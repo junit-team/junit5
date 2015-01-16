@@ -7,20 +7,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.lambda.proposal02.LambdaAssert.*;
 
 /*
-    The JUnit4 way of defining tests should still work.
-    Moreover, we could provide a mechanism for names with any characters.
+    How can we make use of lambdas for better assertions?
  */
-public class BasicTest {
-
-    @Test
-    public void aJunit4CompatibleTest() {
-        assertEquals(1, 1);
-    }
-
-    @Test("test name can be any string")
-    public void methodNameDoesNotMatterHere() {
-        assertEquals(1, 1);
-    }
+public class LambdaAssertionsTest {
 
     /**
      * Using lambdas allows deferring the execution of "expensive" code
@@ -31,10 +20,24 @@ public class BasicTest {
     }
 
     @Test
-    public void testException() {
+    public void testExceptionType() {
         assertException(() -> {
             throw new RuntimeException();
         }, RuntimeException.class, () -> "expected RTE");
+    }
+
+    @Test
+    public void testExceptionDetails() {
+        assertException(
+                () -> {
+                    throw new RuntimeException("a message");
+                },
+                (ex) -> {
+                    assertEquals(RuntimeException.class, ex.getClass());
+                    assertEquals("a message", ex.getMessage());
+                },
+                () -> "expected RTE"
+        );
     }
 
     /**
