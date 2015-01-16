@@ -1,9 +1,16 @@
 package org.junit.lambda.proposal02.examples;
 
 import org.junit.Assert;
+import org.junit.lambda.proposal02.JUnit4CompatibilityRunner;
 import org.junit.lambda.proposal02.Test;
 import org.junit.lambda.proposal02.Testable;
+import org.junit.runner.RunWith;
 
+/**
+ * Add this runner to JUnit Lambda style test classes when used with IDEs not yet supporting
+ * JUnit Lambda. Should be ignored by IDEs supporting JUnit Lambda.
+ */
+@RunWith(JUnit4CompatibilityRunner.class)
 /**
  * We might also allow for even simpler test cases.
  */
