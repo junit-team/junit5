@@ -1,9 +1,6 @@
 package org.junit.lambda.proposal02.examples;
 
-import org.junit.lambda.proposal02.ContextDecorator;
-import org.junit.lambda.proposal02.Database;
-import org.junit.lambda.proposal02.Decorate;
-import org.junit.lambda.proposal02.Test;
+import org.junit.lambda.proposal02.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +43,7 @@ class DatabaseDecorator implements ContextDecorator {
     Database database;
 
     @Override
-    public void beforeAll() {
+    public void beforeAll(TestContext context) {
         database = Database.instance();
         database.startUp();
     }
@@ -57,7 +54,7 @@ class DatabaseDecorator implements ContextDecorator {
     }
 
     @Override
-    public void afterAll() {
+    public void afterAll(TestContext context) {
         database.shutDown();
     }
 }
