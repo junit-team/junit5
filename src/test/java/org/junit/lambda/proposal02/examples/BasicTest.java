@@ -1,5 +1,9 @@
 package org.junit.lambda.proposal02.examples;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.lambda.proposal02.Person;
 import org.junit.lambda.proposal02.Test;
 
@@ -11,6 +15,39 @@ import static org.junit.lambda.proposal02.LambdaAssert.*;
     Moreover, we could provide a mechanism for names with any characters.
  */
 public class BasicTest {
+
+
+    /**
+     * Should work as in JUnit4
+     */
+    @Before
+    public void initialize() {
+
+    }
+
+    /**
+     * Should work as in JUnit4
+     */
+    @After
+    public void cleanUp() {
+
+    }
+
+    /**
+     * Should work as in JUnit4
+     */
+    @BeforeClass
+    public void initializeAll() {
+
+    }
+
+    /**
+     * Should work as in JUnit4
+     */
+    @AfterClass
+    public void cleanUpAll() {
+
+    }
 
     @Test
     public void aJunit4CompatibleTest() {
