@@ -1,17 +1,16 @@
 package org.junit.lambda.proposal02.examples;
 
-import junit.framework.TestResult;
-import org.junit.lambda.proposal02.Decorate;
+import org.junit.lambda.proposal02.DataProvider;
+import org.junit.lambda.proposal02.Parameters;
 import org.junit.lambda.proposal02.Test;
-import org.junit.lambda.proposal02.TestCase;
-import org.junit.lambda.proposal02.TestDecorator;
-
-import java.util.Arrays;
-import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 
-@Decorate(MyData.class)
+
+/**
+ * Under the hood @Parameters could be implemented by decorators
+ */
+@Parameters(MyData.class)
 public class ParameterizedTests {
 
     @Test
@@ -29,7 +28,7 @@ public class ParameterizedTests {
 }
 
 
-class MyData extends Parameters<MyData> {
+class MyData implements DataProvider<MyData> {
 
     public final int x;
     public final int y;
@@ -44,34 +43,17 @@ class MyData extends Parameters<MyData> {
     }
 
     /**
-     * For creation by decorator
+     * For creation by Parameters
      */
     public MyData() {
         this(0,0,0,0);
     }
 
     @Override
-    MyData[] data() {
+    public MyData[] data() {
         return new MyData[] {
                 new MyData(1,2,3,2),
                 new MyData(3,5,8,15)
         };
-    }
-}
-
-abstract class Parameters<T> implements TestDecorator {
-    abstract T[] data();
-
-    private Stream<T> stream() {
-        return Arrays.stream(data());
-    }
-
-    @Override
-    public TestResult runTest(TestCase testCase) throws Exception {
-        //todo:
-        // wrap all tests in additional contexts
-        // create tests case instances for all data supplied in stream
-        // run all tests cases and collect results in new TestResult
-        return null;
     }
 }
