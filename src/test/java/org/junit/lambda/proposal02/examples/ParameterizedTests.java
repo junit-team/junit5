@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 
 
 /**
- * Under the hood @Parameters could be implemented by decorators
+ * Under the hood @Parameters can be implemented by decorators
  */
 @Parameters(MyData.class)
 public class ParameterizedTests {
@@ -28,6 +28,9 @@ public class ParameterizedTests {
 }
 
 
+/**
+ * Can be realized by two classes instead of one
+ */
 class MyData implements DataProvider<MyData> {
 
     public final int x;
