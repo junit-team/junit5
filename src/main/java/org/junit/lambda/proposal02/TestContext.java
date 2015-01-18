@@ -5,5 +5,5 @@ import java.util.List;
 public interface TestContext {
     String getName();
     TestContext getParent();
-    List<ContextDecorator> getDecorators();
+    List<TestDecorator> getDecorators();
 }

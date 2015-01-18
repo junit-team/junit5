@@ -38,7 +38,7 @@ public class DecoratedTests {
     }
 }
 
-class DatabaseDecorator implements ContextDecorator {
+class DatabaseDecorator implements TestDecorator {
 
     Database database;
 
@@ -59,7 +59,7 @@ class DatabaseDecorator implements ContextDecorator {
     }
 }
 
-class TemporaryFile implements ContextDecorator {
+class TemporaryFile implements TestDecorator {
 
     List<File>files = new ArrayList<File>();
 
