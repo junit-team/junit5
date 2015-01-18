@@ -1,7 +1,9 @@
 package org.junit.lambda.proposal02.examples;
 
+import junit.framework.TestResult;
 import org.junit.lambda.proposal02.Decorate;
 import org.junit.lambda.proposal02.Test;
+import org.junit.lambda.proposal02.TestCase;
 import org.junit.lambda.proposal02.TestDecorator;
 
 import java.util.Arrays;
@@ -17,6 +19,9 @@ public class ParameterizedTests {
         assertEquals(data.plus, data.x + data.y);
     }
 
+    /**
+     * Test name can be filled in with pieces from parameters
+     */
     @Test("Multiply $data.x with $data.y")
     public void testMultiplication(MyData data) {
         assertEquals(data.times, data.x * data.y);
@@ -57,8 +62,16 @@ class MyData extends Parameters<MyData> {
 abstract class Parameters<T> implements TestDecorator {
     abstract T[] data();
 
-    public Stream<T> stream() {
+    private Stream<T> stream() {
         return Arrays.stream(data());
     }
 
+    @Override
+    public TestResult runTest(TestCase testCase) throws Exception {
+        //todo:
+        // wrap all tests in additional contexts
+        // create tests case instances for all data supplied in stream
+        // run all tests cases and collect results in new TestResult
+        return null;
+    }
 }
