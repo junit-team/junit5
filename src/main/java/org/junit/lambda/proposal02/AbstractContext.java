@@ -6,10 +6,10 @@ import java.util.List;
 public abstract class AbstractContext implements TestContext {
 
     private String name;
-    private List<TestDecorator> decorators = new ArrayList<TestDecorator>();
-    private TestContext parent;
+    private List<TestComponentDecorator> decorators = new ArrayList<TestComponentDecorator>();
+    private TestComponent parent;
 
-    protected AbstractContext(String name, TestContext parent) {
+    protected AbstractContext(String name, TestComponent parent) {
         this.name = name;
         this.parent = parent;
     }
@@ -20,16 +20,16 @@ public abstract class AbstractContext implements TestContext {
     }
 
     @Override
-    public List<TestDecorator> getDecorators() {
+    public List<TestComponentDecorator> getDecorators() {
         return decorators;
     }
 
-    public void addDecorator(TestDecorator decorator) {
+    public void addDecorator(TestComponentDecorator decorator) {
         decorators.add(decorator);
     }
 
     @Override
-    public TestContext getParent() {
+    public TestComponent getParent() {
         return parent;
     }
 

@@ -1,5 +1,5 @@
 package org.junit.lambda.proposal02;
 
 public @interface Decorate {
-    Class<? extends TestDecorator> value();
+    Class<? extends TestComponentDecorator> value();
 }

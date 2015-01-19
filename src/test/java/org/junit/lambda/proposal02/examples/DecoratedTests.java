@@ -1,5 +1,6 @@
 package org.junit.lambda.proposal02.examples;
 
+import junit.framework.TestResult;
 import org.junit.lambda.proposal02.*;
 
 import java.io.File;
@@ -11,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Decorators replace JUnit4 rules.
- * We can decorate test classes (aka test contexts) - and maybe even individual tests
+ * We can decorate test classes (aka test contexts) - and even individual tests.
  */
 @Decorate(DatabaseDecorator.class)
 public class DecoratedTests {
@@ -38,35 +39,39 @@ public class DecoratedTests {
     }
 }
 
-class DatabaseDecorator implements TestDecorator {
+class DatabaseDecorator implements TestContextDecorator {
 
     Database database;
 
     @Override
-    public void beforeAll(TestContext context) {
+    public TestResult run(TestComponent testComponent) throws Exception {
+        //Leaving out try-catch for clarity of example
         database = Database.instance();
         database.startUp();
-    }
-
-    @Override
-    public void before() {
-        database.clean();
-    }
-
-    @Override
-    public void afterAll(TestContext context) {
+        TestResult result = TestContextDecorator.super.run(testComponent);
         database.shutDown();
+        return result;
     }
+
+    @Override
+    public TestResult runChild(TestComponent testComponent) throws Exception {
+        database.clean();
+        return TestContextDecorator.super.runChild(testComponent);
+    }
+
 }
 
-class TemporaryFile implements TestDecorator {
+class TemporaryFile implements TestComponentDecorator {
 
     List<File>files = new ArrayList<File>();
 
     @Override
-    public void after() throws IOException {
+    public TestResult run(TestComponent testComponent) throws Exception {
+        //Leaving out try-catch for clarity of example
+        TestResult result = TestComponentDecorator.super.run(testComponent);
         for(File file : files)
             file.delete();
+        return result;
     }
 
     public File createFile(String pre, String post) throws IOException {
