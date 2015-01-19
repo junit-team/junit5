@@ -12,6 +12,9 @@ public class LambdaAssert {
     public static void assertException(Runnable code, Class<? extends Throwable> expectedException, Callable<String> failureMessage) {
     }
 
+    public static void assertException(Runnable code, Class<? extends Throwable> expectedException) {
+    }
+
     public static void assertException(Runnable code, Consumer<? extends Throwable> exceptionChecker, Callable<String> failureMessage) {
     }
 

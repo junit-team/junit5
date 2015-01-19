@@ -11,6 +11,7 @@
 - [Exception testing with Lambdas - 2](http://blog.jooq.org/2014/05/23/java-8-friday-better-exceptions/)
 - [Combining matchers, streams and lambdas](http://blog.jooq.org/2014/05/30/java-8-friday-most-internal-dsls-are-outdated/)
 - [JUnit Java8 Runner](https://github.com/motlin/JUnit-Java-8-Runner): Allowing test methods in interfaces.
+- [JUnit Quickcheck](https://github.com/pholser/junit-quickcheck): A quickcheck reimplementation in Java building on JUnit theories
 
 
 ##Our Proposals
