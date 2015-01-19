@@ -12,6 +12,7 @@ import static org.junit.Assume.assumeTrue;
 
 /**
  * Theories should execute without special runner (or decorator) and be mixable with standard test cases.
+ * Maybe we could go with a registration of extensions if they are loaded into the classpath?
  *
  * The DataPoint does not seem especially useful to me, I'd rather go with generators similar to JUnit Quickcheck
  */
