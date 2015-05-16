@@ -15,8 +15,15 @@ import static org.junit.Assert.assertTrue;
  * We can decorate test classes (aka test contexts) - and even individual tests.
  */
 @Decorate(DatabaseDecorator.class)
+@Decorate(DecoratorWithParams.class)
 public class DecoratedTests {
 
+    //Decorator instances can be injected in tests and before/after methods if needed
+    @Before
+    public void setupDecorator(DecoratorWithParams decorator) {
+        decorator.initWith("param2", 2);    
+    }
+    
     @Test
     public void initialDatabaseIsEmpty() {
         assertTrue(Database.instance().isEmpty());
