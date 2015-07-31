@@ -18,5 +18,9 @@
 
 ###Proposal 1 : Using initialization blocks and lambdas to define tests
 
-- [Examples](https://github.com/junit-team/junit-lambda/blob/master/src/test/java/org/junit/lambda/proposal01)
+- [Examples](https://github.com/junit-team/junit-lambda/tree/proposals/src/test/java/org/junit/lambda/proposal01)
+ 
+###Proposal 2 : Using different kinds of decorators, categories and other ideas
+
+- [Examples](https://github.com/junit-team/junit-lambda/tree/proposals/src/test/java/org/junit/lambda/proposal02/examples)
 
