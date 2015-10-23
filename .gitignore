@@ -1,4 +1,19 @@
-/.settings/
-/target/
+# Gradle
+.gradle
+build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Eclipse
 /.classpath
+/.settings/
 /.project
+/bin/
+
+# IntelliJ
+.idea
+spring-events.iml
+
+# Misc
+*.log
