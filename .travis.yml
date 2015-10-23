@@ -1,4 +1,3 @@
 language: java
-script: gradlew clean test
 jdk:
   - oraclejdk8
