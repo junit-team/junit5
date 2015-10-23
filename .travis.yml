@@ -1,4 +1,4 @@
 language: java
-script: mvn verify
+script: gradlew clean test
 jdk:
   - oraclejdk8
