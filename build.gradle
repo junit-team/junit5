@@ -1,0 +1,56 @@
+subprojects {
+
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+	apply plugin: 'idea'
+	apply plugin: 'maven'
+
+	repositories {
+		mavenCentral()
+	}
+
+	compileJava {
+	    sourceCompatibility = 1.8
+	    targetCompatibility = 1.8
+	}
+
+	compileTestJava {
+	    sourceCompatibility = 1.8
+	    targetCompatibility = 1.8
+	    options.compilerArgs += '-parameters'
+	}
+
+	dependencies {
+		compile("org.projectlombok:lombok:${lombokVersion}")
+		testCompile("org.assertj:assertj-core:${assertJVersion}")
+	}
+
+	eclipse {
+	    classpath {
+	         containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+	         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
+	    }
+	}
+
+	test {
+		description = 'Runs JUnit unit tests.'
+		useJUnit()
+
+		scanForTestClasses = false
+		include(["**/*Tests.class", "**/*Test.class"])
+		// Since we set scanForTestClasses to false, we need to filter out inner
+		// classes with the "$" pattern; otherwise, using -Dtest.single=MyTests to
+		// run MyTests by itself will fail if MyTests contains any inner classes.
+		exclude(["**/Abstract*.class", '**/*$*'])
+	}
+
+}
+
+configure(rootProject) {
+	description = "JUnit Lambda"
+
+	task wrapper(type: Wrapper) {
+		gradleVersion = '2.7'
+	}
+
+}
