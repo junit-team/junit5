@@ -10,14 +10,14 @@ subprojects {
 	}
 
 	compileJava {
-	    sourceCompatibility = 1.8
-	    targetCompatibility = 1.8
+		sourceCompatibility = 1.8
+		targetCompatibility = 1.8
 	}
 
 	compileTestJava {
-	    sourceCompatibility = 1.8
-	    targetCompatibility = 1.8
-	    options.compilerArgs += '-parameters'
+		sourceCompatibility = 1.8
+		targetCompatibility = 1.8
+		options.compilerArgs += '-parameters'
 	}
 
 	dependencies {
@@ -26,10 +26,10 @@ subprojects {
 	}
 
 	eclipse {
-	    classpath {
-	         containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
-	         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
-	    }
+		classpath {
+			containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+			containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
+		}
 	}
 
 	test {
@@ -44,10 +44,32 @@ subprojects {
 		exclude(["**/Abstract*.class", '**/*$*'])
 	}
 
+	javadoc {
+		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+		options.author = true
+		options.header = project.name
+		options.addStringOption('Xdoclint:none', '-quiet')
+	}
+
+	task sourcesJar(type: Jar, dependsOn: classes) {
+		classifier = 'sources'
+		from sourceSets.main.allSource
+	}
+
+	task javadocJar(type: Jar) {
+		classifier = 'javadoc'
+		from javadoc
+	}
+
+	artifacts {
+		archives sourcesJar
+		archives javadocJar
+	}
+
 }
 
 configure(rootProject) {
-	description = "JUnit Lambda"
+	description = 'JUnit Lambda'
 
 	task wrapper(type: Wrapper) {
 		gradleVersion = '2.8'
