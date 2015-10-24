@@ -1,7 +1,7 @@
 # Gradle
 .gradle
 /build
-junit-*/build
+junit*/build
 
 # Ignore Gradle GUI config
 gradle-app.setting

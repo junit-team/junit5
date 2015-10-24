@@ -2,6 +2,6 @@ rootProject.name = "junit-lambda"
 	
 include "junit-core"
 include "junit-engine"
-include "junit-engine-junit4"
 include "junit-interceptor"
 include "junit-launch"
+include "junit4-bridge"
