@@ -1,17 +1,21 @@
 # Gradle
 .gradle
-build/
+/build
+junit-*/build
 
 # Ignore Gradle GUI config
 gradle-app.setting
 
 # Eclipse
-/.classpath
-/.settings/
-/.project
-/bin/
+.classpath
+.settings
+.project
+bin
 
 # IntelliJ
+*.iml
+*.ipr
+*.iws
 .idea
 spring-events.iml
 
