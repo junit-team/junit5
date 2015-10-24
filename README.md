@@ -24,3 +24,8 @@ All modules can be installed in a local Maven repository for consumption in othe
 gradlew clean install
 ```
 
+### Dependency Metadata
+
+ - **Group ID**: `org.junit`
+ - **Version**: `5.0.0.BUILD-SNAPSHOT`
+ - **Artifact IDs**: `junit-core`, `junit-engine`, `junit-interceptor`, `junit-launch`, `junit4-bridge`
