@@ -14,8 +14,8 @@ public final class ObjectUtils {
 		/* no-op */
 	}
 
-	public static boolean nullSafeEquals(Object expected, Object actual) {
-		return (expected == null ? actual == null : expected.equals(actual));
+	public static boolean nullSafeEquals(Object obj1, Object obj2) {
+		return (obj1 == null ? obj2 == null : obj1.equals(obj2));
 	}
 
 	public static String nullSafeToString(Class<?>... classes) {
