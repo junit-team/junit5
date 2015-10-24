@@ -1,5 +1,0 @@
-dependencies {
-	compile(project(':junit-lambda-core'))
-	compile(project(':junit-lambda-engine-api'))
-	compile(project(':junit-lambda-engine-core'))
-}
