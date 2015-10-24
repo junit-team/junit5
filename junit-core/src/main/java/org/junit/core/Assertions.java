@@ -1,7 +1,7 @@
 
-package org.junit.lambda.core;
+package org.junit.core;
 
-import org.junit.lambda.core.util.ObjectUtils;
+import org.junit.core.util.ObjectUtils;
 
 public final class Assertions {
 

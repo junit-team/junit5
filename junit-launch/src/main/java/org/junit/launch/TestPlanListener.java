@@ -1,4 +1,5 @@
-package org.junit.lambda.launcher;
+
+package org.junit.launch;
 
 /**
  * @author Sam Brannen

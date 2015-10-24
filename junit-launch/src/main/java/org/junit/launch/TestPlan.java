@@ -1,10 +1,10 @@
 
-package org.junit.lambda.launcher;
+package org.junit.launch;
 
 import java.nio.file.Path;
 import java.util.Map;
 
-import org.junit.lambda.core.TestDescriptor;
+import org.junit.core.TestDescriptor;
 
 /**
  * @author Sam Brannen

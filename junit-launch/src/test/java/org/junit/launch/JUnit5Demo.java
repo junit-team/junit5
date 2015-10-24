@@ -1,5 +1,5 @@
 
-package org.junit.lambda.launcher;
+package org.junit.launch;
 
 import java.util.HashMap;
 

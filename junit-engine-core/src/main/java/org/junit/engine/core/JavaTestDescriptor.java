@@ -1,8 +1,8 @@
 
-package org.junit.lambda.engine.core;
+package org.junit.engine.core;
 
 import static java.util.Collections.*;
-import static org.junit.lambda.core.util.ObjectUtils.*;
+import static org.junit.core.util.ObjectUtils.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.lambda.core.TestDescriptor;
-import org.junit.lambda.core.util.Preconditions;
+import org.junit.core.TestDescriptor;
+import org.junit.core.util.Preconditions;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

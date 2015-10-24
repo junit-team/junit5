@@ -1,5 +1,5 @@
 
-package org.junit.lambda.core.util;
+package org.junit.core.util;
 
 /**
  * @author Sam Brannen

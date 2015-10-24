@@ -1,5 +1,5 @@
 
-package org.junit.lambda.core;
+package org.junit.core;
 
 import java.util.List;
 

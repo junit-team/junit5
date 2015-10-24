@@ -1,10 +1,10 @@
 
-package org.junit.lambda.engine.core;
+package org.junit.engine.core;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
-import static org.junit.lambda.core.Assertions.*;
+import static org.junit.core.Assertions.*;
 
 /**
  * Unit tests for {@link JavaTestDescriptor}.
@@ -19,10 +19,10 @@ public class JavaTestDescriptorTestCase {
 
 	private static final String JUNIT_5_ENGINE_ID = "junit5";
 
-	private static final String TEST_METHOD_ID = "org.junit.lambda.engine.core.JavaTestDescriptorTestCase#test()";
+	private static final String TEST_METHOD_ID = "org.junit.engine.core.JavaTestDescriptorTestCase#test()";
 	private static final String TEST_METHOD_UID = JUNIT_5_ENGINE_ID + ":" + TEST_METHOD_ID;
 
-	private static final String TEST_METHOD_STRING_BIGDECIMAL_ID = "org.junit.lambda.engine.core.JavaTestDescriptorTestCase#test(java.lang.String, java.math.BigDecimal)";
+	private static final String TEST_METHOD_STRING_BIGDECIMAL_ID = "org.junit.engine.core.JavaTestDescriptorTestCase#test(java.lang.String, java.math.BigDecimal)";
 	private static final String TEST_METHOD_STRING_BIGDECIMAL_UID = JUNIT_5_ENGINE_ID + ":" + TEST_METHOD_STRING_BIGDECIMAL_ID;
 
 
