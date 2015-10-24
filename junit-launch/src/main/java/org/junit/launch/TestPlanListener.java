@@ -1,6 +1,8 @@
 
 package org.junit.launch;
 
+import org.junit.core.TestDescriptor;
+
 /**
  * @author Sam Brannen
  * @since 5.0
@@ -22,22 +24,26 @@ public interface TestPlanListener {
 	default void planCompleted() throws Exception {
 	}
 
-	default void testAdded() throws Exception {
+	default void testAdded(TestDescriptor testDescriptor) throws Exception {
 	}
 
-	default void testStarted() throws Exception {
+	default void testStarted(TestDescriptor testDescriptor) throws Exception {
 	}
 
-	default void testFailed() throws Exception {
+	// TODO Add source of failure, likely via a TestResult.
+	default void testFailed(TestDescriptor testDescriptor) throws Exception {
 	}
 
-	default void testSkipped() throws Exception {
+	// TODO Add information about why it was skipped, likely via a TestResult.
+	default void testSkipped(TestDescriptor testDescriptor) throws Exception {
 	}
 
-	default void testAborted() throws Exception {
+	// TODO Add information about why it was aborted, likely via a TestResult.
+	default void testAborted(TestDescriptor testDescriptor) throws Exception {
 	}
 
-	default void testCompleted() throws Exception {
+	// TODO Add details about length of execution, etc., likely via a TestResult.
+	default void testCompleted(TestDescriptor testDescriptor) throws Exception {
 	}
 
 }

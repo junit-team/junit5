@@ -3,6 +3,8 @@ package org.junit.launch;
 
 import java.util.HashMap;
 
+import org.junit.core.TestDescriptor;
+
 /**
  * @author Sam Brannen
  * @since 5.0
@@ -40,8 +42,8 @@ public class JUnit5Demo {
 	static class ConsoleLoggingListener implements TestPlanListener {
 
 		@Override
-		public void testCompleted() throws Exception {
-			System.out.println("Test completed");
+		public void testCompleted(TestDescriptor testDescriptor) throws Exception {
+			System.out.println("Test completed for " + testDescriptor);
 		}
 	}
 
