@@ -2,17 +2,19 @@
 package org.junit.core;
 
 import org.junit.core.util.ObjectUtils;
+import org.opentestalliance.AssertionFailedException;
 
 public final class Assertions {
 
 	private Assertions() {
+		/* no-op */
 	}
 
 	public static void fail(String message) {
 		if (message == null) {
-			throw new AssertionError();
+			throw new AssertionFailedException();
 		}
-		throw new AssertionError(message);
+		throw new AssertionFailedException(message);
 	}
 
 	public static void assertTrue(boolean condition) {
@@ -121,11 +123,11 @@ public final class Assertions {
 			else {
 				String message = Assertions.format("unexpected exception type thrown;", expected.getSimpleName(),
 					actual.getClass().getSimpleName());
-				throw new AssertionError(message, actual);
+				throw new AssertionFailedException(message, actual);
 			}
 		}
 		String message = String.format("expected %s to be thrown, but nothing was thrown", expected.getSimpleName());
-		throw new AssertionError(message);
+		throw new AssertionFailedException(message);
 	}
 
 	private static void failEqual(String message, Object actual) {
