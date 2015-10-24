@@ -13,7 +13,13 @@ This repository currently hosts the prototype for the next generation of JUnit, 
 All modules can be built with Gradle using the following command.
 
 ```
-gradlew clean test assemble
+gradlew clean assemble
+```
+
+All modules can be tested with Gradle using the following command.
+
+```
+gradlew clean test
 ```
 
 ## Installing in Local Maven Repository
