@@ -61,12 +61,11 @@ public class JavaTestDescriptor implements TestDescriptor {
 	private final List<TestDescriptor> children;
 
 
-	public static JavaTestDescriptor from(String uid) throws Exception {
+	public static JavaTestDescriptor from(final String uid) throws Exception {
 		Preconditions.notNull(uid, "TestDescriptor UID must not be null");
-		uid = uid.trim();
 
 		Matcher matcher = UID_PATTERN.matcher(uid);
-		Preconditions.condition(matcher.matches(),
+		Preconditions.condition(matcher.matches(), () ->
 			String.format("Invalid format for %s UID: %s", JavaTestDescriptor.class.getSimpleName(), uid));
 
 		// TODO Validate contents of matched groups.
