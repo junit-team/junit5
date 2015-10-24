@@ -1,5 +1,4 @@
 dependencies {
 	compile(project(':junit-core'))
 	compile(project(':junit-engine'))
-	compile(project(':junit-engine-core'))
 }

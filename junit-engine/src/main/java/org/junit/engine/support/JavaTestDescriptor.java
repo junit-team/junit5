@@ -1,5 +1,5 @@
 
-package org.junit.engine.core;
+package org.junit.engine.support;
 
 import static java.util.Collections.*;
 import static org.junit.core.util.ObjectUtils.*;
