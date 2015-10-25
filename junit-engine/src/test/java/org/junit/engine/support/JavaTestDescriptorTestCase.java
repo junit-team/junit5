@@ -50,14 +50,14 @@ public class JavaTestDescriptorTestCase {
 
 	private static void from() throws Exception {
 		JavaTestDescriptor descriptor = JavaTestDescriptor.from(TEST_METHOD_UID);
-		assertNotNull("descriptor:", descriptor);
-		assertEqual("display name:", "test", descriptor.getDisplayName());
+		assertNotNull(descriptor, "descriptor:");
+		assertEqual("test", descriptor.getDisplayName(), "display name:");
 		assertEqual(JavaTestDescriptorTestCase.class, descriptor.getTestClass());
 		assertEqual(JavaTestDescriptorTestCase.class.getDeclaredMethod("test"), descriptor.getTestMethod());
 
 		descriptor = JavaTestDescriptor.from(TEST_METHOD_STRING_BIGDECIMAL_UID);
-		assertNotNull("descriptor:", descriptor);
-		assertEqual("display name:", "test", descriptor.getDisplayName());
+		assertNotNull(descriptor, "descriptor:");
+		assertEqual("test", descriptor.getDisplayName(), "display name:");
 		assertEqual(JavaTestDescriptorTestCase.class, descriptor.getTestClass());
 		assertEqual(JavaTestDescriptorTestCase.class.getDeclaredMethod("test", String.class, BigDecimal.class),
 			descriptor.getTestMethod());
