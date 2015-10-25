@@ -1,6 +1,7 @@
 
 package org.junit.core;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.junit.core.util.ObjectUtils;
@@ -44,6 +45,22 @@ public final class Assertions {
 		}
 	}
 
+	public static void assertTrue(BooleanSupplier booleanSupplier) {
+		assertTrue(booleanSupplier.getAsBoolean(), (String) null);
+	}
+
+	public static void assertTrue(BooleanSupplier booleanSupplier, String message) {
+		if (!booleanSupplier.getAsBoolean()) {
+			fail(message);
+		}
+	}
+
+	public static void assertTrue(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
+		if (!booleanSupplier.getAsBoolean()) {
+			fail(messageSupplier);
+		}
+	}
+
 	public static void assertFalse(boolean condition) {
 		assertFalse(condition, (String) null);
 	}
@@ -56,6 +73,22 @@ public final class Assertions {
 
 	public static void assertFalse(boolean condition, Supplier<String> messageSupplier) {
 		if (condition) {
+			fail(messageSupplier);
+		}
+	}
+
+	public static void assertFalse(BooleanSupplier booleanSupplier) {
+		assertFalse(booleanSupplier.getAsBoolean(), (String) null);
+	}
+
+	public static void assertFalse(BooleanSupplier booleanSupplier, String message) {
+		if (booleanSupplier.getAsBoolean()) {
+			fail(message);
+		}
+	}
+
+	public static void assertFalse(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
+		if (booleanSupplier.getAsBoolean()) {
 			fail(messageSupplier);
 		}
 	}
