@@ -14,6 +14,10 @@ public final class ObjectUtils {
 		/* no-op */
 	}
 
+	public static boolean isEmpty(CharSequence charSequence) {
+		return (charSequence == null || charSequence.length() == 0);
+	}
+
 	public static boolean nullSafeEquals(Object obj1, Object obj2) {
 		return (obj1 == null ? obj2 == null : obj1.equals(obj2));
 	}

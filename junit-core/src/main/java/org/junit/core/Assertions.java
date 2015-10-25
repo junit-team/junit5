@@ -214,7 +214,7 @@ public final class Assertions {
 
 	private static void failEqual(Object actual, String message) {
 		String prefix = "Values should be different. ";
-		if (message != null && !message.isEmpty()) {
+		if (!ObjectUtils.isEmpty(message)) {
 			prefix = message + ". ";
 		}
 		fail(prefix + "Actual: " + actual);
@@ -259,7 +259,7 @@ public final class Assertions {
 	}
 
 	private static String buildPrefix(String message) {
-		return (message != null && !message.isEmpty() ? message + " ==> " : "");
+		return (!ObjectUtils.isEmpty(message) ? message + " ==> " : "");
 	}
 
 	private static String nullSafeGet(Supplier<String> messageSupplier) {
