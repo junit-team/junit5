@@ -31,6 +31,7 @@ public final class Assumptions {
 				executable.execute();
 			}
 			catch (Throwable e) {
+				// TODO Don't wrap Throwables such as OutOfMemoryError, etc.
 				throw new RuntimeException("Wrapped exception thrown from Executable", e);
 			}
 		}
