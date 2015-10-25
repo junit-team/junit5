@@ -21,6 +21,20 @@ public final class Preconditions {
 		condition(object != null, messageSupplier);
 	}
 
+	/**
+	 * @see ObjectUtils#isEmpty(CharSequence)
+	 */
+	public static void notEmpty(String str, String message) {
+		condition(!ObjectUtils.isEmpty(str), message);
+	}
+
+	/**
+	 * @see ObjectUtils#isEmpty(CharSequence)
+	 */
+	public static void notEmpty(String str, Supplier<String> messageSupplier) {
+		condition(!ObjectUtils.isEmpty(str), messageSupplier);
+	}
+
 	public static void condition(boolean predicate, String message) {
 		if (!predicate) {
 			throw new IllegalArgumentException(message);

@@ -115,7 +115,7 @@ public class JavaTestDescriptor implements TestDescriptor {
 	public JavaTestDescriptor(String engineId, Class<?> testClass, Method testMethod, boolean dynamic,
 			TestDescriptor parent, List<TestDescriptor> children) {
 
-		Preconditions.notNull(engineId, "engineId must not be null");
+		Preconditions.notEmpty(engineId, "engineId must not be null or empty");
 		Preconditions.notNull(testClass, "testClass must not be null");
 
 		this.testClass = testClass;
