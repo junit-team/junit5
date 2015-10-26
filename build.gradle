@@ -86,7 +86,7 @@ subprojects {
 				licenseHeader '\n'
 			}
 			importOrder(['java', 'javax', 'org', 'com', 'org.junit', 'org.opentestalliance', 'lombok'])
-			eclipseFormatFile rootProject.file('spotless_eclipseformat.xml')
+			eclipseFormatFile rootProject.file('spotless_eclipse-java-google-style.xml')
 
 			// You can also tweak the formatting with custom regexes or functions, such as:
 			// Eclipse formatter puts excess whitespace after lambda blocks
