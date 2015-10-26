@@ -15,6 +15,7 @@ subprojects {
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
 	apply plugin: 'maven'
+	apply plugin: 'com.diffplug.gradle.spotless'
 
 	repositories {
 		mavenCentral()
@@ -77,6 +78,23 @@ subprojects {
 		archives javadocJar
 	}
 
+	spotless {
+		java {
+			if (project.name == 'open-test-alliance') {
+				licenseHeaderFile rootProject.file('spotless_apache-2.0-header.java')
+			} else {
+				licenseHeader '\n'
+			}
+			importOrder(['java', 'javax', 'org', 'com', 'org.junit', 'org.opentestalliance', 'lombok'])
+			eclipseFormatFile rootProject.file('spotless_eclipseformat.xml')
+
+			// You can also tweak the formatting with custom regexes or functions, such as:
+			// Eclipse formatter puts excess whitespace after lambda blocks
+			//    funcThatTakesLambdas(x -> {} , y -> {} )  // what Eclipse does
+			//    funcThatTakesLambdas(x -> {}, y -> {})    // what I wish Eclipse did
+			custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
+		}
+	}
 }
 
 configure(rootProject) {
