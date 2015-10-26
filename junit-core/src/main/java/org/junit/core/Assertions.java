@@ -5,6 +5,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.junit.core.util.ObjectUtils;
+
 import org.opentestalliance.AssertionFailedException;
 
 /**
@@ -246,7 +247,7 @@ public final class Assertions {
 		String actualString = String.valueOf(actual);
 		if (expectedString.equals(actualString)) {
 			return prefix + "expected: " + formatClassAndValue(expected, expectedString) + " but was: "
-					+ formatClassAndValue(actual, actualString);
+				+ formatClassAndValue(actual, actualString);
 		}
 		else {
 			return prefix + "expected:<" + expectedString + "> but was:<" + actualString + ">";

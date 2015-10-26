@@ -15,14 +15,16 @@ public class JUnit5Demo {
 	public static void main(String... args) {
 
 		TestPlan testPlan = TestPlan.builder()
-				.configuration(new HashMap<String, String>(){{
+			.configuration(new HashMap<String, String>() {
+				{
 					put("category", "smoke");
-				}})
-				.packageNames("org.example.service.impl")
-				.includePatterns("*Tests")
-				.descriptorIds("junit5:org.example.UserTests#fullname()")
-				.listeners(new ConsoleLoggingListener())
-				.build();
+				}
+			})
+			.packageNames("org.example.service.impl")
+			.includePatterns("*Tests")
+			.descriptorIds("junit5:org.example.UserTests#fullname()")
+			.listeners(new ConsoleLoggingListener())
+			.build();
 
 		testPlan.start();
 		System.out.println("\tTest plan is active: " + testPlan.isActive());

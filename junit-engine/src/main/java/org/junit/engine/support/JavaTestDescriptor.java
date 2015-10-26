@@ -65,8 +65,7 @@ public class JavaTestDescriptor implements TestDescriptor {
 		Preconditions.notNull(uid, "TestDescriptor UID must not be null");
 
 		Matcher matcher = UID_PATTERN.matcher(uid);
-		Preconditions.condition(matcher.matches(), () ->
-			String.format("Invalid format for %s UID: %s", JavaTestDescriptor.class.getSimpleName(), uid));
+		Preconditions.condition(matcher.matches(), () -> String.format("Invalid format for %s UID: %s", JavaTestDescriptor.class.getSimpleName(), uid));
 
 		// TODO Validate contents of matched groups.
 		String engineId = matcher.group(1);
@@ -113,7 +112,7 @@ public class JavaTestDescriptor implements TestDescriptor {
 	}
 
 	public JavaTestDescriptor(String engineId, Class<?> testClass, Method testMethod, boolean dynamic,
-			TestDescriptor parent, List<TestDescriptor> children) {
+		TestDescriptor parent, List<TestDescriptor> children) {
 
 		Preconditions.notEmpty(engineId, "engineId must not be null or empty");
 		Preconditions.notNull(testClass, "testClass must not be null");
