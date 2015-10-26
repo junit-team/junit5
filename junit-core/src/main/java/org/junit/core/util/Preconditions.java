@@ -9,42 +9,42 @@ import java.util.function.Supplier;
  */
 public final class Preconditions {
 
-	private Preconditions() {
-		/* no-op */
-	}
+  private Preconditions() {
+    /* no-op */
+  }
 
-	public static void notNull(Object object, String message) {
-		condition(object != null, message);
-	}
+  public static void notNull(Object object, String message) {
+    condition(object != null, message);
+  }
 
-	public static void notNull(Object object, Supplier<String> messageSupplier) {
-		condition(object != null, messageSupplier);
-	}
+  public static void notNull(Object object, Supplier<String> messageSupplier) {
+    condition(object != null, messageSupplier);
+  }
 
-	/**
-	 * @see ObjectUtils#isEmpty(CharSequence)
-	 */
-	public static void notEmpty(String str, String message) {
-		condition(!ObjectUtils.isEmpty(str), message);
-	}
+  /**
+   * @see ObjectUtils#isEmpty(CharSequence)
+   */
+  public static void notEmpty(String str, String message) {
+    condition(!ObjectUtils.isEmpty(str), message);
+  }
 
-	/**
-	 * @see ObjectUtils#isEmpty(CharSequence)
-	 */
-	public static void notEmpty(String str, Supplier<String> messageSupplier) {
-		condition(!ObjectUtils.isEmpty(str), messageSupplier);
-	}
+  /**
+   * @see ObjectUtils#isEmpty(CharSequence)
+   */
+  public static void notEmpty(String str, Supplier<String> messageSupplier) {
+    condition(!ObjectUtils.isEmpty(str), messageSupplier);
+  }
 
-	public static void condition(boolean predicate, String message) {
-		if (!predicate) {
-			throw new IllegalArgumentException(message);
-		}
-	}
+  public static void condition(boolean predicate, String message) {
+    if (!predicate) {
+      throw new IllegalArgumentException(message);
+    }
+  }
 
-	public static void condition(boolean predicate, Supplier<String> messageSupplier) {
-		if (!predicate) {
-			throw new IllegalArgumentException(messageSupplier.get());
-		}
-	}
+  public static void condition(boolean predicate, Supplier<String> messageSupplier) {
+    if (!predicate) {
+      throw new IllegalArgumentException(messageSupplier.get());
+    }
+  }
 
 }

@@ -9,34 +9,34 @@ import java.util.List;
  */
 public interface TestDescriptor {
 
-	String getEngineId();
+  String getEngineId();
 
-	String getTestId();
+  String getTestId();
 
-	/**
-	 * Get the unique identifier (UID) for the described test.
-	 *
-	 * <p>Uniqueness must hold across an entire test plan, regardless of
-	 * how many engines are used behind the scenes.
-	 *
-	 * <p>The UID is simply the concatenation of the {@linkplain #getEngineId engine ID}
-	 * and the {@linkplain #getTestId test ID} separated by a colon ({@code ":"})
-	 * &mdash; for example, {@code myEngine:test-description-unique-within-my-engine}.
-	 */
-	String getUniqueId();
+  /**
+   * Get the unique identifier (UID) for the described test.
+   *
+   * <p>Uniqueness must hold across an entire test plan, regardless of
+   * how many engines are used behind the scenes.
+   *
+   * <p>The UID is simply the concatenation of the {@linkplain #getEngineId engine ID}
+   * and the {@linkplain #getTestId test ID} separated by a colon ({@code ":"})
+   * &mdash; for example, {@code myEngine:test-description-unique-within-my-engine}.
+   */
+  String getUniqueId();
 
-	String getDisplayName();
+  String getDisplayName();
 
-	TestDescriptor getParent();
+  TestDescriptor getParent();
 
-	List<TestDescriptor> getChildren();
+  List<TestDescriptor> getChildren();
 
-	boolean isRoot();
+  boolean isRoot();
 
-	boolean isNode();
+  boolean isNode();
 
-	boolean isLeaf();
+  boolean isLeaf();
 
-	boolean isDynamic();
+  boolean isDynamic();
 
 }

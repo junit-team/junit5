@@ -8,6 +8,6 @@ package org.junit.core;
 @FunctionalInterface
 public interface Executable {
 
-	void execute() throws Throwable;
+  void execute() throws Throwable;
 
 }

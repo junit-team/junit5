@@ -11,40 +11,38 @@ import org.junit.core.TestDescriptor;
  */
 public class JUnit5Demo {
 
-	@SuppressWarnings("serial")
-	public static void main(String... args) {
+  @SuppressWarnings("serial")
+  public static void main(String... args) {
 
-		TestPlan testPlan = TestPlan.builder()
-				.configuration(new HashMap<String, String>(){{
-					put("category", "smoke");
-				}})
-				.packageNames("org.example.service.impl")
-				.includePatterns("*Tests")
-				.descriptorIds("junit5:org.example.UserTests#fullname()")
-				.listeners(new ConsoleLoggingListener())
-				.build();
+    TestPlan testPlan = TestPlan.builder().configuration(new HashMap<String, String>() {
+      {
+        put("category", "smoke");
+      }
+    }).packageNames("org.example.service.impl").includePatterns("*Tests")
+        .descriptorIds("junit5:org.example.UserTests#fullname()")
+        .listeners(new ConsoleLoggingListener()).build();
 
-		testPlan.start();
-		System.out.println("\tTest plan is active: " + testPlan.isActive());
+    testPlan.start();
+    System.out.println("\tTest plan is active: " + testPlan.isActive());
 
-		testPlan.pause();
-		System.out.println("\tTest plan is paused: " + testPlan.isPaused());
+    testPlan.pause();
+    System.out.println("\tTest plan is paused: " + testPlan.isPaused());
 
-		testPlan.restart();
-		System.out.println("\tTest plan is active: " + testPlan.isActive());
-		System.out.println("\tTest plan is paused: " + testPlan.isPaused());
+    testPlan.restart();
+    System.out.println("\tTest plan is active: " + testPlan.isActive());
+    System.out.println("\tTest plan is paused: " + testPlan.isPaused());
 
-		testPlan.stop();
-		System.out.println("\tTest plan is stopped: " + testPlan.isStopped());
-	}
+    testPlan.stop();
+    System.out.println("\tTest plan is stopped: " + testPlan.isStopped());
+  }
 
 
-	static class ConsoleLoggingListener implements TestPlanListener {
+  static class ConsoleLoggingListener implements TestPlanListener {
 
-		@Override
-		public void testCompleted(TestDescriptor testDescriptor) throws Exception {
-			System.out.println("Test completed for " + testDescriptor);
-		}
-	}
+    @Override
+    public void testCompleted(TestDescriptor testDescriptor) throws Exception {
+      System.out.println("Test completed for " + testDescriptor);
+    }
+  }
 
 }
