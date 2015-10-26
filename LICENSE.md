@@ -9,7 +9,7 @@ THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICE
 * **a)** in the case of the initial Contributor, the initial code and documentation distributed under this Agreement, and
 * **b)** in the case of each subsequent Contributor:
 	* **i)** changes to the Program, and
-	* **ii)** additions to the Program; 
+	* **ii)** additions to the Program;
 where such changes and/or additions to the Program originate from and are distributed by that particular Contributor. A Contribution 'originates' from a Contributor if it was added to the Program by such Contributor itself or anyone acting on such Contributor's behalf. Contributions do not include additions to the Program which: **(i)** are separate modules of software distributed in conjunction with the Program under their own license agreement, and **(ii)** are not derivative works of the Program.
 
 “Contributor” means any person or entity that distributes the Program.
@@ -38,11 +38,11 @@ A Contributor may choose to distribute the Program in object code form under its
 	* **i)** effectively disclaims on behalf of all Contributors all warranties and conditions, express and implied, including warranties or conditions of title and non-infringement, and implied warranties or conditions of merchantability and fitness for a particular purpose;
 	* **ii)** effectively excludes on behalf of all Contributors all liability for damages, including direct, indirect, special, incidental and consequential damages, such as lost profits;
 	* **iii)** states that any provisions which differ from this Agreement are offered by that Contributor alone and not by any other party; and
-	* **iv)** states that source code for the Program is available from such Contributor, and informs licensees how to obtain it in a reasonable manner on or through a medium customarily used for software exchange. 
+	* **iv)** states that source code for the Program is available from such Contributor, and informs licensees how to obtain it in a reasonable manner on or through a medium customarily used for software exchange.
 
 When the Program is made available in source code form:
 * **a)** it must be made available under this Agreement; and
-* **b)** a copy of this Agreement must be included with each copy of the Program. 
+* **b)** a copy of this Agreement must be included with each copy of the Program.
 
 Contributors may not remove or alter any copyright notices contained within the Program.
 
