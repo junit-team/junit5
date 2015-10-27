@@ -3,8 +3,8 @@ package org.junit.gen5.engine.junit5;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.TestListener;
 import org.junit.gen5.engine.TestPlanConfiguration;
-import org.opentestalliance.AssertionFailedError;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
@@ -18,10 +18,13 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
 import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
+import static org.junit.gen5.engine.TestListenerRegistry.notifyListeners;
 
 public class JUnit5TestEngine implements TestEngine {
   // TODO - SBE - could be replace by JUnit5TestEngine.class.getCanonicalName();
   private static final String JUNIT5_ENGINE_ID = "junit5";
+
+  private Iterable<TestListener> testListeners;
 
   @Override
   public String getId() {
@@ -32,16 +35,18 @@ public class JUnit5TestEngine implements TestEngine {
   public List<TestDescriptor> discoverTests(TestPlanConfiguration configuration) {
     List<Class<?>> testClasses = fetchTestClasses(configuration);
 
-    List<TestDescriptor> testDescriptors = testClasses.stream()
+    List<TestDescriptor> testDescriptors = testClasses.parallelStream()
         .map(Class::getDeclaredMethods)
         .flatMap(Arrays::stream)
         .filter(method -> method.isAnnotationPresent(Test.class))
         .map(method -> new JavaTestDescriptor(getId(), method))
+        .peek(testDescriptor -> notifyListeners(testListener -> testListener.testFound(testDescriptor)))
         .collect(Collectors.toList());
 
     testDescriptors.addAll(
-        configuration.getUniqueIds().stream()
+        configuration.getUniqueIds().parallelStream()
             .map(JavaTestDescriptor::from)
+            .peek(testDescriptor -> notifyListeners(testListener -> testListener.testFound(testDescriptor)))
             .collect(Collectors.toList())
     );
 
@@ -81,21 +86,18 @@ public class JUnit5TestEngine implements TestEngine {
   public void execute(Collection<TestDescriptor> testDescriptors) {
     for (TestDescriptor testDescriptor : testDescriptors) {
       try {
+        notifyListeners(testListener -> testListener.testStarted(testDescriptor));
         JavaTestDescriptor javaTestDescriptor = (JavaTestDescriptor) testDescriptor;
         Object testInstance = newInstance(javaTestDescriptor.getTestClass());
         invokeMethod(javaTestDescriptor.getTestMethod(), testInstance);
-        System.out.println(String.format("Test %s succeeded!", testDescriptor.getUniqueId()));
+        notifyListeners(testListener -> testListener.testSucceeded(testDescriptor));
       } catch (InvocationTargetException e) {
         if (e.getTargetException() instanceof TestSkippedException) {
-          System.out.println(String.format("Test %s skipped!", testDescriptor.getUniqueId()));
+          notifyListeners(testListener -> testListener.testSkipped(testDescriptor, e.getTargetException()));
         } else if (e.getTargetException() instanceof TestAbortedException) {
-          System.out.println(String.format("Test %s aborted!", testDescriptor.getUniqueId()));
-        } else if (e.getTargetException() instanceof AssertionFailedError) {
-          System.out.println(String.format("Test %s failed!", testDescriptor.getUniqueId()));
-        } else if (e.getTargetException() instanceof RuntimeException) {
-          throw (RuntimeException) e.getTargetException();
+          notifyListeners(testListener -> testListener.testAborted(testDescriptor, e.getTargetException()));
         } else {
-          throw new RuntimeException(e.getTargetException());
+          notifyListeners(testListener -> testListener.testFailed(testDescriptor, e.getTargetException()));
         }
       } catch (NoSuchMethodException | InstantiationException | IllegalAccessException e) {
         throw new IllegalArgumentException(

@@ -1,11 +1,13 @@
 package org.junit.gen5.launcher;
 
-import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.TestListener;
 import org.junit.gen5.engine.TestPlanConfiguration;
 
-import java.util.List;
 import java.util.ServiceLoader;
+
+import static org.junit.gen5.engine.TestEngineRegistry.lookupAllTestEngines;
+import static org.junit.gen5.engine.TestListenerRegistry.notifyListeners;
 
 public class Launcher {
   private volatile ServiceLoader<TestEngine> testEngines;
@@ -19,16 +21,12 @@ public class Launcher {
   }
 
   public void execute(TestPlan testPlan) {
-    for (TestEngine testEngine : lookupAllTestEngines()) {
-      List<TestDescriptor> tests = testPlan.getAllTestsForTestEngine(testEngine);
-      testEngine.execute(tests);
-    }
-  }
+    notifyListeners(TestListener::testExecutionStarted);
 
-  private Iterable<TestEngine> lookupAllTestEngines() {
-    if (testEngines == null) {
-      testEngines = ServiceLoader.load(TestEngine.class);
+    for (TestEngine testEngine : lookupAllTestEngines()) {
+      testEngine.execute(testPlan.getAllTestsForTestEngine(testEngine));
     }
-    return testEngines;
+
+    notifyListeners(TestListener::testExecutionFinished);
   }
 }
