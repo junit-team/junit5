@@ -1,6 +1,7 @@
 dependencies {
 	testCompile(project(':sample-extension'))
 	testCompile(project(':junit-launcher'))
+	testCompile(project(':junit-console'))
 	testCompile(project(':junit5-api'))
 	testRuntime(project(':junit5-engine'))
 }

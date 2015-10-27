@@ -1,6 +1,7 @@
 package org.junit.gen5.engine;
 
-import java.util.ServiceLoader;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -8,12 +9,13 @@ import java.util.function.Consumer;
  * @since 5.0
  */
 public class TestListenerRegistry {
-  private static Iterable<TestListener> testListeners;
+  private static List<TestListener> testListeners = new LinkedList<>();
+
+  public static void registerListener(TestListener testListener) {
+    testListeners.add(testListener);
+  }
 
   public static Iterable<TestListener> lookupAllTestListeners() {
-    if (testListeners == null) {
-      testListeners = ServiceLoader.load(TestListener.class);
-    }
     return testListeners;
   }
 
