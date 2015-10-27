@@ -34,7 +34,7 @@ gradlew clean install
 
  - **Group ID**: `org.junit`
  - **Version**: `5.0.0.BUILD-SNAPSHOT`
- - **Artifact IDs**: `junit-core`, `junit-engine`, `junit-interceptor`, `junit-launch`, `junit4-bridge`
+ - **Artifact IDs**: `junit-core`, `junit-engine`, `junit-interceptor`, `junit-launcher`, `junit4-bridge`
 
 
 ## Contributing
