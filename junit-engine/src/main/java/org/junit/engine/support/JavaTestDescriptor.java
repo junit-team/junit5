@@ -42,13 +42,7 @@ public class JavaTestDescriptor implements TestDescriptor {
 	private static final Pattern UID_PATTERN = Pattern.compile("^(.+):(.+)#(.+)\\((.*)\\)$");
 
 
-	private final Class<?> testClass;
-
-	private final Method testMethod;
-
-	private final boolean dynamic;
-
-	private final String uniqueId;
+	private final String id;
 
 	private final String engineId;
 
@@ -59,6 +53,12 @@ public class JavaTestDescriptor implements TestDescriptor {
 	private final TestDescriptor parent;
 
 	private final List<TestDescriptor> children;
+
+	private final Class<?> testClass;
+
+	private final Method testMethod;
+
+	private final boolean dynamic;
 
 
 	public static JavaTestDescriptor from(final String uid) throws Exception {
@@ -126,7 +126,7 @@ public class JavaTestDescriptor implements TestDescriptor {
 		this.children = (children != null ? unmodifiableList(children) : emptyList());
 		this.engineId = engineId;
 		this.testId = createTestId(testClass, testMethod);
-		this.uniqueId = this.engineId + ":" + this.testId;
+		this.id = this.engineId + ":" + this.testId;
 	}
 
 
