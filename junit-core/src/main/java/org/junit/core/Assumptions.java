@@ -30,6 +30,10 @@ public final class Assumptions {
 			try {
 				executable.execute();
 			}
+			catch (AssertionError | RuntimeException e) {
+				// rethrow
+				throw e;
+			}
 			catch (Throwable e) {
 				// TODO Don't wrap Throwables such as OutOfMemoryError, etc.
 				throw new RuntimeException("Wrapped exception thrown from Executable", e);
