@@ -108,6 +108,10 @@ public class JavaTestDescriptor implements TestDescriptor {
 	}
 
 
+	public JavaTestDescriptor(String engineId, Method testMethod) {
+		this(engineId, null, testMethod, false, null, null);
+	}
+
 	public JavaTestDescriptor(String engineId, Class<?> testClass, Method testMethod) {
 		this(engineId, testClass, testMethod, false, null, null);
 	}
@@ -116,7 +120,12 @@ public class JavaTestDescriptor implements TestDescriptor {
 			TestDescriptor parent, List<TestDescriptor> children) {
 
 		Preconditions.notEmpty(engineId, "engineId must not be null or empty");
-		Preconditions.notNull(testClass, "testClass must not be null");
+		if (testMethod == null) {
+			Preconditions.notNull(testClass, "testClass must not be null");
+		} else {
+			Preconditions.notNull(testMethod, "testMethod must not be null");
+			testClass = testMethod.getDeclaringClass();
+		}
 
 		this.testClass = testClass;
 		this.testMethod = testMethod;

@@ -29,21 +29,27 @@ public class JavaTestDescriptorTests {
 	@Test
 	public void constructFromMethodWithoutParameters() throws Exception {
 		Method testMethod = getClass().getDeclaredMethod("test");
-		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, getClass(), testMethod);
+		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
 
 		System.out.println("DEBUG - " + descriptor);
 		assertEqual(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
 		assertEqual(TEST_METHOD_ID, descriptor.getTestId());
+		assertEqual(TEST_METHOD_UID, descriptor.getId());
+		assertEqual(getClass(), descriptor.getTestClass());
+		assertEqual(testMethod, descriptor.getTestMethod());
 	}
 
 	@Test
 	public void constructFromMethodWithParameters() throws Exception {
 		Method testMethod = getClass().getDeclaredMethod("test", String.class, BigDecimal.class);
-		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, getClass(), testMethod);
+		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
 
 		System.out.println("DEBUG - " + descriptor);
 		assertEqual(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
 		assertEqual(TEST_METHOD_STRING_BIGDECIMAL_ID, descriptor.getTestId());
+		assertEqual(TEST_METHOD_STRING_BIGDECIMAL_UID, descriptor.getId());
+		assertEqual(getClass(), descriptor.getTestClass());
+		assertEqual(testMethod, descriptor.getTestMethod());
 	}
 
 	@Test
