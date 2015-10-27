@@ -1,5 +1,6 @@
 package org.junit.gen5.api;
 
+import java.util.Objects;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -129,13 +130,13 @@ public final class Assertions {
 	}
 
 	public static void assertEqual(Object expected, Object actual, String message) {
-		if (!ObjectUtils.nullSafeEquals(expected, actual)) {
+		if (!Objects.equals(expected, actual)) {
 			failNotEqual(expected, actual, message);
 		}
 	}
 
 	public static void assertEqual(Object expected, Object actual, Supplier<String> messageSupplier) {
-		if (!ObjectUtils.nullSafeEquals(expected, actual)) {
+		if (!Objects.equals(expected, actual)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
@@ -145,13 +146,13 @@ public final class Assertions {
 	}
 
 	public static void assertNotEqual(Object unexpected, Object actual, String message) {
-		if (ObjectUtils.nullSafeEquals(unexpected, actual)) {
+		if (Objects.equals(unexpected, actual)) {
 			failEqual(actual, message);
 		}
 	}
 
 	public static void assertNotEqual(Object unexpected, Object actual, Supplier<String> messageSupplier) {
-		if (ObjectUtils.nullSafeEquals(unexpected, actual)) {
+		if (Objects.equals(unexpected, actual)) {
 			failEqual(actual, nullSafeGet(messageSupplier));
 		}
 	}

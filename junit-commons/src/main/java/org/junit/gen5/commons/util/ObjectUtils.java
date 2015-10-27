@@ -18,10 +18,6 @@ public final class ObjectUtils {
 		return (charSequence == null || charSequence.length() == 0);
 	}
 
-	public static boolean nullSafeEquals(Object obj1, Object obj2) {
-		return (obj1 == null ? obj2 == null : obj1.equals(obj2));
-	}
-
 	public static String nullSafeToString(Class<?>... classes) {
 		if (classes == null || classes.length == 0) {
 			return "";
