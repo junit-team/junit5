@@ -1,5 +1,5 @@
 
-package org.junit.core.util;
+package org.junit.gen5.commons.util;
 
 import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;

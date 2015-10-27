@@ -9,14 +9,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.engine.Engine;
-import org.junit.gen5.engine.EngineTestDescription;
+import org.junit.gen5.engine.TestDescriptor;
 
 public class Launcher {
 
-	private final Map<String, Map<TestIdentifier, EngineTestDescription>> testDescriptionsByEngine = new LinkedHashMap<>();
+	private final Map<String, Map<TestIdentifier, TestDescriptor>> testDescriptionsByEngine = new LinkedHashMap<>();
 
-	public TestPlan discoverTests(String className) {
-		TestPlan testPlan = new TestPlan();
+	public TestExecutionPlan discoverTests(String className) {
+		TestExecutionPlan testPlan = new TestExecutionPlan();
 		for (Engine engine : discoverEngines()) {
 			testPlan.addTestIdentifiers(discoverTests(className, engine));
 		}
@@ -24,9 +24,9 @@ public class Launcher {
 	}
 
 	private Set<TestIdentifier> discoverTests(String className, Engine engine) {
-		List<EngineTestDescription> discoveredTests = engine.discoverTests(className);
+		List<TestDescriptor> discoveredTests = engine.discoverTests(className);
 		
-		Map<TestIdentifier, EngineTestDescription> engineTestDescriptionsByTestId = new LinkedHashMap<>();
+		Map<TestIdentifier, TestDescriptor> engineTestDescriptionsByTestId = new LinkedHashMap<>();
 		discoveredTests.forEach(testDescription -> engineTestDescriptionsByTestId.put(
 				new TestIdentifier(engine.getId(), testDescription.getId(), testDescription.getDisplayName()),
 				testDescription));
@@ -36,14 +36,14 @@ public class Launcher {
 	}
 
 	// TODO no exceptions please
-	public void execute(TestPlan testPlan) throws Exception {
+	public void execute(TestExecutionPlan testPlan) throws Exception {
 		for (Engine engine : discoverEngines()) {
-			Map<TestIdentifier, EngineTestDescription> engineTestDescriptions = testDescriptionsByEngine
+			Map<TestIdentifier, TestDescriptor> engineTestDescriptions = testDescriptionsByEngine
 					.get(engine.getId());
 			List<TestIdentifier> testIdentifiers = testPlan.getTestIdentifiers();
 			List<TestIdentifier> filtered = engineTestDescriptions.keySet().stream()
 					.filter(testIdentifier -> testIdentifiers.contains(testIdentifier)).collect(Collectors.toList());
-			List<EngineTestDescription> testDescriptions = new ArrayList<>();
+			List<TestDescriptor> testDescriptions = new ArrayList<>();
 			for (TestIdentifier testIdentifier : filtered) {
 				testDescriptions.add(lookup(engine, testIdentifier));
 			}
@@ -51,7 +51,7 @@ public class Launcher {
 		}
 	}
 
-	private EngineTestDescription lookup(Engine engine, TestIdentifier testIdentifier) {
+	private TestDescriptor lookup(Engine engine, TestIdentifier testIdentifier) {
 		return testDescriptionsByEngine.get(engine.getId()).get(testIdentifier);
 	}
 

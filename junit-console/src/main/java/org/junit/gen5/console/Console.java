@@ -1,7 +1,7 @@
 package org.junit.gen5.console;
 
 import org.junit.gen5.launcher.Launcher;
-import org.junit.gen5.launcher.TestPlan;
+import org.junit.gen5.launcher.TestExecutionPlan;
 
 public class Console {
 
@@ -12,7 +12,7 @@ public class Console {
 		Launcher launcher = new Launcher();
 
 		// TODO Launch parameters: Provide configuration
-		TestPlan testPlan = launcher.discoverTests(className);
+		TestExecutionPlan testPlan = launcher.discoverTests(className);
 
 		// TODO Provide means to allow manipulation of test plan?
 		launcher.execute(testPlan);

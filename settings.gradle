@@ -1,5 +1,6 @@
 rootProject.name = "junit-lambda"
 
+include "junit-commons"
 include "junit-console"
 include "junit-engine-api"
 include "junit-launcher"
@@ -8,7 +9,6 @@ include "junit4-engine"
 include "junit5-api"
 include "junit5-engine"
 include "open-test-alliance"
-include "old-junit-core"
 
 include "sample-extension"
 include "sample-project"

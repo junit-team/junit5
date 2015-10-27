@@ -1,5 +1,4 @@
-
-package org.junit.core;
+package org.junit.gen5.api;
 
 /**
  * @author Sam Brannen

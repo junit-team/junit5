@@ -1,5 +1,4 @@
-
-package org.junit.core;
+package org.junit.gen5.api;
 
 import org.opentestalliance.TestAbortedException;
 
@@ -29,6 +28,10 @@ public final class Assumptions {
 		if (condition) {
 			try {
 				executable.execute();
+			}
+			catch (AssertionError | RuntimeException e) {
+				// rethrow
+				throw e;
 			}
 			catch (Throwable e) {
 				// TODO Don't wrap Throwables such as OutOfMemoryError, etc.

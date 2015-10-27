@@ -1,2 +1,4 @@
 dependencies {
+	compile(project(':open-test-alliance'))
+	compile(project(':junit-commons'))
 }

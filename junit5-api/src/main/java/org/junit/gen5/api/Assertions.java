@@ -1,11 +1,10 @@
-
-package org.junit.core;
+package org.junit.gen5.api;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-import org.junit.core.util.ObjectUtils;
-import org.opentestalliance.AssertionFailedException;
+import org.junit.gen5.commons.util.ObjectUtils;
+import org.opentestalliance.AssertionFailedError;
 
 /**
  * @author JUnit Community
@@ -20,9 +19,9 @@ public final class Assertions {
 
 	public static void fail(String message) {
 		if (message == null) {
-			throw new AssertionFailedException();
+			throw new AssertionFailedError();
 		}
-		throw new AssertionFailedException(message);
+		throw new AssertionFailedError(message);
 	}
 
 	public static void fail(Supplier<String> messageSupplier) {
@@ -205,10 +204,10 @@ public final class Assertions {
 			else {
 				String message = Assertions.format(expected.getName(), actual.getClass().getName(),
 					"unexpected exception type thrown;");
-				throw new AssertionFailedException(message, actual);
+				throw new AssertionFailedError(message, actual);
 			}
 		}
-		throw new AssertionFailedException(
+		throw new AssertionFailedError(
 			String.format("expected %s to be thrown, but nothing was thrown", expected.getName()));
 	}
 

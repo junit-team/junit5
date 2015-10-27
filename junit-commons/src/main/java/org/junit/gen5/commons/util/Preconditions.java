@@ -1,5 +1,5 @@
 
-package org.junit.core.util;
+package org.junit.gen5.commons.util;
 
 import java.util.function.Supplier;
 
