@@ -7,6 +7,7 @@ import static org.junit.gen5.commons.util.ObjectUtils.nullSafeToString;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +15,7 @@ import java.util.regex.Pattern;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.engine.Engine;
 import org.junit.gen5.engine.TestDescriptor;
 
 import lombok.Data;
@@ -108,6 +110,10 @@ public class JavaTestDescriptor implements TestDescriptor {
 	@Override
 	public boolean isLeaf() {
 		return getChildren().isEmpty();
+	}
+	
+	public static JavaTestDescriptor fromMethod(Method testMethod, Engine testEngine) {
+		return new JavaTestDescriptor(testEngine.getId(), testMethod);
 	}
 
 	public static JavaTestDescriptor from(final String uid) throws Exception {

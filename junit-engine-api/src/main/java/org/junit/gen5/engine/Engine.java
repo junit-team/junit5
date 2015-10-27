@@ -7,7 +7,7 @@ public interface Engine {
 
 	String getId();
 
-	List<TestDescriptor> discoverTests(String className);
+	List<TestDescriptor> discoverTests(TestPlan testPlan);
 
-	void execute(List<TestDescriptor> testDescriptions) throws Exception;
+	void execute(List<TestDescriptor> testDescriptions) throws Throwable;
 }

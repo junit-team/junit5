@@ -10,21 +10,22 @@ import java.util.stream.Collectors;
 
 import org.junit.gen5.engine.Engine;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestPlan;
 
 public class Launcher {
 
 	private final Map<String, Map<TestIdentifier, TestDescriptor>> testDescriptionsByEngine = new LinkedHashMap<>();
 
-	public TestExecutionPlan discoverTests(String className) {
-		TestExecutionPlan testPlan = new TestExecutionPlan();
+	public TestExecutionPlan discoverTests(TestPlan testPlan) {
+		TestExecutionPlan executionPlan = new TestExecutionPlan();
 		for (Engine engine : discoverEngines()) {
-			testPlan.addTestIdentifiers(discoverTests(className, engine));
+			executionPlan.addTestIdentifiers(discoverTests(testPlan, engine));
 		}
-		return testPlan;
+		return executionPlan;
 	}
 
-	private Set<TestIdentifier> discoverTests(String className, Engine engine) {
-		List<TestDescriptor> discoveredTests = engine.discoverTests(className);
+	private Set<TestIdentifier> discoverTests(TestPlan testPlan, Engine engine) {
+		List<TestDescriptor> discoveredTests = engine.discoverTests(testPlan);
 		
 		Map<TestIdentifier, TestDescriptor> engineTestDescriptionsByTestId = new LinkedHashMap<>();
 		discoveredTests.forEach(testDescription -> engineTestDescriptionsByTestId.put(
@@ -36,7 +37,7 @@ public class Launcher {
 	}
 
 	// TODO no exceptions please
-	public void execute(TestExecutionPlan testPlan) throws Exception {
+	public void execute(TestExecutionPlan testPlan) throws Throwable {
 		for (Engine engine : discoverEngines()) {
 			Map<TestIdentifier, TestDescriptor> engineTestDescriptions = testDescriptionsByEngine
 					.get(engine.getId());
