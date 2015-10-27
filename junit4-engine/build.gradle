@@ -1,3 +1,4 @@
 dependencies {
 	compile(project(':junit-engine-api'))
+	compile('junit:junit:4.12')
 }

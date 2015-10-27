@@ -1,24 +1,21 @@
 # Gradle
 .gradle
-/build
-junit*/build
-open-test-alliance/build
+build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
 
 # Eclipse
 .classpath
-.settings
+.settings/
 .project
-bin
+bin/
 
 # IntelliJ
 *.iml
 *.ipr
 *.iws
-.idea
-spring-events.iml
+.idea/
 
 # Misc
 *.log

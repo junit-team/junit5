@@ -1,0 +1,4 @@
+dependencies {
+	compile(project(':junit-launcher'))
+	compile('junit:junit:4.12')
+}

@@ -1,5 +1,0 @@
-dependencies {
-	compile(project(':junit-core'))
-	compile(project(':junit-engine'))
-	compile('junit:junit:4.12')
-}
