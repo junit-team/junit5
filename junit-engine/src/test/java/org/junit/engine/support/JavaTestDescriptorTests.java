@@ -6,7 +6,7 @@ import static org.junit.core.Assertions.*;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
-import org.junit.Test;
+import org.junit.core.annotation.Test;
 
 /**
  * Unit tests for {@link JavaTestDescriptor}.
@@ -26,8 +26,8 @@ public class JavaTestDescriptorTests {
 	private static final String TEST_METHOD_STRING_BIGDECIMAL_UID = JUNIT_5_ENGINE_ID + ":" + TEST_METHOD_STRING_BIGDECIMAL_ID;
 
 
-	@Test
-	public void constructFromMethodWithoutParameters() throws Exception {
+	@org.junit.Test
+	public void constructFromMethod() throws Exception {
 		Method testMethod = getClass().getDeclaredMethod("test");
 		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
 
@@ -37,9 +37,22 @@ public class JavaTestDescriptorTests {
 		assertEqual(TEST_METHOD_UID, descriptor.getId());
 		assertEqual(getClass(), descriptor.getTestClass());
 		assertEqual(testMethod, descriptor.getTestMethod());
+		assertEqual("test", descriptor.getDisplayName(), "display name:");
 	}
 
-	@Test
+	@org.junit.Test
+	public void constructFromMethodWithCustomDisplayName() throws Exception {
+		Method testMethod = getClass().getDeclaredMethod("foo");
+		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
+
+		System.out.println("DEBUG - " + descriptor);
+		assertEqual(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
+		assertEqual(getClass(), descriptor.getTestClass());
+		assertEqual(testMethod, descriptor.getTestMethod());
+		assertEqual("custom test name", descriptor.getDisplayName(), "display name:");
+	}
+
+	@org.junit.Test
 	public void constructFromMethodWithParameters() throws Exception {
 		Method testMethod = getClass().getDeclaredMethod("test", String.class, BigDecimal.class);
 		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
@@ -50,10 +63,11 @@ public class JavaTestDescriptorTests {
 		assertEqual(TEST_METHOD_STRING_BIGDECIMAL_UID, descriptor.getId());
 		assertEqual(getClass(), descriptor.getTestClass());
 		assertEqual(testMethod, descriptor.getTestMethod());
+		assertEqual("test", descriptor.getDisplayName(), "display name:");
 	}
 
-	@Test
-	public void fromTestDescriptorIdForMethodWithoutParameters() throws Exception {
+	@org.junit.Test
+	public void fromTestDescriptorIdForMethod() throws Exception {
 		JavaTestDescriptor descriptor = JavaTestDescriptor.from(TEST_METHOD_UID);
 		assertNotNull(descriptor, "descriptor:");
 		assertEqual("test", descriptor.getDisplayName(), "display name:");
@@ -61,7 +75,7 @@ public class JavaTestDescriptorTests {
 		assertEqual(JavaTestDescriptorTests.class.getDeclaredMethod("test"), descriptor.getTestMethod());
 	}
 
-	@Test
+	@org.junit.Test
 	public void fromTestDescriptorIdForMethodWithParameters() throws Exception {
 		JavaTestDescriptor descriptor = JavaTestDescriptor.from(TEST_METHOD_STRING_BIGDECIMAL_UID);
 		assertNotNull(descriptor, "descriptor:");
@@ -75,6 +89,10 @@ public class JavaTestDescriptorTests {
 	}
 
 	void test(String txt, BigDecimal sum) {
+	}
+
+	@Test(name = "custom test name")
+	void foo() {
 	}
 
 }

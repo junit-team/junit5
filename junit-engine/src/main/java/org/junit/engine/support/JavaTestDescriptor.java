@@ -11,6 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.core.TestDescriptor;
+import org.junit.core.annotation.Test;
+import org.junit.core.util.ObjectUtils;
 import org.junit.core.util.Preconditions;
 
 import lombok.Data;
@@ -61,6 +63,52 @@ public class JavaTestDescriptor implements TestDescriptor {
 	private final boolean dynamic;
 
 
+	public JavaTestDescriptor(String engineId, Method testMethod) {
+		this(engineId, null, testMethod, false, null, null);
+	}
+
+	public JavaTestDescriptor(String engineId, Class<?> testClass, Method testMethod) {
+		this(engineId, testClass, testMethod, false, null, null);
+	}
+
+	public JavaTestDescriptor(String engineId, Class<?> testClass, Method testMethod, boolean dynamic,
+			TestDescriptor parent, List<TestDescriptor> children) {
+
+		Preconditions.notEmpty(engineId, "engineId must not be null or empty");
+		if (testMethod == null) {
+			Preconditions.notNull(testClass, "testClass must not be null");
+		} else {
+			Preconditions.notNull(testMethod, "testMethod must not be null");
+			testClass = testMethod.getDeclaringClass();
+		}
+
+		this.testClass = testClass;
+		this.testMethod = testMethod;
+		this.dynamic = dynamic;
+		this.displayName = determineDisplayName(testClass, testMethod);
+		this.parent = parent;
+		this.children = (children != null ? unmodifiableList(children) : emptyList());
+		this.engineId = engineId;
+		this.testId = createTestId(testClass, testMethod);
+		this.id = this.engineId + ":" + this.testId;
+	}
+
+
+	@Override
+	public boolean isRoot() {
+		return (getParent() == null);
+	}
+
+	@Override
+	public boolean isNode() {
+		return !isLeaf();
+	}
+
+	@Override
+	public boolean isLeaf() {
+		return getChildren().isEmpty();
+	}
+
 	public static JavaTestDescriptor from(final String uid) throws Exception {
 		Preconditions.notNull(uid, "TestDescriptor UID must not be null");
 
@@ -107,51 +155,20 @@ public class JavaTestDescriptor implements TestDescriptor {
 			nullSafeToString(testMethod.getParameterTypes())) : testClass.getName());
 	}
 
-
-	public JavaTestDescriptor(String engineId, Method testMethod) {
-		this(engineId, null, testMethod, false, null, null);
-	}
-
-	public JavaTestDescriptor(String engineId, Class<?> testClass, Method testMethod) {
-		this(engineId, testClass, testMethod, false, null, null);
-	}
-
-	public JavaTestDescriptor(String engineId, Class<?> testClass, Method testMethod, boolean dynamic,
-			TestDescriptor parent, List<TestDescriptor> children) {
-
-		Preconditions.notEmpty(engineId, "engineId must not be null or empty");
-		if (testMethod == null) {
-			Preconditions.notNull(testClass, "testClass must not be null");
-		} else {
-			Preconditions.notNull(testMethod, "testMethod must not be null");
-			testClass = testMethod.getDeclaringClass();
+	private static String determineDisplayName(Class<?> testClass, Method testMethod) {
+		if (testMethod != null) {
+			Test test = testMethod.getAnnotation(Test.class);
+			if (test != null) {
+				String customName = test.name();
+				if (!ObjectUtils.isEmpty(customName)) {
+					return customName;
+				}
+			}
+			return testMethod.getName();
 		}
-
-		this.testClass = testClass;
-		this.testMethod = testMethod;
-		this.dynamic = dynamic;
-		this.displayName = (testMethod != null ? testMethod.getName() : testClass.getSimpleName());
-		this.parent = parent;
-		this.children = (children != null ? unmodifiableList(children) : emptyList());
-		this.engineId = engineId;
-		this.testId = createTestId(testClass, testMethod);
-		this.id = this.engineId + ":" + this.testId;
-	}
-
-
-	@Override
-	public boolean isRoot() {
-		return (getParent() == null);
-	}
-
-	@Override
-	public boolean isNode() {
-		return !isLeaf();
-	}
-
-	@Override
-	public boolean isLeaf() {
-		return getChildren().isEmpty();
+		else {
+			return testClass.getSimpleName();
+		}
 	}
 
 }
