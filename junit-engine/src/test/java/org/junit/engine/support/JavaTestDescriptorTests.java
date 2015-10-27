@@ -27,17 +27,19 @@ public class JavaTestDescriptorTests {
 
 
 	@Test
-	public void constructor() throws Exception {
-		Class<?> testClass = JavaTestDescriptorTests.class;
-		Method testMethod = testClass.getDeclaredMethod("test");
-		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, testClass, testMethod);
+	public void constructFromMethodWithoutParameters() throws Exception {
+		Method testMethod = getClass().getDeclaredMethod("test");
+		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, getClass(), testMethod);
 
 		System.out.println("DEBUG - " + descriptor);
 		assertEqual(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
 		assertEqual(TEST_METHOD_ID, descriptor.getTestId());
+	}
 
-		testMethod = testClass.getDeclaredMethod("test", String.class, BigDecimal.class);
-		descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, testClass, testMethod);
+	@Test
+	public void constructFromMethodWithParameters() throws Exception {
+		Method testMethod = getClass().getDeclaredMethod("test", String.class, BigDecimal.class);
+		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, getClass(), testMethod);
 
 		System.out.println("DEBUG - " + descriptor);
 		assertEqual(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
@@ -45,20 +47,23 @@ public class JavaTestDescriptorTests {
 	}
 
 	@Test
-	public void from() throws Exception {
+	public void fromTestDescriptorIdForMethodWithoutParameters() throws Exception {
 		JavaTestDescriptor descriptor = JavaTestDescriptor.from(TEST_METHOD_UID);
 		assertNotNull(descriptor, "descriptor:");
 		assertEqual("test", descriptor.getDisplayName(), "display name:");
 		assertEqual(JavaTestDescriptorTests.class, descriptor.getTestClass());
 		assertEqual(JavaTestDescriptorTests.class.getDeclaredMethod("test"), descriptor.getTestMethod());
+	}
 
-		descriptor = JavaTestDescriptor.from(TEST_METHOD_STRING_BIGDECIMAL_UID);
+	@Test
+	public void fromTestDescriptorIdForMethodWithParameters() throws Exception {
+		JavaTestDescriptor descriptor = JavaTestDescriptor.from(TEST_METHOD_STRING_BIGDECIMAL_UID);
 		assertNotNull(descriptor, "descriptor:");
 		assertEqual("test", descriptor.getDisplayName(), "display name:");
-		assertEqual(JavaTestDescriptorTests.class, descriptor.getTestClass());
-		assertEqual(JavaTestDescriptorTests.class.getDeclaredMethod("test", String.class, BigDecimal.class),
-			descriptor.getTestMethod());
+		assertEqual(getClass(), descriptor.getTestClass());
+		assertEqual(getClass().getDeclaredMethod("test", String.class, BigDecimal.class), descriptor.getTestMethod());
 	}
+
 
 	void test() {
 	}
