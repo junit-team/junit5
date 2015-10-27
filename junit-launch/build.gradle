@@ -1,4 +1,5 @@
 dependencies {
 	compile(project(':junit-core'))
 	compile(project(':junit-engine'))
+	testCompile("junit:junit:${junit4Version}")
 }

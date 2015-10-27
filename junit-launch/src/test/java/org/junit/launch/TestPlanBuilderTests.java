@@ -3,17 +3,22 @@ package org.junit.launch;
 
 import java.util.HashMap;
 
+import org.junit.Test;
 import org.junit.core.TestDescriptor;
+import org.junit.launch.TestPlan.TestPlanBuilder;
 
 /**
+ * Unit tests for {@link TestPlanBuilder}.
+ *
  * @author Sam Brannen
  * @since 5.0
  */
-public class JUnit5Demo {
+public class TestPlanBuilderTests {
 
-	@SuppressWarnings("serial")
-	public static void main(String... args) {
+	@Test
+	public void testPlanBuilderDemo() {
 
+		@SuppressWarnings("serial")
 		TestPlan testPlan = TestPlan.builder()
 				.configuration(new HashMap<String, String>(){{
 					put("category", "smoke");

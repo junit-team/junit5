@@ -6,33 +6,29 @@ import static org.junit.core.Assertions.*;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
+import org.junit.Test;
+
 /**
  * Unit tests for {@link JavaTestDescriptor}.
- *
- * <p>To execute tests, simply run the {@link #main} method. The lack of
- * an exception means the tests passed.
  *
  * @author Sam Brannen
  * @since 5.0
  */
-public class JavaTestDescriptorTestCase {
+public class JavaTestDescriptorTests {
 
 	private static final String JUNIT_5_ENGINE_ID = "junit5";
 
-	private static final String TEST_METHOD_ID = "org.junit.engine.support.JavaTestDescriptorTestCase#test()";
+	private static final String TEST_METHOD_ID = JavaTestDescriptorTests.class.getName() + "#test()";
 	private static final String TEST_METHOD_UID = JUNIT_5_ENGINE_ID + ":" + TEST_METHOD_ID;
 
-	private static final String TEST_METHOD_STRING_BIGDECIMAL_ID = "org.junit.engine.support.JavaTestDescriptorTestCase#test(java.lang.String, java.math.BigDecimal)";
+	private static final String TEST_METHOD_STRING_BIGDECIMAL_ID = JavaTestDescriptorTests.class.getName()
+			+ "#test(java.lang.String, java.math.BigDecimal)";
 	private static final String TEST_METHOD_STRING_BIGDECIMAL_UID = JUNIT_5_ENGINE_ID + ":" + TEST_METHOD_STRING_BIGDECIMAL_ID;
 
 
-	public static void main(String... args) throws Exception {
-		constructor();
-		from();
-	}
-
-	private static void constructor() throws Exception {
-		Class<?> testClass = JavaTestDescriptorTestCase.class;
+	@Test
+	public void constructor() throws Exception {
+		Class<?> testClass = JavaTestDescriptorTests.class;
 		Method testMethod = testClass.getDeclaredMethod("test");
 		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, testClass, testMethod);
 
@@ -48,18 +44,19 @@ public class JavaTestDescriptorTestCase {
 		assertEqual(TEST_METHOD_STRING_BIGDECIMAL_ID, descriptor.getTestId());
 	}
 
-	private static void from() throws Exception {
+	@Test
+	public void from() throws Exception {
 		JavaTestDescriptor descriptor = JavaTestDescriptor.from(TEST_METHOD_UID);
 		assertNotNull(descriptor, "descriptor:");
 		assertEqual("test", descriptor.getDisplayName(), "display name:");
-		assertEqual(JavaTestDescriptorTestCase.class, descriptor.getTestClass());
-		assertEqual(JavaTestDescriptorTestCase.class.getDeclaredMethod("test"), descriptor.getTestMethod());
+		assertEqual(JavaTestDescriptorTests.class, descriptor.getTestClass());
+		assertEqual(JavaTestDescriptorTests.class.getDeclaredMethod("test"), descriptor.getTestMethod());
 
 		descriptor = JavaTestDescriptor.from(TEST_METHOD_STRING_BIGDECIMAL_UID);
 		assertNotNull(descriptor, "descriptor:");
 		assertEqual("test", descriptor.getDisplayName(), "display name:");
-		assertEqual(JavaTestDescriptorTestCase.class, descriptor.getTestClass());
-		assertEqual(JavaTestDescriptorTestCase.class.getDeclaredMethod("test", String.class, BigDecimal.class),
+		assertEqual(JavaTestDescriptorTests.class, descriptor.getTestClass());
+		assertEqual(JavaTestDescriptorTests.class.getDeclaredMethod("test", String.class, BigDecimal.class),
 			descriptor.getTestMethod());
 	}
 
