@@ -1,63 +1,34 @@
 package org.junit.gen5.launcher;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.junit.gen5.engine.Engine;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestPlan;
+import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.TestPlanConfiguration;
+
+import java.util.List;
+import java.util.ServiceLoader;
 
 public class Launcher {
+  private volatile ServiceLoader<TestEngine> testEngines;
 
-	private final Map<String, Map<TestIdentifier, TestDescriptor>> testDescriptionsByEngine = new LinkedHashMap<>();
+  public TestPlan createTestPlanWithConfiguration(TestPlanConfiguration configuration) {
+    TestPlan testPlan = new TestPlan();
+    for (TestEngine testEngine : lookupAllTestEngines()) {
+      testPlan.addTests(testEngine.discoverTests(configuration));
+    }
+    return testPlan;
+  }
 
-	public TestExecutionPlan discoverTests(TestPlan testPlan) {
-		TestExecutionPlan executionPlan = new TestExecutionPlan();
-		for (Engine engine : discoverEngines()) {
-			executionPlan.addTestIdentifiers(discoverTests(testPlan, engine));
-		}
-		return executionPlan;
-	}
+  public void execute(TestPlan testPlan) {
+    for (TestEngine testEngine : lookupAllTestEngines()) {
+      List<TestDescriptor> tests = testPlan.getAllTestsForTestEngine(testEngine);
+      testEngine.execute(tests);
+    }
+  }
 
-	private Set<TestIdentifier> discoverTests(TestPlan testPlan, Engine engine) {
-		List<TestDescriptor> discoveredTests = engine.discoverTests(testPlan);
-		
-		Map<TestIdentifier, TestDescriptor> engineTestDescriptionsByTestId = new LinkedHashMap<>();
-		discoveredTests.forEach(testDescription -> engineTestDescriptionsByTestId.put(
-				new TestIdentifier(engine.getId(), testDescription.getId(), testDescription.getDisplayName()),
-				testDescription));
-		testDescriptionsByEngine.put(engine.getId(), engineTestDescriptionsByTestId);
-
-		return engineTestDescriptionsByTestId.keySet();
-	}
-
-	// TODO no exceptions please
-	public void execute(TestExecutionPlan testPlan) throws Throwable {
-		for (Engine engine : discoverEngines()) {
-			Map<TestIdentifier, TestDescriptor> engineTestDescriptions = testDescriptionsByEngine
-					.get(engine.getId());
-			List<TestIdentifier> testIdentifiers = testPlan.getTestIdentifiers();
-			List<TestIdentifier> filtered = engineTestDescriptions.keySet().stream()
-					.filter(testIdentifier -> testIdentifiers.contains(testIdentifier)).collect(Collectors.toList());
-			List<TestDescriptor> testDescriptions = new ArrayList<>();
-			for (TestIdentifier testIdentifier : filtered) {
-				testDescriptions.add(lookup(engine, testIdentifier));
-			}
-			engine.execute(testDescriptions);
-		}
-	}
-
-	private TestDescriptor lookup(Engine engine, TestIdentifier testIdentifier) {
-		return testDescriptionsByEngine.get(engine.getId()).get(testIdentifier);
-	}
-
-	private Iterable<Engine> discoverEngines() {
-		return ServiceLoader.load(Engine.class);
-	}
-
+  private Iterable<TestEngine> lookupAllTestEngines() {
+    if (testEngines == null) {
+      testEngines = ServiceLoader.load(TestEngine.class);
+    }
+    return testEngines;
+  }
 }

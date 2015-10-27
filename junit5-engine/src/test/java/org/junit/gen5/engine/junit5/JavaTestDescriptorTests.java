@@ -34,7 +34,7 @@ public class JavaTestDescriptorTests {
 		System.out.println("DEBUG - " + descriptor);
 		assertEqual(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
 		assertEqual(TEST_METHOD_ID, descriptor.getTestId());
-		assertEqual(TEST_METHOD_UID, descriptor.getId());
+		assertEqual(TEST_METHOD_UID, descriptor.getUniqueId());
 		assertEqual(getClass(), descriptor.getTestClass());
 		assertEqual(testMethod, descriptor.getTestMethod());
 		assertEqual("test", descriptor.getDisplayName(), "display name:");
@@ -60,7 +60,7 @@ public class JavaTestDescriptorTests {
 		System.out.println("DEBUG - " + descriptor);
 		assertEqual(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
 		assertEqual(TEST_METHOD_STRING_BIGDECIMAL_ID, descriptor.getTestId());
-		assertEqual(TEST_METHOD_STRING_BIGDECIMAL_UID, descriptor.getId());
+		assertEqual(TEST_METHOD_STRING_BIGDECIMAL_UID, descriptor.getUniqueId());
 		assertEqual(getClass(), descriptor.getTestClass());
 		assertEqual(testMethod, descriptor.getTestMethod());
 		assertEqual("test", descriptor.getDisplayName(), "display name:");
