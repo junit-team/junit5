@@ -12,3 +12,16 @@ task runSampleTestCase(type: JavaExec) {
 	main = 'org.junit.gen5.console.ConsoleRunner'
 	args 'com.example.SampleTestCase'
 }
+
+test {
+	description = 'Runs JUnit unit tests.'
+	dependsOn runSampleTestCase
+	useJUnit()
+
+	scanForTestClasses = false
+	include(['**/*Tests.class', '**/*Test.class'])
+	// Since we set scanForTestClasses to false, we need to filter out inner
+	// classes with the "$" pattern; otherwise, using -Dtest.single=MyTests to
+	// run MyTests by itself will fail if MyTests contains any inner classes.
+	exclude(['**/Abstract*.class', '**/*$*'])
+}
