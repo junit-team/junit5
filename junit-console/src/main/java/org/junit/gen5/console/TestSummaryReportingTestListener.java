@@ -1,7 +1,8 @@
 package org.junit.gen5.console;
 
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestListener;
+import org.junit.gen5.engine.TestExecutionListener;
+import org.junit.gen5.engine.TestPlanExecutionListener;
 
 import java.io.PrintStream;
 
@@ -9,14 +10,15 @@ import java.io.PrintStream;
  * @author Stefan Bechtold
  * @since 5.0
  */
-public class TestSummaryReportingTestListener implements TestListener {
+public class TestSummaryReportingTestListener implements TestPlanExecutionListener, TestExecutionListener {
+
   private final PrintStream out;
 
-  int testsFound;
-  int testsSkipped;
-  int testsAborted;
-  int testsSucceeded;
-  int testsFailed;
+  private int testsFound;
+  private int testsSkipped;
+  private int testsAborted;
+  private int testsSucceeded;
+  private int testsFailed;
 
   private long timeStarted;
   private long timePaused;
@@ -100,4 +102,5 @@ public class TestSummaryReportingTestListener implements TestListener {
   public void testSucceeded(TestDescriptor testDescriptor) {
     testsSucceeded++;
   }
+
 }

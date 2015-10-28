@@ -3,7 +3,7 @@ package org.junit.gen5.engine.junit5;
 import static java.lang.String.format;
 import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
 import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
-import static org.junit.gen5.engine.TestListenerRegistry.notifyListeners;
+import static org.junit.gen5.engine.TestListenerRegistry.notifyTestExecutionListeners;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -37,13 +37,13 @@ public class JUnit5TestEngine implements TestEngine {
         .flatMap(Arrays::stream)
         .filter(method -> method.isAnnotationPresent(Test.class))
         .map(method -> new JavaTestDescriptor(getId(), method))
-        .peek(testDescriptor -> notifyListeners(testListener -> testListener.testFound(testDescriptor)))
+        .peek(testDescriptor -> notifyTestExecutionListeners(testListener -> testListener.testFound(testDescriptor)))
         .collect(Collectors.toList());
 
     testDescriptors.addAll(
         specification.getUniqueIds().stream()
             .map(JavaTestDescriptor::from)
-            .peek(testDescriptor -> notifyListeners(testListener -> testListener.testFound(testDescriptor)))
+            .peek(testDescriptor -> notifyTestExecutionListeners(testListener -> testListener.testFound(testDescriptor)))
             .collect(Collectors.toList())
     );
 
@@ -83,18 +83,18 @@ public class JUnit5TestEngine implements TestEngine {
   public void execute(Collection<TestDescriptor> testDescriptors) {
     for (TestDescriptor testDescriptor : testDescriptors) {
       try {
-        notifyListeners(testListener -> testListener.testStarted(testDescriptor));
+        notifyTestExecutionListeners(testListener -> testListener.testStarted(testDescriptor));
         JavaTestDescriptor javaTestDescriptor = (JavaTestDescriptor) testDescriptor;
         Object testInstance = newInstance(javaTestDescriptor.getTestClass());
         invokeMethod(javaTestDescriptor.getTestMethod(), testInstance);
-        notifyListeners(testListener -> testListener.testSucceeded(testDescriptor));
+        notifyTestExecutionListeners(testListener -> testListener.testSucceeded(testDescriptor));
       } catch (InvocationTargetException e) {
         if (e.getTargetException() instanceof TestSkippedException) {
-          notifyListeners(testListener -> testListener.testSkipped(testDescriptor, e.getTargetException()));
+          notifyTestExecutionListeners(testListener -> testListener.testSkipped(testDescriptor, e.getTargetException()));
         } else if (e.getTargetException() instanceof TestAbortedException) {
-          notifyListeners(testListener -> testListener.testAborted(testDescriptor, e.getTargetException()));
+          notifyTestExecutionListeners(testListener -> testListener.testAborted(testDescriptor, e.getTargetException()));
         } else {
-          notifyListeners(testListener -> testListener.testFailed(testDescriptor, e.getTargetException()));
+          notifyTestExecutionListeners(testListener -> testListener.testFailed(testDescriptor, e.getTargetException()));
         }
       } catch (NoSuchMethodException | InstantiationException | IllegalAccessException e) {
         throw new IllegalArgumentException(

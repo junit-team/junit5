@@ -1,16 +1,17 @@
 package org.junit.gen5.console;
 
+import java.io.PrintStream;
 
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestListener;
-
-import java.io.PrintStream;
+import org.junit.gen5.engine.TestExecutionListener;
+import org.junit.gen5.engine.TestPlanExecutionListener;
 
 /**
  * @author Stefan Bechtold
  * @since 5.0
  */
-public class ColoredPrintingTestListener implements TestListener {
+public class ColoredPrintingTestListener implements TestPlanExecutionListener, TestExecutionListener {
+
   public static final String ANSI_RESET = "\u001B[0m";
   public static final String ANSI_BLACK = "\u001B[30m";
   public static final String ANSI_RED = "\u001B[31m";

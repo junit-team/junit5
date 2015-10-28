@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  * @author Sam Brannen
  * @since 5.0
  */
-public class TestListenerRegistry {
+public class TestListenerRegistry2 {
 
 	private static final List<TestExecutionListener> testExecutionListeners = new LinkedList<>();
 
