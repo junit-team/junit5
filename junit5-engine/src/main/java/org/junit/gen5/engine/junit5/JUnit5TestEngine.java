@@ -73,6 +73,19 @@ public class JUnit5TestEngine implements TestEngine {
 
 	@Override
 	public void execute(Collection<TestDescriptor> testDescriptors, TestExecutionListener testExecutionListener) {
+
+		// TODO Build a tree of TestDescriptors.
+		//
+		// Simply iterating over a collection is insufficient for our purposes. We need a
+		// tree (or some form of hierarchical data structure) in order to be able to
+		// execute each test within the correct scope.
+		//
+		// For example, we need to execute all test methods within a given test class as a
+		// group in order to:
+		//
+		// 1) retain the instance across test method invocations (if desired).
+		// 2) invoke class-level before & after methods _around_ the set of methods.
+
 		for (TestDescriptor testDescriptor : testDescriptors) {
 
 			Preconditions.condition(testDescriptor instanceof JavaTestDescriptor,
