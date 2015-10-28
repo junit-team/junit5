@@ -1,4 +1,7 @@
+
 package org.junit.gen5.api;
+
+import java.util.function.Supplier;
 
 import org.opentestalliance.TestAbortedException;
 
@@ -18,9 +21,33 @@ public final class Assumptions {
 		}
 	}
 
+	public static void assumeTrue(boolean condition, String message) {
+		if (!condition) {
+			throw new TestAbortedException("Assumption failed: " + message);
+		}
+	}
+
+	public static void assumeTrue(boolean condition, Supplier<String> messageSupplier) {
+		if (!condition) {
+			throw new TestAbortedException(messageSupplier.get());
+		}
+	}
+
 	public static void assumeFalse(boolean condition) {
 		if (condition) {
 			throw new TestAbortedException("Assumption failed: condition is not false");
+		}
+	}
+
+	public static void assumeFalse(boolean condition, String message) {
+		if (condition) {
+			throw new TestAbortedException(message);
+		}
+	}
+
+	public static void assumeFalse(boolean condition, Supplier<String> messageSupplier) {
+		if (condition) {
+			throw new TestAbortedException("Assumption failed: " + messageSupplier.get());
 		}
 	}
 
