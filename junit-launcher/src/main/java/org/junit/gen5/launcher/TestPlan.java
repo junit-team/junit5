@@ -22,6 +22,9 @@ public final class TestPlan {
   }
   private State state = State.NEW;
 
+  /**
+   * List of all TestDescriptors, including children
+   */
   private Collection<TestDescriptor> tests = new LinkedList<>();
   TestPlan() { /* no-op */ }
 
