@@ -32,9 +32,9 @@ gradlew clean install
 
 ### Dependency Metadata
 
- - **Group ID**: `org.junit`
- - **Version**: `5.0.0.BUILD-SNAPSHOT`
- - **Artifact IDs**: TODO
+- **Group ID**: `org.junit`
+- **Version**: `5.0.0.BUILD-SNAPSHOT`
+- **Artifact IDs**: TODO
 
 
 ## Contributing
