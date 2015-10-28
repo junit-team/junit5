@@ -29,7 +29,8 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
   }
 
   @Override
-  public void testPlanExecutionStarted() {
+  public void testPlanExecutionStarted(int numberOfStaticTests) {
+    testsFound = numberOfStaticTests;
     timeStarted = System.currentTimeMillis();
   }
 
@@ -75,7 +76,7 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
   }
 
   @Override
-  public void testFound(TestDescriptor testDescriptor) {
+  public void dynamicTestFound(TestDescriptor testDescriptor) {
     testsFound++;
   }
 

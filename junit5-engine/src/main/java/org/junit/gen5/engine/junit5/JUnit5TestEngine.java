@@ -1,23 +1,23 @@
 package org.junit.gen5.engine.junit5;
 
-import static java.lang.String.format;
-import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
-import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
-import static org.junit.gen5.engine.TestListenerRegistry.notifyTestExecutionListeners;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
+import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
+import static org.junit.gen5.engine.TestListenerRegistry.notifyTestExecutionListeners;
 
 public class JUnit5TestEngine implements TestEngine {
   // TODO - SBE - could be replace by JUnit5TestEngine.class.getCanonicalName();
@@ -37,14 +37,12 @@ public class JUnit5TestEngine implements TestEngine {
         .flatMap(Arrays::stream)
         .filter(method -> method.isAnnotationPresent(Test.class))
         .map(method -> new JavaTestDescriptor(getId(), method))
-        .peek(testDescriptor -> notifyTestExecutionListeners(testListener -> testListener.testFound(testDescriptor)))
-        .collect(Collectors.toList());
+        .collect(toList());
 
     testDescriptors.addAll(
         specification.getUniqueIds().stream()
             .map(JavaTestDescriptor::from)
-            .peek(testDescriptor -> notifyTestExecutionListeners(testListener -> testListener.testFound(testDescriptor)))
-            .collect(Collectors.toList())
+            .collect(toList())
     );
 
     return testDescriptors;

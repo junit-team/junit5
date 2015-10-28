@@ -1,10 +1,10 @@
 package org.junit.gen5.console;
 
-import java.io.PrintStream;
-
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanExecutionListener;
+
+import java.io.PrintStream;
 
 /**
  * @author Stefan Bechtold
@@ -29,8 +29,8 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
   }
 
   @Override
-  public void testPlanExecutionStarted() {
-    out.println("Test execution started.");
+  public void testPlanExecutionStarted(int numberOfStaticTests) {
+    out.printf("Test execution started. Number of static tests: %d%n", numberOfStaticTests);
   }
 
   @Override
@@ -54,7 +54,7 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
   }
 
   @Override
-  public void testFound(TestDescriptor testDescriptor) {
+  public void dynamicTestFound(TestDescriptor testDescriptor) {
     out.print(ANSI_GREEN);
     out.format("Test found:     %s", testDescriptor.toString());
     out.println(ANSI_RESET);

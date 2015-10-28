@@ -1,13 +1,13 @@
 
 package org.junit.gen5.launcher;
 
-import static org.junit.gen5.engine.TestListenerRegistry.*;
-import static org.junit.gen5.launcher.TestEngineRegistry.*;
-
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestListenerRegistry;
 import org.junit.gen5.engine.TestPlanExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
+
+import static org.junit.gen5.engine.TestListenerRegistry.notifyTestPlanExecutionListeners;
+import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
 /**
  * @author Stefan Bechtold
@@ -21,7 +21,7 @@ public class Launcher {
 		TestListenerRegistry.registerTestPlanExecutionListener(testListener);
 	}
 
-	public TestPlan createTestPlanWithConfiguration(TestPlanSpecification specification) {
+	public TestPlan discover(TestPlanSpecification specification) {
 		TestPlan testPlan = new TestPlan();
 		for (TestEngine testEngine : lookupAllTestEngines()) {
 			testPlan.addTests(testEngine.discoverTests(specification));
@@ -29,8 +29,15 @@ public class Launcher {
 		return testPlan;
 	}
 
-	public void execute(TestPlan testPlan) {
-		notifyTestPlanExecutionListeners(TestPlanExecutionListener::testPlanExecutionStarted);
+	public void execute(TestPlanSpecification specification) {
+		TestPlan plan = discover(specification);
+		execute(plan);
+	}
+
+	private void execute(TestPlan testPlan) {
+		notifyTestPlanExecutionListeners(
+				testPlanExecutionListener -> testPlanExecutionListener.testPlanExecutionStarted(testPlan.getTests().size())
+		);
 
 		for (TestEngine testEngine : lookupAllTestEngines()) {
 			testEngine.execute(testPlan.getAllTestsForTestEngine(testEngine));

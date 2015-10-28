@@ -8,7 +8,7 @@ package org.junit.gen5.engine;
  */
 public interface TestExecutionListener {
 
-	default void testFound(TestDescriptor testDescriptor) {
+	default void dynamicTestFound(TestDescriptor testDescriptor) {
 	};
 
 	default void testStarted(TestDescriptor testDescriptor) {

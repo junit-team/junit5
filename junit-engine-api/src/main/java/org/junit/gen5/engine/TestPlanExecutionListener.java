@@ -8,7 +8,7 @@ package org.junit.gen5.engine;
  */
 public interface TestPlanExecutionListener {
 
-	default void testPlanExecutionStarted() {
+	default void testPlanExecutionStarted(int numberOfStaticTests) {
 	};
 
 	default void testPlanExecutionPaused() {
