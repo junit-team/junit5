@@ -1,6 +1,8 @@
 package com.example;
 
+import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Test;
+import org.opentestalliance.AssertionFailedError;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
@@ -8,6 +10,28 @@ import org.opentestalliance.TestSkippedException;
  * Named *TestCase so Gradle will not try to run it.
  */
 class SampleTestCase {
+
+
+	boolean setupWasCalled = false;
+
+
+
+	@Before
+	void setup() {
+		this.setupWasCalled = true;
+	}
+
+
+	@Test
+	void verifyThatSetupWasCalled() {
+
+		if (!this.setupWasCalled)
+			throw new AssertionFailedError("@Before did NOT work");
+
+	}
+
+
+
 	@Test
 	void skippingTest() {
 		throw new TestSkippedException("This test will be skipped!");

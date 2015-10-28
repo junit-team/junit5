@@ -1,23 +1,24 @@
 package org.junit.gen5.engine.junit5;
 
+import static java.lang.String.format;
+import static java.util.stream.Collectors.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
+import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
+import static org.junit.gen5.engine.TestListenerRegistry.notifyTestExecutionListeners;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-
-import static java.lang.String.format;
-import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
-import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
-import static org.junit.gen5.engine.TestListenerRegistry.notifyTestExecutionListeners;
 
 public class JUnit5TestEngine implements TestEngine {
   // TODO - SBE - could be replace by JUnit5TestEngine.class.getCanonicalName();
@@ -82,9 +83,9 @@ public class JUnit5TestEngine implements TestEngine {
     for (TestDescriptor testDescriptor : testDescriptors) {
       try {
         notifyTestExecutionListeners(testListener -> testListener.testStarted(testDescriptor));
+
         JavaTestDescriptor javaTestDescriptor = (JavaTestDescriptor) testDescriptor;
-        Object testInstance = newInstance(javaTestDescriptor.getTestClass());
-        invokeMethod(javaTestDescriptor.getTestMethod(), testInstance);
+        this.handleTestExecution(javaTestDescriptor);
         notifyTestExecutionListeners(testListener -> testListener.testSucceeded(testDescriptor));
       } catch (InvocationTargetException e) {
         if (e.getTargetException() instanceof TestSkippedException) {
@@ -100,4 +101,34 @@ public class JUnit5TestEngine implements TestEngine {
       }
     }
   }
+
+
+  protected void handleTestExecution(JavaTestDescriptor javaTestDescriptor) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    Class<?> testClass = javaTestDescriptor.getTestClass();
+
+
+    List<Method> beforeMethods = this.findBeforeMethods(testClass);
+
+    System.err.println("BEFORE METHODS: " + beforeMethods);
+
+
+    Object testInstance = newInstance(testClass);
+    invokeMethod(javaTestDescriptor.getTestMethod(), testInstance);
+  }
+
+  private List<Method> findBeforeMethods(Class<?> testClass) {
+
+    List<Method> methods = new ArrayList<>();
+
+    //TODO port to streams
+    for(Method method: testClass.getDeclaredMethods()) {
+      for(Annotation annotation: method.getDeclaredAnnotations())
+        if (annotation.annotationType().equals(Before.class))
+          methods.add(method);
+    }
+
+    return methods;
+  }
+
+
 }
