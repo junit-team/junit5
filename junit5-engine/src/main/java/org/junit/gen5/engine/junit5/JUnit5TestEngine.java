@@ -1,17 +1,5 @@
 package org.junit.gen5.engine.junit5;
 
-import static java.lang.String.format;
-import static java.util.stream.Collectors.*;
-import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
-import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
-import static org.junit.gen5.engine.TestListenerRegistry.notifyTestExecutionListeners;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
@@ -21,11 +9,10 @@ import org.junit.gen5.engine.TestPlanSpecification;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.lang.reflect.Method;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
@@ -94,11 +81,11 @@ public class JUnit5TestEngine implements TestEngine {
   public void execute(Collection<TestDescriptor> testDescriptors, TestExecutionListener testExecutionListener) {
     for (TestDescriptor testDescriptor : testDescriptors) {
       try {
-        notifyTestExecutionListeners(testListener -> testListener.testStarted(testDescriptor));
+        testExecutionListener.testStarted(testDescriptor);
 
         JavaTestDescriptor javaTestDescriptor = (JavaTestDescriptor) testDescriptor;
         this.handleTestExecution(javaTestDescriptor);
-        notifyTestExecutionListeners(testListener -> testListener.testSucceeded(testDescriptor));
+        testExecutionListener.testSucceeded(testDescriptor);
       } catch (InvocationTargetException e) {
         if (e.getTargetException() instanceof TestSkippedException) {
           testExecutionListener.testSkipped(testDescriptor, e.getTargetException());
