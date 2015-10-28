@@ -4,6 +4,7 @@ package com.example;
 import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.api.Assumptions.*;
 
+import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Test;
 import org.opentestalliance.TestSkippedException;
@@ -13,17 +14,39 @@ import org.opentestalliance.TestSkippedException;
  */
 class SampleTestCase {
 
-	boolean setupCalled = false;
+	static boolean staticBeforeInvoked = false;
+
+	boolean beforeInvoked = false;
+
+	boolean afterInvoked = false;
+
+	boolean throwExceptionInAfterMethod = false;
 
 
 	@Before
-	void setup() {
-		this.setupCalled = true;
+	static void staticBefore() {
+		staticBeforeInvoked = true;
+	}
+
+	@Before
+	void before() {
+		this.beforeInvoked = true;
+	}
+
+	@After
+	void after() {
+		this.afterInvoked = true;
+		if (throwExceptionInAfterMethod) {
+			throw new RuntimeException("Exception thrown from @After method");
+		}
 	}
 
 	@Test
 	void methodLevelCallbacks() {
-		assertTrue(this.setupCalled, "@Before was not invoked");
+		assertTrue(this.beforeInvoked, "@Before was not invoked on instance method");
+		assertTrue(staticBeforeInvoked, "@Before was not invoked on static method");
+		assertFalse(this.afterInvoked, "@After should not have been invoked");
+		throwExceptionInAfterMethod = true;
 	}
 
 	@Test

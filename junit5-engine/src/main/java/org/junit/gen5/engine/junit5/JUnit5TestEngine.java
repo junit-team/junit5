@@ -1,5 +1,18 @@
 package org.junit.gen5.engine.junit5;
 
+import static java.lang.String.*;
+import static java.util.stream.Collectors.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
+import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
@@ -9,139 +22,116 @@ import org.junit.gen5.engine.TestPlanSpecification;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
-
-import static java.lang.String.format;
-import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
-import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
-
 public class JUnit5TestEngine implements TestEngine {
-  // TODO - SBE - could be replace by JUnit5TestEngine.class.getCanonicalName();
-  private static final String JUNIT5_ENGINE_ID = "junit5";
 
-  @Override
-  public String getId() {
-    return JUNIT5_ENGINE_ID;
-  }
+	// TODO - SBE - could be replaced by JUnit5TestEngine.class.getCanonicalName()
+	private static final String ENGINE_ID = "junit5";
 
-  @Override
-  public List<TestDescriptor> discoverTests(TestPlanSpecification specification) {
-    List<Class<?>> testClasses = fetchTestClasses(specification);
+	@Override
+	public String getId() {
+		return ENGINE_ID;
+	}
 
-    List<TestDescriptor> testDescriptors = testClasses.stream()
-        .map(Class::getDeclaredMethods)
-        .flatMap(Arrays::stream)
-        .filter(method -> method.isAnnotationPresent(Test.class))
-        .map(method -> new JavaTestDescriptor(getId(), method))
-        .collect(toList());
+	@Override
+	public List<TestDescriptor> discoverTests(TestPlanSpecification specification) {
+		List<Class<?>> testClasses = discoverTestClasses(specification);
 
-    testDescriptors.addAll(
-        specification.getUniqueIds().stream()
-            .map(JavaTestDescriptor::from)
-            .collect(toList())
-    );
+		List<TestDescriptor> testDescriptors = testClasses.stream()
+			.map(Class::getDeclaredMethods)
+			.flatMap(Arrays::stream)
+			.filter(method -> method.isAnnotationPresent(Test.class))
+			.map(method -> new JavaTestDescriptor(getId(), method))
+			.collect(toList());
 
-    return testDescriptors;
-  }
+		testDescriptors.addAll(
+			specification.getUniqueIds().stream()
+				.map(JavaTestDescriptor::from)
+				.collect(toList())
+		);
 
-  private List<Class<?>> fetchTestClasses(TestPlanSpecification testPlanSpecification) {
-    List<Class<?>> testClasses = new LinkedList<>();
+		return testDescriptors;
+	}
 
-    // Add specified test classes directly
-    testClasses.addAll(testPlanSpecification.getClasses());
+	private List<Class<?>> discoverTestClasses(TestPlanSpecification testPlanSpecification) {
+		List<Class<?>> testClasses = new ArrayList<>();
 
-    // Add test classes by name
-    for (String className : testPlanSpecification.getClassNames()) {
-      try {
-        testClasses.add(Class.forName(className));
-      } catch (ClassNotFoundException e) {
-        String msg = "Could not find test class '%s' in the classpath!";
-        throw new IllegalArgumentException(format(msg, className));
-      }
-    }
+		// Add specified test classes directly
+		testClasses.addAll(testPlanSpecification.getClasses());
 
-    // TODO - SBE - Add classes for packages
-    // TODO - SBE - Add classes for package names
-    // TODO - SBE - Add classes for paths
-    // TODO - SBE - Add classes for file names
+		// Add test classes by name
+		for (String className : testPlanSpecification.getClassNames()) {
+			try {
+				testClasses.add(Class.forName(className));
+			} catch (ClassNotFoundException e) {
+				throw new IllegalArgumentException(format("Failed to load test class '%s'", className));
+			}
+		}
 
-    return testClasses;
-  }
+		return testClasses;
+	}
 
-  @Override
-  public boolean supports(TestDescriptor testDescriptor) {
-    return testDescriptor instanceof JavaTestDescriptor;
-  }
+	@Override
+	public boolean supports(TestDescriptor testDescriptor) {
+		return testDescriptor instanceof JavaTestDescriptor;
+	}
 
-  @Override
-  public void execute(Collection<TestDescriptor> testDescriptors, TestExecutionListener testExecutionListener) {
-    for (TestDescriptor testDescriptor : testDescriptors) {
-      try {
-        testExecutionListener.testStarted(testDescriptor);
+	@Override
+	public void execute(Collection<TestDescriptor> testDescriptors, TestExecutionListener testExecutionListener) {
+		for (TestDescriptor testDescriptor : testDescriptors) {
+			try {
+				testExecutionListener.testStarted(testDescriptor);
 
-        JavaTestDescriptor javaTestDescriptor = (JavaTestDescriptor) testDescriptor;
-        this.handleTestExecution(javaTestDescriptor);
-        testExecutionListener.testSucceeded(testDescriptor);
-      } catch (InvocationTargetException e) {
-        if (e.getTargetException() instanceof TestSkippedException) {
-          testExecutionListener.testSkipped(testDescriptor, e.getTargetException());
-        } else if (e.getTargetException() instanceof TestAbortedException) {
-          testExecutionListener.testAborted(testDescriptor, e.getTargetException());
-        } else {
-          testExecutionListener.testFailed(testDescriptor, e.getTargetException());
-        }
-      } catch (NoSuchMethodException | InstantiationException | IllegalAccessException e) {
-        throw new IllegalArgumentException(
-            String.format("Test %s not well-formed and cannot be executed! ", testDescriptor.getUniqueId()));
-      }
-    }
-  }
+				JavaTestDescriptor javaTestDescriptor = (JavaTestDescriptor) testDescriptor;
+				executeTest(javaTestDescriptor);
+				testExecutionListener.testSucceeded(testDescriptor);
+			}
+			catch (InvocationTargetException ex) {
+				Throwable targetException = ex.getTargetException();
+				if (targetException instanceof TestSkippedException) {
+					testExecutionListener.testSkipped(testDescriptor, targetException);
+				}
+				else if (targetException instanceof TestAbortedException) {
+					testExecutionListener.testAborted(testDescriptor, targetException);
+				}
+				else {
+					testExecutionListener.testFailed(testDescriptor, targetException);
+				}
+			} catch (NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+				throw new IllegalStateException(
+					String.format("Test %s is not well-formed and cannot be executed", testDescriptor.getUniqueId()));
+			} catch (Exception ex) {
+				testExecutionListener.testFailed(testDescriptor, ex);
+			}
+		}
+	}
 
+	protected void executeTest(JavaTestDescriptor javaTestDescriptor) throws Exception {
+		Class<?> testClass = javaTestDescriptor.getTestClass();
 
-  protected void handleTestExecution(JavaTestDescriptor javaTestDescriptor) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-    Class<?> testClass = javaTestDescriptor.getTestClass();
-    Object testInstance = newInstance(testClass);
+		// TODO Extract test instantiation
+		Object testInstance = newInstance(testClass);
 
-    this.handleBeforeMethods(testClass, testInstance);
-    this.handleTestMethod(javaTestDescriptor, testInstance);
+		executeBeforeMethods(testClass, testInstance);
+		invokeMethod(javaTestDescriptor.getTestMethod(), testInstance);
+		executeAfterMethods(testClass, testInstance);
+	}
 
-  }
+	private void executeBeforeMethods(Class<?> testClass, Object testInstance) throws Exception {
+		for (Method method: findAnnotatedMethods(testClass, Before.class)) {
+			invokeMethod(method, testInstance);
+		}
+	}
 
-  private void handleTestMethod(JavaTestDescriptor javaTestDescriptor, Object testInstance) throws IllegalAccessException, InvocationTargetException {
-    invokeMethod(javaTestDescriptor.getTestMethod(), testInstance);
-  }
+	private void executeAfterMethods(Class<?> testClass, Object testInstance) throws Exception {
+		for (Method method : findAnnotatedMethods(testClass, After.class)) {
+			invokeMethod(method, testInstance);
+		}
+	}
 
-  private void handleBeforeMethods(Class<?> testClass, Object testInstance) throws IllegalAccessException, InvocationTargetException {
-    List<Method> beforeMethods = this.findBeforeMethods(testClass);
-
-    System.out.println("BEFORE METHODS: " + beforeMethods);
-
-    for (Method method: beforeMethods) {
-      invokeMethod(method, testInstance);
-    }
-  }
-
-  private List<Method> findBeforeMethods(Class<?> testClass) {
-    return this.findMethodsForGivenAnnotation(testClass, Before.class);
-  }
-
-
-
-  private List<Method> findMethodsForGivenAnnotation(Class<?> testClass, Class<? extends Annotation> desiredAnnotation) {
-    List<Method> methods = new ArrayList<>();
-
-    //TODO port to streams?
-    for(Method method: testClass.getDeclaredMethods()) {
-        if (method.isAnnotationPresent(desiredAnnotation))
-          methods.add(method);
-    }
-
-    return methods;
-  }
-
+	private List<Method> findAnnotatedMethods(Class<?> testClass, Class<? extends Annotation> annotationType) {
+		return Arrays.stream(testClass.getDeclaredMethods())
+			.filter(method -> method.isAnnotationPresent(annotationType))
+			.collect(toList());
+	}
 
 }
