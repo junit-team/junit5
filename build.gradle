@@ -31,6 +31,7 @@ subprojects {
 	dependencies {
 		provided("org.projectlombok:lombok:${lombokVersion}")
 		testCompile("org.assertj:assertj-core:${assertJVersion}")
+		testCompile("junit:junit:${junit4Version}")
 	}
 
 	eclipse {
