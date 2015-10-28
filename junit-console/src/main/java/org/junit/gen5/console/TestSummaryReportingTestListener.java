@@ -1,25 +1,28 @@
 
 package org.junit.gen5.console;
 
+import java.io.PrintStream;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanExecutionListener;
 
-import java.io.PrintStream;
-
 /**
  * @author Stefan Bechtold
+ * @author Sam Brannen
  * @since 5.0
  */
 public class TestSummaryReportingTestListener implements TestPlanExecutionListener, TestExecutionListener {
 
 	private final PrintStream out;
 
-	private int testsFound;
-	private int testsSkipped;
-	private int testsAborted;
-	private int testsSucceeded;
-	private int testsFailed;
+	private final AtomicInteger testsStarted = new AtomicInteger();
+	private final AtomicInteger testsFound = new AtomicInteger();
+	private final AtomicInteger testsSkipped = new AtomicInteger();
+	private final AtomicInteger testsAborted = new AtomicInteger();
+	private final AtomicInteger testsSucceeded = new AtomicInteger();
+	private final AtomicInteger testsFailed = new AtomicInteger();
 
 	private long timeStarted;
 	private long timePaused;
@@ -32,19 +35,19 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 
 	@Override
 	public void testPlanExecutionStarted(int numberOfStaticTests) {
-		testsFound = numberOfStaticTests;
-		timeStarted = System.currentTimeMillis();
+		this.testsFound.set(numberOfStaticTests);
+		this.timeStarted = System.currentTimeMillis();
 	}
 
 	@Override
 	public void testPlanExecutionPaused() {
-		timePaused = System.currentTimeMillis();
+		this.timePaused = System.currentTimeMillis();
 	}
 
 	@Override
 	public void testPlanExecutionRestarted() {
-		timeStarted += System.currentTimeMillis() - timePaused;
-		timePaused = 0;
+		this.timeStarted += System.currentTimeMillis() - this.timePaused;
+		this.timePaused = 0;
 	}
 
 	@Override
@@ -58,41 +61,48 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 	}
 
 	private void reportSummary(String msg) {
-		timeFinished = System.currentTimeMillis();
+		this.timeFinished = System.currentTimeMillis();
 
-		out.println(String.format(
-			"%s after %d ms\n" + "[%10d tests found     ]\n" + "[%10d tests skipped   ]\n" + "[%10d tests aborted   ]\n"
-					+ "[%10d tests failed    ]\n" + "[%10d tests successful]\n",
-			msg, timeFinished - timeStarted, testsFound, testsSkipped, testsAborted, testsFailed, testsSucceeded));
+		out.println(String.format(//
+			"%s after %d ms\n"//
+			+ "[%10d tests found     ]\n"//
+			+ "[%10d tests started   ]\n"//
+			+ "[%10d tests skipped   ]\n"//
+			+ "[%10d tests aborted   ]\n"//
+			+ "[%10d tests failed    ]\n"//
+			+ "[%10d tests successful]\n", //
+			msg, (this.timeFinished - this.timeStarted), this.testsFound.get(), this.testsStarted.get(),
+			this.testsSkipped.get(), this.testsAborted.get(), this.testsFailed.get(), this.testsSucceeded.get()));
 	}
 
 	@Override
 	public void dynamicTestFound(TestDescriptor testDescriptor) {
-		testsFound++;
+		this.testsFound.incrementAndGet();
 	}
 
 	@Override
 	public void testStarted(TestDescriptor testDescriptor) {
+		this.testsStarted.incrementAndGet();
 	}
 
 	@Override
 	public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-		testsSkipped++;
+		this.testsSkipped.incrementAndGet();
 	}
 
 	@Override
 	public void testAborted(TestDescriptor testDescriptor, Throwable t) {
-		testsAborted++;
+		this.testsAborted.incrementAndGet();
 	}
 
 	@Override
 	public void testFailed(TestDescriptor testDescriptor, Throwable t) {
-		testsFailed++;
+		this.testsFailed.incrementAndGet();
 	}
 
 	@Override
 	public void testSucceeded(TestDescriptor testDescriptor) {
-		testsSucceeded++;
+		this.testsSucceeded.incrementAndGet();
 	}
 
 }
