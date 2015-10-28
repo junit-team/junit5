@@ -127,13 +127,17 @@ public class JUnit5TestEngine implements TestEngine {
 
   private List<Method> findBeforeMethods(Class<?> testClass) {
 
+    Class<?> desiredAnnotation = Before.class;
+
+
     List<Method> methods = new ArrayList<>();
 
     //TODO port to streams
     for(Method method: testClass.getDeclaredMethods()) {
-      for(Annotation annotation: method.getDeclaredAnnotations())
-        if (annotation.annotationType().equals(Before.class))
+      for(Annotation annotation: method.getDeclaredAnnotations()) {
+        if (annotation.annotationType().equals(desiredAnnotation))
           methods.add(method);
+      }
     }
 
     return methods;
