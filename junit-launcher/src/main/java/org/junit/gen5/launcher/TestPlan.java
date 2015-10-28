@@ -1,3 +1,4 @@
+
 package org.junit.gen5.launcher;
 
 import org.junit.gen5.engine.TestDescriptor;
@@ -13,76 +14,80 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 
 /**
- * @author Sam Brannen
  * @since 5.0
  */
-public final class TestPlan {
-  private static enum State {
-    NEW, ACTIVE, PAUSED, STOPPED, COMPLETED;
-  }
-  private State state = State.NEW;
+final class TestPlan {
 
-  /**
-   * List of all TestDescriptors, including children
-   */
-  private Collection<TestDescriptor> tests = new LinkedList<>();
-  TestPlan() { /* no-op */ }
+	private static enum State {
+		NEW, ACTIVE, PAUSED, STOPPED, COMPLETED;
+	}
 
-  public boolean isActive() {
-    return this.state == State.ACTIVE;
-  }
+	/**
+	 * List of all TestDescriptors, including children.
+	 */
+	private final Collection<TestDescriptor> testDescriptors = new LinkedList<>();
 
-  public boolean isPaused() {
-    return this.state == State.PAUSED;
-  }
+	private State state = State.NEW;
 
-  public boolean isStopped() {
-    return this.state == State.STOPPED;
-  }
 
-  public boolean isCompleted() {
-    return this.state == State.COMPLETED;
-  }
+	TestPlan() {
+		/* no-op */
+	}
 
-  public void addTest(TestDescriptor testDescriptor) {
-    addTests(singleton(testDescriptor));
-  }
+	public boolean isActive() {
+		return this.state == State.ACTIVE;
+	}
 
-  public void addTests(TestDescriptor... testDescriptors) {
-    addTests(asList(testDescriptors));
-  }
+	public boolean isPaused() {
+		return this.state == State.PAUSED;
+	}
 
-  public void addTests(Collection<TestDescriptor> testDescriptors) {
-    tests.addAll(testDescriptors);
-  }
+	public boolean isStopped() {
+		return this.state == State.STOPPED;
+	}
 
-  public Collection<TestDescriptor> getTests() {
-    return Collections.unmodifiableCollection(tests);
-  }
+	public boolean isCompleted() {
+		return this.state == State.COMPLETED;
+	}
 
-  public List<TestDescriptor> getAllTestsForTestEngine(TestEngine testEngine) {
-    return tests.stream()
-        .filter(testEngine::supports)
-        .collect(Collectors.toList());
-  }
+	public void addTest(TestDescriptor testDescriptor) {
+		addTests(singleton(testDescriptor));
+	}
 
-  public void start() {
-    System.out.println("Starting test plan");
-    this.state = State.ACTIVE;
-  }
+	public void addTests(TestDescriptor... testDescriptors) {
+		addTests(asList(testDescriptors));
+	}
 
-  public void stop() {
-    System.out.println("Stopping test plan");
-    this.state = State.STOPPED;
-  }
+	public void addTests(Collection<TestDescriptor> testDescriptors) {
+		testDescriptors.addAll(testDescriptors);
+	}
 
-  public void pause() {
-    System.out.println("Pausing test plan");
-    this.state = State.PAUSED;
-  }
+	public Collection<TestDescriptor> getTests() {
+		return Collections.unmodifiableCollection(testDescriptors);
+	}
 
-  public void restart() {
-    System.out.println("Restarting test plan");
-    this.state = State.ACTIVE;
-  }
+	public List<TestDescriptor> getAllTestsForTestEngine(TestEngine testEngine) {
+		return testDescriptors.stream().filter(testEngine::supports).collect(Collectors.toList());
+	}
+
+	public void start() {
+		System.out.println("Starting test plan");
+		this.state = State.ACTIVE;
+	}
+
+	public void stop() {
+		System.out.println("Stopping test plan");
+		this.state = State.STOPPED;
+	}
+
+	public void pause() {
+		System.out.println("Pausing test plan");
+		this.state = State.PAUSED;
+	}
+
+	public void restart() {
+		System.out.println("Restarting test plan");
+		this.state = State.ACTIVE;
+	}
+
 }
