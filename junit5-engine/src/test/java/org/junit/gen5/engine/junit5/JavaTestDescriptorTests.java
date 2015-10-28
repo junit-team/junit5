@@ -32,12 +32,12 @@ public class JavaTestDescriptorTests {
 		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
 
 		System.out.println("DEBUG - " + descriptor);
-		assertEqual(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
-		assertEqual(TEST_METHOD_ID, descriptor.getTestId());
-		assertEqual(TEST_METHOD_UID, descriptor.getUniqueId());
-		assertEqual(getClass(), descriptor.getTestClass());
-		assertEqual(testMethod, descriptor.getTestMethod());
-		assertEqual("test", descriptor.getDisplayName(), "display name:");
+		assertEquals(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
+		assertEquals(TEST_METHOD_ID, descriptor.getTestId());
+		assertEquals(TEST_METHOD_UID, descriptor.getUniqueId());
+		assertEquals(getClass(), descriptor.getTestClass());
+		assertEquals(testMethod, descriptor.getTestMethod());
+		assertEquals("test", descriptor.getDisplayName(), "display name:");
 	}
 
 	@org.junit.Test
@@ -46,10 +46,10 @@ public class JavaTestDescriptorTests {
 		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
 
 		System.out.println("DEBUG - " + descriptor);
-		assertEqual(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
-		assertEqual(getClass(), descriptor.getTestClass());
-		assertEqual(testMethod, descriptor.getTestMethod());
-		assertEqual("custom test name", descriptor.getDisplayName(), "display name:");
+		assertEquals(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
+		assertEquals(getClass(), descriptor.getTestClass());
+		assertEquals(testMethod, descriptor.getTestMethod());
+		assertEquals("custom test name", descriptor.getDisplayName(), "display name:");
 	}
 
 	@org.junit.Test
@@ -58,30 +58,30 @@ public class JavaTestDescriptorTests {
 		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
 
 		System.out.println("DEBUG - " + descriptor);
-		assertEqual(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
-		assertEqual(TEST_METHOD_STRING_BIGDECIMAL_ID, descriptor.getTestId());
-		assertEqual(TEST_METHOD_STRING_BIGDECIMAL_UID, descriptor.getUniqueId());
-		assertEqual(getClass(), descriptor.getTestClass());
-		assertEqual(testMethod, descriptor.getTestMethod());
-		assertEqual("test", descriptor.getDisplayName(), "display name:");
+		assertEquals(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
+		assertEquals(TEST_METHOD_STRING_BIGDECIMAL_ID, descriptor.getTestId());
+		assertEquals(TEST_METHOD_STRING_BIGDECIMAL_UID, descriptor.getUniqueId());
+		assertEquals(getClass(), descriptor.getTestClass());
+		assertEquals(testMethod, descriptor.getTestMethod());
+		assertEquals("test", descriptor.getDisplayName(), "display name:");
 	}
 
 	@org.junit.Test
 	public void fromTestDescriptorIdForMethod() throws Exception {
 		JavaTestDescriptor descriptor = JavaTestDescriptor.from(TEST_METHOD_UID);
 		assertNotNull(descriptor, "descriptor:");
-		assertEqual("test", descriptor.getDisplayName(), "display name:");
-		assertEqual(JavaTestDescriptorTests.class, descriptor.getTestClass());
-		assertEqual(JavaTestDescriptorTests.class.getDeclaredMethod("test"), descriptor.getTestMethod());
+		assertEquals("test", descriptor.getDisplayName(), "display name:");
+		assertEquals(JavaTestDescriptorTests.class, descriptor.getTestClass());
+		assertEquals(JavaTestDescriptorTests.class.getDeclaredMethod("test"), descriptor.getTestMethod());
 	}
 
 	@org.junit.Test
 	public void fromTestDescriptorIdForMethodWithParameters() throws Exception {
 		JavaTestDescriptor descriptor = JavaTestDescriptor.from(TEST_METHOD_STRING_BIGDECIMAL_UID);
 		assertNotNull(descriptor, "descriptor:");
-		assertEqual("test", descriptor.getDisplayName(), "display name:");
-		assertEqual(getClass(), descriptor.getTestClass());
-		assertEqual(getClass().getDeclaredMethod("test", String.class, BigDecimal.class), descriptor.getTestMethod());
+		assertEquals("test", descriptor.getDisplayName(), "display name:");
+		assertEquals(getClass(), descriptor.getTestClass());
+		assertEquals(getClass().getDeclaredMethod("test", String.class, BigDecimal.class), descriptor.getTestMethod());
 	}
 
 

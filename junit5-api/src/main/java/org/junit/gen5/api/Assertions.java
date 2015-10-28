@@ -1,11 +1,11 @@
 package org.junit.gen5.api;
 
+import org.junit.gen5.commons.util.ObjectUtils;
+import org.opentestalliance.AssertionFailedError;
+
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
-
-import org.junit.gen5.commons.util.ObjectUtils;
-import org.opentestalliance.AssertionFailedError;
 
 /**
  * @author JUnit Community
@@ -125,33 +125,33 @@ public final class Assertions {
 		}
 	}
 
-	public static void assertEqual(Object expected, Object actual) {
-		assertEqual(expected, actual, (String) null);
+	public static void assertEquals(Object expected, Object actual) {
+		assertEquals(expected, actual, (String) null);
 	}
 
-	public static void assertEqual(Object expected, Object actual, String message) {
+	public static void assertEquals(Object expected, Object actual, String message) {
 		if (!Objects.equals(expected, actual)) {
 			failNotEqual(expected, actual, message);
 		}
 	}
 
-	public static void assertEqual(Object expected, Object actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(Object expected, Object actual, Supplier<String> messageSupplier) {
 		if (!Objects.equals(expected, actual)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
 
-	public static void assertNotEqual(Object unexpected, Object actual) {
-		assertNotEqual(unexpected, actual, (String) null);
+	public static void assertNotEquals(Object unexpected, Object actual) {
+		assertNotEquals(unexpected, actual, (String) null);
 	}
 
-	public static void assertNotEqual(Object unexpected, Object actual, String message) {
+	public static void assertNotEquals(Object unexpected, Object actual, String message) {
 		if (Objects.equals(unexpected, actual)) {
 			failEqual(actual, message);
 		}
 	}
 
-	public static void assertNotEqual(Object unexpected, Object actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(Object unexpected, Object actual, Supplier<String> messageSupplier) {
 		if (Objects.equals(unexpected, actual)) {
 			failEqual(actual, nullSafeGet(messageSupplier));
 		}
