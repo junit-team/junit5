@@ -1,9 +1,18 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 
 package org.junit.gen5.launcher;
 
-import org.junit.gen5.engine.*;
-
 import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
+
+import org.junit.gen5.engine.*;
 
 /**
  * @author Stefan Bechtold
@@ -35,8 +44,8 @@ public class Launcher {
 
 	private void execute(TestPlan testPlan) {
 		listenerRegistry.notifyTestPlanExecutionListeners(
-				testPlanExecutionListener -> testPlanExecutionListener.testPlanExecutionStarted(testPlan.getTests().size())
-		);
+			testPlanExecutionListener -> testPlanExecutionListener.testPlanExecutionStarted(
+				testPlan.getTests().size()));
 
 		TestExecutionListener compositeListener = listenerRegistry.getCompositeTestExecutionListener();
 

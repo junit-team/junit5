@@ -1,3 +1,12 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 
 package org.junit.gen5.engine;
 
@@ -14,41 +23,46 @@ import lombok.Value;
  */
 @Value
 public final class TestPlanSpecification {
-  private List<Class<?>> classes = new LinkedList<>();
-  private List<String> classNames = new LinkedList<>();
-  private List<String> uniqueIds = new LinkedList<>();
 
-  private TestPlanSpecification() { /* no-op */ }
+	private List<Class<?>> classes = new LinkedList<>();
+	private List<String> classNames = new LinkedList<>();
+	private List<String> uniqueIds = new LinkedList<>();
 
-  public static Builder builder() {
-    return new Builder();
-  }
 
-  public static final class Builder {
+	private TestPlanSpecification() {
+		/* no-op */ }
 
-    private TestPlanSpecification specification = new TestPlanSpecification();
+	public static Builder builder() {
+		return new Builder();
+	}
 
-    private Builder() {
-      /* no-op */
-    }
 
-    public Builder classes(Class<?>... classes) {
-      Arrays.stream(classes).forEach(testClass -> specification.classes.add(testClass));
-      return this;
-    }
+	public static final class Builder {
 
-    public Builder classNames(String... classNames) {
-      Arrays.stream(classNames).forEach(className -> specification.classNames.add(className));
-      return this;
-    }
+		private TestPlanSpecification specification = new TestPlanSpecification();
 
-    public Builder uniqueIds(String... uniqueIds) {
-      Arrays.stream(uniqueIds).forEach(uniqueId -> specification.uniqueIds.add(uniqueId));
-      return this;
-    }
 
-    public TestPlanSpecification build() {
-      return specification;
-    }
-  }
+		private Builder() {
+			/* no-op */
+		}
+
+		public Builder classes(Class<?>... classes) {
+			Arrays.stream(classes).forEach(testClass -> specification.classes.add(testClass));
+			return this;
+		}
+
+		public Builder classNames(String... classNames) {
+			Arrays.stream(classNames).forEach(className -> specification.classNames.add(className));
+			return this;
+		}
+
+		public Builder uniqueIds(String... uniqueIds) {
+			Arrays.stream(uniqueIds).forEach(uniqueId -> specification.uniqueIds.add(uniqueId));
+			return this;
+		}
+
+		public TestPlanSpecification build() {
+			return specification;
+		}
+	}
 }
