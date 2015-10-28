@@ -56,42 +56,45 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
   @Override
   public void dynamicTestFound(TestDescriptor testDescriptor) {
     out.print(ANSI_GREEN);
-    out.format("Test found:     %s", testDescriptor.toString());
+    out.format("Test found:     %s", testDescriptor);
     out.println(ANSI_RESET);
   }
 
   @Override
   public void testStarted(TestDescriptor testDescriptor) {
     out.print(ANSI_GREEN);
-    out.format("Test started:   %s", testDescriptor.toString());
+    out.format("Test started:   %s", testDescriptor);
     out.println(ANSI_RESET);
   }
 
   @Override
   public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
     out.print(ANSI_YELLOW);
-    out.format("Test skipped:   %s\n=> Exception:   %s", testDescriptor.toString(), (t != null) ? t.getLocalizedMessage() : "none");
+    out.format("Test skipped:   %s\n=> Exception:   %s", testDescriptor,
+        	(t != null) ? t.getLocalizedMessage() : "none");
     out.println(ANSI_RESET);
   }
 
   @Override
   public void testAborted(TestDescriptor testDescriptor, Throwable t) {
     out.print(ANSI_YELLOW);
-    out.format("Test aborted:   %s\n=> Exception:   %s", testDescriptor.toString(), (t != null) ? t.getLocalizedMessage() : "none");
+    out.format("Test aborted:   %s\n=> Exception:   %s", testDescriptor,
+        	(t != null) ? t.getLocalizedMessage() : "none");
     out.println(ANSI_RESET);
   }
 
   @Override
   public void testFailed(TestDescriptor testDescriptor, Throwable t) {
     out.print(ANSI_RED);
-    out.format("Test failed:    %s\n=> Exception:   %s", testDescriptor.toString(), t.getLocalizedMessage());
+    out.format("Test failed:    %s\n=> Exception:   %s", testDescriptor, t.getLocalizedMessage());
     out.println(ANSI_RESET);
   }
 
   @Override
   public void testSucceeded(TestDescriptor testDescriptor) {
     out.print(ANSI_GREEN);
-    out.format("Test succeeded: %s", testDescriptor.toString());
+    out.format("Test succeeded: %s", testDescriptor);
     out.println(ANSI_RESET);
   }
+
 }
