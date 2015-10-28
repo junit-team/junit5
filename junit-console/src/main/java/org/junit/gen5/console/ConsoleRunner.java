@@ -1,8 +1,6 @@
 
-package com.example;
+package org.junit.gen5.console;
 
-import org.junit.gen5.console.ColoredPrintingTestListener;
-import org.junit.gen5.console.TestSummaryReportingTestListener;
 import org.junit.gen5.engine.TestListenerRegistry;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.launcher.Launcher;
@@ -13,7 +11,7 @@ import org.junit.gen5.launcher.TestPlan;
  * @author Sam Brannen
  * @since 5.0
  */
-public class Console {
+public class ConsoleRunner {
 
 	public static void main(String[] args) throws Throwable {
 
