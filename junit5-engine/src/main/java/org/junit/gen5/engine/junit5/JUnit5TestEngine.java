@@ -24,8 +24,6 @@ public class JUnit5TestEngine implements TestEngine {
   // TODO - SBE - could be replace by JUnit5TestEngine.class.getCanonicalName();
   private static final String JUNIT5_ENGINE_ID = "junit5";
 
-  private Iterable<TestListener> testListeners;
-
   @Override
   public String getId() {
     return JUNIT5_ENGINE_ID;
