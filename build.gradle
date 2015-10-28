@@ -4,6 +4,14 @@ subprojects {
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
 	apply plugin: 'maven'
+	
+	configurations {
+		provided
+	}
+	
+	sourceSets.each{ sourceSet -> 
+	    sourceSet.compileClasspath += configurations.provided
+	}
 
 	repositories {
 		mavenCentral()
@@ -21,12 +29,13 @@ subprojects {
 	}
 
 	dependencies {
-		compile("org.projectlombok:lombok:${lombokVersion}")
+		provided("org.projectlombok:lombok:${lombokVersion}")
 		testCompile("org.assertj:assertj-core:${assertJVersion}")
 	}
 
 	eclipse {
 		classpath {
+			plusConfigurations += [ configurations.provided ]
 			containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
 			containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
 		}
