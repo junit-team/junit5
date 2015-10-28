@@ -8,7 +8,7 @@ dependencies {
 
 task runSampleTestCase(type: JavaExec) {
 	classpath = sourceSets.test.runtimeClasspath
-	classpath += project(':junit-console')sourceSets.main.runtimeClasspath
+	classpath += project(':junit-console').sourceSets.main.runtimeClasspath
 	main = 'org.junit.gen5.console.ConsoleRunner'
 	args 'com.example.SampleTestCase'
 }

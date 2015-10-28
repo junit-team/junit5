@@ -1,7 +1,6 @@
 
 package org.junit.gen5.console;
 
-import org.junit.gen5.engine.TestListenerRegistry;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.launcher.Launcher;
 
@@ -19,9 +18,6 @@ public class ConsoleRunner {
 
 		ColoredPrintingTestListener printingListener = new ColoredPrintingTestListener(System.out);
 		TestSummaryReportingTestListener reportingListener = new TestSummaryReportingTestListener(System.out);
-
-		TestListenerRegistry.registerTestExecutionListener(printingListener);
-		TestListenerRegistry.registerTestExecutionListener(reportingListener);
 
 		launcher.registerTestPlanExecutionListener(printingListener);
 		launcher.registerTestPlanExecutionListener(reportingListener);

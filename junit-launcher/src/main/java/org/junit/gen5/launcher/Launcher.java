@@ -1,10 +1,7 @@
 
 package org.junit.gen5.launcher;
 
-import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestListenerRegistry;
-import org.junit.gen5.engine.TestPlanExecutionListener;
-import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.*;
 
 import static org.junit.gen5.engine.TestListenerRegistry.notifyTestPlanExecutionListeners;
 import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
@@ -17,8 +14,11 @@ import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
 public class Launcher {
 
+	private TestListenerRegistry listenerRegistry = new TestListenerRegistry();
+
 	public void registerTestPlanExecutionListener(TestPlanExecutionListener testListener) {
-		TestListenerRegistry.registerTestPlanExecutionListener(testListener);
+		listenerRegistry.registerTestPlanExecutionListener(testListener);
+		listenerRegistry.registerTestExecutionListener((TestExecutionListener) testListener);
 	}
 
 	public TestPlan discover(TestPlanSpecification specification) {
@@ -35,7 +35,7 @@ public class Launcher {
 	}
 
 	private void execute(TestPlan testPlan) {
-		notifyTestPlanExecutionListeners(
+		listenerRegistry.notifyTestPlanExecutionListeners(
 				testPlanExecutionListener -> testPlanExecutionListener.testPlanExecutionStarted(testPlan.getTests().size())
 		);
 
@@ -43,7 +43,7 @@ public class Launcher {
 			testEngine.execute(testPlan.getAllTestsForTestEngine(testEngine));
 		}
 
-		notifyTestPlanExecutionListeners(TestPlanExecutionListener::testPlanExecutionFinished);
+		listenerRegistry.notifyTestPlanExecutionListeners(TestPlanExecutionListener::testPlanExecutionFinished);
 	}
 
 }
