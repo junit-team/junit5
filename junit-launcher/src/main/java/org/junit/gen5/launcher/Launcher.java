@@ -5,13 +5,10 @@ import org.junit.gen5.engine.TestListener;
 import org.junit.gen5.engine.TestListenerRegistry;
 import org.junit.gen5.engine.TestPlanConfiguration;
 
-import java.util.ServiceLoader;
-
 import static org.junit.gen5.engine.TestEngineRegistry.lookupAllTestEngines;
 import static org.junit.gen5.engine.TestListenerRegistry.notifyListeners;
 
 public class Launcher {
-  private volatile ServiceLoader<TestEngine> testEngines;
 
   public void registerTestListener(TestListener testListener) {
     TestListenerRegistry.registerListener(testListener);
