@@ -59,9 +59,8 @@ class TestExecutor {
 	}
 
 	private List<Method> findAnnotatedMethods(Class<?> testClass, Class<? extends Annotation> annotationType) {
-		return Arrays.stream(testClass.getDeclaredMethods())
-				.filter(method -> method.isAnnotationPresent(annotationType))
-				.collect(toList());
+		return Arrays.stream(testClass.getDeclaredMethods()).filter(
+			method -> method.isAnnotationPresent(annotationType)).collect(toList());
 	}
 
 }

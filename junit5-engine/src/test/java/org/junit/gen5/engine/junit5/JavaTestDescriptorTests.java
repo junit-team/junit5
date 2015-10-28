@@ -32,7 +32,8 @@ public class JavaTestDescriptorTests {
 
 	private static final String TEST_METHOD_STRING_BIGDECIMAL_ID = JavaTestDescriptorTests.class.getName()
 			+ "#test(java.lang.String, java.math.BigDecimal)";
-	private static final String TEST_METHOD_STRING_BIGDECIMAL_UID = JUNIT_5_ENGINE_ID + ":" + TEST_METHOD_STRING_BIGDECIMAL_ID;
+	private static final String TEST_METHOD_STRING_BIGDECIMAL_UID = JUNIT_5_ENGINE_ID + ":"
+			+ TEST_METHOD_STRING_BIGDECIMAL_ID;
 
 
 	@org.junit.Test
@@ -92,7 +93,6 @@ public class JavaTestDescriptorTests {
 		assertEquals(getClass(), descriptor.getTestClass());
 		assertEquals(getClass().getDeclaredMethod("test", String.class, BigDecimal.class), descriptor.getTestMethod());
 	}
-
 
 	void test() {
 	}

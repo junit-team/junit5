@@ -25,8 +25,7 @@ public class ConsoleRunner {
 		// TODO Configure launcher?
 		Launcher launcher = new Launcher();
 
-		launcher.registerTestPlanExecutionListeners(
-			new ColoredPrintingTestListener(System.out),
+		launcher.registerTestPlanExecutionListeners(new ColoredPrintingTestListener(System.out),
 			new TestSummaryReportingTestListener(System.out));
 
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.builder().classNames(args).build();
