@@ -22,11 +22,11 @@ public class ReflectionUtils {
     return constructor.newInstance();
   }
 
-  public static <T extends Object> T invokeMethod(Method method, Object testInstance)
+  public static Object invokeMethod(Method method, Object testInstance)
       throws IllegalAccessException, InvocationTargetException {
     if (!method.isAccessible()) {
       method.setAccessible(true);
     }
-    return (T) method.invoke(testInstance);
+    return method.invoke(testInstance);
   }
 }
