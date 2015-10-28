@@ -1,9 +1,11 @@
+
 package com.example;
+
+import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assumptions.*;
 
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Test;
-import org.opentestalliance.AssertionFailedError;
-import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
 /**
@@ -11,44 +13,37 @@ import org.opentestalliance.TestSkippedException;
  */
 class SampleTestCase {
 
-
-	boolean setupWasCalled = false;
-
+	boolean setupCalled = false;
 
 
 	@Before
 	void setup() {
-		this.setupWasCalled = true;
+		this.setupCalled = true;
 	}
 
-
 	@Test
-	void verifyThatSetupWasCalled() {
-
-		if (!this.setupWasCalled)
-			throw new AssertionFailedError("@Before did NOT work");
-
+	void methodLevelCallbacks() {
+		assertTrue(this.setupCalled, "@Before was not invoked");
 	}
 
-
-
 	@Test
-	void skippingTest() {
-		throw new TestSkippedException("This test will be skipped!");
+	void skippedTest() {
+		throw new TestSkippedException("This test will be skipped");
 	}
 
 	@Test
 	void abortedTest() {
-		throw new TestAbortedException("This test will be aborted!");
+		assumeTrue((2 * 3 == 4), () -> "Assumed that 2*3=4, but 2*3=" + (2 * 3));
 	}
 
 	@Test
 	void failingTest() {
-		throw new AssertionError("This test will always fail!");
+		fail("This test will always fail");
 	}
 
 	@Test
 	void succeedingTest() {
 		// no-op
 	}
+
 }
