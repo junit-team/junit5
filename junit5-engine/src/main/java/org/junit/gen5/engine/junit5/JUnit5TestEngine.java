@@ -1,11 +1,9 @@
 package org.junit.gen5.engine.junit5;
 
-import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestListener;
-import org.opentestalliance.TestAbortedException;
-import org.opentestalliance.TestSkippedException;
+import static java.lang.String.format;
+import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
+import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
+import static org.junit.gen5.engine.TestListenerRegistry.notifyListeners;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -14,11 +12,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
-import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
-import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
-import static org.junit.gen5.engine.TestListenerRegistry.notifyListeners;
+import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.opentestalliance.TestAbortedException;
+import org.opentestalliance.TestSkippedException;
 
 public class JUnit5TestEngine implements TestEngine {
   // TODO - SBE - could be replace by JUnit5TestEngine.class.getCanonicalName();
@@ -33,7 +32,7 @@ public class JUnit5TestEngine implements TestEngine {
   public List<TestDescriptor> discoverTests(TestPlanSpecification specification) {
     List<Class<?>> testClasses = fetchTestClasses(specification);
 
-    List<TestDescriptor> testDescriptors = testClasses.parallelStream()
+    List<TestDescriptor> testDescriptors = testClasses.stream()
         .map(Class::getDeclaredMethods)
         .flatMap(Arrays::stream)
         .filter(method -> method.isAnnotationPresent(Test.class))
@@ -42,7 +41,7 @@ public class JUnit5TestEngine implements TestEngine {
         .collect(Collectors.toList());
 
     testDescriptors.addAll(
-        configuration.getUniqueIds().parallelStream()
+        specification.getUniqueIds().stream()
             .map(JavaTestDescriptor::from)
             .peek(testDescriptor -> notifyListeners(testListener -> testListener.testFound(testDescriptor)))
             .collect(Collectors.toList())
