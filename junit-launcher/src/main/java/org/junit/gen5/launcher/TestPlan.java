@@ -1,8 +1,8 @@
 
 package org.junit.gen5.launcher;
 
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
+import static java.util.Arrays.*;
+import static java.util.Collections.*;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -10,8 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 
 /**
  * @since 5.0
@@ -21,6 +21,7 @@ final class TestPlan {
 	private static enum State {
 		NEW, ACTIVE, PAUSED, STOPPED, COMPLETED;
 	}
+
 
 	/**
 	 * List of all TestDescriptors, including children.
@@ -59,7 +60,7 @@ final class TestPlan {
 	}
 
 	public void addTests(Collection<TestDescriptor> testDescriptors) {
-		testDescriptors.addAll(testDescriptors);
+		this.testDescriptors.addAll(testDescriptors);
 	}
 
 	public Collection<TestDescriptor> getTests() {
@@ -67,7 +68,7 @@ final class TestPlan {
 	}
 
 	public List<TestDescriptor> getAllTestsForTestEngine(TestEngine testEngine) {
-		return testDescriptors.stream().filter(testEngine::supports).collect(Collectors.toList());
+		return this.testDescriptors.stream().filter(testEngine::supports).collect(Collectors.toList());
 	}
 
 	public void start() {
