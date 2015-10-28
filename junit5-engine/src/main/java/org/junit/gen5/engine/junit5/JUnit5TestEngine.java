@@ -104,15 +104,25 @@ public class JUnit5TestEngine implements TestEngine {
 
   protected void handleTestExecution(JavaTestDescriptor javaTestDescriptor) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
     Class<?> testClass = javaTestDescriptor.getTestClass();
+    Object testInstance = newInstance(testClass);
 
+    this.handleBeforeMethods(testClass, testInstance);
+    this.handleTestMethod(javaTestDescriptor, testInstance);
 
+  }
+
+  private void handleTestMethod(JavaTestDescriptor javaTestDescriptor, Object testInstance) throws IllegalAccessException, InvocationTargetException {
+    invokeMethod(javaTestDescriptor.getTestMethod(), testInstance);
+  }
+
+  private void handleBeforeMethods(Class<?> testClass, Object testInstance) throws IllegalAccessException, InvocationTargetException {
     List<Method> beforeMethods = this.findBeforeMethods(testClass);
 
-    System.err.println("BEFORE METHODS: " + beforeMethods);
+    System.out.println("BEFORE METHODS: " + beforeMethods);
 
-
-    Object testInstance = newInstance(testClass);
-    invokeMethod(javaTestDescriptor.getTestMethod(), testInstance);
+    for (Method method: beforeMethods) {
+      invokeMethod(method, testInstance);
+    }
   }
 
   private List<Method> findBeforeMethods(Class<?> testClass) {
