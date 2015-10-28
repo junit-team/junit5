@@ -2,19 +2,15 @@ package org.junit.gen5.engine.junit5;
 
 import static java.lang.String.*;
 import static java.util.stream.Collectors.*;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.gen5.api.After;
-import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestExecutionListener;
@@ -78,60 +74,39 @@ public class JUnit5TestEngine implements TestEngine {
 	@Override
 	public void execute(Collection<TestDescriptor> testDescriptors, TestExecutionListener testExecutionListener) {
 		for (TestDescriptor testDescriptor : testDescriptors) {
-			try {
-				testExecutionListener.testStarted(testDescriptor);
 
-				JavaTestDescriptor javaTestDescriptor = (JavaTestDescriptor) testDescriptor;
-				executeTest(javaTestDescriptor);
-				testExecutionListener.testSucceeded(testDescriptor);
+			Preconditions.condition(testDescriptor instanceof JavaTestDescriptor,
+				String.format("%s supports test descriptors of type %s, not of type %s", getClass().getSimpleName(),
+					JavaTestDescriptor.class.getName(),
+					(testDescriptor != null ? testDescriptor.getClass().getName() : "null")));
+
+			JavaTestDescriptor javaTestDescriptor = (JavaTestDescriptor) testDescriptor;
+
+			try {
+				testExecutionListener.testStarted(javaTestDescriptor);
+				new TestExecutor(javaTestDescriptor).execute();
+				testExecutionListener.testSucceeded(javaTestDescriptor);
 			}
 			catch (InvocationTargetException ex) {
 				Throwable targetException = ex.getTargetException();
 				if (targetException instanceof TestSkippedException) {
-					testExecutionListener.testSkipped(testDescriptor, targetException);
+					testExecutionListener.testSkipped(javaTestDescriptor, targetException);
 				}
 				else if (targetException instanceof TestAbortedException) {
-					testExecutionListener.testAborted(testDescriptor, targetException);
+					testExecutionListener.testAborted(javaTestDescriptor, targetException);
 				}
 				else {
-					testExecutionListener.testFailed(testDescriptor, targetException);
+					testExecutionListener.testFailed(javaTestDescriptor, targetException);
 				}
-			} catch (NoSuchMethodException | InstantiationException | IllegalAccessException e) {
-				throw new IllegalStateException(
-					String.format("Test %s is not well-formed and cannot be executed", testDescriptor.getUniqueId()));
-			} catch (Exception ex) {
-				testExecutionListener.testFailed(testDescriptor, ex);
+			}
+			catch (NoSuchMethodException | InstantiationException | IllegalAccessException ex) {
+				throw new IllegalStateException(String.format("Test %s is not well-formed and cannot be executed",
+					javaTestDescriptor.getUniqueId()), ex);
+			}
+			catch (Exception ex) {
+				testExecutionListener.testFailed(javaTestDescriptor, ex);
 			}
 		}
-	}
-
-	protected void executeTest(JavaTestDescriptor javaTestDescriptor) throws Exception {
-		Class<?> testClass = javaTestDescriptor.getTestClass();
-
-		// TODO Extract test instantiation
-		Object testInstance = newInstance(testClass);
-
-		executeBeforeMethods(testClass, testInstance);
-		invokeMethod(javaTestDescriptor.getTestMethod(), testInstance);
-		executeAfterMethods(testClass, testInstance);
-	}
-
-	private void executeBeforeMethods(Class<?> testClass, Object testInstance) throws Exception {
-		for (Method method: findAnnotatedMethods(testClass, Before.class)) {
-			invokeMethod(method, testInstance);
-		}
-	}
-
-	private void executeAfterMethods(Class<?> testClass, Object testInstance) throws Exception {
-		for (Method method : findAnnotatedMethods(testClass, After.class)) {
-			invokeMethod(method, testInstance);
-		}
-	}
-
-	private List<Method> findAnnotatedMethods(Class<?> testClass, Class<? extends Annotation> annotationType) {
-		return Arrays.stream(testClass.getDeclaredMethods())
-			.filter(method -> method.isAnnotationPresent(annotationType))
-			.collect(toList());
 	}
 
 }
