@@ -64,7 +64,7 @@ class SampleTestCase {
 		fail("This test will always fail");
 	}
 
-	@Test
+	@Test(name = "custom name")
 	void succeedingTest() {
 		// no-op
 	}
