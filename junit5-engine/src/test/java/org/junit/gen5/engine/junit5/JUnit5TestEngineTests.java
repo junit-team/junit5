@@ -22,10 +22,10 @@ import org.junit.gen5.engine.TestPlanSpecification;
 public class JUnit5TestEngineTests {
 
 	@org.junit.Test
-	public void executeTestsFromMethodDescriptors() {
+	public void executeTestsFromDescriptorsGeneratedFromClasses() {
 		JUnit5TestEngine engine = new JUnit5TestEngine();
 
-		TestPlanSpecification spec = TestPlanSpecification.builder().classNames(LocalTestCase.class.getName()).build();
+		TestPlanSpecification spec = TestPlanSpecification.builder().classes(LocalTestCase.class).build();
 
 		List<TestDescriptor> descriptors = engine.discoverTests(spec);
 		Assert.assertNotNull(descriptors);
