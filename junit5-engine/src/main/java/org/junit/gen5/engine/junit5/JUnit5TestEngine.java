@@ -4,7 +4,6 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestListener;
-import org.junit.gen5.engine.TestPlanConfiguration;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
@@ -19,6 +18,7 @@ import static java.lang.String.format;
 import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
 import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
 import static org.junit.gen5.engine.TestListenerRegistry.notifyListeners;
+import org.junit.gen5.engine.TestPlanSpecification;
 
 public class JUnit5TestEngine implements TestEngine {
   // TODO - SBE - could be replace by JUnit5TestEngine.class.getCanonicalName();
@@ -32,8 +32,8 @@ public class JUnit5TestEngine implements TestEngine {
   }
 
   @Override
-  public List<TestDescriptor> discoverTests(TestPlanConfiguration configuration) {
-    List<Class<?>> testClasses = fetchTestClasses(configuration);
+  public List<TestDescriptor> discoverTests(TestPlanSpecification specification) {
+    List<Class<?>> testClasses = fetchTestClasses(specification);
 
     List<TestDescriptor> testDescriptors = testClasses.parallelStream()
         .map(Class::getDeclaredMethods)
@@ -53,14 +53,14 @@ public class JUnit5TestEngine implements TestEngine {
     return testDescriptors;
   }
 
-  private List<Class<?>> fetchTestClasses(TestPlanConfiguration testPlanConfiguration) {
+  private List<Class<?>> fetchTestClasses(TestPlanSpecification testPlanSpecification) {
     List<Class<?>> testClasses = new LinkedList<>();
 
     // Add specified test classes directly
-    testClasses.addAll(testPlanConfiguration.getClasses());
+    testClasses.addAll(testPlanSpecification.getClasses());
 
     // Add test classes by name
-    for (String className : testPlanConfiguration.getClassNames()) {
+    for (String className : testPlanSpecification.getClassNames()) {
       try {
         testClasses.add(Class.forName(className));
       } catch (ClassNotFoundException e) {

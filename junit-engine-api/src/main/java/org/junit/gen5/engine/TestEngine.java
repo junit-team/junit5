@@ -7,7 +7,7 @@ public interface TestEngine {
     return getClass().getCanonicalName();
   }
 
-  Collection<TestDescriptor> discoverTests(TestPlanConfiguration configuration);
+  Collection<TestDescriptor> discoverTests(TestPlanSpecification configuration);
 
   default boolean supports(TestDescriptor testDescriptor) {
     return testDescriptor.getUniqueId().startsWith(getId());

@@ -6,7 +6,7 @@ import static org.junit.gen5.engine.TestListenerRegistry.notifyListeners;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestListener;
 import org.junit.gen5.engine.TestListenerRegistry;
-import org.junit.gen5.engine.TestPlanConfiguration;
+import org.junit.gen5.engine.TestPlanSpecification;
 
 public class Launcher {
 
@@ -14,10 +14,10 @@ public class Launcher {
     TestListenerRegistry.registerListener(testListener);
   }
 
-  public TestPlan createTestPlanWithConfiguration(TestPlanConfiguration configuration) {
+  public TestPlan createTestPlanWithConfiguration(TestPlanSpecification specification) {
     TestPlan testPlan = new TestPlan();
     for (TestEngine testEngine : lookupAllTestEngines()) {
-      testPlan.addTests(testEngine.discoverTests(configuration));
+      testPlan.addTests(testEngine.discoverTests(specification));
     }
     return testPlan;
   }

@@ -2,7 +2,7 @@ package com.example;
 
 import org.junit.gen5.console.ColoredPrintingTestListener;
 import org.junit.gen5.console.TestSummaryReportingTestListener;
-import org.junit.gen5.engine.TestPlanConfiguration;
+import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestPlan;
 
@@ -14,8 +14,8 @@ public class Console {
     launcher.registerTestListener(new ColoredPrintingTestListener(System.out));
     launcher.registerTestListener(new TestSummaryReportingTestListener(System.out));
 
-    TestPlanConfiguration testPlanConfiguration =
-        TestPlanConfiguration.builder()
+    TestPlanSpecification testPlanConfiguration =
+        TestPlanSpecification.builder()
             .classNames(args)
             .build();
 
