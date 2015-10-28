@@ -18,5 +18,5 @@ public interface TestEngine {
         .allMatch(testDescriptor -> supports(testDescriptor));
   }
 
-  void execute(Collection<TestDescriptor> testDescriptions);
+  void execute(Collection<TestDescriptor> testDescriptions, TestExecutionListener testExecutionListener);
 }

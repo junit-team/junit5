@@ -3,7 +3,6 @@ package org.junit.gen5.launcher;
 
 import org.junit.gen5.engine.*;
 
-import static org.junit.gen5.engine.TestListenerRegistry.notifyTestPlanExecutionListeners;
 import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
 /**
@@ -39,8 +38,57 @@ public class Launcher {
 				testPlanExecutionListener -> testPlanExecutionListener.testPlanExecutionStarted(testPlan.getTests().size())
 		);
 
+		TestExecutionListener compositeListener = new TestExecutionListener() {
+			@Override
+			public void dynamicTestFound(TestDescriptor testDescriptor) {
+				listenerRegistry.notifyTestExecutionListeners(
+						testExecutionListener -> testExecutionListener.dynamicTestFound(testDescriptor)
+				);
+			}
+
+			@Override
+			public void testStarted(TestDescriptor testDescriptor) {
+				listenerRegistry.notifyTestExecutionListeners(
+						testExecutionListener -> testExecutionListener.testStarted(testDescriptor)
+				);
+
+			}
+
+			@Override
+			public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
+				listenerRegistry.notifyTestExecutionListeners(
+						testExecutionListener -> testExecutionListener.testSkipped(testDescriptor, t)
+				);
+
+			}
+
+			@Override
+			public void testAborted(TestDescriptor testDescriptor, Throwable t) {
+				listenerRegistry.notifyTestExecutionListeners(
+						testExecutionListener -> testExecutionListener.testAborted(testDescriptor, t)
+				);
+
+			}
+
+			@Override
+			public void testFailed(TestDescriptor testDescriptor, Throwable t) {
+				listenerRegistry.notifyTestExecutionListeners(
+						testExecutionListener -> testExecutionListener.testFailed(testDescriptor, t)
+				);
+
+			}
+
+			@Override
+			public void testSucceeded(TestDescriptor testDescriptor) {
+				listenerRegistry.notifyTestExecutionListeners(
+						testExecutionListener -> testExecutionListener.testSucceeded(testDescriptor)
+				);
+
+			}
+		};
+
 		for (TestEngine testEngine : lookupAllTestEngines()) {
-			testEngine.execute(testPlan.getAllTestsForTestEngine(testEngine));
+			testEngine.execute(testPlan.getAllTestsForTestEngine(testEngine), compositeListener);
 		}
 
 		listenerRegistry.notifyTestPlanExecutionListeners(TestPlanExecutionListener::testPlanExecutionFinished);

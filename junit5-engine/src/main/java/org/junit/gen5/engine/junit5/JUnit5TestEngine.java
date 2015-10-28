@@ -16,9 +16,21 @@ import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
+import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
 
 public class JUnit5TestEngine implements TestEngine {
   // TODO - SBE - could be replace by JUnit5TestEngine.class.getCanonicalName();
@@ -79,7 +91,7 @@ public class JUnit5TestEngine implements TestEngine {
   }
 
   @Override
-  public void execute(Collection<TestDescriptor> testDescriptors) {
+  public void execute(Collection<TestDescriptor> testDescriptors, TestExecutionListener testExecutionListener) {
     for (TestDescriptor testDescriptor : testDescriptors) {
       try {
         notifyTestExecutionListeners(testListener -> testListener.testStarted(testDescriptor));
@@ -89,11 +101,11 @@ public class JUnit5TestEngine implements TestEngine {
         notifyTestExecutionListeners(testListener -> testListener.testSucceeded(testDescriptor));
       } catch (InvocationTargetException e) {
         if (e.getTargetException() instanceof TestSkippedException) {
-          notifyTestExecutionListeners(testListener -> testListener.testSkipped(testDescriptor, e.getTargetException()));
+          testExecutionListener.testSkipped(testDescriptor, e.getTargetException());
         } else if (e.getTargetException() instanceof TestAbortedException) {
-          notifyTestExecutionListeners(testListener -> testListener.testAborted(testDescriptor, e.getTargetException()));
+          testExecutionListener.testAborted(testDescriptor, e.getTargetException());
         } else {
-          notifyTestExecutionListeners(testListener -> testListener.testFailed(testDescriptor, e.getTargetException()));
+          testExecutionListener.testFailed(testDescriptor, e.getTargetException());
         }
       } catch (NoSuchMethodException | InstantiationException | IllegalAccessException e) {
         throw new IllegalArgumentException(
