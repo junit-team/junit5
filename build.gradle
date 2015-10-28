@@ -4,13 +4,13 @@ subprojects {
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
 	apply plugin: 'maven'
-	
+
 	configurations {
 		provided
 	}
-	
+
 	sourceSets.each{ sourceSet -> 
-	    sourceSet.compileClasspath += configurations.provided
+		sourceSet.compileClasspath += configurations.provided
 	}
 
 	repositories {
@@ -42,22 +42,22 @@ subprojects {
 		}
 	}
 
-    idea {
-        module {
-            scopes.PROVIDED.plus += [configurations.provided]
-        }
-    }
+	idea {
+		module {
+			scopes.PROVIDED.plus += [ configurations.provided ]
+		}
+	}
 
-    test {
+	test {
 		description = 'Runs JUnit unit tests.'
 		useJUnit()
 
 		scanForTestClasses = false
-		include(["**/*Tests.class", "**/*Test.class"])
+		include(['**/*Tests.class', '**/*Test.class'])
 		// Since we set scanForTestClasses to false, we need to filter out inner
 		// classes with the "$" pattern; otherwise, using -Dtest.single=MyTests to
 		// run MyTests by itself will fail if MyTests contains any inner classes.
-		exclude(["**/Abstract*.class", '**/*$*'])
+		exclude(['**/Abstract*.class', '**/*$*'])
 	}
 
 	javadoc {
