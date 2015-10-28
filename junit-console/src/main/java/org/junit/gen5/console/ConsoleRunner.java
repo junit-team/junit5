@@ -11,16 +11,14 @@ import org.junit.gen5.launcher.Launcher;
  */
 public class ConsoleRunner {
 
-	public static void main(String[] args) throws Throwable {
+	public static void main(String... args) {
 
 		// TODO Configure launcher?
 		Launcher launcher = new Launcher();
 
-		ColoredPrintingTestListener printingListener = new ColoredPrintingTestListener(System.out);
-		TestSummaryReportingTestListener reportingListener = new TestSummaryReportingTestListener(System.out);
-
-		launcher.registerTestPlanExecutionListener(printingListener);
-		launcher.registerTestPlanExecutionListener(reportingListener);
+		launcher.registerTestPlanExecutionListeners(
+			new ColoredPrintingTestListener(System.out),
+			new TestSummaryReportingTestListener(System.out));
 
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.builder().classNames(args).build();
 

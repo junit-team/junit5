@@ -10,14 +10,14 @@ import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
  * @author Sam Brannen
  * @since 5.0
  */
-
 public class Launcher {
 
-	private TestListenerRegistry listenerRegistry = new TestListenerRegistry();
+	private final TestListenerRegistry listenerRegistry = new TestListenerRegistry();
 
-	public void registerTestPlanExecutionListener(TestPlanExecutionListener testListener) {
-		listenerRegistry.registerTestPlanExecutionListener(testListener);
-		listenerRegistry.registerTestExecutionListener(testListener);
+
+	public void registerTestPlanExecutionListeners(TestPlanExecutionListener... testListeners) {
+		listenerRegistry.registerTestPlanExecutionListeners(testListeners);
+		listenerRegistry.registerTestExecutionListeners(testListeners);
 	}
 
 	public TestPlan discover(TestPlanSpecification specification) {
