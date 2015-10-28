@@ -1,9 +1,21 @@
+buildscript {
+	repositories {
+		maven {
+			url 'https://plugins.gradle.org/m2/'
+		}
+	}
+	dependencies {
+		classpath 'com.diffplug.gradle.spotless:spotless:1.3.1'
+	}
+}
+
 subprojects {
 
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
 	apply plugin: 'maven'
+	apply plugin: 'com.diffplug.gradle.spotless'
 
 	configurations {
 		provided
@@ -82,12 +94,38 @@ subprojects {
 		archives javadocJar
 	}
 
+	spotless {
+		java {
+			if (project.name == 'open-test-alliance') {
+				licenseHeaderFile rootProject.file('src/spotless/apache-license-2.0.java')
+			} else {
+				licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java')
+			}
+			importOrder(['java', 'javax', 'com', 'org', 'org.junit', 'org.opentestalliance', 'lombok'])
+			eclipseFormatFile rootProject.file('src/eclipse/junit-lambda-eclipse-formatter-settings.xml')
+
+			custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
+		}
+	}
+
 }
 
 configure(rootProject) {
 	description = 'JUnit Lambda'
 
+	apply plugin: 'com.diffplug.gradle.spotless'
+
+	spotless {
+		format 'misc', {
+			target '**/*.gradle', '**/*.md', '**/*.gitignore'
+			indentWithTabs()
+			trimTrailingWhitespace()
+			endWithNewline()
+		}
+	}
+
 	task wrapper(type: Wrapper) {
 		distributionUrl = 'https://services.gradle.org/distributions/gradle-2.8-all.zip'
 	}
+
 }
