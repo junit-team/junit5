@@ -1,4 +1,6 @@
-package org.junit.gen5.engine;
+package org.junit.gen5.launcher;
+
+import org.junit.gen5.engine.TestEngine;
 
 import java.util.ServiceLoader;
 
