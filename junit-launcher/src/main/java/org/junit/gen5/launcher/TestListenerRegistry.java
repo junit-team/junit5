@@ -1,6 +1,7 @@
 
 package org.junit.gen5.launcher;
 
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanExecutionListener;
 
@@ -44,4 +45,58 @@ public class TestListenerRegistry {
 		lookupTestPlanExecutionListeners().forEach(consumer);
 	}
 
+	public TestExecutionListener getCompositeTestExecutionListener() {
+		return new CompositeTestExecutionListener();
+	}
+
+	public class CompositeTestExecutionListener implements TestExecutionListener {
+
+		@Override
+		public void dynamicTestFound(TestDescriptor testDescriptor) {
+			notifyTestExecutionListeners(
+					testExecutionListener -> testExecutionListener.dynamicTestFound(testDescriptor)
+			);
+		}
+
+		@Override
+		public void testStarted(TestDescriptor testDescriptor) {
+			notifyTestExecutionListeners(
+					testExecutionListener -> testExecutionListener.testStarted(testDescriptor)
+			);
+
+		}
+
+		@Override
+		public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
+			notifyTestExecutionListeners(
+					testExecutionListener -> testExecutionListener.testSkipped(testDescriptor, t)
+			);
+
+		}
+
+		@Override
+		public void testAborted(TestDescriptor testDescriptor, Throwable t) {
+			notifyTestExecutionListeners(
+					testExecutionListener -> testExecutionListener.testAborted(testDescriptor, t)
+			);
+
+		}
+
+		@Override
+		public void testFailed(TestDescriptor testDescriptor, Throwable t) {
+			notifyTestExecutionListeners(
+					testExecutionListener -> testExecutionListener.testFailed(testDescriptor, t)
+			);
+
+		}
+
+		@Override
+		public void testSucceeded(TestDescriptor testDescriptor) {
+			notifyTestExecutionListeners(
+					testExecutionListener -> testExecutionListener.testSucceeded(testDescriptor)
+			);
+
+		}
+
+	}
 }

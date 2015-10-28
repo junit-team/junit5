@@ -6,7 +6,7 @@ package org.junit.gen5.engine;
  * @author Sam Brannen
  * @since 5.0
  */
-public interface TestPlanExecutionListener {
+public interface TestPlanExecutionListener extends TestExecutionListener {
 
 	default void testPlanExecutionStarted(int numberOfStaticTests) {
 	};
