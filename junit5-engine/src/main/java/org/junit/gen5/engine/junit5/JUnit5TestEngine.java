@@ -20,7 +20,7 @@ import org.opentestalliance.TestSkippedException;
 
 public class JUnit5TestEngine implements TestEngine {
 
-	// TODO - SBE - could be replaced by JUnit5TestEngine.class.getCanonicalName()
+	// TODO Consider using class names for engine IDs.
 	private static final String ENGINE_ID = "junit5";
 
 	@Override
