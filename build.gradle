@@ -42,7 +42,13 @@ subprojects {
 		}
 	}
 
-	test {
+    idea {
+        module {
+            scopes.PROVIDED.plus += [configurations.provided]
+        }
+    }
+
+    test {
 		description = 'Runs JUnit unit tests.'
 		useJUnit()
 
