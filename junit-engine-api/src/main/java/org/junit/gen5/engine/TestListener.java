@@ -5,11 +5,11 @@ package org.junit.gen5.engine;
  * @since 5.0
  */
 public interface TestListener {
-  default void testExecutionStarted() {};
-  default void testExecutionPaused() {};
-  default void testExecutionRestarted() {};
-  default void testExecutionStopped() {};
-  default void testExecutionFinished() {};
+  default void testPlanExecutionStarted() {};
+  default void testPlanExecutionPaused() {};
+  default void testPlanExecutionRestarted() {};
+  default void testPlanExecutionStopped() {};
+  default void testPlanExecutionFinished() {};
 
   default void testFound(TestDescriptor testDescriptor) {};
   default void testStarted(TestDescriptor testDescriptor) {};

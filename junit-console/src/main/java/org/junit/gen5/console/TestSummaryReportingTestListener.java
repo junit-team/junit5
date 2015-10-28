@@ -27,28 +27,28 @@ public class TestSummaryReportingTestListener implements TestListener {
   }
 
   @Override
-  public void testExecutionStarted() {
+  public void testPlanExecutionStarted() {
     timeStarted = System.currentTimeMillis();
   }
 
   @Override
-  public void testExecutionPaused() {
+  public void testPlanExecutionPaused() {
     timePaused = System.currentTimeMillis();
   }
 
   @Override
-  public void testExecutionRestarted() {
+  public void testPlanExecutionRestarted() {
     timeStarted += System.currentTimeMillis() - timePaused;
     timePaused = 0;
   }
 
   @Override
-  public void testExecutionStopped() {
+  public void testPlanExecutionStopped() {
     reportSummary("Test run stopped");
   }
 
   @Override
-  public void testExecutionFinished() {
+  public void testPlanExecutionFinished() {
     reportSummary("Test run finished");
   }
 
