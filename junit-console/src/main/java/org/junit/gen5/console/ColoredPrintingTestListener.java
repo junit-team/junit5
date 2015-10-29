@@ -10,6 +10,8 @@
 
 package org.junit.gen5.console;
 
+import static org.junit.gen5.console.ColoredPrintingTestListener.Color.*;
+
 import java.io.PrintStream;
 
 import org.junit.gen5.engine.TestDescriptor;
@@ -18,22 +20,14 @@ import org.junit.gen5.engine.TestPlanExecutionListener;
 
 /**
  * @author Stefan Bechtold
+ * @author Marc Philipp
  * @since 5.0
  */
 public class ColoredPrintingTestListener implements TestPlanExecutionListener, TestExecutionListener {
 
-	public static final String ANSI_RESET = "\u001B[0m";
-	public static final String ANSI_BLACK = "\u001B[30m";
-	public static final String ANSI_RED = "\u001B[31m";
-	public static final String ANSI_GREEN = "\u001B[32m";
-	public static final String ANSI_YELLOW = "\u001B[33m";
-	public static final String ANSI_BLUE = "\u001B[34m";
-	public static final String ANSI_PURPLE = "\u001B[35m";
-	public static final String ANSI_CYAN = "\u001B[36m";
-	public static final String ANSI_WHITE = "\u001B[37m";
+	private static final String ANSI_RESET = "\u001B[0m";
 
 	private final PrintStream out;
-
 
 	public ColoredPrintingTestListener(PrintStream out) {
 		this.out = out;
@@ -61,51 +55,61 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 
 	@Override
 	public void testPlanExecutionFinished() {
-		out.println(ANSI_RESET);
 	}
 
 	@Override
 	public void dynamicTestFound(TestDescriptor testDescriptor) {
-		out.print(ANSI_GREEN);
-		out.format("Test found:     %s", testDescriptor);
-		out.println(ANSI_RESET);
+		println(BLUE, "Test found:     %s", testDescriptor);
 	}
 
 	@Override
 	public void testStarted(TestDescriptor testDescriptor) {
-		out.print(ANSI_GREEN);
-		out.format("Test started:   %s", testDescriptor);
-		out.println(ANSI_RESET);
+		println(BLACK, "Test started:   %s", testDescriptor);
 	}
 
 	@Override
 	public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-		out.print(ANSI_YELLOW);
-		out.format("Test skipped:   %s\n=> Exception:   %s", testDescriptor,
-			(t != null) ? t.getLocalizedMessage() : "none");
-		out.println(ANSI_RESET);
+		println(YELLOW, "Test skipped:   %s\n=> Exception:   %s", testDescriptor,
+				(t != null) ? t.getLocalizedMessage() : "none");
 	}
 
 	@Override
 	public void testAborted(TestDescriptor testDescriptor, Throwable t) {
-		out.print(ANSI_YELLOW);
-		out.format("Test aborted:   %s\n=> Exception:   %s", testDescriptor,
-			(t != null) ? t.getLocalizedMessage() : "none");
-		out.println(ANSI_RESET);
+		println(YELLOW, "Test aborted:   %s\n=> Exception:   %s", testDescriptor,
+				(t != null) ? t.getLocalizedMessage() : "none");
 	}
 
 	@Override
 	public void testFailed(TestDescriptor testDescriptor, Throwable t) {
-		out.print(ANSI_RED);
-		out.format("Test failed:    %s\n=> Exception:   %s", testDescriptor, t.getLocalizedMessage());
-		out.println(ANSI_RESET);
+		println(RED, "Test failed:    %s\n=> Exception:   %s", testDescriptor, t.getLocalizedMessage());
 	}
 
 	@Override
 	public void testSucceeded(TestDescriptor testDescriptor) {
-		out.print(ANSI_GREEN);
-		out.format("Test succeeded: %s", testDescriptor);
+		println(GREEN, "Test succeeded: %s", testDescriptor);
+	}
+
+	void println(Color color, String format, Object... args) {
+		out.print(color.ansiCode);
+		out.format(format, args);
 		out.println(ANSI_RESET);
+	}
+
+	enum Color {
+		BLACK("\u001B[30m"), //
+		RED("\u001B[31m"), //
+		GREEN("\u001B[32m"), //
+		YELLOW("\u001B[33m"), //
+		BLUE("\u001B[34m"), //
+		PURPLE("\u001B[35m"), //
+		CYAN("\u001B[36m"), //
+		WHITE("\u001B[37m");
+
+		private final String ansiCode;
+
+		Color(String ansiCode) {
+			this.ansiCode = ansiCode;
+		}
 	}
 
 }
