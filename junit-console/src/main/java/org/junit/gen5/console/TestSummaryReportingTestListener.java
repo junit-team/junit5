@@ -72,16 +72,18 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 	private void reportSummary(String msg) {
 		this.timeFinished = System.currentTimeMillis();
 
-		out.println(String.format(//
-			"%s after %d ms\n"//
-					+ "[%10d tests found     ]\n"//
-					+ "[%10d tests started   ]\n"//
-					+ "[%10d tests skipped   ]\n"//
-					+ "[%10d tests aborted   ]\n"//
-					+ "[%10d tests failed    ]\n"//
-					+ "[%10d tests successful]\n", //
+		// @formatter:off
+		out.println(String.format(
+			"%s after %d ms\n"
+			+ "[%10d tests found     ]\n"
+			+ "[%10d tests started   ]\n"
+			+ "[%10d tests skipped   ]\n"
+			+ "[%10d tests aborted   ]\n"
+			+ "[%10d tests failed    ]\n"
+			+ "[%10d tests successful]\n",
 			msg, (this.timeFinished - this.timeStarted), this.testsFound.get(), this.testsStarted.get(),
 			this.testsSkipped.get(), this.testsAborted.get(), this.testsFailed.get(), this.testsSucceeded.get()));
+		// @formatter:on
 	}
 
 	@Override

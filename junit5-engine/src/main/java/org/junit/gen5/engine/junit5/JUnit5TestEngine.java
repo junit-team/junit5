@@ -44,9 +44,14 @@ public class JUnit5TestEngine implements TestEngine {
 	public List<TestDescriptor> discoverTests(TestPlanSpecification specification) {
 		List<Class<?>> testClasses = discoverTestClasses(specification);
 
-		List<TestDescriptor> testDescriptors = testClasses.stream().map(Class::getDeclaredMethods).flatMap(
-			Arrays::stream).filter(method -> method.isAnnotationPresent(Test.class)).map(
-				method -> new JavaTestDescriptor(getId(), method)).collect(toList());
+		// @formatter:off
+		List<TestDescriptor> testDescriptors = testClasses.stream()
+				.map(Class::getDeclaredMethods)
+				.flatMap(Arrays::stream)
+				.filter(method -> method.isAnnotationPresent(Test.class))
+				.map(method -> new JavaTestDescriptor(getId(), method))
+				.collect(toList());
+		// @formatter:on
 
 		testDescriptors.addAll(specification.getUniqueIds().stream().map(JavaTestDescriptor::from).collect(toList()));
 

@@ -24,9 +24,11 @@ public class TestPlanSpecificationBuilderTests {
 
 	@Test
 	public void testPlanBuilderDemo() {
-		TestPlanSpecification testPlanConfiguration = TestPlanSpecification.builder()//
-		.uniqueIds("junit5:org.example.UserTests#fullname()")//
-		.build();
+		// @formatter:off
+		TestPlanSpecification testPlanConfiguration = TestPlanSpecification.builder()
+				.uniqueIds("junit5:org.example.UserTests#fullname()")
+				.build();
+		// @formatter:on
 
 		assertThat(testPlanConfiguration).isNotNull();
 	}
