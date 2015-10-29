@@ -82,6 +82,12 @@ public class TaskBasedJUnit5TestEngine implements TestEngine {
 		try {
 			for (ExecutionTask executionTask : executionTasks) {
 				executionTask.execute();
+
+				System.out.println();
+				TaskPrinter printer = new TaskPrinter();
+				printer.print(executionTask);
+				System.out.println();
+
 			}
 		}
 		catch (Exception e) {

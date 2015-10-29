@@ -10,6 +10,8 @@
 
 package org.junit.gen5.engine.junit5.task;
 
+import java.util.*;
+
 public class DummyTask implements ExecutionTask {
 
 	private String label;
@@ -24,6 +26,11 @@ public class DummyTask implements ExecutionTask {
 
 		System.out.println("--> TASK: " + this.label);
 
+	}
+
+	@Override
+	public List<ExecutionTask> getChildren() {
+		return null;
 	}
 
 }

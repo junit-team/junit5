@@ -10,8 +10,13 @@
 
 package org.junit.gen5.engine.junit5.task;
 
+import java.util.*;
+
 public interface ExecutionTask {
 
 	void execute() throws Exception;
+
+	//display only - to be removed
+	List<ExecutionTask> getChildren();
 
 }

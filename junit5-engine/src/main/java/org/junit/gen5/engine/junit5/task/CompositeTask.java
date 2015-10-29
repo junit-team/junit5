@@ -27,8 +27,7 @@ public class CompositeTask implements ExecutionTask {
 	@Override
 	public void execute() throws Exception {
 
-		System.out.println("--> TASK: " + this.getClass().getSimpleName() + ": '" + this.label + "' - children count: "
-				+ this.children.size());
+		System.out.println(this);
 
 		for (ExecutionTask child : this.children) {
 			child.execute();
@@ -36,4 +35,13 @@ public class CompositeTask implements ExecutionTask {
 
 	}
 
+	@Override
+	public List<ExecutionTask> getChildren() {
+		return this.children;
+	}
+
+	@Override
+	public String toString() {
+		return this.label;
+	}
 }

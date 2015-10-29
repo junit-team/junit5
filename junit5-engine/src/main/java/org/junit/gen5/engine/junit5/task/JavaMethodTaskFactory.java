@@ -29,8 +29,8 @@ public class JavaMethodTaskFactory {
 		tasks.add(this.createTestMethodTask(testDescriptor, instance));
 		tasks.addAll(this.createAfterTasks(testDescriptor.getTestClass(), instance));
 
-		return new CompositeTask(tasks, "composite task for " + testDescriptor.getTestClass().getSimpleName() + "."
-				+ testDescriptor.getTestMethod().getName() + "()");
+		return new CompositeTask(tasks,
+			testDescriptor.getTestClass().getSimpleName() + "." + testDescriptor.getTestMethod().getName() + "()");
 
 	}
 

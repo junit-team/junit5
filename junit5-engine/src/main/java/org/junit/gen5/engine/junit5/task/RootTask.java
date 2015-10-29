@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit5.task;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.lang.reflect.*;
+import java.util.*;
 
 import org.junit.gen5.engine.*;
 import org.junit.gen5.engine.junit5.*;
@@ -26,6 +27,8 @@ public class RootTask implements ExecutionTask {
 
 	private JavaMethodTaskFactory javaMethodTaskFactory = new JavaMethodTaskFactory();
 
+	ExecutionTask task;
+
 
 	public RootTask(TestExecutionListener testExecutionListener, JavaMethodTestDescriptor testDescriptor) {
 
@@ -35,9 +38,12 @@ public class RootTask implements ExecutionTask {
 	}
 
 	@Override
-	public void execute() throws Exception {
+	public List<ExecutionTask> getChildren() {
+		return this.task.getChildren();
+	}
 
-		System.out.println("---->  ROOT TASK");
+	@Override
+	public void execute() throws Exception {
 
 		this.handleSingleDescriptor(this.testExecutionListener, this.testDescriptor);
 	}
@@ -49,8 +55,8 @@ public class RootTask implements ExecutionTask {
 			testExecutionListener.testStarted(testDescriptor);
 
 			Object instance = newInstance(testDescriptor.getTestClass());
-			ExecutionTask task = this.createJavaTestMethodTask(testDescriptor, instance);
-			task.execute();
+			this.task = this.createJavaTestMethodTask(testDescriptor, instance);
+			this.task.execute();
 
 			testExecutionListener.testSucceeded(testDescriptor);
 		}
@@ -79,4 +85,8 @@ public class RootTask implements ExecutionTask {
 		return this.javaMethodTaskFactory.createJavaTestMethodTask(testDescriptor, instance);
 	}
 
+	@Override
+	public String toString() {
+		return this.task.toString();
+	}
 }

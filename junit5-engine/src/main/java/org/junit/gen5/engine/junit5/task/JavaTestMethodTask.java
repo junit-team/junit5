@@ -62,4 +62,9 @@ public class JavaTestMethodTask<T> implements ExecutionTask {
 		// @formatter:on
 	}
 
+	@Override
+	public List<ExecutionTask> getChildren() {
+		return null;
+	}
+
 }

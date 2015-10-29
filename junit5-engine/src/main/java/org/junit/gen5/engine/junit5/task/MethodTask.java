@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit5.task;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.lang.reflect.*;
+import java.util.*;
 
 public class MethodTask<T> implements ExecutionTask {
 
@@ -27,10 +28,20 @@ public class MethodTask<T> implements ExecutionTask {
 		this.instance = instance;
 	}
 
+	@Override
 	public void execute() throws Exception {
 		System.out.println("--> TASK: " + this.getClass().getSimpleName() + " - " + this.method.getName() + "()");
 
 		invokeMethod(this.method, this.instance);
 	}
 
+	@Override
+	public List<ExecutionTask> getChildren() {
+		return null;
+	}
+
+	@Override
+	public String toString() {
+		return this.method.getName() + "()";
+	}
 }
