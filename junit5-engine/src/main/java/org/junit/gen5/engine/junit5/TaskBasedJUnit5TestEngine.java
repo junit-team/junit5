@@ -10,13 +10,14 @@
 
 package org.junit.gen5.engine.junit5;
 
-import org.junit.gen5.api.*;
-import org.junit.gen5.engine.*;
-import org.junit.gen5.engine.junit5.task.*;
-import java.util.*;
 import static java.lang.String.*;
 import static java.util.stream.Collectors.*;
 
+import java.util.*;
+
+import org.junit.gen5.api.*;
+import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.junit5.task.*;
 
 public class TaskBasedJUnit5TestEngine implements TestEngine {
 
@@ -88,7 +89,8 @@ public class TaskBasedJUnit5TestEngine implements TestEngine {
 		}
 	}
 
-	private List<ExecutionTask> buildTaskTrees(Collection<TestDescriptor> testDescriptors, TestExecutionListener testExecutionListener) {
+	private List<ExecutionTask> buildTaskTrees(Collection<TestDescriptor> testDescriptors,
+			TestExecutionListener testExecutionListener) {
 		List<ExecutionTask> executionTasks = new ArrayList<>();
 
 		for (TestDescriptor testDescriptor : testDescriptors) {

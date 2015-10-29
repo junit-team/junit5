@@ -10,15 +10,15 @@
 
 package org.junit.gen5.engine.junit5;
 
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
+
+import java.lang.reflect.*;
+
 import org.junit.gen5.engine.*;
 import org.junit.gen5.engine.junit5.task.*;
 import org.opentestalliance.*;
-import java.lang.reflect.*;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
-
 
 public class RootTask implements ExecutionTask {
-
 
 	private TestExecutionListener testExecutionListener;
 	private JavaMethodTestDescriptor testDescriptor;
@@ -31,7 +31,6 @@ public class RootTask implements ExecutionTask {
 
 	}
 
-
 	@Override
 	public void execute() throws Exception {
 
@@ -40,14 +39,11 @@ public class RootTask implements ExecutionTask {
 		this.handleSingleDescriptor(this.testExecutionListener, this.testDescriptor);
 	}
 
-
-
-
-	private void handleSingleDescriptor(TestExecutionListener testExecutionListener, JavaMethodTestDescriptor testDescriptor) {
+	private void handleSingleDescriptor(TestExecutionListener testExecutionListener,
+			JavaMethodTestDescriptor testDescriptor) {
 
 		try {
 			testExecutionListener.testStarted(testDescriptor);
-
 
 			Object instance = newInstance(testDescriptor.getTestClass());
 			ExecutionTask task = this.createJavaTestMethodTask(testDescriptor, instance);
@@ -68,14 +64,13 @@ public class RootTask implements ExecutionTask {
 			}
 		}
 		catch (NoSuchMethodException | InstantiationException | IllegalAccessException ex) {
-			throw new IllegalStateException(String.format("Test %s is not well-formed and cannot be executed",
-					testDescriptor.getUniqueId()), ex);
+			throw new IllegalStateException(
+				String.format("Test %s is not well-formed and cannot be executed", testDescriptor.getUniqueId()), ex);
 		}
 		catch (Exception ex) {
 			testExecutionListener.testFailed(testDescriptor, ex);
 		}
 	}
-
 
 	//TODO: extract factory
 	private ExecutionTask createJavaTestMethodTask(JavaMethodTestDescriptor testDescriptor, Object instance) {
