@@ -12,14 +12,11 @@ package org.junit.gen5.engine.junit5;
 
 import org.junit.gen5.api.*;
 import org.junit.gen5.engine.*;
-import org.opentestalliance.*;
-
-import java.lang.reflect.*;
+import org.junit.gen5.engine.junit5.task.*;
 import java.util.*;
-
 import static java.lang.String.*;
 import static java.util.stream.Collectors.*;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+
 
 public class TaskBasedJUnit5TestEngine implements TestEngine {
 
@@ -74,55 +71,32 @@ public class TaskBasedJUnit5TestEngine implements TestEngine {
 	@Override
 	public void execute(Collection<TestDescriptor> testDescriptors, TestExecutionListener testExecutionListener) {
 
-		// TODO Build a tree of TestDescriptors.
-		//
-		// Simply iterating over a collection is insufficient for our purposes. We need a
-		// tree (or some form of hierarchical data structure) in order to be able to
-		// execute each test within the correct scope.
-		//
-		// For example, we need to execute all test methods within a given test class as a
-		// group in order to:
-		//
-		// 1) retain the instance across test method invocations (if desired).
-		// 2) invoke class-level before & after methods _around_ the set of methods.
+		List<ExecutionTask> executionTasks = this.buildTaskTrees(testDescriptors, testExecutionListener);
 
-		for (TestDescriptor testDescriptor : testDescriptors) {
-			this.handleSingleDescriptor(testExecutionListener, (JavaMethodTestDescriptor) testDescriptor);
+		this.executeAllTaskTrees(executionTasks);
+
+	}
+
+	private void executeAllTaskTrees(List<ExecutionTask> executionTasks) {
+		try {
+			for (ExecutionTask executionTask : executionTasks) {
+				executionTask.execute();
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
+	private List<ExecutionTask> buildTaskTrees(Collection<TestDescriptor> testDescriptors, TestExecutionListener testExecutionListener) {
+		List<ExecutionTask> executionTasks = new ArrayList<>();
 
-	private void handleSingleDescriptor(TestExecutionListener testExecutionListener, JavaMethodTestDescriptor testDescriptor) {
+		for (TestDescriptor testDescriptor : testDescriptors) {
+			RootTask task = new RootTask(testExecutionListener, (JavaMethodTestDescriptor) testDescriptor);
+			executionTasks.add(task);
 
-		try {
-			testExecutionListener.testStarted(testDescriptor);
-
-
-			Object instance = newInstance(testDescriptor.getTestClass());
-			JavaTestMethodTask task = new JavaTestMethodTask(testDescriptor.getTestClass(), testDescriptor.getTestMethod(), instance);
-			task.execute();
-
-			testExecutionListener.testSucceeded(testDescriptor);
 		}
-		catch (InvocationTargetException ex) {
-			Throwable targetException = ex.getTargetException();
-			if (targetException instanceof TestSkippedException) {
-				testExecutionListener.testSkipped(testDescriptor, targetException);
-			}
-			else if (targetException instanceof TestAbortedException) {
-				testExecutionListener.testAborted(testDescriptor, targetException);
-			}
-			else {
-				testExecutionListener.testFailed(testDescriptor, targetException);
-			}
-		}
-		catch (NoSuchMethodException | InstantiationException | IllegalAccessException ex) {
-			throw new IllegalStateException(String.format("Test %s is not well-formed and cannot be executed",
-					testDescriptor.getUniqueId()), ex);
-		}
-		catch (Exception ex) {
-			testExecutionListener.testFailed(testDescriptor, ex);
-		}
+		return executionTasks;
 	}
 
 }
