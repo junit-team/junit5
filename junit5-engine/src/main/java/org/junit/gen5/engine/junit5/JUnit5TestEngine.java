@@ -50,10 +50,11 @@ public class JUnit5TestEngine implements TestEngine {
 			if (element instanceof ClassNameSpecification) {
 				ClassNameSpecification classNameSpecification = (ClassNameSpecification) element;
 				Class<?> testClass = discoverTestClass(classNameSpecification.getClassName());
+				JavaClassTestDescriptor parent = new JavaClassTestDescriptor(getId(), testClass);
 				// @formatter:off
 				testDescriptors.addAll(Arrays.stream(testClass.getDeclaredMethods())
 					.filter(method -> method.isAnnotationPresent(Test.class))
-					.map(method -> new JavaMethodTestDescriptor(getId(), testClass, method))
+					.map(method -> new JavaMethodTestDescriptor(getId(), testClass, method, parent))
 					.collect(toList()));
 				// @formatter:on
 			}

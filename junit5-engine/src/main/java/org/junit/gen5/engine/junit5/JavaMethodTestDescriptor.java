@@ -10,7 +10,6 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static java.util.Collections.*;
 import static org.junit.gen5.commons.util.ObjectUtils.nullSafeToString;
 
 import java.lang.reflect.Method;
@@ -28,7 +27,7 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
 
 /**
- * {@link TestDescriptor} for tests based on Java classes and methods.
+ * {@link TestDescriptor} for tests based on Java methods.
  *
  * <p>The pattern of the {@link #getTestId test ID} takes the form of
  * <code>{fully qualified class name}#{method name}({comma separated list
@@ -90,45 +89,37 @@ public class JavaMethodTestDescriptor implements TestDescriptor {
 	}
 
 
-	private final String uniqueId;
 	private final String engineId;
 	private final String testId;
 	private final String displayName;
-	private final TestDescriptor parent;
-	private final List<TestDescriptor> children;
+	private final JavaClassTestDescriptor parent;
 	private final Class<?> testClass;
 
 	private final Method testMethod;
 
 
 	public JavaMethodTestDescriptor(String engineId, Class<?> testClass, Method testMethod) {
-		this(engineId, testClass, testMethod, null, null);
+		this(engineId, testClass, testMethod, null);
 	}
 
-	public JavaMethodTestDescriptor(String engineId, Class<?> testClass, Method testMethod, TestDescriptor parent,
-			List<TestDescriptor> children) {
+	public JavaMethodTestDescriptor(String engineId, Class<?> testClass, Method testMethod,
+			JavaClassTestDescriptor parent) {
 
 		Preconditions.notEmpty(engineId, "engineId must not be null or empty");
-		if (testMethod == null) {
-			Preconditions.notNull(testClass, "testClass must not be null");
-		}
-		else {
-			Preconditions.notNull(testMethod, "testMethod must not be null");
-			testClass = testMethod.getDeclaringClass();
-		}
+		Preconditions.notNull(testClass, "testClass must not be null");
+		Preconditions.notNull(testMethod, "testMethod must not be null");
 
 		this.testClass = testClass;
 		this.testMethod = testMethod;
 		this.displayName = determineDisplayName(testClass, testMethod);
 		this.parent = parent;
-		this.children = (children != null ? unmodifiableList(children) : emptyList());
 		this.engineId = engineId;
 		this.testId = createTestId(testClass, testMethod);
-		this.uniqueId = this.engineId + ":" + this.testId;
 	}
 
 	private static Class<?> loadClass(String name) {
 		try {
+			// TODO Use correct classloader
 			// TODO Add support for primitive types and arrays.
 			return JavaMethodTestDescriptor.class.getClassLoader().loadClass(name);
 		}
