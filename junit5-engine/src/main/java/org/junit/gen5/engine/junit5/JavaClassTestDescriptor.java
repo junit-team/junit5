@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit5;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
 

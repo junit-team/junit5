@@ -13,8 +13,10 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.commons.util.ObjectUtils.nullSafeToString;
 
 import java.lang.reflect.Method;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.Preconditions;
@@ -29,7 +31,6 @@ import org.junit.gen5.engine.TestDescriptor;
 @Data
 @EqualsAndHashCode
 public class JavaMethodTestDescriptor implements TestDescriptor {
-
 
 	private final String testId;
 	private final String displayName;
