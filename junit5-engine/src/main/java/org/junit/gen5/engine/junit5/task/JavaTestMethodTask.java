@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5;
+package org.junit.gen5.engine.junit5.task;
 
 import static java.util.stream.Collectors.*;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
@@ -25,7 +25,7 @@ import org.junit.gen5.engine.junit5.task.*;
  * @author Matthias Merdes
  * @since 5.0
  */
-class JavaTestMethodTask<T> implements ExecutionTask {
+public class JavaTestMethodTask<T> implements ExecutionTask {
 
 	private final Class<T> target;
 	private final T instance;
