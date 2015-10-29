@@ -34,6 +34,9 @@ public class RootTask implements ExecutionTask {
 
 	@Override
 	public void execute() throws Exception {
+
+		System.out.println("---->  ROOT TASK");
+
 		this.handleSingleDescriptor(this.testExecutionListener, this.testDescriptor);
 	}
 
@@ -47,7 +50,7 @@ public class RootTask implements ExecutionTask {
 
 
 			Object instance = newInstance(testDescriptor.getTestClass());
-			JavaTestMethodTask task = new JavaTestMethodTask(testDescriptor.getTestClass(), testDescriptor.getTestMethod(), instance);
+			ExecutionTask task = this.createJavaTestMethodTask(testDescriptor, instance);
 			task.execute();
 
 			testExecutionListener.testSucceeded(testDescriptor);
@@ -71,6 +74,12 @@ public class RootTask implements ExecutionTask {
 		catch (Exception ex) {
 			testExecutionListener.testFailed(testDescriptor, ex);
 		}
+	}
+
+
+	//TODO: extract factory
+	private ExecutionTask createJavaTestMethodTask(JavaMethodTestDescriptor testDescriptor, Object instance) {
+		return new JavaTestMethodTask(testDescriptor.getTestClass(), testDescriptor.getTestMethod(), instance);
 	}
 
 }

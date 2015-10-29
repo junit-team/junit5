@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import org.junit.gen5.api.*;
+import org.junit.gen5.engine.junit5.task.*;
 
 import java.lang.annotation.*;
 import java.lang.reflect.*;
@@ -24,7 +25,7 @@ import static org.junit.gen5.commons.util.ReflectionUtils.*;
  * @author Matthias Merdes
  * @since 5.0
  */
-class JavaTestMethodTask<T> {
+class JavaTestMethodTask<T> implements ExecutionTask {
 
 
 	private final Class<T> target;
@@ -39,7 +40,7 @@ class JavaTestMethodTask<T> {
 	}
 
 
-	void execute() throws Exception {
+	public void execute() throws Exception {
 
 		executeBeforeMethods(this.target, this.instance);
 		invokeMethod(this.method, this.instance);
