@@ -25,6 +25,9 @@ public class CompositeTask implements ExecutionTask {
 	@Override
 	public void execute() throws Exception {
 
+		System.out.println(
+			"--> TASK: " + this.getClass().getSimpleName() + " - children count: " + this.children.size());
+
 		for (ExecutionTask child : this.children) {
 			child.execute();
 		}
