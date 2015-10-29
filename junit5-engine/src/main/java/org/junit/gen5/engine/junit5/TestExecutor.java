@@ -36,7 +36,7 @@ class TestExecutor {
 	}
 
 	void execute() throws Exception {
-		Class<?> testClass = this.testDescriptor.getTestClass();
+		Class<?> testClass = this.testDescriptor.getParent().getTestClass();
 
 		// TODO Extract test instantiation
 		Object testInstance = newInstance(testClass);

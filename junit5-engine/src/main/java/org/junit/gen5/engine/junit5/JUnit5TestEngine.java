@@ -54,13 +54,13 @@ public class JUnit5TestEngine implements TestEngine {
 				// @formatter:off
 				testDescriptors.addAll(Arrays.stream(testClass.getDeclaredMethods())
 					.filter(method -> method.isAnnotationPresent(Test.class))
-					.map(method -> new JavaMethodTestDescriptor(getId(), testClass, method, parent))
+					.map(method -> new JavaMethodTestDescriptor(  method, parent))
 					.collect(toList()));
 				// @formatter:on
 			}
 			else if (element instanceof UniqueIdSpecification) {
 				UniqueIdSpecification uniqueIdSpecification = (UniqueIdSpecification) element;
-				testDescriptors.add(JavaMethodTestDescriptor.from(uniqueIdSpecification.getUniqueId()));
+				testDescriptors.add(JavaTestDescriptorFactory.from(uniqueIdSpecification.getUniqueId()));
 			}
 		}
 
