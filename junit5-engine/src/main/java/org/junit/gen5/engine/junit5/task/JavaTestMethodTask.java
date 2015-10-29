@@ -19,6 +19,7 @@ import java.util.*;
 
 import org.junit.gen5.api.*;
 
+@Deprecated
 public class JavaTestMethodTask<T> implements ExecutionTask {
 
 	private final Class<T> target;
