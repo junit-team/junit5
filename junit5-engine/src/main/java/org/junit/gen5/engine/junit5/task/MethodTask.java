@@ -28,7 +28,7 @@ public class MethodTask<T> implements ExecutionTask {
 	}
 
 	public void execute() throws Exception {
-		System.out.println("--> TASK: " + this.getClass().getSimpleName() + " - " + this.method);
+		System.out.println("--> TASK: " + this.getClass().getSimpleName() + " - " + this.method.getName() + "()");
 
 		invokeMethod(this.method, this.instance);
 	}

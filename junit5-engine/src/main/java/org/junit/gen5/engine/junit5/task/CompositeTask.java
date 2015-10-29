@@ -16,17 +16,19 @@ public class CompositeTask implements ExecutionTask {
 
 	private List<ExecutionTask> children;
 
+	private String label;
 
-	public CompositeTask(List<ExecutionTask> children) {
+
+	public CompositeTask(List<ExecutionTask> children, String label) {
 		this.children = children;
-
+		this.label = label;
 	}
 
 	@Override
 	public void execute() throws Exception {
 
-		System.out.println(
-			"--> TASK: " + this.getClass().getSimpleName() + " - children count: " + this.children.size());
+		System.out.println("--> TASK: " + this.getClass().getSimpleName() + ": '" + this.label + "' - children count: "
+				+ this.children.size());
 
 		for (ExecutionTask child : this.children) {
 			child.execute();
