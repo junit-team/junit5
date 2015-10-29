@@ -24,6 +24,8 @@ public class RootTask implements ExecutionTask {
 	private TestExecutionListener testExecutionListener;
 	private JavaMethodTestDescriptor testDescriptor;
 
+	private JavaMethodTaskFactory javaMethodTaskFactory = new JavaMethodTaskFactory();
+
 
 	public RootTask(TestExecutionListener testExecutionListener, JavaMethodTestDescriptor testDescriptor) {
 
@@ -73,9 +75,8 @@ public class RootTask implements ExecutionTask {
 		}
 	}
 
-	//TODO: extract factory
 	private ExecutionTask createJavaTestMethodTask(JavaMethodTestDescriptor testDescriptor, Object instance) {
-		return new JavaTestMethodTask(testDescriptor.getTestClass(), testDescriptor.getTestMethod(), instance);
+		return this.javaMethodTaskFactory.createJavaTestMethodTask(testDescriptor, instance);
 	}
 
 }
