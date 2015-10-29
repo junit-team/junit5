@@ -19,13 +19,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes and methods.

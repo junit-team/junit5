@@ -10,9 +10,12 @@
 
 package org.junit.gen5.launcher;
 
-import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
+import static org.junit.gen5.launcher.TestEngineRegistry.*;
 
-import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.TestExecutionListener;
+import org.junit.gen5.engine.TestPlanExecutionListener;
+import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
  * @author Stefan Bechtold

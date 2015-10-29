@@ -10,7 +10,7 @@
 
 package org.junit.gen5.launcher;
 
-import static java.util.Arrays.asList;
+import static java.util.Arrays.*;
 
 import java.util.LinkedList;
 import java.util.List;
