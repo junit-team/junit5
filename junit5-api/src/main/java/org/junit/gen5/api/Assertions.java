@@ -15,7 +15,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.junit.gen5.commons.util.ObjectUtils;
-
 import org.opentestalliance.AssertionFailedError;
 
 /**
