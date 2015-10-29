@@ -29,6 +29,7 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 
 	private final PrintStream out;
 
+
 	public ColoredPrintingTestListener(PrintStream out) {
 		this.out = out;
 	}
@@ -59,34 +60,43 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 
 	@Override
 	public void dynamicTestFound(TestDescriptor testDescriptor) {
-		println(BLUE, "Test found:     %s", testDescriptor);
+		printlnTestDescriptor(BLUE, "Test found:", testDescriptor);
 	}
 
 	@Override
 	public void testStarted(TestDescriptor testDescriptor) {
-		println(BLACK, "Test started:   %s", testDescriptor);
+		printlnTestDescriptor(BLACK, "Test started:", testDescriptor);
 	}
 
 	@Override
 	public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-		println(YELLOW, "Test skipped:   %s\n=> Exception:   %s", testDescriptor,
-				(t != null) ? t.getLocalizedMessage() : "none");
+		printlnTestDescriptor(YELLOW, "Test skipped:", testDescriptor);
+		printlnException(YELLOW, t);
 	}
 
 	@Override
 	public void testAborted(TestDescriptor testDescriptor, Throwable t) {
-		println(YELLOW, "Test aborted:   %s\n=> Exception:   %s", testDescriptor,
-				(t != null) ? t.getLocalizedMessage() : "none");
+		printlnTestDescriptor(YELLOW, "Test aborted:", testDescriptor);
+		printlnException(YELLOW, t);
 	}
 
 	@Override
 	public void testFailed(TestDescriptor testDescriptor, Throwable t) {
-		println(RED, "Test failed:    %s\n=> Exception:   %s", testDescriptor, t.getLocalizedMessage());
+		printlnTestDescriptor(RED, "Test failed:", testDescriptor);
+		printlnException(RED, t);
 	}
 
 	@Override
 	public void testSucceeded(TestDescriptor testDescriptor) {
-		println(GREEN, "Test succeeded: %s", testDescriptor);
+		printlnTestDescriptor(GREEN, "Test succeeded:", testDescriptor);
+	}
+
+	private void printlnTestDescriptor(Color color, String message, TestDescriptor testDescriptor) {
+		println(color, "%-15s   %s [%s]", message, testDescriptor.getDisplayName(), testDescriptor.getUniqueId());
+	}
+
+	private void printlnException(Color color, Throwable throwable) {
+		println(color, "                  => Exception:   %s", throwable.getLocalizedMessage());
 	}
 
 	void println(Color color, String format, Object... args) {
@@ -94,6 +104,7 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 		out.format(format, args);
 		out.println(ANSI_RESET);
 	}
+
 
 	enum Color {
 		BLACK("\u001B[30m"), //
@@ -106,6 +117,7 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 		WHITE("\u001B[37m");
 
 		private final String ansiCode;
+
 
 		Color(String ansiCode) {
 			this.ansiCode = ansiCode;
