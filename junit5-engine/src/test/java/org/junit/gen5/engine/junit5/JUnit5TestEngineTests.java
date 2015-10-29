@@ -31,10 +31,14 @@ import org.junit.gen5.engine.TestPlanSpecification;
 public class JUnit5TestEngineTests {
 
 	@org.junit.Test
-	public void executeTestsFromDescriptorsGeneratedFromClasses() {
+	public void executeTestsFromFromClasses() {
 		JUnit5TestEngine engine = new JUnit5TestEngine();
 
-		TestPlanSpecification spec = TestPlanSpecification.builder().classes(LocalTestCase.class).build();
+		// @formatter:off
+		TestPlanSpecification spec = TestPlanSpecification.builder()
+			.classes(LocalTestCase.class)
+			.build();
+		// @formatter:on
 
 		List<TestDescriptor> descriptors = engine.discoverTests(spec);
 		Assert.assertNotNull(descriptors);
@@ -48,6 +52,28 @@ public class JUnit5TestEngineTests {
 		Assert.assertEquals(1, listener.testSucceededCount.get());
 		Assert.assertEquals(1, listener.testAbortedCount.get());
 		Assert.assertEquals(1, listener.testFailedCount.get());
+	}
+
+	@org.junit.Test
+	public void executeTestFromTestId() {
+		JUnit5TestEngine engine = new JUnit5TestEngine();
+
+		// @formatter:off
+		TestPlanSpecification spec = TestPlanSpecification.builder()
+			.uniqueIds("junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()")
+			.build();
+		// @formatter:on
+
+		List<TestDescriptor> descriptors = engine.discoverTests(spec);
+		Assert.assertNotNull(descriptors);
+		Assert.assertEquals("# tests", 1, descriptors.size());
+
+		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
+
+		engine.execute(descriptors, listener);
+
+		Assert.assertEquals(1, listener.testStartedCount.get());
+		Assert.assertEquals(1, listener.testSucceededCount.get());
 	}
 
 
