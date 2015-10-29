@@ -100,9 +100,8 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 	}
 
 	void println(Color color, String format, Object... args) {
-		out.print(color);
-		out.format(format, args);
-		out.println(NONE);
+		// Use string concatenation to avoid ansi disruption on console
+		out.println(color + String.format(format, args) + NONE);
 	}
 
 
