@@ -26,7 +26,6 @@ public class Launcher {
 
 	private final TestListenerRegistry listenerRegistry = new TestListenerRegistry();
 
-
 	public void registerTestPlanExecutionListeners(TestPlanExecutionListener... testListeners) {
 		listenerRegistry.registerTestPlanExecutionListeners(testListeners);
 		listenerRegistry.registerTestExecutionListeners(testListeners);

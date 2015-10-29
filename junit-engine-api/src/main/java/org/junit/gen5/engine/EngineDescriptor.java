@@ -17,7 +17,6 @@ public class EngineDescriptor implements TestDescriptor {
 
 	private String engineId;
 
-
 	public EngineDescriptor(String engineId) {
 		this.engineId = engineId;
 	}

@@ -36,7 +36,6 @@ public class JUnit5TestEngine implements TestEngine {
 	// TODO Consider using class names for engine IDs.
 	private static final String ENGINE_ID = "junit5";
 
-
 	@Override
 	public String getId() {
 		return ENGINE_ID;

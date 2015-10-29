@@ -33,7 +33,6 @@ public class JUnit5TestEngineTests {
 
 	private static final EngineDescriptor ENGINE_DESCRIPTOR = new EngineDescriptor("engine-id");
 
-
 	@org.junit.Test
 	public void executeTestsFromFromClasses() {
 		JUnit5TestEngine engine = new JUnit5TestEngine();
@@ -95,7 +94,6 @@ public class JUnit5TestEngineTests {
 		Assert.assertEquals(1 + 1, listener.testSucceededCount.get());
 	}
 
-
 	private static class LocalTestCase {
 
 		@Test
@@ -125,7 +123,6 @@ public class JUnit5TestEngineTests {
 		final AtomicInteger testSucceededCount = new AtomicInteger();
 		final AtomicInteger testAbortedCount = new AtomicInteger();
 		final AtomicInteger testFailedCount = new AtomicInteger();
-
 
 		@Override
 		public void testStarted(TestDescriptor testDescriptor) {

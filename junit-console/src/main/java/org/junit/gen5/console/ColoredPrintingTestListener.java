@@ -29,7 +29,6 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 
 	private final PrintStream out;
 
-
 	public ColoredPrintingTestListener(PrintStream out) {
 		this.out = out;
 	}
@@ -104,7 +103,6 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 		out.println(color + String.format(format, args) + NONE);
 	}
 
-
 	static enum Color {
 
 		NONE("\u001B[0m"),
@@ -126,7 +124,6 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 		WHITE("\u001B[37m");
 
 		private final String ansiCode;
-
 
 		Color(String ansiCode) {
 			this.ansiCode = ansiCode;

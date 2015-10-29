@@ -43,9 +43,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return new TestPlanSpecification(elements);
 	}
 
-
 	private final List<TestPlanSpecificationElement> elements;
-
 
 	public TestPlanSpecification(List<TestPlanSpecificationElement> elements) {
 		this.elements = elements;

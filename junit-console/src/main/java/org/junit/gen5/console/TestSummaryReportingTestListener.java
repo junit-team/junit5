@@ -38,7 +38,6 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 	private long timePaused;
 	private long timeFinished;
 
-
 	public TestSummaryReportingTestListener(PrintStream out) {
 		this.out = out;
 	}

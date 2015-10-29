@@ -30,7 +30,6 @@ class TestListenerRegistry {
 
 	private final List<TestPlanExecutionListener> testPlanExecutionListeners = new LinkedList<>();
 
-
 	void registerTestExecutionListeners(TestExecutionListener... listeners) {
 		this.testExecutionListeners.addAll(asList(listeners));
 	}
@@ -50,7 +49,6 @@ class TestListenerRegistry {
 	TestExecutionListener getCompositeTestExecutionListener() {
 		return new CompositeTestExecutionListener();
 	}
-
 
 	private class CompositeTestExecutionListener implements TestExecutionListener {
 

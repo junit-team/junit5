@@ -22,7 +22,6 @@ class TestEngineRegistry {
 
 	private static Iterable<TestEngine> testEngines;
 
-
 	static Iterable<TestEngine> lookupAllTestEngines() {
 		if (testEngines == null) {
 			testEngines = ServiceLoader.load(TestEngine.class);

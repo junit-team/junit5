@@ -31,7 +31,6 @@ class SampleTestCase {
 
 	boolean throwExceptionInAfterMethod = false;
 
-
 	@Before
 	static void staticBefore() {
 		staticBeforeInvoked = true;

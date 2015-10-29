@@ -36,7 +36,6 @@ public class JavaMethodTestDescriptor implements TestDescriptor {
 	private final JavaClassTestDescriptor parent;
 	private final Method testMethod;
 
-
 	public JavaMethodTestDescriptor(Method testMethod, JavaClassTestDescriptor parent) {
 		Preconditions.notNull(testMethod, "testMethod must not be null");
 		Preconditions.notNull(parent, "parent must not be null");

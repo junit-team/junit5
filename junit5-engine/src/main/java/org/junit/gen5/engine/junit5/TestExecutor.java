@@ -30,7 +30,6 @@ class TestExecutor {
 
 	private final JavaMethodTestDescriptor testDescriptor;
 
-
 	TestExecutor(JavaMethodTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
 	}

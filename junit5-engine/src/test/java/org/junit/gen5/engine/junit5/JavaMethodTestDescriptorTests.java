@@ -39,7 +39,6 @@ public class JavaMethodTestDescriptorTests {
 
 	private static final EngineDescriptor ENGINE_DESCRIPTOR = new EngineDescriptor(JUNIT_5_ENGINE_ID);
 
-
 	@org.junit.Test
 	public void constructFromMethod() throws Exception {
 		Class<?> testClass = getClass();
