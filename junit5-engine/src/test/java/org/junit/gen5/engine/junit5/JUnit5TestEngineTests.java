@@ -34,7 +34,8 @@ public class JUnit5TestEngineTests {
 	public void executeTestsFromFromClasses() {
 		JUnit5TestEngine engine = new JUnit5TestEngine();
 
-		TestPlanSpecification spec = TestPlanSpecification.forClassName(LocalTestCase.class.getName());
+		TestPlanSpecification spec = TestPlanSpecification.build(
+			TestPlanSpecification.forClassName(LocalTestCase.class.getName()));
 
 		List<TestDescriptor> descriptors = engine.discoverTests(spec);
 		Assert.assertNotNull(descriptors);
@@ -54,8 +55,8 @@ public class JUnit5TestEngineTests {
 	public void executeTestFromUniqueId() {
 		JUnit5TestEngine engine = new JUnit5TestEngine();
 
-		TestPlanSpecification spec = TestPlanSpecification.forUniqueId(
-			"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()");
+		TestPlanSpecification spec = TestPlanSpecification.build(TestPlanSpecification.forUniqueId(
+			"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"));
 
 		List<TestDescriptor> descriptors = engine.discoverTests(spec);
 		Assert.assertNotNull(descriptors);

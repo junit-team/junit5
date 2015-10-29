@@ -32,7 +32,8 @@ public class ConsoleRunner {
 			// @formatter:on
 		);
 
-		TestPlanSpecification testPlanSpecification = TestPlanSpecification.forClassNames(args);
+		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
+			TestPlanSpecification.forClassNames(args));
 
 		// TODO Provide means to allow manipulation of test plan?
 		launcher.execute(testPlanSpecification);

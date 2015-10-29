@@ -10,14 +10,6 @@
 
 package org.junit.gen5.engine;
 
-import java.util.Collections;
-import java.util.Iterator;
-
-public interface TestSpecificationElement extends TestPlanSpecification {
-
-	@Override
-	default public Iterator<TestPlanSpecification> iterator() {
-		return Collections.<TestPlanSpecification> singleton(this).iterator();
-	}
+public interface TestPlanSpecificationElement {
 
 }

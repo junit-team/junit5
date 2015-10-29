@@ -13,7 +13,7 @@ package org.junit.gen5.engine;
 import lombok.Value;
 
 @Value
-public class ClassNameSpecification implements TestSpecificationElement {
+public class ClassNameSpecification implements TestPlanSpecificationElement {
 
 	private String className;
 

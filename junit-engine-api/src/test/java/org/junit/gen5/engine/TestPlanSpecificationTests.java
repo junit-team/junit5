@@ -24,8 +24,8 @@ public class TestPlanSpecificationTests {
 
 	@Test
 	public void testPlanBuilderDemo() {
-		TestPlanSpecification specification = TestPlanSpecification.forUniqueId(
-			"junit5:org.example.UserTests#fullname()");
+		TestPlanSpecification specification = TestPlanSpecification.build(
+			TestPlanSpecification.forUniqueId("junit5:org.example.UserTests#fullname()"));
 
 		assertNotNull(specification);
 	}

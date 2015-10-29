@@ -11,30 +11,49 @@
 package org.junit.gen5.engine;
 
 import static java.util.Arrays.stream;
+import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * @since 5.0
  */
-public interface TestPlanSpecification extends Iterable<TestPlanSpecification> {
+public final class TestPlanSpecification implements Iterable<TestPlanSpecificationElement> {
 
-	static TestPlanSpecification forClassName(String className) {
+	public static TestPlanSpecificationElement forClassName(String className) {
 		return new ClassNameSpecification(className);
 	}
 
-	static TestPlanSpecification forUniqueId(String uniqueId) {
+	public static List<TestPlanSpecificationElement> forClassNames(String... classNames) {
+		return stream(classNames).map(ClassNameSpecification::new).collect(toList());
+	}
+
+	public static TestPlanSpecificationElement forUniqueId(String uniqueId) {
 		return new UniqueIdSpecification(uniqueId);
 	}
 
-	static TestPlanSpecification build(TestPlanSpecification... elements) {
-		return new CompositeSpecification(elements);
+	public static TestPlanSpecification build(TestPlanSpecificationElement... elements) {
+		return build(Arrays.asList(elements));
 	}
 
-	static TestPlanSpecification forClassNames(String... classNames) {
-		List<TestPlanSpecification> elements = stream(classNames).map(ClassNameSpecification::new).collect(toList());
-		return new CompositeSpecification(elements);
+	public static TestPlanSpecification build(List<TestPlanSpecificationElement> elements) {
+		return new TestPlanSpecification(elements);
 	}
+
+
+	private final List<TestPlanSpecificationElement> elements;
+
+
+	public TestPlanSpecification(List<TestPlanSpecificationElement> elements) {
+		this.elements = elements;
+	}
+
+	@Override
+	public Iterator<TestPlanSpecificationElement> iterator() {
+		return unmodifiableList(elements).iterator();
+	};
 
 }

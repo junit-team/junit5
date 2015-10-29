@@ -13,7 +13,7 @@ package org.junit.gen5.engine;
 import lombok.Value;
 
 @Value
-public class UniqueIdSpecification implements TestSpecificationElement {
+public class UniqueIdSpecification implements TestPlanSpecificationElement {
 
 	private String uniqueId;
 

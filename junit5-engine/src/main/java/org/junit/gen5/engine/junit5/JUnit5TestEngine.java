@@ -26,6 +26,7 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.UniqueIdSpecification;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
@@ -45,7 +46,7 @@ public class JUnit5TestEngine implements TestEngine {
 	public List<TestDescriptor> discoverTests(TestPlanSpecification specification) {
 		List<TestDescriptor> testDescriptors = new ArrayList<>();
 
-		for (TestPlanSpecification element : specification) {
+		for (TestPlanSpecificationElement element : specification) {
 			if (element instanceof ClassNameSpecification) {
 				ClassNameSpecification classNameSpecification = (ClassNameSpecification) element;
 				Class<?> testClass = discoverTestClass(classNameSpecification.getClassName());
