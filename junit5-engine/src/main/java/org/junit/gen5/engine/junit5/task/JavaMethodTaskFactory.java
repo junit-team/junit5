@@ -10,19 +10,19 @@
 
 package org.junit.gen5.engine.junit5.task;
 
-import org.junit.gen5.engine.junit5.*;
 import java.util.*;
 
+import org.junit.gen5.engine.junit5.*;
 
 public class JavaMethodTaskFactory {
 
-
 	public ExecutionTask createJavaTestMethodTask(JavaMethodTestDescriptor testDescriptor, Object instance) {
-		JavaTestMethodTask javaTestMethodTask = new JavaTestMethodTask(testDescriptor.getTestClass(), testDescriptor.getTestMethod(), instance);
+		JavaTestMethodTask javaTestMethodTask = new JavaTestMethodTask(testDescriptor.getTestClass(),
+			testDescriptor.getTestMethod(), instance);
 
-		return new CompositeTask(Arrays.asList(new DummyTask("BEFORE TASK"), javaTestMethodTask, new DummyTask("AFTER TASK")));
+		return new CompositeTask(
+			Arrays.asList(new DummyTask("BEFORE TASK"), javaTestMethodTask, new DummyTask("AFTER TASK")));
 
 	}
-
 
 }

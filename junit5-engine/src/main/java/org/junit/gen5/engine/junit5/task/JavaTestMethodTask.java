@@ -20,11 +20,7 @@ import java.util.*;
 import org.junit.gen5.api.*;
 import org.junit.gen5.engine.junit5.task.*;
 
-/**
- * @author Sam Brannen
- * @author Matthias Merdes
- * @since 5.0
- */
+
 public class JavaTestMethodTask<T> implements ExecutionTask {
 
 	private final Class<T> target;
@@ -39,6 +35,8 @@ public class JavaTestMethodTask<T> implements ExecutionTask {
 	}
 
 	public void execute() throws Exception {
+
+		System.out.println("--> TASK: " + this.getClass().getSimpleName());
 
 		executeBeforeMethods(this.target, this.instance);
 		invokeMethod(this.method, this.instance);
