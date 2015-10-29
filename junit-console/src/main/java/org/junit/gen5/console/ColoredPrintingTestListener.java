@@ -21,6 +21,7 @@ import org.junit.gen5.engine.TestPlanExecutionListener;
 /**
  * @author Stefan Bechtold
  * @author Marc Philipp
+ * @author Sam Brannen
  * @since 5.0
  */
 public class ColoredPrintingTestListener implements TestPlanExecutionListener, TestExecutionListener {
@@ -98,21 +99,30 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 	}
 
 	void println(Color color, String format, Object... args) {
-		out.print(color.ansiCode);
+		out.print(color);
 		out.format(format, args);
-		out.println(NONE.ansiCode);
+		out.println(NONE);
 	}
 
 
-	enum Color {
-		NONE("\u001B[0m"), //
-		BLACK("\u001B[30m"), //
-		RED("\u001B[31m"), //
-		GREEN("\u001B[32m"), //
-		YELLOW("\u001B[33m"), //
-		BLUE("\u001B[34m"), //
-		PURPLE("\u001B[35m"), //
-		CYAN("\u001B[36m"), //
+	static enum Color {
+
+		NONE("\u001B[0m"),
+
+		BLACK("\u001B[30m"),
+
+		RED("\u001B[31m"),
+
+		GREEN("\u001B[32m"),
+
+		YELLOW("\u001B[33m"),
+
+		BLUE("\u001B[34m"),
+
+		PURPLE("\u001B[35m"),
+
+		CYAN("\u001B[36m"),
+
 		WHITE("\u001B[37m");
 
 		private final String ansiCode;
@@ -120,6 +130,11 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 
 		Color(String ansiCode) {
 			this.ansiCode = ansiCode;
+		}
+
+		@Override
+		public String toString() {
+			return this.ansiCode;
 		}
 	}
 
