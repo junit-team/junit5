@@ -25,8 +25,6 @@ import org.junit.gen5.engine.TestPlanExecutionListener;
  */
 public class ColoredPrintingTestListener implements TestPlanExecutionListener, TestExecutionListener {
 
-	private static final String ANSI_RESET = "\u001B[0m";
-
 	private final PrintStream out;
 
 
@@ -65,7 +63,7 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 
 	@Override
 	public void testStarted(TestDescriptor testDescriptor) {
-		printlnTestDescriptor(BLACK, "Test started:", testDescriptor);
+		printlnTestDescriptor(NONE, "Test started:", testDescriptor);
 	}
 
 	@Override
@@ -102,11 +100,12 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 	void println(Color color, String format, Object... args) {
 		out.print(color.ansiCode);
 		out.format(format, args);
-		out.println(ANSI_RESET);
+		out.println(NONE.ansiCode);
 	}
 
 
 	enum Color {
+		NONE("\u001B[0m"), //
 		BLACK("\u001B[30m"), //
 		RED("\u001B[31m"), //
 		GREEN("\u001B[32m"), //
