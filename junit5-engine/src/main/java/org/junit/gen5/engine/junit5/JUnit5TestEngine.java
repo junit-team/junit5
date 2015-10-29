@@ -53,13 +53,13 @@ public class JUnit5TestEngine implements TestEngine {
 				// @formatter:off
 				testDescriptors.addAll(Arrays.stream(testClass.getDeclaredMethods())
 					.filter(method -> method.isAnnotationPresent(Test.class))
-					.map(method -> new JavaTestDescriptor(getId(), testClass, method))
+					.map(method -> new JavaMethodTestDescriptor(getId(), testClass, method))
 					.collect(toList()));
 				// @formatter:on
 			}
 			else if (element instanceof UniqueIdSpecification) {
 				UniqueIdSpecification uniqueIdSpecification = (UniqueIdSpecification) element;
-				testDescriptors.add(JavaTestDescriptor.from(uniqueIdSpecification.getUniqueId()));
+				testDescriptors.add(JavaMethodTestDescriptor.from(uniqueIdSpecification.getUniqueId()));
 			}
 		}
 
@@ -78,7 +78,7 @@ public class JUnit5TestEngine implements TestEngine {
 
 	@Override
 	public boolean supports(TestDescriptor testDescriptor) {
-		return testDescriptor instanceof JavaTestDescriptor;
+		return testDescriptor instanceof JavaMethodTestDescriptor;
 	}
 
 	@Override
@@ -98,12 +98,12 @@ public class JUnit5TestEngine implements TestEngine {
 
 		for (TestDescriptor testDescriptor : testDescriptors) {
 
-			Preconditions.condition(testDescriptor instanceof JavaTestDescriptor,
+			Preconditions.condition(testDescriptor instanceof JavaMethodTestDescriptor,
 				String.format("%s supports test descriptors of type %s, not of type %s", getClass().getSimpleName(),
-					JavaTestDescriptor.class.getName(),
+					JavaMethodTestDescriptor.class.getName(),
 					(testDescriptor != null ? testDescriptor.getClass().getName() : "null")));
 
-			JavaTestDescriptor javaTestDescriptor = (JavaTestDescriptor) testDescriptor;
+			JavaMethodTestDescriptor javaTestDescriptor = (JavaMethodTestDescriptor) testDescriptor;
 
 			try {
 				testExecutionListener.testStarted(javaTestDescriptor);

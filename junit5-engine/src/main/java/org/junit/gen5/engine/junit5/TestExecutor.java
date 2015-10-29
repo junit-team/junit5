@@ -28,10 +28,10 @@ import org.junit.gen5.api.Before;
  */
 class TestExecutor {
 
-	private final JavaTestDescriptor testDescriptor;
+	private final JavaMethodTestDescriptor testDescriptor;
 
 
-	TestExecutor(JavaTestDescriptor testDescriptor) {
+	TestExecutor(JavaMethodTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
 	}
 

@@ -45,7 +45,7 @@ import org.junit.gen5.engine.TestDescriptor;
  */
 @Data
 @EqualsAndHashCode
-public class JavaTestDescriptor implements TestDescriptor {
+public class JavaMethodTestDescriptor implements TestDescriptor {
 
 	// The following pattern only supports descriptors for test methods.
 	// TODO Support descriptors for test classes.
@@ -53,12 +53,12 @@ public class JavaTestDescriptor implements TestDescriptor {
 	private static final Pattern UID_PATTERN = Pattern.compile("^(.+):(.+)#(.+)\\((.*)\\)$");
 
 
-	public static JavaTestDescriptor from(final String uid) throws RuntimeException {
+	public static JavaMethodTestDescriptor from(final String uid) throws RuntimeException {
 		Preconditions.notNull(uid, "TestDescriptor UID must not be null");
 
 		Matcher matcher = UID_PATTERN.matcher(uid);
 		Preconditions.condition(matcher.matches(),
-			() -> String.format("Invalid format for %s UID: %s", JavaTestDescriptor.class.getSimpleName(), uid));
+			() -> String.format("Invalid format for %s UID: %s", JavaMethodTestDescriptor.class.getSimpleName(), uid));
 
 		// TODO Validate contents of matched groups.
 		String engineId = matcher.group(1);
@@ -82,7 +82,7 @@ public class JavaTestDescriptor implements TestDescriptor {
 
 		try {
 			Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
-			return new JavaTestDescriptor(engineId, method);
+			return new JavaMethodTestDescriptor(engineId, method);
 		}
 		catch (NoSuchMethodException e) {
 			throw new IllegalStateException("Failed to get method with name '" + methodName + "'.", e);
@@ -101,15 +101,15 @@ public class JavaTestDescriptor implements TestDescriptor {
 	private final Method testMethod;
 
 
-	public JavaTestDescriptor(String engineId, Method testMethod) {
+	public JavaMethodTestDescriptor(String engineId, Method testMethod) {
 		this(engineId, testMethod.getDeclaringClass(), testMethod, null, null);
 	}
 
-	public JavaTestDescriptor(String engineId, Class<?> testClass, Method testMethod) {
+	public JavaMethodTestDescriptor(String engineId, Class<?> testClass, Method testMethod) {
 		this(engineId, testClass, testMethod, null, null);
 	}
 
-	public JavaTestDescriptor(String engineId, Class<?> testClass, Method testMethod, TestDescriptor parent,
+	public JavaMethodTestDescriptor(String engineId, Class<?> testClass, Method testMethod, TestDescriptor parent,
 			List<TestDescriptor> children) {
 
 		Preconditions.notEmpty(engineId, "engineId must not be null or empty");
@@ -134,7 +134,7 @@ public class JavaTestDescriptor implements TestDescriptor {
 	private static Class<?> loadClass(String name) {
 		try {
 			// TODO Add support for primitive types and arrays.
-			return JavaTestDescriptor.class.getClassLoader().loadClass(name);
+			return JavaMethodTestDescriptor.class.getClassLoader().loadClass(name);
 		}
 		catch (ClassNotFoundException e) {
 			throw new IllegalStateException("Failed to load class with name '" + name + "'.", e);

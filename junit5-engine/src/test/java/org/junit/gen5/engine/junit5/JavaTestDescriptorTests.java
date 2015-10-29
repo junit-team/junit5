@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 import org.junit.gen5.api.Test;
 
 /**
- * Unit tests for {@link JavaTestDescriptor}.
+ * Unit tests for {@link JavaMethodTestDescriptor}.
  *
  * @author Sam Brannen
  * @since 5.0
@@ -40,7 +40,7 @@ public class JavaTestDescriptorTests {
 	@org.junit.Test
 	public void constructFromMethod() throws Exception {
 		Method testMethod = getClass().getDeclaredMethod("test");
-		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
+		JavaMethodTestDescriptor descriptor = new JavaMethodTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
 
 		System.out.println("DEBUG - " + descriptor);
 		assertEquals(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
@@ -54,7 +54,7 @@ public class JavaTestDescriptorTests {
 	@org.junit.Test
 	public void constructFromMethodWithCustomDisplayName() throws Exception {
 		Method testMethod = getClass().getDeclaredMethod("foo");
-		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
+		JavaMethodTestDescriptor descriptor = new JavaMethodTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
 
 		System.out.println("DEBUG - " + descriptor);
 		assertEquals(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
@@ -66,7 +66,7 @@ public class JavaTestDescriptorTests {
 	@org.junit.Test
 	public void constructFromMethodWithParameters() throws Exception {
 		Method testMethod = getClass().getDeclaredMethod("test", String.class, BigDecimal.class);
-		JavaTestDescriptor descriptor = new JavaTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
+		JavaMethodTestDescriptor descriptor = new JavaMethodTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
 
 		System.out.println("DEBUG - " + descriptor);
 		assertEquals(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
@@ -79,7 +79,7 @@ public class JavaTestDescriptorTests {
 
 	@org.junit.Test
 	public void fromTestDescriptorIdForMethod() throws Exception {
-		JavaTestDescriptor descriptor = JavaTestDescriptor.from(TEST_METHOD_UID);
+		JavaMethodTestDescriptor descriptor = JavaMethodTestDescriptor.from(TEST_METHOD_UID);
 		assertNotNull(descriptor, "descriptor:");
 		assertEquals("test", descriptor.getDisplayName(), "display name:");
 		assertEquals(JavaTestDescriptorTests.class, descriptor.getTestClass());
@@ -88,7 +88,7 @@ public class JavaTestDescriptorTests {
 
 	@org.junit.Test
 	public void fromTestDescriptorIdForMethodWithParameters() throws Exception {
-		JavaTestDescriptor descriptor = JavaTestDescriptor.from(TEST_METHOD_STRING_BIGDECIMAL_UID);
+		JavaMethodTestDescriptor descriptor = JavaMethodTestDescriptor.from(TEST_METHOD_STRING_BIGDECIMAL_UID);
 		assertNotNull(descriptor, "descriptor:");
 		assertEquals("test", descriptor.getDisplayName(), "display name:");
 		assertEquals(getClass(), descriptor.getTestClass());
