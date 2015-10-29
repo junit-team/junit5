@@ -10,27 +10,24 @@
 
 package org.junit.gen5.engine;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
 /**
- * Unit tests for {@link TestPlanSpecification.Builder}.
+ * Unit tests for {@link TestPlanSpecification}.
  *
  * @author Sam Brannen
  * @since 5.0
  */
-public class TestPlanSpecificationBuilderTests {
+public class TestPlanSpecificationTests {
 
 	@Test
 	public void testPlanBuilderDemo() {
-		// @formatter:off
-		TestPlanSpecification testPlanConfiguration = TestPlanSpecification.builder()
-				.uniqueIds("junit5:org.example.UserTests#fullname()")
-				.build();
-		// @formatter:on
+		TestPlanSpecification specification = TestPlanSpecification.forUniqueId(
+			"junit5:org.example.UserTests#fullname()");
 
-		assertThat(testPlanConfiguration).isNotNull();
+		assertNotNull(specification);
 	}
 
 }

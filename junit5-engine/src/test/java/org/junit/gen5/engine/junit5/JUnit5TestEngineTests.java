@@ -10,8 +10,8 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.api.Assumptions.*;
+import static org.junit.gen5.api.Assertions.fail;
+import static org.junit.gen5.api.Assumptions.assumeTrue;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,11 +34,7 @@ public class JUnit5TestEngineTests {
 	public void executeTestsFromFromClasses() {
 		JUnit5TestEngine engine = new JUnit5TestEngine();
 
-		// @formatter:off
-		TestPlanSpecification spec = TestPlanSpecification.builder()
-			.classes(LocalTestCase.class)
-			.build();
-		// @formatter:on
+		TestPlanSpecification spec = TestPlanSpecification.forClassName(LocalTestCase.class.getName());
 
 		List<TestDescriptor> descriptors = engine.discoverTests(spec);
 		Assert.assertNotNull(descriptors);
@@ -55,14 +51,11 @@ public class JUnit5TestEngineTests {
 	}
 
 	@org.junit.Test
-	public void executeTestFromTestId() {
+	public void executeTestFromUniqueId() {
 		JUnit5TestEngine engine = new JUnit5TestEngine();
 
-		// @formatter:off
-		TestPlanSpecification spec = TestPlanSpecification.builder()
-			.uniqueIds("junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()")
-			.build();
-		// @formatter:on
+		TestPlanSpecification spec = TestPlanSpecification.forUniqueId(
+			"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()");
 
 		List<TestDescriptor> descriptors = engine.discoverTests(spec);
 		Assert.assertNotNull(descriptors);
@@ -74,6 +67,27 @@ public class JUnit5TestEngineTests {
 
 		Assert.assertEquals(1, listener.testStartedCount.get());
 		Assert.assertEquals(1, listener.testSucceededCount.get());
+	}
+
+	@org.junit.Test
+	public void executeCompositeTestPlanSpecification() {
+		JUnit5TestEngine engine = new JUnit5TestEngine();
+
+		TestPlanSpecification spec = TestPlanSpecification.build(
+			TestPlanSpecification.forUniqueId(
+				"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
+			TestPlanSpecification.forClassName(LocalTestCase.class.getName()));
+
+		List<TestDescriptor> descriptors = engine.discoverTests(spec);
+		Assert.assertNotNull(descriptors);
+		Assert.assertEquals("# tests", 3 + 1, descriptors.size());
+
+		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
+
+		engine.execute(descriptors, listener);
+
+		Assert.assertEquals(3 + 1, listener.testStartedCount.get());
+		Assert.assertEquals(1 + 1, listener.testSucceededCount.get());
 	}
 
 

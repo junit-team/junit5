@@ -10,8 +10,8 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static java.lang.String.*;
-import static java.util.stream.Collectors.*;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -21,10 +21,12 @@ import java.util.List;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.UniqueIdSpecification;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
@@ -41,39 +43,36 @@ public class JUnit5TestEngine implements TestEngine {
 
 	@Override
 	public List<TestDescriptor> discoverTests(TestPlanSpecification specification) {
-		List<Class<?>> testClasses = discoverTestClasses(specification);
+		List<TestDescriptor> testDescriptors = new ArrayList<>();
 
-		// @formatter:off
-		List<TestDescriptor> testDescriptors = testClasses.stream()
-				.map(Class::getDeclaredMethods)
-				.flatMap(Arrays::stream)
-				.filter(method -> method.isAnnotationPresent(Test.class))
-				.map(method -> new JavaTestDescriptor(getId(), method))
-				.collect(toList());
-		// @formatter:on
-
-		testDescriptors.addAll(specification.getUniqueIds().stream().map(JavaTestDescriptor::from).collect(toList()));
+		for (TestPlanSpecification element : specification) {
+			if (element instanceof ClassNameSpecification) {
+				ClassNameSpecification classNameSpecification = (ClassNameSpecification) element;
+				Class<?> testClass = discoverTestClass(classNameSpecification.getClassName());
+				// @formatter:off
+				testDescriptors.addAll(Arrays.stream(testClass.getDeclaredMethods())
+					.filter(method -> method.isAnnotationPresent(Test.class))
+					.map(method -> new JavaTestDescriptor(getId(), testClass, method))
+					.collect(toList()));
+				// @formatter:on
+			}
+			else if (element instanceof UniqueIdSpecification) {
+				UniqueIdSpecification uniqueIdSpecification = (UniqueIdSpecification) element;
+				testDescriptors.add(JavaTestDescriptor.from(uniqueIdSpecification.getUniqueId()));
+			}
+		}
 
 		return testDescriptors;
 	}
 
-	private List<Class<?>> discoverTestClasses(TestPlanSpecification testPlanSpecification) {
-		List<Class<?>> testClasses = new ArrayList<>();
-
-		// Add specified test classes directly
-		testClasses.addAll(testPlanSpecification.getClasses());
-
-		// Add test classes by name
-		for (String className : testPlanSpecification.getClassNames()) {
-			try {
-				testClasses.add(Class.forName(className));
-			}
-			catch (ClassNotFoundException e) {
-				throw new IllegalArgumentException(format("Failed to load test class '%s'", className));
-			}
+	private Class<?> discoverTestClass(String className) {
+		// TODO Use correct ClassLoader
+		try {
+			return Class.forName(className);
 		}
-
-		return testClasses;
+		catch (ClassNotFoundException e) {
+			throw new IllegalArgumentException(format("Failed to load test class '%s'", className));
+		}
 	}
 
 	@Override
