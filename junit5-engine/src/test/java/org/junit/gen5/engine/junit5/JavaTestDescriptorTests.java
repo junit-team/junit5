@@ -39,40 +39,43 @@ public class JavaTestDescriptorTests {
 
 	@org.junit.Test
 	public void constructFromMethod() throws Exception {
-		Method testMethod = getClass().getDeclaredMethod("test");
-		JavaMethodTestDescriptor descriptor = new JavaMethodTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
+		Class<? extends JavaTestDescriptorTests> testClass = getClass();
+		Method testMethod = testClass.getDeclaredMethod("test");
+		JavaMethodTestDescriptor descriptor = new JavaMethodTestDescriptor(JUNIT_5_ENGINE_ID, testClass, testMethod);
 
 		System.out.println("DEBUG - " + descriptor);
 		assertEquals(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
 		assertEquals(TEST_METHOD_ID, descriptor.getTestId());
 		assertEquals(TEST_METHOD_UID, descriptor.getUniqueId());
-		assertEquals(getClass(), descriptor.getTestClass());
+		assertEquals(testClass, descriptor.getTestClass());
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test", descriptor.getDisplayName(), "display name:");
 	}
 
 	@org.junit.Test
 	public void constructFromMethodWithCustomDisplayName() throws Exception {
-		Method testMethod = getClass().getDeclaredMethod("foo");
-		JavaMethodTestDescriptor descriptor = new JavaMethodTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
+		Class<? extends JavaTestDescriptorTests> testClass = getClass();
+		Method testMethod = testClass.getDeclaredMethod("foo");
+		JavaMethodTestDescriptor descriptor = new JavaMethodTestDescriptor(JUNIT_5_ENGINE_ID, testClass, testMethod);
 
 		System.out.println("DEBUG - " + descriptor);
 		assertEquals(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
-		assertEquals(getClass(), descriptor.getTestClass());
+		assertEquals(testClass, descriptor.getTestClass());
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom test name", descriptor.getDisplayName(), "display name:");
 	}
 
 	@org.junit.Test
 	public void constructFromMethodWithParameters() throws Exception {
-		Method testMethod = getClass().getDeclaredMethod("test", String.class, BigDecimal.class);
-		JavaMethodTestDescriptor descriptor = new JavaMethodTestDescriptor(JUNIT_5_ENGINE_ID, testMethod);
+		Class<? extends JavaTestDescriptorTests> testClass = getClass();
+		Method testMethod = testClass.getDeclaredMethod("test", String.class, BigDecimal.class);
+		JavaMethodTestDescriptor descriptor = new JavaMethodTestDescriptor(JUNIT_5_ENGINE_ID, testClass, testMethod);
 
 		System.out.println("DEBUG - " + descriptor);
 		assertEquals(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
 		assertEquals(TEST_METHOD_STRING_BIGDECIMAL_ID, descriptor.getTestId());
 		assertEquals(TEST_METHOD_STRING_BIGDECIMAL_UID, descriptor.getUniqueId());
-		assertEquals(getClass(), descriptor.getTestClass());
+		assertEquals(testClass, descriptor.getTestClass());
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test", descriptor.getDisplayName(), "display name:");
 	}

@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import static java.util.Collections.*;
-import static org.junit.gen5.commons.util.ObjectUtils.*;
+import static org.junit.gen5.commons.util.ObjectUtils.nullSafeToString;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -82,7 +82,7 @@ public class JavaMethodTestDescriptor implements TestDescriptor {
 
 		try {
 			Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
-			return new JavaMethodTestDescriptor(engineId, method);
+			return new JavaMethodTestDescriptor(engineId, clazz, method);
 		}
 		catch (NoSuchMethodException e) {
 			throw new IllegalStateException("Failed to get method with name '" + methodName + "'.", e);
@@ -100,10 +100,6 @@ public class JavaMethodTestDescriptor implements TestDescriptor {
 
 	private final Method testMethod;
 
-
-	public JavaMethodTestDescriptor(String engineId, Method testMethod) {
-		this(engineId, testMethod.getDeclaringClass(), testMethod, null, null);
-	}
 
 	public JavaMethodTestDescriptor(String engineId, Class<?> testClass, Method testMethod) {
 		this(engineId, testClass, testMethod, null, null);
