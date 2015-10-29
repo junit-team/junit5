@@ -57,8 +57,8 @@ public final class TestPlan {
 		return this.testDescriptors.stream().filter(testEngine::supports).collect(Collectors.toList());
 	}
 
-	public int getNumberOfStaticTests() {
-		return getTests().size();
+	public long getNumberOfStaticTests() {
+		return this.testDescriptors.stream().filter(TestDescriptor::isTest).count();
 	}
 
 }

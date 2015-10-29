@@ -53,4 +53,9 @@ public class JavaClassTestDescriptor implements TestDescriptor {
 		return testClass.getSimpleName();
 	}
 
+	@Override
+	public boolean isTest() {
+		return false;
+	}
+
 }

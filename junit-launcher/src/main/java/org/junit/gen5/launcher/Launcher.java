@@ -12,6 +12,7 @@ package org.junit.gen5.launcher;
 
 import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -34,7 +35,9 @@ public class Launcher {
 	public TestPlan discover(TestPlanSpecification specification) {
 		TestPlan testPlan = new TestPlan();
 		for (TestEngine testEngine : lookupAllTestEngines()) {
-			testPlan.addTests(testEngine.discoverTests(specification));
+			TestDescriptor engineDescriptor = testEngine.createEngineDescriptor();
+			testPlan.addTest(engineDescriptor);
+			testPlan.addTests(testEngine.discoverTests(specification, engineDescriptor));
 		}
 		return testPlan;
 	}

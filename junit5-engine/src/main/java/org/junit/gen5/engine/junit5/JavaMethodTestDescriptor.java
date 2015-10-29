@@ -72,4 +72,9 @@ public class JavaMethodTestDescriptor implements TestDescriptor {
 		return getParent().getEngineId();
 	}
 
+	@Override
+	public boolean isTest() {
+		return true;
+	}
+
 }

@@ -43,7 +43,7 @@ public class JUnit5TestEngine implements TestEngine {
 	}
 
 	@Override
-	public List<TestDescriptor> discoverTests(TestPlanSpecification specification) {
+	public List<TestDescriptor> discoverTests(TestPlanSpecification specification, TestDescriptor root) {
 		List<TestDescriptor> testDescriptors = new ArrayList<>();
 
 		for (TestPlanSpecificationElement element : specification) {
@@ -51,6 +51,7 @@ public class JUnit5TestEngine implements TestEngine {
 				ClassNameSpecification classNameSpecification = (ClassNameSpecification) element;
 				Class<?> testClass = discoverTestClass(classNameSpecification.getClassName());
 				JavaClassTestDescriptor parent = new JavaClassTestDescriptor(getId(), testClass);
+				testDescriptors.add(parent);
 				// @formatter:off
 				testDescriptors.addAll(Arrays.stream(testClass.getDeclaredMethods())
 					.filter(method -> method.isAnnotationPresent(Test.class))
@@ -79,7 +80,8 @@ public class JUnit5TestEngine implements TestEngine {
 
 	@Override
 	public boolean supports(TestDescriptor testDescriptor) {
-		return testDescriptor instanceof JavaMethodTestDescriptor;
+		//Todo super class for Java test descriptors?
+		return testDescriptor instanceof JavaMethodTestDescriptor || testDescriptor instanceof JavaClassTestDescriptor;
 	}
 
 	@Override
@@ -97,12 +99,17 @@ public class JUnit5TestEngine implements TestEngine {
 		// 1) retain the instance across test method invocations (if desired).
 		// 2) invoke class-level before & after methods _around_ the set of methods.
 
+		//todo hierarchies of tests must be executed top down
 		for (TestDescriptor testDescriptor : testDescriptors) {
 
-			Preconditions.condition(testDescriptor instanceof JavaMethodTestDescriptor,
+			Preconditions.condition(supports(testDescriptor),
 				String.format("%s supports test descriptors of type %s, not of type %s", getClass().getSimpleName(),
 					JavaMethodTestDescriptor.class.getName(),
 					(testDescriptor != null ? testDescriptor.getClass().getName() : "null")));
+
+			if (testDescriptor instanceof JavaClassTestDescriptor) {
+				continue;
+			}
 
 			JavaMethodTestDescriptor javaTestDescriptor = (JavaMethodTestDescriptor) testDescriptor;
 

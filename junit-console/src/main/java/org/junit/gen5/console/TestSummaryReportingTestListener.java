@@ -11,7 +11,7 @@
 package org.junit.gen5.console;
 
 import java.io.PrintStream;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionListener;
@@ -27,12 +27,12 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 
 	private final PrintStream out;
 
-	private final AtomicInteger testsStarted = new AtomicInteger();
-	private final AtomicInteger testsFound = new AtomicInteger();
-	private final AtomicInteger testsSkipped = new AtomicInteger();
-	private final AtomicInteger testsAborted = new AtomicInteger();
-	private final AtomicInteger testsSucceeded = new AtomicInteger();
-	private final AtomicInteger testsFailed = new AtomicInteger();
+	private final AtomicLong testsStarted = new AtomicLong();
+	private final AtomicLong testsFound = new AtomicLong();
+	private final AtomicLong testsSkipped = new AtomicLong();
+	private final AtomicLong testsAborted = new AtomicLong();
+	private final AtomicLong testsSucceeded = new AtomicLong();
+	private final AtomicLong testsFailed = new AtomicLong();
 
 	private long timeStarted;
 	private long timePaused;

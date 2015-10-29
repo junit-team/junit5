@@ -38,4 +38,6 @@ public interface TestDescriptor {
 
 	TestDescriptor getParent();
 
+	boolean isTest();
+
 }

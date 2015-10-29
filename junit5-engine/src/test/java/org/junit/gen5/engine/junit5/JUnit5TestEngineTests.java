@@ -37,9 +37,9 @@ public class JUnit5TestEngineTests {
 		TestPlanSpecification spec = TestPlanSpecification.build(
 			TestPlanSpecification.forClassName(LocalTestCase.class.getName()));
 
-		List<TestDescriptor> descriptors = engine.discoverTests(spec);
+		List<TestDescriptor> descriptors = engine.discoverTests(spec, null);
 		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# tests", 3, descriptors.size());
+		Assert.assertEquals("# descriptors (class + methods)", 4, descriptors.size());
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
@@ -58,7 +58,7 @@ public class JUnit5TestEngineTests {
 		TestPlanSpecification spec = TestPlanSpecification.build(TestPlanSpecification.forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"));
 
-		List<TestDescriptor> descriptors = engine.discoverTests(spec);
+		List<TestDescriptor> descriptors = engine.discoverTests(spec, null);
 		Assert.assertNotNull(descriptors);
 		Assert.assertEquals("# tests", 1, descriptors.size());
 
@@ -79,9 +79,9 @@ public class JUnit5TestEngineTests {
 				"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
 			TestPlanSpecification.forClassName(LocalTestCase.class.getName()));
 
-		List<TestDescriptor> descriptors = engine.discoverTests(spec);
+		List<TestDescriptor> descriptors = engine.discoverTests(spec, null);
 		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# tests", 3 + 1, descriptors.size());
+		Assert.assertEquals("# descriptors", 4 + 1, descriptors.size());
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
