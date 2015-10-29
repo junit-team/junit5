@@ -18,7 +18,6 @@ import java.util.function.Consumer;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionListener;
-import org.junit.gen5.engine.TestPlanExecutionListener;
 
 /**
  * @author Stefan Bechtold

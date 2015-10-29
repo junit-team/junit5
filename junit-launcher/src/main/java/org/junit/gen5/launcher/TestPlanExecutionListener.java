@@ -8,7 +8,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.launcher;
+
+import org.junit.gen5.engine.TestExecutionListener;
 
 /**
  * @author Stefan Bechtold
@@ -17,7 +19,7 @@ package org.junit.gen5.engine;
  */
 public interface TestPlanExecutionListener extends TestExecutionListener {
 
-	default void testPlanExecutionStarted(int numberOfStaticTests) {
+	default void testPlanExecutionStarted(TestPlan testPlan) {
 	};
 
 	default void testPlanExecutionPaused() {

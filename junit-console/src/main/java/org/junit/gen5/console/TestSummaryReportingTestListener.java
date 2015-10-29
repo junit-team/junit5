@@ -15,7 +15,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionListener;
-import org.junit.gen5.engine.TestPlanExecutionListener;
+import org.junit.gen5.launcher.TestPlan;
+import org.junit.gen5.launcher.TestPlanExecutionListener;
 
 /**
  * @author Stefan Bechtold
@@ -43,8 +44,8 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 	}
 
 	@Override
-	public void testPlanExecutionStarted(int numberOfStaticTests) {
-		this.testsFound.set(numberOfStaticTests);
+	public void testPlanExecutionStarted(TestPlan testPlan) {
+		this.testsFound.set(testPlan.getNumberOfStaticTests());
 		this.timeStarted = System.currentTimeMillis();
 	}
 

@@ -16,7 +16,8 @@ import java.io.PrintStream;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionListener;
-import org.junit.gen5.engine.TestPlanExecutionListener;
+import org.junit.gen5.launcher.TestPlan;
+import org.junit.gen5.launcher.TestPlanExecutionListener;
 
 /**
  * @author Stefan Bechtold
@@ -34,8 +35,8 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 	}
 
 	@Override
-	public void testPlanExecutionStarted(int numberOfStaticTests) {
-		out.printf("Test execution started. Number of static tests: %d%n", numberOfStaticTests);
+	public void testPlanExecutionStarted(TestPlan testPlan) {
+		out.printf("Test execution started. Number of static tests: %d%n", testPlan.getNumberOfStaticTests());
 	}
 
 	@Override

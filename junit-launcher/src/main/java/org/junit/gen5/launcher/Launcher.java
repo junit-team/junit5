@@ -10,11 +10,10 @@
 
 package org.junit.gen5.launcher;
 
-import static org.junit.gen5.launcher.TestEngineRegistry.*;
+import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestExecutionListener;
-import org.junit.gen5.engine.TestPlanExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -47,8 +46,7 @@ public class Launcher {
 
 	private void execute(TestPlan testPlan) {
 		listenerRegistry.notifyTestPlanExecutionListeners(
-			testPlanExecutionListener -> testPlanExecutionListener.testPlanExecutionStarted(
-				testPlan.getTests().size()));
+			testPlanExecutionListener -> testPlanExecutionListener.testPlanExecutionStarted(testPlan));
 
 		TestExecutionListener compositeListener = listenerRegistry.getCompositeTestExecutionListener();
 

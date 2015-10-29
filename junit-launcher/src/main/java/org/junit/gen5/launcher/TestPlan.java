@@ -25,7 +25,7 @@ import org.junit.gen5.engine.TestEngine;
 /**
  * @since 5.0
  */
-final class TestPlan {
+public final class TestPlan {
 
 	/**
 	 * List of all TestDescriptors, including children.
@@ -55,6 +55,10 @@ final class TestPlan {
 
 	public List<TestDescriptor> getAllTestsForTestEngine(TestEngine testEngine) {
 		return this.testDescriptors.stream().filter(testEngine::supports).collect(Collectors.toList());
+	}
+
+	public int getNumberOfStaticTests() {
+		return getTests().size();
 	}
 
 }
