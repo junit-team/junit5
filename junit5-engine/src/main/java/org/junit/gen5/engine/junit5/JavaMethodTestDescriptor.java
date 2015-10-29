@@ -32,27 +32,18 @@ import org.junit.gen5.engine.TestDescriptor;
 @EqualsAndHashCode
 public class JavaMethodTestDescriptor implements TestDescriptor {
 
-	private final String testId;
 	private final String displayName;
 	private final JavaClassTestDescriptor parent;
-
 	private final Method testMethod;
 
 
 	public JavaMethodTestDescriptor(Method testMethod, JavaClassTestDescriptor parent) {
-
 		Preconditions.notNull(testMethod, "testMethod must not be null");
 		Preconditions.notNull(parent, "parent must not be null");
 
 		this.testMethod = testMethod;
 		this.displayName = determineDisplayName();
 		this.parent = parent;
-		this.testId = createTestId();
-	}
-
-	private String createTestId() {
-		return String.format("%s#%s(%s)", getParent().getTestId(), testMethod.getName(),
-			nullSafeToString(testMethod.getParameterTypes()));
 	}
 
 	private String determineDisplayName() {
@@ -70,6 +61,12 @@ public class JavaMethodTestDescriptor implements TestDescriptor {
 	@Override
 	public String getEngineId() {
 		return getParent().getEngineId();
+	}
+
+	@Override
+	public String getTestId() {
+		return String.format("%s#%s(%s)", getParent().getTestId(), testMethod.getName(),
+			nullSafeToString(testMethod.getParameterTypes()));
 	}
 
 	@Override

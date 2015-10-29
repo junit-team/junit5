@@ -12,8 +12,6 @@ package org.junit.gen5.engine;
 
 import java.util.Collection;
 
-import lombok.Value;
-
 public interface TestEngine {
 
 	default String getId() {
@@ -36,35 +34,4 @@ public interface TestEngine {
 
 	void execute(Collection<TestDescriptor> testDescriptions, TestExecutionListener testExecutionListener);
 
-}
-
-@Value
-class EngineDescriptor implements TestDescriptor {
-
-	private String engineId;
-
-
-	public EngineDescriptor(String engineId) {
-		this.engineId = engineId;
-	}
-
-	@Override
-	public String getTestId() {
-		return getEngineId();
-	}
-
-	@Override
-	public String getDisplayName() {
-		return getEngineId();
-	}
-
-	@Override
-	public TestDescriptor getParent() {
-		return null;
-	}
-
-	@Override
-	public boolean isTest() {
-		return false;
-	}
 }

@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -30,6 +31,9 @@ import org.junit.gen5.engine.TestPlanSpecification;
  */
 public class JUnit5TestEngineTests {
 
+	private static final EngineDescriptor ENGINE_DESCRIPTOR = new EngineDescriptor("engine-id");
+
+
 	@org.junit.Test
 	public void executeTestsFromFromClasses() {
 		JUnit5TestEngine engine = new JUnit5TestEngine();
@@ -37,7 +41,7 @@ public class JUnit5TestEngineTests {
 		TestPlanSpecification spec = TestPlanSpecification.build(
 			TestPlanSpecification.forClassName(LocalTestCase.class.getName()));
 
-		List<TestDescriptor> descriptors = engine.discoverTests(spec, null);
+		List<TestDescriptor> descriptors = engine.discoverTests(spec, ENGINE_DESCRIPTOR);
 		Assert.assertNotNull(descriptors);
 		Assert.assertEquals("# descriptors (class + methods)", 4, descriptors.size());
 
@@ -58,7 +62,7 @@ public class JUnit5TestEngineTests {
 		TestPlanSpecification spec = TestPlanSpecification.build(TestPlanSpecification.forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"));
 
-		List<TestDescriptor> descriptors = engine.discoverTests(spec, null);
+		List<TestDescriptor> descriptors = engine.discoverTests(spec, ENGINE_DESCRIPTOR);
 		Assert.assertNotNull(descriptors);
 		Assert.assertEquals("# tests", 1, descriptors.size());
 
@@ -79,7 +83,7 @@ public class JUnit5TestEngineTests {
 				"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
 			TestPlanSpecification.forClassName(LocalTestCase.class.getName()));
 
-		List<TestDescriptor> descriptors = engine.discoverTests(spec, null);
+		List<TestDescriptor> descriptors = engine.discoverTests(spec, ENGINE_DESCRIPTOR);
 		Assert.assertNotNull(descriptors);
 		Assert.assertEquals("# descriptors", 4 + 1, descriptors.size());
 

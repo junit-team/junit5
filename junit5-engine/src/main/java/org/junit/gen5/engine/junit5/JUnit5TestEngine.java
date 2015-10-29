@@ -50,7 +50,7 @@ public class JUnit5TestEngine implements TestEngine {
 			if (element instanceof ClassNameSpecification) {
 				ClassNameSpecification classNameSpecification = (ClassNameSpecification) element;
 				Class<?> testClass = discoverTestClass(classNameSpecification.getClassName());
-				JavaClassTestDescriptor parent = new JavaClassTestDescriptor(getId(), testClass);
+				JavaClassTestDescriptor parent = new JavaClassTestDescriptor(testClass, root);
 				testDescriptors.add(parent);
 				// @formatter:off
 				testDescriptors.addAll(Arrays.stream(testClass.getDeclaredMethods())
@@ -61,7 +61,7 @@ public class JUnit5TestEngine implements TestEngine {
 			}
 			else if (element instanceof UniqueIdSpecification) {
 				UniqueIdSpecification uniqueIdSpecification = (UniqueIdSpecification) element;
-				testDescriptors.add(JavaTestDescriptorFactory.from(uniqueIdSpecification.getUniqueId()));
+				testDescriptors.add(JavaTestDescriptorFactory.from(uniqueIdSpecification.getUniqueId(), root));
 			}
 		}
 

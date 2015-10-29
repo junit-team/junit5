@@ -43,7 +43,7 @@ public class JavaTestDescriptorFactory {
 
 
 	//Todo must be able to create any kind of JavaTestDescriptor
-	public static JavaMethodTestDescriptor from(final String uid) throws RuntimeException {
+	public static JavaMethodTestDescriptor from(final String uid, TestDescriptor root) throws RuntimeException {
 		Preconditions.notNull(uid, "TestDescriptor UID must not be null");
 
 		Matcher matcher = UID_PATTERN.matcher(uid);
@@ -71,7 +71,7 @@ public class JavaTestDescriptorFactory {
 		Class<?>[] parameterTypes = paramTypeList.toArray(new Class<?>[paramTypeList.size()]);
 
 		try {
-			JavaClassTestDescriptor parent = new JavaClassTestDescriptor(engineId, clazz);
+			JavaClassTestDescriptor parent = new JavaClassTestDescriptor(clazz, root);
 			Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
 			return new JavaMethodTestDescriptor(method, parent);
 		}

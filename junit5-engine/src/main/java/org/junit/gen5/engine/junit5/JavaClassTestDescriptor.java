@@ -28,19 +28,16 @@ import org.junit.gen5.engine.TestDescriptor;
 @EqualsAndHashCode
 public class JavaClassTestDescriptor implements TestDescriptor {
 
-	private final String engineId;
 	private final TestDescriptor parent;
 	private final Class<?> testClass;
 
 
-	public JavaClassTestDescriptor(String engineId, Class<?> testClass) {
-		Preconditions.notEmpty(engineId, "engineId must not be null or empty");
+	public JavaClassTestDescriptor(Class<?> testClass, TestDescriptor parent) {
 		Preconditions.notNull(testClass, "testClass must not be null");
+		Preconditions.notNull(parent, "parent must not be null");
 
 		this.testClass = testClass;
-		//todo there could be parents (eg. packages)
-		this.parent = null;
-		this.engineId = engineId;
+		this.parent = parent;
 	}
 
 	@Override
@@ -58,4 +55,8 @@ public class JavaClassTestDescriptor implements TestDescriptor {
 		return false;
 	}
 
+	@Override
+	public String getEngineId() {
+		return parent.getEngineId();
+	}
 }
