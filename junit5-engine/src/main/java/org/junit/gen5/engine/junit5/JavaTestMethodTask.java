@@ -10,15 +10,15 @@
 
 package org.junit.gen5.engine.junit5;
 
-import org.junit.gen5.api.*;
-import org.junit.gen5.engine.junit5.task.*;
+import static java.util.stream.Collectors.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
 
-import static java.util.stream.Collectors.*;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import org.junit.gen5.api.*;
+import org.junit.gen5.engine.junit5.task.*;
 
 /**
  * @author Sam Brannen
@@ -26,7 +26,6 @@ import static org.junit.gen5.commons.util.ReflectionUtils.*;
  * @since 5.0
  */
 class JavaTestMethodTask<T> implements ExecutionTask {
-
 
 	private final Class<T> target;
 	private final T instance;
@@ -39,14 +38,12 @@ class JavaTestMethodTask<T> implements ExecutionTask {
 		this.instance = instance;
 	}
 
-
 	public void execute() throws Exception {
 
 		executeBeforeMethods(this.target, this.instance);
 		invokeMethod(this.method, this.instance);
 		executeAfterMethods(this.target, this.instance);
 	}
-
 
 	private void executeBeforeMethods(Class<?> testClass, Object testInstance) throws Exception {
 		for (Method method : findAnnotatedMethods(testClass, Before.class)) {
