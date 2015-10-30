@@ -74,7 +74,17 @@ public class TaskBasedJUnit5TestEngine implements TestEngine {
 
 		List<ExecutionTask> executionTasks = this.buildTaskTrees(testDescriptors, testExecutionListener);
 
-		this.executeAllTaskTrees(executionTasks);
+		CompositeTask root = new CompositeTask(executionTasks, "ENGINE: " + this.getId());
+		try {
+			root.execute();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		this.logCompleteTree(root);
+
+		// this.executeAllTaskTrees(executionTasks);
 
 	}
 
@@ -83,16 +93,20 @@ public class TaskBasedJUnit5TestEngine implements TestEngine {
 			for (ExecutionTask executionTask : executionTasks) {
 				executionTask.execute();
 
-				System.out.println();
-				TaskPrinter printer = new TaskPrinter();
-				printer.print(executionTask);
-				System.out.println();
+				this.logCompleteTree(executionTask);
 
 			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void logCompleteTree(ExecutionTask executionTask) {
+		System.out.println();
+		TaskPrinter printer = new TaskPrinter();
+		printer.print(executionTask);
+		System.out.println();
 	}
 
 	private List<ExecutionTask> buildTaskTrees(Collection<TestDescriptor> testDescriptors,
