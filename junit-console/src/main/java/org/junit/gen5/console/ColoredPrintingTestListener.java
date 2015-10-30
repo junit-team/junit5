@@ -55,6 +55,7 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
+		out.println("Test execution finished.");
 	}
 
 	@Override

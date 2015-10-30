@@ -16,6 +16,7 @@ import java.util.function.Supplier;
 
 import org.junit.gen5.commons.util.ObjectUtils;
 import org.opentestalliance.AssertionFailedError;
+import org.opentestalliance.MultipleFailuresException;
 
 /**
  * @author JUnit Community
@@ -203,6 +204,31 @@ public final class Assertions {
 		expectThrows(expected, executable);
 	}
 
+	public static void assertAll(Executable... asserts) {
+		assertAll("Multiple failures:", asserts);
+	}
+
+	public static void assertAll(String groupName, Executable... asserts) {
+		MultipleFailuresException multipleFailuresException = new MultipleFailuresException(groupName);
+		for (Executable executable : asserts) {
+			try {
+				executable.execute();
+			}
+			catch (AssertionError failure) {
+				multipleFailuresException.addFailure(failure);
+			}
+			catch (RuntimeException rte) {
+				throw rte;
+			}
+			catch (Throwable throwable) {
+				throw new RuntimeException(throwable);
+			}
+		}
+		if (multipleFailuresException.hasFailures()) {
+			throw multipleFailuresException;
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	public static <T extends Throwable> T expectThrows(Class<T> expected, Executable executable) {
 		try {
@@ -256,7 +282,7 @@ public final class Assertions {
 		String actualString = String.valueOf(actual);
 		if (expectedString.equals(actualString)) {
 			return prefix + "expected: " + formatClassAndValue(expected, expectedString) + " but was: "
-					+ formatClassAndValue(actual, actualString);
+				+ formatClassAndValue(actual, actualString);
 		}
 		else {
 			return prefix + "expected:<" + expectedString + "> but was:<" + actualString + ">";

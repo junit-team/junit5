@@ -11,7 +11,10 @@
 package com.example;
 
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.api.Assumptions.*;
+import static org.junit.gen5.api.Assumptions.assumeTrue;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
@@ -75,6 +78,34 @@ class SampleTestCase {
 	@Test(name = "custom name")
 	void succeedingTest() {
 		// no-op
+	}
+
+	@Test(name = "with succeding assertAll")
+	void assertAllTest() {
+		Map<String, String> person = new HashMap<String, String>() {{
+			put("firstName", "Johannes");
+			put("lastName", "Link");
+			put("city", "Heidelberg");
+		}};
+		assertAll("Check person",
+			() -> assertEquals("Johannes", person.get("firstName")),
+			() -> assertEquals("Link", person.get("lastName")),
+			() -> assertEquals("Heidelberg", person.get("city"))
+		);
+	}
+
+	@Test(name = "with failing assertAll")
+	void assertAllFailingTest() {
+		Map<String, String> person = new HashMap<String, String>() {{
+			put("firstName", "Johanes");
+			put("lastName", "Link");
+			put("city", "Aschaffenburg");
+		}};
+		assertAll("Check person",
+			() -> assertEquals("Johannes", person.get("firstName")),
+			() -> assertEquals("Link", person.get("lastName")),
+			() -> assertEquals("Heidelberg", person.get("city"))
+		);
 	}
 
 }
