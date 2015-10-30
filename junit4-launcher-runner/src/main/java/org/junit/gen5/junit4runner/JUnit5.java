@@ -10,12 +10,21 @@
 
 package org.junit.gen5.junit4runner;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.gen5.launcher.TestPlanExecutionListener;
@@ -24,8 +33,35 @@ import org.junit.runner.Result;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.model.InitializationError;
 
 public class JUnit5 extends Runner {
+
+	public static final String CREATE_SPECIFICATION_METHOD_NAME = "createSpecification";
+
+	/**
+	 * The <code>Classes</code> annotation specifies the classes to be run when a class
+	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	@Inherited
+	public @interface Classes {
+
+		/**
+		 * @return the classes to be run
+		 */
+		public Class<?>[]value();
+	}
+
+	private static Class<?>[] getAnnotatedClasses(Class<?> testClass) throws InitializationError {
+		Classes annotation = testClass.getAnnotation(Classes.class);
+		if (annotation == null) {
+			throw new InitializationError(String.format("class '%s' must have a @%s annotation or a static %s method",
+				testClass.getName(), Classes.class.getSimpleName(), CREATE_SPECIFICATION_METHOD_NAME));
+		}
+		return annotation.value();
+	}
 
 	private final Class<?> testClass;
 	private TestPlanSpecification specification = null;
@@ -33,16 +69,26 @@ public class JUnit5 extends Runner {
 	private final Launcher launcher = new Launcher();
 	private final Map<String, Description> id2Description = new HashMap<>();
 
-	public JUnit5(Class<?> testClass) {
+	public JUnit5(Class<?> testClass) throws InitializationError {
 		this.testClass = testClass;
+		this.specification = createSpecification();
+		description = generateDescription();
+	}
+
+	private TestPlanSpecification createSpecification() throws InitializationError {
 		try {
-			Method createSpecMethod = testClass.getMethod("createSpecification");
-			this.specification = (TestPlanSpecification) createSpecMethod.invoke(null);
+			Method createSpecMethod = testClass.getMethod(CREATE_SPECIFICATION_METHOD_NAME);
+			return (TestPlanSpecification) createSpecMethod.invoke(null);
+		}
+		catch (NoSuchMethodException nsme) {
+			Class<?>[] testClasses = getAnnotatedClasses(testClass);
+			List<TestPlanSpecificationElement> testClassNames = Arrays.stream(testClasses).map(
+				clazz -> TestPlanSpecification.forClassName(clazz.getName())).collect(Collectors.toList());
+			return TestPlanSpecification.build(testClassNames);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			throw new InitializationError(e);
 		}
-		description = generateDescription();
 	}
 
 	private Description generateDescription() {

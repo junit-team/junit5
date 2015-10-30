@@ -10,15 +10,17 @@
 
 package com.example;
 
-import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.junit4runner.JUnit5;
+import org.junit.gen5.junit4runner.JUnit5.Classes;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
+@Classes({ SampleTestCase.class, SucceedingTestCase.class })
 public class JUnit4SamplesSuite {
 
-	public static TestPlanSpecification createSpecification() {
-		return TestPlanSpecification.build(
-			TestPlanSpecification.forClassNames(SampleTestCase.class.getName(), SucceedingTestCase.class.getName()));
-	}
+	// When you have the following method, it overrides the Classes annotation
+	//		public static TestPlanSpecification createSpecification() {
+	//			return TestPlanSpecification.build(
+	//				TestPlanSpecification.forClassNames(SucceedingTestCase.class.getName()));
+	//		}
 }
