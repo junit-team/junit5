@@ -59,12 +59,13 @@ public class EngineTestGroup implements TestDescriptor, TestExecutor {
 
 	@Override
 	public void execute(TestExecutionContext context) {
-		Stream<TestExecutor> testExecutorStream = context.getTestDescriptors().stream().filter(
-			testDescriptor -> Objects.nonNull(testDescriptor.getParent())).filter(
-				testDescriptor -> testDescriptor.getParent().equals(this)).map(TestExecutionResolver::forDescriptor);
-
-		List<TestExecutor> testExecutors = testExecutorStream.collect(Collectors.toList());
-		testExecutors.stream().forEach(testExecutor -> testExecutor.execute(context));
+		// @formatter:off
+		context.getTestDescriptors().stream()
+				.filter(testDescriptor -> Objects.nonNull(testDescriptor.getParent()))
+				.filter(testDescriptor -> testDescriptor.getParent().equals(this))
+				.map(TestExecutionResolver::forDescriptor)
+				.forEach(testExecutor -> testExecutor.execute(context));
+		// @formatter:on
 	}
 
 	@Override

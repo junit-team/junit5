@@ -10,7 +10,10 @@
 
 package org.junit.gen5.engine.junit5;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.*;
@@ -64,11 +67,16 @@ public class JUnit5TestEngine implements TestEngine {
 		// 1) retain the instance across test method invocations (if desired).
 		// 2) invoke class-level before & after methods _around_ the set of methods.
 
-		context.getTestDescriptors().stream().peek(testDescriptor -> {
-			Preconditions.condition(supports(testDescriptor),
-				String.format("%s does not support test descriptors of type %s!", getId(),
-					(testDescriptor != null ? testDescriptor.getClass().getName() : "null")));
-		}).map(TestExecutionResolver::forDescriptor).filter(TestExecutor::isRoot).forEach(
-			testExecutor -> testExecutor.execute(context));
+		// @formatter:off
+		context.getTestDescriptors().stream()
+				.peek(testDescriptor -> {
+					Preconditions.condition(supports(testDescriptor),
+						String.format("%s does not support test descriptors of type %s!", getId(),
+							(testDescriptor != null ? testDescriptor.getClass().getName() : "null")));
+				})
+				.map(TestExecutionResolver::forDescriptor)
+				.filter(TestExecutor::isRoot)
+				.forEach(testExecutor -> testExecutor.execute(context));
+		// @formatter:on
 	}
 }

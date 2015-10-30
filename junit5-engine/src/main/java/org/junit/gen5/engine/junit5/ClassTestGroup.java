@@ -53,10 +53,13 @@ public class ClassTestGroup implements TestDescriptor, TestExecutor {
 
 	@Override
 	public void execute(TestExecutionContext context) {
-		context.getTestDescriptors().stream().filter(
-			testDescriptor -> Objects.nonNull(testDescriptor.getParent())).filter(
-				testDescriptor -> testDescriptor.getParent().equals(this)).map(
-					TestExecutionResolver::forDescriptor).forEach(testExecutor -> testExecutor.execute(context));
+		// @formatter:off
+		context.getTestDescriptors().stream()
+				.filter(testDescriptor -> Objects.nonNull(testDescriptor.getParent()))
+				.filter(testDescriptor -> testDescriptor.getParent().equals(this))
+				.map(TestExecutionResolver::forDescriptor)
+				.forEach(testExecutor -> testExecutor.execute(context));
+		// @formatter:on
 	}
 
 	@Override

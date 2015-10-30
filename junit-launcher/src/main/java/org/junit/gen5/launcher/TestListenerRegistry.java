@@ -29,9 +29,12 @@ class TestListenerRegistry {
 	private final List<TestExecutionListener> testExecutionListeners = new LinkedList<>();
 
 	void registerListener(TestExecutionListener... listeners) {
-		Arrays.stream(listeners).peek(this.testExecutionListeners::add).filter(
-			listener -> listener instanceof TestPlanExecutionListener).map(
-				listener -> (TestPlanExecutionListener) listener).peek(this.testPlanExecutionListeners::add);
+		for (TestExecutionListener listener : listeners) {
+			this.testExecutionListeners.add(listener);
+			if (listener instanceof TestPlanExecutionListener) {
+				this.testPlanExecutionListeners.add((TestPlanExecutionListener) listener);
+			}
+		}
 	}
 
 	private void notifyTestPlanExecutionListeners(Consumer<TestPlanExecutionListener> consumer) {
