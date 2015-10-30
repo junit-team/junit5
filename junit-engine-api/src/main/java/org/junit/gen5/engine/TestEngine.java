@@ -32,6 +32,6 @@ public interface TestEngine {
 		return new EngineDescriptor(getId());
 	}
 
-	void execute(Collection<TestDescriptor> testDescriptions, TestExecutionListener testExecutionListener);
+	void execute(EngineExecutionContext context);
 
 }

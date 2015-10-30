@@ -12,6 +12,7 @@ package org.junit.gen5.launcher;
 
 import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
+import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestExecutionListener;
@@ -53,7 +54,8 @@ public class Launcher {
 		TestExecutionListener compositeListener = listenerRegistry.getCompositeTestExecutionListener();
 
 		for (TestEngine testEngine : lookupAllTestEngines()) {
-			testEngine.execute(testPlan.getAllTestsForTestEngine(testEngine), compositeListener);
+			testEngine.execute(
+				new EngineExecutionContext(testPlan.getAllTestsForTestEngine(testEngine), compositeListener));
 		}
 
 		listenerRegistry.notifyTestPlanExecutionListeners(TestPlanExecutionListener::testPlanExecutionFinished);

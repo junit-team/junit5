@@ -16,15 +16,14 @@ import static java.util.stream.Collectors.toList;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.ClassNameSpecification;
+import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.UniqueIdSpecification;
@@ -79,12 +78,12 @@ public class JUnit5TestEngine implements TestEngine {
 
 	@Override
 	public boolean supports(TestDescriptor testDescriptor) {
-		//Todo super class for Java test descriptors?
+		// Todo super class for Java test descriptors?
 		return testDescriptor instanceof JavaMethodTestDescriptor || testDescriptor instanceof JavaClassTestDescriptor;
 	}
 
 	@Override
-	public void execute(Collection<TestDescriptor> testDescriptors, TestExecutionListener testExecutionListener) {
+	public void execute(EngineExecutionContext context) {
 
 		// TODO Build a tree of TestDescriptors.
 		//
@@ -98,8 +97,8 @@ public class JUnit5TestEngine implements TestEngine {
 		// 1) retain the instance across test method invocations (if desired).
 		// 2) invoke class-level before & after methods _around_ the set of methods.
 
-		//todo hierarchies of tests must be executed top down
-		for (TestDescriptor testDescriptor : testDescriptors) {
+		// todo hierarchies of tests must be executed top down
+		for (TestDescriptor testDescriptor : context.getTestDescriptions()) {
 
 			Preconditions.condition(supports(testDescriptor),
 				String.format("%s supports test descriptors of type %s, not of type %s", getClass().getSimpleName(),
@@ -113,20 +112,20 @@ public class JUnit5TestEngine implements TestEngine {
 			JavaMethodTestDescriptor javaTestDescriptor = (JavaMethodTestDescriptor) testDescriptor;
 
 			try {
-				testExecutionListener.testStarted(javaTestDescriptor);
+				context.getTestExecutionListener().testStarted(javaTestDescriptor);
 				new TestExecutor(javaTestDescriptor).execute();
-				testExecutionListener.testSucceeded(javaTestDescriptor);
+				context.getTestExecutionListener().testSucceeded(javaTestDescriptor);
 			}
 			catch (InvocationTargetException ex) {
 				Throwable targetException = ex.getTargetException();
 				if (targetException instanceof TestSkippedException) {
-					testExecutionListener.testSkipped(javaTestDescriptor, targetException);
+					context.getTestExecutionListener().testSkipped(javaTestDescriptor, targetException);
 				}
 				else if (targetException instanceof TestAbortedException) {
-					testExecutionListener.testAborted(javaTestDescriptor, targetException);
+					context.getTestExecutionListener().testAborted(javaTestDescriptor, targetException);
 				}
 				else {
-					testExecutionListener.testFailed(javaTestDescriptor, targetException);
+					context.getTestExecutionListener().testFailed(javaTestDescriptor, targetException);
 				}
 			}
 			catch (NoSuchMethodException | InstantiationException | IllegalAccessException ex) {
@@ -134,7 +133,7 @@ public class JUnit5TestEngine implements TestEngine {
 					javaTestDescriptor.getUniqueId()), ex);
 			}
 			catch (Exception ex) {
-				testExecutionListener.testFailed(javaTestDescriptor, ex);
+				context.getTestExecutionListener().testFailed(javaTestDescriptor, ex);
 			}
 		}
 	}

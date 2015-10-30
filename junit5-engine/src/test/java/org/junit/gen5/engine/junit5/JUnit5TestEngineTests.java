@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Assert;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDescriptor;
+import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -46,7 +47,7 @@ public class JUnit5TestEngineTests {
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		engine.execute(descriptors, listener);
+		engine.execute(new EngineExecutionContext(descriptors, listener));
 
 		Assert.assertEquals(3, listener.testStartedCount.get());
 		Assert.assertEquals(1, listener.testSucceededCount.get());
@@ -67,7 +68,7 @@ public class JUnit5TestEngineTests {
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		engine.execute(descriptors, listener);
+		engine.execute(new EngineExecutionContext(descriptors, listener));
 
 		Assert.assertEquals(1, listener.testStartedCount.get());
 		Assert.assertEquals(1, listener.testSucceededCount.get());
@@ -88,7 +89,7 @@ public class JUnit5TestEngineTests {
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		engine.execute(descriptors, listener);
+		engine.execute(new EngineExecutionContext(descriptors, listener));
 
 		Assert.assertEquals(3 + 1, listener.testStartedCount.get());
 		Assert.assertEquals(1 + 1, listener.testSucceededCount.get());
