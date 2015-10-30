@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.commons.util.ObjectUtils.nullSafeToString;
+import static org.junit.gen5.commons.util.ObjectUtils.*;
 
 import java.lang.reflect.Method;
 
@@ -18,8 +18,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
 
 /**
@@ -51,7 +51,7 @@ public class MethodTestDescriptor implements TestDescriptor {
 		Test test = testMethod.getAnnotation(Test.class);
 		if (test != null) {
 			String customName = test.name();
-			if (!ObjectUtils.isEmpty(customName)) {
+			if (!StringUtils.isBlank(customName)) {
 				return customName;
 			}
 		}

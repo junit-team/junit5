@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-import org.junit.gen5.commons.util.ObjectUtils;
+import org.junit.gen5.commons.util.StringUtils;
 import org.opentestalliance.AssertionFailedError;
 import org.opentestalliance.MultipleFailuresException;
 
@@ -250,7 +250,7 @@ public final class Assertions {
 
 	private static void failEqual(Object actual, String message) {
 		String prefix = "Values should be different. ";
-		if (!ObjectUtils.isEmpty(message)) {
+		if (!StringUtils.isEmpty(message)) {
 			prefix = message + ". ";
 		}
 		fail(prefix + "Actual: " + actual);
@@ -295,7 +295,7 @@ public final class Assertions {
 	}
 
 	private static String buildPrefix(String message) {
-		return (!ObjectUtils.isEmpty(message) ? message + " ==> " : "");
+		return (!StringUtils.isEmpty(message) ? message + " ==> " : "");
 	}
 
 	private static String nullSafeGet(Supplier<String> messageSupplier) {

@@ -31,17 +31,31 @@ public final class Preconditions {
 	}
 
 	/**
-	 * @see ObjectUtils#isEmpty(CharSequence)
+	 * @see StringUtils#isEmpty(CharSequence)
 	 */
 	public static void notEmpty(String str, String message) {
-		condition(!ObjectUtils.isEmpty(str), message);
+		condition(!StringUtils.isEmpty(str), message);
 	}
 
 	/**
-	 * @see ObjectUtils#isEmpty(CharSequence)
+	 * @see StringUtils#isEmpty(CharSequence)
 	 */
 	public static void notEmpty(String str, Supplier<String> messageSupplier) {
-		condition(!ObjectUtils.isEmpty(str), messageSupplier);
+		condition(!StringUtils.isEmpty(str), messageSupplier);
+	}
+
+	/**
+	 * @see StringUtils#isBlank(String)
+	 */
+	public static void notBlank(String str, String message) {
+		condition(!StringUtils.isBlank(str), message);
+	}
+
+	/**
+	 * @see StringUtils#isBlank(String)
+	 */
+	public static void notBlank(String str, Supplier<String> messageSupplier) {
+		condition(!StringUtils.isBlank(str), messageSupplier);
 	}
 
 	public static void condition(boolean predicate, String message) {
