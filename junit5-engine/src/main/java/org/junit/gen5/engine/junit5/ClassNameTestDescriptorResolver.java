@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ClassNameSpecification;
-import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 
 /**
@@ -62,4 +61,5 @@ public class ClassNameTestDescriptorResolver
 			return result;
 		}
 	}
+
 }

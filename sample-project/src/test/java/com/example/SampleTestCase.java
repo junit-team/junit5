@@ -81,6 +81,7 @@ class SampleTestCase {
 	}
 
 	@Test(name = "with succeding assertAll")
+	@SuppressWarnings("serial")
 	void assertAllTest() {
 		// @formatter:off
 		Map<String, String> person = new HashMap<String, String>() {{
@@ -97,6 +98,7 @@ class SampleTestCase {
 	}
 
 	@Test(name = "with failing assertAll")
+	@SuppressWarnings("serial")
 	void assertAllFailingTest() {
 		// @formatter:off
 		Map<String, String> person = new HashMap<String, String>() {{
