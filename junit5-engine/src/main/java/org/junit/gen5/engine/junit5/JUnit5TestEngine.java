@@ -59,12 +59,20 @@ public class JUnit5TestEngine implements TestEngine {
 		testDescriptors.add(root);
 
 		for (TestPlanSpecificationElement element : specification) {
-			TestDescriptorResolver testDescriptorResolver = testDescriptorResolverRegistry.forType(element.getClass());
-			TestDescriptor descriptor = testDescriptorResolver.resolve(root, element);
-			testDescriptors.add(descriptor);
-			testDescriptors.addAll(testDescriptorResolver.resolveChildren(descriptor, element));
+			testDescriptors.addAll(resolveElement(testDescriptorResolverRegistry, root, element));
 		}
 		return new ArrayList<>(testDescriptors);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Set<TestDescriptor> resolveElement(TestDescriptorResolverRegistry testDescriptorResolverRegistry,
+			EngineDescriptor root, TestPlanSpecificationElement element) {
+		Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
+		TestDescriptorResolver testDescriptorResolver = testDescriptorResolverRegistry.forType(element.getClass());
+		TestDescriptor descriptor = testDescriptorResolver.resolve(root, element);
+		testDescriptors.add(descriptor);
+		testDescriptors.addAll(testDescriptorResolver.resolveChildren(descriptor, element));
+		return testDescriptors;
 	}
 
 	@Override
