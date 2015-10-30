@@ -25,9 +25,9 @@ public class JavaMethodTaskFactory {
 
 		List<ExecutionTask> tasks = new ArrayList<>();
 
-		tasks.addAll(this.createBeforeTasks(testDescriptor.getTestClass(), instance));
+		tasks.add(this.createBeforeTasks(testDescriptor.getTestClass(), instance));
 		tasks.add(this.createTestMethodTask(testDescriptor, instance));
-		tasks.addAll(this.createAfterTasks(testDescriptor.getTestClass(), instance));
+		tasks.add(this.createAfterTasks(testDescriptor.getTestClass(), instance));
 
 		return new CompositeTask(tasks,
 			testDescriptor.getTestClass().getSimpleName() + "." + testDescriptor.getTestMethod().getName() + "()");
@@ -38,12 +38,18 @@ public class JavaMethodTaskFactory {
 		return new MethodTask(testDescriptor.getTestClass(), testDescriptor.getTestMethod(), instance);
 	}
 
-	private List<ExecutionTask> createBeforeTasks(Class<?> testClass, Object instance) {
-		return createExecutionTasksForAnnotationType(testClass, instance, Before.class);
+	private ExecutionTask createBeforeTasks(Class<?> testClass, Object instance) {
+
+		List<ExecutionTask> befores = createExecutionTasksForAnnotationType(testClass, instance, Before.class);
+
+		return new CompositeTask(befores, "@Before");
+
 	}
 
-	private List<ExecutionTask> createAfterTasks(Class<?> testClass, Object instance) {
-		return createExecutionTasksForAnnotationType(testClass, instance, After.class);
+	private ExecutionTask createAfterTasks(Class<?> testClass, Object instance) {
+		List<ExecutionTask> afters = createExecutionTasksForAnnotationType(testClass, instance, After.class);
+
+		return new CompositeTask(afters, "@After");
 	}
 
 	private List<ExecutionTask> createExecutionTasksForAnnotationType(Class<?> testClass, Object instance,
