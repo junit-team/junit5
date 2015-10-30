@@ -28,7 +28,7 @@ public class EngineDescriptor implements TestDescriptor {
 
 	@Override
 	public String getDisplayName() {
-		return getEngineId();
+		return "Test engine: " + getEngineId();
 	}
 
 	@Override
