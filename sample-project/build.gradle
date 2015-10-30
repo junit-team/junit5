@@ -3,6 +3,7 @@ apply plugin: 'java'
 dependencies {
 	testCompile(project(':sample-extension'))
 	testCompile(project(':junit5-api'))
+	testCompile(project(':junit4-launcher-runner'))
 	testRuntime(project(':junit5-engine'))
 }
 

@@ -1,4 +1,5 @@
 dependencies {
 	compile(project(':junit-launcher'))
-	compile('junit:junit:${junit4Version}')
+//	compile('junit:junit:${junit4Version}') //does not work in IntelliJ :-(
+	compile('junit:junit:4.12')
 }
