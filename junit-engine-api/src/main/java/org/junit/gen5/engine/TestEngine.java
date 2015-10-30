@@ -18,7 +18,7 @@ public interface TestEngine {
 		return getClass().getCanonicalName();
 	}
 
-	Collection<TestDescriptor> discoverTests(TestPlanSpecification specification, TestDescriptor root);
+	Collection<TestDescriptor> discoverTests(TestPlanSpecification specification);
 
 	default boolean supports(TestDescriptor testDescriptor) {
 		return testDescriptor.getUniqueId().startsWith(getId());
@@ -28,10 +28,5 @@ public interface TestEngine {
 		return testDescriptors.stream().allMatch(testDescriptor -> supports(testDescriptor));
 	}
 
-	default TestDescriptor createEngineDescriptor() {
-		return new EngineDescriptor(getId());
-	}
-
-	void execute(Collection<TestDescriptor> testDescriptions, TestExecutionListener testExecutionListener);
-
+	void execute(TestExecutionContext context);
 }

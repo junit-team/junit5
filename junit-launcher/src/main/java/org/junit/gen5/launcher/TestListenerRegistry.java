@@ -10,8 +10,9 @@
 
 package org.junit.gen5.launcher;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -26,25 +27,26 @@ import org.junit.gen5.engine.TestExecutionListener;
  */
 class TestListenerRegistry {
 
+	private final List<TestPlanExecutionListener> testPlanExecutionListeners = new LinkedList<>();
 	private final List<TestExecutionListener> testExecutionListeners = new LinkedList<>();
 
-	private final List<TestPlanExecutionListener> testPlanExecutionListeners = new LinkedList<>();
 
-
-	void registerTestExecutionListeners(TestExecutionListener... listeners) {
-		this.testExecutionListeners.addAll(asList(listeners));
+	void registerListener(TestExecutionListener... listeners) {
+		Arrays.stream(listeners).peek(this.testExecutionListeners::add).filter(
+			listener -> listener instanceof TestPlanExecutionListener).map(
+				listener -> (TestPlanExecutionListener) listener).peek(this.testPlanExecutionListeners::add);
 	}
 
-	void registerTestPlanExecutionListeners(TestPlanExecutionListener... listeners) {
-		this.testPlanExecutionListeners.addAll(asList(listeners));
+	private void notifyTestPlanExecutionListeners(Consumer<TestPlanExecutionListener> consumer) {
+		this.testPlanExecutionListeners.forEach(consumer);
 	}
 
-	void notifyTestExecutionListeners(Consumer<TestExecutionListener> consumer) {
+	private void notifyTestExecutionListeners(Consumer<TestExecutionListener> consumer) {
 		this.testExecutionListeners.forEach(consumer);
 	}
 
-	void notifyTestPlanExecutionListeners(Consumer<TestPlanExecutionListener> consumer) {
-		this.testPlanExecutionListeners.forEach(consumer);
+	TestPlanExecutionListener getCompositeTestPlanExecutionListener() {
+		return new CompositeTestPlanExecutionListener();
 	}
 
 	TestExecutionListener getCompositeTestExecutionListener() {
@@ -55,36 +57,61 @@ class TestListenerRegistry {
 	private class CompositeTestExecutionListener implements TestExecutionListener {
 
 		@Override
-		public void dynamicTestFound(TestDescriptor testDescriptor) {
-			notifyTestExecutionListeners(
-				testExecutionListener -> testExecutionListener.dynamicTestFound(testDescriptor));
+		public void testFound(TestDescriptor testDescriptor) {
+			notifyTestExecutionListeners(listener -> listener.testFound(testDescriptor));
 		}
 
 		@Override
 		public void testStarted(TestDescriptor testDescriptor) {
-			notifyTestExecutionListeners(testExecutionListener -> testExecutionListener.testStarted(testDescriptor));
+			notifyTestExecutionListeners(listener -> listener.testStarted(testDescriptor));
 		}
 
 		@Override
 		public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-			notifyTestExecutionListeners(testExecutionListener -> testExecutionListener.testSkipped(testDescriptor, t));
+			notifyTestExecutionListeners(listener -> listener.testSkipped(testDescriptor, t));
 		}
 
 		@Override
 		public void testAborted(TestDescriptor testDescriptor, Throwable t) {
-			notifyTestExecutionListeners(testExecutionListener -> testExecutionListener.testAborted(testDescriptor, t));
+			notifyTestExecutionListeners(listener -> listener.testAborted(testDescriptor, t));
 		}
 
 		@Override
 		public void testFailed(TestDescriptor testDescriptor, Throwable t) {
-			notifyTestExecutionListeners(testExecutionListener -> testExecutionListener.testFailed(testDescriptor, t));
+			notifyTestExecutionListeners(listener -> listener.testFailed(testDescriptor, t));
 		}
 
 		@Override
 		public void testSucceeded(TestDescriptor testDescriptor) {
-			notifyTestExecutionListeners(testExecutionListener -> testExecutionListener.testSucceeded(testDescriptor));
+			notifyTestExecutionListeners(listener -> listener.testSucceeded(testDescriptor));
 		}
-
 	}
 
+	private class CompositeTestPlanExecutionListener implements TestPlanExecutionListener {
+
+		@Override
+		public void testPlanExecutionStarted(TestPlan testPlan) {
+			notifyTestPlanExecutionListeners(listener -> listener.testPlanExecutionStarted(testPlan));
+		}
+
+		@Override
+		public void testPlanExecutionPaused(TestPlan testPlan) {
+			notifyTestPlanExecutionListeners(listener -> listener.testPlanExecutionPaused(testPlan));
+		}
+
+		@Override
+		public void testPlanExecutionRestarted(TestPlan testPlan) {
+			notifyTestPlanExecutionListeners(listener -> listener.testPlanExecutionRestarted(testPlan));
+		}
+
+		@Override
+		public void testPlanExecutionStopped(TestPlan testPlan) {
+			notifyTestPlanExecutionListeners(listener -> listener.testPlanExecutionStopped(testPlan));
+		}
+
+		@Override
+		public void testPlanExecutionFinished(TestPlan testPlan) {
+			notifyTestPlanExecutionListeners(listener -> listener.testPlanExecutionFinished(testPlan));
+		}
+	}
 }

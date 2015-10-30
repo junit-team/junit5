@@ -21,15 +21,13 @@ import org.junit.gen5.launcher.Launcher;
 public class ConsoleRunner {
 
 	public static void main(String... args) {
-
 		// TODO Configure launcher?
 		Launcher launcher = new Launcher();
-
-		launcher.registerTestPlanExecutionListeners(
+		launcher.registerListeners(
 			// @formatter:off
-			new ColoredPrintingTestListener(System.out),
-			new TestSummaryReportingTestListener(System.out)
-			// @formatter:on
+				new ColoredPrintingTestListener(System.out),
+				new TestSummaryReportingTestListener(System.out)
+				// @formatter:on
 		);
 
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
@@ -38,5 +36,4 @@ public class ConsoleRunner {
 		// TODO Provide means to allow manipulation of test plan?
 		launcher.execute(testPlanSpecification);
 	}
-
 }

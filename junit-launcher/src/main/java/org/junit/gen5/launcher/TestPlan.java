@@ -60,5 +60,4 @@ public final class TestPlan {
 	public long getNumberOfStaticTests() {
 		return this.testDescriptors.stream().filter(TestDescriptor::isTest).count();
 	}
-
 }

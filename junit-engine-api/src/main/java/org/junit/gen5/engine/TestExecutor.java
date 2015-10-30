@@ -10,10 +10,15 @@
 
 package org.junit.gen5.engine;
 
-import lombok.Value;
+/**
+ * @author Stefan Bechtold
+ * @author Sam Brannen
+ * @author Matthias Merdes
+ * @since 5.0
+ */
+public interface TestExecutor {
 
-@Value
-public class ClassNameSpecification implements TestPlanSpecificationElement {
+	void execute(TestExecutionContext context);
 
-	private String className;
+	boolean isRoot();
 }

@@ -23,7 +23,7 @@ import org.junit.gen5.launcher.TestPlanExecutionListener;
  * @author Sam Brannen
  * @since 5.0
  */
-public class TestSummaryReportingTestListener implements TestPlanExecutionListener, TestExecutionListener {
+public class TestSummaryReportingTestListener implements TestPlanExecutionListener {
 
 	private final PrintStream out;
 
@@ -50,23 +50,23 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 	}
 
 	@Override
-	public void testPlanExecutionPaused() {
+	public void testPlanExecutionPaused(TestPlan testPlan) {
 		this.timePaused = System.currentTimeMillis();
 	}
 
 	@Override
-	public void testPlanExecutionRestarted() {
+	public void testPlanExecutionRestarted(TestPlan testPlan) {
 		this.timeStarted += System.currentTimeMillis() - this.timePaused;
 		this.timePaused = 0;
 	}
 
 	@Override
-	public void testPlanExecutionStopped() {
+	public void testPlanExecutionStopped(TestPlan testPlan) {
 		reportSummary("Test run stopped");
 	}
 
 	@Override
-	public void testPlanExecutionFinished() {
+	public void testPlanExecutionFinished(TestPlan testPlan) {
 		reportSummary("Test run finished");
 	}
 
@@ -88,7 +88,7 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 	}
 
 	@Override
-	public void dynamicTestFound(TestDescriptor testDescriptor) {
+	public void testFound(TestDescriptor testDescriptor) {
 		this.testsFound.incrementAndGet();
 	}
 
