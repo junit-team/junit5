@@ -82,6 +82,7 @@ class SampleTestCase {
 
 	@Test(name = "with succeding assertAll")
 	void assertAllTest() {
+		// @formatter:off
 		Map<String, String> person = new HashMap<String, String>() {{
 			put("firstName", "Johannes");
 			put("lastName", "Link");
@@ -92,10 +93,12 @@ class SampleTestCase {
 			() -> assertEquals("Link", person.get("lastName")),
 			() -> assertEquals("Heidelberg", person.get("city"))
 		);
+		// @formatter:on
 	}
 
 	@Test(name = "with failing assertAll")
 	void assertAllFailingTest() {
+		// @formatter:off
 		Map<String, String> person = new HashMap<String, String>() {{
 			put("firstName", "Johanes");
 			put("lastName", "Link");
@@ -106,6 +109,7 @@ class SampleTestCase {
 			() -> assertEquals("Link", person.get("lastName")),
 			() -> assertEquals("Heidelberg", person.get("city"))
 		);
+		// @formatter:on
 	}
 
 }

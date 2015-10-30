@@ -74,7 +74,7 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 
 		// @formatter:off
 		out.println(String.format(
-			"%s after %d ms\n"
+			"%n%s after %d ms\n"
 			+ "[%10d tests found     ]\n"
 			+ "[%10d tests started   ]\n"
 			+ "[%10d tests skipped   ]\n"
