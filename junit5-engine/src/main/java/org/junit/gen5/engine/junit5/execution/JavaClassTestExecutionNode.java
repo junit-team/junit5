@@ -30,12 +30,19 @@ import org.junit.gen5.engine.junit5.descriptor.JavaClassTestDescriptor;
  * @author Sam Brannen
  * @since 5.0
  */
-public class JavaClassTestExecutionNode extends TestExecutionNode<JavaClassTestDescriptor> {
+public class JavaClassTestExecutionNode extends TestExecutionNode {
 
 	static final String TEST_INSTANCE_ATTRIBUTE_NAME = JavaClassTestExecutionNode.class.getName() + ".TestInstance";
 
+	private final JavaClassTestDescriptor testDescriptor;
+
 	public JavaClassTestExecutionNode(JavaClassTestDescriptor testDescriptor) {
-		super(testDescriptor);
+		this.testDescriptor = testDescriptor;
+	}
+
+	@Override
+	public JavaClassTestDescriptor getTestDescriptor() {
+		return testDescriptor;
 	}
 
 	private Object createTestInstance() {

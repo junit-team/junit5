@@ -23,10 +23,17 @@ import org.opentestalliance.TestSkippedException;
  * @author Sam Brannen
  * @since 5.0
  */
-public class JavaMethodTestExecutionNode extends TestExecutionNode<JavaMethodTestDescriptor> {
+public class JavaMethodTestExecutionNode extends TestExecutionNode {
+
+	private final JavaMethodTestDescriptor testDescriptor;
 
 	public JavaMethodTestExecutionNode(JavaMethodTestDescriptor testDescriptor) {
-		super(testDescriptor);
+		this.testDescriptor = testDescriptor;
+	}
+
+	@Override
+	public JavaMethodTestDescriptor getTestDescriptor() {
+		return testDescriptor;
 	}
 
 	@Override

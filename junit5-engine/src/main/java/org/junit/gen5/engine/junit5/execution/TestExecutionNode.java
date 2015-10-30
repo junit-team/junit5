@@ -22,15 +22,10 @@ import org.junit.gen5.engine.TestDescriptor;
  * @author Sam Brannen
  * @since 5.0
  */
-public abstract class TestExecutionNode<T extends TestDescriptor> {
+public abstract class TestExecutionNode {
 
-	private final T testDescriptor;
 	private TestExecutionNode parent = null;
 	private List<TestExecutionNode> children = new LinkedList<>();
-
-	protected TestExecutionNode(T testDescriptor) {
-		this.testDescriptor = testDescriptor;
-	}
 
 	public void addChild(TestExecutionNode childNode) {
 		this.children.add(childNode);
@@ -43,9 +38,7 @@ public abstract class TestExecutionNode<T extends TestDescriptor> {
 
 	public abstract void execute(EngineExecutionContext context);
 
-	public T getTestDescriptor() {
-		return testDescriptor;
-	}
+	public abstract TestDescriptor getTestDescriptor();
 
 	public TestExecutionNode getParent() {
 		return parent;
