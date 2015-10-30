@@ -10,16 +10,9 @@
 
 package com.example;
 
-import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.api.Assumptions.assumeTrue;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Test;
-import org.opentestalliance.TestSkippedException;
 
 /**
  * Named *TestCase so Gradle will not try to run it.
