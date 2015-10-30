@@ -41,7 +41,7 @@ public class JavaTestDescriptorFactory {
 	// TODO Decide if we want to support descriptors for packages.
 	private static final Pattern UID_PATTERN = Pattern.compile("^(.+):(.+)#(.+)\\((.*)\\)$");
 
-	//Todo must be able to create any kind of JavaTestDescriptor
+	// Todo must be able to create any kind of JavaTestDescriptor
 	public static JavaMethodTestDescriptor from(final String uid, TestDescriptor root) throws RuntimeException {
 		Preconditions.notNull(uid, "TestDescriptor UID must not be null");
 
@@ -50,7 +50,6 @@ public class JavaTestDescriptorFactory {
 			() -> String.format("Invalid format for %s UID: %s", JavaMethodTestDescriptor.class.getSimpleName(), uid));
 
 		// TODO Validate contents of matched groups.
-		String engineId = matcher.group(1);
 		String className = matcher.group(2);
 		String methodName = matcher.group(3);
 		String methodParameters = matcher.group(4);

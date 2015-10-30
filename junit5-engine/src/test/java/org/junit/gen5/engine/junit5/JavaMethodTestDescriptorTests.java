@@ -37,6 +37,9 @@ public class JavaMethodTestDescriptorTests {
 	private static final String TEST_METHOD_STRING_BIGDECIMAL_UID = JUNIT_5_ENGINE_ID + ":"
 			+ TEST_METHOD_STRING_BIGDECIMAL_ID;
 
+	private static final String TEST_METHOD_FOO_UID = JUNIT_5_ENGINE_ID + ":"
+			+ JavaMethodTestDescriptorTests.class.getName() + "#foo()";
+
 	private static final EngineDescriptor ENGINE_DESCRIPTOR = new EngineDescriptor(JUNIT_5_ENGINE_ID);
 
 	@org.junit.Test
@@ -47,8 +50,6 @@ public class JavaMethodTestDescriptorTests {
 		JavaMethodTestDescriptor descriptor = new JavaMethodTestDescriptor(testMethod, parent);
 
 		System.out.println("DEBUG - " + descriptor);
-		assertEquals(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
-		assertEquals(TEST_METHOD_ID, descriptor.getTestId());
 		assertEquals(TEST_METHOD_UID, descriptor.getUniqueId());
 		assertEquals(testClass, descriptor.getParent().getTestClass());
 		assertEquals(testMethod, descriptor.getTestMethod());
@@ -63,7 +64,7 @@ public class JavaMethodTestDescriptorTests {
 		JavaMethodTestDescriptor descriptor = new JavaMethodTestDescriptor(testMethod, parent);
 
 		System.out.println("DEBUG - " + descriptor);
-		assertEquals(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
+		assertEquals(TEST_METHOD_FOO_UID, descriptor.getUniqueId());
 		assertEquals(testClass, descriptor.getParent().getTestClass());
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom test name", descriptor.getDisplayName(), "display name:");
@@ -77,8 +78,6 @@ public class JavaMethodTestDescriptorTests {
 		JavaMethodTestDescriptor descriptor = new JavaMethodTestDescriptor(testMethod, parent);
 
 		System.out.println("DEBUG - " + descriptor);
-		assertEquals(JUNIT_5_ENGINE_ID, descriptor.getEngineId());
-		assertEquals(TEST_METHOD_STRING_BIGDECIMAL_ID, descriptor.getTestId());
 		assertEquals(TEST_METHOD_STRING_BIGDECIMAL_UID, descriptor.getUniqueId());
 		assertEquals(testClass, descriptor.getParent().getTestClass());
 		assertEquals(testMethod, descriptor.getTestMethod());

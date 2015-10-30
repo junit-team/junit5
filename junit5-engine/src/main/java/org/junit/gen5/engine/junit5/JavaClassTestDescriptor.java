@@ -40,8 +40,8 @@ public class JavaClassTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public String getTestId() {
-		return testClass.getName();
+	public String getUniqueId() {
+		return parent.getUniqueId() + ":" + testClass.getName();
 	}
 
 	@Override
@@ -54,8 +54,4 @@ public class JavaClassTestDescriptor implements TestDescriptor {
 		return false;
 	}
 
-	@Override
-	public String getEngineId() {
-		return parent.getEngineId();
-	}
 }

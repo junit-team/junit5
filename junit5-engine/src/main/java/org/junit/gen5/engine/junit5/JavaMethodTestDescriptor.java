@@ -58,13 +58,8 @@ public class JavaMethodTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public String getEngineId() {
-		return getParent().getEngineId();
-	}
-
-	@Override
-	public String getTestId() {
-		return String.format("%s#%s(%s)", getParent().getTestId(), testMethod.getName(),
+	public String getUniqueId() {
+		return String.format("%s#%s(%s)", getParent().getUniqueId(), testMethod.getName(),
 			nullSafeToString(testMethod.getParameterTypes()));
 	}
 

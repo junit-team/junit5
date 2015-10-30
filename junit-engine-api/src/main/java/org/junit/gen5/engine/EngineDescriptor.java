@@ -22,7 +22,7 @@ public class EngineDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public String getTestId() {
+	public String getUniqueId() {
 		return getEngineId();
 	}
 
