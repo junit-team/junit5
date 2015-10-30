@@ -36,23 +36,23 @@ public final class TestPlan {
 		/* no-op */
 	}
 
-	public void addTest(TestDescriptor testDescriptor) {
-		addTests(singleton(testDescriptor));
+	public void addTestDescriptor(TestDescriptor testDescriptor) {
+		addTestDescriptors(singleton(testDescriptor));
 	}
 
-	public void addTests(TestDescriptor... testDescriptors) {
-		addTests(asList(testDescriptors));
+	public void addTestDescriptors(TestDescriptor... testDescriptors) {
+		addTestDescriptors(asList(testDescriptors));
 	}
 
-	public void addTests(Collection<TestDescriptor> testDescriptors) {
+	public void addTestDescriptors(Collection<TestDescriptor> testDescriptors) {
 		this.testDescriptors.addAll(testDescriptors);
 	}
 
-	public Collection<TestDescriptor> getTests() {
+	public Collection<TestDescriptor> getTestDescriptors() {
 		return Collections.unmodifiableCollection(testDescriptors);
 	}
 
-	public List<TestDescriptor> getAllTestsForTestEngine(TestEngine testEngine) {
+	public List<TestDescriptor> getAllTestDescriptorsForTestEngine(TestEngine testEngine) {
 		return this.testDescriptors.stream().filter(testEngine::supports).collect(Collectors.toList());
 	}
 

@@ -36,8 +36,8 @@ public class Launcher {
 		TestPlan testPlan = new TestPlan();
 		for (TestEngine testEngine : lookupAllTestEngines()) {
 			TestDescriptor engineDescriptor = testEngine.createEngineDescriptor();
-			testPlan.addTest(engineDescriptor);
-			testPlan.addTests(testEngine.discoverTests(specification, engineDescriptor));
+			testPlan.addTestDescriptor(engineDescriptor);
+			testPlan.addTestDescriptors(testEngine.discoverTests(specification, engineDescriptor));
 		}
 		return testPlan;
 	}
@@ -55,7 +55,7 @@ public class Launcher {
 
 		for (TestEngine testEngine : lookupAllTestEngines()) {
 			testEngine.execute(
-				new EngineExecutionContext(testPlan.getAllTestsForTestEngine(testEngine), compositeListener));
+				new EngineExecutionContext(testPlan.getAllTestDescriptorsForTestEngine(testEngine), compositeListener));
 		}
 
 		listenerRegistry.notifyTestPlanExecutionListeners(TestPlanExecutionListener::testPlanExecutionFinished);
