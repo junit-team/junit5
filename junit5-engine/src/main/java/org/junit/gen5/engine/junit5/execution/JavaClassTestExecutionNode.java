@@ -10,8 +10,17 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import java.lang.reflect.InvocationTargetException;
+import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.gen5.api.AfterAll;
+import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.junit5.descriptor.JavaClassTestDescriptor;
@@ -23,12 +32,13 @@ import org.junit.gen5.engine.junit5.descriptor.JavaClassTestDescriptor;
  */
 public class JavaClassTestExecutionNode extends TestExecutionNode<JavaClassTestDescriptor> {
 
+	static final String TEST_INSTANCE_ATTRIBUTE_NAME = JavaClassTestExecutionNode.class.getName() + ".TestInstance";
+
 	public JavaClassTestExecutionNode(JavaClassTestDescriptor testDescriptor) {
 		super(testDescriptor);
 	}
 
-	@Override
-	public Object createTestInstance() {
+	private Object createTestInstance() {
 		try {
 			return ReflectionUtils.newInstance(getTestDescriptor().getTestClass());
 		}
@@ -41,8 +51,58 @@ public class JavaClassTestExecutionNode extends TestExecutionNode<JavaClassTestD
 
 	@Override
 	public void execute(EngineExecutionContext context) {
-		for (TestExecutionNode child : getChildren()) {
-			child.execute(context);
+		Class<?> testClass = getTestDescriptor().getTestClass();
+		Object testInstance = createTestInstance();
+		context.getAttributes().put(TEST_INSTANCE_ATTRIBUTE_NAME, testInstance);
+
+		try {
+			executeBeforeAllMethods(testClass, testInstance);
+			for (TestExecutionNode child : getChildren()) {
+				child.execute(context);
+			}
 		}
+		catch (Exception e) {
+			context.getTestExecutionListener().testFailed(getTestDescriptor(), e);
+		}
+		finally {
+			executeAfterAllMethods(context, testClass, testInstance);
+			context.getAttributes().remove(TEST_INSTANCE_ATTRIBUTE_NAME);
+		}
+	}
+
+	private void executeBeforeAllMethods(Class<?> testClass, Object testInstance) throws Exception {
+		for (Method method : findAnnotatedMethods(testClass, BeforeAll.class)) {
+			invokeMethod(method, testInstance);
+		}
+	}
+
+	private void executeAfterAllMethods(EngineExecutionContext context, Class<?> testClass, Object testInstance) {
+		Exception exceptionDuringAfterAll = null;
+
+		for (Method method : findAnnotatedMethods(testClass, AfterAll.class)) {
+			try {
+				invokeMethod(method, testInstance);
+			}
+			catch (Exception e) {
+				if (exceptionDuringAfterAll == null) {
+					exceptionDuringAfterAll = e;
+				}
+				else {
+					exceptionDuringAfterAll.addSuppressed(e);
+				}
+			}
+		}
+
+		if (exceptionDuringAfterAll != null) {
+			context.getTestExecutionListener().testFailed(getTestDescriptor(), exceptionDuringAfterAll);
+		}
+	}
+
+	private List<Method> findAnnotatedMethods(Class<?> testClass, Class<? extends Annotation> annotationType) {
+		// @formatter:off
+		return Arrays.stream(testClass.getDeclaredMethods())
+				.filter(method -> method.isAnnotationPresent(annotationType))
+				.collect(toList());
+		// @formatter:on
 	}
 }

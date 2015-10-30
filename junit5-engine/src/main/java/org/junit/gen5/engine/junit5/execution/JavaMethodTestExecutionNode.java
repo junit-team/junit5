@@ -33,7 +33,7 @@ public class JavaMethodTestExecutionNode extends TestExecutionNode<JavaMethodTes
 	public void execute(EngineExecutionContext context) {
 		try {
 			context.getTestExecutionListener().testStarted(getTestDescriptor());
-			Object testInstance = getParent().createTestInstance();
+			Object testInstance = context.getAttributes().get(JavaClassTestExecutionNode.TEST_INSTANCE_ATTRIBUTE_NAME);
 			ReflectionUtils.invokeMethod(getTestDescriptor().getTestMethod(), testInstance);
 			context.getTestExecutionListener().testSucceeded(getTestDescriptor());
 		}

@@ -43,10 +43,6 @@ public abstract class TestExecutionNode<T extends TestDescriptor> {
 
 	public abstract void execute(EngineExecutionContext context);
 
-	public Object createTestInstance() {
-		return (getParent() != null) ? getParent().createTestInstance() : null;
-	}
-
 	public T getTestDescriptor() {
 		return testDescriptor;
 	}
