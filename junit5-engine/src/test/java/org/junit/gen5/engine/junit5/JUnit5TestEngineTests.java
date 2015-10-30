@@ -23,6 +23,7 @@ import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
 
 /**
  * Unit tests for {@link JUnit5TestEngine}.
@@ -32,8 +33,6 @@ import org.junit.gen5.engine.TestPlanSpecification;
  */
 public class JUnit5TestEngineTests {
 
-	private static final EngineDescriptor ENGINE_DESCRIPTOR = new EngineDescriptor("junit5");
-
 	@org.junit.Test
 	public void executeTestsFromFromClasses() {
 		JUnit5TestEngine engine = new JUnit5TestEngine();
@@ -41,9 +40,9 @@ public class JUnit5TestEngineTests {
 		TestPlanSpecification spec = TestPlanSpecification.build(
 			TestPlanSpecification.forClassName(LocalTestCase.class.getName()));
 
-		List<TestDescriptor> descriptors = engine.discoverTests(spec, ENGINE_DESCRIPTOR);
+		List<TestDescriptor> descriptors = engine.discoverTests(spec);
 		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# descriptors", 4, descriptors.size());
+		Assert.assertEquals("# descriptors", 5, descriptors.size());
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
@@ -62,9 +61,9 @@ public class JUnit5TestEngineTests {
 		TestPlanSpecification spec = TestPlanSpecification.build(TestPlanSpecification.forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"));
 
-		List<TestDescriptor> descriptors = engine.discoverTests(spec, ENGINE_DESCRIPTOR);
+		List<TestDescriptor> descriptors = engine.discoverTests(spec);
 		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# tests", 2, descriptors.size());
+		Assert.assertEquals("# tests", 3, descriptors.size());
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
@@ -83,9 +82,9 @@ public class JUnit5TestEngineTests {
 				"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
 			TestPlanSpecification.forClassName(LocalTestCase.class.getName()));
 
-		List<TestDescriptor> descriptors = engine.discoverTests(spec, ENGINE_DESCRIPTOR);
+		List<TestDescriptor> descriptors = engine.discoverTests(spec);
 		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# descriptors", 4, descriptors.size());
+		Assert.assertEquals("# descriptors", 5, descriptors.size());
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 

@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5;
+package org.junit.gen5.engine.junit5.descriptor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ import org.junit.gen5.engine.TestPlanSpecificationElement;
  * @author Stefan Bechtold
  * @since 5.0
  */
-class TestDescriptorResolverRegistry {
+public class TestDescriptorResolverRegistry {
 
 	private final Map<Class<? extends TestPlanSpecificationElement>, TestDescriptorResolver<? extends TestPlanSpecificationElement, ?>> resolvers = new HashMap<>();
 

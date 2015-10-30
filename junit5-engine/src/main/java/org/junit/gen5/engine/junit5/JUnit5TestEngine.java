@@ -10,13 +10,12 @@
 
 package org.junit.gen5.engine.junit5;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import static java.util.stream.Collectors.toList;
+
+import java.util.*;
 
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.engine.*;
 import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
@@ -24,6 +23,9 @@ import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.UniqueIdSpecification;
+import org.junit.gen5.engine.junit5.descriptor.*;
+import org.junit.gen5.engine.junit5.execution.TestExecutionNode;
+import org.junit.gen5.engine.junit5.execution.TestExecutionNodeResolver;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
@@ -38,13 +40,17 @@ public class JUnit5TestEngine implements TestEngine {
 	}
 
 	@Override
-	public List<TestDescriptor> discoverTests(TestPlanSpecification specification, TestDescriptor root) {
-		// TODO lookup SpecificationResolverRegistry within the ApplicationExecutionContext
+	public List<TestDescriptor> discoverTests(TestPlanSpecification specification) {
+		// TODO lookup TestDescriptorResolverRegistry within the ApplicationExecutionContext
 		TestDescriptorResolverRegistry testDescriptorResolverRegistry = new TestDescriptorResolverRegistry();
 		testDescriptorResolverRegistry.addResolver(ClassNameSpecification.class, new ClassNameTestDescriptorResolver());
 		testDescriptorResolverRegistry.addResolver(UniqueIdSpecification.class, new UniqueIdTestDescriptorResolver());
 
+		// TODO Avoid redundant creation of TestDescriptors during this phase
 		Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
+		EngineDescriptor root = new EngineDescriptor(this);
+		testDescriptors.add(root);
+
 		for (TestPlanSpecificationElement element : specification) {
 			TestDescriptorResolver testDescriptorResolver = testDescriptorResolverRegistry.forType(element.getClass());
 			TestDescriptor descriptor = testDescriptorResolver.resolve(root, element);
@@ -57,7 +63,7 @@ public class JUnit5TestEngine implements TestEngine {
 	@Override
 	public boolean supports(TestDescriptor testDescriptor) {
 		// TODO super class for Java test descriptors?
-		return testDescriptor instanceof JavaMethodTestDescriptor || testDescriptor instanceof JavaClassTestDescriptor;
+		return testDescriptor.getUniqueId().startsWith(getId());
 	}
 
 	@Override
@@ -75,44 +81,26 @@ public class JUnit5TestEngine implements TestEngine {
 		// 1) retain the instance across test method invocations (if desired).
 		// 2) invoke class-level before & after methods _around_ the set of methods.
 
-		// TODO hierarchies of tests must be executed top down
+		Map<TestDescriptor, TestExecutionNode> nodes = new HashMap<>();
 		for (TestDescriptor testDescriptor : context.getTestDescriptions()) {
+			nodes.put(testDescriptor, TestExecutionNodeResolver.forDescriptor(testDescriptor));
+		}
 
-			Preconditions.condition(supports(testDescriptor),
-				String.format("%s supports test descriptors of type %s, not of type %s", getClass().getSimpleName(),
-					JavaMethodTestDescriptor.class.getName(),
-					(testDescriptor != null ? testDescriptor.getClass().getName() : "null")));
-
-			if (testDescriptor instanceof JavaClassTestDescriptor) {
-				continue;
+		List<TestExecutionNode> rootNodes = new LinkedList<>();
+		for (TestExecutionNode node : nodes.values()) {
+			TestDescriptor currentTestDescriptor = node.getTestDescriptor();
+			if (currentTestDescriptor.getParent() == null) {
+				rootNodes.add(node);
 			}
 
-			JavaMethodTestDescriptor javaTestDescriptor = (JavaMethodTestDescriptor) testDescriptor;
+			List<TestExecutionNode> childrenForCurrentNode = context.getTestDescriptions().stream().filter(
+				testDescriptor -> currentTestDescriptor.equals(testDescriptor.getParent())).map(
+					testDescriptor -> nodes.get(testDescriptor)).collect(toList());
+			node.addChildren(childrenForCurrentNode);
+		}
 
-			try {
-				context.getTestExecutionListener().testStarted(javaTestDescriptor);
-				new TestExecutor(javaTestDescriptor).execute();
-				context.getTestExecutionListener().testSucceeded(javaTestDescriptor);
-			}
-			catch (InvocationTargetException ex) {
-				Throwable targetException = ex.getTargetException();
-				if (targetException instanceof TestSkippedException) {
-					context.getTestExecutionListener().testSkipped(javaTestDescriptor, targetException);
-				}
-				else if (targetException instanceof TestAbortedException) {
-					context.getTestExecutionListener().testAborted(javaTestDescriptor, targetException);
-				}
-				else {
-					context.getTestExecutionListener().testFailed(javaTestDescriptor, targetException);
-				}
-			}
-			catch (NoSuchMethodException | InstantiationException | IllegalAccessException ex) {
-				throw new IllegalStateException(String.format("Test %s is not well-formed and cannot be executed",
-					javaTestDescriptor.getUniqueId()), ex);
-			}
-			catch (Exception ex) {
-				context.getTestExecutionListener().testFailed(javaTestDescriptor, ex);
-			}
+		for (TestExecutionNode rootNode : rootNodes) {
+			rootNode.execute(context);
 		}
 	}
 }

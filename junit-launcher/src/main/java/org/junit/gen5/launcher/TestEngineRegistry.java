@@ -25,6 +25,12 @@ class TestEngineRegistry {
 	static Iterable<TestEngine> lookupAllTestEngines() {
 		if (testEngines == null) {
 			testEngines = ServiceLoader.load(TestEngine.class);
+
+			// TODO LOG
+			for (TestEngine testEngine : testEngines) {
+				System.out.println(testEngine.getId());
+			}
+
 		}
 		return testEngines;
 	}

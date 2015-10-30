@@ -36,9 +36,7 @@ public class Launcher {
 	public TestPlan discover(TestPlanSpecification specification) {
 		TestPlan testPlan = new TestPlan();
 		for (TestEngine testEngine : lookupAllTestEngines()) {
-			TestDescriptor engineDescriptor = testEngine.createEngineDescriptor();
-			testPlan.addTestDescriptor(engineDescriptor);
-			testPlan.addTestDescriptors(testEngine.discoverTests(specification, engineDescriptor));
+			testPlan.addTestDescriptors(testEngine.discoverTests(specification));
 		}
 		return testPlan;
 	}

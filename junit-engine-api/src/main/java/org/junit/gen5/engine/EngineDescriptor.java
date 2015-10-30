@@ -15,20 +15,20 @@ import lombok.Value;
 @Value
 public class EngineDescriptor implements TestDescriptor {
 
-	private String engineId;
+	private TestEngine engine;
 
-	public EngineDescriptor(String engineId) {
-		this.engineId = engineId;
+	public EngineDescriptor(TestEngine engine) {
+		this.engine = engine;
 	}
 
 	@Override
 	public String getUniqueId() {
-		return getEngineId();
+		return engine.getId();
 	}
 
 	@Override
 	public String getDisplayName() {
-		return "Test engine: " + getEngineId();
+		return "Test engine: " + engine.getId();
 	}
 
 	@Override

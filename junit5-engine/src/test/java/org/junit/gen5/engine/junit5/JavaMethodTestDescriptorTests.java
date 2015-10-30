@@ -10,37 +10,38 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNotNull;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDescriptor;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.UniqueIdSpecification;
+import org.junit.gen5.engine.junit5.descriptor.JavaClassTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.JavaMethodTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.UniqueIdTestDescriptorResolver;
+import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
 
 /**
  * Unit tests for {@link JavaMethodTestDescriptor}.
  *
  * @author Sam Brannen
+ * @author Stefan Bechtold
  * @since 5.0
  */
 public class JavaMethodTestDescriptorTests {
 
-	private static final String JUNIT_5_ENGINE_ID = "junit5";
-
 	private static final String TEST_METHOD_ID = JavaMethodTestDescriptorTests.class.getName() + "#test()";
-	private static final String TEST_METHOD_UID = JUNIT_5_ENGINE_ID + ":" + TEST_METHOD_ID;
-
+	private static final String TEST_METHOD_UID = TestEngineStub.TEST_ENGINE_DUMMY_ID + ":" + TEST_METHOD_ID;
 	private static final String TEST_METHOD_STRING_BIGDECIMAL_ID = JavaMethodTestDescriptorTests.class.getName()
 			+ "#test(java.lang.String, java.math.BigDecimal)";
-
-	private static final String TEST_METHOD_STRING_BIGDECIMAL_UID = JUNIT_5_ENGINE_ID + ":"
+	private static final String TEST_METHOD_STRING_BIGDECIMAL_UID = TestEngineStub.TEST_ENGINE_DUMMY_ID + ":"
 			+ TEST_METHOD_STRING_BIGDECIMAL_ID;
-
-	private static final String TEST_METHOD_FOO_UID = JUNIT_5_ENGINE_ID + ":"
-			+ JavaMethodTestDescriptorTests.class.getName() + "#foo()";
-
-	private static final EngineDescriptor ENGINE_DESCRIPTOR = new EngineDescriptor(JUNIT_5_ENGINE_ID);
+	private static final EngineDescriptor ENGINE_DESCRIPTOR = new EngineDescriptor(new TestEngineStub());
 
 	@org.junit.Test
 	public void constructFromMethod() throws Exception {
@@ -64,7 +65,6 @@ public class JavaMethodTestDescriptorTests {
 		JavaMethodTestDescriptor descriptor = new JavaMethodTestDescriptor(testMethod, parent);
 
 		System.out.println("DEBUG - " + descriptor);
-		assertEquals(TEST_METHOD_FOO_UID, descriptor.getUniqueId());
 		assertEquals(testClass, descriptor.getParent().getTestClass());
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom test name", descriptor.getDisplayName(), "display name:");
@@ -86,21 +86,33 @@ public class JavaMethodTestDescriptorTests {
 
 	@org.junit.Test
 	public void fromTestDescriptorIdForMethod() throws Exception {
-		JavaMethodTestDescriptor descriptor = JavaTestDescriptorFactory.from(TEST_METHOD_UID, ENGINE_DESCRIPTOR);
+		UniqueIdTestDescriptorResolver resolver = new UniqueIdTestDescriptorResolver();
+		UniqueIdSpecification specification = new UniqueIdSpecification(TEST_METHOD_UID);
+		TestDescriptor descriptor = resolver.resolve(ENGINE_DESCRIPTOR, specification);
+		List<TestDescriptor> descriptors = resolver.resolveChildren(descriptor, specification);
+		descriptor = descriptors.get(0);
+
 		assertNotNull(descriptor, "descriptor:");
 		assertEquals("test", descriptor.getDisplayName(), "display name:");
-		assertEquals(JavaMethodTestDescriptorTests.class, descriptor.getParent().getTestClass());
-		assertEquals(JavaMethodTestDescriptorTests.class.getDeclaredMethod("test"), descriptor.getTestMethod());
+		assertEquals(JavaMethodTestDescriptorTests.class,
+			((JavaClassTestDescriptor) descriptor.getParent()).getTestClass());
+		assertEquals(JavaMethodTestDescriptorTests.class.getDeclaredMethod("test"),
+			((JavaMethodTestDescriptor) descriptor).getTestMethod());
 	}
 
 	@org.junit.Test
 	public void fromTestDescriptorIdForMethodWithParameters() throws Exception {
-		JavaMethodTestDescriptor descriptor = JavaTestDescriptorFactory.from(TEST_METHOD_STRING_BIGDECIMAL_UID,
-			ENGINE_DESCRIPTOR);
+		UniqueIdTestDescriptorResolver resolver = new UniqueIdTestDescriptorResolver();
+		UniqueIdSpecification specification = new UniqueIdSpecification(TEST_METHOD_STRING_BIGDECIMAL_UID);
+		TestDescriptor descriptor = resolver.resolve(ENGINE_DESCRIPTOR, specification);
+		List<TestDescriptor> descriptors = resolver.resolveChildren(descriptor, specification);
+		descriptor = descriptors.get(0);
+
 		assertNotNull(descriptor, "descriptor:");
 		assertEquals("test", descriptor.getDisplayName(), "display name:");
-		assertEquals(getClass(), descriptor.getParent().getTestClass());
-		assertEquals(getClass().getDeclaredMethod("test", String.class, BigDecimal.class), descriptor.getTestMethod());
+		assertEquals(getClass(), ((JavaClassTestDescriptor) descriptor.getParent()).getTestClass());
+		assertEquals(getClass().getDeclaredMethod("test", String.class, BigDecimal.class),
+			((JavaMethodTestDescriptor) descriptor).getTestMethod());
 	}
 
 	void test() {
@@ -112,5 +124,4 @@ public class JavaMethodTestDescriptorTests {
 	@Test(name = "custom test name")
 	void foo() {
 	}
-
 }
