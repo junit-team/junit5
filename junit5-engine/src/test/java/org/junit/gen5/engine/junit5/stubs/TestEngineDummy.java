@@ -22,7 +22,6 @@ public class TestEngineDummy implements TestEngine {
 
 	public static final String TEST_ENGINE_DUMMY_ID = "TestEngineDummyID";
 
-
 	@Override
 	public String getId() {
 		return TEST_ENGINE_DUMMY_ID;

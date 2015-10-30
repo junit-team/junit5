@@ -12,7 +12,6 @@ package org.junit.gen5.launcher;
 
 import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.junit.gen5.engine.*;
@@ -25,7 +24,6 @@ import org.junit.gen5.engine.*;
 public class Launcher {
 
 	private final TestListenerRegistry listenerRegistry = new TestListenerRegistry();
-
 
 	public void registerListeners(TestExecutionListener... testListeners) {
 		listenerRegistry.registerListener(testListeners);

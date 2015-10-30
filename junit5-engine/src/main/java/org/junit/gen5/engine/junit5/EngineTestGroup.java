@@ -33,7 +33,6 @@ public class EngineTestGroup implements TestDescriptor, TestExecutor {
 
 	private final TestEngine engine;
 
-
 	public EngineTestGroup(TestEngine engine) {
 		this.engine = engine;
 	}

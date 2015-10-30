@@ -45,7 +45,6 @@ public class MethodTest implements TestDescriptor, TestExecutor {
 	private final String uniqueId;
 	private final String displayName;
 
-
 	public MethodTest(ClassTestGroup parent, Method testMethod) {
 		Preconditions.notNull(parent, "parent must not be null");
 		Preconditions.notNull(testMethod, "testMethod must not be null");

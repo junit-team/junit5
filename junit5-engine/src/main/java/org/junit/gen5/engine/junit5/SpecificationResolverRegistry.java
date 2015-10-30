@@ -33,9 +33,7 @@ class SpecificationResolverRegistry {
 		};
 	}
 
-
 	private static final Map<Class<? extends TestPlanSpecificationElement>, SpecificationResolver> RESOLVERS;
-
 
 	public static SpecificationResolver forType(Class<? extends TestPlanSpecificationElement> type) {
 		if (RESOLVERS.containsKey(type)) {

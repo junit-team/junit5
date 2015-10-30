@@ -46,7 +46,6 @@ public class UniqueIdSpecificationResolver implements SpecificationResolver<Uniq
 	// TODO Decide if we want to support descriptors for packages.
 	private static final Pattern UID_PATTERN = Pattern.compile("^(?:([^:]+):)?(?:([^#]+)#)?(?:([^(]+)\\(([^)]*)\\))?$");
 
-
 	@Override
 	public TestDescriptor resolve(TestDescriptor parent, UniqueIdSpecification element) {
 		String uid = element.getUniqueId();

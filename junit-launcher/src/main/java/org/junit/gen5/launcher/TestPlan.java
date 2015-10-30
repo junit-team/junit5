@@ -32,7 +32,6 @@ public final class TestPlan {
 	 */
 	private final Collection<TestDescriptor> testDescriptors = new LinkedList<>();
 
-
 	TestPlan() {
 		/* no-op */
 	}

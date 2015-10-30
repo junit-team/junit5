@@ -36,7 +36,6 @@ public class ClassTestGroup implements TestDescriptor, TestExecutor {
 	private final String uniqueId;
 	private final String displayName;
 
-
 	public ClassTestGroup(TestDescriptor parent, Class<?> testClass) {
 		Preconditions.notNull(parent, "parent must not be null");
 		Preconditions.notNull(testClass, "testClass must not be null");

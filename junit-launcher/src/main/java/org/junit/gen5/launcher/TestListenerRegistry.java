@@ -10,8 +10,6 @@
 
 package org.junit.gen5.launcher;
 
-import static java.util.Arrays.asList;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,7 +27,6 @@ class TestListenerRegistry {
 
 	private final List<TestPlanExecutionListener> testPlanExecutionListeners = new LinkedList<>();
 	private final List<TestExecutionListener> testExecutionListeners = new LinkedList<>();
-
 
 	void registerListener(TestExecutionListener... listeners) {
 		Arrays.stream(listeners).peek(this.testExecutionListeners::add).filter(
@@ -52,7 +49,6 @@ class TestListenerRegistry {
 	TestExecutionListener getCompositeTestExecutionListener() {
 		return new CompositeTestExecutionListener();
 	}
-
 
 	private class CompositeTestExecutionListener implements TestExecutionListener {
 

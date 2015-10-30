@@ -38,7 +38,6 @@ public class JavaMethodTestDescriptorTests {
 			+ TEST_METHOD_STRING_BIGDECIMAL_ID;
 	private static final EngineTestGroup ENGINE_DESCRIPTOR = new EngineTestGroup(new TestEngineDummy());
 
-
 	@org.junit.Test
 	public void constructFromMethod() throws Exception {
 		Class<?> testClass = getClass();
