@@ -17,14 +17,11 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
-import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
 
 /**
  * Unit tests for {@link JUnit5TestEngine}.
