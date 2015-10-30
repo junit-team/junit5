@@ -10,27 +10,35 @@
 
 package org.junit.gen5.engine.junit4;
 
-import org.junit.gen5.engine.TestDescriptor;
+import lombok.Value;
 
-final class DummyTestDescriptor implements TestDescriptor {
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.runner.Description;
+
+@Value
+final class DescriptionTestDescriptor implements TestDescriptor {
+
+	private TestDescriptor parent;
+	private Description description;
 
 	@Override
 	public boolean isTest() {
-		return true;
+		return description.isTest();
 	}
 
 	@Override
 	public String getUniqueId() {
-		return "dummy";
+		// TODO Use unique ID if set, too
+		return "junit4:" + description.getDisplayName();
 	}
 
 	@Override
 	public TestDescriptor getParent() {
-		return null;
+		return parent;
 	}
 
 	@Override
 	public String getDisplayName() {
-		return "dummy";
+		return description.getDisplayName();
 	}
 }

@@ -10,8 +10,13 @@
 
 package com.example;
 
+import org.junit.Test;
+
 public class JUnit4TestCase {
 
-	// nothing here, yet
+	@Test
+	public void succeedingTest() {
+		// no-op
+	}
 
 }
