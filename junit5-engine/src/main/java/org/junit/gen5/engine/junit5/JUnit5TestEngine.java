@@ -10,23 +10,14 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static java.lang.String.format;
-import static java.util.stream.Collectors.toList;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.engine.ClassNameSpecification;
-import org.junit.gen5.engine.EngineExecutionContext;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.gen5.engine.UniqueIdSpecification;
+import org.junit.gen5.engine.*;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
@@ -42,43 +33,24 @@ public class JUnit5TestEngine implements TestEngine {
 
 	@Override
 	public List<TestDescriptor> discoverTests(TestPlanSpecification specification, TestDescriptor root) {
-		List<TestDescriptor> testDescriptors = new ArrayList<>();
+		// TODO lookup SpecificationResolverRegistry within the ApplicationExecutionContext
+		TestDescriptorResolverRegistry testDescriptorResolverRegistry = new TestDescriptorResolverRegistry();
+		testDescriptorResolverRegistry.addResolver(ClassNameSpecification.class, new ClassNameTestDescriptorResolver());
+		testDescriptorResolverRegistry.addResolver(UniqueIdSpecification.class, new UniqueIdTestDescriptorResolver());
 
+		Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
 		for (TestPlanSpecificationElement element : specification) {
-			if (element instanceof ClassNameSpecification) {
-				ClassNameSpecification classNameSpecification = (ClassNameSpecification) element;
-				Class<?> testClass = discoverTestClass(classNameSpecification.getClassName());
-				JavaClassTestDescriptor parent = new JavaClassTestDescriptor(testClass, root);
-				testDescriptors.add(parent);
-				// @formatter:off
-				testDescriptors.addAll(Arrays.stream(testClass.getDeclaredMethods())
-					.filter(method -> method.isAnnotationPresent(Test.class))
-					.map(method -> new JavaMethodTestDescriptor(  method, parent))
-					.collect(toList()));
-				// @formatter:on
-			}
-			else if (element instanceof UniqueIdSpecification) {
-				UniqueIdSpecification uniqueIdSpecification = (UniqueIdSpecification) element;
-				testDescriptors.add(JavaTestDescriptorFactory.from(uniqueIdSpecification.getUniqueId(), root));
-			}
+			TestDescriptorResolver testDescriptorResolver = testDescriptorResolverRegistry.forType(element.getClass());
+			TestDescriptor descriptor = testDescriptorResolver.resolve(root, element);
+			testDescriptors.add(descriptor);
+			testDescriptors.addAll(testDescriptorResolver.resolveChildren(descriptor, element));
 		}
-
-		return testDescriptors;
-	}
-
-	private Class<?> discoverTestClass(String className) {
-		// TODO Use correct ClassLoader
-		try {
-			return Class.forName(className);
-		}
-		catch (ClassNotFoundException e) {
-			throw new IllegalArgumentException(format("Failed to load test class '%s'", className));
-		}
+		return new ArrayList<>(testDescriptors);
 	}
 
 	@Override
 	public boolean supports(TestDescriptor testDescriptor) {
-		// Todo super class for Java test descriptors?
+		// TODO super class for Java test descriptors?
 		return testDescriptor instanceof JavaMethodTestDescriptor || testDescriptor instanceof JavaClassTestDescriptor;
 	}
 
@@ -97,7 +69,7 @@ public class JUnit5TestEngine implements TestEngine {
 		// 1) retain the instance across test method invocations (if desired).
 		// 2) invoke class-level before & after methods _around_ the set of methods.
 
-		// todo hierarchies of tests must be executed top down
+		// TODO hierarchies of tests must be executed top down
 		for (TestDescriptor testDescriptor : context.getTestDescriptions()) {
 
 			Preconditions.condition(supports(testDescriptor),
@@ -137,5 +109,4 @@ public class JUnit5TestEngine implements TestEngine {
 			}
 		}
 	}
-
 }

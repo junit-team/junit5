@@ -32,7 +32,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
  */
 public class JUnit5TestEngineTests {
 
-	private static final EngineDescriptor ENGINE_DESCRIPTOR = new EngineDescriptor("engine-id");
+	private static final EngineDescriptor ENGINE_DESCRIPTOR = new EngineDescriptor("junit5");
 
 	@org.junit.Test
 	public void executeTestsFromFromClasses() {
@@ -43,7 +43,7 @@ public class JUnit5TestEngineTests {
 
 		List<TestDescriptor> descriptors = engine.discoverTests(spec, ENGINE_DESCRIPTOR);
 		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# descriptors (class + methods)", 4, descriptors.size());
+		Assert.assertEquals("# descriptors", 4, descriptors.size());
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
@@ -64,7 +64,7 @@ public class JUnit5TestEngineTests {
 
 		List<TestDescriptor> descriptors = engine.discoverTests(spec, ENGINE_DESCRIPTOR);
 		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# tests", 1, descriptors.size());
+		Assert.assertEquals("# tests", 2, descriptors.size());
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
@@ -85,14 +85,14 @@ public class JUnit5TestEngineTests {
 
 		List<TestDescriptor> descriptors = engine.discoverTests(spec, ENGINE_DESCRIPTOR);
 		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# descriptors", 4 + 1, descriptors.size());
+		Assert.assertEquals("# descriptors", 4, descriptors.size());
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
 		engine.execute(new EngineExecutionContext(descriptors, listener));
 
-		Assert.assertEquals(3 + 1, listener.testStartedCount.get());
-		Assert.assertEquals(1 + 1, listener.testSucceededCount.get());
+		Assert.assertEquals(3, listener.testStartedCount.get());
+		Assert.assertEquals(1, listener.testSucceededCount.get());
 	}
 
 	private static class LocalTestCase {

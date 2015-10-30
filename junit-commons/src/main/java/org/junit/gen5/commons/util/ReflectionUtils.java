@@ -10,9 +10,12 @@
 
 package org.junit.gen5.commons.util;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 /**
  * @author Stefan Bechtold
@@ -42,4 +45,18 @@ public class ReflectionUtils {
 		return method.invoke(testInstance);
 	}
 
+	public static <A extends Annotation> Optional<A> getAnnotationFrom(AnnotatedElement element, Class<A> annotation) {
+		return Optional.ofNullable(element.getAnnotation(annotation));
+	}
+
+	public static Class<?> loadClass(String name) {
+		try {
+			// TODO Use correct classloader
+			// TODO Add support for primitive types and arrays.
+			return ClassLoader.getSystemClassLoader().loadClass(name);
+		}
+		catch (ClassNotFoundException e) {
+			throw new IllegalStateException("Failed to load class with name '" + name + "'.", e);
+		}
+	}
 }
