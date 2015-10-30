@@ -81,14 +81,13 @@ class SampleTestCase {
 	}
 
 	@Test(name = "with succeding assertAll")
-	@SuppressWarnings("serial")
 	void assertAllTest() {
+		Map<String, String> person = new HashMap<String, String>();
+		person.put("firstName", "Johannes");
+		person.put("lastName", "Link");
+		person.put("city", "Heidelberg");
+
 		// @formatter:off
-		Map<String, String> person = new HashMap<String, String>() {{
-			put("firstName", "Johannes");
-			put("lastName", "Link");
-			put("city", "Heidelberg");
-		}};
 		assertAll("Check person",
 			() -> assertEquals("Johannes", person.get("firstName")),
 			() -> assertEquals("Link", person.get("lastName")),
@@ -98,14 +97,13 @@ class SampleTestCase {
 	}
 
 	@Test(name = "with failing assertAll")
-	@SuppressWarnings("serial")
 	void assertAllFailingTest() {
+		Map<String, String> person = new HashMap<String, String>();
+		person.put("firstName", "Johanes");
+		person.put("lastName", "Link");
+		person.put("city", "Aschaffenburg");
+
 		// @formatter:off
-		Map<String, String> person = new HashMap<String, String>() {{
-			put("firstName", "Johanes");
-			put("lastName", "Link");
-			put("city", "Aschaffenburg");
-		}};
 		assertAll("Check person",
 			() -> assertEquals("Johannes", person.get("firstName")),
 			() -> assertEquals("Link", person.get("lastName")),

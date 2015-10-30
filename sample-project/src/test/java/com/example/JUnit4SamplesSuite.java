@@ -15,9 +15,10 @@ import org.junit.gen5.junit4runner.JUnit5;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
-public class JUnit4Suite {
+public class JUnit4SamplesSuite {
 
 	public static TestPlanSpecification createSpecification() {
-		return TestPlanSpecification.build(TestPlanSpecification.forClassName(SampleTestCase.class.getName()));
+		return TestPlanSpecification.build(
+			TestPlanSpecification.forClassNames(SampleTestCase.class.getName(), SucceedingTestCase.class.getName()));
 	}
 }
