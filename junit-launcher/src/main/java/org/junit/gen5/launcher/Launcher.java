@@ -51,8 +51,10 @@ public class Launcher {
 
 		testPlanExecutionListener.testPlanExecutionStarted(testPlan);
 		for (TestEngine testEngine : lookupAllTestEngines()) {
+			testPlanExecutionListener.testPlanExecutionStartedOnEngine(testPlan, testEngine);
 			List<TestDescriptor> testDescriptors = testPlan.getAllTestDescriptorsForTestEngine(testEngine);
 			testEngine.execute(new EngineExecutionContext(testDescriptors, testExecutionListener));
+			testPlanExecutionListener.testPlanExecutionFinishedOnEngine(testPlan, testEngine);
 		}
 		testPlanExecutionListener.testPlanExecutionFinished(testPlan);
 	}

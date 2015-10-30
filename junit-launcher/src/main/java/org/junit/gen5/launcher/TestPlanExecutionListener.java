@@ -10,6 +10,7 @@
 
 package org.junit.gen5.launcher;
 
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestExecutionListener;
 
 /**
@@ -32,5 +33,11 @@ public interface TestPlanExecutionListener extends TestExecutionListener {
 	}
 
 	default void testPlanExecutionFinished(TestPlan testPlan) {
+	}
+
+	default void testPlanExecutionStartedOnEngine(TestPlan testPlan, TestEngine testEngine) {
+	}
+
+	default void testPlanExecutionFinishedOnEngine(TestPlan testPlan, TestEngine testEngine) {
 	}
 }

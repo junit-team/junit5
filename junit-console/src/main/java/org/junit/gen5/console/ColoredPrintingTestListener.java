@@ -15,6 +15,7 @@ import static org.junit.gen5.console.ColoredPrintingTestListener.Color.*;
 import java.io.PrintStream;
 
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.gen5.launcher.TestPlanExecutionListener;
@@ -56,6 +57,16 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
 		out.println("Test execution finished.");
+	}
+
+	@Override
+	public void testPlanExecutionStartedOnEngine(TestPlan testPlan, TestEngine testEngine) {
+		println(BLUE, "Engine started: %s", testEngine.getId());
+	}
+
+	@Override
+	public void testPlanExecutionFinishedOnEngine(TestPlan testPlan, TestEngine testEngine) {
+		println(BLUE, "Engine finished: %s", testEngine.getId());
 	}
 
 	@Override

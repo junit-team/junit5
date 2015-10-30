@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestExecutionListener;
 
 /**
@@ -110,6 +111,18 @@ class TestListenerRegistry {
 		@Override
 		public void testPlanExecutionFinished(TestPlan testPlan) {
 			notifyTestPlanExecutionListeners(listener -> listener.testPlanExecutionFinished(testPlan));
+		}
+
+		@Override
+		public void testPlanExecutionStartedOnEngine(TestPlan testPlan, TestEngine testEngine) {
+			notifyTestPlanExecutionListeners(
+				listener -> listener.testPlanExecutionStartedOnEngine(testPlan, testEngine));
+		}
+
+		@Override
+		public void testPlanExecutionFinishedOnEngine(TestPlan testPlan, TestEngine testEngine) {
+			notifyTestPlanExecutionListeners(
+				listener -> listener.testPlanExecutionFinishedOnEngine(testPlan, testEngine));
 		}
 	}
 }
