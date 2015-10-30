@@ -1,5 +1,7 @@
 group   = 'org.opentestalliance'
 version = '1.0.0.BUILD-SNAPSHOT'
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+compileJava {
+	sourceCompatibility = 1.6
+	targetCompatibility = 1.6
+}
