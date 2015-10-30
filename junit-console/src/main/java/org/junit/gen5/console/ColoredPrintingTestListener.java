@@ -106,33 +106,33 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 
 	static enum Color {
 
-		NONE("\u001B[0m"),
+		NONE(0),
 
-		BLACK("\u001B[30m"),
+		BLACK(30),
 
-		RED("\u001B[31m"),
+		RED(31),
 
-		GREEN("\u001B[32m"),
+		GREEN(32),
 
-		YELLOW("\u001B[33m"),
+		YELLOW(33),
 
-		BLUE("\u001B[34m"),
+		BLUE(34),
 
-		PURPLE("\u001B[35m"),
+		PURPLE(35),
 
-		CYAN("\u001B[36m"),
+		CYAN(36),
 
-		WHITE("\u001B[37m");
+		WHITE(37);
 
-		private final String ansiCode;
+		private final int ansiCode;
 
-		Color(String ansiCode) {
+		Color(int ansiCode) {
 			this.ansiCode = ansiCode;
 		}
 
 		@Override
 		public String toString() {
-			return this.ansiCode;
+			return "\u001B[" + this.ansiCode + "m";
 		}
 	}
 
