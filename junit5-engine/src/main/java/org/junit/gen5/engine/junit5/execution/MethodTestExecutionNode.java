@@ -54,8 +54,6 @@ class MethodTestExecutionNode extends TestExecutionNode {
 			ReflectionUtils.invokeMethod(getTestDescriptor().getTestMethod(), testInstance);
 		}
 		catch (Throwable ex) {
-			// Note: executeAfterMethods() handles listener notification regarding the
-			// thrown exception.
 			exceptionThrown = ex;
 			if (ex instanceof InvocationTargetException) {
 				exceptionThrown = ((InvocationTargetException) ex).getTargetException();
@@ -65,7 +63,18 @@ class MethodTestExecutionNode extends TestExecutionNode {
 			exceptionThrown = executeAfterMethods(context, testClass, testInstance, exceptionThrown);
 		}
 
-		if (exceptionThrown == null) {
+		if (exceptionThrown != null) {
+			if (exceptionThrown instanceof TestSkippedException) {
+				context.getTestExecutionListener().testSkipped(getTestDescriptor(), exceptionThrown);
+			}
+			else if (exceptionThrown instanceof TestAbortedException) {
+				context.getTestExecutionListener().testAborted(getTestDescriptor(), exceptionThrown);
+			}
+			else {
+				context.getTestExecutionListener().testFailed(getTestDescriptor(), exceptionThrown);
+			}
+		}
+		else {
 			context.getTestExecutionListener().testSucceeded(getTestDescriptor());
 		}
 	}
@@ -95,18 +104,6 @@ class MethodTestExecutionNode extends TestExecutionNode {
 				else {
 					exceptionThrown.addSuppressed(currentException);
 				}
-			}
-		}
-
-		if (exceptionThrown != null) {
-			if (exceptionThrown instanceof TestSkippedException) {
-				context.getTestExecutionListener().testSkipped(getTestDescriptor(), exceptionThrown);
-			}
-			else if (exceptionThrown instanceof TestAbortedException) {
-				context.getTestExecutionListener().testAborted(getTestDescriptor(), exceptionThrown);
-			}
-			else {
-				context.getTestExecutionListener().testFailed(getTestDescriptor(), exceptionThrown);
 			}
 		}
 
