@@ -73,6 +73,7 @@ subprojects {
 	}
 
 	javadoc {
+		classpath += configurations.provided
 		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = project.name
