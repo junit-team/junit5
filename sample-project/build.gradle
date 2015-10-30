@@ -3,20 +3,22 @@ apply plugin: 'java'
 dependencies {
 	testCompile(project(':sample-extension'))
 	testCompile(project(':junit5-api'))
+	testCompile("junit:junit:${junit4Version}")
 	testCompile(project(':junit4-launcher-runner'))
 	testRuntime(project(':junit5-engine'))
+	testRuntime(project(':junit4-engine'))
 }
 
-task runSampleTestCase(type: JavaExec) {
+task runSampleTestCases(type: JavaExec) {
 	classpath = sourceSets.test.runtimeClasspath
 	classpath += project(':junit-console').sourceSets.main.runtimeClasspath
 	main = 'org.junit.gen5.console.ConsoleRunner'
-	args 'com.example.SampleTestCase'
+	args 'com.example.SampleTestCase', 'com.example.JUnit4TestCase'
 }
 
 test {
 	description = 'Runs JUnit unit tests.'
-	dependsOn runSampleTestCase
+	dependsOn runSampleTestCases
 	useJUnit()
 
 	scanForTestClasses = false
