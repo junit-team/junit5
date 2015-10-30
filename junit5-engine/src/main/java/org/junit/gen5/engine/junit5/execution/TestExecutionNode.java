@@ -24,27 +24,29 @@ import org.junit.gen5.engine.TestDescriptor;
  */
 public abstract class TestExecutionNode {
 
-	private TestExecutionNode parent = null;
+	private TestExecutionNode parent;
+
 	private List<TestExecutionNode> children = new LinkedList<>();
 
-	public void addChild(TestExecutionNode childNode) {
-		this.children.add(childNode);
-		childNode.parent = this;
+	private void addChild(TestExecutionNode child) {
+		this.children.add(child);
+		child.parent = this;
 	}
 
-	public void addChildren(List<TestExecutionNode> childNodes) {
-		childNodes.forEach(childNode -> addChild(childNode));
+	public final void addChildren(List<TestExecutionNode> children) {
+		children.forEach(child -> addChild(child));
 	}
 
-	public abstract void execute(EngineExecutionContext context);
+	public final TestExecutionNode getParent() {
+		return this.parent;
+	}
+
+	public final List<TestExecutionNode> getChildren() {
+		return Collections.unmodifiableList(this.children);
+	}
 
 	public abstract TestDescriptor getTestDescriptor();
 
-	public TestExecutionNode getParent() {
-		return parent;
-	}
+	public abstract void execute(EngineExecutionContext context);
 
-	public List<TestExecutionNode> getChildren() {
-		return Collections.unmodifiableList(children);
-	}
 }

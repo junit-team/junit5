@@ -10,8 +10,8 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
+import static java.util.stream.Collectors.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -23,26 +23,21 @@ import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineExecutionContext;
-import org.junit.gen5.engine.junit5.descriptor.JavaClassTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 
 /**
  * @author Stefan Bechtold
  * @author Sam Brannen
  * @since 5.0
  */
-public class JavaClassTestExecutionNode extends TestExecutionNode {
+class ClassTestExecutionNode extends TestExecutionNode {
 
-	static final String TEST_INSTANCE_ATTRIBUTE_NAME = JavaClassTestExecutionNode.class.getName() + ".TestInstance";
+	static final String TEST_INSTANCE_ATTRIBUTE_NAME = ClassTestExecutionNode.class.getName() + ".TestInstance";
 
-	private final JavaClassTestDescriptor testDescriptor;
+	private final ClassTestDescriptor testDescriptor;
 
-	public JavaClassTestExecutionNode(JavaClassTestDescriptor testDescriptor) {
+	ClassTestExecutionNode(ClassTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
-	}
-
-	@Override
-	public JavaClassTestDescriptor getTestDescriptor() {
-		return testDescriptor;
 	}
 
 	private Object createTestInstance() {
@@ -54,6 +49,11 @@ public class JavaClassTestExecutionNode extends TestExecutionNode {
 				String.format("Test %s is not well-formed and cannot be executed", getTestDescriptor().getUniqueId()),
 				ex);
 		}
+	}
+
+	@Override
+	public ClassTestDescriptor getTestDescriptor() {
+		return this.testDescriptor;
 	}
 
 	@Override
@@ -72,8 +72,12 @@ public class JavaClassTestExecutionNode extends TestExecutionNode {
 			context.getTestExecutionListener().testFailed(getTestDescriptor(), e);
 		}
 		finally {
-			executeAfterAllMethods(context, testClass, testInstance);
-			context.getAttributes().remove(TEST_INSTANCE_ATTRIBUTE_NAME);
+			try {
+				executeAfterAllMethods(context, testClass, testInstance);
+			}
+			finally {
+				context.getAttributes().remove(TEST_INSTANCE_ATTRIBUTE_NAME);
+			}
 		}
 	}
 
@@ -112,4 +116,5 @@ public class JavaClassTestExecutionNode extends TestExecutionNode {
 				.collect(toList());
 		// @formatter:on
 	}
+
 }

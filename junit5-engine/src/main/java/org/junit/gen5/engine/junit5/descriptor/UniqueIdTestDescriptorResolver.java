@@ -51,10 +51,10 @@ public class UniqueIdTestDescriptorResolver implements TestDescriptorResolver<Un
 		String uid = element.getUniqueId();
 		Preconditions.notEmpty(uid, "UniqueID must not be empty");
 		Preconditions.condition(uid.startsWith(parent.getUniqueId()),
-			String.format("UniqueID '%s' must start with UniqueID of parent '%s'!", uid, parent.getUniqueId()));
+			String.format("UniqueID '%s' must start with UniqueID of parent '%s'", uid, parent.getUniqueId()));
 
 		Matcher matcher = UID_PATTERN.matcher(uid);
-		Preconditions.condition(matcher.matches(), () -> String.format("Given UniqueID '%s' was not recognised!", uid));
+		Preconditions.condition(matcher.matches(), () -> String.format("Given UniqueID '%s' was not recognized", uid));
 
 		String className = matcher.group(2);
 		String methodName = matcher.group(3);
@@ -62,10 +62,10 @@ public class UniqueIdTestDescriptorResolver implements TestDescriptorResolver<Un
 
 		Class<?> clazz = ReflectionUtils.loadClass(className);
 		if (parent instanceof EngineDescriptor) {
-			return new JavaClassTestDescriptor(clazz, parent);
+			return new ClassTestDescriptor(clazz, parent);
 		}
-		else if (parent instanceof JavaClassTestDescriptor) {
-			JavaClassTestDescriptor group = (JavaClassTestDescriptor) parent;
+		else if (parent instanceof ClassTestDescriptor) {
+			ClassTestDescriptor group = (ClassTestDescriptor) parent;
 
 			try {
 				List<Class<?>> paramTypeList = new ArrayList<>();
@@ -77,17 +77,16 @@ public class UniqueIdTestDescriptorResolver implements TestDescriptorResolver<Un
 				}
 
 				Class<?>[] parameterTypes = paramTypeList.toArray(new Class<?>[paramTypeList.size()]);
-				JavaClassTestDescriptor testClassGroup = group;
+				ClassTestDescriptor testClassGroup = group;
 				Method method = testClassGroup.getTestClass().getDeclaredMethod(methodName, parameterTypes);
-				return new JavaMethodTestDescriptor(method, testClassGroup);
+				return new MethodTestDescriptor(method, testClassGroup);
 			}
 			catch (NoSuchMethodException e) {
 				throw new IllegalStateException("Failed to get method with name '" + methodName + "'.", e);
 			}
 		}
 		else {
-			throw new IllegalStateException(
-				String.format("Given UniqueID '%s' could not be completely resolved!", uid));
+			throw new IllegalStateException(String.format("Given UniqueID '%s' could not be completely resolved", uid));
 		}
 	}
 
@@ -106,4 +105,5 @@ public class UniqueIdTestDescriptorResolver implements TestDescriptorResolver<Un
 			return result;
 		}
 	}
+
 }

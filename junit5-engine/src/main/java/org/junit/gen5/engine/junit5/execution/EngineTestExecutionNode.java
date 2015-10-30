@@ -18,17 +18,17 @@ import org.junit.gen5.engine.EngineExecutionContext;
  * @author Sam Brannen
  * @since 5.0
  */
-public class RunAllChildrenTestExecutionNode extends TestExecutionNode {
+class EngineTestExecutionNode extends TestExecutionNode {
 
 	private final EngineDescriptor testDescriptor;
 
-	public RunAllChildrenTestExecutionNode(EngineDescriptor testDescriptor) {
+	EngineTestExecutionNode(EngineDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
 	}
 
 	@Override
 	public EngineDescriptor getTestDescriptor() {
-		return testDescriptor;
+		return this.testDescriptor;
 	}
 
 	@Override
@@ -37,4 +37,5 @@ public class RunAllChildrenTestExecutionNode extends TestExecutionNode {
 			child.execute(context);
 		}
 	}
+
 }

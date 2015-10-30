@@ -14,7 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineExecutionContext;
-import org.junit.gen5.engine.junit5.descriptor.JavaMethodTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
@@ -23,24 +23,24 @@ import org.opentestalliance.TestSkippedException;
  * @author Sam Brannen
  * @since 5.0
  */
-public class JavaMethodTestExecutionNode extends TestExecutionNode {
+class MethodTestExecutionNode extends TestExecutionNode {
 
-	private final JavaMethodTestDescriptor testDescriptor;
+	private final MethodTestDescriptor testDescriptor;
 
-	public JavaMethodTestExecutionNode(JavaMethodTestDescriptor testDescriptor) {
+	MethodTestExecutionNode(MethodTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
 	}
 
 	@Override
-	public JavaMethodTestDescriptor getTestDescriptor() {
-		return testDescriptor;
+	public MethodTestDescriptor getTestDescriptor() {
+		return this.testDescriptor;
 	}
 
 	@Override
 	public void execute(EngineExecutionContext context) {
 		try {
 			context.getTestExecutionListener().testStarted(getTestDescriptor());
-			Object testInstance = context.getAttributes().get(JavaClassTestExecutionNode.TEST_INSTANCE_ATTRIBUTE_NAME);
+			Object testInstance = context.getAttributes().get(ClassTestExecutionNode.TEST_INSTANCE_ATTRIBUTE_NAME);
 			ReflectionUtils.invokeMethod(getTestDescriptor().getTestMethod(), testInstance);
 			context.getTestExecutionListener().testSucceeded(getTestDescriptor());
 		}
@@ -60,4 +60,5 @@ public class JavaMethodTestExecutionNode extends TestExecutionNode {
 			context.getTestExecutionListener().testFailed(getTestDescriptor(), ex);
 		}
 	}
+
 }

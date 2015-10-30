@@ -13,10 +13,12 @@ package org.junit.gen5.engine.junit5.descriptor;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 
 /**
  * @author Stefan Bechtold
+ * @author Sam Brannen
  * @since 5.0
  */
 public class TestDescriptorResolverRegistry {
@@ -25,17 +27,20 @@ public class TestDescriptorResolverRegistry {
 
 	@SuppressWarnings("unchecked")
 	public <T extends TestPlanSpecificationElement> TestDescriptorResolver<T, ?> forType(Class<T> type) {
-		if (resolvers.containsKey(type)) {
+		Preconditions.notNull(type, "TestPlanSpecificationElement type must not be null");
+		if (this.resolvers.containsKey(type)) {
 			return (TestDescriptorResolver<T, ?>) resolvers.get(type);
 		}
-		else {
-			throw new UnsupportedOperationException(
-				"There is no specification resolver registered for type: " + type.getName());
-		}
+
+		// else
+		throw new IllegalArgumentException(
+			"There is no TestDescriptorResolver registered for TestPlanSpecificationElement type: " + type.getName());
 	}
 
 	public <T extends TestPlanSpecificationElement> void addResolver(Class<T> element,
 			TestDescriptorResolver<T, ?> resolver) {
-		resolvers.put(element, resolver);
+
+		this.resolvers.put(element, resolver);
 	}
+
 }

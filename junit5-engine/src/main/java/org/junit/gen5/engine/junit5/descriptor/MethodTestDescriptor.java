@@ -30,13 +30,15 @@ import org.junit.gen5.engine.TestDescriptor;
  */
 @Data
 @EqualsAndHashCode
-public class JavaMethodTestDescriptor implements TestDescriptor {
+public class MethodTestDescriptor implements TestDescriptor {
 
 	private final String displayName;
-	private final JavaClassTestDescriptor parent;
+
+	private final ClassTestDescriptor parent;
+
 	private final Method testMethod;
 
-	public JavaMethodTestDescriptor(Method testMethod, JavaClassTestDescriptor parent) {
+	public MethodTestDescriptor(Method testMethod, ClassTestDescriptor parent) {
 		Preconditions.notNull(testMethod, "testMethod must not be null");
 		Preconditions.notNull(parent, "parent must not be null");
 
@@ -58,13 +60,13 @@ public class JavaMethodTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public String getUniqueId() {
+	public final String getUniqueId() {
 		return String.format("%s#%s(%s)", getParent().getUniqueId(), testMethod.getName(),
 			nullSafeToString(testMethod.getParameterTypes()));
 	}
 
 	@Override
-	public boolean isTest() {
+	public final boolean isTest() {
 		return true;
 	}
 

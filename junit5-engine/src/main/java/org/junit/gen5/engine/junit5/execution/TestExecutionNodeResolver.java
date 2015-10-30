@@ -10,10 +10,11 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.JavaClassTestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.JavaMethodTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 
 /**
  * @author Stefan Bechtold
@@ -23,18 +24,20 @@ import org.junit.gen5.engine.junit5.descriptor.JavaMethodTestDescriptor;
 public class TestExecutionNodeResolver {
 
 	public static TestExecutionNode forDescriptor(TestDescriptor testDescriptor) {
-		if (testDescriptor instanceof JavaMethodTestDescriptor) {
-			return new JavaMethodTestExecutionNode((JavaMethodTestDescriptor) testDescriptor);
+		Preconditions.notNull(testDescriptor, "testDescriptor must not be null");
+
+		if (testDescriptor instanceof MethodTestDescriptor) {
+			return new MethodTestExecutionNode((MethodTestDescriptor) testDescriptor);
 		}
-		else if (testDescriptor instanceof JavaClassTestDescriptor) {
-			return new JavaClassTestExecutionNode((JavaClassTestDescriptor) testDescriptor);
+		else if (testDescriptor instanceof ClassTestDescriptor) {
+			return new ClassTestExecutionNode((ClassTestDescriptor) testDescriptor);
 		}
 		else if (testDescriptor instanceof EngineDescriptor) {
-			return new RunAllChildrenTestExecutionNode((EngineDescriptor) testDescriptor);
+			return new EngineTestExecutionNode((EngineDescriptor) testDescriptor);
 		}
-		else {
-			throw new UnsupportedOperationException(
-				"Engine expects that classes implementing the TestDescriptor interface do also implement the TestExecutor interface!");
-		}
+
+		// else
+		throw new IllegalArgumentException("Unsupported TestDescriptor type: " + testDescriptor.getClass().getName());
 	}
+
 }

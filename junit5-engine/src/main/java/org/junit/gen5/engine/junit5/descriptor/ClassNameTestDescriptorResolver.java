@@ -26,34 +26,41 @@ import org.junit.gen5.engine.TestDescriptor;
  * @since 5.0
  */
 public class ClassNameTestDescriptorResolver
-		implements TestDescriptorResolver<ClassNameSpecification, JavaClassTestDescriptor> {
+		implements TestDescriptorResolver<ClassNameSpecification, ClassTestDescriptor> {
 
 	@Override
-	public JavaClassTestDescriptor resolve(TestDescriptor parent, ClassNameSpecification element) {
+	public ClassTestDescriptor resolve(TestDescriptor parent, ClassNameSpecification element) {
 		Class<?> clazz = loadClass(element.getClassName());
-		return new JavaClassTestDescriptor(clazz, parent);
+		return new ClassTestDescriptor(clazz, parent);
 	}
 
 	@Override
-	public List<TestDescriptor> resolveChildren(JavaClassTestDescriptor parent, ClassNameSpecification element) {
+	public List<TestDescriptor> resolveChildren(ClassTestDescriptor parent, ClassNameSpecification element) {
 		if (parent.getUniqueId().endsWith(element.getClassName())) {
-			// TODO fetch children resolvers from according to type
+			// TODO Retrieve children resolvers according to type
 			List<TestDescriptor> children = new LinkedList<>();
 
-			children.addAll(Arrays.stream(parent.getTestClass().getDeclaredMethods()).filter(
-				method -> method.isAnnotationPresent(Test.class)).map(
-					method -> new JavaMethodTestDescriptor(method, parent)).collect(toList()));
+			// @formatter:off
+			children.addAll(Arrays.stream(parent.getTestClass().getDeclaredMethods())
+				.filter(method -> method.isAnnotationPresent(Test.class))
+				.map(method -> new MethodTestDescriptor(method, parent))
+				.collect(toList()));
+			// @formatter:on
 
-			List<JavaClassTestDescriptor> groups = Arrays.stream(parent.getTestClass().getDeclaredClasses()).filter(
-				Class::isMemberClass).map(clazz -> new JavaClassTestDescriptor(clazz, parent)).collect(toList());
+			// @formatter:off
+			List<ClassTestDescriptor> groups = Arrays.stream(parent.getTestClass().getDeclaredClasses())
+				.filter(Class::isMemberClass)
+				.map(clazz -> new ClassTestDescriptor(clazz, parent))
+				.collect(toList());
 			children.addAll(groups);
+			// @formatter:on
 
 			groups.forEach(group -> children.addAll(resolveChildren(group, element)));
 
 			return children;
 		}
 		else {
-			JavaClassTestDescriptor child = resolve(parent, element);
+			ClassTestDescriptor child = resolve(parent, element);
 			List<TestDescriptor> children = resolveChildren(child, element);
 			List<TestDescriptor> result = new LinkedList<>();
 			result.add(child);

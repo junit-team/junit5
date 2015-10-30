@@ -22,22 +22,23 @@ public class EngineDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public String getUniqueId() {
+	public final String getUniqueId() {
 		return engine.getId();
 	}
 
 	@Override
-	public String getDisplayName() {
+	public final String getDisplayName() {
 		return "Test engine: " + engine.getId();
 	}
 
 	@Override
-	public TestDescriptor getParent() {
+	public final TestDescriptor getParent() {
 		return null;
 	}
 
 	@Override
-	public boolean isTest() {
+	public final boolean isTest() {
 		return false;
 	}
+
 }

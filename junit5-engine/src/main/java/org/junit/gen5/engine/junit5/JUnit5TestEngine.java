@@ -47,11 +47,7 @@ public class JUnit5TestEngine implements TestEngine {
 
 	@Override
 	public List<TestDescriptor> discoverTests(TestPlanSpecification specification) {
-		// TODO lookup TestDescriptorResolverRegistry within the
-		// ApplicationExecutionContext
-		TestDescriptorResolverRegistry testDescriptorResolverRegistry = new TestDescriptorResolverRegistry();
-		testDescriptorResolverRegistry.addResolver(ClassNameSpecification.class, new ClassNameTestDescriptorResolver());
-		testDescriptorResolverRegistry.addResolver(UniqueIdSpecification.class, new UniqueIdTestDescriptorResolver());
+		TestDescriptorResolverRegistry testDescriptorResolverRegistry = createResolverRegistry();
 
 		// TODO Avoid redundant creation of TestDescriptors during this phase
 		Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
@@ -75,26 +71,24 @@ public class JUnit5TestEngine implements TestEngine {
 		return testDescriptors;
 	}
 
+	private TestDescriptorResolverRegistry createResolverRegistry() {
+		// TODO Look up TestDescriptorResolverRegistry within the
+		// ApplicationExecutionContext
+		TestDescriptorResolverRegistry testDescriptorResolverRegistry = new TestDescriptorResolverRegistry();
+		testDescriptorResolverRegistry.addResolver(ClassNameSpecification.class, new ClassNameTestDescriptorResolver());
+		testDescriptorResolverRegistry.addResolver(UniqueIdSpecification.class, new UniqueIdTestDescriptorResolver());
+		return testDescriptorResolverRegistry;
+	}
+
 	@Override
 	public boolean supports(TestDescriptor testDescriptor) {
-		// TODO super class for Java test descriptors?
+		// TODO Consider creating a superclass or marker interface for JUnit 5 test
+		// descriptors.
 		return testDescriptor.getUniqueId().startsWith(getId());
 	}
 
 	@Override
 	public void execute(EngineExecutionContext context) {
-
-		// TODO Build a tree of TestDescriptors.
-		//
-		// Simply iterating over a collection is insufficient for our purposes. We need a
-		// tree (or some form of hierarchical data structure) in order to be able to
-		// execute each test within the correct scope.
-		//
-		// For example, we need to execute all test methods within a given test class as a
-		// group in order to:
-		//
-		// 1) retain the instance across test method invocations (if desired).
-		// 2) invoke class-level before & after methods _around_ the set of methods.
 
 		Map<TestDescriptor, TestExecutionNode> nodes = new HashMap<>();
 		for (TestDescriptor testDescriptor : context.getTestDescriptions()) {
@@ -103,14 +97,18 @@ public class JUnit5TestEngine implements TestEngine {
 
 		List<TestExecutionNode> rootNodes = new LinkedList<>();
 		for (TestExecutionNode node : nodes.values()) {
+
 			TestDescriptor currentTestDescriptor = node.getTestDescriptor();
 			if (currentTestDescriptor.getParent() == null) {
 				rootNodes.add(node);
 			}
 
-			List<TestExecutionNode> childrenForCurrentNode = context.getTestDescriptions().stream().filter(
-				testDescriptor -> currentTestDescriptor.equals(testDescriptor.getParent())).map(
-					testDescriptor -> nodes.get(testDescriptor)).collect(toList());
+			// @formatter:off
+			List<TestExecutionNode> childrenForCurrentNode = context.getTestDescriptions().stream()
+					.filter(testDescriptor -> currentTestDescriptor.equals(testDescriptor.getParent()))
+					.map(testDescriptor -> nodes.get(testDescriptor))
+					.collect(toList());
+			// @formatter:on
 			node.addChildren(childrenForCurrentNode);
 		}
 
@@ -118,4 +116,5 @@ public class JUnit5TestEngine implements TestEngine {
 			rootNode.execute(context);
 		}
 	}
+
 }

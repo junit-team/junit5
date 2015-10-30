@@ -26,12 +26,12 @@ import org.junit.gen5.engine.TestDescriptor;
  */
 @Data
 @EqualsAndHashCode
-public class JavaClassTestDescriptor implements TestDescriptor {
+public class ClassTestDescriptor implements TestDescriptor {
 
 	private final TestDescriptor parent;
 	private final Class<?> testClass;
 
-	public JavaClassTestDescriptor(Class<?> testClass, TestDescriptor parent) {
+	public ClassTestDescriptor(Class<?> testClass, TestDescriptor parent) {
 		Preconditions.notNull(testClass, "testClass must not be null");
 		Preconditions.notNull(parent, "parent must not be null");
 
@@ -40,17 +40,17 @@ public class JavaClassTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public String getUniqueId() {
-		return parent.getUniqueId() + ":" + testClass.getName();
+	public final String getUniqueId() {
+		return this.parent.getUniqueId() + ":" + testClass.getName();
 	}
 
 	@Override
-	public String getDisplayName() {
-		return testClass.getSimpleName();
+	public final String getDisplayName() {
+		return this.testClass.getSimpleName();
 	}
 
 	@Override
-	public boolean isTest() {
+	public final boolean isTest() {
 		return false;
 	}
 
