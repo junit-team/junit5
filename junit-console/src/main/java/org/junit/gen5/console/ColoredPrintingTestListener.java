@@ -25,7 +25,7 @@ import org.junit.gen5.launcher.TestPlanExecutionListener;
  * @author Sam Brannen
  * @since 5.0
  */
-public class ColoredPrintingTestListener implements TestPlanExecutionListener, TestExecutionListener {
+public class ColoredPrintingTestListener implements TestPlanExecutionListener {
 
 	private final PrintStream out;
 
@@ -39,26 +39,27 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 	}
 
 	@Override
-	public void testPlanExecutionPaused() {
+	public void testPlanExecutionPaused(TestPlan testPlan) {
 		out.println("Test execution paused.");
 	}
 
 	@Override
-	public void testPlanExecutionRestarted() {
+	public void testPlanExecutionRestarted(TestPlan testPlan) {
 		out.println("Test execution continued.");
 	}
 
 	@Override
-	public void testPlanExecutionStopped() {
+	public void testPlanExecutionStopped(TestPlan testPlan) {
 		out.println("Test execution canceled.");
 	}
 
 	@Override
-	public void testPlanExecutionFinished() {
+	public void testPlanExecutionFinished(TestPlan testPlan) {
+		out.println("Test execution finished.");
 	}
 
 	@Override
-	public void dynamicTestFound(TestDescriptor testDescriptor) {
+	public void testFound(TestDescriptor testDescriptor) {
 		printlnTestDescriptor(BLUE, "Test found:", testDescriptor);
 	}
 
@@ -104,7 +105,6 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 	}
 
 	static enum Color {
-
 		NONE("\u001B[0m"),
 
 		BLACK("\u001B[30m"),
@@ -134,5 +134,4 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 			return this.ansiCode;
 		}
 	}
-
 }

@@ -10,10 +10,17 @@
 
 package org.junit.gen5.engine;
 
+import java.util.Collection;
+
 import lombok.Value;
 
+/**
+ * @author Stefan Bechtold
+ * @since 5.0
+ */
 @Value
-public class ClassNameSpecification implements TestPlanSpecificationElement {
+public class TestExecutionContext {
 
-	private String className;
+	private Collection<TestDescriptor> testDescriptors;
+	private TestExecutionListener testExecutionListener;
 }

@@ -20,18 +20,17 @@ import org.junit.gen5.engine.TestExecutionListener;
 public interface TestPlanExecutionListener extends TestExecutionListener {
 
 	default void testPlanExecutionStarted(TestPlan testPlan) {
-	};
+	}
 
-	default void testPlanExecutionPaused() {
-	};
+	default void testPlanExecutionPaused(TestPlan testPlan) {
+	}
 
-	default void testPlanExecutionRestarted() {
-	};
+	default void testPlanExecutionRestarted(TestPlan testPlan) {
+	}
 
-	default void testPlanExecutionStopped() {
-	};
+	default void testPlanExecutionStopped(TestPlan testPlan) {
+	}
 
-	default void testPlanExecutionFinished() {
-	};
-
+	default void testPlanExecutionFinished(TestPlan testPlan) {
+	}
 }

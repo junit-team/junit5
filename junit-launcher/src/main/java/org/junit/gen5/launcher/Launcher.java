@@ -12,10 +12,9 @@ package org.junit.gen5.launcher;
 
 import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestExecutionListener;
-import org.junit.gen5.engine.TestPlanSpecification;
+import java.util.List;
+
+import org.junit.gen5.engine.*;
 
 /**
  * @author Stefan Bechtold
@@ -26,37 +25,29 @@ public class Launcher {
 
 	private final TestListenerRegistry listenerRegistry = new TestListenerRegistry();
 
-	public void registerTestPlanExecutionListeners(TestPlanExecutionListener... testListeners) {
-		listenerRegistry.registerTestPlanExecutionListeners(testListeners);
-		listenerRegistry.registerTestExecutionListeners(testListeners);
+	public void registerListeners(TestExecutionListener... testListeners) {
+		listenerRegistry.registerListener(testListeners);
 	}
 
 	public TestPlan discover(TestPlanSpecification specification) {
 		TestPlan testPlan = new TestPlan();
 		for (TestEngine testEngine : lookupAllTestEngines()) {
-			TestDescriptor engineDescriptor = testEngine.createEngineDescriptor();
-			testPlan.addTest(engineDescriptor);
-			testPlan.addTests(testEngine.discoverTests(specification, engineDescriptor));
+			testPlan.addTests(testEngine.discoverTests(specification));
 		}
 		return testPlan;
 	}
 
 	public void execute(TestPlanSpecification specification) {
+		TestPlanExecutionListener testPlanExecutionListener = listenerRegistry.getCompositeTestPlanExecutionListener();
+		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
+
 		TestPlan plan = discover(specification);
-		execute(plan);
-	}
 
-	private void execute(TestPlan testPlan) {
-		listenerRegistry.notifyTestPlanExecutionListeners(
-			testPlanExecutionListener -> testPlanExecutionListener.testPlanExecutionStarted(testPlan));
-
-		TestExecutionListener compositeListener = listenerRegistry.getCompositeTestExecutionListener();
-
+		testPlanExecutionListener.testPlanExecutionStarted(plan);
 		for (TestEngine testEngine : lookupAllTestEngines()) {
-			testEngine.execute(testPlan.getAllTestsForTestEngine(testEngine), compositeListener);
+			List<TestDescriptor> testDescriptors = plan.getAllTestsForTestEngine(testEngine);
+			testEngine.execute(new TestExecutionContext(testDescriptors, testExecutionListener));
 		}
-
-		listenerRegistry.notifyTestPlanExecutionListeners(TestPlanExecutionListener::testPlanExecutionFinished);
+		testPlanExecutionListener.testPlanExecutionFinished(plan);
 	}
-
 }
