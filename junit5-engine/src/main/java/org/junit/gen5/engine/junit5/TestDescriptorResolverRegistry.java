@@ -21,11 +21,12 @@ import org.junit.gen5.engine.TestPlanSpecificationElement;
  */
 class TestDescriptorResolverRegistry {
 
-	private final Map<Class<? extends TestPlanSpecificationElement>, TestDescriptorResolver> resolvers = new HashMap<>();
+	private final Map<Class<? extends TestPlanSpecificationElement>, TestDescriptorResolver<? extends TestPlanSpecificationElement, ?>> resolvers = new HashMap<>();
 
-	public TestDescriptorResolver forType(Class<? extends TestPlanSpecificationElement> type) {
+	@SuppressWarnings("unchecked")
+	public <T extends TestPlanSpecificationElement> TestDescriptorResolver<T, ?> forType(Class<T> type) {
 		if (resolvers.containsKey(type)) {
-			return resolvers.get(type);
+			return (TestDescriptorResolver<T, ?>) resolvers.get(type);
 		}
 		else {
 			throw new UnsupportedOperationException(
@@ -33,7 +34,8 @@ class TestDescriptorResolverRegistry {
 		}
 	}
 
-	public void addResolver(Class<? extends TestPlanSpecificationElement> element, TestDescriptorResolver resolver) {
+	public <T extends TestPlanSpecificationElement> void addResolver(Class<T> element,
+			TestDescriptorResolver<T, ?> resolver) {
 		resolvers.put(element, resolver);
 	}
 }
