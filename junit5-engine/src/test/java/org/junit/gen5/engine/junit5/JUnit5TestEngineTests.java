@@ -10,8 +10,8 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.fail;
-import static org.junit.gen5.api.Assumptions.assumeTrue;
+import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assumptions.*;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;

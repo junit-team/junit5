@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
