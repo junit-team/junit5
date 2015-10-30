@@ -49,23 +49,23 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 	}
 
 	@Override
-	public void testPlanExecutionPaused() {
+	public void testPlanExecutionPaused(TestPlan testPlan) {
 		this.timePaused = System.currentTimeMillis();
 	}
 
 	@Override
-	public void testPlanExecutionRestarted() {
+	public void testPlanExecutionRestarted(TestPlan testPlan) {
 		this.timeStarted += System.currentTimeMillis() - this.timePaused;
 		this.timePaused = 0;
 	}
 
 	@Override
-	public void testPlanExecutionStopped() {
+	public void testPlanExecutionStopped(TestPlan testPlan) {
 		reportSummary("Test run stopped");
 	}
 
 	@Override
-	public void testPlanExecutionFinished() {
+	public void testPlanExecutionFinished(TestPlan testPlan) {
 		reportSummary("Test run finished");
 	}
 

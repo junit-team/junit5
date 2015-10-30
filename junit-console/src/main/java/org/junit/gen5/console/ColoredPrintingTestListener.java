@@ -39,22 +39,22 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 	}
 
 	@Override
-	public void testPlanExecutionPaused() {
+	public void testPlanExecutionPaused(TestPlan testPlan) {
 		out.println("Test execution paused.");
 	}
 
 	@Override
-	public void testPlanExecutionRestarted() {
+	public void testPlanExecutionRestarted(TestPlan testPlan) {
 		out.println("Test execution continued.");
 	}
 
 	@Override
-	public void testPlanExecutionStopped() {
+	public void testPlanExecutionStopped(TestPlan testPlan) {
 		out.println("Test execution canceled.");
 	}
 
 	@Override
-	public void testPlanExecutionFinished() {
+	public void testPlanExecutionFinished(TestPlan testPlan) {
 	}
 
 	@Override

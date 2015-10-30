@@ -12,6 +12,8 @@ package org.junit.gen5.launcher;
 
 import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
+import java.util.List;
+
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
@@ -27,9 +29,8 @@ public class Launcher {
 
 	private final TestListenerRegistry listenerRegistry = new TestListenerRegistry();
 
-	public void registerTestPlanExecutionListeners(TestPlanExecutionListener... testListeners) {
-		listenerRegistry.registerTestPlanExecutionListeners(testListeners);
-		listenerRegistry.registerTestExecutionListeners(testListeners);
+	public void registerTestPlanExecutionListeners(TestExecutionListener... testListeners) {
+		listenerRegistry.registerListener(testListeners);
 	}
 
 	public TestPlan discover(TestPlanSpecification specification) {
@@ -43,22 +44,18 @@ public class Launcher {
 	}
 
 	public void execute(TestPlanSpecification specification) {
-		TestPlan plan = discover(specification);
-		execute(plan);
+		execute(discover(specification));
 	}
 
-	private void execute(TestPlan testPlan) {
-		listenerRegistry.notifyTestPlanExecutionListeners(
-			testPlanExecutionListener -> testPlanExecutionListener.testPlanExecutionStarted(testPlan));
+	public void execute(TestPlan testPlan) {
+		TestPlanExecutionListener testPlanExecutionListener = listenerRegistry.getCompositeTestPlanExecutionListener();
+		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
 
-		TestExecutionListener compositeListener = listenerRegistry.getCompositeTestExecutionListener();
-
+		testPlanExecutionListener.testPlanExecutionStarted(testPlan);
 		for (TestEngine testEngine : lookupAllTestEngines()) {
-			testEngine.execute(
-				new EngineExecutionContext(testPlan.getAllTestDescriptorsForTestEngine(testEngine), compositeListener));
+			List<TestDescriptor> testDescriptors = testPlan.getAllTestDescriptorsForTestEngine(testEngine);
+			testEngine.execute(new EngineExecutionContext(testDescriptors, testExecutionListener));
 		}
-
-		listenerRegistry.notifyTestPlanExecutionListeners(TestPlanExecutionListener::testPlanExecutionFinished);
+		testPlanExecutionListener.testPlanExecutionFinished(testPlan);
 	}
-
 }
