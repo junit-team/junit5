@@ -30,8 +30,6 @@ class SampleTestCase {
 
 	boolean beforeInvoked = false;
 
-	boolean afterInvoked = false;
-
 	boolean throwExceptionInAfterMethod = false;
 
 	@Before
@@ -42,12 +40,14 @@ class SampleTestCase {
 	@Before
 	void before() {
 		this.beforeInvoked = true;
+		// Reset state, since the test instance is retained across all test methods;
+		// otherwise, after() always throws an exception.
+		this.throwExceptionInAfterMethod = false;
 	}
 
 	@After
 	void after() {
-		this.afterInvoked = true;
-		if (throwExceptionInAfterMethod) {
+		if (this.throwExceptionInAfterMethod) {
 			throw new RuntimeException("Exception thrown from @After method");
 		}
 	}
@@ -56,8 +56,7 @@ class SampleTestCase {
 	void methodLevelCallbacks() {
 		assertTrue(this.beforeInvoked, "@Before was not invoked on instance method");
 		assertTrue(staticBeforeInvoked, "@Before was not invoked on static method");
-		assertFalse(this.afterInvoked, "@After should not have been invoked");
-		throwExceptionInAfterMethod = true;
+		this.throwExceptionInAfterMethod = true;
 	}
 
 	@Test
@@ -80,7 +79,7 @@ class SampleTestCase {
 		// no-op
 	}
 
-	@Test(name = "with succeding assertAll")
+	@Test(name = "with succeeding assertAll")
 	void assertAllTest() {
 		Map<String, String> person = new HashMap<String, String>();
 		person.put("firstName", "Johannes");

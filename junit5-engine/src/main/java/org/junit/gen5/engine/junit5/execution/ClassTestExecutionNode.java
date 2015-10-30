@@ -10,14 +10,11 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static java.util.stream.Collectors.*;
+import static org.junit.gen5.commons.util.AnnotationUtils.*;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.BeforeAll;
@@ -107,14 +104,6 @@ class ClassTestExecutionNode extends TestExecutionNode {
 		if (exceptionDuringAfterAll != null) {
 			context.getTestExecutionListener().testFailed(getTestDescriptor(), exceptionDuringAfterAll);
 		}
-	}
-
-	private List<Method> findAnnotatedMethods(Class<?> testClass, Class<? extends Annotation> annotationType) {
-		// @formatter:off
-		return Arrays.stream(testClass.getDeclaredMethods())
-				.filter(method -> method.isAnnotationPresent(annotationType))
-				.collect(toList());
-		// @formatter:on
 	}
 
 }

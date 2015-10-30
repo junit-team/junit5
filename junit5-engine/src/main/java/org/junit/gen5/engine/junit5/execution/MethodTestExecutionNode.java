@@ -10,8 +10,14 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import java.lang.reflect.InvocationTargetException;
+import static org.junit.gen5.commons.util.AnnotationUtils.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import org.junit.gen5.api.After;
+import org.junit.gen5.api.Before;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
@@ -19,8 +25,8 @@ import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
 /**
- * @author Stefan Bechtold
  * @author Sam Brannen
+ * @author Stefan Bechtold
  * @since 5.0
  */
 class MethodTestExecutionNode extends TestExecutionNode {
@@ -38,27 +44,73 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 	@Override
 	public void execute(EngineExecutionContext context) {
+		context.getTestExecutionListener().testStarted(getTestDescriptor());
+		Object testInstance = context.getAttributes().get(ClassTestExecutionNode.TEST_INSTANCE_ATTRIBUTE_NAME);
+		Class<?> testClass = testInstance.getClass();
+		Throwable exceptionThrown = null;
+
 		try {
-			context.getTestExecutionListener().testStarted(getTestDescriptor());
-			Object testInstance = context.getAttributes().get(ClassTestExecutionNode.TEST_INSTANCE_ATTRIBUTE_NAME);
+			executeBeforeMethods(testClass, testInstance);
 			ReflectionUtils.invokeMethod(getTestDescriptor().getTestMethod(), testInstance);
+		}
+		catch (Throwable ex) {
+			// Note: executeAfterMethods() handles listener notification regarding the
+			// thrown exception.
+			exceptionThrown = ex;
+			if (ex instanceof InvocationTargetException) {
+				exceptionThrown = ((InvocationTargetException) ex).getTargetException();
+			}
+		}
+		finally {
+			exceptionThrown = executeAfterMethods(context, testClass, testInstance, exceptionThrown);
+		}
+
+		if (exceptionThrown == null) {
 			context.getTestExecutionListener().testSucceeded(getTestDescriptor());
 		}
-		catch (InvocationTargetException ex) {
-			Throwable targetException = ex.getTargetException();
-			if (targetException instanceof TestSkippedException) {
-				context.getTestExecutionListener().testSkipped(getTestDescriptor(), targetException);
+	}
+
+	private void executeBeforeMethods(Class<?> testClass, Object testInstance) throws Exception {
+		for (Method method : findAnnotatedMethods(testClass, Before.class)) {
+			invokeMethod(method, testInstance);
+		}
+	}
+
+	private Throwable executeAfterMethods(EngineExecutionContext context, Class<?> testClass, Object testInstance,
+			Throwable exceptionThrown) {
+
+		for (Method method : findAnnotatedMethods(testClass, After.class)) {
+			try {
+				invokeMethod(method, testInstance);
 			}
-			else if (targetException instanceof TestAbortedException) {
-				context.getTestExecutionListener().testAborted(getTestDescriptor(), targetException);
+			catch (Throwable ex) {
+				Throwable currentException = ex;
+				if (currentException instanceof InvocationTargetException) {
+					currentException = ((InvocationTargetException) currentException).getTargetException();
+				}
+
+				if (exceptionThrown == null) {
+					exceptionThrown = currentException;
+				}
+				else {
+					exceptionThrown.addSuppressed(currentException);
+				}
+			}
+		}
+
+		if (exceptionThrown != null) {
+			if (exceptionThrown instanceof TestSkippedException) {
+				context.getTestExecutionListener().testSkipped(getTestDescriptor(), exceptionThrown);
+			}
+			else if (exceptionThrown instanceof TestAbortedException) {
+				context.getTestExecutionListener().testAborted(getTestDescriptor(), exceptionThrown);
 			}
 			else {
-				context.getTestExecutionListener().testFailed(getTestDescriptor(), targetException);
+				context.getTestExecutionListener().testFailed(getTestDescriptor(), exceptionThrown);
 			}
 		}
-		catch (Exception ex) {
-			context.getTestExecutionListener().testFailed(getTestDescriptor(), ex);
-		}
+
+		return exceptionThrown;
 	}
 
 }
