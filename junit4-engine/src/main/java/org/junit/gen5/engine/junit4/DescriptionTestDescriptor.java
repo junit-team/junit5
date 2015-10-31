@@ -10,16 +10,16 @@
 
 package org.junit.gen5.engine.junit4;
 
-import lombok.Value;
+import lombok.Data;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.runner.Description;
 
-@Value
-final class DescriptionTestDescriptor implements TestDescriptor {
+@Data
+class DescriptionTestDescriptor implements TestDescriptor {
 
-	private TestDescriptor parent;
-	private Description description;
+	private final TestDescriptor parent;
+	private final Description description;
 
 	@Override
 	public boolean isTest() {

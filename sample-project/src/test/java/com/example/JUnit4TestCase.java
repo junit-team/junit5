@@ -10,6 +10,9 @@
 
 package com.example;
 
+import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class JUnit4TestCase {
@@ -17,6 +20,22 @@ public class JUnit4TestCase {
 	@Test
 	public void succeedingTest() {
 		// no-op
+	}
+
+	@Test
+	public void failingTest() {
+		Assert.fail("this should fail");
+	}
+
+	@Test
+	@Ignore
+	public void skippedTest() {
+		// no-op
+	}
+
+	@Test
+	public void abortedTest() {
+		Assume.assumeTrue("this should be aborted", false);
 	}
 
 }
