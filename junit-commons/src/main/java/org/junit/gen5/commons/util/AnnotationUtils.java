@@ -16,8 +16,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Collection of utilities for working with {@linkplain Annotation annotations}.
@@ -39,16 +41,43 @@ public final class AnnotationUtils {
 	 * or <em>meta-present</em> on the supplied {@code element}.
 	 */
 	public static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType) {
+		return findAnnotation(element, annotationType, new HashSet<Annotation>());
+	}
+
+	private static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType,
+			Set<Annotation> visited) {
+
 		Preconditions.notNull(element, "AnnotatedElement must not be null");
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 
+		// Directly present?
 		A annotation = element.getDeclaredAnnotation(annotationType);
+		if (annotation != null) {
+			return Optional.ofNullable(annotation);
+		}
 
-		// TODO Avoid infinite recursion by tracking visited annotations.
-		// TODO Exclude annotations from the java.lang.annotation package from searches.
-		if (annotation == null) {
-			for (Annotation composedAnnotation : element.getDeclaredAnnotations()) {
-				Optional<A> metaAnnotation = findAnnotation(composedAnnotation.annotationType(), annotationType);
+		// Meta-present on directly present annotations?
+		for (Annotation candiateAnnotation : element.getDeclaredAnnotations()) {
+			if (!isInJavaLangAnnotationPackage(candiateAnnotation) && visited.add(candiateAnnotation)) {
+				Optional<A> metaAnnotation = findAnnotation(candiateAnnotation.annotationType(), annotationType,
+					visited);
+				if (metaAnnotation.isPresent()) {
+					return metaAnnotation;
+				}
+			}
+		}
+
+		// Indirectly present?
+		annotation = element.getAnnotation(annotationType);
+		if (annotation != null) {
+			return Optional.ofNullable(annotation);
+		}
+
+		// Meta-present on indirectly present annotations?
+		for (Annotation candiateAnnotation : element.getAnnotations()) {
+			if (!isInJavaLangAnnotationPackage(candiateAnnotation) && visited.add(candiateAnnotation)) {
+				Optional<A> metaAnnotation = findAnnotation(candiateAnnotation.annotationType(), annotationType,
+					visited);
 				if (metaAnnotation.isPresent()) {
 					return metaAnnotation;
 				}
@@ -69,6 +98,11 @@ public final class AnnotationUtils {
 				.filter(method -> method.isAnnotationPresent(annotationType))
 				.collect(toList());
 		// @formatter:on
+	}
+
+	public static boolean isInJavaLangAnnotationPackage(Annotation annotation) {
+		return (annotation != null
+				&& annotation.annotationType().getPackage().getName().startsWith("java.lang.annotation"));
 	}
 
 }
