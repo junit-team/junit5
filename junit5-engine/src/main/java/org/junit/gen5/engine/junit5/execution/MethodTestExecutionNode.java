@@ -80,7 +80,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	}
 
 	private void executeBeforeMethods(Class<?> testClass, Object testInstance) throws Exception {
-		for (Method method : findAnnotatedMethods(testClass, Before.class)) {
+		for (Method method : findAnnotatedMethods(testClass, Before.class, MethodSortOrder.HierarchyDown)) {
 			invokeMethod(method, testInstance);
 		}
 	}
@@ -88,7 +88,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	private Throwable executeAfterMethods(EngineExecutionContext context, Class<?> testClass, Object testInstance,
 			Throwable exceptionThrown) {
 
-		for (Method method : findAnnotatedMethods(testClass, After.class)) {
+		for (Method method : findAnnotatedMethods(testClass, After.class, MethodSortOrder.HierarchyUp)) {
 			try {
 				invokeMethod(method, testInstance);
 			}

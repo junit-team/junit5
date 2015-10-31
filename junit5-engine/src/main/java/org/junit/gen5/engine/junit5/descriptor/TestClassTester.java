@@ -10,13 +10,14 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.AnnotationUtils;
 
 /**
  * @since 5.0
  */
 class TestClassTester extends ReflectionObjectTester {
+
+	private TestMethodTester methodTester = new TestMethodTester();
 
 	boolean accept(Class<?> testClassCandidate) {
 		if (isAbstract(testClassCandidate))
@@ -27,7 +28,8 @@ class TestClassTester extends ReflectionObjectTester {
 	}
 
 	private boolean hasTestMethods(Class<?> testClassCandidate) {
-		return !AnnotationUtils.findAnnotatedMethods(testClassCandidate, Test.class).isEmpty();
+		return !AnnotationUtils.findMethods(testClassCandidate, methodTester::accept,
+			AnnotationUtils.MethodSortOrder.HierarchyDown).isEmpty();
 	}
 
 }

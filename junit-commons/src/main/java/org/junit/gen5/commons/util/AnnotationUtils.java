@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Collection of utilities for working with {@linkplain Annotation annotations}.
@@ -32,6 +33,10 @@ import java.util.Set;
  * @see AnnotatedElement
  */
 public final class AnnotationUtils {
+
+	public static enum MethodSortOrder {
+		HierarchyDown, HierarchyUp
+	}
 
 	private AnnotationUtils() {
 		/* no-op */
@@ -75,9 +80,9 @@ public final class AnnotationUtils {
 		}
 
 		// Meta-present on indirectly present annotations?
-		for (Annotation candiateAnnotation : element.getAnnotations()) {
-			if (!isInJavaLangAnnotationPackage(candiateAnnotation) && visited.add(candiateAnnotation)) {
-				Optional<A> metaAnnotation = findAnnotation(candiateAnnotation.annotationType(), annotationType,
+		for (Annotation candidateAnnotation : element.getAnnotations()) {
+			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
+				Optional<A> metaAnnotation = findAnnotation(candidateAnnotation.annotationType(), annotationType,
 					visited);
 				if (metaAnnotation.isPresent()) {
 					return metaAnnotation;
@@ -88,13 +93,21 @@ public final class AnnotationUtils {
 		return Optional.empty();
 	}
 
-	public static List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType) {
+	public static List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType,
+			MethodSortOrder sortOrder) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 
+		return findMethods(clazz, method -> findAnnotation(method, annotationType).isPresent(), sortOrder);
+	}
+
+	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate, MethodSortOrder sortOrder) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(predicate, "predicate must not be null");
+
 		// @formatter:off
-		return findAllMethodsInHierarchy(clazz).stream()
-				.filter(method -> findAnnotation(method, annotationType).isPresent())
+		return findAllMethodsInHierarchy(clazz, sortOrder).stream()
+				.filter(predicate::test)
 				.collect(toList());
 		// @formatter:on
 	}
@@ -103,14 +116,21 @@ public final class AnnotationUtils {
 	 * Return all methods in superclass hierarchy except from Object.
 	 * Superclass methods are first.
 	 */
-	public static List<Method> findAllMethodsInHierarchy(Class<?> clazz) {
+	public static List<Method> findAllMethodsInHierarchy(Class<?> clazz, MethodSortOrder sortOrder) {
 		// TODO Support interface default methods.
 		// TODO Determine if we need to support bridged methods.
 		List<Method> methods = new ArrayList<>();
-		if (clazz.getSuperclass() != Object.class) {
-			methods.addAll(findAllMethodsInHierarchy(clazz.getSuperclass()));
+		if (sortOrder == MethodSortOrder.HierarchyDown) {
+			if (clazz.getSuperclass() != Object.class) {
+				methods.addAll(findAllMethodsInHierarchy(clazz.getSuperclass(), sortOrder));
+			}
 		}
 		methods.addAll(Arrays.asList(clazz.getDeclaredMethods()));
+		if (sortOrder == MethodSortOrder.HierarchyUp) {
+			if (clazz.getSuperclass() != Object.class) {
+				methods.addAll(findAllMethodsInHierarchy(clazz.getSuperclass(), sortOrder));
+			}
+		}
 		return methods;
 	}
 

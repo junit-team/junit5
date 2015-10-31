@@ -43,15 +43,22 @@ class SucceedingTestCase extends AbstractSuperTest {
 
 	@Test(name = "A nice name for test 2")
 	void test1() {
+		System.out.println("test1");
 	}
 
 	@Test(name = "A test name with umlauts äöüÄÖÜß")
 	void test2() {
+		System.out.println("test2");
 	}
 
 }
 
 abstract class AbstractSuperTest {
+
+	@BeforeAll
+	void beforeAllFromSuperclass() {
+		System.out.println(getClass().getName() + " before all from super class called");
+	}
 
 	@Before
 	void beforeFromSuperclass() {
@@ -60,6 +67,16 @@ abstract class AbstractSuperTest {
 
 	@Test
 	void testFromSuperclass() {
+		System.out.println("test from superclass");
+	}
 
+	@After
+	void afterFromSuperclass() {
+		System.out.println(getClass().getName() + " after from super class called");
+	}
+
+	@AfterAll
+	void afterAllFromSuperclass() {
+		System.out.println(getClass().getName() + " after all from super class called");
 	}
 }
