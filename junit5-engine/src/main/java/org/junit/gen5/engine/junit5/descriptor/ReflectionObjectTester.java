@@ -15,16 +15,18 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 
+import org.junit.gen5.commons.util.AnnotationUtils;
+
 class ReflectionObjectTester {
 
-	boolean hasAnnotation(AnnotatedElement candidate, Class<? extends Annotation> annotationClass) {
-		return candidate.isAnnotationPresent(annotationClass);
+	boolean hasAnnotation(AnnotatedElement element, Class<? extends Annotation> annotationType) {
+		return AnnotationUtils.findAnnotation(element, annotationType).isPresent();
 	}
 
 	boolean hasModifier(Object candidate, int modifier) {
 		int modifiers = 0;
 		if (candidate instanceof Class) {
-			modifiers = ((Class) candidate).getModifiers();
+			modifiers = ((Class<?>) candidate).getModifiers();
 		}
 		if (candidate instanceof Member) {
 			modifiers = ((Member) candidate).getModifiers();

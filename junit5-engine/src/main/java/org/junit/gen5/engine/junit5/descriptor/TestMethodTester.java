@@ -19,7 +19,7 @@ import org.junit.gen5.api.Test;
  * @since 5.0
  */
 class TestMethodTester extends ReflectionObjectTester {
-	
+
 	boolean accept(Method testMethodCandidate) {
 		if (isPrivate(testMethodCandidate))
 			return false;
