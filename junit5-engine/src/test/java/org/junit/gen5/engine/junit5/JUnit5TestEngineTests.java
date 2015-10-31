@@ -11,10 +11,10 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.api.Assumptions.assumeTrue;
+import static org.junit.gen5.api.Assumptions.*;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
 import org.junit.gen5.api.After;
@@ -23,7 +23,6 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.opentestalliance.TestSkippedException;
 
@@ -43,19 +42,10 @@ public class JUnit5TestEngineTests {
 	}
 
 	@org.junit.Test
-	public void executeTestsFromFromClasses() {
+	public void executeTestsForClassName() {
+		TestPlanSpecification spec = build(forClassName(LocalTestCase.class.getName()));
 
-		TestPlanSpecification spec = TestPlanSpecification.build(
-			TestPlanSpecification.forClassName(LocalTestCase.class.getName()));
-
-		List<TestDescriptor> descriptors = discoverTests(spec);
-
-		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# descriptors", 8, descriptors.size());
-
-		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
-
-		engine.execute(new EngineExecutionContext(descriptors, listener));
+		TrackingTestExecutionListener listener = executeTests(spec, 8);
 
 		Assert.assertEquals("# tests started", 6, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
@@ -64,26 +54,12 @@ public class JUnit5TestEngineTests {
 		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
 	}
 
-	private List<TestDescriptor> discoverTests(TestPlanSpecification spec) {
-		//For some reason the JUnit5Engine only works correctly if the engine descriptor is in the list of descriptors
-		EngineDescriptor engineDescriptor = new EngineDescriptor(engine);
-		List<TestDescriptor> descriptors = engine.discoverTests(spec, engineDescriptor);
-		descriptors.add(engineDescriptor);
-		return descriptors;
-	}
-
 	@org.junit.Test
-	public void executeTestFromUniqueId() {
-		TestPlanSpecification spec = TestPlanSpecification.build(TestPlanSpecification.forUniqueId(
-			"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"));
+	public void executeTestForUniqueId() {
+		TestPlanSpecification spec = build(
+			forUniqueId("junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"));
 
-		List<TestDescriptor> descriptors = discoverTests(spec);
-		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# tests", 3, descriptors.size());
-
-		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
-
-		engine.execute(new EngineExecutionContext(descriptors, listener));
+		TrackingTestExecutionListener listener = executeTests(spec, 3);
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
@@ -93,17 +69,11 @@ public class JUnit5TestEngineTests {
 	}
 
 	@org.junit.Test
-	public void executeTestFromUniqueIdWithExceptionThrownInAfterMethod() {
-		TestPlanSpecification spec = TestPlanSpecification.build(TestPlanSpecification.forUniqueId(
+	public void executeTestForUniqueIdWithExceptionThrownInAfterMethod() {
+		TestPlanSpecification spec = build(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#throwExceptionInAfterMethod()"));
 
-		List<TestDescriptor> descriptors = discoverTests(spec);
-		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# tests", 3, descriptors.size());
-
-		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
-
-		engine.execute(new EngineExecutionContext(descriptors, listener));
+		TrackingTestExecutionListener listener = executeTests(spec, 3);
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());
@@ -114,24 +84,38 @@ public class JUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void executeCompositeTestPlanSpecification() {
-		TestPlanSpecification spec = TestPlanSpecification.build(
-			TestPlanSpecification.forUniqueId(
-				"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
-			TestPlanSpecification.forClassName(LocalTestCase.class.getName()));
+		TestPlanSpecification spec = build(
+			forUniqueId("junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
+			forClassName(LocalTestCase.class.getName()));
 
-		List<TestDescriptor> descriptors = discoverTests(spec);
-		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# descriptors", 8, descriptors.size());
-
-		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
-
-		engine.execute(new EngineExecutionContext(descriptors, listener));
+		TrackingTestExecutionListener listener = executeTests(spec, 8);
 
 		Assert.assertEquals("# tests started", 6, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
 		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
 		Assert.assertEquals("# tests aborted", 1, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
+	}
+
+	private TrackingTestExecutionListener executeTests(TestPlanSpecification spec, int expectedDescriptorCount) {
+		List<TestDescriptor> descriptors = discoverTests(spec);
+		Assert.assertNotNull(descriptors);
+		Assert.assertEquals("# descriptors", expectedDescriptorCount, descriptors.size());
+
+		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
+
+		engine.execute(new EngineExecutionContext(descriptors, listener));
+
+		return listener;
+	}
+
+	private List<TestDescriptor> discoverTests(TestPlanSpecification spec) {
+		// For some reason the JUnit5Engine only works correctly if the engine descriptor
+		// is in the list of descriptors
+		EngineDescriptor engineDescriptor = new EngineDescriptor(engine);
+		List<TestDescriptor> descriptors = engine.discoverTests(spec, engineDescriptor);
+		descriptors.add(engineDescriptor);
+		return descriptors;
 	}
 
 	private static class LocalTestCase {
@@ -192,45 +176,6 @@ public class JUnit5TestEngineTests {
 		@Test
 		void alwaysFails() {
 			fail("#fail");
-		}
-
-	}
-
-	/**
-	 * Simple {@link TestExecutionListener} that tracks the number of times
-	 * that certain callbacks are invoked.
-	 */
-	private static class TrackingTestExecutionListener implements TestExecutionListener {
-
-		final AtomicInteger testStartedCount = new AtomicInteger();
-		final AtomicInteger testSucceededCount = new AtomicInteger();
-		final AtomicInteger testSkippedCount = new AtomicInteger();
-		final AtomicInteger testAbortedCount = new AtomicInteger();
-		final AtomicInteger testFailedCount = new AtomicInteger();
-
-		@Override
-		public void testStarted(TestDescriptor testDescriptor) {
-			testStartedCount.incrementAndGet();
-		}
-
-		@Override
-		public void testSucceeded(TestDescriptor testDescriptor) {
-			testSucceededCount.incrementAndGet();
-		}
-
-		@Override
-		public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-			testSkippedCount.incrementAndGet();
-		}
-
-		@Override
-		public void testAborted(TestDescriptor testDescriptor, Throwable t) {
-			testAbortedCount.incrementAndGet();
-		}
-
-		@Override
-		public void testFailed(TestDescriptor testDescriptor, Throwable t) {
-			testFailedCount.incrementAndGet();
 		}
 
 	}
