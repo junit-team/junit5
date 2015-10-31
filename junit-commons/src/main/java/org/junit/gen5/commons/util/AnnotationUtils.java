@@ -38,8 +38,8 @@ public final class AnnotationUtils {
 	}
 
 	/**
-	 * Find an annotation of {@code annotationType} that is either <em>present</em>
-	 * or <em>meta-present</em> on the supplied {@code element}.
+	 * Find the first annotation of {@code annotationType} that is either
+	 * <em>present</em> or <em>meta-present</em> on the supplied {@code element}.
 	 */
 	public static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType) {
 		return findAnnotation(element, annotationType, new HashSet<Annotation>());
