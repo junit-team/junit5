@@ -51,6 +51,11 @@ class SucceedingTestCase extends AbstractSuperTest {
 		System.out.println("test2");
 	}
 
+	@Test(name = "😱")
+	void emoji() {
+		System.out.println("test2");
+	}
+
 }
 
 abstract class AbstractSuperTest {
