@@ -78,6 +78,7 @@ public class UniqueIdTestDescriptorResolver implements TestDescriptorResolver<Un
 
 				Class<?>[] parameterTypes = paramTypeList.toArray(new Class<?>[paramTypeList.size()]);
 				ClassTestDescriptor testClassGroup = group;
+				//Todo: should search full hierarchy just like AnnotationUtils.findAllMethodsInHierarchy
 				Method method = testClassGroup.getTestClass().getDeclaredMethod(methodName, parameterTypes);
 				return new MethodTestDescriptor(method, testClassGroup);
 			}

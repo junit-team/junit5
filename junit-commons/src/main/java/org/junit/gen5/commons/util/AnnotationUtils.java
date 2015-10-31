@@ -10,14 +10,13 @@
 
 package org.junit.gen5.commons.util;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -103,8 +102,8 @@ public final class AnnotationUtils {
 	}
 
 	/**
-		Return all methods in superclass hierarchy except from Object.
-	 	Superclass methods are first.
+	 Return all methods in superclass hierarchy except from Object.
+	 Superclass methods are first.
 	 **/
 	public static List<Method> findAllMethodsInHierarchy(Class<?> clazz) {
 		//Todo: Support interface default methods
