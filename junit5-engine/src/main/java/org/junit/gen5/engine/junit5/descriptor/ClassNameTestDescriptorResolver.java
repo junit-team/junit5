@@ -27,8 +27,9 @@ import org.junit.gen5.engine.TestDescriptor;
 public class ClassNameTestDescriptorResolver
 		implements TestDescriptorResolver<ClassNameSpecification, ClassTestDescriptor> {
 
-	private TestClassTester classTester = new TestClassTester();
-	private TestMethodTester methodTester = new TestMethodTester();
+	private static final TestClassTester classTester = new TestClassTester();
+
+	private static final TestMethodTester methodTester = new TestMethodTester();
 
 	@Override
 	public ClassTestDescriptor resolve(TestDescriptor parent, ClassNameSpecification element) {

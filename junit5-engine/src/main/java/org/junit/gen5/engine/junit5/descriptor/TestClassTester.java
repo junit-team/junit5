@@ -12,11 +12,12 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import java.util.Arrays;
 
-public class TestClassTester {
+class TestClassTester {
 
-	private TestMethodTester methodTester = new TestMethodTester();
+	private final TestMethodTester methodTester = new TestMethodTester();
 
-	public boolean accept(Class<?> testClassCandidate) {
+	boolean accept(Class<?> testClassCandidate) {
 		return Arrays.stream(testClassCandidate.getDeclaredMethods()).anyMatch(methodTester::accept);
 	}
+
 }

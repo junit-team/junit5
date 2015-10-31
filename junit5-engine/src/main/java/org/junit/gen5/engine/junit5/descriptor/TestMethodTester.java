@@ -14,9 +14,10 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Test;
 
-public class TestMethodTester {
+class TestMethodTester {
 
-	public boolean accept(Method testMethodCandidate) {
+	boolean accept(Method testMethodCandidate) {
 		return testMethodCandidate.isAnnotationPresent(Test.class);
 	}
+
 }
