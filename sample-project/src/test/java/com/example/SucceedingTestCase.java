@@ -19,7 +19,7 @@ import org.junit.gen5.api.Test;
 /**
  * Named *TestCase so Gradle will not try to run it.
  */
-class SucceedingTestCase {
+class SucceedingTestCase extends AbstractSuperTest {
 
 	@BeforeAll
 	void initClass() {
@@ -49,4 +49,17 @@ class SucceedingTestCase {
 	void test2() {
 	}
 
+}
+
+abstract class AbstractSuperTest {
+
+	@Before
+	void beforeFromSuperclass() {
+		System.out.println(getClass().getName() + " before from super class called");
+	}
+
+	@Test
+	void testFromSuperclass() {
+
+	}
 }

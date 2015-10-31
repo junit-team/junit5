@@ -13,10 +13,13 @@ package org.junit.gen5.engine.junit5.descriptor;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.TestDescriptor;
 
@@ -48,8 +51,9 @@ public class ClassNameTestDescriptorResolver
 			// TODO Retrieve children resolvers according to type
 			List<TestDescriptor> children = new LinkedList<>();
 
+			List<Method> testMethodCandidates = AnnotationUtils.findAllMethodsInHierarchy(parent.getTestClass());
 			// @formatter:off
-			children.addAll(Arrays.stream(parent.getTestClass().getDeclaredMethods())
+			children.addAll(testMethodCandidates.stream()
 				.filter(methodTester::accept)
 				.map(method -> new MethodTestDescriptor(method, parent))
 				.collect(toList()));

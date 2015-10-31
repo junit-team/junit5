@@ -15,7 +15,9 @@ import static java.util.stream.Collectors.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -94,10 +96,24 @@ public final class AnnotationUtils {
 		// TODO Support meta-annotations.
 
 		// @formatter:off
-		return Arrays.stream(clazz.getDeclaredMethods())
+		return findAllMethodsInHierarchy(clazz).stream()
 				.filter(method -> method.isAnnotationPresent(annotationType))
 				.collect(toList());
 		// @formatter:on
+	}
+
+	/**
+		Return all methods in superclass hierarchy except from Object.
+	 	Superclass methods are first.
+	 **/
+	public static List<Method> findAllMethodsInHierarchy(Class<?> clazz) {
+		//Todo: Support interface default methods
+		List<Method> methods = new ArrayList();
+		if (clazz.getSuperclass() != Object.class) {
+			methods.addAll(findAllMethodsInHierarchy(clazz.getSuperclass()));
+		}
+		methods.addAll(Arrays.asList(clazz.getDeclaredMethods()));
+		return methods;
 	}
 
 	public static boolean isInJavaLangAnnotationPackage(Annotation annotation) {

@@ -12,6 +12,9 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import java.util.Arrays;
 
+import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.util.AnnotationUtils;
+
 /**
  * @since 5.0
  */
@@ -28,7 +31,7 @@ class TestClassTester extends ReflectionObjectTester {
 	}
 
 	private boolean hasTestMethods(Class<?> testClassCandidate) {
-		return Arrays.stream(testClassCandidate.getDeclaredMethods()).anyMatch(methodTester::accept);
+		return !AnnotationUtils.findAnnotatedMethods(testClassCandidate, Test.class).isEmpty();
 	}
 
 }
