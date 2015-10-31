@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,8 +66,11 @@ public class JUnit5TestEngine implements TestEngine {
 		Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
 		TestDescriptorResolver testDescriptorResolver = testDescriptorResolverRegistry.forType(element.getClass());
 		TestDescriptor descriptor = testDescriptorResolver.resolve(root, element);
-		testDescriptors.add(descriptor);
-		testDescriptors.addAll(testDescriptorResolver.resolveChildren(descriptor, element));
+		//Get rid of null check
+		if (descriptor != null) {
+			testDescriptors.add(descriptor);
+			testDescriptors.addAll(testDescriptorResolver.resolveChildren(descriptor, element));
+		}
 		return testDescriptors;
 	}
 

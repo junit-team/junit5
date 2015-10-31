@@ -28,10 +28,18 @@ import org.junit.gen5.engine.TestDescriptor;
 public class ClassNameTestDescriptorResolver
 		implements TestDescriptorResolver<ClassNameSpecification, ClassTestDescriptor> {
 
+	private TestClassTester classTester = new TestClassTester();
+	private TestMethodTester methodTester = new TestMethodTester();
+
 	@Override
 	public ClassTestDescriptor resolve(TestDescriptor parent, ClassNameSpecification element) {
 		Class<?> clazz = loadClass(element.getClassName());
-		return new ClassTestDescriptor(clazz, parent);
+		if (classTester.accept(clazz)) {
+			return new ClassTestDescriptor(clazz, parent);
+		}
+		else {
+			return null;
+		}
 	}
 
 	@Override
@@ -42,12 +50,13 @@ public class ClassNameTestDescriptorResolver
 
 			// @formatter:off
 			children.addAll(Arrays.stream(parent.getTestClass().getDeclaredMethods())
-				.filter(method -> method.isAnnotationPresent(Test.class))
+				.filter(methodTester::accept)
 				.map(method -> new MethodTestDescriptor(method, parent))
 				.collect(toList()));
 			// @formatter:on
 
 			// @formatter:off
+// Disabled following code since it will lead to stack overflow when a nested class is present in test class
 //			List<ClassTestDescriptor> groups = Arrays.stream(parent.getTestClass().getDeclaredClasses())
 //				.filter(Class::isMemberClass)
 //				.map(clazz -> new ClassTestDescriptor(clazz, parent))
