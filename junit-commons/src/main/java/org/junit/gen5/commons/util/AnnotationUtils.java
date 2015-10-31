@@ -53,7 +53,7 @@ public final class AnnotationUtils {
 		// Directly present?
 		A annotation = element.getDeclaredAnnotation(annotationType);
 		if (annotation != null) {
-			return Optional.ofNullable(annotation);
+			return Optional.of(annotation);
 		}
 
 		// Meta-present on directly present annotations?
@@ -70,7 +70,7 @@ public final class AnnotationUtils {
 		// Indirectly present?
 		annotation = element.getAnnotation(annotationType);
 		if (annotation != null) {
-			return Optional.ofNullable(annotation);
+			return Optional.of(annotation);
 		}
 
 		// Meta-present on indirectly present annotations?
@@ -84,7 +84,7 @@ public final class AnnotationUtils {
 			}
 		}
 
-		return Optional.ofNullable(annotation);
+		return Optional.empty();
 	}
 
 	public static List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType) {
