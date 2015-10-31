@@ -41,7 +41,7 @@ class SucceedingTestCase extends AbstractSuperTest {
 		System.out.println(getClass().getName() + " after called");
 	}
 
-	@Test(name = "A nice name for test 2")
+	@Test(name = "A nice name for test 1")
 	void test1() {
 		System.out.println("test1");
 	}

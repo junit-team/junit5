@@ -64,9 +64,9 @@ public final class AnnotationUtils {
 		}
 
 		// Meta-present on directly present annotations?
-		for (Annotation candiateAnnotation : element.getDeclaredAnnotations()) {
-			if (!isInJavaLangAnnotationPackage(candiateAnnotation) && visited.add(candiateAnnotation)) {
-				Optional<A> metaAnnotation = findAnnotation(candiateAnnotation.annotationType(), annotationType,
+		for (Annotation candidateAnnotation : element.getDeclaredAnnotations()) {
+			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
+				Optional<A> metaAnnotation = findAnnotation(candidateAnnotation.annotationType(), annotationType,
 					visited);
 				if (metaAnnotation.isPresent()) {
 					return metaAnnotation;
@@ -108,14 +108,13 @@ public final class AnnotationUtils {
 
 		// @formatter:off
 		return findAllMethodsInHierarchy(clazz, sortOrder).stream()
-				.filter(predicate::test)
+				.filter(predicate)
 				.collect(toList());
 		// @formatter:on
 	}
 
 	/**
 	 * Return all methods in superclass hierarchy except from Object.
-	 * Superclass methods are first.
 	 */
 	public static List<Method> findAllMethodsInHierarchy(Class<?> clazz, MethodSortOrder sortOrder) {
 		// TODO Support interface default methods.
@@ -157,11 +156,13 @@ public final class AnnotationUtils {
 		if (!lower.getName().equals(upper.getName())) {
 			return false;
 		}
-		if (lower.getParameterTypes().length != upper.getParameterTypes().length) {
+		Class<?>[] lowerParameterTypes = lower.getParameterTypes();
+		Class<?>[] upperParameterTypes = upper.getParameterTypes();
+		if (lowerParameterTypes.length != upperParameterTypes.length) {
 			return false;
 		}
-		for (int i = 0; i < lower.getParameterTypes().length; i++) {
-			if (!lower.getParameterTypes()[i].equals(upper.getParameterTypes()[i])) {
+		for (int i = 0; i < lowerParameterTypes.length; i++) {
+			if (!lowerParameterTypes[i].equals(upperParameterTypes[i])) {
 				return false;
 			}
 		}
