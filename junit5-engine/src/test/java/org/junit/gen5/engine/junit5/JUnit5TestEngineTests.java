@@ -18,7 +18,9 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.gen5.api.After;
+import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Before;
+import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
@@ -27,7 +29,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
 import org.opentestalliance.TestSkippedException;
 
 /**
- * Unit tests for {@link JUnit5TestEngine}.
+ * Tests for {@link JUnit5TestEngine}.
  *
  * @author Sam Brannen
  * @since 5.0
@@ -106,6 +108,9 @@ public class JUnit5TestEngineTests {
 
 		engine.execute(new EngineExecutionContext(descriptors, listener));
 
+		Assert.assertTrue("@BeforeAll was not invoked", LocalTestCase.beforeAllInvoked);
+		Assert.assertTrue("@AfterAll was not invoked", LocalTestCase.afterAllInvoked);
+
 		return listener;
 	}
 
@@ -120,11 +125,25 @@ public class JUnit5TestEngineTests {
 
 	private static class LocalTestCase {
 
+		static boolean beforeAllInvoked = false;
+
+		static boolean afterAllInvoked = false;
+
 		static boolean staticBeforeInvoked = false;
 
 		boolean beforeInvoked = false;
 
 		boolean throwExceptionInAfterMethod = false;
+
+		@BeforeAll
+		void beforeAll() {
+			beforeAllInvoked = true;
+		}
+
+		@AfterAll
+		void afterAll() {
+			afterAllInvoked = true;
+		}
 
 		@Before
 		static void staticBefore() {
