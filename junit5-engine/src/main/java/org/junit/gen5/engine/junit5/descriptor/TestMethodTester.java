@@ -10,20 +10,20 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.commons.util.AnnotationUtils;
 
-/**
- * @author Johannes Link
- * @author Sam Brannen
- * @since 5.0
- */
-class TestMethodTester {
+class TestMethodTester extends ReflectionObjectTester {
 
 	boolean accept(Method testMethodCandidate) {
-		return AnnotationUtils.findAnnotation(testMethodCandidate, Test.class).isPresent();
+		if (isPrivate(testMethodCandidate))
+			return false;
+		return hasAnnotation(testMethodCandidate, Test.class);
 	}
 
 }
