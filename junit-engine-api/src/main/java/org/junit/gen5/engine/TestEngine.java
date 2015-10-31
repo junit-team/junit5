@@ -18,14 +18,10 @@ public interface TestEngine {
 		return getClass().getCanonicalName();
 	}
 
-	Collection<TestDescriptor> discoverTests(TestPlanSpecification specification);
+	Collection<TestDescriptor> discoverTests(TestPlanSpecification specification, TestDescriptor engineDescriptor);
 
 	default boolean supports(TestDescriptor testDescriptor) {
 		return testDescriptor.getUniqueId().startsWith(getId());
-	}
-
-	default boolean supportsAll(Collection<TestDescriptor> testDescriptors) {
-		return testDescriptors.stream().allMatch(testDescriptor -> supports(testDescriptor));
 	}
 
 	void execute(EngineExecutionContext context);

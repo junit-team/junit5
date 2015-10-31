@@ -28,17 +28,13 @@ public class TestEngineStub implements TestEngine {
 	}
 
 	@Override
-	public Collection<TestDescriptor> discoverTests(TestPlanSpecification specification) {
+	public Collection<TestDescriptor> discoverTests(TestPlanSpecification specification,
+			TestDescriptor engineDescriptor) {
 		return null;
 	}
 
 	@Override
 	public boolean supports(TestDescriptor testDescriptor) {
-		return false;
-	}
-
-	@Override
-	public boolean supportsAll(Collection<TestDescriptor> testDescriptors) {
 		return false;
 	}
 

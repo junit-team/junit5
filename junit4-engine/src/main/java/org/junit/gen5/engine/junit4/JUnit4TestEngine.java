@@ -34,7 +34,8 @@ public class JUnit4TestEngine implements TestEngine {
 	}
 
 	@Override
-	public Collection<TestDescriptor> discoverTests(TestPlanSpecification specification) {
+	public Collection<TestDescriptor> discoverTests(TestPlanSpecification specification,
+			TestDescriptor engineDescriptor) {
 		Set<TestDescriptor> result = new LinkedHashSet<>();
 		for (TestPlanSpecificationElement element : specification) {
 			if (element instanceof ClassNameSpecification) {
@@ -45,7 +46,7 @@ public class JUnit4TestEngine implements TestEngine {
 				// TODO This skips malformed JUnit 4 tests, too
 				if (!(runner instanceof ErrorReportingRunner)) {
 					Description root = runner.getDescription();
-					DescriptionTestDescriptor rootDescriptor = new DescriptionTestDescriptor(null, root);
+					DescriptionTestDescriptor rootDescriptor = new DescriptionTestDescriptor(engineDescriptor, root);
 					addRecursively(rootDescriptor, result);
 				}
 			}

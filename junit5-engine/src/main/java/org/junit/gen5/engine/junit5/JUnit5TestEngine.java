@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.gen5.engine.ClassNameSpecification;
-import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
@@ -46,23 +45,21 @@ public class JUnit5TestEngine implements TestEngine {
 	}
 
 	@Override
-	public List<TestDescriptor> discoverTests(TestPlanSpecification specification) {
+	public List<TestDescriptor> discoverTests(TestPlanSpecification specification, TestDescriptor engineDescriptor) {
 		TestDescriptorResolverRegistry testDescriptorResolverRegistry = createResolverRegistry();
 
 		// TODO Avoid redundant creation of TestDescriptors during this phase
 		Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
-		EngineDescriptor root = new EngineDescriptor(this);
-		testDescriptors.add(root);
 
 		for (TestPlanSpecificationElement element : specification) {
-			testDescriptors.addAll(resolveElement(testDescriptorResolverRegistry, root, element));
+			testDescriptors.addAll(resolveElement(testDescriptorResolverRegistry, engineDescriptor, element));
 		}
 		return new ArrayList<>(testDescriptors);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Set<TestDescriptor> resolveElement(TestDescriptorResolverRegistry testDescriptorResolverRegistry,
-			EngineDescriptor root, TestPlanSpecificationElement element) {
+			TestDescriptor root, TestPlanSpecificationElement element) {
 		Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
 		TestDescriptorResolver testDescriptorResolver = testDescriptorResolverRegistry.forType(element.getClass());
 		TestDescriptor descriptor = testDescriptorResolver.resolve(root, element);

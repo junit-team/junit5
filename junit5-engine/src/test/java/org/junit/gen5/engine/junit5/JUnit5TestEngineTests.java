@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.api.Assumptions.*;
+import static org.junit.gen5.api.Assumptions.assumeTrue;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionListener;
@@ -34,14 +35,21 @@ import org.opentestalliance.TestSkippedException;
  */
 public class JUnit5TestEngineTests {
 
+	private JUnit5TestEngine engine;
+
+	@org.junit.Before
+	public void init() {
+		engine = new JUnit5TestEngine();
+	}
+
 	@org.junit.Test
 	public void executeTestsFromFromClasses() {
-		JUnit5TestEngine engine = new JUnit5TestEngine();
 
 		TestPlanSpecification spec = TestPlanSpecification.build(
 			TestPlanSpecification.forClassName(LocalTestCase.class.getName()));
 
-		List<TestDescriptor> descriptors = engine.discoverTests(spec);
+		List<TestDescriptor> descriptors = discoverTests(spec);
+
 		Assert.assertNotNull(descriptors);
 		Assert.assertEquals("# descriptors", 8, descriptors.size());
 
@@ -56,14 +64,20 @@ public class JUnit5TestEngineTests {
 		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
 	}
 
+	private List<TestDescriptor> discoverTests(TestPlanSpecification spec) {
+		//For some reason the JUnit5Engine only works correctly if the engine descriptor is in the list of descriptors
+		EngineDescriptor engineDescriptor = new EngineDescriptor(engine);
+		List<TestDescriptor> descriptors = engine.discoverTests(spec, engineDescriptor);
+		descriptors.add(engineDescriptor);
+		return descriptors;
+	}
+
 	@org.junit.Test
 	public void executeTestFromUniqueId() {
-		JUnit5TestEngine engine = new JUnit5TestEngine();
-
 		TestPlanSpecification spec = TestPlanSpecification.build(TestPlanSpecification.forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"));
 
-		List<TestDescriptor> descriptors = engine.discoverTests(spec);
+		List<TestDescriptor> descriptors = discoverTests(spec);
 		Assert.assertNotNull(descriptors);
 		Assert.assertEquals("# tests", 3, descriptors.size());
 
@@ -80,12 +94,10 @@ public class JUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void executeTestFromUniqueIdWithExceptionThrownInAfterMethod() {
-		JUnit5TestEngine engine = new JUnit5TestEngine();
-
 		TestPlanSpecification spec = TestPlanSpecification.build(TestPlanSpecification.forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#throwExceptionInAfterMethod()"));
 
-		List<TestDescriptor> descriptors = engine.discoverTests(spec);
+		List<TestDescriptor> descriptors = discoverTests(spec);
 		Assert.assertNotNull(descriptors);
 		Assert.assertEquals("# tests", 3, descriptors.size());
 
@@ -102,14 +114,12 @@ public class JUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void executeCompositeTestPlanSpecification() {
-		JUnit5TestEngine engine = new JUnit5TestEngine();
-
 		TestPlanSpecification spec = TestPlanSpecification.build(
 			TestPlanSpecification.forUniqueId(
 				"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
 			TestPlanSpecification.forClassName(LocalTestCase.class.getName()));
 
-		List<TestDescriptor> descriptors = engine.discoverTests(spec);
+		List<TestDescriptor> descriptors = discoverTests(spec);
 		Assert.assertNotNull(descriptors);
 		Assert.assertEquals("# descriptors", 8, descriptors.size());
 
