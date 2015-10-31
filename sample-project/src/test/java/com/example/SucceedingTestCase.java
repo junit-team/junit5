@@ -11,13 +11,25 @@
 package com.example;
 
 import org.junit.gen5.api.After;
+import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Before;
+import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Test;
 
 /**
  * Named *TestCase so Gradle will not try to run it.
  */
 class SucceedingTestCase {
+
+	@BeforeAll
+	void initClass() {
+		System.out.println(getClass().getName() + " before all called");
+	}
+
+	@AfterAll
+	void teardownClass() {
+		System.out.println(getClass().getName() + " after all called");
+	}
 
 	@Before
 	void before() {
@@ -31,11 +43,10 @@ class SucceedingTestCase {
 
 	@Test(name = "A nice name for test 2")
 	void test1() {
-
 	}
 
 	@Test(name = "A test name with umlauts äöüÄÖÜß")
 	void test2() {
-
 	}
+
 }
