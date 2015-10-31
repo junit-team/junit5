@@ -92,11 +92,9 @@ public final class AnnotationUtils {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 
-		// TODO Support meta-annotations.
-
 		// @formatter:off
 		return findAllMethodsInHierarchy(clazz).stream()
-				.filter(method -> method.isAnnotationPresent(annotationType))
+				.filter(method -> findAnnotation(method, annotationType).isPresent())
 				.collect(toList());
 		// @formatter:on
 	}
