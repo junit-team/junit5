@@ -13,11 +13,17 @@ package org.junit.gen5.engine.junit5.descriptor;
 import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.util.AnnotationUtils;
 
+/**
+ * @author Johannes Link
+ * @author Sam Brannen
+ * @since 5.0
+ */
 class TestMethodTester {
 
 	boolean accept(Method testMethodCandidate) {
-		return testMethodCandidate.isAnnotationPresent(Test.class);
+		return AnnotationUtils.findAnnotation(testMethodCandidate, Test.class).isPresent();
 	}
 
 }

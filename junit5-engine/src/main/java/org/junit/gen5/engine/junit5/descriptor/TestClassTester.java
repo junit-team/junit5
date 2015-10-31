@@ -13,6 +13,10 @@ package org.junit.gen5.engine.junit5.descriptor;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
+/**
+ * @author Johannes Link
+ * @since 5.0
+ */
 class TestClassTester {
 
 	private final TestMethodTester methodTester = new TestMethodTester();

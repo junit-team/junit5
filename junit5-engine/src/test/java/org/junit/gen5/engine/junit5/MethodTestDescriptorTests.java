@@ -10,9 +10,12 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.gen5.api.Assertions.*;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.List;
@@ -50,7 +53,6 @@ public class MethodTestDescriptorTests {
 		ClassTestDescriptor parent = new ClassTestDescriptor(testClass, ENGINE_DESCRIPTOR);
 		MethodTestDescriptor descriptor = new MethodTestDescriptor(testMethod, parent);
 
-		System.out.println("DEBUG - " + descriptor);
 		assertEquals(TEST_METHOD_UID, descriptor.getUniqueId());
 		assertEquals(testClass, descriptor.getParent().getTestClass());
 		assertEquals(testMethod, descriptor.getTestMethod());
@@ -64,10 +66,21 @@ public class MethodTestDescriptorTests {
 		ClassTestDescriptor parent = new ClassTestDescriptor(testClass, ENGINE_DESCRIPTOR);
 		MethodTestDescriptor descriptor = new MethodTestDescriptor(testMethod, parent);
 
-		System.out.println("DEBUG - " + descriptor);
 		assertEquals(testClass, descriptor.getParent().getTestClass());
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom test name", descriptor.getDisplayName(), "display name:");
+	}
+
+	@org.junit.Test
+	public void constructFromMethodWithCustomDisplayNameInCustomTestAnnotation() throws Exception {
+		Class<?> testClass = getClass();
+		Method testMethod = testClass.getDeclaredMethod("customTestAnnotation");
+		ClassTestDescriptor parent = new ClassTestDescriptor(testClass, ENGINE_DESCRIPTOR);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(testMethod, parent);
+
+		assertEquals(testClass, descriptor.getParent().getTestClass());
+		assertEquals(testMethod, descriptor.getTestMethod());
+		assertEquals("custom name", descriptor.getDisplayName(), "display name:");
 	}
 
 	@org.junit.Test
@@ -77,7 +90,6 @@ public class MethodTestDescriptorTests {
 		ClassTestDescriptor parent = new ClassTestDescriptor(testClass, ENGINE_DESCRIPTOR);
 		MethodTestDescriptor descriptor = new MethodTestDescriptor(testMethod, parent);
 
-		System.out.println("DEBUG - " + descriptor);
 		assertEquals(TEST_METHOD_STRING_BIGDECIMAL_UID, descriptor.getUniqueId());
 		assertEquals(testClass, descriptor.getParent().getTestClass());
 		assertEquals(testMethod, descriptor.getTestMethod());
@@ -123,4 +135,15 @@ public class MethodTestDescriptorTests {
 	@Test(name = "custom test name")
 	void foo() {
 	}
+
+	@CustomTestAnnotation
+	void customTestAnnotation() {
+	}
+
+	@Test(name = "custom name")
+	@Target(ElementType.METHOD)
+	@Retention(RetentionPolicy.RUNTIME)
+	static @interface CustomTestAnnotation {
+	}
+
 }

@@ -18,6 +18,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
@@ -48,15 +49,12 @@ public class MethodTestDescriptor implements TestDescriptor {
 	}
 
 	private String determineDisplayName() {
-		Test test = testMethod.getAnnotation(Test.class);
-		if (test != null) {
-			String customName = test.name();
-			if (!StringUtils.isBlank(customName)) {
-				return customName;
-			}
-		}
-		return testMethod.getName();
-
+		// @formatter:off
+		return AnnotationUtils.findAnnotation(this.testMethod, Test.class)
+				.map(Test::name)
+				.filter(name -> !StringUtils.isBlank(name))
+				.orElse(this.testMethod.getName());
+		// @formatter:on
 	}
 
 	@Override

@@ -14,6 +14,10 @@ import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.api.Assumptions.*;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.List;
 
 import org.junit.Assert;
@@ -44,13 +48,28 @@ public class JUnit5TestEngineTests {
 	}
 
 	@org.junit.Test
+	public void executeCompositeTestPlanSpecification() {
+		TestPlanSpecification spec = build(
+			forUniqueId("junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
+			forClassName(LocalTestCase.class.getName()));
+
+		TrackingTestExecutionListener listener = executeTests(spec, 9);
+
+		Assert.assertEquals("# tests started", 7, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 3, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
+		Assert.assertEquals("# tests aborted", 1, listener.testAbortedCount.get());
+		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
+	}
+
+	@org.junit.Test
 	public void executeTestsForClassName() {
 		TestPlanSpecification spec = build(forClassName(LocalTestCase.class.getName()));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 8);
+		TrackingTestExecutionListener listener = executeTests(spec, 9);
 
-		Assert.assertEquals("# tests started", 6, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests started", 7, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 3, listener.testSucceededCount.get());
 		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
 		Assert.assertEquals("# tests aborted", 1, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
@@ -82,21 +101,6 @@ public class JUnit5TestEngineTests {
 		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
 		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
-	}
-
-	@org.junit.Test
-	public void executeCompositeTestPlanSpecification() {
-		TestPlanSpecification spec = build(
-			forUniqueId("junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
-			forClassName(LocalTestCase.class.getName()));
-
-		TrackingTestExecutionListener listener = executeTests(spec, 8);
-
-		Assert.assertEquals("# tests started", 6, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 1, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
 	}
 
 	private TrackingTestExecutionListener executeTests(TestPlanSpecification spec, int expectedDescriptorCount) {
@@ -181,6 +185,11 @@ public class JUnit5TestEngineTests {
 			/* no-op */
 		}
 
+		@CustomTestAnnotation
+		void customTestAnnotation() {
+			/* no-op */
+		}
+
 		@Test
 		void skipped() {
 			// TODO Switch to @Ignore once we support it.
@@ -197,6 +206,12 @@ public class JUnit5TestEngineTests {
 			fail("#fail");
 		}
 
+	}
+
+	@Test
+	@Target(ElementType.METHOD)
+	@Retention(RetentionPolicy.RUNTIME)
+	static @interface CustomTestAnnotation {
 	}
 
 }
