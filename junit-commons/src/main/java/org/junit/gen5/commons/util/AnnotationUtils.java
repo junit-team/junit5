@@ -17,6 +17,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -119,19 +120,52 @@ public final class AnnotationUtils {
 	public static List<Method> findAllMethodsInHierarchy(Class<?> clazz, MethodSortOrder sortOrder) {
 		// TODO Support interface default methods.
 		// TODO Determine if we need to support bridged methods.
+
+		List<Method> localMethods = Arrays.asList(clazz.getDeclaredMethods());
+
+		// @formatter:off
+		List<Method> superclassMethods = getSuperclassMethods(clazz, sortOrder).stream()
+				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
+				.collect(toList());
+		// @formatter:on
+
 		List<Method> methods = new ArrayList<>();
 		if (sortOrder == MethodSortOrder.HierarchyDown) {
-			if (clazz.getSuperclass() != Object.class) {
-				methods.addAll(findAllMethodsInHierarchy(clazz.getSuperclass(), sortOrder));
-			}
+			methods.addAll(superclassMethods);
 		}
-		methods.addAll(Arrays.asList(clazz.getDeclaredMethods()));
+		methods.addAll(localMethods);
 		if (sortOrder == MethodSortOrder.HierarchyUp) {
-			if (clazz.getSuperclass() != Object.class) {
-				methods.addAll(findAllMethodsInHierarchy(clazz.getSuperclass(), sortOrder));
-			}
+			methods.addAll(superclassMethods);
 		}
 		return methods;
+	}
+
+	private static List<Method> getSuperclassMethods(Class<?> clazz, MethodSortOrder sortOrder) {
+		if (clazz.getSuperclass() != Object.class) {
+			return findAllMethodsInHierarchy(clazz.getSuperclass(), sortOrder);
+		}
+		else {
+			return Collections.emptyList();
+		}
+	}
+
+	private static boolean isMethodShadowedByLocalMethods(Method method, List<Method> localMethods) {
+		return localMethods.stream().anyMatch(local -> isMethodShadowedBy(method, local));
+	}
+
+	private static boolean isMethodShadowedBy(Method upper, Method lower) {
+		if (!lower.getName().equals(upper.getName())) {
+			return false;
+		}
+		if (lower.getParameterTypes().length != upper.getParameterTypes().length) {
+			return false;
+		}
+		for (int i = 0; i < lower.getParameterTypes().length; i++) {
+			if (!lower.getParameterTypes()[i].equals(upper.getParameterTypes()[i])) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public static boolean isInJavaLangAnnotationPackage(Annotation annotation) {

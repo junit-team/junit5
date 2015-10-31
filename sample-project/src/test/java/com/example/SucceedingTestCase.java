@@ -70,6 +70,12 @@ abstract class AbstractSuperTest {
 		System.out.println("test from superclass");
 	}
 
+	@Test
+	//Shadowed by test2 in sub class
+	void test2() {
+		System.out.println("test2 from superclass should never be called because it's shadowed");
+	}
+
 	@After
 	void afterFromSuperclass() {
 		System.out.println(getClass().getName() + " after from super class called");
