@@ -100,12 +100,13 @@ public final class AnnotationUtils {
 	}
 
 	/**
-	 Return all methods in superclass hierarchy except from Object.
-	 Superclass methods are first.
-	 **/
+	 * Return all methods in superclass hierarchy except from Object.
+	 * Superclass methods are first.
+	 */
 	public static List<Method> findAllMethodsInHierarchy(Class<?> clazz) {
-		//Todo: Support interface default methods
-		List<Method> methods = new ArrayList();
+		// TODO Support interface default methods.
+		// TODO Determine if we need to support bridged methods.
+		List<Method> methods = new ArrayList<>();
 		if (clazz.getSuperclass() != Object.class) {
 			methods.addAll(findAllMethodsInHierarchy(clazz.getSuperclass()));
 		}
