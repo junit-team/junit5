@@ -10,8 +10,6 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import java.util.Arrays;
-
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.AnnotationUtils;
 
@@ -19,8 +17,6 @@ import org.junit.gen5.commons.util.AnnotationUtils;
  * @since 5.0
  */
 class TestClassTester extends ReflectionObjectTester {
-
-	private final TestMethodTester methodTester = new TestMethodTester();
 
 	boolean accept(Class<?> testClassCandidate) {
 		if (isAbstract(testClassCandidate))
