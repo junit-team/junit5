@@ -83,6 +83,7 @@ class RunListenerAdapter extends RunListener {
 
 	private DescriptionTestDescriptor lookupTestDescriptor(Description description) {
 		DescriptionTestDescriptor testDescriptor = description2descriptor.get(description);
+		// TODO can we make sure this will not happen?
 		Preconditions.notNull(testDescriptor, () -> "Could not find TestDescriptor for Description " + description);
 		return testDescriptor;
 	}
