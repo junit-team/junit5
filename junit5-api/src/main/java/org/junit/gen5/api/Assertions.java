@@ -200,10 +200,6 @@ public final class Assertions {
 		}
 	}
 
-	public static void assertThrows(Class<? extends Throwable> expected, Executable executable) {
-		expectThrows(expected, executable);
-	}
-
 	public static void assertAll(Executable... asserts) {
 		assertAll("Multiple failures:", asserts);
 	}
@@ -227,6 +223,10 @@ public final class Assertions {
 		if (multipleFailuresException.hasFailures()) {
 			throw multipleFailuresException;
 		}
+	}
+
+	public static void assertThrows(Class<? extends Throwable> expected, Executable executable) {
+		expectThrows(expected, executable);
 	}
 
 	@SuppressWarnings("unchecked")
