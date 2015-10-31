@@ -53,10 +53,10 @@ public class JUnit5TestEngineTests {
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
 			forClassName(LocalTestCase.class.getName()));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 9);
+		TrackingTestExecutionListener listener = executeTests(spec, 10);
 
-		Assert.assertEquals("# tests started", 7, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 3, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests started", 8, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 4, listener.testSucceededCount.get());
 		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
 		Assert.assertEquals("# tests aborted", 1, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
@@ -66,10 +66,10 @@ public class JUnit5TestEngineTests {
 	public void executeTestsForClassName() {
 		TestPlanSpecification spec = build(forClassName(LocalTestCase.class.getName()));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 9);
+		TrackingTestExecutionListener listener = executeTests(spec, 10);
 
-		Assert.assertEquals("# tests started", 7, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 3, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests started", 8, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 4, listener.testSucceededCount.get());
 		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
 		Assert.assertEquals("# tests aborted", 1, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
@@ -127,7 +127,16 @@ public class JUnit5TestEngineTests {
 		return descriptors;
 	}
 
-	private static class LocalTestCase {
+	private static abstract class AbstractTestCase {
+
+		@Test
+		void fromSuperclass() {
+			/* no-op */
+		}
+
+	}
+
+	private static class LocalTestCase extends AbstractTestCase {
 
 		static boolean beforeAllInvoked = false;
 
