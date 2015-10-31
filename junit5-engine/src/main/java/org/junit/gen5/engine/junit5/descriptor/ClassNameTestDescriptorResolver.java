@@ -48,14 +48,14 @@ public class ClassNameTestDescriptorResolver
 			// @formatter:on
 
 			// @formatter:off
-			List<ClassTestDescriptor> groups = Arrays.stream(parent.getTestClass().getDeclaredClasses())
-				.filter(Class::isMemberClass)
-				.map(clazz -> new ClassTestDescriptor(clazz, parent))
-				.collect(toList());
-			children.addAll(groups);
+//			List<ClassTestDescriptor> groups = Arrays.stream(parent.getTestClass().getDeclaredClasses())
+//				.filter(Class::isMemberClass)
+//				.map(clazz -> new ClassTestDescriptor(clazz, parent))
+//				.collect(toList());
+//			children.addAll(groups);
 			// @formatter:on
-
-			groups.forEach(group -> children.addAll(resolveChildren(group, element)));
+			//
+			//			groups.forEach(group -> children.addAll(resolveChildren(group, element)));
 
 			return children;
 		}

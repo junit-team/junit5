@@ -111,4 +111,12 @@ class SampleTestCase {
 		// @formatter:on
 	}
 
+	//Currently ignored by junit5 engine
+	class InnerTestCase {
+
+		@Test
+		void innerTest() {
+
+		}
+	}
 }
