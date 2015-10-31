@@ -10,9 +10,11 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
+/**
+ * @since 5.0
+ */
 class TestClassTester extends ReflectionObjectTester {
 
 	private final TestMethodTester methodTester = new TestMethodTester();
@@ -23,10 +25,6 @@ class TestClassTester extends ReflectionObjectTester {
 		if (testClassCandidate.isLocalClass())
 			return false;
 		return hasTestMethods(testClassCandidate);
-	}
-
-	private boolean isAbstract(Class<?> testClassCandidate) {
-		return (testClassCandidate.getModifiers() & Modifier.ABSTRACT) != 0;
 	}
 
 	private boolean hasTestMethods(Class<?> testClassCandidate) {
