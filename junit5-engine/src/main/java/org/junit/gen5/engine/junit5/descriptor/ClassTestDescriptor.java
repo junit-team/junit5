@@ -25,8 +25,7 @@ import org.junit.gen5.engine.TestDescriptor;
  * @since 5.0
  */
 @Data
-@EqualsAndHashCode
-public class ClassTestDescriptor implements TestDescriptor {
+public class ClassTestDescriptor extends AbstractTestDescriptor {
 
 	private final TestDescriptor parent;
 	private final Class<?> testClass;
