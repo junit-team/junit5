@@ -10,9 +10,9 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
@@ -22,39 +22,38 @@ public class SpecificationResolver {
 
 	private final Set testDescriptors;
 	private final TestDescriptor root;
-	private final TestDescriptorResolverRegistry resolverRegistry;
 
 	public SpecificationResolver(Set testDescriptors, TestDescriptor root) {
 		this.testDescriptors = testDescriptors;
 		this.root = root;
-		this.resolverRegistry = createResolverRegistry();
 	}
 
 	public void resolveElement(TestPlanSpecificationElement element) {
-		testDescriptors.addAll(resolveElement(resolverRegistry, root, element));
+		if (element.getClass() == ClassNameSpecification.class) {
+			resolveClassNameSpecification((ClassNameSpecification) element);
+		}
+		if (element.getClass() == UniqueIdSpecification.class) {
+			resolveUniqueIdSpecification((UniqueIdSpecification) element);
+		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Set<TestDescriptor> resolveElement(TestDescriptorResolverRegistry testDescriptorResolverRegistry,
-			TestDescriptor root, TestPlanSpecificationElement element) {
-		Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
-		TestDescriptorResolver testDescriptorResolver = testDescriptorResolverRegistry.forType(element.getClass());
-		TestDescriptor descriptor = testDescriptorResolver.resolve(root, element);
-		//Get rid of null check
+	private void resolveUniqueIdSpecification(UniqueIdSpecification element) {
+		UniqueIdParts uniqueIdParts = new UniqueIdParts(element.getUniqueId());
+		Preconditions.condition(element.getUniqueId().equals(uniqueIdParts.rest()), "Unique ID is: " + uniqueIdParts.rest());
+		String engingeId = uniqueIdParts.pop();
+		TestDescriptor descriptor = new UniqueIdTestDescriptorResolver().resolve(root, element);
 		if (descriptor != null) {
 			testDescriptors.add(descriptor);
-			testDescriptors.addAll(testDescriptorResolver.resolveChildren(descriptor, element));
+			testDescriptors.addAll(new UniqueIdTestDescriptorResolver().resolveChildren(descriptor, element));
 		}
-		return testDescriptors;
 	}
 
-	private TestDescriptorResolverRegistry createResolverRegistry() {
-		// TODO Look up TestDescriptorResolverRegistry within the
-		// ApplicationExecutionContext
-		TestDescriptorResolverRegistry testDescriptorResolverRegistry = new TestDescriptorResolverRegistry();
-		testDescriptorResolverRegistry.addResolver(ClassNameSpecification.class, new ClassNameTestDescriptorResolver());
-		testDescriptorResolverRegistry.addResolver(UniqueIdSpecification.class, new UniqueIdTestDescriptorResolver());
-		return testDescriptorResolverRegistry;
+	private void resolveClassNameSpecification(ClassNameSpecification element) {
+		ClassTestDescriptor descriptor = new ClassNameTestDescriptorResolver().resolve(root, element);
+		if (descriptor != null) {
+			testDescriptors.add(descriptor);
+			testDescriptors.addAll(new ClassNameTestDescriptorResolver().resolveChildren(descriptor, element));
+		}
 	}
 
 }
