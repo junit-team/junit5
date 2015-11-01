@@ -87,11 +87,14 @@ class SampleTestCase {
 
 	}
 
-	//	@Test
-	//	void argumentInjectionByAnnotation(@CustomAnnotation String value) {
-	//		assertTrue(value != null);
-	//
-	//	}
+	@Test
+	void argumentInjectionByAnnotation(@CustomAnnotation String value) {
+
+		//		assertTrue(customType != null);    /not yet there
+		assertTrue(true);
+
+	}
+
 
 	@Test(name = "with succeeding assertAll")
 	void assertAllTest() {

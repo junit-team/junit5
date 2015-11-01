@@ -10,17 +10,17 @@
 
 package com.example;
 
+import java.util.*;
+
+
 public class CustomType {
 
-	private String label;
+	private Date date;
 
-	public CustomType(String label) {
-		this.label = label;
-	}
 
 	@Override
 	public String toString() {
-		return "CustomType: " + this.label;
+		return "CustomType: " + this.date;
 	}
 
 }
