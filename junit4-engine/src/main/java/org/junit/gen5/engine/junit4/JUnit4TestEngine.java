@@ -77,7 +77,7 @@ public class JUnit4TestEngine implements TestEngine {
 	@Override
 	public void execute(EngineExecutionContext context) {
 		//@formatter:off
-		Map<RunnerTestDescriptor, List<DescriptionTestDescriptor>> groupedByRunner = context.getTestDescriptions().stream()
+		Map<RunnerTestDescriptor, List<DescriptionTestDescriptor>> groupedByRunner = context.getTestDescriptors().stream()
 			.filter(testDescriptor -> !(testDescriptor instanceof RunnerTestDescriptor))
 			.map(testDescriptor -> (DescriptionTestDescriptor) testDescriptor)
 			.collect(groupingBy(testDescriptor -> findRunner(testDescriptor)));

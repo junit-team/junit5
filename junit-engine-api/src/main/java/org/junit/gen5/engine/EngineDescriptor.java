@@ -17,13 +17,12 @@ public class EngineDescriptor implements TestDescriptor {
 
 	private TestEngine engine;
 
+	// Defined as a field so that Lombok includes it in toString().
+	private String uniqueId;
+
 	public EngineDescriptor(TestEngine engine) {
 		this.engine = engine;
-	}
-
-	@Override
-	public final String getUniqueId() {
-		return engine.getId();
+		this.uniqueId = engine.getId();
 	}
 
 	@Override
