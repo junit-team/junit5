@@ -39,7 +39,8 @@ public class SpecificationResolver {
 
 	private void resolveUniqueIdSpecification(UniqueIdSpecification element) {
 		UniqueIdParts uniqueIdParts = new UniqueIdParts(element.getUniqueId());
-		Preconditions.condition(element.getUniqueId().equals(uniqueIdParts.rest()), "Unique ID is: " + uniqueIdParts.rest());
+		Preconditions.condition(element.getUniqueId().equals(uniqueIdParts.rest()),
+			"Unique ID is: " + uniqueIdParts.rest());
 		String engingeId = uniqueIdParts.pop();
 		TestDescriptor descriptor = new UniqueIdTestDescriptorResolver().resolve(root, element);
 		if (descriptor != null) {
