@@ -46,15 +46,20 @@ public class JUnit5TestEngine implements TestEngine {
 
 	@Override
 	public List<TestDescriptor> discoverTests(TestPlanSpecification specification, TestDescriptor engineDescriptor) {
-		TestDescriptorResolverRegistry testDescriptorResolverRegistry = createResolverRegistry();
-
 		// TODO Avoid redundant creation of TestDescriptors during this phase
 		Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
+		resolveSpecification(specification, engineDescriptor, testDescriptors);
+		return new ArrayList<>(testDescriptors);
+	}
+
+	// Isolated this step to allow easier experimentation / branching / pull requesting
+	private void resolveSpecification(TestPlanSpecification specification, TestDescriptor engineDescriptor,
+			Set<TestDescriptor> testDescriptors) {
+		TestDescriptorResolverRegistry testDescriptorResolverRegistry = createResolverRegistry();
 
 		for (TestPlanSpecificationElement element : specification) {
 			testDescriptors.addAll(resolveElement(testDescriptorResolverRegistry, engineDescriptor, element));
 		}
-		return new ArrayList<>(testDescriptors);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
