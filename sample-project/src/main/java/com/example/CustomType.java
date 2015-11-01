@@ -12,11 +12,9 @@ package com.example;
 
 import java.util.*;
 
-
 public class CustomType {
 
 	private Date date;
-
 
 	@Override
 	public String toString() {

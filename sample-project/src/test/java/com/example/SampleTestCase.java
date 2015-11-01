@@ -95,7 +95,6 @@ class SampleTestCase {
 
 	}
 
-
 	@Test(name = "with succeeding assertAll")
 	void assertAllTest() {
 		Map<String, String> person = new HashMap<String, String>();
