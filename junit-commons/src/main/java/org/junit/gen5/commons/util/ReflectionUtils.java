@@ -13,6 +13,7 @@ package org.junit.gen5.commons.util;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * @author Stefan Bechtold
@@ -39,7 +40,14 @@ public class ReflectionUtils {
 		if (!method.isAccessible()) {
 			method.setAccessible(true);
 		}
-		return method.invoke(testInstance);
+
+		//TODO: do properly
+		if (method.getParameterCount() == 0)
+			return method.invoke(testInstance);
+
+		Object[] args = new Object[] { null };
+
+		return method.invoke(testInstance, args);
 	}
 
 	public static Class<?> loadClass(String name) {

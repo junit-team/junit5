@@ -79,6 +79,20 @@ class SampleTestCase {
 		// no-op
 	}
 
+	@Test
+	void argumentInjectionByType(CustomType customType) {
+
+		//		assertTrue(customType != null);    /not yet there
+		assertTrue(true);
+
+	}
+
+	//	@Test
+	//	void argumentInjectionByAnnotation(@CustomAnnotation String value) {
+	//		assertTrue(value != null);
+	//
+	//	}
+
 	@Test(name = "with succeeding assertAll")
 	void assertAllTest() {
 		Map<String, String> person = new HashMap<String, String>();
