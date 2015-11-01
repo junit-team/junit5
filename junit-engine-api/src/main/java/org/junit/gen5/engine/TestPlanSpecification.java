@@ -52,6 +52,6 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 	@Override
 	public Iterator<TestPlanSpecificationElement> iterator() {
 		return unmodifiableList(elements).iterator();
-	};
+	}
 
 }

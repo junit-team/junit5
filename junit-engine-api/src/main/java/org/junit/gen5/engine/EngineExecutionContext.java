@@ -19,8 +19,10 @@ import lombok.Value;
 @Value
 public class EngineExecutionContext {
 
-	private Collection<TestDescriptor> testDescriptions;
+	private Collection<TestDescriptor> testDescriptors;
+
 	private TestExecutionListener testExecutionListener;
-	private final Map<String, Object> attributes = new HashMap<>();
+
+	private Map<String, Object> attributes = new HashMap<>();
 
 }

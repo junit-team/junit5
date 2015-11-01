@@ -36,12 +36,10 @@ import org.junit.gen5.engine.junit5.execution.TestExecutionNodeResolver;
 
 public class JUnit5TestEngine implements TestEngine {
 
-	// TODO Consider using class names for engine IDs.
-	private static final String ENGINE_ID = "junit5";
-
 	@Override
 	public String getId() {
-		return ENGINE_ID;
+		// TODO Consider using class names for engine IDs.
+		return "junit5";
 	}
 
 	@Override
@@ -96,7 +94,7 @@ public class JUnit5TestEngine implements TestEngine {
 	public void execute(EngineExecutionContext context) {
 
 		Map<TestDescriptor, TestExecutionNode> nodes = new HashMap<>();
-		for (TestDescriptor testDescriptor : context.getTestDescriptions()) {
+		for (TestDescriptor testDescriptor : context.getTestDescriptors()) {
 			nodes.put(testDescriptor, TestExecutionNodeResolver.forDescriptor(testDescriptor));
 		}
 
@@ -109,7 +107,7 @@ public class JUnit5TestEngine implements TestEngine {
 			}
 
 			// @formatter:off
-			List<TestExecutionNode> childrenForCurrentNode = context.getTestDescriptions().stream()
+			List<TestExecutionNode> childrenForCurrentNode = context.getTestDescriptors().stream()
 					.filter(testDescriptor -> currentTestDescriptor.equals(testDescriptor.getParent()))
 					.map(testDescriptor -> nodes.get(testDescriptor))
 					.collect(toList());
