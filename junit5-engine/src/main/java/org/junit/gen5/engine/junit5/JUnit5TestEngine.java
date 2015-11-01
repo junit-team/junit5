@@ -28,6 +28,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.UniqueIdSpecification;
 import org.junit.gen5.engine.junit5.descriptor.ClassNameTestDescriptorResolver;
+import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;
 import org.junit.gen5.engine.junit5.descriptor.TestDescriptorResolver;
 import org.junit.gen5.engine.junit5.descriptor.TestDescriptorResolverRegistry;
 import org.junit.gen5.engine.junit5.descriptor.UniqueIdTestDescriptorResolver;
@@ -53,34 +54,10 @@ public class JUnit5TestEngine implements TestEngine {
 	// Isolated this step to allow easier experimentation / branching / pull requesting
 	private void resolveSpecification(TestPlanSpecification specification, TestDescriptor engineDescriptor,
 			Set<TestDescriptor> testDescriptors) {
-		TestDescriptorResolverRegistry testDescriptorResolverRegistry = createResolverRegistry();
-
+		SpecificationResolver resolver = new SpecificationResolver(testDescriptors, engineDescriptor);
 		for (TestPlanSpecificationElement element : specification) {
-			testDescriptors.addAll(resolveElement(testDescriptorResolverRegistry, engineDescriptor, element));
+			resolver.resolveElement(element);
 		}
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Set<TestDescriptor> resolveElement(TestDescriptorResolverRegistry testDescriptorResolverRegistry,
-			TestDescriptor root, TestPlanSpecificationElement element) {
-		Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
-		TestDescriptorResolver testDescriptorResolver = testDescriptorResolverRegistry.forType(element.getClass());
-		TestDescriptor descriptor = testDescriptorResolver.resolve(root, element);
-		//Get rid of null check
-		if (descriptor != null) {
-			testDescriptors.add(descriptor);
-			testDescriptors.addAll(testDescriptorResolver.resolveChildren(descriptor, element));
-		}
-		return testDescriptors;
-	}
-
-	private TestDescriptorResolverRegistry createResolverRegistry() {
-		// TODO Look up TestDescriptorResolverRegistry within the
-		// ApplicationExecutionContext
-		TestDescriptorResolverRegistry testDescriptorResolverRegistry = new TestDescriptorResolverRegistry();
-		testDescriptorResolverRegistry.addResolver(ClassNameSpecification.class, new ClassNameTestDescriptorResolver());
-		testDescriptorResolverRegistry.addResolver(UniqueIdSpecification.class, new UniqueIdTestDescriptorResolver());
-		return testDescriptorResolverRegistry;
 	}
 
 	@Override
