@@ -10,12 +10,11 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.commons.util.ObjectUtils.*;
+import static org.junit.gen5.commons.util.ObjectUtils.nullSafeToString;
 
 import java.lang.reflect.Method;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.AnnotationUtils;
@@ -30,8 +29,7 @@ import org.junit.gen5.engine.TestDescriptor;
  * @since 5.0
  */
 @Data
-@EqualsAndHashCode
-public class MethodTestDescriptor implements TestDescriptor {
+public class MethodTestDescriptor extends AbstractTestDescriptor {
 
 	private final String displayName;
 
