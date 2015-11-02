@@ -24,11 +24,19 @@ public class UniqueIdParts {
 	}
 
 	private void splitIntoParts(String uniqueId) {
-		parts.add(uniqueId);
+		String currentPart = "";
+		for (char c : uniqueId.toCharArray()) {
+			if (SEPARATORS.contains(Character.toString(c))) {
+				parts.add(currentPart);
+				currentPart = "";
+			}
+			currentPart += c;
+		}
+		parts.add(currentPart);
 	}
 
 	public String pop() {
-		return null;
+		return parts.remove(0);
 	}
 
 	public String rest() {
