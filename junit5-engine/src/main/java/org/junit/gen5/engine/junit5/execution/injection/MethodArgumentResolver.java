@@ -20,6 +20,17 @@ import org.junit.gen5.engine.junit5.descriptor.*;
 // for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
 public class MethodArgumentResolver {
 
+	/**
+	 * prepare a list of objects as arguments for the execution of this test method
+	 *
+	 * @param methodTestDescriptor the test descriptor for the underlying (test) method
+	 * @return a list of Objects to be used as arguments in the method call - will be an empty list in case of no-arg methods
+	 * @throws NoSuchMethodException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+
 	public List<Object> prepareArguments(MethodTestDescriptor methodTestDescriptor)
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
@@ -28,21 +39,24 @@ public class MethodArgumentResolver {
 		List<Object> arguments = new ArrayList<>();
 
 		if (testMethod.getParameterCount() > 0) {
-
 			Parameter[] parameters = testMethod.getParameters();
 			for (Parameter parameter : parameters) {
-				Class<?> parameterType = parameter.getType();
-				Annotation[] parameterAnnotations = parameter.getAnnotations();
-
-				System.out.println("				parameterType = " + parameterType);
-				System.out.println("				parameterAnnotations = " + Arrays.asList(parameterAnnotations));
-
-				Object newInstance = ReflectionUtils.newInstance(parameterType);
+				Object newInstance = this.resolveArgumentForMethodParameter(parameter);
 				arguments.add(newInstance);
 			}
 		}
 
 		return arguments;
+	}
+
+	//TODO: delegate to strategy objects with proper interface
+	private Object resolveArgumentForMethodParameter(Parameter parameter)
+			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+		Class<?> parameterType = parameter.getType();
+		Annotation[] parameterAnnotations = parameter.getAnnotations();
+
+		System.out.println("parameter = " + parameter);
+		return ReflectionUtils.newInstance(parameterType);
 	}
 
 }
