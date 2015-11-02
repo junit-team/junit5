@@ -22,6 +22,7 @@ import org.junit.gen5.api.Before;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
+import org.junit.gen5.engine.junit5.execution.injection.*;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
@@ -94,28 +95,9 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	private List<Object> prepareArguments(MethodTestDescriptor methodTestDescriptor)
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
-		// for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
-
-		Method testMethod = methodTestDescriptor.getTestMethod();
-
-		List<Object> arguments = new ArrayList<>();
-
-		if (testMethod.getParameterCount() > 0) {
-
-			Parameter[] parameters = testMethod.getParameters();
-			for (Parameter parameter : parameters) {
-				Class<?> parameterType = parameter.getType();
-				Annotation[] parameterAnnotations = parameter.getAnnotations();
-
-				System.out.println("				parameterType = " + parameterType);
-				System.out.println("				parameterAnnotations = " + Arrays.asList(parameterAnnotations));
-
-				Object newInstance = ReflectionUtils.newInstance(parameterType);
-				arguments.add(newInstance);
-			}
-		}
-
-		return arguments;
+		//should probably not be instantiated here, maybe be brought along by the executionContext
+		MethodArgumentResolver argumentResolver = new MethodArgumentResolver();
+		return argumentResolver.prepareArguments(methodTestDescriptor);
 	}
 
 	private void executeBeforeMethods(Class<?> testClass, Object testInstance) throws Exception {
