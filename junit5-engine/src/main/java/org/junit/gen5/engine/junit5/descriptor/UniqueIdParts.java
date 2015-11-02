@@ -36,6 +36,8 @@ public class UniqueIdParts {
 	}
 
 	public String pop() {
+		if (parts.isEmpty())
+			return "";
 		return parts.remove(0);
 	}
 
