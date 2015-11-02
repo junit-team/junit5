@@ -91,14 +91,12 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		ReflectionUtils.invokeMethod(testMethod, testInstance, arguments.toArray());
 	}
 
-
 	private List<Object> prepareArguments(MethodTestDescriptor methodTestDescriptor)
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
 		// for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
 
 		Method testMethod = methodTestDescriptor.getTestMethod();
-
 
 		List<Object> arguments = new ArrayList<>();
 
@@ -117,7 +115,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 			}
 		}
 
-			return arguments;
+		return arguments;
 	}
 
 	private void executeBeforeMethods(Class<?> testClass, Object testInstance) throws Exception {
