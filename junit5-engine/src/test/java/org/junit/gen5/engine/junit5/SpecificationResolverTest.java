@@ -66,12 +66,12 @@ public class SpecificationResolverTest {
 		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.YourTestClass#test4()"));
 	}
 
-	//	@org.junit.Test
+	@org.junit.Test
 	public void testClassResolutionByUniqueId() {
-		UniqueIdSpecification specification1 = new UniqueIdSpecification(
+		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"junit5:org.junit.gen5.engine.junit5.MyTestClass");
 
-		resolver.resolveElement(specification1);
+		resolver.resolveElement(specification);
 
 		Assert.assertEquals(3, descriptors.size());
 		Set uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toSet());
@@ -82,8 +82,7 @@ public class SpecificationResolverTest {
 
 	@org.junit.Test(expected = IllegalArgumentException.class)
 	public void testNonResolvableUniqueId() {
-		UniqueIdSpecification specification1 = new UniqueIdSpecification(
-			"junit5:poops-machine");
+		UniqueIdSpecification specification1 = new UniqueIdSpecification("junit5:poops-machine");
 
 		resolver.resolveElement(specification1);
 	}
