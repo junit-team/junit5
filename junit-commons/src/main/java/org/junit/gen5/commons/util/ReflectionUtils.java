@@ -35,19 +35,18 @@ public class ReflectionUtils {
 		return constructor.newInstance();
 	}
 
-	public static Object invokeMethod(Method method, Object testInstance)
+	public static Object invokeMethod(Method method, Object testInstance, Object[] arguments)
 			throws IllegalAccessException, InvocationTargetException {
 		if (!method.isAccessible()) {
 			method.setAccessible(true);
 		}
 
-		//TODO: do properly
-		if (method.getParameterCount() == 0)
-			return method.invoke(testInstance);
+		return method.invoke(testInstance, arguments);
+	}
 
-		Object[] args = new Object[] { null };
-
-		return method.invoke(testInstance, args);
+	public static Object invokeMethod(Method method, Object testInstance)
+			throws IllegalAccessException, InvocationTargetException {
+		return invokeMethod(method, testInstance, new Object[] {});
 	}
 
 	public static Class<?> loadClass(String name) {

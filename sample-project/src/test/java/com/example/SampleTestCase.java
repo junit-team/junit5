@@ -81,17 +81,15 @@ class SampleTestCase {
 
 	@Test
 	void argumentInjectionByType(CustomType customType) {
-
-		//		assertTrue(customType != null);    /not yet there
-		assertTrue(true);
-
+		assertTrue(customType != null);
+		System.out.println("customType = " + customType);
 	}
 
 	@Test
 	void argumentInjectionByAnnotation(@CustomAnnotation String value) {
 
-		//		assertTrue(customType != null);    /not yet there
-		assertTrue(true);
+		assertTrue(value != null);
+		System.out.println("value = " + value);
 
 	}
 

@@ -13,8 +13,9 @@ package org.junit.gen5.engine.junit5.execution;
 import static org.junit.gen5.commons.util.AnnotationUtils.*;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
+import java.util.*;
 
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
@@ -51,7 +52,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 		try {
 			executeBeforeMethods(testClass, testInstance);
-			ReflectionUtils.invokeMethod(getTestDescriptor().getTestMethod(), testInstance);
+			this.invokeTestMethod(context, testInstance);
 		}
 		catch (Throwable ex) {
 			exceptionThrown = ex;
@@ -77,6 +78,34 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		else {
 			context.getTestExecutionListener().testSucceeded(getTestDescriptor());
 		}
+	}
+
+	private void invokeTestMethod(EngineExecutionContext context, Object testInstance)
+			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException {
+
+		// for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
+
+		MethodTestDescriptor methodTestDescriptor = getTestDescriptor();
+		Method testMethod = methodTestDescriptor.getTestMethod();
+
+		List<Object> arguments = new ArrayList<>();
+
+		if (testMethod.getParameterCount() > 0) {
+
+			Parameter[] parameters = testMethod.getParameters();
+			for (Parameter parameter : parameters) {
+				Class<?> parameterType = parameter.getType();
+				Annotation[] parameterAnnotations = parameter.getAnnotations();
+
+				System.out.println("				parameterType = " + parameterType);
+				System.out.println("				parameterAnnotations = " + Arrays.asList(parameterAnnotations));
+
+				Object newInstance = ReflectionUtils.newInstance(parameterType);
+				arguments.add(newInstance);
+			}
+		}
+
+		ReflectionUtils.invokeMethod(testMethod, testInstance, arguments.toArray());
 	}
 
 	private void executeBeforeMethods(Class<?> testClass, Object testInstance) throws Exception {

@@ -14,7 +14,7 @@ import java.util.*;
 
 public class CustomType {
 
-	private Date date;
+	private Date date = new Date();
 
 	@Override
 	public String toString() {
