@@ -80,6 +80,14 @@ public class SpecificationResolverTest {
 		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.MyTestClass#test2()"));
 	}
 
+	@org.junit.Test(expected = IllegalArgumentException.class)
+	public void testNonResolvableUniqueId() {
+		UniqueIdSpecification specification1 = new UniqueIdSpecification(
+			"junit5:poops-machine");
+
+		resolver.resolveElement(specification1);
+	}
+
 	@org.junit.Test
 	public void testMethodResolutionByUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
