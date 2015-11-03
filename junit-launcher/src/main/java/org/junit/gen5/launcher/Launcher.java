@@ -12,6 +12,7 @@ package org.junit.gen5.launcher;
 
 import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.gen5.engine.EngineDescriptor;
@@ -38,8 +39,11 @@ public class Launcher {
 		TestPlan testPlan = new TestPlan();
 		for (TestEngine testEngine : lookupAllTestEngines()) {
 			TestDescriptor engineDescriptor = new EngineDescriptor(testEngine);
-			testPlan.addTestDescriptor(engineDescriptor);
-			testPlan.addTestDescriptors(testEngine.discoverTests(specification, engineDescriptor));
+			Collection<TestDescriptor> testDescriptors = testEngine.discoverTests(specification, engineDescriptor);
+			if (!testDescriptors.isEmpty()) {
+				testPlan.addTestDescriptor(engineDescriptor);
+				testPlan.addTestDescriptors(testDescriptors);
+			}
 		}
 		return testPlan;
 	}
