@@ -12,10 +12,7 @@ package org.junit.gen5.engine.junit5.execution.injection;
 
 import java.lang.reflect.*;
 
-/**
- * Created by mmerdes on 03.11.15.
- */
-public interface SingleMethodArgumentResolver {
+public interface MethodArgumentResolver {
 
 	Object resolveArgumentForMethodParameter(Parameter parameter)
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException;

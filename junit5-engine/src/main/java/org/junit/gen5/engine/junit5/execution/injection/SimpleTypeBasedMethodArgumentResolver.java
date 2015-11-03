@@ -16,7 +16,7 @@ import java.lang.reflect.*;
 import org.junit.gen5.commons.util.*;
 
 // for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
-public class SimpleTypeBasedMethodArgumentResolver implements SingleMethodArgumentResolver {
+public class SimpleTypeBasedMethodArgumentResolver implements MethodArgumentResolver {
 
 	@Override
 	public Object resolveArgumentForMethodParameter(Parameter parameter)
