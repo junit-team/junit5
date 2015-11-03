@@ -91,8 +91,10 @@ public class SpecificationResolverTest {
 		Set uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toSet());
 		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass"));
 		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass"));
-		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass#test5()"));
-		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass#test6()"));
+		Assert.assertTrue(
+			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass#test5()"));
+		Assert.assertTrue(
+			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass#test6()"));
 	}
 
 	@org.junit.Test
@@ -106,7 +108,8 @@ public class SpecificationResolverTest {
 		Set uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toSet());
 		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass"));
 		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass"));
-		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass#test5()"));
+		Assert.assertTrue(
+			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass#test5()"));
 	}
 
 	@org.junit.Test(expected = IllegalArgumentException.class)
@@ -118,7 +121,8 @@ public class SpecificationResolverTest {
 
 	@org.junit.Test(expected = IllegalArgumentException.class)
 	public void testUniqueIdOfNotTestMethod() {
-		UniqueIdSpecification specification1 = new UniqueIdSpecification("junit5:org.junit.gen5.engine.junit5.MyTestClass#notATest()");
+		UniqueIdSpecification specification1 = new UniqueIdSpecification(
+			"junit5:org.junit.gen5.engine.junit5.MyTestClass#notATest()");
 		resolver.resolveElement(specification1);
 	}
 

@@ -17,6 +17,7 @@ import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
+
 import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.TestDescriptor;
@@ -66,7 +67,7 @@ public class SpecificationResolver {
 	}
 
 	private void resolveUniqueId(UniqueIdSpecification uniqueIdSpecification, TestDescriptor parent,
-		UniqueIdParts uniqueIdRest) {
+			UniqueIdParts uniqueIdRest) {
 		String idPart = uniqueIdRest.pop();
 		if (idPart.isEmpty()) {
 			return;
