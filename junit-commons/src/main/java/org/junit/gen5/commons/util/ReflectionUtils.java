@@ -42,15 +42,10 @@ public class ReflectionUtils {
 		return method.invoke(testInstance);
 	}
 
-	public static Class<?> loadClass(String name) {
-		try {
-			// TODO Use correct classloader
-			// TODO Add support for primitive types and arrays.
-			return ClassLoader.getSystemClassLoader().loadClass(name);
-		}
-		catch (ClassNotFoundException e) {
-			throw new IllegalStateException("Failed to load class with name '" + name + "'.", e);
-		}
+	public static Class<?> loadClass(String name) throws ClassNotFoundException {
+		// TODO Use correct classloader
+		// TODO Add support for primitive types and arrays.
+		return ClassLoader.getSystemClassLoader().loadClass(name);
 	}
 
 }
