@@ -10,21 +10,13 @@
 
 package org.junit.gen5.engine.junit5.execution.injection;
 
-import java.lang.annotation.*;
 import java.lang.reflect.*;
 
-import org.junit.gen5.commons.util.*;
+/**
+ * Created by mmerdes on 03.11.15.
+ */
+public interface SingleMethodArgumentResolver {
 
-// for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
-public class SingleMethodArgumentResolver {
-
-	public Object resolveArgumentForMethodParameter(Parameter parameter)
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-		Class<?> parameterType = parameter.getType();
-		Annotation[] parameterAnnotations = parameter.getAnnotations();
-
-		System.out.println("parameter = " + parameter);
-		return ReflectionUtils.newInstance(parameterType);
-	}
-
+	Object resolveArgumentForMethodParameter(Parameter parameter)
+			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException;
 }

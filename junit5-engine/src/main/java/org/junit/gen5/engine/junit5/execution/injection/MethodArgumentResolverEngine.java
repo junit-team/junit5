@@ -19,7 +19,7 @@ import org.junit.gen5.engine.junit5.descriptor.*;
 public class MethodArgumentResolverEngine {
 
 	//TODO: fetch from some sort of registry
-	SingleMethodArgumentResolver methodArgumentResolver = new SingleMethodArgumentResolver();
+	SingleMethodArgumentResolver methodArgumentResolver = new SimpleTypeBasedMethodArgumentResolver();
 
 	/**
 	 * prepare a list of objects as arguments for the execution of this test method
