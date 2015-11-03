@@ -70,7 +70,7 @@ public class SpecificationResolver {
 		if (withChildren) {
 			//Todo: pull code of ClassNameTestDescriptorResolver in
 			testDescriptors.addAll(new ClassNameTestDescriptorResolver().resolveChildren(descriptor,
-					new ClassNameSpecification(clazz.getName())));
+				new ClassNameSpecification(clazz.getName())));
 		}
 		return descriptor;
 	}
