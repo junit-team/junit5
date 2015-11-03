@@ -18,7 +18,7 @@ import org.junit.gen5.commons.util.*;
 import org.junit.gen5.engine.junit5.descriptor.*;
 
 // for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
-public class MethodArgumentResolver {
+public class MethodArgumentResolverEngine {
 
 	/**
 	 * prepare a list of objects as arguments for the execution of this test method

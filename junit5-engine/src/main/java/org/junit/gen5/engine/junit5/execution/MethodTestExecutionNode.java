@@ -13,7 +13,6 @@ package org.junit.gen5.engine.junit5.execution;
 import static org.junit.gen5.commons.util.AnnotationUtils.*;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
-import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -96,7 +95,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
 		//should probably not be instantiated here, maybe be brought along by the executionContext
-		MethodArgumentResolver argumentResolver = new MethodArgumentResolver();
+		MethodArgumentResolverEngine argumentResolver = new MethodArgumentResolverEngine();
 		return argumentResolver.prepareArguments(methodTestDescriptor);
 	}
 
