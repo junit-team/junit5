@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.api.Assumptions.*;
+import static org.junit.gen5.api.Assumptions.assumeTrue;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.lang.annotation.ElementType;
@@ -19,7 +19,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
-
 import org.junit.Assert;
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.AfterAll;
@@ -80,7 +79,7 @@ public class JUnit5TestEngineTests {
 		TestPlanSpecification spec = build(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 3);
+		TrackingTestExecutionListener listener = executeTests(spec, 4);
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
@@ -94,7 +93,7 @@ public class JUnit5TestEngineTests {
 		TestPlanSpecification spec = build(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#throwExceptionInAfterMethod()"));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 3);
+		TrackingTestExecutionListener listener = executeTests(spec, 4);
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());
