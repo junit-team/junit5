@@ -11,8 +11,6 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
 
@@ -40,6 +38,9 @@ public class ClassTestDescriptor extends AbstractTestDescriptor {
 
 	@Override
 	public final String getUniqueId() {
+		if (testClass.isMemberClass()) {
+			return this.parent.getUniqueId() + "$" + testClass.getSimpleName();
+		}
 		return this.parent.getUniqueId() + ":" + testClass.getName();
 	}
 
