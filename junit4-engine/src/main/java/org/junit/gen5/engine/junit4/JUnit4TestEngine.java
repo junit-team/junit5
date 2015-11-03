@@ -49,7 +49,13 @@ public class JUnit4TestEngine implements TestEngine {
 		for (TestPlanSpecificationElement element : specification) {
 			if (element instanceof ClassNameSpecification) {
 				String className = ((ClassNameSpecification) element).getClassName();
-				Class<?> testClass = ReflectionUtils.loadClass(className);
+				Class<?> testClass = null;
+				try {
+					testClass = ReflectionUtils.loadClass(className);
+				}
+				catch (ClassNotFoundException e) {
+					throw new IllegalArgumentException("Class " + className + " not found.");
+				}
 				Runner runner = Request.aClass(testClass).getRunner();
 
 				// TODO This skips malformed JUnit 4 tests, too

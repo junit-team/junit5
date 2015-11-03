@@ -20,18 +20,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.gen5.engine.UniqueIdSpecification;
-import org.junit.gen5.engine.junit5.descriptor.ClassNameTestDescriptorResolver;
 import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;
-import org.junit.gen5.engine.junit5.descriptor.TestDescriptorResolver;
-import org.junit.gen5.engine.junit5.descriptor.TestDescriptorResolverRegistry;
-import org.junit.gen5.engine.junit5.descriptor.UniqueIdTestDescriptorResolver;
 import org.junit.gen5.engine.junit5.execution.TestExecutionNode;
 import org.junit.gen5.engine.junit5.execution.TestExecutionNodeResolver;
 

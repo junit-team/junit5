@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -18,15 +18,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.util.List;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.UniqueIdSpecification;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.UniqueIdTestDescriptorResolver;
 import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
 
 /**
@@ -94,36 +90,6 @@ public class MethodTestDescriptorTests {
 		assertEquals(testClass, descriptor.getParent().getTestClass());
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test", descriptor.getDisplayName(), "display name:");
-	}
-
-	@org.junit.Test
-	public void fromTestDescriptorIdForMethod() throws Exception {
-		UniqueIdTestDescriptorResolver resolver = new UniqueIdTestDescriptorResolver();
-		UniqueIdSpecification specification = new UniqueIdSpecification(TEST_METHOD_UID);
-		TestDescriptor descriptor = resolver.resolve(ENGINE_DESCRIPTOR, specification);
-		List<TestDescriptor> descriptors = resolver.resolveChildren(descriptor, specification);
-		descriptor = descriptors.get(0);
-
-		assertNotNull(descriptor, "descriptor:");
-		assertEquals("test", descriptor.getDisplayName(), "display name:");
-		assertEquals(MethodTestDescriptorTests.class, ((ClassTestDescriptor) descriptor.getParent()).getTestClass());
-		assertEquals(MethodTestDescriptorTests.class.getDeclaredMethod("test"),
-			((MethodTestDescriptor) descriptor).getTestMethod());
-	}
-
-	@org.junit.Test
-	public void fromTestDescriptorIdForMethodWithParameters() throws Exception {
-		UniqueIdTestDescriptorResolver resolver = new UniqueIdTestDescriptorResolver();
-		UniqueIdSpecification specification = new UniqueIdSpecification(TEST_METHOD_STRING_BIGDECIMAL_UID);
-		TestDescriptor descriptor = resolver.resolve(ENGINE_DESCRIPTOR, specification);
-		List<TestDescriptor> descriptors = resolver.resolveChildren(descriptor, specification);
-		descriptor = descriptors.get(0);
-
-		assertNotNull(descriptor, "descriptor:");
-		assertEquals("test", descriptor.getDisplayName(), "display name:");
-		assertEquals(getClass(), ((ClassTestDescriptor) descriptor.getParent()).getTestClass());
-		assertEquals(getClass().getDeclaredMethod("test", String.class, BigDecimal.class),
-			((MethodTestDescriptor) descriptor).getTestMethod());
 	}
 
 	void test() {

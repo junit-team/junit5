@@ -44,4 +44,8 @@ public class UniqueIdParts {
 	public String rest() {
 		return parts.stream().collect(Collectors.joining());
 	}
+
+	public boolean isEmpty() {
+		return parts.isEmpty();
+	}
 }

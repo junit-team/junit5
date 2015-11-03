@@ -34,7 +34,13 @@ public class ClassNameTestDescriptorResolver
 
 	@Override
 	public ClassTestDescriptor resolve(TestDescriptor parent, ClassNameSpecification element) {
-		Class<?> clazz = loadClass(element.getClassName());
+		Class<?> clazz = null;
+		try {
+			clazz = loadClass(element.getClassName());
+		}
+		catch (ClassNotFoundException e) {
+			throw new IllegalStateException(e);
+		}
 		if (classTester.accept(clazz)) {
 			return new ClassTestDescriptor(clazz, parent);
 		}

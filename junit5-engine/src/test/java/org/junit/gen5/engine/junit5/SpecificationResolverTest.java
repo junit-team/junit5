@@ -109,6 +109,7 @@ public class SpecificationResolverTest {
 
 		resolver.resolveElement(specification1);
 		resolver.resolveElement(specification2);
+		resolver.resolveElement(specification2); //should have no effect
 
 		Assert.assertEquals(3, descriptors.size());
 		Set uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toSet());
@@ -122,7 +123,7 @@ public class SpecificationResolverTest {
 			"junit5:org.junit.gen5.engine.junit5.MyTestClass#test2()").getParent();
 
 		Assert.assertEquals(fromMethod1, fromMethod2);
-		//		Assert.assertSame(fromMethod1, fromMethod2);
+		Assert.assertSame(fromMethod1, fromMethod2);
 	}
 
 	public TestDescriptor descriptorByUniqueId(String id) {
