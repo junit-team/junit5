@@ -77,8 +77,7 @@ class RunListenerAdapter extends RunListener {
 
 	private void notifyTestExecutionListener(Description description, Throwable cause,
 			BiConsumer<TestDescriptor, Throwable> consumer) {
-		DescriptionTestDescriptor testDescriptor = lookupTestDescriptor(description);
-		consumer.accept(testDescriptor, cause);
+		notifyTestExecutionListener(description, testDescriptor -> consumer.accept(testDescriptor, cause));
 	}
 
 	private DescriptionTestDescriptor lookupTestDescriptor(Description description) {
