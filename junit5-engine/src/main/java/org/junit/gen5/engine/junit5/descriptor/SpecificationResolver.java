@@ -47,11 +47,32 @@ public class SpecificationResolver {
 	}
 
 	private void resolveClassNameSpecification(ClassNameSpecification element) {
-		ClassTestDescriptor descriptor = new ClassNameTestDescriptorResolver().resolve(root, element);
-		if (descriptor != null) {
-			testDescriptors.add(descriptor);
-			testDescriptors.addAll(new ClassNameTestDescriptorResolver().resolveChildren(descriptor, element));
+		Class<?> clazz = null;
+		try {
+			clazz = loadClass(element.getClassName());
 		}
+		catch (ClassNotFoundException e) {
+			throwCannotResolveClassNameException(element.getClassName());
+		}
+
+		resolveClass(clazz, root, true);
+	}
+
+	private ClassTestDescriptor resolveClass(Class<?> clazz, TestDescriptor parent, boolean withChildren) {
+		if (!classTester.accept(clazz)) {
+			throwCannotResolveClassNameException(clazz.getName());
+		}
+		if (clazz.isMemberClass()) {
+			parent = resolveClass(clazz.getEnclosingClass(), parent, false);
+		}
+		ClassTestDescriptor descriptor = new ClassTestDescriptor(clazz, parent);
+		testDescriptors.add(descriptor);
+		if (withChildren) {
+			//Todo: pull code of ClassNameTestDescriptorResolver in
+			testDescriptors.addAll(new ClassNameTestDescriptorResolver().resolveChildren(descriptor,
+					new ClassNameSpecification(clazz.getName())));
+		}
+		return descriptor;
 	}
 
 	private void resolveUniqueIdSpecification(UniqueIdSpecification uniqueIdSpecification) {
@@ -59,7 +80,7 @@ public class SpecificationResolver {
 
 		String engineId = uniqueIdParts.pop();
 		if (!root.getUniqueId().equals(engineId)) {
-			throwCannotResolveException(uniqueIdSpecification.getUniqueId(), engineId);
+			throwCannotResolveUniqueIdException(uniqueIdSpecification.getUniqueId(), engineId);
 		}
 
 		resolveUniqueId(uniqueIdSpecification, root, uniqueIdParts);
@@ -86,7 +107,7 @@ public class SpecificationResolver {
 				resolveUniqueId(uniqueIdSpecification, methodDescriptor, uniqueIdRest);
 				break;
 			default:
-				throwCannotResolveException(uniqueIdSpecification.getUniqueId(), idPart);
+				throwCannotResolveUniqueIdException(uniqueIdSpecification.getUniqueId(), idPart);
 		}
 	}
 
@@ -103,11 +124,11 @@ public class SpecificationResolver {
 		try {
 			method = classDescriptor.getTestClass().getDeclaredMethod(methodName, new Class[0]);
 			if (!methodTester.accept(method)) {
-				throwCannotResolveException(parent.getUniqueId() + idPart, idPart);
+				throwCannotResolveUniqueIdException(parent.getUniqueId() + idPart, idPart);
 			}
 		}
 		catch (NoSuchMethodException nsme) {
-			throwCannotResolveException(parent.getUniqueId() + idPart, idPart);
+			throwCannotResolveUniqueIdException(parent.getUniqueId() + idPart, idPart);
 		}
 		return new MethodTestDescriptor(method, classDescriptor);
 
@@ -153,7 +174,7 @@ public class SpecificationResolver {
 			clazz = loadClass(className);
 		}
 		catch (ClassNotFoundException e) {
-			throwCannotResolveException(parent.getUniqueId() + uniqueIdPart, uniqueIdPart);
+			throwCannotResolveUniqueIdException(parent.getUniqueId() + uniqueIdPart, uniqueIdPart);
 		}
 		ClassTestDescriptor newDescriptor = new ClassTestDescriptor(clazz, parent);
 		ClassTestDescriptor existingDescriptor = (ClassTestDescriptor) descriptorByUniqueId(
@@ -179,9 +200,13 @@ public class SpecificationResolver {
 		return null;
 	}
 
-	private void throwCannotResolveException(String fullUniqueId, String uniqueIdPart) {
+	private void throwCannotResolveUniqueIdException(String fullUniqueId, String uniqueIdPart) {
 		throw new IllegalArgumentException(
 			String.format("Cannot resolve part '%s' of unique id '%s'", uniqueIdPart, fullUniqueId));
+	}
+
+	private void throwCannotResolveClassNameException(String className) {
+		throw new IllegalArgumentException(String.format("Cannot resolve class of name '%s'", className));
 	}
 
 }

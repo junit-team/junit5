@@ -24,7 +24,9 @@ class TestClassTester extends ReflectionObjectTester {
 			return false;
 		if (testClassCandidate.isLocalClass())
 			return false;
-		return hasTestMethods(testClassCandidate);
+		return true;
+		// Todo: Classes without tests should be marked
+		//		return hasTestMethods(testClassCandidate);
 	}
 
 	private boolean hasTestMethods(Class<?> testClassCandidate) {

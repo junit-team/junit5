@@ -49,6 +49,23 @@ public class SpecificationResolverTest {
 	}
 
 	@org.junit.Test
+	public void testClassNameResolutionOfNestedClass() {
+		ClassNameSpecification specification = new ClassNameSpecification(
+			OtherTestClass.InnerTestClass.class.getName());
+
+		resolver.resolveElement(specification);
+
+		Assert.assertEquals(4, descriptors.size());
+		Set uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toSet());
+		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass"));
+		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass"));
+		Assert.assertTrue(
+			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass#test5()"));
+		Assert.assertTrue(
+			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass#test6()"));
+	}
+
+	@org.junit.Test
 	public void testTwoClassNameResolution() {
 		ClassNameSpecification specification1 = new ClassNameSpecification(MyTestClass.class.getName());
 		ClassNameSpecification specification2 = new ClassNameSpecification(YourTestClass.class.getName());
