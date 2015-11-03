@@ -10,15 +10,16 @@
 
 package org.junit.gen5.engine.junit5.execution.injection;
 
-import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
 
-import org.junit.gen5.commons.util.*;
 import org.junit.gen5.engine.junit5.descriptor.*;
 
 // for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
 public class MethodArgumentResolverEngine {
+
+	//TODO: fetch from some sort of registry
+	SingleMethodArgumentResolver methodArgumentResolver = new SingleMethodArgumentResolver();
 
 	/**
 	 * prepare a list of objects as arguments for the execution of this test method
@@ -49,14 +50,11 @@ public class MethodArgumentResolverEngine {
 		return arguments;
 	}
 
-	//TODO: delegate to strategy objects with proper interface
 	private Object resolveArgumentForMethodParameter(Parameter parameter)
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-		Class<?> parameterType = parameter.getType();
-		Annotation[] parameterAnnotations = parameter.getAnnotations();
 
-		System.out.println("parameter = " + parameter);
-		return ReflectionUtils.newInstance(parameterType);
+		return this.methodArgumentResolver.resolveArgumentForMethodParameter(parameter);
+
 	}
 
 }
