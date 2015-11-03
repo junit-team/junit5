@@ -80,10 +80,45 @@ public class SpecificationResolverTest {
 		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.MyTestClass#test2()"));
 	}
 
+	@org.junit.Test
+	public void testInnerClassResolutionByUniqueId() {
+		UniqueIdSpecification specification = new UniqueIdSpecification(
+			"junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass");
+
+		resolver.resolveElement(specification);
+
+		Assert.assertEquals(4, descriptors.size());
+		Set uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toSet());
+		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass"));
+		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass"));
+		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass#test5()"));
+		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass#test6()"));
+	}
+
+	@org.junit.Test
+	public void testMethodOfInnerClassByUniqueId() {
+		UniqueIdSpecification specification = new UniqueIdSpecification(
+			"junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass#test5()");
+
+		resolver.resolveElement(specification);
+
+		Assert.assertEquals(3, descriptors.size());
+		Set uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toSet());
+		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass"));
+		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass"));
+		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass#test5()"));
+	}
+
 	@org.junit.Test(expected = IllegalArgumentException.class)
 	public void testNonResolvableUniqueId() {
 		UniqueIdSpecification specification1 = new UniqueIdSpecification("junit5:poops-machine");
 
+		resolver.resolveElement(specification1);
+	}
+
+	@org.junit.Test(expected = IllegalArgumentException.class)
+	public void testUniqueIdOfNotTestMethod() {
+		UniqueIdSpecification specification1 = new UniqueIdSpecification("junit5:org.junit.gen5.engine.junit5.MyTestClass#notATest()");
 		resolver.resolveElement(specification1);
 	}
 
@@ -145,6 +180,9 @@ class MyTestClass {
 
 	}
 
+	void notATest() {
+
+	}
 }
 
 class YourTestClass {
@@ -159,4 +197,21 @@ class YourTestClass {
 
 	}
 
+}
+
+class OtherTestClass {
+
+	static class InnerTestClass {
+
+		@Test
+		void test5() {
+
+		}
+
+		@Test
+		void test6() {
+
+		}
+
+	}
 }

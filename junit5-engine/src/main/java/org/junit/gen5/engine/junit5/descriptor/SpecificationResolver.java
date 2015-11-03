@@ -17,7 +17,6 @@ import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
-
 import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.TestDescriptor;
@@ -67,22 +66,26 @@ public class SpecificationResolver {
 	}
 
 	private void resolveUniqueId(UniqueIdSpecification uniqueIdSpecification, TestDescriptor parent,
-			UniqueIdParts uniqueIdRest) {
-		String part = uniqueIdRest.pop();
-		if (part.isEmpty()) {
+		UniqueIdParts uniqueIdRest) {
+		String idPart = uniqueIdRest.pop();
+		if (idPart.isEmpty()) {
 			return;
 		}
-		switch (part.charAt(0)) {
+		switch (idPart.charAt(0)) {
 			case ':':
-				TestDescriptor classDescriptor = resolveClassByUniqueId(parent, part, uniqueIdRest);
+				TestDescriptor classDescriptor = resolveClassByUniqueId(parent, idPart, uniqueIdRest);
 				resolveUniqueId(uniqueIdSpecification, classDescriptor, uniqueIdRest);
 				break;
+			case '$':
+				TestDescriptor classDescriptor2 = resolveClassByUniqueId(parent, idPart, uniqueIdRest);
+				resolveUniqueId(uniqueIdSpecification, classDescriptor2, uniqueIdRest);
+				break;
 			case '#':
-				TestDescriptor methodDescriptor = resolveMethodByUniqueId(parent, part, uniqueIdRest);
+				TestDescriptor methodDescriptor = resolveMethodByUniqueId(parent, idPart, uniqueIdRest);
 				resolveUniqueId(uniqueIdSpecification, methodDescriptor, uniqueIdRest);
 				break;
 			default:
-				throwCannotResolveException(uniqueIdSpecification.getUniqueId(), part);
+				throwCannotResolveException(uniqueIdSpecification.getUniqueId(), idPart);
 		}
 	}
 
@@ -92,15 +95,18 @@ public class SpecificationResolver {
 		return methodDescriptor;
 	}
 
-	private MethodTestDescriptor getMethodTestDescriptor(TestDescriptor parent, String part) {
-		String methodName = part.substring(1, part.length() - 2);
+	private MethodTestDescriptor getMethodTestDescriptor(TestDescriptor parent, String idPart) {
+		String methodName = idPart.substring(1, idPart.length() - 2);
 		ClassTestDescriptor classDescriptor = (ClassTestDescriptor) parent;
 		Method method = null;
 		try {
 			method = classDescriptor.getTestClass().getDeclaredMethod(methodName, new Class[0]);
+			if (!methodTester.accept(method)) {
+				throwCannotResolveException(parent.getUniqueId() + idPart, idPart);
+			}
 		}
 		catch (NoSuchMethodException nsme) {
-			throwCannotResolveException(parent.getUniqueId() + part, part);
+			throwCannotResolveException(parent.getUniqueId() + idPart, idPart);
 		}
 		return new MethodTestDescriptor(method, classDescriptor);
 
@@ -138,12 +144,15 @@ public class SpecificationResolver {
 
 	private ClassTestDescriptor getClassTestDescriptor(TestDescriptor parent, String uniqueIdPart) {
 		String className = uniqueIdPart.substring(1);
+		if (parent instanceof ClassTestDescriptor) {
+			className = ((ClassTestDescriptor) parent).getTestClass().getName() + uniqueIdPart;
+		}
 		Class<?> clazz = null;
 		try {
 			clazz = loadClass(className);
 		}
 		catch (ClassNotFoundException e) {
-			throwCannotResolveException(parent + uniqueIdPart, uniqueIdPart);
+			throwCannotResolveException(parent.getUniqueId() + uniqueIdPart, uniqueIdPart);
 		}
 		ClassTestDescriptor newDescriptor = new ClassTestDescriptor(clazz, parent);
 		ClassTestDescriptor existingDescriptor = (ClassTestDescriptor) descriptorByUniqueId(
@@ -169,9 +178,9 @@ public class SpecificationResolver {
 		return null;
 	}
 
-	private void throwCannotResolveException(String fullUniqueId, String part) {
+	private void throwCannotResolveException(String fullUniqueId, String uniqueIdPart) {
 		throw new IllegalArgumentException(
-			String.format("Cannot resolve part '%s' of unique id '%s'", part, fullUniqueId));
+			String.format("Cannot resolve part '%s' of unique id '%s'", uniqueIdPart, fullUniqueId));
 	}
 
 }
