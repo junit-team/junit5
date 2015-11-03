@@ -175,6 +175,8 @@ public class JUnit5 extends Runner {
 		@Override
 		public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
 			Description description = findJUnit4Description(testDescriptor);
+			// TODO We call this after calling fireTestStarted. This leads to a wrong test
+			// count in Eclipse.
 			notifier.fireTestIgnored(description);
 		}
 
