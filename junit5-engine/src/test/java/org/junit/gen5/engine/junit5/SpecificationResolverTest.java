@@ -157,6 +157,21 @@ public class SpecificationResolverTest {
 	}
 
 	@org.junit.Test
+	public void testMethodResolutionByUniqueIdFromInheritedClass() {
+		UniqueIdSpecification specification = new UniqueIdSpecification(
+			"junit5:org.junit.gen5.engine.junit5.HerTestClass#test1()");
+
+		resolver.resolveElement(specification);
+
+		Assert.assertEquals(2, descriptors.size());
+		Set uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toSet());
+
+		System.out.println(uniqueIds);
+		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.HerTestClass"));
+		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.HerTestClass#test1()"));
+	}
+
+	@org.junit.Test
 	public void testTwoMethodResolutionsByUniqueId() {
 		UniqueIdSpecification specification1 = new UniqueIdSpecification(
 			"junit5:org.junit.gen5.engine.junit5.MyTestClass#test1()");
@@ -218,6 +233,9 @@ class YourTestClass {
 
 	}
 
+}
+
+class HerTestClass extends MyTestClass {
 }
 
 class OtherTestClass {

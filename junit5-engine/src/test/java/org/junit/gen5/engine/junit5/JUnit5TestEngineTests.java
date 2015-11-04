@@ -112,6 +112,7 @@ public class JUnit5TestEngineTests {
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
+		System.out.println("Descriptors: " + descriptors);
 		engine.execute(new EngineExecutionContext(descriptors, listener));
 
 		Assert.assertTrue("@BeforeAll was not invoked", LocalTestCase.beforeAllInvoked);

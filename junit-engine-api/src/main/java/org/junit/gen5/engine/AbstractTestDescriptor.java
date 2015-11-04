@@ -25,11 +25,12 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public boolean equals(Object other) {
+		if (other == null)
+			return false;
 		if (this.getClass() != other.getClass())
 			return false;
 		TestDescriptor otherDescriptor = (TestDescriptor) other;
-		return this.getUniqueId().equals(otherDescriptor.getUniqueId())
-				&& this.getParent().equals(otherDescriptor.getParent());
+		return this.getUniqueId().equals(otherDescriptor.getUniqueId());
 	}
 
 	@Override

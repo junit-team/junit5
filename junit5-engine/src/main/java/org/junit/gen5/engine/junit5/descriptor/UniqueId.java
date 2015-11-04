@@ -16,9 +16,9 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.function.Predicate;
 import lombok.Value;
-
+import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
 
@@ -109,14 +109,15 @@ public class UniqueId {
 	}
 
 	private static Method findMethodByName(Class<?> clazz, String methodName) {
-		try {
-			//Todo move to ReflectionUtils and check superclass hierarchy
-			//Todo consider parameters
-			return clazz.getDeclaredMethod(methodName, new Class[0]);
-		}
-		catch (NoSuchMethodException e) {
+		//Todo consider parameters
+		Predicate<Method> methodPredicate = method -> method.getName().equals(methodName);
+
+		List<Method> candidates = AnnotationUtils.findMethods(clazz, methodPredicate,
+			AnnotationUtils.MethodSortOrder.HierarchyDown);
+		if (candidates.isEmpty()) {
 			return null;
 		}
+		return candidates.get(0);
 	}
 
 	private static Class<?> findNestedClass(String nameExtension, Class<?> containerClass) {
