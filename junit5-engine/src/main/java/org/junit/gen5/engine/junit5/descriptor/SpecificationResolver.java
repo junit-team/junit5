@@ -10,16 +10,15 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.AnnotationUtils.findMethods;
-import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
 
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
-
 import org.junit.gen5.commons.util.AnnotationUtils;
+import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.ClassNameSpecification;
+import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.UniqueIdSpecification;
@@ -27,12 +26,12 @@ import org.junit.gen5.engine.UniqueIdSpecification;
 public class SpecificationResolver {
 
 	private final Set<TestDescriptor> testDescriptors;
-	private final TestDescriptor root;
+	private final EngineDescriptor root;
 
 	private final TestClassTester classTester = new TestClassTester();
 	private final TestMethodTester methodTester = new TestMethodTester();
 
-	public SpecificationResolver(Set testDescriptors, TestDescriptor root) {
+	public SpecificationResolver(Set testDescriptors, EngineDescriptor root) {
 		this.testDescriptors = testDescriptors;
 		this.root = root;
 	}
@@ -47,11 +46,51 @@ public class SpecificationResolver {
 	}
 
 	private void resolveClassNameSpecification(ClassNameSpecification element) {
+		UniqueId uniqueId = UniqueId.fromClassName(element.getClassName(), root);
+		resolveUniqueId(uniqueId);
 	}
 
 	private void resolveUniqueIdSpecification(UniqueIdSpecification uniqueIdSpecification) {
-		UniqueIdParts uniqueIdParts = new UniqueIdParts(uniqueIdSpecification.getUniqueId());
-
+		UniqueId uniqueId = UniqueId.fromUniqueId(uniqueIdSpecification.getUniqueId(), root);
+		resolveUniqueId(uniqueId);
 	}
+
+	private void resolveUniqueId(UniqueId uniqueId) {
+		if (uniqueId.getJavaElement() instanceof Class) {
+			resolveClass((Class<?>) uniqueId.getJavaElement(), uniqueId.getUniqueId(), root, true);
+		}
+	}
+
+
+	private ClassTestDescriptor resolveClass(Class<?> clazz, String uniqueId, AbstractTestDescriptor parent,
+		boolean withChildren) {
+		if (!classTester.accept(clazz)) {
+			throwCannotResolveClassException(clazz);
+		}
+		//		if (clazz.isMemberClass()) {
+		//			parent = resolveClass(clazz.getEnclosingClass(), parent, false);
+		//		}
+		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, clazz);
+		parent.addChild(descriptor);
+		testDescriptors.add(descriptor);
+
+		if (withChildren) {
+			List<Method> testMethodCandidates = findMethods(clazz, methodTester::accept,
+				AnnotationUtils.MethodSortOrder.HierarchyDown);
+
+			for(Method method : testMethodCandidates) {
+				UniqueId methodId = UniqueId.fromMethod(method, clazz, root);
+				MethodTestDescriptor methodDescriptor = new MethodTestDescriptor(methodId.getUniqueId(), method);
+				descriptor.addChild(methodDescriptor);
+				testDescriptors.add(methodDescriptor);
+			}
+		}
+		return descriptor;
+	}
+
+	private static void throwCannotResolveClassException(Class<?> clazz) {
+		throw new IllegalArgumentException(String.format("Class '%s' is not a test class.", clazz.getName()));
+	}
+
 
 }

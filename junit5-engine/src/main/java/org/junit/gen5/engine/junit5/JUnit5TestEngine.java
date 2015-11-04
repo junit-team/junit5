@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
@@ -38,7 +39,7 @@ public class JUnit5TestEngine implements TestEngine {
 	}
 
 	@Override
-	public List<TestDescriptor> discoverTests(TestPlanSpecification specification, TestDescriptor engineDescriptor) {
+	public List<TestDescriptor> discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
 		// TODO Avoid redundant creation of TestDescriptors during this phase
 		Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
 		resolveSpecification(specification, engineDescriptor, testDescriptors);
@@ -46,7 +47,7 @@ public class JUnit5TestEngine implements TestEngine {
 	}
 
 	// Isolated this step to allow easier experimentation / branching / pull requesting
-	private void resolveSpecification(TestPlanSpecification specification, TestDescriptor engineDescriptor,
+	private void resolveSpecification(TestPlanSpecification specification, EngineDescriptor engineDescriptor,
 			Set<TestDescriptor> testDescriptors) {
 		SpecificationResolver resolver = new SpecificationResolver(testDescriptors, engineDescriptor);
 		for (TestPlanSpecificationElement element : specification) {

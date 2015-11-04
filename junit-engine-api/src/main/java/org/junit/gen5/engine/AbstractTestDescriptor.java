@@ -8,20 +8,19 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor;
+package org.junit.gen5.engine;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.gen5.engine.TestDescriptor;
 
-
-public abstract class AbstractJavaTestDescriptor implements TestDescriptor {
+public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final String uniqueId;
 	private TestDescriptor parent;
-	private Set<TestDescriptor> children;
+	private final Set<TestDescriptor> children = new HashSet<>();
 
-	AbstractJavaTestDescriptor(String uniqueId) {
+	protected AbstractTestDescriptor(String uniqueId) {
 		this.uniqueId = uniqueId;
 	}
 
@@ -54,7 +53,12 @@ public abstract class AbstractJavaTestDescriptor implements TestDescriptor {
 		this.parent = parent;
 	}
 
-	public void addChild(AbstractJavaTestDescriptor child) {
+	public void addChild(AbstractTestDescriptor child) {
+		child.setParent(this);
 		children.add(child);
+	}
+
+	public Set<TestDescriptor> getChildren() {
+		return children;
 	}
 }

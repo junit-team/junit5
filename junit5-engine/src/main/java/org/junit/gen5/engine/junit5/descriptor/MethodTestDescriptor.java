@@ -10,8 +10,6 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.commons.util.ObjectUtils.nullSafeToString;
-
 import java.lang.reflect.Method;
 
 import lombok.Data;
@@ -20,6 +18,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
+import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 
 /**
@@ -29,7 +28,7 @@ import org.junit.gen5.engine.TestDescriptor;
  * @since 5.0
  */
 @Data
-public class MethodTestDescriptor extends AbstractJavaTestDescriptor {
+public class MethodTestDescriptor extends AbstractTestDescriptor {
 
 	private final String displayName;
 

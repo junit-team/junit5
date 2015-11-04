@@ -6,11 +6,9 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.Value;
-
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.engine.EngineDescriptor;
+import org.junit.gen5.engine.TestDescriptor;
 
 @Value
 public class UniqueId {
@@ -31,7 +29,7 @@ public class UniqueId {
 		return parts;
 	}
 
-	public static UniqueId fromUniqueId(String uniqueId, EngineDescriptor engineDescriptor) {
+	public static UniqueId fromUniqueId(String uniqueId, TestDescriptor engineDescriptor) {
 		Preconditions.notEmpty(uniqueId, "uniqueId must not be empty");
 
 		List<String> parts = split(uniqueId);
@@ -45,14 +43,25 @@ public class UniqueId {
 
 	}
 
-	public static UniqueId fromClassName(String className, EngineDescriptor engineDescriptor) {
+	public static UniqueId fromClassName(String className, TestDescriptor engineDescriptor) {
 		Preconditions.notEmpty(className, "className must not be empty");
 		Class<?> clazz = classByName(className);
 		if (clazz == null) {
 			throwCannotResolveClassNameException(className);
 		}
-		String uniqueId = engineDescriptor.getUniqueId() + ":" + className;
+		return fromClass(clazz, engineDescriptor);
+	}
+
+	public static UniqueId fromClass(Class<?> clazz, TestDescriptor engineDescriptor) {
+		Preconditions.notNull(clazz, "clazz must not be null");
+		String uniqueId = engineDescriptor.getUniqueId() + ":" + clazz.getName();
 		return new UniqueId(uniqueId, clazz);
+	}
+
+
+	public static UniqueId fromMethod(Method testMethod, Class<?> clazz, TestDescriptor engineDescriptor) {
+		String uniqueId = fromClass(clazz,engineDescriptor).getUniqueId() + "#" + testMethod.getName() + "()";
+		return new UniqueId(uniqueId, testMethod);
 	}
 
 	private static AnnotatedElement findElement(String uniqueId, List<String> parts) {
@@ -85,6 +94,10 @@ public class UniqueId {
 
 	private static Method findMethod(String methodSpecPart, Class<?> clazz) {
 		String methodName = methodSpecPart.substring(1, methodSpecPart.length() - 2);
+		return findMethodByName(clazz, methodName);
+	}
+
+	private static Method findMethodByName(Class<?> clazz, String methodName) {
 		try {
 			//Todo move to ReflectionUtils and check superclass hierarchy
 			//Todo consider parameters
@@ -134,4 +147,5 @@ public class UniqueId {
 		this.uniqueId = uniqueId;
 		this.javaElement = javaElement;
 	}
+
 }

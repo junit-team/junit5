@@ -10,20 +10,6 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.commons.util.AnnotationUtils.findMethods;
-import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
-
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Set;
-
-import org.junit.gen5.commons.util.AnnotationUtils;
-import org.junit.gen5.engine.ClassNameSpecification;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.gen5.engine.UniqueIdSpecification;
-
 public class OldSpecificationResolver {
 
 //	private final Set<TestDescriptor> testDescriptors;
@@ -208,5 +194,5 @@ public class OldSpecificationResolver {
 //	private void throwCannotResolveClassNameException(String className) {
 //		throw new IllegalArgumentException(String.format("Cannot resolve class of name '%s'", className));
 //	}
-//
+
 }

@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit5.descriptor;
 import lombok.Data;
 
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 
 /**
@@ -24,7 +25,7 @@ import org.junit.gen5.engine.TestDescriptor;
  * @since 5.0
  */
 @Data
-public class ClassTestDescriptor extends AbstractJavaTestDescriptor {
+public class ClassTestDescriptor extends AbstractTestDescriptor {
 
 	private final Class<?> testClass;
 

@@ -66,6 +66,23 @@ public class UniqueIdTest {
 		Assert.assertEquals("junit5:org.junit.gen5.engine.junit5.ATestClass$AnInnerTestClass", uniqueId.getUniqueId());
 		Assert.assertSame(ATestClass.AnInnerTestClass.class, uniqueId.getJavaElement());
 	}
+
+	@org.junit.Test
+	public void fromMethod() throws NoSuchMethodException {
+		Method testMethod = ATestClass.class.getDeclaredMethod("test1", new Class[0]);
+		UniqueId uniqueId = UniqueId.fromMethod(testMethod, ATestClass.class, engineDescriptor);
+		Assert.assertEquals("junit5:org.junit.gen5.engine.junit5.ATestClass#test1()", uniqueId.getUniqueId());
+		Assert.assertSame(testMethod, uniqueId.getJavaElement());
+	}
+
+	@org.junit.Test
+	public void fromMethodInSubclass() throws NoSuchMethodException {
+		Method testMethod = ATestClass.class.getDeclaredMethod("test1", new Class[0]);
+		UniqueId uniqueId = UniqueId.fromMethod(testMethod, BTestClass.class, engineDescriptor);
+		Assert.assertEquals("junit5:org.junit.gen5.engine.junit5.BTestClass#test1()", uniqueId.getUniqueId());
+		Assert.assertSame(testMethod, uniqueId.getJavaElement());
+	}
+
 }
 
 
@@ -90,4 +107,8 @@ class ATestClass {
 			}
 		}
 	}
+}
+
+class BTestClass extends ATestClass {
+
 }
