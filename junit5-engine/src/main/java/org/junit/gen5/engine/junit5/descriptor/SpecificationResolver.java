@@ -60,6 +60,15 @@ public class SpecificationResolver {
 		if (uniqueId.getJavaElement() instanceof Class) {
 			resolveClass((Class<?>) uniqueId.getJavaElement(), uniqueId.getUniqueId(), root, true);
 		}
+		if (uniqueId.getJavaElement() instanceof Method) {
+			resolveMethod((Method) uniqueId.getJavaElement(), uniqueId.getUniqueId(), root, true);
+		}
+	}
+
+	private void resolveMethod(Method method, String uniqueId, EngineDescriptor root, boolean withChildren) {
+		if (!methodTester.accept(method)) {
+			throwCannotResolveMethodException(method);
+		}
 	}
 
 	private ClassTestDescriptor resolveClass(Class<?> clazz, String uniqueId, AbstractTestDescriptor parent,
@@ -67,9 +76,11 @@ public class SpecificationResolver {
 		if (!classTester.accept(clazz)) {
 			throwCannotResolveClassException(clazz);
 		}
-		//		if (clazz.isMemberClass()) {
-		//			parent = resolveClass(clazz.getEnclosingClass(), parent, false);
-		//		}
+		if (clazz.isMemberClass()) {
+			Class<?> enclosingClass = clazz.getEnclosingClass();
+			UniqueId parentId = UniqueId.fromClass(enclosingClass, root);
+			parent = resolveClass(enclosingClass, parentId.getUniqueId(), parent, false);
+		}
 		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, clazz);
 		parent.addChild(descriptor);
 		testDescriptors.add(descriptor);
@@ -86,6 +97,10 @@ public class SpecificationResolver {
 			}
 		}
 		return descriptor;
+	}
+
+	private static void throwCannotResolveMethodException(Method method) {
+		throw new IllegalArgumentException(String.format("Method '%s' is not a test method.", method.getName()));
 	}
 
 	private static void throwCannotResolveClassException(Class<?> clazz) {

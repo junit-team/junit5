@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.ClassNameSpecification;
+import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
@@ -44,7 +45,7 @@ public class JUnit4TestEngine implements TestEngine {
 
 	@Override
 	public Collection<TestDescriptor> discoverTests(TestPlanSpecification specification,
-			TestDescriptor engineDescriptor) {
+			EngineDescriptor engineDescriptor) {
 		Set<TestDescriptor> result = new LinkedHashSet<>();
 		for (TestPlanSpecificationElement element : specification) {
 			if (element instanceof ClassNameSpecification) {
