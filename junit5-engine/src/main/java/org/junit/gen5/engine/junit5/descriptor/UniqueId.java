@@ -77,6 +77,7 @@ public class UniqueId {
 		String methodName = methodSpecPart.substring(1, methodSpecPart.length() - 2);
 		try {
 			//Todo move to ReflectionUtils and check superclass hierarchy
+			//Todo consider parameters
 			return clazz.getDeclaredMethod(methodName, new Class[0]);
 		}
 		catch (NoSuchMethodException e) {
