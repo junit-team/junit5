@@ -29,21 +29,18 @@ import org.junit.gen5.engine.TestDescriptor;
  * @since 5.0
  */
 @Data
-public class MethodTestDescriptor extends AbstractTestDescriptor {
+public class MethodTestDescriptor extends AbstractJavaTestDescriptor {
 
 	private final String displayName;
 
-	private final ClassTestDescriptor parent;
-
 	private final Method testMethod;
 
-	public MethodTestDescriptor(Method testMethod, ClassTestDescriptor parent) {
+	public MethodTestDescriptor(String uniqueId, Method testMethod) {
+		super(uniqueId);
 		Preconditions.notNull(testMethod, "testMethod must not be null");
-		Preconditions.notNull(parent, "parent must not be null");
 
 		this.testMethod = testMethod;
 		this.displayName = determineDisplayName();
-		this.parent = parent;
 	}
 
 	private String determineDisplayName() {
@@ -53,12 +50,6 @@ public class MethodTestDescriptor extends AbstractTestDescriptor {
 				.filter(name -> !StringUtils.isBlank(name))
 				.orElse(this.testMethod.getName());
 		// @formatter:on
-	}
-
-	@Override
-	public final String getUniqueId() {
-		return String.format("%s#%s(%s)", getParent().getUniqueId(), testMethod.getName(),
-			nullSafeToString(testMethod.getParameterTypes()));
 	}
 
 	@Override

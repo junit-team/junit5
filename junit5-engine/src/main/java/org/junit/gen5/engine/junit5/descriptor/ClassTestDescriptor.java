@@ -24,25 +24,15 @@ import org.junit.gen5.engine.TestDescriptor;
  * @since 5.0
  */
 @Data
-public class ClassTestDescriptor extends AbstractTestDescriptor {
+public class ClassTestDescriptor extends AbstractJavaTestDescriptor {
 
-	private final TestDescriptor parent;
 	private final Class<?> testClass;
 
-	public ClassTestDescriptor(Class<?> testClass, TestDescriptor parent) {
+	public ClassTestDescriptor(String uniqueId, Class<?> testClass) {
+		super(uniqueId);
 		Preconditions.notNull(testClass, "testClass must not be null");
-		Preconditions.notNull(parent, "parent must not be null");
 
 		this.testClass = testClass;
-		this.parent = parent;
-	}
-
-	@Override
-	public final String getUniqueId() {
-		if (testClass.isMemberClass()) {
-			return this.parent.getUniqueId() + "$" + testClass.getSimpleName();
-		}
-		return this.parent.getUniqueId() + ":" + testClass.getName();
 	}
 
 	@Override

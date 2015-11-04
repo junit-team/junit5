@@ -42,7 +42,8 @@ public class ClassNameTestDescriptorResolver
 			throw new IllegalStateException(e);
 		}
 		if (classTester.accept(clazz)) {
-			return new ClassTestDescriptor(clazz, parent);
+			return null;
+//			return new ClassTestDescriptor(clazz, parent);
 		}
 		else {
 			return null;
@@ -60,7 +61,8 @@ public class ClassNameTestDescriptorResolver
 
 			// @formatter:off
 			children.addAll(testMethodCandidates.stream()
-				.map(method -> new MethodTestDescriptor(method, parent))
+				.map(method -> new MethodTestDescriptor("a unique id", method))
+//				.map(method -> new MethodTestDescriptor(method, parent))
 				.collect(toList()));
 			// @formatter:on
 

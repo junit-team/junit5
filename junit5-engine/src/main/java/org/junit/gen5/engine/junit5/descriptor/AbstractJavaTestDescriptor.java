@@ -10,9 +10,20 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import java.util.Set;
+
 import org.junit.gen5.engine.TestDescriptor;
 
-public abstract class AbstractTestDescriptor implements TestDescriptor {
+
+public abstract class AbstractJavaTestDescriptor implements TestDescriptor {
+
+	private final String uniqueId;
+	private TestDescriptor parent;
+	private Set<TestDescriptor> children;
+
+	AbstractJavaTestDescriptor(String uniqueId) {
+		this.uniqueId = uniqueId;
+	}
 
 	@Override
 	public boolean equals(Object other) {
@@ -27,5 +38,23 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	public int hashCode() {
 		//Even if you think otherwise this complies to Java's equals/hashCode contract
 		return 42;
+	}
+
+	@Override
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	@Override
+	public TestDescriptor getParent() {
+		return parent;
+	}
+
+	protected void setParent(TestDescriptor parent) {
+		this.parent = parent;
+	}
+
+	public void addChild(AbstractJavaTestDescriptor child) {
+		children.add(child);
 	}
 }
