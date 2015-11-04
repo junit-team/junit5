@@ -26,7 +26,6 @@ public class SimpleTypeBasedMethodArgumentResolver implements MethodArgumentReso
 		if (parameterType.getName().equals("com.example.CustomType"))
 			return ReflectionUtils.newInstance(parameterType);
 
-
 		return null;
 	}
 

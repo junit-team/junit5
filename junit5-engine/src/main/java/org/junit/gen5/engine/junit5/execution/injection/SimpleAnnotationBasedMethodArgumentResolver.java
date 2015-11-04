@@ -10,10 +10,10 @@
 
 package org.junit.gen5.engine.junit5.execution.injection;
 
-import org.junit.gen5.commons.util.*;
-
 import java.lang.annotation.*;
 import java.lang.reflect.*;
+
+import org.junit.gen5.commons.util.*;
 
 // for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
 public class SimpleAnnotationBasedMethodArgumentResolver implements MethodArgumentResolver {
