@@ -10,24 +10,25 @@
 
 package org.junit.gen5.engine.junit5.execution.injection;
 
+import org.junit.gen5.commons.util.*;
+
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 
-import org.junit.gen5.commons.util.*;
-
 // for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
-public class SimpleTypeBasedMethodArgumentResolver implements MethodArgumentResolver {
+public class SimpleAnnotationBasedMethodArgumentResolver implements MethodArgumentResolver {
 
 	@Override
 	public Object resolveArgumentForMethodParameter(Parameter parameter)
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		Class<?> parameterType = parameter.getType();
 
-		if (parameterType.getName().equals("com.example.CustomType"))
-			return ReflectionUtils.newInstance(parameterType);
+		//TODO: machen
 
+		Annotation[] parameterAnnotations = parameter.getAnnotations();
 
-		return null;
+		System.out.println("parameter = " + parameter);
+		return ReflectionUtils.newInstance(parameterType);
 	}
 
 }
