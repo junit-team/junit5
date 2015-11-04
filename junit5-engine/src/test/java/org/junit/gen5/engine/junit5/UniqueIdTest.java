@@ -1,3 +1,13 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
+
 package org.junit.gen5.engine.junit5;
 
 import java.lang.reflect.Method;
@@ -46,9 +56,10 @@ public class UniqueIdTest {
 
 	@org.junit.Test
 	public void fromUniqueIdForMethodInNestedClass() throws NoSuchMethodException {
-		UniqueId uniqueId = UniqueId.fromUniqueId("junit5:org.junit.gen5.engine.junit5.ATestClass$AnInnerTestClass#test2()",
-			engineDescriptor);
-		Assert.assertEquals("junit5:org.junit.gen5.engine.junit5.ATestClass$AnInnerTestClass#test2()", uniqueId.getUniqueId());
+		UniqueId uniqueId = UniqueId.fromUniqueId(
+			"junit5:org.junit.gen5.engine.junit5.ATestClass$AnInnerTestClass#test2()", engineDescriptor);
+		Assert.assertEquals("junit5:org.junit.gen5.engine.junit5.ATestClass$AnInnerTestClass#test2()",
+			uniqueId.getUniqueId());
 		Method testMethod = ATestClass.AnInnerTestClass.class.getDeclaredMethod("test2", new Class[0]);
 		Assert.assertEquals(testMethod, uniqueId.getJavaElement());
 	}
@@ -62,7 +73,8 @@ public class UniqueIdTest {
 
 	@org.junit.Test
 	public void nestedClassFromClassName() throws NoSuchMethodException {
-		UniqueId uniqueId = UniqueId.fromClassName("org.junit.gen5.engine.junit5.ATestClass$AnInnerTestClass", engineDescriptor);
+		UniqueId uniqueId = UniqueId.fromClassName("org.junit.gen5.engine.junit5.ATestClass$AnInnerTestClass",
+			engineDescriptor);
 		Assert.assertEquals("junit5:org.junit.gen5.engine.junit5.ATestClass$AnInnerTestClass", uniqueId.getUniqueId());
 		Assert.assertSame(ATestClass.AnInnerTestClass.class, uniqueId.getJavaElement());
 	}
@@ -85,7 +97,6 @@ public class UniqueIdTest {
 
 }
 
-
 class ATestClass {
 
 	@Test
@@ -101,6 +112,7 @@ class ATestClass {
 		}
 
 		static class InnerInnerTestClass {
+
 			@Test
 			void test3() {
 

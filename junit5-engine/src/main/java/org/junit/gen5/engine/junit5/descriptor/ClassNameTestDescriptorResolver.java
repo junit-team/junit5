@@ -43,7 +43,7 @@ public class ClassNameTestDescriptorResolver
 		}
 		if (classTester.accept(clazz)) {
 			return null;
-//			return new ClassTestDescriptor(clazz, parent);
+			//			return new ClassTestDescriptor(clazz, parent);
 		}
 		else {
 			return null;

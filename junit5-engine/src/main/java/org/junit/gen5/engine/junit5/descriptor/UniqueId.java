@@ -1,3 +1,13 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
+
 package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
@@ -6,7 +16,9 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.Value;
+
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
 
@@ -58,9 +70,8 @@ public class UniqueId {
 		return new UniqueId(uniqueId, clazz);
 	}
 
-
 	public static UniqueId fromMethod(Method testMethod, Class<?> clazz, TestDescriptor engineDescriptor) {
-		String uniqueId = fromClass(clazz,engineDescriptor).getUniqueId() + "#" + testMethod.getName() + "()";
+		String uniqueId = fromClass(clazz, engineDescriptor).getUniqueId() + "#" + testMethod.getName() + "()";
 		return new UniqueId(uniqueId, testMethod);
 	}
 
@@ -130,15 +141,13 @@ public class UniqueId {
 	}
 
 	private static void throwCannotResolveClassNameException(String className) {
-		throw new IllegalArgumentException(
-			String.format("Cannot resolve class name '%s'", className));
+		throw new IllegalArgumentException(String.format("Cannot resolve class name '%s'", className));
 	}
 
 	private static void throwCannotResolveUniqueIdException(String fullUniqueId, String uniqueIdPart) {
 		throw new IllegalArgumentException(
 			String.format("Cannot resolve part '%s' of unique id '%s'", uniqueIdPart, fullUniqueId));
 	}
-
 
 	private final String uniqueId;
 	private final AnnotatedElement javaElement;

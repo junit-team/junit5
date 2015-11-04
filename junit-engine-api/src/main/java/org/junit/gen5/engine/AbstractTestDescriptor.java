@@ -13,7 +13,6 @@ package org.junit.gen5.engine;
 import java.util.HashSet;
 import java.util.Set;
 
-
 public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final String uniqueId;
