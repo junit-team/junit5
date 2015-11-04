@@ -45,6 +45,16 @@ public class UniqueId {
 
 	}
 
+	public static UniqueId fromClassName(String className, EngineDescriptor engineDescriptor) {
+		Preconditions.notEmpty(className, "className must not be empty");
+		Class<?> clazz = classByName(className);
+		if (clazz == null) {
+			throwCannotResolveClassNameException(className);
+		}
+		String uniqueId = engineDescriptor.getUniqueId() + ":" + className;
+		return new UniqueId(uniqueId, clazz);
+	}
+
 	private static AnnotatedElement findElement(String uniqueId, List<String> parts) {
 		AnnotatedElement current = null;
 		String head = parts.remove(0);
@@ -104,6 +114,11 @@ public class UniqueId {
 			clazz = null;
 		}
 		return clazz;
+	}
+
+	private static void throwCannotResolveClassNameException(String className) {
+		throw new IllegalArgumentException(
+			String.format("Cannot resolve class name '%s'", className));
 	}
 
 	private static void throwCannotResolveUniqueIdException(String fullUniqueId, String uniqueIdPart) {
