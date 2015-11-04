@@ -173,13 +173,13 @@ public class SpecificationResolverTest {
 		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.MyTestClass#test1()"));
 		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.MyTestClass#test2()"));
 
-		TestDescriptor fromMethod1 = descriptorByUniqueId(
+		TestDescriptor classFromMethod1 = descriptorByUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.MyTestClass#test1()").getParent();
-		TestDescriptor fromMethod2 = descriptorByUniqueId(
+		TestDescriptor classFromMethod2 = descriptorByUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.MyTestClass#test2()").getParent();
 
-		Assert.assertEquals(fromMethod1, fromMethod2);
-		Assert.assertSame(fromMethod1, fromMethod2);
+		Assert.assertEquals(classFromMethod1, classFromMethod2);
+		Assert.assertSame(classFromMethod1, classFromMethod2);
 	}
 
 	public TestDescriptor descriptorByUniqueId(String id) {

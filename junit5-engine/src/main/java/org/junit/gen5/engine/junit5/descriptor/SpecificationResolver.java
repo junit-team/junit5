@@ -15,7 +15,6 @@ import static org.junit.gen5.commons.util.AnnotationUtils.findMethods;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
-
 import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.ClassNameSpecification;
@@ -65,14 +64,23 @@ public class SpecificationResolver {
 		}
 	}
 
-	private void resolveMethod(Method method, String uniqueId, EngineDescriptor root, boolean withChildren) {
+	private void resolveMethod(Method method, String uniqueId, AbstractTestDescriptor parent, boolean withChildren) {
 		if (!methodTester.accept(method)) {
 			throwCannotResolveMethodException(method);
 		}
+		Class<?> enclosingClass = method.getDeclaringClass();
+		UniqueId parentId = UniqueId.fromClass(enclosingClass, root);
+		parent = resolveClass(enclosingClass, parentId.getUniqueId(), parent, false);
+
+		MethodTestDescriptor descriptor = getOrCreateMethodDescriptor(method, uniqueId);
+		parent.addChild(descriptor);
+		testDescriptors.add(descriptor);
+
+		//todo methods could have children too
 	}
 
 	private ClassTestDescriptor resolveClass(Class<?> clazz, String uniqueId, AbstractTestDescriptor parent,
-			boolean withChildren) {
+		boolean withChildren) {
 		if (!classTester.accept(clazz)) {
 			throwCannotResolveClassException(clazz);
 		}
@@ -81,7 +89,7 @@ public class SpecificationResolver {
 			UniqueId parentId = UniqueId.fromClass(enclosingClass, root);
 			parent = resolveClass(enclosingClass, parentId.getUniqueId(), parent, false);
 		}
-		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, clazz);
+		ClassTestDescriptor descriptor = getOrCreateClassDescriptor(clazz, uniqueId);
 		parent.addChild(descriptor);
 		testDescriptors.add(descriptor);
 
@@ -91,13 +99,43 @@ public class SpecificationResolver {
 
 			for (Method method : testMethodCandidates) {
 				UniqueId methodId = UniqueId.fromMethod(method, clazz, root);
-				MethodTestDescriptor methodDescriptor = new MethodTestDescriptor(methodId.getUniqueId(), method);
+				MethodTestDescriptor methodDescriptor = getOrCreateMethodDescriptor(method, methodId.getUniqueId());
 				descriptor.addChild(methodDescriptor);
 				testDescriptors.add(methodDescriptor);
 			}
 		}
 		return descriptor;
 	}
+
+	private MethodTestDescriptor getOrCreateMethodDescriptor(Method method, String uniqueId) {
+		TestDescriptor existingDescriptor = descriptorByUniqueId(uniqueId);
+		if (existingDescriptor == null) {
+			return new MethodTestDescriptor(uniqueId, method);
+		}
+		else {
+			return (MethodTestDescriptor) existingDescriptor;
+		}
+	}
+
+	private ClassTestDescriptor getOrCreateClassDescriptor(Class<?> clazz, String uniqueId) {
+		TestDescriptor existingDescriptor = descriptorByUniqueId(uniqueId);
+		if (existingDescriptor == null) {
+			return new ClassTestDescriptor(uniqueId, clazz);
+		}
+		else {
+			return (ClassTestDescriptor) existingDescriptor;
+		}
+	}
+
+	private TestDescriptor descriptorByUniqueId(String uniqueId) {
+		for (TestDescriptor descriptor : testDescriptors) {
+			if (descriptor.getUniqueId().equals(uniqueId)) {
+				return descriptor;
+			}
+		}
+		return null;
+	}
+
 
 	private static void throwCannotResolveMethodException(Method method) {
 		throw new IllegalArgumentException(String.format("Method '%s' is not a test method.", method.getName()));
