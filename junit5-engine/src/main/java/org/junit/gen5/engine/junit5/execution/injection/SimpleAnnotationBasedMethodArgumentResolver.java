@@ -23,12 +23,17 @@ public class SimpleAnnotationBasedMethodArgumentResolver implements MethodArgume
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		Class<?> parameterType = parameter.getType();
 
-		//TODO: machen
+		//todo: check should be based on class-objects not strings
+		boolean match = false;
+		for (Annotation parameterAnnotation : parameter.getAnnotations()) {
+			if (parameterAnnotation.annotationType().getName().equals("com.example.CustomAnnotation"))
+				match = true;
+		}
 
-		Annotation[] parameterAnnotations = parameter.getAnnotations();
+		if (match)
+			return ReflectionUtils.newInstance(parameterType);
 
-		System.out.println("parameter = " + parameter);
-		return ReflectionUtils.newInstance(parameterType);
+		return null;
 	}
 
 }

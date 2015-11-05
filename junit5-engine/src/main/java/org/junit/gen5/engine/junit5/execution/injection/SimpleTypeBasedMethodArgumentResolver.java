@@ -23,6 +23,7 @@ public class SimpleTypeBasedMethodArgumentResolver implements MethodArgumentReso
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		Class<?> parameterType = parameter.getType();
 
+		//todo: check should be based on class-objects not strings
 		if (parameterType.getName().equals("com.example.CustomType"))
 			return ReflectionUtils.newInstance(parameterType);
 
