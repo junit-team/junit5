@@ -19,7 +19,7 @@ import org.junit.gen5.api.Test;
 /**
  * Named *TestCase so Gradle will not try to run it.
  */
-class SucceedingTestCase extends AbstractSuperTest {
+class SucceedingTestCase extends AbstractSuperTest implements InterfaceWithTestCases {
 
 	@BeforeAll
 	void initClass() {
@@ -90,4 +90,32 @@ abstract class AbstractSuperTest {
 	void afterAllFromSuperclass() {
 		System.out.println(getClass().getName() + " after all from super class called");
 	}
+}
+
+interface InterfaceWithTestCases extends SuperInterface {
+
+	@Before
+	default void beforeFromInterface() {
+		System.out.println(getClass().getName() + " before from interface called");
+	}
+
+	@Test
+	default void testFromInterface() {
+		System.out.println("test from interface");
+	}
+
+	@After
+	default void afterFromInterface() {
+		System.out.println(getClass().getName() + " after from interface called");
+	}
+
+}
+
+interface SuperInterface {
+
+	@Test
+	default void testFromInterface() {
+		System.out.println("test from super interface is shadowed");
+	}
+
 }

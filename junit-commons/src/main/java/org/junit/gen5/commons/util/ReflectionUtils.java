@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * @author Stefan Bechtold
@@ -98,15 +99,50 @@ public class ReflectionUtils {
 				.collect(toList());
 		// @formatter:on
 
+		// @formatter:off
+		List<Method> interfaceMethods = getInterfaceMethods(clazz, sortOrder).stream()
+				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
+				.collect(toList());
+		// @formatter:on
+
 		List<Method> methods = new ArrayList<>();
 		if (sortOrder == MethodSortOrder.HierarchyDown) {
 			methods.addAll(superclassMethods);
+			methods.addAll(interfaceMethods);
 		}
 		methods.addAll(localMethods);
 		if (sortOrder == MethodSortOrder.HierarchyUp) {
+			methods.addAll(interfaceMethods);
 			methods.addAll(superclassMethods);
 		}
 		return methods;
+	}
+
+	private static List<Method> getInterfaceMethods(Class<?> clazz, MethodSortOrder sortOrder) {
+		List<Method> allInterfaceMethods = new ArrayList<>();
+		for (Class<?> anInterface : clazz.getInterfaces()) {
+
+			List<Method> localMethods = Arrays.stream(anInterface.getDeclaredMethods()).filter(
+				method -> method.isDefault()).collect(Collectors.toList());
+
+			// @formatter:off
+			List<Method> subInterfaceMethods = getInterfaceMethods(anInterface, sortOrder).stream()
+					.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
+					.collect(toList());
+			// @formatter:on
+
+			if (sortOrder == MethodSortOrder.HierarchyDown) {
+				allInterfaceMethods.addAll(subInterfaceMethods);
+			}
+			allInterfaceMethods.addAll(localMethods);
+			if (sortOrder == MethodSortOrder.HierarchyUp) {
+				allInterfaceMethods.addAll(subInterfaceMethods);
+			}
+		}
+		//		System.out.println("INTERFACE METHODS: " + interfaceMethods);
+		//		System.out.println();
+		return allInterfaceMethods;
+
 	}
 
 	private static List<Method> getSuperclassMethods(Class<?> clazz, MethodSortOrder sortOrder) {

@@ -15,6 +15,7 @@ import org.junit.gen5.junit4runner.JUnit5.Classes;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
+//@Classes({ SucceedingTestCase.class })
 @Classes({ SampleTestCase.class, SucceedingTestCase.class, JUnit4TestCase.class })
 public class JUnit4SamplesSuite {
 
