@@ -29,10 +29,6 @@ import java.util.Set;
  */
 public final class AnnotationUtils {
 
-	public static enum MethodSortOrder {
-		HierarchyDown, HierarchyUp
-	}
-
 	private AnnotationUtils() {
 		/* no-op */
 	}
@@ -89,7 +85,7 @@ public final class AnnotationUtils {
 	}
 
 	public static List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType,
-			MethodSortOrder sortOrder) {
+			ReflectionUtils.MethodSortOrder sortOrder) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 

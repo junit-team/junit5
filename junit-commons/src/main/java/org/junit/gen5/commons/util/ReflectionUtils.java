@@ -28,6 +28,10 @@ import java.util.function.Predicate;
  */
 public class ReflectionUtils {
 
+	public enum MethodSortOrder {
+		HierarchyDown, HierarchyUp
+	}
+
 	private ReflectionUtils() {
 		/* no-op */
 	}
@@ -55,8 +59,7 @@ public class ReflectionUtils {
 		return ClassLoader.getSystemClassLoader().loadClass(name);
 	}
 
-	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate,
-			AnnotationUtils.MethodSortOrder sortOrder) {
+	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate, MethodSortOrder sortOrder) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "predicate must not be null");
 
@@ -70,7 +73,7 @@ public class ReflectionUtils {
 	/**
 	 * Return all methods in superclass hierarchy except from Object.
 	 */
-	public static List<Method> findAllMethodsInHierarchy(Class<?> clazz, AnnotationUtils.MethodSortOrder sortOrder) {
+	public static List<Method> findAllMethodsInHierarchy(Class<?> clazz, MethodSortOrder sortOrder) {
 		// TODO Support interface default methods.
 		// TODO Determine if we need to support bridged methods.
 
@@ -83,17 +86,17 @@ public class ReflectionUtils {
 		// @formatter:on
 
 		List<Method> methods = new ArrayList<>();
-		if (sortOrder == AnnotationUtils.MethodSortOrder.HierarchyDown) {
+		if (sortOrder == MethodSortOrder.HierarchyDown) {
 			methods.addAll(superclassMethods);
 		}
 		methods.addAll(localMethods);
-		if (sortOrder == AnnotationUtils.MethodSortOrder.HierarchyUp) {
+		if (sortOrder == MethodSortOrder.HierarchyUp) {
 			methods.addAll(superclassMethods);
 		}
 		return methods;
 	}
 
-	private static List<Method> getSuperclassMethods(Class<?> clazz, AnnotationUtils.MethodSortOrder sortOrder) {
+	private static List<Method> getSuperclassMethods(Class<?> clazz, MethodSortOrder sortOrder) {
 		if (clazz.getSuperclass() != Object.class) {
 			return findAllMethodsInHierarchy(clazz.getSuperclass(), sortOrder);
 		}
@@ -122,4 +125,5 @@ public class ReflectionUtils {
 		}
 		return true;
 	}
+
 }

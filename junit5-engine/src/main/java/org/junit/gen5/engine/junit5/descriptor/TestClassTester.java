@@ -10,7 +10,6 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
@@ -32,7 +31,7 @@ class TestClassTester extends ReflectionObjectTester {
 
 	private boolean hasTestMethods(Class<?> testClassCandidate) {
 		return !ReflectionUtils.findMethods(testClassCandidate, methodTester::accept,
-			AnnotationUtils.MethodSortOrder.HierarchyDown).isEmpty();
+			ReflectionUtils.MethodSortOrder.HierarchyDown).isEmpty();
 	}
 
 }
