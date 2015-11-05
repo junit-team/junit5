@@ -51,14 +51,36 @@ public class JUnit5 extends Runner {
 		/**
 		 * @return the classes to be run
 		 */
-		public Class<?>[]value();
+		Class<?>[]value();
 	}
 
 	private static Class<?>[] getAnnotatedClasses(Class<?> testClass) throws InitializationError {
 		Classes annotation = testClass.getAnnotation(Classes.class);
 		if (annotation == null) {
-			throw new InitializationError(String.format("class '%s' must have a @%s annotation or a static %s method",
-				testClass.getName(), Classes.class.getSimpleName(), CREATE_SPECIFICATION_METHOD_NAME));
+			return new Class[0];
+		}
+		return annotation.value();
+	}
+
+	/**
+	 * The <code>UniqueIds</code> annotation specifies unique ids of classes or methods to be run when a class
+	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	@Inherited
+	public @interface UniqueIds {
+
+		/**
+		 * @return the classes to be run
+		 */
+		String[]value();
+	}
+
+	private static String[] getAnnotatedUniqueIds(Class<?> testClass) throws InitializationError {
+		UniqueIds annotation = testClass.getAnnotation(UniqueIds.class);
+		if (annotation == null) {
+			return new String[0];
 		}
 		return annotation.value();
 	}
@@ -81,14 +103,25 @@ public class JUnit5 extends Runner {
 			return (TestPlanSpecification) createSpecMethod.invoke(null);
 		}
 		catch (NoSuchMethodException nsme) {
-			Class<?>[] testClasses = getAnnotatedClasses(testClass);
-			List<TestPlanSpecificationElement> testClassNames = Arrays.stream(testClasses).map(
-				clazz -> TestPlanSpecification.forClassName(clazz.getName())).collect(Collectors.toList());
-			return TestPlanSpecification.build(testClassNames);
+			List<TestPlanSpecificationElement> specs = getClassnameSpecificationElements();
+			specs.addAll(getUniqueIdSpecificationElements());
+			return TestPlanSpecification.build(specs);
 		}
 		catch (Exception e) {
 			throw new InitializationError(e);
 		}
+	}
+
+	private List<TestPlanSpecificationElement> getClassnameSpecificationElements() throws InitializationError {
+		Class<?>[] testClasses = getAnnotatedClasses(testClass);
+		return Arrays.stream(testClasses).map(
+			clazz -> TestPlanSpecification.forClassName(clazz.getName())).collect(Collectors.toList());
+	}
+
+	private List<TestPlanSpecificationElement> getUniqueIdSpecificationElements() throws InitializationError {
+		String[] uniqueIds = getAnnotatedUniqueIds(testClass);
+		return Arrays.stream(uniqueIds).map(
+			uniqueId -> TestPlanSpecification.forUniqueId(uniqueId)).collect(Collectors.toList());
 	}
 
 	private Description generateDescription() {
@@ -178,19 +211,21 @@ public class JUnit5 extends Runner {
 			// TODO We call this after calling fireTestStarted. This leads to a wrong test
 			// count in Eclipse.
 			notifier.fireTestIgnored(description);
+			notifier.fireTestFinished(description);
 		}
 
 		@Override
 		public void testAborted(TestDescriptor testDescriptor, Throwable t) {
 			Description description = findJUnit4Description(testDescriptor);
 			notifier.fireTestAssumptionFailed(new Failure(description, t));
+			notifier.fireTestFinished(description);
 		}
 
 		@Override
 		public void testFailed(TestDescriptor testDescriptor, Throwable t) {
 			Description description = findJUnit4Description(testDescriptor);
 			notifier.fireTestFailure(new Failure(description, t));
-
+			notifier.fireTestFinished(description);
 		}
 
 		@Override
