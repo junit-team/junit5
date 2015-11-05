@@ -10,173 +10,42 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
-
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import lombok.Value;
-
-import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.ReflectionUtils;
-
-@Value
-public class JUnit5Testable {
-
-	private static final String SEPARATORS = ":$#";
-
-	private static List<String> split(String uniqueId) {
-		List<String> parts = new ArrayList<>();
-		String currentPart = "";
-		for (char c : uniqueId.toCharArray()) {
-			if (SEPARATORS.contains(Character.toString(c))) {
-				parts.add(currentPart);
-				currentPart = "";
-			}
-			currentPart += c;
-		}
-		parts.add(currentPart);
-		return parts;
-	}
+public abstract class JUnit5Testable {
 
 	public static JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
-		Preconditions.notEmpty(uniqueId, "uniqueId must not be empty");
-		List<String> parts = split(uniqueId);
-		Preconditions.condition(parts.remove(0).equals(engineId), "uniqueId must start with engineId");
-
-		return createElement(uniqueId, parts);
+		return new JUnit5TestableFactory().fromUniqueId(uniqueId, engineId);
 	}
 
 	public static JUnit5Testable fromClassName(String className, String engineId) {
-		Preconditions.notEmpty(className, "className must not be empty");
-		Class<?> clazz = classByName(className);
-		if (clazz == null) {
-			throwCannotResolveClassNameException(className);
-		}
-		return fromClass(clazz, engineId);
+		return new JUnit5TestableFactory().fromClassName(className, engineId);
 	}
 
 	public static JUnit5Testable fromClass(Class<?> clazz, String engineId) {
-		Preconditions.notNull(clazz, "clazz must not be null");
-		String uniqueId = engineId + ":" + clazz.getName();
-		return new JUnit5Testable(uniqueId, clazz, null);
+		return new JUnit5TestableFactory().fromClass(clazz, engineId);
 	}
 
 	public static JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
-		String uniqueId = fromClass(clazz, engineId).getUniqueId() + "#" + testMethod.getName()
-				+ getParameterIdPart(testMethod);
-		return new JUnit5Testable(uniqueId, testMethod, clazz);
-	}
-
-	public static String getParameterIdPart(Method testMethod) {
-		String parameterString = Arrays.stream(testMethod.getParameterTypes()).map(Class::getName).collect(
-			Collectors.joining(","));
-		return "(" + parameterString + ")";
-	}
-
-	private static JUnit5Testable createElement(String uniqueId, List<String> parts) {
-		AnnotatedElement currentJavaElement = null;
-		Class<?> currentJavaContainer = null;
-		String head = parts.remove(0);
-		while (true) {
-			switch (head.charAt(0)) {
-				case ':':
-					currentJavaElement = findTopLevelClass(head);
-					break;
-				case '$':
-					currentJavaContainer = (Class<?>) currentJavaElement;
-					currentJavaElement = findNestedClass(head, (Class<?>) currentJavaElement);
-					break;
-				case '#':
-					currentJavaContainer = (Class<?>) currentJavaElement;
-					currentJavaElement = findMethod(head, currentJavaContainer, uniqueId);
-					break;
-				default:
-					currentJavaContainer = null;
-					currentJavaElement = null;
-			}
-
-			if (currentJavaElement == null) {
-				throwCannotResolveUniqueIdException(uniqueId, head);
-			}
-			if (parts.isEmpty())
-				break;
-			head = parts.remove(0);
-		}
-		return new JUnit5Testable(uniqueId, currentJavaElement, currentJavaContainer);
-	}
-
-	private static Method findMethod(String methodSpecPart, Class<?> clazz, String uniqueId) {
-		int startParams = methodSpecPart.indexOf('(');
-		String methodName = methodSpecPart.substring(1, startParams);
-		int endParams = methodSpecPart.lastIndexOf(')');
-		String paramsPart = methodSpecPart.substring(startParams + 1, endParams);
-		Class<?>[] parameterTypes = findParameterTypes(paramsPart, uniqueId);
-		return findMethod(clazz, methodName, parameterTypes);
-	}
-
-	private static <R> Class<?>[] findParameterTypes(String paramsPart, String uniqueId) {
-		if (paramsPart.isEmpty()) {
-			return new Class<?>[0];
-		}
-		List<Class<?>> types = Arrays.stream(paramsPart.split(",")).map(typeName -> {
-			try {
-				return ReflectionUtils.loadClass(typeName);
-			}
-			catch (ClassNotFoundException e) {
-				throwCannotResolveUniqueIdException(uniqueId, paramsPart);
-				return null; //cannot happen
-			}
-		}).collect(Collectors.toList());
-		return types.toArray(new Class<?>[types.size()]);
-	}
-
-	private static Method findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
-		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes).orElseThrow(
-			() -> new IllegalArgumentException(String.format("No method with 'name' %s and paramter types '%s'",
-				methodName, Arrays.toString(parameterTypes))));
-	}
-
-	private static Class<?> findNestedClass(String nameExtension, Class<?> containerClass) {
-		String fullClassName = containerClass.getName() + nameExtension;
-		return classByName(fullClassName);
-	}
-
-	private static Class<?> findTopLevelClass(String classNamePart) {
-		String className = classNamePart.substring(1);
-		return classByName(className);
-	}
-
-	private static Class<?> classByName(String className) {
-		try {
-			return loadClass(className);
-		}
-		catch (ClassNotFoundException e) {
-			return null;
-		}
-	}
-
-	private static void throwCannotResolveClassNameException(String className) {
-		throw new IllegalArgumentException(String.format("Cannot resolve class name '%s'", className));
-	}
-
-	private static void throwCannotResolveUniqueIdException(String fullUniqueId, String uniqueIdPart) {
-		throw new IllegalArgumentException(
-			String.format("Cannot resolve part '%s' of unique id '%s'", uniqueIdPart, fullUniqueId));
+		return new JUnit5TestableFactory().fromMethod(testMethod, clazz, engineId);
 	}
 
 	private final String uniqueId;
-	private final AnnotatedElement javaElement;
-	private final Class<?> javaContainer;
 
-	private JUnit5Testable(String uniqueId, AnnotatedElement javaElement, Class<?> javaContainer) {
+	JUnit5Testable(String uniqueId) {
 		this.uniqueId = uniqueId;
-		this.javaElement = javaElement;
-		this.javaContainer = javaContainer;
 	}
 
+	abstract void accept(Visitor visitor);
+
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	public interface Visitor {
+
+		void visitClass(String uniqueId, Class<?> testClass);
+
+		void visitMethod(String uniqueId, Method method, Class<?> container);
+	}
 }

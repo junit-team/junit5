@@ -59,13 +59,18 @@ public class SpecificationResolver {
 	}
 
 	private void resolveUniqueId(JUnit5Testable testable) {
-		if (testable.getJavaElement() instanceof Class) {
-			resolveClass((Class<?>) testable.getJavaElement(), testable.getUniqueId(), engineDescriptor, true);
-		}
-		if (testable.getJavaElement() instanceof Method) {
-			resolveMethod((Method) testable.getJavaElement(), testable.getJavaContainer(), testable.getUniqueId(),
-				engineDescriptor);
-		}
+		testable.accept(new JUnit5Testable.Visitor() {
+
+			@Override
+			public void visitClass(String uniqueId, Class<?> testClass) {
+				resolveClass(testClass, uniqueId, engineDescriptor, true);
+			}
+
+			@Override
+			public void visitMethod(String uniqueId, Method method, Class<?> container) {
+				resolveMethod(method, container, uniqueId, engineDescriptor);
+			}
+		});
 	}
 
 	private void resolveMethod(Method method, Class<?> testClass, String uniqueId, AbstractTestDescriptor parent) {
