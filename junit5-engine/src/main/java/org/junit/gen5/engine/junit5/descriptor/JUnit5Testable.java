@@ -25,7 +25,7 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
 
 @Value
-public class UniqueId {
+public class JUnit5Testable {
 
 	private static final String SEPARATORS = ":$#";
 
@@ -43,39 +43,35 @@ public class UniqueId {
 		return parts;
 	}
 
-	public static UniqueId fromUniqueId(String uniqueId, TestDescriptor engineDescriptor) {
+	public static JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
 		Preconditions.notEmpty(uniqueId, "uniqueId must not be empty");
-
 		List<String> parts = split(uniqueId);
-
-		Preconditions.condition(parts.remove(0).equals(engineDescriptor.getUniqueId()),
-			"uniqueId must start with engineId");
+		Preconditions.condition(parts.remove(0).equals(engineId), "uniqueId must start with engineId");
 
 		return createElement(uniqueId, parts);
-
 	}
 
-	public static UniqueId fromClassName(String className, TestDescriptor engineDescriptor) {
+	public static JUnit5Testable fromClassName(String className, String engineId) {
 		Preconditions.notEmpty(className, "className must not be empty");
 		Class<?> clazz = classByName(className);
 		if (clazz == null) {
 			throwCannotResolveClassNameException(className);
 		}
-		return fromClass(clazz, engineDescriptor);
+		return fromClass(clazz, engineId);
 	}
 
-	public static UniqueId fromClass(Class<?> clazz, TestDescriptor engineDescriptor) {
+	public static JUnit5Testable fromClass(Class<?> clazz, String engineId) {
 		Preconditions.notNull(clazz, "clazz must not be null");
-		String uniqueId = engineDescriptor.getUniqueId() + ":" + clazz.getName();
-		return new UniqueId(uniqueId, clazz, null);
+		String uniqueId = engineId + ":" + clazz.getName();
+		return new JUnit5Testable(uniqueId, clazz, null);
 	}
 
-	public static UniqueId fromMethod(Method testMethod, Class<?> clazz, TestDescriptor engineDescriptor) {
-		String uniqueId = fromClass(clazz, engineDescriptor).getUniqueId() + "#" + testMethod.getName() + "()";
-		return new UniqueId(uniqueId, testMethod, clazz);
+	public static JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
+		String uniqueId = fromClass(clazz, engineId).getUniqueId() + "#" + testMethod.getName() + "()";
+		return new JUnit5Testable(uniqueId, testMethod, clazz);
 	}
 
-	private static UniqueId createElement(String uniqueId, List<String> parts) {
+	private static JUnit5Testable createElement(String uniqueId, List<String> parts) {
 		AnnotatedElement currentJavaElement = null;
 		Class<?> currentJavaContainer = null;
 		String head = parts.remove(0);
@@ -104,7 +100,7 @@ public class UniqueId {
 				break;
 			head = parts.remove(0);
 		}
-		return new UniqueId(uniqueId, currentJavaElement, currentJavaContainer);
+		return new JUnit5Testable(uniqueId, currentJavaElement, currentJavaContainer);
 	}
 
 	private static Method findMethod(String methodSpecPart, Class<?> clazz) {
@@ -158,7 +154,7 @@ public class UniqueId {
 	private final AnnotatedElement javaElement;
 	private final Class<?> javaContainer;
 
-	private UniqueId(String uniqueId, AnnotatedElement javaElement, Class<?> javaContainer) {
+	private JUnit5Testable(String uniqueId, AnnotatedElement javaElement, Class<?> javaContainer) {
 		this.uniqueId = uniqueId;
 		this.javaElement = javaElement;
 		this.javaContainer = javaContainer;
