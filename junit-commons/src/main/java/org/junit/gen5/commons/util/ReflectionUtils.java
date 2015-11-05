@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -57,6 +58,18 @@ public class ReflectionUtils {
 		// TODO Use correct classloader
 		// TODO Add support for primitive types and arrays.
 		return ClassLoader.getSystemClassLoader().loadClass(name);
+	}
+
+	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
+		Predicate<Method> nameAndParameterTypesMatch = (method -> method.getName().equals(methodName)
+				&& Arrays.equals(method.getParameterTypes(), parameterTypes));
+
+		List<Method> candidates = ReflectionUtils.findMethods(clazz, nameAndParameterTypesMatch,
+			ReflectionUtils.MethodSortOrder.HierarchyDown);
+		if (candidates.isEmpty()) {
+			return Optional.empty();
+		}
+		return Optional.of(candidates.get(0));
 	}
 
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate, MethodSortOrder sortOrder) {

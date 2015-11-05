@@ -75,7 +75,7 @@ public class JUnit5Testable {
 	}
 
 	public static String getParameterIdPart(Method testMethod) {
-		String parameterString = Arrays.stream(testMethod.getParameterTypes()).map(type -> type.getName()).collect(
+		String parameterString = Arrays.stream(testMethod.getParameterTypes()).map(Class::getName).collect(
 			Collectors.joining(","));
 		return "(" + parameterString + ")";
 	}
@@ -138,21 +138,7 @@ public class JUnit5Testable {
 	}
 
 	private static Method findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
-
-		//Todo Move findMethod with name and params to ReflectionUtils
-		Predicate<Method> methodPredicate = (method -> method.getName().equals(methodName)
-				&& typesAreEquals(method.getParameterTypes(), parameterTypes));
-
-		List<Method> candidates = ReflectionUtils.findMethods(clazz, methodPredicate,
-			ReflectionUtils.MethodSortOrder.HierarchyDown);
-		if (candidates.isEmpty()) {
-			return null;
-		}
-		return candidates.get(0);
-	}
-
-	private static boolean typesAreEquals(Class<?>[] types, Class<?>[] otherTypes) {
-		return Arrays.equals(types, otherTypes);
+		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes).get();
 	}
 
 	private static Class<?> findNestedClass(String nameExtension, Class<?> containerClass) {
@@ -166,14 +152,12 @@ public class JUnit5Testable {
 	}
 
 	private static Class<?> classByName(String className) {
-		Class<?> clazz = null;
 		try {
-			clazz = loadClass(className);
+			return loadClass(className);
 		}
 		catch (ClassNotFoundException e) {
-			clazz = null;
+			return null;
 		}
-		return clazz;
 	}
 
 	private static void throwCannotResolveClassNameException(String className) {
