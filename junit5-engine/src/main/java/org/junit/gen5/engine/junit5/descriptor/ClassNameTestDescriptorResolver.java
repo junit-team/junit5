@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.TestDescriptor;
 
@@ -49,7 +50,7 @@ public class ClassNameTestDescriptorResolver
 			// TODO Retrieve children resolvers according to type
 			List<TestDescriptor> children = new LinkedList<>();
 
-			List<Method> testMethodCandidates = findMethods(parent.getTestClass(), methodTester::accept,
+			List<Method> testMethodCandidates = ReflectionUtils.findMethods(parent.getTestClass(), methodTester::accept,
 				MethodSortOrder.HierarchyDown);
 
 			// @formatter:off

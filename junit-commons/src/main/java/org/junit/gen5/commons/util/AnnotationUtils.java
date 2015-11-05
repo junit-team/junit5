@@ -10,19 +10,13 @@
 
 package org.junit.gen5.commons.util;
 
-import static java.util.stream.Collectors.toList;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 
 /**
  * Collection of utilities for working with {@linkplain Annotation annotations}.
@@ -99,74 +93,8 @@ public final class AnnotationUtils {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 
-		return findMethods(clazz, method -> findAnnotation(method, annotationType).isPresent(), sortOrder);
-	}
-
-	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate, MethodSortOrder sortOrder) {
-		Preconditions.notNull(clazz, "Class must not be null");
-		Preconditions.notNull(predicate, "predicate must not be null");
-
-		// @formatter:off
-		return findAllMethodsInHierarchy(clazz, sortOrder).stream()
-				.filter(predicate)
-				.collect(toList());
-		// @formatter:on
-	}
-
-	/**
-	 * Return all methods in superclass hierarchy except from Object.
-	 */
-	public static List<Method> findAllMethodsInHierarchy(Class<?> clazz, MethodSortOrder sortOrder) {
-		// TODO Support interface default methods.
-		// TODO Determine if we need to support bridged methods.
-
-		List<Method> localMethods = Arrays.asList(clazz.getDeclaredMethods());
-
-		// @formatter:off
-		List<Method> superclassMethods = getSuperclassMethods(clazz, sortOrder).stream()
-				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
-				.collect(toList());
-		// @formatter:on
-
-		List<Method> methods = new ArrayList<>();
-		if (sortOrder == MethodSortOrder.HierarchyDown) {
-			methods.addAll(superclassMethods);
-		}
-		methods.addAll(localMethods);
-		if (sortOrder == MethodSortOrder.HierarchyUp) {
-			methods.addAll(superclassMethods);
-		}
-		return methods;
-	}
-
-	private static List<Method> getSuperclassMethods(Class<?> clazz, MethodSortOrder sortOrder) {
-		if (clazz.getSuperclass() != Object.class) {
-			return findAllMethodsInHierarchy(clazz.getSuperclass(), sortOrder);
-		}
-		else {
-			return Collections.emptyList();
-		}
-	}
-
-	private static boolean isMethodShadowedByLocalMethods(Method method, List<Method> localMethods) {
-		return localMethods.stream().anyMatch(local -> isMethodShadowedBy(method, local));
-	}
-
-	private static boolean isMethodShadowedBy(Method upper, Method lower) {
-		if (!lower.getName().equals(upper.getName())) {
-			return false;
-		}
-		Class<?>[] lowerParameterTypes = lower.getParameterTypes();
-		Class<?>[] upperParameterTypes = upper.getParameterTypes();
-		if (lowerParameterTypes.length != upperParameterTypes.length) {
-			return false;
-		}
-		for (int i = 0; i < lowerParameterTypes.length; i++) {
-			if (!lowerParameterTypes[i].equals(upperParameterTypes[i])) {
-				return false;
-			}
-		}
-		return true;
+		return ReflectionUtils.findMethods(clazz, method -> findAnnotation(method, annotationType).isPresent(),
+			sortOrder);
 	}
 
 	public static boolean isInJavaLangAnnotationPackage(Annotation annotation) {
