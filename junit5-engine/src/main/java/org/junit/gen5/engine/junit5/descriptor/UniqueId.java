@@ -17,9 +17,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+
 import lombok.Value;
+
 import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
 
 @Value
@@ -112,8 +115,8 @@ public class UniqueId {
 		//Todo consider parameters
 		Predicate<Method> methodPredicate = method -> method.getName().equals(methodName);
 
-		List<Method> candidates = AnnotationUtils.findMethods(clazz, methodPredicate,
-			AnnotationUtils.MethodSortOrder.HierarchyDown);
+		List<Method> candidates = ReflectionUtils.findMethods(clazz, methodPredicate,
+			ReflectionUtils.MethodSortOrder.HierarchyDown);
 		if (candidates.isEmpty()) {
 			return null;
 		}

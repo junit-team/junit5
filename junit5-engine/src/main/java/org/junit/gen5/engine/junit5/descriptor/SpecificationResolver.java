@@ -15,7 +15,8 @@ import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
-import org.junit.gen5.commons.util.AnnotationUtils;
+
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.EngineDescriptor;
@@ -80,7 +81,7 @@ public class SpecificationResolver {
 	}
 
 	private ClassTestDescriptor resolveClass(Class<?> clazz, String uniqueId, AbstractTestDescriptor parent,
-		boolean withChildren) {
+			boolean withChildren) {
 		if (!classTester.accept(clazz)) {
 			throwCannotResolveClassException(clazz);
 		}
@@ -95,7 +96,7 @@ public class SpecificationResolver {
 
 		if (withChildren) {
 			List<Method> testMethodCandidates = findMethods(clazz, methodTester::accept,
-				AnnotationUtils.MethodSortOrder.HierarchyDown);
+				ReflectionUtils.MethodSortOrder.HierarchyDown);
 
 			for (Method method : testMethodCandidates) {
 				UniqueId methodId = UniqueId.fromMethod(method, clazz, root);
@@ -135,7 +136,6 @@ public class SpecificationResolver {
 		}
 		return null;
 	}
-
 
 	private static void throwCannotResolveMethodException(Method method) {
 		throw new IllegalArgumentException(String.format("Method '%s' is not a test method.", method.getName()));
