@@ -14,11 +14,9 @@ import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import lombok.Value;
@@ -138,7 +136,9 @@ public class JUnit5Testable {
 	}
 
 	private static Method findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
-		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes).get();
+		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes).orElseThrow(
+			() -> new IllegalArgumentException(String.format("No method with 'name' %s and paramter types '%s'",
+				methodName, Arrays.toString(parameterTypes))));
 	}
 
 	private static Class<?> findNestedClass(String nameExtension, Class<?> containerClass) {

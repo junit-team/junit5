@@ -172,6 +172,30 @@ public class SpecificationResolverTest {
 	}
 
 	@org.junit.Test
+	public void testMethodResolutionByUniqueIdWithParams() {
+		UniqueIdSpecification specification = new UniqueIdSpecification(
+			"junit5:org.junit.gen5.engine.junit5.HerTestClass#test7(java.lang.String)");
+
+		resolver.resolveElement(specification);
+
+		Assert.assertEquals(2, descriptors.size());
+		Set uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toSet());
+
+		System.out.println(uniqueIds);
+		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.HerTestClass"));
+		Assert.assertTrue(
+			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.HerTestClass#test7(java.lang.String)"));
+	}
+
+	@org.junit.Test(expected = IllegalArgumentException.class)
+	public void testMethodResolutionByUniqueIdWithWrongParams() {
+		UniqueIdSpecification specification = new UniqueIdSpecification(
+			"junit5:org.junit.gen5.engine.junit5.HerTestClass#test7(java.math.BigDecimal)");
+
+		resolver.resolveElement(specification);
+	}
+
+	@org.junit.Test
 	public void testTwoMethodResolutionsByUniqueId() {
 		UniqueIdSpecification specification1 = new UniqueIdSpecification(
 			"junit5:org.junit.gen5.engine.junit5.MyTestClass#test1()");
@@ -236,6 +260,11 @@ class YourTestClass {
 }
 
 class HerTestClass extends MyTestClass {
+
+	@Test
+	void test7(String param) {
+
+	}
 }
 
 class OtherTestClass {
