@@ -114,14 +114,14 @@ public class JUnit5 extends Runner {
 
 	private List<TestPlanSpecificationElement> getClassnameSpecificationElements() throws InitializationError {
 		Class<?>[] testClasses = getAnnotatedClasses(testClass);
-		return Arrays.stream(testClasses).map(
-			clazz -> TestPlanSpecification.forClassName(clazz.getName())).collect(Collectors.toList());
+		return Arrays.stream(testClasses).map(clazz -> TestPlanSpecification.forClassName(clazz.getName())).collect(
+			Collectors.toList());
 	}
 
 	private List<TestPlanSpecificationElement> getUniqueIdSpecificationElements() throws InitializationError {
 		String[] uniqueIds = getAnnotatedUniqueIds(testClass);
-		return Arrays.stream(uniqueIds).map(
-			uniqueId -> TestPlanSpecification.forUniqueId(uniqueId)).collect(Collectors.toList());
+		return Arrays.stream(uniqueIds).map(uniqueId -> TestPlanSpecification.forUniqueId(uniqueId)).collect(
+			Collectors.toList());
 	}
 
 	private Description generateDescription() {
