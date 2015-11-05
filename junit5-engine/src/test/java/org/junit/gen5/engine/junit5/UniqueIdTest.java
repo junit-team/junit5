@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 
 import org.junit.Assert;
 import org.junit.gen5.api.Test;
@@ -85,13 +86,17 @@ public class UniqueIdTest {
 		UniqueId uniqueId = UniqueId.fromMethod(testMethod, ATestClass.class, engineDescriptor);
 		Assert.assertEquals("junit5:org.junit.gen5.engine.junit5.ATestClass#test1()", uniqueId.getUniqueId());
 		Assert.assertSame(testMethod, uniqueId.getJavaElement());
+		Assert.assertSame(ATestClass.class, uniqueId.getJavaContainer());
 	}
 
-	@org.junit.Test
-	public void fromMethodInSubclass() throws NoSuchMethodException {
-		Method testMethod = ATestClass.class.getDeclaredMethod("test1", new Class[0]);
+	//Todo: Yet to implement
+	//	@org.junit.Test
+	public void fromMethodWithParameters() throws NoSuchMethodException {
+		Method testMethod = BTestClass.class.getDeclaredMethod("test4", String.class, BigDecimal.class);
 		UniqueId uniqueId = UniqueId.fromMethod(testMethod, BTestClass.class, engineDescriptor);
-		Assert.assertEquals("junit5:org.junit.gen5.engine.junit5.BTestClass#test1()", uniqueId.getUniqueId());
+		Assert.assertEquals(
+			"junit5:org.junit.gen5.engine.junit5.BTestClass#test4(java.lang.String, java.math.BigDecimal)",
+			uniqueId.getUniqueId());
 		Assert.assertSame(testMethod, uniqueId.getJavaElement());
 	}
 
@@ -122,5 +127,10 @@ class ATestClass {
 }
 
 class BTestClass extends ATestClass {
+
+	@Test
+	void test4(String aString, BigDecimal aBigDecimal) {
+
+	}
 
 }

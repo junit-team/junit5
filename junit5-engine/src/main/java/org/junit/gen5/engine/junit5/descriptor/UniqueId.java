@@ -20,7 +20,6 @@ import java.util.function.Predicate;
 
 import lombok.Value;
 
-import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
@@ -52,9 +51,7 @@ public class UniqueId {
 		Preconditions.condition(parts.remove(0).equals(engineDescriptor.getUniqueId()),
 			"uniqueId must start with engineId");
 
-		AnnotatedElement element = findElement(uniqueId, parts);
-
-		return new UniqueId(uniqueId, element);
+		return createElement(uniqueId, parts);
 
 	}
 
@@ -70,40 +67,44 @@ public class UniqueId {
 	public static UniqueId fromClass(Class<?> clazz, TestDescriptor engineDescriptor) {
 		Preconditions.notNull(clazz, "clazz must not be null");
 		String uniqueId = engineDescriptor.getUniqueId() + ":" + clazz.getName();
-		return new UniqueId(uniqueId, clazz);
+		return new UniqueId(uniqueId, clazz, null);
 	}
 
 	public static UniqueId fromMethod(Method testMethod, Class<?> clazz, TestDescriptor engineDescriptor) {
 		String uniqueId = fromClass(clazz, engineDescriptor).getUniqueId() + "#" + testMethod.getName() + "()";
-		return new UniqueId(uniqueId, testMethod);
+		return new UniqueId(uniqueId, testMethod, clazz);
 	}
 
-	private static AnnotatedElement findElement(String uniqueId, List<String> parts) {
-		AnnotatedElement current = null;
+	private static UniqueId createElement(String uniqueId, List<String> parts) {
+		AnnotatedElement currentJavaElement = null;
+		Class<?> currentJavaContainer = null;
 		String head = parts.remove(0);
 		while (true) {
 			switch (head.charAt(0)) {
 				case ':':
-					current = findTopLevelClass(head);
+					currentJavaElement = findTopLevelClass(head);
 					break;
 				case '$':
-					current = findNestedClass(head, (Class<?>) current);
+					currentJavaContainer = (Class<?>) currentJavaElement;
+					currentJavaElement = findNestedClass(head, (Class<?>) currentJavaElement);
 					break;
 				case '#':
-					current = findMethod(head, (Class<?>) current);
+					currentJavaContainer = (Class<?>) currentJavaElement;
+					currentJavaElement = findMethod(head, (Class<?>) currentJavaElement);
 					break;
 				default:
-					current = null;
+					currentJavaContainer = null;
+					currentJavaElement = null;
 			}
 
-			if (current == null) {
+			if (currentJavaElement == null) {
 				throwCannotResolveUniqueIdException(uniqueId, head);
 			}
 			if (parts.isEmpty())
 				break;
 			head = parts.remove(0);
 		}
-		return current;
+		return new UniqueId(uniqueId, currentJavaElement, currentJavaContainer);
 	}
 
 	private static Method findMethod(String methodSpecPart, Class<?> clazz) {
@@ -155,10 +156,12 @@ public class UniqueId {
 
 	private final String uniqueId;
 	private final AnnotatedElement javaElement;
+	private final Class<?> javaContainer;
 
-	private UniqueId(String uniqueId, AnnotatedElement javaElement) {
+	private UniqueId(String uniqueId, AnnotatedElement javaElement, Class<?> javaContainer) {
 		this.uniqueId = uniqueId;
 		this.javaElement = javaElement;
+		this.javaContainer = javaContainer;
 	}
 
 }

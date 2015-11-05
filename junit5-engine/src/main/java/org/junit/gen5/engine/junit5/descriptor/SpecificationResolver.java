@@ -61,17 +61,18 @@ public class SpecificationResolver {
 			resolveClass((Class<?>) uniqueId.getJavaElement(), uniqueId.getUniqueId(), root, true);
 		}
 		if (uniqueId.getJavaElement() instanceof Method) {
-			resolveMethod((Method) uniqueId.getJavaElement(), uniqueId.getUniqueId(), root, true);
+			resolveMethod((Method) uniqueId.getJavaElement(), uniqueId.getJavaContainer(), uniqueId.getUniqueId(), root,
+				true);
 		}
 	}
 
-	private void resolveMethod(Method method, String uniqueId, AbstractTestDescriptor parent, boolean withChildren) {
+	private void resolveMethod(Method method, Class<?> testClass, String uniqueId, AbstractTestDescriptor parent,
+			boolean withChildren) {
 		if (!methodTester.accept(method)) {
 			throwCannotResolveMethodException(method);
 		}
-		Class<?> enclosingClass = method.getDeclaringClass();
-		UniqueId parentId = UniqueId.fromClass(enclosingClass, root);
-		parent = resolveClass(enclosingClass, parentId.getUniqueId(), parent, false);
+		UniqueId parentId = UniqueId.fromClass(testClass, root);
+		parent = resolveClass(testClass, parentId.getUniqueId(), parent, false);
 
 		MethodTestDescriptor descriptor = getOrCreateMethodDescriptor(method, uniqueId);
 		parent.addChild(descriptor);

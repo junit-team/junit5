@@ -36,52 +36,39 @@ public class MethodTestDescriptorTests {
 	public void constructFromMethod() throws Exception {
 		Class<?> testClass = getClass();
 		Method testMethod = testClass.getDeclaredMethod("test");
-		ClassTestDescriptor parent = new ClassTestDescriptor("a class id", testClass);
 		MethodTestDescriptor descriptor = new MethodTestDescriptor("a method id", testMethod);
-		parent.addChild(descriptor);
 
 		assertEquals("a method id", descriptor.getUniqueId());
-		assertEquals(testClass, ((ClassTestDescriptor) descriptor.getParent()).getTestClass());
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test", descriptor.getDisplayName(), "display name:");
 	}
 
-	//	@org.junit.Test
-	//	public void constructFromMethodWithCustomDisplayName() throws Exception {
-	//		Class<?> testClass = getClass();
-	//		Method testMethod = testClass.getDeclaredMethod("foo");
-	//		ClassTestDescriptor parent = new ClassTestDescriptor(testClass, ENGINE_DESCRIPTOR);
-	//		MethodTestDescriptor descriptor = new MethodTestDescriptor(testMethod, parent);
-	//
-	//		assertEquals(testClass, descriptor.getParent().getTestClass());
-	//		assertEquals(testMethod, descriptor.getTestMethod());
-	//		assertEquals("custom test name", descriptor.getDisplayName(), "display name:");
-	//	}
-	//
-	//	@org.junit.Test
-	//	public void constructFromMethodWithCustomDisplayNameInCustomTestAnnotation() throws Exception {
-	//		Class<?> testClass = getClass();
-	//		Method testMethod = testClass.getDeclaredMethod("customTestAnnotation");
-	//		ClassTestDescriptor parent = new ClassTestDescriptor(testClass, ENGINE_DESCRIPTOR);
-	//		MethodTestDescriptor descriptor = new MethodTestDescriptor(testMethod, parent);
-	//
-	//		assertEquals(testClass, descriptor.getParent().getTestClass());
-	//		assertEquals(testMethod, descriptor.getTestMethod());
-	//		assertEquals("custom name", descriptor.getDisplayName(), "display name:");
-	//	}
-	//
-	//	@org.junit.Test
-	//	public void constructFromMethodWithParameters() throws Exception {
-	//		Class<?> testClass = getClass();
-	//		Method testMethod = testClass.getDeclaredMethod("test", String.class, BigDecimal.class);
-	//		ClassTestDescriptor parent = new ClassTestDescriptor(testClass, ENGINE_DESCRIPTOR);
-	//		MethodTestDescriptor descriptor = new MethodTestDescriptor(testMethod, parent);
-	//
-	//		assertEquals(TEST_METHOD_STRING_BIGDECIMAL_UID, descriptor.getUniqueId());
-	//		assertEquals(testClass, descriptor.getParent().getTestClass());
-	//		assertEquals(testMethod, descriptor.getTestMethod());
-	//		assertEquals("test", descriptor.getDisplayName(), "display name:");
-	//	}
+	@org.junit.Test
+	public void constructFromMethodWithCustomDisplayName() throws Exception {
+		Method testMethod = getClass().getDeclaredMethod("foo");
+		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", testMethod);
+
+		assertEquals(testMethod, descriptor.getTestMethod());
+		assertEquals("custom test name", descriptor.getDisplayName(), "display name:");
+	}
+
+	@org.junit.Test
+	public void constructFromMethodWithCustomDisplayNameInCustomTestAnnotation() throws Exception {
+		Method testMethod = getClass().getDeclaredMethod("customTestAnnotation");
+		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", testMethod);
+
+		assertEquals(testMethod, descriptor.getTestMethod());
+		assertEquals("custom name", descriptor.getDisplayName(), "display name:");
+	}
+
+	@org.junit.Test
+	public void constructFromMethodWithParameters() throws Exception {
+		Method testMethod = getClass().getDeclaredMethod("test", String.class, BigDecimal.class);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", testMethod);
+
+		assertEquals(testMethod, descriptor.getTestMethod());
+		assertEquals("test", descriptor.getDisplayName(), "display name:");
+	}
 
 	void test() {
 	}
