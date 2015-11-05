@@ -11,7 +11,6 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.commons.util.AnnotationUtils.*;
 import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
 
 import java.lang.reflect.Method;
@@ -51,7 +50,7 @@ public class ClassNameTestDescriptorResolver
 			List<TestDescriptor> children = new LinkedList<>();
 
 			List<Method> testMethodCandidates = ReflectionUtils.findMethods(parent.getTestClass(), methodTester::accept,
-				MethodSortOrder.HierarchyDown);
+				ReflectionUtils.MethodSortOrder.HierarchyDown);
 
 			// @formatter:off
 			children.addAll(testMethodCandidates.stream()
