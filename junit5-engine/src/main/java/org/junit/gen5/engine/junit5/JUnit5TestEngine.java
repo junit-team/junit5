@@ -65,11 +65,20 @@ public class JUnit5TestEngine implements TestEngine {
 	@Override
 	public void execute(EngineExecutionContext context) {
 
-		Map<TestDescriptor, TestExecutionNode> nodes = new HashMap<>();
-		for (TestDescriptor testDescriptor : context.getTestDescriptors()) {
-			nodes.put(testDescriptor, TestExecutionNodeResolver.forDescriptor(testDescriptor));
-		}
+		Map<TestDescriptor, TestExecutionNode> nodes = buildTestExecutionNodesTree(context);
 
+		List<TestExecutionNode> rootNodes = findRootNodes(nodes);
+
+		startRootNodesExecution(context, rootNodes);
+	}
+
+	private void startRootNodesExecution(EngineExecutionContext context, List<TestExecutionNode> rootNodes) {
+		for (TestExecutionNode rootNode : rootNodes) {
+			rootNode.execute(context);
+		}
+	}
+
+	private List<TestExecutionNode> findRootNodes(Map<TestDescriptor, TestExecutionNode> nodes) {
 		List<TestExecutionNode> rootNodes = new LinkedList<>();
 		for (TestExecutionNode node : nodes.values()) {
 
@@ -77,6 +86,19 @@ public class JUnit5TestEngine implements TestEngine {
 			if (currentTestDescriptor.getParent() == null) {
 				rootNodes.add(node);
 			}
+		}
+		return rootNodes;
+	}
+
+	private Map<TestDescriptor, TestExecutionNode> buildTestExecutionNodesTree(EngineExecutionContext context) {
+		Map<TestDescriptor, TestExecutionNode> nodes = new HashMap<>();
+		for (TestDescriptor testDescriptor : context.getTestDescriptors()) {
+			nodes.put(testDescriptor, TestExecutionNodeResolver.forDescriptor(testDescriptor));
+		}
+
+		for (TestExecutionNode node : nodes.values()) {
+
+			TestDescriptor currentTestDescriptor = node.getTestDescriptor();
 
 			// @formatter:off
 			List<TestExecutionNode> childrenForCurrentNode = context.getTestDescriptors().stream()
@@ -86,10 +108,7 @@ public class JUnit5TestEngine implements TestEngine {
 			// @formatter:on
 			node.addChildren(childrenForCurrentNode);
 		}
-
-		for (TestExecutionNode rootNode : rootNodes) {
-			rootNode.execute(context);
-		}
+		return nodes;
 	}
 
 }
