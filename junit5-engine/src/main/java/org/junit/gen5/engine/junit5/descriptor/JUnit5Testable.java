@@ -14,15 +14,17 @@ import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import lombok.Value;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.TestDescriptor;
 
 @Value
 public class JUnit5Testable {
@@ -67,8 +69,15 @@ public class JUnit5Testable {
 	}
 
 	public static JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
-		String uniqueId = fromClass(clazz, engineId).getUniqueId() + "#" + testMethod.getName() + "()";
+		String uniqueId = fromClass(clazz, engineId).getUniqueId() + "#" + testMethod.getName()
+				+ getParameterIdPart(testMethod);
 		return new JUnit5Testable(uniqueId, testMethod, clazz);
+	}
+
+	public static String getParameterIdPart(Method testMethod) {
+		String parameterString = Arrays.stream(testMethod.getParameterTypes()).map(type -> type.getName()).collect(
+			Collectors.joining(","));
+		return "(" + parameterString + ")";
 	}
 
 	private static JUnit5Testable createElement(String uniqueId, List<String> parts) {
@@ -86,7 +95,7 @@ public class JUnit5Testable {
 					break;
 				case '#':
 					currentJavaContainer = (Class<?>) currentJavaElement;
-					currentJavaElement = findMethod(head, (Class<?>) currentJavaElement);
+					currentJavaElement = findMethod(head, currentJavaContainer, uniqueId);
 					break;
 				default:
 					currentJavaContainer = null;
@@ -103,14 +112,36 @@ public class JUnit5Testable {
 		return new JUnit5Testable(uniqueId, currentJavaElement, currentJavaContainer);
 	}
 
-	private static Method findMethod(String methodSpecPart, Class<?> clazz) {
-		String methodName = methodSpecPart.substring(1, methodSpecPart.length() - 2);
-		return findMethodByName(clazz, methodName);
+	private static Method findMethod(String methodSpecPart, Class<?> clazz, String uniqueId) {
+		int startParams = methodSpecPart.indexOf('(');
+		String methodName = methodSpecPart.substring(1, startParams);
+		int endParams = methodSpecPart.lastIndexOf(')');
+		String paramsPart = methodSpecPart.substring(startParams + 1, endParams);
+		Class<?>[] parameterTypes = findParameterTypes(paramsPart, uniqueId);
+		return findMethod(clazz, methodName, parameterTypes);
 	}
 
-	private static Method findMethodByName(Class<?> clazz, String methodName) {
-		//Todo consider parameters
-		Predicate<Method> methodPredicate = method -> method.getName().equals(methodName);
+	private static <R> Class<?>[] findParameterTypes(String paramsPart, String uniqueId) {
+		if (paramsPart.isEmpty()) {
+			return new Class<?>[0];
+		}
+		List<Class<?>> types = Arrays.stream(paramsPart.split(",")).map(typeName -> {
+			try {
+				return ReflectionUtils.loadClass(typeName);
+			}
+			catch (ClassNotFoundException e) {
+				throwCannotResolveUniqueIdException(uniqueId, paramsPart);
+				return null; //cannot happen
+			}
+		}).collect(Collectors.toList());
+		return types.toArray(new Class<?>[types.size()]);
+	}
+
+	private static Method findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
+
+		//Todo Move findMethod with name and params to ReflectionUtils
+		Predicate<Method> methodPredicate = (method -> method.getName().equals(methodName)
+				&& typesAreEquals(method.getParameterTypes(), parameterTypes));
 
 		List<Method> candidates = ReflectionUtils.findMethods(clazz, methodPredicate,
 			ReflectionUtils.MethodSortOrder.HierarchyDown);
@@ -118,6 +149,10 @@ public class JUnit5Testable {
 			return null;
 		}
 		return candidates.get(0);
+	}
+
+	private static boolean typesAreEquals(Class<?>[] types, Class<?>[] otherTypes) {
+		return Arrays.equals(types, otherTypes);
 	}
 
 	private static Class<?> findNestedClass(String nameExtension, Class<?> containerClass) {
