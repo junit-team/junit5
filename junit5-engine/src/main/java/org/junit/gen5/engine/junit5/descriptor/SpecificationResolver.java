@@ -18,11 +18,9 @@ import java.util.Set;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
-import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.gen5.engine.UniqueIdSpecification;
 import org.junit.gen5.engine.junit5.testers.CanBeTestClass;
 import org.junit.gen5.engine.junit5.testers.IsTestMethod;
 
@@ -40,27 +38,32 @@ public class SpecificationResolver {
 	}
 
 	public void resolveElement(TestPlanSpecificationElement element) {
-		if (element.getClass() == ClassNameSpecification.class) {
-			resolveClassNameSpecification((ClassNameSpecification) element);
-		}
-		if (element.getClass() == UniqueIdSpecification.class) {
-			resolveUniqueIdSpecification((UniqueIdSpecification) element);
-		}
+		element.accept(new TestPlanSpecificationElement.Visitor() {
+
+			@Override
+			public void visitClassNameSpecification(String className) {
+				resolveClassName(className);
+			}
+
+			@Override
+			public void visitUniqueIdSpecification(String uniqueId) {
+				resolveUniqueId(uniqueId);
+			}
+		});
 	}
 
-	private void resolveClassNameSpecification(ClassNameSpecification element) {
-		JUnit5Testable testable = JUnit5Testable.fromClassName(element.getClassName(), engineDescriptor.getUniqueId());
-		resolveUniqueId(testable);
+	private void resolveClassName(String className) {
+		JUnit5Testable testable = JUnit5Testable.fromClassName(className, engineDescriptor.getUniqueId());
+		resolveTestable(testable);
 	}
 
-	private void resolveUniqueIdSpecification(UniqueIdSpecification uniqueIdSpecification) {
+	private void resolveUniqueId(String uniqueId) {
 
-		JUnit5Testable testable = JUnit5Testable.fromUniqueId(uniqueIdSpecification.getUniqueId(),
-			engineDescriptor.getUniqueId());
-		resolveUniqueId(testable);
+		JUnit5Testable testable = JUnit5Testable.fromUniqueId(uniqueId, engineDescriptor.getUniqueId());
+		resolveTestable(testable);
 	}
 
-	private void resolveUniqueId(JUnit5Testable testable) {
+	private void resolveTestable(JUnit5Testable testable) {
 		testable.accept(new JUnit5Testable.Visitor() {
 
 			@Override

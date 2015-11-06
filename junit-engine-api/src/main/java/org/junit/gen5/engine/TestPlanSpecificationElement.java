@@ -12,4 +12,12 @@ package org.junit.gen5.engine;
 
 public interface TestPlanSpecificationElement {
 
+	interface Visitor {
+
+		void visitClassNameSpecification(String className);
+
+		void visitUniqueIdSpecification(String uniqueId);
+	}
+
+	void accept(Visitor visitor);
 }
