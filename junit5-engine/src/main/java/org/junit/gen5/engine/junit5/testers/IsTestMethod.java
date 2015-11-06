@@ -8,9 +8,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor;
+package org.junit.gen5.engine.junit5.testers;
 
 import java.lang.reflect.Method;
+import java.util.function.Predicate;
 
 import org.junit.gen5.api.Test;
 
@@ -18,9 +19,10 @@ import org.junit.gen5.api.Test;
  * @author Sam Brannen
  * @since 5.0
  */
-class TestMethodTester extends ReflectionObjectTester {
+public class IsTestMethod extends ReflectionObjectTester implements Predicate<Method> {
 
-	boolean accept(Method testMethodCandidate) {
+	@Override
+	public boolean test(Method testMethodCandidate) {
 		if (isPrivate(testMethodCandidate))
 			return false;
 		return hasAnnotation(testMethodCandidate, Test.class);

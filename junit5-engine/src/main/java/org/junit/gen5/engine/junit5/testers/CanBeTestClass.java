@@ -8,29 +8,30 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor;
+package org.junit.gen5.engine.junit5.testers;
+
+import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * @since 5.0
  */
-class TestClassTester extends ReflectionObjectTester {
+public class CanBeTestClass extends ReflectionObjectTester implements Predicate<Class<?>> {
 
-	private TestMethodTester methodTester = new TestMethodTester();
+	private IsTestMethod methodTester = new IsTestMethod();
 
-	boolean accept(Class<?> testClassCandidate) {
+	@Override
+	public boolean test(Class<?> testClassCandidate) {
 		if (isAbstract(testClassCandidate))
 			return false;
-		if (testClassCandidate.isLocalClass())
-			return false;
-		return true;
+		return !testClassCandidate.isLocalClass();
 		// Todo: Classes without tests should be marked
 		//		return hasTestMethods(testClassCandidate);
 	}
 
 	private boolean hasTestMethods(Class<?> testClassCandidate) {
-		return !ReflectionUtils.findMethods(testClassCandidate, methodTester::accept,
+		return !ReflectionUtils.findMethods(testClassCandidate, methodTester::test,
 			ReflectionUtils.MethodSortOrder.HierarchyDown).isEmpty();
 	}
 

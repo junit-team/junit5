@@ -23,14 +23,16 @@ import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.UniqueIdSpecification;
+import org.junit.gen5.engine.junit5.testers.CanBeTestClass;
+import org.junit.gen5.engine.junit5.testers.IsTestMethod;
 
 public class SpecificationResolver {
 
 	private final Set<TestDescriptor> testDescriptors;
 	private final EngineDescriptor engineDescriptor;
 
-	private final TestClassTester classTester = new TestClassTester();
-	private final TestMethodTester methodTester = new TestMethodTester();
+	private final CanBeTestClass canBeTestClass = new CanBeTestClass();
+	private final IsTestMethod isTestMethod = new IsTestMethod();
 
 	public SpecificationResolver(Set testDescriptors, EngineDescriptor engineDescriptor) {
 		this.testDescriptors = testDescriptors;
@@ -74,7 +76,7 @@ public class SpecificationResolver {
 	}
 
 	private void resolveMethod(Method method, Class<?> testClass, String uniqueId, AbstractTestDescriptor parent) {
-		if (!methodTester.accept(method)) {
+		if (!isTestMethod.test(method)) {
 			throwCannotResolveMethodException(method);
 		}
 		JUnit5Testable parentId = JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueId());
@@ -87,7 +89,7 @@ public class SpecificationResolver {
 
 	private ClassTestDescriptor resolveClass(Class<?> clazz, String uniqueId, AbstractTestDescriptor parent,
 			boolean withChildren) {
-		if (!classTester.accept(clazz)) {
+		if (!canBeTestClass.test(clazz)) {
 			throwCannotResolveClassException(clazz);
 		}
 		if (clazz.isMemberClass()) {
@@ -99,7 +101,7 @@ public class SpecificationResolver {
 		parent.addChild(descriptor);
 
 		if (withChildren) {
-			List<Method> testMethodCandidates = findMethods(clazz, methodTester::accept,
+			List<Method> testMethodCandidates = findMethods(clazz, isTestMethod,
 				ReflectionUtils.MethodSortOrder.HierarchyDown);
 
 			for (Method method : testMethodCandidates) {
