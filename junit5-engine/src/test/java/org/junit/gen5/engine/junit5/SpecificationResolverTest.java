@@ -26,14 +26,16 @@ import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;
 public class SpecificationResolverTest {
 
 	private Set<TestDescriptor> descriptors;
+	private JUnit5TestEngine testEngine;
 	private EngineDescriptor engineDescriptor;
 	private SpecificationResolver resolver;
 
 	@org.junit.Before
 	public void init() {
 		descriptors = new HashSet<>();
-		engineDescriptor = new EngineDescriptor(new JUnit5TestEngine());
-		resolver = new SpecificationResolver(descriptors, engineDescriptor);
+		testEngine = new JUnit5TestEngine();
+		engineDescriptor = new EngineDescriptor(testEngine);
+		resolver = new SpecificationResolver(testEngine, descriptors, engineDescriptor);
 	}
 
 	@org.junit.Test

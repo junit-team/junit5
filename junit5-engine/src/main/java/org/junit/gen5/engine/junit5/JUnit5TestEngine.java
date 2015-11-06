@@ -37,19 +37,19 @@ public class JUnit5TestEngine implements TestEngine {
 	// TODO Consider using class names for engine IDs.
 	private static final String JUNIT5_ENGINE_ID = "junit5";
 
-	public static JUnit5Testable fromUniqueId(String uniqueId) {
+	public JUnit5Testable fromUniqueId(String uniqueId) {
 		return new JUnit5TestableFactory().fromUniqueId(uniqueId, JUNIT5_ENGINE_ID);
 	}
 
-	public static JUnit5Testable fromClassName(String className) {
+	public JUnit5Testable fromClassName(String className) {
 		return new JUnit5TestableFactory().fromClassName(className, JUNIT5_ENGINE_ID);
 	}
 
-	public static JUnit5Testable fromClass(Class<?> clazz) {
+	public JUnit5Testable fromClass(Class<?> clazz) {
 		return new JUnit5TestableFactory().fromClass(clazz, JUNIT5_ENGINE_ID);
 	}
 
-	public static JUnit5Testable fromMethod(Method testMethod, Class<?> clazz) {
+	public JUnit5Testable fromMethod(Method testMethod, Class<?> clazz) {
 		return new JUnit5TestableFactory().fromMethod(testMethod, clazz, JUNIT5_ENGINE_ID);
 	}
 
@@ -66,7 +66,7 @@ public class JUnit5TestEngine implements TestEngine {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(this);
 		testDescriptors.add(engineDescriptor);
 
-		SpecificationResolver resolver = new SpecificationResolver(testDescriptors, engineDescriptor);
+		SpecificationResolver resolver = new SpecificationResolver(this, testDescriptors, engineDescriptor);
 		for (TestPlanSpecificationElement element : specification) {
 			resolver.resolveElement(element);
 		}
