@@ -26,25 +26,26 @@ import org.junit.gen5.engine.junit5.execution.TestExecutionNode;
 import org.junit.gen5.engine.junit5.execution.TestExecutionNodeResolver;
 
 public class JUnit5TestEngine implements TestEngine {
+
 	// TODO Consider using class names for engine IDs.
 	public static final String JUNIT5_ENGINE_ID = "junit5";
 
-	private final JUnit5TestableFactory JUnit5TestableFactory = new JUnit5TestableFactory(this);
+	private final JUnit5TestableFactory testableFactory = new JUnit5TestableFactory(this);
 
 	public JUnit5Testable fromUniqueId(String uniqueId) {
-		return JUnit5TestableFactory.fromUniqueId(uniqueId);
+		return testableFactory.fromUniqueId(uniqueId);
 	}
 
 	public JUnit5Testable fromClassName(String className) {
-		return JUnit5TestableFactory.fromClassName(className);
+		return testableFactory.fromClassName(className);
 	}
 
 	public JUnit5Testable fromClass(Class<?> clazz) {
-		return JUnit5TestableFactory.fromClass(clazz);
+		return testableFactory.fromClass(clazz);
 	}
 
 	public JUnit5Testable fromMethod(Method testMethod, Class<?> clazz) {
-		return JUnit5TestableFactory.fromMethod(testMethod, clazz);
+		return testableFactory.fromMethod(testMethod, clazz);
 	}
 
 	@Override

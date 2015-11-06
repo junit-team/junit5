@@ -44,6 +44,7 @@ public class SpecificationResolver {
 
 	public void resolveElement(TestPlanSpecificationElement element) {
 		element.accept(new TestPlanSpecificationElement.Visitor() {
+
 			@Override
 			public void visitClassNameSpecification(String className) {
 				resolveClassName(className);
@@ -79,6 +80,7 @@ public class SpecificationResolver {
 
 	private void resolveTestable(JUnit5Testable testable) {
 		testable.accept(new JUnit5Testable.Visitor() {
+
 			@Override
 			public void visitClass(String uniqueId, Class<?> testClass) {
 				resolveClass(testClass, uniqueId, parent, true);
@@ -116,8 +118,7 @@ public class SpecificationResolver {
 				ReflectionUtils.MethodSortOrder.HierarchyDown);
 
 			for (Method method : testMethodCandidates) {
-				JUnit5Testable methodTestable = testEngine.fromMethod(method, clazz
-				);
+				JUnit5Testable methodTestable = testEngine.fromMethod(method, clazz);
 				MethodTestDescriptor methodDescriptor = getOrCreateMethodDescriptor(method,
 					methodTestable.getUniqueId());
 				descriptor.addChild(methodDescriptor);
