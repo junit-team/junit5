@@ -184,7 +184,7 @@ public class ReflectionUtils {
 		return true;
 	}
 
-	public static Class[] findAllClassesInIackage(String packageName) {
+	public static Class[] findAllClassesInPackage(String packageName) {
 		return new ReflectionPackage(packageName).findAllClasses();
 	}
 
