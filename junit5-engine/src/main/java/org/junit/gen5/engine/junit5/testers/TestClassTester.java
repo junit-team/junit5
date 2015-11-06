@@ -10,16 +10,19 @@
 
 package org.junit.gen5.engine.junit5.testers;
 
+import java.util.function.Predicate;
+
 import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * @since 5.0
  */
-public class TestClassTester extends ReflectionObjectTester {
+public class TestClassTester extends ReflectionObjectTester implements Predicate<Class<?>> {
 
 	private TestMethodTester methodTester = new TestMethodTester();
 
-	public boolean accept(Class<?> testClassCandidate) {
+	@Override
+	public boolean test(Class<?> testClassCandidate) {
 		if (isAbstract(testClassCandidate))
 			return false;
 		if (testClassCandidate.isLocalClass())
@@ -28,7 +31,7 @@ public class TestClassTester extends ReflectionObjectTester {
 	}
 
 	private boolean hasTestMethods(Class<?> testClassCandidate) {
-		return !ReflectionUtils.findMethods(testClassCandidate, methodTester::accept,
+		return !ReflectionUtils.findMethods(testClassCandidate, methodTester::test,
 			ReflectionUtils.MethodSortOrder.HierarchyDown).isEmpty();
 	}
 

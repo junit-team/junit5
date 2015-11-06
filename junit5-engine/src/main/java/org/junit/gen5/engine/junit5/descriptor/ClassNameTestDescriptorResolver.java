@@ -37,7 +37,7 @@ public class ClassNameTestDescriptorResolver
 	@Override
 	public ClassTestDescriptor resolve(TestDescriptor parent, ClassNameSpecification element) {
 		Class<?> clazz = loadClass(element.getClassName());
-		if (classTester.accept(clazz)) {
+		if (classTester.test(clazz)) {
 			return new ClassTestDescriptor(clazz, parent);
 		}
 		else {
@@ -51,7 +51,7 @@ public class ClassNameTestDescriptorResolver
 			// TODO Retrieve children resolvers according to type
 			List<TestDescriptor> children = new LinkedList<>();
 
-			List<Method> testMethodCandidates = ReflectionUtils.findMethods(parent.getTestClass(), methodTester::accept,
+			List<Method> testMethodCandidates = ReflectionUtils.findMethods(parent.getTestClass(), methodTester,
 				ReflectionUtils.MethodSortOrder.HierarchyDown);
 
 			// @formatter:off

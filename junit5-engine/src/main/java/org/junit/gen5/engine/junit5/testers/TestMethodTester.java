@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5.testers;
 
 import java.lang.reflect.Method;
+import java.util.function.Predicate;
 
 import org.junit.gen5.api.Test;
 
@@ -18,9 +19,10 @@ import org.junit.gen5.api.Test;
  * @author Sam Brannen
  * @since 5.0
  */
-public class TestMethodTester extends ReflectionObjectTester {
+public class TestMethodTester extends ReflectionObjectTester implements Predicate<Method> {
 
-	public boolean accept(Method testMethodCandidate) {
+	@Override
+	public boolean test(Method testMethodCandidate) {
 		if (isPrivate(testMethodCandidate))
 			return false;
 		return hasAnnotation(testMethodCandidate, Test.class);
