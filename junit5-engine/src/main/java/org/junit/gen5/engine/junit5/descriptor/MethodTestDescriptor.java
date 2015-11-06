@@ -12,8 +12,6 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import java.lang.reflect.Method;
 
-import lombok.Data;
-
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.Preconditions;
@@ -27,7 +25,6 @@ import org.junit.gen5.engine.TestDescriptor;
  * @author Sam Brannen
  * @since 5.0
  */
-@Data
 public class MethodTestDescriptor extends AbstractTestDescriptor {
 
 	private final String displayName;
@@ -49,6 +46,15 @@ public class MethodTestDescriptor extends AbstractTestDescriptor {
 				.filter(name -> !StringUtils.isBlank(name))
 				.orElse(this.testMethod.getName());
 		// @formatter:on
+	}
+
+	@Override
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public Method getTestMethod() {
+		return testMethod;
 	}
 
 	@Override
