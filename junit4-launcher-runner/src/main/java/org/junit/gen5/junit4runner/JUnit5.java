@@ -10,6 +10,9 @@
 
 package org.junit.gen5.junit4runner;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
@@ -28,6 +31,7 @@ import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.gen5.launcher.TestPlanExecutionListener;
+import org.junit.gen5.launcher.listeners.LoggingListener;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.Runner;
@@ -105,6 +109,9 @@ public class JUnit5 extends Runner {
 		catch (NoSuchMethodException nsme) {
 			List<TestPlanSpecificationElement> specs = getClassnameSpecificationElements();
 			specs.addAll(getUniqueIdSpecificationElements());
+			if (specs.isEmpty()) { //Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
+				specs.add(TestPlanSpecification.forClassName(testClass.getName()));
+			}
 			return TestPlanSpecification.build(specs);
 		}
 		catch (Exception e) {
