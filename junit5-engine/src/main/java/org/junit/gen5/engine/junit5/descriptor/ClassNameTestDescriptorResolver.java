@@ -20,6 +20,8 @@ import java.util.List;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.junit5.testers.TestClassTester;
+import org.junit.gen5.engine.junit5.testers.TestMethodTester;
 
 /**
  * @author Stefan Bechtold

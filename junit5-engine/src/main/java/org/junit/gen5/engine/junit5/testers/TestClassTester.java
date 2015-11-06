@@ -8,18 +8,18 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor;
+package org.junit.gen5.engine.junit5.testers;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * @since 5.0
  */
-class TestClassTester extends ReflectionObjectTester {
+public class TestClassTester extends ReflectionObjectTester {
 
 	private TestMethodTester methodTester = new TestMethodTester();
 
-	boolean accept(Class<?> testClassCandidate) {
+	public boolean accept(Class<?> testClassCandidate) {
 		if (isAbstract(testClassCandidate))
 			return false;
 		if (testClassCandidate.isLocalClass())

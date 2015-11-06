@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor;
+package org.junit.gen5.engine.junit5.testers;
 
 import java.lang.reflect.Method;
 
@@ -18,9 +18,9 @@ import org.junit.gen5.api.Test;
  * @author Sam Brannen
  * @since 5.0
  */
-class TestMethodTester extends ReflectionObjectTester {
+public class TestMethodTester extends ReflectionObjectTester {
 
-	boolean accept(Method testMethodCandidate) {
+	public boolean accept(Method testMethodCandidate) {
 		if (isPrivate(testMethodCandidate))
 			return false;
 		return hasAnnotation(testMethodCandidate, Test.class);
