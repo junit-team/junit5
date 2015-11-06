@@ -13,12 +13,12 @@ package org.junit.gen5.engine;
 import lombok.Value;
 
 @Value
-public class ClassNameSpecification implements TestPlanSpecificationElement {
+public class PackageSpecification implements TestPlanSpecificationElement {
 
-	private String className;
+	private String packageName;
 
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitClassNameSpecification(className);
+		visitor.visitPackageSpecification(packageName);
 	}
 }

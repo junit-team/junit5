@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -54,15 +55,26 @@ public class ReflectionUtils {
 		return method.invoke(testInstance);
 	}
 
-	public static Class<?> loadClass(String name) {
-		try {
-			// TODO Use correct classloader
-			// TODO Add support for primitive types and arrays.
-			return ClassLoader.getSystemClassLoader().loadClass(name);
+	public static Class<?> loadClass(String name) throws ClassNotFoundException {
+		// TODO Use correct classloader
+		// TODO Add support for primitive types and arrays.
+		return getClassLoader().loadClass(name);
+	}
+
+	public static ClassLoader getClassLoader() {
+		return ClassLoader.getSystemClassLoader();
+	}
+
+	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
+		Predicate<Method> nameAndParameterTypesMatch = (method -> method.getName().equals(methodName)
+				&& Arrays.equals(method.getParameterTypes(), parameterTypes));
+
+		List<Method> candidates = ReflectionUtils.findMethods(clazz, nameAndParameterTypesMatch,
+			ReflectionUtils.MethodSortOrder.HierarchyDown);
+		if (candidates.isEmpty()) {
+			return Optional.empty();
 		}
-		catch (ClassNotFoundException e) {
-			throw new IllegalStateException("Failed to load class with name '" + name + "'.", e);
-		}
+		return Optional.of(candidates.get(0));
 	}
 
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate, MethodSortOrder sortOrder) {
@@ -165,6 +177,10 @@ public class ReflectionUtils {
 			}
 		}
 		return true;
+	}
+
+	public static Class[] findAllClassesInIackage(String packageName) {
+		return new ReflectionPackage(packageName).findAllClasses();
 	}
 
 }

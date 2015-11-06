@@ -14,14 +14,12 @@ import static org.junit.gen5.commons.util.ObjectUtils.*;
 
 import java.lang.reflect.Method;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
+import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 
 /**
@@ -30,23 +28,18 @@ import org.junit.gen5.engine.TestDescriptor;
  * @author Sam Brannen
  * @since 5.0
  */
-@Data
-@EqualsAndHashCode
-public class MethodTestDescriptor implements TestDescriptor {
+public class MethodTestDescriptor extends AbstractTestDescriptor {
 
 	private final String displayName;
 
-	private final ClassTestDescriptor parent;
-
 	private final Method testMethod;
 
-	public MethodTestDescriptor(Method testMethod, ClassTestDescriptor parent) {
+	public MethodTestDescriptor(String uniqueId, Method testMethod) {
+		super(uniqueId);
 		Preconditions.notNull(testMethod, "testMethod must not be null");
-		Preconditions.notNull(parent, "parent must not be null");
 
 		this.testMethod = testMethod;
 		this.displayName = determineDisplayName();
-		this.parent = parent;
 	}
 
 	private String determineDisplayName() {
@@ -67,9 +60,12 @@ public class MethodTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public final String getUniqueId() {
-		return String.format("%s#%s(%s)", getParent().getUniqueId(), testMethod.getName(),
-			nullSafeToString(testMethod.getParameterTypes()));
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public Method getTestMethod() {
+		return testMethod;
 	}
 
 	@Override

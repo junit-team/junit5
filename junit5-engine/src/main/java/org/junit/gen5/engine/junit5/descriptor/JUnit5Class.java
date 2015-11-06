@@ -8,17 +8,22 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.junit5.descriptor;
 
 import lombok.Value;
 
 @Value
-public class ClassNameSpecification implements TestPlanSpecificationElement {
+public class JUnit5Class extends JUnit5Testable {
 
-	private String className;
+	private final Class<?> javaClass;
 
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitClassNameSpecification(className);
+	JUnit5Class(String uniqueId, Class<?> javaClass) {
+		super(uniqueId);
+		this.javaClass = javaClass;
 	}
+
+	public void accept(Visitor visitor) {
+		visitor.visitClass(getUniqueId(), javaClass);
+	}
+
 }

@@ -23,6 +23,10 @@ import java.util.List;
  */
 public final class TestPlanSpecification implements Iterable<TestPlanSpecificationElement> {
 
+	public static TestPlanSpecificationElement forPackage(String packageName) {
+		return new PackageSpecification(packageName);
+	}
+
 	public static TestPlanSpecificationElement forClassName(String className) {
 		return new ClassNameSpecification(className);
 	}

@@ -8,17 +8,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package com.example.subpackage;
 
-import lombok.Value;
+import org.junit.gen5.api.Test;
 
-@Value
-public class ClassNameSpecification implements TestPlanSpecificationElement {
+public class SubpackageTestCase2 {
 
-	private String className;
+	@Test
+	void subpackageTest2() {
 
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visitClassNameSpecification(className);
 	}
 }

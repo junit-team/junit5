@@ -17,21 +17,20 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 /**
  * @since 5.0
  */
-public class CanBeTestClass extends ReflectionObjectTester implements Predicate<Class<?>> {
+public class IsTestClassWithTests extends ReflectionObjectTester implements Predicate<Class<?>> {
 
-	private IsTestMethod methodTester = new IsTestMethod();
+	private IsTestMethod isTestMethod = new IsTestMethod();
+	private CanBeTestClass canBeTestClass = new CanBeTestClass();
 
 	@Override
 	public boolean test(Class<?> testClassCandidate) {
-		if (isAbstract(testClassCandidate))
+		if (!canBeTestClass.test(testClassCandidate))
 			return false;
-		return !testClassCandidate.isLocalClass();
-		// Todo: Classes without tests should be marked
-		//		return hasTestMethods(testClassCandidate);
+		return hasTestMethods(testClassCandidate);
 	}
 
 	private boolean hasTestMethods(Class<?> testClassCandidate) {
-		return !ReflectionUtils.findMethods(testClassCandidate, methodTester::test,
+		return !ReflectionUtils.findMethods(testClassCandidate, isTestMethod,
 			ReflectionUtils.MethodSortOrder.HierarchyDown).isEmpty();
 	}
 

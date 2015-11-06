@@ -10,29 +10,18 @@
 
 package org.junit.gen5.engine;
 
-import lombok.Value;
-
-@Value
-public class EngineDescriptor implements TestDescriptor {
+public class EngineDescriptor extends AbstractTestDescriptor {
 
 	private TestEngine engine;
 
-	// Defined as a field so that Lombok includes it in toString().
-	private String uniqueId;
-
 	public EngineDescriptor(TestEngine engine) {
+		super(engine.getId());
 		this.engine = engine;
-		this.uniqueId = engine.getId();
 	}
 
 	@Override
 	public final String getDisplayName() {
 		return "Test engine: " + engine.getId();
-	}
-
-	@Override
-	public final TestDescriptor getParent() {
-		return null;
 	}
 
 	@Override
