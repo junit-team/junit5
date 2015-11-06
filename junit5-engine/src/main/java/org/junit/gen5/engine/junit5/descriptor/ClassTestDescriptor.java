@@ -13,7 +13,11 @@ package org.junit.gen5.engine.junit5.descriptor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import org.junit.gen5.api.Name;
+import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
 
 /**
@@ -28,6 +32,7 @@ import org.junit.gen5.engine.TestDescriptor;
 @EqualsAndHashCode
 public class ClassTestDescriptor implements TestDescriptor {
 
+	private final String displayName;
 	private final TestDescriptor parent;
 	private final Class<?> testClass;
 
@@ -37,6 +42,7 @@ public class ClassTestDescriptor implements TestDescriptor {
 
 		this.testClass = testClass;
 		this.parent = parent;
+		this.displayName = determineDisplayName();
 	}
 
 	@Override
@@ -44,9 +50,13 @@ public class ClassTestDescriptor implements TestDescriptor {
 		return this.parent.getUniqueId() + ":" + testClass.getName();
 	}
 
-	@Override
-	public final String getDisplayName() {
-		return this.testClass.getSimpleName();
+	private String determineDisplayName() {
+		// @formatter:off
+		return AnnotationUtils.findAnnotation(this.testClass, Name.class)
+				.map(Name::value)
+				.filter(name -> !StringUtils.isBlank(name))
+				.orElse(this.testClass.getName());
+		// @formatter:on
 	}
 
 	@Override
