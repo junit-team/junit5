@@ -35,8 +35,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public int hashCode() {
-		//Even if you think otherwise this complies to Java's equals/hashCode contract
-		return 42;
+		return uniqueId.hashCode();
 	}
 
 	@Override
