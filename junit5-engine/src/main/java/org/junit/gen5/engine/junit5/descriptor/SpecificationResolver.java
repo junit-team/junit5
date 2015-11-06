@@ -22,6 +22,7 @@ import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.engine.junit5.testers.CanBeTestClass;
 import org.junit.gen5.engine.junit5.testers.IsTestClassWithTests;
 import org.junit.gen5.engine.junit5.testers.IsTestMethod;
@@ -29,15 +30,15 @@ import org.junit.gen5.engine.junit5.testers.IsTestMethod;
 public class SpecificationResolver {
 
 	private final Set<TestDescriptor> testDescriptors;
-	private final EngineDescriptor engineDescriptor;
+	private final AbstractTestDescriptor parent;
 
 	private final CanBeTestClass canBeTestClass = new CanBeTestClass();
 	private final IsTestMethod isTestMethod = new IsTestMethod();
 	private final IsTestClassWithTests isTestClassWithTests = new IsTestClassWithTests();
 
-	public SpecificationResolver(Set testDescriptors, EngineDescriptor engineDescriptor) {
+	public SpecificationResolver(Set testDescriptors, AbstractTestDescriptor parent) {
 		this.testDescriptors = testDescriptors;
-		this.engineDescriptor = engineDescriptor;
+		this.parent = parent;
 	}
 
 	public void resolveElement(TestPlanSpecificationElement element) {
@@ -61,19 +62,19 @@ public class SpecificationResolver {
 	}
 
 	private void resolvePackage(String packageName) {
-		Class<?>[] candidateClasses = ReflectionUtils.findAllClassesInIackage(packageName);
+		Class<?>[] candidateClasses = ReflectionUtils.findAllClassesInPackage(packageName);
 		Arrays.stream(candidateClasses).filter(isTestClassWithTests).forEach(
-			testClass -> resolveTestable(JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueId())));
+			testClass -> resolveTestable(JUnit5TestEngine.fromClass(testClass)));
 	}
 
 	private void resolveClassName(String className) {
-		JUnit5Testable testable = JUnit5Testable.fromClassName(className, engineDescriptor.getUniqueId());
+		JUnit5Testable testable = JUnit5TestEngine.fromClassName(className);
 		resolveTestable(testable);
 	}
 
 	private void resolveUniqueId(String uniqueId) {
 
-		JUnit5Testable testable = JUnit5Testable.fromUniqueId(uniqueId, engineDescriptor.getUniqueId());
+		JUnit5Testable testable = JUnit5TestEngine.fromUniqueId(uniqueId);
 		resolveTestable(testable);
 	}
 
@@ -82,12 +83,12 @@ public class SpecificationResolver {
 
 			@Override
 			public void visitClass(String uniqueId, Class<?> testClass) {
-				resolveClass(testClass, uniqueId, engineDescriptor, true);
+				resolveClass(testClass, uniqueId, parent, true);
 			}
 
 			@Override
 			public void visitMethod(String uniqueId, Method method, Class<?> container) {
-				resolveMethod(method, container, uniqueId, engineDescriptor);
+				resolveMethod(method, container, uniqueId, parent);
 			}
 
 		});
@@ -97,7 +98,7 @@ public class SpecificationResolver {
 		if (!isTestMethod.test(method)) {
 			throwCannotResolveMethodException(method);
 		}
-		JUnit5Testable parentId = JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueId());
+		JUnit5Testable parentId = JUnit5TestEngine.fromClass(testClass);
 		parent = resolveClass(testClass, parentId.getUniqueId(), parent, false);
 
 		MethodTestDescriptor descriptor = getOrCreateMethodDescriptor(method, uniqueId);
@@ -118,8 +119,8 @@ public class SpecificationResolver {
 				ReflectionUtils.MethodSortOrder.HierarchyDown);
 
 			for (Method method : testMethodCandidates) {
-				JUnit5Testable methodTestable = JUnit5Testable.fromMethod(method, clazz,
-					engineDescriptor.getUniqueId());
+				JUnit5Testable methodTestable = JUnit5TestEngine.fromMethod(method, clazz
+				);
 				MethodTestDescriptor methodDescriptor = getOrCreateMethodDescriptor(method,
 					methodTestable.getUniqueId());
 				descriptor.addChild(methodDescriptor);

@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit5;
 
 import static java.util.stream.Collectors.toList;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -26,35 +27,51 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.junit5.descriptor.JUnit5Testable;
+import org.junit.gen5.engine.junit5.descriptor.JUnit5TestableFactory;
 import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;
 import org.junit.gen5.engine.junit5.execution.TestExecutionNode;
 import org.junit.gen5.engine.junit5.execution.TestExecutionNodeResolver;
 
 public class JUnit5TestEngine implements TestEngine {
+	// TODO Consider using class names for engine IDs.
+	private static final String JUNIT5_ENGINE_ID = "junit5";
+
+	public static JUnit5Testable fromUniqueId(String uniqueId) {
+		return new JUnit5TestableFactory().fromUniqueId(uniqueId, JUNIT5_ENGINE_ID);
+	}
+
+	public static JUnit5Testable fromClassName(String className) {
+		return new JUnit5TestableFactory().fromClassName(className, JUNIT5_ENGINE_ID);
+	}
+
+	public static JUnit5Testable fromClass(Class<?> clazz) {
+		return new JUnit5TestableFactory().fromClass(clazz, JUNIT5_ENGINE_ID);
+	}
+
+	public static JUnit5Testable fromMethod(Method testMethod, Class<?> clazz) {
+		return new JUnit5TestableFactory().fromMethod(testMethod, clazz, JUNIT5_ENGINE_ID);
+	}
 
 	@Override
 	public String getId() {
-		// TODO Consider using class names for engine IDs.
-		return "junit5";
+		return JUNIT5_ENGINE_ID;
 	}
 
 	@Override
 	public List<TestDescriptor> discoverTests(TestPlanSpecification specification) {
 		// TODO Avoid redundant creation of TestDescriptors during this phase
 		Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
+
 		EngineDescriptor engineDescriptor = new EngineDescriptor(this);
 		testDescriptors.add(engineDescriptor);
-		resolveSpecification(specification, engineDescriptor, testDescriptors);
-		return new ArrayList<>(testDescriptors);
-	}
 
-	// Isolated this step to allow easier experimentation / branching / pull requesting
-	private void resolveSpecification(TestPlanSpecification specification, EngineDescriptor engineDescriptor,
-			Set<TestDescriptor> testDescriptors) {
 		SpecificationResolver resolver = new SpecificationResolver(testDescriptors, engineDescriptor);
 		for (TestPlanSpecificationElement element : specification) {
 			resolver.resolveElement(element);
 		}
+
+		return new ArrayList<>(testDescriptors);
 	}
 
 	@Override

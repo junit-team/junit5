@@ -14,22 +14,6 @@ import java.lang.reflect.Method;
 
 public abstract class JUnit5Testable {
 
-	public static JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
-		return new JUnit5TestableFactory().fromUniqueId(uniqueId, engineId);
-	}
-
-	public static JUnit5Testable fromClassName(String className, String engineId) {
-		return new JUnit5TestableFactory().fromClassName(className, engineId);
-	}
-
-	public static JUnit5Testable fromClass(Class<?> clazz, String engineId) {
-		return new JUnit5TestableFactory().fromClass(clazz, engineId);
-	}
-
-	public static JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
-		return new JUnit5TestableFactory().fromMethod(testMethod, clazz, engineId);
-	}
-
 	private final String uniqueId;
 
 	JUnit5Testable(String uniqueId) {
