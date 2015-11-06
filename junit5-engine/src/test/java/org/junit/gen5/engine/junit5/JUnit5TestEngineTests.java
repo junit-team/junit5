@@ -82,7 +82,7 @@ public class JUnit5TestEngineTests {
 		TestPlanSpecification spec = build(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 4);
+		TrackingTestExecutionListener listener = executeTests(spec, 3);
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
@@ -96,7 +96,7 @@ public class JUnit5TestEngineTests {
 		TestPlanSpecification spec = build(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#throwExceptionInAfterMethod()"));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 4);
+		TrackingTestExecutionListener listener = executeTests(spec, 3);
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());
@@ -223,7 +223,7 @@ public class JUnit5TestEngineTests {
 	@Test
 	@Target(ElementType.METHOD)
 	@Retention(RetentionPolicy.RUNTIME)
-	static @interface CustomTestAnnotation {
+	@interface CustomTestAnnotation {
 	}
 
 }

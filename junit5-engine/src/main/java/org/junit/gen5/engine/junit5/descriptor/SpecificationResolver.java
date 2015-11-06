@@ -95,11 +95,6 @@ public class SpecificationResolver {
 		if (!canBeTestClass.test(clazz)) {
 			throwCannotResolveClassException(clazz);
 		}
-		if (clazz.isMemberClass()) {
-			Class<?> enclosingClass = clazz.getEnclosingClass();
-			JUnit5Testable parentId = JUnit5Testable.fromClass(enclosingClass, engineDescriptor.getUniqueId());
-			parent = resolveClass(enclosingClass, parentId.getUniqueId(), parent, false);
-		}
 		ClassTestDescriptor descriptor = getOrCreateClassDescriptor(clazz, uniqueId);
 		parent.addChild(descriptor);
 

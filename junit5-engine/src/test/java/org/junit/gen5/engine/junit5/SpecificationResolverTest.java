@@ -55,9 +55,8 @@ public class SpecificationResolverTest {
 
 		resolver.resolveElement(specification);
 
-		Assert.assertEquals(4, descriptors.size());
+		Assert.assertEquals(3, descriptors.size());
 		Set uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toSet());
-		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass"));
 		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass"));
 		Assert.assertTrue(
 			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass#test5()"));
@@ -104,9 +103,8 @@ public class SpecificationResolverTest {
 
 		resolver.resolveElement(specification);
 
-		Assert.assertEquals(4, descriptors.size());
+		Assert.assertEquals(3, descriptors.size());
 		Set uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toSet());
-		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass"));
 		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass"));
 		Assert.assertTrue(
 			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass#test5()"));
@@ -121,9 +119,8 @@ public class SpecificationResolverTest {
 
 		resolver.resolveElement(specification);
 
-		Assert.assertEquals(3, descriptors.size());
+		Assert.assertEquals(2, descriptors.size());
 		Set uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toSet());
-		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass"));
 		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass"));
 		Assert.assertTrue(
 			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.OtherTestClass$InnerTestClass#test5()"));
