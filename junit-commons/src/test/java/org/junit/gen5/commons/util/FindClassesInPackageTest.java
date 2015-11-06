@@ -25,7 +25,7 @@ public class FindClassesInPackageTest {
 		//		for(Class clazz : classes) {
 		//			System.out.println(clazz.getName());
 		//		}
-		Assert.assertTrue("Should be at least 19 classes", classes.length == 19);
+		Assert.assertTrue("Should be at least 19 classes", classes.length >= 20);
 		Assert.assertTrue(Arrays.asList(classes).contains(InnerClassToBeFound.class));
 		Assert.assertTrue(Arrays.asList(classes).contains(MemberClassToBeFound.class));
 	}
