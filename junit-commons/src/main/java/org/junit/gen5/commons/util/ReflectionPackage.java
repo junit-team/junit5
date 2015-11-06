@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Optional;
 
 public class ReflectionPackage {
 
@@ -69,17 +70,14 @@ public class ReflectionPackage {
 				classes.addAll(findClassesInSourceDirRecursively(file, packageName + "." + file.getName()));
 			}
 			else if (isAClassFile(file)) {
-				try {
-					classes.add(getClassForClassFile(file, packageName));
-				}
-				catch (ClassNotFoundException e) {
-				}
+				Optional<Class<?>> classForClassFile = getClassForClassFile(file, packageName);
+				classForClassFile.ifPresent(clazz -> classes.add(clazz));
 			}
 		}
 		return classes;
 	}
 
-	private static Class<?> getClassForClassFile(File file, String packageName) throws ClassNotFoundException {
+	private static Optional<Class<?>> getClassForClassFile(File file, String packageName) {
 		String className = packageName + '.'
 				+ file.getName().substring(0, file.getName().length() - CLASS_FILE_SUFFIX.length());
 		return ReflectionUtils.loadClass(className);

@@ -55,10 +55,15 @@ public class ReflectionUtils {
 		return method.invoke(testInstance);
 	}
 
-	public static Class<?> loadClass(String name) throws ClassNotFoundException {
+	public static Optional<Class<?>> loadClass(String name) {
 		// TODO Use correct classloader
 		// TODO Add support for primitive types and arrays.
-		return getClassLoader().loadClass(name);
+		try {
+			return Optional.of(getClassLoader().loadClass(name));
+		}
+		catch (ClassNotFoundException e) {
+			return Optional.empty();
+		}
 	}
 
 	public static ClassLoader getClassLoader() {

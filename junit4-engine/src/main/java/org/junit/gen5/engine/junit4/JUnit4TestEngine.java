@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.EngineDescriptor;
@@ -53,19 +52,14 @@ public class JUnit4TestEngine implements TestEngine {
 			if (element instanceof ClassNameSpecification) {
 				String className = ((ClassNameSpecification) element).getClassName();
 
-				Class<?> testClass = null;
-				try {
-					testClass = ReflectionUtils.loadClass(className);
+				Class<?> testClass = ReflectionUtils.loadClass(className).orElseThrow(
+					() -> new IllegalArgumentException("Class " + className + " not found."));
 
-					//JL: Hack to break endless recursion if runner will lead to the
-					// execution of JUnit5 test (eg. @RunWith(JUnit5.class))
-					// how to do that properly?
-					if (testClass.isAnnotationPresent(RunWith.class)) {
-						continue;
-					}
-				}
-				catch (ClassNotFoundException e) {
-					throw new IllegalArgumentException("Class " + className + " not found.");
+				//JL: Hack to break endless recursion if runner will lead to the
+				// execution of JUnit5 test (eg. @RunWith(JUnit5.class))
+				// how to do that properly?
+				if (testClass.isAnnotationPresent(RunWith.class)) {
+					continue;
 				}
 				Runner runner = Request.aClass(testClass).getRunner();
 

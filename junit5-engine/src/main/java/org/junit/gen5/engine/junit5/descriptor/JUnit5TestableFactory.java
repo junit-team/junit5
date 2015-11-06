@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.util.Preconditions;
@@ -127,10 +128,10 @@ public class JUnit5TestableFactory {
 			return new Class<?>[0];
 		}
 		List<Class<?>> types = Arrays.stream(paramsPart.split(",")).map(typeName -> {
-			try {
-				return ReflectionUtils.loadClass(typeName);
-			}
-			catch (ClassNotFoundException e) {
+			Optional<Class<?>> aClass = ReflectionUtils.loadClass(typeName);
+			if (aClass.isPresent())
+				return aClass.get();
+			else {
 				throwCannotResolveUniqueIdException(uniqueId, paramsPart);
 				return null; //cannot happen
 			}
@@ -155,12 +156,7 @@ public class JUnit5TestableFactory {
 	}
 
 	private Class<?> classByName(String className) {
-		try {
-			return loadClass(className);
-		}
-		catch (ClassNotFoundException e) {
-			return null;
-		}
+		return loadClass(className).orElse(null);
 	}
 
 	private void throwCannotResolveClassNameException(String className) {
