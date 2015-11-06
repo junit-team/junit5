@@ -20,8 +20,8 @@ import java.util.List;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.junit5.testers.TestClassTester;
-import org.junit.gen5.engine.junit5.testers.TestMethodTester;
+import org.junit.gen5.engine.junit5.testers.CanBeTestClass;
+import org.junit.gen5.engine.junit5.testers.IsTestMethod;
 
 /**
  * @author Stefan Bechtold
@@ -30,14 +30,14 @@ import org.junit.gen5.engine.junit5.testers.TestMethodTester;
 public class ClassNameTestDescriptorResolver
 		implements TestDescriptorResolver<ClassNameSpecification, ClassTestDescriptor> {
 
-	private static final TestClassTester classTester = new TestClassTester();
+	private static final CanBeTestClass canBeTestClass = new CanBeTestClass();
 
-	private static final TestMethodTester methodTester = new TestMethodTester();
+	private static final IsTestMethod isTestMethod = new IsTestMethod();
 
 	@Override
 	public ClassTestDescriptor resolve(TestDescriptor parent, ClassNameSpecification element) {
 		Class<?> clazz = loadClass(element.getClassName());
-		if (classTester.test(clazz)) {
+		if (canBeTestClass.test(clazz)) {
 			return new ClassTestDescriptor(clazz, parent);
 		}
 		else {
@@ -51,7 +51,7 @@ public class ClassNameTestDescriptorResolver
 			// TODO Retrieve children resolvers according to type
 			List<TestDescriptor> children = new LinkedList<>();
 
-			List<Method> testMethodCandidates = ReflectionUtils.findMethods(parent.getTestClass(), methodTester,
+			List<Method> testMethodCandidates = ReflectionUtils.findMethods(parent.getTestClass(), isTestMethod,
 				ReflectionUtils.MethodSortOrder.HierarchyDown);
 
 			// @formatter:off

@@ -19,7 +19,7 @@ import org.junit.gen5.api.Test;
  * @author Sam Brannen
  * @since 5.0
  */
-public class TestMethodTester extends ReflectionObjectTester implements Predicate<Method> {
+public class IsTestMethod extends ReflectionObjectTester implements Predicate<Method> {
 
 	@Override
 	public boolean test(Method testMethodCandidate) {

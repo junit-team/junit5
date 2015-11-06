@@ -17,9 +17,9 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 /**
  * @since 5.0
  */
-public class TestClassTester extends ReflectionObjectTester implements Predicate<Class<?>> {
+public class CanBeTestClass extends ReflectionObjectTester implements Predicate<Class<?>> {
 
-	private TestMethodTester methodTester = new TestMethodTester();
+	private IsTestMethod methodTester = new IsTestMethod();
 
 	@Override
 	public boolean test(Class<?> testClassCandidate) {
