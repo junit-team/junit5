@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.EngineDescriptor;
@@ -31,6 +32,7 @@ import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.internal.runners.ErrorReportingRunner;
 import org.junit.runner.Description;
 import org.junit.runner.Request;
+import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.NoTestsRemainException;
@@ -50,9 +52,17 @@ public class JUnit4TestEngine implements TestEngine {
 		for (TestPlanSpecificationElement element : specification) {
 			if (element instanceof ClassNameSpecification) {
 				String className = ((ClassNameSpecification) element).getClassName();
+
 				Class<?> testClass = null;
 				try {
 					testClass = ReflectionUtils.loadClass(className);
+
+					//JL: Hack to break endless recursion if runner will lead to the
+					// execution of JUnit5 test (eg. @RunWith(JUnit5.class))
+					// how to do that properly?
+					if (testClass.isAnnotationPresent(RunWith.class)) {
+						continue;
+					}
 				}
 				catch (ClassNotFoundException e) {
 					throw new IllegalArgumentException("Class " + className + " not found.");
