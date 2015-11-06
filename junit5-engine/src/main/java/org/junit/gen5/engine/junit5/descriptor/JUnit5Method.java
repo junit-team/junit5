@@ -20,7 +20,7 @@ public class JUnit5Method extends JUnit5Testable {
 	private final Class<?> containerClass;
 	private final Method javaMethod;
 
-	JUnit5Method(String uniqueId, Method javaElement, Class<?> containerClass) {
+	public JUnit5Method(String uniqueId, Method javaElement, Class<?> containerClass) {
 		super(uniqueId);
 		this.javaMethod = javaElement;
 		this.containerClass = containerClass;

@@ -23,7 +23,6 @@ public class JUnit5TestableTest {
 
 	@org.junit.Test
 	public void fromUniqueIdForTopLevelClass() {
-
 		JUnit5Class testable = (JUnit5Class) testEngine.fromUniqueId(
 				"junit5:org.junit.gen5.engine.junit5.ATestClass");
 		Assert.assertEquals("junit5:org.junit.gen5.engine.junit5.ATestClass", testable.getUniqueId());

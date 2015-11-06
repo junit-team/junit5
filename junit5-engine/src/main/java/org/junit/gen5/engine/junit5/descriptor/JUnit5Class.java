@@ -17,7 +17,7 @@ public class JUnit5Class extends JUnit5Testable {
 
 	private final Class<?> javaClass;
 
-	JUnit5Class(String uniqueId, Class<?> javaClass) {
+	public JUnit5Class(String uniqueId, Class<?> javaClass) {
 		super(uniqueId);
 		this.javaClass = javaClass;
 	}

@@ -44,7 +44,6 @@ public class SpecificationResolver {
 
 	public void resolveElement(TestPlanSpecificationElement element) {
 		element.accept(new TestPlanSpecificationElement.Visitor() {
-
 			@Override
 			public void visitClassNameSpecification(String className) {
 				resolveClassName(className);
@@ -74,14 +73,12 @@ public class SpecificationResolver {
 	}
 
 	private void resolveUniqueId(String uniqueId) {
-
 		JUnit5Testable testable = testEngine.fromUniqueId(uniqueId);
 		resolveTestable(testable);
 	}
 
 	private void resolveTestable(JUnit5Testable testable) {
 		testable.accept(new JUnit5Testable.Visitor() {
-
 			@Override
 			public void visitClass(String uniqueId, Class<?> testClass) {
 				resolveClass(testClass, uniqueId, parent, true);
@@ -91,7 +88,6 @@ public class SpecificationResolver {
 			public void visitMethod(String uniqueId, Method method, Class<?> container) {
 				resolveMethod(method, container, uniqueId, parent);
 			}
-
 		});
 	}
 

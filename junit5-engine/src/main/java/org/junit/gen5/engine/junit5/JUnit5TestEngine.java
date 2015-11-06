@@ -13,13 +13,7 @@ package org.junit.gen5.engine.junit5;
 import static java.util.stream.Collectors.toList;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
@@ -27,30 +21,30 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.gen5.engine.junit5.descriptor.JUnit5Testable;
-import org.junit.gen5.engine.junit5.descriptor.JUnit5TestableFactory;
-import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;
+import org.junit.gen5.engine.junit5.descriptor.*;
 import org.junit.gen5.engine.junit5.execution.TestExecutionNode;
 import org.junit.gen5.engine.junit5.execution.TestExecutionNodeResolver;
 
 public class JUnit5TestEngine implements TestEngine {
 	// TODO Consider using class names for engine IDs.
-	private static final String JUNIT5_ENGINE_ID = "junit5";
+	public static final String JUNIT5_ENGINE_ID = "junit5";
+
+	private final JUnit5TestableFactory JUnit5TestableFactory = new JUnit5TestableFactory(this);
 
 	public JUnit5Testable fromUniqueId(String uniqueId) {
-		return new JUnit5TestableFactory().fromUniqueId(uniqueId, JUNIT5_ENGINE_ID);
+		return JUnit5TestableFactory.fromUniqueId(uniqueId);
 	}
 
 	public JUnit5Testable fromClassName(String className) {
-		return new JUnit5TestableFactory().fromClassName(className, JUNIT5_ENGINE_ID);
+		return JUnit5TestableFactory.fromClassName(className);
 	}
 
 	public JUnit5Testable fromClass(Class<?> clazz) {
-		return new JUnit5TestableFactory().fromClass(clazz, JUNIT5_ENGINE_ID);
+		return JUnit5TestableFactory.fromClass(clazz);
 	}
 
 	public JUnit5Testable fromMethod(Method testMethod, Class<?> clazz) {
-		return new JUnit5TestableFactory().fromMethod(testMethod, clazz, JUNIT5_ENGINE_ID);
+		return JUnit5TestableFactory.fromMethod(testMethod, clazz);
 	}
 
 	@Override
