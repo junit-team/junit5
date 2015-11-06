@@ -18,6 +18,7 @@ import org.junit.Assert;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.EngineDescriptor;
+import org.junit.gen5.engine.PackageSpecification;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueIdSpecification;
 import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;
@@ -216,6 +217,21 @@ public class SpecificationResolverTest {
 
 		Assert.assertEquals(classFromMethod1, classFromMethod2);
 		Assert.assertSame(classFromMethod1, classFromMethod2);
+	}
+
+	@org.junit.Test
+	public void testPackageResolution() {
+		PackageSpecification specification = new PackageSpecification("org.junit.gen5.engine.junit5.subpackage");
+		resolver.resolveElement(specification);
+
+		Assert.assertEquals(4, descriptors.size());
+		Set uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toSet());
+		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.subpackage.Class1WithTestCases"));
+		Assert.assertTrue(
+			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.subpackage.Class1WithTestCases#test1()"));
+		Assert.assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.subpackage.Class2WithTestCases"));
+		Assert.assertTrue(
+			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.subpackage.Class2WithTestCases#test2()"));
 	}
 
 	public TestDescriptor descriptorByUniqueId(String id) {

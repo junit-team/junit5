@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit5.descriptor;
 import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.junit5.testers.CanBeTestClass;
+import org.junit.gen5.engine.junit5.testers.IsTestClassWithTests;
 import org.junit.gen5.engine.junit5.testers.IsTestMethod;
 
 public class SpecificationResolver {
@@ -31,6 +33,7 @@ public class SpecificationResolver {
 
 	private final CanBeTestClass canBeTestClass = new CanBeTestClass();
 	private final IsTestMethod isTestMethod = new IsTestMethod();
+	private final IsTestClassWithTests isTestClassWithTests = new IsTestClassWithTests();
 
 	public SpecificationResolver(Set testDescriptors, EngineDescriptor engineDescriptor) {
 		this.testDescriptors = testDescriptors;
@@ -49,7 +52,18 @@ public class SpecificationResolver {
 			public void visitUniqueIdSpecification(String uniqueId) {
 				resolveUniqueId(uniqueId);
 			}
+
+			@Override
+			public void visitPackageSpecification(String packageName) {
+				resolvePackage(packageName);
+			}
 		});
+	}
+
+	private void resolvePackage(String packageName) {
+		Class<?>[] candidateClasses = ReflectionUtils.findAllClassesInIackage(packageName);
+		Arrays.stream(candidateClasses).filter(isTestClassWithTests).forEach(
+			testClass -> resolveTestable(JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueId())));
 	}
 
 	private void resolveClassName(String className) {
@@ -75,6 +89,7 @@ public class SpecificationResolver {
 			public void visitMethod(String uniqueId, Method method, Class<?> container) {
 				resolveMethod(method, container, uniqueId, engineDescriptor);
 			}
+
 		});
 	}
 

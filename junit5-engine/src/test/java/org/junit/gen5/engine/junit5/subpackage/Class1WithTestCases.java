@@ -8,18 +8,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.junit5.subpackage;
 
-public interface TestPlanSpecificationElement {
+import org.junit.gen5.api.Test;
 
-	interface Visitor {
+public class Class1WithTestCases {
 
-		void visitClassNameSpecification(String className);
+	@Test
+	void test1() {
 
-		void visitUniqueIdSpecification(String uniqueId);
-
-		void visitPackageSpecification(String packageName);
 	}
-
-	void accept(Visitor visitor);
 }

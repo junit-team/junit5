@@ -10,9 +10,6 @@
 
 package org.junit.gen5.junit4runner;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
@@ -20,6 +17,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +29,6 @@ import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.gen5.launcher.TestPlanExecutionListener;
-import org.junit.gen5.launcher.listeners.LoggingListener;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.Runner;
@@ -89,6 +86,29 @@ public class JUnit5 extends Runner {
 		return annotation.value();
 	}
 
+	/**
+	 * The <code>Packages</code> annotation specifies names of packages to be run when a class
+	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	@Inherited
+	public @interface Packages {
+
+		/**
+		 * @return the classes to be run
+		 */
+		String[]value();
+	}
+
+	private static String[] getAnnotatedPackages(Class<?> testClass) throws InitializationError {
+		Packages annotation = testClass.getAnnotation(Packages.class);
+		if (annotation == null) {
+			return new String[0];
+		}
+		return annotation.value();
+	}
+
 	private final Class<?> testClass;
 	private TestPlanSpecification specification = null;
 	private Description description;
@@ -109,6 +129,7 @@ public class JUnit5 extends Runner {
 		catch (NoSuchMethodException nsme) {
 			List<TestPlanSpecificationElement> specs = getClassnameSpecificationElements();
 			specs.addAll(getUniqueIdSpecificationElements());
+			specs.addAll(getPackagesSpecificationElements());
 			if (specs.isEmpty()) { //Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
 				specs.add(TestPlanSpecification.forClassName(testClass.getName()));
 			}
@@ -117,6 +138,13 @@ public class JUnit5 extends Runner {
 		catch (Exception e) {
 			throw new InitializationError(e);
 		}
+	}
+
+	private Collection<? extends TestPlanSpecificationElement> getPackagesSpecificationElements()
+			throws InitializationError {
+		String[] packages = getAnnotatedPackages(testClass);
+		return Arrays.stream(packages).map(uniqueId -> TestPlanSpecification.forPackage(uniqueId)).collect(
+			Collectors.toList());
 	}
 
 	private List<TestPlanSpecificationElement> getClassnameSpecificationElements() throws InitializationError {
