@@ -122,11 +122,7 @@ public class JUnit5TestEngineTests {
 	}
 
 	private List<TestDescriptor> discoverTests(TestPlanSpecification spec) {
-		// For some reason the JUnit5Engine only works correctly if the engine descriptor
-		// is in the list of descriptors
-		EngineDescriptor engineDescriptor = new EngineDescriptor(engine);
-		List<TestDescriptor> descriptors = engine.discoverTests(spec, engineDescriptor);
-		descriptors.add(engineDescriptor);
+		List<TestDescriptor> descriptors = engine.discoverTests(spec);
 		return descriptors;
 	}
 

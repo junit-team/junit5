@@ -45,9 +45,11 @@ public class JUnit4TestEngine implements TestEngine {
 	}
 
 	@Override
-	public Collection<TestDescriptor> discoverTests(TestPlanSpecification specification,
-			EngineDescriptor engineDescriptor) {
+	public Collection<TestDescriptor> discoverTests(TestPlanSpecification specification) {
 		Set<TestDescriptor> result = new LinkedHashSet<>();
+		EngineDescriptor engineDescriptor = new EngineDescriptor(this);
+		result.add(engineDescriptor);
+
 		for (TestPlanSpecificationElement element : specification) {
 			if (element instanceof ClassNameSpecification) {
 				String className = ((ClassNameSpecification) element).getClassName();

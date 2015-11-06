@@ -39,9 +39,11 @@ public class JUnit5TestEngine implements TestEngine {
 	}
 
 	@Override
-	public List<TestDescriptor> discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
+	public List<TestDescriptor> discoverTests(TestPlanSpecification specification) {
 		// TODO Avoid redundant creation of TestDescriptors during this phase
 		Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
+		EngineDescriptor engineDescriptor = new EngineDescriptor(this);
+		testDescriptors.add(engineDescriptor);
 		resolveSpecification(specification, engineDescriptor, testDescriptors);
 		return new ArrayList<>(testDescriptors);
 	}
@@ -57,8 +59,7 @@ public class JUnit5TestEngine implements TestEngine {
 
 	@Override
 	public boolean supports(TestDescriptor testDescriptor) {
-		// TODO Consider creating a superclass or marker interface for JUnit 5 test
-		// descriptors.
+		// TODO Consider creating a superclass or marker interface for JUnit 5 test descriptors.
 		return testDescriptor.getUniqueId().startsWith(getId());
 	}
 

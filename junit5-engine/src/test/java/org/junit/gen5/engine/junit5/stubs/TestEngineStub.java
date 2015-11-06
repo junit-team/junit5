@@ -28,8 +28,7 @@ public class TestEngineStub implements TestEngine {
 	}
 
 	@Override
-	public Collection<TestDescriptor> discoverTests(TestPlanSpecification specification,
-			EngineDescriptor engineDescriptor) {
+	public Collection<TestDescriptor> discoverTests(TestPlanSpecification specification) {
 		return null;
 	}
 
