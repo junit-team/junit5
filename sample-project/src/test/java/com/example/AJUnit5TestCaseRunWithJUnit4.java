@@ -10,7 +10,8 @@
 
 package com.example;
 
-import org.junit.gen5.api.Assertions;
+import static org.junit.gen5.api.Assertions.*;
+
 import org.junit.gen5.api.Test;
 import org.junit.gen5.junit4runner.JUnit5;
 import org.junit.runner.RunWith;
@@ -19,12 +20,13 @@ import org.junit.runner.RunWith;
 public class AJUnit5TestCaseRunWithJUnit4 {
 
 	@Test
-	public void aSucceedingTest() {
-
+	void aSucceedingTest() {
+		/* no-op */
 	}
 
 	@Test
-	public void aFailingTest() {
-		Assertions.fail("Failing for failing's sake.");
+	void aFailingTest() {
+		fail("Failing for failing's sake.");
 	}
+
 }
