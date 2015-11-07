@@ -10,18 +10,12 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.commons.util.ObjectUtils.*;
-
 import java.lang.reflect.Method;
+import java.util.Set;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-import org.junit.gen5.api.Test;
-import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestTag;
 
 /**
  * {@link TestDescriptor} for tests based on Java methods.
@@ -29,38 +23,37 @@ import org.junit.gen5.engine.TestDescriptor;
  * @author Sam Brannen
  * @since 5.0
  */
-@Data
-@EqualsAndHashCode
-public class MethodTestDescriptor implements TestDescriptor {
+public class MethodTestDescriptor extends AbstractJUnit5TestDescriptor {
 
 	private final String displayName;
 
-	private final ClassTestDescriptor parent;
-
 	private final Method testMethod;
 
-	public MethodTestDescriptor(Method testMethod, ClassTestDescriptor parent) {
+	public MethodTestDescriptor(String uniqueId, Method testMethod) {
+		super(uniqueId);
 		Preconditions.notNull(testMethod, "testMethod must not be null");
-		Preconditions.notNull(parent, "parent must not be null");
 
 		this.testMethod = testMethod;
-		this.displayName = determineDisplayName();
-		this.parent = parent;
-	}
 
-	private String determineDisplayName() {
-		// @formatter:off
-		return AnnotationUtils.findAnnotation(this.testMethod, Test.class)
-				.map(Test::name)
-				.filter(name -> !StringUtils.isBlank(name))
-				.orElse(this.testMethod.getName());
-		// @formatter:on
+		this.displayName = determineDisplayName(testMethod, testMethod.getName());
 	}
 
 	@Override
-	public final String getUniqueId() {
-		return String.format("%s#%s(%s)", getParent().getUniqueId(), testMethod.getName(),
-			nullSafeToString(testMethod.getParameterTypes()));
+	public Set<TestTag> getTags() {
+		Set<TestTag> methodTags = getTags(this.getTestMethod());
+		if (getParent() != null) {
+			methodTags.addAll(getParent().getTags());
+		}
+		return methodTags;
+	}
+
+	@Override
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public Method getTestMethod() {
+		return testMethod;
 	}
 
 	@Override

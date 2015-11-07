@@ -12,11 +12,13 @@ package org.junit.gen5.commons.util;
 
 import static org.junit.Assert.*;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -77,26 +79,33 @@ public final class AnnotationUtilsTests {
 		assertTrue(optionalAnnotation.isPresent());
 	}
 
-	@Target({ ElementType.TYPE, ElementType.METHOD })
-	@Retention(RetentionPolicy.RUNTIME)
-	static @interface Annotation1 {
+	@Test
+	public void findAllAnnotationsOfSameType() throws Exception {
+		List<Annotation1> allAnnotations = AnnotationUtils.findAllAnnotations(DoubleAnnotationClass.class,
+			Annotation1.class);
+		assertEquals(2, allAnnotations.size());
 	}
 
 	@Target({ ElementType.TYPE, ElementType.METHOD })
 	@Retention(RetentionPolicy.RUNTIME)
-	static @interface Annotation2 {
+	@interface Annotation1 {
+	}
+
+	@Target({ ElementType.TYPE, ElementType.METHOD })
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface Annotation2 {
 	}
 
 	@Target(ElementType.TYPE)
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
-	static @interface InheritedAnnotation {
+	@interface InheritedAnnotation {
 	}
 
 	@Target({ ElementType.TYPE, ElementType.METHOD })
 	@Retention(RetentionPolicy.RUNTIME)
 	@Annotation1
-	static @interface ComposedAnnotation {
+	@interface ComposedAnnotation {
 	}
 
 	@Annotation1
@@ -124,6 +133,12 @@ public final class AnnotationUtilsTests {
 		@ComposedAnnotation
 		void method() {
 		}
+	}
+
+	@ComposedAnnotation()
+	@Annotation1()
+	static class DoubleAnnotationClass {
+
 	}
 
 }

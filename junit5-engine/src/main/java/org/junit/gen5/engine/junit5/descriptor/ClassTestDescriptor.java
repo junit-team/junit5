@@ -10,11 +10,11 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import java.util.Set;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestTag;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.
@@ -24,29 +24,32 @@ import org.junit.gen5.engine.TestDescriptor;
  *
  * @since 5.0
  */
-@Data
-@EqualsAndHashCode
-public class ClassTestDescriptor implements TestDescriptor {
+public class ClassTestDescriptor extends AbstractJUnit5TestDescriptor {
 
-	private final TestDescriptor parent;
+	private final String displayName;
 	private final Class<?> testClass;
 
-	public ClassTestDescriptor(Class<?> testClass, TestDescriptor parent) {
+	public ClassTestDescriptor(String uniqueId, Class<?> testClass) {
+		super(uniqueId);
 		Preconditions.notNull(testClass, "testClass must not be null");
-		Preconditions.notNull(parent, "parent must not be null");
 
 		this.testClass = testClass;
-		this.parent = parent;
+
+		this.displayName = determineDisplayName(testClass, testClass.getName());
+
+	}
+
+	public Class<?> getTestClass() {
+		return testClass;
+	}
+
+	public String getDisplayName() {
+		return displayName;
 	}
 
 	@Override
-	public final String getUniqueId() {
-		return this.parent.getUniqueId() + ":" + testClass.getName();
-	}
-
-	@Override
-	public final String getDisplayName() {
-		return this.testClass.getSimpleName();
+	public Set<TestTag> getTags() {
+		return getTags(this.testClass);
 	}
 
 	@Override

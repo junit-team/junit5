@@ -14,12 +14,16 @@ import org.junit.gen5.api.After;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.BeforeAll;
+import org.junit.gen5.api.Name;
+import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
 
 /**
  * Named *TestCase so Gradle will not try to run it.
  */
-class SucceedingTestCase extends AbstractSuperTest {
+@Name("A succeeding test case")
+@Tag("fast")
+class SucceedingTestCase extends AbstractSuperTest implements InterfaceWithTestCases {
 
 	@BeforeAll
 	void initClass() {
@@ -41,17 +45,20 @@ class SucceedingTestCase extends AbstractSuperTest {
 		System.out.println(getClass().getName() + " after called");
 	}
 
-	@Test(name = "A nice name for test 1")
+	@Test
+	@Name("A nice name for test 1")
 	void test1() {
 		System.out.println("test1");
 	}
 
-	@Test(name = "A test name with umlauts äöüÄÖÜß")
+	@Test
+	@Name("A test name with umlauts äöüÄÖÜß")
 	void test2() {
 		System.out.println("test2");
 	}
 
-	@Test(name = "😱")
+	@Test
+	@Name("😱")
 	void emoji() {
 		System.out.println("emoji?");
 	}
@@ -90,4 +97,32 @@ abstract class AbstractSuperTest {
 	void afterAllFromSuperclass() {
 		System.out.println(getClass().getName() + " after all from super class called");
 	}
+}
+
+interface InterfaceWithTestCases extends SuperInterface {
+
+	@Before
+	default void beforeFromInterface() {
+		System.out.println(getClass().getName() + " before from interface called");
+	}
+
+	@Test
+	default void testFromInterface() {
+		System.out.println("test from interface");
+	}
+
+	@After
+	default void afterFromInterface() {
+		System.out.println(getClass().getName() + " after from interface called");
+	}
+
+}
+
+interface SuperInterface {
+
+	@Test
+	default void testFromInterface() {
+		System.out.println("test from super interface is shadowed");
+	}
+
 }

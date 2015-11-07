@@ -19,6 +19,7 @@ import java.util.*;
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 import org.junit.gen5.engine.junit5.execution.injection.*;
@@ -34,6 +35,8 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 	private final MethodTestDescriptor testDescriptor;
 
+	private final ConditionalEvaluator conditionalEvaluator = new ConditionalEvaluator();
+
 	MethodTestExecutionNode(MethodTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
 	}
@@ -45,6 +48,12 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 	@Override
 	public void execute(EngineExecutionContext context) {
+
+		if (!this.conditionalEvaluator.testEnabled(context, getTestDescriptor())) {
+			// Abort execution of the test completely at this point.
+			return;
+		}
+
 		context.getTestExecutionListener().testStarted(getTestDescriptor());
 		Object testInstance = context.getAttributes().get(ClassTestExecutionNode.TEST_INSTANCE_ATTRIBUTE_NAME);
 		Class<?> testClass = testInstance.getClass();

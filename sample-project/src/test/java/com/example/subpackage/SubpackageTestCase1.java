@@ -8,22 +8,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor;
-
-import java.lang.reflect.Method;
+package com.example.subpackage;
 
 import org.junit.gen5.api.Test;
 
-/**
- * @author Sam Brannen
- * @since 5.0
- */
-class TestMethodTester extends ReflectionObjectTester {
+public class SubpackageTestCase1 {
 
-	boolean accept(Method testMethodCandidate) {
-		if (isPrivate(testMethodCandidate))
-			return false;
-		return hasAnnotation(testMethodCandidate, Test.class);
+	@Test
+	void subpackageTest1() {
+
 	}
-
 }

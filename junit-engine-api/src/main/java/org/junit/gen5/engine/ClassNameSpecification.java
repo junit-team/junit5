@@ -17,4 +17,8 @@ public class ClassNameSpecification implements TestPlanSpecificationElement {
 
 	private String className;
 
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitClassNameSpecification(className);
+	}
 }

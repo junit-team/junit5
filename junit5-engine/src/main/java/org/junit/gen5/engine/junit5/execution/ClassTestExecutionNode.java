@@ -33,6 +33,8 @@ class ClassTestExecutionNode extends TestExecutionNode {
 
 	private final ClassTestDescriptor testDescriptor;
 
+	private final ConditionalEvaluator conditionalEvaluator = new ConditionalEvaluator();
+
 	ClassTestExecutionNode(ClassTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
 	}
@@ -55,6 +57,12 @@ class ClassTestExecutionNode extends TestExecutionNode {
 
 	@Override
 	public void execute(EngineExecutionContext context) {
+
+		if (!this.conditionalEvaluator.testEnabled(context, getTestDescriptor())) {
+			// Abort execution of the test completely at this point.
+			return;
+		}
+
 		Class<?> testClass = getTestDescriptor().getTestClass();
 		Object testInstance = createTestInstance();
 		context.getAttributes().put(TEST_INSTANCE_ATTRIBUTE_NAME, testInstance);

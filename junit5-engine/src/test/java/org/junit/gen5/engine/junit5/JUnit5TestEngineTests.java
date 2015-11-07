@@ -25,6 +25,7 @@ import org.junit.gen5.api.After;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.BeforeAll;
+import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
@@ -47,7 +48,6 @@ public class JUnit5TestEngineTests {
 		engine = new JUnit5TestEngine();
 	}
 
-	@org.junit.Test
 	public void executeCompositeTestPlanSpecification() {
 		TestPlanSpecification spec = build(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
@@ -73,6 +73,44 @@ public class JUnit5TestEngineTests {
 		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
 		Assert.assertEquals("# tests aborted", 1, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
+	}
+
+	@org.junit.Test
+	public void executeTestsWithDisabledTestClass() {
+		TestPlanSpecification spec = build(forClassName(DisabledTestClassTestCase.class.getName()));
+
+		List<TestDescriptor> descriptors = discoverTests(spec);
+		Assert.assertNotNull(descriptors);
+		Assert.assertEquals("# descriptors", 3, descriptors.size());
+
+		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
+
+		engine.execute(new EngineExecutionContext(descriptors, listener));
+
+		Assert.assertEquals("# tests started", 0, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
+		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
+		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+	}
+
+	@org.junit.Test
+	public void executeTestsWithDisabledTestMethod() {
+		TestPlanSpecification spec = build(forClassName(DisabledTestMethodTestCase.class.getName()));
+
+		List<TestDescriptor> descriptors = discoverTests(spec);
+		Assert.assertNotNull(descriptors);
+		Assert.assertEquals("# descriptors", 4, descriptors.size());
+
+		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
+
+		engine.execute(new EngineExecutionContext(descriptors, listener));
+
+		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
+		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
+		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
 	}
 
 	@org.junit.Test
@@ -110,6 +148,7 @@ public class JUnit5TestEngineTests {
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
+		System.out.println("Descriptors: " + descriptors);
 		engine.execute(new EngineExecutionContext(descriptors, listener));
 
 		Assert.assertTrue("@BeforeAll was not invoked", LocalTestCase.beforeAllInvoked);
@@ -217,10 +256,32 @@ public class JUnit5TestEngineTests {
 
 	}
 
+	@Disabled
+	private static class DisabledTestClassTestCase {
+
+		@Test
+		void disabledTest() {
+		}
+
+	}
+
+	private static class DisabledTestMethodTestCase {
+
+		@Test
+		void enabledTest() {
+		}
+
+		@Test
+		@Disabled
+		void disabledTest() {
+		}
+
+	}
+
 	@Test
 	@Target(ElementType.METHOD)
 	@Retention(RetentionPolicy.RUNTIME)
-	static @interface CustomTestAnnotation {
+	@interface CustomTestAnnotation {
 	}
 
 }

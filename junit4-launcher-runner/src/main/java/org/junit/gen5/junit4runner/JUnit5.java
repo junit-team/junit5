@@ -10,17 +10,20 @@
 
 package org.junit.gen5.junit4runner;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.function.Predicate;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -51,14 +54,82 @@ public class JUnit5 extends Runner {
 		/**
 		 * @return the classes to be run
 		 */
-		public Class<?>[]value();
+		Class<?>[]value();
 	}
 
 	private static Class<?>[] getAnnotatedClasses(Class<?> testClass) throws InitializationError {
 		Classes annotation = testClass.getAnnotation(Classes.class);
 		if (annotation == null) {
-			throw new InitializationError(String.format("class '%s' must have a @%s annotation or a static %s method",
-				testClass.getName(), Classes.class.getSimpleName(), CREATE_SPECIFICATION_METHOD_NAME));
+			return new Class[0];
+		}
+		return annotation.value();
+	}
+
+	/**
+	 * The <code>UniqueIds</code> annotation specifies unique ids of classes or methods to be run when a class
+	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	@Inherited
+	public @interface UniqueIds {
+
+		/**
+		 * @return the classes to be run
+		 */
+		String[]value();
+	}
+
+	private static String[] getAnnotatedUniqueIds(Class<?> testClass) throws InitializationError {
+		UniqueIds annotation = testClass.getAnnotation(UniqueIds.class);
+		if (annotation == null) {
+			return new String[0];
+		}
+		return annotation.value();
+	}
+
+	/**
+	 * The <code>Packages</code> annotation specifies names of packages to be run when a class
+	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	@Inherited
+	public @interface Packages {
+
+		/**
+		 * @return the classes to be run
+		 */
+		String[]value();
+	}
+
+	private static String[] getAnnotatedPackages(Class<?> testClass) throws InitializationError {
+		Packages annotation = testClass.getAnnotation(Packages.class);
+		if (annotation == null) {
+			return new String[0];
+		}
+		return annotation.value();
+	}
+
+	/**
+	 * The <code>Packages</code> annotation specifies names of packages to be run when a class
+	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	@Inherited
+	public @interface OnlyIncludeTags {
+
+		/**
+		 * @return the classes to be run
+		 */
+		String[]value();
+	}
+
+	private static String[] getAnnotatedOnlyIncludeTags(Class<?> testClass) throws InitializationError {
+		OnlyIncludeTags annotation = testClass.getAnnotation(OnlyIncludeTags.class);
+		if (annotation == null) {
+			return new String[0];
 		}
 		return annotation.value();
 	}
@@ -81,19 +152,42 @@ public class JUnit5 extends Runner {
 			return (TestPlanSpecification) createSpecMethod.invoke(null);
 		}
 		catch (NoSuchMethodException nsme) {
-			Class<?>[] testClasses = getAnnotatedClasses(testClass);
-			List<TestPlanSpecificationElement> testClassNames = Arrays.stream(testClasses).map(
-				clazz -> TestPlanSpecification.forClassName(clazz.getName())).collect(Collectors.toList());
-			return TestPlanSpecification.build(testClassNames);
+			List<TestPlanSpecificationElement> specs = getClassnameSpecificationElements();
+			specs.addAll(getUniqueIdSpecificationElements());
+			specs.addAll(getPackagesSpecificationElements());
+			if (specs.isEmpty()) { //Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
+				specs.add(TestPlanSpecification.forClassName(testClass.getName()));
+			}
+			TestPlanSpecification plan = TestPlanSpecification.build(specs);
+			String[] onlyIncludeTags = getAnnotatedOnlyIncludeTags(testClass);
+			if (onlyIncludeTags.length > 0) {
+				Predicate<TestDescriptor> tagNamesFilter = TestPlanSpecification.filterByTags(onlyIncludeTags);
+				plan.filterWith(tagNamesFilter);
+			}
+			return plan;
 		}
 		catch (Exception e) {
 			throw new InitializationError(e);
 		}
 	}
 
+	private Collection<TestPlanSpecificationElement> getPackagesSpecificationElements() throws InitializationError {
+		String[] packages = getAnnotatedPackages(testClass);
+		return stream(packages).map(TestPlanSpecification::forPackage).collect(toList());
+	}
+
+	private List<TestPlanSpecificationElement> getClassnameSpecificationElements() throws InitializationError {
+		Class<?>[] testClasses = getAnnotatedClasses(testClass);
+		return stream(testClasses).map(Class::getName).map(TestPlanSpecification::forClassName).collect(toList());
+	}
+
+	private List<TestPlanSpecificationElement> getUniqueIdSpecificationElements() throws InitializationError {
+		String[] uniqueIds = getAnnotatedUniqueIds(testClass);
+		return stream(uniqueIds).map(TestPlanSpecification::forUniqueId).collect(toList());
+	}
+
 	private Description generateDescription() {
-		Description suiteDescription = Description.createSuiteDescription(
-			"JUnit 5 test suite: " + testClass.getSimpleName());
+		Description suiteDescription = Description.createSuiteDescription(testClass.getName());
 		if (specification != null) {
 			TestPlan plan = launcher.discover(specification);
 			for (TestDescriptor descriptor : plan.getTestDescriptors()) {
@@ -175,20 +269,24 @@ public class JUnit5 extends Runner {
 		@Override
 		public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
 			Description description = findJUnit4Description(testDescriptor);
+			// TODO We call this after calling fireTestStarted. This leads to a wrong test
+			// count in Eclipse.
 			notifier.fireTestIgnored(description);
+			notifier.fireTestFinished(description);
 		}
 
 		@Override
 		public void testAborted(TestDescriptor testDescriptor, Throwable t) {
 			Description description = findJUnit4Description(testDescriptor);
 			notifier.fireTestAssumptionFailed(new Failure(description, t));
+			notifier.fireTestFinished(description);
 		}
 
 		@Override
 		public void testFailed(TestDescriptor testDescriptor, Throwable t) {
 			Description description = findJUnit4Description(testDescriptor);
 			notifier.fireTestFailure(new Failure(description, t));
-
+			notifier.fireTestFinished(description);
 		}
 
 		@Override
