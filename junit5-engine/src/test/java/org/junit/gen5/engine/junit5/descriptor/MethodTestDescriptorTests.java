@@ -79,12 +79,14 @@ public class MethodTestDescriptorTests {
 	}
 
 	@org.junit.Test
-	public void constructFromMethodWithCustomDisplayNameInCustomTestAnnotation() throws Exception {
+	public void constructFromMethodWithCustomTestAnnotation() throws Exception {
 		Method testMethod = getClass().getDeclaredMethod("customTestAnnotation");
 		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom name", descriptor.getDisplayName(), "display name:");
+		List<String> tags = descriptor.getTags().stream().map(TestTag::getName).collect(Collectors.toList());
+		assertEquals("custom tag", tags.get(0), "tags:");
 	}
 
 	@org.junit.Test
@@ -115,6 +117,7 @@ public class MethodTestDescriptorTests {
 
 	@Test
 	@Name("custom name")
+	@Tag("custom tag")
 	@Target(ElementType.METHOD)
 	@Retention(RetentionPolicy.RUNTIME)
 	@interface CustomTestAnnotation {

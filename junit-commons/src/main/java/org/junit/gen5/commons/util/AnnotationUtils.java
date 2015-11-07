@@ -13,6 +13,9 @@ package org.junit.gen5.commons.util;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -33,11 +36,62 @@ public final class AnnotationUtils {
 		/* no-op */
 	}
 
+	//Todo: Cannot figure out how method could return List<A>
+	//Todo: Implement meta annotation support
+	/**
+	 * Find all annotations of {@code annotationType} that are either
+	 * <em>present</em> or <em>meta-present</em> on the supplied {@code element}.
+	 */
+	public static <A extends Annotation> List<Annotation> findAllAnnotations(AnnotatedElement element,
+			Class<A> annotationType) {
+		return findAllAnnotations(element, annotationType, new HashSet<>());
+	}
+
+	private static <A extends Annotation> List<Annotation> findAllAnnotations(AnnotatedElement element,
+			Class<A> annotationType, Set<Annotation> visited) {
+		//		Annotation[] annotations = element.getAnnotationsByType(annotationType);
+		//		return Arrays.asList(annotations);
+		Preconditions.notNull(annotationType, "annotationType must not be null");
+
+		if (element == null) {
+			return Collections.emptyList();
+		}
+
+		List<Annotation> collectedAnnotations = new ArrayList<>();
+
+		// Directly present or inherited?
+		Annotation[] annotations = element.getAnnotationsByType(annotationType);
+		collectedAnnotations.addAll(Arrays.asList(annotations));
+
+		// Meta-present on directly present annotations?
+		// Todo: Isn't this covered by the next block as well?
+		for (Annotation candidateAnnotation : element.getDeclaredAnnotations()) {
+			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
+				List<Annotation> metaAnnotations = findAllAnnotations(candidateAnnotation.annotationType(),
+					annotationType, visited);
+				collectedAnnotations.addAll(metaAnnotations);
+			}
+		}
+
+		// Meta-present on indirectly present annotations?
+		for (Annotation candidateAnnotation : element.getAnnotations()) {
+			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
+				List<Annotation> metaAnnotations = findAllAnnotations(candidateAnnotation.annotationType(),
+					annotationType, visited);
+				collectedAnnotations.addAll(metaAnnotations);
+			}
+		}
+
+		return collectedAnnotations;
+
+	}
+
 	/**
 	 * Find the first annotation of {@code annotationType} that is either
 	 * <em>present</em> or <em>meta-present</em> on the supplied {@code element}.
 	 */
 	public static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType) {
+		//Todo: should we delegate to findAllAnnotations?
 		return findAnnotation(element, annotationType, new HashSet<Annotation>());
 	}
 

@@ -10,16 +10,9 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.gen5.api.Name;
-import org.junit.gen5.api.Tag;
-import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.StringUtils;
-import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 
@@ -31,7 +24,7 @@ import org.junit.gen5.engine.TestTag;
  *
  * @since 5.0
  */
-public class ClassTestDescriptor extends AbstractTestDescriptor {
+public class ClassTestDescriptor extends AbstractJUnit5TestDescriptor {
 
 	private final String displayName;
 	private final Class<?> testClass;
@@ -41,7 +34,9 @@ public class ClassTestDescriptor extends AbstractTestDescriptor {
 		Preconditions.notNull(testClass, "testClass must not be null");
 
 		this.testClass = testClass;
-		this.displayName = determineDisplayName();
+
+		this.displayName = determineDisplayName(testClass, testClass.getName());
+
 	}
 
 	public Class<?> getTestClass() {
@@ -54,29 +49,7 @@ public class ClassTestDescriptor extends AbstractTestDescriptor {
 
 	@Override
 	public Set<TestTag> getTags() {
-		//Todo: Remove duplication with MethodDescriptor.getTags
-		Set<TestTag> tags = new HashSet<>();
-		// @formatter:off
-		Tag[] tagAnnotations = this.testClass.getAnnotationsByType(Tag.class);
-		// Todo: Implement AnnotationUtils.findAnnotations and use it to support meta annotations
-		Arrays.stream(tagAnnotations)
-				.map(Tag::value)
-				.filter(name -> !StringUtils.isBlank(name))
-				.forEach( tagName -> tags.add(new TestTag(tagName)));
-		// @formatter:on
-
-		return tags;
-	}
-
-	private String determineDisplayName() {
-		//Todo: Remove duplication with MethodDescriptor.determineDisplayName
-
-		// @formatter:off
-		return AnnotationUtils.findAnnotation(this.testClass, Name.class)
-				.map(Name::value)
-				.filter(name -> !StringUtils.isBlank(name))
-				.orElse(this.testClass.getName());
-		// @formatter:on
+		return getTags(this.testClass);
 	}
 
 	@Override
