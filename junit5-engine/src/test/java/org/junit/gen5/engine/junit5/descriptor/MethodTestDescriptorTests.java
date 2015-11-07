@@ -19,6 +19,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
+import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
 
 /**
@@ -74,7 +75,8 @@ public class MethodTestDescriptorTests {
 	void test(String txt, BigDecimal sum) {
 	}
 
-	@Test(name = "custom test name")
+	@Test
+	@Name("custom test name")
 	void foo() {
 	}
 
@@ -82,10 +84,11 @@ public class MethodTestDescriptorTests {
 	void customTestAnnotation() {
 	}
 
-	@Test(name = "custom name")
+	@Test
+	@Name("custom name")
 	@Target(ElementType.METHOD)
 	@Retention(RetentionPolicy.RUNTIME)
-	static @interface CustomTestAnnotation {
+	@interface CustomTestAnnotation {
 	}
 
 }

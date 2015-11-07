@@ -13,7 +13,6 @@ package org.junit.gen5.engine.junit5.descriptor;
 import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Name;
-import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
@@ -42,17 +41,9 @@ public class MethodTestDescriptor extends AbstractTestDescriptor {
 
 	private String determineDisplayName() {
 		// @formatter:off
-		String name = AnnotationUtils.findAnnotation(this.testMethod, Name.class)
+		return AnnotationUtils.findAnnotation(this.testMethod, Name.class)
 				.map(Name::value)
-				.filter(nameFromNameAnnotation -> !StringUtils.isBlank(nameFromNameAnnotation))
-				.orElse(null);
-
-		if (name != null)
-			return name;
-
-		return AnnotationUtils.findAnnotation(this.testMethod, Test.class)
-				.map(Test::name)
-				.filter(nameFromTestAnnotation -> !StringUtils.isBlank(nameFromTestAnnotation))
+				.filter(name -> !StringUtils.isBlank(name))
 				.orElse(this.testMethod.getName());
 		// @formatter:on
 	}

@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
+import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
 import org.opentestalliance.TestSkippedException;
 
@@ -74,12 +75,14 @@ class SampleTestCase {
 		fail("This test will always fail");
 	}
 
-	@Test(name = "custom name")
+	@Test
+	@Name("custom name")
 	void succeedingTest() {
 		// no-op
 	}
 
-	@Test(name = "with succeeding assertAll")
+	@Test
+	@Name("with succeeding assertAll")
 	void assertAllTest() {
 		Map<String, String> person = new HashMap<String, String>();
 		person.put("firstName", "Johannes");
@@ -95,7 +98,8 @@ class SampleTestCase {
 		// @formatter:on
 	}
 
-	@Test(name = "with failing assertAll")
+	@Test
+	@Name("with failing assertAll")
 	void assertAllFailingTest() {
 		Map<String, String> person = new HashMap<String, String>();
 		person.put("firstName", "Johanes");
@@ -111,7 +115,7 @@ class SampleTestCase {
 		// @formatter:on
 	}
 
-	//Currently ignored by junit5 engine
+	// Currently ignored by junit5 engine
 	class InnerTestCase {
 
 		@Test
@@ -119,4 +123,5 @@ class SampleTestCase {
 
 		}
 	}
+
 }

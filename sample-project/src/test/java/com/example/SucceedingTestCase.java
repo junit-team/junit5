@@ -43,25 +43,22 @@ class SucceedingTestCase extends AbstractSuperTest implements InterfaceWithTestC
 		System.out.println(getClass().getName() + " after called");
 	}
 
-	@Test(name = "A nice name for test 1")
+	@Test
+	@Name("A nice name for test 1")
 	void test1() {
 		System.out.println("test1");
 	}
 
-	@Test(name = "A test name with umlauts äöüÄÖÜß")
+	@Test
+	@Name("A test name with umlauts äöüÄÖÜß")
 	void test2() {
 		System.out.println("test2");
 	}
 
-	@Test(name = "😱")
+	@Test
+	@Name("😱")
 	void emoji() {
 		System.out.println("emoji?");
-	}
-
-	@Test()
-	@Name("a test with @Name annotation")
-	void testWithNameAnnotation() {
-		System.out.println("testWithNameAnnotation");
 	}
 
 }
