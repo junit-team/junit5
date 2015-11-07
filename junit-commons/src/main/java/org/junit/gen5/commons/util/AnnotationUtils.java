@@ -44,8 +44,11 @@ public final class AnnotationUtils {
 	private static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType,
 			Set<Annotation> visited) {
 
-		Preconditions.notNull(element, "AnnotatedElement must not be null");
 		Preconditions.notNull(annotationType, "annotationType must not be null");
+
+		if (element == null) {
+			return Optional.empty();
+		}
 
 		// Directly present?
 		A annotation = element.getDeclaredAnnotation(annotationType);
