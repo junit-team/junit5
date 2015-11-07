@@ -32,7 +32,7 @@ public abstract class AbstractJUnit5TestDescriptor extends AbstractTestDescripto
 	protected Set<TestTag> getTags(AnnotatedElement taggedElement) {
 		Set<TestTag> tags = new HashSet<>();
 		// @formatter:off
-		List<Annotation> tagAnnotations = AnnotationUtils.findAllAnnotations(taggedElement, Tag.class);
+		List<Tag> tagAnnotations = AnnotationUtils.findAllAnnotations(taggedElement, Tag.class);
 		tagAnnotations.stream()
 				.map(annotation -> (Tag) annotation)
 				.map(Tag::value)
