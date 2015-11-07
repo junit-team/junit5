@@ -10,6 +10,8 @@
 
 package org.junit.gen5.engine;
 
+import java.util.Set;
+
 /**
  * @author Sam Brannen
  * @since 5.0
@@ -30,4 +32,5 @@ public interface TestDescriptor {
 
 	boolean isTest();
 
+	Set<TestTag> getTags();
 }

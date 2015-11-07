@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -55,6 +56,11 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	public final Set<AbstractTestDescriptor> getChildren() {
 		return this.children;
+	}
+
+	@Override
+	public Set<TestTag> getTags() {
+		return Collections.emptySet();
 	}
 
 	@Override

@@ -18,9 +18,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.gen5.api.Name;
+import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.TestTag;
 
 /**
  * Unit tests for {@link MethodTestDescriptor}.
@@ -29,6 +33,9 @@ import org.junit.gen5.api.Test;
  * @author Stefan Bechtold
  * @since 5.0
  */
+@Tag("classTag1")
+@Tag("classTag2")
+@Name("custom class name")
 public class MethodTestDescriptorTests {
 
 	@org.junit.Test
@@ -43,12 +50,32 @@ public class MethodTestDescriptorTests {
 	}
 
 	@org.junit.Test
-	public void constructFromMethodWithCustomDisplayName() throws Exception {
+	public void constructFromMethodWithAnnotations() throws Exception {
 		Method testMethod = getClass().getDeclaredMethod("foo");
 		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom test name", descriptor.getDisplayName(), "display name:");
+
+		List<String> tags = descriptor.getTags().stream().map(TestTag::getName).collect(Collectors.toList());
+		assertEquals(2, descriptor.getTags().size());
+		assertTrue(tags.contains("methodTag1"));
+		assertTrue(tags.contains("methodTag2"));
+
+	}
+
+	@org.junit.Test
+	public void constructClassDescriptorWithAnnotations() throws Exception {
+		ClassTestDescriptor descriptor = new ClassTestDescriptor("any id", getClass());
+
+		assertEquals(getClass(), descriptor.getTestClass());
+		assertEquals("custom class name", descriptor.getDisplayName(), "display name:");
+
+		List<String> tags = descriptor.getTags().stream().map(TestTag::getName).collect(Collectors.toList());
+		assertEquals(2, descriptor.getTags().size());
+		assertTrue(tags.contains("classTag1"));
+		assertTrue(tags.contains("classTag2"));
+
 	}
 
 	@org.junit.Test
@@ -77,6 +104,8 @@ public class MethodTestDescriptorTests {
 
 	@Test
 	@Name("custom test name")
+	@Tag("methodTag1")
+	@Tag("methodTag2")
 	void foo() {
 	}
 
