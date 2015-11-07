@@ -10,18 +10,19 @@
 
 package org.junit.gen5.junit4runner;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -140,23 +141,19 @@ public class JUnit5 extends Runner {
 		}
 	}
 
-	private Collection<? extends TestPlanSpecificationElement> getPackagesSpecificationElements()
-			throws InitializationError {
+	private Collection<TestPlanSpecificationElement> getPackagesSpecificationElements() throws InitializationError {
 		String[] packages = getAnnotatedPackages(testClass);
-		return Arrays.stream(packages).map(uniqueId -> TestPlanSpecification.forPackage(uniqueId)).collect(
-			Collectors.toList());
+		return stream(packages).map(TestPlanSpecification::forPackage).collect(toList());
 	}
 
 	private List<TestPlanSpecificationElement> getClassnameSpecificationElements() throws InitializationError {
 		Class<?>[] testClasses = getAnnotatedClasses(testClass);
-		return Arrays.stream(testClasses).map(clazz -> TestPlanSpecification.forClassName(clazz.getName())).collect(
-			Collectors.toList());
+		return stream(testClasses).map(Class::getName).map(TestPlanSpecification::forClassName).collect(toList());
 	}
 
 	private List<TestPlanSpecificationElement> getUniqueIdSpecificationElements() throws InitializationError {
 		String[] uniqueIds = getAnnotatedUniqueIds(testClass);
-		return Arrays.stream(uniqueIds).map(uniqueId -> TestPlanSpecification.forUniqueId(uniqueId)).collect(
-			Collectors.toList());
+		return stream(uniqueIds).map(TestPlanSpecification::forUniqueId).collect(toList());
 	}
 
 	private Description generateDescription() {
