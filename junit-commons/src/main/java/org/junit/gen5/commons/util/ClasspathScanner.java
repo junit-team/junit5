@@ -18,20 +18,23 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
 
-public class ReflectionPackage {
+/**
+ * @since 5.0
+ */
+class ClasspathScanner {
 
-	final static String CLASS_FILE_SUFFIX = ".class";
+	private static final String CLASS_FILE_SUFFIX = ".class";
 
-	private String packageBaseName;
+	private final String basePackageName;
 
-	ReflectionPackage(String packageBaseName) {
-		this.packageBaseName = packageBaseName;
+	ClasspathScanner(String basePackageName) {
+		this.basePackageName = basePackageName;
 	}
 
-	Class[] findAllClasses() {
+	Class<?>[] scanForClassesRecursively() {
 		try {
 			List<File> dirs = allSourceDirsForPackage();
-			List<Class> classes = allClassesInSourceDirs(dirs);
+			List<Class<?>> classes = allClassesInSourceDirs(dirs);
 			return classes.toArray(new Class[classes.size()]);
 		}
 		catch (IOException e) {
@@ -40,17 +43,17 @@ public class ReflectionPackage {
 		}
 	}
 
-	private List<Class> allClassesInSourceDirs(List<File> sourceDirs) {
-		List<Class> classes = new ArrayList<>();
+	private List<Class<?>> allClassesInSourceDirs(List<File> sourceDirs) {
+		List<Class<?>> classes = new ArrayList<>();
 		for (File aSourceDir : sourceDirs) {
-			classes.addAll(findClassesInSourceDirRecursively(aSourceDir, packageBaseName));
+			classes.addAll(findClassesInSourceDirRecursively(aSourceDir, this.basePackageName));
 		}
 		return classes;
 	}
 
 	private List<File> allSourceDirsForPackage() throws IOException {
 		ClassLoader classLoader = ReflectionUtils.getClassLoader();
-		String path = packageBaseName.replace('.', '/');
+		String path = this.basePackageName.replace('.', '/');
 		Enumeration<URL> resources = classLoader.getResources(path);
 		List<File> dirs = new ArrayList<>();
 		while (resources.hasMoreElements()) {
@@ -60,8 +63,8 @@ public class ReflectionPackage {
 		return dirs;
 	}
 
-	private static List<Class> findClassesInSourceDirRecursively(File sourceDir, String packageName) {
-		List<Class> classes = new ArrayList<>();
+	private static List<Class<?>> findClassesInSourceDirRecursively(File sourceDir, String packageName) {
+		List<Class<?>> classes = new ArrayList<>();
 		if (!sourceDir.exists()) {
 			return classes;
 		}
@@ -69,21 +72,21 @@ public class ReflectionPackage {
 			if (file.isDirectory()) {
 				classes.addAll(findClassesInSourceDirRecursively(file, packageName + "." + file.getName()));
 			}
-			else if (isAClassFile(file)) {
-				Optional<Class<?>> classForClassFile = getClassForClassFile(file, packageName);
+			else if (isClassFile(file)) {
+				Optional<Class<?>> classForClassFile = loadClassForClassFile(file, packageName);
 				classForClassFile.ifPresent(clazz -> classes.add(clazz));
 			}
 		}
 		return classes;
 	}
 
-	private static Optional<Class<?>> getClassForClassFile(File file, String packageName) {
+	private static Optional<Class<?>> loadClassForClassFile(File file, String packageName) {
 		String className = packageName + '.'
 				+ file.getName().substring(0, file.getName().length() - CLASS_FILE_SUFFIX.length());
 		return ReflectionUtils.loadClass(className);
 	}
 
-	private static boolean isAClassFile(File file) {
+	private static boolean isClassFile(File file) {
 		return file.getName().endsWith(CLASS_FILE_SUFFIX);
 	}
 

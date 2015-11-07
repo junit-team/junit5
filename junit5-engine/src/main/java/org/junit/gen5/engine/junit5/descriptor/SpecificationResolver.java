@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -35,7 +35,7 @@ public class SpecificationResolver {
 	private final IsTestMethod isTestMethod = new IsTestMethod();
 	private final IsTestClassWithTests isTestClassWithTests = new IsTestClassWithTests();
 
-	public SpecificationResolver(Set testDescriptors, EngineDescriptor engineDescriptor) {
+	public SpecificationResolver(Set<TestDescriptor> testDescriptors, EngineDescriptor engineDescriptor) {
 		this.testDescriptors = testDescriptors;
 		this.engineDescriptor = engineDescriptor;
 	}
@@ -61,7 +61,7 @@ public class SpecificationResolver {
 	}
 
 	private void resolvePackage(String packageName) {
-		Class<?>[] candidateClasses = ReflectionUtils.findAllClassesInIackage(packageName);
+		Class<?>[] candidateClasses = ReflectionUtils.findAllClassesInPackage(packageName);
 		Arrays.stream(candidateClasses).filter(isTestClassWithTests).forEach(
 			testClass -> resolveTestable(JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueId())));
 	}

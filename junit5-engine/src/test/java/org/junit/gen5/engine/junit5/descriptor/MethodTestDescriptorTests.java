@@ -8,9 +8,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5;
+package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.*;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -20,8 +20,6 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 
 /**
  * Unit tests for {@link MethodTestDescriptor}.

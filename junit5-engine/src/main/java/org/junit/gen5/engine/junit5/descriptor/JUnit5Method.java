@@ -12,12 +12,15 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import java.lang.reflect.Method;
 
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 @Value
-public class JUnit5Method extends JUnit5Testable {
+@EqualsAndHashCode(callSuper = false)
+class JUnit5Method extends JUnit5Testable {
 
 	private final Class<?> containerClass;
+
 	private final Method javaMethod;
 
 	JUnit5Method(String uniqueId, Method javaElement, Class<?> containerClass) {
@@ -26,8 +29,9 @@ public class JUnit5Method extends JUnit5Testable {
 		this.containerClass = containerClass;
 	}
 
-	public void accept(Visitor visitor) {
-		visitor.visitMethod(getUniqueId(), javaMethod, containerClass);
+	@Override
+	void accept(Visitor visitor) {
+		visitor.visitMethod(getUniqueId(), this.javaMethod, this.containerClass);
 	}
 
 }

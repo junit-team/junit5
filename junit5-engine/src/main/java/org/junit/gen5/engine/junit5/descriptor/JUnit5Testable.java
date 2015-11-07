@@ -12,21 +12,21 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import java.lang.reflect.Method;
 
-public abstract class JUnit5Testable {
+abstract class JUnit5Testable {
 
-	public static JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
+	static JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
 		return new JUnit5TestableFactory().fromUniqueId(uniqueId, engineId);
 	}
 
-	public static JUnit5Testable fromClassName(String className, String engineId) {
+	static JUnit5Testable fromClassName(String className, String engineId) {
 		return new JUnit5TestableFactory().fromClassName(className, engineId);
 	}
 
-	public static JUnit5Testable fromClass(Class<?> clazz, String engineId) {
+	static JUnit5Testable fromClass(Class<?> clazz, String engineId) {
 		return new JUnit5TestableFactory().fromClass(clazz, engineId);
 	}
 
-	public static JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
+	static JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
 		return new JUnit5TestableFactory().fromMethod(testMethod, clazz, engineId);
 	}
 
@@ -36,16 +36,17 @@ public abstract class JUnit5Testable {
 		this.uniqueId = uniqueId;
 	}
 
-	abstract void accept(Visitor visitor);
-
-	public String getUniqueId() {
-		return uniqueId;
+	String getUniqueId() {
+		return this.uniqueId;
 	}
 
-	public interface Visitor {
+	abstract void accept(Visitor visitor);
+
+	interface Visitor {
 
 		void visitClass(String uniqueId, Class<?> testClass);
 
 		void visitMethod(String uniqueId, Method method, Class<?> container);
 	}
+
 }

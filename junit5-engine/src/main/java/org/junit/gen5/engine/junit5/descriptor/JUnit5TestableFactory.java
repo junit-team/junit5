@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;

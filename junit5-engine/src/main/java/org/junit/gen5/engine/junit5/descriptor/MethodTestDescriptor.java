@@ -10,8 +10,6 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.commons.util.ObjectUtils.*;
-
 import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Name;

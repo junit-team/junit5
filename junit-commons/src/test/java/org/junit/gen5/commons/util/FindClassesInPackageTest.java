@@ -12,7 +12,7 @@ package org.junit.gen5.commons.util;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,20 +21,19 @@ public class FindClassesInPackageTest {
 
 	@Test
 	public void findAllClassesInThisPackage() throws IOException, ClassNotFoundException {
-		Class[] classes = ReflectionUtils.findAllClassesInIackage("org.junit.gen5.commons");
+		List<Class<?>> classes = Arrays.asList(ReflectionUtils.findAllClassesInPackage("org.junit.gen5.commons"));
 		//		for(Class clazz : classes) {
 		//			System.out.println(clazz.getName());
 		//		}
-		Assert.assertTrue("Should be at least 19 classes", classes.length >= 20);
-		Assert.assertTrue(Arrays.asList(classes).contains(InnerClassToBeFound.class));
-		Assert.assertTrue(Arrays.asList(classes).contains(MemberClassToBeFound.class));
+		Assert.assertTrue("Should be at least 20 classes", classes.size() >= 20);
+		Assert.assertTrue(classes.contains(NestedClassToBeFound.class));
+		Assert.assertTrue(classes.contains(MemberClassToBeFound.class));
 	}
 
 	class MemberClassToBeFound {
-
 	}
 
-	static class InnerClassToBeFound {
-
+	static class NestedClassToBeFound {
 	}
+
 }

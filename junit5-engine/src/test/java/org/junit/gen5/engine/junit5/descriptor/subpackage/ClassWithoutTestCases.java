@@ -8,14 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.subpackage;
+package org.junit.gen5.engine.junit5.descriptor.subpackage;
 
-import org.junit.gen5.api.Test;
-
-public class Class2WithTestCases {
-
-	@Test
-	void test2() {
-
-	}
+public class ClassWithoutTestCases {
 }

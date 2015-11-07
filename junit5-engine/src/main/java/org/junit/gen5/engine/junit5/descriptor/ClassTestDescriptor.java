@@ -11,7 +11,6 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import org.junit.gen5.api.Name;
-import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;

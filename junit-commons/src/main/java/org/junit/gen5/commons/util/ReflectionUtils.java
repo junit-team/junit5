@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * @author Sam Brannen
  * @since 5.0
  */
-public class ReflectionUtils {
+public final class ReflectionUtils {
 
 	public enum MethodSortOrder {
 		HierarchyDown, HierarchyUp
@@ -74,8 +74,7 @@ public class ReflectionUtils {
 		Predicate<Method> nameAndParameterTypesMatch = (method -> method.getName().equals(methodName)
 				&& Arrays.equals(method.getParameterTypes(), parameterTypes));
 
-		List<Method> candidates = ReflectionUtils.findMethods(clazz, nameAndParameterTypesMatch,
-			ReflectionUtils.MethodSortOrder.HierarchyDown);
+		List<Method> candidates = findMethods(clazz, nameAndParameterTypesMatch, MethodSortOrder.HierarchyDown);
 		if (candidates.isEmpty()) {
 			return Optional.empty();
 		}
@@ -184,8 +183,8 @@ public class ReflectionUtils {
 		return true;
 	}
 
-	public static Class[] findAllClassesInIackage(String packageName) {
-		return new ReflectionPackage(packageName).findAllClasses();
+	public static Class<?>[] findAllClassesInPackage(String basePackageName) {
+		return new ClasspathScanner(basePackageName).scanForClassesRecursively();
 	}
 
 }

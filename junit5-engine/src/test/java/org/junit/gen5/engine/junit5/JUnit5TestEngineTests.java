@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.api.Assumptions.assumeTrue;
+import static org.junit.gen5.api.Assumptions.*;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.lang.annotation.ElementType;
@@ -63,8 +63,7 @@ public class JUnit5TestEngineTests {
 		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
 	}
 
-	//	@org.junit.Test
-	//todo forClassName does not work
+	@org.junit.Test
 	public void executeTestsForClassName() {
 		TestPlanSpecification spec = build(forClassName(LocalTestCase.class.getName()));
 

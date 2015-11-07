@@ -10,10 +10,12 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 @Value
-public class JUnit5Class extends JUnit5Testable {
+@EqualsAndHashCode(callSuper = false)
+class JUnit5Class extends JUnit5Testable {
 
 	private final Class<?> javaClass;
 
@@ -22,8 +24,9 @@ public class JUnit5Class extends JUnit5Testable {
 		this.javaClass = javaClass;
 	}
 
-	public void accept(Visitor visitor) {
-		visitor.visitClass(getUniqueId(), javaClass);
+	@Override
+	void accept(Visitor visitor) {
+		visitor.visitClass(getUniqueId(), this.javaClass);
 	}
 
 }
