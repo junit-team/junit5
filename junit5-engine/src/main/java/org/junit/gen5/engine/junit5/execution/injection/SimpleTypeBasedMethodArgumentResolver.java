@@ -25,13 +25,4 @@ public class SimpleTypeBasedMethodArgumentResolver implements MethodArgumentReso
 		return (parameterType.getName().equals("com.example.CustomType"));
 	}
 
-	@Override
-	public Object resolveArgumentForMethodParameter(Parameter parameter)
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-		Class<?> parameterType = parameter.getType();
-
-		return ReflectionUtils.newInstance(parameterType);
-
-	}
-
 }

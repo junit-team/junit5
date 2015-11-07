@@ -12,11 +12,19 @@ package org.junit.gen5.engine.junit5.execution.injection;
 
 import java.lang.reflect.*;
 
+import org.junit.gen5.commons.util.*;
+
 // for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
 public interface MethodArgumentResolver {
 
 	boolean supports(Parameter parameter);
 
-	Object resolveArgumentForMethodParameter(Parameter parameter)
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException;
+	default public Object resolveArgumentForMethodParameter(Parameter parameter)
+			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+		Class<?> parameterType = parameter.getType();
+
+		return ReflectionUtils.newInstance(parameterType);
+
+	}
+
 }
