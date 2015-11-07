@@ -32,11 +32,9 @@ public final class AnnotationUtils {
 		/* no-op */
 	}
 
-	//Todo: Implement meta annotation support
 	/**
 	 * Find all annotations of {@code annotationType} that are either
 	 * <em>present</em> or <em>meta-present</em> on the supplied {@code element}.
-	 * Todo: Cannot figure out how method could return List<A>
 	 */
 	public static <A extends Annotation> List<A> findAllAnnotations(AnnotatedElement element, Class<A> annotationType) {
 		return findAllAnnotations(element, annotationType, new HashSet<>());

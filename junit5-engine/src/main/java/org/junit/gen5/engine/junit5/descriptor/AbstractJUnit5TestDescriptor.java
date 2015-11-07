@@ -10,7 +10,6 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.HashSet;
 import java.util.List;
@@ -34,7 +33,6 @@ public abstract class AbstractJUnit5TestDescriptor extends AbstractTestDescripto
 		// @formatter:off
 		List<Tag> tagAnnotations = AnnotationUtils.findAllAnnotations(taggedElement, Tag.class);
 		tagAnnotations.stream()
-				.map(annotation -> (Tag) annotation)
 				.map(Tag::value)
 				.filter(name -> !StringUtils.isBlank(name))
 				.forEach( tagName -> tags.add(new TestTag(tagName)));
