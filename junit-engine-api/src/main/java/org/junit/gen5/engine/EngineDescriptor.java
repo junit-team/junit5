@@ -12,7 +12,7 @@ package org.junit.gen5.engine;
 
 public class EngineDescriptor extends AbstractTestDescriptor {
 
-	private TestEngine engine;
+	private final TestEngine engine;
 
 	public EngineDescriptor(TestEngine engine) {
 		super(engine.getId());
@@ -20,7 +20,7 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 	}
 
 	@Override
-	public final String getDisplayName() {
+	public String getDisplayName() {
 		return "Test engine: " + engine.getId();
 	}
 
