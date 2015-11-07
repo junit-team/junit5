@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.engine.AbstractTestDescriptor;
 
 public class JUnit5TestableFactory {
 
@@ -48,6 +49,14 @@ public class JUnit5TestableFactory {
 		Preconditions.notNull(clazz, "clazz must not be null");
 		String uniqueId = engineId + ":" + clazz.getName();
 		return new JUnit5Class(uniqueId, clazz);
+	}
+
+	public JUnit5Testable fromContext(Class<?> testClass, AbstractTestDescriptor parent) {
+		Preconditions.notNull(testClass, "testClass must not be null");
+		Preconditions.notNull(parent, "parent must not be null");
+
+		String uniqueId = parent.getUniqueId() + "$" + testClass.getSimpleName();
+		return new JUnit5Context(uniqueId, testClass, parent);
 	}
 
 	public JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
@@ -167,5 +176,4 @@ public class JUnit5TestableFactory {
 		throw new IllegalArgumentException(
 			String.format("Cannot resolve part '%s' of unique id '%s'", uniqueIdPart, fullUniqueId));
 	}
-
 }

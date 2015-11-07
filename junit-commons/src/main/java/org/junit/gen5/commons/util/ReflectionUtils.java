@@ -15,11 +15,7 @@ import static java.util.stream.Collectors.toList;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -68,6 +64,13 @@ public final class ReflectionUtils {
 
 	public static ClassLoader getClassLoader() {
 		return ClassLoader.getSystemClassLoader();
+	}
+
+	public static List<Class<?>> findClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(predicate, "predicate must not be null");
+
+		return Arrays.stream(clazz.getClasses()).filter(predicate).collect(Collectors.toList());
 	}
 
 	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {

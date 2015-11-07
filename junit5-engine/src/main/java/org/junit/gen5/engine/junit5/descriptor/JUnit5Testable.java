@@ -12,6 +12,8 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import java.lang.reflect.Method;
 
+import org.junit.gen5.engine.AbstractTestDescriptor;
+
 abstract class JUnit5Testable {
 
 	static JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
@@ -24,6 +26,10 @@ abstract class JUnit5Testable {
 
 	static JUnit5Testable fromClass(Class<?> clazz, String engineId) {
 		return new JUnit5TestableFactory().fromClass(clazz, engineId);
+	}
+
+	public static JUnit5Testable fromContext(Class<?> testClass, AbstractTestDescriptor parent) {
+		return new JUnit5TestableFactory().fromContext(testClass, parent);
 	}
 
 	static JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
@@ -47,6 +53,8 @@ abstract class JUnit5Testable {
 		void visitClass(String uniqueId, Class<?> testClass);
 
 		void visitMethod(String uniqueId, Method method, Class<?> container);
+
+		void visitContext(String uniqueId, Class<?> javaClass, AbstractTestDescriptor parent);
 	}
 
 }

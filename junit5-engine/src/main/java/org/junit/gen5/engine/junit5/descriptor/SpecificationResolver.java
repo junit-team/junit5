@@ -24,6 +24,7 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.junit5.testers.CanBeTestClass;
 import org.junit.gen5.engine.junit5.testers.IsTestClassWithTests;
+import org.junit.gen5.engine.junit5.testers.IsTestContext;
 import org.junit.gen5.engine.junit5.testers.IsTestMethod;
 
 public class SpecificationResolver {
@@ -32,6 +33,7 @@ public class SpecificationResolver {
 	private final EngineDescriptor engineDescriptor;
 
 	private final CanBeTestClass canBeTestClass = new CanBeTestClass();
+	private final IsTestContext isTestContext = new IsTestContext();
 	private final IsTestMethod isTestMethod = new IsTestMethod();
 	private final IsTestClassWithTests isTestClassWithTests = new IsTestClassWithTests();
 
@@ -90,6 +92,10 @@ public class SpecificationResolver {
 				resolveMethod(method, container, uniqueId, engineDescriptor);
 			}
 
+			@Override
+			public void visitContext(String uniqueId, Class<?> testClass, AbstractTestDescriptor parent) {
+				resolveClass(testClass, uniqueId, parent, true);
+			}
 		});
 	}
 
@@ -114,6 +120,13 @@ public class SpecificationResolver {
 		parent.addChild(descriptor);
 
 		if (withChildren) {
+			List<Class<?>> testClassCandidates = findClasses(clazz, isTestContext);
+			for (Class<?> testClass : testClassCandidates) {
+				JUnit5Testable contextTestable = JUnit5Testable.fromContext(testClass, descriptor);
+				ClassTestDescriptor context = getOrCreateClassDescriptor(testClass, contextTestable.getUniqueId());
+				parent.addChild(context);
+			}
+
 			List<Method> testMethodCandidates = findMethods(clazz, isTestMethod,
 				ReflectionUtils.MethodSortOrder.HierarchyDown);
 
