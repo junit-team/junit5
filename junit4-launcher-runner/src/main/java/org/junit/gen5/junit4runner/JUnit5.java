@@ -190,12 +190,17 @@ public class JUnit5 extends Runner {
 		Description suiteDescription = Description.createSuiteDescription(testClass.getName());
 		if (specification != null) {
 			TestPlan plan = launcher.discover(specification);
-			for (TestDescriptor descriptor : plan.getTestDescriptors()) {
-				Description description = createJUnit4Description(descriptor, suiteDescription);
-				id2Description.put(descriptor.getUniqueId(), description);
-			}
+			buildDescriptionTree(suiteDescription, plan);
 		}
 		return suiteDescription;
+	}
+
+	private void buildDescriptionTree(Description suiteDescription, TestPlan plan) {
+		//Todo: If children come before their parent the tree is not correctly built up
+		for (TestDescriptor descriptor : plan.getTestDescriptors()) {
+			Description description = createJUnit4Description(descriptor, suiteDescription);
+			id2Description.put(descriptor.getUniqueId(), description);
+		}
 	}
 
 	private Description createJUnit4Description(TestDescriptor testDescriptor, Description rootDescription) {
