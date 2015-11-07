@@ -13,7 +13,10 @@ package org.junit.gen5.launcher;
 import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
@@ -41,11 +44,37 @@ public class Launcher {
 			EngineDescriptor engineDescriptor = new EngineDescriptor(testEngine);
 			Collection<TestDescriptor> testDescriptors = testEngine.discoverTests(specification, engineDescriptor);
 			if (!testDescriptors.isEmpty()) {
-				testPlan.addTestDescriptor(engineDescriptor);
-				testPlan.addTestDescriptors(testDescriptors);
+				Set<TestDescriptor> descriptorCandidates = findFilteredCandidates(specification, testDescriptors);
+				Set<TestDescriptor> descriptorsWithConcreteTests = filterWithoutConcreteTests(descriptorCandidates);
+				testPlan.addTestDescriptors(descriptorsWithConcreteTests);
 			}
 		}
+		//		System.out.println(testPlan.getTestDescriptors().size());
+		//		testPlan.getTestDescriptors().forEach(
+		//				descriptor -> {
+		//					System.out.println(descriptor.getUniqueId());
+		//				}
+		//		);
 		return testPlan;
+	}
+
+	protected Set<TestDescriptor> findFilteredCandidates(TestPlanSpecification specification,
+			Collection<TestDescriptor> testDescriptors) {
+		// @formatter:off
+		return testDescriptors.stream()
+				.filter((descriptor) -> !descriptor.isTest() || specification.acceptDescriptor(descriptor))
+				.collect(Collectors.toSet());
+		// @formatter:on
+	}
+
+	private Set<TestDescriptor> filterWithoutConcreteTests(Set<TestDescriptor> descriptorCandidates) {
+		Set<TestDescriptor> included = new HashSet<>();
+		descriptorCandidates.stream().filter(
+			descriptor -> descriptor.isTest() || included.contains(descriptor)).forEach(descriptor -> {
+				included.add(descriptor);
+				included.add(descriptor.getParent());
+			});
+		return included;
 	}
 
 	public void execute(TestPlanSpecification specification) {

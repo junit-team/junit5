@@ -40,7 +40,11 @@ public class MethodTestDescriptor extends AbstractJUnit5TestDescriptor {
 
 	@Override
 	public Set<TestTag> getTags() {
-		return getTags(this.getTestMethod());
+		Set<TestTag> methodTags = getTags(this.getTestMethod());
+		if (getParent() != null) {
+			methodTags.addAll(getParent().getTags());
+		}
+		return methodTags;
 	}
 
 	@Override

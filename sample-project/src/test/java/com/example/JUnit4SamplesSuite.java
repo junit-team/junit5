@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 @UniqueIds({ "junit5:com.example.SampleTestCase#assertAllTest()",
 	"junit5:com.example.SampleTestCase#assertAllFailingTest()" })
 @Packages({ "com.example.subpackage" })
+@OnlyIncludeTags({ "fast" })
 //@Classes({ SampleTestCase.class, SucceedingTestCase.class, JUnit4TestCase.class })
 public class JUnit4SamplesSuite {
 

@@ -51,16 +51,22 @@ public class MethodTestDescriptorTests {
 
 	@org.junit.Test
 	public void constructFromMethodWithAnnotations() throws Exception {
+		ClassTestDescriptor classDescriptor = new ClassTestDescriptor("class id", getClass());
 		Method testMethod = getClass().getDeclaredMethod("foo");
-		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", testMethod);
+		MethodTestDescriptor methodDescriptor = new MethodTestDescriptor("method id", testMethod);
+		classDescriptor.addChild(methodDescriptor);
 
-		assertEquals(testMethod, descriptor.getTestMethod());
-		assertEquals("custom test name", descriptor.getDisplayName(), "display name:");
+		assertEquals(testMethod, methodDescriptor.getTestMethod());
+		assertEquals("custom test name", methodDescriptor.getDisplayName(), "display name:");
 
-		List<String> tags = descriptor.getTags().stream().map(TestTag::getName).collect(Collectors.toList());
-		assertEquals(2, descriptor.getTags().size());
+		List<String> tags = methodDescriptor.getTags().stream().map(TestTag::getName).collect(Collectors.toList());
+		assertEquals(4, methodDescriptor.getTags().size());
 		assertTrue(tags.contains("methodTag1"));
 		assertTrue(tags.contains("methodTag2"));
+
+		//Methods "inherit" tags from their test class
+		assertTrue(tags.contains("classTag1"));
+		assertTrue(tags.contains("classTag2"));
 
 	}
 

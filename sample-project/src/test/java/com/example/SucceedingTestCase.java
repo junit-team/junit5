@@ -15,12 +15,14 @@ import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Name;
+import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
 
 /**
  * Named *TestCase so Gradle will not try to run it.
  */
 @Name("A succeeding test case")
+@Tag("fast")
 class SucceedingTestCase extends AbstractSuperTest implements InterfaceWithTestCases {
 
 	@BeforeAll

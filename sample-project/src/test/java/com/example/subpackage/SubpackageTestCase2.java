@@ -10,11 +10,13 @@
 
 package com.example.subpackage;
 
+import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
 
 public class SubpackageTestCase2 {
 
 	@Test
+	@Tag("fast")
 	void subpackageTest2() {
 
 	}
