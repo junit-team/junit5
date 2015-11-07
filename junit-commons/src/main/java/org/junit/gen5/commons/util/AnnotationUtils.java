@@ -10,16 +10,12 @@
 
 package org.junit.gen5.commons.util;
 
+import static java.util.Arrays.asList;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Collection of utilities for working with {@linkplain Annotation annotations}.
@@ -36,36 +32,36 @@ public final class AnnotationUtils {
 		/* no-op */
 	}
 
+	//Todo: Implement meta annotation support
 	/**
 	 * Find all annotations of {@code annotationType} that are either
 	 * <em>present</em> or <em>meta-present</em> on the supplied {@code element}.
 	 * Todo: Cannot figure out how method could return List<A>
 	 */
-	public static <A extends Annotation> List<Annotation> findAllAnnotations(AnnotatedElement element,
-			Class<A> annotationType) {
+	public static <A extends Annotation> List<A> findAllAnnotations(AnnotatedElement element, Class<A> annotationType) {
 		return findAllAnnotations(element, annotationType, new HashSet<>());
 	}
 
-	private static <A extends Annotation> List<Annotation> findAllAnnotations(AnnotatedElement element,
-			Class<A> annotationType, Set<Annotation> visited) {
+	private static <A extends Annotation> List<A> findAllAnnotations(AnnotatedElement element, Class<A> annotationType,
+			Set<Annotation> visited) {
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 
 		if (element == null) {
 			return Collections.emptyList();
 		}
 
-		List<Annotation> collectedAnnotations = new ArrayList<>();
+		List<A> collectedAnnotations = new ArrayList<>();
 
 		// Directly present or inherited?
-		Annotation[] annotations = element.getAnnotationsByType(annotationType);
-		collectedAnnotations.addAll(Arrays.asList(annotations));
+		List<A> annotations = asList(element.getAnnotationsByType(annotationType));
+		collectedAnnotations.addAll(annotations);
 
 		// Meta-present on directly present annotations?
 		// Todo: Isn't this covered by the next block as well?
 		for (Annotation candidateAnnotation : element.getDeclaredAnnotations()) {
 			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
-				List<Annotation> metaAnnotations = findAllAnnotations(candidateAnnotation.annotationType(),
-					annotationType, visited);
+				List<A> metaAnnotations = findAllAnnotations(candidateAnnotation.annotationType(), annotationType,
+					visited);
 				collectedAnnotations.addAll(metaAnnotations);
 			}
 		}
@@ -73,8 +69,8 @@ public final class AnnotationUtils {
 		// Meta-present on indirectly present annotations?
 		for (Annotation candidateAnnotation : element.getAnnotations()) {
 			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
-				List<Annotation> metaAnnotations = findAllAnnotations(candidateAnnotation.annotationType(),
-					annotationType, visited);
+				List<A> metaAnnotations = findAllAnnotations(candidateAnnotation.annotationType(), annotationType,
+					visited);
 				collectedAnnotations.addAll(metaAnnotations);
 			}
 		}

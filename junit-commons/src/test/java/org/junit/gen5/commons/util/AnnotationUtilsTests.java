@@ -81,7 +81,7 @@ public final class AnnotationUtilsTests {
 
 	@Test
 	public void findAllAnnotationsOfSameType() throws Exception {
-		List<Annotation> allAnnotations = AnnotationUtils.findAllAnnotations(DoubleAnnotationClass.class,
+		List<Annotation1> allAnnotations = AnnotationUtils.findAllAnnotations(DoubleAnnotationClass.class,
 			Annotation1.class);
 		assertEquals(2, allAnnotations.size());
 	}
