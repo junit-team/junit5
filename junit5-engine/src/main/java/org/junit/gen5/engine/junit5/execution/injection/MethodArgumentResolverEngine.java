@@ -18,7 +18,8 @@ import org.junit.gen5.engine.junit5.descriptor.*;
 // for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
 public class MethodArgumentResolverEngine {
 
-	PrimitiveMethodArgumentResolverRegistry resolverRegistry = new PrimitiveMethodArgumentResolverRegistry();
+	//todo: when introducing the extension mechanism this instance will have to come from outside
+	MethodArgumentResolverRegistry resolverRegistry = new PrimitiveMethodArgumentResolverRegistry();
 
 	/**
 	 * prepare a list of objects as arguments for the execution of this test method
@@ -52,6 +53,7 @@ public class MethodArgumentResolverEngine {
 	private Object resolveArgumentForMethodParameter(Parameter parameter)
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
+		//todo: throw exception as well when there are more than 1 resolver for a given parameter
 		for (MethodArgumentResolver argumentResolver : this.resolverRegistry.getMethodArgumentResolvers()) {
 			if (argumentResolver.supports(parameter))
 				return argumentResolver.resolveArgumentForMethodParameter(parameter);

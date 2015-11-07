@@ -13,11 +13,12 @@ package org.junit.gen5.engine.junit5.execution.injection;
 import java.util.*;
 
 //TODO: this class will have to be filled by the extension mechanism and handed to the resolver engine from outside
-public class PrimitiveMethodArgumentResolverRegistry {
+public class PrimitiveMethodArgumentResolverRegistry implements MethodArgumentResolverRegistry {
 
 	private List<MethodArgumentResolver> methodArgumentResolvers = Arrays.asList(
 		new SimpleTypeBasedMethodArgumentResolver(), new SimpleAnnotationBasedMethodArgumentResolver());
 
+	@Override
 	public List<MethodArgumentResolver> getMethodArgumentResolvers() {
 		return this.methodArgumentResolvers;
 	}
