@@ -15,7 +15,7 @@ import java.lang.reflect.*;
 // for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
 public interface MethodArgumentResolver {
 
-	//TODO: eventuell supports() einbauen
+	boolean supports(Parameter parameter);
 
 	Object resolveArgumentForMethodParameter(Parameter parameter)
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException;

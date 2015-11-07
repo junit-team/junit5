@@ -19,21 +19,24 @@ import org.junit.gen5.commons.util.*;
 public class SimpleAnnotationBasedMethodArgumentResolver implements MethodArgumentResolver {
 
 	@Override
+	public boolean supports(Parameter parameter) {
+
+		//todo: check should be based on class-objects not strings
+		for (Annotation parameterAnnotation : parameter.getAnnotations()) {
+			if (parameterAnnotation.annotationType().getName().equals("com.example.CustomAnnotation"))
+				return true;
+		}
+
+		return false;
+	}
+
+	@Override
 	public Object resolveArgumentForMethodParameter(Parameter parameter)
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		Class<?> parameterType = parameter.getType();
 
-		//todo: check should be based on class-objects not strings
-		boolean match = false;
-		for (Annotation parameterAnnotation : parameter.getAnnotations()) {
-			if (parameterAnnotation.annotationType().getName().equals("com.example.CustomAnnotation"))
-				match = true;
-		}
+		return ReflectionUtils.newInstance(parameterType);
 
-		if (match)
-			return ReflectionUtils.newInstance(parameterType);
-
-		return null;
 	}
 
 }

@@ -55,9 +55,8 @@ public class MethodArgumentResolverEngine {
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
 		for (MethodArgumentResolver argumentResolver : this.methodArgumentResolvers) {
-			Object resolvedParameter = argumentResolver.resolveArgumentForMethodParameter(parameter);
-			if (resolvedParameter != null)
-				return resolvedParameter;
+			if (argumentResolver.supports(parameter))
+				return argumentResolver.resolveArgumentForMethodParameter(parameter);
 		}
 
 		throw new IllegalStateException("Error: no resolver found for parameter " + parameter);

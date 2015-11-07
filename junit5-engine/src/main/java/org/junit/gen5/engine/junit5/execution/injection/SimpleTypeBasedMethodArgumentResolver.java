@@ -10,7 +10,6 @@
 
 package org.junit.gen5.engine.junit5.execution.injection;
 
-import java.lang.annotation.*;
 import java.lang.reflect.*;
 
 import org.junit.gen5.commons.util.*;
@@ -19,15 +18,20 @@ import org.junit.gen5.commons.util.*;
 public class SimpleTypeBasedMethodArgumentResolver implements MethodArgumentResolver {
 
 	@Override
+	public boolean supports(Parameter parameter) {
+		Class<?> parameterType = parameter.getType();
+
+		//todo: check should be based on class-objects not strings
+		return (parameterType.getName().equals("com.example.CustomType"));
+	}
+
+	@Override
 	public Object resolveArgumentForMethodParameter(Parameter parameter)
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		Class<?> parameterType = parameter.getType();
 
-		//todo: check should be based on class-objects not strings
-		if (parameterType.getName().equals("com.example.CustomType"))
-			return ReflectionUtils.newInstance(parameterType);
+		return ReflectionUtils.newInstance(parameterType);
 
-		return null;
 	}
 
 }
