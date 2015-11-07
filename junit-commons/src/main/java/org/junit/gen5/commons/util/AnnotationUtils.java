@@ -36,11 +36,10 @@ public final class AnnotationUtils {
 		/* no-op */
 	}
 
-	//Todo: Cannot figure out how method could return List<A>
-	//Todo: Implement meta annotation support
 	/**
 	 * Find all annotations of {@code annotationType} that are either
 	 * <em>present</em> or <em>meta-present</em> on the supplied {@code element}.
+	 * Todo: Cannot figure out how method could return List<A>
 	 */
 	public static <A extends Annotation> List<Annotation> findAllAnnotations(AnnotatedElement element,
 			Class<A> annotationType) {
@@ -49,8 +48,6 @@ public final class AnnotationUtils {
 
 	private static <A extends Annotation> List<Annotation> findAllAnnotations(AnnotatedElement element,
 			Class<A> annotationType, Set<Annotation> visited) {
-		//		Annotation[] annotations = element.getAnnotationsByType(annotationType);
-		//		return Arrays.asList(annotations);
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 
 		if (element == null) {
