@@ -157,8 +157,7 @@ public class JUnit5 extends Runner {
 	}
 
 	private Description generateDescription() {
-		Description suiteDescription = Description.createSuiteDescription(
-			"JUnit 5 test suite: " + testClass.getSimpleName());
+		Description suiteDescription = Description.createSuiteDescription(testClass.getName());
 		if (specification != null) {
 			TestPlan plan = launcher.discover(specification);
 			for (TestDescriptor descriptor : plan.getTestDescriptors()) {
