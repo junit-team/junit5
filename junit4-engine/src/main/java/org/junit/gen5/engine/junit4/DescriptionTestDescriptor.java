@@ -12,18 +12,20 @@ package org.junit.gen5.engine.junit4;
 
 import java.util.Collections;
 import java.util.Set;
-
-import lombok.Data;
-
+import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.runner.Description;
 
-@Data
-class DescriptionTestDescriptor implements TestDescriptor {
+class DescriptionTestDescriptor extends AbstractTestDescriptor {
 
-	private final TestDescriptor parent;
 	private final Description description;
+
+	DescriptionTestDescriptor(TestDescriptor parent, Description description) {
+		super("junit4:" + description.getDisplayName());
+		parent.addChild(this);
+		this.description = description;
+	}
 
 	@Override
 	public boolean isTest() {
@@ -36,18 +38,11 @@ class DescriptionTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public String getUniqueId() {
-		// TODO Use unique ID if set, too
-		return "junit4:" + description.getDisplayName();
-	}
-
-	@Override
-	public TestDescriptor getParent() {
-		return parent;
-	}
-
-	@Override
 	public String getDisplayName() {
 		return description.getDisplayName();
+	}
+
+	public Description getDescription() {
+		return description;
 	}
 }

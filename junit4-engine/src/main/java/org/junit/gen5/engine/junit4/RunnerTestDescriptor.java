@@ -10,14 +10,9 @@
 
 package org.junit.gen5.engine.junit4;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.runner.Runner;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
 class RunnerTestDescriptor extends DescriptionTestDescriptor {
 
 	private Runner runner;
@@ -27,4 +22,7 @@ class RunnerTestDescriptor extends DescriptionTestDescriptor {
 		this.runner = runner;
 	}
 
+	public Runner getRunner() {
+		return runner;
+	}
 }

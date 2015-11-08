@@ -33,4 +33,8 @@ public interface TestDescriptor {
 	boolean isTest();
 
 	Set<TestTag> getTags();
+
+	void addChild(TestDescriptor descriptor);
+
+	Set<TestDescriptor> getChildren();
 }

@@ -26,7 +26,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private TestDescriptor parent;
 
-	private final Set<AbstractTestDescriptor> children = new LinkedHashSet<>();
+	private final Set<TestDescriptor> children = new LinkedHashSet<>();
 
 	protected AbstractTestDescriptor(String uniqueId) {
 		Preconditions.notBlank(uniqueId, "uniqueId must not be null or empty");
@@ -39,7 +39,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public final TestDescriptor getParent() {
+	public TestDescriptor getParent() {
 		return this.parent;
 	}
 
@@ -48,13 +48,14 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		this.parent = parent;
 	}
 
-	public final void addChild(AbstractTestDescriptor child) {
+	public final void addChild(TestDescriptor child) {
 		Preconditions.notNull(child, "child must not be null");
-		child.setParent(this);
+		if (child instanceof AbstractTestDescriptor)
+			((AbstractTestDescriptor) child).setParent(this);
 		this.children.add(child);
 	}
 
-	public final Set<AbstractTestDescriptor> getChildren() {
+	public final Set<TestDescriptor> getChildren() {
 		return this.children;
 	}
 
