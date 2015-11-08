@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
@@ -40,6 +41,9 @@ public class JUnit5TestEngine implements TestEngine {
 
 	@Override
 	public List<TestDescriptor> discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
+		Preconditions.notNull(specification, "specification must not be null");
+		Preconditions.notNull(engineDescriptor, "engineDescriptor must not be null");
+
 		// TODO Avoid redundant creation of TestDescriptors during this phase
 		Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
 		resolveSpecification(specification, engineDescriptor, testDescriptors);
