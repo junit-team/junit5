@@ -138,7 +138,7 @@ public class JUnit5 extends Runner {
 	private TestPlanSpecification specification = null;
 	private Description description;
 	private final Launcher launcher = new Launcher();
-	private final Map<String, Description> id2Description = new HashMap<>();
+	private final Map<TestDescriptor, Description> descriptions = new HashMap<>();
 
 	public JUnit5(Class<?> testClass) throws InitializationError {
 		this.testClass = testClass;
@@ -198,32 +198,33 @@ public class JUnit5 extends Runner {
 	private void buildDescriptionTree(Description suiteDescription, TestPlan plan) {
 		//Todo: If children come before their parent the tree is not correctly built up
 		for (TestDescriptor descriptor : plan.getTestDescriptors()) {
-			Description description = createJUnit4Description(descriptor, suiteDescription);
-			id2Description.put(descriptor.getUniqueId(), description);
+			addDescriptionFor(descriptor, suiteDescription);
 		}
 	}
 
-	private Description createJUnit4Description(TestDescriptor testDescriptor, Description rootDescription) {
-		Description newDescription = null;
+	private Description addDescriptionFor(TestDescriptor descriptor, Description root) {
+		if (descriptions.containsKey(descriptor))
+			return descriptions.get(descriptor);
+		Description newDescription = createJUnit4Description(descriptor);
+		descriptions.put(descriptor, newDescription);
+		if (descriptor.getParent() == null) {
+			root.addChild(newDescription);
+		}
+		else {
+			Description parent = addDescriptionFor(descriptor.getParent(), root);
+			parent.addChild(newDescription);
+		}
+		return newDescription;
+	}
+
+	private Description createJUnit4Description(TestDescriptor testDescriptor) {
 		if (testDescriptor.isTest()) {
-			newDescription = Description.createTestDescription(testDescriptor.getParent().getDisplayName(),
+			return Description.createTestDescription(testDescriptor.getParent().getDisplayName(),
 				testDescriptor.getDisplayName(), testDescriptor.getUniqueId());
 		}
 		else {
-			newDescription = Description.createSuiteDescription(testDescriptor.getDisplayName(),
-				testDescriptor.getUniqueId());
+			return Description.createSuiteDescription(testDescriptor.getDisplayName(), testDescriptor.getUniqueId());
 		}
-		if (testDescriptor.getParent() == null) {
-			rootDescription.addChild(newDescription);
-		}
-		else {
-			Description parent = id2Description.get(testDescriptor.getParent().getUniqueId());
-			if (parent != null) {
-				parent.addChild(newDescription);
-			}
-		}
-		return newDescription;
-
 	}
 
 	@Override
@@ -301,9 +302,9 @@ public class JUnit5 extends Runner {
 		}
 
 		private Description findJUnit4Description(TestDescriptor testDescriptor) {
-			Description description = id2Description.get(testDescriptor.getUniqueId());
+			Description description = descriptions.get(testDescriptor.getUniqueId());
 			if (description == null) {
-				description = createJUnit4Description(testDescriptor, description);
+				description = addDescriptionFor(testDescriptor, getDescription());
 			}
 			return description;
 		}

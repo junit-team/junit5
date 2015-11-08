@@ -11,6 +11,7 @@
 package com.example;
 
 import static org.junit.gen5.junit4runner.JUnit5.*;
+import static org.junit.gen5.junit4runner.JUnit5.Packages;
 
 import org.junit.gen5.junit4runner.JUnit5;
 import org.junit.gen5.junit4runner.JUnit5.Classes;
