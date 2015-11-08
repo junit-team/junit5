@@ -27,7 +27,7 @@ import org.junit.runner.RunWith;
 @OnlyEngine("junit5")
 public class JUnit4SamplesSuite {
 
-	// When you have the following method, it overrides the Classes annotation
+	// When you have the following method, it overrides all annotations
 	//		public static TestPlanSpecification createSpecification() {
 	//			return TestPlanSpecification.build(
 	//				TestPlanSpecification.forClassNames(SucceedingTestCase.class.getName()));
