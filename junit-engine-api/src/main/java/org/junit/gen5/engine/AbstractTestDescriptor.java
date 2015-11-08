@@ -60,6 +60,12 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
+		getChildren().forEach(child -> visitor.visit(child));
+	}
+
+	@Override
 	public Set<TestTag> getTags() {
 		return Collections.emptySet();
 	}
