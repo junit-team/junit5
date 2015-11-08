@@ -36,6 +36,8 @@ public interface TestDescriptor {
 
 	void addChild(TestDescriptor descriptor);
 
+	void remove();
+
 	Set<TestDescriptor> getChildren();
 
 	interface Visitor {

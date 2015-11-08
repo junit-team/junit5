@@ -44,10 +44,23 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	protected final void setParent(TestDescriptor parent) {
-		Preconditions.notNull(parent, "parent must not be null");
 		this.parent = parent;
 	}
 
+	protected void removeChild(AbstractTestDescriptor abstractTestDescriptor) {
+		children.remove(abstractTestDescriptor);
+	}
+
+
+	@Override
+	public void remove() {
+		if (parent instanceof AbstractTestDescriptor)
+			((AbstractTestDescriptor) parent).removeChild(this);
+		setParent(null);
+		children.clear(); //to prevent visiting
+	}
+
+	@Override
 	public final void addChild(TestDescriptor child) {
 		Preconditions.notNull(child, "child must not be null");
 		if (child instanceof AbstractTestDescriptor)
@@ -55,6 +68,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		this.children.add(child);
 	}
 
+	@Override
 	public final Set<TestDescriptor> getChildren() {
 		return this.children;
 	}
@@ -62,7 +76,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
-		getChildren().forEach(child -> visitor.visit(child));
+		new LinkedHashSet<>(getChildren()).forEach(child -> child.accept(visitor));
 	}
 
 	@Override
