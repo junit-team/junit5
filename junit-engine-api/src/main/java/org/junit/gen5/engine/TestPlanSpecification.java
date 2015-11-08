@@ -48,6 +48,10 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		// @formatter:on
 	}
 
+	public static Predicate<TestDescriptor> filterByEngine(String engineId) {
+		return (TestDescriptor descriptor) -> descriptor.getUniqueId().startsWith(engineId);
+	}
+
 	public static TestPlanSpecification build(TestPlanSpecificationElement... elements) {
 		return build(Arrays.asList(elements));
 	}
@@ -70,7 +74,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 	}
 
 	public void filterWith(Predicate<TestDescriptor> filter) {
-		descriptorFilter = filter;
+		descriptorFilter = descriptorFilter.and(filter);
 	}
 
 	public boolean acceptDescriptor(TestDescriptor descriptor) {

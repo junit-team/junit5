@@ -19,6 +19,7 @@ import java.util.Map;
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Name;
+import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
 import org.opentestalliance.TestSkippedException;
 
@@ -71,6 +72,7 @@ class SampleTestCase {
 	}
 
 	@Test
+	@Tag("fast")
 	void failingTest() {
 		fail("This test will always fail");
 	}

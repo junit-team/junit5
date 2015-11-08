@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
@@ -134,6 +135,29 @@ public class JUnit5 extends Runner {
 		return annotation.value();
 	}
 
+	/**
+	 * The <code>Packages</code> annotation specifies names of packages to be run when a class
+	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	@Inherited
+	public @interface OnlyEngine {
+
+		/**
+		 * @return engineId
+		 */
+		String value();
+	}
+
+	private static String getAnnotatedOnlyEngine(Class<?> testClass) throws InitializationError {
+		OnlyEngine annotation = testClass.getAnnotation(OnlyEngine.class);
+		if (annotation == null) {
+			return "";
+		}
+		return annotation.value();
+	}
+
 	private final Class<?> testClass;
 	private TestPlanSpecification specification = null;
 	private Description description;
@@ -159,15 +183,28 @@ public class JUnit5 extends Runner {
 				specs.add(TestPlanSpecification.forClassName(testClass.getName()));
 			}
 			TestPlanSpecification plan = TestPlanSpecification.build(specs);
-			String[] onlyIncludeTags = getAnnotatedOnlyIncludeTags(testClass);
-			if (onlyIncludeTags.length > 0) {
-				Predicate<TestDescriptor> tagNamesFilter = TestPlanSpecification.filterByTags(onlyIncludeTags);
-				plan.filterWith(tagNamesFilter);
-			}
+			addOnlyIncludeTagsFilter(plan);
+			addOnlyIncludeEngineFilter(plan);
 			return plan;
 		}
 		catch (Exception e) {
 			throw new InitializationError(e);
+		}
+	}
+
+	private void addOnlyIncludeTagsFilter(TestPlanSpecification plan) throws InitializationError {
+		String[] onlyIncludeTags = getAnnotatedOnlyIncludeTags(testClass);
+		if (onlyIncludeTags.length > 0) {
+			Predicate<TestDescriptor> tagNamesFilter = TestPlanSpecification.filterByTags(onlyIncludeTags);
+			plan.filterWith(tagNamesFilter);
+		}
+	}
+
+	private void addOnlyIncludeEngineFilter(TestPlanSpecification plan) throws InitializationError {
+		String onlyIncludeEngine = getAnnotatedOnlyEngine(testClass);
+		if (!StringUtils.isBlank(onlyIncludeEngine)) {
+			Predicate<TestDescriptor> engineFilter = TestPlanSpecification.filterByEngine(onlyIncludeEngine);
+			plan.filterWith(engineFilter);
 		}
 	}
 
