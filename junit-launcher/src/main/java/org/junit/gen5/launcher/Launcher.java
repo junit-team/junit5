@@ -45,6 +45,7 @@ public class Launcher {
 			Collection<TestDescriptor> testDescriptors = testEngine.discoverTests(specification, engineDescriptor);
 			if (!testDescriptors.isEmpty()) {
 				Set<TestDescriptor> descriptorCandidates = findFilteredCandidates(specification, testDescriptors);
+				descriptorCandidates.add(engineDescriptor);
 				Set<TestDescriptor> prunedDescriptors = pruneAllWithoutConcreteTests(descriptorCandidates);
 				testPlan.addTestDescriptors(prunedDescriptors);
 			}
