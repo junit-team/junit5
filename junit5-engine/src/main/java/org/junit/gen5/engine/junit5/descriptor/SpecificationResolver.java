@@ -122,16 +122,15 @@ public class SpecificationResolver {
 		parent.addChild(descriptor);
 
 		if (withChildren) {
-			List<Class<?>> testClassCandidates = findClasses(clazz, isTestContext);
-			for (Class<?> testClass : testClassCandidates) {
-				JUnit5Testable contextTestable = JUnit5Testable.fromContext(testClass, clazz, engineDescriptor.getUniqueId());
-				ClassTestDescriptor context = getOrCreateClassDescriptor(testClass, contextTestable.getUniqueId());
-				parent.addChild(context);
+			List<Class<?>> contextClasses = findClasses(clazz, isTestContext);
+			for (Class<?> contextClass : contextClasses) {
+				JUnit5Testable contextTestable = JUnit5Testable.fromContext(contextClass, clazz, engineDescriptor.getUniqueId());
+				ClassTestDescriptor context = getOrCreateClassDescriptor(contextClass, contextTestable.getUniqueId());
+				descriptor.addChild(context);
 			}
 
 			List<Method> testMethodCandidates = findMethods(clazz, isTestMethod,
 				ReflectionUtils.MethodSortOrder.HierarchyDown);
-
 			for (Method method : testMethodCandidates) {
 				JUnit5Testable methodTestable = JUnit5Testable.fromMethod(method, clazz,
 					engineDescriptor.getUniqueId());

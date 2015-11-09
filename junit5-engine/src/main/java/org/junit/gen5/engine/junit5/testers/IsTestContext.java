@@ -23,9 +23,9 @@ import org.junit.gen5.api.Test;
 public class IsTestContext extends ReflectionObjectTester implements Predicate<Class<?>> {
 
 	@Override
-	public boolean test(Class<?> testClassCandidate) {
-		if (isPrivate(testClassCandidate))
+	public boolean test(Class<?> contextClassCandidate) {
+		if (isPrivate(contextClassCandidate))
 			return false;
-		return hasAnnotation(testClassCandidate, Context.class);
+		return hasAnnotation(contextClassCandidate, Context.class) && contextClassCandidate.isLocalClass();
 	}
 }
