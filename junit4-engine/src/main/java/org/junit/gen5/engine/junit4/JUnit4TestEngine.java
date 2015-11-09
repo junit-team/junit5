@@ -21,13 +21,13 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.TestPlanSpecificationElement.Visitor;
 import org.junit.internal.runners.ErrorReportingRunner;
 import org.junit.runner.Description;
 import org.junit.runner.Request;
@@ -49,28 +49,37 @@ public class JUnit4TestEngine implements TestEngine {
 			EngineDescriptor engineDescriptor) {
 		Set<TestDescriptor> result = new LinkedHashSet<>();
 		for (TestPlanSpecificationElement element : specification) {
-			if (element instanceof ClassNameSpecification) {
-				String className = ((ClassNameSpecification) element).getClassName();
+			element.accept(new Visitor() {
 
-				Class<?> testClass = ReflectionUtils.loadClass(className).orElseThrow(
-					() -> new IllegalArgumentException("Class " + className + " not found."));
+				// TODO support more TestPlanSpecificationElements
 
-				// TODO JL: Hack to break endless recursion if runner will lead to the
-				// execution of JUnit5 test (eg. @RunWith(JUnit5.class))
-				// how to do that properly?
-				if (testClass.isAnnotationPresent(RunWith.class)) {
-					continue;
+				@Override
+				public void visitClassNameSpecification(String className) {
+					resolveClassName(engineDescriptor, className, result);
 				}
-				Runner runner = Request.aClass(testClass).getRunner();
-
-				// TODO This skips malformed JUnit 4 tests, too
-				if (!(runner instanceof ErrorReportingRunner)) {
-					RunnerTestDescriptor rootDescriptor = new RunnerTestDescriptor(engineDescriptor, runner);
-					addRecursively(rootDescriptor, result);
-				}
-			}
+			});
 		}
 		return result;
+	}
+
+	private void resolveClassName(EngineDescriptor engineDescriptor, String className, Set<TestDescriptor> result) {
+		Class<?> testClass = ReflectionUtils.loadClass(className).orElseThrow(
+			() -> new IllegalArgumentException("Class " + className + " not found."));
+
+		// TODO JL: Hack to break endless recursion if runner will lead to the
+		// execution of JUnit5 test (eg. @RunWith(JUnit5.class))
+		// how to do that properly?
+		if (testClass.isAnnotationPresent(RunWith.class)) {
+			return;
+		}
+
+		Runner runner = Request.aClass(testClass).getRunner();
+
+		// TODO This skips malformed JUnit 4 tests, too
+		if (!(runner instanceof ErrorReportingRunner)) {
+			RunnerTestDescriptor rootDescriptor = new RunnerTestDescriptor(engineDescriptor, runner);
+			addRecursively(rootDescriptor, result);
+		}
 	}
 
 	private void addRecursively(JUnit4TestDescriptor parent, Set<TestDescriptor> result) {

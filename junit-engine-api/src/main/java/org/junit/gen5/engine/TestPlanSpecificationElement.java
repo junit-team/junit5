@@ -14,11 +14,14 @@ public interface TestPlanSpecificationElement {
 
 	interface Visitor {
 
-		void visitClassNameSpecification(String className);
+		default void visitClassNameSpecification(String className) {
+		}
 
-		void visitUniqueIdSpecification(String uniqueId);
+		default void visitUniqueIdSpecification(String uniqueId) {
+		}
 
-		void visitPackageSpecification(String packageName);
+		default void visitPackageSpecification(String packageName) {
+		}
 	}
 
 	void accept(Visitor visitor);
