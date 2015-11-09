@@ -34,7 +34,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 	private final MethodTestDescriptor testDescriptor;
 
-	private final ConditionalEvaluator conditionalEvaluator = new ConditionalEvaluator();
+	private final ConditionEvaluator conditionalEvaluator = new ConditionEvaluator();
 
 	MethodTestExecutionNode(MethodTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;

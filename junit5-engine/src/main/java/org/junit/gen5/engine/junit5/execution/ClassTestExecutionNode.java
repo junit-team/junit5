@@ -33,7 +33,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 
 	private final ClassTestDescriptor testDescriptor;
 
-	private final ConditionalEvaluator conditionalEvaluator = new ConditionalEvaluator();
+	private final ConditionEvaluator conditionalEvaluator = new ConditionEvaluator();
 
 	ClassTestExecutionNode(ClassTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;

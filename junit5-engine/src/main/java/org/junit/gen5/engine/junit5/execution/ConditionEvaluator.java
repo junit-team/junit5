@@ -26,10 +26,15 @@ import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 import org.opentestalliance.TestSkippedException;
 
 /**
+ * {@code ConditionEvaluator} evaluates {@link Condition Conditions}
+ * configured via {@link Conditional @Conditional}.
+ *
  * @author Sam Brannen
  * @since 5.0
+ * @see Conditional
+ * @see Condition
  */
-class ConditionalEvaluator {
+class ConditionEvaluator {
 
 	boolean testEnabled(EngineExecutionContext context, ClassTestDescriptor testDescriptor) {
 		return testEnabled(context, testDescriptor, testDescriptor.getTestClass(), null);
@@ -43,7 +48,7 @@ class ConditionalEvaluator {
 	private boolean testEnabled(EngineExecutionContext context, TestDescriptor testDescriptor, final Class<?> testClass,
 			final Method testMethod) {
 
-		Context conditionalContext = new Context() {
+		Context conditionContext = new Context() {
 
 			@Override
 			public Method getTestMethod() {
@@ -68,7 +73,7 @@ class ConditionalEvaluator {
 				try {
 					Condition condition = ReflectionUtils.newInstance(conditionalClass);
 
-					if (!condition.matches(conditionalContext)) {
+					if (!condition.matches(conditionContext)) {
 						Throwable exceptionThrown = new TestSkippedException(String.format(
 							"Skipped test method [%s] due to failed condition [%s]",
 							(testMethod != null ? testMethod.toGenericString() : "N/A"), conditionalClass.getName()));
@@ -79,7 +84,7 @@ class ConditionalEvaluator {
 					}
 				}
 				catch (Exception e) {
-					throw new IllegalStateException("Failed to instantiate Condition", e);
+					throw new IllegalStateException("Failed to evaluate Condition", e);
 				}
 			}
 		}
