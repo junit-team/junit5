@@ -93,9 +93,9 @@ public class JUnit4TestEngine implements TestEngine {
 			return (RunnerTestDescriptor) testDescriptor;
 		}
 		if (testDescriptor instanceof DescriptionTestDescriptor) {
-			return findRunnerTestDescriptor((JUnit4TestDescriptor) testDescriptor.getParent());
+			return findRunnerTestDescriptor(((DescriptionTestDescriptor) testDescriptor).getParent());
 		}
-		throw new IllegalStateException();
+		throw new IllegalStateException("Cannot handle testDescriptor of class " + testDescriptor.getClass().getName());
 	}
 
 }

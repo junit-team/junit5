@@ -31,10 +31,6 @@ class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
 	private final EngineDescriptor engineDescriptor;
 	private final Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
 
-	public JUnit4SpecificationResolver(EngineDescriptor engineDescriptor) {
-		this.engineDescriptor = engineDescriptor;
-	}
-
 	// TODO support more TestPlanSpecificationElements/visit methods
 
 	@Override
