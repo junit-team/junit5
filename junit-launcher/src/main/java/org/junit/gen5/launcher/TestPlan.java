@@ -10,15 +10,12 @@
 
 package org.junit.gen5.launcher;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
+import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 
@@ -30,34 +27,27 @@ public final class TestPlan {
 	/**
 	 * List of all TestDescriptors, including children.
 	 */
-	private final Collection<TestDescriptor> testDescriptors = new LinkedList<>();
+	private final Collection<EngineDescriptor> engineDescriptors = new LinkedList<>();
 
 	TestPlan() {
 		/* no-op */
 	}
 
-	public void addTestDescriptor(TestDescriptor testDescriptor) {
-		addTestDescriptors(singleton(testDescriptor));
+	public void addEngineDescriptor(EngineDescriptor engineDescriptor) {
+		engineDescriptors.add(engineDescriptor);
 	}
 
-	public void addTestDescriptors(TestDescriptor... testDescriptors) {
-		addTestDescriptors(asList(testDescriptors));
+	public Collection<TestDescriptor> getEngineDescriptors() {
+		return Collections.unmodifiableCollection(engineDescriptors);
 	}
 
-	public void addTestDescriptors(Collection<TestDescriptor> testDescriptors) {
-		this.testDescriptors.addAll(testDescriptors);
-	}
-
-	public Collection<TestDescriptor> getTestDescriptors() {
-		return Collections.unmodifiableCollection(testDescriptors);
-	}
-
-	public List<TestDescriptor> getAllTestDescriptorsForTestEngine(TestEngine testEngine) {
-		return this.testDescriptors.stream().filter(testEngine::supports).collect(Collectors.toList());
+	public Optional<EngineDescriptor> getEngineDescriptorFor(TestEngine testEngine) {
+		return this.engineDescriptors.stream().filter(
+			descriptor -> descriptor.getEngine().equals(testEngine)).findFirst();
 	}
 
 	public long getNumberOfStaticTests() {
-		return this.testDescriptors.stream().filter(TestDescriptor::isTest).count();
+		return this.engineDescriptors.stream().filter(TestDescriptor::isTest).count();
 	}
 
 }

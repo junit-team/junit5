@@ -29,4 +29,7 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 		return false;
 	}
 
+	public TestEngine getEngine() {
+		return engine;
+	}
 }

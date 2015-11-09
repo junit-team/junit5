@@ -11,6 +11,7 @@
 package org.junit.gen5.engine;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -58,6 +59,15 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 			((AbstractTestDescriptor) parent).removeChild(this);
 		setParent(null);
 		children.clear();
+	}
+
+	public Set<TestDescriptor> allChildren() {
+		Set<TestDescriptor> all = new HashSet<>();
+		all.addAll(children);
+		for (TestDescriptor child : children) {
+			all.addAll(((AbstractTestDescriptor) child).allChildren());
+		}
+		return all;
 	}
 
 	@Override

@@ -12,7 +12,6 @@ package org.junit.gen5.engine.junit5;
 
 import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -40,14 +39,14 @@ public class JUnit5TestEngine implements TestEngine {
 	}
 
 	@Override
-	public List<TestDescriptor> discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
+	public void discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
 		Preconditions.notNull(specification, "specification must not be null");
 		Preconditions.notNull(engineDescriptor, "engineDescriptor must not be null");
 
 		// TODO Avoid redundant creation of TestDescriptors during this phase
 		Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
+		// Todo: testDescriptors are no longer needed
 		resolveSpecification(specification, engineDescriptor, testDescriptors);
-		return new ArrayList<>(testDescriptors);
 	}
 
 	// Isolated this step to allow easier experimentation / branching / pull requesting
@@ -96,7 +95,7 @@ public class JUnit5TestEngine implements TestEngine {
 
 	private Map<TestDescriptor, TestExecutionNode> buildTestExecutionNodesTree(EngineExecutionContext context) {
 		Map<TestDescriptor, TestExecutionNode> nodes = new HashMap<>();
-		for (TestDescriptor testDescriptor : context.getTestDescriptors()) {
+		for (TestDescriptor testDescriptor : context.getEngineDescriptor().allChildren()) {
 			nodes.put(testDescriptor, TestExecutionNodeResolver.forDescriptor(testDescriptor));
 		}
 
@@ -105,7 +104,7 @@ public class JUnit5TestEngine implements TestEngine {
 			TestDescriptor currentTestDescriptor = node.getTestDescriptor();
 
 			// @formatter:off
-			List<TestExecutionNode> childrenForCurrentNode = context.getTestDescriptors().stream()
+			List<TestExecutionNode> childrenForCurrentNode = context.getEngineDescriptor().allChildren().stream()
 					.filter(testDescriptor -> currentTestDescriptor.equals(testDescriptor.getParent()))
 					.map(testDescriptor -> nodes.get(testDescriptor))
 					.collect(toList());

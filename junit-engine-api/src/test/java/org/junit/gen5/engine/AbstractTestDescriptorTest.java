@@ -11,7 +11,6 @@
 package org.junit.gen5.engine;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -28,9 +27,7 @@ public class AbstractTestDescriptorTest {
 		engineDescriptor = new EngineDescriptor(new TestEngine() {
 
 			@Override
-			public Collection<TestDescriptor> discoverTests(TestPlanSpecification specification,
-					EngineDescriptor engineDescriptor) {
-				return null;
+			public void discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
 			}
 
 			@Override

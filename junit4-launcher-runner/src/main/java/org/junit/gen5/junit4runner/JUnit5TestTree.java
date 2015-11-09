@@ -45,7 +45,7 @@ class JUnit5TestTree {
 	}
 
 	private void buildDescriptionTree(Description suiteDescription, TestPlan plan) {
-		for (TestDescriptor descriptor : plan.getTestDescriptors()) {
+		for (TestDescriptor descriptor : plan.getEngineDescriptors()) {
 			addDescriptionFor(descriptor, suiteDescription);
 		}
 	}

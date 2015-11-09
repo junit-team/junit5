@@ -13,7 +13,6 @@ package org.junit.gen5.engine.junit4;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
-import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -45,8 +44,8 @@ public class JUnit4TestEngine implements TestEngine {
 	}
 
 	@Override
-	public Collection<TestDescriptor> discoverTests(TestPlanSpecification specification,
-			EngineDescriptor engineDescriptor) {
+	public void discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
+		//Todo: result is no longer needed
 		Set<TestDescriptor> result = new LinkedHashSet<>();
 		for (TestPlanSpecificationElement element : specification) {
 			if (element instanceof ClassNameSpecification) {
@@ -70,7 +69,6 @@ public class JUnit4TestEngine implements TestEngine {
 				}
 			}
 		}
-		return result;
 	}
 
 	private void addRecursively(DescriptionTestDescriptor parent, Set<TestDescriptor> result) {
@@ -88,7 +86,7 @@ public class JUnit4TestEngine implements TestEngine {
 	@Override
 	public void execute(EngineExecutionContext context) {
 		//@formatter:off
-		Map<RunnerTestDescriptor, List<DescriptionTestDescriptor>> groupedByRunner = context.getTestDescriptors().stream()
+		Map<RunnerTestDescriptor, List<DescriptionTestDescriptor>> groupedByRunner = context.getEngineDescriptor().allChildren().stream()
 			.filter(testDescriptor -> !(testDescriptor instanceof RunnerTestDescriptor))
 			.map(testDescriptor -> (DescriptionTestDescriptor) testDescriptor)
 			.collect(groupingBy(testDescriptor -> findRunner(testDescriptor)));

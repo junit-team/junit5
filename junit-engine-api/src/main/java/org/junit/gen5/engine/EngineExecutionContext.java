@@ -10,7 +10,6 @@
 
 package org.junit.gen5.engine;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +18,7 @@ import lombok.Value;
 @Value
 public class EngineExecutionContext {
 
-	private Collection<TestDescriptor> testDescriptors;
+	private EngineDescriptor engineDescriptor;
 
 	private TestExecutionListener testExecutionListener;
 
