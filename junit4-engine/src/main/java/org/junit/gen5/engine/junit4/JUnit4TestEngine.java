@@ -41,7 +41,7 @@ public class JUnit4TestEngine implements TestEngine {
 
 	@Override
 	public String getId() {
-		return "junit4";
+		return JUnit4TestDescriptor.ENGINE_ID;
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class JUnit4TestEngine implements TestEngine {
 				Class<?> testClass = ReflectionUtils.loadClass(className).orElseThrow(
 					() -> new IllegalArgumentException("Class " + className + " not found."));
 
-				//JL: Hack to break endless recursion if runner will lead to the
+				// TODO JL: Hack to break endless recursion if runner will lead to the
 				// execution of JUnit5 test (eg. @RunWith(JUnit5.class))
 				// how to do that properly?
 				if (testClass.isAnnotationPresent(RunWith.class)) {
@@ -65,7 +65,7 @@ public class JUnit4TestEngine implements TestEngine {
 
 				// TODO This skips malformed JUnit 4 tests, too
 				if (!(runner instanceof ErrorReportingRunner)) {
-					DescriptionTestDescriptor rootDescriptor = new RunnerTestDescriptor(engineDescriptor, runner);
+					RunnerTestDescriptor rootDescriptor = new RunnerTestDescriptor(engineDescriptor, runner);
 					addRecursively(rootDescriptor, result);
 				}
 			}
@@ -73,7 +73,7 @@ public class JUnit4TestEngine implements TestEngine {
 		return result;
 	}
 
-	private void addRecursively(DescriptionTestDescriptor parent, Set<TestDescriptor> result) {
+	private void addRecursively(JUnit4TestDescriptor parent, Set<TestDescriptor> result) {
 		result.add(parent);
 		for (Description child : parent.getDescription().getChildren()) {
 			addRecursively(new DescriptionTestDescriptor(parent, child), result);
@@ -82,16 +82,16 @@ public class JUnit4TestEngine implements TestEngine {
 
 	@Override
 	public boolean supports(TestDescriptor testDescriptor) {
-		return testDescriptor instanceof DescriptionTestDescriptor;
+		return testDescriptor instanceof JUnit4TestDescriptor;
 	}
 
 	@Override
 	public void execute(EngineExecutionContext context) {
 		//@formatter:off
 		Map<RunnerTestDescriptor, List<DescriptionTestDescriptor>> groupedByRunner = context.getTestDescriptors().stream()
-			.filter(testDescriptor -> !(testDescriptor instanceof RunnerTestDescriptor))
+			.filter(testDescriptor -> (testDescriptor instanceof DescriptionTestDescriptor))
 			.map(testDescriptor -> (DescriptionTestDescriptor) testDescriptor)
-			.collect(groupingBy(testDescriptor -> findRunner(testDescriptor)));
+			.collect(groupingBy(testDescriptor -> findRunnerTestDescriptor(testDescriptor)));
 		//@formatter:on
 
 		for (Entry<RunnerTestDescriptor, List<DescriptionTestDescriptor>> entry : groupedByRunner.entrySet()) {
@@ -124,11 +124,14 @@ public class JUnit4TestEngine implements TestEngine {
 		runner.run(notifier);
 	}
 
-	private RunnerTestDescriptor findRunner(TestDescriptor testDescriptor) {
+	private RunnerTestDescriptor findRunnerTestDescriptor(JUnit4TestDescriptor testDescriptor) {
 		if (testDescriptor instanceof RunnerTestDescriptor) {
 			return (RunnerTestDescriptor) testDescriptor;
 		}
-		return findRunner(testDescriptor.getParent());
+		if (testDescriptor instanceof DescriptionTestDescriptor) {
+			return findRunnerTestDescriptor((JUnit4TestDescriptor) testDescriptor.getParent());
+		}
+		throw new IllegalStateException();
 	}
 
 }
