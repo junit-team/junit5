@@ -58,6 +58,7 @@ class ConditionEvaluator {
 			}
 		};
 
+		// TODO Introduce support for finding *all* @Conditional annotations.
 		Optional<Conditional> classLevelAnno = findAnnotation(testClass, Conditional.class);
 		Optional<Conditional> methodLevelAnno = findAnnotation(testMethod, Conditional.class);
 
