@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
+ * @author Sam Brannen
  * @since 5.0
  */
 public final class TestPlanSpecification implements Iterable<TestPlanSpecificationElement> {
@@ -41,10 +42,11 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 	}
 
 	public static Predicate<TestDescriptor> filterByTags(String... tagNames) {
+		List<String> includeTags = Arrays.asList(tagNames);
 		// @formatter:off
 		return (TestDescriptor descriptor) -> descriptor.getTags().stream()
 				.map(TestTag::getName)
-				.anyMatch(name -> Arrays.asList(tagNames).contains(name));
+				.anyMatch(includeTags::contains);
 		// @formatter:on
 	}
 
