@@ -51,7 +51,6 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		children.remove(abstractTestDescriptor);
 	}
 
-
 	@Override
 	public void remove() {
 		if (parent instanceof AbstractTestDescriptor)

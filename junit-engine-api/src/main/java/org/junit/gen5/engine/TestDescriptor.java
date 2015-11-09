@@ -41,6 +41,7 @@ public interface TestDescriptor {
 	Set<TestDescriptor> getChildren();
 
 	interface Visitor {
+
 		void visit(TestDescriptor descriptor);
 	}
 
