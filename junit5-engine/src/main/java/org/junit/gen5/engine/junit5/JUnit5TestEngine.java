@@ -49,7 +49,7 @@ public class JUnit5TestEngine implements TestEngine {
 	}
 
 	private void resolveSpecification(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
-		SpecificationResolver resolver = new SpecificationResolver(new HashSet<>(), engineDescriptor);
+		SpecificationResolver resolver = new SpecificationResolver(engineDescriptor);
 		for (TestPlanSpecificationElement element : specification) {
 			resolver.resolveElement(element);
 		}
