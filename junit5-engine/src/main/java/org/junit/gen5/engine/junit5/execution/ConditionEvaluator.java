@@ -19,11 +19,9 @@ import org.junit.gen5.api.Condition;
 import org.junit.gen5.api.Condition.Context;
 import org.junit.gen5.api.Conditional;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
-import org.opentestalliance.TestSkippedException;
 
 /**
  * {@code ConditionEvaluator} evaluates {@link Condition Conditions}
@@ -36,17 +34,16 @@ import org.opentestalliance.TestSkippedException;
  */
 class ConditionEvaluator {
 
-	boolean testEnabled(EngineExecutionContext context, ClassTestDescriptor testDescriptor) {
-		return testEnabled(context, testDescriptor, testDescriptor.getTestClass(), null);
+	boolean testEnabled(ClassTestDescriptor testDescriptor) {
+		return testEnabled(testDescriptor, testDescriptor.getTestClass(), null);
 	}
 
-	boolean testEnabled(EngineExecutionContext context, MethodTestDescriptor testDescriptor) {
-		return testEnabled(context, testDescriptor, testDescriptor.getTestMethod().getDeclaringClass(),
+	boolean testEnabled(MethodTestDescriptor testDescriptor) {
+		return testEnabled(testDescriptor, testDescriptor.getTestMethod().getDeclaringClass(),
 			testDescriptor.getTestMethod());
 	}
 
-	private boolean testEnabled(EngineExecutionContext context, TestDescriptor testDescriptor, final Class<?> testClass,
-			final Method testMethod) {
+	private boolean testEnabled(TestDescriptor testDescriptor, final Class<?> testClass, final Method testMethod) {
 
 		Context conditionContext = new Context() {
 
@@ -74,12 +71,7 @@ class ConditionEvaluator {
 					Condition condition = ReflectionUtils.newInstance(conditionalClass);
 
 					if (!condition.matches(conditionContext)) {
-						Throwable exceptionThrown = new TestSkippedException(String.format(
-							"Skipped test method [%s] due to failed condition [%s]",
-							(testMethod != null ? testMethod.toGenericString() : "N/A"), conditionalClass.getName()));
-						context.getTestExecutionListener().testSkipped(testDescriptor, exceptionThrown);
-
-						// Abort execution of the test completely at this point.
+						// We found a failing condition, so there is no need to continue.
 						return false;
 					}
 				}
