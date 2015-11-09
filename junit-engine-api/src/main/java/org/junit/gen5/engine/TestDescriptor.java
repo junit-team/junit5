@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -18,7 +19,7 @@ import java.util.Set;
  */
 public interface TestDescriptor {
 
-	// Todo: Move modifying methods and visitor to sub type ModifiableTestDescriptor
+	// Todo: Move modifying methods and visitor to sub type ModifiableTestDescriptor?
 
 	/**
 	 * Get the unique identifier (UID) for the described test.
@@ -50,6 +51,13 @@ public interface TestDescriptor {
 		if (isTest())
 			return true;
 		return getChildren().stream().anyMatch(anyDescriptor -> anyDescriptor.hasTests());
+	}
+
+	default Optional<TestDescriptor> findByUniqueId(String uniqueId) {
+		if (getUniqueId().equals(uniqueId))
+			return Optional.of(this);
+		return getChildren().stream().filter(
+			testDescriptor -> testDescriptor.getUniqueId().equals(uniqueId)).findFirst();
 	}
 
 	interface Visitor {

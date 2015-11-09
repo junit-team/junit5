@@ -13,16 +13,12 @@ package org.junit.gen5.engine.junit5.descriptor;
 import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.junit5.testers.CanBeTestClass;
 import org.junit.gen5.engine.junit5.testers.IsTestClassWithTests;
@@ -128,34 +124,13 @@ public class SpecificationResolver {
 	}
 
 	private MethodTestDescriptor getOrCreateMethodDescriptor(Method method, String uniqueId) {
-		MethodTestDescriptor methodTestDescriptor = (MethodTestDescriptor) descriptorByUniqueId(uniqueId);
-		if (methodTestDescriptor == null) {
-			methodTestDescriptor = new MethodTestDescriptor(uniqueId, method);
-		}
-		return methodTestDescriptor;
+		return (MethodTestDescriptor) engineDescriptor.findByUniqueId(uniqueId).orElse(
+			new MethodTestDescriptor(uniqueId, method));
 	}
 
 	private ClassTestDescriptor getOrCreateClassDescriptor(Class<?> clazz, String uniqueId) {
-		ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptorByUniqueId(uniqueId);
-		if (classTestDescriptor == null) {
-			classTestDescriptor = new ClassTestDescriptor(uniqueId, clazz);
-		}
-		return classTestDescriptor;
-	}
-
-	private TestDescriptor descriptorByUniqueId(String uniqueId) {
-		//Todo: this is inefficient b/c has to visit all test descriptors. May TestDescriptor.childByUniqueId() ?
-		List<TestDescriptor> found = new ArrayList<>();
-		TestDescriptor.Visitor findByUnique = (descriptor, remove) -> {
-			if (descriptor.getUniqueId().equals(uniqueId)) {
-				found.add(descriptor);
-			}
-		};
-		engineDescriptor.accept(findByUnique);
-		if (found.isEmpty())
-			return null;
-		else
-			return found.get(0);
+		return (ClassTestDescriptor) engineDescriptor.findByUniqueId(uniqueId).orElse(
+			new ClassTestDescriptor(uniqueId, clazz));
 	}
 
 	private static void throwCannotResolveMethodException(Method method) {
