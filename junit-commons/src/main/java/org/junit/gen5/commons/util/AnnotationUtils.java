@@ -55,7 +55,7 @@ public final class AnnotationUtils {
 		collectedAnnotations.addAll(annotations);
 
 		// Meta-present on directly present annotations?
-		// Todo: Isn't this covered by the next block as well?
+		// TODO Isn't this covered by the next block as well?
 		for (Annotation candidateAnnotation : element.getDeclaredAnnotations()) {
 			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
 				List<A> metaAnnotations = findAllAnnotations(candidateAnnotation.annotationType(), annotationType,
@@ -82,7 +82,7 @@ public final class AnnotationUtils {
 	 * <em>present</em> or <em>meta-present</em> on the supplied {@code element}.
 	 */
 	public static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType) {
-		//Todo: should we delegate to findAllAnnotations?
+		//TODO should we delegate to findAllAnnotations?
 		return findAnnotation(element, annotationType, new HashSet<Annotation>());
 	}
 
