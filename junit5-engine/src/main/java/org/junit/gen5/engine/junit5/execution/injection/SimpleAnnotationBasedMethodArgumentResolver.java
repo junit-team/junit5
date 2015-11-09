@@ -12,20 +12,28 @@ package org.junit.gen5.engine.junit5.execution.injection;
 
 import java.lang.annotation.*;
 import java.lang.reflect.*;
+import java.util.*;
+
+import org.junit.gen5.commons.util.*;
 
 // for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
 public class SimpleAnnotationBasedMethodArgumentResolver implements MethodArgumentResolver {
 
+	private final String annotationName = "com.example.CustomAnnotation";
+
 	@Override
 	public boolean supports(Parameter parameter) {
 
-		//todo: check should be based on class-objects not strings
-		for (Annotation parameterAnnotation : parameter.getAnnotations()) {
-			if (parameterAnnotation.annotationType().getName().equals("com.example.CustomAnnotation"))
-				return true;
-		}
+		Optional<Class<?>> classOptional = ReflectionUtils.loadClass(annotationName);
+		if (!classOptional.isPresent())
+			return false;
 
-		return false;
+		//TODO: improve!
+		Class<Annotation> annotationClass = (Class<Annotation>) classOptional.get();
+		List<Annotation> annotations = AnnotationUtils.findAllAnnotations(parameter, annotationClass);
+
+		return !annotations.isEmpty();
+
 	}
 
 }
