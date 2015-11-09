@@ -51,12 +51,13 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		children.remove(abstractTestDescriptor);
 	}
 
-	@Override
-	public void remove() {
+	protected void removeFromHierarchy() {
+		if (isRoot())
+			return;
 		if (parent instanceof AbstractTestDescriptor)
 			((AbstractTestDescriptor) parent).removeChild(this);
 		setParent(null);
-		children.clear(); //to prevent visiting
+		children.clear();
 	}
 
 	@Override
@@ -74,7 +75,8 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visit(this);
+		Runnable delete = () -> removeFromHierarchy();
+		visitor.visit(this, delete);
 		new LinkedHashSet<>(getChildren()).forEach(child -> child.accept(visitor));
 	}
 

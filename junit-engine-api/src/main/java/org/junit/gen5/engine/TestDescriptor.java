@@ -32,17 +32,19 @@ public interface TestDescriptor {
 
 	boolean isTest();
 
+	default boolean isRoot() {
+		return getParent() == null;
+	}
+
 	Set<TestTag> getTags();
 
 	void addChild(TestDescriptor descriptor);
-
-	void remove();
 
 	Set<TestDescriptor> getChildren();
 
 	interface Visitor {
 
-		void visit(TestDescriptor descriptor);
+		void visit(TestDescriptor descriptor, Runnable deleteCurrent);
 	}
 
 	void accept(Visitor visitor);

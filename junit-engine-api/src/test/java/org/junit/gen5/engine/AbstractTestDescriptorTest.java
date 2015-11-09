@@ -61,21 +61,21 @@ public class AbstractTestDescriptorTest {
 	@Test
 	public void visitAllNodes() {
 		List<TestDescriptor> visited = new ArrayList<>();
-		engineDescriptor.accept(visited::add);
+		engineDescriptor.accept((descriptor, delete) -> visited.add(descriptor));
 
 		Assert.assertEquals(8, visited.size());
 	}
 
 	@Test
 	public void pruneLeaf() {
-		TestDescriptor.Visitor visitor = (TestDescriptor descriptor) -> {
+		TestDescriptor.Visitor visitor = (TestDescriptor descriptor, Runnable delete) -> {
 			if (descriptor.getUniqueId().equals("leaf1-1"))
-				descriptor.remove();
+				delete.run();
 		};
 		engineDescriptor.accept(visitor);
 
 		List<String> visited = new ArrayList<>();
-		engineDescriptor.accept((descriptor) -> visited.add(descriptor.getUniqueId()));
+		engineDescriptor.accept((descriptor, delete) -> visited.add(descriptor.getUniqueId()));
 
 		Assert.assertEquals(7, visited.size());
 		Assert.assertTrue(visited.contains("group1"));
@@ -85,9 +85,9 @@ public class AbstractTestDescriptorTest {
 	@Test
 	public void pruneGroup() {
 		final AtomicInteger countVisited = new AtomicInteger();
-		TestDescriptor.Visitor visitor = (TestDescriptor descriptor) -> {
+		TestDescriptor.Visitor visitor = (descriptor, delete) -> {
 			if (descriptor.getUniqueId().equals("group1"))
-				descriptor.remove();
+				delete.run();
 			countVisited.incrementAndGet();
 		};
 		engineDescriptor.accept(visitor);
@@ -95,7 +95,7 @@ public class AbstractTestDescriptorTest {
 		Assert.assertEquals("Children of pruned element are not visited", 4, countVisited.get());
 
 		List<String> visited = new ArrayList<>();
-		engineDescriptor.accept((descriptor) -> visited.add(descriptor.getUniqueId()));
+		engineDescriptor.accept((descriptor, delete) -> visited.add(descriptor.getUniqueId()));
 
 		Assert.assertEquals(3, visited.size());
 		Assert.assertFalse(visited.contains("group1"));
