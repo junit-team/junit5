@@ -76,7 +76,8 @@ class ConditionEvaluator {
 					}
 				}
 				catch (Exception e) {
-					throw new IllegalStateException("Failed to evaluate Condition", e);
+					throw new IllegalStateException(
+						String.format("Failed to evaluate condition [%s]", conditionalClass.getName()), e);
 				}
 			}
 		}
