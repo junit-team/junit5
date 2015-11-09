@@ -44,7 +44,7 @@ public interface TestDescriptor {
 
 	interface Visitor {
 
-		void visit(TestDescriptor descriptor, Runnable deleteCurrent);
+		void visit(TestDescriptor descriptor, Runnable remove);
 	}
 
 	void accept(Visitor visitor);

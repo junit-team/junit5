@@ -53,7 +53,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	protected void removeFromHierarchy() {
 		if (isRoot())
-			return;
+			throw new UnsupportedOperationException("You cannot remove the root of a hierarchy.");
 		if (parent instanceof AbstractTestDescriptor)
 			((AbstractTestDescriptor) parent).removeChild(this);
 		setParent(null);
@@ -75,8 +75,8 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public void accept(Visitor visitor) {
-		Runnable delete = () -> removeFromHierarchy();
-		visitor.visit(this, delete);
+		Runnable remove = () -> removeFromHierarchy();
+		visitor.visit(this, remove);
 		new LinkedHashSet<>(getChildren()).forEach(child -> child.accept(visitor));
 	}
 
