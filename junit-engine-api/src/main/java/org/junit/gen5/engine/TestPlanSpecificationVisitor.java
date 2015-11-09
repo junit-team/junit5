@@ -10,8 +10,14 @@
 
 package org.junit.gen5.engine;
 
-public interface TestPlanSpecificationElement {
+public interface TestPlanSpecificationVisitor {
 
-	void accept(TestPlanSpecificationVisitor visitor);
+	default void visitClassNameSpecification(String className) {
+	}
 
+	default void visitUniqueIdSpecification(String uniqueId) {
+	}
+
+	default void visitPackageSpecification(String packageName) {
+	}
 }

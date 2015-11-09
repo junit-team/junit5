@@ -78,6 +78,10 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return unmodifiableList(this.elements).iterator();
 	}
 
+	public void accept(TestPlanSpecificationVisitor visitor) {
+		elements.forEach(element -> element.accept(visitor));
+	}
+
 	public void filterWith(Predicate<TestDescriptor> filter) {
 		Preconditions.notNull(filter, "filter must not be null");
 		this.descriptorFilter = this.descriptorFilter.and(filter);

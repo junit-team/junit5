@@ -14,24 +14,16 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
-import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.gen5.engine.TestPlanSpecificationElement.Visitor;
-import org.junit.internal.runners.ErrorReportingRunner;
 import org.junit.runner.Description;
-import org.junit.runner.Request;
-import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.NoTestsRemainException;
@@ -47,46 +39,9 @@ public class JUnit4TestEngine implements TestEngine {
 	@Override
 	public Collection<TestDescriptor> discoverTests(TestPlanSpecification specification,
 			EngineDescriptor engineDescriptor) {
-		Set<TestDescriptor> result = new LinkedHashSet<>();
-		for (TestPlanSpecificationElement element : specification) {
-			element.accept(new Visitor() {
-
-				// TODO support more TestPlanSpecificationElements
-
-				@Override
-				public void visitClassNameSpecification(String className) {
-					resolveClassName(engineDescriptor, className, result);
-				}
-			});
-		}
-		return result;
-	}
-
-	private void resolveClassName(EngineDescriptor engineDescriptor, String className, Set<TestDescriptor> result) {
-		Class<?> testClass = ReflectionUtils.loadClass(className).orElseThrow(
-			() -> new IllegalArgumentException("Class " + className + " not found."));
-
-		// TODO JL: Hack to break endless recursion if runner will lead to the
-		// execution of JUnit5 test (eg. @RunWith(JUnit5.class))
-		// how to do that properly?
-		if (testClass.isAnnotationPresent(RunWith.class)) {
-			return;
-		}
-
-		Runner runner = Request.aClass(testClass).getRunner();
-
-		// TODO This skips malformed JUnit 4 tests, too
-		if (!(runner instanceof ErrorReportingRunner)) {
-			RunnerTestDescriptor rootDescriptor = new RunnerTestDescriptor(engineDescriptor, runner);
-			addRecursively(rootDescriptor, result);
-		}
-	}
-
-	private void addRecursively(JUnit4TestDescriptor parent, Set<TestDescriptor> result) {
-		result.add(parent);
-		for (Description child : parent.getDescription().getChildren()) {
-			addRecursively(new DescriptionTestDescriptor(parent, child), result);
-		}
+		JUnit4SpecificationResolver resolver = new JUnit4SpecificationResolver(engineDescriptor);
+		specification.accept(resolver);
+		return resolver.getTestDescriptors();
 	}
 
 	@Override
