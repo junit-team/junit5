@@ -28,13 +28,9 @@ public abstract class TestExecutionNode {
 
 	private List<TestExecutionNode> children = new LinkedList<>();
 
-	private void addChild(TestExecutionNode child) {
+	public void addChild(TestExecutionNode child) {
 		this.children.add(child);
 		child.parent = this;
-	}
-
-	public final void addChildren(List<TestExecutionNode> children) {
-		children.forEach(child -> addChild(child));
 	}
 
 	public final TestExecutionNode getParent() {

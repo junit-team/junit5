@@ -44,20 +44,21 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		return this.parent;
 	}
 
-	protected final void setParent(TestDescriptor parent) {
+	public final void setParent(TestDescriptor parent) {
 		this.parent = parent;
 	}
 
-	protected void removeChild(AbstractTestDescriptor abstractTestDescriptor) {
-		children.remove(abstractTestDescriptor);
+	@Override
+	public void removeChild(TestDescriptor child) {
+		children.remove(child);
+		if (child instanceof AbstractTestDescriptor)
+			((AbstractTestDescriptor) child).setParent(null);
 	}
 
 	protected void removeFromHierarchy() {
 		if (isRoot())
 			throw new UnsupportedOperationException("You cannot remove the root of a hierarchy.");
-		if (parent instanceof AbstractTestDescriptor)
-			((AbstractTestDescriptor) parent).removeChild(this);
-		setParent(null);
+		parent.removeChild(this);
 		children.clear();
 	}
 
@@ -87,7 +88,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	public void accept(Visitor visitor) {
 		Runnable remove = () -> removeFromHierarchy();
 		visitor.visit(this, remove);
-		new LinkedHashSet<>(getChildren()).forEach(child -> child.accept(visitor));
+		new HashSet<>(getChildren()).forEach(child -> child.accept(visitor));
 	}
 
 	@Override

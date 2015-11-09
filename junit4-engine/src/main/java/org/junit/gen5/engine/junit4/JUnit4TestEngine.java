@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit4;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -79,14 +80,13 @@ public class JUnit4TestEngine implements TestEngine {
 	}
 
 	@Override
-	public boolean supports(TestDescriptor testDescriptor) {
-		return testDescriptor instanceof DescriptionTestDescriptor;
-	}
-
-	@Override
 	public void execute(EngineExecutionContext context) {
+
+		//Todo: Use capabilities of engine node to build up tree or to visit nodes
+		List<TestDescriptor> originalTestDescriptors = new ArrayList<>(context.getEngineDescriptor().allChildren());
+
 		//@formatter:off
-		Map<RunnerTestDescriptor, List<DescriptionTestDescriptor>> groupedByRunner = context.getEngineDescriptor().allChildren().stream()
+		Map<RunnerTestDescriptor, List<DescriptionTestDescriptor>> groupedByRunner = originalTestDescriptors.stream()
 			.filter(testDescriptor -> !(testDescriptor instanceof RunnerTestDescriptor))
 			.map(testDescriptor -> (DescriptionTestDescriptor) testDescriptor)
 			.collect(groupingBy(testDescriptor -> findRunner(testDescriptor)));

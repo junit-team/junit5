@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 	"junit5:com.example.SampleTestCase#assertAllFailingTest()" })
 @Packages({ "com.example.subpackage" })
 //@OnlyIncludeTags({ "fast" })
-//@OnlyEngine("junit5")
+//@JUnit5.OnlyEngine("junit5")
 public class JUnit4SamplesSuite {
 
 	// When you have the following method, it overrides all annotations

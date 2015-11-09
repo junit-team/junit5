@@ -39,39 +39,11 @@ public class Launcher {
 		for (TestEngine testEngine : lookupAllTestEngines()) {
 			EngineDescriptor engineDescriptor = new EngineDescriptor(testEngine);
 			testEngine.discoverTests(specification, engineDescriptor);
-			applyFiltersToEngineDescriptor(specification, engineDescriptor);
-			pruneEngineDescriptor(engineDescriptor);
 			testPlan.addEngineDescriptor(engineDescriptor);
 		}
+		testPlan.applyFilters(specification);
+		testPlan.prune();
 		return testPlan;
-	}
-
-	private void applyFiltersToEngineDescriptor(TestPlanSpecification specification,
-			EngineDescriptor engineDescriptor) {
-		TestDescriptor.Visitor filteringVisitor = (descriptor, remove) -> {
-			if (!descriptor.isTest())
-				return;
-			if (!specification.acceptDescriptor(descriptor))
-				remove.run();
-		};
-		engineDescriptor.accept(filteringVisitor);
-	}
-
-	private void pruneEngineDescriptor(EngineDescriptor engineDescriptor) {
-		TestDescriptor.Visitor pruningVisitor = (descriptor, remove) -> {
-			if (descriptor.isRoot())
-				return;
-			if (hasTests(descriptor))
-				return;
-			remove.run();
-		};
-		engineDescriptor.accept(pruningVisitor);
-	}
-
-	private boolean hasTests(TestDescriptor descriptor) {
-		if (descriptor.isTest())
-			return true;
-		return descriptor.getChildren().stream().anyMatch(anyDescriptor -> hasTests(anyDescriptor));
 	}
 
 	public void execute(TestPlanSpecification specification) {

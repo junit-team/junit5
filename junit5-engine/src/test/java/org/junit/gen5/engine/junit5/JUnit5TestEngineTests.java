@@ -48,13 +48,13 @@ public class JUnit5TestEngineTests {
 		engine = new JUnit5TestEngine();
 	}
 
-	//Todo enable again
+	@org.junit.Test
 	public void executeCompositeTestPlanSpecification() {
 		TestPlanSpecification spec = build(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
 			forClassName(LocalTestCase.class.getName()));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 10);
+		TrackingTestExecutionListener listener = executeTests(spec, 9);
 
 		Assert.assertEquals("# tests started", 8, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 4, listener.testSucceededCount.get());
@@ -146,13 +146,11 @@ public class JUnit5TestEngineTests {
 
 	private TrackingTestExecutionListener executeTests(TestPlanSpecification spec, int expectedDescriptorCount) {
 		EngineDescriptor engineDescriptor = discoverTests(spec);
-		Set<TestDescriptor> descriptors = engineDescriptor.allChildren();
-		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# descriptors", expectedDescriptorCount, descriptors.size());
+		Assert.assertEquals("# descriptors", expectedDescriptorCount, engineDescriptor.allChildren().size());
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		System.out.println("Descriptors: " + descriptors);
+		// System.out.println("Descriptors: " + engineDescriptor.allChildren());
 		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
 
 		Assert.assertTrue("@BeforeAll was not invoked", LocalTestCase.beforeAllInvoked);

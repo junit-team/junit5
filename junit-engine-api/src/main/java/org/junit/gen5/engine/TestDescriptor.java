@@ -40,7 +40,15 @@ public interface TestDescriptor {
 
 	void addChild(TestDescriptor descriptor);
 
+	void removeChild(TestDescriptor descriptor);
+
 	Set<TestDescriptor> getChildren();
+
+	default boolean hasTests() {
+		if (isTest())
+			return true;
+		return getChildren().stream().anyMatch(anyDescriptor -> anyDescriptor.hasTests());
+	}
 
 	interface Visitor {
 

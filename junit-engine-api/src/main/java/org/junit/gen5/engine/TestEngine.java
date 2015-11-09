@@ -18,9 +18,5 @@ public interface TestEngine {
 
 	void discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor);
 
-	default boolean supports(TestDescriptor testDescriptor) {
-		return testDescriptor.getUniqueId().startsWith(getId());
-	}
-
 	void execute(EngineExecutionContext context);
 }

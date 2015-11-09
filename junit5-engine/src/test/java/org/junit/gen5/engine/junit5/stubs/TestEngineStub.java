@@ -34,11 +34,6 @@ public class TestEngineStub implements TestEngine {
 	}
 
 	@Override
-	public boolean supports(TestDescriptor testDescriptor) {
-		return false;
-	}
-
-	@Override
 	public void execute(EngineExecutionContext context) {
 	}
 }
