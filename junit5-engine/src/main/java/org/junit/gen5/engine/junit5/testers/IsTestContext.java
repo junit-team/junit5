@@ -10,11 +10,8 @@
 
 package org.junit.gen5.engine.junit5.testers;
 
-import java.lang.reflect.Method;
 import java.util.function.Predicate;
-
 import org.junit.gen5.api.Context;
-import org.junit.gen5.api.Test;
 
 /**
  * @author Stefan Bechtold
@@ -26,6 +23,10 @@ public class IsTestContext extends ReflectionObjectTester implements Predicate<C
 	public boolean test(Class<?> contextClassCandidate) {
 		if (isPrivate(contextClassCandidate))
 			return false;
-		return hasAnnotation(contextClassCandidate, Context.class) && contextClassCandidate.isLocalClass();
+		if (!contextClassCandidate.isMemberClass())
+			return false;
+		if (isStatic(contextClassCandidate))
+			return false;
+		return hasAnnotation(contextClassCandidate, Context.class);
 	}
 }

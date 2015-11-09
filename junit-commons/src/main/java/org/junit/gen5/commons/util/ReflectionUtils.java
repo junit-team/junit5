@@ -66,11 +66,11 @@ public final class ReflectionUtils {
 		return ClassLoader.getSystemClassLoader();
 	}
 
-	public static List<Class<?>> findClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
+	public static List<Class<?>> findInnerClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "predicate must not be null");
 
-		return Arrays.stream(clazz.getClasses()).filter(predicate).collect(Collectors.toList());
+		return Arrays.stream(clazz.getDeclaredClasses()).filter(predicate).collect(Collectors.toList());
 	}
 
 	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {

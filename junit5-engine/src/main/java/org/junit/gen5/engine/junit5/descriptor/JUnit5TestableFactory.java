@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -19,10 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.AbstractTestDescriptor;
 
 public class JUnit5TestableFactory {
 
@@ -55,7 +53,7 @@ public class JUnit5TestableFactory {
 		Preconditions.notNull(testClass, "testClass must not be null");
 		Preconditions.notNull(container, "parent must not be null");
 
-		String uniqueId = fromClass(container, engineId) + "$" + testClass.getSimpleName();
+		String uniqueId = fromClass(container, engineId).getUniqueId() + "@" + testClass.getSimpleName();
 		return new JUnit5Context(uniqueId, testClass, container);
 	}
 
@@ -97,6 +95,10 @@ public class JUnit5TestableFactory {
 				case '$':
 					currentJavaContainer = (Class<?>) currentJavaElement;
 					currentJavaElement = findNestedClass(head, (Class<?>) currentJavaElement);
+					break;
+				case '@':
+					currentJavaContainer = (Class<?>) currentJavaElement;
+					currentJavaElement = findNestedContext(head, (Class<?>) currentJavaElement);
 					break;
 				case '#':
 					currentJavaContainer = (Class<?>) currentJavaElement;
@@ -156,6 +158,11 @@ public class JUnit5TestableFactory {
 
 	private Class<?> findNestedClass(String nameExtension, Class<?> containerClass) {
 		String fullClassName = containerClass.getName() + nameExtension;
+		return classByName(fullClassName);
+	}
+
+	private Class<?> findNestedContext(String nameExtension, Class<?> containerClass) {
+		String fullClassName = containerClass.getName() + "$" + nameExtension.substring(1);
 		return classByName(fullClassName);
 	}
 

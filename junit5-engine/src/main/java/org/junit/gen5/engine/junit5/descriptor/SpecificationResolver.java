@@ -94,11 +94,22 @@ public class SpecificationResolver {
 
 			@Override
 			public void visitContext(String uniqueId, Class<?> testClass, Class<?> containerClass) {
-				//Todo XXXXXXXXX
 				AbstractTestDescriptor container = resolveClass(containerClass, uniqueId, engineDescriptor, false);
-				resolveClass(testClass, uniqueId, container, true);
+				resolveContext(testClass, containerClass, uniqueId, container);
 			}
 		});
+	}
+
+	private void resolveContext(Class<?> contextClass, Class<?> containerClass, String uniqueId, AbstractTestDescriptor parent) {
+		if (!isTestContext.test(contextClass)) {
+			throwCannotResolveContextException(contextClass);
+		}
+		JUnit5Testable parentId = JUnit5Testable.fromContext(contextClass, containerClass, engineDescriptor.getUniqueId());
+		parent = resolveClass(containerClass, parentId.getUniqueId(), parent, false);
+
+		ClassTestDescriptor descriptor = getOrCreateContextDescriptor(contextClass, uniqueId);
+		parent.addChild(descriptor);
+		testDescriptors.add(descriptor);
 	}
 
 	private void resolveMethod(Method method, Class<?> testClass, String uniqueId, AbstractTestDescriptor parent) {
@@ -122,7 +133,7 @@ public class SpecificationResolver {
 		parent.addChild(descriptor);
 
 		if (withChildren) {
-			List<Class<?>> contextClasses = findClasses(clazz, isTestContext);
+			List<Class<?>> contextClasses = findInnerClasses(clazz, isTestContext);
 			for (Class<?> contextClass : contextClasses) {
 				JUnit5Testable contextTestable = JUnit5Testable.fromContext(contextClass, clazz, engineDescriptor.getUniqueId());
 				ClassTestDescriptor context = getOrCreateClassDescriptor(contextClass, contextTestable.getUniqueId());
@@ -151,6 +162,15 @@ public class SpecificationResolver {
 		return methodTestDescriptor;
 	}
 
+	private ClassTestDescriptor getOrCreateContextDescriptor(Class<?> clazz, String uniqueId) {
+		ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptorByUniqueId(uniqueId);
+		if (classTestDescriptor == null) {
+			classTestDescriptor = new ClassTestDescriptor(uniqueId, clazz);
+			testDescriptors.add(classTestDescriptor);
+		}
+		return classTestDescriptor;
+	}
+
 	private ClassTestDescriptor getOrCreateClassDescriptor(Class<?> clazz, String uniqueId) {
 		ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptorByUniqueId(uniqueId);
 		if (classTestDescriptor == null) {
@@ -175,6 +195,10 @@ public class SpecificationResolver {
 
 	private static void throwCannotResolveClassException(Class<?> clazz) {
 		throw new IllegalArgumentException(String.format("Class '%s' is not a test class.", clazz.getName()));
+	}
+
+	private static void throwCannotResolveContextException(Class<?> clazz) {
+		throw new IllegalArgumentException(String.format("Class '%s' is not a test context.", clazz.getName()));
 	}
 
 }
