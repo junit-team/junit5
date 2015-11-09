@@ -31,7 +31,7 @@ public interface TestDescriptor {
 
 	String getDisplayName();
 
-	TestDescriptor getParent();
+	Optional<TestDescriptor> getParent();
 
 	boolean isTest();
 

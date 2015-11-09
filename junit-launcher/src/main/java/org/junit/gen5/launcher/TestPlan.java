@@ -13,7 +13,6 @@ package org.junit.gen5.launcher;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -66,8 +65,8 @@ public final class TestPlan implements TestDescriptor {
 	}
 
 	@Override
-	public TestDescriptor getParent() {
-		return null;
+	public Optional<TestDescriptor> getParent() {
+		return Optional.empty();
 	}
 
 	@Override

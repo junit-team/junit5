@@ -54,7 +54,7 @@ class JUnit5TestTree {
 
 	private Description createJUnit4Description(TestDescriptor testDescriptor) {
 		if (testDescriptor.isTest()) {
-			return Description.createTestDescription(testDescriptor.getParent().getDisplayName(),
+			return Description.createTestDescription(testDescriptor.getParent().get().getDisplayName(),
 				testDescriptor.getDisplayName(), testDescriptor.getUniqueId());
 		}
 		else {

@@ -10,11 +10,10 @@
 
 package org.junit.gen5.engine;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.commons.util.Preconditions;
@@ -42,8 +41,8 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public TestDescriptor getParent() {
-		return this.parent;
+	public Optional<TestDescriptor> getParent() {
+		return Optional.ofNullable(this.parent);
 	}
 
 	public final void setParent(TestDescriptor parent) {

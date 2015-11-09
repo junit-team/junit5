@@ -207,9 +207,9 @@ public class SpecificationResolverTest {
 		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()"));
 
 		TestDescriptor classFromMethod1 = descriptorByUniqueId(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()").getParent();
+			"junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()").getParent().get();
 		TestDescriptor classFromMethod2 = descriptorByUniqueId(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()").getParent();
+			"junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()").getParent().get();
 
 		assertEquals(classFromMethod1, classFromMethod2);
 		assertSame(classFromMethod1, classFromMethod2);

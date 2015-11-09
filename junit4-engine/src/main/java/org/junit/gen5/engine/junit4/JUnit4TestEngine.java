@@ -126,7 +126,7 @@ public class JUnit4TestEngine implements TestEngine {
 		if (testDescriptor instanceof RunnerTestDescriptor) {
 			return (RunnerTestDescriptor) testDescriptor;
 		}
-		return findRunner(testDescriptor.getParent());
+		return findRunner(testDescriptor.getParent().get());
 	}
 
 }
