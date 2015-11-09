@@ -66,9 +66,9 @@ class ConditionEvaluator {
 
 		if (conditional != null) {
 			Class<? extends Condition>[] classes = conditional.value();
-			for (Class<? extends Condition> conditionalClass : classes) {
+			for (Class<? extends Condition> conditionClass : classes) {
 				try {
-					Condition condition = ReflectionUtils.newInstance(conditionalClass);
+					Condition condition = ReflectionUtils.newInstance(conditionClass);
 
 					if (!condition.matches(conditionContext)) {
 						// We found a failing condition, so there is no need to continue.
@@ -77,7 +77,7 @@ class ConditionEvaluator {
 				}
 				catch (Exception e) {
 					throw new IllegalStateException(
-						String.format("Failed to evaluate condition [%s]", conditionalClass.getName()), e);
+						String.format("Failed to evaluate condition [%s]", conditionClass.getName()), e);
 				}
 			}
 		}
