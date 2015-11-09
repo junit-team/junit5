@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.EngineDescriptor;
@@ -230,6 +231,26 @@ public class SpecificationResolverTest {
 			"junit5:org.junit.gen5.engine.junit5.descriptor.subpackage.Class2WithTestCases#test2()"));
 	}
 
+	@org.junit.Test
+	public void testContextResolution() {
+		ClassNameSpecification specification = new ClassNameSpecification(TestCaseWithContexts.class.getName());
+
+		resolver.resolveElement(specification);
+
+		List<String> uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toList());
+		uniqueIds().forEach(id ->
+			System.out.println(id)
+		);
+
+		assertEquals(6, uniqueIds.size());
+
+//		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass"));
+//		assertTrue(uniqueIds.contains(
+//			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()"));
+//		assertTrue(uniqueIds.contains(
+//			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test6()"));
+	}
+
 	private TestDescriptor descriptorByUniqueId(String id) {
 		return descriptors.stream().filter(d -> d.getUniqueId().equals(id)).findFirst().get();
 	}
@@ -290,6 +311,34 @@ class OtherTestClass {
 
 		@Test
 		void test6() {
+
+		}
+
+	}
+}
+
+class TestCaseWithContexts {
+
+	@Test
+	void testA() {
+
+	}
+
+	@Context
+	class InnerContext {
+
+		@Test
+		void testB() {
+
+		}
+
+		@Context
+		class InnerInnerContext {
+
+			@Test
+			void testC() {
+
+			}
 
 		}
 

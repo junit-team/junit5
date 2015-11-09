@@ -17,20 +17,20 @@ import org.junit.gen5.engine.AbstractTestDescriptor;
 
 @Value
 @EqualsAndHashCode(callSuper = false)
-class JUnit5Context extends JUnit5Testable {
+class JUnit5Context extends JUnit5Class {
 
 	private final Class<?> javaClass;
-	private final AbstractTestDescriptor parent;
+	private final Class<?> containerClass;
 
-	JUnit5Context(String uniqueId, Class<?> javaClass, AbstractTestDescriptor parent) {
-		super(uniqueId);
+	JUnit5Context(String uniqueId, Class<?> javaClass, Class<?> containerClass) {
+		super(uniqueId, javaClass);
 		this.javaClass = javaClass;
-		this.parent = parent;
+		this.containerClass = containerClass;
 	}
 
 	@Override
 	void accept(Visitor visitor) {
-		visitor.visitContext(getUniqueId(), this.javaClass, this.parent);
+		visitor.visitContext(getUniqueId(), this.javaClass, this.containerClass);
 	}
 
 }

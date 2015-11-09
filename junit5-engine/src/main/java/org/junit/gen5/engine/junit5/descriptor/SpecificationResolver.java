@@ -93,8 +93,10 @@ public class SpecificationResolver {
 			}
 
 			@Override
-			public void visitContext(String uniqueId, Class<?> testClass, AbstractTestDescriptor parent) {
-				resolveClass(testClass, uniqueId, parent, true);
+			public void visitContext(String uniqueId, Class<?> testClass, Class<?> containerClass) {
+				//Todo XXXXXXXXX
+				AbstractTestDescriptor container = resolveClass(containerClass, uniqueId, engineDescriptor, false);
+				resolveClass(testClass, uniqueId, container, true);
 			}
 		});
 	}
@@ -122,7 +124,7 @@ public class SpecificationResolver {
 		if (withChildren) {
 			List<Class<?>> testClassCandidates = findClasses(clazz, isTestContext);
 			for (Class<?> testClass : testClassCandidates) {
-				JUnit5Testable contextTestable = JUnit5Testable.fromContext(testClass, descriptor);
+				JUnit5Testable contextTestable = JUnit5Testable.fromContext(testClass, clazz, engineDescriptor.getUniqueId());
 				ClassTestDescriptor context = getOrCreateClassDescriptor(testClass, contextTestable.getUniqueId());
 				parent.addChild(context);
 			}

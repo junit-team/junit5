@@ -28,8 +28,8 @@ abstract class JUnit5Testable {
 		return new JUnit5TestableFactory().fromClass(clazz, engineId);
 	}
 
-	public static JUnit5Testable fromContext(Class<?> testClass, AbstractTestDescriptor parent) {
-		return new JUnit5TestableFactory().fromContext(testClass, parent);
+	public static JUnit5Testable fromContext(Class<?> testClass, Class<?> containerClass, String engineId) {
+		return new JUnit5TestableFactory().fromContext(testClass, containerClass, engineId);
 	}
 
 	static JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
@@ -54,7 +54,7 @@ abstract class JUnit5Testable {
 
 		void visitMethod(String uniqueId, Method method, Class<?> container);
 
-		void visitContext(String uniqueId, Class<?> javaClass, AbstractTestDescriptor parent);
+		void visitContext(String uniqueId, Class<?> javaClass, Class<?> containerClass);
 	}
 
 }

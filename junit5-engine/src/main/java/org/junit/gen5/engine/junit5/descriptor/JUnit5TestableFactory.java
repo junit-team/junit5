@@ -51,12 +51,12 @@ public class JUnit5TestableFactory {
 		return new JUnit5Class(uniqueId, clazz);
 	}
 
-	public JUnit5Testable fromContext(Class<?> testClass, AbstractTestDescriptor parent) {
+	public JUnit5Testable fromContext(Class<?> testClass, Class<?> container, String engineId) {
 		Preconditions.notNull(testClass, "testClass must not be null");
-		Preconditions.notNull(parent, "parent must not be null");
+		Preconditions.notNull(container, "parent must not be null");
 
-		String uniqueId = parent.getUniqueId() + "$" + testClass.getSimpleName();
-		return new JUnit5Context(uniqueId, testClass, parent);
+		String uniqueId = fromClass(container, engineId) + "$" + testClass.getSimpleName();
+		return new JUnit5Context(uniqueId, testClass, container);
 	}
 
 	public JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
