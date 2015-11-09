@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 
+import org.junit.gen5.commons.util.Preconditions;
+
 /**
  * @author Sam Brannen
  * @since 5.0
@@ -64,6 +66,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 
 	private final List<TestPlanSpecificationElement> elements;
 
+	// Begin predicate chain with a predicate that always evaluates to true.
 	private Predicate<TestDescriptor> descriptorFilter = (TestDescriptor descriptor) -> true;
 
 	public TestPlanSpecification(List<TestPlanSpecificationElement> elements) {
@@ -72,15 +75,17 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 
 	@Override
 	public Iterator<TestPlanSpecificationElement> iterator() {
-		return unmodifiableList(elements).iterator();
+		return unmodifiableList(this.elements).iterator();
 	}
 
 	public void filterWith(Predicate<TestDescriptor> filter) {
-		descriptorFilter = descriptorFilter.and(filter);
+		Preconditions.notNull(filter, "filter must not be null");
+		this.descriptorFilter = this.descriptorFilter.and(filter);
 	}
 
-	public boolean acceptDescriptor(TestDescriptor descriptor) {
-		return descriptorFilter.test(descriptor);
+	public boolean acceptDescriptor(TestDescriptor testDescriptor) {
+		Preconditions.notNull(testDescriptor, "testDescriptor must not be null");
+		return this.descriptorFilter.test(testDescriptor);
 	}
 
 }
