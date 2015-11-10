@@ -26,6 +26,6 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Conditional {
 
-	Class<? extends Condition>[]value() default Condition.class;
+	Class<? extends Condition>[]value();
 
 }

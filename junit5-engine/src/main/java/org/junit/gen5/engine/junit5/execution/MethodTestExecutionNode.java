@@ -35,7 +35,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 	private final MethodTestDescriptor testDescriptor;
 
-	private final ConditionalEvaluator conditionalEvaluator = new ConditionalEvaluator();
+	private final ConditionEvaluator conditionalEvaluator = new ConditionEvaluator();
 
 	MethodTestExecutionNode(MethodTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
@@ -48,8 +48,16 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 	@Override
 	public void execute(EngineExecutionContext context) {
+		final Method testMethod = getTestDescriptor().getTestMethod();
 
-		if (!this.conditionalEvaluator.testEnabled(context, getTestDescriptor())) {
+		if (!this.conditionalEvaluator.testEnabled(getTestDescriptor())) {
+			// TODO Determine if we really need an explicit TestSkippedException.
+			// TODO Provide a way for failed conditions to provide a detailed explanation
+			// of why a condition failed (e.g., a text message).
+			TestSkippedException testSkippedException = new TestSkippedException(
+				String.format("Skipped test method [%s] due to failed condition", testMethod.toGenericString()));
+			context.getTestExecutionListener().testSkipped(getTestDescriptor(), testSkippedException);
+
 			// Abort execution of the test completely at this point.
 			return;
 		}

@@ -21,6 +21,7 @@ import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
+import org.opentestalliance.TestSkippedException;
 
 /**
  * @author Stefan Bechtold
@@ -33,7 +34,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 
 	private final ClassTestDescriptor testDescriptor;
 
-	private final ConditionalEvaluator conditionalEvaluator = new ConditionalEvaluator();
+	private final ConditionEvaluator conditionalEvaluator = new ConditionEvaluator();
 
 	ClassTestExecutionNode(ClassTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
@@ -57,13 +58,20 @@ class ClassTestExecutionNode extends TestExecutionNode {
 
 	@Override
 	public void execute(EngineExecutionContext context) {
+		Class<?> testClass = getTestDescriptor().getTestClass();
 
-		if (!this.conditionalEvaluator.testEnabled(context, getTestDescriptor())) {
+		if (!this.conditionalEvaluator.testEnabled(getTestDescriptor())) {
+			// TODO Determine if we really need an explicit TestSkippedException.
+			// TODO Provide a way for failed conditions to provide a detailed explanation
+			// of why a condition failed (e.g., a text message).
+			TestSkippedException testSkippedException = new TestSkippedException(
+				String.format("Skipped test class [%s] due to failed condition", testClass.getName()));
+			context.getTestExecutionListener().testSkipped(getTestDescriptor(), testSkippedException);
+
 			// Abort execution of the test completely at this point.
 			return;
 		}
 
-		Class<?> testClass = getTestDescriptor().getTestClass();
 		Object testInstance = createTestInstance();
 		context.getAttributes().put(TEST_INSTANCE_ATTRIBUTE_NAME, testInstance);
 

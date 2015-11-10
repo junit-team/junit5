@@ -45,16 +45,11 @@ public class Launcher {
 			Collection<TestDescriptor> testDescriptors = testEngine.discoverTests(specification, engineDescriptor);
 			if (!testDescriptors.isEmpty()) {
 				Set<TestDescriptor> descriptorCandidates = findFilteredCandidates(specification, testDescriptors);
-				Set<TestDescriptor> descriptorsWithConcreteTests = filterWithoutConcreteTests(descriptorCandidates);
-				testPlan.addTestDescriptors(descriptorsWithConcreteTests);
+				descriptorCandidates.add(engineDescriptor);
+				Set<TestDescriptor> prunedDescriptors = pruneAllWithoutConcreteTests(descriptorCandidates);
+				testPlan.addTestDescriptors(prunedDescriptors);
 			}
 		}
-		//		System.out.println(testPlan.getTestDescriptors().size());
-		//		testPlan.getTestDescriptors().forEach(
-		//				descriptor -> {
-		//					System.out.println(descriptor.getUniqueId());
-		//				}
-		//		);
 		return testPlan;
 	}
 
@@ -67,7 +62,8 @@ public class Launcher {
 		// @formatter:on
 	}
 
-	private Set<TestDescriptor> filterWithoutConcreteTests(Set<TestDescriptor> descriptorCandidates) {
+	private Set<TestDescriptor> pruneAllWithoutConcreteTests(Set<TestDescriptor> descriptorCandidates) {
+		//Todo: pruning only works if descriptor candidates come in the right order, i.e. parents come before their children
 		Set<TestDescriptor> included = new HashSet<>();
 		descriptorCandidates.stream().filter(
 			descriptor -> descriptor.isTest() || included.contains(descriptor)).forEach(descriptor -> {
