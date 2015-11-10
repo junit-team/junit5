@@ -23,17 +23,14 @@ public class SimpleAnnotationBasedMethodArgumentResolver implements MethodArgume
 
 	@Override
 	public boolean supports(Parameter parameter) {
-
-		Optional<Class<?>> classOptional = ReflectionUtils.loadClass(annotationName);
+		Optional<Class<Annotation>> classOptional = ReflectionUtils.loadClass(annotationName, Annotation.class);
 		if (!classOptional.isPresent())
 			return false;
 
-		//TODO: improve!
-		Class<Annotation> annotationClass = (Class<Annotation>) classOptional.get();
+		Class<Annotation> annotationClass = classOptional.get();
 		List<Annotation> annotations = AnnotationUtils.findAllAnnotations(parameter, annotationClass);
 
 		return !annotations.isEmpty();
-
 	}
 
 }
