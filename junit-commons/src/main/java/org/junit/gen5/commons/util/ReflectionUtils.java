@@ -40,6 +40,9 @@ public final class ReflectionUtils {
 
 	public static <T> T newInstance(Class<T> clazz)
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+
+		Preconditions.notNull(clazz, "class must not be null");
+
 		Constructor<T> constructor = clazz.getDeclaredConstructor();
 		if (!constructor.isAccessible()) {
 			constructor.setAccessible(true);
@@ -47,17 +50,22 @@ public final class ReflectionUtils {
 		return constructor.newInstance();
 	}
 
-	public static Object invokeMethod(Method method, Object testInstance)
+	public static Object invokeMethod(Method method, Object target)
 			throws IllegalAccessException, InvocationTargetException {
+
+		Preconditions.notNull(method, "method must not be null");
+		Preconditions.notNull(target, "target must not be null");
+
 		if (!method.isAccessible()) {
 			method.setAccessible(true);
 		}
-		return method.invoke(testInstance);
+		return method.invoke(target);
 	}
 
 	public static <A extends Class<?>> Optional<A> loadClass(String name) {
 		// TODO Use correct classloader
 		// TODO Add support for primitive types and arrays.
+		Preconditions.notBlank(name, "class name must not be null or empty");
 		try {
 			return Optional.of((A) getClassLoader().loadClass(name));
 		}
@@ -71,6 +79,9 @@ public final class ReflectionUtils {
 	}
 
 	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notBlank(methodName, "methodName must not be null or empty");
+
 		Predicate<Method> nameAndParameterTypesMatch = (method -> method.getName().equals(methodName)
 				&& Arrays.equals(method.getParameterTypes(), parameterTypes));
 
@@ -84,6 +95,7 @@ public final class ReflectionUtils {
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate, MethodSortOrder sortOrder) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "predicate must not be null");
+		Preconditions.notNull(sortOrder, "MethodSortOrder must not be null");
 
 		// @formatter:off
 		return findAllMethodsInHierarchy(clazz, sortOrder).stream()
@@ -96,6 +108,9 @@ public final class ReflectionUtils {
 	 * Return all methods in superclass hierarchy except from Object.
 	 */
 	public static List<Method> findAllMethodsInHierarchy(Class<?> clazz, MethodSortOrder sortOrder) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(sortOrder, "MethodSortOrder must not be null");
+
 		// TODO Support interface default methods.
 		// TODO Determine if we need to support bridged methods.
 
@@ -127,6 +142,9 @@ public final class ReflectionUtils {
 	}
 
 	private static List<Method> getInterfaceMethods(Class<?> clazz, MethodSortOrder sortOrder) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(sortOrder, "MethodSortOrder must not be null");
+
 		List<Method> allInterfaceMethods = new ArrayList<>();
 		for (Class<?> anInterface : clazz.getInterfaces()) {
 

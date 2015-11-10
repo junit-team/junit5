@@ -28,6 +28,7 @@ class ClasspathScanner {
 	private final String basePackageName;
 
 	ClasspathScanner(String basePackageName) {
+		Preconditions.notBlank(basePackageName, "basePackageName must not be null");
 		this.basePackageName = basePackageName;
 	}
 
