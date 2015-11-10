@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.BeforeAll;
-import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
@@ -113,7 +112,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 
 	private Object createTestInstance() {
 		try {
-			return ReflectionUtils.newInstance(getTestDescriptor().getTestClass());
+			return newInstance(getTestDescriptor().getTestClass());
 		}
 		catch (Exception ex) {
 			throw new IllegalStateException(

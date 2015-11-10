@@ -258,6 +258,9 @@ public final class ReflectionUtils {
 	}
 
 	private static void handleException(Throwable ex) {
+		if (ex instanceof InvocationTargetException) {
+			handleException(((InvocationTargetException) ex).getTargetException());
+		}
 		if (ex instanceof NoSuchMethodException) {
 			throw new IllegalStateException("No such method or constructor", ex);
 		}
@@ -266,9 +269,6 @@ public final class ReflectionUtils {
 		}
 		if (ex instanceof IllegalAccessException) {
 			throw new IllegalStateException("Failed to access method or constructor", ex);
-		}
-		if (ex instanceof InvocationTargetException) {
-			handleException(((InvocationTargetException) ex).getTargetException());
 		}
 		if (ex instanceof RuntimeException) {
 			throw (RuntimeException) ex;
