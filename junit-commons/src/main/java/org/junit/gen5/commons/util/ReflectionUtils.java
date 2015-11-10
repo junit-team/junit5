@@ -55,11 +55,11 @@ public final class ReflectionUtils {
 		return method.invoke(testInstance);
 	}
 
-	public static Optional<Class<?>> loadClass(String name) {
+	public static <A extends Class<?>> Optional<A> loadClass(String name) {
 		// TODO Use correct classloader
 		// TODO Add support for primitive types and arrays.
 		try {
-			return Optional.of(getClassLoader().loadClass(name));
+			return Optional.of((A) getClassLoader().loadClass(name));
 		}
 		catch (ClassNotFoundException e) {
 			return Optional.empty();
