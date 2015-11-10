@@ -12,26 +12,26 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
 
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
 public class JUnit5TestableFactory {
 
-	private static final String SEPARATORS = ":$#";
+	private static final String SEPARATORS = ":@#";
 
 	public JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
 		Preconditions.notEmpty(uniqueId, "uniqueId must not be empty");
 		List<String> parts = split(uniqueId);
 		Preconditions.condition(parts.remove(0).equals(engineId), "uniqueId must start with engineId");
 
-		return createElement(uniqueId, parts);
+		return createElement(uniqueId, parts, null);
 	}
 
 	public JUnit5Testable fromClassName(String className, String engineId) {
@@ -83,46 +83,29 @@ public class JUnit5TestableFactory {
 		return "(" + parameterString + ")";
 	}
 
-	private JUnit5Testable createElement(String uniqueId, List<String> parts) {
-		AnnotatedElement currentJavaElement = null;
-		Class<?> currentJavaContainer = null;
+	private JUnit5Testable createElement(String uniqueId, List<String> parts, JUnit5Testable last) {
+		if (parts.isEmpty())
+			return last;
+		JUnit5Testable next = null;
 		String head = parts.remove(0);
-		while (true) {
-			switch (head.charAt(0)) {
-				case ':':
-					currentJavaElement = findTopLevelClass(head);
-					break;
-				case '$':
-					currentJavaContainer = (Class<?>) currentJavaElement;
-					currentJavaElement = findNestedClass(head, (Class<?>) currentJavaElement);
-					break;
-				case '@':
-					currentJavaContainer = (Class<?>) currentJavaElement;
-					currentJavaElement = findNestedContext(head, (Class<?>) currentJavaElement);
-					break;
-				case '#':
-					currentJavaContainer = (Class<?>) currentJavaElement;
-					currentJavaElement = findMethod(head, currentJavaContainer, uniqueId);
-					break;
-				default:
-					currentJavaContainer = null;
-					currentJavaElement = null;
-			}
-
-			if (currentJavaElement == null) {
-				throwCannotResolveUniqueIdException(uniqueId, head);
-			}
-			if (parts.isEmpty())
+		switch (head.charAt(0)) {
+			case ':':
+				next = new JUnit5Class(uniqueId, findTopLevelClass(head));
 				break;
-			head = parts.remove(0);
+			case '@': {
+				Class<?> container = ((JUnit5Class) last).getJavaClass();
+				next = new JUnit5Context(uniqueId, findNestedContext(head, container), container);
+				break;
+			}
+			case '#': {
+				Class<?> container = ((JUnit5Class) last).getJavaClass();
+				next = new JUnit5Method(uniqueId, findMethod(head, container, uniqueId), container);
+				break;
+			}
+			default:
+				throwCannotResolveUniqueIdException(uniqueId, head);
 		}
-		if (currentJavaElement instanceof Method) {
-			return new JUnit5Method(uniqueId, (Method) currentJavaElement, currentJavaContainer);
-		}
-		if (currentJavaElement instanceof Class) {
-			return new JUnit5Class(uniqueId, (Class<?>) currentJavaElement);
-		}
-		return null; //cannot happen
+		return createElement(uniqueId, parts, next);
 	}
 
 	private Method findMethod(String methodSpecPart, Class<?> clazz, String uniqueId) {
@@ -156,11 +139,6 @@ public class JUnit5TestableFactory {
 				methodName, Arrays.toString(parameterTypes))));
 	}
 
-	private Class<?> findNestedClass(String nameExtension, Class<?> containerClass) {
-		String fullClassName = containerClass.getName() + nameExtension;
-		return classByName(fullClassName);
-	}
-
 	private Class<?> findNestedContext(String nameExtension, Class<?> containerClass) {
 		String fullClassName = containerClass.getName() + "$" + nameExtension.substring(1);
 		return classByName(fullClassName);
@@ -172,7 +150,8 @@ public class JUnit5TestableFactory {
 	}
 
 	private Class<?> classByName(String className) {
-		return loadClass(className).orElse(null);
+		return loadClass(className).orElseThrow(
+			() -> new IllegalArgumentException(String.format("Cannot resolve class name '%s'", className)));
 	}
 
 	private void throwCannotResolveClassNameException(String className) {

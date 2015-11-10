@@ -100,14 +100,17 @@ public class SpecificationResolver {
 		});
 	}
 
-	private void resolveContext(Class<?> contextClass, Class<?> containerClass, String uniqueId, AbstractTestDescriptor parent) {
+	private void resolveContext(Class<?> contextClass, Class<?> containerClass, String uniqueId,
+			AbstractTestDescriptor parent) {
 		if (!isTestContext.test(contextClass)) {
 			throwCannotResolveContextException(contextClass);
 		}
-		JUnit5Testable parentId = JUnit5Testable.fromContext(contextClass, containerClass, engineDescriptor.getUniqueId());
+		//Todo: tut noch nicht
+		JUnit5Testable parentId = JUnit5Testable.fromContext(contextClass, containerClass,
+			engineDescriptor.getUniqueId());
 		parent = resolveClass(containerClass, parentId.getUniqueId(), parent, false);
 
-		ClassTestDescriptor descriptor = getOrCreateContextDescriptor(contextClass, uniqueId);
+		ContextTestDescriptor descriptor = getOrCreateContextDescriptor(contextClass, uniqueId);
 		parent.addChild(descriptor);
 		testDescriptors.add(descriptor);
 	}
@@ -135,7 +138,8 @@ public class SpecificationResolver {
 		if (withChildren) {
 			List<Class<?>> contextClasses = findInnerClasses(clazz, isTestContext);
 			for (Class<?> contextClass : contextClasses) {
-				JUnit5Testable contextTestable = JUnit5Testable.fromContext(contextClass, clazz, engineDescriptor.getUniqueId());
+				JUnit5Testable contextTestable = JUnit5Testable.fromContext(contextClass, clazz,
+					engineDescriptor.getUniqueId());
 				ClassTestDescriptor context = getOrCreateClassDescriptor(contextClass, contextTestable.getUniqueId());
 				descriptor.addChild(context);
 			}
@@ -162,13 +166,13 @@ public class SpecificationResolver {
 		return methodTestDescriptor;
 	}
 
-	private ClassTestDescriptor getOrCreateContextDescriptor(Class<?> clazz, String uniqueId) {
-		ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptorByUniqueId(uniqueId);
-		if (classTestDescriptor == null) {
-			classTestDescriptor = new ClassTestDescriptor(uniqueId, clazz);
-			testDescriptors.add(classTestDescriptor);
+	private ContextTestDescriptor getOrCreateContextDescriptor(Class<?> clazz, String uniqueId) {
+		ContextTestDescriptor contextTestDescriptor = (ContextTestDescriptor) descriptorByUniqueId(uniqueId);
+		if (contextTestDescriptor == null) {
+			contextTestDescriptor = new ContextTestDescriptor(uniqueId, clazz);
+			testDescriptors.add(contextTestDescriptor);
 		}
-		return classTestDescriptor;
+		return contextTestDescriptor;
 	}
 
 	private ClassTestDescriptor getOrCreateClassDescriptor(Class<?> clazz, String uniqueId) {

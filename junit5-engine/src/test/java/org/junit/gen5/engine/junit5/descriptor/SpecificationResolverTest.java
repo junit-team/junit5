@@ -237,18 +237,17 @@ public class SpecificationResolverTest {
 
 		resolver.resolveElement(specification);
 
+		descriptors.forEach(id -> System.out.println(id));
+
 		List<String> uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toList());
-		uniqueIds().forEach(id ->
-			System.out.println(id)
-		);
 
 		assertEquals(6, uniqueIds.size());
 
-//		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass"));
-//		assertTrue(uniqueIds.contains(
-//			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()"));
-//		assertTrue(uniqueIds.contains(
-//			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test6()"));
+		//		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass"));
+		//		assertTrue(uniqueIds.contains(
+		//			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()"));
+		//		assertTrue(uniqueIds.contains(
+		//			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test6()"));
 	}
 
 	private TestDescriptor descriptorByUniqueId(String id) {

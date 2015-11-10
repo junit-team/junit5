@@ -10,27 +10,21 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import lombok.EqualsAndHashCode;
-import lombok.Value;
-
-import org.junit.gen5.engine.AbstractTestDescriptor;
-
-@Value
-@EqualsAndHashCode(callSuper = false)
 class JUnit5Context extends JUnit5Class {
 
-	private final Class<?> javaClass;
 	private final Class<?> containerClass;
 
 	JUnit5Context(String uniqueId, Class<?> javaClass, Class<?> containerClass) {
 		super(uniqueId, javaClass);
-		this.javaClass = javaClass;
 		this.containerClass = containerClass;
 	}
 
 	@Override
 	void accept(Visitor visitor) {
-		visitor.visitContext(getUniqueId(), this.javaClass, this.containerClass);
+		visitor.visitContext(getUniqueId(), getJavaClass(), this.containerClass);
 	}
 
+	public Class<?> getContainerClass() {
+		return containerClass;
+	}
 }

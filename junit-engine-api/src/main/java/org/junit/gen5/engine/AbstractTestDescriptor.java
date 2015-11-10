@@ -80,4 +80,8 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		return this.uniqueId.hashCode();
 	}
 
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + ": " + getUniqueId();
+	}
 }
