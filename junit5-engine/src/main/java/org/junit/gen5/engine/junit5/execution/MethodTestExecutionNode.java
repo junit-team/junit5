@@ -18,7 +18,6 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
-import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
@@ -68,7 +67,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 		try {
 			executeBeforeMethods(testClass, testInstance);
-			ReflectionUtils.invokeMethod(testMethod, testInstance);
+			invokeMethod(testMethod, testInstance);
 		}
 		catch (Throwable ex) {
 			exceptionThrown = ex;

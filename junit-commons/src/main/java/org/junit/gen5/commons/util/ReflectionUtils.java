@@ -12,6 +12,7 @@ package org.junit.gen5.commons.util;
 
 import static java.util.stream.Collectors.toList;
 
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,8 +25,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * @author Stefan Bechtold
+ * Collection of utilities for working with Java reflection APIs.
+ *
  * @author Sam Brannen
+ * @author Stefan Bechtold
  * @since 5.0
  */
 public final class ReflectionUtils {
@@ -38,28 +41,46 @@ public final class ReflectionUtils {
 		/* no-op */
 	}
 
-	public static <T> T newInstance(Class<T> clazz)
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-
-		Preconditions.notNull(clazz, "class must not be null");
-
-		Constructor<T> constructor = clazz.getDeclaredConstructor();
-		if (!constructor.isAccessible()) {
-			constructor.setAccessible(true);
+	public static ClassLoader getDefaultClassLoader() {
+		try {
+			return Thread.currentThread().getContextClassLoader();
 		}
-		return constructor.newInstance();
+		catch (Throwable ex) {
+			/* ignore */
+		}
+		return ClassLoader.getSystemClassLoader();
 	}
 
-	public static Object invokeMethod(Method method, Object target)
-			throws IllegalAccessException, InvocationTargetException {
+	public static <T> T newInstance(Class<T> clazz, Object... args) {
+		Preconditions.notNull(clazz, "class must not be null");
 
+		try {
+			Constructor<T> constructor = clazz.getDeclaredConstructor();
+			makeAccessible(constructor);
+			return constructor.newInstance(args);
+		}
+		catch (Exception ex) {
+			handleException(ex);
+		}
+
+		// Appeasing the compiler: this should hopefully never happen...
+		throw new IllegalStateException("Exception handling algorithm in ReflectionUtils is incomplete");
+	}
+
+	public static Object invokeMethod(Method method, Object target, Object... args) {
 		Preconditions.notNull(method, "method must not be null");
 		Preconditions.notNull(target, "target must not be null");
 
-		if (!method.isAccessible()) {
-			method.setAccessible(true);
+		try {
+			makeAccessible(method);
+			return method.invoke(target, args);
 		}
-		return method.invoke(target);
+		catch (Exception ex) {
+			handleException(ex);
+		}
+
+		// Appeasing the compiler: this should hopefully never happen...
+		throw new IllegalStateException("Exception handling algorithm in ReflectionUtils is incomplete");
 	}
 
 	public static Optional<Class<?>> loadClass(String name) {
@@ -104,14 +125,8 @@ public final class ReflectionUtils {
 		}
 	}
 
-	public static ClassLoader getDefaultClassLoader() {
-		try {
-			return Thread.currentThread().getContextClassLoader();
-		}
-		catch (Throwable ex) {
-			/* ignore */
-		}
-		return ClassLoader.getSystemClassLoader();
+	public static Class<?>[] findAllClassesInPackage(String basePackageName) {
+		return new ClasspathScanner(basePackageName).scanForClassesRecursively();
 	}
 
 	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
@@ -121,11 +136,12 @@ public final class ReflectionUtils {
 		Predicate<Method> nameAndParameterTypesMatch = (method -> method.getName().equals(methodName)
 				&& Arrays.equals(method.getParameterTypes(), parameterTypes));
 
-		List<Method> candidates = findMethods(clazz, nameAndParameterTypesMatch, MethodSortOrder.HierarchyDown);
-		if (candidates.isEmpty()) {
-			return Optional.empty();
-		}
-		return Optional.of(candidates.get(0));
+		List<Method> candidates = findMethods(clazz, nameAndParameterTypesMatch);
+		return (!candidates.isEmpty() ? Optional.of(candidates.get(0)) : Optional.empty());
+	}
+
+	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate) {
+		return findMethods(clazz, predicate, MethodSortOrder.HierarchyDown);
 	}
 
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate, MethodSortOrder sortOrder) {
@@ -182,13 +198,13 @@ public final class ReflectionUtils {
 		Preconditions.notNull(sortOrder, "MethodSortOrder must not be null");
 
 		List<Method> allInterfaceMethods = new ArrayList<>();
-		for (Class<?> anInterface : clazz.getInterfaces()) {
+		for (Class<?> ifc : clazz.getInterfaces()) {
 
-			List<Method> localMethods = Arrays.stream(anInterface.getDeclaredMethods()).filter(
+			List<Method> localMethods = Arrays.stream(ifc.getDeclaredMethods()).filter(
 				method -> method.isDefault()).collect(Collectors.toList());
 
 			// @formatter:off
-			List<Method> subInterfaceMethods = getInterfaceMethods(anInterface, sortOrder).stream()
+			List<Method> subInterfaceMethods = getInterfaceMethods(ifc, sortOrder).stream()
 					.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 					.collect(toList());
 			// @formatter:on
@@ -235,8 +251,31 @@ public final class ReflectionUtils {
 		return true;
 	}
 
-	public static Class<?>[] findAllClassesInPackage(String basePackageName) {
-		return new ClasspathScanner(basePackageName).scanForClassesRecursively();
+	private static void makeAccessible(AccessibleObject object) {
+		if (!object.isAccessible()) {
+			object.setAccessible(true);
+		}
+	}
+
+	private static void handleException(Throwable ex) {
+		if (ex instanceof NoSuchMethodException) {
+			throw new IllegalStateException("No such method or constructor", ex);
+		}
+		if (ex instanceof InstantiationException) {
+			throw new IllegalStateException("Instantiation failed", ex);
+		}
+		if (ex instanceof IllegalAccessException) {
+			throw new IllegalStateException("Failed to access method or constructor", ex);
+		}
+		if (ex instanceof InvocationTargetException) {
+			handleException(((InvocationTargetException) ex).getTargetException());
+		}
+		if (ex instanceof RuntimeException) {
+			throw (RuntimeException) ex;
+		}
+		if (ex instanceof Error) {
+			throw (Error) ex;
+		}
 	}
 
 }
