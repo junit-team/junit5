@@ -63,28 +63,39 @@ public final class ReflectionUtils {
 	}
 
 	public static Optional<Class<?>> loadClass(String name) {
+		return loadClass(name, getDefaultClassLoader());
+	}
+
+	public static Optional<Class<?>> loadClass(String name, ClassLoader classLoader) {
 		Preconditions.notBlank(name, "class name must not be null or empty");
+		Preconditions.notNull(classLoader, "ClassLoader must not be null");
 		try {
 			// TODO Add support for primitive types and arrays.
-			return Optional.of(getClassLoader().loadClass(name));
+			return Optional.of(classLoader.loadClass(name));
 		}
 		catch (ClassNotFoundException e) {
 			return Optional.empty();
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <T> Optional<Class<T>> loadClass(String name, Class<T> requiredType) {
+		return loadClass(name, requiredType, getDefaultClassLoader());
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> Optional<Class<T>> loadClass(String name, Class<T> requiredType, ClassLoader classLoader) {
 		Preconditions.notBlank(name, "class name must not be null or empty");
 		Preconditions.notNull(requiredType, "requiredType must not be null");
+		Preconditions.notNull(classLoader, "ClassLoader must not be null");
+
 		try {
 			// TODO Add support for primitive types and arrays.
-			Class<?> clazz = getClassLoader().loadClass(name);
+			Class<?> clazz = classLoader.loadClass(name);
 			if (requiredType.isInstance(clazz)) {
 				return Optional.of((Class<T>) clazz);
 			}
 			else {
-				throw new IllegalArgumentException(
+				throw new IllegalStateException(
 					String.format("Class [%s] is not of required type [%s]", name, requiredType.getName()));
 			}
 		}
@@ -93,8 +104,13 @@ public final class ReflectionUtils {
 		}
 	}
 
-	public static ClassLoader getClassLoader() {
-		// TODO Use correct classloader
+	public static ClassLoader getDefaultClassLoader() {
+		try {
+			return Thread.currentThread().getContextClassLoader();
+		}
+		catch (Throwable ex) {
+			/* ignore */
+		}
 		return ClassLoader.getSystemClassLoader();
 	}
 
