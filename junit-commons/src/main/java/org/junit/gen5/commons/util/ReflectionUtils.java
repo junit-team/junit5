@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  */
 public final class ReflectionUtils {
 
-	public enum MethodSortOrder {
+	public static enum MethodSortOrder {
 		HierarchyDown, HierarchyUp
 	}
 
@@ -62,12 +62,31 @@ public final class ReflectionUtils {
 		return method.invoke(target);
 	}
 
-	public static <A extends Class<?>> Optional<A> loadClass(String name) {
-		// TODO Use correct classloader
-		// TODO Add support for primitive types and arrays.
+	public static Optional<Class<?>> loadClass(String name) {
 		Preconditions.notBlank(name, "class name must not be null or empty");
 		try {
-			return Optional.of((A) getClassLoader().loadClass(name));
+			// TODO Add support for primitive types and arrays.
+			return Optional.of(getClassLoader().loadClass(name));
+		}
+		catch (ClassNotFoundException e) {
+			return Optional.empty();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> Optional<Class<T>> loadClass(String name, Class<T> requiredType) {
+		Preconditions.notBlank(name, "class name must not be null or empty");
+		Preconditions.notNull(requiredType, "requiredType must not be null");
+		try {
+			// TODO Add support for primitive types and arrays.
+			Class<?> clazz = getClassLoader().loadClass(name);
+			if (requiredType.isInstance(clazz)) {
+				return Optional.of((Class<T>) clazz);
+			}
+			else {
+				throw new IllegalArgumentException(
+					String.format("Class [%s] is not of required type [%s]", name, requiredType.getName()));
+			}
 		}
 		catch (ClassNotFoundException e) {
 			return Optional.empty();
@@ -75,10 +94,11 @@ public final class ReflectionUtils {
 	}
 
 	public static ClassLoader getClassLoader() {
+		// TODO Use correct classloader
 		return ClassLoader.getSystemClassLoader();
 	}
 
-	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
+	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "methodName must not be null or empty");
 
@@ -165,8 +185,6 @@ public final class ReflectionUtils {
 				allInterfaceMethods.addAll(subInterfaceMethods);
 			}
 		}
-		//		System.out.println("INTERFACE METHODS: " + interfaceMethods);
-		//		System.out.println();
 		return allInterfaceMethods;
 
 	}
