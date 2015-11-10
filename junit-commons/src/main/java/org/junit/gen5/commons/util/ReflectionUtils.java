@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  */
 public final class ReflectionUtils {
 
-	public static enum MethodSortOrder {
+	public enum MethodSortOrder {
 		HierarchyDown, HierarchyUp
 	}
 
@@ -98,7 +98,7 @@ public final class ReflectionUtils {
 		try {
 			// TODO Add support for primitive types and arrays.
 			Class<?> clazz = classLoader.loadClass(name);
-			if (requiredType.isInstance(clazz)) {
+			if (requiredType.isAssignableFrom(clazz)) {
 				return Optional.of((Class<T>) clazz);
 			}
 			else {
