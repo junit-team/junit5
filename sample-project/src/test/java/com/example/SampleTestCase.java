@@ -84,38 +84,6 @@ class SampleTestCase {
 	}
 
 	@Test
-	void argumentInjectionByType(CustomType customType) {
-		assertTrue(customType != null);
-		System.out.println("customType = " + customType);
-	}
-
-	@Test
-	void argumentInjectionByAnnotation(@CustomAnnotation String value) {
-
-		assertTrue(value != null);
-		System.out.println("value = " + value);
-
-	}
-
-	//some overloaded methods
-
-	@Test
-	void overloadedName() {
-		assertTrue(true);
-	}
-
-	@Test
-	void overloadedName(CustomType customType) {
-		assertTrue(customType != null);
-	}
-
-	@Test
-	void overloadedName(CustomType customType, @CustomAnnotation String value) {
-		assertTrue(customType != null);
-		assertTrue(value != null);
-	}
-
-	@Test
 	@Name("with succeeding assertAll")
 	void assertAllTest() {
 		Map<String, String> person = new HashMap<String, String>();

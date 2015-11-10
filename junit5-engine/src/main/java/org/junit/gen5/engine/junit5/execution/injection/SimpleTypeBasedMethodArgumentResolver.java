@@ -22,7 +22,7 @@ public class SimpleTypeBasedMethodArgumentResolver implements MethodArgumentReso
 		Class<?> parameterType = parameter.getType();
 
 		//todo: check should be based on class-objects not strings
-		return (parameterType.getName().equals("com.example.CustomType"));
+		return (parameterType.getName().equals("org.junit.gen5.engine.junit5.execution.injection.sample.CustomType"));
 	}
 
 }

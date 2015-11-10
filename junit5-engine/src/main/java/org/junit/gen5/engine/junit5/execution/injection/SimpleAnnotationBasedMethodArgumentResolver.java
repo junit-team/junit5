@@ -19,7 +19,7 @@ import org.junit.gen5.commons.util.*;
 // for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
 public class SimpleAnnotationBasedMethodArgumentResolver implements MethodArgumentResolver {
 
-	private final String annotationName = "com.example.CustomAnnotation";
+	private final String annotationName = "org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation";
 
 	@Override
 	public boolean supports(Parameter parameter) {

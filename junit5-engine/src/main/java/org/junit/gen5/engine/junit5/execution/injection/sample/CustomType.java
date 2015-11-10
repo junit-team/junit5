@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.example;
+package org.junit.gen5.engine.junit5.execution.injection.sample;
 
 import java.util.*;
 
