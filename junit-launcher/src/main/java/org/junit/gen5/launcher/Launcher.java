@@ -63,6 +63,7 @@ public class Launcher {
 	}
 
 	private Set<TestDescriptor> pruneAllWithoutConcreteTests(Set<TestDescriptor> descriptorCandidates) {
+		//Todo: pruning only works if descriptor candidates come in the right order, i.e. parents come before their children
 		Set<TestDescriptor> included = new HashSet<>();
 		descriptorCandidates.stream().filter(
 			descriptor -> descriptor.isTest() || included.contains(descriptor)).forEach(descriptor -> {
