@@ -295,6 +295,12 @@ public class JUnit5TestEngineTests {
 
 	private static class MethodParameterInjectionTestCase {
 
+//		TODO: make this work
+		//		@Test
+		//		void argumentInjectionWithCompetingResolvers(@CustomAnnotation CustomType customType) {
+		//			 //should fail
+		//		}
+
 		@Test
 		void argumentInjectionByType(CustomType customType) {
 			assertTrue(customType != null);
