@@ -11,10 +11,14 @@
 package org.junit.gen5.engine.junit4;
 
 import static java.util.Collections.emptySet;
+import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 
+import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.TestTag;
@@ -47,7 +51,27 @@ interface JUnit4TestDescriptor extends TestDescriptor {
 
 	@Override
 	default Optional<TestSource> getSource() {
+		Optional<Method> testMethod = getTestMethod();
+		if (testMethod.isPresent()) {
+			return Optional.of(new JavaSource(testMethod.get()));
+		}
+		return getTestClass().map(JavaSource::new);
+	}
+
+	default Optional<Method> getTestMethod() {
+		Optional<Class<?>> testClass = getTestClass();
+		String methodName = getDescription().getMethodName();
+		if (testClass.isPresent() && methodName != null) {
+			List<Method> methods = findMethods(testClass.get(), method -> methodName.equals(method.getName()));
+			if (methods.size() == 1) {
+				return Optional.of(methods.get(0));
+			}
+		}
 		return Optional.empty();
+	}
+
+	default Optional<Class<?>> getTestClass() {
+		return Optional.ofNullable(getDescription().getTestClass());
 	}
 
 	Description getDescription();
