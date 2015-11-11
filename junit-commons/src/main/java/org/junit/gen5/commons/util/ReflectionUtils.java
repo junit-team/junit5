@@ -51,7 +51,7 @@ public final class ReflectionUtils {
 		return constructor.newInstance();
 	}
 
-	public static Object invokeMethod(Method method, Object target, Object[] arguments)
+	public static Object invokeMethod(Method method, Object target, Object... arguments)
 			throws IllegalAccessException, InvocationTargetException {
 
 		Preconditions.notNull(method, "method must not be null");
@@ -64,10 +64,6 @@ public final class ReflectionUtils {
 		return method.invoke(target, arguments);
 	}
 
-	public static Object invokeMethod(Method method, Object testInstance)
-			throws IllegalAccessException, InvocationTargetException {
-		return invokeMethod(method, testInstance, new Object[] {});
-	}
 
 	public static Optional<Class<?>> loadClass(String name) {
 		return loadClass(name, getDefaultClassLoader());
