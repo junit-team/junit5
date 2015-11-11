@@ -21,10 +21,17 @@ class RunnerTestDescriptor implements JUnit4TestDescriptor {
 
 	EngineDescriptor parent;
 	Runner runner;
+	Description description;
+
+	public RunnerTestDescriptor(EngineDescriptor parent, Runner runner) {
+		this.parent = parent;
+		this.runner = runner;
+		this.description = runner.getDescription();
+	}
 
 	@Override
 	public Description getDescription() {
-		return runner.getDescription();
+		return description;
 	}
 
 }
