@@ -57,7 +57,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		this.children.add(child);
 	}
 
-	public final void setSource(TestSource source) {
+	protected final void setSource(TestSource source) {
 		Preconditions.notNull(source, "test source must not be null");
 		this.source = source;
 	}
