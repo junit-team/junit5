@@ -40,7 +40,7 @@ public class JavaSource implements TestSource {
 	}
 
 	@Override
-	public boolean isFolder() {
+	public boolean isDirectory() {
 		return false;
 	}
 

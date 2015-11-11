@@ -16,7 +16,7 @@ public interface TestSource {
 
 	boolean isJavaMethod();
 
-	boolean isFolder();
+	boolean isDirectory();
 
 	boolean isFile();
 
