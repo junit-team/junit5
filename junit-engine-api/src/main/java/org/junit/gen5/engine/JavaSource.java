@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class JavaSource implements TestSource {
 
-	private final Class javaClass;
+	private final Class<?> javaClass;
 
 	private final Method javaMethod;
 
