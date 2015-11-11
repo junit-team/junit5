@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -33,4 +34,6 @@ public interface TestDescriptor {
 	boolean isTest();
 
 	Set<TestTag> getTags();
+
+	Optional<TestSource> getSource();
 }

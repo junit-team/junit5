@@ -12,9 +12,11 @@ package org.junit.gen5.engine.junit4;
 
 import static java.util.Collections.emptySet;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.TestTag;
 import org.junit.runner.Description;
 
@@ -41,6 +43,11 @@ interface JUnit4TestDescriptor extends TestDescriptor {
 	@Override
 	default Set<TestTag> getTags() {
 		return emptySet();
+	}
+
+	@Override
+	default Optional<TestSource> getSource() {
+		return Optional.empty();
 	}
 
 	Description getDescription();
