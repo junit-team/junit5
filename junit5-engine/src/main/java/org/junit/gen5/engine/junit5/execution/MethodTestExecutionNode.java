@@ -76,6 +76,9 @@ class MethodTestExecutionNode extends TestExecutionNode {
 			if (ex instanceof InvocationTargetException) {
 				exceptionThrown = ((InvocationTargetException) ex).getTargetException();
 			}
+			if (ex instanceof ArgumentResolutionException) {
+				exceptionThrown = ex.getCause();
+			}
 		}
 		finally {
 			exceptionThrown = executeAfterMethods(context, testClass, testInstance, exceptionThrown);
@@ -98,7 +101,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	}
 
 	private void invokeTestMethod(EngineExecutionContext context, Object testInstance)
-			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException {
+			throws InvocationTargetException, IllegalAccessException, ArgumentResolutionException {
 
 		MethodTestDescriptor methodTestDescriptor = getTestDescriptor();
 
@@ -109,7 +112,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	}
 
 	private List<Object> prepareArguments(MethodTestDescriptor methodTestDescriptor)
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+			throws ArgumentResolutionException {
 
 		//todo: should probably not be instantiated here, maybe be brought along by the executionContext
 		MethodArgumentResolverEngine argumentResolver = new MethodArgumentResolverEngine();

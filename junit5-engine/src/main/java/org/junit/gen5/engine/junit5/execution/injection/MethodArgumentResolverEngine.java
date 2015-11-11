@@ -26,15 +26,21 @@ public class MethodArgumentResolverEngine {
 	 *
 	 * @param methodTestDescriptor the test descriptor for the underlying (test) method
 	 * @return a list of Objects to be used as arguments in the method call - will be an empty list in case of no-arg methods
-	 * @throws NoSuchMethodException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws ArgumentResolutionException
 	 */
+	public List<Object> prepareArguments(MethodTestDescriptor methodTestDescriptor) throws ArgumentResolutionException {
 
-	public List<Object> prepareArguments(MethodTestDescriptor methodTestDescriptor)
+		try {
+			return this.doPrepareArguments(methodTestDescriptor);
+		}
+		catch (Exception root) {
+			throw new ArgumentResolutionException("problem with argument resolution", root);
+		}
+
+	}
+
+	private List<Object> doPrepareArguments(MethodTestDescriptor methodTestDescriptor)
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-
 		Method testMethod = methodTestDescriptor.getTestMethod();
 
 		List<Object> arguments = new ArrayList<>();
