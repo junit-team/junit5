@@ -10,42 +10,44 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import static java.util.stream.Collectors.*;
+import static org.junit.gen5.commons.util.AnnotationUtils.*;
+
 import java.lang.reflect.AnnotatedElement;
-import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Tag;
-import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestTag;
 
+/**
+ * @author Sam Brannen
+ * @since 5.0
+ */
 public abstract class AbstractJUnit5TestDescriptor extends AbstractTestDescriptor {
 
 	protected AbstractJUnit5TestDescriptor(String uniqueId) {
 		super(uniqueId);
 	}
 
-	protected Set<TestTag> getTags(AnnotatedElement taggedElement) {
-		Set<TestTag> tags = new HashSet<>();
+	protected Set<TestTag> getTags(AnnotatedElement element) {
 		// @formatter:off
-		List<Tag> tagAnnotations = AnnotationUtils.findAllAnnotations(taggedElement, Tag.class);
-		tagAnnotations.stream()
+		return findRepeatableAnnotations(element, Tag.class).stream()
 				.map(Tag::value)
-				.filter(name -> !StringUtils.isBlank(name))
-				.forEach( tagName -> tags.add(new TestTag(tagName)));
+				.filter(StringUtils::isNotBlank)
+				.map(TestTag::new)
+				.collect(toCollection(LinkedHashSet::new));
 		// @formatter:on
-
-		return tags;
 	}
 
-	protected String determineDisplayName(AnnotatedElement namedElement, String defaultName) {
+	protected String determineDisplayName(AnnotatedElement element, String defaultName) {
 		// @formatter:off
-		return AnnotationUtils.findAnnotation(namedElement, Name.class)
+		return findAnnotation(element, Name.class)
 				.map(Name::value)
-				.filter(name -> !StringUtils.isBlank(name))
+				.filter(StringUtils::isNotBlank)
 				.orElse(defaultName);
 		// @formatter:on
 	}
