@@ -127,6 +127,7 @@ public class JUnit5TestableFactory {
 	}
 
 	private Method findMethod(String methodSpecPart, Class<?> clazz, String uniqueId) {
+		//Todo: Throw IAE when format wrong. Currently you gen IndexOutOfBoundsException
 		int startParams = methodSpecPart.indexOf('(');
 		String methodName = methodSpecPart.substring(1, startParams);
 		int endParams = methodSpecPart.lastIndexOf(')');
