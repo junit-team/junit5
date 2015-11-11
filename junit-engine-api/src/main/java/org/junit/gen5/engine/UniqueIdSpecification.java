@@ -18,7 +18,7 @@ public class UniqueIdSpecification implements TestPlanSpecificationElement {
 	private String uniqueId;
 
 	@Override
-	public void accept(Visitor visitor) {
+	public void accept(TestPlanSpecificationVisitor visitor) {
 		visitor.visitUniqueIdSpecification(uniqueId);
 	}
 }

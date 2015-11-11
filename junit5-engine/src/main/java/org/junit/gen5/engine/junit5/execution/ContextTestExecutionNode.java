@@ -13,20 +13,15 @@ package org.junit.gen5.engine.junit5.execution;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.BeforeAll;
-import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineExecutionContext;
-import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.ContextTestDescriptor;
 import org.opentestalliance.TestSkippedException;
 
 /**
- * @author Stefan Bechtold
- * @author Sam Brannen
  * @since 5.0
  */
 class ContextTestExecutionNode extends TestExecutionNode {
@@ -35,7 +30,7 @@ class ContextTestExecutionNode extends TestExecutionNode {
 
 	private final ContextTestDescriptor testDescriptor;
 
-	private final ConditionalEvaluator conditionalEvaluator = new ConditionalEvaluator();
+	private final ConditionEvaluator conditionalEvaluator = new ConditionEvaluator();
 
 	ContextTestExecutionNode(ContextTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;

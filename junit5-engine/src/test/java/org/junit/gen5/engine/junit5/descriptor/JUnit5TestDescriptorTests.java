@@ -27,7 +27,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestTag;
 
 /**
- * Unit tests for {@link MethodTestDescriptor}.
+ * Unit tests for {@link ClassTestDescriptor} and {@link MethodTestDescriptor}.
  *
  * @author Sam Brannen
  * @author Stefan Bechtold
@@ -36,7 +36,7 @@ import org.junit.gen5.engine.TestTag;
 @Tag("classTag1")
 @Tag("classTag2")
 @Name("custom class name")
-public class MethodTestDescriptorTests {
+public class JUnit5TestDescriptorTests {
 
 	@org.junit.Test
 	public void constructFromMethod() throws Exception {
@@ -51,17 +51,22 @@ public class MethodTestDescriptorTests {
 
 	@org.junit.Test
 	public void constructFromMethodWithAnnotations() throws Exception {
+		ClassTestDescriptor classDescriptor = new ClassTestDescriptor("class id", getClass());
 		Method testMethod = getClass().getDeclaredMethod("foo");
-		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", testMethod);
+		MethodTestDescriptor methodDescriptor = new MethodTestDescriptor("method id", testMethod);
+		classDescriptor.addChild(methodDescriptor);
 
-		assertEquals(testMethod, descriptor.getTestMethod());
-		assertEquals("custom test name", descriptor.getDisplayName(), "display name:");
+		assertEquals(testMethod, methodDescriptor.getTestMethod());
+		assertEquals("custom test name", methodDescriptor.getDisplayName(), "display name:");
 
-		List<String> tags = descriptor.getTags().stream().map(TestTag::getName).collect(Collectors.toList());
-		assertEquals(2, descriptor.getTags().size());
+		List<String> tags = methodDescriptor.getTags().stream().map(TestTag::getName).collect(Collectors.toList());
+		assertEquals(4, methodDescriptor.getTags().size());
 		assertTrue(tags.contains("methodTag1"));
 		assertTrue(tags.contains("methodTag2"));
 
+		// Methods "inherit" tags from their test class
+		assertTrue(tags.contains("classTag1"));
+		assertTrue(tags.contains("classTag2"));
 	}
 
 	@org.junit.Test
@@ -75,7 +80,6 @@ public class MethodTestDescriptorTests {
 		assertEquals(2, descriptor.getTags().size());
 		assertTrue(tags.contains("classTag1"));
 		assertTrue(tags.contains("classTag2"));
-
 	}
 
 	@org.junit.Test

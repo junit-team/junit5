@@ -18,7 +18,7 @@ public class PackageSpecification implements TestPlanSpecificationElement {
 	private String packageName;
 
 	@Override
-	public void accept(Visitor visitor) {
+	public void accept(TestPlanSpecificationVisitor visitor) {
 		visitor.visitPackageSpecification(packageName);
 	}
 }
