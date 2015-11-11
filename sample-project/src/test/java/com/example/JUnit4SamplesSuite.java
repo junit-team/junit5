@@ -19,8 +19,11 @@ import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
 @Classes({ SucceedingTestCase.class })
-@UniqueIds({ "junit5:com.example.SampleTestCase#assertAllTest()",
-	"junit5:com.example.SampleTestCase#assertAllFailingTest()" })
+@UniqueIds({
+		"junit5:com.example.SampleTestCase#assertAllTest()",
+		"junit5:com.example.SampleTestCase#assertAllFailingTest()",
+		"junit5:com.example.SampleTestCase@AnInnerTestContext"
+})
 @Packages({ "com.example.subpackage" })
 //@Classes({ SampleTestCase.class, SucceedingTestCase.class, JUnit4TestCase.class })
 public class JUnit4SamplesSuite {

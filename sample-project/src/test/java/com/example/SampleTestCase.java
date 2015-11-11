@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
+import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
 import org.opentestalliance.TestSkippedException;
@@ -115,8 +116,9 @@ class SampleTestCase {
 		// @formatter:on
 	}
 
-	// Currently ignored by junit5 engine
-	class InnerTestCase {
+	@Context
+	@Name("An inner test context")
+	class AnInnerTestContext {
 
 		@Test
 		void innerTest() {

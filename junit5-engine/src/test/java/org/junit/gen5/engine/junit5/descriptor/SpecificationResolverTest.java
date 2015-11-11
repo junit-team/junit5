@@ -232,22 +232,83 @@ public class SpecificationResolverTest {
 	}
 
 	@org.junit.Test
-	public void testContextResolution() {
+	public void testContextResolutionFromContainerClass() {
 		ClassNameSpecification specification = new ClassNameSpecification(TestCaseWithContexts.class.getName());
+
+		resolver.resolveElement(specification);
+
+		List<String> uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toList());
+		assertEquals(6, uniqueIds.size());
+
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts"));
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts#testA()"));
+		assertTrue(
+			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext"));
+		assertTrue(uniqueIds.contains(
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext#testB()"));
+		assertTrue(uniqueIds.contains(
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext"));
+		assertTrue(uniqueIds.contains(
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext#testC()"));
+	}
+
+	@org.junit.Test
+	public void testContextResolutionFromContextClass() {
+		ClassNameSpecification specification = new ClassNameSpecification(
+			TestCaseWithContexts.InnerContext.class.getName());
+
+		resolver.resolveElement(specification);
+
+		List<String> uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toList());
+		assertEquals(5, uniqueIds.size());
+
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts"));
+		assertTrue(
+			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext"));
+		assertTrue(uniqueIds.contains(
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext#testB()"));
+		assertTrue(uniqueIds.contains(
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext"));
+		assertTrue(uniqueIds.contains(
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext#testC()"));
+	}
+
+	@org.junit.Test
+	public void testContextResolutionFromUniqueId() {
+		UniqueIdSpecification specification = new UniqueIdSpecification(
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext");
+
+		resolver.resolveElement(specification);
+
+		List<String> uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toList());
+		assertEquals(4, uniqueIds.size());
+
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts"));
+		assertTrue(
+			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext"));
+		assertTrue(uniqueIds.contains(
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext"));
+		assertTrue(uniqueIds.contains(
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext#testC()"));
+	}
+
+	@org.junit.Test
+	public void testContextResolutionFromUniqueIdToMethod() {
+		UniqueIdSpecification specification = new UniqueIdSpecification(
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext#testB()");
 
 		resolver.resolveElement(specification);
 
 		descriptors.forEach(id -> System.out.println(id));
 
 		List<String> uniqueIds = descriptors.stream().map(d -> d.getUniqueId()).collect(Collectors.toList());
+		assertEquals(3, uniqueIds.size());
 
-		assertEquals(6, uniqueIds.size());
-
-		//		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass"));
-		//		assertTrue(uniqueIds.contains(
-		//			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()"));
-		//		assertTrue(uniqueIds.contains(
-		//			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test6()"));
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts"));
+		assertTrue(
+			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext"));
+		assertTrue(uniqueIds.contains(
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext#testB()"));
 	}
 
 	private TestDescriptor descriptorByUniqueId(String id) {

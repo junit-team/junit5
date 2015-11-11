@@ -94,18 +94,9 @@ public class SpecificationResolver {
 
 			@Override
 			public void visitContext(String uniqueId, Class<?> testClass, Class<?> containerClass) {
-				resolveContextTestable(uniqueId, testClass, containerClass);
+				resolveContextTestable(uniqueId, testClass, containerClass, withChildren);
 			}
 		});
-	}
-
-	private void resolveContextTestable(String uniqueId, Class<?> testClass, Class<?> containerClass) {
-		JUnit5Testable containerTestable = JUnit5Testable.fromClass(containerClass, uniqueId);
-		resolveTestable(containerTestable, false);
-		AbstractTestDescriptor containerDescriptor = descriptorByUniqueId(containerTestable.getUniqueId());
-		ContextTestDescriptor descriptor = getOrCreateContextDescriptor(testClass, uniqueId);
-		containerDescriptor.addChild(descriptor);
-		testDescriptors.add(descriptor);
 	}
 
 	private void resolveTestable(JUnit5Testable testable) {
@@ -114,37 +105,60 @@ public class SpecificationResolver {
 
 	private void resolveMethodTestable(Method method, Class<?> testClass, String uniqueId,
 			AbstractTestDescriptor parentDescriptor) {
-		JUnit5Testable parentId = JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueId());
-		AbstractTestDescriptor newParentDescriptor = resolveClassTestable(testClass, parentId.getUniqueId(),
-			parentDescriptor, false);
+		JUnit5Testable parentTestable = JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueId());
+		AbstractTestDescriptor newParentDescriptor = resolveAndReturnParentTestable(parentTestable);
 		MethodTestDescriptor descriptor = getOrCreateMethodDescriptor(method, uniqueId);
 		newParentDescriptor.addChild(descriptor);
 		testDescriptors.add(descriptor);
 	}
 
-	private ClassTestDescriptor resolveClassTestable(Class<?> clazz, String uniqueId, AbstractTestDescriptor parent,
+	private void resolveClassTestable(Class<?> testClass, String uniqueId, AbstractTestDescriptor parentDescriptor,
 			boolean withChildren) {
-		ClassTestDescriptor descriptor = getOrCreateClassDescriptor(clazz, uniqueId);
-		parent.addChild(descriptor);
+		ClassTestDescriptor descriptor = getOrCreateClassDescriptor(testClass, uniqueId);
+		parentDescriptor.addChild(descriptor);
 
 		if (withChildren) {
-			List<Class<?>> contextClasses = findInnerClasses(clazz, isTestContext);
-			for (Class<?> contextClass : contextClasses) {
-				JUnit5Testable contextTestable = JUnit5Testable.fromClass(contextClass, engineDescriptor.getUniqueId());
-				resolveTestable(contextTestable);
-			}
-
-			List<Method> testMethodCandidates = findMethods(clazz, isTestMethod,
-				ReflectionUtils.MethodSortOrder.HierarchyDown);
-			for (Method method : testMethodCandidates) {
-				JUnit5Testable methodTestable = JUnit5Testable.fromMethod(method, clazz,
-					engineDescriptor.getUniqueId());
-				MethodTestDescriptor methodDescriptor = getOrCreateMethodDescriptor(method,
-					methodTestable.getUniqueId());
-				descriptor.addChild(methodDescriptor);
-			}
+			resolveContainedContexts(testClass);
+			resolveContainedTestMethods(testClass, descriptor);
 		}
-		return descriptor;
+		testDescriptors.add(descriptor);
+	}
+
+	private void resolveContextTestable(String uniqueId, Class<?> testClass, Class<?> containerClass,
+			boolean withChildren) {
+		JUnit5Testable containerTestable = JUnit5Testable.fromClass(containerClass, engineDescriptor.getUniqueId());
+		AbstractTestDescriptor parentDescriptor = resolveAndReturnParentTestable(containerTestable);
+		ContextTestDescriptor descriptor = getOrCreateContextDescriptor(testClass, uniqueId);
+		parentDescriptor.addChild(descriptor);
+
+		if (withChildren) {
+			resolveContainedContexts(testClass);
+			resolveContainedTestMethods(testClass, descriptor);
+		}
+		testDescriptors.add(descriptor);
+	}
+
+	private AbstractTestDescriptor resolveAndReturnParentTestable(JUnit5Testable containerTestable) {
+		resolveTestable(containerTestable, false);
+		return descriptorByUniqueId(containerTestable.getUniqueId());
+	}
+
+	private void resolveContainedTestMethods(Class<?> testClass, AbstractTestDescriptor parentDescriptor) {
+		List<Method> testMethodCandidates = findMethods(testClass, isTestMethod, MethodSortOrder.HierarchyDown);
+		for (Method method : testMethodCandidates) {
+			JUnit5Testable methodTestable = JUnit5Testable.fromMethod(method, testClass,
+				engineDescriptor.getUniqueId());
+			MethodTestDescriptor methodDescriptor = getOrCreateMethodDescriptor(method, methodTestable.getUniqueId());
+			parentDescriptor.addChild(methodDescriptor);
+		}
+	}
+
+	private void resolveContainedContexts(Class<?> clazz) {
+		List<Class<?>> contextClasses = findInnerClasses(clazz, isTestContext);
+		for (Class<?> contextClass : contextClasses) {
+			JUnit5Testable contextTestable = JUnit5Testable.fromClass(contextClass, engineDescriptor.getUniqueId());
+			resolveTestable(contextTestable);
+		}
 	}
 
 	private MethodTestDescriptor getOrCreateMethodDescriptor(Method method, String uniqueId) {
