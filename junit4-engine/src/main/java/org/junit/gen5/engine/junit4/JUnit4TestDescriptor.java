@@ -14,35 +14,34 @@ import static java.util.Collections.emptySet;
 
 import java.util.Set;
 
+import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.runner.Description;
 
-interface JUnit4TestDescriptor extends TestDescriptor {
+abstract class JUnit4TestDescriptor extends AbstractTestDescriptor {
 
-	String ENGINE_ID = "junit4";
+	public static String ENGINE_ID = "junit4";
 
-	@Override
-	public default String getUniqueId() {
-		// TODO Use unique ID if set, too
-		return ENGINE_ID + ":" + getDescription().getDisplayName();
+	protected JUnit4TestDescriptor(String uniqueId) {
+		super(uniqueId);
 	}
 
 	@Override
-	public default String getDisplayName() {
+	public String getDisplayName() {
 		return getDescription().getDisplayName();
 	}
 
 	@Override
-	public default boolean isTest() {
+	public boolean isTest() {
 		return getDescription().isTest();
 	}
 
 	@Override
-	public default Set<TestTag> getTags() {
+	public Set<TestTag> getTags() {
 		return emptySet();
 	}
 
-	Description getDescription();
+	public abstract Description getDescription();
 
 }

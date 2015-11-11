@@ -38,8 +38,7 @@ public class JUnit4TestEngine implements TestEngine {
 	}
 
 	@Override
-	public void discoverTests(TestPlanSpecification specification,
-			EngineDescriptor engineDescriptor) {
+	public void discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
 		JUnit4SpecificationResolver resolver = new JUnit4SpecificationResolver(engineDescriptor);
 		specification.accept(resolver);
 	}
@@ -92,7 +91,7 @@ public class JUnit4TestEngine implements TestEngine {
 			return (RunnerTestDescriptor) testDescriptor;
 		}
 		if (testDescriptor instanceof DescriptionTestDescriptor) {
-			return findRunnerTestDescriptor(((DescriptionTestDescriptor) testDescriptor).getParent().get());
+			return findRunnerTestDescriptor((JUnit4TestDescriptor) testDescriptor.getParent().get());
 		}
 		throw new IllegalStateException("Cannot handle testDescriptor of class " + testDescriptor.getClass().getName());
 	}

@@ -10,14 +10,21 @@
 
 package org.junit.gen5.engine.junit4;
 
-import lombok.Value;
-
 import org.junit.runner.Description;
 
-@Value
-class DescriptionTestDescriptor implements JUnit4TestDescriptor {
+class DescriptionTestDescriptor extends JUnit4TestDescriptor {
 
-	JUnit4TestDescriptor parent;
-	Description description;
+	final Description description;
 
+	DescriptionTestDescriptor(Description description) {
+		// TODO Use unique ID if set, too
+		super(ENGINE_ID + ":" + description.getDisplayName());
+		this.description = description;
+
+	}
+
+	@Override
+	public Description getDescription() {
+		return description;
+	}
 }
