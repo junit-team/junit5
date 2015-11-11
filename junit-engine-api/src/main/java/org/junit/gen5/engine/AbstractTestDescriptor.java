@@ -12,6 +12,7 @@ package org.junit.gen5.engine;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.commons.util.Preconditions;
@@ -25,6 +26,8 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	private final String uniqueId;
 
 	private TestDescriptor parent;
+
+	private TestSource source;
 
 	private final Set<AbstractTestDescriptor> children = new LinkedHashSet<>();
 
@@ -54,6 +57,11 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		this.children.add(child);
 	}
 
+	public final void setSource(TestSource source) {
+		Preconditions.notNull(source, "test source must not be null");
+		this.source = source;
+	}
+
 	public final Set<AbstractTestDescriptor> getChildren() {
 		return this.children;
 	}
@@ -61,6 +69,11 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	@Override
 	public Set<TestTag> getTags() {
 		return Collections.emptySet();
+	}
+
+	@Override
+	public Optional<TestSource> getSource() {
+		return Optional.ofNullable(source);
 	}
 
 	@Override

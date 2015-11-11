@@ -12,9 +12,11 @@ package org.junit.gen5.engine.junit4;
 
 import static java.util.Collections.emptySet;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.TestTag;
 import org.junit.runner.Description;
 
@@ -23,24 +25,29 @@ interface JUnit4TestDescriptor extends TestDescriptor {
 	String ENGINE_ID = "junit4";
 
 	@Override
-	public default String getUniqueId() {
+	default String getUniqueId() {
 		// TODO Use unique ID if set, too
 		return ENGINE_ID + ":" + getDescription().getDisplayName();
 	}
 
 	@Override
-	public default String getDisplayName() {
+	default String getDisplayName() {
 		return getDescription().getDisplayName();
 	}
 
 	@Override
-	public default boolean isTest() {
+	default boolean isTest() {
 		return getDescription().isTest();
 	}
 
 	@Override
-	public default Set<TestTag> getTags() {
+	default Set<TestTag> getTags() {
 		return emptySet();
+	}
+
+	@Override
+	default Optional<TestSource> getSource() {
+		return Optional.empty();
 	}
 
 	Description getDescription();
