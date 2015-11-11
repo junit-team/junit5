@@ -20,6 +20,7 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.TestPlanSpecificationVisitor;
 import org.junit.gen5.engine.junit5.testers.CanBeTestClass;
 import org.junit.gen5.engine.junit5.testers.IsTestClassWithTests;
 import org.junit.gen5.engine.junit5.testers.IsTestMethod;
@@ -37,7 +38,7 @@ public class SpecificationResolver {
 	}
 
 	public void resolveElement(TestPlanSpecificationElement element) {
-		element.accept(new TestPlanSpecificationElement.Visitor() {
+		element.accept(new TestPlanSpecificationVisitor() {
 
 			@Override
 			public void visitClassNameSpecification(String className) {

@@ -10,19 +10,21 @@
 
 package org.junit.gen5.engine.junit4;
 
-import org.junit.gen5.engine.TestDescriptor;
+import lombok.Value;
+
+import org.junit.gen5.engine.EngineDescriptor;
+import org.junit.runner.Description;
 import org.junit.runner.Runner;
 
-class RunnerTestDescriptor extends DescriptionTestDescriptor {
+@Value
+class RunnerTestDescriptor implements JUnit4TestDescriptor {
 
-	private Runner runner;
+	EngineDescriptor parent;
+	Runner runner;
 
-	public RunnerTestDescriptor(TestDescriptor parent, Runner runner) {
-		super(parent, runner.getDescription());
-		this.runner = runner;
+	@Override
+	public Description getDescription() {
+		return runner.getDescription();
 	}
 
-	public Runner getRunner() {
-		return runner;
-	}
 }

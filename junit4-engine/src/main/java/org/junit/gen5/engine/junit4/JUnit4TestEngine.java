@@ -14,24 +14,17 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
-import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.internal.runners.ErrorReportingRunner;
 import org.junit.runner.Description;
-import org.junit.runner.Request;
-import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.NoTestsRemainException;
@@ -41,42 +34,14 @@ public class JUnit4TestEngine implements TestEngine {
 
 	@Override
 	public String getId() {
-		return "junit4";
+		return JUnit4TestDescriptor.ENGINE_ID;
 	}
 
 	@Override
-	public void discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
-		//Todo: result is no longer needed
-		Set<TestDescriptor> result = new LinkedHashSet<>();
-		for (TestPlanSpecificationElement element : specification) {
-			if (element instanceof ClassNameSpecification) {
-				String className = ((ClassNameSpecification) element).getClassName();
-
-				Class<?> testClass = ReflectionUtils.loadClass(className).orElseThrow(
-					() -> new IllegalArgumentException("Class " + className + " not found."));
-
-				//JL: Hack to break endless recursion if runner will lead to the
-				// execution of JUnit5 test (eg. @RunWith(JUnit5.class))
-				// how to do that properly?
-				if (testClass.isAnnotationPresent(RunWith.class)) {
-					continue;
-				}
-				Runner runner = Request.aClass(testClass).getRunner();
-
-				// TODO This skips malformed JUnit 4 tests, too
-				if (!(runner instanceof ErrorReportingRunner)) {
-					DescriptionTestDescriptor rootDescriptor = new RunnerTestDescriptor(engineDescriptor, runner);
-					addRecursively(rootDescriptor, result);
-				}
-			}
-		}
-	}
-
-	private void addRecursively(DescriptionTestDescriptor parent, Set<TestDescriptor> result) {
-		result.add(parent);
-		for (Description child : parent.getDescription().getChildren()) {
-			addRecursively(new DescriptionTestDescriptor(parent, child), result);
-		}
+	public void discoverTests(TestPlanSpecification specification,
+			EngineDescriptor engineDescriptor) {
+		JUnit4SpecificationResolver resolver = new JUnit4SpecificationResolver(engineDescriptor);
+		specification.accept(resolver);
 	}
 
 	@Override
@@ -87,9 +52,9 @@ public class JUnit4TestEngine implements TestEngine {
 
 		//@formatter:off
 		Map<RunnerTestDescriptor, List<DescriptionTestDescriptor>> groupedByRunner = originalTestDescriptors.stream()
-			.filter(testDescriptor -> !(testDescriptor instanceof RunnerTestDescriptor))
+			.filter(testDescriptor -> (testDescriptor instanceof DescriptionTestDescriptor))
 			.map(testDescriptor -> (DescriptionTestDescriptor) testDescriptor)
-			.collect(groupingBy(testDescriptor -> findRunner(testDescriptor)));
+			.collect(groupingBy(testDescriptor -> findRunnerTestDescriptor(testDescriptor)));
 		//@formatter:on
 
 		for (Entry<RunnerTestDescriptor, List<DescriptionTestDescriptor>> entry : groupedByRunner.entrySet()) {
@@ -122,11 +87,14 @@ public class JUnit4TestEngine implements TestEngine {
 		runner.run(notifier);
 	}
 
-	private RunnerTestDescriptor findRunner(TestDescriptor testDescriptor) {
+	private RunnerTestDescriptor findRunnerTestDescriptor(JUnit4TestDescriptor testDescriptor) {
 		if (testDescriptor instanceof RunnerTestDescriptor) {
 			return (RunnerTestDescriptor) testDescriptor;
 		}
-		return findRunner(testDescriptor.getParent().get());
+		if (testDescriptor instanceof DescriptionTestDescriptor) {
+			return findRunnerTestDescriptor(((DescriptionTestDescriptor) testDescriptor).getParent().get());
+		}
+		throw new IllegalStateException("Cannot handle testDescriptor of class " + testDescriptor.getClass().getName());
 	}
 
 }

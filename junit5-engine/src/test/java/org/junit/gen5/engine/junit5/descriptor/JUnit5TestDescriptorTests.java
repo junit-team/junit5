@@ -27,7 +27,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestTag;
 
 /**
- * Unit tests for {@link MethodTestDescriptor}.
+ * Unit tests for {@link ClassTestDescriptor} and {@link MethodTestDescriptor}.
  *
  * @author Sam Brannen
  * @author Stefan Bechtold
@@ -36,7 +36,7 @@ import org.junit.gen5.engine.TestTag;
 @Tag("classTag1")
 @Tag("classTag2")
 @Name("custom class name")
-public class MethodTestDescriptorTests {
+public class JUnit5TestDescriptorTests {
 
 	@org.junit.Test
 	public void constructFromMethod() throws Exception {
@@ -64,10 +64,9 @@ public class MethodTestDescriptorTests {
 		assertTrue(tags.contains("methodTag1"));
 		assertTrue(tags.contains("methodTag2"));
 
-		//Methods "inherit" tags from their test class
+		// Methods "inherit" tags from their test class
 		assertTrue(tags.contains("classTag1"));
 		assertTrue(tags.contains("classTag2"));
-
 	}
 
 	@org.junit.Test
@@ -81,7 +80,6 @@ public class MethodTestDescriptorTests {
 		assertEquals(2, descriptor.getTags().size());
 		assertTrue(tags.contains("classTag1"));
 		assertTrue(tags.contains("classTag2"));
-
 	}
 
 	@org.junit.Test

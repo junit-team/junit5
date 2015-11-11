@@ -19,31 +19,33 @@ import org.junit.gen5.api.Condition;
 import org.junit.gen5.api.Condition.Context;
 import org.junit.gen5.api.Conditional;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
-import org.opentestalliance.TestSkippedException;
 
 /**
+ * {@code ConditionEvaluator} evaluates {@link Condition Conditions}
+ * configured via {@link Conditional @Conditional}.
+ *
  * @author Sam Brannen
  * @since 5.0
+ * @see Conditional
+ * @see Condition
  */
-class ConditionalEvaluator {
+class ConditionEvaluator {
 
-	boolean testEnabled(EngineExecutionContext context, ClassTestDescriptor testDescriptor) {
-		return testEnabled(context, testDescriptor, testDescriptor.getTestClass(), null);
+	boolean testEnabled(ClassTestDescriptor testDescriptor) {
+		return testEnabled(testDescriptor, testDescriptor.getTestClass(), null);
 	}
 
-	boolean testEnabled(EngineExecutionContext context, MethodTestDescriptor testDescriptor) {
-		return testEnabled(context, testDescriptor, testDescriptor.getTestMethod().getDeclaringClass(),
+	boolean testEnabled(MethodTestDescriptor testDescriptor) {
+		return testEnabled(testDescriptor, testDescriptor.getTestMethod().getDeclaringClass(),
 			testDescriptor.getTestMethod());
 	}
 
-	private boolean testEnabled(EngineExecutionContext context, TestDescriptor testDescriptor, final Class<?> testClass,
-			final Method testMethod) {
+	private boolean testEnabled(TestDescriptor testDescriptor, final Class<?> testClass, final Method testMethod) {
 
-		Context conditionalContext = new Context() {
+		Context conditionContext = new Context() {
 
 			@Override
 			public Method getTestMethod() {
@@ -56,6 +58,7 @@ class ConditionalEvaluator {
 			}
 		};
 
+		// TODO Introduce support for finding *all* @Conditional annotations.
 		Optional<Conditional> classLevelAnno = findAnnotation(testClass, Conditional.class);
 		Optional<Conditional> methodLevelAnno = findAnnotation(testMethod, Conditional.class);
 
@@ -64,22 +67,18 @@ class ConditionalEvaluator {
 
 		if (conditional != null) {
 			Class<? extends Condition>[] classes = conditional.value();
-			for (Class<? extends Condition> conditionalClass : classes) {
+			for (Class<? extends Condition> conditionClass : classes) {
 				try {
-					Condition condition = ReflectionUtils.newInstance(conditionalClass);
+					Condition condition = ReflectionUtils.newInstance(conditionClass);
 
-					if (!condition.matches(conditionalContext)) {
-						Throwable exceptionThrown = new TestSkippedException(String.format(
-							"Skipped test method [%s] due to failed condition [%s]",
-							(testMethod != null ? testMethod.toGenericString() : "N/A"), conditionalClass.getName()));
-						context.getTestExecutionListener().testSkipped(testDescriptor, exceptionThrown);
-
-						// Abort execution of the test completely at this point.
+					if (!condition.matches(conditionContext)) {
+						// We found a failing condition, so there is no need to continue.
 						return false;
 					}
 				}
 				catch (Exception e) {
-					throw new IllegalStateException("Failed to instantiate Condition", e);
+					throw new IllegalStateException(
+						String.format("Failed to evaluate condition [%s]", conditionClass.getName()), e);
 				}
 			}
 		}

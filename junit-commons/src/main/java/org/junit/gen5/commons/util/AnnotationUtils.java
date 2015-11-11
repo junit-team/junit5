@@ -15,7 +15,14 @@ import static java.util.Arrays.asList;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 
 /**
  * Collection of utilities for working with {@linkplain Annotation annotations}.
@@ -55,7 +62,6 @@ public final class AnnotationUtils {
 		collectedAnnotations.addAll(annotations);
 
 		// Meta-present on directly present annotations?
-		// Todo: Isn't this covered by the next block as well?
 		for (Annotation candidateAnnotation : element.getDeclaredAnnotations()) {
 			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
 				List<A> metaAnnotations = findAllAnnotations(candidateAnnotation.annotationType(), annotationType,
@@ -82,7 +88,6 @@ public final class AnnotationUtils {
 	 * <em>present</em> or <em>meta-present</em> on the supplied {@code element}.
 	 */
 	public static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType) {
-		//Todo: should we delegate to findAllAnnotations?
 		return findAnnotation(element, annotationType, new HashSet<Annotation>());
 	}
 
@@ -133,7 +138,8 @@ public final class AnnotationUtils {
 	}
 
 	public static List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType,
-			ReflectionUtils.MethodSortOrder sortOrder) {
+			MethodSortOrder sortOrder) {
+
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 

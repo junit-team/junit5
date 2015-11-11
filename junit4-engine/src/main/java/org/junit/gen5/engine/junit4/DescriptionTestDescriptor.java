@@ -10,40 +10,14 @@
 
 package org.junit.gen5.engine.junit4;
 
-import java.util.Collections;
-import java.util.Set;
+import lombok.Value;
 
-import org.junit.gen5.engine.AbstractTestDescriptor;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestTag;
 import org.junit.runner.Description;
 
-class DescriptionTestDescriptor extends AbstractTestDescriptor {
+@Value
+class DescriptionTestDescriptor implements JUnit4TestDescriptor {
 
-	private final Description description;
+	JUnit4TestDescriptor parent;
+	Description description;
 
-	DescriptionTestDescriptor(TestDescriptor parent, Description description) {
-		super("junit4:" + description.getDisplayName());
-		parent.addChild(this);
-		this.description = description;
-	}
-
-	@Override
-	public boolean isTest() {
-		return description.isTest();
-	}
-
-	@Override
-	public Set<TestTag> getTags() {
-		return Collections.emptySet();
-	}
-
-	@Override
-	public String getDisplayName() {
-		return description.getDisplayName();
-	}
-
-	public Description getDescription() {
-		return description;
-	}
 }
