@@ -154,7 +154,6 @@ public class JUnit5TestEngineTests {
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		System.out.println("Descriptors: " + descriptors);
 		engine.execute(new EngineExecutionContext(descriptors, listener));
 
 		Assert.assertEquals("# tests started", 8, listener.testStartedCount.get());
@@ -171,7 +170,6 @@ public class JUnit5TestEngineTests {
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		System.out.println("Descriptors: " + descriptors);
 		engine.execute(new EngineExecutionContext(descriptors, listener));
 
 		Assert.assertTrue("@BeforeAll was not invoked", LocalTestCase.beforeAllInvoked);
@@ -322,18 +320,14 @@ public class JUnit5TestEngineTests {
 		@Test
 		void argumentInjectionByType(CustomType customType) {
 			assertTrue(customType != null);
-			System.out.println("customType = " + customType);
 		}
 
 		@Test
 		void argumentInjectionByAnnotation(@CustomAnnotation String value) {
-
 			assertTrue(value != null);
-			System.out.println("value = " + value);
-
 		}
 
-		//		some overloaded methods
+		// some overloaded methods
 
 		@Test
 		void overloadedName() {

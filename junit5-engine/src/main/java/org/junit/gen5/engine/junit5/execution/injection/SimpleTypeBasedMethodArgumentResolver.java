@@ -10,9 +10,7 @@
 
 package org.junit.gen5.engine.junit5.execution.injection;
 
-import java.lang.reflect.*;
-
-import org.junit.gen5.commons.util.*;
+import java.lang.reflect.Parameter;
 
 // for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
 public class SimpleTypeBasedMethodArgumentResolver implements MethodArgumentResolver {
@@ -21,7 +19,7 @@ public class SimpleTypeBasedMethodArgumentResolver implements MethodArgumentReso
 	public boolean supports(Parameter parameter) {
 		Class<?> parameterType = parameter.getType();
 
-		//todo: check should be based on class-objects not strings
+		// TODO check should be based on class-objects not strings
 		return (parameterType.getName().equals("org.junit.gen5.engine.junit5.execution.injection.sample.CustomType"));
 	}
 
