@@ -174,7 +174,7 @@ public class JUnit5TestEngineTests {
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		Assert.assertEquals("# descriptors", 4, engineDescriptor.allChildren().size());
 
-		engineDescriptor.allChildren().forEach(testDescriptor -> System.out.println(testDescriptor));
+		// engineDescriptor.allChildren().forEach(testDescriptor -> System.out.println(testDescriptor));
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 

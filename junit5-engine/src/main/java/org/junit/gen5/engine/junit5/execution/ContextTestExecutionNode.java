@@ -24,6 +24,7 @@ import org.opentestalliance.TestSkippedException;
 /**
  * @since 5.0
  */
+// Todo: Implement execution of inner contexts
 class ContextTestExecutionNode extends TestExecutionNode {
 
 	static final String TEST_INSTANCE_ATTRIBUTE_NAME = ContextTestExecutionNode.class.getName() + ".TestInstance";
@@ -54,7 +55,7 @@ class ContextTestExecutionNode extends TestExecutionNode {
 
 	@Override
 	public void execute(EngineExecutionContext context) {
-		TestSkippedException testSkippedException = new TestSkippedException("Not yet able to execute test contexts");
+		TestSkippedException testSkippedException = new TestSkippedException("Not yet able to execute test contexts.");
 		context.getTestExecutionListener().testSkipped(getTestDescriptor(), testSkippedException);
 
 		//		if (!this.conditionalEvaluator.testEnabled(context, getTestDescriptor())) {

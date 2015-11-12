@@ -15,6 +15,7 @@ import static org.junit.gen5.commons.util.ReflectionUtils.*;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
@@ -104,7 +105,7 @@ public class SpecificationResolver {
 	private void resolveMethodTestable(Method method, Class<?> testClass, String uniqueId,
 			AbstractTestDescriptor parentDescriptor) {
 		JUnit5Testable parentTestable = JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueId());
-		AbstractTestDescriptor newParentDescriptor = resolveAndReturnParentTestable(parentTestable);
+		TestDescriptor newParentDescriptor = resolveAndReturnParentTestable(parentTestable);
 		MethodTestDescriptor descriptor = getOrCreateMethodDescriptor(method, uniqueId);
 		newParentDescriptor.addChild(descriptor);
 	}
@@ -123,7 +124,7 @@ public class SpecificationResolver {
 	private void resolveContextTestable(String uniqueId, Class<?> testClass, Class<?> containerClass,
 			boolean withChildren) {
 		JUnit5Testable containerTestable = JUnit5Testable.fromClass(containerClass, engineDescriptor.getUniqueId());
-		AbstractTestDescriptor parentDescriptor = resolveAndReturnParentTestable(containerTestable);
+		TestDescriptor parentDescriptor = resolveAndReturnParentTestable(containerTestable);
 		ContextTestDescriptor descriptor = getOrCreateContextDescriptor(testClass, uniqueId);
 		parentDescriptor.addChild(descriptor);
 
@@ -133,7 +134,7 @@ public class SpecificationResolver {
 		}
 	}
 
-	private AbstractTestDescriptor resolveAndReturnParentTestable(JUnit5Testable containerTestable) {
+	private TestDescriptor resolveAndReturnParentTestable(JUnit5Testable containerTestable) {
 		resolveTestable(containerTestable, false);
 		return descriptorByUniqueId(containerTestable.getUniqueId());
 	}
@@ -181,15 +182,13 @@ public class SpecificationResolver {
 		return classTestDescriptor;
 	}
 
-	private AbstractTestDescriptor descriptorByUniqueId(String uniqueId) {
-
-		//Todo: move byUniqueId to AbstractTestDescriptor
-		for (TestDescriptor descriptor : engineDescriptor.allChildren()) {
-			if (descriptor.getUniqueId().equals(uniqueId)) {
-				return (AbstractTestDescriptor) descriptor;
-			}
-		}
-		return null;
+	private TestDescriptor descriptorByUniqueId(String uniqueId) {
+		//Todo: Users of this method should use Optional directly but I couldn't figure out how.
+		Optional<TestDescriptor> optional = engineDescriptor.findByUniqueId(uniqueId);
+		if (optional.isPresent())
+			return optional.get();
+		else
+			return null;
 	}
 
 }
