@@ -28,7 +28,7 @@ public class SimpleAnnotationBasedMethodArgumentResolver implements MethodArgume
 			return false;
 
 		Class<Annotation> annotationClass = classOptional.get();
-		List<Annotation> annotations = AnnotationUtils.findAllAnnotations(parameter, annotationClass);
+		List<Annotation> annotations = AnnotationUtils.findRepeatableAnnotations(parameter, annotationClass);
 
 		return !annotations.isEmpty();
 	}

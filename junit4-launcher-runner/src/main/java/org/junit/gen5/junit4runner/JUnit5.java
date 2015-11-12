@@ -36,6 +36,9 @@ import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
+/**
+ * @since 5.0
+ */
 public class JUnit5 extends Runner {
 
 	public static final String CREATE_SPECIFICATION_METHOD_NAME = "createSpecification";
@@ -203,7 +206,7 @@ public class JUnit5 extends Runner {
 
 	private void addOnlyIncludeEngineFilter(TestPlanSpecification plan) {
 		String onlyIncludeEngine = getAnnotatedOnlyEngine(testClass);
-		if (!StringUtils.isBlank(onlyIncludeEngine)) {
+		if (StringUtils.isNotBlank(onlyIncludeEngine)) {
 			Predicate<TestDescriptor> engineFilter = TestPlanSpecification.filterByEngine(onlyIncludeEngine);
 			plan.filterWith(engineFilter);
 		}

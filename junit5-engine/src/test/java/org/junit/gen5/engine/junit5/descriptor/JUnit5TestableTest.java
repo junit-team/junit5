@@ -124,7 +124,7 @@ public class JUnit5TestableTest {
 		JUnit5Method testable = (JUnit5Method) JUnit5Testable.fromMethod(testMethod, BTestClass.class,
 			engineDescriptor.getUniqueId());
 		Assert.assertEquals(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.BTestClass#test4(java.lang.String,java.math.BigDecimal)",
+			"junit5:org.junit.gen5.engine.junit5.descriptor.BTestClass#test4(java.lang.String, java.math.BigDecimal)",
 			testable.getUniqueId());
 		Assert.assertSame(testMethod, testable.getJavaMethod());
 	}
