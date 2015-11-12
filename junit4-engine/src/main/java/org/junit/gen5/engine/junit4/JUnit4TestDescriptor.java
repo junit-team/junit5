@@ -20,7 +20,6 @@ import java.util.Set;
 
 import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.JavaSource;
-import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.TestTag;
 import org.junit.runner.Description;

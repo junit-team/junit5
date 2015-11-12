@@ -22,7 +22,7 @@ class RunnerTestDescriptor extends JUnit4TestDescriptor {
 
 	Description description;
 
-	public RunnerTestDescriptor(Runner runner) {
+	RunnerTestDescriptor(Runner runner) {
 		// TODO Use unique ID if set, too
 		super(ENGINE_ID + ":" + runner.getDescription().getDisplayName());
 		this.runner = runner;

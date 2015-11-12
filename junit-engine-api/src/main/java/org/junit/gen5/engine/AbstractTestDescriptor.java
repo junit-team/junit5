@@ -94,7 +94,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public void accept(Visitor visitor) {
-		Runnable remove = () -> removeFromHierarchy();
+		Runnable remove = this::removeFromHierarchy;
 		visitor.visit(this, remove);
 		new HashSet<>(getChildren()).forEach(child -> child.accept(visitor));
 	}

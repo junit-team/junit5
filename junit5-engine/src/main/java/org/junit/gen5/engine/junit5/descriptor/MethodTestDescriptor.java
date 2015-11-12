@@ -24,7 +24,7 @@ import org.junit.gen5.engine.TestTag;
  * @author Sam Brannen
  * @since 5.0
  */
-public class MethodTestDescriptor extends AbstractJUnit5TestDescriptor {
+public class MethodTestDescriptor extends JUnit5TestDescriptor {
 
 	private final String displayName;
 

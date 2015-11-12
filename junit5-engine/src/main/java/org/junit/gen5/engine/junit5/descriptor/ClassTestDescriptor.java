@@ -25,7 +25,7 @@ import org.junit.gen5.engine.TestTag;
  *
  * @since 5.0
  */
-public class ClassTestDescriptor extends AbstractJUnit5TestDescriptor {
+public class ClassTestDescriptor extends JUnit5TestDescriptor {
 
 	private final String displayName;
 	private final Class<?> testClass;
@@ -45,6 +45,7 @@ public class ClassTestDescriptor extends AbstractJUnit5TestDescriptor {
 		return testClass;
 	}
 
+	@Override
 	public String getDisplayName() {
 		return displayName;
 	}

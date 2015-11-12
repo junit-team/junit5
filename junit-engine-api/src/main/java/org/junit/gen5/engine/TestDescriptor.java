@@ -19,8 +19,6 @@ import java.util.Set;
  */
 public interface TestDescriptor {
 
-	// Todo: Move modifying methods and visitor to sub type ModifiableTestDescriptor?
-
 	/**
 	 * Get the unique identifier (UID) for the described test.
 	 *
