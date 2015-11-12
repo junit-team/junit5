@@ -10,22 +10,21 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-class JUnit5Class extends JUnit5Testable {
+class JUnit5Context extends JUnit5Class {
 
-	private final Class<?> javaClass;
+	private final Class<?> containerClass;
 
-	JUnit5Class(String uniqueId, Class<?> javaClass) {
-		super(uniqueId);
-		this.javaClass = javaClass;
-	}
-
-	public Class<?> getJavaClass() {
-		return javaClass;
+	JUnit5Context(String uniqueId, Class<?> javaClass, Class<?> containerClass) {
+		super(uniqueId, javaClass);
+		this.containerClass = containerClass;
 	}
 
 	@Override
 	void accept(Visitor visitor) {
-		visitor.visitClass(getUniqueId(), this.javaClass);
+		visitor.visitContext(getUniqueId(), getJavaClass(), this.containerClass);
 	}
 
+	public Class<?> getContainerClass() {
+		return containerClass;
+	}
 }

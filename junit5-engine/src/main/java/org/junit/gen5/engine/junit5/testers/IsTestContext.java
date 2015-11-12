@@ -12,18 +12,22 @@ package org.junit.gen5.engine.junit5.testers;
 
 import java.util.function.Predicate;
 
+import org.junit.gen5.api.Context;
+
 /**
+ * @author Stefan Bechtold
  * @since 5.0
  */
-public class CanBeTestClass extends ReflectionObjectTester implements Predicate<Class<?>> {
+public class IsTestContext extends ReflectionObjectTester implements Predicate<Class<?>> {
 
 	@Override
-	public boolean test(Class<?> testClassCandidate) {
-		if (isAbstract(testClassCandidate))
+	public boolean test(Class<?> contextClassCandidate) {
+		if (isPrivate(contextClassCandidate))
 			return false;
-		if (testClassCandidate.isMemberClass() && !isStatic(testClassCandidate))
+		if (!contextClassCandidate.isMemberClass())
 			return false;
-		return (!testClassCandidate.isLocalClass());
+		if (isStatic(contextClassCandidate))
+			return false;
+		return hasAnnotation(contextClassCandidate, Context.class);
 	}
-
 }

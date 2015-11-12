@@ -36,8 +36,4 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 		return engine;
 	}
 
-	public long getNumberOfStaticTests() {
-		return allChildren().stream().filter(TestDescriptor::isTest).count();
-	}
-
 }

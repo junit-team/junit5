@@ -10,7 +10,8 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import java.lang.reflect.AnnotatedElement;
+import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,21 +21,27 @@ import java.util.stream.Collectors;
 import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.engine.junit5.testers.CanBeTestClass;
+import org.junit.gen5.engine.junit5.testers.IsTestContext;
+import org.junit.gen5.engine.junit5.testers.IsTestMethod;
 
 /**
- * @author Sam Brannen
  * @since 5.0
  */
 class JUnit5TestableFactory {
 
-	private static final String SEPARATORS = ":$#";
+	private static final String SEPARATORS = ":@#";
+
+	private CanBeTestClass canBeTestClass = new CanBeTestClass();
+	private IsTestContext isTestContext = new IsTestContext();
+	private IsTestMethod isTestMethod = new IsTestMethod();
 
 	JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
 		Preconditions.notBlank(uniqueId, "Unique ID must not be null or empty");
 		List<String> parts = split(uniqueId);
 		Preconditions.condition(parts.remove(0).equals(engineId), "uniqueId must start with engineId");
 
-		return createElement(uniqueId, parts);
+		return createTestable(uniqueId, engineId, parts, null);
 	}
 
 	JUnit5Testable fromClassName(String className, String engineId) {
@@ -46,19 +53,32 @@ class JUnit5TestableFactory {
 		return fromClass(clazz, engineId);
 	}
 
-	JUnit5Testable fromClass(Class<?> clazz, String engineId) {
-		Preconditions.notNull(clazz, "Class must not be null");
+	public JUnit5Testable fromClass(Class<?> clazz, String engineId) {
+		Preconditions.notNull(clazz, "clazz must not be null");
 		Preconditions.notBlank(engineId, "Engine ID must not be null or empty");
-		String uniqueId = engineId + ":" + clazz.getName();
-		return new JUnit5Class(uniqueId, clazz);
+		if (canBeTestClass.test(clazz)) {
+			String uniqueId = engineId + ":" + clazz.getName();
+			return new JUnit5Class(uniqueId, clazz);
+		}
+		if (isTestContext.test(clazz)) {
+			return createContextTestable(clazz, clazz.getEnclosingClass(), engineId);
+		}
+		throwCannotResolveClassException(clazz);
+		return null; //cannot happen
 	}
 
-	JUnit5Testable fromMethod(Method method, Class<?> clazz, String engineId) {
-		Preconditions.notNull(method, "Method must not be null");
-		Preconditions.notNull(clazz, "Class must not be null");
-		String uniqueId = String.format("%s#%s(%s)", fromClass(clazz, engineId).getUniqueId(), method.getName(),
-			ObjectUtils.nullSafeToString(method.getParameterTypes()));
-		return new JUnit5Method(uniqueId, method, clazz);
+	private JUnit5Testable createContextTestable(Class<?> testClass, Class<?> container, String engineId) {
+		String uniqueId = fromClass(container, engineId).getUniqueId() + "@" + testClass.getSimpleName();
+		return new JUnit5Context(uniqueId, testClass, container);
+	}
+
+	public JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
+		if (!isTestMethod.test(testMethod)) {
+			throwCannotResolveMethodException(testMethod);
+		}
+		String uniqueId = String.format("%s#%s(%s)", fromClass(clazz, engineId).getUniqueId(), testMethod.getName(),
+			ObjectUtils.nullSafeToString(testMethod.getParameterTypes()));
+		return new JUnit5Method(uniqueId, testMethod, clazz);
 	}
 
 	private List<String> split(String uniqueId) {
@@ -75,49 +95,29 @@ class JUnit5TestableFactory {
 		return parts;
 	}
 
-	private JUnit5Testable createElement(String uniqueId, List<String> parts) {
-		AnnotatedElement currentJavaElement = null;
-		Class<?> currentJavaContainer = null;
+	private JUnit5Testable createTestable(String uniqueId, String engineId, List<String> parts, JUnit5Testable last) {
+		if (parts.isEmpty())
+			return last;
+		JUnit5Testable next = null;
 		String head = parts.remove(0);
-		while (true) {
-			switch (head.charAt(0)) {
-				case ':': {
-					currentJavaElement = findTopLevelClass(head);
-					break;
-				}
-				case '$': {
-					currentJavaContainer = (Class<?>) currentJavaElement;
-					currentJavaElement = findNestedClass(head, (Class<?>) currentJavaElement);
-					break;
-				}
-				case '#': {
-					currentJavaContainer = (Class<?>) currentJavaElement;
-					currentJavaElement = findMethod(head, currentJavaContainer, uniqueId);
-					break;
-				}
-				default: {
-					currentJavaContainer = null;
-					currentJavaElement = null;
-				}
-			}
-
-			if (currentJavaElement == null) {
-				throw createCannotResolveUniqueIdException(uniqueId, head);
-			}
-			if (parts.isEmpty()) {
+		switch (head.charAt(0)) {
+			case ':':
+				next = fromClass(findTopLevelClass(head), engineId);
+				break;
+			case '@': {
+				Class<?> container = ((JUnit5Class) last).getJavaClass();
+				next = fromClass(findNestedContext(head, container), engineId);
 				break;
 			}
-			head = parts.remove(0);
+			case '#': {
+				Class<?> container = ((JUnit5Class) last).getJavaClass();
+				next = fromMethod(findMethod(head, container, uniqueId), container, engineId);
+				break;
+			}
+			default:
+				throw createCannotResolveUniqueIdException(uniqueId, head);
 		}
-		if (currentJavaElement instanceof Method) {
-			return new JUnit5Method(uniqueId, (Method) currentJavaElement, currentJavaContainer);
-		}
-		if (currentJavaElement instanceof Class) {
-			return new JUnit5Class(uniqueId, (Class<?>) currentJavaElement);
-		}
-
-		// Should not happen
-		return null;
+		return createTestable(uniqueId, engineId, parts, next);
 	}
 
 	private Method findMethod(String methodSpecPart, Class<?> clazz, String uniqueId) {
@@ -150,15 +150,20 @@ class JUnit5TestableFactory {
 				methodName, ObjectUtils.nullSafeToString(parameterTypes))));
 	}
 
-	private static Class<?> findNestedClass(String nameExtension, Class<?> containerClass) {
-		return loadClassByName(containerClass.getName() + nameExtension);
+	private Class<?> findNestedContext(String nameExtension, Class<?> containerClass) {
+		return classByName(containerClass.getName() + "$" + nameExtension.substring(1));
 	}
 
-	private static Class<?> findTopLevelClass(String classNamePart) {
+	private Class<?> findTopLevelClass(String classNamePart) {
 		return loadClassByName(classNamePart.substring(1));
 	}
 
-	private static Class<?> loadClassByName(String className) {
+	private Class<?> classByName(String className) {
+		return loadClass(className).orElseThrow(
+			() -> new IllegalArgumentException(String.format("Cannot resolve class name '%s'", className)));
+	}
+
+	private Class<?> loadClassByName(String className) {
 		return ReflectionUtils.loadClass(className).orElse(null);
 	}
 
@@ -170,6 +175,15 @@ class JUnit5TestableFactory {
 	private static RuntimeException createCannotResolveUniqueIdException(String fullUniqueId, String uniqueIdPart) {
 		return new IllegalArgumentException(
 			String.format("Cannot resolve part '%s' of unique ID '%s'", uniqueIdPart, fullUniqueId));
+	}
+
+	private static void throwCannotResolveMethodException(Method method) {
+		throw new IllegalArgumentException(String.format("Method '%s' is not a test method.", method.getName()));
+	}
+
+	private void throwCannotResolveClassException(Class<?> clazz) {
+		throw new IllegalArgumentException(
+			String.format("Cannot resolve class name '%s' because it's not a test container", clazz.getName()));
 	}
 
 }

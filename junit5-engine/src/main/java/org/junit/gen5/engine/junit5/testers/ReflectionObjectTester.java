@@ -42,4 +42,7 @@ class ReflectionObjectTester {
 		return hasModifier(candidate, Modifier.ABSTRACT);
 	}
 
+	boolean isStatic(Object candidate) {
+		return hasModifier(candidate, Modifier.STATIC);
+	}
 }

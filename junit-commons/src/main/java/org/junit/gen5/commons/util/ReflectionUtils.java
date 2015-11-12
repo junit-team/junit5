@@ -129,10 +129,14 @@ public final class ReflectionUtils {
 		return new ClasspathScanner(basePackageName).scanForClassesRecursively();
 	}
 
-	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+	public static List<Class<?>> findInnerClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
 		Preconditions.notNull(clazz, "Class must not be null");
-		Preconditions.notBlank(methodName, "methodName must not be null or empty");
+		Preconditions.notNull(predicate, "predicate must not be null");
 
+		return Arrays.stream(clazz.getDeclaredClasses()).filter(predicate).collect(Collectors.toList());
+	}
+
+	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
 		Predicate<Method> nameAndParameterTypesMatch = (method -> method.getName().equals(methodName)
 				&& Arrays.equals(method.getParameterTypes(), parameterTypes));
 

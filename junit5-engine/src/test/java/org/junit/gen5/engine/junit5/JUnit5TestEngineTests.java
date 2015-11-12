@@ -25,6 +25,7 @@ import org.junit.gen5.api.After;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.BeforeAll;
+import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
@@ -166,6 +167,26 @@ public class JUnit5TestEngineTests {
 		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
 	}
 
+	@org.junit.Test
+	public void executeTestCaseWithInnerContext() {
+		TestPlanSpecification spec = build(forClassName(TestCaseWithContext.class.getName()));
+
+		EngineDescriptor engineDescriptor = discoverTests(spec);
+		Assert.assertEquals("# descriptors", 4, engineDescriptor.allChildren().size());
+
+		engineDescriptor.allChildren().forEach(testDescriptor -> System.out.println(testDescriptor));
+
+		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
+
+		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
+
+		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
+		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
+		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+	}
+
 	private TrackingTestExecutionListener executeTests(TestPlanSpecification spec, int expectedDescriptorCount) {
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		Assert.assertEquals("# descriptors", expectedDescriptorCount, engineDescriptor.allChildren().size());
@@ -297,6 +318,22 @@ public class JUnit5TestEngineTests {
 		void disabledTest() {
 		}
 
+	}
+
+	private static class TestCaseWithContext {
+
+		@Test
+		void enabledTest() {
+		}
+
+		@Context
+		class InnerTestCase {
+
+			@Test
+			void innerTest() {
+				//Currently skipped
+			}
+		}
 	}
 
 	private static class MethodParameterInjectionTestCase {
