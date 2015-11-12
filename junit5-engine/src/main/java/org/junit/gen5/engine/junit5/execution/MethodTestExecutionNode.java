@@ -77,7 +77,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 				exceptionThrown = ((InvocationTargetException) ex).getTargetException();
 			}
 			if (ex instanceof ArgumentResolutionException) {
-				exceptionThrown = ex.getCause();
+				exceptionThrown = new TestSkippedException(ex.getMessage(), ex.getCause());
 			}
 		}
 		finally {

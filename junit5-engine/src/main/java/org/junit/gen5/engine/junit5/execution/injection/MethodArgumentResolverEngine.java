@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit5.execution.injection;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.junit.gen5.engine.junit5.descriptor.*;
 
@@ -52,17 +53,20 @@ public class MethodArgumentResolverEngine {
 	private Object resolveArgumentForMethodParameter(Parameter parameter) throws ArgumentResolutionException {
 
 		try {
-			//todo: throw exception as well when there are more than 1 resolver for a given parameter
-			for (MethodArgumentResolver argumentResolver : this.resolverRegistry.getMethodArgumentResolvers()) {
-				if (argumentResolver.supports(parameter))
-					return argumentResolver.resolveArgumentForMethodParameter(parameter);
-			}
-		}
-		catch (Exception expection) {
-			throw new ArgumentResolutionException(expection);
-		}
 
-		throw new ArgumentResolutionException("Error: no resolver found for parameter " + parameter);
+			List<MethodArgumentResolver> matchingResolvers = this.resolverRegistry.getMethodArgumentResolvers().stream().filter(
+				argumentResolver -> argumentResolver.supports(parameter)).collect(Collectors.toList());
+			if (matchingResolvers.size() > 1) {
+				throw new ArgumentResolutionException("Too many resolvers found for parameter: " + parameter);
+			}
+			if (matchingResolvers.size() == 0) {
+				throw new ArgumentResolutionException("No resolver found for parameter: " + parameter);
+			}
+			return matchingResolvers.get(0).resolveArgumentForMethodParameter(parameter);
+		}
+		catch (Exception cause) {
+			throw new ArgumentResolutionException(cause);
+		}
 	}
 
 }

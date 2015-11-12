@@ -144,14 +144,20 @@ public class JUnit5TestEngineTests {
 	}
 
 	@org.junit.Test
-	public void executeTestsForMethodArgumentExceptionCases() {
+	public void executeTestsForMethodArgumentInjectionCases() {
 		TestPlanSpecification spec = build(forClassName(MethodParameterInjectionTestCase.class.getName()));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 7);
+		List<TestDescriptor> descriptors = discoverTests(spec);
+		Assert.assertEquals("# descriptors", 8, descriptors.size());
 
-		Assert.assertEquals("# tests started", 5, listener.testStartedCount.get());
+		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
+
+		System.out.println("Descriptors: " + descriptors);
+		engine.execute(new EngineExecutionContext(descriptors, listener));
+
+		Assert.assertEquals("# tests started", 6, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 5, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
+		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
 		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
 	}
@@ -295,11 +301,10 @@ public class JUnit5TestEngineTests {
 
 	private static class MethodParameterInjectionTestCase {
 
-		//		TODO: make this work
-		//		@Test
-		//		void argumentInjectionWithCompetingResolvers(@CustomAnnotation CustomType customType) {
-		//			 //should fail
-		//		}
+		@Test
+		void argumentInjectionWithCompetingResolversMustNotBeExecuted(@CustomAnnotation CustomType customType) {
+			//should be skipped
+		}
 
 		@Test
 		void argumentInjectionByType(CustomType customType) {
