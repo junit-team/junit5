@@ -8,11 +8,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.execution.injection;
+package org.junit.gen5.engine.junit5.execution;
 
-import java.util.*;
+import lombok.Value;
 
-public interface MethodArgumentResolverRegistry {
+import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 
-	List<MethodArgumentResolver> getMethodArgumentResolvers();
+@Value
+public class TestExecutionContext {
+
+	private MethodTestDescriptor descriptor;
+
 }

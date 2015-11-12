@@ -26,7 +26,9 @@ import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Disabled;
+import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.api.TestName;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
@@ -148,15 +150,15 @@ public class JUnit5TestEngineTests {
 		TestPlanSpecification spec = build(forClassName(MethodParameterInjectionTestCase.class.getName()));
 
 		List<TestDescriptor> descriptors = discoverTests(spec);
-		Assert.assertEquals("# descriptors", 8, descriptors.size());
+		Assert.assertEquals("# descriptors", 10, descriptors.size());
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
 		System.out.println("Descriptors: " + descriptors);
 		engine.execute(new EngineExecutionContext(descriptors, listener));
 
-		Assert.assertEquals("# tests started", 6, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 5, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests started", 8, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 7, listener.testSucceededCount.get());
 		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
 		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
@@ -300,6 +302,17 @@ public class JUnit5TestEngineTests {
 	}
 
 	private static class MethodParameterInjectionTestCase {
+
+		@Test
+		void argumentInjectionOfStandardTestName(@TestName String name) {
+			assertEquals("argumentInjectionOfStandardTestName", name);
+		}
+
+		@Test
+		@Name("myName")
+		void argumentInjectionOfUserProvidedTestName(@TestName String name) {
+			assertEquals("myName", name);
+		}
 
 		@Test
 		void argumentInjectionWithCompetingResolversMustNotBeExecuted(@CustomAnnotation CustomType customType) {

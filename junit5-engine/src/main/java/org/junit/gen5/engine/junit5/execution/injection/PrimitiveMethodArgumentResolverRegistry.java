@@ -16,7 +16,8 @@ import java.util.*;
 public class PrimitiveMethodArgumentResolverRegistry implements MethodArgumentResolverRegistry {
 
 	private List<MethodArgumentResolver> methodArgumentResolvers = Arrays.asList(
-		new SimpleTypeBasedMethodArgumentResolver(), new SimpleAnnotationBasedMethodArgumentResolver());
+		new SimpleTypeBasedMethodArgumentResolver(), new SimpleAnnotationBasedMethodArgumentResolver(),
+		new TestNameArgumentResolver());
 
 	@Override
 	public List<MethodArgumentResolver> getMethodArgumentResolvers() {

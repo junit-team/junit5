@@ -105,18 +105,20 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 		MethodTestDescriptor methodTestDescriptor = getTestDescriptor();
 
-		List<Object> arguments = this.prepareArguments(methodTestDescriptor);
+		TestExecutionContext testExecutionContext = new TestExecutionContext(methodTestDescriptor);
+
+		List<Object> arguments = this.prepareArguments(testExecutionContext);
 
 		Method testMethod = methodTestDescriptor.getTestMethod();
 		ReflectionUtils.invokeMethod(testMethod, testInstance, arguments.toArray());
 	}
 
-	private List<Object> prepareArguments(MethodTestDescriptor methodTestDescriptor)
+	private List<Object> prepareArguments(TestExecutionContext testExecutionContext)
 			throws ArgumentResolutionException {
 
 		//todo: should probably not be instantiated here, maybe be brought along by the executionContext
 		MethodArgumentResolverEngine argumentResolver = new MethodArgumentResolverEngine();
-		return argumentResolver.prepareArguments(methodTestDescriptor);
+		return argumentResolver.prepareArguments(testExecutionContext);
 	}
 
 	private void executeBeforeMethods(Class<?> testClass, Object testInstance) throws Exception {
