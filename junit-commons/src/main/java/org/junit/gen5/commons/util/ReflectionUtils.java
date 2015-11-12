@@ -16,6 +16,7 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -67,13 +68,15 @@ public final class ReflectionUtils {
 		throw new IllegalStateException("Exception handling algorithm in ReflectionUtils is incomplete");
 	}
 
-	public static Object invokeMethod(Method method, Object target, Object... args) {
+	public static Object invokeMethod(Method method, Object target, Object... arguments)
+			throws IllegalAccessException, InvocationTargetException {
+
 		Preconditions.notNull(method, "method must not be null");
 		Preconditions.notNull(target, "target must not be null");
 
 		try {
 			makeAccessible(method);
-			return method.invoke(target, args);
+			return method.invoke(target, arguments);
 		}
 		catch (Exception ex) {
 			handleException(ex);

@@ -31,6 +31,8 @@ import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
+import org.junit.gen5.engine.junit5.execution.injection.sample.CustomType;
 import org.opentestalliance.TestSkippedException;
 
 /**
@@ -139,6 +141,25 @@ public class JUnit5TestEngineTests {
 		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
 		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
+	}
+
+	@org.junit.Test
+	public void executeTestsForMethodArgumentInjectionCases() {
+		TestPlanSpecification spec = build(forClassName(MethodParameterInjectionTestCase.class.getName()));
+
+		List<TestDescriptor> descriptors = discoverTests(spec);
+		Assert.assertEquals("# descriptors", 8, descriptors.size());
+
+		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
+
+		System.out.println("Descriptors: " + descriptors);
+		engine.execute(new EngineExecutionContext(descriptors, listener));
+
+		Assert.assertEquals("# tests started", 6, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 5, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
+		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
+		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
 	}
 
 	private TrackingTestExecutionListener executeTests(TestPlanSpecification spec, int expectedDescriptorCount) {
@@ -274,6 +295,47 @@ public class JUnit5TestEngineTests {
 		@Test
 		@Disabled
 		void disabledTest() {
+		}
+
+	}
+
+	private static class MethodParameterInjectionTestCase {
+
+		@Test
+		void argumentInjectionWithCompetingResolversMustNotBeExecuted(@CustomAnnotation CustomType customType) {
+			//should be skipped
+		}
+
+		@Test
+		void argumentInjectionByType(CustomType customType) {
+			assertTrue(customType != null);
+			System.out.println("customType = " + customType);
+		}
+
+		@Test
+		void argumentInjectionByAnnotation(@CustomAnnotation String value) {
+
+			assertTrue(value != null);
+			System.out.println("value = " + value);
+
+		}
+
+		//		some overloaded methods
+
+		@Test
+		void overloadedName() {
+			assertTrue(true);
+		}
+
+		@Test
+		void overloadedName(CustomType customType) {
+			assertTrue(customType != null);
+		}
+
+		@Test
+		void overloadedName(CustomType customType, @CustomAnnotation String value) {
+			assertTrue(customType != null);
+			assertTrue(value != null);
 		}
 
 	}
