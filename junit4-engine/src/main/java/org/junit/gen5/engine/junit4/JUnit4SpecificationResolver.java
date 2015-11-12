@@ -29,7 +29,6 @@ import org.junit.runner.Runner;
 class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
 
 	private final EngineDescriptor engineDescriptor;
-	private final Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
 
 	// TODO support more TestPlanSpecificationElements/visit methods
 
@@ -49,14 +48,17 @@ class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
 
 		// TODO This skips malformed JUnit 4 tests, too
 		if (!(runner instanceof ErrorReportingRunner)) {
-			addRecursively(new RunnerTestDescriptor(engineDescriptor, runner));
+			RunnerTestDescriptor testDescriptor = new RunnerTestDescriptor(runner);
+			engineDescriptor.addChild(testDescriptor);
+			addRecursively(testDescriptor);
 		}
 	}
 
 	private void addRecursively(JUnit4TestDescriptor parent) {
-		testDescriptors.add(parent);
 		for (Description child : parent.getDescription().getChildren()) {
-			addRecursively(new DescriptionTestDescriptor(parent, child));
+			DescriptionTestDescriptor testDescriptor = new DescriptionTestDescriptor(child);
+			parent.addChild(testDescriptor);
+			addRecursively(testDescriptor);
 		}
 	}
 }

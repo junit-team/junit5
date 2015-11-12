@@ -10,17 +10,15 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.TestPlanSpecificationVisitor;
 import org.junit.gen5.engine.junit5.testers.CanBeTestClass;
@@ -29,15 +27,13 @@ import org.junit.gen5.engine.junit5.testers.IsTestMethod;
 
 public class SpecificationResolver {
 
-	private final Set<TestDescriptor> testDescriptors;
 	private final EngineDescriptor engineDescriptor;
 
 	private final CanBeTestClass canBeTestClass = new CanBeTestClass();
 	private final IsTestMethod isTestMethod = new IsTestMethod();
 	private final IsTestClassWithTests isTestClassWithTests = new IsTestClassWithTests();
 
-	public SpecificationResolver(Set<TestDescriptor> testDescriptors, EngineDescriptor engineDescriptor) {
-		this.testDescriptors = testDescriptors;
+	public SpecificationResolver(EngineDescriptor engineDescriptor) {
 		this.engineDescriptor = engineDescriptor;
 	}
 
@@ -103,7 +99,6 @@ public class SpecificationResolver {
 
 		MethodTestDescriptor descriptor = getOrCreateMethodDescriptor(method, uniqueId);
 		parent.addChild(descriptor);
-		testDescriptors.add(descriptor);
 	}
 
 	private ClassTestDescriptor resolveClass(Class<?> clazz, String uniqueId, AbstractTestDescriptor parent,
@@ -130,30 +125,13 @@ public class SpecificationResolver {
 	}
 
 	private MethodTestDescriptor getOrCreateMethodDescriptor(Method method, String uniqueId) {
-		MethodTestDescriptor methodTestDescriptor = (MethodTestDescriptor) descriptorByUniqueId(uniqueId);
-		if (methodTestDescriptor == null) {
-			methodTestDescriptor = new MethodTestDescriptor(uniqueId, method);
-			testDescriptors.add(methodTestDescriptor);
-		}
-		return methodTestDescriptor;
+		return (MethodTestDescriptor) engineDescriptor.findByUniqueId(uniqueId).orElse(
+			new MethodTestDescriptor(uniqueId, method));
 	}
 
 	private ClassTestDescriptor getOrCreateClassDescriptor(Class<?> clazz, String uniqueId) {
-		ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptorByUniqueId(uniqueId);
-		if (classTestDescriptor == null) {
-			classTestDescriptor = new ClassTestDescriptor(uniqueId, clazz);
-			testDescriptors.add(classTestDescriptor);
-		}
-		return classTestDescriptor;
-	}
-
-	private TestDescriptor descriptorByUniqueId(String uniqueId) {
-		for (TestDescriptor descriptor : testDescriptors) {
-			if (descriptor.getUniqueId().equals(uniqueId)) {
-				return descriptor;
-			}
-		}
-		return null;
+		return (ClassTestDescriptor) engineDescriptor.findByUniqueId(uniqueId).orElse(
+			new ClassTestDescriptor(uniqueId, clazz));
 	}
 
 	private static void throwCannotResolveMethodException(Method method) {

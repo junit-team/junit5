@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EngineDescriptor extends AbstractTestDescriptor {
 
 	private final TestEngine engine;
@@ -27,6 +30,14 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 	@Override
 	public final boolean isTest() {
 		return false;
+	}
+
+	public TestEngine getEngine() {
+		return engine;
+	}
+
+	public long getNumberOfStaticTests() {
+		return allChildren().stream().filter(TestDescriptor::isTest).count();
 	}
 
 }

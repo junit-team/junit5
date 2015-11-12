@@ -27,9 +27,9 @@ import org.junit.gen5.engine.TestTag;
  * @author Sam Brannen
  * @since 5.0
  */
-public abstract class AbstractJUnit5TestDescriptor extends AbstractTestDescriptor {
+public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 
-	protected AbstractJUnit5TestDescriptor(String uniqueId) {
+	protected JUnit5TestDescriptor(String uniqueId) {
 		super(uniqueId);
 	}
 

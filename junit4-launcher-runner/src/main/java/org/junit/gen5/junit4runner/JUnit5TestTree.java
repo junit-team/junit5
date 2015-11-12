@@ -30,10 +30,6 @@ class JUnit5TestTree {
 		return suiteDescription;
 	}
 
-	Description addDescriptionFor(TestDescriptor descriptor) {
-		return addDescriptionFor(descriptor, suiteDescription);
-	}
-
 	Description getDescription(TestDescriptor testDescriptor) {
 		return descriptions.get(testDescriptor);
 	}
@@ -45,29 +41,20 @@ class JUnit5TestTree {
 	}
 
 	private void buildDescriptionTree(Description suiteDescription, TestPlan plan) {
-		for (TestDescriptor descriptor : plan.getTestDescriptors()) {
-			addDescriptionFor(descriptor, suiteDescription);
-		}
+		plan.getEngineDescriptors().stream().forEach(
+			testDescriptor -> buildDescription(testDescriptor, suiteDescription));
 	}
 
-	private Description addDescriptionFor(TestDescriptor descriptor, Description root) {
-		if (descriptions.containsKey(descriptor))
-			return descriptions.get(descriptor);
+	private void buildDescription(TestDescriptor descriptor, Description parent) {
 		Description newDescription = createJUnit4Description(descriptor);
+		parent.addChild(newDescription);
 		descriptions.put(descriptor, newDescription);
-		if (descriptor.getParent() == null) {
-			root.addChild(newDescription);
-		}
-		else {
-			Description parent = addDescriptionFor(descriptor.getParent(), root);
-			parent.addChild(newDescription);
-		}
-		return newDescription;
+		descriptor.getChildren().stream().forEach(testDescriptor -> buildDescription(testDescriptor, newDescription));
 	}
 
 	private Description createJUnit4Description(TestDescriptor testDescriptor) {
 		if (testDescriptor.isTest()) {
-			return Description.createTestDescription(testDescriptor.getParent().getDisplayName(),
+			return Description.createTestDescription(testDescriptor.getParent().get().getDisplayName(),
 				testDescriptor.getDisplayName(), testDescriptor.getUniqueId());
 		}
 		else {
