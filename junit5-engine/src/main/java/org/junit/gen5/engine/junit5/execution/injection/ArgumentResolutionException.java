@@ -12,8 +12,16 @@ package org.junit.gen5.engine.junit5.execution.injection;
 
 public class ArgumentResolutionException extends Exception {
 
+	public ArgumentResolutionException(String message) {
+		super(message);
+	}
+
 	public ArgumentResolutionException(String message, Throwable cause) {
 		super(message, cause);
+	}
+
+	public ArgumentResolutionException(Throwable cause) {
+		super(cause);
 	}
 
 }

@@ -29,18 +29,11 @@ public class MethodArgumentResolverEngine {
 	 * @throws ArgumentResolutionException
 	 */
 	public List<Object> prepareArguments(MethodTestDescriptor methodTestDescriptor) throws ArgumentResolutionException {
-
-		try {
-			return this.doPrepareArguments(methodTestDescriptor);
-		}
-		catch (Exception cause) {
-			throw new ArgumentResolutionException("problem with argument resolution", cause);
-		}
-
+		return this.doPrepareArguments(methodTestDescriptor);
 	}
 
 	private List<Object> doPrepareArguments(MethodTestDescriptor methodTestDescriptor)
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+			throws ArgumentResolutionException {
 		Method testMethod = methodTestDescriptor.getTestMethod();
 
 		List<Object> arguments = new ArrayList<>();
@@ -56,16 +49,20 @@ public class MethodArgumentResolverEngine {
 		return arguments;
 	}
 
-	private Object resolveArgumentForMethodParameter(Parameter parameter)
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+	private Object resolveArgumentForMethodParameter(Parameter parameter) throws ArgumentResolutionException {
 
-		//todo: throw exception as well when there are more than 1 resolver for a given parameter
-		for (MethodArgumentResolver argumentResolver : this.resolverRegistry.getMethodArgumentResolvers()) {
-			if (argumentResolver.supports(parameter))
-				return argumentResolver.resolveArgumentForMethodParameter(parameter);
+		try {
+			//todo: throw exception as well when there are more than 1 resolver for a given parameter
+			for (MethodArgumentResolver argumentResolver : this.resolverRegistry.getMethodArgumentResolvers()) {
+				if (argumentResolver.supports(parameter))
+					return argumentResolver.resolveArgumentForMethodParameter(parameter);
+			}
+		}
+		catch (Exception expection) {
+			throw new ArgumentResolutionException(expection);
 		}
 
-		throw new IllegalStateException("Error: no resolver found for parameter " + parameter);
+		throw new ArgumentResolutionException("Error: no resolver found for parameter " + parameter);
 	}
 
 }
