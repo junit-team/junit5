@@ -10,27 +10,26 @@
 
 package org.junit.gen5.engine.junit5.execution.injection;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Parameter;
 
-import org.junit.gen5.commons.util.*;
+import org.junit.gen5.commons.util.AnnotationUtils;
+import org.junit.gen5.commons.util.ReflectionUtils;
 
-// for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
-public class SimpleAnnotationBasedMethodArgumentResolver implements MethodArgumentResolver {
+/**
+ * @since 5.0
+ */
+class SimpleAnnotationBasedMethodArgumentResolver implements MethodArgumentResolver {
 
-	private final String annotationName = "org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation";
+	private static final String ANNOTATION_NAME = "org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation";
 
 	@Override
 	public boolean supports(Parameter parameter) {
-		Optional<Class<Annotation>> classOptional = ReflectionUtils.loadClass(annotationName, Annotation.class);
-		if (!classOptional.isPresent())
-			return false;
-
-		Class<Annotation> annotationClass = classOptional.get();
-		List<Annotation> annotations = AnnotationUtils.findRepeatableAnnotations(parameter, annotationClass);
-
-		return !annotations.isEmpty();
+		// @formatter:off
+		return ReflectionUtils.loadClass(ANNOTATION_NAME, Annotation.class)
+				.map(clazz -> AnnotationUtils.findAnnotation(parameter, clazz).isPresent())
+				.orElse(false);
+		// @formatter:on
 	}
 
 }

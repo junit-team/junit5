@@ -10,7 +10,12 @@
 
 package org.junit.gen5.engine.junit5.execution.injection;
 
-public class ArgumentResolutionException extends Exception {
+/**
+ * @since 5.0
+ */
+public class ArgumentResolutionException extends RuntimeException {
+
+	private static final long serialVersionUID = 5137237798019406636L;
 
 	public ArgumentResolutionException(String message) {
 		super(message);

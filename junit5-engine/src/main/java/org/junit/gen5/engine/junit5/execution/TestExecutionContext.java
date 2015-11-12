@@ -14,6 +14,9 @@ import lombok.Value;
 
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 
+/**
+ * @since 5.0
+ */
 @Value
 public class TestExecutionContext {
 

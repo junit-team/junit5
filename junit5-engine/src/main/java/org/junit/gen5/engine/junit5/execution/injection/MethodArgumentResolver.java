@@ -10,23 +10,22 @@
 
 package org.junit.gen5.engine.junit5.execution.injection;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Parameter;
 
-import org.junit.gen5.commons.util.*;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.execution.TestExecutionContext;
 
-// for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
+/**
+ * @since 5.0
+ */
 public interface MethodArgumentResolver {
 
+	// TODO Introduce custom MethodParameter type.
 	boolean supports(Parameter parameter);
 
-	default public Object resolveArgumentForMethodParameter(Parameter parameter,
-			TestExecutionContext testExecutionContext) throws NoSuchMethodException, InstantiationException,
-					IllegalAccessException, InvocationTargetException {
-		Class<?> parameterType = parameter.getType();
-
-		return ReflectionUtils.newInstance(parameterType);
-
+	// TODO Introduce custom MethodParameter type.
+	default Object resolveArgument(Parameter parameter, TestExecutionContext testExecutionContext) {
+		return ReflectionUtils.newInstance(parameter.getType());
 	}
 
 }

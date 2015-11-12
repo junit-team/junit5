@@ -113,12 +113,10 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		ReflectionUtils.invokeMethod(testMethod, testInstance, arguments.toArray());
 	}
 
-	private List<Object> prepareArguments(TestExecutionContext testExecutionContext)
-			throws ArgumentResolutionException {
-
-		//todo: should probably not be instantiated here, maybe be brought along by the executionContext
-		MethodArgumentResolverEngine argumentResolver = new MethodArgumentResolverEngine();
-		return argumentResolver.prepareArguments(testExecutionContext);
+	private List<Object> prepareArguments(TestExecutionContext testExecutionContext) {
+		// TODO Do not instantiate MethodArgumentResolverEngine locally; consider
+		// supplying via the executionContext.
+		return new MethodArgumentResolverEngine().prepareArguments(testExecutionContext);
 	}
 
 	private void executeBeforeMethods(Class<?> testClass, Object testInstance) throws Exception {

@@ -10,9 +10,13 @@
 
 package org.junit.gen5.engine.junit5.execution.injection;
 
-import java.util.*;
+import java.util.List;
 
-public interface MethodArgumentResolverRegistry {
+/**
+ * @since 5.0
+ */
+interface MethodArgumentResolverRegistry {
 
 	List<MethodArgumentResolver> getMethodArgumentResolvers();
+
 }

@@ -10,18 +10,23 @@
 
 package org.junit.gen5.engine.junit5.execution.injection;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.gen5.engine.junit5.descriptor.*;
 import org.junit.gen5.engine.junit5.execution.TestExecutionContext;
 
-// for a 'real' solution see: org.springframework.web.method.support.HandlerMethodArgumentResolver
+/**
+ * @author Sam Brannen
+ * @since 5.0
+ */
 public class MethodArgumentResolverEngine {
 
-	//todo: when introducing the extension mechanism this instance will have to come from outside
-	MethodArgumentResolverRegistry resolverRegistry = new PrimitiveMethodArgumentResolverRegistry();
+	// TODO When introducing the extension mechanism this instance will have to come from
+	// outside
+	private final MethodArgumentResolverRegistry resolverRegistry = new PrimitiveMethodArgumentResolverRegistry();
 
 	/**
 	 * prepare a list of objects as arguments for the execution of this test method
@@ -36,6 +41,7 @@ public class MethodArgumentResolverEngine {
 
 	private List<Object> doPrepareArguments(TestExecutionContext testExecutionContext)
 			throws ArgumentResolutionException {
+
 		Method testMethod = testExecutionContext.getDescriptor().getTestMethod();
 
 		List<Object> arguments = new ArrayList<>();
@@ -55,19 +61,25 @@ public class MethodArgumentResolverEngine {
 			throws ArgumentResolutionException {
 
 		try {
+			// @formatter:off
+			List<MethodArgumentResolver> matchingResolvers = this.resolverRegistry.getMethodArgumentResolvers().stream()
+					.filter(resolver -> resolver.supports(parameter))
+					.collect(Collectors.toList());
+			// @formatter:oN
 
-			List<MethodArgumentResolver> matchingResolvers = this.resolverRegistry.getMethodArgumentResolvers().stream().filter(
-				argumentResolver -> argumentResolver.supports(parameter)).collect(Collectors.toList());
 			if (matchingResolvers.size() > 1) {
 				throw new ArgumentResolutionException("Too many resolvers found for parameter: " + parameter);
 			}
 			if (matchingResolvers.size() == 0) {
 				throw new ArgumentResolutionException("No resolver found for parameter: " + parameter);
 			}
-			return matchingResolvers.get(0).resolveArgumentForMethodParameter(parameter, testExecutionContext);
+			return matchingResolvers.get(0).resolveArgument(parameter, testExecutionContext);
 		}
-		catch (Exception cause) {
-			throw new ArgumentResolutionException(cause);
+		catch (Exception ex) {
+			if (ex instanceof ArgumentResolutionException) {
+				throw (ArgumentResolutionException) ex;
+			}
+			throw new ArgumentResolutionException(ex);
 		}
 	}
 

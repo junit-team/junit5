@@ -10,26 +10,25 @@
 
 package org.junit.gen5.engine.junit5.execution.injection;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
-import java.util.Optional;
 
 import org.junit.gen5.api.TestName;
 import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.engine.junit5.execution.TestExecutionContext;
 
+/**
+ * @since 5.0
+ */
 public class TestNameArgumentResolver implements MethodArgumentResolver {
 
 	@Override
 	public boolean supports(Parameter parameter) {
-		Optional<TestName> annotation = AnnotationUtils.findAnnotation(parameter, TestName.class);
-
-		return annotation.isPresent() && parameter.getType().equals(String.class);
+		return parameter.getType().equals(String.class)
+				&& AnnotationUtils.findAnnotation(parameter, TestName.class).isPresent();
 	}
 
 	@Override
-	public Object resolveArgumentForMethodParameter(Parameter parameter, TestExecutionContext testExecutionContext)
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+	public Object resolveArgument(Parameter parameter, TestExecutionContext testExecutionContext) {
 		return testExecutionContext.getDescriptor().getDisplayName();
 	}
 
