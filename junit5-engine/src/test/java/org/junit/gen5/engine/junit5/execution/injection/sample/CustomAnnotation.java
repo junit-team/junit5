@@ -10,11 +10,12 @@
 
 package org.junit.gen5.engine.junit5.execution.injection.sample;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@Target({ ElementType.PARAMETER })
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-@Documented
 public @interface CustomAnnotation {
-
 }
