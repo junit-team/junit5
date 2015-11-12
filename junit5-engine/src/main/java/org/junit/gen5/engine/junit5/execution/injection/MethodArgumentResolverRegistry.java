@@ -8,20 +8,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.junit5.execution.injection;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-import lombok.Value;
+/**
+ * @since 5.0
+ */
+interface MethodArgumentResolverRegistry {
 
-@Value
-public class EngineExecutionContext {
-
-	private EngineDescriptor engineDescriptor;
-
-	private TestExecutionListener testExecutionListener;
-
-	private Map<String, Object> attributes = new HashMap<>();
+	List<MethodArgumentResolver> getMethodArgumentResolvers();
 
 }

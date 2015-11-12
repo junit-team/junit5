@@ -10,7 +10,7 @@
 
 package org.junit.gen5.commons.util;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;

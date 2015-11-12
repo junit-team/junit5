@@ -8,20 +8,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.junit5.execution.injection.sample;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import lombok.Value;
+public class CustomType {
 
-@Value
-public class EngineExecutionContext {
+	private Date date = new Date();
 
-	private EngineDescriptor engineDescriptor;
-
-	private TestExecutionListener testExecutionListener;
-
-	private Map<String, Object> attributes = new HashMap<>();
+	@Override
+	public String toString() {
+		return "CustomType: " + this.date;
+	}
 
 }

@@ -84,6 +84,13 @@ class SampleTestCase {
 		// no-op
 	}
 
+	// todo: enable as soon as resolvable types are available in sample project
+	//	@Test
+	//	void argumentInjectionTest(CustomType customType, @CustomAnnotation String value) {
+	//		assertTrue(customType != null);
+	//		assertTrue(value != null);
+	//	}
+
 	@Test
 	@Name("with succeeding assertAll")
 	void assertAllTest() {

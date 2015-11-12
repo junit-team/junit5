@@ -15,7 +15,6 @@ import static org.junit.gen5.commons.util.ReflectionUtils.*;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
@@ -30,7 +29,6 @@ import org.junit.gen5.engine.junit5.testers.IsTestMethod;
 
 public class SpecificationResolver {
 
-	private final Set<TestDescriptor> testDescriptors;
 	private final EngineDescriptor engineDescriptor;
 
 	private final CanBeTestClass canBeTestClass = new CanBeTestClass();
@@ -38,8 +36,7 @@ public class SpecificationResolver {
 	private final IsTestMethod isTestMethod = new IsTestMethod();
 	private final IsTestClassWithTests isTestClassWithTests = new IsTestClassWithTests();
 
-	public SpecificationResolver(Set<TestDescriptor> testDescriptors, EngineDescriptor engineDescriptor) {
-		this.testDescriptors = testDescriptors;
+	public SpecificationResolver(EngineDescriptor engineDescriptor) {
 		this.engineDescriptor = engineDescriptor;
 	}
 
@@ -110,7 +107,6 @@ public class SpecificationResolver {
 		AbstractTestDescriptor newParentDescriptor = resolveAndReturnParentTestable(parentTestable);
 		MethodTestDescriptor descriptor = getOrCreateMethodDescriptor(method, uniqueId);
 		newParentDescriptor.addChild(descriptor);
-		testDescriptors.add(descriptor);
 	}
 
 	private void resolveClassTestable(Class<?> testClass, String uniqueId, AbstractTestDescriptor parentDescriptor,
@@ -122,7 +118,6 @@ public class SpecificationResolver {
 			resolveContainedContexts(testClass);
 			resolveContainedTestMethods(testClass, descriptor);
 		}
-		testDescriptors.add(descriptor);
 	}
 
 	private void resolveContextTestable(String uniqueId, Class<?> testClass, Class<?> containerClass,
@@ -136,7 +131,6 @@ public class SpecificationResolver {
 			resolveContainedContexts(testClass);
 			resolveContainedTestMethods(testClass, descriptor);
 		}
-		testDescriptors.add(descriptor);
 	}
 
 	private AbstractTestDescriptor resolveAndReturnParentTestable(JUnit5Testable containerTestable) {
@@ -145,7 +139,8 @@ public class SpecificationResolver {
 	}
 
 	private void resolveContainedTestMethods(Class<?> testClass, AbstractTestDescriptor parentDescriptor) {
-		List<Method> testMethodCandidates = findMethods(testClass, isTestMethod, MethodSortOrder.HierarchyDown);
+		List<Method> testMethodCandidates = findMethods(testClass, isTestMethod,
+			ReflectionUtils.MethodSortOrder.HierarchyDown);
 		for (Method method : testMethodCandidates) {
 			JUnit5Testable methodTestable = JUnit5Testable.fromMethod(method, testClass,
 				engineDescriptor.getUniqueId());
@@ -166,7 +161,6 @@ public class SpecificationResolver {
 		MethodTestDescriptor methodTestDescriptor = (MethodTestDescriptor) descriptorByUniqueId(uniqueId);
 		if (methodTestDescriptor == null) {
 			methodTestDescriptor = new MethodTestDescriptor(uniqueId, method);
-			testDescriptors.add(methodTestDescriptor);
 		}
 		return methodTestDescriptor;
 	}
@@ -175,7 +169,6 @@ public class SpecificationResolver {
 		ContextTestDescriptor contextTestDescriptor = (ContextTestDescriptor) descriptorByUniqueId(uniqueId);
 		if (contextTestDescriptor == null) {
 			contextTestDescriptor = new ContextTestDescriptor(uniqueId, clazz);
-			testDescriptors.add(contextTestDescriptor);
 		}
 		return contextTestDescriptor;
 	}
@@ -184,13 +177,14 @@ public class SpecificationResolver {
 		ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptorByUniqueId(uniqueId);
 		if (classTestDescriptor == null) {
 			classTestDescriptor = new ClassTestDescriptor(uniqueId, clazz);
-			testDescriptors.add(classTestDescriptor);
 		}
 		return classTestDescriptor;
 	}
 
 	private AbstractTestDescriptor descriptorByUniqueId(String uniqueId) {
-		for (TestDescriptor descriptor : testDescriptors) {
+
+		//Todo: move byUniqueId to AbstractTestDescriptor
+		for (TestDescriptor descriptor : engineDescriptor.allChildren()) {
 			if (descriptor.getUniqueId().equals(uniqueId)) {
 				return (AbstractTestDescriptor) descriptor;
 			}

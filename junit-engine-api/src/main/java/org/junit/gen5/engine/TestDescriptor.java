@@ -29,11 +29,41 @@ public interface TestDescriptor {
 
 	String getDisplayName();
 
-	TestDescriptor getParent();
+	Optional<TestDescriptor> getParent();
 
 	boolean isTest();
 
+	default boolean isRoot() {
+		return getParent() == null;
+	}
+
 	Set<TestTag> getTags();
+
+	void addChild(TestDescriptor descriptor);
+
+	void removeChild(TestDescriptor descriptor);
+
+	Set<TestDescriptor> getChildren();
+
+	default boolean hasTests() {
+		if (isTest())
+			return true;
+		return getChildren().stream().anyMatch(anyDescriptor -> anyDescriptor.hasTests());
+	}
+
+	default Optional<TestDescriptor> findByUniqueId(String uniqueId) {
+		if (getUniqueId().equals(uniqueId))
+			return Optional.of(this);
+		return getChildren().stream().filter(
+			testDescriptor -> testDescriptor.getUniqueId().equals(uniqueId)).findFirst();
+	}
+
+	interface Visitor {
+
+		void visit(TestDescriptor descriptor, Runnable remove);
+	}
+
+	void accept(Visitor visitor);
 
 	Optional<TestSource> getSource();
 }

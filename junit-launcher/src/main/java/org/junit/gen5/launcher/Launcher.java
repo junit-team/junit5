@@ -12,11 +12,7 @@ package org.junit.gen5.launcher;
 
 import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
@@ -42,35 +38,12 @@ public class Launcher {
 		TestPlan testPlan = new TestPlan();
 		for (TestEngine testEngine : lookupAllTestEngines()) {
 			EngineDescriptor engineDescriptor = new EngineDescriptor(testEngine);
-			Collection<TestDescriptor> testDescriptors = testEngine.discoverTests(specification, engineDescriptor);
-			if (!testDescriptors.isEmpty()) {
-				Set<TestDescriptor> descriptorCandidates = findFilteredCandidates(specification, testDescriptors);
-				descriptorCandidates.add(engineDescriptor);
-				Set<TestDescriptor> prunedDescriptors = pruneAllWithoutConcreteTests(descriptorCandidates);
-				testPlan.addTestDescriptors(prunedDescriptors);
-			}
+			testEngine.discoverTests(specification, engineDescriptor);
+			testPlan.addEngineDescriptor(engineDescriptor);
 		}
+		testPlan.applyFilters(specification);
+		testPlan.prune();
 		return testPlan;
-	}
-
-	protected Set<TestDescriptor> findFilteredCandidates(TestPlanSpecification specification,
-			Collection<TestDescriptor> testDescriptors) {
-		// @formatter:off
-		return testDescriptors.stream()
-				.filter((descriptor) -> !descriptor.isTest() || specification.acceptDescriptor(descriptor))
-				.collect(Collectors.toSet());
-		// @formatter:on
-	}
-
-	private Set<TestDescriptor> pruneAllWithoutConcreteTests(Set<TestDescriptor> descriptorCandidates) {
-		//Todo: pruning only works if descriptor candidates come in the right order, i.e. parents come before their children
-		Set<TestDescriptor> included = new HashSet<>();
-		descriptorCandidates.stream().filter(
-			descriptor -> descriptor.isTest() || included.contains(descriptor)).forEach(descriptor -> {
-				included.add(descriptor);
-				included.add(descriptor.getParent());
-			});
-		return included;
 	}
 
 	public void execute(TestPlanSpecification specification) {
@@ -84,8 +57,8 @@ public class Launcher {
 		testPlanExecutionListener.testPlanExecutionStarted(testPlan);
 		for (TestEngine testEngine : lookupAllTestEngines()) {
 			testPlanExecutionListener.testPlanExecutionStartedOnEngine(testPlan, testEngine);
-			List<TestDescriptor> testDescriptors = testPlan.getAllTestDescriptorsForTestEngine(testEngine);
-			testEngine.execute(new EngineExecutionContext(testDescriptors, testExecutionListener));
+			Optional<EngineDescriptor> engineDescriptor = testPlan.getEngineDescriptorFor(testEngine);
+			testEngine.execute(new EngineExecutionContext(engineDescriptor.get(), testExecutionListener));
 			testPlanExecutionListener.testPlanExecutionFinishedOnEngine(testPlan, testEngine);
 		}
 		testPlanExecutionListener.testPlanExecutionFinished(testPlan);

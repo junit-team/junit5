@@ -15,7 +15,7 @@ import java.util.Set;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestTag;
 
-public class ContextTestDescriptor extends AbstractJUnit5TestDescriptor {
+public class ContextTestDescriptor extends JUnit5TestDescriptor {
 
 	private final String displayName;
 	private final Class<?> contextClass;
@@ -34,6 +34,7 @@ public class ContextTestDescriptor extends AbstractJUnit5TestDescriptor {
 		return contextClass;
 	}
 
+	@Override
 	public String getDisplayName() {
 		return displayName;
 	}

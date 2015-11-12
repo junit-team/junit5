@@ -8,20 +8,18 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
-
-import java.util.HashMap;
-import java.util.Map;
+package org.junit.gen5.engine.junit5.execution;
 
 import lombok.Value;
 
+import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
+
+/**
+ * @since 5.0
+ */
 @Value
-public class EngineExecutionContext {
+public class TestExecutionContext {
 
-	private EngineDescriptor engineDescriptor;
-
-	private TestExecutionListener testExecutionListener;
-
-	private Map<String, Object> attributes = new HashMap<>();
+	private MethodTestDescriptor descriptor;
 
 }

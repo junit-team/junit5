@@ -16,15 +16,25 @@ import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 
-@Value
-class RunnerTestDescriptor implements JUnit4TestDescriptor {
+class RunnerTestDescriptor extends JUnit4TestDescriptor {
 
-	EngineDescriptor parent;
-	Runner runner;
+	final Runner runner;
+
+	Description description;
+
+	RunnerTestDescriptor(Runner runner) {
+		// TODO Use unique ID if set, too
+		super(ENGINE_ID + ":" + runner.getDescription().getDisplayName());
+		this.runner = runner;
+		this.description = runner.getDescription();
+	}
 
 	@Override
 	public Description getDescription() {
-		return runner.getDescription();
+		return description;
 	}
 
+	public Runner getRunner() {
+		return runner;
+	}
 }

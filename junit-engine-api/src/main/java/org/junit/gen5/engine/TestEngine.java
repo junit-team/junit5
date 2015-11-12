@@ -10,19 +10,13 @@
 
 package org.junit.gen5.engine;
 
-import java.util.Collection;
-
 public interface TestEngine {
 
 	default String getId() {
 		return getClass().getCanonicalName();
 	}
 
-	Collection<TestDescriptor> discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor);
-
-	default boolean supports(TestDescriptor testDescriptor) {
-		return testDescriptor.getUniqueId().startsWith(getId());
-	}
+	void discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor);
 
 	void execute(EngineExecutionContext context);
 }

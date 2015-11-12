@@ -10,9 +10,11 @@
 
 package org.junit.gen5.engine.junit5.stubs;
 
-import java.util.Collection;
-
-import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.EngineDescriptor;
+import org.junit.gen5.engine.EngineExecutionContext;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
  * @author Stefan Bechtold
@@ -28,14 +30,7 @@ public class TestEngineStub implements TestEngine {
 	}
 
 	@Override
-	public Collection<TestDescriptor> discoverTests(TestPlanSpecification specification,
-			EngineDescriptor engineDescriptor) {
-		return null;
-	}
-
-	@Override
-	public boolean supports(TestDescriptor testDescriptor) {
-		return false;
+	public void discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
 	}
 
 	@Override

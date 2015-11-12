@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit4;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -37,22 +38,19 @@ public class JUnit4TestEngine implements TestEngine {
 	}
 
 	@Override
-	public Collection<TestDescriptor> discoverTests(TestPlanSpecification specification,
-			EngineDescriptor engineDescriptor) {
+	public void discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
 		JUnit4SpecificationResolver resolver = new JUnit4SpecificationResolver(engineDescriptor);
 		specification.accept(resolver);
-		return resolver.getTestDescriptors();
-	}
-
-	@Override
-	public boolean supports(TestDescriptor testDescriptor) {
-		return testDescriptor instanceof JUnit4TestDescriptor;
 	}
 
 	@Override
 	public void execute(EngineExecutionContext context) {
+
+		//Todo: Use capabilities of engine node to build up tree or to visit nodes
+		List<TestDescriptor> originalTestDescriptors = new ArrayList<>(context.getEngineDescriptor().allChildren());
+
 		//@formatter:off
-		Map<RunnerTestDescriptor, List<DescriptionTestDescriptor>> groupedByRunner = context.getTestDescriptors().stream()
+		Map<RunnerTestDescriptor, List<DescriptionTestDescriptor>> groupedByRunner = originalTestDescriptors.stream()
 			.filter(testDescriptor -> (testDescriptor instanceof DescriptionTestDescriptor))
 			.map(testDescriptor -> (DescriptionTestDescriptor) testDescriptor)
 			.collect(groupingBy(testDescriptor -> findRunnerTestDescriptor(testDescriptor)));
@@ -93,7 +91,7 @@ public class JUnit4TestEngine implements TestEngine {
 			return (RunnerTestDescriptor) testDescriptor;
 		}
 		if (testDescriptor instanceof DescriptionTestDescriptor) {
-			return findRunnerTestDescriptor(((DescriptionTestDescriptor) testDescriptor).getParent());
+			return findRunnerTestDescriptor((JUnit4TestDescriptor) testDescriptor.getParent().get());
 		}
 		throw new IllegalStateException("Cannot handle testDescriptor of class " + testDescriptor.getClass().getName());
 	}

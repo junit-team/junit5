@@ -11,14 +11,14 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.api.Assumptions.*;
+import static org.junit.gen5.api.Assumptions.assumeTrue;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.gen5.api.After;
@@ -26,11 +26,15 @@ import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Disabled;
+import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.api.TestName;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
+import org.junit.gen5.engine.junit5.execution.injection.sample.CustomType;
 import org.opentestalliance.TestSkippedException;
 
 /**
@@ -48,12 +52,13 @@ public class JUnit5TestEngineTests {
 		engine = new JUnit5TestEngine();
 	}
 
+	@org.junit.Test
 	public void executeCompositeTestPlanSpecification() {
 		TestPlanSpecification spec = build(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
 			forClassName(LocalTestCase.class.getName()));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 10);
+		TrackingTestExecutionListener listener = executeTests(spec, 9);
 
 		Assert.assertEquals("# tests started", 8, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 4, listener.testSucceededCount.get());
@@ -66,7 +71,7 @@ public class JUnit5TestEngineTests {
 	public void executeTestsForClassName() {
 		TestPlanSpecification spec = build(forClassName(LocalTestCase.class.getName()));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 10);
+		TrackingTestExecutionListener listener = executeTests(spec, 9);
 
 		Assert.assertEquals("# tests started", 8, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 4, listener.testSucceededCount.get());
@@ -79,13 +84,14 @@ public class JUnit5TestEngineTests {
 	public void executeTestsWithDisabledTestClass() {
 		TestPlanSpecification spec = build(forClassName(DisabledTestClassTestCase.class.getName()));
 
-		List<TestDescriptor> descriptors = discoverTests(spec);
+		EngineDescriptor engineDescriptor = discoverTests(spec);
+		Set<TestDescriptor> descriptors = engineDescriptor.allChildren();
 		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# descriptors", 3, descriptors.size());
+		Assert.assertEquals("# descriptors", 2, descriptors.size());
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		engine.execute(new EngineExecutionContext(descriptors, listener));
+		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
 
 		Assert.assertEquals("# tests started", 0, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());
@@ -98,13 +104,14 @@ public class JUnit5TestEngineTests {
 	public void executeTestsWithDisabledTestMethod() {
 		TestPlanSpecification spec = build(forClassName(DisabledTestMethodTestCase.class.getName()));
 
-		List<TestDescriptor> descriptors = discoverTests(spec);
+		EngineDescriptor engineDescriptor = discoverTests(spec);
+		Set<TestDescriptor> descriptors = engineDescriptor.allChildren();
 		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# descriptors", 4, descriptors.size());
+		Assert.assertEquals("# descriptors", 3, descriptors.size());
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		engine.execute(new EngineExecutionContext(descriptors, listener));
+		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
@@ -118,7 +125,7 @@ public class JUnit5TestEngineTests {
 		TestPlanSpecification spec = build(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 3);
+		TrackingTestExecutionListener listener = executeTests(spec, 2);
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
@@ -132,7 +139,7 @@ public class JUnit5TestEngineTests {
 		TestPlanSpecification spec = build(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#throwExceptionInAfterMethod()"));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 3);
+		TrackingTestExecutionListener listener = executeTests(spec, 2);
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());
@@ -141,15 +148,32 @@ public class JUnit5TestEngineTests {
 		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
 	}
 
-	private TrackingTestExecutionListener executeTests(TestPlanSpecification spec, int expectedDescriptorCount) {
-		List<TestDescriptor> descriptors = discoverTests(spec);
-		Assert.assertNotNull(descriptors);
-		Assert.assertEquals("# descriptors", expectedDescriptorCount, descriptors.size());
+	@org.junit.Test
+	public void executeTestsForMethodArgumentInjectionCases() {
+		TestPlanSpecification spec = build(forClassName(MethodParameterInjectionTestCase.class.getName()));
+
+		EngineDescriptor engineDescriptor = discoverTests(spec);
+		Assert.assertEquals("# descriptors", 9, engineDescriptor.allChildren().size());
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		System.out.println("Descriptors: " + descriptors);
-		engine.execute(new EngineExecutionContext(descriptors, listener));
+		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
+
+		Assert.assertEquals("# tests started", 8, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 7, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
+		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
+		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+	}
+
+	private TrackingTestExecutionListener executeTests(TestPlanSpecification spec, int expectedDescriptorCount) {
+		EngineDescriptor engineDescriptor = discoverTests(spec);
+		Assert.assertEquals("# descriptors", expectedDescriptorCount, engineDescriptor.allChildren().size());
+
+		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
+
+		// System.out.println("Descriptors: " + engineDescriptor.allChildren());
+		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
 
 		Assert.assertTrue("@BeforeAll was not invoked", LocalTestCase.beforeAllInvoked);
 		Assert.assertTrue("@AfterAll was not invoked", LocalTestCase.afterAllInvoked);
@@ -157,13 +181,10 @@ public class JUnit5TestEngineTests {
 		return listener;
 	}
 
-	private List<TestDescriptor> discoverTests(TestPlanSpecification spec) {
-		// For some reason the JUnit5Engine only works correctly if the engine descriptor
-		// is in the list of descriptors
+	private EngineDescriptor discoverTests(TestPlanSpecification spec) {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(engine);
-		List<TestDescriptor> descriptors = engine.discoverTests(spec, engineDescriptor);
-		descriptors.add(engineDescriptor);
-		return descriptors;
+		engine.discoverTests(spec, engineDescriptor);
+		return engineDescriptor;
 	}
 
 	private static abstract class AbstractTestCase {
@@ -274,6 +295,54 @@ public class JUnit5TestEngineTests {
 		@Test
 		@Disabled
 		void disabledTest() {
+		}
+
+	}
+
+	private static class MethodParameterInjectionTestCase {
+
+		@Test
+		void argumentInjectionOfStandardTestName(@TestName String name) {
+			assertEquals("argumentInjectionOfStandardTestName", name);
+		}
+
+		@Test
+		@Name("myName")
+		void argumentInjectionOfUserProvidedTestName(@TestName String name) {
+			assertEquals("myName", name);
+		}
+
+		@Test
+		void argumentInjectionWithCompetingResolversMustNotBeExecuted(@CustomAnnotation CustomType customType) {
+			//should be skipped
+		}
+
+		@Test
+		void argumentInjectionByType(CustomType customType) {
+			assertTrue(customType != null);
+		}
+
+		@Test
+		void argumentInjectionByAnnotation(@CustomAnnotation String value) {
+			assertTrue(value != null);
+		}
+
+		// some overloaded methods
+
+		@Test
+		void overloadedName() {
+			assertTrue(true);
+		}
+
+		@Test
+		void overloadedName(CustomType customType) {
+			assertTrue(customType != null);
+		}
+
+		@Test
+		void overloadedName(CustomType customType, @CustomAnnotation String value) {
+			assertTrue(customType != null);
+			assertTrue(value != null);
 		}
 
 	}

@@ -24,7 +24,7 @@ import org.junit.gen5.engine.TestTag;
  * @author Sam Brannen
  * @since 5.0
  */
-public class MethodTestDescriptor extends AbstractJUnit5TestDescriptor {
+public class MethodTestDescriptor extends JUnit5TestDescriptor {
 
 	private final String displayName;
 
@@ -44,9 +44,7 @@ public class MethodTestDescriptor extends AbstractJUnit5TestDescriptor {
 	@Override
 	public Set<TestTag> getTags() {
 		Set<TestTag> methodTags = getTags(this.getTestMethod());
-		if (getParent() != null) {
-			methodTags.addAll(getParent().getTags());
-		}
+		getParent().ifPresent(parentDescriptor -> methodTags.addAll(parentDescriptor.getTags()));
 		return methodTags;
 	}
 

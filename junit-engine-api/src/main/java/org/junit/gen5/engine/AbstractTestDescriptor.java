@@ -11,6 +11,7 @@
 package org.junit.gen5.engine;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -29,7 +30,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private TestSource source;
 
-	private final Set<AbstractTestDescriptor> children = new LinkedHashSet<>();
+	private final Set<TestDescriptor> children = new LinkedHashSet<>();
 
 	protected AbstractTestDescriptor(String uniqueId) {
 		Preconditions.notBlank(uniqueId, "uniqueId must not be null or empty");
@@ -42,19 +43,48 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public final TestDescriptor getParent() {
-		return this.parent;
+	public Optional<TestDescriptor> getParent() {
+		return Optional.ofNullable(this.parent);
 	}
 
-	protected final void setParent(TestDescriptor parent) {
-		Preconditions.notNull(parent, "parent must not be null");
+	public final void setParent(TestDescriptor parent) {
 		this.parent = parent;
 	}
 
-	public final void addChild(AbstractTestDescriptor child) {
+	@Override
+	public void removeChild(TestDescriptor child) {
+		children.remove(child);
+		if (child instanceof AbstractTestDescriptor)
+			((AbstractTestDescriptor) child).setParent(null);
+	}
+
+	protected void removeFromHierarchy() {
+		if (isRoot())
+			throw new UnsupportedOperationException("You cannot remove the root of a hierarchy.");
+		parent.removeChild(this);
+		children.clear();
+	}
+
+	public Set<TestDescriptor> allChildren() {
+		Set<TestDescriptor> all = new HashSet<>();
+		all.addAll(children);
+		for (TestDescriptor child : children) {
+			all.addAll(((AbstractTestDescriptor) child).allChildren());
+		}
+		return all;
+	}
+
+	@Override
+	public final void addChild(TestDescriptor child) {
 		Preconditions.notNull(child, "child must not be null");
-		child.setParent(this);
+		if (child instanceof AbstractTestDescriptor)
+			((AbstractTestDescriptor) child).setParent(this);
 		this.children.add(child);
+	}
+
+	@Override
+	public final Set<TestDescriptor> getChildren() {
+		return Collections.unmodifiableSet(this.children);
 	}
 
 	protected final void setSource(TestSource source) {
@@ -62,8 +92,11 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		this.source = source;
 	}
 
-	public final Set<AbstractTestDescriptor> getChildren() {
-		return this.children;
+	@Override
+	public void accept(Visitor visitor) {
+		Runnable remove = this::removeFromHierarchy;
+		visitor.visit(this, remove);
+		new HashSet<>(getChildren()).forEach(child -> child.accept(visitor));
 	}
 
 	@Override

@@ -81,11 +81,7 @@ class JUnit5RunnerListener implements TestPlanExecutionListener {
 	}
 
 	private Description findJUnit4Description(TestDescriptor testDescriptor) {
-		Description description = testTree.getDescription(testDescriptor);
-		if (description == null) {
-			description = testTree.addDescriptionFor(testDescriptor);
-		}
-		return description;
+		return testTree.getDescription(testDescriptor);
 	}
 
 }
