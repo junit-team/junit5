@@ -33,8 +33,8 @@ public class MethodArgumentResolverEngine {
 		try {
 			return this.doPrepareArguments(methodTestDescriptor);
 		}
-		catch (Exception root) {
-			throw new ArgumentResolutionException("problem with argument resolution", root);
+		catch (Exception cause) {
+			throw new ArgumentResolutionException("problem with argument resolution", cause);
 		}
 
 	}
