@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit5.descriptor;
 import java.util.Set;
 
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 
@@ -37,6 +38,7 @@ public class ClassTestDescriptor extends AbstractJUnit5TestDescriptor {
 
 		this.displayName = determineDisplayName(testClass, testClass.getName());
 
+		setSource(new JavaSource(testClass));
 	}
 
 	public Class<?> getTestClass() {

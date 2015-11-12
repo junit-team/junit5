@@ -26,11 +26,15 @@ import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Disabled;
+import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.api.TestName;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
+import org.junit.gen5.engine.junit5.execution.injection.sample.CustomType;
 import org.opentestalliance.TestSkippedException;
 
 /**
@@ -142,6 +146,24 @@ public class JUnit5TestEngineTests {
 		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
 		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
+	}
+
+	@org.junit.Test
+	public void executeTestsForMethodArgumentInjectionCases() {
+		TestPlanSpecification spec = build(forClassName(MethodParameterInjectionTestCase.class.getName()));
+
+		EngineDescriptor engineDescriptor = discoverTests(spec);
+		Assert.assertEquals("# descriptors", 9, engineDescriptor.allChildren().size());
+
+		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
+
+		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
+
+		Assert.assertEquals("# tests started", 8, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 7, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
+		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
+		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
 	}
 
 	private TrackingTestExecutionListener executeTests(TestPlanSpecification spec, int expectedDescriptorCount) {
@@ -273,6 +295,54 @@ public class JUnit5TestEngineTests {
 		@Test
 		@Disabled
 		void disabledTest() {
+		}
+
+	}
+
+	private static class MethodParameterInjectionTestCase {
+
+		@Test
+		void argumentInjectionOfStandardTestName(@TestName String name) {
+			assertEquals("argumentInjectionOfStandardTestName", name);
+		}
+
+		@Test
+		@Name("myName")
+		void argumentInjectionOfUserProvidedTestName(@TestName String name) {
+			assertEquals("myName", name);
+		}
+
+		@Test
+		void argumentInjectionWithCompetingResolversMustNotBeExecuted(@CustomAnnotation CustomType customType) {
+			//should be skipped
+		}
+
+		@Test
+		void argumentInjectionByType(CustomType customType) {
+			assertTrue(customType != null);
+		}
+
+		@Test
+		void argumentInjectionByAnnotation(@CustomAnnotation String value) {
+			assertTrue(value != null);
+		}
+
+		// some overloaded methods
+
+		@Test
+		void overloadedName() {
+			assertTrue(true);
+		}
+
+		@Test
+		void overloadedName(CustomType customType) {
+			assertTrue(customType != null);
+		}
+
+		@Test
+		void overloadedName(CustomType customType, @CustomAnnotation String value) {
+			assertTrue(customType != null);
+			assertTrue(value != null);
 		}
 
 	}

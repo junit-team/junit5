@@ -20,15 +20,18 @@ class RunnerTestDescriptor extends JUnit4TestDescriptor {
 
 	final Runner runner;
 
-	RunnerTestDescriptor(Runner runner) {
+	Description description;
+
+	public RunnerTestDescriptor(Runner runner) {
 		// TODO Use unique ID if set, too
 		super(ENGINE_ID + ":" + runner.getDescription().getDisplayName());
 		this.runner = runner;
+		this.description = runner.getDescription();
 	}
 
 	@Override
 	public Description getDescription() {
-		return runner.getDescription();
+		return description;
 	}
 
 	public Runner getRunner() {

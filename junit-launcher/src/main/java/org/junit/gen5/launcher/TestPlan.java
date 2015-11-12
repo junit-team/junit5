@@ -20,6 +20,7 @@ import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.TestTag;
 
 /**
@@ -51,7 +52,8 @@ public final class TestPlan implements TestDescriptor {
 	}
 
 	public long getNumberOfStaticTests() {
-		return this.engineDescriptors.stream().filter(TestDescriptor::isTest).count();
+		return this.engineDescriptors.stream().mapToLong(
+			engineDescriptor -> engineDescriptor.getNumberOfStaticTests()).sum();
 	}
 
 	@Override
@@ -102,6 +104,11 @@ public final class TestPlan implements TestDescriptor {
 		new HashSet<>(engineDescriptors).forEach(child -> child.accept(visitor));
 	}
 
+	@Override
+	public Optional<TestSource> getSource() {
+		return Optional.empty();
+	}
+
 	void applyFilters(TestPlanSpecification specification) {
 		Visitor filteringVisitor = (descriptor, remove) -> {
 			if (!descriptor.isTest())
@@ -119,12 +126,6 @@ public final class TestPlan implements TestDescriptor {
 			remove.run();
 		};
 		accept(pruningVisitor);
-	}
-
-	private boolean hasTests(TestDescriptor descriptor) {
-		if (descriptor.isTest())
-			return true;
-		return descriptor.getChildren().stream().anyMatch(anyDescriptor -> hasTests(anyDescriptor));
 	}
 
 }

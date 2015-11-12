@@ -66,4 +66,6 @@ public interface TestDescriptor {
 	}
 
 	void accept(Visitor visitor);
+
+	Optional<TestSource> getSource();
 }

@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.util.Set;
 
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 
@@ -36,6 +37,8 @@ public class MethodTestDescriptor extends AbstractJUnit5TestDescriptor {
 		this.testMethod = testMethod;
 
 		this.displayName = determineDisplayName(testMethod, testMethod.getName());
+
+		setSource(new JavaSource(testMethod));
 	}
 
 	@Override

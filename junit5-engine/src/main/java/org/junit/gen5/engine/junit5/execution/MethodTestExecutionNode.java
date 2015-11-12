@@ -13,14 +13,16 @@ package org.junit.gen5.engine.junit5.execution;
 import static org.junit.gen5.commons.util.AnnotationUtils.*;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
+import java.util.*;
 
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
+import org.junit.gen5.engine.junit5.execution.injection.*;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
@@ -67,12 +69,15 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 		try {
 			executeBeforeMethods(testClass, testInstance);
-			invokeMethod(testMethod, testInstance);
+			this.invokeTestMethod(context, testInstance);
 		}
 		catch (Throwable ex) {
 			exceptionThrown = ex;
 			if (ex instanceof InvocationTargetException) {
 				exceptionThrown = ((InvocationTargetException) ex).getTargetException();
+			}
+			if (ex instanceof ArgumentResolutionException) {
+				exceptionThrown = new TestSkippedException(ex.getMessage(), ex.getCause());
 			}
 		}
 		finally {
@@ -93,6 +98,25 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		else {
 			context.getTestExecutionListener().testSucceeded(getTestDescriptor());
 		}
+	}
+
+	private void invokeTestMethod(EngineExecutionContext context, Object testInstance)
+			throws InvocationTargetException, IllegalAccessException, ArgumentResolutionException {
+
+		MethodTestDescriptor methodTestDescriptor = getTestDescriptor();
+
+		TestExecutionContext testExecutionContext = new TestExecutionContext(methodTestDescriptor);
+
+		List<Object> arguments = this.prepareArguments(testExecutionContext);
+
+		Method testMethod = methodTestDescriptor.getTestMethod();
+		ReflectionUtils.invokeMethod(testMethod, testInstance, arguments.toArray());
+	}
+
+	private List<Object> prepareArguments(TestExecutionContext testExecutionContext) {
+		// TODO Do not instantiate MethodArgumentResolverEngine locally; consider
+		// supplying via the executionContext.
+		return new MethodArgumentResolverEngine().prepareArguments(testExecutionContext);
 	}
 
 	private void executeBeforeMethods(Class<?> testClass, Object testInstance) throws Exception {

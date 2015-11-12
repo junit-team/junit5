@@ -28,6 +28,8 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private TestDescriptor parent;
 
+	private TestSource source;
+
 	private final Set<TestDescriptor> children = new LinkedHashSet<>();
 
 	protected AbstractTestDescriptor(String uniqueId) {
@@ -82,7 +84,12 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public final Set<TestDescriptor> getChildren() {
-		return this.children;
+		return Collections.unmodifiableSet(this.children);
+	}
+
+	protected final void setSource(TestSource source) {
+		Preconditions.notNull(source, "test source must not be null");
+		this.source = source;
 	}
 
 	@Override
@@ -95,6 +102,11 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	@Override
 	public Set<TestTag> getTags() {
 		return Collections.emptySet();
+	}
+
+	@Override
+	public Optional<TestSource> getSource() {
+		return Optional.ofNullable(source);
 	}
 
 	@Override

@@ -29,7 +29,6 @@ import org.junit.runner.Runner;
 class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
 
 	private final EngineDescriptor engineDescriptor;
-	private final Set<TestDescriptor> testDescriptors = new LinkedHashSet<>();
 
 	// TODO support more TestPlanSpecificationElements/visit methods
 
@@ -56,7 +55,6 @@ class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
 	}
 
 	private void addRecursively(JUnit4TestDescriptor parent) {
-		testDescriptors.add(parent);
 		for (Description child : parent.getDescription().getChildren()) {
 			DescriptionTestDescriptor testDescriptor = new DescriptionTestDescriptor(child);
 			parent.addChild(testDescriptor);

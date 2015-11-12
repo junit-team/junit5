@@ -10,7 +10,7 @@
 
 package org.junit.gen5.commons.util;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
@@ -92,7 +92,7 @@ public final class ReflectionUtils {
 		Preconditions.notNull(classLoader, "ClassLoader must not be null");
 		try {
 			// TODO Add support for primitive types and arrays.
-			return Optional.of(classLoader.loadClass(name));
+			return Optional.of(classLoader.loadClass(name.trim()));
 		}
 		catch (ClassNotFoundException e) {
 			return Optional.empty();
