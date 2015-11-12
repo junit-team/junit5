@@ -98,7 +98,7 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 
 	@Override
 	public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-		this.testsSkipped.incrementAndGet();
+		this.testsSkipped.addAndGet(testDescriptor.getNumberOfStaticTests());
 	}
 
 	@Override

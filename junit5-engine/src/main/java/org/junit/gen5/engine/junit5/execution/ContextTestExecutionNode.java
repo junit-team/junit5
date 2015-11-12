@@ -54,7 +54,8 @@ class ContextTestExecutionNode extends TestExecutionNode {
 
 	@Override
 	public void execute(EngineExecutionContext context) {
-		throw new TestSkippedException("Not yet able to execute test contexts");
+		TestSkippedException testSkippedException = new TestSkippedException("Not yet able to execute test contexts");
+		context.getTestExecutionListener().testSkipped(getTestDescriptor(), testSkippedException);
 
 		//		if (!this.conditionalEvaluator.testEnabled(context, getTestDescriptor())) {
 		//			// Abort execution of the test completely at this point.

@@ -100,6 +100,11 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
+	public long getNumberOfStaticTests() {
+		return allChildren().stream().filter(TestDescriptor::isTest).count();
+	}
+
+	@Override
 	public Set<TestTag> getTags() {
 		return Collections.emptySet();
 	}

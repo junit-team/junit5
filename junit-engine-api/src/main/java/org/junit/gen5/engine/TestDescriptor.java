@@ -45,6 +45,8 @@ public interface TestDescriptor {
 
 	Set<TestDescriptor> getChildren();
 
+	long getNumberOfStaticTests();
+
 	default boolean hasTests() {
 		if (isTest())
 			return true;
