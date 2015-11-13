@@ -12,6 +12,7 @@ package org.junit.gen5.engine;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 import lombok.Value;
 
@@ -23,5 +24,7 @@ public class EngineExecutionContext {
 	private TestExecutionListener testExecutionListener;
 
 	private Map<String, Object> attributes = new HashMap<>();
+
+	private Stack<Object> testInstances = new Stack<>();
 
 }

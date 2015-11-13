@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.*;
+import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -62,7 +62,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		}
 
 		context.getTestExecutionListener().testStarted(getTestDescriptor());
-		Object testInstance = context.getAttributes().get(ClassTestExecutionNode.TEST_INSTANCE_ATTRIBUTE_NAME);
+		Object testInstance = context.getTestInstances().peek();
 		Class<?> testClass = testInstance.getClass();
 		Throwable exceptionThrown = null;
 

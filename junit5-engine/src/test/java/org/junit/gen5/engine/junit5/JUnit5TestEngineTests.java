@@ -188,6 +188,7 @@ public class JUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void executeTestCaseWithInnerContext() {
+		//TODO enhance test to check before and after in nested contexts
 		TestPlanSpecification spec = build(forClassName(TestCaseWithContext.class.getName()));
 
 		EngineDescriptor engineDescriptor = discoverTests(spec);
@@ -199,9 +200,9 @@ public class JUnit5TestEngineTests {
 
 		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
 
-		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
+		Assert.assertEquals("# tests started", 2, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
 		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
 	}
@@ -212,7 +213,6 @@ public class JUnit5TestEngineTests {
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		// System.out.println("Descriptors: " + engineDescriptor.allChildren());
 		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
 
 		Assert.assertTrue("@BeforeAll was not invoked", LocalTestCase.beforeAllInvoked);

@@ -29,8 +29,6 @@ import org.opentestalliance.TestSkippedException;
  */
 class ClassTestExecutionNode extends TestExecutionNode {
 
-	static final String TEST_INSTANCE_ATTRIBUTE_NAME = ClassTestExecutionNode.class.getName() + ".TestInstance";
-
 	private final ClassTestDescriptor testDescriptor;
 
 	private final ConditionEvaluator conditionalEvaluator = new ConditionEvaluator();
@@ -61,7 +59,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 		}
 
 		Object testInstance = createTestInstance();
-		context.getAttributes().put(TEST_INSTANCE_ATTRIBUTE_NAME, testInstance);
+		context.getTestInstances().push(testInstance);
 
 		try {
 			executeBeforeAllMethods(testClass, testInstance);
@@ -77,7 +75,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 				executeAfterAllMethods(context, testClass, testInstance);
 			}
 			finally {
-				context.getAttributes().remove(TEST_INSTANCE_ATTRIBUTE_NAME);
+				context.getTestInstances().pop();
 			}
 		}
 	}
