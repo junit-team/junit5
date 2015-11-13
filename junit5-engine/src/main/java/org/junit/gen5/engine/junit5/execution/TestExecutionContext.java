@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import lombok.Value;
 
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
@@ -21,5 +24,7 @@ import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 public class TestExecutionContext {
 
 	private MethodTestDescriptor descriptor;
+
+	private Map<String, Object> attributes = new HashMap<>();
 
 }

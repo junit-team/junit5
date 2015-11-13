@@ -168,6 +168,25 @@ public class JUnit5TestEngineTests {
 	}
 
 	@org.junit.Test
+	public void executeTestsForMethodArgumentInjectionInBeforeAndAfterMethodsCases() {
+		TestPlanSpecification spec = build(
+			forClassName(BeforeAndAfterMethodParameterInjectionTestCase.class.getName()));
+
+		EngineDescriptor engineDescriptor = discoverTests(spec);
+		Assert.assertEquals("# descriptors", 2, engineDescriptor.allChildren().size());
+
+		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
+
+		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
+
+		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
+		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
+		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+	}
+
+	@org.junit.Test
 	public void executeTestCaseWithInnerContext() {
 		TestPlanSpecification spec = build(forClassName(TestCaseWithContext.class.getName()));
 
@@ -350,18 +369,18 @@ public class JUnit5TestEngineTests {
 		}
 
 		@Test
-		void argumentInjectionWithCompetingResolversMustNotBeExecuted(@CustomAnnotation CustomType customType) {
-			//should be skipped
+		void argumentInjectionWithCompetingResolversFail(@CustomAnnotation CustomType customType) {
+			// should fail
 		}
 
 		@Test
 		void argumentInjectionByType(CustomType customType) {
-			assertTrue(customType != null);
+			assertNotNull(customType);
 		}
 
 		@Test
 		void argumentInjectionByAnnotation(@CustomAnnotation String value) {
-			assertTrue(value != null);
+			assertNotNull(value);
 		}
 
 		// some overloaded methods
@@ -373,13 +392,32 @@ public class JUnit5TestEngineTests {
 
 		@Test
 		void overloadedName(CustomType customType) {
-			assertTrue(customType != null);
+			assertNotNull(customType);
 		}
 
 		@Test
 		void overloadedName(CustomType customType, @CustomAnnotation String value) {
-			assertTrue(customType != null);
-			assertTrue(value != null);
+			assertNotNull(customType);
+			assertNotNull(value);
+		}
+
+	}
+
+	private static class BeforeAndAfterMethodParameterInjectionTestCase {
+
+		@Before
+		void before(@TestName String name) {
+			assertEquals("custom name", name);
+		}
+
+		@Test
+		@Name("custom name")
+		void customNamedTest() {
+		}
+
+		@After
+		void after(@TestName String name) {
+			assertEquals("custom name", name);
 		}
 
 	}

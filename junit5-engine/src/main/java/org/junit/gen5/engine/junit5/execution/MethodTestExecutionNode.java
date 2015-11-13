@@ -11,7 +11,6 @@
 package org.junit.gen5.engine.junit5.execution;
 
 import static org.junit.gen5.commons.util.AnnotationUtils.*;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -68,7 +67,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		Throwable exceptionThrown = null;
 
 		try {
-			executeBeforeMethods(testClass, testInstance);
+			executeBeforeMethods(context, testClass, testInstance);
 			invokeTestMethod(context, testInstance);
 		}
 		catch (Throwable ex) {
@@ -97,20 +96,20 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		}
 	}
 
-	private void invokeTestMethod(EngineExecutionContext context, Object testInstance) {
-		MethodTestDescriptor methodTestDescriptor = getTestDescriptor();
-		Method testMethod = methodTestDescriptor.getTestMethod();
-
+	private void invokeMethod(EngineExecutionContext context, Method method, Object target) {
 		// TODO Determine where DefaultMethodArgumentResolverRegistry should be created.
-		MethodInvoker methodInvoker = new MethodInvoker(testMethod, testInstance,
-			new DefaultMethodArgumentResolverRegistry());
+		MethodInvoker methodInvoker = new MethodInvoker(method, target, new DefaultMethodArgumentResolverRegistry());
 
-		methodInvoker.invoke(new TestExecutionContext(methodTestDescriptor));
+		methodInvoker.invoke(new TestExecutionContext(getTestDescriptor()));
 	}
 
-	private void executeBeforeMethods(Class<?> testClass, Object testInstance) throws Exception {
+	private void invokeTestMethod(EngineExecutionContext context, Object testInstance) {
+		invokeMethod(context, getTestDescriptor().getTestMethod(), testInstance);
+	}
+
+	private void executeBeforeMethods(EngineExecutionContext context, Class<?> testClass, Object testInstance) {
 		for (Method method : findAnnotatedMethods(testClass, Before.class, MethodSortOrder.HierarchyDown)) {
-			invokeMethod(method, testInstance);
+			invokeMethod(context, method, testInstance);
 		}
 	}
 
@@ -119,7 +118,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 		for (Method method : findAnnotatedMethods(testClass, After.class, MethodSortOrder.HierarchyUp)) {
 			try {
-				invokeMethod(method, testInstance);
+				invokeMethod(context, method, testInstance);
 			}
 			catch (Throwable ex) {
 				Throwable currentException = ex;
