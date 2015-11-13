@@ -10,9 +10,9 @@
 
 package org.junit.gen5.engine;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * @since 5.0
+ */
 public class EngineDescriptor extends AbstractTestDescriptor {
 
 	private final TestEngine engine;

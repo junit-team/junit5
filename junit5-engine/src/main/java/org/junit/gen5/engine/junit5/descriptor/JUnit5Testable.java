@@ -12,8 +12,6 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import java.lang.reflect.Method;
 
-import org.junit.gen5.engine.AbstractTestDescriptor;
-
 abstract class JUnit5Testable {
 
 	static JUnit5Testable fromUniqueId(String uniqueId, String engineId) {

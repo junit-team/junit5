@@ -24,7 +24,8 @@ import org.opentestalliance.TestSkippedException;
 /**
  * @since 5.0
  */
-// Todo: Implement execution of inner contexts
+// TODO Implement execution of inner contexts.
+@SuppressWarnings("unused")
 class ContextTestExecutionNode extends TestExecutionNode {
 
 	static final String TEST_INSTANCE_ATTRIBUTE_NAME = ContextTestExecutionNode.class.getName() + ".TestInstance";

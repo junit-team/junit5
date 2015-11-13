@@ -18,12 +18,9 @@ import java.util.function.Predicate;
 public class CanBeTestClass extends ReflectionObjectTester implements Predicate<Class<?>> {
 
 	@Override
-	public boolean test(Class<?> testClassCandidate) {
-		if (isAbstract(testClassCandidate))
-			return false;
-		if (testClassCandidate.isMemberClass() && !isStatic(testClassCandidate))
-			return false;
-		return (!testClassCandidate.isLocalClass());
+	public boolean test(Class<?> candidate) {
+		return !isAbstract(candidate) && !candidate.isLocalClass()
+				&& (isStatic(candidate) || !candidate.isMemberClass());
 	}
 
 }

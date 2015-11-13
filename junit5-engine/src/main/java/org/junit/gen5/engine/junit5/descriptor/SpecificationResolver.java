@@ -15,7 +15,6 @@ import static org.junit.gen5.commons.util.ReflectionUtils.*;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
@@ -23,16 +22,17 @@ import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.TestPlanSpecificationVisitor;
-import org.junit.gen5.engine.junit5.testers.CanBeTestClass;
 import org.junit.gen5.engine.junit5.testers.IsTestClassWithTests;
 import org.junit.gen5.engine.junit5.testers.IsTestContext;
 import org.junit.gen5.engine.junit5.testers.IsTestMethod;
 
+/**
+ * @since 5.0
+ */
 public class SpecificationResolver {
 
 	private final EngineDescriptor engineDescriptor;
 
-	private final CanBeTestClass canBeTestClass = new CanBeTestClass();
 	private final IsTestContext isTestContext = new IsTestContext();
 	private final IsTestMethod isTestMethod = new IsTestMethod();
 	private final IsTestClassWithTests isTestClassWithTests = new IsTestClassWithTests();
@@ -183,12 +183,8 @@ public class SpecificationResolver {
 	}
 
 	private TestDescriptor descriptorByUniqueId(String uniqueId) {
-		//Todo: Users of this method should use Optional directly but I couldn't figure out how.
-		Optional<TestDescriptor> optional = engineDescriptor.findByUniqueId(uniqueId);
-		if (optional.isPresent())
-			return optional.get();
-		else
-			return null;
+		// TODO Users of this method should use Optional directly but I couldn't figure out how.
+		return engineDescriptor.findByUniqueId(uniqueId).orElse(null);
 	}
 
 }

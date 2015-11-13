@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit4;
 
-import static java.util.function.Function.identity;
+import static java.util.function.Function.*;
 import static java.util.stream.Collectors.*;
 
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ public class JUnit4TestEngine implements TestEngine {
 	@Override
 	public void execute(EngineExecutionContext context) {
 
-		//Todo: Use capabilities of engine node to build up tree or to visit nodes
+		// TODO Use capabilities of engine node to build up tree or to visit nodes
 		List<TestDescriptor> originalTestDescriptors = new ArrayList<>(context.getEngineDescriptor().allChildren());
 
 		//@formatter:off

@@ -22,10 +22,9 @@ import org.junit.gen5.api.Test;
 public class IsTestMethod extends ReflectionObjectTester implements Predicate<Method> {
 
 	@Override
-	public boolean test(Method testMethodCandidate) {
-		if (isPrivate(testMethodCandidate))
-			return false;
-		return hasAnnotation(testMethodCandidate, Test.class);
+	public boolean test(Method candidate) {
+		return !isStatic(candidate) && !isPrivate(candidate) && !isAbstract(candidate)
+				&& hasAnnotation(candidate, Test.class);
 	}
 
 }

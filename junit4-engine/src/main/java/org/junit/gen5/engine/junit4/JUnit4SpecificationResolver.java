@@ -10,14 +10,10 @@
 
 package org.junit.gen5.engine.junit4;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import lombok.Data;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationVisitor;
 import org.junit.internal.runners.ErrorReportingRunner;
 import org.junit.runner.Description;
@@ -61,4 +57,5 @@ class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
 			addRecursively(testDescriptor);
 		}
 	}
+
 }

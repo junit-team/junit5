@@ -10,9 +10,6 @@
 
 package org.junit.gen5.engine.junit4;
 
-import lombok.Value;
-
-import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 
@@ -20,7 +17,7 @@ class RunnerTestDescriptor extends JUnit4TestDescriptor {
 
 	final Runner runner;
 
-	Description description;
+	final Description description;
 
 	RunnerTestDescriptor(Runner runner) {
 		// TODO Use unique ID if set, too
@@ -37,4 +34,5 @@ class RunnerTestDescriptor extends JUnit4TestDescriptor {
 	public Runner getRunner() {
 		return runner;
 	}
+
 }

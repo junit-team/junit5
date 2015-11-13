@@ -12,9 +12,7 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.Assert.*;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.api.Context;

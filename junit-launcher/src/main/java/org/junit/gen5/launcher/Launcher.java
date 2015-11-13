@@ -10,13 +10,12 @@
 
 package org.junit.gen5.launcher;
 
-import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
+import static org.junit.gen5.launcher.TestEngineRegistry.*;
 
 import java.util.Optional;
 
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
-import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -65,4 +64,5 @@ public class Launcher {
 		}
 		testPlanExecutionListener.testPlanExecutionFinished(testPlan);
 	}
+
 }
