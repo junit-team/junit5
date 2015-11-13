@@ -8,13 +8,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.execution.injection;
+package org.junit.gen5.engine.junit5.execution.injection.support;
 
 import java.lang.reflect.Parameter;
 
 import org.junit.gen5.api.TestName;
 import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.engine.junit5.execution.TestExecutionContext;
+import org.junit.gen5.engine.junit5.execution.injection.MethodArgumentResolver;
 
 /**
  * @since 5.0

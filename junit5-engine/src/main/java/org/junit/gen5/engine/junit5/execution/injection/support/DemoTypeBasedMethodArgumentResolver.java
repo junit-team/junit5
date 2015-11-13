@@ -8,14 +8,19 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.execution.injection;
+package org.junit.gen5.engine.junit5.execution.injection.support;
 
 import java.lang.reflect.Parameter;
 
+import org.junit.gen5.engine.junit5.execution.injection.MethodArgumentResolver;
+
 /**
+ * <strong>Only for demonstration purposes: will be removed at a later date.</strong>
+ *
  * @since 5.0
  */
-class SimpleTypeBasedMethodArgumentResolver implements MethodArgumentResolver {
+// TODO Move demo code to test source tree once extension mechanism is in place.
+class DemoTypeBasedMethodArgumentResolver implements MethodArgumentResolver {
 
 	@Override
 	public boolean supports(Parameter parameter) {

@@ -13,16 +13,16 @@ package org.junit.gen5.engine.junit5.execution;
 import static org.junit.gen5.commons.util.AnnotationUtils.*;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
-import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
-import org.junit.gen5.engine.junit5.execution.injection.*;
+import org.junit.gen5.engine.junit5.execution.injection.MethodInvoker;
+import org.junit.gen5.engine.junit5.execution.injection.support.DefaultMethodArgumentResolverRegistry;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
@@ -35,7 +35,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 	private final MethodTestDescriptor testDescriptor;
 
-	private final ConditionEvaluator conditionalEvaluator = new ConditionEvaluator();
+	private final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
 	MethodTestExecutionNode(MethodTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
@@ -50,7 +50,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	public void execute(EngineExecutionContext context) {
 		final Method testMethod = getTestDescriptor().getTestMethod();
 
-		if (!this.conditionalEvaluator.testEnabled(getTestDescriptor())) {
+		if (!this.conditionEvaluator.testEnabled(getTestDescriptor())) {
 			// TODO Determine if we really need an explicit TestSkippedException.
 			// TODO Provide a way for failed conditions to provide a detailed explanation
 			// of why a condition failed (e.g., a text message).
@@ -99,16 +99,13 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 	private void invokeTestMethod(EngineExecutionContext context, Object testInstance) {
 		MethodTestDescriptor methodTestDescriptor = getTestDescriptor();
-		TestExecutionContext testExecutionContext = new TestExecutionContext(methodTestDescriptor);
-
 		Method testMethod = methodTestDescriptor.getTestMethod();
-		ReflectionUtils.invokeMethod(testMethod, testInstance, resolveArguments(testExecutionContext).toArray());
-	}
 
-	private List<Object> resolveArguments(TestExecutionContext testExecutionContext) {
-		// TODO Do not instantiate MethodArgumentResolverEngine locally; consider
-		// supplying via the executionContext.
-		return new MethodArgumentResolverEngine().resolveArguments(testExecutionContext);
+		// TODO Determine where DefaultMethodArgumentResolverRegistry should be created.
+		MethodInvoker methodInvoker = new MethodInvoker(testMethod, testInstance,
+			new DefaultMethodArgumentResolverRegistry());
+
+		methodInvoker.invoke(new TestExecutionContext(methodTestDescriptor));
 	}
 
 	private void executeBeforeMethods(Class<?> testClass, Object testInstance) throws Exception {

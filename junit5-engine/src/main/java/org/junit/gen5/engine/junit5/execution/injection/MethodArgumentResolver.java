@@ -16,14 +16,16 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.execution.TestExecutionContext;
 
 /**
+ * @author Matthias Merdes
+ * @author Sam Brannen
  * @since 5.0
  */
 public interface MethodArgumentResolver {
 
-	// TODO Introduce custom MethodParameter type.
+	// TODO Consider introducing a custom MethodParameter type.
 	boolean supports(Parameter parameter);
 
-	// TODO Introduce custom MethodParameter type.
+	// TODO Consider introducing a custom MethodParameter type.
 	default Object resolveArgument(Parameter parameter, TestExecutionContext testExecutionContext) {
 		return ReflectionUtils.newInstance(parameter.getType());
 	}
