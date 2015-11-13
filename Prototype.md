@@ -11,10 +11,11 @@ If you want to do that use [the project's issue tracker](https://github.com/juni
 
 ## Installation
 
-We haven't deployed the artifacts to maven yet. That's why the most comfortable way to try JUnit Lambda
-is to clone the [git repository](https://github.com/junit-team/junit-lambda), play around in [our sample project](https://github.com/junit-team/junit-lambda/blob/master/sample-project/) or create a sample project of your own with dependencies set as in [/sample-project/build.gradle](https://github.com/junit-team/junit-lambda/blob/master/sample-project/build.gradle).
+Artifacts have been deployed to [Sonatype's snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/).
 
-We plan to provide maven artifacts as soon as the prototype phase is over.
+For use with Gradle, please take a look at [our sample project](https://github.com/junit-team/junit-lambda/blob/master/sample-project/) or create a sample project of your own with dependencies set as in [/sample-project/build.gradle](https://github.com/junit-team/junit-lambda/blob/master/sample-project/build.gradle).
+
+For Maven, check out the example [junit5-maven-consumer](https://github.com/junit-team/junit5-maven-consumer).
 
 ## Running JUnit 5 test cases
 
