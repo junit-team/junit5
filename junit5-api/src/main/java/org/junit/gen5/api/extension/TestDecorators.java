@@ -17,10 +17,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marker interface for all test decorators.
+ * Annotation used to declare all types of test decorators.
+ *
+ * <p>See concrete implementations of {@link TestDecorator} for details.
  *
  * @author Sam Brannen
  * @since 5.0
+ * @see MethodArgumentResolver
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
