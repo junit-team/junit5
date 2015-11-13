@@ -16,6 +16,10 @@ import java.util.Set;
 /**
  * @author Sam Brannen
  * @since 5.0
+ * 
+ * Todo: Divide into public facing TestDescriptor and engine-internal MutableTestDescriptor.
+ *       The tree of TestDescriptors should be parallel to (and not just a super type of) MutableTestDescriptor
+ *       so that clients won't rely on implementation details of MutableTestDescriptor
  */
 public interface TestDescriptor {
 
