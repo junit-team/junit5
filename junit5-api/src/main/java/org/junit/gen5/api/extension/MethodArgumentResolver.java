@@ -8,25 +8,26 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.execution.injection;
+package org.junit.gen5.api.extension;
 
 import java.lang.reflect.Parameter;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.junit5.execution.TestExecutionContext;
 
 /**
  * @author Matthias Merdes
  * @author Sam Brannen
  * @since 5.0
  */
-public interface MethodArgumentResolver {
+public interface MethodArgumentResolver extends TestDecorator {
 
 	// TODO Consider introducing a custom MethodParameter type.
+
 	boolean supports(Parameter parameter);
 
-	// TODO Consider introducing a custom MethodParameter type.
-	default Object resolveArgument(Parameter parameter, TestExecutionContext testExecutionContext) {
+	default Object resolveArgument(Parameter parameter, TestExecutionContext testExecutionContext)
+			throws ArgumentResolutionException {
+
 		return ReflectionUtils.newInstance(parameter.getType());
 	}
 

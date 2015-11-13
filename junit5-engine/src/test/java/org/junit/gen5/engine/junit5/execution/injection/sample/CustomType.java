@@ -12,9 +12,12 @@ package org.junit.gen5.engine.junit5.execution.injection.sample;
 
 import java.util.*;
 
+/**
+ * @since 5.0
+ */
 public class CustomType {
 
-	private Date date = new Date();
+	private final Date date = new Date();
 
 	@Override
 	public String toString() {

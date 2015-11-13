@@ -10,7 +10,9 @@
 
 package org.junit.gen5.engine.junit5.execution.injection;
 
-import java.util.List;
+import java.util.Set;
+
+import org.junit.gen5.api.extension.MethodArgumentResolver;
 
 /**
  * @author Matthias Merdes
@@ -21,8 +23,6 @@ public interface MethodArgumentResolverRegistry {
 
 	void addResolvers(MethodArgumentResolver... resolver);
 
-	void addResolvers(List<MethodArgumentResolver> resolvers);
-
-	List<MethodArgumentResolver> getResolvers();
+	Set<MethodArgumentResolver> getResolvers();
 
 }

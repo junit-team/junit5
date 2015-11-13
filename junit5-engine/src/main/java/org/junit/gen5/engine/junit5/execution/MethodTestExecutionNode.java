@@ -10,13 +10,21 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
+import static org.junit.gen5.commons.util.AnnotationUtils.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
+import org.junit.gen5.api.extension.MethodArgumentResolver;
+import org.junit.gen5.api.extension.TestDecorator;
+import org.junit.gen5.api.extension.TestDecorators;
+import org.junit.gen5.api.extension.TestExecutionContext;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
@@ -97,10 +105,56 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	}
 
 	private void invokeMethod(EngineExecutionContext context, Method method, Object target) {
-		// TODO Determine where DefaultMethodArgumentResolverRegistry should be created.
-		MethodInvoker methodInvoker = new MethodInvoker(method, target, new DefaultMethodArgumentResolverRegistry());
 
-		methodInvoker.invoke(new TestExecutionContext(getTestDescriptor()));
+		// TODO Determine where DefaultMethodArgumentResolverRegistry should be created.
+		DefaultMethodArgumentResolverRegistry resolverRegistry = new DefaultMethodArgumentResolverRegistry();
+
+		// TODO Load and instantiate TestDecorators only once per test class/method.
+		// In other words, we need to store the resolved/instantiated decorators in a
+		// cache.
+		findAnnotation(method.getDeclaringClass(), TestDecorators.class).map(TestDecorators::value).ifPresent(
+			clazzes -> {
+				for (Class<? extends TestDecorator> clazz : clazzes) {
+					TestDecorator testDecorator = ReflectionUtils.newInstance(clazz);
+					if (testDecorator instanceof MethodArgumentResolver) {
+						resolverRegistry.addResolvers((MethodArgumentResolver) testDecorator);
+					}
+				}
+			});
+
+		MethodInvoker methodInvoker = new MethodInvoker(method, target, resolverRegistry);
+
+		// TODO Introduce factory for TestExecutionContext instances.
+		// TODO Cache & reuse TestExecutionContext instance so extensions can share state.
+		methodInvoker.invoke(new TestExecutionContext() {
+
+			private final Map<String, Object> attributes = new HashMap<>();
+
+			@Override
+			public Optional<Class<?>> getTestClass() {
+				return Optional.of(getTestDescriptor().getTestMethod().getDeclaringClass());
+			}
+
+			@Override
+			public Optional<Method> getTestMethod() {
+				return Optional.of(getTestDescriptor().getTestMethod());
+			}
+
+			@Override
+			public Optional<Object> getTestInstance() {
+				return Optional.of(target);
+			}
+
+			@Override
+			public String getDisplayName() {
+				return getTestDescriptor().getDisplayName();
+			}
+
+			@Override
+			public Map<String, Object> getAttributes() {
+				return this.attributes;
+			}
+		});
 	}
 
 	private void invokeTestMethod(EngineExecutionContext context, Object testInstance) {

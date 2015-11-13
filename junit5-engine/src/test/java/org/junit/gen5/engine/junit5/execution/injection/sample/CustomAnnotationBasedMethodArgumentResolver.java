@@ -10,15 +10,19 @@
 
 package org.junit.gen5.engine.junit5.execution.injection.sample;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.reflect.Parameter;
+
+import org.junit.gen5.api.extension.MethodArgumentResolver;
+import org.junit.gen5.commons.util.AnnotationUtils;
 
 /**
  * @since 5.0
  */
-@Target(ElementType.PARAMETER)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface CustomAnnotation {
+public class CustomAnnotationBasedMethodArgumentResolver implements MethodArgumentResolver {
+
+	@Override
+	public boolean supports(Parameter parameter) {
+		return AnnotationUtils.findAnnotation(parameter, CustomAnnotation.class).isPresent();
+	}
+
 }

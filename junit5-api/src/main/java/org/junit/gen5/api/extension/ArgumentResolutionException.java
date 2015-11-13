@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.execution.injection;
+package org.junit.gen5.api.extension;
 
 /**
  * @since 5.0

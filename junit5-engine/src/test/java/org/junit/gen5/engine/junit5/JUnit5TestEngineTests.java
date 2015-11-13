@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.api.Assumptions.assumeTrue;
+import static org.junit.gen5.api.Assumptions.*;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.lang.annotation.ElementType;
@@ -30,12 +30,15 @@ import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestName;
+import org.junit.gen5.api.extension.TestDecorators;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
+import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotationBasedMethodArgumentResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomType;
+import org.junit.gen5.engine.junit5.execution.injection.sample.CustomTypeBasedMethodArgumentResolver;
 import org.opentestalliance.TestSkippedException;
 
 /**
@@ -355,6 +358,7 @@ public class JUnit5TestEngineTests {
 		}
 	}
 
+	@TestDecorators({ CustomTypeBasedMethodArgumentResolver.class, CustomAnnotationBasedMethodArgumentResolver.class })
 	private static class MethodParameterInjectionTestCase {
 
 		@Test
