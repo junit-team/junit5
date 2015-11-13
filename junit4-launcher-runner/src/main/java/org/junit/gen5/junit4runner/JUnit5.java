@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.StringUtils;
+import org.junit.gen5.engine.EngineFilter;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
@@ -146,6 +147,29 @@ public class JUnit5 extends Runner {
 		return annotation.value();
 	}
 
+	/**
+	 * The <code>OnlyEngine</code> annotation specifies the engine ID to be filtered when a class
+	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	@Inherited
+	public @interface ClassNameMatches {
+
+		/**
+		 * @return regex
+		 */
+		String value();
+	}
+
+	private static String getAnnotatedClassNameMatches(Class<?> testClass) {
+		ClassNameMatches annotation = testClass.getAnnotation(ClassNameMatches.class);
+		if (annotation == null) {
+			return "";
+		}
+		return annotation.value();
+	}
+
 	private final Class<?> testClass;
 	private final TestPlanSpecification specification;
 	private final JUnit5TestTree testTree;
@@ -192,14 +216,23 @@ public class JUnit5 extends Runner {
 		TestPlanSpecification plan = TestPlanSpecification.build(specs);
 		addOnlyIncludeTagsFilter(plan);
 		addOnlyIncludeEngineFilter(plan);
+		addClassNameMatches(plan);
 
 		return plan;
+	}
+
+	private void addClassNameMatches(TestPlanSpecification plan) {
+		String regex = getAnnotatedClassNameMatches(testClass).trim();
+		if (!regex.isEmpty()) {
+			EngineFilter classNameFilter = TestPlanSpecification.classNameMatches(regex);
+			plan.filterWith(classNameFilter);
+		}
 	}
 
 	private void addOnlyIncludeTagsFilter(TestPlanSpecification plan) {
 		String[] onlyIncludeTags = getAnnotatedOnlyIncludeTags(testClass);
 		if (onlyIncludeTags.length > 0) {
-			Predicate<TestDescriptor> tagNamesFilter = TestPlanSpecification.filterByTags(onlyIncludeTags);
+			Predicate<TestDescriptor> tagNamesFilter = TestPlanSpecification.byTags(onlyIncludeTags);
 			plan.filterWith(tagNamesFilter);
 		}
 	}
@@ -207,7 +240,7 @@ public class JUnit5 extends Runner {
 	private void addOnlyIncludeEngineFilter(TestPlanSpecification plan) {
 		String onlyIncludeEngine = getAnnotatedOnlyEngine(testClass);
 		if (StringUtils.isNotBlank(onlyIncludeEngine)) {
-			Predicate<TestDescriptor> engineFilter = TestPlanSpecification.filterByEngine(onlyIncludeEngine);
+			Predicate<TestDescriptor> engineFilter = TestPlanSpecification.byEngine(onlyIncludeEngine);
 			plan.filterWith(engineFilter);
 		}
 	}

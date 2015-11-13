@@ -22,12 +22,15 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.engine.ClassFilter;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
+import org.junit.gen5.engine.EngineFilter;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;
 import org.junit.gen5.engine.junit5.execution.TestExecutionNode;
 import org.junit.gen5.engine.junit5.execution.TestExecutionNodeResolver;
@@ -53,6 +56,26 @@ public class JUnit5TestEngine implements TestEngine {
 		for (TestPlanSpecificationElement element : specification) {
 			resolver.resolveElement(element);
 		}
+		applyEngineFilters(specification.getEngineFilters(), engineDescriptor);
+	}
+
+	private void applyEngineFilters(List<EngineFilter> engineFilters, EngineDescriptor engineDescriptor) {
+		//Todo: Currently only works with a single ClassFilter
+		if (engineFilters.isEmpty())
+			return;
+		ClassFilter filter = (ClassFilter) engineFilters.get(0);
+		TestDescriptor.Visitor filteringVisitor = new TestDescriptor.Visitor() {
+
+			@Override
+			public void visit(TestDescriptor descriptor, Runnable remove) {
+				if (descriptor instanceof ClassTestDescriptor) {
+					ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptor;
+					if (!filter.acceptClass(classTestDescriptor.getTestClass()))
+						remove.run();
+				}
+			}
+		};
+		engineDescriptor.accept(filteringVisitor);
 	}
 
 	@Override

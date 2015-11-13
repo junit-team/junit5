@@ -99,7 +99,7 @@ public final class TestPlan implements TestDescriptor {
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visit(this, () -> {
-			throw new UnsupportedOperationException("It's not possible to remove the whole test plan");
+			//the test plan itself will never be removed
 		});
 		new HashSet<>(engineDescriptors).forEach(child -> child.accept(visitor));
 	}

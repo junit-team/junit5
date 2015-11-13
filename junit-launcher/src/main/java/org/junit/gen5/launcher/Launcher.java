@@ -56,10 +56,12 @@ public class Launcher {
 
 		testPlanExecutionListener.testPlanExecutionStarted(testPlan);
 		for (TestEngine testEngine : lookupAllTestEngines()) {
-			testPlanExecutionListener.testPlanExecutionStartedOnEngine(testPlan, testEngine);
-			Optional<EngineDescriptor> engineDescriptor = testPlan.getEngineDescriptorFor(testEngine);
-			testEngine.execute(new EngineExecutionContext(engineDescriptor.get(), testExecutionListener));
-			testPlanExecutionListener.testPlanExecutionFinishedOnEngine(testPlan, testEngine);
+			Optional<EngineDescriptor> engineDescriptorOptional = testPlan.getEngineDescriptorFor(testEngine);
+			engineDescriptorOptional.ifPresent(engineDescriptor -> {
+				testPlanExecutionListener.testPlanExecutionStartedOnEngine(testPlan, testEngine);
+				testEngine.execute(new EngineExecutionContext(engineDescriptor, testExecutionListener));
+				testPlanExecutionListener.testPlanExecutionFinishedOnEngine(testPlan, testEngine);
+			});
 		}
 		testPlanExecutionListener.testPlanExecutionFinished(testPlan);
 	}

@@ -28,7 +28,7 @@ class TestEngineRegistry {
 
 			// TODO LOG
 			for (TestEngine testEngine : testEngines) {
-				System.out.println(testEngine.getId());
+				System.out.println(String.format("Discovered test engine with id: '%s'", testEngine.getId()));
 			}
 
 		}

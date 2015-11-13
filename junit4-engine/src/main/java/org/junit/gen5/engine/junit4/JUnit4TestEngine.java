@@ -14,13 +14,14 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.junit.gen5.engine.ClassFilter;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionContext;
+import org.junit.gen5.engine.EngineFilter;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -41,6 +42,27 @@ public class JUnit4TestEngine implements TestEngine {
 	public void discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
 		JUnit4SpecificationResolver resolver = new JUnit4SpecificationResolver(engineDescriptor);
 		specification.accept(resolver);
+		applyEngineFilters(specification.getEngineFilters(), engineDescriptor);
+	}
+
+	// More or less copied over from JUnit5TestEngine
+	private void applyEngineFilters(List<EngineFilter> engineFilters, EngineDescriptor engineDescriptor) {
+		//Todo: Currently only works with a single ClassFilter
+		if (engineFilters.isEmpty())
+			return;
+		ClassFilter filter = (ClassFilter) engineFilters.get(0);
+
+		TestDescriptor.Visitor filteringVisitor = (descriptor, remove) -> {
+			if (descriptor instanceof DescriptionTestDescriptor) {
+				DescriptionTestDescriptor descriptionTestDescriptor = (DescriptionTestDescriptor) descriptor;
+				descriptionTestDescriptor.getTestClass().ifPresent(clazz -> {
+					if (!filter.acceptClass(clazz))
+						remove.run();
+				});
+			}
+		};
+
+		engineDescriptor.accept(filteringVisitor);
 	}
 
 	@Override

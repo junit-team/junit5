@@ -22,8 +22,9 @@ import org.junit.runner.RunWith;
 	"junit5:com.example.SampleTestCase#assertAllFailingTest()",
 	"junit5:com.example.SampleTestCase@AnInnerTestContext" })
 @Packages({ "com.example.subpackage" })
+//@ClassNameMatches(".*TestCase.")
 //@OnlyIncludeTags({ "fast" })
-//@JUnit5.OnlyEngine("junit5")
+//@OnlyEngine("junit5")
 public class JUnit4SamplesSuite {
 
 	// When you have the following method, it overrides all annotations

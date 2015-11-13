@@ -14,7 +14,9 @@ import static java.util.Arrays.stream;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -43,7 +45,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return new UniqueIdSpecification(uniqueId);
 	}
 
-	public static Predicate<TestDescriptor> filterByTags(String... tagNames) {
+	public static Predicate<TestDescriptor> byTags(String... tagNames) {
 		List<String> includeTags = Arrays.asList(tagNames);
 		// @formatter:off
 		return (TestDescriptor descriptor) -> descriptor.getTags().stream()
@@ -52,8 +54,12 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		// @formatter:on
 	}
 
-	public static Predicate<TestDescriptor> filterByEngine(String engineId) {
+	public static Predicate<TestDescriptor> byEngine(String engineId) {
 		return (TestDescriptor descriptor) -> descriptor.getUniqueId().startsWith(engineId);
+	}
+
+	public static EngineFilter classNameMatches(String regex) {
+		return new ClassNameFilter(regex);
 	}
 
 	public static TestPlanSpecification build(TestPlanSpecificationElement... elements) {
@@ -66,8 +72,12 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 
 	private final List<TestPlanSpecificationElement> elements;
 
+	// Descriptor Filters are evaluated by the launcher itself after engines have done their discovery.
 	// Begin predicate chain with a predicate that always evaluates to true.
 	private Predicate<TestDescriptor> descriptorFilter = (TestDescriptor descriptor) -> true;
+
+	// Engine filters are handed through to all test engines to be applied during discovery
+	private List<EngineFilter> engineFilters = new ArrayList<>();
 
 	public TestPlanSpecification(List<TestPlanSpecificationElement> elements) {
 		this.elements = elements;
@@ -85,6 +95,15 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 	public void filterWith(Predicate<TestDescriptor> filter) {
 		Preconditions.notNull(filter, "filter must not be null");
 		this.descriptorFilter = this.descriptorFilter.and(filter);
+	}
+
+	public void filterWith(EngineFilter filter) {
+		Preconditions.notNull(filter, "filter must not be null");
+		this.engineFilters.add(filter);
+	}
+
+	public List<EngineFilter> getEngineFilters() {
+		return Collections.unmodifiableList(engineFilters);
 	}
 
 	public boolean acceptDescriptor(TestDescriptor testDescriptor) {
