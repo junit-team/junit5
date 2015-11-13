@@ -1,6 +1,13 @@
 # JUnit Lambda Prototype
 
-The goal of the prototype phase is to come up with some working code that will entice people to give us feedback on APIs and SPIs. If you want to do that use [the project's issue tracker](https://github.com/junit-team/junit-lambda/issues), add something to [the feedback page](https://github.com/junit-team/junit-lambda/wiki/Prototype-Feedback), or comment on [Twitter](https://twitter.com/junitlambda).
+The goal of the prototype phase is to come up with some working code that will entice people to give us feedback on APIs and SPIs. At the current stage we *DO NOT COLLECT FEEDBACK ABOUT THE IMPLEMENTATION* because it's in large parts neither polished, nor thoroughly tested, nor stable.
+
+We're also not accepting any pull requests. This has two reasons:
+
+- The goal of the prototype is to get feedback on the API. Focusing on code style, formatting and other details will distract the community's (and our) attention. Most (if not all) of the code will be rewritten anyway.
+- Legal reasons. Any contributor will have to sign a contributor's agreement along the line of  [Contributing.md](https://github.com/junit-team/junit-lambda/blob/master/CONTRIBUTING.md). The exact details have not been figured out yet, but we will contact you *before accepting your first pull request*.
+
+If you want to do that use [the project's issue tracker](https://github.com/junit-team/junit-lambda/issues), or comment on [Twitter](https://twitter.com/junitlambda).
 
 ## Installation
 
