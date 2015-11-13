@@ -108,7 +108,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	private List<Object> resolveArguments(TestExecutionContext testExecutionContext) {
 		// TODO Do not instantiate MethodArgumentResolverEngine locally; consider
 		// supplying via the executionContext.
-		return new MethodArgumentResolverEngine().prepareArguments(testExecutionContext);
+		return new MethodArgumentResolverEngine().resolveArguments(testExecutionContext);
 	}
 
 	private void executeBeforeMethods(Class<?> testClass, Object testInstance) throws Exception {

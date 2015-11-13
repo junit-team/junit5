@@ -10,11 +10,11 @@
 
 package org.junit.gen5.engine.junit5.execution.injection;
 
-import java.lang.reflect.Method;
+import static java.util.stream.Collectors.*;
+
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.gen5.engine.junit5.execution.TestExecutionContext;
 
@@ -29,43 +29,29 @@ public class MethodArgumentResolverEngine {
 	private final MethodArgumentResolverRegistry resolverRegistry = new PrimitiveMethodArgumentResolverRegistry();
 
 	/**
-	 * prepare a list of objects as arguments for the execution of this test method
+	 * Resolve the list of arguments for the test method in the supplied
+	 * {@link TestExecutionContext}.
 	 *
-	 * @param testExecutionContext the test execution context for the underlying (test) method
-	 * @return a list of Objects to be used as arguments in the method call - will be an empty list in case of no-arg methods
+	 * @param testExecutionContext the current test execution context
+	 * @return the list of Objects to be used as arguments in the method
+	 * invocation; an empty list in case of a no-arg method
 	 * @throws ArgumentResolutionException
 	 */
-	public List<Object> prepareArguments(TestExecutionContext testExecutionContext) throws ArgumentResolutionException {
-		return this.doPrepareArguments(testExecutionContext);
+	public List<Object> resolveArguments(TestExecutionContext testExecutionContext) throws ArgumentResolutionException {
+		// @formatter:off
+		return Arrays.stream(testExecutionContext.getDescriptor().getTestMethod().getParameters())
+				.map(param -> resolveArgument(param, testExecutionContext))
+				.collect(toList());
+		// @formatter:on
 	}
 
-	private List<Object> doPrepareArguments(TestExecutionContext testExecutionContext)
-			throws ArgumentResolutionException {
-
-		Method testMethod = testExecutionContext.getDescriptor().getTestMethod();
-
-		List<Object> arguments = new ArrayList<>();
-
-		if (testMethod.getParameterCount() > 0) {
-			Parameter[] parameters = testMethod.getParameters();
-			for (Parameter parameter : parameters) {
-				Object newInstance = this.resolveArgumentForMethodParameter(parameter, testExecutionContext);
-				arguments.add(newInstance);
-			}
-		}
-
-		return arguments;
-	}
-
-	private Object resolveArgumentForMethodParameter(Parameter parameter, TestExecutionContext testExecutionContext)
-			throws ArgumentResolutionException {
-
+	private Object resolveArgument(Parameter parameter, TestExecutionContext testExecutionContext) {
 		try {
 			// @formatter:off
 			List<MethodArgumentResolver> matchingResolvers = this.resolverRegistry.getMethodArgumentResolvers().stream()
 					.filter(resolver -> resolver.supports(parameter))
-					.collect(Collectors.toList());
-			// @formatter:oN
+					.collect(toList());
+			// @formatter:on
 
 			if (matchingResolvers.size() == 0) {
 				throw new ArgumentResolutionException(
