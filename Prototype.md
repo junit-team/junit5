@@ -1,6 +1,6 @@
 # JUnit Lambda Prototype
 
-The goal of the prototype phase is to come up with some working code that will entice people to give us feedback on APIs and SPIs. At the current stage we *DO NOT COLLECT FEEDBACK ABOUT THE IMPLEMENTATION* because it's in large parts neither polished, nor thoroughly tested, nor stable.
+The goal of the prototype phase is to come up with some working code that will entice people to give us feedback on **APIs and public interfaces** as described in the sections below. At the current stage we **DO NOT COLLECT FEEDBACK ABOUT THE IMPLEMENTATION** because it's in large parts neither polished, nor thoroughly tested, nor stable.
 
 We're also not accepting any pull requests. This has two reasons:
 
