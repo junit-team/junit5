@@ -15,6 +15,7 @@ subprojects {
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
 	apply plugin: 'maven'
+	apply plugin: 'signing'
 	apply plugin: 'com.diffplug.gradle.spotless'
 
 	configurations {
@@ -106,6 +107,85 @@ subprojects {
 			eclipseFormatFile rootProject.file('src/eclipse/junit-lambda-eclipse-formatter-settings.xml')
 
 			custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
+		}
+	}
+
+	gradle.taskGraph.whenReady { taskGraph ->
+		if (taskGraph.hasTask("uploadArchives")) {
+			signing {
+				sign configurations.archives
+			}
+		}
+	}
+
+	uploadArchives {
+		repositories {
+			mavenDeployer {
+				beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+				repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+					authentication(userName: ossrhUsername, password: ossrhPassword)
+				}
+
+				snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+					authentication(userName: ossrhUsername, password: ossrhPassword)
+				}
+
+				pom.project {
+					name "${project.group}:${project.name}"
+					packaging 'jar'
+					description "Module \"${project.name}\" of the prototype for the next generation of JUnit, codenamed \"JUnit Lambda\"."
+					url 'http://junit.org/junit-lambda.html'
+
+					scm {
+						connection 'scm:git:git://github.com/junit-team/junit-lambda.git'
+						developerConnection 'scm:git:git://github.com/junit-team/junit-lambda.git'
+						url 'https://github.com/junit-team/junit-lambda'
+					}
+
+					licenses {
+						if (project.name == 'open-test-alliance') {
+							license {
+								name 'The Apache License, Version 2.0'
+								url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+							}
+						} else {
+							license {
+								name 'Eclipse Public License v1.0'
+								url 'http://www.eclipse.org/legal/epl-v10.html'
+							}
+						}
+					}
+
+					developers {
+						developer {
+							id 'bechte'
+							name 'Stefan Bechtold'
+							email 'stefan.bechtold@me.com'
+						}
+						developer {
+							id 'jlink'
+							name 'Johannes Link'
+							email 'business@johanneslink.net'
+						}
+						developer {
+							id 'marcphilipp'
+							name 'Marc Philipp'
+							email 'mail@marcphilipp.de'
+						}
+						developer {
+							id 'mmerdes'
+							name 'Matthias Merdes'
+							email 'Matthias.Merdes@heidelberg-mobil.com'
+						}
+						developer {
+							id 'sbrannen'
+							name 'Sam Brannen'
+							email 'sam@sambrannen.com'
+						}
+					}
+				}
+			}
 		}
 	}
 
