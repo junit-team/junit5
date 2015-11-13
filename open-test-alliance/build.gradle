@@ -1,4 +1,4 @@
-version = '1.0.0.BUILD-SNAPSHOT'
+version = '1.0.0-SNAPSHOT'
 
 compileJava {
 	sourceCompatibility = 1.6
