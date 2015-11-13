@@ -13,40 +13,22 @@ package org.junit.gen5.engine.junit5.descriptor;
 import java.util.Set;
 
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.engine.JavaSource;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 
-public class ContextTestDescriptor extends JUnit5TestDescriptor {
+/**
+ * {@link TestDescriptor} for tests based on inner Java classes.
+ *
+ * <p>The pattern of the {@link #getUniqueId unique ID} takes the form of
+ * <code>{parent unique id}:{fully qualified class name of parent}@{simple class name}</code>.
+ *
+ * @since 5.0
+ */
+public class ContextTestDescriptor extends ClassTestDescriptor {
 
-	private final String displayName;
-	private final Class<?> contextClass;
-
-	public ContextTestDescriptor(String uniqueId, Class<?> contextClass) {
-		super(uniqueId);
-		Preconditions.notNull(contextClass, "contextClass must not be null");
-
-		this.contextClass = contextClass;
-
-		this.displayName = determineDisplayName(contextClass, contextClass.getName());
-
-	}
-
-	public Class<?> getContextClass() {
-		return contextClass;
-	}
-
-	@Override
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	@Override
-	public Set<TestTag> getTags() {
-		return getTags(this.contextClass);
-	}
-
-	@Override
-	public final boolean isTest() {
-		return false;
+	public ContextTestDescriptor(String uniqueId, Class<?> testClass) {
+		super(uniqueId, testClass);
 	}
 
 }

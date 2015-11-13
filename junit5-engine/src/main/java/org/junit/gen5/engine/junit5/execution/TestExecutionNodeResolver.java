@@ -27,16 +27,16 @@ public class TestExecutionNodeResolver {
 	public static TestExecutionNode forDescriptor(TestDescriptor testDescriptor) {
 		Preconditions.notNull(testDescriptor, "testDescriptor must not be null");
 
-		if (testDescriptor instanceof MethodTestDescriptor) {
+		if (testDescriptor.getClass().equals(MethodTestDescriptor.class)) {
 			return new MethodTestExecutionNode((MethodTestDescriptor) testDescriptor);
 		}
-		else if (testDescriptor instanceof ClassTestDescriptor) {
+		else if (testDescriptor.getClass().equals(ClassTestDescriptor.class)) {
 			return new ClassTestExecutionNode((ClassTestDescriptor) testDescriptor);
 		}
-		else if (testDescriptor instanceof ContextTestDescriptor) {
+		else if (testDescriptor.getClass().equals(ContextTestDescriptor.class)) {
 			return new ContextTestExecutionNode((ContextTestDescriptor) testDescriptor);
 		}
-		else if (testDescriptor instanceof EngineDescriptor) {
+		else if (testDescriptor.getClass().equals(EngineDescriptor.class)) {
 			return new EngineTestExecutionNode((EngineDescriptor) testDescriptor);
 		}
 

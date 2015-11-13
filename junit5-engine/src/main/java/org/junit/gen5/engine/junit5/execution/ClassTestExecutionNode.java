@@ -110,7 +110,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 		}
 	}
 
-	private Object createTestInstance() {
+	protected Object createTestInstance() {
 		try {
 			return newInstance(getTestDescriptor().getTestClass());
 		}

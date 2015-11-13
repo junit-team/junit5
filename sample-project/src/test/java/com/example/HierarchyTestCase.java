@@ -11,6 +11,8 @@
 package com.example;
 
 import org.junit.gen5.api.*;
+import org.junit.gen5.junit4runner.JUnit5;
+import org.junit.runner.RunWith;
 
 /**
  * Named *TestCase so Gradle will not try to run it.
@@ -18,7 +20,8 @@ import org.junit.gen5.api.*;
  * @author Stefan Bechtold
  * @since 5.0.0
  */
-class HierarchyTestCase {
+@RunWith(JUnit5.class)
+public class HierarchyTestCase {
 
 	static int topLevelBeforeAllInvocationCount = 0;
 	static int topLevelAfterAllInvocationCount = 0;
@@ -78,6 +81,7 @@ class HierarchyTestCase {
 	}
 
 	@Context
+	@Name("Second Level Context")
 	class SecondLevelTestContext {
 
 		@BeforeAll
@@ -117,6 +121,7 @@ class HierarchyTestCase {
 		}
 
 		@Context
+		@Name("Third Level Context")
 		class ThirdLevelTestContext {
 
 			@BeforeAll
