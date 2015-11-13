@@ -67,11 +67,19 @@ public class MethodArgumentResolverEngine {
 					.collect(Collectors.toList());
 			// @formatter:oN
 
-			if (matchingResolvers.size() > 1) {
-				throw new ArgumentResolutionException("Too many resolvers found for parameter: " + parameter);
-			}
 			if (matchingResolvers.size() == 0) {
-				throw new ArgumentResolutionException("No resolver found for parameter: " + parameter);
+				throw new ArgumentResolutionException(
+					"No MethodArgumentResolver registered for parameter: " + parameter);
+			}
+			if (matchingResolvers.size() > 1) {
+				// @formatter:off
+				List<String> resolverNames = matchingResolvers.stream()
+						.map(resolver -> resolver.getClass().getName())
+						.collect(toList());
+				// @formatter:on
+				throw new ArgumentResolutionException(
+					String.format("Discovered multiple competing MethodArgumentResolvers for parameter [%s]: %s",
+						parameter, resolverNames));
 			}
 			return matchingResolvers.get(0).resolveArgument(parameter, testExecutionContext);
 		}
@@ -79,7 +87,8 @@ public class MethodArgumentResolverEngine {
 			if (ex instanceof ArgumentResolutionException) {
 				throw (ArgumentResolutionException) ex;
 			}
-			throw new ArgumentResolutionException(ex);
+			throw new ArgumentResolutionException(String.format("Failed to resolve parameter [%s] for method [%s]",
+				parameter, testExecutionContext.getDescriptor().getTestMethod()), ex);
 		}
 	}
 
