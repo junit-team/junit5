@@ -136,7 +136,7 @@ public final class ReflectionUtils {
 		return Arrays.stream(clazz.getDeclaredClasses()).filter(predicate).collect(Collectors.toList());
 	}
 
-	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
+	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Predicate<Method> nameAndParameterTypesMatch = (method -> method.getName().equals(methodName)
 				&& Arrays.equals(method.getParameterTypes(), parameterTypes));
 
