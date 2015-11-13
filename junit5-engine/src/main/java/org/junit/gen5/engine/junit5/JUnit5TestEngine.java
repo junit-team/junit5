@@ -55,15 +55,11 @@ public class JUnit5TestEngine implements TestEngine {
 		if (engineFilters.isEmpty())
 			return;
 		ClassFilter filter = (ClassFilter) engineFilters.get(0);
-		TestDescriptor.Visitor filteringVisitor = new TestDescriptor.Visitor() {
-
-			@Override
-			public void visit(TestDescriptor descriptor, Runnable remove) {
-				if (descriptor instanceof ClassTestDescriptor) {
-					ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptor;
-					if (!filter.acceptClass(classTestDescriptor.getTestClass()))
-						remove.run();
-				}
+		TestDescriptor.Visitor filteringVisitor = (descriptor, remove) -> {
+			if (descriptor.getClass().equals(ClassTestDescriptor.class)) {
+				ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptor;
+				if (!filter.acceptClass(classTestDescriptor.getTestClass()))
+					remove.run();
 			}
 		};
 		engineDescriptor.accept(filteringVisitor);
