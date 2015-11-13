@@ -8,20 +8,20 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.execution.injection.sample;
+package com.example;
 
-import java.util.Date;
+import java.lang.reflect.Parameter;
+
+import org.junit.gen5.api.extension.MethodArgumentResolver;
 
 /**
  * @since 5.0
  */
-public class CustomType {
-
-	private final Date date = new Date();
+public class CustomTypeBasedMethodArgumentResolver implements MethodArgumentResolver {
 
 	@Override
-	public String toString() {
-		return "CustomType: " + this.date;
+	public boolean supports(Parameter parameter) {
+		return parameter.getType().equals(CustomType.class);
 	}
 
 }

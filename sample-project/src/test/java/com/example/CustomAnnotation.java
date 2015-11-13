@@ -8,20 +8,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.execution.injection.sample;
+package com.example;
 
-import java.util.Date;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-/**
- * @since 5.0
- */
-public class CustomType {
-
-	private final Date date = new Date();
-
-	@Override
-	public String toString() {
-		return "CustomType: " + this.date;
-	}
-
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface CustomAnnotation {
 }

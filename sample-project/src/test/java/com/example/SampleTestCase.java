@@ -11,7 +11,7 @@
 package com.example;
 
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.api.Assumptions.assumeTrue;
+import static org.junit.gen5.api.Assumptions.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,11 +22,14 @@ import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.api.TestName;
+import org.junit.gen5.api.extension.TestDecorators;
 import org.opentestalliance.TestSkippedException;
 
 /**
  * Named *TestCase so Gradle will not try to run it.
  */
+@TestDecorators({ CustomTypeBasedMethodArgumentResolver.class, CustomAnnotationBasedMethodArgumentResolver.class })
 class SampleTestCase {
 
 	static boolean staticBeforeInvoked = false;
@@ -84,12 +87,13 @@ class SampleTestCase {
 		// no-op
 	}
 
-	// todo: enable as soon as resolvable types are available in sample project
-	//	@Test
-	//	void argumentInjectionTest(CustomType customType, @CustomAnnotation String value) {
-	//		assertTrue(customType != null);
-	//		assertTrue(value != null);
-	//	}
+	@Test
+	@Name("Method Injection")
+	void methodInjectionTest(@TestName String testName, CustomType customType, @CustomAnnotation String value) {
+		assertEquals("Method Injection", testName);
+		assertNotNull(customType);
+		assertNotNull(value);
+	}
 
 	@Test
 	@Name("with succeeding assertAll")
