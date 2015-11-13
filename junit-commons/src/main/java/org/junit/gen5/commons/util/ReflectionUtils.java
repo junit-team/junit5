@@ -10,7 +10,7 @@
 
 package org.junit.gen5.commons.util;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
@@ -54,8 +54,11 @@ public final class ReflectionUtils {
 	public static <T> T newInstance(Class<T> clazz, Object... args) {
 		Preconditions.notNull(clazz, "class must not be null");
 
+		List<Class<?>> argTypes = Arrays.stream(args).map(obj -> obj.getClass()).collect(Collectors.toList());
+		Class<?>[] parameterTypes = argTypes.toArray(new Class<?>[argTypes.size()]);
+
 		try {
-			Constructor<T> constructor = clazz.getDeclaredConstructor();
+			Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes);
 			makeAccessible(constructor);
 			return constructor.newInstance(args);
 		}

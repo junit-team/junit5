@@ -110,7 +110,11 @@ class ClassTestExecutionNode extends TestExecutionNode {
 		}
 	}
 
-	protected Object createTestInstance() {
+	/**
+	 * Must be public to be executable by child contexts
+	 * @return
+	 */
+	public Object createTestInstance() {
 		try {
 			return newInstance(getTestDescriptor().getTestClass());
 		}

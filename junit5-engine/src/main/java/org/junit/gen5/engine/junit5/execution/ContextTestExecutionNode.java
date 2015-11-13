@@ -10,16 +10,11 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import java.lang.reflect.Constructor;
 
-import java.lang.reflect.Method;
-
-import org.junit.gen5.api.AfterAll;
-import org.junit.gen5.api.BeforeAll;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.ContextTestDescriptor;
 import org.opentestalliance.TestSkippedException;
 
 /**
@@ -35,8 +30,26 @@ class ContextTestExecutionNode extends ClassTestExecutionNode {
 
 	@Override
 	public void execute(EngineExecutionContext context) {
+		//		try {
+		//			super.execute(context);
+		//		}
+		//		catch (Exception e) {
+		//			context.getTestExecutionListener().testFailed(getTestDescriptor(), e);
+		//
+		//		}
 		TestSkippedException testSkippedException = new TestSkippedException("Not yet able to execute test contexts.");
 		context.getTestExecutionListener().testSkipped(getTestDescriptor(), testSkippedException);
 	}
 
+	@Override
+	public Object createTestInstance() {
+		Object parentInstance = ((ClassTestExecutionNode) getParent()).createTestInstance();
+		try {
+			Object testInstance = ReflectionUtils.newInstance(getTestDescriptor().getTestClass(), parentInstance);
+			return testInstance;
+		}
+		catch (Exception e) {
+			throw new RuntimeException("Error while creating test context instance.", e);
+		}
+	}
 }
