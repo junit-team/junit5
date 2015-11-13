@@ -162,9 +162,9 @@ public class JUnit5TestEngineTests {
 
 		Assert.assertEquals("# tests started", 8, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 7, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
+		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
 		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
 	}
 
 	@org.junit.Test
