@@ -69,7 +69,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 		try {
 			executeBeforeMethods(testClass, testInstance);
-			this.invokeTestMethod(context, testInstance);
+			invokeTestMethod(context, testInstance);
 		}
 		catch (Throwable ex) {
 			exceptionThrown = ex;
@@ -100,20 +100,15 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		}
 	}
 
-	private void invokeTestMethod(EngineExecutionContext context, Object testInstance)
-			throws InvocationTargetException, IllegalAccessException, ArgumentResolutionException {
-
+	private void invokeTestMethod(EngineExecutionContext context, Object testInstance) {
 		MethodTestDescriptor methodTestDescriptor = getTestDescriptor();
-
 		TestExecutionContext testExecutionContext = new TestExecutionContext(methodTestDescriptor);
 
-		List<Object> arguments = this.prepareArguments(testExecutionContext);
-
 		Method testMethod = methodTestDescriptor.getTestMethod();
-		ReflectionUtils.invokeMethod(testMethod, testInstance, arguments.toArray());
+		ReflectionUtils.invokeMethod(testMethod, testInstance, resolveArguments(testExecutionContext).toArray());
 	}
 
-	private List<Object> prepareArguments(TestExecutionContext testExecutionContext) {
+	private List<Object> resolveArguments(TestExecutionContext testExecutionContext) {
 		// TODO Do not instantiate MethodArgumentResolverEngine locally; consider
 		// supplying via the executionContext.
 		return new MethodArgumentResolverEngine().prepareArguments(testExecutionContext);

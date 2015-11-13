@@ -60,7 +60,7 @@ public class JUnit5TestEngine implements TestEngine {
 	}
 
 	private void applyEngineFilters(List<EngineFilter> engineFilters, EngineDescriptor engineDescriptor) {
-		//Todo: Currently only works with a single ClassFilter
+		// TODO Currently only works with a single ClassFilter
 		if (engineFilters.isEmpty())
 			return;
 		ClassFilter filter = (ClassFilter) engineFilters.get(0);
