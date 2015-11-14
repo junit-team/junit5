@@ -22,7 +22,7 @@ subprojects {
 		provided
 	}
 
-	sourceSets.each{ sourceSet ->
+	sourceSets.each { sourceSet ->
 		sourceSet.compileClasspath += configurations.provided
 	}
 
@@ -45,8 +45,8 @@ subprojects {
 		provided("org.projectlombok:lombok:${lombokVersion}")
 		testCompile("org.assertj:assertj-core:${assertJVersion}")
 		testCompile("junit:junit:${junit4Version}")
-		testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 		testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
+		testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 	}
 
 	eclipse {
@@ -64,7 +64,7 @@ subprojects {
 	}
 
 	test {
-		description = 'Runs JUnit unit tests.'
+		description = 'Runs JUnit tests.'
 		useJUnit()
 
 		systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
