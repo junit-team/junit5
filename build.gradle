@@ -119,6 +119,9 @@ subprojects {
 	}
 
 	uploadArchives {
+
+		dependsOn check
+
 		repositories {
 			mavenDeployer {
 				beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
