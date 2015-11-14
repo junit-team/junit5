@@ -33,11 +33,11 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 	private final TestDescriptor descriptor;
 	private final TestExecutionContext parent;
 	private final Object testInstance;
+	private final Map<String, Object> attributes = new HashMap<>();
+
 	private Class<?> testClass = null;
 	private Method testMethod = null;
-
-	private final Map<String, Object> attributes = new HashMap<>();
-	private final Set<MethodArgumentResolver> resolvers;
+	private Set<MethodArgumentResolver> resolvers = new HashSet<>();
 
 	DescriptorBasedTestExecutionContext(TestDescriptor descriptor, TestExecutionContext parent, Object testInstance) {
 
@@ -45,21 +45,21 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 		this.parent = parent;
 		this.testInstance = testInstance;
 
+		final Set<MethodArgumentResolver> parentResolvers = parent != null ? parent.getResolvers()
+				: Collections.emptySet();
+
 		if (descriptor instanceof ClassTestDescriptor) {
 			//also handles ContextTestDescriptor which is subclass of CTD
 			testClass = ((ClassTestDescriptor) descriptor).getTestClass();
+			resolvers.addAll(getMethodArgumentResolvers(testClass, parentResolvers));
 		}
 		else if (descriptor instanceof MethodTestDescriptor) {
 			MethodTestDescriptor methodTestDescriptor = (MethodTestDescriptor) descriptor;
 			testMethod = methodTestDescriptor.getTestMethod();
 			testClass = ((ClassTestDescriptor) methodTestDescriptor.getParent().get()).getTestClass();
+			//TODO Next line shouldn't be necessary but it is
+			resolvers.addAll(getMethodArgumentResolvers(testClass, parentResolvers));
 		}
-
-		final Set<MethodArgumentResolver> parentResolvers = parent != null ? parent.getResolvers()
-				: Collections.emptySet();
-		resolvers = testClass != null ? new HashSet<>(getMethodArgumentResolvers(testClass, parentResolvers))
-				: new HashSet<>();
-
 	}
 
 	@SuppressWarnings("unchecked")
