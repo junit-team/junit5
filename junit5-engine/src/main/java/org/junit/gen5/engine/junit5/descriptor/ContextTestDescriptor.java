@@ -10,12 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import java.util.Set;
-
-import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestTag;
 
 /**
  * {@link TestDescriptor} for tests based on inner Java classes.
