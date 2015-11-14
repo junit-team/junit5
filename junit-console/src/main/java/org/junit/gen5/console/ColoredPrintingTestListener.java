@@ -36,7 +36,7 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
-		out.printf("Test execution started. Number of static tests: %d%n", testPlan.getNumberOfStaticTests());
+		out.printf("Test execution started. Number of static tests: %d%n", testPlan.countStaticTests());
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 		out.println(color + String.format(format, args) + NONE);
 	}
 
-	static enum Color {
+	enum Color {
 
 		NONE(0),
 

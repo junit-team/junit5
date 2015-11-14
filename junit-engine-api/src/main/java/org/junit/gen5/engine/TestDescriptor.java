@@ -50,7 +50,7 @@ public interface TestDescriptor {
 
 	Set<TestDescriptor> getChildren();
 
-	default long getNumberOfStaticTests() {
+	default long countStaticTests() {
 		AtomicLong staticTests = new AtomicLong(0);
 		Visitor visitor = (descriptor, remove) -> {
 			if (descriptor.isTest())

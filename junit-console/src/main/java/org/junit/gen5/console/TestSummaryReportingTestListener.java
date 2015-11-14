@@ -44,7 +44,7 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
-		this.testsFound.set(testPlan.getNumberOfStaticTests());
+		this.testsFound.set(testPlan.countStaticTests());
 		this.timeStarted = System.currentTimeMillis();
 	}
 
@@ -98,7 +98,7 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 
 	@Override
 	public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-		this.testsSkipped.addAndGet(testDescriptor.getNumberOfStaticTests());
+		this.testsSkipped.addAndGet(testDescriptor.countStaticTests());
 	}
 
 	@Override

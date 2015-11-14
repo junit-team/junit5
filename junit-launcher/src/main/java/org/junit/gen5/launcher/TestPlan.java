@@ -51,9 +51,8 @@ public final class TestPlan implements TestDescriptor {
 			descriptor -> descriptor.getEngine().equals(testEngine)).findFirst();
 	}
 
-	public long getNumberOfStaticTests() {
-		return this.engineDescriptors.stream().mapToLong(
-			engineDescriptor -> engineDescriptor.getNumberOfStaticTests()).sum();
+	public long countStaticTests() {
+		return this.engineDescriptors.stream().mapToLong(engineDescriptor -> engineDescriptor.countStaticTests()).sum();
 	}
 
 	@Override
