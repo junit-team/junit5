@@ -45,6 +45,8 @@ subprojects {
 		provided("org.projectlombok:lombok:${lombokVersion}")
 		testCompile("org.assertj:assertj-core:${assertJVersion}")
 		testCompile("junit:junit:${junit4Version}")
+		testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
+		testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
 	}
 
 	eclipse {
@@ -64,6 +66,8 @@ subprojects {
 	test {
 		description = 'Runs JUnit unit tests.'
 		useJUnit()
+		
+		systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
 
 		scanForTestClasses = false
 		include(['**/*Tests.class', '**/*Test.class'])

@@ -14,9 +14,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * @since 5.0
@@ -24,6 +26,7 @@ import java.util.Optional;
 class ClasspathScanner {
 
 	private static final String CLASS_FILE_SUFFIX = ".class";
+	private static final Logger LOG = Logger.getLogger(ClasspathScanner.class.getName());
 
 	private final String basePackageName;
 
@@ -35,6 +38,7 @@ class ClasspathScanner {
 	Class<?>[] scanForClassesRecursively() {
 		try {
 			List<File> dirs = allSourceDirsForPackage();
+			LOG.fine(() -> "Directories found: " + dirs);
 			List<Class<?>> classes = allClassesInSourceDirs(dirs);
 			return classes.toArray(new Class[classes.size()]);
 		}
@@ -54,6 +58,7 @@ class ClasspathScanner {
 
 	private List<File> allSourceDirsForPackage() throws IOException {
 		ClassLoader classLoader = ReflectionUtils.getDefaultClassLoader();
+		LOG.severe(() -> "ClassLoader: " + classLoader);
 		String path = this.basePackageName.replace('.', '/');
 		Enumeration<URL> resources = classLoader.getResources(path);
 		List<File> dirs = new ArrayList<>();
@@ -65,11 +70,14 @@ class ClasspathScanner {
 	}
 
 	private static List<Class<?>> findClassesInSourceDirRecursively(File sourceDir, String packageName) {
+		LOG.finer(() -> "Searching for classes in package: " + packageName);
 		List<Class<?>> classes = new ArrayList<>();
 		if (!sourceDir.exists()) {
 			return classes;
 		}
-		for (File file : sourceDir.listFiles()) {
+		File[] files = sourceDir.listFiles();
+		LOG.finer(() -> "Files found: " + Arrays.toString(files));
+		for (File file : files) {
 			if (file.isDirectory()) {
 				classes.addAll(findClassesInSourceDirRecursively(file, packageName + "." + file.getName()));
 			}
