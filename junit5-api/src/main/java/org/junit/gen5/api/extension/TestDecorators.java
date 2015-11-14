@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * @since 5.0
  * @see MethodArgumentResolver
  */
-@Target(ElementType.TYPE)
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited

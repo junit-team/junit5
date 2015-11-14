@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit5.execution;
 
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
 
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,8 +46,13 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 		this.parent = parent;
 		this.testInstance = testInstance;
 
-		final Set<MethodArgumentResolver> parentResolvers = parent != null ? parent.getResolvers()
-				: Collections.emptySet();
+		Set<MethodArgumentResolver> parentResolvers = null;
+		if (parent == null) {
+			parentResolvers = Collections.emptySet();
+		}
+		else {
+			parentResolvers = parent.getResolvers();
+		}
 
 		if (descriptor instanceof ClassTestDescriptor) {
 			//also handles ContextTestDescriptor which is subclass of CTD
@@ -57,17 +63,16 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 			MethodTestDescriptor methodTestDescriptor = (MethodTestDescriptor) descriptor;
 			testMethod = methodTestDescriptor.getTestMethod();
 			testClass = ((ClassTestDescriptor) methodTestDescriptor.getParent().get()).getTestClass();
-			//TODO Next line shouldn't be necessary but it is
-			resolvers.addAll(getMethodArgumentResolvers(testClass, parentResolvers));
+			resolvers.addAll(getMethodArgumentResolvers(testMethod, parentResolvers));
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private Set<MethodArgumentResolver> getMethodArgumentResolvers(Class<?> testClass,
+	private Set<MethodArgumentResolver> getMethodArgumentResolvers(AnnotatedElement annotatedElement,
 			Set<MethodArgumentResolver> parentResolvers) {
 		// TODO Determine where the MethodArgumentResolverRegistry should be created.
 		MethodArgumentResolverRegistry resolverRegistry = new MethodArgumentResolverRegistry(parentResolvers);
-		findAnnotation(testClass, TestDecorators.class).map(TestDecorators::value).ifPresent(clazzes -> {
+		findAnnotation(annotatedElement, TestDecorators.class).map(TestDecorators::value).ifPresent(clazzes -> {
 			for (Class<? extends TestDecorator> clazz : clazzes) {
 				if (MethodArgumentResolver.class.isAssignableFrom(clazz)) {
 					resolverRegistry.addResolverWithClass((Class<? extends MethodArgumentResolver>) clazz);

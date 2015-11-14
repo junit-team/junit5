@@ -190,6 +190,24 @@ public class JUnit5TestEngineTests {
 	}
 
 	@org.junit.Test
+	public void executeTestsForMethodWithTestDecoratorAnnotation() {
+		TestPlanSpecification spec = build(forClassName(TestDecoratorOnMethodTestCase.class.getName()));
+
+		EngineDescriptor engineDescriptor = discoverTests(spec);
+		Assert.assertEquals("# descriptors", 2, engineDescriptor.allChildren().size());
+
+		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
+
+		engine.execute(new ExecutionRequest(engineDescriptor, listener));
+
+		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
+		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
+		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+	}
+
+	@org.junit.Test
 	public void executeTestCaseWithInnerContext() {
 		//TODO enhance test to check before and after in nested contexts
 		TestPlanSpecification spec = build(forClassName(TestCaseWithContext.class.getName()));
@@ -422,6 +440,18 @@ public class JUnit5TestEngineTests {
 		@After
 		void after(@TestName String name) {
 			assertEquals("custom name", name);
+		}
+
+	}
+
+	private static class TestDecoratorOnMethodTestCase {
+
+		@Test
+		@TestDecorators({ CustomTypeBasedMethodArgumentResolver.class,
+			CustomAnnotationBasedMethodArgumentResolver.class })
+		void testMethodWithDecoratorAnnotation(CustomType customType, @CustomAnnotation String value) {
+			assertNotNull(customType);
+			assertNotNull(value);
 		}
 
 	}
