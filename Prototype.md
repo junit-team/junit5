@@ -13,9 +13,13 @@ If you want to provide input in the interim, please use [the project's issue tra
 
 Snapshot artifacts are deployed to [Sonatype's snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/).
 
-For use with Gradle, please take a look at [our sample project](https://github.com/junit-team/junit-lambda/blob/master/sample-project/) or create a sample project of your own with dependencies set as in [/sample-project/build.gradle](https://github.com/junit-team/junit-lambda/blob/master/sample-project/build.gradle).
+## JUnit 5 Sample Projects
 
-For Maven, check out the example [junit5-maven-consumer](https://github.com/junit-team/junit5-maven-consumer).
+You can find a collection of sample projects based on the JUnit 5 prototype in the [junit5-samples](https://github.com/junit-team/junit5-samples) repository.
+
+For Gradle, check out the [junit5-gradle-consumer](https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer) project.
+
+For Maven, check out the [junit5-maven-consumer](https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer) project.
 
 ## Running JUnit 5 test cases
 
