@@ -48,20 +48,13 @@ public abstract class TestExecutionNode {
 
 	protected void executeChild(TestExecutionNode child, ExecutionRequest request, TestExecutionContext parentContext,
 			Object testInstance) {
-
-		TestExecutionContext childContext = createChildContext(child.getTestDescriptor(), parentContext, testInstance);
+		TestExecutionContext childContext = createChildContext(child, parentContext, testInstance);
 		child.execute(request, childContext);
-
 	}
 
-	private TestExecutionContext createChildContext(TestDescriptor descriptor, TestExecutionContext parentContext,
+	private TestExecutionContext createChildContext(TestExecutionNode child, TestExecutionContext parentContext,
 			Object testInstance) {
-		return createContext(descriptor, parentContext, testInstance);
-	}
-
-	protected TestExecutionContext createContext(TestDescriptor descriptor, TestExecutionContext parent,
-			Object testInstance) {
-		return new DescriptorBasedTestExecutionContext(descriptor, parent, testInstance);
+		return new DescriptorBasedTestExecutionContext(child.getTestDescriptor(), parentContext, testInstance);
 	}
 
 }

@@ -40,12 +40,11 @@ public class EngineTestExecutionNode extends TestExecutionNode {
 	}
 
 	public void executeRequest(ExecutionRequest request) {
-		TestExecutionContext context = createTopLevelContext();
-		execute(request, context);
+		execute(request, createTopLevelContext());
 	}
 
 	private TestExecutionContext createTopLevelContext() {
-		return createContext(getTestDescriptor(), null, null);
+		return new DescriptorBasedTestExecutionContext(getTestDescriptor(), null, null);
 	}
 
 }
