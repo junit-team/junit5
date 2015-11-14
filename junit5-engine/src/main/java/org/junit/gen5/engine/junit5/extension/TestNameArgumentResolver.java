@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.execution.injection.support;
+package org.junit.gen5.engine.junit5.extension;
 
 import static org.junit.gen5.commons.util.AnnotationUtils.*;
 

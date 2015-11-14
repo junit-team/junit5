@@ -28,8 +28,6 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
-import org.junit.gen5.engine.junit5.execution.injection.MethodInvoker;
-import org.junit.gen5.engine.junit5.execution.injection.support.DefaultMethodArgumentResolverRegistry;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
@@ -105,24 +103,10 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	}
 
 	private void invokeMethod(EngineExecutionContext context, Method method, Object target) {
+		MethodArgumentResolverRegistry resolverRegistry = buildMethodArgumentResolverRegistry();
+		populateRegistryForMethod(resolverRegistry, method);
 
-		// TODO Determine where DefaultMethodArgumentResolverRegistry should be created.
-		DefaultMethodArgumentResolverRegistry resolverRegistry = new DefaultMethodArgumentResolverRegistry();
-
-		// TODO Load and instantiate TestDecorators only once per test class/method.
-		// In other words, we need to store the resolved/instantiated decorators in a
-		// cache.
-		findAnnotation(method.getDeclaringClass(), TestDecorators.class).map(TestDecorators::value).ifPresent(
-			clazzes -> {
-				for (Class<? extends TestDecorator> clazz : clazzes) {
-					TestDecorator testDecorator = ReflectionUtils.newInstance(clazz);
-					if (testDecorator instanceof MethodArgumentResolver) {
-						resolverRegistry.addResolvers((MethodArgumentResolver) testDecorator);
-					}
-				}
-			});
-
-		MethodInvoker methodInvoker = new MethodInvoker(method, target, resolverRegistry);
+		MethodInvoker methodInvoker = new MethodInvoker(method, target, resolverRegistry.getResolvers());
 
 		// TODO Introduce factory for TestExecutionContext instances.
 		// TODO Cache & reuse TestExecutionContext instance so extensions can share state.
@@ -190,6 +174,26 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		}
 
 		return exceptionThrown;
+	}
+
+	private MethodArgumentResolverRegistry buildMethodArgumentResolverRegistry() {
+		// TODO Determine where the MethodArgumentResolverRegistry should be created.
+		return new MethodArgumentResolverRegistry();
+	}
+
+	private void populateRegistryForMethod(MethodArgumentResolverRegistry resolverRegistry, Method method) {
+		// TODO Load and instantiate TestDecorators only once per test class/method.
+		// In other words, we need to store the resolved/instantiated decorators in a
+		// cache and *not* recreate them for every @Before, @Test, and @After method.
+		findAnnotation(method.getDeclaringClass(), TestDecorators.class).map(TestDecorators::value).ifPresent(
+			clazzes -> {
+				for (Class<? extends TestDecorator> clazz : clazzes) {
+					TestDecorator testDecorator = ReflectionUtils.newInstance(clazz);
+					if (testDecorator instanceof MethodArgumentResolver) {
+						resolverRegistry.addResolvers((MethodArgumentResolver) testDecorator);
+					}
+				}
+			});
 	}
 
 }

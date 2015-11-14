@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.execution.injection;
+package org.junit.gen5.engine.junit5.execution;
 
 import static java.util.stream.Collectors.*;
 
@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.gen5.api.extension.ArgumentResolutionException;
 import org.junit.gen5.api.extension.MethodArgumentResolver;
@@ -32,25 +33,25 @@ import org.junit.gen5.commons.util.ReflectionUtils;
  * @author Matthias Merdes
  * @since 5.0
  */
-public class MethodInvoker {
+class MethodInvoker {
 
 	private final Method method;
 
 	private final Object target;
 
-	private final MethodArgumentResolverRegistry resolverRegistry;
+	private final Set<MethodArgumentResolver> resolvers;
 
-	public MethodInvoker(Method method, Object target, MethodArgumentResolverRegistry resolverRegistry) {
+	MethodInvoker(Method method, Object target, Set<MethodArgumentResolver> resolvers) {
 		Preconditions.notNull(method, "method must not be null");
 		Preconditions.notNull(target, "target object must not be null");
-		Preconditions.notNull(resolverRegistry, "MethodArgumentResolverRegistry must not be null");
+		Preconditions.notNull(resolvers, "resolvers must not be null");
 
 		this.method = method;
 		this.target = target;
-		this.resolverRegistry = resolverRegistry;
+		this.resolvers = resolvers;
 	}
 
-	public Object invoke(TestExecutionContext testExecutionContext) {
+	Object invoke(TestExecutionContext testExecutionContext) {
 		return ReflectionUtils.invokeMethod(this.method, this.target, resolveArguments(testExecutionContext));
 	}
 
@@ -73,7 +74,7 @@ public class MethodInvoker {
 	private Object resolveArgument(Parameter parameter, TestExecutionContext testExecutionContext) {
 		try {
 			// @formatter:off
-			List<MethodArgumentResolver> matchingResolvers = this.resolverRegistry.getResolvers().stream()
+			List<MethodArgumentResolver> matchingResolvers = this.resolvers.stream()
 					.filter(resolver -> resolver.supports(parameter))
 					.collect(toList());
 			// @formatter:on
