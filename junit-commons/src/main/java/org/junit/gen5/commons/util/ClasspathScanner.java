@@ -58,7 +58,7 @@ class ClasspathScanner {
 
 	private List<File> allSourceDirsForPackage() throws IOException {
 		ClassLoader classLoader = ReflectionUtils.getDefaultClassLoader();
-		LOG.severe(() -> "ClassLoader: " + classLoader);
+		LOG.fine(() -> "ClassLoader: " + classLoader);
 		String path = this.basePackageName.replace('.', '/');
 		Enumeration<URL> resources = classLoader.getResources(path);
 		List<File> dirs = new ArrayList<>();
