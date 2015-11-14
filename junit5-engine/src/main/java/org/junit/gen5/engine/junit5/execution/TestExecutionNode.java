@@ -48,6 +48,7 @@ public abstract class TestExecutionNode {
 
 	protected void executeChild(TestExecutionNode child, ExecutionRequest request, TestExecutionContext parentContext,
 			Object testInstance) {
+
 		TestExecutionContext childContext = createChildContext(child, parentContext, testInstance);
 		child.execute(request, childContext);
 	}
