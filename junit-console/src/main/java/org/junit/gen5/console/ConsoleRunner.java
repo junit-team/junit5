@@ -41,6 +41,12 @@ public class ConsoleRunner {
 	private boolean enableExitCode;
 	// @formatter:on
 
+	// @formatter:off
+	@Option(name = { "-C", "--disable-ansi-colors" },
+			description = "Disable colored output (not supported by all terminals)")
+	private boolean disableAnsiColors;
+	// @formatter:on
+
 	@Arguments(description = "Test classes to execute")
 	private List<String> testClasses;
 
@@ -59,7 +65,7 @@ public class ConsoleRunner {
 		TestSummaryReportingTestListener testSummaryListener = new TestSummaryReportingTestListener(System.out);
 		launcher.registerTestPlanExecutionListeners(
 			// @formatter:off
-			new ColoredPrintingTestListener(System.out),
+			new ColoredPrintingTestListener(System.out, disableAnsiColors),
 			testSummaryListener
 			// @formatter:on
 		);

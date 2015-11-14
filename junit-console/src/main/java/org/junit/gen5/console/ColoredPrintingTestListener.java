@@ -29,9 +29,11 @@ import org.junit.gen5.launcher.TestPlanExecutionListener;
 public class ColoredPrintingTestListener implements TestPlanExecutionListener, TestExecutionListener {
 
 	private final PrintStream out;
+	private final boolean disableAnsiColors;
 
-	public ColoredPrintingTestListener(PrintStream out) {
+	public ColoredPrintingTestListener(PrintStream out, boolean disableAnsiColors) {
 		this.out = out;
+		this.disableAnsiColors = disableAnsiColors;
 	}
 
 	@Override
@@ -110,9 +112,18 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 		println(color, "                  => Exception:   %s", throwable.getLocalizedMessage());
 	}
 
-	void println(Color color, String format, Object... args) {
-		// Use string concatenation to avoid ansi disruption on console
-		out.println(color + String.format(format, args) + NONE);
+	private void println(Color color, String format, Object... args) {
+		println(color, String.format(format, args));
+	}
+
+	private void println(Color color, String message) {
+		if (disableAnsiColors) {
+			out.println(message);
+		}
+		else {
+			// Use string concatenation to avoid ansi disruption on console
+			out.println(color + message + NONE);
+		}
 	}
 
 	enum Color {
