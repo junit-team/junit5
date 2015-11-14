@@ -136,8 +136,8 @@ public abstract class TestExecutionNode {
 
 	private Set<MethodArgumentResolver> getMethodArgumentResolvers(Class<?> testClass,
 			Set<MethodArgumentResolver> parentResolvers) {
-		MethodArgumentResolverRegistry resolverRegistry = buildMethodArgumentResolverRegistry();
-		resolverRegistry.addAllResolvers(parentResolvers);
+		// TODO Determine where the MethodArgumentResolverRegistry should be created.
+		MethodArgumentResolverRegistry resolverRegistry = new MethodArgumentResolverRegistry(parentResolvers);
 		findAnnotation(testClass, TestDecorators.class).map(TestDecorators::value).ifPresent(clazzes -> {
 			for (Class<? extends TestDecorator> clazz : clazzes) {
 				resolverRegistry.addResolverWithClass((Class<? extends MethodArgumentResolver>) clazz);
@@ -145,11 +145,6 @@ public abstract class TestExecutionNode {
 		});
 
 		return resolverRegistry.getResolvers();
-	}
-
-	private MethodArgumentResolverRegistry buildMethodArgumentResolverRegistry() {
-		// TODO Determine where the MethodArgumentResolverRegistry should be created.
-		return new MethodArgumentResolverRegistry();
 	}
 
 }

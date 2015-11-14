@@ -33,7 +33,10 @@ class MethodArgumentResolverRegistry {
 	 *
 	 * @see TestNameArgumentResolver
 	 */
-	MethodArgumentResolverRegistry() {
+	MethodArgumentResolverRegistry(Set<MethodArgumentResolver> parentResolvers) {
+		parentResolvers.stream().forEach(r -> {
+			this.resolvers.add(r);
+		});
 		addResolverWithClass(TestNameArgumentResolver.class);
 	}
 
@@ -54,10 +57,4 @@ class MethodArgumentResolverRegistry {
 		return resolvers.stream().anyMatch(r -> r.getClass().equals(resolverClass));
 	}
 
-	public void addAllResolvers(Set<MethodArgumentResolver> parentResolvers) {
-		parentResolvers.stream().forEach(r -> {
-			if (!resolverAlreadyPresent(r.getClass()))
-				this.resolvers.add(r);
-		});
-	}
 }
