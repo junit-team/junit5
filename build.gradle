@@ -110,11 +110,11 @@ subprojects {
 		}
 	}
 
-	gradle.taskGraph.whenReady { taskGraph ->
-		if (taskGraph.hasTask("uploadArchives")) {
-			signing {
-				sign configurations.archives
-			}
+	def signArtifacts = !project.version.contains('SNAPSHOT')
+
+	if (signArtifacts) {
+		signing {
+			sign configurations.archives
 		}
 	}
 
@@ -124,7 +124,10 @@ subprojects {
 
 		repositories {
 			mavenDeployer {
-				beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+				if (signArtifacts) {
+					beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+				}
 
 				def ossrhUsername = rootProject.hasProperty('ossrhUsername') ? rootProject.ossrhUsername : ''
 				def ossrhPassword = rootProject.hasProperty('ossrhPassword') ? rootProject.ossrhPassword : ''
