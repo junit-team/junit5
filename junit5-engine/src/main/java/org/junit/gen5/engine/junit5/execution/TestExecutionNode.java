@@ -93,8 +93,6 @@ public abstract class TestExecutionNode {
 		final Set<MethodArgumentResolver> resolvers = testClass != null
 				? new HashSet<>(getMethodArgumentResolvers(testClass, parentResolvers)) : new HashSet<>();
 
-		resolvers.stream().forEach(r -> System.out.println("RESOLVER: " + r));
-
 		return new TestExecutionContext() {
 
 			private final Map<String, Object> attributes = new HashMap<>();

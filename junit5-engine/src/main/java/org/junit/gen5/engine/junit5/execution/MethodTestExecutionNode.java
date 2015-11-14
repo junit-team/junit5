@@ -63,8 +63,6 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		}
 
 		request.getTestExecutionListener().testStarted(getTestDescriptor());
-		Object testInstance = context.getTestInstance().get();
-		Class<?> testClass = testInstance.getClass();
 		Throwable exceptionThrown = null;
 
 		try {
