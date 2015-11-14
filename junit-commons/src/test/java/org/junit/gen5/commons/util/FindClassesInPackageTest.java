@@ -22,10 +22,6 @@ public class FindClassesInPackageTest {
 	@Test
 	public void findAllClassesInThisPackage() throws IOException, ClassNotFoundException {
 		List<Class<?>> classes = Arrays.asList(ReflectionUtils.findAllClassesInPackage("org.junit.gen5.commons"));
-		System.out.println("Number of classes found: " + classes.size());
-		for (Class<?> clazz : classes) {
-			System.out.println(clazz.getName());
-		}
 		Assert.assertTrue("Should be at least 20 classes", classes.size() >= 20);
 		Assert.assertTrue(classes.contains(NestedClassToBeFound.class));
 		Assert.assertTrue(classes.contains(MemberClassToBeFound.class));
