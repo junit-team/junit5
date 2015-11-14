@@ -116,4 +116,8 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 		this.testsSucceeded.incrementAndGet();
 	}
 
+	public long getNumberOfFailedTests() {
+		return testsFailed.get();
+	}
+
 }

@@ -16,10 +16,12 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.junit.gen5.commons.util.Preconditions;
 
@@ -38,7 +40,15 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 	}
 
 	public static List<TestPlanSpecificationElement> forClassNames(String... classNames) {
-		return stream(classNames).map(ClassNameSpecification::new).collect(toList());
+		return forClassNames(stream(classNames));
+	}
+
+	public static List<TestPlanSpecificationElement> forClassNames(Collection<String> classNames) {
+		return forClassNames(classNames.stream());
+	}
+
+	public static List<TestPlanSpecificationElement> forClassNames(Stream<String> classNames) {
+		return classNames.map(ClassNameSpecification::new).collect(toList());
 	}
 
 	public static TestPlanSpecificationElement forUniqueId(String uniqueId) {
