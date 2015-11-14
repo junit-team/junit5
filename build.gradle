@@ -66,8 +66,10 @@ subprojects {
 	test {
 		description = 'Runs JUnit unit tests.'
 		useJUnit()
-		
+
 		systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
+		systemProperty 'org.apache.logging.log4j.level', 'ERROR'
+		systemProperty 'org.apache.logging.log4j.simplelog.StatusLogger.level', 'OFF'
 
 		scanForTestClasses = false
 		include(['**/*Tests.class', '**/*Test.class'])
