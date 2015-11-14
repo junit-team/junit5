@@ -26,7 +26,7 @@ import org.junit.gen5.api.extension.TestDecorators;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
-import org.junit.gen5.engine.EngineExecutionContext;
+import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
@@ -52,7 +52,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	}
 
 	@Override
-	public void execute(EngineExecutionContext context) {
+	public void execute(ExecutionRequest request, TestExecutionContext context) {
 		final Method testMethod = getTestDescriptor().getTestMethod();
 
 		if (!this.conditionEvaluator.testEnabled(getTestDescriptor())) {
@@ -61,20 +61,20 @@ class MethodTestExecutionNode extends TestExecutionNode {
 			// of why a condition failed (e.g., a text message).
 			TestSkippedException testSkippedException = new TestSkippedException(
 				String.format("Skipped test method [%s] due to failed condition", testMethod.toGenericString()));
-			context.getTestExecutionListener().testSkipped(getTestDescriptor(), testSkippedException);
+			request.getTestExecutionListener().testSkipped(getTestDescriptor(), testSkippedException);
 
 			// Abort execution of the test completely at this point.
 			return;
 		}
 
-		context.getTestExecutionListener().testStarted(getTestDescriptor());
-		Object testInstance = context.getTestInstances().peek();
+		request.getTestExecutionListener().testStarted(getTestDescriptor());
+		Object testInstance = request.getTestInstances().peek();
 		Class<?> testClass = testInstance.getClass();
 		Throwable exceptionThrown = null;
 
 		try {
-			executeBeforeMethods(context, testClass, testInstance);
-			invokeTestMethod(context, testInstance);
+			executeBeforeMethods(request, testClass, testInstance);
+			invokeTestMethod(request, testInstance);
 		}
 		catch (Throwable ex) {
 			exceptionThrown = ex;
@@ -83,26 +83,26 @@ class MethodTestExecutionNode extends TestExecutionNode {
 			}
 		}
 		finally {
-			exceptionThrown = executeAfterMethods(context, testClass, testInstance, exceptionThrown);
+			exceptionThrown = executeAfterMethods(request, testClass, testInstance, exceptionThrown);
 		}
 
 		if (exceptionThrown != null) {
 			if (exceptionThrown instanceof TestSkippedException) {
-				context.getTestExecutionListener().testSkipped(getTestDescriptor(), exceptionThrown);
+				request.getTestExecutionListener().testSkipped(getTestDescriptor(), exceptionThrown);
 			}
 			else if (exceptionThrown instanceof TestAbortedException) {
-				context.getTestExecutionListener().testAborted(getTestDescriptor(), exceptionThrown);
+				request.getTestExecutionListener().testAborted(getTestDescriptor(), exceptionThrown);
 			}
 			else {
-				context.getTestExecutionListener().testFailed(getTestDescriptor(), exceptionThrown);
+				request.getTestExecutionListener().testFailed(getTestDescriptor(), exceptionThrown);
 			}
 		}
 		else {
-			context.getTestExecutionListener().testSucceeded(getTestDescriptor());
+			request.getTestExecutionListener().testSucceeded(getTestDescriptor());
 		}
 	}
 
-	private void invokeMethod(EngineExecutionContext context, Method method, Object target) {
+	private void invokeMethod(ExecutionRequest request, Method method, Object target) {
 		MethodArgumentResolverRegistry resolverRegistry = buildMethodArgumentResolverRegistry();
 		populateRegistryForMethod(resolverRegistry, method);
 
@@ -141,17 +141,17 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		});
 	}
 
-	private void invokeTestMethod(EngineExecutionContext context, Object testInstance) {
+	private void invokeTestMethod(ExecutionRequest context, Object testInstance) {
 		invokeMethod(context, getTestDescriptor().getTestMethod(), testInstance);
 	}
 
-	private void executeBeforeMethods(EngineExecutionContext context, Class<?> testClass, Object testInstance) {
+	private void executeBeforeMethods(ExecutionRequest context, Class<?> testClass, Object testInstance) {
 		for (Method method : findAnnotatedMethods(testClass, Before.class, MethodSortOrder.HierarchyDown)) {
 			invokeMethod(context, method, testInstance);
 		}
 	}
 
-	private Throwable executeAfterMethods(EngineExecutionContext context, Class<?> testClass, Object testInstance,
+	private Throwable executeAfterMethods(ExecutionRequest context, Class<?> testClass, Object testInstance,
 			Throwable exceptionThrown) {
 
 		for (Method method : findAnnotatedMethods(testClass, After.class, MethodSortOrder.HierarchyUp)) {

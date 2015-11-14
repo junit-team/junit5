@@ -11,10 +11,14 @@
 package org.junit.gen5.engine.junit5.execution;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-import org.junit.gen5.engine.EngineExecutionContext;
+import org.junit.gen5.api.extension.TestExecutionContext;
+import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 
 /**
@@ -43,6 +47,33 @@ public abstract class TestExecutionNode {
 
 	public abstract TestDescriptor getTestDescriptor();
 
-	public abstract void execute(EngineExecutionContext context);
+	public abstract void execute(ExecutionRequest request, TestExecutionContext context);
+
+	protected void executeChild(TestExecutionNode child, ExecutionRequest request, TestExecutionContext parentContext) {
+		TestExecutionContext childContext = createChildContext(child.getTestDescriptor(), parentContext);
+		child.execute(request, childContext);
+	}
+
+	protected TestExecutionContext createChildContext(TestDescriptor descriptor, TestExecutionContext parent) {
+		return new TestExecutionContext() {
+
+			private final Map<String, Object> attributes = new HashMap<>();
+
+			@Override
+			public String getDisplayName() {
+				return descriptor.getDisplayName();
+			}
+
+			@Override
+			public Map<String, Object> getAttributes() {
+				return attributes;
+			}
+
+			@Override
+			public Optional<TestExecutionContext> getParent() {
+				return Optional.ofNullable(parent);
+			}
+		};
+	}
 
 }

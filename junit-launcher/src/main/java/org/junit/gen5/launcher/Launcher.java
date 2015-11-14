@@ -15,7 +15,7 @@ import static org.junit.gen5.launcher.TestEngineRegistry.*;
 import java.util.Optional;
 
 import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.EngineExecutionContext;
+import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -58,7 +58,7 @@ public class Launcher {
 			Optional<EngineDescriptor> engineDescriptorOptional = testPlan.getEngineDescriptorFor(testEngine);
 			engineDescriptorOptional.ifPresent(engineDescriptor -> {
 				testPlanExecutionListener.testPlanExecutionStartedOnEngine(testPlan, testEngine);
-				testEngine.execute(new EngineExecutionContext(engineDescriptor, testExecutionListener));
+				testEngine.execute(new ExecutionRequest(engineDescriptor, testExecutionListener));
 				testPlanExecutionListener.testPlanExecutionFinishedOnEngine(testPlan, testEngine);
 			});
 		}

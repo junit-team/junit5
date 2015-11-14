@@ -15,8 +15,8 @@ import java.util.List;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.ClassFilter;
 import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.EngineFilter;
+import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -66,7 +66,7 @@ public class JUnit5TestEngine implements TestEngine {
 	}
 
 	@Override
-	public void execute(EngineExecutionContext request) {
+	public void execute(ExecutionRequest request) {
 
 		EngineTestExecutionNode executionNode = new TestExecutionNodeBuilder().buildExecutionTree(
 			request.getEngineDescriptor());

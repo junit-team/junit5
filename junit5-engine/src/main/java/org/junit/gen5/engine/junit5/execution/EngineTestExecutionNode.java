@@ -10,8 +10,9 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.EngineExecutionContext;
+import org.junit.gen5.engine.ExecutionRequest;
 
 /**
  * @author Stefan Bechtold
@@ -32,14 +33,15 @@ public class EngineTestExecutionNode extends TestExecutionNode {
 	}
 
 	@Override
-	public void execute(EngineExecutionContext context) {
+	public void execute(ExecutionRequest request, TestExecutionContext context) {
 		for (TestExecutionNode child : getChildren()) {
-			child.execute(context);
+			executeChild(child, request, context);
 		}
 	}
 
-	public void executeRequest(EngineExecutionContext context) {
-		execute(context);
+	public void executeRequest(ExecutionRequest request) {
+		TestExecutionContext context = createChildContext(getTestDescriptor(), null);
+		execute(request, context);
 	}
 
 }

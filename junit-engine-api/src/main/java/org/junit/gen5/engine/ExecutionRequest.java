@@ -17,7 +17,7 @@ import java.util.Stack;
 import lombok.Value;
 
 @Value
-public class EngineExecutionContext {
+public class ExecutionRequest {
 
 	private EngineDescriptor engineDescriptor;
 

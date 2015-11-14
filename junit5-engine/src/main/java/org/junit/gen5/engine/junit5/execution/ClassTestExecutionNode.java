@@ -17,8 +17,9 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.BeforeAll;
+import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.ReflectionUtils.*;
-import org.junit.gen5.engine.EngineExecutionContext;
+import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.opentestalliance.TestSkippedException;
 
@@ -43,7 +44,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 	}
 
 	@Override
-	public void execute(EngineExecutionContext context) {
+	public void execute(ExecutionRequest request, TestExecutionContext context) {
 		Class<?> testClass = getTestDescriptor().getTestClass();
 
 		if (!this.conditionalEvaluator.testEnabled(getTestDescriptor())) {
@@ -52,30 +53,30 @@ class ClassTestExecutionNode extends TestExecutionNode {
 			// of why a condition failed (e.g., a text message).
 			TestSkippedException testSkippedException = new TestSkippedException(
 				String.format("Skipped test class [%s] due to failed condition", testClass.getName()));
-			context.getTestExecutionListener().testSkipped(getTestDescriptor(), testSkippedException);
+			request.getTestExecutionListener().testSkipped(getTestDescriptor(), testSkippedException);
 
 			// Abort execution of the test completely at this point.
 			return;
 		}
 
 		Object testInstance = createTestInstance();
-		context.getTestInstances().push(testInstance);
+		request.getTestInstances().push(testInstance);
 
 		try {
 			executeBeforeAllMethods(testClass, testInstance);
 			for (TestExecutionNode child : getChildren()) {
-				child.execute(context);
+				executeChild(child, request, context);
 			}
 		}
 		catch (Exception e) {
-			context.getTestExecutionListener().testFailed(getTestDescriptor(), e);
+			request.getTestExecutionListener().testFailed(getTestDescriptor(), e);
 		}
 		finally {
 			try {
-				executeAfterAllMethods(context, testClass, testInstance);
+				executeAfterAllMethods(request, testClass, testInstance);
 			}
 			finally {
-				context.getTestInstances().pop();
+				request.getTestInstances().pop();
 			}
 		}
 	}
@@ -86,7 +87,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 		}
 	}
 
-	private void executeAfterAllMethods(EngineExecutionContext context, Class<?> testClass, Object testInstance) {
+	private void executeAfterAllMethods(ExecutionRequest context, Class<?> testClass, Object testInstance) {
 		Exception exceptionDuringAfterAll = null;
 
 		for (Method method : findAnnotatedMethods(testClass, AfterAll.class, MethodSortOrder.HierarchyUp)) {
