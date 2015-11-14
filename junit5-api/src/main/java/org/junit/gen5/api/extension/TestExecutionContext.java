@@ -16,6 +16,12 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
+ * {@code TestExecutionContext} encapsulates the <em>context</em> in which
+ * the current test is being executed.
+ *
+ * <p>Test decorators and extensions are provided an instance of
+ * {@code TestExecutionContext} to perform their work.
+ *
  * @author Sam Brannen
  * @since 5.0
  */
@@ -27,16 +33,16 @@ public interface TestExecutionContext {
 
 	Optional<Method> getTestMethod();
 
-	Optional<TestExecutionContext> getParent();
-
 	default Optional<Throwable> getTestException() {
 		return Optional.empty();
 	}
 
-	Set<MethodArgumentResolver> getResolvers();
+	Map<String, Object> getAttributes();
 
 	String getDisplayName();
 
-	Map<String, Object> getAttributes();
+	Optional<TestExecutionContext> getParent();
+
+	Set<MethodArgumentResolver> getArgumentResolvers();
 
 }

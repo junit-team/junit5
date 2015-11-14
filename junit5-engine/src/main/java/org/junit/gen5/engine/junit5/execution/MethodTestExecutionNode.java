@@ -96,7 +96,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	}
 
 	private void invokeMethod(Method method, TestExecutionContext context) {
-		Set<MethodArgumentResolver> resolvers = context.getResolvers();
+		Set<MethodArgumentResolver> resolvers = context.getArgumentResolvers();
 		MethodInvoker methodInvoker = new MethodInvoker(method, context.getTestInstance().get(), resolvers);
 		methodInvoker.invoke(context);
 	}
