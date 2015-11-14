@@ -32,7 +32,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestName;
 import org.junit.gen5.api.extension.TestDecorators;
 import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.EngineExecutionContext;
+import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
@@ -95,7 +95,7 @@ public class JUnit5TestEngineTests {
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
+		engine.execute(new ExecutionRequest(engineDescriptor, listener));
 
 		Assert.assertEquals("# tests started", 0, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());
@@ -115,7 +115,7 @@ public class JUnit5TestEngineTests {
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
+		engine.execute(new ExecutionRequest(engineDescriptor, listener));
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
@@ -161,7 +161,7 @@ public class JUnit5TestEngineTests {
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
+		engine.execute(new ExecutionRequest(engineDescriptor, listener));
 
 		Assert.assertEquals("# tests started", 8, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 7, listener.testSucceededCount.get());
@@ -180,7 +180,7 @@ public class JUnit5TestEngineTests {
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
+		engine.execute(new ExecutionRequest(engineDescriptor, listener));
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
@@ -201,7 +201,7 @@ public class JUnit5TestEngineTests {
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
+		engine.execute(new ExecutionRequest(engineDescriptor, listener));
 
 		Assert.assertEquals("# tests started", 2, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
@@ -216,7 +216,7 @@ public class JUnit5TestEngineTests {
 
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
 
-		engine.execute(new EngineExecutionContext(engineDescriptor, listener));
+		engine.execute(new ExecutionRequest(engineDescriptor, listener));
 
 		Assert.assertTrue("@BeforeAll was not invoked", LocalTestCase.beforeAllInvoked);
 		Assert.assertTrue("@AfterAll was not invoked", LocalTestCase.afterAllInvoked);

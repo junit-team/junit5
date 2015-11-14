@@ -18,5 +18,5 @@ public interface TestEngine {
 
 	void discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor);
 
-	void execute(EngineExecutionContext context);
+	void execute(ExecutionRequest context);
 }

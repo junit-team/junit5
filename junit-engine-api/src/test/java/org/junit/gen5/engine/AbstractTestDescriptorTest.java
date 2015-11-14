@@ -31,7 +31,7 @@ public class AbstractTestDescriptorTest {
 			}
 
 			@Override
-			public void execute(EngineExecutionContext context) {
+			public void execute(ExecutionRequest context) {
 
 			}
 

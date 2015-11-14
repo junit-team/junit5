@@ -20,8 +20,8 @@ import java.util.Map.Entry;
 
 import org.junit.gen5.engine.ClassFilter;
 import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.EngineFilter;
+import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -66,7 +66,7 @@ public class JUnit4TestEngine implements TestEngine {
 	}
 
 	@Override
-	public void execute(EngineExecutionContext context) {
+	public void execute(ExecutionRequest context) {
 
 		// TODO Use capabilities of engine node to build up tree or to visit nodes
 		List<TestDescriptor> originalTestDescriptors = new ArrayList<>(context.getEngineDescriptor().allChildren());
@@ -90,7 +90,7 @@ public class JUnit4TestEngine implements TestEngine {
 		}
 	}
 
-	private void executeSingleRunnerSafely(EngineExecutionContext context, RunnerTestDescriptor runnerTestDescriptor,
+	private void executeSingleRunnerSafely(ExecutionRequest context, RunnerTestDescriptor runnerTestDescriptor,
 			List<DescriptionTestDescriptor> testDescriptors) throws NoTestsRemainException {
 		Runner runner = runnerTestDescriptor.getRunner();
 
