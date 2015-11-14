@@ -10,13 +10,12 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.junit.gen5.api.extension.MethodArgumentResolver;
-import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.extension.TestNameArgumentResolver;
 
 /**
@@ -35,16 +34,30 @@ class MethodArgumentResolverRegistry {
 	 * @see TestNameArgumentResolver
 	 */
 	MethodArgumentResolverRegistry() {
-		this.resolvers.add(new TestNameArgumentResolver());
+		addResolverWithClass(TestNameArgumentResolver.class);
 	}
 
 	Set<MethodArgumentResolver> getResolvers() {
 		return Collections.unmodifiableSet(this.resolvers);
 	}
 
-	void addResolvers(MethodArgumentResolver... resolvers) {
-		Preconditions.notNull(resolvers, "MethodArgumentResolver array must not be null");
-		Arrays.stream(resolvers).forEach(resolver -> this.resolvers.add(resolver));
+	void addResolverWithClass(Class<? extends MethodArgumentResolver> resolverClass) {
+		if (resolverAlreadyPresent(resolverClass))
+			return;
+		MethodArgumentResolver resolver = ReflectionUtils.newInstance(resolverClass);
+		this.resolvers.add(resolver);
+
 	}
 
+	private boolean resolverAlreadyPresent(Class<? extends MethodArgumentResolver> resolverClass) {
+		//Only one resolver of same class needed since resolvers don't have state
+		return resolvers.stream().anyMatch(r -> r.getClass().equals(resolverClass));
+	}
+
+	public void addAllResolvers(Set<MethodArgumentResolver> parentResolvers) {
+		parentResolvers.stream().forEach(r -> {
+			if (!resolverAlreadyPresent(r.getClass()))
+				this.resolvers.add(r);
+		});
+	}
 }
