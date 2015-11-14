@@ -22,6 +22,7 @@ import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
+import org.opentestalliance.TestSkippedException;
 
 class RunListenerAdapter extends RunListener {
 
@@ -40,7 +41,8 @@ class RunListenerAdapter extends RunListener {
 	public void testIgnored(Description description) throws Exception {
 		// TODO this looks weird
 		notifyTestExecutionListener(description, testExecutionListener::testStarted);
-		notifyTestExecutionListener(description, null, testExecutionListener::testSkipped);
+		notifyTestExecutionListener(description, new TestSkippedException("ignored"),
+			testExecutionListener::testSkipped);
 	}
 
 	@Override

@@ -12,6 +12,7 @@ package org.junit.gen5.engine;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Sam Brannen
@@ -49,7 +50,15 @@ public interface TestDescriptor {
 
 	Set<TestDescriptor> getChildren();
 
-	long getNumberOfStaticTests();
+	default long getNumberOfStaticTests() {
+		AtomicLong staticTests = new AtomicLong(0);
+		Visitor visitor = (descriptor, remove) -> {
+			if (descriptor.isTest())
+				staticTests.incrementAndGet();
+		};
+		accept(visitor);
+		return staticTests.get();
+	}
 
 	default boolean hasTests() {
 		if (isTest())
