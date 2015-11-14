@@ -10,30 +10,43 @@
 
 package com.example.mockito;
 
-import org.junit.gen5.api.Assertions;
+import static org.junit.gen5.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.api.TestName;
 import org.junit.gen5.api.extension.TestDecorators;
 import org.junit.gen5.junit4runner.JUnit5;
 import org.junit.runner.RunWith;
 
-import static org.mockito.Mockito.*;
-
+/**
+ * @author Johannes Link
+ * @author Sam Brannen
+ * @since 5.0
+ */
 @RunWith(JUnit5.class)
-@TestDecorators({MockitoDecorator.class})
-public class SampleMockitoDecoratorTestCase {
+@TestDecorators(MockitoDecorator.class)
+class SampleMockitoDecoratorTestCase {
 
 	@Before
-	void initialize(@InjectMock MyType myInstance) {
-		when(myInstance.getName()).thenReturn("A very nice name indeed");
+	void initialize(@InjectMock MyType myType, @TestName String testName) {
+		when(myType.getName()).thenReturn(testName);
 	}
 
 	@Test
-	void simpleTestWithInjectedMock(@InjectMock MyType myInstance) {
-		Assertions.assertEquals("A very nice name indeed", myInstance.getName());
+	void simpleTestWithInjectedMock(@InjectMock MyType myType) {
+		assertEquals("simpleTestWithInjectedMock", myType.getName());
 	}
+
+	@Test
+	void secondTestWithInjectedMock(@InjectMock MyType myType) {
+		assertEquals("secondTestWithInjectedMock", myType.getName());
+	}
+
 }
 
 interface MyType {
+
 	String getName();
 }
