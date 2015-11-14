@@ -23,6 +23,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;
+import org.junit.gen5.engine.junit5.execution.EngineTestExecutionNode;
 import org.junit.gen5.engine.junit5.execution.TestExecutionNode;
 import org.junit.gen5.engine.junit5.execution.TestExecutionNodeResolver;
 
@@ -66,22 +67,26 @@ public class JUnit5TestEngine implements TestEngine {
 	}
 
 	@Override
-	public void execute(EngineExecutionContext context) {
+	public void execute(EngineExecutionContext request) {
 
-		TestExecutionNode rootNode = buildExecutionTree(context.getEngineDescriptor());
-		rootNode.execute(context);
+		EngineTestExecutionNode executionNode = buildExecutionTree(request.getEngineDescriptor());
+		executionNode.executeRequest(request);
 	}
 
-	private TestExecutionNode buildExecutionTree(EngineDescriptor engineDescriptor) {
-		return buildExecutionNode(engineDescriptor, null);
+	private EngineTestExecutionNode buildExecutionTree(EngineDescriptor engineDescriptor) {
+		EngineTestExecutionNode root = new EngineTestExecutionNode(engineDescriptor);
+		buildChildrenNodes(engineDescriptor, root);
+		return root;
 	}
 
-	private TestExecutionNode buildExecutionNode(TestDescriptor descriptor, TestExecutionNode parent) {
+	private void buildExecutionNode(TestDescriptor descriptor, TestExecutionNode parent) {
 		TestExecutionNode newNode = TestExecutionNodeResolver.forDescriptor(descriptor);
-		if (parent != null)
-			parent.addChild(newNode);
-		descriptor.getChildren().stream().forEach(testDescriptor -> buildExecutionNode(testDescriptor, newNode));
-		return newNode;
+		parent.addChild(newNode);
+		buildChildrenNodes(newNode.getTestDescriptor(), newNode);
+	}
+
+	private void buildChildrenNodes(TestDescriptor parentDescriptor, TestExecutionNode parent) {
+		parentDescriptor.getChildren().stream().forEach(testDescriptor -> buildExecutionNode(testDescriptor, parent));
 	}
 
 }

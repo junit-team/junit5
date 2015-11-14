@@ -36,6 +36,10 @@ public interface TestExecutionContext {
 		return Optional.empty();
 	}
 
+	default Optional<TestExecutionContext> getParent() {
+		return Optional.empty();
+	}
+
 	String getDisplayName();
 
 	Map<String, Object> getAttributes();
