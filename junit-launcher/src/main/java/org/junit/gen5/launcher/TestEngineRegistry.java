@@ -11,6 +11,7 @@
 package org.junit.gen5.launcher;
 
 import java.util.ServiceLoader;
+import java.util.logging.Logger;
 
 import org.junit.gen5.engine.TestEngine;
 
@@ -20,17 +21,16 @@ import org.junit.gen5.engine.TestEngine;
  */
 class TestEngineRegistry {
 
+	private static final Logger LOG = Logger.getLogger(TestEngineRegistry.class.getName());
+
 	private static Iterable<TestEngine> testEngines;
 
 	static Iterable<TestEngine> lookupAllTestEngines() {
 		if (testEngines == null) {
 			testEngines = ServiceLoader.load(TestEngine.class);
-
-			// TODO LOG
 			for (TestEngine testEngine : testEngines) {
-				System.out.println(String.format("Discovered test engine with id: '%s'", testEngine.getId()));
+				LOG.info(() -> String.format("Discovered test engine with id: '%s'", testEngine.getId()));
 			}
-
 		}
 		return testEngines;
 	}
