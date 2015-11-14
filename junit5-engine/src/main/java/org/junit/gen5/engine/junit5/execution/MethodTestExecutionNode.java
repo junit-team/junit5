@@ -14,6 +14,7 @@ import static org.junit.gen5.commons.util.AnnotationUtils.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Set;
 
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
@@ -103,8 +104,11 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		MethodArgumentResolverRegistry resolverRegistry = buildMethodArgumentResolverRegistry();
 		populateRegistryForMethod(resolverRegistry, context.getTestMethod().get());
 
-		MethodInvoker methodInvoker = new MethodInvoker(method, context.getTestInstance().get(),
-			resolverRegistry.getResolvers());
+		Set<MethodArgumentResolver> resolvers = resolverRegistry.getResolvers();
+
+		//		Set<MethodArgumentResolver> resolvers = context.getResolvers();
+
+		MethodInvoker methodInvoker = new MethodInvoker(method, context.getTestInstance().get(), resolvers);
 
 		// TODO Introduce factory for TestExecutionContext instances.
 		// TODO Cache & reuse TestExecutionContext instance so extensions can share state.

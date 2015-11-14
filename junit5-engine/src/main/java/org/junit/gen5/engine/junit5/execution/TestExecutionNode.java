@@ -10,15 +10,23 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
+
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
+import org.junit.gen5.api.extension.MethodArgumentResolver;
+import org.junit.gen5.api.extension.TestDecorator;
+import org.junit.gen5.api.extension.TestDecorators;
 import org.junit.gen5.api.extension.TestExecutionContext;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
@@ -81,6 +89,12 @@ public abstract class TestExecutionNode {
 	protected TestExecutionContext createContext(TestDescriptor descriptor, TestExecutionContext parent,
 			Object testInstance, Method testMethod, Class testClass) {
 
+		final Set<MethodArgumentResolver> resolvers = testClass != null
+				? new HashSet<>(getMethodArgumentResolvers(testClass)) : new HashSet<>();
+		final Set<MethodArgumentResolver> parentResolvers = parent != null ? parent.getResolvers()
+				: Collections.emptySet();
+		resolvers.addAll(parentResolvers);
+
 		return new TestExecutionContext() {
 
 			private final Map<String, Object> attributes = new HashMap<>();
@@ -114,7 +128,38 @@ public abstract class TestExecutionNode {
 			public Optional<Class<?>> getTestClass() {
 				return Optional.ofNullable(testClass);
 			}
+
+			@Override
+			public Set<MethodArgumentResolver> getResolvers() {
+				return resolvers;
+			}
 		};
+	}
+
+	private Set<MethodArgumentResolver> getMethodArgumentResolvers(Class<?> testClass) {
+		MethodArgumentResolverRegistry resolverRegistry = buildMethodArgumentResolverRegistry();
+		populateRegistryForClass(resolverRegistry, testClass);
+
+		return resolverRegistry.getResolvers();
+	}
+
+	private MethodArgumentResolverRegistry buildMethodArgumentResolverRegistry() {
+		// TODO Determine where the MethodArgumentResolverRegistry should be created.
+		return new MethodArgumentResolverRegistry();
+	}
+
+	private void populateRegistryForClass(MethodArgumentResolverRegistry resolverRegistry, Class<?> testClass) {
+		// TODO Load and instantiate TestDecorators only once per test class/method.
+		// In other words, we need to store the resolved/instantiated decorators in a
+		// cache and *not* recreate them for every @Before, @Test, and @After method.
+		findAnnotation(testClass, TestDecorators.class).map(TestDecorators::value).ifPresent(clazzes -> {
+			for (Class<? extends TestDecorator> clazz : clazzes) {
+				TestDecorator testDecorator = ReflectionUtils.newInstance(clazz);
+				if (testDecorator instanceof MethodArgumentResolver) {
+					resolverRegistry.addResolvers((MethodArgumentResolver) testDecorator);
+				}
+			}
+		});
 	}
 
 }

@@ -11,8 +11,10 @@
 package org.junit.gen5.api.extension;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Sam Brannen
@@ -38,6 +40,10 @@ public interface TestExecutionContext {
 
 	default Optional<TestExecutionContext> getParent() {
 		return Optional.empty();
+	}
+
+	default Set<MethodArgumentResolver> getResolvers() {
+		return Collections.emptySet();
 	}
 
 	String getDisplayName();
