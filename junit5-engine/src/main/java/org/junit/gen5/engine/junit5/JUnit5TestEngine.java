@@ -24,8 +24,7 @@ import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;
 import org.junit.gen5.engine.junit5.execution.EngineTestExecutionNode;
-import org.junit.gen5.engine.junit5.execution.TestExecutionNode;
-import org.junit.gen5.engine.junit5.execution.TestExecutionNodeResolver;
+import org.junit.gen5.engine.junit5.execution.TestExecutionNodeBuilder;
 
 public class JUnit5TestEngine implements TestEngine {
 
@@ -69,24 +68,9 @@ public class JUnit5TestEngine implements TestEngine {
 	@Override
 	public void execute(EngineExecutionContext request) {
 
-		EngineTestExecutionNode executionNode = buildExecutionTree(request.getEngineDescriptor());
+		EngineTestExecutionNode executionNode = new TestExecutionNodeBuilder().buildExecutionTree(
+			request.getEngineDescriptor());
 		executionNode.executeRequest(request);
-	}
-
-	private EngineTestExecutionNode buildExecutionTree(EngineDescriptor engineDescriptor) {
-		EngineTestExecutionNode root = new EngineTestExecutionNode(engineDescriptor);
-		buildChildrenNodes(engineDescriptor, root);
-		return root;
-	}
-
-	private void buildExecutionNode(TestDescriptor descriptor, TestExecutionNode parent) {
-		TestExecutionNode newNode = TestExecutionNodeResolver.forDescriptor(descriptor);
-		parent.addChild(newNode);
-		buildChildrenNodes(newNode.getTestDescriptor(), newNode);
-	}
-
-	private void buildChildrenNodes(TestDescriptor parentDescriptor, TestExecutionNode parent) {
-		parentDescriptor.getChildren().stream().forEach(testDescriptor -> buildExecutionNode(testDescriptor, parent));
 	}
 
 }
