@@ -85,6 +85,7 @@ subprojects {
 		options.author = true
 		options.header = project.name
 		options.addStringOption('Xdoclint:none', '-quiet')
+		exclude '**/com/example/**'
 	}
 
 	task sourcesJar(type: Jar, dependsOn: classes) {
