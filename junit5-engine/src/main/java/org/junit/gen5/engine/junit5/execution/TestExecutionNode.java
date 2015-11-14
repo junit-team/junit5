@@ -10,26 +10,13 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
-
-import java.lang.reflect.Method;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
-import org.junit.gen5.api.extension.MethodArgumentResolver;
-import org.junit.gen5.api.extension.TestDecorator;
-import org.junit.gen5.api.extension.TestDecorators;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 
 /**
  * @author Stefan Bechtold
@@ -62,92 +49,19 @@ public abstract class TestExecutionNode {
 	protected void executeChild(TestExecutionNode child, ExecutionRequest request, TestExecutionContext parentContext,
 			Object testInstance) {
 
-		TestExecutionContext childContext = createChildContext(child, parentContext, testInstance);
+		TestExecutionContext childContext = createChildContext(child.getTestDescriptor(), parentContext, testInstance);
 		child.execute(request, childContext);
 
 	}
 
-	private TestExecutionContext createChildContext(TestExecutionNode child, TestExecutionContext parentContext,
+	private TestExecutionContext createChildContext(TestDescriptor descriptor, TestExecutionContext parentContext,
 			Object testInstance) {
-		Class<?> testClass = null;
-		Method testMethod = null;
-
-		if (child.getTestDescriptor() instanceof ClassTestDescriptor) {
-			//also handles ContextTestDescriptor which is subclass of CTD
-			testClass = ((ClassTestDescriptor) child.getTestDescriptor()).getTestClass();
-		}
-
-		if (child.getTestDescriptor() instanceof MethodTestDescriptor) {
-			MethodTestDescriptor methodTestDescriptor = (MethodTestDescriptor) child.getTestDescriptor();
-			testMethod = methodTestDescriptor.getTestMethod();
-			testClass = ((ClassTestDescriptor) methodTestDescriptor.getParent().get()).getTestClass();
-		}
-		return createContext(child.getTestDescriptor(), parentContext, testInstance, testMethod, testClass);
+		return createContext(descriptor, parentContext, testInstance);
 	}
 
 	protected TestExecutionContext createContext(TestDescriptor descriptor, TestExecutionContext parent,
-			Object testInstance, Method testMethod, Class testClass) {
-
-		final Set<MethodArgumentResolver> parentResolvers = parent != null ? parent.getResolvers()
-				: Collections.emptySet();
-		final Set<MethodArgumentResolver> resolvers = testClass != null
-				? new HashSet<>(getMethodArgumentResolvers(testClass, parentResolvers)) : new HashSet<>();
-
-		return new TestExecutionContext() {
-
-			private final Map<String, Object> attributes = new HashMap<>();
-
-			@Override
-			public String getDisplayName() {
-				return descriptor.getDisplayName();
-			}
-
-			@Override
-			public Map<String, Object> getAttributes() {
-				return attributes;
-			}
-
-			@Override
-			public Optional<TestExecutionContext> getParent() {
-				return Optional.ofNullable(parent);
-			}
-
-			@Override
-			public Optional<Object> getTestInstance() {
-				return Optional.ofNullable(testInstance);
-			}
-
-			@Override
-			public Optional<Method> getTestMethod() {
-				return Optional.ofNullable(testMethod);
-			}
-
-			@Override
-			public Optional<Class<?>> getTestClass() {
-				return Optional.ofNullable(testClass);
-			}
-
-			@Override
-			public Set<MethodArgumentResolver> getResolvers() {
-				return resolvers;
-			}
-		};
-	}
-
-	@SuppressWarnings("unchecked")
-	private Set<MethodArgumentResolver> getMethodArgumentResolvers(Class<?> testClass,
-			Set<MethodArgumentResolver> parentResolvers) {
-		// TODO Determine where the MethodArgumentResolverRegistry should be created.
-		MethodArgumentResolverRegistry resolverRegistry = new MethodArgumentResolverRegistry(parentResolvers);
-		findAnnotation(testClass, TestDecorators.class).map(TestDecorators::value).ifPresent(clazzes -> {
-			for (Class<? extends TestDecorator> clazz : clazzes) {
-				if (MethodArgumentResolver.class.isAssignableFrom(clazz)) {
-					resolverRegistry.addResolverWithClass((Class<? extends MethodArgumentResolver>) clazz);
-				}
-			}
-		});
-
-		return resolverRegistry.getResolvers();
+			Object testInstance) {
+		return new DescriptorBasedTestExecutionContext(descriptor, parent, testInstance);
 	}
 
 }

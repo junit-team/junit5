@@ -45,7 +45,7 @@ public class EngineTestExecutionNode extends TestExecutionNode {
 	}
 
 	private TestExecutionContext createTopLevelContext() {
-		return createContext(getTestDescriptor(), null, null, null, null);
+		return createContext(getTestDescriptor(), null, null);
 	}
 
 }

@@ -11,7 +11,6 @@
 package org.junit.gen5.api.extension;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -22,29 +21,19 @@ import java.util.Set;
  */
 public interface TestExecutionContext {
 
-	default Optional<Class<?>> getTestClass() {
-		return Optional.empty();
-	}
+	Optional<Class<?>> getTestClass();
 
-	default Optional<Object> getTestInstance() {
-		return Optional.empty();
-	}
+	Optional<Object> getTestInstance();
 
-	default Optional<Method> getTestMethod() {
-		return Optional.empty();
-	}
+	Optional<Method> getTestMethod();
+
+	Optional<TestExecutionContext> getParent();
 
 	default Optional<Throwable> getTestException() {
 		return Optional.empty();
 	}
 
-	default Optional<TestExecutionContext> getParent() {
-		return Optional.empty();
-	}
-
-	default Set<MethodArgumentResolver> getResolvers() {
-		return Collections.emptySet();
-	}
+	Set<MethodArgumentResolver> getResolvers();
 
 	String getDisplayName();
 
