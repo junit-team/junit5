@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,6 +21,8 @@ import java.util.Optional;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 
 /**
  * @author Stefan Bechtold
@@ -49,12 +52,35 @@ public abstract class TestExecutionNode {
 
 	public abstract void execute(ExecutionRequest request, TestExecutionContext context);
 
-	protected void executeChild(TestExecutionNode child, ExecutionRequest request, TestExecutionContext parentContext) {
-		TestExecutionContext childContext = createChildContext(child.getTestDescriptor(), parentContext);
+	protected void executeChild(TestExecutionNode child, ExecutionRequest request, TestExecutionContext parentContext,
+			Object testInstance) {
+
+		TestExecutionContext childContext = createChildContext(child, parentContext, testInstance);
 		child.execute(request, childContext);
+
 	}
 
-	protected TestExecutionContext createChildContext(TestDescriptor descriptor, TestExecutionContext parent) {
+	private TestExecutionContext createChildContext(TestExecutionNode child, TestExecutionContext parentContext,
+			Object testInstance) {
+		Class<?> testClass = null;
+		Method testMethod = null;
+
+		if (child.getTestDescriptor() instanceof ClassTestDescriptor) {
+			//also handles ContextTestDescriptor which is subclass of CTD
+			testClass = ((ClassTestDescriptor) child.getTestDescriptor()).getTestClass();
+		}
+
+		if (child.getTestDescriptor() instanceof MethodTestDescriptor) {
+			MethodTestDescriptor methodTestDescriptor = (MethodTestDescriptor) child.getTestDescriptor();
+			testMethod = methodTestDescriptor.getTestMethod();
+			testClass = ((ClassTestDescriptor) methodTestDescriptor.getParent().get()).getTestClass();
+		}
+		return createContext(child.getTestDescriptor(), parentContext, testInstance, testMethod, testClass);
+	}
+
+	protected TestExecutionContext createContext(TestDescriptor descriptor, TestExecutionContext parent,
+			Object testInstance, Method testMethod, Class testClass) {
+
 		return new TestExecutionContext() {
 
 			private final Map<String, Object> attributes = new HashMap<>();
@@ -72,6 +98,21 @@ public abstract class TestExecutionNode {
 			@Override
 			public Optional<TestExecutionContext> getParent() {
 				return Optional.ofNullable(parent);
+			}
+
+			@Override
+			public Optional<Object> getTestInstance() {
+				return Optional.ofNullable(testInstance);
+			}
+
+			@Override
+			public Optional<Method> getTestMethod() {
+				return Optional.ofNullable(testMethod);
+			}
+
+			@Override
+			public Optional<Class<?>> getTestClass() {
+				return Optional.ofNullable(testClass);
 			}
 		};
 	}

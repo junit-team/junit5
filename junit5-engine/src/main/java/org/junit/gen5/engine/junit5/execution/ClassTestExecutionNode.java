@@ -60,24 +60,18 @@ class ClassTestExecutionNode extends TestExecutionNode {
 		}
 
 		Object testInstance = createTestInstance();
-		request.getTestInstances().push(testInstance);
 
 		try {
 			executeBeforeAllMethods(testClass, testInstance);
 			for (TestExecutionNode child : getChildren()) {
-				executeChild(child, request, context);
+				executeChild(child, request, context, testInstance);
 			}
 		}
 		catch (Exception e) {
 			request.getTestExecutionListener().testFailed(getTestDescriptor(), e);
 		}
 		finally {
-			try {
-				executeAfterAllMethods(request, testClass, testInstance);
-			}
-			finally {
-				request.getTestInstances().pop();
-			}
+			executeAfterAllMethods(request, testClass, testInstance);
 		}
 	}
 

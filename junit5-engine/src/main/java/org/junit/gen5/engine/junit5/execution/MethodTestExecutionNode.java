@@ -14,9 +14,6 @@ import static org.junit.gen5.commons.util.AnnotationUtils.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
@@ -68,13 +65,13 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		}
 
 		request.getTestExecutionListener().testStarted(getTestDescriptor());
-		Object testInstance = request.getTestInstances().peek();
+		Object testInstance = context.getTestInstance().get();
 		Class<?> testClass = testInstance.getClass();
 		Throwable exceptionThrown = null;
 
 		try {
-			executeBeforeMethods(request, testClass, testInstance);
-			invokeTestMethod(request, testInstance);
+			executeBeforeMethods(context);
+			invokeTestMethod(context.getTestMethod().get(), context);
 		}
 		catch (Throwable ex) {
 			exceptionThrown = ex;
@@ -83,7 +80,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 			}
 		}
 		finally {
-			exceptionThrown = executeAfterMethods(request, testClass, testInstance, exceptionThrown);
+			exceptionThrown = executeAfterMethods(context, exceptionThrown);
 		}
 
 		if (exceptionThrown != null) {
@@ -102,61 +99,35 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		}
 	}
 
-	private void invokeMethod(ExecutionRequest request, Method method, Object target) {
+	private void invokeMethod(Method method, TestExecutionContext context) {
 		MethodArgumentResolverRegistry resolverRegistry = buildMethodArgumentResolverRegistry();
-		populateRegistryForMethod(resolverRegistry, method);
+		populateRegistryForMethod(resolverRegistry, context.getTestMethod().get());
 
-		MethodInvoker methodInvoker = new MethodInvoker(method, target, resolverRegistry.getResolvers());
+		MethodInvoker methodInvoker = new MethodInvoker(method, context.getTestInstance().get(),
+			resolverRegistry.getResolvers());
 
 		// TODO Introduce factory for TestExecutionContext instances.
 		// TODO Cache & reuse TestExecutionContext instance so extensions can share state.
-		methodInvoker.invoke(new TestExecutionContext() {
-
-			private final Map<String, Object> attributes = new HashMap<>();
-
-			@Override
-			public Optional<Class<?>> getTestClass() {
-				return Optional.of(getTestDescriptor().getTestMethod().getDeclaringClass());
-			}
-
-			@Override
-			public Optional<Method> getTestMethod() {
-				return Optional.of(getTestDescriptor().getTestMethod());
-			}
-
-			@Override
-			public Optional<Object> getTestInstance() {
-				return Optional.of(target);
-			}
-
-			@Override
-			public String getDisplayName() {
-				return getTestDescriptor().getDisplayName();
-			}
-
-			@Override
-			public Map<String, Object> getAttributes() {
-				return this.attributes;
-			}
-		});
+		methodInvoker.invoke(context);
 	}
 
-	private void invokeTestMethod(ExecutionRequest context, Object testInstance) {
-		invokeMethod(context, getTestDescriptor().getTestMethod(), testInstance);
+	private void invokeTestMethod(Method method, TestExecutionContext context) {
+		invokeMethod(method, context);
 	}
 
-	private void executeBeforeMethods(ExecutionRequest context, Class<?> testClass, Object testInstance) {
-		for (Method method : findAnnotatedMethods(testClass, Before.class, MethodSortOrder.HierarchyDown)) {
-			invokeMethod(context, method, testInstance);
+	private void executeBeforeMethods(TestExecutionContext context) {
+		for (Method method : findAnnotatedMethods(context.getTestClass().get(), Before.class,
+			MethodSortOrder.HierarchyDown)) {
+			invokeMethod(method, context);
 		}
 	}
 
-	private Throwable executeAfterMethods(ExecutionRequest context, Class<?> testClass, Object testInstance,
-			Throwable exceptionThrown) {
+	private Throwable executeAfterMethods(TestExecutionContext context, Throwable exceptionThrown) {
 
-		for (Method method : findAnnotatedMethods(testClass, After.class, MethodSortOrder.HierarchyUp)) {
+		for (Method method : findAnnotatedMethods(context.getTestClass().get(), After.class,
+			MethodSortOrder.HierarchyUp)) {
 			try {
-				invokeMethod(context, method, testInstance);
+				invokeMethod(method, context);
 			}
 			catch (Throwable ex) {
 				Throwable currentException = ex;

@@ -35,13 +35,17 @@ public class EngineTestExecutionNode extends TestExecutionNode {
 	@Override
 	public void execute(ExecutionRequest request, TestExecutionContext context) {
 		for (TestExecutionNode child : getChildren()) {
-			executeChild(child, request, context);
+			executeChild(child, request, context, null);
 		}
 	}
 
 	public void executeRequest(ExecutionRequest request) {
-		TestExecutionContext context = createChildContext(getTestDescriptor(), null);
+		TestExecutionContext context = createTopLevelContext();
 		execute(request, context);
+	}
+
+	private TestExecutionContext createTopLevelContext() {
+		return createContext(getTestDescriptor(), null, null, null, null);
 	}
 
 }
