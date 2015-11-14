@@ -22,9 +22,25 @@ import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
  * @author Sam Brannen
  * @since 5.0
  */
-public class TestExecutionNodeResolver {
+public class TestExecutionNodeBuilder {
 
-	public static TestExecutionNode forDescriptor(TestDescriptor testDescriptor) {
+	public EngineTestExecutionNode buildExecutionTree(EngineDescriptor engineDescriptor) {
+		EngineTestExecutionNode root = new EngineTestExecutionNode(engineDescriptor);
+		buildChildrenNodes(engineDescriptor, root);
+		return root;
+	}
+
+	private void buildExecutionNode(TestDescriptor descriptor, TestExecutionNode parent) {
+		TestExecutionNode newNode = createNode(descriptor);
+		parent.addChild(newNode);
+		buildChildrenNodes(newNode.getTestDescriptor(), newNode);
+	}
+
+	private void buildChildrenNodes(TestDescriptor parentDescriptor, TestExecutionNode parent) {
+		parentDescriptor.getChildren().stream().forEach(testDescriptor -> buildExecutionNode(testDescriptor, parent));
+	}
+
+	private TestExecutionNode createNode(TestDescriptor testDescriptor) {
 		Preconditions.notNull(testDescriptor, "testDescriptor must not be null");
 
 		if (testDescriptor.getClass().equals(MethodTestDescriptor.class)) {
