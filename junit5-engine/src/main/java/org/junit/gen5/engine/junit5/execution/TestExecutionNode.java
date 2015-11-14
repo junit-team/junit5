@@ -134,13 +134,16 @@ public abstract class TestExecutionNode {
 		};
 	}
 
+	@SuppressWarnings("unchecked")
 	private Set<MethodArgumentResolver> getMethodArgumentResolvers(Class<?> testClass,
 			Set<MethodArgumentResolver> parentResolvers) {
 		// TODO Determine where the MethodArgumentResolverRegistry should be created.
 		MethodArgumentResolverRegistry resolverRegistry = new MethodArgumentResolverRegistry(parentResolvers);
 		findAnnotation(testClass, TestDecorators.class).map(TestDecorators::value).ifPresent(clazzes -> {
 			for (Class<? extends TestDecorator> clazz : clazzes) {
-				resolverRegistry.addResolverWithClass((Class<? extends MethodArgumentResolver>) clazz);
+				if (MethodArgumentResolver.class.isAssignableFrom(clazz)) {
+					resolverRegistry.addResolverWithClass((Class<? extends MethodArgumentResolver>) clazz);
+				}
 			}
 		});
 
