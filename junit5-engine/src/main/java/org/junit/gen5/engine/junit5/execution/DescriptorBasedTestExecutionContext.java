@@ -130,12 +130,32 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(this.testClass, this.testMethod, this.testInstance);
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof DescriptorBasedTestExecutionContext)) {
+			return false;
+		}
+
+		DescriptorBasedTestExecutionContext that = (DescriptorBasedTestExecutionContext) obj;
+
+		// @formatter:off
+		return Objects.equals(this.testClass, that.testClass)
+				&& Objects.equals(this.testMethod, that.testMethod)
+				&& Objects.equals(this.testInstance, that.testInstance);
+		// @formatter:on
 	}
 
 	@Override
+	public String toString() {
+		return getDisplayName();
 	}
 
 }
