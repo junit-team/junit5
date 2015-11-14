@@ -32,9 +32,9 @@ gradlew clean install
 
 ### Dependency Metadata
 
-- **Group ID**: `org.junit`
-- **Version**: `5.0.0.BUILD-SNAPSHOT`
-- **Artifact IDs**: TODO
+- **Group ID**: `org.junit.prototype`
+- **Version**: `5.0.0-SNAPSHOT`
+- **Artifact IDs**: see <https://oss.sonatype.org/content/repositories/snapshots/org/junit/prototype/>
 
 
 ## Contributing
