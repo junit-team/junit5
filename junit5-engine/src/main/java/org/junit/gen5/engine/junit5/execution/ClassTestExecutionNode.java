@@ -51,7 +51,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 	public void execute(ExecutionRequest request, TestExecutionContext context) {
 		Class<?> testClass = getTestDescriptor().getTestClass();
 
-		if (!this.conditionalEvaluator.testEnabled(getTestDescriptor())) {
+		if (this.conditionalEvaluator.testDisabled(context)) {
 			// TODO Determine if we really need an explicit TestSkippedException.
 			// TODO Provide a way for failed conditions to provide a detailed explanation
 			// of why a condition failed (e.g., a text message).

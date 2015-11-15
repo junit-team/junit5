@@ -10,18 +10,15 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.*;
+import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.junit.gen5.api.Condition;
-import org.junit.gen5.api.Condition.Context;
 import org.junit.gen5.api.Conditional;
+import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 
 /**
  * {@code ConditionEvaluator} evaluates {@link Condition Conditions}
@@ -34,29 +31,15 @@ import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
  */
 class ConditionEvaluator {
 
-	boolean testEnabled(ClassTestDescriptor testDescriptor) {
-		return testEnabled(testDescriptor, testDescriptor.getTestClass(), null);
-	}
+	/**
+	 * Determine if the test represented by the supplied {@link TestExecutionContext}
+	 * is <em>disabled</em> by evaluating all {@link Condition Conditions}
+	 * configured via {@link Conditional @Conditional}.
+	 */
+	boolean testDisabled(TestExecutionContext context) {
 
-	boolean testEnabled(MethodTestDescriptor testDescriptor) {
-		return testEnabled(testDescriptor, testDescriptor.getTestMethod().getDeclaringClass(),
-			testDescriptor.getTestMethod());
-	}
-
-	private boolean testEnabled(TestDescriptor testDescriptor, final Class<?> testClass, final Method testMethod) {
-
-		Context conditionContext = new Context() {
-
-			@Override
-			public Method getTestMethod() {
-				return testMethod;
-			}
-
-			@Override
-			public Class<?> getTestClass() {
-				return testClass;
-			}
-		};
+		final Class<?> testClass = context.getTestClass().orElse(null);
+		final Method testMethod = context.getTestMethod().orElse(null);
 
 		// TODO Introduce support for finding *all* @Conditional annotations.
 		Optional<Conditional> classLevelAnno = findAnnotation(testClass, Conditional.class);
@@ -71,9 +54,9 @@ class ConditionEvaluator {
 				try {
 					Condition condition = ReflectionUtils.newInstance(conditionClass);
 
-					if (!condition.matches(conditionContext)) {
+					if (!condition.matches(context)) {
 						// We found a failing condition, so there is no need to continue.
-						return false;
+						return true;
 					}
 				}
 				catch (Exception e) {
@@ -83,7 +66,7 @@ class ConditionEvaluator {
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 }

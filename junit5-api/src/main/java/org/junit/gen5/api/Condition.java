@@ -10,7 +10,7 @@
 
 package org.junit.gen5.api;
 
-import java.lang.reflect.Method;
+import org.junit.gen5.api.extension.TestExecutionContext;
 
 /**
  * @author Sam Brannen
@@ -20,14 +20,6 @@ import java.lang.reflect.Method;
 @FunctionalInterface
 public interface Condition {
 
-	boolean matches(Context context);
-
-	public interface Context {
-
-		Class<?> getTestClass();
-
-		Method getTestMethod();
-
-	}
+	boolean matches(TestExecutionContext context);
 
 }

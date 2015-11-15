@@ -10,10 +10,13 @@
 
 package com.example;
 
+import static org.junit.gen5.api.Assertions.fail;
+
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.BeforeAll;
+import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
@@ -43,6 +46,12 @@ class SucceedingTestCase extends AbstractSuperTest implements InterfaceWithTestC
 	@After
 	void after() {
 		System.out.println(getClass().getName() + " after called");
+	}
+
+	@Disabled
+	@Test
+	void disabled() {
+		fail("this test should be disabled");
 	}
 
 	@Test

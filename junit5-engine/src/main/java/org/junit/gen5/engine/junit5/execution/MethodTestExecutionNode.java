@@ -47,7 +47,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	public void execute(ExecutionRequest request, TestExecutionContext context) {
 		final Method testMethod = getTestDescriptor().getTestMethod();
 
-		if (!this.conditionEvaluator.testEnabled(getTestDescriptor())) {
+		if (this.conditionEvaluator.testDisabled(context)) {
 			// TODO Determine if we really need an explicit TestSkippedException.
 			// TODO Provide a way for failed conditions to provide a detailed explanation
 			// of why a condition failed (e.g., a text message).
