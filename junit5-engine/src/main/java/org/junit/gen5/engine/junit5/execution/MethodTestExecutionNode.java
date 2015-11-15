@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.junit.gen5.api.After;
+import org.junit.gen5.api.Condition.Result;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.ExecutionRequest;
@@ -47,12 +48,12 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	public void execute(ExecutionRequest request, TestExecutionContext context) {
 		final Method testMethod = getTestDescriptor().getTestMethod();
 
-		if (this.conditionEvaluator.testDisabled(context)) {
+		Result result = this.conditionEvaluator.evaluate(context);
+		if (!result.isSuccess()) {
 			// TODO Determine if we really need an explicit TestSkippedException.
-			// TODO Provide a way for failed conditions to provide a detailed explanation
-			// of why a condition failed (e.g., a text message).
 			TestSkippedException testSkippedException = new TestSkippedException(
-				String.format("Skipped test method [%s] due to failed condition", testMethod.toGenericString()));
+				String.format("Skipping test method [%s]; reason: %s", testMethod.toGenericString(),
+					result.getReason().orElse("unknown")));
 			request.getTestExecutionListener().testSkipped(getTestDescriptor(), testSkippedException);
 
 			// Abort execution of the test completely at this point.

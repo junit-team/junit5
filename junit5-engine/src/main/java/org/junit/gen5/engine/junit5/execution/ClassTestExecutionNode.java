@@ -20,6 +20,7 @@ import java.util.Set;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.BeforeAll;
+import org.junit.gen5.api.Condition.Result;
 import org.junit.gen5.api.extension.MethodArgumentResolver;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
@@ -36,7 +37,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 
 	private final ClassTestDescriptor testDescriptor;
 
-	private final ConditionEvaluator conditionalEvaluator = new ConditionEvaluator();
+	private final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
 	ClassTestExecutionNode(ClassTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
@@ -49,14 +50,13 @@ class ClassTestExecutionNode extends TestExecutionNode {
 
 	@Override
 	public void execute(ExecutionRequest request, TestExecutionContext context) {
-		Class<?> testClass = getTestDescriptor().getTestClass();
+		Class<?> testClass = context.getTestClass().get();
 
-		if (this.conditionalEvaluator.testDisabled(context)) {
+		Result result = this.conditionEvaluator.evaluate(context);
+		if (!result.isSuccess()) {
 			// TODO Determine if we really need an explicit TestSkippedException.
-			// TODO Provide a way for failed conditions to provide a detailed explanation
-			// of why a condition failed (e.g., a text message).
-			TestSkippedException testSkippedException = new TestSkippedException(
-				String.format("Skipped test class [%s] due to failed condition", testClass.getName()));
+			TestSkippedException testSkippedException = new TestSkippedException(String.format(
+				"Skipping test class [%s]; reason: %s", testClass.getName(), result.getReason().orElse("unknown")));
 			request.getTestExecutionListener().testSkipped(getTestDescriptor(), testSkippedException);
 
 			// Abort execution of the test completely at this point.

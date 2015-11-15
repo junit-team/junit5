@@ -33,15 +33,23 @@ public @interface Disabled {
 	static class DisabledCondition implements Condition {
 
 		/**
-		 * Tests are enabled if {@code @Disabled} is neither present on the
-		 * test class nor on the test method.
+		 * Tests are disabled if {@code @Disabled} is either present on the
+		 * test class or on the test method.
 		 */
 		@Override
-		public boolean matches(TestExecutionContext context) {
-			// @formatter:off
-			return context.getTestClass().map(clazz -> !findAnnotation(clazz, Disabled.class).isPresent()).orElse(true)
-					&& context.getTestMethod().map(method -> !findAnnotation(method, Disabled.class).isPresent()).orElse(true);
-			// @formatter:on
+		public Result evaluate(TestExecutionContext context) {
+
+			if (findAnnotation(context.getTestClass(), Disabled.class).isPresent()) {
+				return Result.failure(
+					String.format("@Disabled is present on test class [%s]", context.getTestClass().get().getName()));
+			}
+
+			if (findAnnotation(context.getTestMethod(), Disabled.class).isPresent()) {
+				return Result.failure(String.format("@Disabled is present on test method [%s]",
+					context.getTestMethod().get().toGenericString()));
+			}
+
+			return Result.success("@Disabled is not present");
 		}
 	}
 

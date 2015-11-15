@@ -10,9 +10,17 @@
 
 package org.junit.gen5.api;
 
+import java.util.Optional;
+
+import lombok.Data;
+
 import org.junit.gen5.api.extension.TestExecutionContext;
 
 /**
+ * A {@code Condition} can be {@linkplain #evaluate evaluated} to determine
+ * if a given test (e.g., class or method) should be executed based on the
+ * supplied {@link TestExecutionContext}.
+ *
  * @author Sam Brannen
  * @since 5.0
  * @see Conditional
@@ -20,6 +28,39 @@ import org.junit.gen5.api.extension.TestExecutionContext;
 @FunctionalInterface
 public interface Condition {
 
-	boolean matches(TestExecutionContext context);
+	/**
+	 * Evaluate this condition for the supplied {@link TestExecutionContext}.
+	 *
+	 * <p>A {@linkplain Result#success successful} result implies that the
+	 * test should be executed; whereas, a {@linkplain Result#failure failed}
+	 * result implies that the condition failed and the test should not be
+	 * executed.
+	 */
+	Result evaluate(TestExecutionContext context);
+
+	/**
+	 * The result of evaluating a condition.
+	 */
+	@Data(staticConstructor = "of")
+	public static class Result {
+
+		/**
+		 * Factory for creating <em>success</em> results.
+		 */
+		public static Result success(String reason) {
+			return of(true, Optional.ofNullable(reason));
+		}
+
+		/**
+		 * Factory for creating <em>failure</em> results.
+		 */
+		public static Result failure(String reason) {
+			return of(false, Optional.ofNullable(reason));
+		}
+
+		private final boolean success;
+		private final Optional<String> reason;
+
+	}
 
 }

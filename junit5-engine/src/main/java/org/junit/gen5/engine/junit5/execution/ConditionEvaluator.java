@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.junit.gen5.api.Condition;
+import org.junit.gen5.api.Condition.Result;
 import org.junit.gen5.api.Conditional;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.ReflectionUtils;
@@ -36,7 +37,7 @@ class ConditionEvaluator {
 	 * is <em>disabled</em> by evaluating all {@link Condition Conditions}
 	 * configured via {@link Conditional @Conditional}.
 	 */
-	boolean testDisabled(TestExecutionContext context) {
+	Result evaluate(TestExecutionContext context) {
 
 		final Class<?> testClass = context.getTestClass().orElse(null);
 		final Method testMethod = context.getTestMethod().orElse(null);
@@ -54,9 +55,10 @@ class ConditionEvaluator {
 				try {
 					Condition condition = ReflectionUtils.newInstance(conditionClass);
 
-					if (!condition.matches(context)) {
+					Result result = condition.evaluate(context);
+					if (!result.isSuccess()) {
 						// We found a failing condition, so there is no need to continue.
-						return true;
+						return result;
 					}
 				}
 				catch (Exception e) {
@@ -66,7 +68,7 @@ class ConditionEvaluator {
 			}
 		}
 
-		return false;
+		return Result.success("No failed conditions encountered");
 	}
 
 }
