@@ -27,7 +27,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnit5.class)
 @TestDecorators(MockitoDecorator.class)
-class SampleMockitoDecoratorTestCase {
+class MockitoDecoratorInBaseClassTest {
 
 	@Before
 	void initialize(@InjectMock MyType myType, @TestName String testName) {
@@ -44,9 +44,4 @@ class SampleMockitoDecoratorTestCase {
 		assertEquals("secondTestWithInjectedMock", myType.getName());
 	}
 
-}
-
-interface MyType {
-
-	String getName();
 }
