@@ -23,24 +23,24 @@ public class EngineTestExecutionNode extends TestExecutionNode {
 
 	private final EngineDescriptor testDescriptor;
 
-	public EngineTestExecutionNode(EngineDescriptor testDescriptor) {
+	EngineTestExecutionNode(EngineDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
 	}
 
 	@Override
-	public EngineDescriptor getTestDescriptor() {
+	EngineDescriptor getTestDescriptor() {
 		return this.testDescriptor;
-	}
-
-	@Override
-	public void execute(ExecutionRequest request, TestExecutionContext context) {
-		for (TestExecutionNode child : getChildren()) {
-			executeChild(child, request, context, null);
-		}
 	}
 
 	public void executeRequest(ExecutionRequest request) {
 		execute(request, createTopLevelContext());
+	}
+
+	@Override
+	void execute(ExecutionRequest request, TestExecutionContext context) {
+		for (TestExecutionNode child : getChildren()) {
+			executeChild(child, request, context, null);
+		}
 	}
 
 	private TestExecutionContext createTopLevelContext() {

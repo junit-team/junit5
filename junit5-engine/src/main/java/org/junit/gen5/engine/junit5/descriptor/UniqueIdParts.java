@@ -14,12 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UniqueIdParts {
+class UniqueIdParts {
 
 	private static final String SEPARATORS = ":$#";
+
 	private final List<String> parts = new ArrayList<>();
 
-	public UniqueIdParts(String uniqueId) {
+	UniqueIdParts(String uniqueId) {
 		splitIntoParts(uniqueId);
 	}
 
@@ -35,17 +36,18 @@ public class UniqueIdParts {
 		parts.add(currentPart);
 	}
 
-	public String pop() {
+	String pop() {
 		if (parts.isEmpty())
 			return "";
 		return parts.remove(0);
 	}
 
-	public String rest() {
+	String rest() {
 		return parts.stream().collect(Collectors.joining());
 	}
 
-	public boolean isEmpty() {
+	boolean isEmpty() {
 		return parts.isEmpty();
 	}
+
 }

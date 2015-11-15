@@ -30,31 +30,31 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor {
 
 	private final Method testMethod;
 
-	public MethodTestDescriptor(String uniqueId, Method testMethod) {
+	MethodTestDescriptor(String uniqueId, Method testMethod) {
 		super(uniqueId);
+
 		Preconditions.notNull(testMethod, "testMethod must not be null");
 
 		this.testMethod = testMethod;
-
 		this.displayName = determineDisplayName(testMethod, testMethod.getName());
 
 		setSource(new JavaSource(testMethod));
 	}
 
 	@Override
-	public Set<TestTag> getTags() {
-		Set<TestTag> methodTags = getTags(this.getTestMethod());
+	public final Set<TestTag> getTags() {
+		Set<TestTag> methodTags = getTags(getTestMethod());
 		getParent().ifPresent(parentDescriptor -> methodTags.addAll(parentDescriptor.getTags()));
 		return methodTags;
 	}
 
 	@Override
-	public String getDisplayName() {
-		return displayName;
+	public final String getDisplayName() {
+		return this.displayName;
 	}
 
-	public Method getTestMethod() {
-		return testMethod;
+	public final Method getTestMethod() {
+		return this.testMethod;
 	}
 
 	@Override

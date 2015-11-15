@@ -38,12 +38,12 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	}
 
 	@Override
-	public MethodTestDescriptor getTestDescriptor() {
+	MethodTestDescriptor getTestDescriptor() {
 		return this.testDescriptor;
 	}
 
 	@Override
-	public void execute(ExecutionRequest request, TestExecutionContext context) {
+	void execute(ExecutionRequest request, TestExecutionContext context) {
 		if (isTestDisabled(request, context)) {
 			// Abort execution of the test completely at this point.
 			return;

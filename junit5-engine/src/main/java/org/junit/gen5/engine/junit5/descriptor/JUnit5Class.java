@@ -19,8 +19,8 @@ class JUnit5Class extends JUnit5Testable {
 		this.javaClass = javaClass;
 	}
 
-	public Class<?> getJavaClass() {
-		return javaClass;
+	Class<?> getJavaClass() {
+		return this.javaClass;
 	}
 
 	@Override

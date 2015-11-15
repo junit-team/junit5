@@ -22,7 +22,7 @@ import org.junit.gen5.engine.TestDescriptor;
  */
 public class ContextTestDescriptor extends ClassTestDescriptor {
 
-	public ContextTestDescriptor(String uniqueId, Class<?> testClass) {
+	ContextTestDescriptor(String uniqueId, Class<?> testClass) {
 		super(uniqueId, testClass);
 	}
 

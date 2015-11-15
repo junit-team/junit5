@@ -53,7 +53,7 @@ class JUnit5TestableFactory {
 		return fromClass(clazz, engineId);
 	}
 
-	public JUnit5Testable fromClass(Class<?> clazz, String engineId) {
+	JUnit5Testable fromClass(Class<?> clazz, String engineId) {
 		Preconditions.notNull(clazz, "clazz must not be null");
 		Preconditions.notBlank(engineId, "Engine ID must not be null or empty");
 		if (canBeTestClass.test(clazz)) {
@@ -72,7 +72,7 @@ class JUnit5TestableFactory {
 		return new JUnit5Context(uniqueId, testClass, container);
 	}
 
-	public JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
+	JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
 		if (!isTestMethod.test(testMethod)) {
 			throwCannotResolveMethodException(testMethod);
 		}

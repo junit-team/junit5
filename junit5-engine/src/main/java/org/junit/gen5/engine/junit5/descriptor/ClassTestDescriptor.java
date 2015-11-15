@@ -28,30 +28,31 @@ import org.junit.gen5.engine.TestTag;
 public class ClassTestDescriptor extends JUnit5TestDescriptor {
 
 	private final String displayName;
+
 	private final Class<?> testClass;
 
-	public ClassTestDescriptor(String uniqueId, Class<?> testClass) {
+	ClassTestDescriptor(String uniqueId, Class<?> testClass) {
 		super(uniqueId);
+
 		Preconditions.notNull(testClass, "testClass must not be null");
 
 		this.testClass = testClass;
-
 		this.displayName = determineDisplayName(testClass, testClass.getName());
 
 		setSource(new JavaSource(testClass));
 	}
 
-	public Class<?> getTestClass() {
-		return testClass;
+	public final Class<?> getTestClass() {
+		return this.testClass;
 	}
 
 	@Override
-	public String getDisplayName() {
-		return displayName;
+	public final String getDisplayName() {
+		return this.displayName;
 	}
 
 	@Override
-	public Set<TestTag> getTags() {
+	public final Set<TestTag> getTags() {
 		return getTags(this.testClass);
 	}
 

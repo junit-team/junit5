@@ -29,7 +29,7 @@ import org.opentestalliance.TestSkippedException;
  * @author Sam Brannen
  * @since 5.0
  */
-public abstract class TestExecutionNode {
+abstract class TestExecutionNode {
 
 	private TestExecutionNode parent;
 
@@ -37,22 +37,22 @@ public abstract class TestExecutionNode {
 
 	private final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
-	public void addChild(TestExecutionNode child) {
+	void addChild(TestExecutionNode child) {
 		this.children.add(child);
 		child.parent = this;
 	}
 
-	public final TestExecutionNode getParent() {
+	final TestExecutionNode getParent() {
 		return this.parent;
 	}
 
-	public final List<TestExecutionNode> getChildren() {
+	final List<TestExecutionNode> getChildren() {
 		return Collections.unmodifiableList(this.children);
 	}
 
-	public abstract TestDescriptor getTestDescriptor();
+	abstract TestDescriptor getTestDescriptor();
 
-	public abstract void execute(ExecutionRequest request, TestExecutionContext context);
+	abstract void execute(ExecutionRequest request, TestExecutionContext context);
 
 	protected final boolean isTestDisabled(ExecutionRequest request, TestExecutionContext context) {
 		Result result = this.conditionEvaluator.evaluate(context);
@@ -82,11 +82,11 @@ public abstract class TestExecutionNode {
 		return new DescriptorBasedTestExecutionContext(child.getTestDescriptor(), parentContext, testInstance);
 	}
 
-	public void executeBeforeEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
+	void executeBeforeEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
 			Object testInstance) {
 	}
 
-	public Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance,
+	Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance,
 			Throwable previousException) {
 		return null;
 	}

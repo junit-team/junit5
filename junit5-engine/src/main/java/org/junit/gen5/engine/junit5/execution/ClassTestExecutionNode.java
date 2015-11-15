@@ -42,12 +42,12 @@ class ClassTestExecutionNode extends TestExecutionNode {
 	}
 
 	@Override
-	public ClassTestDescriptor getTestDescriptor() {
+	ClassTestDescriptor getTestDescriptor() {
 		return this.testDescriptor;
 	}
 
 	@Override
-	public void execute(ExecutionRequest request, TestExecutionContext context) {
+	void execute(ExecutionRequest request, TestExecutionContext context) {
 		if (isTestDisabled(request, context)) {
 			// Abort execution of the test completely at this point.
 			return;
@@ -104,11 +104,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 		}
 	}
 
-	/**
-	 * Must be public to be executable by child contexts
-	 * @return
-	 */
-	public Object createTestInstance() {
+	Object createTestInstance() {
 		try {
 			return newInstance(getTestDescriptor().getTestClass());
 		}
@@ -120,7 +116,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 	}
 
 	@Override
-	public void executeBeforeEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
+	void executeBeforeEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
 			Object testInstance) {
 		List<Method> beforeEachMethods = getBeforeEachMethods();
 
@@ -136,7 +132,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 	}
 
 	@Override
-	public Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance,
+	Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance,
 			Throwable previousException) {
 		List<Method> afterEachMethods = getAfterEachMethods();
 

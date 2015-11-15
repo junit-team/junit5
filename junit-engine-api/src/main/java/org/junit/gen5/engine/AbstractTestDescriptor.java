@@ -53,22 +53,24 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public void removeChild(TestDescriptor child) {
-		children.remove(child);
-		if (child instanceof AbstractTestDescriptor)
+		this.children.remove(child);
+		if (child instanceof AbstractTestDescriptor) {
 			((AbstractTestDescriptor) child).setParent(null);
+		}
 	}
 
 	protected void removeFromHierarchy() {
-		if (isRoot())
+		if (isRoot()) {
 			throw new UnsupportedOperationException("You cannot remove the root of a hierarchy.");
-		parent.removeChild(this);
-		children.clear();
+		}
+		this.parent.removeChild(this);
+		this.children.clear();
 	}
 
 	public Set<TestDescriptor> allChildren() {
 		Set<TestDescriptor> all = new HashSet<>();
-		all.addAll(children);
-		for (TestDescriptor child : children) {
+		all.addAll(this.children);
+		for (TestDescriptor child : this.children) {
 			all.addAll(((AbstractTestDescriptor) child).allChildren());
 		}
 		return all;
@@ -78,10 +80,11 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		if (getUniqueId().equals(uniqueId)) {
 			return Optional.of(this);
 		}
-		for (TestDescriptor child : children) {
+		for (TestDescriptor child : this.children) {
 			Optional<TestDescriptor> result = child.findByUniqueId(uniqueId);
-			if (result.isPresent())
+			if (result.isPresent()) {
 				return result;
+			}
 		}
 		return Optional.empty();
 	}
@@ -89,8 +92,9 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	@Override
 	public final void addChild(TestDescriptor child) {
 		Preconditions.notNull(child, "child must not be null");
-		if (child instanceof AbstractTestDescriptor)
+		if (child instanceof AbstractTestDescriptor) {
 			((AbstractTestDescriptor) child).setParent(this);
+		}
 		this.children.add(child);
 	}
 
@@ -118,7 +122,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public Optional<TestSource> getSource() {
-		return Optional.ofNullable(source);
+		return Optional.ofNullable(this.source);
 	}
 
 	@Override
@@ -142,4 +146,5 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	public String toString() {
 		return getClass().getSimpleName() + ": " + getUniqueId();
 	}
+
 }

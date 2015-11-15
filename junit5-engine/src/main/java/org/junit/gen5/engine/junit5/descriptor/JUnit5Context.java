@@ -24,7 +24,8 @@ class JUnit5Context extends JUnit5Class {
 		visitor.visitContext(getUniqueId(), getJavaClass(), this.containerClass);
 	}
 
-	public Class<?> getContainerClass() {
-		return containerClass;
+	Class<?> getContainerClass() {
+		return this.containerClass;
 	}
+
 }
