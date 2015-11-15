@@ -120,6 +120,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 		}
 	}
 
+	@Override
 	public void executeBeforeEachTest(TestExecutionContext context, Object testInstance) {
 		List<Method> beforeEachMethods = getBeforeEachMethods();
 
@@ -133,12 +134,17 @@ class ClassTestExecutionNode extends TestExecutionNode {
 		return findAnnotatedMethods(getTestDescriptor().getTestClass(), Before.class, MethodSortOrder.HierarchyDown);
 	}
 
-	public void executeAfterEachTest(TestExecutionContext context, Object testInstance) {
+	@Override
+	public Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance,
+			Throwable previousException) {
 		List<Method> afterEachMethods = getAfterEachMethods();
 
 		for (Method method : afterEachMethods) {
-			invokeMethodInContext(method, context, testInstance);
+			previousException = invokeMethodInContextWithAggregatingExceptions(method, context, testInstance,
+				previousException);
 		}
+
+		return previousException;
 	}
 
 	protected List<Method> getAfterEachMethods() {

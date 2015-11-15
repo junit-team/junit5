@@ -10,8 +10,6 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.gen5.api.extension.TestExecutionContext;
@@ -47,15 +45,22 @@ class ContextTestExecutionNode extends ClassTestExecutionNode {
 	}
 
 	@Override
-	public void executeAfterEachTest(TestExecutionContext context, Object testInstance) {
-		super.executeAfterEachTest(context, testInstance);
-		executeAfterEachTestOfParent(context, testInstance);
+	// TODO Change the exception thing into an exception aggregator
+	public Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance,
+			Throwable previousException) {
+		super.executeAfterEachTest(context, testInstance, previousException);
+		previousException = executeAfterEachTestOfParent(context, testInstance, previousException);
+		return previousException;
 	}
 
-	private void executeAfterEachTestOfParent(TestExecutionContext context, Object testInstance) {
+	private Throwable executeAfterEachTestOfParent(TestExecutionContext context, Object testInstance,
+			Throwable previousException) {
 		Optional<Object> optionalParentInstance = ReflectionUtils.getOuterInstance(testInstance);
+		Throwable[] previousExceptionContainer = new Throwable[1];
 		optionalParentInstance.ifPresent(parentInstance -> {
-			getParent().executeBeforeEachTest(context.getParent().get(), parentInstance);
+			previousExceptionContainer[0] = getParent().executeAfterEachTest(context, parentInstance,
+				previousException);
 		});
+		return previousExceptionContainer[0];
 	}
 }

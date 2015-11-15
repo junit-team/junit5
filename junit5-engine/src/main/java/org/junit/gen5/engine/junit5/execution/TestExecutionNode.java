@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -64,7 +65,9 @@ public abstract class TestExecutionNode {
 	public void executeBeforeEachTest(TestExecutionContext context, Object testInstance) {
 	}
 
-	public void executeAfterEachTest(TestExecutionContext context, Object testInstance) {
+	public Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance,
+			Throwable previousException) {
+		return null;
 	}
 
 	protected void invokeMethodInContext(Method method, TestExecutionContext context, Object target) {
@@ -73,4 +76,24 @@ public abstract class TestExecutionNode {
 		methodInvoker.invoke(context);
 	}
 
+	protected Throwable invokeMethodInContextWithAggregatingExceptions(Method method, TestExecutionContext context,
+			Object target, Throwable exceptionThrown) {
+		try {
+			invokeMethodInContext(method, context, target);
+		}
+		catch (Throwable ex) {
+			Throwable currentException = ex;
+			if (currentException instanceof InvocationTargetException) {
+				currentException = ((InvocationTargetException) currentException).getTargetException();
+			}
+
+			if (exceptionThrown == null) {
+				exceptionThrown = currentException;
+			}
+			else {
+				exceptionThrown.addSuppressed(currentException);
+			}
+		}
+		return exceptionThrown;
+	}
 }

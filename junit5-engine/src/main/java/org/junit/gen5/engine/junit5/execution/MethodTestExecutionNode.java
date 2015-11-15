@@ -103,28 +103,14 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 	private Throwable executeAfterMethods(TestExecutionContext context, Throwable exceptionThrown) {
 
+		Object target = context.getTestInstance().get();
+
 		// TODO: A bit more complicated than before
-		// getParent().executeAfterEachTest(context);
+		//return  getParent().executeAfterEachTest(context, target, exceptionThrown);
 
 		for (Method method : findAnnotatedMethods(context.getTestClass().get(), After.class,
 			MethodSortOrder.HierarchyUp)) {
-			try {
-				Object target = context.getTestInstance().get();
-				invokeMethodInContext(method, context, target);
-			}
-			catch (Throwable ex) {
-				Throwable currentException = ex;
-				if (currentException instanceof InvocationTargetException) {
-					currentException = ((InvocationTargetException) currentException).getTargetException();
-				}
-
-				if (exceptionThrown == null) {
-					exceptionThrown = currentException;
-				}
-				else {
-					exceptionThrown.addSuppressed(currentException);
-				}
-			}
+			exceptionThrown = invokeMethodInContextWithAggregatingExceptions(method, context, target, exceptionThrown);
 		}
 
 		return exceptionThrown;
