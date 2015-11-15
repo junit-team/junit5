@@ -10,11 +10,9 @@
 
 package com.example.mockito;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Parameter;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.gen5.api.extension.ArgumentResolutionException;
 import org.junit.gen5.api.extension.MethodArgumentResolver;
@@ -28,7 +26,12 @@ import org.junit.gen5.commons.util.AnnotationUtils;
  */
 public class MockitoDecorator implements MethodArgumentResolver {
 
-	private final Map<TestExecutionContext, Map<Class<?>, Object>> mocks = new HashMap<>();
+	private final ContextScope mocksInScope;
+
+	public MockitoDecorator() {
+		mocksInScope = new ContextScope<Class<?>, Object>(type -> mock(type), ContextScope.LifeCycle.OncePerTest,
+			ContextScope.Inheritance.Yes);
+	}
 
 	@Override
 	public boolean supports(Parameter parameter) {
@@ -39,23 +42,8 @@ public class MockitoDecorator implements MethodArgumentResolver {
 	public Object resolveArgument(Parameter parameter, TestExecutionContext testExecutionContext)
 			throws ArgumentResolutionException {
 
-		Map<Class<?>, Object> contextMocks = mocksFor(testExecutionContext);
 		Class<?> mockType = parameter.getType();
-		Object mock = contextMocks.get(mockType);
-		if (mock == null) {
-			mock = mock(mockType);
-			contextMocks.put(mockType, mock);
-		}
-		return mock;
-	}
-
-	private Map<Class<?>, Object> mocksFor(TestExecutionContext context) {
-		Map<Class<?>, Object> contextMocks = this.mocks.get(context);
-		if (contextMocks == null) {
-			contextMocks = new HashMap<>();
-			this.mocks.put(context, contextMocks);
-		}
-		return contextMocks;
+		return mocksInScope.get(testExecutionContext, mockType);
 	}
 
 }

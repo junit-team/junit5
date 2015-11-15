@@ -27,7 +27,8 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnit5.class)
 @TestDecorators(MockitoDecorator.class)
-class MockitoDecoratorInBaseClassTest {
+//public to be picked up by IDE JUnit4 test runner
+public class MockitoDecoratorInBaseClassTest {
 
 	@Before
 	void initialize(@InjectMock MyType myType, @TestName String testName) {
