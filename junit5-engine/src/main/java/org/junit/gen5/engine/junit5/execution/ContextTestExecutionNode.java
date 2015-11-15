@@ -32,15 +32,17 @@ class ContextTestExecutionNode extends ClassTestExecutionNode {
 	}
 
 	@Override
-	public void executeBeforeEachTest(TestExecutionContext context, Object testInstance) {
-		executeBeforeEachTestOfParent(context, testInstance);
-		super.executeBeforeEachTest(context, testInstance);
+	public void executeBeforeEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
+			Object testInstance) {
+		executeBeforeEachTestOfParent(methodContext, resolutionContext, testInstance);
+		super.executeBeforeEachTest(methodContext, resolutionContext, testInstance);
 	}
 
-	private void executeBeforeEachTestOfParent(TestExecutionContext context, Object testInstance) {
+	private void executeBeforeEachTestOfParent(TestExecutionContext methodContext, TestExecutionContext parentContext,
+			Object testInstance) {
 		Optional<Object> optionalParentInstance = ReflectionUtils.getOuterInstance(testInstance);
 		optionalParentInstance.ifPresent(parentInstance -> {
-			getParent().executeBeforeEachTest(context.getParent().get(), parentInstance);
+			getParent().executeBeforeEachTest(methodContext, parentContext.getParent().get(), parentInstance);
 		});
 	}
 

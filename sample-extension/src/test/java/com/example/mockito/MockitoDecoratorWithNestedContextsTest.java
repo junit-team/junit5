@@ -79,8 +79,8 @@ public class MockitoDecoratorWithNestedContextsTest {
 			assertEquals("base class", myType.getName());
 
 			// TODO Mocks from nested contexts should not be visible, but they are
-			//			assertNull(yourType.getName());
-			//			assertNull(theirType.getName());
+			//assertNull(theirType.getName());
+			//assertNull(yourType.getName());
 		}
 
 	}

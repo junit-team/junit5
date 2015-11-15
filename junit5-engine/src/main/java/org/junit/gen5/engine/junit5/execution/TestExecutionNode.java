@@ -62,7 +62,8 @@ public abstract class TestExecutionNode {
 		return new DescriptorBasedTestExecutionContext(child.getTestDescriptor(), parentContext, testInstance);
 	}
 
-	public void executeBeforeEachTest(TestExecutionContext context, Object testInstance) {
+	public void executeBeforeEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
+			Object testInstance) {
 	}
 
 	public Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance,
@@ -70,16 +71,17 @@ public abstract class TestExecutionNode {
 		return null;
 	}
 
-	protected void invokeMethodInContext(Method method, TestExecutionContext context, Object target) {
-		Set<MethodArgumentResolver> resolvers = context.getArgumentResolvers();
-		MethodInvoker methodInvoker = new MethodInvoker(method, target, resolvers);
-		methodInvoker.invoke(context);
+	protected void invokeMethodInContext(Method method, TestExecutionContext methodContext,
+			Set<MethodArgumentResolver> argumentResolvers, Object target) {
+		//		Set<MethodArgumentResolver> resolvers = methodContext.getArgumentResolvers();
+		MethodInvoker methodInvoker = new MethodInvoker(method, target, argumentResolvers);
+		methodInvoker.invoke(methodContext);
 	}
 
 	protected Throwable invokeMethodInContextWithAggregatingExceptions(Method method, TestExecutionContext context,
 			Object target, Throwable exceptionThrown) {
 		try {
-			invokeMethodInContext(method, context, target);
+			invokeMethodInContext(method, context, context.getArgumentResolvers(), target);
 		}
 		catch (Throwable ex) {
 			Throwable currentException = ex;
