@@ -362,6 +362,13 @@ public class JUnit5TestEngineTests {
 
 	private static class TestCaseWithContext {
 
+		boolean beforeInvoked = false;
+
+		@Before
+		void init() {
+			beforeInvoked = true;
+		}
+
 		@Test
 		void enabledTest() {
 		}
@@ -371,7 +378,7 @@ public class JUnit5TestEngineTests {
 
 			@Test
 			void innerTest() {
-				//Currently skipped
+				//assertTrue(beforeInvoked, "before of parent context was not invoked");
 			}
 		}
 	}
