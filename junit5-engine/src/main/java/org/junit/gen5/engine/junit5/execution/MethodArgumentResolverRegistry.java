@@ -34,9 +34,7 @@ class MethodArgumentResolverRegistry {
 	 * @see TestNameArgumentResolver
 	 */
 	MethodArgumentResolverRegistry(Set<MethodArgumentResolver> parentResolvers) {
-		parentResolvers.stream().forEach(r -> {
-			this.resolvers.add(r);
-		});
+		parentResolvers.stream().forEach(resolvers::add);
 		addResolverWithClass(TestNameArgumentResolver.class);
 	}
 
@@ -45,15 +43,14 @@ class MethodArgumentResolverRegistry {
 	}
 
 	void addResolverWithClass(Class<? extends MethodArgumentResolver> resolverClass) {
-		if (resolverAlreadyPresent(resolverClass))
+		if (resolverAlreadyPresent(resolverClass)) {
 			return;
-		MethodArgumentResolver resolver = ReflectionUtils.newInstance(resolverClass);
-		this.resolvers.add(resolver);
-
+		}
+		this.resolvers.add(ReflectionUtils.newInstance(resolverClass));
 	}
 
 	private boolean resolverAlreadyPresent(Class<? extends MethodArgumentResolver> resolverClass) {
-		//Only one resolver of same class needed since resolvers don't have state
+		// Only one resolver of same type needed since resolvers are stateless.
 		return resolvers.stream().anyMatch(r -> r.getClass().equals(resolverClass));
 	}
 
