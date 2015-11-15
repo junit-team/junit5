@@ -43,16 +43,16 @@ public class TestExecutionNodeBuilder {
 	private TestExecutionNode createNode(TestDescriptor testDescriptor) {
 		Preconditions.notNull(testDescriptor, "testDescriptor must not be null");
 
-		if (testDescriptor.getClass().equals(MethodTestDescriptor.class)) {
+		if (testDescriptor.getClass() == MethodTestDescriptor.class) {
 			return new MethodTestExecutionNode((MethodTestDescriptor) testDescriptor);
 		}
-		else if (testDescriptor.getClass().equals(ClassTestDescriptor.class)) {
+		else if (testDescriptor.getClass() == ClassTestDescriptor.class) {
 			return new ClassTestExecutionNode((ClassTestDescriptor) testDescriptor);
 		}
-		else if (testDescriptor.getClass().equals(ContextTestDescriptor.class)) {
+		else if (testDescriptor.getClass() == ContextTestDescriptor.class) {
 			return new ContextTestExecutionNode((ContextTestDescriptor) testDescriptor);
 		}
-		else if (testDescriptor.getClass().equals(EngineDescriptor.class)) {
+		else if (testDescriptor.getClass() == EngineDescriptor.class) {
 			return new EngineTestExecutionNode((EngineDescriptor) testDescriptor);
 		}
 

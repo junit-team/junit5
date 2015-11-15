@@ -23,13 +23,14 @@ import org.junit.gen5.api.extension.TestExecutionContext;
  * executing test for {@code String} method parameters annotated with
  * {@link TestName @TestName}.
  *
+ * @author Sam Brannen
  * @since 5.0
  */
 public class TestNameArgumentResolver implements MethodArgumentResolver {
 
 	@Override
 	public boolean supports(Parameter parameter) {
-		return parameter.getType().equals(String.class) && findAnnotation(parameter, TestName.class).isPresent();
+		return parameter.getType() == String.class && findAnnotation(parameter, TestName.class).isPresent();
 	}
 
 	@Override
