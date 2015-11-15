@@ -10,7 +10,8 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -26,8 +27,8 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * {@code MethodInvoker} encapsulates the invocation of a method, including
- * support for dynamic resolution of method arguments via {@link MethodParameterResolver
- * MethodArgumentResolvers} registered in the supplied {@link MethodParameterResolverRegistry}.
+ * support for dynamic resolution of method parameters via {@link MethodParameterResolver
+ * MethodParameterResolvers} registered in the supplied {@link MethodParameterResolverRegistry}.
  *
  * @author Sam Brannen
  * @author Matthias Merdes
@@ -52,26 +53,26 @@ class MethodInvoker {
 	}
 
 	Object invoke(TestExecutionContext testExecutionContext) {
-		return ReflectionUtils.invokeMethod(this.method, this.target, resolveArguments(testExecutionContext));
+		return ReflectionUtils.invokeMethod(this.method, this.target, resolveParameters(testExecutionContext));
 	}
 
 	/**
-	 * Resolve the array of arguments for the configured method.
+	 * Resolve the array of parameters for the configured method.
 	 *
 	 * @param testExecutionContext the current test execution context
-	 * @return the array of Objects to be used as arguments in the method
+	 * @return the array of Objects to be used as parameters in the method
 	 * invocation; never {@code null} though potentially empty
 	 * @throws ParameterResolutionException
 	 */
-	private Object[] resolveArguments(TestExecutionContext testExecutionContext) throws ParameterResolutionException {
+	private Object[] resolveParameters(TestExecutionContext testExecutionContext) throws ParameterResolutionException {
 		// @formatter:off
 		return Arrays.stream(this.method.getParameters())
-				.map(param -> resolveArgument(param, testExecutionContext))
+				.map(param -> resolveParameter(param, testExecutionContext))
 				.toArray(Object[]::new);
 		// @formatter:on
 	}
 
-	private Object resolveArgument(Parameter parameter, TestExecutionContext testExecutionContext) {
+	private Object resolveParameter(Parameter parameter, TestExecutionContext testExecutionContext) {
 		try {
 			// @formatter:off
 			List<MethodParameterResolver> matchingResolvers = this.resolvers.stream()
@@ -81,7 +82,7 @@ class MethodInvoker {
 
 			if (matchingResolvers.size() == 0) {
 				throw new ParameterResolutionException(
-					String.format("No MethodArgumentResolver registered for parameter [%s] in method [%s].", parameter,
+					String.format("No MethodParameterResolver registered for parameter [%s] in method [%s].", parameter,
 						this.method.toGenericString()));
 			}
 			if (matchingResolvers.size() > 1) {
@@ -91,7 +92,7 @@ class MethodInvoker {
 						.collect(joining(", "));
 				// @formatter:on
 				throw new ParameterResolutionException(String.format(
-					"Discovered multiple competing MethodArgumentResolvers for parameter [%s] in method [%s]: %s",
+					"Discovered multiple competing MethodParameterResolvers for parameter [%s] in method [%s]: %s",
 					parameter, this.method.toGenericString(), resolverNames));
 			}
 			return matchingResolvers.get(0).resolve(parameter, testExecutionContext);

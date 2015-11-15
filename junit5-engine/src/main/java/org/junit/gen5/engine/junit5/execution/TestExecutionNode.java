@@ -90,16 +90,16 @@ abstract class TestExecutionNode {
 	}
 
 	protected void invokeMethodInContext(Method method, TestExecutionContext methodContext,
-			Set<MethodParameterResolver> argumentResolvers, Object target) {
-		MethodInvoker methodInvoker = new MethodInvoker(method, target, argumentResolvers);
+			Set<MethodParameterResolver> parameterResolvers, Object target) {
+		MethodInvoker methodInvoker = new MethodInvoker(method, target, parameterResolvers);
 		methodInvoker.invoke(methodContext);
 	}
 
 	protected void invokeMethodInContextWithAggregatingExceptions(Method method, TestExecutionContext methodContext,
-			Set<MethodParameterResolver> argumentResolvers, Object target, List<Throwable> exceptionsCollector) {
+			Set<MethodParameterResolver> parameterResolvers, Object target, List<Throwable> exceptionsCollector) {
 
 		try {
-			invokeMethodInContext(method, methodContext, argumentResolvers, target);
+			invokeMethodInContext(method, methodContext, parameterResolvers, target);
 		}
 		catch (Throwable currentException) {
 			// InvocationTargetException already handled in ReflectionUtils.invokeMethod()

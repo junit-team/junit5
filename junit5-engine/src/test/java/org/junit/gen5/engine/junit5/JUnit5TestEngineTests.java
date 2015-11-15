@@ -416,28 +416,28 @@ public class JUnit5TestEngineTests {
 	private static class MethodInjectionTestCase {
 
 		@Test
-		void argumentInjectionOfStandardTestName(@TestName String name) {
-			assertEquals("argumentInjectionOfStandardTestName", name);
+		void parameterInjectionOfStandardTestName(@TestName String name) {
+			assertEquals("parameterInjectionOfStandardTestName", name);
 		}
 
 		@Test
 		@Name("myName")
-		void argumentInjectionOfUserProvidedTestName(@TestName String name) {
+		void parameterInjectionOfUserProvidedTestName(@TestName String name) {
 			assertEquals("myName", name);
 		}
 
 		@Test
-		void argumentInjectionWithCompetingResolversFail(@CustomAnnotation CustomType customType) {
+		void parameterInjectionWithCompetingResolversFail(@CustomAnnotation CustomType customType) {
 			// should fail
 		}
 
 		@Test
-		void argumentInjectionByType(CustomType customType) {
+		void parameterInjectionByType(CustomType customType) {
 			assertNotNull(customType);
 		}
 
 		@Test
-		void argumentInjectionByAnnotation(@CustomAnnotation String value) {
+		void parameterInjectionByAnnotation(@CustomAnnotation String value) {
 			assertNotNull(value);
 		}
 

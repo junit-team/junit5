@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.*;
+import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -63,13 +63,13 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 			// Also handles ContextTestDescriptor which extends ClassTestDescriptor.
 			this.testClass = ((ClassTestDescriptor) descriptor).getTestClass();
 			this.testMethod = null;
-			this.resolvers.addAll(getMethodArgumentResolvers(this.testClass, parentResolvers));
+			this.resolvers.addAll(getMethodParameterResolvers(this.testClass, parentResolvers));
 		}
 		else if (descriptor instanceof MethodTestDescriptor) {
 			MethodTestDescriptor methodTestDescriptor = (MethodTestDescriptor) descriptor;
 			this.testClass = ((ClassTestDescriptor) methodTestDescriptor.getParent().get()).getTestClass();
 			this.testMethod = methodTestDescriptor.getTestMethod();
-			this.resolvers.addAll(getMethodArgumentResolvers(this.testMethod, parentResolvers));
+			this.resolvers.addAll(getMethodParameterResolvers(this.testMethod, parentResolvers));
 		}
 		else {
 			this.testClass = null;
@@ -78,10 +78,10 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Set<MethodParameterResolver> getMethodArgumentResolvers(AnnotatedElement annotatedElement,
+	private Set<MethodParameterResolver> getMethodParameterResolvers(AnnotatedElement annotatedElement,
 			Set<MethodParameterResolver> parentResolvers) {
 
-		// TODO Determine where the MethodArgumentResolverRegistry should be created.
+		// TODO Determine where the MethodParameterResolverRegistry should be created.
 		MethodParameterResolverRegistry resolverRegistry = new MethodParameterResolverRegistry(parentResolvers);
 		findAnnotation(annotatedElement, TestDecorators.class).map(TestDecorators::value).ifPresent(clazzes -> {
 			for (Class<? extends TestDecorator> clazz : clazzes) {
