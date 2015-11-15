@@ -10,9 +10,10 @@
 
 package com.example.mockito;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Test;
@@ -31,7 +32,7 @@ import org.junit.runner.RunWith;
 public class MockitoDecoratorWithNestedContextsTest {
 
 	@Before
-	void initialize(@InjectMock MyType myType) {
+	void initializeBaseClass(@InjectMock MyType myType) {
 		when(myType.getName()).thenReturn("base class");
 	}
 
@@ -44,14 +45,42 @@ public class MockitoDecoratorWithNestedContextsTest {
 	class FirstContext {
 
 		@Before
-		void initialize(@InjectMock YourType yourType, @InjectMock MyType myType) {
+		void initializeFirstContext(@InjectMock YourType yourType, @InjectMock MyType myType) {
 			when(yourType.getName()).thenReturn("first context");
 			assertEquals("base class", myType.getName());
 		}
 
-		//@Test
+		@Test
 		void firstContextTest(@InjectMock YourType yourType) {
 			assertEquals("first context", yourType.getName());
+		}
+
+		@Context
+		class SecondContext {
+
+			@Before
+			void initializeSecondContext(@InjectMock YourType yourType, @InjectMock MyType myType,
+					@InjectMock TheirType theirType) {
+				when(theirType.getName()).thenReturn("second context");
+				assertEquals("base class", myType.getName());
+				assertEquals("first context", yourType.getName());
+			}
+
+			@Test
+			void secondContextTest(@InjectMock TheirType theirType) {
+				assertEquals("second context", theirType.getName());
+			}
+
+		}
+
+		@After
+		void afterFirstContext(@InjectMock YourType yourType, @InjectMock MyType myType,
+				@InjectMock TheirType theirType) {
+			assertEquals("base class", myType.getName());
+
+			// TODO Mocks from nested contexts should not be visible, but they are
+			//			assertNull(yourType.getName());
+			//			assertNull(theirType.getName());
 		}
 
 	}

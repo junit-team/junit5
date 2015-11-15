@@ -8,23 +8,23 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.example.mockito;
+package org.junit.gen5.api.extension;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.Preconditions;
 
+// TODO: Implement support for other LifeCyle and Inheritance configurations
 public class ContextScope<K, V> {
 
-	enum LifeCycle {
+	public enum LifeCycle {
 		OncePerTest, OncePerContext, OncePerClass, Singleton
 	}
 
-	enum Inheritance {
+	public enum Inheritance {
 		Yes, No
 	}
 

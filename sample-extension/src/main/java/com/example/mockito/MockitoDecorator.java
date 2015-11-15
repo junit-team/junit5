@@ -15,6 +15,7 @@ import static org.mockito.Mockito.mock;
 import java.lang.reflect.Parameter;
 
 import org.junit.gen5.api.extension.ArgumentResolutionException;
+import org.junit.gen5.api.extension.ContextScope;
 import org.junit.gen5.api.extension.MethodArgumentResolver;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.AnnotationUtils;
