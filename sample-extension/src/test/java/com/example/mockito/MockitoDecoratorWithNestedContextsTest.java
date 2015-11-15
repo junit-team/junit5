@@ -31,6 +31,8 @@ import org.junit.runner.RunWith;
 //public to be picked up by IDE JUnit4 test runner
 public class MockitoDecoratorWithNestedContextsTest {
 
+	boolean baseClassTestRun = false;
+
 	@Before
 	void initializeBaseClass(@InjectMock MyType myType) {
 		when(myType.getName()).thenReturn("base class");
@@ -39,6 +41,7 @@ public class MockitoDecoratorWithNestedContextsTest {
 	@Test
 	void baseClassTest(@InjectMock MyType myType) {
 		assertEquals("base class", myType.getName());
+		baseClassTestRun = true;
 	}
 
 	@Context
@@ -78,9 +81,10 @@ public class MockitoDecoratorWithNestedContextsTest {
 				@InjectMock TheirType theirType) {
 			assertEquals("base class", myType.getName());
 
-			// TODO Mocks from nested contexts should not be visible, but they are
-			//assertNull(theirType.getName());
-			//assertNull(yourType.getName());
+			if (baseClassTestRun) {
+				assertNull(theirType.getName());
+				assertNull(yourType.getName());
+			}
 		}
 
 	}

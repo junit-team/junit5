@@ -10,15 +10,12 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
-
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.junit.gen5.api.After;
 import org.junit.gen5.api.Condition.Result;
 import org.junit.gen5.api.extension.TestExecutionContext;
-import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 import org.opentestalliance.TestAbortedException;
@@ -50,36 +47,41 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		}
 
 		request.getTestExecutionListener().testStarted(getTestDescriptor());
-		Throwable exceptionThrown = null;
+
+		List<Throwable> exceptionsCollector = new ArrayList<>();
 
 		try {
 			executeBeforeMethods(context);
 			invokeTestMethod(context.getTestMethod().get(), context);
 		}
 		catch (Throwable ex) {
-			exceptionThrown = ex;
-			if (ex instanceof InvocationTargetException) {
-				exceptionThrown = ((InvocationTargetException) ex).getTargetException();
-			}
+			exceptionsCollector.add(ex);
 		}
 		finally {
-			exceptionThrown = executeAfterMethods(context, exceptionThrown);
+			executeAfterMethods(context, exceptionsCollector);
 		}
 
-		if (exceptionThrown != null) {
-			if (exceptionThrown instanceof TestSkippedException) {
-				request.getTestExecutionListener().testSkipped(getTestDescriptor(), exceptionThrown);
+		if (!exceptionsCollector.isEmpty()) {
+			Throwable mainException = wrapInCollectingException(exceptionsCollector);
+			if (mainException instanceof TestSkippedException) {
+				request.getTestExecutionListener().testSkipped(getTestDescriptor(), mainException);
 			}
-			else if (exceptionThrown instanceof TestAbortedException) {
-				request.getTestExecutionListener().testAborted(getTestDescriptor(), exceptionThrown);
+			else if (mainException instanceof TestAbortedException) {
+				request.getTestExecutionListener().testAborted(getTestDescriptor(), mainException);
 			}
 			else {
-				request.getTestExecutionListener().testFailed(getTestDescriptor(), exceptionThrown);
+				request.getTestExecutionListener().testFailed(getTestDescriptor(), mainException);
 			}
 		}
 		else {
 			request.getTestExecutionListener().testSucceeded(getTestDescriptor());
 		}
+	}
+
+	protected Throwable wrapInCollectingException(List<Throwable> exceptionsCollector) {
+		Throwable mainException = exceptionsCollector.remove(0);
+		exceptionsCollector.stream().forEach(ex -> mainException.addSuppressed(ex));
+		return mainException;
 	}
 
 	@Override
@@ -94,22 +96,14 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	}
 
 	private void executeBeforeMethods(TestExecutionContext context) {
-		getParent().executeBeforeEachTest(context, context.getParent().get(), context.getTestInstance().get());
+		Object target = context.getTestInstance().get();
+		getParent().executeBeforeEachTest(context, context.getParent().get(), target);
 	}
 
-	private Throwable executeAfterMethods(TestExecutionContext context, Throwable exceptionThrown) {
+	private void executeAfterMethods(TestExecutionContext context, List<Throwable> exceptionsCollector) {
 
 		Object target = context.getTestInstance().get();
-
-		// TODO: A bit more complicated than before
-		//return  getParent().executeAfterEachTest(context, target, exceptionThrown);
-
-		for (Method method : findAnnotatedMethods(context.getTestClass().get(), After.class,
-			MethodSortOrder.HierarchyUp)) {
-			exceptionThrown = invokeMethodInContextWithAggregatingExceptions(method, context, target, exceptionThrown);
-		}
-
-		return exceptionThrown;
+		getParent().executeAfterEachTest(context, context.getParent().get(), target, exceptionsCollector);
 	}
 
 }

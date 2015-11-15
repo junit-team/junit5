@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.gen5.api.extension.TestExecutionContext;
@@ -38,30 +39,28 @@ class ContextTestExecutionNode extends ClassTestExecutionNode {
 		super.executeBeforeEachTest(methodContext, resolutionContext, testInstance);
 	}
 
-	private void executeBeforeEachTestOfParent(TestExecutionContext methodContext, TestExecutionContext parentContext,
-			Object testInstance) {
+	private void executeBeforeEachTestOfParent(TestExecutionContext methodContext,
+			TestExecutionContext resolutionContext, Object testInstance) {
 		Optional<Object> optionalParentInstance = ReflectionUtils.getOuterInstance(testInstance);
 		optionalParentInstance.ifPresent(parentInstance -> {
-			getParent().executeBeforeEachTest(methodContext, parentContext.getParent().get(), parentInstance);
+			getParent().executeBeforeEachTest(methodContext, resolutionContext.getParent().get(), parentInstance);
 		});
 	}
 
 	@Override
-	// TODO Change the exception thing into an exception aggregator
-	Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance, Throwable previousException) {
-		super.executeAfterEachTest(context, testInstance, previousException);
-		previousException = executeAfterEachTestOfParent(context, testInstance, previousException);
-		return previousException;
+	void executeAfterEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
+			Object testInstance, List<Throwable> exceptionCollector) {
+
+		super.executeAfterEachTest(methodContext, resolutionContext, testInstance, exceptionCollector);
+		executeAfterEachTestOfParent(methodContext, resolutionContext, testInstance, exceptionCollector);
 	}
 
-	private Throwable executeAfterEachTestOfParent(TestExecutionContext context, Object testInstance,
-			Throwable previousException) {
+	private void executeAfterEachTestOfParent(TestExecutionContext methodContext,
+			TestExecutionContext resolutionContext, Object testInstance, List<Throwable> exceptionsCollector) {
 		Optional<Object> optionalParentInstance = ReflectionUtils.getOuterInstance(testInstance);
-		Throwable[] previousExceptionContainer = new Throwable[1];
 		optionalParentInstance.ifPresent(parentInstance -> {
-			previousExceptionContainer[0] = getParent().executeAfterEachTest(context, parentInstance,
-				previousException);
+			getParent().executeAfterEachTest(methodContext, resolutionContext.getParent().get(), parentInstance,
+				exceptionsCollector);
 		});
-		return previousExceptionContainer[0];
 	}
 }

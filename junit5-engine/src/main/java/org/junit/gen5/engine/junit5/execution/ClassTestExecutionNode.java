@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.gen5.api.After;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.BeforeAll;
@@ -132,19 +133,19 @@ class ClassTestExecutionNode extends TestExecutionNode {
 	}
 
 	@Override
-	Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance, Throwable previousException) {
+	void executeAfterEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
+			Object testInstance, List<Throwable> exceptionCollector) {
 		List<Method> afterEachMethods = getAfterEachMethods();
 
+		Set<MethodArgumentResolver> parentResolvers = resolutionContext.getArgumentResolvers();
 		for (Method method : afterEachMethods) {
-			previousException = invokeMethodInContextWithAggregatingExceptions(method, context, testInstance,
-				previousException);
+			invokeMethodInContextWithAggregatingExceptions(method, methodContext, parentResolvers, testInstance,
+				exceptionCollector);
 		}
-
-		return previousException;
 	}
 
 	protected List<Method> getAfterEachMethods() {
-		return findAnnotatedMethods(getTestDescriptor().getTestClass(), Before.class, MethodSortOrder.HierarchyUp);
+		return findAnnotatedMethods(getTestDescriptor().getTestClass(), After.class, MethodSortOrder.HierarchyUp);
 	}
 
 }

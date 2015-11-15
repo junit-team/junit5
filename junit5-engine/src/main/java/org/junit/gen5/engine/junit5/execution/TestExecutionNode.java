@@ -10,7 +10,6 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -86,35 +85,24 @@ abstract class TestExecutionNode {
 			Object testInstance) {
 	}
 
-	Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance, Throwable previousException) {
-		return null;
+	void executeAfterEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
+			Object testInstance, List<Throwable> exceptionsCollector) {
 	}
 
 	protected void invokeMethodInContext(Method method, TestExecutionContext methodContext,
 			Set<MethodArgumentResolver> argumentResolvers, Object target) {
-		//		Set<MethodArgumentResolver> resolvers = methodContext.getArgumentResolvers();
 		MethodInvoker methodInvoker = new MethodInvoker(method, target, argumentResolvers);
 		methodInvoker.invoke(methodContext);
 	}
 
-	protected Throwable invokeMethodInContextWithAggregatingExceptions(Method method, TestExecutionContext context,
-			Object target, Throwable exceptionThrown) {
+	protected void invokeMethodInContextWithAggregatingExceptions(Method method, TestExecutionContext methodContext,
+			Set<MethodArgumentResolver> argumentResolvers, Object target, List<Throwable> exceptionsCollector) {
 		try {
-			invokeMethodInContext(method, context, context.getArgumentResolvers(), target);
+			invokeMethodInContext(method, methodContext, argumentResolvers, target);
 		}
-		catch (Throwable ex) {
-			Throwable currentException = ex;
-			if (currentException instanceof InvocationTargetException) {
-				currentException = ((InvocationTargetException) currentException).getTargetException();
-			}
-
-			if (exceptionThrown == null) {
-				exceptionThrown = currentException;
-			}
-			else {
-				exceptionThrown.addSuppressed(currentException);
-			}
+		catch (Throwable currentException) {
+			// InvocationTargetException already handled in ReflectionUtils.invokeMethod()
+			exceptionsCollector.add(currentException);
 		}
-		return exceptionThrown;
 	}
 }

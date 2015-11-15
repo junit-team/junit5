@@ -231,7 +231,7 @@ public class JUnit5TestEngineTests {
 		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
 
-		//Assert.assertEquals("# after calls", 3, TestCaseWithContext.countAfterInvoked);
+		Assert.assertEquals("# after calls", 3, TestCaseWithContext.countAfterInvoked);
 	}
 
 	private TrackingTestExecutionListener executeTests(TestPlanSpecification spec, int expectedDescriptorCount) {
