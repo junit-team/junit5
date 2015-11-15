@@ -10,7 +10,7 @@
 
 package org.junit.gen5.launcher;
 
-import static org.junit.gen5.launcher.TestEngineRegistry.*;
+import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
 import java.util.Optional;
 

@@ -10,7 +10,8 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.findInnerClasses;
+import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;

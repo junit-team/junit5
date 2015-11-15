@@ -10,8 +10,8 @@
 
 package com.example.mockito;
 
-import static org.junit.gen5.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Test;

@@ -10,7 +10,11 @@
 
 package org.junit.gen5.console;
 
-import static org.junit.gen5.console.ColoredPrintingTestListener.Color.*;
+import static org.junit.gen5.console.ColoredPrintingTestListener.Color.BLUE;
+import static org.junit.gen5.console.ColoredPrintingTestListener.Color.GREEN;
+import static org.junit.gen5.console.ColoredPrintingTestListener.Color.NONE;
+import static org.junit.gen5.console.ColoredPrintingTestListener.Color.RED;
+import static org.junit.gen5.console.ColoredPrintingTestListener.Color.YELLOW;
 
 import java.io.PrintStream;
 

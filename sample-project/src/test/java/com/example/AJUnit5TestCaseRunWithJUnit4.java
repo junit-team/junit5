@@ -10,7 +10,7 @@
 
 package com.example;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.fail;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.junit4runner.JUnit5;

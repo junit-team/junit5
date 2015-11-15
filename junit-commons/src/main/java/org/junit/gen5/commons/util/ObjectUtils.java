@@ -10,8 +10,8 @@
 
 package org.junit.gen5.commons.util;
 
-import static java.util.Arrays.*;
-import static java.util.stream.Collectors.*;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 
 /**
  * @author Sam Brannen

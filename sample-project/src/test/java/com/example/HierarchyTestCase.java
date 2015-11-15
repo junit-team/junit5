@@ -10,7 +10,13 @@
 
 package com.example;
 
-import org.junit.gen5.api.*;
+import org.junit.gen5.api.After;
+import org.junit.gen5.api.AfterAll;
+import org.junit.gen5.api.Before;
+import org.junit.gen5.api.BeforeAll;
+import org.junit.gen5.api.Context;
+import org.junit.gen5.api.Name;
+import org.junit.gen5.api.Test;
 import org.junit.gen5.junit4runner.JUnit5;
 import org.junit.runner.RunWith;
 

@@ -10,8 +10,9 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static java.util.stream.Collectors.*;
-import static org.junit.gen5.commons.util.AnnotationUtils.*;
+import static java.util.stream.Collectors.toCollection;
+import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
+import static org.junit.gen5.commons.util.AnnotationUtils.findRepeatableAnnotations;
 
 import java.lang.reflect.AnnotatedElement;
 import java.util.LinkedHashSet;
