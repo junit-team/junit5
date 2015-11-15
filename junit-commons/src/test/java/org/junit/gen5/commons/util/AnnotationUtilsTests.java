@@ -27,6 +27,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Optional;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -88,13 +89,30 @@ public final class AnnotationUtilsTests {
 	}
 
 	@Test
+	public void findRepeatableAnnotationsWithSingleComposedTag() throws Exception {
+		assertTagsFound(SingleComposedTaggedClass.class, "fast");
+	}
+
+	@Test
 	public void findRepeatableAnnotationsWithMultipleTags() throws Exception {
 		assertTagsFound(MultiTaggedClass.class, "a", "b", "c");
 	}
 
 	@Test
+	public void findRepeatableAnnotationsWithMultipleComposedTags() throws Exception {
+		assertTagsFound(MultiComposedTaggedClass.class, "fast", "smoke");
+		assertTagsFound(FastAndSmokyTaggedClass.class, "fast", "smoke");
+	}
+
+	@Test
 	public void findRepeatableAnnotationsWithContainer() throws Exception {
 		assertTagsFound(ContainerTaggedClass.class, "a", "b", "c", "d");
+	}
+
+	@Test
+	@Ignore("Disabled until findRepeatableAnnotations() algorithm is refined")
+	public void findRepeatableAnnotationsWithComposedTagBeforeContainer() throws Exception {
+		assertTagsFound(ContainerAfterComposedTaggedClass.class, "fast", "a", "b", "c");
 	}
 
 	private void assertTagsFound(Class<?> clazz, String... tags) throws Exception {
@@ -139,6 +157,22 @@ public final class AnnotationUtilsTests {
 		String value();
 	}
 
+	@Retention(RetentionPolicy.RUNTIME)
+	@Tag("fast")
+	@interface Fast {
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Tag("smoke")
+	@interface Smoke {
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Fast
+	@Smoke
+	@interface FastAndSmoky {
+	}
+
 	@Annotation1
 	static class Annotation1Class {
 	}
@@ -170,15 +204,33 @@ public final class AnnotationUtilsTests {
 	static class SingleTaggedClass {
 	}
 
+	@Fast
+	static class SingleComposedTaggedClass {
+	}
+
 	@Tag("a")
 	@Tag("b")
 	@Tag("c")
 	static class MultiTaggedClass {
 	}
 
+	@Fast
+	@Smoke
+	static class MultiComposedTaggedClass {
+	}
+
+	@FastAndSmoky
+	static class FastAndSmokyTaggedClass {
+	}
+
 	@Tags({ @Tag("a"), @Tag("b"), @Tag("c") })
 	@Tag("d")
 	static class ContainerTaggedClass {
+	}
+
+	@Fast
+	@Tags({ @Tag("a"), @Tag("b"), @Tag("c") })
+	static class ContainerAfterComposedTaggedClass {
 	}
 
 }
