@@ -35,6 +35,10 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return new PackageSpecification(packageName);
 	}
 
+	public static List<TestPlanSpecificationElement> forPackages(Collection<String> packageNames) {
+		return packageNames.stream().map(PackageSpecification::new).collect(toList());
+	}
+
 	public static TestPlanSpecificationElement forClassName(String className) {
 		return new ClassNameSpecification(className);
 	}

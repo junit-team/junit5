@@ -11,6 +11,7 @@
 package org.junit.gen5.console;
 
 import static io.airlift.airline.SingleCommand.singleCommand;
+import static java.util.Arrays.stream;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ import io.airlift.airline.HelpOption;
 import io.airlift.airline.Option;
 
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.launcher.Launcher;
 
 /**
@@ -47,8 +49,15 @@ public class ConsoleRunner {
 	private boolean disableAnsiColors;
 	// @formatter:on
 
-	@Arguments(description = "Test classes to execute")
-	private List<String> testClasses;
+	// @formatter:off
+	@Option(name = { "-m", "--argument-mode" },
+			arity = 1,
+			description = "How to treat arguments. Possible values: classes, packages")
+	private String argumentMode = "classes";
+	// @formatter:on
+
+	@Arguments(description = "Test classes or packages to execute (depending on --argument-mode/-m)")
+	private List<String> arguments;
 
 	public static void main(String... args) {
 		ConsoleRunner consoleRunner = singleCommand(ConsoleRunner.class).parse(args);
@@ -71,7 +80,7 @@ public class ConsoleRunner {
 		);
 
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
-			TestPlanSpecification.forClassNames(testClasses));
+			testPlanSpecificationElementsFromArguments());
 
 		// TODO Provide means to allow manipulation of test plan?
 		launcher.execute(testPlanSpecification);
@@ -80,6 +89,41 @@ public class ConsoleRunner {
 			long failedTests = testSummaryListener.getNumberOfFailedTests();
 			int exitCode = (int) Math.min(Integer.MAX_VALUE, failedTests);
 			System.exit(exitCode);
+		}
+	}
+
+	private List<TestPlanSpecificationElement> testPlanSpecificationElementsFromArguments() {
+		ArgumentMode mode = ArgumentMode.parse(argumentMode);
+		return mode.toTestPlanSpecificationElements(arguments);
+	}
+
+	private enum ArgumentMode {
+
+		CLASSES {
+
+			@Override
+			List<TestPlanSpecificationElement> toTestPlanSpecificationElements(List<String> arguments) {
+				return TestPlanSpecification.forClassNames(arguments);
+			}
+		},
+
+		PACKAGES {
+
+			@Override
+			List<TestPlanSpecificationElement> toTestPlanSpecificationElements(List<String> arguments) {
+				return TestPlanSpecification.forPackages(arguments);
+			}
+		};
+
+		abstract List<TestPlanSpecificationElement> toTestPlanSpecificationElements(List<String> arguments);
+
+		static ArgumentMode parse(String value) {
+			// @formatter:off
+			return stream(values())
+					.filter(mode -> mode.name().equalsIgnoreCase(value))
+					.findAny()
+					.orElseThrow(() -> new IllegalArgumentException("Illegal argument mode: " + value));
+			// @formatter:on
 		}
 	}
 
