@@ -23,7 +23,6 @@ import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;
-import org.junit.gen5.engine.junit5.execution.EngineTestExecutionNode;
 import org.junit.gen5.engine.junit5.execution.TestExecutionNodeBuilder;
 
 public class JUnit5TestEngine implements TestEngine {
@@ -52,11 +51,12 @@ public class JUnit5TestEngine implements TestEngine {
 
 	private void applyEngineFilters(List<EngineFilter> engineFilters, EngineDescriptor engineDescriptor) {
 		// TODO Currently only works with a single ClassFilter
-		if (engineFilters.isEmpty())
+		if (engineFilters.isEmpty()) {
 			return;
+		}
 		ClassFilter filter = (ClassFilter) engineFilters.get(0);
 		TestDescriptor.Visitor filteringVisitor = (descriptor, remove) -> {
-			if (descriptor.getClass().equals(ClassTestDescriptor.class)) {
+			if (descriptor.getClass() == ClassTestDescriptor.class) {
 				ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptor;
 				if (!filter.acceptClass(classTestDescriptor.getTestClass()))
 					remove.run();
@@ -67,10 +67,7 @@ public class JUnit5TestEngine implements TestEngine {
 
 	@Override
 	public void execute(ExecutionRequest request) {
-
-		EngineTestExecutionNode executionNode = new TestExecutionNodeBuilder().buildExecutionTree(
-			request.getEngineDescriptor());
-		executionNode.executeRequest(request);
+		new TestExecutionNodeBuilder().buildExecutionTree(request.getEngineDescriptor()).executeRequest(request);
 	}
 
 }
