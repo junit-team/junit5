@@ -74,6 +74,7 @@ public class JUnit5TestEngineTests {
 	@org.junit.Test
 	public void executeTestsForClassName() {
 		TestPlanSpecification spec = build(forClassName(LocalTestCase.class.getName()));
+		LocalTestCase.countAfterInvoked = 0;
 
 		TrackingTestExecutionListener listener = executeTests(spec, 9);
 
@@ -82,6 +83,8 @@ public class JUnit5TestEngineTests {
 		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
 		Assert.assertEquals("# tests aborted", 1, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
+
+		Assert.assertEquals("# after calls", 8, LocalTestCase.countAfterInvoked);
 	}
 
 	@org.junit.Test
@@ -209,8 +212,9 @@ public class JUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void executeTestCaseWithInnerContext() {
-		//TODO enhance test to check before and after in nested contexts
 		TestPlanSpecification spec = build(forClassName(TestCaseWithContext.class.getName()));
+
+		TestCaseWithContext.countAfterInvoked = 0;
 
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		Assert.assertEquals("# descriptors", 6, engineDescriptor.allChildren().size());
@@ -226,6 +230,8 @@ public class JUnit5TestEngineTests {
 		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
 		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+
+		//Assert.assertEquals("# after calls", 3, TestCaseWithContext.countAfterInvoked);
 	}
 
 	private TrackingTestExecutionListener executeTests(TestPlanSpecification spec, int expectedDescriptorCount) {
@@ -269,6 +275,8 @@ public class JUnit5TestEngineTests {
 
 		boolean throwExceptionInAfterMethod = false;
 
+		static int countAfterInvoked = 0;
+
 		@BeforeAll
 		void beforeAll() {
 			beforeAllInvoked = true;
@@ -294,6 +302,7 @@ public class JUnit5TestEngineTests {
 
 		@After
 		void after() {
+			countAfterInvoked++;
 			if (this.throwExceptionInAfterMethod) {
 				throw new RuntimeException("Exception thrown from @After method");
 			}
@@ -364,9 +373,16 @@ public class JUnit5TestEngineTests {
 
 		boolean beforeInvoked = false;
 
+		static int countAfterInvoked = 0;
+
 		@Before
 		void init() {
 			beforeInvoked = true;
+		}
+
+		@After
+		void after() {
+			countAfterInvoked++;
 		}
 
 		@Test
