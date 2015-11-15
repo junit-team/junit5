@@ -79,8 +79,8 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 			+ "[%10d tests started   ]\n"
 			+ "[%10d tests skipped   ]\n"
 			+ "[%10d tests aborted   ]\n"
-			+ "[%10d tests failed    ]\n"
-			+ "[%10d tests successful]\n",
+			+ "[%10d tests successful]\n"
+			+ "[%10d tests failed    ]\n",
 			msg, (this.timeFinished - this.timeStarted), this.testsFound.get(), this.testsStarted.get(),
 			this.testsSkipped.get(), this.testsAborted.get(), this.testsFailed.get(), this.testsSucceeded.get()));
 		// @formatter:on
@@ -117,7 +117,7 @@ public class TestSummaryReportingTestListener implements TestPlanExecutionListen
 	}
 
 	public long getNumberOfFailedTests() {
-		return testsFailed.get();
+		return this.testsFailed.get();
 	}
 
 }

@@ -34,30 +34,28 @@ import org.junit.gen5.launcher.Launcher;
 @Command(name = "ConsoleRunner", description = "console test runner")
 public class ConsoleRunner {
 
-	@Inject
-	public HelpOption helpOption;
-
 	// @formatter:off
+
 	@Option(name = { "-x", "--enable-exit-code" },
 			description = "Exit process with number of failing tests as exit code")
 	private boolean enableExitCode;
-	// @formatter:on
 
-	// @formatter:off
 	@Option(name = { "-C", "--disable-ansi-colors" },
 			description = "Disable colored output (not supported by all terminals)")
 	private boolean disableAnsiColors;
-	// @formatter:on
 
-	// @formatter:off
 	@Option(name = { "-m", "--argument-mode" },
 			arity = 1,
 			description = "How to treat arguments. Possible values: classes, packages")
 	private String argumentMode = "classes";
-	// @formatter:on
 
 	@Arguments(description = "Test classes or packages to execute (depending on --argument-mode/-m)")
 	private List<String> arguments;
+
+	// @formatter:on
+
+	@Inject
+	public HelpOption helpOption;
 
 	public static void main(String... args) {
 		ConsoleRunner consoleRunner = singleCommand(ConsoleRunner.class).parse(args);
