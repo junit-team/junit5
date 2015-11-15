@@ -8,21 +8,20 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.execution.injection.sample;
+package com.example;
 
 import java.lang.reflect.Parameter;
 
-import org.junit.gen5.api.extension.MethodArgumentResolver;
-import org.junit.gen5.commons.util.AnnotationUtils;
+import org.junit.gen5.api.extension.MethodParameterResolver;
 
 /**
  * @since 5.0
  */
-public class CustomAnnotationBasedMethodArgumentResolver implements MethodArgumentResolver {
+public class CustomTypeParameterResolver implements MethodParameterResolver {
 
 	@Override
 	public boolean supports(Parameter parameter) {
-		return AnnotationUtils.findAnnotation(parameter, CustomAnnotation.class).isPresent();
+		return parameter.getType().equals(CustomType.class);
 	}
 
 }

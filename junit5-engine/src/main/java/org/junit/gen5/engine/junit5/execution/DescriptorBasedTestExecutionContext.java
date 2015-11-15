@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.gen5.api.extension.MethodArgumentResolver;
+import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestDecorator;
 import org.junit.gen5.api.extension.TestDecorators;
 import org.junit.gen5.api.extension.TestExecutionContext;
@@ -48,7 +48,7 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 
 	private final TestExecutionContext parent;
 
-	private final Set<MethodArgumentResolver> resolvers = new HashSet<>();
+	private final Set<MethodParameterResolver> resolvers = new HashSet<>();
 
 	DescriptorBasedTestExecutionContext(TestDescriptor descriptor, TestExecutionContext parent, Object testInstance) {
 
@@ -56,7 +56,7 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 		this.displayName = descriptor.getDisplayName();
 		this.parent = parent;
 
-		Set<MethodArgumentResolver> parentResolvers = (parent != null ? parent.getArgumentResolvers()
+		Set<MethodParameterResolver> parentResolvers = (parent != null ? parent.getParameterResolvers()
 				: Collections.emptySet());
 
 		if (descriptor instanceof ClassTestDescriptor) {
@@ -78,15 +78,15 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Set<MethodArgumentResolver> getMethodArgumentResolvers(AnnotatedElement annotatedElement,
-			Set<MethodArgumentResolver> parentResolvers) {
+	private Set<MethodParameterResolver> getMethodArgumentResolvers(AnnotatedElement annotatedElement,
+			Set<MethodParameterResolver> parentResolvers) {
 
 		// TODO Determine where the MethodArgumentResolverRegistry should be created.
-		MethodArgumentResolverRegistry resolverRegistry = new MethodArgumentResolverRegistry(parentResolvers);
+		MethodParameterResolverRegistry resolverRegistry = new MethodParameterResolverRegistry(parentResolvers);
 		findAnnotation(annotatedElement, TestDecorators.class).map(TestDecorators::value).ifPresent(clazzes -> {
 			for (Class<? extends TestDecorator> clazz : clazzes) {
-				if (MethodArgumentResolver.class.isAssignableFrom(clazz)) {
-					resolverRegistry.addResolverWithClass((Class<? extends MethodArgumentResolver>) clazz);
+				if (MethodParameterResolver.class.isAssignableFrom(clazz)) {
+					resolverRegistry.addResolverWithClass((Class<? extends MethodParameterResolver>) clazz);
 				}
 			}
 		});
@@ -125,7 +125,7 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 	}
 
 	@Override
-	public Set<MethodArgumentResolver> getArgumentResolvers() {
+	public Set<MethodParameterResolver> getParameterResolvers() {
 		return this.resolvers;
 	}
 

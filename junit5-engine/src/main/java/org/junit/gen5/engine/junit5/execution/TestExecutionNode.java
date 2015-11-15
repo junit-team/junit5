@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.gen5.api.Condition.Result;
-import org.junit.gen5.api.extension.MethodArgumentResolver;
+import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -90,13 +90,14 @@ abstract class TestExecutionNode {
 	}
 
 	protected void invokeMethodInContext(Method method, TestExecutionContext methodContext,
-			Set<MethodArgumentResolver> argumentResolvers, Object target) {
+			Set<MethodParameterResolver> argumentResolvers, Object target) {
 		MethodInvoker methodInvoker = new MethodInvoker(method, target, argumentResolvers);
 		methodInvoker.invoke(methodContext);
 	}
 
 	protected void invokeMethodInContextWithAggregatingExceptions(Method method, TestExecutionContext methodContext,
-			Set<MethodArgumentResolver> argumentResolvers, Object target, List<Throwable> exceptionsCollector) {
+			Set<MethodParameterResolver> argumentResolvers, Object target, List<Throwable> exceptionsCollector) {
+
 		try {
 			invokeMethodInContext(method, methodContext, argumentResolvers, target);
 		}
@@ -105,4 +106,5 @@ abstract class TestExecutionNode {
 			exceptionsCollector.add(currentException);
 		}
 	}
+
 }

@@ -8,16 +8,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.example;
+package org.junit.gen5.engine.junit5.execution.injection.sample;
 
 import java.lang.reflect.Parameter;
 
-import org.junit.gen5.api.extension.MethodArgumentResolver;
+import org.junit.gen5.api.extension.MethodParameterResolver;
 
 /**
  * @since 5.0
  */
-public class CustomTypeBasedMethodArgumentResolver implements MethodArgumentResolver {
+public class CustomTypeParameterResolver implements MethodParameterResolver {
 
 	@Override
 	public boolean supports(Parameter parameter) {

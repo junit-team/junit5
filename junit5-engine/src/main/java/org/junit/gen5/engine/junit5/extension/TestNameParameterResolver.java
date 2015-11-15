@@ -10,23 +10,23 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.*;
+import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.reflect.Parameter;
 
 import org.junit.gen5.api.TestName;
-import org.junit.gen5.api.extension.MethodArgumentResolver;
+import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestExecutionContext;
 
 /**
- * {@code MethodArgumentResolver} that resolves the name of the currently
+ * {@code MethodParameterResolver} that resolves the name of the currently
  * executing test for {@code String} method parameters annotated with
  * {@link TestName @TestName}.
  *
  * @author Sam Brannen
  * @since 5.0
  */
-public class TestNameArgumentResolver implements MethodArgumentResolver {
+public class TestNameParameterResolver implements MethodParameterResolver {
 
 	@Override
 	public boolean supports(Parameter parameter) {
@@ -34,7 +34,7 @@ public class TestNameArgumentResolver implements MethodArgumentResolver {
 	}
 
 	@Override
-	public Object resolveArgument(Parameter parameter, TestExecutionContext testExecutionContext) {
+	public Object resolve(Parameter parameter, TestExecutionContext testExecutionContext) {
 		return testExecutionContext.getDisplayName();
 	}
 

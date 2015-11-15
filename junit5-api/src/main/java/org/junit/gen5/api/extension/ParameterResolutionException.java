@@ -13,19 +13,19 @@ package org.junit.gen5.api.extension;
 /**
  * @since 5.0
  */
-public class ArgumentResolutionException extends RuntimeException {
+public class ParameterResolutionException extends RuntimeException {
 
 	private static final long serialVersionUID = 5137237798019406636L;
 
-	public ArgumentResolutionException(String message) {
+	public ParameterResolutionException(String message) {
 		super(message);
 	}
 
-	public ArgumentResolutionException(String message, Throwable cause) {
+	public ParameterResolutionException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public ArgumentResolutionException(Throwable cause) {
+	public ParameterResolutionException(Throwable cause) {
 		super(cause);
 	}
 

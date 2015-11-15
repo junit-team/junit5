@@ -23,7 +23,7 @@ import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Condition.Result;
-import org.junit.gen5.api.extension.MethodArgumentResolver;
+import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.ExecutionRequest;
@@ -121,7 +121,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 			Object testInstance) {
 		List<Method> beforeEachMethods = getBeforeEachMethods();
 
-		Set<MethodArgumentResolver> parentResolvers = resolutionContext.getArgumentResolvers();
+		Set<MethodParameterResolver> parentResolvers = resolutionContext.getParameterResolvers();
 		for (Method method : beforeEachMethods) {
 			invokeMethodInContext(method, methodContext, parentResolvers, testInstance);
 		}
@@ -135,9 +135,10 @@ class ClassTestExecutionNode extends TestExecutionNode {
 	@Override
 	void executeAfterEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
 			Object testInstance, List<Throwable> exceptionCollector) {
+
 		List<Method> afterEachMethods = getAfterEachMethods();
 
-		Set<MethodArgumentResolver> parentResolvers = resolutionContext.getArgumentResolvers();
+		Set<MethodParameterResolver> parentResolvers = resolutionContext.getParameterResolvers();
 		for (Method method : afterEachMethods) {
 			invokeMethodInContextWithAggregatingExceptions(method, methodContext, parentResolvers, testInstance,
 				exceptionCollector);

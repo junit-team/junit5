@@ -92,7 +92,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 	private void invokeTestMethod(Method method, TestExecutionContext context) {
 		Object target = context.getTestInstance().get();
-		invokeMethodInContext(method, context, context.getArgumentResolvers(), target);
+		invokeMethodInContext(method, context, context.getParameterResolvers(), target);
 	}
 
 	private void executeBeforeMethods(TestExecutionContext context) {
@@ -101,7 +101,6 @@ class MethodTestExecutionNode extends TestExecutionNode {
 	}
 
 	private void executeAfterMethods(TestExecutionContext context, List<Throwable> exceptionsCollector) {
-
 		Object target = context.getTestInstance().get();
 		getParent().executeAfterEachTest(context, context.getParent().get(), target, exceptionsCollector);
 	}

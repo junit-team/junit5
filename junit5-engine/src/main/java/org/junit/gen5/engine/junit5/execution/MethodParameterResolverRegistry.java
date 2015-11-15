@@ -14,42 +14,42 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.junit.gen5.api.extension.MethodArgumentResolver;
+import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.junit5.extension.TestNameArgumentResolver;
+import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
 
 /**
  * @author Sam Brannen
  * @author Matthias Merdes
  * @since 5.0
  */
-class MethodArgumentResolverRegistry {
+class MethodParameterResolverRegistry {
 
-	private final Set<MethodArgumentResolver> resolvers = new LinkedHashSet<>();
+	private final Set<MethodParameterResolver> resolvers = new LinkedHashSet<>();
 
 	/**
-	 * Create a new {@link MethodArgumentResolverRegistry} with
-	 * global, default argument resolvers pre-registered.
+	 * Create a new {@link MethodParameterResolverRegistry} with
+	 * global, default parameter resolvers pre-registered.
 	 *
-	 * @see TestNameArgumentResolver
+	 * @see TestNameParameterResolver
 	 */
-	MethodArgumentResolverRegistry(Set<MethodArgumentResolver> parentResolvers) {
+	MethodParameterResolverRegistry(Set<MethodParameterResolver> parentResolvers) {
 		parentResolvers.stream().forEach(resolvers::add);
-		addResolverWithClass(TestNameArgumentResolver.class);
+		addResolverWithClass(TestNameParameterResolver.class);
 	}
 
-	Set<MethodArgumentResolver> getResolvers() {
+	Set<MethodParameterResolver> getResolvers() {
 		return Collections.unmodifiableSet(this.resolvers);
 	}
 
-	void addResolverWithClass(Class<? extends MethodArgumentResolver> resolverClass) {
+	void addResolverWithClass(Class<? extends MethodParameterResolver> resolverClass) {
 		if (resolverAlreadyPresent(resolverClass)) {
 			return;
 		}
 		this.resolvers.add(ReflectionUtils.newInstance(resolverClass));
 	}
 
-	private boolean resolverAlreadyPresent(Class<? extends MethodArgumentResolver> resolverClass) {
+	private boolean resolverAlreadyPresent(Class<? extends MethodParameterResolver> resolverClass) {
 		// Only one resolver of same type needed since resolvers are stateless.
 		return resolvers.stream().anyMatch(r -> r.getClass().equals(resolverClass));
 	}

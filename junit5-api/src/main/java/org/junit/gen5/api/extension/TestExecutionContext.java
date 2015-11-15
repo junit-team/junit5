@@ -43,6 +43,6 @@ public interface TestExecutionContext {
 
 	Optional<TestExecutionContext> getParent();
 
-	Set<MethodArgumentResolver> getArgumentResolvers();
+	Set<MethodParameterResolver> getParameterResolvers();
 
 }

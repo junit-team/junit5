@@ -19,14 +19,12 @@ import org.junit.gen5.commons.util.ReflectionUtils;
  * @author Sam Brannen
  * @since 5.0
  */
-public interface MethodArgumentResolver extends TestDecorator {
-
-	// TODO Consider introducing a custom MethodParameter type.
+public interface MethodParameterResolver extends TestDecorator {
 
 	boolean supports(Parameter parameter);
 
-	default Object resolveArgument(Parameter parameter, TestExecutionContext testExecutionContext)
-			throws ArgumentResolutionException {
+	default Object resolve(Parameter parameter, TestExecutionContext testExecutionContext)
+			throws ParameterResolutionException {
 
 		return ReflectionUtils.newInstance(parameter.getType());
 	}

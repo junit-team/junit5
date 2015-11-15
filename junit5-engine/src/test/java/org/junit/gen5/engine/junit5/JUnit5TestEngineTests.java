@@ -10,9 +10,14 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.api.Assumptions.*;
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.fail;
+import static org.junit.gen5.api.Assumptions.assumeTrue;
+import static org.junit.gen5.engine.TestPlanSpecification.build;
+import static org.junit.gen5.engine.TestPlanSpecification.forClassName;
+import static org.junit.gen5.engine.TestPlanSpecification.forUniqueId;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -36,9 +41,9 @@ import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
-import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotationBasedMethodArgumentResolver;
+import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotationParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomType;
-import org.junit.gen5.engine.junit5.execution.injection.sample.CustomTypeBasedMethodArgumentResolver;
+import org.junit.gen5.engine.junit5.execution.injection.sample.CustomTypeParameterResolver;
 import org.opentestalliance.TestSkippedException;
 
 /**
@@ -156,8 +161,8 @@ public class JUnit5TestEngineTests {
 	}
 
 	@org.junit.Test
-	public void executeTestsForMethodArgumentInjectionCases() {
-		TestPlanSpecification spec = build(forClassName(MethodParameterInjectionTestCase.class.getName()));
+	public void executeTestsForMethodInjectionCases() {
+		TestPlanSpecification spec = build(forClassName(MethodInjectionTestCase.class.getName()));
 
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		Assert.assertEquals("# descriptors", 9, engineDescriptor.allChildren().size());
@@ -174,9 +179,8 @@ public class JUnit5TestEngineTests {
 	}
 
 	@org.junit.Test
-	public void executeTestsForMethodArgumentInjectionInBeforeAndAfterMethodsCases() {
-		TestPlanSpecification spec = build(
-			forClassName(BeforeAndAfterMethodParameterInjectionTestCase.class.getName()));
+	public void executeTestsForMethodInjectionInBeforeAndAfterMethodsCases() {
+		TestPlanSpecification spec = build(forClassName(BeforeAndAfterMethodInjectionTestCase.class.getName()));
 
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		Assert.assertEquals("# descriptors", 2, engineDescriptor.allChildren().size());
@@ -408,8 +412,8 @@ public class JUnit5TestEngineTests {
 		}
 	}
 
-	@TestDecorators({ CustomTypeBasedMethodArgumentResolver.class, CustomAnnotationBasedMethodArgumentResolver.class })
-	private static class MethodParameterInjectionTestCase {
+	@TestDecorators({ CustomTypeParameterResolver.class, CustomAnnotationParameterResolver.class })
+	private static class MethodInjectionTestCase {
 
 		@Test
 		void argumentInjectionOfStandardTestName(@TestName String name) {
@@ -457,7 +461,7 @@ public class JUnit5TestEngineTests {
 
 	}
 
-	private static class BeforeAndAfterMethodParameterInjectionTestCase {
+	private static class BeforeAndAfterMethodInjectionTestCase {
 
 		@Before
 		void before(@TestName String name) {
@@ -479,8 +483,7 @@ public class JUnit5TestEngineTests {
 	private static class TestDecoratorOnMethodTestCase {
 
 		@Test
-		@TestDecorators({ CustomTypeBasedMethodArgumentResolver.class,
-			CustomAnnotationBasedMethodArgumentResolver.class })
+		@TestDecorators({ CustomTypeParameterResolver.class, CustomAnnotationParameterResolver.class })
 		void testMethodWithDecoratorAnnotation(CustomType customType, @CustomAnnotation String value) {
 			assertNotNull(customType);
 			assertNotNull(value);

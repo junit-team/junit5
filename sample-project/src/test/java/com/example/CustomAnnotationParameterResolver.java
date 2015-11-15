@@ -12,13 +12,13 @@ package com.example;
 
 import java.lang.reflect.Parameter;
 
-import org.junit.gen5.api.extension.MethodArgumentResolver;
+import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.commons.util.AnnotationUtils;
 
 /**
  * @since 5.0
  */
-public class CustomAnnotationBasedMethodArgumentResolver implements MethodArgumentResolver {
+public class CustomAnnotationParameterResolver implements MethodParameterResolver {
 
 	@Override
 	public boolean supports(Parameter parameter) {

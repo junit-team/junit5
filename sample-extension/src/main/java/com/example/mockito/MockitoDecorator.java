@@ -14,9 +14,9 @@ import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Parameter;
 
-import org.junit.gen5.api.extension.ArgumentResolutionException;
 import org.junit.gen5.api.extension.ContextScope;
-import org.junit.gen5.api.extension.MethodArgumentResolver;
+import org.junit.gen5.api.extension.MethodParameterResolver;
+import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.AnnotationUtils;
 
@@ -25,7 +25,7 @@ import org.junit.gen5.commons.util.AnnotationUtils;
  * @author Sam Brannen
  * @since 5.0
  */
-public class MockitoDecorator implements MethodArgumentResolver {
+public class MockitoDecorator implements MethodParameterResolver {
 
 	private final ContextScope<Class<?>, Object> mocksInScope;
 
@@ -40,8 +40,8 @@ public class MockitoDecorator implements MethodArgumentResolver {
 	}
 
 	@Override
-	public Object resolveArgument(Parameter parameter, TestExecutionContext testExecutionContext)
-			throws ArgumentResolutionException {
+	public Object resolve(Parameter parameter, TestExecutionContext testExecutionContext)
+			throws ParameterResolutionException {
 
 		Class<?> mockType = parameter.getType();
 		return mocksInScope.get(testExecutionContext, mockType);
