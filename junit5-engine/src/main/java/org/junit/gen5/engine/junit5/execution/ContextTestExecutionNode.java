@@ -48,8 +48,7 @@ class ContextTestExecutionNode extends ClassTestExecutionNode {
 
 	@Override
 	// TODO Change the exception thing into an exception aggregator
-	Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance,
-			Throwable previousException) {
+	Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance, Throwable previousException) {
 		super.executeAfterEachTest(context, testInstance, previousException);
 		previousException = executeAfterEachTestOfParent(context, testInstance, previousException);
 		return previousException;

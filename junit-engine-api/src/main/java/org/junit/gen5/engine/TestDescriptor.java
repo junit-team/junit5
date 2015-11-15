@@ -76,6 +76,7 @@ public interface TestDescriptor {
 	}
 
 	interface Visitor {
+
 		void visit(TestDescriptor descriptor, Runnable remove);
 	}
 

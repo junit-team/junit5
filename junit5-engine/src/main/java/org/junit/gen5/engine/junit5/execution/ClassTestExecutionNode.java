@@ -132,8 +132,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 	}
 
 	@Override
-	Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance,
-			Throwable previousException) {
+	Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance, Throwable previousException) {
 		List<Method> afterEachMethods = getAfterEachMethods();
 
 		for (Method method : afterEachMethods) {

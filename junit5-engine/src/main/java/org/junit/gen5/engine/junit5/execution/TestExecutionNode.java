@@ -86,8 +86,7 @@ abstract class TestExecutionNode {
 			Object testInstance) {
 	}
 
-	Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance,
-			Throwable previousException) {
+	Throwable executeAfterEachTest(TestExecutionContext context, Object testInstance, Throwable previousException) {
 		return null;
 	}
 
