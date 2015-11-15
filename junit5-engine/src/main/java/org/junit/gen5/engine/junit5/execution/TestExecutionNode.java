@@ -17,10 +17,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.gen5.api.Condition.Result;
 import org.junit.gen5.api.extension.MethodArgumentResolver;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
+import org.opentestalliance.TestSkippedException;
 
 /**
  * @author Stefan Bechtold
@@ -32,6 +34,8 @@ public abstract class TestExecutionNode {
 	private TestExecutionNode parent;
 
 	private List<TestExecutionNode> children = new LinkedList<>();
+
+	private final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
 	public void addChild(TestExecutionNode child) {
 		this.children.add(child);
@@ -49,6 +53,22 @@ public abstract class TestExecutionNode {
 	public abstract TestDescriptor getTestDescriptor();
 
 	public abstract void execute(ExecutionRequest request, TestExecutionContext context);
+
+	protected final boolean isTestDisabled(ExecutionRequest request, TestExecutionContext context) {
+		Result result = this.conditionEvaluator.evaluate(context);
+		if (!result.isSuccess()) {
+			// TODO Determine if we really need an explicit TestSkippedException.
+			request.getTestExecutionListener().testSkipped(getTestDescriptor(),
+				new TestSkippedException(buildTestSkippedMessage(result, context)));
+			return true;
+		}
+		return false;
+	}
+
+	protected String buildTestSkippedMessage(Result result, TestExecutionContext context) {
+		return String.format("Skipping [%s]; reason: %s", context.getDisplayName(),
+			result.getReason().orElse("unknown"));
+	}
 
 	protected void executeChild(TestExecutionNode child, ExecutionRequest request, TestExecutionContext parentContext,
 			Object testInstance) {

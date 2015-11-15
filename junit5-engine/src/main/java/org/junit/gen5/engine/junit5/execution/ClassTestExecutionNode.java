@@ -10,8 +10,9 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.*;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
+import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
+import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -26,7 +27,6 @@ import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
-import org.opentestalliance.TestSkippedException;
 
 /**
  * @author Stefan Bechtold
@@ -36,8 +36,6 @@ import org.opentestalliance.TestSkippedException;
 class ClassTestExecutionNode extends TestExecutionNode {
 
 	private final ClassTestDescriptor testDescriptor;
-
-	private final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
 	ClassTestExecutionNode(ClassTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
@@ -50,19 +48,12 @@ class ClassTestExecutionNode extends TestExecutionNode {
 
 	@Override
 	public void execute(ExecutionRequest request, TestExecutionContext context) {
-		Class<?> testClass = context.getTestClass().get();
-
-		Result result = this.conditionEvaluator.evaluate(context);
-		if (!result.isSuccess()) {
-			// TODO Determine if we really need an explicit TestSkippedException.
-			TestSkippedException testSkippedException = new TestSkippedException(String.format(
-				"Skipping test class [%s]; reason: %s", testClass.getName(), result.getReason().orElse("unknown")));
-			request.getTestExecutionListener().testSkipped(getTestDescriptor(), testSkippedException);
-
+		if (isTestDisabled(request, context)) {
 			// Abort execution of the test completely at this point.
 			return;
 		}
 
+		Class<?> testClass = context.getTestClass().get();
 		Object testInstance = createTestInstance();
 
 		try {
@@ -77,6 +68,12 @@ class ClassTestExecutionNode extends TestExecutionNode {
 		finally {
 			executeAfterAllMethods(request, testClass, testInstance);
 		}
+	}
+
+	@Override
+	protected String buildTestSkippedMessage(Result result, TestExecutionContext context) {
+		return String.format("Skipping test class [%s]; reason: %s", context.getTestClass().get().getName(),
+			result.getReason().orElse("unknown"));
 	}
 
 	private void executeBeforeAllMethods(Class<?> testClass, Object testInstance) throws Exception {

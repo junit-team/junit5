@@ -33,8 +33,6 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 	private final MethodTestDescriptor testDescriptor;
 
-	private final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
-
 	MethodTestExecutionNode(MethodTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
 	}
@@ -46,16 +44,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 	@Override
 	public void execute(ExecutionRequest request, TestExecutionContext context) {
-		final Method testMethod = getTestDescriptor().getTestMethod();
-
-		Result result = this.conditionEvaluator.evaluate(context);
-		if (!result.isSuccess()) {
-			// TODO Determine if we really need an explicit TestSkippedException.
-			TestSkippedException testSkippedException = new TestSkippedException(
-				String.format("Skipping test method [%s]; reason: %s", testMethod.toGenericString(),
-					result.getReason().orElse("unknown")));
-			request.getTestExecutionListener().testSkipped(getTestDescriptor(), testSkippedException);
-
+		if (isTestDisabled(request, context)) {
 			// Abort execution of the test completely at this point.
 			return;
 		}
@@ -91,6 +80,12 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		else {
 			request.getTestExecutionListener().testSucceeded(getTestDescriptor());
 		}
+	}
+
+	@Override
+	protected String buildTestSkippedMessage(Result result, TestExecutionContext context) {
+		return String.format("Skipping test method [%s]; reason: %s", context.getTestMethod().get().toGenericString(),
+			result.getReason().orElse("unknown"));
 	}
 
 	private void invokeTestMethod(Method method, TestExecutionContext context) {
