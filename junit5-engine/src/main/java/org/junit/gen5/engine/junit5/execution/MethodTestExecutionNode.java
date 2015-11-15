@@ -14,11 +14,8 @@ import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Set;
 
 import org.junit.gen5.api.After;
-import org.junit.gen5.api.Before;
-import org.junit.gen5.api.extension.MethodArgumentResolver;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.ExecutionRequest;
@@ -95,29 +92,25 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		}
 	}
 
-	private void invokeMethod(Method method, TestExecutionContext context) {
-		Set<MethodArgumentResolver> resolvers = context.getArgumentResolvers();
-		MethodInvoker methodInvoker = new MethodInvoker(method, context.getTestInstance().get(), resolvers);
-		methodInvoker.invoke(context);
-	}
-
 	private void invokeTestMethod(Method method, TestExecutionContext context) {
-		invokeMethod(method, context);
+		Object target = context.getTestInstance().get();
+		invokeMethodInContext(method, context, target);
 	}
 
 	private void executeBeforeMethods(TestExecutionContext context) {
-		for (Method method : findAnnotatedMethods(context.getTestClass().get(), Before.class,
-			MethodSortOrder.HierarchyDown)) {
-			invokeMethod(method, context);
-		}
+		getParent().executeBeforeEachTest(context, context.getTestInstance().get());
 	}
 
 	private Throwable executeAfterMethods(TestExecutionContext context, Throwable exceptionThrown) {
 
+		// TODO: A bit more complicated than before
+		// getParent().executeAfterEachTest(context);
+
 		for (Method method : findAnnotatedMethods(context.getTestClass().get(), After.class,
 			MethodSortOrder.HierarchyUp)) {
 			try {
-				invokeMethod(method, context);
+				Object target = context.getTestInstance().get();
+				invokeMethodInContext(method, context, target);
 			}
 			catch (Throwable ex) {
 				Throwable currentException = ex;

@@ -33,6 +33,23 @@ import java.util.stream.Collectors;
  */
 public final class ReflectionUtils {
 
+	public static Optional<Object> getOuterInstance(Object inner) {
+		// This is risky since it depends on the name of the field which is nowhere guaranteed
+		// but has been stable so far in all JDKs
+		Optional<Object> parentInstance = Arrays.stream(inner.getClass().getDeclaredFields()).filter(
+			f -> f.getName().startsWith("this$")).findFirst().map(f -> {
+				f.setAccessible(true);
+				try {
+					return f.get(inner);
+				}
+				catch (IllegalAccessException e) {
+					return Optional.empty();
+				}
+			});
+
+		return parentInstance;
+	}
+
 	public enum MethodSortOrder {
 		HierarchyDown, HierarchyUp
 	}

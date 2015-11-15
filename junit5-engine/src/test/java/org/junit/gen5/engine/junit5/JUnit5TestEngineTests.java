@@ -213,7 +213,7 @@ public class JUnit5TestEngineTests {
 		TestPlanSpecification spec = build(forClassName(TestCaseWithContext.class.getName()));
 
 		EngineDescriptor engineDescriptor = discoverTests(spec);
-		Assert.assertEquals("# descriptors", 4, engineDescriptor.allChildren().size());
+		Assert.assertEquals("# descriptors", 6, engineDescriptor.allChildren().size());
 
 		// engineDescriptor.allChildren().forEach(testDescriptor -> System.out.println(testDescriptor));
 
@@ -221,8 +221,8 @@ public class JUnit5TestEngineTests {
 
 		engine.execute(new ExecutionRequest(engineDescriptor, listener));
 
-		Assert.assertEquals("# tests started", 2, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests started", 3, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 3, listener.testSucceededCount.get());
 		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
 		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
@@ -378,7 +378,16 @@ public class JUnit5TestEngineTests {
 
 			@Test
 			void innerTest() {
-				//assertTrue(beforeInvoked, "before of parent context was not invoked");
+				assertTrue(beforeInvoked, "before of parent context was not invoked");
+			}
+
+			@Context
+			class InnerInnerTestCase {
+
+				@Test
+				void innerInnerTest() {
+					assertTrue(beforeInvoked, "before of parent context was not invoked");
+				}
 			}
 		}
 	}
