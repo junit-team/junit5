@@ -27,7 +27,7 @@ import org.junit.gen5.commons.util.AnnotationUtils;
  */
 public class MockitoDecorator implements MethodArgumentResolver {
 
-	private final ContextScope mocksInScope;
+	private final ContextScope<Class<?>, Object> mocksInScope;
 
 	public MockitoDecorator() {
 		mocksInScope = new ContextScope<Class<?>, Object>(type -> mock(type), ContextScope.LifeCycle.OncePerTest,

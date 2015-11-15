@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
+import static org.junit.gen5.commons.util.AnnotationUtils.*;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.lang.reflect.Method;
@@ -22,7 +22,7 @@ import org.junit.gen5.api.Before;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.extension.MethodArgumentResolver;
 import org.junit.gen5.api.extension.TestExecutionContext;
-import org.junit.gen5.commons.util.ReflectionUtils.*;
+import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.opentestalliance.TestSkippedException;
