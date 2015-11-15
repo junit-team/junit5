@@ -10,8 +10,12 @@
 
 package com.example;
 
-import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.api.Assumptions.*;
+import static org.junit.gen5.api.Assertions.assertAll;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.fail;
+import static org.junit.gen5.api.Assumptions.assumeTrue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +24,6 @@ import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Name;
-import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestName;
 import org.junit.gen5.api.extension.TestDecorators;
@@ -76,7 +79,7 @@ class SampleTestCase {
 	}
 
 	@Test
-	@Tag("fast")
+	@Fast
 	void failingTest() {
 		fail("This test will always fail");
 	}
