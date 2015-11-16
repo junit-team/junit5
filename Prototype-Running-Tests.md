@@ -38,30 +38,30 @@ We have prepared two small sample projects that use it through Gradle and Maven.
 
 	NAME
 	        ConsoleRunner - console test runner
-	
+
 	SYNOPSIS
 	        ConsoleRunner [(-C | --disable-ansi-colors)] [(-h | --help)]
 	                [(-m <argumentMode> | --argument-mode <argumentMode>)]
 	                [(-x | --enable-exit-code)] [--] [<arguments>...]
-	
+
 	OPTIONS
 	        -C, --disable-ansi-colors
 	            Disable colored output (not supported by all terminals)
-	
+
 	        -h, --help
 	            Display help information
-	
+
 	        -m <argumentMode>, --argument-mode <argumentMode>
 	            How to treat arguments. Possible values: classes, packages
-	
+
 	        -x, --enable-exit-code
 	            Exit process with number of failing tests as exit code
-	
+
 	        --
 	            This option can be used to separate command-line options from the
 	            list of argument, (useful when arguments might be mistaken for
 	            command-line options
-	
+
 	        <arguments>
 	            Test classes or packages to execute (depending on
 	            --argument-mode/-m)
@@ -83,9 +83,9 @@ You need the following artifacts and their dependencies on the classpath:
 - _junit5-engine_ (`org.junit.prototype:junit5-engine:5.0.0-SNAPSHOT`) in _testRuntime_ scope:
   Implementation of the Engine API for JUnit 5.
 
-### Single Test
+### Single Test Class
 
-One way to use the `JUnit5` runner is to annotate a JUnit 5 test class with `@RunWith(JUnit5.class)` directly. Please note that the tests are annotated with  `org.junit.gen5.api.Test` (JUnit 5), not `org.junit.Test` (JUnit 4).
+One way to use the `JUnit5` runner is to annotate a JUnit 5 test class with `@RunWith(JUnit5.class)` directly. Please note that the tests are annotated with  `org.junit.gen5.api.Test` (JUnit 5), not `org.junit.Test` (JUnit 4). Moreover, in this case the test class has to be `public` because otherwise the IDEs won't recognize it as a test class.
 
 ```java
 package com.example;
@@ -114,7 +114,7 @@ public class AJUnit5TestCaseRunWithJUnit4 {
 
 ### Multiple Tests
 
-If you have multiple JUnit 5 tests you can create a test suite. 
+If you have multiple JUnit 5 tests you can create a test suite.
 
 ```java
 package com.example;
