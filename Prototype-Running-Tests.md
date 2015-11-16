@@ -7,6 +7,27 @@ At this stage there is no direct support to run JUnit 5 tests in build tools and
 
 The `ConsoleRunner` is a command-line Java application that lets you run JUnit 4/5 tests and prints out test executions and results to the console.
 
+Here's an example of its output:
+
+```
+Test execution started. Number of static tests: 2
+Engine started: junit5
+Test started:     My 1st JUnit 5 test! 😎 [junit5:com.example.project.FirstTest#myFirstTest(java.lang.String)]
+Test succeeded:   My 1st JUnit 5 test! 😎 [junit5:com.example.project.FirstTest#myFirstTest(java.lang.String)]
+Test skipped:     mySecondTest [junit5:com.example.project.SecondTest#mySecondTest()]
+                  => Exception:   Skipped test method [void com.example.project.SecondTest.mySecondTest()] due to failed condition
+Engine finished: junit5
+Test execution finished.
+
+Test run finished after 29 ms
+[         2 tests found     ]
+[         1 tests started   ]
+[         1 tests skipped   ]
+[         0 tests aborted   ]
+[         1 tests successful]
+[         0 tests failed    ]
+```
+
 ### Gradle/Maven usage
 
 We have prepared two small sample projects that use it through Gradle and Maven. Please see [junit5-gradle-consumer](https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer) and [junit5-maven-consumer](https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer), respectively.
