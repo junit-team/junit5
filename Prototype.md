@@ -60,17 +60,26 @@ and `pom.xml` in the projects below:
 
 ----
 
-# Launching JUnit Lambda
+# Integrating JUnit 4 Test Suites
 
-This section is primarily intended for IDE and build tool providers.
+[How to run - and migrate - your JUnit4 tests with JUnit5?](Prototype-JUnit4-Run-And-Migrate)
 
 ----
 
-# Integrating JUnit 4 Test Suites
+# Programmatically Discover and Launch JUnit 5 Tests
+
+[The page on the JUnit5 Launcher API](Prototype-Launcher-API) is primarily targeted at IDE and build tool providers.
+
+There is also a short paragraph on [how to plug in other test enginges into the launcher](Prototype-Launcher-API#plug-in-engine)
 
 ----
 
 # The Open Test Alliance
+
+We have the idea to build a [very minimal common foundation for testing libraries], so that third-party libraries (like Hamcrest and AssertJ) can be used with any of those libraries.
+
+For the time being we suggest a small hierarchy of exceptions to be used. Check out the [open-test-alliance] project.
+
 
 ----
 
