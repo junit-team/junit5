@@ -70,7 +70,7 @@ and `pom.xml` in the projects below:
 
 [The page on the JUnit5 Launcher API](Prototype-Launcher-API) is primarily targeted at IDE and build tool providers.
 
-There is also a short paragraph on [how to plug in other test enginges into the launcher](Prototype-Launcher-API#plugging-in-your-own-test-engine-plug-in-engine)
+There is also a short paragraph on [how to plug in other test enginges into the launcher](Prototype-Launcher-API#plugging-in-your-own-test-engine).
 
 ----
 
