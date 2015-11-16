@@ -4,4 +4,4 @@
 
 ## Running Tests
 
-## Plugging in Your Own Test Engine (#plug-in-engine)
+## Plugging in Your Own Test Engine
