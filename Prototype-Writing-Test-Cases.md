@@ -21,7 +21,13 @@ All core annotations are located in the [`org.junit.gen5.api`] package in the `j
 | **`@Disabled`** | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore` |
 | **`@TestDecorators`** | Used to register custom extensions and decorators for tests such as `MethodParameterResolver`. See [the page on test decorators](Prototype-Test-Decorators) |
 
-## Examples
+### Support for Meta Annotations
+
+The JUnit 5 supports _meta annotations_. That means that you can define your
+custom annotation that will automatically "hand down" its own annotations to elements
+that are annotated with it.
+
+### Examples
 
 A standard test case looks like this:
 ```java
@@ -35,8 +41,7 @@ class MyTest {
   void init() {}
 
   @Test
-  void succeedingTest() {
-  }
+  void succeedingTest() { }
 
   @After
   void tearDown() {}
@@ -47,6 +52,18 @@ class MyTest {
 ```
 Mind that neither the test class nor the test method need to be `public`.
 Also, `@BeforeAll` and `@AfterAll` can be used on `static` or non-static methods.
+
+Test classes and test methods can get a custom name - with spaces, special chars
+and even emojis - that will be displayed be test runners and test reporting:
+
+```java
+@Name("A special test case")
+class CanHaveAnyNameTest {
+  @Test
+  @Name("A nice name, isn't it?")
+  void testWithANiceName() { }
+}
+```
 
 JUnit 5 comes with many of the assertion methods that JUnit 4 has, and adds a few
 that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions
@@ -83,6 +100,67 @@ class MyTest {
 }
 ```
 
+Here's a disabled test case:
+
+```java
+import org.junit.gen5.api.*;
+
+@Disabled
+class MyTest {
+  @Test
+  void testWillBeSkipped() { }
+}
+```
+
+Test classes and methods can be tagged. Those tags can later be used to filter
+[test discovery and execution](Prototype-Running-Tests):
+
+```java
+@Tag("fast")
+@Tag("model")
+class AFastTest {
+
+  @Test @Tag("taxes")
+  void testingTaxCalculation() { }
+}
+```
+
+## Test Contexts
+
+Test contexts give the test writer more capabilities to express the relationship
+among several group of tests. Here's an example:
+
+```java
+class MyObjectTest {
+  MyObject myObject;
+
+  @Before
+  void init() {
+    myObject = new MyObject();
+  }
+
+  @Test
+  void testEmptyObject() { }
+
+  @Context
+  class WithChildren() {
+    @Before
+    void initWithChildren() {
+      myObject.addChild(new MyObject());
+      myObject.addChild(new MyObject());
+    }
+
+    @Test
+    void testObjectWithChildren() { }
+  }
+}
+```
+
+Mind that _only non-static inner classes_ can serve as contexts.
+Contexts can be arbitrarily nested and can be considered to be full members of
+the test class family.
+
+
 ## Method Parameters
 
 In all prior JUnit versions, `@Test`, `@Before`, and `@After` methods were not allowed to have parameters (at least not with the standard `Runner` implementations). As one of the major changes in JUnit 5, methods are now permitted to have parameters allowing for greater flexibility.
@@ -90,10 +168,45 @@ In all prior JUnit versions, `@Test`, `@Before`, and `@After` methods were not a
 There are a few built-in resolvers in the prototype that need not be explicitly enabled:
 
 - `@TestName`:
- If a method parameter is of type `String` and annotated with `@TestName`, the [`TestNameParameterResolver`] will supply the _display name_ of the current test at runtime (either its canonical name or its user-provided `@Name`). This acts as a drop-in replacement for the `TestName` rule from JUnit 4.
+ If a method parameter is of type `String` and annotated with `@TestName`, the [`TestNameParameterResolver`] will supply the _display name_ of the current test at runtime (either its canonical name or its user-provided `@Name`). This acts as a drop-in replacement for the `TestName` rule from JUnit 4:
+
+  ```java
+  class MyTest {
+    @Before
+    void init(@TestName name) {
+      assertTrue(name.equals("TEST 1") || name.equals("test2"));
+    }
+
+    @Test @Name("TEST 1")
+    void test1(@TestName name) {
+      assertEquals("TEST 1", name);
+    }
+
+    @Test
+    void test2() { }
+  }
+  ```
 
 All other parameter resolvers must be explicitly enabled by applying a [test decorator](Prototype-Test-Decorators) using `@TestDecorators`.
 
 -  Check out the `methodInjectionTest(...)` test method in [`SampleTestCase`] for an example that uses the built-in `TestNameParameterResolver` as well as the aforementioned custom resolvers, `CustomTypeParameterResolver` and `CustomAnnotationParameterResolver`.
 
--  The [`MockitoDecorator`] is another example of a `MethodParameterResolver`. While not intended to be production-ready, it demonstrates the simplicity and expressiveness of both the extension model and the parameter resolution process. Check out the source code for [`MockitoDecoratorInBaseClassTest`] for an example of injecting Mockito mocks into `@Before` and `@Test` methods.
+-  The [`MockitoDecorator`] is another example of a `MethodParameterResolver`. While not intended to be production-ready, it demonstrates the simplicity and expressiveness of both the extension model and the parameter resolution process. Check out the source code for [`MockitoDecoratorInBaseClassTest`] for an example of injecting Mockito mocks into `@Before` and `@Test` methods:
+
+  ```java
+  import static org.mockito.Mockito.when;
+  import com.example.mockito.MockitoDecorator;
+  
+  @TestDecorators({ MockitoDecorator.class })
+  class MyMockitoTest {
+  	@Before
+  	void init(@InjectMock MyType myType) {
+  		when(myType.getName()).thenReturn("hello");
+  	}
+
+  	@Test
+  	void simpleTestWithInjectedMock(@InjectMock MyType myType) {
+  		assertEquals("hello", myType.getName());
+  	}
+  }
+  ```
