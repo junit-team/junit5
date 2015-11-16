@@ -39,9 +39,13 @@ gradlew clean install
 
 ## Contributing
 
-For the time being we're not accepting any pull requests. This has two reasons:
+# JUnit Lambda Prototype
 
-- The goal of the prototype is to get feedback on the API. Focusing on code style, formatting and other details will distract the community's (and our) attention. Most (if not all) of the code will be rewritten anyway.
-- Legal reasons. Any contributor will have to sign a contributor's agreement along the line of  [Contributing.md](https://github.com/junit-team/junit-lambda/blob/master/CONTRIBUTING.md). The exact details have not been figured out yet, but we will contact you *before accepting your first pull request*.
+The goal of the prototype phase is to come up with some working code that will entice people to give us feedback on the **programming model, APIs, and SPIs** as described in the sections below. At the current stage, we are **NOT COLLECTING FEEDBACK ABOUT THE IMPLEMENTATION**, simply because it's in large parts neither polished, nor thoroughly tested, nor stable.
 
-If you want to contribute by commenting and discussing the API, use [the project's issue tracker](https://github.com/junit-team/junit-lambda/issues), add something to [the feedback page](https://github.com/junit-team/junit-lambda/wiki/Prototype-Feedback) or comment on [Twitter](https://twitter.com/junitlambda).
+We are also not accepting any pull requests at this time, for the following reasons:
+
+- **Focus**: The goal of the prototype is to get feedback on the API and programming model. Focusing on code style, formatting, and other details will distract the community's (and our) attention. A lot of the code in the prototype will potentially be rewritten anyway.
+- **Legal reasons**: Any contributor will have to sign a contributor's agreement along the lines of [Contributing.md](https://github.com/junit-team/junit-lambda/blob/master/CONTRIBUTING.md). The exact details have not been figured out yet, but we will contact you *before accepting your first pull request*.
+
+If you want to provide input in the interim, please use [the project's issue tracker](https://github.com/junit-team/junit-lambda/issues) or send us comments via [Twitter](https://twitter.com/junitlambda).
