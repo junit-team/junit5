@@ -40,7 +40,7 @@ Generally, parameters may be resolved by type or by annotations.
 For a very simple example see the `@TestName` annotation. It must be declared on a parameter of type String and will hold the name of the test at runtime (either its canonical name or its user-provided `@Name`). 
 This acts as a simple replacement of the old `TestName` rule.
 
-The MockitoDecorator is another example of a `MethodParameterResolver`. 
+The `MockitoDecorator` is another example of a `MethodParameterResolver`. 
 While not intended to be production-ready it demonstrates the simplicity and expressives of both
 the extension model and the parameter resolution process.
 
