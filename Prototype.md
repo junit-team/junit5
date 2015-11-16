@@ -13,6 +13,12 @@ If you want to provide input in the interim, please use [the project's issue tra
 
 Snapshot artifacts are deployed to [Sonatype's snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/).
 
+### Dependency Metadata
+
+- **Group ID**: `org.junit.prototype`
+- **Version**: `5.0.0-SNAPSHOT`
+- **Artifact IDs**: see <https://oss.sonatype.org/content/repositories/snapshots/org/junit/prototype/>
+
 ## JUnit 5 Sample Projects
 
 You can find a collection of sample projects based on the JUnit 5 prototype in the [junit5-samples](https://github.com/junit-team/junit5-samples) repository.
