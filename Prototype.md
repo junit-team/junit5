@@ -58,12 +58,13 @@ TODO:
   - explain why @Test takes no arguments
 - explain new annotations
 
+## Method Parameters
 
-In all prior JUnit versions, test methods were not allowed to have parameters (at least with the standard `Runner` implementations). As one of the major changes in JUnit 5, methods are now permitted to have parameters allowing for greater flexibility. If there is a method parameter, it needs to be _resolved_ at runtime by a `MethodParameterResolver`. A `MethodParameterResolver` can either be built-in or registered by the user (see the extension model for further details). Generally speaking, parameters may be resolved by *type* or by *annotation*. For concrete examples, consult the source code for `CustomAnnotationParameterResolver` and `CustomTypeParameterResolver`, respectively.
+In all prior JUnit versions, test methods were not allowed to have parameters (at least with the standard `Runner` implementations). As one of the major changes in JUnit 5, methods are now permitted to have parameters allowing for greater flexibility. If there is a method parameter, it needs to be _resolved_ at runtime by a [`MethodParameterResolver`]. A `MethodParameterResolver` can either be built-in or registered by the user (see the extension model for further details). Generally speaking, parameters may be resolved by *type* or by *annotation*. For concrete examples, consult the source code for [`CustomTypeParameterResolver`] and [`CustomAnnotationParameterResolver`], respectively.
 
 For a very simple yet useful example, see the `@TestName` annotation. It must be declared on a method parameter of type `String` and will hold the name of the test at runtime (either its canonical name or its user-provided `@Name`). This acts as a drop-in replacement for the `TestName` rule from JUnit 4.
 
-The `MockitoDecorator` is another example of a `MethodParameterResolver`. 
+The [`MockitoDecorator`] is another example of a `MethodParameterResolver`. 
 While not intended to be production-ready, it demonstrates the simplicity and expressiveness of both the extension model and the parameter resolution process.
 
 Note that the method parameter resolution process in JUnit 5 is similar to the one used in Spring MVC controller methods.
@@ -87,9 +88,13 @@ Note that the method parameter resolution process in JUnit 5 is similar to the o
 ----
 
 [CONTRIBUTING]: https://github.com/junit-team/junit-lambda/blob/master/CONTRIBUTING.md
+[`CustomAnnotationParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java
+[`CustomTypeParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java
 [issue tracker]: https://github.com/junit-team/junit-lambda/issues
 [junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer
 [junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer
 [junit5-samples]: https://github.com/junit-team/junit5-samples
+[`MethodParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java
+[`MockitoDecorator`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/main/java/com/example/mockito/MockitoDecorator.java
 [snapshots repository]: https://oss.sonatype.org/content/repositories/snapshots/
 [Twitter]: https://twitter.com/junitlambda
