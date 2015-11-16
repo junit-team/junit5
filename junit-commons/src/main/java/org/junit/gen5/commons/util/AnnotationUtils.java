@@ -12,6 +12,7 @@ package org.junit.gen5.commons.util;
 
 import static java.util.Arrays.asList;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -19,8 +20,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import lombok.Value;
 
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 
@@ -34,6 +39,8 @@ import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
  * @see AnnotatedElement
  */
 public final class AnnotationUtils {
+
+	private static final Map<AnnotationCacheKey, Annotation> annotationCache = new ConcurrentHashMap<>(256);
 
 	private AnnotationUtils() {
 		/* no-op */
@@ -85,6 +92,7 @@ public final class AnnotationUtils {
 		return findAnnotation(element, annotationType, new HashSet<Annotation>());
 	}
 
+	@SuppressWarnings("unchecked")
 	private static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType,
 			Set<Annotation> visited) {
 
@@ -94,9 +102,17 @@ public final class AnnotationUtils {
 			return Optional.empty();
 		}
 
-		// Directly present?
-		A annotation = element.getDeclaredAnnotation(annotationType);
+		// Cached?
+		AnnotationCacheKey key = new AnnotationCacheKey(element, annotationType);
+		A annotation = (A) annotationCache.get(key);
 		if (annotation != null) {
+			return Optional.of(annotation);
+		}
+
+		// Directly present?
+		annotation = element.getDeclaredAnnotation(annotationType);
+		if (annotation != null) {
+			annotationCache.put(key, annotation);
 			return Optional.of(annotation);
 		}
 
@@ -106,6 +122,7 @@ public final class AnnotationUtils {
 				Optional<A> metaAnnotation = findAnnotation(candidateAnnotation.annotationType(), annotationType,
 					visited);
 				if (metaAnnotation.isPresent()) {
+					annotationCache.put(key, metaAnnotation.get());
 					return metaAnnotation;
 				}
 			}
@@ -114,6 +131,7 @@ public final class AnnotationUtils {
 		// Indirectly present?
 		annotation = element.getAnnotation(annotationType);
 		if (annotation != null) {
+			annotationCache.put(key, annotation);
 			return Optional.of(annotation);
 		}
 
@@ -123,6 +141,7 @@ public final class AnnotationUtils {
 				Optional<A> metaAnnotation = findAnnotation(candidateAnnotation.annotationType(), annotationType,
 					visited);
 				if (metaAnnotation.isPresent()) {
+					annotationCache.put(key, metaAnnotation.get());
 					return metaAnnotation;
 				}
 			}
@@ -205,6 +224,15 @@ public final class AnnotationUtils {
 	public static boolean isInJavaLangAnnotationPackage(Annotation annotation) {
 		return (annotation != null
 				&& annotation.annotationType().getPackage().getName().startsWith("java.lang.annotation"));
+	}
+
+	@Value
+	private static class AnnotationCacheKey implements Serializable {
+
+		private static final long serialVersionUID = 4611807332019442648L;
+
+		private AnnotatedElement element;
+		private Class<? extends Annotation> annotationType;
 	}
 
 }
