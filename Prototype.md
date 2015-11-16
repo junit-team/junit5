@@ -52,7 +52,7 @@ For Maven, check out the [junit5-maven-consumer] project.
 
 ## Annotations
 
-JUnit 5 supports the following annotations for configuring and extending tests.
+JUnit 5 supports the following annotations for configuring tests and extending the framework.
 
 All core annotations are located in the [`org.junit.gen5.api`] package in the `junit5-api` module.
 
