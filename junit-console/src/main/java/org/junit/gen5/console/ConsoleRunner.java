@@ -17,14 +17,16 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.airlift.airline.Arguments;
-import io.airlift.airline.Command;
-import io.airlift.airline.HelpOption;
-import io.airlift.airline.Option;
-
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.launcher.Launcher;
+
+import io.airlift.airline.Arguments;
+import io.airlift.airline.Command;
+import io.airlift.airline.Help;
+import io.airlift.airline.Option;
+import io.airlift.airline.model.CommandMetadata;
 
 /**
  * @author Stefan Bechtold
@@ -35,6 +37,8 @@ import org.junit.gen5.launcher.Launcher;
 public class ConsoleRunner {
 
 	// @formatter:off
+    @Option(name = {"-h", "--help"}, description = "Display help information")
+    private boolean help;
 
 	@Option(name = { "-x", "--enable-exit-code" },
 			description = "Exit process with number of failing tests as exit code")
@@ -55,14 +59,28 @@ public class ConsoleRunner {
 	// @formatter:on
 
 	@Inject
-	public HelpOption helpOption;
+	public CommandMetadata commandMetadata;
 
 	public static void main(String... args) {
 		ConsoleRunner consoleRunner = singleCommand(ConsoleRunner.class).parse(args);
 
-		if (!consoleRunner.helpOption.showHelpIfRequested()) {
+		if (consoleRunner.help) {
+			showHelp(consoleRunner);
+		}
+
+		try {
 			consoleRunner.run();
 		}
+		catch (Exception e) {
+			e.printStackTrace(System.err);
+			System.err.println();
+			showHelp(consoleRunner);
+			System.exit(-1);
+		}
+	}
+
+	private static void showHelp(ConsoleRunner consoleRunner) {
+		Help.help(consoleRunner.commandMetadata);
 	}
 
 	private void run() {
@@ -91,6 +109,7 @@ public class ConsoleRunner {
 	}
 
 	private List<TestPlanSpecificationElement> testPlanSpecificationElementsFromArguments() {
+		Preconditions.notNull(arguments, "No arguments given");
 		ArgumentMode mode = ArgumentMode.parse(argumentMode);
 		return mode.toTestPlanSpecificationElements(arguments);
 	}
