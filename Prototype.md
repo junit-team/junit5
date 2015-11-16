@@ -44,35 +44,34 @@ For Maven, check out the [junit5-maven-consumer] project.
 
 ----
 
-# Running JUnit 5 test cases
+# Running JUnit 5 Test Cases
 
 ----
 
-# Writing JUnit 5 test cases
+# Writing JUnit 5 Test Cases
 
 ## Annotations
 
 JUnit 5 supports the following annotations for configuring and extending tests.
 
+All core annotations are located in the [`org.junit.gen5.api`] package in the `junit5-api` module.
+
 | Annotation | Description |
 |------------|-------------|
-| **`@Test`** | denotes that a method is a test method |
-| **`@Name`** | declares a custom display name for the test class or test method |
-| **`@TestName`** | allows the display name of the current test to be supplied as a method parameter to `@Test`, `@Before`, and `@After` methods |
-| **`@Before`** | denotes that the annotated method should be executed _before_ each `@Test` method in the current class or class hierarchy |
-| **`@After`** | denotes that the annotated method should be executed _after_ each `@Test` method in the current class or class hierarchy |
-| **`@BeforeAll`** | denotes that the annotated method should be executed _before_ all `@Test` methods in the current class or class hierarchy |
-| **`@AfterAll`** | denotes that the annotated method should be executed _after_ all `@Test` methods in the current class or class hierarchy |
-| **`@Context`** | denotes that the annotated class is an inner test class |
-| **`@Tag`** and **`@Tags`** | used to declare _tags_ for filtering tests, either at the class or method level |
-| **`@Conditional`** | used to declare _conditions_ that will be evaluated to determine if a test is enabled; `@Disabled` is a built-in implementation of conditional test execution |
-| **`@Disabled`** | used to _disable_ a test class or test method; analogous to `@Ignore` from JUnit 4 |
-| **`@TestDecorators`** | used to register custom extensions and decorators for tests such as `MethodParameterResolver` |
+| **`@Test`** | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test decorators in JUnit 5 operate based on their own dedicated annotations. |
+| **`@Name`** | Declares a custom display name for the test class or test method |
+| **`@TestName`** | Allows the display name of the current test to be supplied as a method parameter to `@Test`, `@Before`, and `@After` methods; analogous to the JUnit 4's `TestName` rule |
+| **`@Before`** | Denotes that the annotated method should be executed _before_ **each** `@Test` method in the current class or class hierarchy |
+| **`@After`** | Denotes that the annotated method should be executed _after_ **each** `@Test` method in the current class or class hierarchy |
+| **`@BeforeAll`** | Denotes that the annotated method should be executed _before_ **all** `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@BeforeClass` |
+| **`@AfterAll`** | Denotes that the annotated method should be executed _after_ **all** `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@AfterClass` |
+| **`@Context`** | Denotes that the annotated class is an inner test class |
+| **`@Tag`** and **`@Tags`** | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4 |
+| **`@Conditional`** | Used to declare _conditions_ that will be evaluated to determine if a test is enabled. `@Disabled` is a built-in implementation of conditional test execution. |
+| **`@Disabled`** | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore` |
+| **`@TestDecorators`** | Used to register custom extensions and decorators for tests such as `MethodParameterResolver` |
 
-**TODO**
-
-- Expand on differences.
-- Explain why `@Test` does not have attributes, in contrast to JUnit 4.
+## Examples
 
 ## Method Parameters
 
@@ -87,15 +86,17 @@ While not intended to be production-ready, it demonstrates the simplicity and ex
 
 ----
 
-# Extending JUnit 5's built-in behavior
+# Extending JUnit 5's Built-in Behavior
 
 ----
 
-# Launching JUnit Lambda (for IDE and build tool providers)
+# Launching JUnit Lambda
+
+This section is primarily intended for IDE and build tool providers.
 
 ----
 
-# Integrating JUnit 4 test suites
+# Integrating JUnit 4 Test Suites
 
 ----
 
@@ -113,6 +114,7 @@ While not intended to be production-ready, it demonstrates the simplicity and ex
 [`MethodParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java
 [`MockitoDecorator`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/main/java/com/example/mockito/MockitoDecorator.java
 [`MockitoDecoratorInBaseClassTest`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/test/java/com/example/mockito/MockitoDecoratorInBaseClassTest.java
+[`org.junit.gen5.api`]: https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api
 [`SampleTestCase`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/SampleTestCase.java
 [snapshots repository]: https://oss.sonatype.org/content/repositories/snapshots/
 [`TestNameParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java
