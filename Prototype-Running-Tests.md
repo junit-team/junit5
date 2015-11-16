@@ -77,7 +77,7 @@ You need the following artifacts and their dependencies on the classpath:
 - _junit5-api_ (`org.junit.prototype:junit5-api:5.0.0-SNAPSHOT`) in _test_ scope:
   API for writing tests, includes `@Test` etc.
 
-- _junit4-launcher-runner_ (`org.junit.prototype:junit-console:5.0.0-SNAPSHOT`) in _test_ scope:
+- _junit4-launcher-runner_ (`org.junit.prototype:junit4-launcher-runner:5.0.0-SNAPSHOT`) in _test_ scope:
   Location of the `JUnit5` runner.
 
 - _junit5-engine_ (`org.junit.prototype:junit5-engine:5.0.0-SNAPSHOT`) in _testRuntime_ scope:
