@@ -25,6 +25,22 @@ For Maven, check out the [junit5-maven-consumer](https://github.com/junit-team/j
 
 ## Writing JUnit 5 test cases
 
+JUnit 5 supports the familiar @Test, @Before, and @After annotations.
+
+TODO: 
+* expand on differences, explain why @Test takes no arguments 
+* explain new annotations
+
+
+In all prior JUnit versions test methods were required not to have parameters.
+As one of the major changes in JUnit 5 methods are now allowed to have parameters allowing for greater flexibility. 
+If there is a method parameter it needs to be _resolved_ at runtime. This is achieved by `MethodParameterResolver` instances. Such `MethodParameterResolver`s can either be built-in or added by the user (see extension model).
+Generally, parameters may be resolved by type or by annotations. 
+
+
+
+
+
 ## Extending JUnit 5's built-in behavior
 
 ## Launching JUnit Lambda (for IDE and build tool providers)
