@@ -42,15 +42,15 @@ and `pom.xml` in the projects below:
 
 ----
 
-# Running JUnit 5 Test
-
-[How to run tests in JUnit5?](Prototype-Running-Tests)
-
-----
-
 # Writing JUnit 5 Test Cases
 
 [How to write test cases in JUnit5?](Prototype-Writing-Test-Cases)
+
+----
+
+# Running JUnit 5 Test
+
+[How to run tests in JUnit5?](Prototype-Running-Tests)
 
 ----
 

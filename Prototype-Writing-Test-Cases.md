@@ -23,6 +23,30 @@ All core annotations are located in the [`org.junit.gen5.api`] package in the `j
 
 ## Examples
 
+A standard test case looks like this:
+```java
+import org.junit.gen5.Test;
+class MyTest {
+  @BeforeAll
+  void initAll() {}
+
+  @Before
+  void init() {}
+
+  @Test
+  void succeedingTest() {
+  }
+
+  @After
+  void tearDown() {}
+
+  @AfterAll
+  void tearDownAll() {}
+}
+```
+Mind that neither the test class nor the test method need to be public.
+Also, `@BeforeAll` and `@AfterAll` can be used on `static` or non-static methods.
+
 ## Method Parameters
 
 In all prior JUnit versions, `@Test`, `@Before`, and `@After` methods were not allowed to have parameters (at least not with the standard `Runner` implementations). As one of the major changes in JUnit 5, methods are now permitted to have parameters allowing for greater flexibility.
