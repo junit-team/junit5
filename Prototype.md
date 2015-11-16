@@ -36,7 +36,7 @@ In all prior JUnit versions test methods were required not to have parameters.
 As one of the major changes in JUnit 5 methods are now allowed to have parameters allowing for greater flexibility. 
 If there is a method parameter it needs to be _resolved_ at runtime. This is achieved by `MethodParameterResolver` instances. Such `MethodParameterResolver`s can either be built-in or added by the user (see extension model).
 Generally, parameters may be resolved by type or by annotations, 
-see `CustomAnnotationParameterResolver` and `CustomTypeParameterResolver`, respectively
+see `CustomAnnotationParameterResolver` and `CustomTypeParameterResolver`, respectively.
 
 For a very simple yet usefule example see the `@TestName` annotation. It must be declared on a parameter of type String and will hold the name of the test at runtime (either its canonical name or its user-provided `@Name`). 
 This acts as a simple replacement of the old `TestName` rule.
