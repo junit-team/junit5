@@ -60,14 +60,14 @@ TODO:
 
 ## Method Parameters
 
-In all prior JUnit versions, test methods were not allowed to have parameters (at least with the standard `Runner` implementations). As one of the major changes in JUnit 5, methods are now permitted to have parameters allowing for greater flexibility. If there is a method parameter, it needs to be _resolved_ at runtime by a [`MethodParameterResolver`]. A `MethodParameterResolver` can either be built-in or registered by the user (see the extension model for further details). Generally speaking, parameters may be resolved by *type* or by *annotation*. For concrete examples, consult the source code for [`CustomTypeParameterResolver`] and [`CustomAnnotationParameterResolver`], respectively.
+In all prior JUnit versions, `@Test`, `@Before`, and `@After` methods were not allowed to have parameters (at least not with the standard `Runner` implementations). As one of the major changes in JUnit 5, methods are now permitted to have parameters allowing for greater flexibility. If there is a method parameter, it needs to be _resolved_ at runtime by a [`MethodParameterResolver`]. A `MethodParameterResolver` can either be built-in or registered by the user (see the extension model for further details). Generally speaking, parameters may be resolved by *type* or by *annotation*. For concrete examples, consult the source code for [`CustomTypeParameterResolver`] and [`CustomAnnotationParameterResolver`], respectively.
 
-For a very simple yet useful example, see the `@TestName` annotation. It must be declared on a method parameter of type `String` and will hold the name of the test at runtime (either its canonical name or its user-provided `@Name`). This acts as a drop-in replacement for the `TestName` rule from JUnit 4.
+For a very simple yet useful example, consider the support for `@TestName`. If a method parameter is of type `String` and annotated with `@TestName`, the [`TestNameParameterResolver`] will supply the _display name_ of the current test at runtime (either its canonical name or its user-provided `@Name`). This acts as a drop-in replacement for the `TestName` rule from JUnit 4.
+
+Check out the `methodInjectionTest(...)` test method in [`SampleTestCase`] for an example that uses the built-in `TestNameParameterResolver` as well as the aforementioned custom resolvers, `CustomTypeParameterResolver` and `CustomAnnotationParameterResolver`.
 
 The [`MockitoDecorator`] is another example of a `MethodParameterResolver`. 
-While not intended to be production-ready, it demonstrates the simplicity and expressiveness of both the extension model and the parameter resolution process.
-
-Note that the method parameter resolution process in JUnit 5 is similar to the one used in Spring MVC controller methods.
+While not intended to be production-ready, it demonstrates the simplicity and expressiveness of both the extension model and the parameter resolution process. Check out the source code for [`MockitoDecoratorInBaseClassTest`] for an example of injecting Mockito mocks into `@Before` and `@Test` methods.
 
 ----
 
@@ -96,5 +96,8 @@ Note that the method parameter resolution process in JUnit 5 is similar to the o
 [junit5-samples]: https://github.com/junit-team/junit5-samples
 [`MethodParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java
 [`MockitoDecorator`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/main/java/com/example/mockito/MockitoDecorator.java
+[`MockitoDecoratorInBaseClassTest`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/test/java/com/example/mockito/MockitoDecoratorInBaseClassTest.java
+[`SampleTestCase`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/SampleTestCase.java
 [snapshots repository]: https://oss.sonatype.org/content/repositories/snapshots/
+[`TestNameParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java
 [Twitter]: https://twitter.com/junitlambda
