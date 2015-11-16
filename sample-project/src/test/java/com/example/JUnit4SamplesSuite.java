@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 @UniqueIds({ "junit5:com.example.SampleTestCase#assertAllTest()",
 	"junit5:com.example.SampleTestCase#assertAllFailingTest()",
 	"junit5:com.example.SampleTestCase@AnInnerTestContext" })
-@Packages({ "com.example.subpackage" })
+@Packages("com.example.subpackage")
 //@ClassNameMatches(".*TestCase.")
 //@OnlyIncludeTags({ "fast" })
 //@OnlyEngine("junit5")
