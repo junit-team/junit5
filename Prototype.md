@@ -50,13 +50,27 @@ For Maven, check out the [junit5-maven-consumer] project.
 
 # Writing JUnit 5 test cases
 
-JUnit 5 supports the familiar `@Test`, `@Before`, and `@After` annotations.
+## Annotations
 
-TODO:
+JUnit 5 supports the following annotations for configuring and extending tests.
 
-- expand on differences
-  - explain why @Test takes no arguments
-- explain new annotations
+- `@Test`: denotes that a method is a test method
+- `@Name`: declares a custom display name for the test class or test method
+- `@TestName`: allows the display name of the current test to be supplied as a method parameter to `@Test`, `@Before`, and `@After` methods
+- `@Before`: denotes that the annotated method should be executed _before_ each `@Test` method in the current class or class hierarchy
+- `@After`: denotes that the annotated method should be executed _after_ each `@Test` method in the current class or class hierarchy
+- `@BeforeAll`: denotes that the annotated method should be executed _before_ all `@Test` methods in the current class or class hierarchy
+- `@AfterAll`: denotes that the annotated method should be executed _after_ all `@Test` methods in the current class or class hierarchy
+- `@Context`: denotes that the annotated class is an inner test class
+- `@Tag` and `@Tags`: used to declare _tags_ for filtering tests, either at the class or method level
+- `@Conditional`: used to declare _conditions_ that will be evaluated to determine if a test is enabled; `@Disabled` is a built-in implementation of conditional test execution
+- `@Disabled`: used to _disable_ a test class or test method; analogous to `@Ignore` from JUnit 4
+- `@TestDecorators`: used to register custom extensions and decorators for tests such as `MethodParameterResolver`
+
+**TODO**
+
+- Expand on differences.
+- Explain why `@Test` does not have attributes, in contrast to JUnit 4.
 
 ## Method Parameters
 
