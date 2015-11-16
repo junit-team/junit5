@@ -22,7 +22,7 @@ public class CustomAnnotationParameterResolver implements MethodParameterResolve
 
 	@Override
 	public boolean supports(Parameter parameter) {
-		return AnnotationUtils.findAnnotation(parameter, CustomAnnotation.class).isPresent();
+		return AnnotationUtils.isAnnotated(parameter, CustomAnnotation.class);
 	}
 
 }

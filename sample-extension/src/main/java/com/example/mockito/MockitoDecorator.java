@@ -36,7 +36,7 @@ public class MockitoDecorator implements MethodParameterResolver {
 
 	@Override
 	public boolean supports(Parameter parameter) {
-		return AnnotationUtils.findAnnotation(parameter, InjectMock.class).isPresent();
+		return AnnotationUtils.isAnnotated(parameter, InjectMock.class);
 	}
 
 	@Override

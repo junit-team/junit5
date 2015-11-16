@@ -10,17 +10,20 @@
 
 package org.junit.gen5.engine.junit5.testers;
 
+import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
+
 import java.util.function.Predicate;
 
 /**
  * @since 5.0
  */
-public class CanBeTestClass extends ReflectionObjectTester implements Predicate<Class<?>> {
+public class CanBeTestClass implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> candidate) {
-		return !isAbstract(candidate) && !candidate.isLocalClass()
-				&& (isStatic(candidate) || !candidate.isMemberClass());
+		return (!isAbstract(candidate) && !candidate.isLocalClass()
+				&& (isStatic(candidate) || !candidate.isMemberClass()));
 	}
 
 }

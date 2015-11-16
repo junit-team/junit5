@@ -10,6 +10,11 @@
 
 package org.junit.gen5.engine.junit5.testers;
 
+import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.gen5.commons.util.ReflectionUtils.isPrivate;
+import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
+
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
@@ -19,12 +24,12 @@ import org.junit.gen5.api.Test;
  * @author Sam Brannen
  * @since 5.0
  */
-public class IsTestMethod extends ReflectionObjectTester implements Predicate<Method> {
+public class IsTestMethod implements Predicate<Method> {
 
 	@Override
 	public boolean test(Method candidate) {
-		return !isStatic(candidate) && !isPrivate(candidate) && !isAbstract(candidate)
-				&& hasAnnotation(candidate, Test.class);
+		return (!isStatic(candidate) && !isPrivate(candidate) && !isAbstract(candidate)
+				&& isAnnotated(candidate, Test.class));
 	}
 
 }

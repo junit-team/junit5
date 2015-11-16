@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
+import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Parameter;
 
@@ -30,7 +30,7 @@ public class TestNameParameterResolver implements MethodParameterResolver {
 
 	@Override
 	public boolean supports(Parameter parameter) {
-		return parameter.getType() == String.class && findAnnotation(parameter, TestName.class).isPresent();
+		return (parameter.getType() == String.class && isAnnotated(parameter, TestName.class));
 	}
 
 	@Override

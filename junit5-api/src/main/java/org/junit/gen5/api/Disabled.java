@@ -10,7 +10,7 @@
 
 package org.junit.gen5.api;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
+import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -39,12 +39,12 @@ public @interface Disabled {
 		@Override
 		public Result evaluate(TestExecutionContext context) {
 
-			if (findAnnotation(context.getTestClass(), Disabled.class).isPresent()) {
+			if (isAnnotated(context.getTestClass(), Disabled.class)) {
 				return Result.failure(
 					String.format("@Disabled is present on test class [%s]", context.getTestClass().get().getName()));
 			}
 
-			if (findAnnotation(context.getTestMethod(), Disabled.class).isPresent()) {
+			if (isAnnotated(context.getTestMethod(), Disabled.class)) {
 				return Result.failure(String.format("@Disabled is present on test method [%s]",
 					context.getTestMethod().get().toGenericString()));
 			}

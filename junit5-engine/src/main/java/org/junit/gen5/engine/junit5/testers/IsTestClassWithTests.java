@@ -19,7 +19,7 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 /**
  * @since 5.0
  */
-public class IsTestClassWithTests extends ReflectionObjectTester implements Predicate<Class<?>> {
+public class IsTestClassWithTests implements Predicate<Class<?>> {
 
 	private static final IsTestMethod isTestMethod = new IsTestMethod();
 

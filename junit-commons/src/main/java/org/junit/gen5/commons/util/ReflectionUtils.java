@@ -15,7 +15,9 @@ import static java.util.stream.Collectors.toList;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,23 +35,6 @@ import java.util.stream.Collectors;
  */
 public final class ReflectionUtils {
 
-	public static Optional<Object> getOuterInstance(Object inner) {
-		// This is risky since it depends on the name of the field which is nowhere guaranteed
-		// but has been stable so far in all JDKs
-		Optional<Object> parentInstance = Arrays.stream(inner.getClass().getDeclaredFields()).filter(
-			f -> f.getName().startsWith("this$")).findFirst().map(f -> {
-				f.setAccessible(true);
-				try {
-					return f.get(inner);
-				}
-				catch (IllegalAccessException e) {
-					return Optional.empty();
-				}
-			});
-
-		return parentInstance;
-	}
-
 	public enum MethodSortOrder {
 		HierarchyDown, HierarchyUp
 	}
@@ -66,6 +51,30 @@ public final class ReflectionUtils {
 			/* ignore */
 		}
 		return ClassLoader.getSystemClassLoader();
+	}
+
+	public static boolean isPrivate(Class<?> clazz) {
+		return Modifier.isPrivate(clazz.getModifiers());
+	}
+
+	public static boolean isPrivate(Member member) {
+		return Modifier.isPrivate(member.getModifiers());
+	}
+
+	public static boolean isAbstract(Class<?> clazz) {
+		return Modifier.isAbstract(clazz.getModifiers());
+	}
+
+	public static boolean isAbstract(Member member) {
+		return Modifier.isAbstract(member.getModifiers());
+	}
+
+	public static boolean isStatic(Class<?> clazz) {
+		return Modifier.isStatic(clazz.getModifiers());
+	}
+
+	public static boolean isStatic(Member member) {
+		return Modifier.isStatic(member.getModifiers());
 	}
 
 	public static <T> T newInstance(Class<T> clazz, Object... args) {
@@ -141,6 +150,23 @@ public final class ReflectionUtils {
 		catch (ClassNotFoundException e) {
 			return Optional.empty();
 		}
+	}
+
+	public static Optional<Object> getOuterInstance(Object inner) {
+		// This is risky since it depends on the name of the field which is nowhere guaranteed
+		// but has been stable so far in all JDKs
+		Optional<Object> outerInstance = Arrays.stream(inner.getClass().getDeclaredFields()).filter(
+			f -> f.getName().startsWith("this$")).findFirst().map(f -> {
+				makeAccessible(f);
+				try {
+					return f.get(inner);
+				}
+				catch (IllegalAccessException e) {
+					return Optional.empty();
+				}
+			});
+
+		return outerInstance;
 	}
 
 	public static Class<?>[] findAllClassesInPackage(String basePackageName) {

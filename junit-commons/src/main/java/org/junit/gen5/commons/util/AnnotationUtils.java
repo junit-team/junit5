@@ -40,6 +40,27 @@ public final class AnnotationUtils {
 	}
 
 	/**
+	 * Determine if an annotation of {@code annotationType} is either
+	 * <em>present</em> or <em>meta-present</em> on the supplied optional
+	 * {@code element}.
+	 * @see #findAnnotation(Optional, Class)
+	 */
+	public static boolean isAnnotated(Optional<? extends AnnotatedElement> element,
+			Class<? extends Annotation> annotationType) {
+
+		return findAnnotation(element, annotationType).isPresent();
+	}
+
+	/**
+	 * Determine if an annotation of {@code annotationType} is either
+	 * <em>present</em> or <em>meta-present</em> on the supplied {@code element}.
+	 * @see #findAnnotation(AnnotatedElement, Class)
+	 */
+	public static boolean isAnnotated(AnnotatedElement element, Class<? extends Annotation> annotationType) {
+		return findAnnotation(element, annotationType).isPresent();
+	}
+
+	/**
 	 * Find the first annotation of {@code annotationType} that is either
 	 * <em>present</em> or <em>meta-present</em> on the supplied optional
 	 * {@code element}.
