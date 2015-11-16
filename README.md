@@ -41,7 +41,7 @@ gradlew clean install
 
 # JUnit Lambda Prototype
 
-We're currently collection feedback about the prototype the functionality of which [is described on the Wiki](https://github.com/junit-team/junit-lambda/wiki/Prototype)
+We're currently collection feedback about the prototype the functionality of which [is described in the Wiki](https://github.com/junit-team/junit-lambda/wiki/Prototype).
 
 The goal of the prototype phase is to come up with some working code that will entice people to give us feedback on the **programming model, APIs, and SPIs** as described in the sections below. At the current stage, we are **NOT COLLECTING FEEDBACK ABOUT THE IMPLEMENTATION**, simply because it's in large parts neither polished, nor thoroughly tested, nor stable.
 
