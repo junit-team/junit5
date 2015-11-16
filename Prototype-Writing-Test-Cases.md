@@ -25,7 +25,8 @@ All core annotations are located in the [`org.junit.gen5.api`] package in the `j
 
 A standard test case looks like this:
 ```java
-import org.junit.gen5.Test;
+import org.junit.gen5.api.*;
+
 class MyTest {
   @BeforeAll
   void initAll() {}
@@ -44,8 +45,43 @@ class MyTest {
   void tearDownAll() {}
 }
 ```
-Mind that neither the test class nor the test method need to be public.
+Mind that neither the test class nor the test method need to be `public`.
 Also, `@BeforeAll` and `@AfterAll` can be used on `static` or non-static methods.
+
+JUnit 5 comes with many of the assertion methods that JUnit 4 has, and adds a few
+that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions
+are static methods on [`org.junit.gen5.Assertions`].
+
+```java
+import static org.junit.gen5.api.Assertions.*;
+
+class MyTest {
+  @Test
+  void standardAssertions() {
+    assertEquals(2, 2);
+    assertEquals(4, 4, "The optional test description is now the last parameter.")
+    assertTrue(myCondition, () -> "Test description can be lazy.")
+  }
+
+  @Test
+  void groupedAssertions() {
+    // In a grouped assertion all assertions are executed and several
+    // failures are reported together
+    assertAll("address",
+      () -> assertEquals("Johannes", address.getFirstName()),
+      () -> assertEquals("Link", address.getLastName()),
+    )
+  }
+
+  @Test
+  void exceptiongTesting() {
+    Throwable exception = expectThrows(IllegalArgumentException.class,
+      () -> throw new IllegalArgumentException("a message");
+    )
+    assertEquals("a message", exception.getMessage());
+  }
+}
+```
 
 ## Method Parameters
 
