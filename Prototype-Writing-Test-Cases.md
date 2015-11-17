@@ -7,6 +7,7 @@
 - [Standard Test Class](#standard-test-class)
 - [Custom Names](#custom-names)
 - [Assertions](#assertions)
+- [Assumptions](#assumptions)
 - [Disabling Tests](#disabling-tests)
 - [Tagging and Filtering](#tagging-and-filtering)
 - [Test Contexts](#test-contexts)
@@ -142,6 +143,49 @@ class MyTest {
       () -> throw new IllegalArgumentException("a message")
     );
     assertEquals("a message", exception.getMessage());
+  }
+
+}
+```
+
+----
+
+## Assumptions
+
+JUnit 5 comes with a subset of the assumption methods that JUnit 4 provides and adds a few
+that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assumptions
+are static methods in the [`org.junit.gen5.Assumptions`] class.
+
+```java
+import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assumptions.*;
+
+import org.junit.gen5.api.*;
+
+class MyTest {
+
+  @Test
+  void testOnlyOnCiServer() {
+    assumeTrue("CI".equals(System.getenv("ENV"));
+    // remainder of test
+  }
+
+  @Test
+  void testOnlyOnDeveloperWorkstation() {
+    assumeTrue("DEV".equals(System.getenv("ENV"),
+               () -> "Aborting test: not on developer workstation");
+    // remainder of test
+  }
+
+  @Test
+  void testInAllEnvironments() {
+    assumingThat("CI".equals(System.getenv("ENV"), () -> {
+        // perform these assertions only on the CI server
+        assertEquals(...);
+    });
+
+    // perform these assertions in all environments
+    assertEquals(...);
   }
 
 }
