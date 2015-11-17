@@ -80,8 +80,8 @@ class MyTest {
   void standardAssertions() {
     assertEquals(2, 2);
     assertEquals(4, 4, "The optional assertion message is now the last parameter.");
-    assertTrue(myCondition, () -> "Assertion messages can be lazily evaluated -- " +
-                                  "to avoid constructing complex messages unnecessarily.");
+    assertTrue(2 == 2, () -> "Assertion messages can be lazily evaluated -- " +
+                             "to avoid constructing complex messages unnecessarily.");
   }
 
   @Test
@@ -90,15 +90,15 @@ class MyTest {
     // failures will be reported together.
     assertAll("address",
       () -> assertEquals("Johannes", address.getFirstName()),
-      () -> assertEquals("Link", address.getLastName()),
-    )
+      () -> assertEquals("Link", address.getLastName())
+    );
   }
 
   @Test
   void exceptionTesting() {
     Throwable exception = expectThrows(IllegalArgumentException.class,
       () -> throw new IllegalArgumentException("a message");
-    )
+    );
     assertEquals("a message", exception.getMessage());
   }
 }
