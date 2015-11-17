@@ -56,34 +56,18 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 			return forClass(testClassOptional.get());
 		}
 
-		//TODO Handle case when test method is inherited
-		Optional<Method> testMethodOptional = loadMethod(anyName);
+		Optional<Method> testMethodOptional = ReflectionUtils.loadMethod(anyName);
 		if (testMethodOptional.isPresent()) {
 			Method testMethod = testMethodOptional.get();
 			return forMethod(testMethod.getDeclaringClass(), testMethod);
 		}
 
+		if (ReflectionUtils.isPackage(anyName)) {
+			return forPackage(anyName);
+		}
+
 		throw new IllegalArgumentException(
 			String.format("'%s' specifies neither a class, nor a method, nor a package.", anyName));
-	}
-
-	//TODO Move to ReflectionUtils and handle parameters
-	private static Optional<Method> loadMethod(String anyName) {
-		Optional<Method> testMethodOptional = Optional.empty();
-		int hashPosition = anyName.lastIndexOf('#');
-		if (hashPosition >= 0 && hashPosition < anyName.length()) {
-			String className = anyName.substring(0, hashPosition);
-			String methodName = anyName.substring(hashPosition + 1);
-			Optional<Class<?>> methodClassOptional = ReflectionUtils.loadClass(className);
-			if (methodClassOptional.isPresent()) {
-				try {
-					testMethodOptional = Optional.of(methodClassOptional.get().getDeclaredMethod(methodName));
-				}
-				catch (NoSuchMethodException ignore) {
-				}
-			}
-		}
-		return testMethodOptional;
 	}
 
 	public static List<TestPlanSpecificationElement> forClassNames(Collection<String> classNames) {

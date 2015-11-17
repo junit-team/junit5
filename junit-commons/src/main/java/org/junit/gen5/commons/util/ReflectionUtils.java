@@ -152,6 +152,32 @@ public final class ReflectionUtils {
 		}
 	}
 
+	/**
+	 * Try to load a method by its fully qualified name (if such a thing exists for methods).
+	 * @param fullyQualifiedMethodName In the form 'package.subpackage.ClassName#methodName'
+	 * @return Optional of Method
+	 */
+	public static Optional<Method> loadMethod(String fullyQualifiedMethodName) {
+		Preconditions.notBlank(fullyQualifiedMethodName, "full method name must not be null or empty");
+		//TODO Handle overloaded and inherited methods
+
+		Optional<Method> testMethodOptional = Optional.empty();
+		int hashPosition = fullyQualifiedMethodName.lastIndexOf('#');
+		if (hashPosition >= 0 && hashPosition < fullyQualifiedMethodName.length()) {
+			String className = fullyQualifiedMethodName.substring(0, hashPosition);
+			String methodName = fullyQualifiedMethodName.substring(hashPosition + 1);
+			Optional<Class<?>> methodClassOptional = loadClass(className);
+			if (methodClassOptional.isPresent()) {
+				try {
+					testMethodOptional = Optional.of(methodClassOptional.get().getDeclaredMethod(methodName));
+				}
+				catch (NoSuchMethodException ignore) {
+				}
+			}
+		}
+		return testMethodOptional;
+	}
+
 	public static Optional<Object> getOuterInstance(Object inner) {
 		// This is risky since it depends on the name of the field which is nowhere guaranteed
 		// but has been stable so far in all JDKs
@@ -167,6 +193,10 @@ public final class ReflectionUtils {
 			});
 
 		return outerInstance;
+	}
+
+	public static boolean isPackage(String basePackageName) {
+		return new ClasspathScanner(basePackageName).isPackage();
 	}
 
 	public static Class<?>[] findAllClassesInPackage(String basePackageName) {

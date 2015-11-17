@@ -35,6 +35,18 @@ class ClasspathScanner {
 		this.basePackageName = basePackageName;
 	}
 
+	boolean isPackage() {
+		ClassLoader classLoader = ReflectionUtils.getDefaultClassLoader();
+		String path = basePackagePath();
+		try {
+			classLoader.getResources(path);
+			return true;
+		}
+		catch (IOException e) {
+			return false;
+		}
+	}
+
 	Class<?>[] scanForClassesRecursively() {
 		try {
 			List<File> dirs = allSourceDirsForPackage();
@@ -59,7 +71,7 @@ class ClasspathScanner {
 	private List<File> allSourceDirsForPackage() throws IOException {
 		ClassLoader classLoader = ReflectionUtils.getDefaultClassLoader();
 		LOG.fine(() -> "ClassLoader: " + classLoader);
-		String path = this.basePackageName.replace('.', '/');
+		String path = basePackagePath();
 		Enumeration<URL> resources = classLoader.getResources(path);
 		List<File> dirs = new ArrayList<>();
 		while (resources.hasMoreElements()) {
@@ -67,6 +79,10 @@ class ClasspathScanner {
 			dirs.add(new File(resource.getFile()));
 		}
 		return dirs;
+	}
+
+	private String basePackagePath() {
+		return this.basePackageName.replace('.', '/');
 	}
 
 	private static List<Class<?>> findClassesInSourceDirRecursively(File sourceDir, String packageName) {

@@ -42,6 +42,13 @@ public class TestPlanSpecificationTests {
 		TestPlanSpecificationElement specification = TestPlanSpecification.forName(methodName);
 		assertEquals(MethodSpecification.class, specification.getClass());
 	}
+
+	@Test
+	public void testForNameWithPackage() throws NoSuchMethodException {
+		String packageName = "org.junit.gen5";
+		TestPlanSpecificationElement specification = TestPlanSpecification.forName(packageName);
+		assertEquals(PackageSpecification.class, specification.getClass());
+	}
 }
 
 class MyTestClass {
