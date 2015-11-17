@@ -35,15 +35,15 @@ gradlew clean install
 - **Group ID**: `org.junit.prototype`
 - **Version**: `5.0.0-SNAPSHOT`
 - **Artifact IDs**:
-  - `junit-commons`
-  - `junit-console`
-  - `junit-engine-api`
-  - `junit-launcher`
-  - `junit4-engine`
-  - `junit4-launcher-runner`
-  - `junit5-api`
-  - `junit5-engine`
-  - `open-test-alliance`
+	- `junit-commons`
+	- `junit-console`
+	- `junit-engine-api`
+	- `junit-launcher`
+	- `junit4-engine`
+	- `junit4-launcher-runner`
+	- `junit5-api`
+	- `junit5-engine`
+	- `open-test-alliance`
 
 See also: <https://oss.sonatype.org/content/repositories/snapshots/org/junit/prototype/>
 
