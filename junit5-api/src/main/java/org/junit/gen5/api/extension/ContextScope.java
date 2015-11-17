@@ -57,7 +57,6 @@ public class ContextScope<K, V> {
 			return getInContext(context.getParent(), key);
 		else
 			return value;
-
 	}
 
 	private void putInContext(TestExecutionContext context, K key, V value) {
@@ -65,12 +64,7 @@ public class ContextScope<K, V> {
 	}
 
 	private Map<K, V> valuesFor(TestExecutionContext context) {
-		Map<K, V> contextValues = this.values.get(context);
-		if (contextValues == null) {
-			contextValues = new HashMap<>();
-			this.values.put(context, contextValues);
-		}
-		return contextValues;
+		return this.values.computeIfAbsent(context, key -> new HashMap<>());
 	}
 
 }
