@@ -1,30 +1,40 @@
-# Migrating from JUnit 4
+# Migrating from JUnit 4 to JUnit 5
 
-Although JUnit 5 will not support many of JUnit 4 features, e.g. Rules and Runners,
-we do not expect source code maintainers to migrate all of their existing tests, test extensions
-and custom build test infrastructure to migrate to JUnit 5 in one go, or at all.
+Although the JUnit 5 programming model and extension model will not support JUnit 4
+features such as `Rules` and `Runners`, it is not expected that source code maintainers
+will need to update all of their existing tests, test extensions, and custom build test
+infrastructure to migrate to JUnit 5.
 
-Instead JUnit 5 comes with a _JUnit 4 test engine_ that allows to run "old"
-tests through the JUnit 5 test runners. Moreover, you can have JUnit 4 and 5 tests
-side by side because all JUnit 5 classes and annotations are
-in new packages below `org.junit.gen5`. Since we plan to do some maintenance and
-bug fixes for JUnit 4, you have plenty of time to migrate away from JUnit 5.
+Instead, JUnit 5 provides a gentle migration path via a _JUnit 4 test engine_ which
+allows existing tests based on JUnit 4 to be executed using the JUnit 5 infrastructure.
+Since all classes and annotations specific to JUnit 5 reside under a new `org.junit.gen5`
+base package, having both JUnit 4 and JUnit 5 in the classpath does not lead to any
+conflicts. It is therefore safe to maintain existing JUnit 4 tests alongside JUnit 5
+tests. Furthermore, since the JUnit team will continue to provide maintenance and bug
+fix releases for the JUnit 4.x baseline, developers have plenty of time to migrate to
+JUnit 5 on their own schedule.
 
 ## Running JUnit 4 Tests with JUnit 5
 
 Just make sure that the `junit4-engine` artifact is in your test runtime path.
 In that case JUnit 4 tests will automatically be picked up by JUnit 5 test runners.
 
-See the example projects in the [junit5-samples](https://github.com/junit-team/junit5-samples) repository to find out how this is
+See the example projects in the [junit5-samples] repository to find out how this is
 done with Gradle and Maven.
 
-## Migrating existing tests to JUnit 5
+## Migration Tips
 
-Some of the things you have to watch out for when migrating existing tests:
+The following are things you have to watch out for when migrating existing
+JUnit 4 tests to JUnit 5.
 
-- All annotations are now in `org.junit.gen5.api`.
-- All assertions are now in `org.junit.gen5.api.Assertions`.
-- `@Ignore` does no longer exist, it's called `@Disabled` now.
-- `@Category` does no longer exist, use `@Tag` instead.
-- `@RunWith` does no longer exist.
-- `@Rule` does no longer exist.
+- Annotations reside in the `org.junit.gen5.api` package.
+- Assertions reside in `org.junit.gen5.api.Assertions`.
+- Assumptions reside in `org.junit.gen5.api.Assumptions`.
+- `@BeforeClass` and `@AfterClass` no longer exist; use `@BeforeAll` and `@AfterAll` instead.
+- `@Ignore` no longer exists: use `@Disabled` instead.
+- `@Category` no longer exists; use `@Tag` instead.
+- `@RunWith` no longer exists.
+- `@Rule` no longer exists.
+- Test instances are retained across all test methods in a test class.
+
+[junit5-samples]: https://github.com/junit-team/junit5-samples
