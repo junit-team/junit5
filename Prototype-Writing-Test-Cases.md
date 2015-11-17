@@ -24,13 +24,14 @@ All core annotations are located in the [`org.junit.gen5.api`] package in the `j
 | Annotation | Description |
 |------------|-------------|
 | **`@Test`** | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test decorators in JUnit 5 operate based on their own dedicated annotations. |
+| **`@TestInstance`** | Used to configure the lifecycle of a test instance. By default a test instance will be created for each test method within a class. Annotate your test class with `@TestInstance(PER_CLASS)` to override the default behavior and have the test instance retained across test methods. |
 | **`@Name`** | Declares a custom display name for the test class or test method |
 | **`@TestName`** | Allows the display name of the current test to be supplied as a method parameter to `@Test`, `@Before`, and `@After` methods; analogous to the JUnit 4's `TestName` rule |
 | **`@Before`** | Denotes that the annotated method should be executed _before_ **each** `@Test` method in the current class or class hierarchy |
 | **`@After`** | Denotes that the annotated method should be executed _after_ **each** `@Test` method in the current class or class hierarchy |
-| **`@BeforeAll`** | Denotes that the annotated method should be executed _before_ **all** `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@BeforeClass` |
-| **`@AfterAll`** | Denotes that the annotated method should be executed _after_ **all** `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@AfterClass` |
-| **`@Context`** | Denotes that the annotated class is an inner test class |
+| **`@BeforeAll`** | Denotes that the annotated method should be executed _before_ **all** `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@BeforeClass`. Such methods must be `static` unless the test class is annotated with `@TestInstance(PER_CLASS)`. |
+| **`@AfterAll`** | Denotes that the annotated method should be executed _after_ **all** `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@AfterClass`. Such methods must be `static` unless the test class is annotated with `@TestInstance(PER_CLASS)`. |
+| **`@Context`** | Denotes that the annotated class is an inner test class; typically used in conjunction with `@TestInstance(PER_CLASS)`. |
 | **`@Tag`** and **`@Tags`** | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4 |
 | **`@Conditional`** | Used to declare _conditions_ that will be evaluated to determine if a test is enabled. `@Disabled` is a built-in implementation of conditional test execution. |
 | **`@Disabled`** | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore` |
@@ -61,6 +62,7 @@ public @interface Fast {
 ```java
 import org.junit.gen5.api.*;
 
+@TestInstance(PER_CLASS)
 class MyTest {
 
   @BeforeAll
@@ -82,7 +84,8 @@ class MyTest {
 ```
 
 Notice that neither the test class nor the test method need to be `public`.
-Also, `@BeforeAll` and `@AfterAll` can be used on `static` or non-static methods.
+Also, `@BeforeAll` and `@AfterAll` can be used on non-static methods if the
+test class is annotated with `@TestInstance(PER_CLASS)`.
 
 ----
 
