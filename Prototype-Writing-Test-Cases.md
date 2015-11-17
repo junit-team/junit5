@@ -216,14 +216,13 @@ the test class family.
 
 ----
 
-## Method Parameters
+## Method Parameters and Dependency Injection
 
-In all prior JUnit versions, `@Test`, `@Before`, and `@After` methods were not allowed to have parameters (at least not with the standard `Runner` implementations). As one of the major changes in JUnit 5, methods are now permitted to have parameters allowing for greater flexibility.
+In all prior JUnit versions, `@Test`, `@Before`, and `@After` methods were not allowed to have parameters (at least not with the standard `Runner` implementations). As one of the major changes in JUnit 5, methods are now permitted to have parameters allowing for greater flexibility and enabling method-level _Dependency Injection_.
 
 There are a few built-in resolvers in the prototype that need not be explicitly enabled:
 
-- `@TestName`:
- If a method parameter is of type `String` and annotated with `@TestName`, the [`TestNameParameterResolver`] will supply the _display name_ of the current test at runtime (either its canonical name or its user-provided `@Name`). This acts as a drop-in replacement for the `TestName` rule from JUnit 4:
+- `@TestName`: If a method parameter is of type `String` and annotated with `@TestName`, the [`TestNameParameterResolver`] will supply the _display name_ of the current test at runtime (either its canonical name or its user-provided `@Name`). This acts as a drop-in replacement for the `TestName` rule from JUnit 4:
 
   ```java
   import org.junit.gen5.api.*;
@@ -247,7 +246,7 @@ There are a few built-in resolvers in the prototype that need not be explicitly 
   }
   ```
 
-All other parameter resolvers must be explicitly enabled by applying a [test decorator](Prototype-Test-Decorators) using `@TestDecorators`.
+All other parameter resolvers must be explicitly enabled by registering a [test decorator](Prototype-Test-Decorators) via `@TestDecorators`.
 
 -  Check out the `methodInjectionTest(...)` test method in [`SampleTestCase`] for an example that uses the built-in `TestNameParameterResolver` as well as the aforementioned custom resolvers, `CustomTypeParameterResolver` and `CustomAnnotationParameterResolver`.
 
