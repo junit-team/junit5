@@ -35,6 +35,6 @@ JUnit 4 tests to JUnit 5.
 - `@Category` no longer exists; use `@Tag` instead.
 - `@RunWith` no longer exists.
 - `@Rule` no longer exists.
-- Test instances are retained across all test methods in a test class.
+- Test instances are retained across all test methods in a test class._This is a strongly debated issue within the team_. We might change it back to JUnit 4's behavior or even offer both mode in the future.
 
 [junit5-samples]: https://github.com/junit-team/junit5-samples
