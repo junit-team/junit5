@@ -94,9 +94,20 @@ public final class ReflectionUtils {
 		throw new IllegalStateException("Exception handling algorithm in ReflectionUtils is incomplete");
 	}
 
+	/**
+	 * Invoke the supplied method, making it accessible if necessary and
+	 * wrapping any runtime exception in an {@code IllegalStateException}.
+	 *
+	 * @param method the method to invoke.
+	 * @param target the object on which to invoke the method; may be
+	 * {@code null} if the method is {@code static}
+	 * @param args the arguments to pass to the method
+	 * @return the value returned by the method invocation
+	 */
 	public static Object invokeMethod(Method method, Object target, Object... args) {
 		Preconditions.notNull(method, "method must not be null");
-		Preconditions.notNull(target, "target must not be null");
+		Preconditions.condition((target != null || Modifier.isStatic(method.getModifiers())),
+			() -> String.format("Cannot invoke static method [%s] on a null target.", method.toGenericString()));
 
 		try {
 			makeAccessible(method);
