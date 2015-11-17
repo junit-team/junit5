@@ -1,5 +1,7 @@
 # JUnit Lambda
 
+We are currently in _Phase 2_, building the prototype. Jump straight to the [Prototype](https://github.com/junit-team/junit-lambda/wiki/Prototype) page for full details.
+
 ## Overview
 
 This repository currently hosts the prototype for the next generation of JUnit, codenamed "JUnit Lambda".
