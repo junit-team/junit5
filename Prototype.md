@@ -10,6 +10,9 @@ We are also not accepting any pull requests at this time, for the following reas
 If you want to provide input in the interim, please use the project's [issue tracker] or send us comments via [Twitter].
 
 ----
+# Supported Java Versions
+
+JUnit 5 only supports Java 8 and above. However, you can still test classes compiled with lower versions.
 
 # Installation
 
@@ -78,7 +81,7 @@ There is also a short paragraph on [how to plug in other test enginges into the 
 
 We have the idea to build a [very minimal common foundation for testing libraries], so that third-party libraries (like Hamcrest and AssertJ) can be used with any of those libraries.
 
-For the time being we suggest a small hierarchy of exceptions to be used. Check out the [open-test-alliance] project.
+For the time being we suggest a small hierarchy of exceptions to be used. Check out the [open-test-alliance](https://github.com/junit-team/junit-lambda/tree/master/open-test-alliance) project.
 
 
 ----
