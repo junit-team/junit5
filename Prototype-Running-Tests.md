@@ -41,7 +41,6 @@ We have prepared two small sample projects that use it through Gradle and Maven.
 
 	SYNOPSIS
 	        ConsoleRunner [(-C | --disable-ansi-colors)] [(-h | --help)]
-	                [(-m <argumentMode> | --argument-mode <argumentMode>)]
 	                [(-x | --enable-exit-code)] [--] [<arguments>...]
 
 	OPTIONS
