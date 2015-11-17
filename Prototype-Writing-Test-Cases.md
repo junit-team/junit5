@@ -139,7 +139,7 @@ class MyTest {
   void testWillBeSkipped() {}
 
   @Test
-  void testWillExecuted() {}
+  void testWillBeExecuted() {}
 
 }
 ```
