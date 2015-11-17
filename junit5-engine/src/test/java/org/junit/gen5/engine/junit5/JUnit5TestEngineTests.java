@@ -16,7 +16,7 @@ import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.api.Assumptions.assumeTrue;
 import static org.junit.gen5.engine.TestPlanSpecification.build;
-import static org.junit.gen5.engine.TestPlanSpecification.forClassName;
+import static org.junit.gen5.engine.TestPlanSpecification.forClass;
 import static org.junit.gen5.engine.TestPlanSpecification.forUniqueId;
 
 import java.lang.annotation.ElementType;
@@ -65,7 +65,7 @@ public class JUnit5TestEngineTests {
 	public void executeCompositeTestPlanSpecification() {
 		TestPlanSpecification spec = build(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.JUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
-			forClassName(LocalTestCase.class.getName()));
+			forClass(LocalTestCase.class));
 
 		TrackingTestExecutionListener listener = executeTests(spec, 9);
 
@@ -78,7 +78,7 @@ public class JUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void executeTestsForClassName() {
-		TestPlanSpecification spec = build(forClassName(LocalTestCase.class.getName()));
+		TestPlanSpecification spec = build(forClass(LocalTestCase.class));
 		LocalTestCase.countAfterInvoked = 0;
 
 		TrackingTestExecutionListener listener = executeTests(spec, 9);
@@ -94,7 +94,7 @@ public class JUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void executeTestsWithDisabledTestClass() {
-		TestPlanSpecification spec = build(forClassName(DisabledTestClassTestCase.class.getName()));
+		TestPlanSpecification spec = build(forClass(DisabledTestClassTestCase.class));
 
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		Set<TestDescriptor> descriptors = engineDescriptor.allChildren();
@@ -114,7 +114,7 @@ public class JUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void executeTestsWithDisabledTestMethod() {
-		TestPlanSpecification spec = build(forClassName(DisabledTestMethodTestCase.class.getName()));
+		TestPlanSpecification spec = build(forClass(DisabledTestMethodTestCase.class));
 
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		Set<TestDescriptor> descriptors = engineDescriptor.allChildren();
@@ -162,7 +162,7 @@ public class JUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void executeTestsForMethodInjectionCases() {
-		TestPlanSpecification spec = build(forClassName(MethodInjectionTestCase.class.getName()));
+		TestPlanSpecification spec = build(forClass(MethodInjectionTestCase.class));
 
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		Assert.assertEquals("# descriptors", 9, engineDescriptor.allChildren().size());
@@ -180,7 +180,7 @@ public class JUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterMethodsCases() {
-		TestPlanSpecification spec = build(forClassName(BeforeAndAfterMethodInjectionTestCase.class.getName()));
+		TestPlanSpecification spec = build(forClass(BeforeAndAfterMethodInjectionTestCase.class));
 
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		Assert.assertEquals("# descriptors", 2, engineDescriptor.allChildren().size());
@@ -198,7 +198,7 @@ public class JUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void executeTestsForMethodWithTestDecoratorAnnotation() {
-		TestPlanSpecification spec = build(forClassName(TestDecoratorOnMethodTestCase.class.getName()));
+		TestPlanSpecification spec = build(forClass(TestDecoratorOnMethodTestCase.class));
 
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		Assert.assertEquals("# descriptors", 2, engineDescriptor.allChildren().size());
@@ -216,7 +216,7 @@ public class JUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void executeTestCaseWithInnerContext() {
-		TestPlanSpecification spec = build(forClassName(TestCaseWithContext.class.getName()));
+		TestPlanSpecification spec = build(forClass(TestCaseWithContext.class));
 
 		TestCaseWithContext.countAfterInvoked = 0;
 

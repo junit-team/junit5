@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -48,18 +49,49 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return new MethodSpecification(testClass, testMethod);
 	}
 
-	public static TestPlanSpecificationElement forClassName(String className) {
-		Class<?> testClass = ReflectionUtils.loadClass(className).orElseThrow(
-			() -> new IllegalArgumentException("Class " + className + " not found."));
-		return forClass(testClass);
+	public static TestPlanSpecificationElement forName(String anyName) {
+
+		Optional<Class<?>> testClassOptional = ReflectionUtils.loadClass(anyName);
+		if (testClassOptional.isPresent()) {
+			return forClass(testClassOptional.get());
+		}
+
+		//TODO Handle case when test method is inherited
+		Optional<Method> testMethodOptional = loadMethod(anyName);
+		if (testMethodOptional.isPresent()) {
+			Method testMethod = testMethodOptional.get();
+			return forMethod(testMethod.getDeclaringClass(), testMethod);
+		}
+
+		throw new IllegalArgumentException(
+			String.format("'%s' specifies neither a class, nor a method, nor a package.", anyName));
+	}
+
+	//TODO Move to ReflectionUtils and handle parameters
+	private static Optional<Method> loadMethod(String anyName) {
+		Optional<Method> testMethodOptional = Optional.empty();
+		int hashPosition = anyName.lastIndexOf('#');
+		if (hashPosition >= 0 && hashPosition < anyName.length()) {
+			String className = anyName.substring(0, hashPosition);
+			String methodName = anyName.substring(hashPosition + 1);
+			Optional<Class<?>> methodClassOptional = ReflectionUtils.loadClass(className);
+			if (methodClassOptional.isPresent()) {
+				try {
+					testMethodOptional = Optional.of(methodClassOptional.get().getDeclaredMethod(methodName));
+				}
+				catch (NoSuchMethodException ignore) {
+				}
+			}
+		}
+		return testMethodOptional;
 	}
 
 	public static List<TestPlanSpecificationElement> forClassNames(Collection<String> classNames) {
-		return forClassNames(classNames.stream());
+		return forNames(classNames.stream());
 	}
 
-	public static List<TestPlanSpecificationElement> forClassNames(Stream<String> classNames) {
-		return classNames.map(name -> forClassName(name)).collect(toList());
+	private static List<TestPlanSpecificationElement> forNames(Stream<String> classNames) {
+		return classNames.map(name -> forName(name)).collect(toList());
 	}
 
 	public static TestPlanSpecificationElement forClass(Class<?> testClass) {

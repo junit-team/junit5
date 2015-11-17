@@ -209,7 +209,7 @@ public class JUnit5 extends Runner {
 
 		//Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
 		if (specs.isEmpty()) {
-			specs.add(TestPlanSpecification.forClassName(testClass.getName()));
+			specs.add(TestPlanSpecification.forClass(testClass));
 		}
 
 		TestPlanSpecification plan = TestPlanSpecification.build(specs);
