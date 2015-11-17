@@ -51,6 +51,11 @@ public class SpecificationResolver {
 			}
 
 			@Override
+			public void visitClassSpecification(Class<?> testClass) {
+				resolveClassSpecification(testClass);
+			}
+
+			@Override
 			public void visitUniqueIdSpecification(String uniqueId) {
 				resolveUniqueIdSpecification(uniqueId);
 			}
@@ -66,6 +71,11 @@ public class SpecificationResolver {
 		Class<?>[] candidateClasses = ReflectionUtils.findAllClassesInPackage(packageName);
 		Arrays.stream(candidateClasses).filter(isTestClassWithTests).forEach(
 			testClass -> resolveTestable(JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueId())));
+	}
+
+	private void resolveClassSpecification(Class<?> testClass) {
+		JUnit5Testable testable = JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueId());
+		resolveTestable(testable);
 	}
 
 	private void resolveClassNameSpecification(String className) {

@@ -10,17 +10,15 @@
 
 package org.junit.gen5.engine;
 
-public interface TestPlanSpecificationVisitor {
+import lombok.Value;
 
-	default void visitClassNameSpecification(String className) {
-	}
+@Value
+public class ClassSpecification implements TestPlanSpecificationElement {
 
-	default void visitUniqueIdSpecification(String uniqueId) {
-	}
+	private Class<?> testClass;
 
-	default void visitPackageSpecification(String packageName) {
-	}
-
-	default void visitClassSpecification(Class<?> testClass) {
+	@Override
+	public void accept(TestPlanSpecificationVisitor visitor) {
+		visitor.visitClassSpecification(testClass);
 	}
 }
