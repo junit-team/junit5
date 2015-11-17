@@ -113,7 +113,7 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 	}
 
 	private void printlnException(Color color, Throwable throwable) {
-		println(color, "                  => Exception:   %s", throwable.getLocalizedMessage());
+		println(color, "                  => Exception: %s", throwable.getLocalizedMessage());
 	}
 
 	private void println(Color color, String format, Object... args) {
@@ -125,7 +125,7 @@ public class ColoredPrintingTestListener implements TestPlanExecutionListener, T
 			out.println(message);
 		}
 		else {
-			// Use string concatenation to avoid ansi disruption on console
+			// Use string concatenation to avoid ANSI disruption on console
 			out.println(color + message + NONE);
 		}
 	}
