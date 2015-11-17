@@ -30,18 +30,28 @@ All modules can be installed in a local Maven repository for consumption in othe
 gradlew clean install
 ```
 
-### Dependency Metadata
+## Dependency Metadata
 
 - **Group ID**: `org.junit.prototype`
 - **Version**: `5.0.0-SNAPSHOT`
-- **Artifact IDs**: see <https://oss.sonatype.org/content/repositories/snapshots/org/junit/prototype/>
+- **Artifact IDs**:
+  - `junit-commons`
+  - `junit-console`
+  - `junit-engine-api`
+  - `junit-launcher`
+  - `junit4-engine`
+  - `junit4-launcher-runner`
+  - `junit5-api`
+  - `junit5-engine`
+  - `open-test-alliance`
 
+See also: <https://oss.sonatype.org/content/repositories/snapshots/org/junit/prototype/>
 
 ## Contributing
 
 # JUnit Lambda Prototype
 
-We're currently collection feedback about the prototype the functionality of which [is described in the Wiki](https://github.com/junit-team/junit-lambda/wiki/Prototype).
+The JUnit Lambda team is currently collecting feedback about the prototype which [is described in the Wiki](https://github.com/junit-team/junit-lambda/wiki/Prototype).
 
 The goal of the prototype phase is to come up with some working code that will entice people to give us feedback on the **programming model, APIs, and SPIs** as described in the sections below. At the current stage, we are **NOT COLLECTING FEEDBACK ABOUT THE IMPLEMENTATION**, simply because it's in large parts neither polished, nor thoroughly tested, nor stable.
 
