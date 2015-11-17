@@ -35,6 +35,7 @@ A standard test case looks like this:
 import org.junit.gen5.api.*;
 
 class MyTest {
+
   @BeforeAll
   void initAll() {}
 
@@ -42,13 +43,14 @@ class MyTest {
   void init() {}
 
   @Test
-  void succeedingTest() { }
+  void succeedingTest() {}
 
   @After
   void tearDown() {}
 
   @AfterAll
   void tearDownAll() {}
+
 }
 ```
 
@@ -59,12 +61,15 @@ Test classes and test methods can declare a custom name -- with spaces, special 
 and even emojis -- that will be displayed by test runners and test reporting:
 
 ```java
+import org.junit.gen5.api.*;
+
 @Name("A special test case")
 class CanHaveAnyNameTest {
 
   @Test
   @Name("A nice name, isn't it?")
-  void testWithANiceName() { }
+  void testWithANiceName() {}
+
 }
 ```
 
@@ -75,7 +80,10 @@ are static methods in the [`org.junit.gen5.Assertions`] class.
 ```java
 import static org.junit.gen5.api.Assertions.*;
 
+import org.junit.gen5.api.*;
+
 class MyTest {
+
   @Test
   void standardAssertions() {
     assertEquals(2, 2);
@@ -97,10 +105,11 @@ class MyTest {
   @Test
   void exceptionTesting() {
     Throwable exception = expectThrows(IllegalArgumentException.class,
-      () -> throw new IllegalArgumentException("a message");
+      () -> throw new IllegalArgumentException("a message")
     );
     assertEquals("a message", exception.getMessage());
   }
+
 }
 ```
 
@@ -111,8 +120,27 @@ import org.junit.gen5.api.*;
 
 @Disabled
 class MyTest {
+
   @Test
-  void testWillBeSkipped() { }
+  void testWillBeSkipped() {}
+
+}
+```
+
+And here's a test case with a disabled test method:
+
+```java
+import org.junit.gen5.api.*;
+
+class MyTest {
+
+  @Disabled
+  @Test
+  void testWillBeSkipped() {}
+
+  @Test
+  void testWillExecuted() {}
+
 }
 ```
 
@@ -120,12 +148,16 @@ Test classes and methods can be tagged. Those tags can later be used to filter
 [test discovery and execution](Prototype-Running-Tests):
 
 ```java
+import org.junit.gen5.api.*;
+
 @Tag("fast")
 @Tag("model")
-class AFastTest {
+class FastModelTests {
 
-  @Test @Tag("taxes")
-  void testingTaxCalculation() { }
+  @Test
+  @Tag("taxes")
+  void testingTaxCalculation() {}
+
 }
 ```
 
@@ -135,7 +167,10 @@ Test contexts give the test writer more capabilities to express the relationship
 among several group of tests. Here's an example:
 
 ```java
+import org.junit.gen5.api.*;
+
 class MyObjectTest {
+
   MyObject myObject;
 
   @Before
@@ -144,10 +179,11 @@ class MyObjectTest {
   }
 
   @Test
-  void testEmptyObject() { }
+  void testEmptyObject() {}
 
   @Context
   class WithChildren() {
+
     @Before
     void initWithChildren() {
       myObject.addChild(new MyObject());
@@ -155,8 +191,10 @@ class MyObjectTest {
     }
 
     @Test
-    void testObjectWithChildren() { }
+    void testObjectWithChildren() {}
+
   }
+
 }
 ```
 
@@ -174,19 +212,24 @@ There are a few built-in resolvers in the prototype that need not be explicitly 
  If a method parameter is of type `String` and annotated with `@TestName`, the [`TestNameParameterResolver`] will supply the _display name_ of the current test at runtime (either its canonical name or its user-provided `@Name`). This acts as a drop-in replacement for the `TestName` rule from JUnit 4:
 
   ```java
+  import org.junit.gen5.api.*;
+
   class MyTest {
+
     @Before
     void init(@TestName name) {
       assertTrue(name.equals("TEST 1") || name.equals("test2"));
     }
 
-    @Test @Name("TEST 1")
+    @Test
+    @Name("TEST 1")
     void test1(@TestName name) {
       assertEquals("TEST 1", name);
     }
 
     @Test
-    void test2() { }
+    void test2() {}
+
   }
   ```
 
@@ -197,20 +240,24 @@ All other parameter resolvers must be explicitly enabled by applying a [test dec
 -  The [`MockitoDecorator`] is another example of a `MethodParameterResolver`. While not intended to be production-ready, it demonstrates the simplicity and expressiveness of both the extension model and the parameter resolution process. Check out the source code for [`MockitoDecoratorInBaseClassTest`] for an example of injecting Mockito mocks into `@Before` and `@Test` methods:
 
   ```java
+  import org.junit.gen5.api.*;
+
   import static org.mockito.Mockito.when;
   import com.example.mockito.MockitoDecorator;
   
-  @TestDecorators({ MockitoDecorator.class })
+  @TestDecorators(MockitoDecorator.class)
   class MyMockitoTest {
-  	@Before
-  	void init(@InjectMock MyType myType) {
-  		when(myType.getName()).thenReturn("hello");
-  	}
 
-  	@Test
-  	void simpleTestWithInjectedMock(@InjectMock MyType myType) {
-  		assertEquals("hello", myType.getName());
-  	}
+    @Before
+    void init(@InjectMock MyType myType) {
+      when(myType.getName()).thenReturn("hello");
+    }
+
+    @Test
+    void simpleTestWithInjectedMock(@InjectMock MyType myType) {
+      assertEquals("hello", myType.getName());
+    }
+
   }
   ```
 
