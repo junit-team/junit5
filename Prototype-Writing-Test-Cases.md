@@ -280,7 +280,7 @@ There are a few built-in resolvers in the prototype that need not be explicitly 
 
 All other parameter resolvers must be explicitly enabled by registering a [test decorator](Prototype-Test-Decorators) via `@TestDecorators`.
 
--  Check out the `methodInjectionTest(...)` test method in [`SampleTestCase`] for an example that uses the built-in `TestNameParameterResolver` as well as the aforementioned custom resolvers, `CustomTypeParameterResolver` and `CustomAnnotationParameterResolver`.
+-  Check out the `methodInjectionTest(...)` test method in [`SampleTestCase`] for an example that uses the built-in `TestNameParameterResolver` as well as two user-provided resolvers, [`CustomTypeParameterResolver`] and [`CustomAnnotationParameterResolver`].
 
 -  The [`MockitoDecorator`] is another example of a `MethodParameterResolver`. While not intended to be production-ready, it demonstrates the simplicity and expressiveness of both the extension model and the parameter resolution process. Check out the source code for [`MockitoDecoratorInBaseClassTest`] for an example of injecting Mockito mocks into `@Before` and `@Test` methods:
 
