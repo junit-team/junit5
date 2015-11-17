@@ -15,7 +15,7 @@ bug fixes for JUnit 4, you have plenty of time to migrate away from JUnit 5.
 Just make sure that the `junit4-engine` artifact is in your test runtime path.
 In that case JUnit 4 tests will automatically be picked up by JUnit 5 test runners.
 
-See the example projects in the [junit5-samples] repository to find out how this is
+See the example projects in the [junit5-samples](https://github.com/junit-team/junit5-samples) repository to find out how this is
 done with Gradle and Maven.
 
 ## Migrating existing tests to JUnit 5
