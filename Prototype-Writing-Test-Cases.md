@@ -30,6 +30,7 @@ that are annotated with it.
 ### Examples
 
 A standard test case looks like this:
+
 ```java
 import org.junit.gen5.api.*;
 
@@ -50,24 +51,26 @@ class MyTest {
   void tearDownAll() {}
 }
 ```
-Mind that neither the test class nor the test method need to be `public`.
+
+Notice that neither the test class nor the test method need to be `public`.
 Also, `@BeforeAll` and `@AfterAll` can be used on `static` or non-static methods.
 
-Test classes and test methods can get a custom name - with spaces, special chars
-and even emojis - that will be displayed be test runners and test reporting:
+Test classes and test methods can declare a custom name -- with spaces, special characters,
+and even emojis -- that will be displayed by test runners and test reporting:
 
 ```java
 @Name("A special test case")
 class CanHaveAnyNameTest {
+
   @Test
   @Name("A nice name, isn't it?")
   void testWithANiceName() { }
 }
 ```
 
-JUnit 5 comes with many of the assertion methods that JUnit 4 has, and adds a few
+JUnit 5 comes with many of the assertion methods that JUnit 4 has and adds a few
 that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions
-are static methods on [`org.junit.gen5.Assertions`].
+are static methods in the [`org.junit.gen5.Assertions`] class.
 
 ```java
 import static org.junit.gen5.api.Assertions.*;
@@ -76,14 +79,15 @@ class MyTest {
   @Test
   void standardAssertions() {
     assertEquals(2, 2);
-    assertEquals(4, 4, "The optional test description is now the last parameter.")
-    assertTrue(myCondition, () -> "Test description can be lazy.")
+    assertEquals(4, 4, "The optional assertion message is now the last parameter.");
+    assertTrue(myCondition, () -> "Assertion messages can be lazily evaluated -- " +
+                                  "to avoid constructing complex messages unnecessarily.");
   }
 
   @Test
   void groupedAssertions() {
-    // In a grouped assertion all assertions are executed and several
-    // failures are reported together
+    // In a grouped assertion all assertions are executed, and any
+    // failures will be reported together.
     assertAll("address",
       () -> assertEquals("Johannes", address.getFirstName()),
       () -> assertEquals("Link", address.getLastName()),
@@ -91,7 +95,7 @@ class MyTest {
   }
 
   @Test
-  void exceptiongTesting() {
+  void exceptionTesting() {
     Throwable exception = expectThrows(IllegalArgumentException.class,
       () -> throw new IllegalArgumentException("a message");
     )
@@ -160,7 +164,6 @@ Mind that _only non-static inner classes_ can serve as contexts.
 Contexts can be arbitrarily nested and can be considered to be full members of
 the test class family.
 
-
 ## Method Parameters
 
 In all prior JUnit versions, `@Test`, `@Before`, and `@After` methods were not allowed to have parameters (at least not with the standard `Runner` implementations). As one of the major changes in JUnit 5, methods are now permitted to have parameters allowing for greater flexibility.
@@ -210,3 +213,20 @@ All other parameter resolvers must be explicitly enabled by applying a [test dec
   	}
   }
   ```
+
+[CONTRIBUTING]: https://github.com/junit-team/junit-lambda/blob/master/CONTRIBUTING.md
+[`CustomAnnotationParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java
+[`CustomTypeParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java
+[issue tracker]: https://github.com/junit-team/junit-lambda/issues
+[junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer
+[junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer
+[junit5-samples]: https://github.com/junit-team/junit5-samples
+[`MethodParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java
+[`MockitoDecorator`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/main/java/com/example/mockito/MockitoDecorator.java
+[`MockitoDecoratorInBaseClassTest`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/test/java/com/example/mockito/MockitoDecoratorInBaseClassTest.java
+[`org.junit.gen5.api`]: https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api
+[`org.junit.gen5.Assertions`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java
+[`SampleTestCase`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/SampleTestCase.java
+[snapshots repository]: https://oss.sonatype.org/content/repositories/snapshots/
+[`TestNameParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java
+[Twitter]: https://twitter.com/junitlambda
