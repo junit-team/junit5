@@ -23,13 +23,15 @@ All core annotations are located in the [`org.junit.gen5.api`] package in the `j
 
 ### Support for Meta Annotations
 
-The JUnit 5 supports _meta annotations_. That means that you can define your
-custom annotation that will automatically "hand down" its own annotations to elements
-that are annotated with it.
+JUnit 5 supports _meta annotations_. That means that you can define your own
+custom annotation that will automatically _inherit_ the semantics of its
+meta-annotations.
 
-### Examples
+----
 
-A standard test case looks like this:
+## Examples
+
+### Standard Test Class
 
 ```java
 import org.junit.gen5.api.*;
@@ -57,6 +59,8 @@ class MyTest {
 Notice that neither the test class nor the test method need to be `public`.
 Also, `@BeforeAll` and `@AfterAll` can be used on `static` or non-static methods.
 
+### Custom Names
+
 Test classes and test methods can declare a custom name -- with spaces, special characters,
 and even emojis -- that will be displayed by test runners and test reporting:
 
@@ -72,6 +76,8 @@ class CanHaveAnyNameTest {
 
 }
 ```
+
+### Assertions
 
 JUnit 5 comes with many of the assertion methods that JUnit 4 has and adds a few
 that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions
@@ -113,6 +119,8 @@ class MyTest {
 }
 ```
 
+### Disabling Tests
+
 Here's a disabled test case:
 
 ```java
@@ -144,6 +152,8 @@ class MyTest {
 }
 ```
 
+### Tagging and Filtering
+
 Test classes and methods can be tagged. Those tags can later be used to filter
 [test discovery and execution](Prototype-Running-Tests):
 
@@ -160,6 +170,8 @@ class FastModelTests {
 
 }
 ```
+
+----
 
 ## Test Contexts
 
@@ -198,9 +210,11 @@ class MyObjectTest {
 }
 ```
 
-Mind that _only non-static inner classes_ can serve as contexts.
+Notice that _only non-static inner classes_ can serve as contexts.
 Contexts can be arbitrarily nested and can be considered to be full members of
 the test class family.
+
+----
 
 ## Method Parameters
 
