@@ -51,9 +51,6 @@ We have prepared two small sample projects that use it through Gradle and Maven.
 	        -h, --help
 	            Display help information
 
-	        -m <argumentMode>, --argument-mode <argumentMode>
-	            How to treat arguments. Possible values: classes, packages
-
 	        -x, --enable-exit-code
 	            Exit process with number of failing tests as exit code
 
@@ -63,8 +60,7 @@ We have prepared two small sample projects that use it through Gradle and Maven.
 	            command-line options
 
 	        <arguments>
-	            Test classes or packages to execute (depending on
-	            --argument-mode/-m)
+	            Test classes, methods or packages to execute
 
 ## Using JUnit4 to Run JUnit5 Tests
 
