@@ -13,7 +13,7 @@ task runSampleTestCases(type: JavaExec) {
 	classpath = sourceSets.test.runtimeClasspath
 	classpath += project(':junit-console').sourceSets.main.runtimeClasspath
 	main = 'org.junit.gen5.console.ConsoleRunner'
-	args 'com.example.SampleTestCase', 'com.example.SucceedingTestCase', 'com.example.JUnit4TestCase', 'com.example.HierarchyTestCase'
+	args 'com.example'
 }
 
 test {

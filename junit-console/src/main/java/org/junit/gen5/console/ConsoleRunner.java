@@ -11,7 +11,6 @@
 package org.junit.gen5.console;
 
 import static io.airlift.airline.SingleCommand.singleCommand;
-import static java.util.Arrays.stream;
 
 import java.util.List;
 
@@ -48,12 +47,7 @@ public class ConsoleRunner {
 			description = "Disable colored output (not supported by all terminals)")
 	private boolean disableAnsiColors;
 
-	@Option(name = { "-m", "--argument-mode" },
-			arity = 1,
-			description = "How to treat arguments. Possible values: classes, packages")
-	private String argumentMode = "classes";
-
-	@Arguments(description = "Test classes or packages to execute (depending on --argument-mode/-m)")
+	@Arguments(description = "Test classes, methods or packages to execute")
 	private List<String> arguments;
 
 	// @formatter:on
@@ -110,38 +104,11 @@ public class ConsoleRunner {
 
 	private List<TestPlanSpecificationElement> testPlanSpecificationElementsFromArguments() {
 		Preconditions.notNull(arguments, "No arguments given");
-		ArgumentMode mode = ArgumentMode.parse(argumentMode);
-		return mode.toTestPlanSpecificationElements(arguments);
+		return toTestPlanSpecificationElements(arguments);
 	}
 
-	private enum ArgumentMode {
-
-		CLASSES {
-
-			@Override
-			List<TestPlanSpecificationElement> toTestPlanSpecificationElements(List<String> arguments) {
-				return TestPlanSpecification.forClassNames(arguments);
-			}
-		},
-
-		PACKAGES {
-
-			@Override
-			List<TestPlanSpecificationElement> toTestPlanSpecificationElements(List<String> arguments) {
-				return TestPlanSpecification.forPackages(arguments);
-			}
-		};
-
-		abstract List<TestPlanSpecificationElement> toTestPlanSpecificationElements(List<String> arguments);
-
-		static ArgumentMode parse(String value) {
-			// @formatter:off
-			return stream(values())
-					.filter(mode -> mode.name().equalsIgnoreCase(value))
-					.findAny()
-					.orElseThrow(() -> new IllegalArgumentException("Illegal argument mode: " + value));
-			// @formatter:on
-		}
+	List<TestPlanSpecificationElement> toTestPlanSpecificationElements(List<String> arguments) {
+		return TestPlanSpecification.forNames(arguments);
 	}
 
 }

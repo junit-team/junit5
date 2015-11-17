@@ -30,6 +30,6 @@ public class JUnit4SamplesSuite {
 	// When you have the following method, it overrides all annotations
 	//		public static TestPlanSpecification createSpecification() {
 	//			return TestPlanSpecification.build(
-	//				TestPlanSpecification.forClassNames(SucceedingTestCase.class.getName()));
+	//				TestPlanSpecification.forNames(SucceedingTestCase.class.getName()));
 	//		}
 }

@@ -41,10 +41,6 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return packageNames.stream().map(packageName -> forPackage(packageName)).collect(toList());
 	}
 
-	public static TestPlanSpecificationElement forMethod(Method testMethod) {
-		return forMethod(testMethod.getDeclaringClass(), testMethod);
-	}
-
 	public static TestPlanSpecificationElement forMethod(Class<?> testClass, Method testMethod) {
 		return new MethodSpecification(testClass, testMethod);
 	}
@@ -70,7 +66,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 			String.format("'%s' specifies neither a class, nor a method, nor a package.", anyName));
 	}
 
-	public static List<TestPlanSpecificationElement> forClassNames(Collection<String> classNames) {
+	public static List<TestPlanSpecificationElement> forNames(Collection<String> classNames) {
 		return forNames(classNames.stream());
 	}
 
