@@ -3,7 +3,7 @@
 **Table of Contents**
 
 - [Annotations](#annotations)
-  - [Meta-Annotations and Composed Annotations](meta-annotations-and-composed-annotations)
+  - [Meta-Annotations and Composed Annotations](#meta-annotations-and-composed-annotations)
 - [Standard Test Class](#standard-test-class)
 - [Custom Names](#custom-names)
 - [Assertions](#assertions)
