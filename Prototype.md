@@ -47,42 +47,41 @@ and `pom.xml` in the projects below:
 
 # Writing JUnit 5 Test Cases
 
-[How to write test cases in JUnit5?](Prototype-Writing-Test-Cases)
+[How to write test cases in JUnit 5?](Prototype-Writing-Test-Cases)
 
 ----
 
-# Running JUnit 5 Test
+# Running JUnit 5 Tests
 
-[How to run tests in JUnit5?](Prototype-Running-Tests)
+[How to run tests in JUnit 5?](Prototype-Running-Tests)
 
 ----
 
 # Extending JUnit 5 with Test Decorators
 
-[How to extend JUnit5?](Prototype-Test-Decorators)
+[How to extend JUnit 5?](Prototype-Test-Decorators)
 
 ----
 
-# Integrating JUnit 4 Test Suites
+# Integrating JUnit 5 in JUnit 4 Test Suites
 
-[How to run - and migrate - your JUnit4 tests with JUnit5?](Prototype-JUnit4-Run-And-Migrate)
+[How to run existing JUnit 4 tests with JUnit5 and migrate from JUnit 4 to JUnit 5?](Prototype-JUnit4-Run-And-Migrate)
 
 ----
 
 # Programmatically Discover and Launch JUnit 5 Tests
 
-[The page on the JUnit5 Launcher API](Prototype-Launcher-API) is primarily targeted at IDE and build tool providers.
+The [JUnit 5 Launcher API](Prototype-Launcher-API) page is primarily targeted at IDE and build tool providers.
 
-There is also a short paragraph on [how to plug in other test enginges into the launcher](Prototype-Launcher-API#plugging-in-your-own-test-engine).
+There is also a short paragraph on [how to plug other test engines into the launcher](Prototype-Launcher-API#plugging-in-your-own-test-engine).
 
 ----
 
 # The Open Test Alliance
 
-We have the idea to build a [very minimal common foundation for testing libraries], so that third-party libraries (like Hamcrest and AssertJ) can be used with any of those libraries.
+Based on discussions with IDE and build tool developers from Eclipse, Gradle, and IntelliJ, the JUnit Lambda team has developed a proposal for an open source project to provide a minimal common foundation for testing libraries on the JVM. The primary goal of the project is to enable testing frameworks like JUnit, TestNG, Spock, etc. and third-party assertion libraries like Hamcrest, AssertJ, etc. to use a common set of exceptions that IDEs and build tools can support in a consistent manner across all testing scenarios -- for example, for consistent reporting and test execution visualization.
 
-For the time being we suggest a small hierarchy of exceptions to be used. Check out the [open-test-alliance](https://github.com/junit-team/junit-lambda/tree/master/open-test-alliance) project.
-
+For the time being we have begun with a small hierarchy of exceptions that we consider to be common for all testing and assertion frameworks. Please check out the [open-test-alliance](https://github.com/junit-team/junit-lambda/tree/master/open-test-alliance) project and let us know what you think.
 
 ----
 
