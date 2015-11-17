@@ -51,6 +51,11 @@ public class SpecificationResolver {
 			}
 
 			@Override
+			public void visitMethodSpecification(Class<?> testClass, Method testMethod) {
+				resolveMethodSpecification(testClass, testMethod);
+			}
+
+			@Override
 			public void visitUniqueIdSpecification(String uniqueId) {
 				resolveUniqueIdSpecification(uniqueId);
 			}
@@ -70,6 +75,11 @@ public class SpecificationResolver {
 
 	private void resolveClassSpecification(Class<?> testClass) {
 		JUnit5Testable testable = JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueId());
+		resolveTestable(testable);
+	}
+
+	private void resolveMethodSpecification(Class<?> testClass, Method testMethod) {
+		JUnit5Testable testable = JUnit5Testable.fromMethod(testMethod, testClass, engineDescriptor.getUniqueId());
 		resolveTestable(testable);
 	}
 

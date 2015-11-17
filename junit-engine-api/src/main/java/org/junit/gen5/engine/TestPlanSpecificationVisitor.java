@@ -10,6 +10,8 @@
 
 package org.junit.gen5.engine;
 
+import java.lang.reflect.Method;
+
 public interface TestPlanSpecificationVisitor {
 
 	default void visitUniqueIdSpecification(String uniqueId) {
@@ -19,5 +21,8 @@ public interface TestPlanSpecificationVisitor {
 	}
 
 	default void visitClassSpecification(Class<?> testClass) {
+	}
+
+	default void visitMethodSpecification(Class<?> testClass, Method testMethod) {
 	}
 }

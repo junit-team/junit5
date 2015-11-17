@@ -13,6 +13,7 @@ package org.junit.gen5.engine;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,6 +38,14 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 
 	public static List<TestPlanSpecificationElement> forPackages(Collection<String> packageNames) {
 		return packageNames.stream().map(packageName -> forPackage(packageName)).collect(toList());
+	}
+
+	public static TestPlanSpecificationElement forMethod(Method testMethod) {
+		return forMethod(testMethod.getDeclaringClass(), testMethod);
+	}
+
+	public static TestPlanSpecificationElement forMethod(Class<?> testClass, Method testMethod) {
+		return new MethodSpecification(testClass, testMethod);
 	}
 
 	public static TestPlanSpecificationElement forClassName(String className) {

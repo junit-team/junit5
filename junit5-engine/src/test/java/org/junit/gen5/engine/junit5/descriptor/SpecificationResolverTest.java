@@ -19,6 +19,7 @@ import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ClassSpecification;
 import org.junit.gen5.engine.EngineDescriptor;
+import org.junit.gen5.engine.MethodSpecification;
 import org.junit.gen5.engine.PackageSpecification;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueIdSpecification;
@@ -75,6 +76,41 @@ public class SpecificationResolverTest {
 			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()"));
 		assertTrue(uniqueIds.contains(
 			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test6()"));
+	}
+
+	@org.junit.Test
+	public void testMethodResolution() throws NoSuchMethodException {
+		MethodSpecification specification = new MethodSpecification(
+			MyTestClass.class.getDeclaredMethod("test1").getDeclaringClass(),
+			MyTestClass.class.getDeclaredMethod("test1"));
+
+		resolver.resolveElement(specification);
+
+		assertEquals(2, engineDescriptor.allChildren().size());
+		List<String> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass"));
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
+	}
+
+	@org.junit.Test
+	public void testMethodResolutionFromInheritedMethod() throws NoSuchMethodException {
+		MethodSpecification specification = new MethodSpecification(HerTestClass.class,
+			MyTestClass.class.getDeclaredMethod("test1"));
+
+		resolver.resolveElement(specification);
+
+		assertEquals(2, engineDescriptor.allChildren().size());
+		List<String> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.HerTestClass"));
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test1()"));
+	}
+
+	@org.junit.Test(expected = IllegalArgumentException.class)
+	public void testResolutionOfNotTestMethod() throws NoSuchMethodException {
+		MethodSpecification specification = new MethodSpecification(
+			MyTestClass.class.getDeclaredMethod("notATest").getDeclaringClass(),
+			MyTestClass.class.getDeclaredMethod("notATest"));
+		resolver.resolveElement(specification);
 	}
 
 	@org.junit.Test
