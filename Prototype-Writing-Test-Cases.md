@@ -21,11 +21,23 @@ All core annotations are located in the [`org.junit.gen5.api`] package in the `j
 | **`@Disabled`** | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore` |
 | **`@TestDecorators`** | Used to register custom extensions and decorators for tests such as `MethodParameterResolver`. See [the page on test decorators](Prototype-Test-Decorators) |
 
-### Support for Meta Annotations
+### Meta-Annotations and Composed Annotations
 
-JUnit 5 supports _meta annotations_. That means that you can define your own
-custom annotation that will automatically _inherit_ the semantics of its
-meta-annotations.
+JUnit 5 annotations can be used as _meta-annotations_. That means that you can define your own
+_composed annotation_ that will automatically _inherit_ the semantics of its meta-annotations.
+
+For example, instead of copying and pasting `@Tag("fast")` throughout your code base (see [Tagging and Filtering](#tagging-and-filtering)), you can create a custom _composed annotation_ named `@Fast` as
+follows. `@Fast` can then be used as a drop-in replacement for `@Tag("fast")`.
+
+```java
+import org.junit.gen5.api.*;
+
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+@Tag("fast")
+public @interface Fast {
+}
+```
 
 ----
 
