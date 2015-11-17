@@ -81,7 +81,7 @@ There is also a short paragraph on [how to plug other test engines into the laun
 
 Based on discussions with IDE and build tool developers from Eclipse, Gradle, and IntelliJ, the JUnit Lambda team has developed a proposal for an open source project to provide a minimal common foundation for testing libraries on the JVM. The primary goal of the project is to enable testing frameworks like JUnit, TestNG, Spock, etc. and third-party assertion libraries like Hamcrest, AssertJ, etc. to use a common set of exceptions that IDEs and build tools can support in a consistent manner across all testing scenarios -- for example, for consistent reporting and test execution visualization.
 
-For the time being we have begun with a small hierarchy of exceptions that we consider to be common for all testing and assertion frameworks. Please check out the [open-test-alliance](https://github.com/junit-team/junit-lambda/tree/master/open-test-alliance) project and let us know what you think.
+For the time being we have begun with a small hierarchy of exceptions that we consider to be common for all testing and assertion frameworks. Please check out the [open-test-alliance](https://github.com/junit-team/junit-lambda/tree/master/open-test-alliance) project and [provide us feedback](https://github.com/junit-team/junit-lambda/issues/12).
 
 ----
 
