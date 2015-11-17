@@ -10,7 +10,6 @@
 
 package org.junit.gen5.engine;
 
-import static java.util.Arrays.stream;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
@@ -24,6 +23,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * @author Sam Brannen
@@ -36,15 +36,13 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 	}
 
 	public static List<TestPlanSpecificationElement> forPackages(Collection<String> packageNames) {
-		return packageNames.stream().map(PackageSpecification::new).collect(toList());
+		return packageNames.stream().map(packageName -> forPackage(packageName)).collect(toList());
 	}
 
 	public static TestPlanSpecificationElement forClassName(String className) {
-		return new ClassNameSpecification(className);
-	}
-
-	public static List<TestPlanSpecificationElement> forClassNames(String... classNames) {
-		return forClassNames(stream(classNames));
+		Class<?> testClass = ReflectionUtils.loadClass(className).orElseThrow(
+			() -> new IllegalArgumentException("Class " + className + " not found."));
+		return forClass(testClass);
 	}
 
 	public static List<TestPlanSpecificationElement> forClassNames(Collection<String> classNames) {
@@ -52,7 +50,11 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 	}
 
 	public static List<TestPlanSpecificationElement> forClassNames(Stream<String> classNames) {
-		return classNames.map(ClassNameSpecification::new).collect(toList());
+		return classNames.map(name -> forClassName(name)).collect(toList());
+	}
+
+	public static TestPlanSpecificationElement forClass(Class<?> testClass) {
+		return new ClassSpecification(testClass);
 	}
 
 	public static TestPlanSpecificationElement forUniqueId(String uniqueId) {

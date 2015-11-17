@@ -12,9 +12,6 @@ package org.junit.gen5.engine;
 
 public interface TestPlanSpecificationVisitor {
 
-	default void visitClassNameSpecification(String className) {
-	}
-
 	default void visitUniqueIdSpecification(String uniqueId) {
 	}
 

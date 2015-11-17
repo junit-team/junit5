@@ -18,10 +18,6 @@ abstract class JUnit5Testable {
 		return new JUnit5TestableFactory().fromUniqueId(uniqueId, engineId);
 	}
 
-	static JUnit5Testable fromClassName(String className, String engineId) {
-		return new JUnit5TestableFactory().fromClassName(className, engineId);
-	}
-
 	static JUnit5Testable fromClass(Class<?> clazz, String engineId) {
 		return new JUnit5TestableFactory().fromClass(clazz, engineId);
 	}

@@ -61,7 +61,7 @@ public class JUnit5TestableTest {
 			"junit5:org.junit.gen5.engine.junit5.descriptor.ATestClass#test1()", engineDescriptor.getUniqueId());
 		Assert.assertEquals("junit5:org.junit.gen5.engine.junit5.descriptor.ATestClass#test1()",
 			testable.getUniqueId());
-		Method testMethod = ATestClass.class.getDeclaredMethod("test1", new Class[0]);
+		Method testMethod = ATestClass.class.getDeclaredMethod("test1");
 		Assert.assertEquals(testMethod, testable.getJavaMethod());
 	}
 
@@ -74,7 +74,7 @@ public class JUnit5TestableTest {
 		Assert.assertEquals(
 			"junit5:org.junit.gen5.engine.junit5.descriptor.BTestClass#test4(java.lang.String, java.math.BigDecimal)",
 			testable.getUniqueId());
-		Method testMethod = BTestClass.class.getDeclaredMethod("test4", new Class[] { String.class, BigDecimal.class });
+		Method testMethod = BTestClass.class.getDeclaredMethod("test4", String.class, BigDecimal.class);
 		Assert.assertEquals(testMethod, testable.getJavaMethod());
 	}
 
@@ -86,22 +86,21 @@ public class JUnit5TestableTest {
 			engineDescriptor.getUniqueId());
 		Assert.assertEquals("junit5:org.junit.gen5.engine.junit5.descriptor.ATestClass$AnInnerTestClass#test2()",
 			testable.getUniqueId());
-		Method testMethod = ATestClass.AnInnerTestClass.class.getDeclaredMethod("test2", new Class[0]);
+		Method testMethod = ATestClass.AnInnerTestClass.class.getDeclaredMethod("test2");
 		Assert.assertEquals(testMethod, testable.getJavaMethod());
 	}
 
 	@org.junit.Test
-	public void fromClassName() throws NoSuchMethodException {
-		JUnit5Class testable = (JUnit5Class) JUnit5Testable.fromClassName(
-			"org.junit.gen5.engine.junit5.descriptor.ATestClass", engineDescriptor.getUniqueId());
+	public void fromClass() throws NoSuchMethodException {
+		JUnit5Class testable = (JUnit5Class) JUnit5Testable.fromClass(ATestClass.class, engineDescriptor.getUniqueId());
 		Assert.assertEquals("junit5:org.junit.gen5.engine.junit5.descriptor.ATestClass", testable.getUniqueId());
 		Assert.assertSame(ATestClass.class, testable.getJavaClass());
 	}
 
 	@org.junit.Test
-	public void nestedClassFromClassName() throws NoSuchMethodException {
-		JUnit5Class testable = (JUnit5Class) JUnit5Testable.fromClassName(
-			"org.junit.gen5.engine.junit5.descriptor.ATestClass$AnInnerTestClass", engineDescriptor.getUniqueId());
+	public void nestedClassFromClass() throws NoSuchMethodException {
+		JUnit5Class testable = (JUnit5Class) JUnit5Testable.fromClass(ATestClass.AnInnerTestClass.class,
+			engineDescriptor.getUniqueId());
 		Assert.assertEquals("junit5:org.junit.gen5.engine.junit5.descriptor.ATestClass$AnInnerTestClass",
 			testable.getUniqueId());
 		Assert.assertSame(ATestClass.AnInnerTestClass.class, testable.getJavaClass());
@@ -109,7 +108,7 @@ public class JUnit5TestableTest {
 
 	@org.junit.Test
 	public void fromMethod() throws NoSuchMethodException {
-		Method testMethod = ATestClass.class.getDeclaredMethod("test1", new Class[0]);
+		Method testMethod = ATestClass.class.getDeclaredMethod("test1");
 		JUnit5Method testable = (JUnit5Method) JUnit5Testable.fromMethod(testMethod, ATestClass.class,
 			engineDescriptor.getUniqueId());
 		Assert.assertEquals("junit5:org.junit.gen5.engine.junit5.descriptor.ATestClass#test1()",

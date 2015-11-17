@@ -14,9 +14,9 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.ClassNameSpecification;
 import org.junit.gen5.engine.ClassSpecification;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.PackageSpecification;
@@ -30,8 +30,8 @@ public class SpecificationResolverTest {
 	private SpecificationResolver resolver = new SpecificationResolver(engineDescriptor);
 
 	@org.junit.Test
-	public void testSingleClassNameResolution() {
-		ClassNameSpecification specification = new ClassNameSpecification(MyTestClass.class.getName());
+	public void testSingleClassResolution() {
+		ClassSpecification specification = new ClassSpecification(MyTestClass.class);
 
 		resolver.resolveElement(specification);
 
@@ -43,26 +43,9 @@ public class SpecificationResolverTest {
 	}
 
 	@org.junit.Test
-	public void testClassNameResolutionOfNestedClass() {
-		ClassNameSpecification specification = new ClassNameSpecification(
-			OtherTestClass.NestedTestClass.class.getName());
-
-		resolver.resolveElement(specification);
-
-		assertEquals(3, engineDescriptor.allChildren().size());
-		List<String> uniqueIds = engineDescriptor.allChildren().stream().map(d -> d.getUniqueId()).collect(
-			Collectors.toList());
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass"));
-		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()"));
-		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test6()"));
-	}
-
-	@org.junit.Test
-	public void testTwoClassNameResolution() {
-		ClassNameSpecification specification1 = new ClassNameSpecification(MyTestClass.class.getName());
-		ClassNameSpecification specification2 = new ClassNameSpecification(YourTestClass.class.getName());
+	public void testTwoClassesResolution() {
+		ClassSpecification specification1 = new ClassSpecification(MyTestClass.class);
+		ClassSpecification specification2 = new ClassSpecification(YourTestClass.class);
 
 		resolver.resolveElement(specification1);
 		resolver.resolveElement(specification2);
@@ -76,19 +59,6 @@ public class SpecificationResolverTest {
 		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.YourTestClass"));
 		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.YourTestClass#test3()"));
 		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.YourTestClass#test4()"));
-	}
-
-	@org.junit.Test
-	public void testSingleClassResolution() {
-		ClassSpecification specification = new ClassSpecification(MyTestClass.class);
-
-		resolver.resolveElement(specification);
-
-		assertEquals(3, engineDescriptor.allChildren().size());
-		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()"));
 	}
 
 	@org.junit.Test
@@ -260,8 +230,8 @@ public class SpecificationResolverTest {
 	}
 
 	@org.junit.Test
-	public void testContextResolutionFromContainerClass() {
-		ClassNameSpecification specification = new ClassNameSpecification(TestCaseWithContexts.class.getName());
+	public void testContextResolutionFromBaseClass() {
+		ClassSpecification specification = new ClassSpecification(TestCaseWithContexts.class);
 
 		resolver.resolveElement(specification);
 
@@ -283,8 +253,7 @@ public class SpecificationResolverTest {
 
 	@org.junit.Test
 	public void testContextResolutionFromContextClass() {
-		ClassNameSpecification specification = new ClassNameSpecification(
-			TestCaseWithContexts.InnerContext.class.getName());
+		ClassSpecification specification = new ClassSpecification(TestCaseWithContexts.InnerContext.class);
 
 		resolver.resolveElement(specification);
 
@@ -325,7 +294,8 @@ public class SpecificationResolverTest {
 
 	@org.junit.Test
 	public void testContextResolutionFromClass() {
-		ClassSpecification specification = new ClassSpecification(TestCaseWithContexts.InnerContext.InnerInnerContext.class);
+		ClassSpecification specification = new ClassSpecification(
+			TestCaseWithContexts.InnerContext.InnerInnerContext.class);
 
 		resolver.resolveElement(specification);
 

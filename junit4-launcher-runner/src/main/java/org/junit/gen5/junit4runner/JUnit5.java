@@ -20,7 +20,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -245,14 +244,14 @@ public class JUnit5 extends Runner {
 		}
 	}
 
-	private Collection<TestPlanSpecificationElement> getPackagesSpecificationElements() {
+	private List<TestPlanSpecificationElement> getPackagesSpecificationElements() {
 		String[] packages = getAnnotatedPackages(testClass);
 		return stream(packages).map(TestPlanSpecification::forPackage).collect(toList());
 	}
 
 	private List<TestPlanSpecificationElement> getClassnameSpecificationElements() {
 		Class<?>[] testClasses = getAnnotatedClasses(testClass);
-		return stream(testClasses).map(Class::getName).map(TestPlanSpecification::forClassName).collect(toList());
+		return stream(testClasses).map(TestPlanSpecification::forClass).collect(toList());
 	}
 
 	private List<TestPlanSpecificationElement> getUniqueIdSpecificationElements() {

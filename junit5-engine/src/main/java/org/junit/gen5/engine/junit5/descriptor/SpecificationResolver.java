@@ -46,11 +46,6 @@ public class SpecificationResolver {
 		element.accept(new TestPlanSpecificationVisitor() {
 
 			@Override
-			public void visitClassNameSpecification(String className) {
-				resolveClassNameSpecification(className);
-			}
-
-			@Override
 			public void visitClassSpecification(Class<?> testClass) {
 				resolveClassSpecification(testClass);
 			}
@@ -78,13 +73,7 @@ public class SpecificationResolver {
 		resolveTestable(testable);
 	}
 
-	private void resolveClassNameSpecification(String className) {
-		JUnit5Testable testable = JUnit5Testable.fromClassName(className, engineDescriptor.getUniqueId());
-		resolveTestable(testable);
-	}
-
 	private void resolveUniqueIdSpecification(String uniqueId) {
-
 		JUnit5Testable testable = JUnit5Testable.fromUniqueId(uniqueId, engineDescriptor.getUniqueId());
 		resolveTestable(testable);
 	}
@@ -99,7 +88,7 @@ public class SpecificationResolver {
 
 			@Override
 			public void visitMethod(String uniqueId, Method method, Class<?> container) {
-				resolveMethodTestable(method, container, uniqueId, engineDescriptor);
+				resolveMethodTestable(method, container, uniqueId);
 			}
 
 			@Override
@@ -113,8 +102,7 @@ public class SpecificationResolver {
 		resolveTestable(testable, true);
 	}
 
-	private void resolveMethodTestable(Method method, Class<?> testClass, String uniqueId,
-			AbstractTestDescriptor parentDescriptor) {
+	private void resolveMethodTestable(Method method, Class<?> testClass, String uniqueId) {
 		JUnit5Testable parentTestable = JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueId());
 		TestDescriptor newParentDescriptor = resolveAndReturnParentTestable(parentTestable);
 		MethodTestDescriptor descriptor = getOrCreateMethodDescriptor(method, uniqueId);

@@ -12,7 +12,6 @@ package org.junit.gen5.engine.junit4;
 
 import lombok.Data;
 
-import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationVisitor;
 import org.junit.internal.runners.ErrorReportingRunner;
@@ -29,9 +28,7 @@ class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
 	// TODO support more TestPlanSpecificationElements/visit methods
 
 	@Override
-	public void visitClassNameSpecification(String className) {
-		Class<?> testClass = ReflectionUtils.loadClass(className).orElseThrow(
-			() -> new IllegalArgumentException("Class " + className + " not found."));
+	public void visitClassSpecification(Class<?> testClass) {
 
 		// TODO JL: Hack to break endless recursion if runner will lead to the
 		// execution of JUnit5 test (eg. @RunWith(JUnit5.class))
