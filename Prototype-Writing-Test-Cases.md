@@ -1,5 +1,19 @@
 # Writing JUnit 5 Test Cases
 
+**Table of Contents**
+
+- [Annotations](#annotations)
+  - [Meta-Annotations and Composed Annotations](meta-annotations-and-composed-annotations)
+- [Standard Test Class](#standard-test-class)
+- [Custom Names](#custom-names)
+- [Assertions](#assertions)
+- [Disabling Tests](#disabling-tests)
+- [Tagging and Filtering](#tagging-and-filtering)
+- [Test Contexts](#test-contexts)
+- [Method Parameters and Dependency Injection](#method-parameters-and-dependency-injection)
+
+----
+
 ## Annotations
 
 JUnit 5 supports the following annotations for configuring tests and extending the framework.
@@ -41,9 +55,7 @@ public @interface Fast {
 
 ----
 
-## Examples
-
-### Standard Test Class
+## Standard Test Class
 
 ```java
 import org.junit.gen5.api.*;
@@ -71,7 +83,9 @@ class MyTest {
 Notice that neither the test class nor the test method need to be `public`.
 Also, `@BeforeAll` and `@AfterAll` can be used on `static` or non-static methods.
 
-### Custom Names
+----
+
+## Custom Names
 
 Test classes and test methods can declare a custom name -- with spaces, special characters,
 and even emojis -- that will be displayed by test runners and test reporting:
@@ -89,7 +103,9 @@ class CanHaveAnyNameTest {
 }
 ```
 
-### Assertions
+----
+
+## Assertions
 
 JUnit 5 comes with many of the assertion methods that JUnit 4 has and adds a few
 that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions
@@ -131,7 +147,9 @@ class MyTest {
 }
 ```
 
-### Disabling Tests
+----
+
+## Disabling Tests
 
 Here's a disabled test case:
 
@@ -164,7 +182,9 @@ class MyTest {
 }
 ```
 
-### Tagging and Filtering
+----
+
+## Tagging and Filtering
 
 Test classes and methods can be tagged. Those tags can later be used to filter
 [test discovery and execution](Prototype-Running-Tests):
