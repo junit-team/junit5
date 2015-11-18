@@ -10,7 +10,7 @@
 
 package com.example;
 
-import static org.junit.gen5.api.TestInstance.Mode.PER_CLASS;
+import static org.junit.gen5.api.TestInstance.Lifecycle.PER_CLASS;
 
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.AfterAll;

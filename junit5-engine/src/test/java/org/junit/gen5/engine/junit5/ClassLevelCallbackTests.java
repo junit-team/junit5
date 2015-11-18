@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.TestInstance.Mode.PER_CLASS;
+import static org.junit.gen5.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.gen5.engine.TestPlanSpecification.build;
 import static org.junit.gen5.engine.TestPlanSpecification.forClass;
 
@@ -71,13 +71,13 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 		static boolean afterAllInvoked = false;
 
 		@BeforeAll
-		// MUST be static for TestInstance.Mode.PER_METHOD!
+		// MUST be static for TestInstance.Lifecycle.PER_METHOD!
 		static void beforeAll() {
 			beforeAllInvoked = true;
 		}
 
 		@AfterAll
-		// MUST be static for TestInstance.Mode.PER_METHOD!
+		// MUST be static for TestInstance.Lifecycle.PER_METHOD!
 		static void afterAll() {
 			afterAllInvoked = true;
 		}

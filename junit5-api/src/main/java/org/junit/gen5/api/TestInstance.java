@@ -17,8 +17,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Class-level annotation used to configure how test instances are managed
- * within a test class.
+ * {@code @TestInstance} is a class-level annotation that is used to configure
+ * the {@linkplain Lifecycle lifecycle} of test instances for the annotated
+ * test class.
+ *
+ * <p>If {@code @TestInstance} is not declared on a test class, the lifecycle
+ * mode will default to {@link Lifecycle#PER_METHOD PER_METHOD}.
  *
  * @author Sam Brannen
  * @since 5.0
@@ -29,12 +33,14 @@ import java.lang.annotation.Target;
 public @interface TestInstance {
 
 	/**
-	 * Test instantiation modes.
+	 * Enumeration of test instance lifecycle <em>modes</em>.
 	 */
-	public enum Mode {
+	public enum Lifecycle {
 
 		/**
 		 * When using this mode, a new test instance will be created once per test class.
+		 *
+		 * @see #PER_METHOD
 		 */
 		PER_CLASS,
 
@@ -43,15 +49,15 @@ public @interface TestInstance {
 		 *
 		 * <p>This mode is analogous to the behavior found in JUnit versions
 		 * 1 through 4.
+		 *
+		 * @see #PER_CLASS
 		 */
 		PER_METHOD
 	}
 
 	/**
-	 * The test instantiation mode to use.
-	 *
-	 * <p>Defaults to {@link Mode#PER_METHOD PER_METHOD}.
+	 * The test instance lifecycle <em>mode</em> to use.
 	 */
-	Mode value() default Mode.PER_METHOD;
+	Lifecycle value();
 
 }

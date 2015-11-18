@@ -26,7 +26,7 @@ import org.junit.gen5.api.Before;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Condition.Result;
 import org.junit.gen5.api.TestInstance;
-import org.junit.gen5.api.TestInstance.Mode;
+import org.junit.gen5.api.TestInstance.Lifecycle;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.AnnotationUtils;
@@ -88,12 +88,12 @@ class ClassTestExecutionNode extends TestExecutionNode {
 
 	private boolean isInstancePerClassMode(Class<?> testClass) {
 		// @formatter:off
-		Mode testInstanceMode = AnnotationUtils.findAnnotation(testClass, TestInstance.class)
+		Lifecycle testInstanceLifecycle = AnnotationUtils.findAnnotation(testClass, TestInstance.class)
 				.map(TestInstance::value)
-				.orElse(TestInstance.Mode.PER_METHOD);
+				.orElse(Lifecycle.PER_METHOD);
 		// @formatter:on
 
-		return (testInstanceMode == TestInstance.Mode.PER_CLASS);
+		return (testInstanceLifecycle == Lifecycle.PER_CLASS);
 	}
 
 	private void executeBeforeAllMethods(Class<?> testClass, Object testInstance) throws Exception {
