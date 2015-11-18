@@ -10,9 +10,6 @@
 
 package org.junit.gen5.engine.junit4;
 
-import java.util.Arrays;
-import java.util.List;
-
 import lombok.Data;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
@@ -54,9 +51,14 @@ class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
 
 	@Override
 	public void visitPackageSpecification(String packageName) {
-		List<Class<?>> candidateClasses = ReflectionUtils.findAllClassesInPackage(packageName,
-			isJUnit4TestClassWithTests);
-		candidateClasses.stream().forEach(this::visitClassSpecification);
+		ReflectionUtils.findAllClassesInPackage(packageName, isJUnit4TestClassWithTests).stream().forEach(
+			this::visitClassSpecification);
+	}
+
+	@Override
+	public void visitAllTestsSpecification() {
+		ReflectionUtils.findAllClassesInClassFiles(isJUnit4TestClassWithTests).stream().forEach(
+			testClass -> visitClassSpecification(testClass));
 	}
 
 	private void addRecursively(JUnit4TestDescriptor parent) {

@@ -66,6 +66,10 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 			String.format("'%s' specifies neither a class, nor a method, nor a package.", anyName));
 	}
 
+	public static TestPlanSpecificationElement allTests() {
+		return new AllTestsSpecification();
+	}
+
 	public static List<TestPlanSpecificationElement> forNames(Collection<String> classNames) {
 		return forNames(classNames.stream());
 	}

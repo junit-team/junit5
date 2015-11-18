@@ -25,4 +25,8 @@ public interface TestPlanSpecificationVisitor {
 
 	default void visitMethodSpecification(Class<?> testClass, Method testMethod) {
 	}
+
+	default void visitAllTestsSpecification() {
+	}
+
 }

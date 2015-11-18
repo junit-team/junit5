@@ -47,7 +47,10 @@ public class ConsoleRunner {
 			description = "Disable colored output (not supported by all terminals)")
 	private boolean disableAnsiColors;
 
-	@Arguments(description = "Test classes, methods or packages to execute")
+	@Option(name = {"-a", "--all"}, description = "Run all tests")
+	private boolean runAllTests;
+
+	@Arguments(description = "Test classes, methods or packages to execute (ignore if --all|-a has been chosen)")
 	private List<String> arguments;
 
 	// @formatter:on
@@ -89,8 +92,13 @@ public class ConsoleRunner {
 			// @formatter:on
 		);
 
-		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
-			testPlanSpecificationElementsFromArguments());
+		TestPlanSpecification testPlanSpecification = null;
+		if (runAllTests) {
+			testPlanSpecification = TestPlanSpecification.build(TestPlanSpecification.allTests());
+		}
+		else {
+			testPlanSpecification = TestPlanSpecification.build(testPlanSpecificationElementsFromArguments());
+		}
 
 		// TODO Provide means to allow manipulation of test plan?
 		launcher.execute(testPlanSpecification);

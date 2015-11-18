@@ -12,6 +12,7 @@ package org.junit.gen5.commons.util;
 
 import static java.util.stream.Collectors.toList;
 
+import java.io.File;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -217,6 +218,36 @@ public final class ReflectionUtils {
 	public static boolean isPackage(String packageName) {
 		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader, ReflectionUtils::loadClass).isPackage(
 			packageName);
+	}
+
+	public static List<Class<?>> findAllClassesInClassFiles(Predicate<Class<?>> classTester) {
+		ClasspathScanner scanner = new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
+			ReflectionUtils::loadClass);
+		List<Class<?>> collectedClasses = new ArrayList<>();
+		// @formatter:off
+		getAllClasspathRootDirectories().stream()
+				.filter(File::exists)
+				.forEach(root -> collectedClasses.addAll(scanner.scanForClassesInClasspathRoot(root, classTester)));
+		// @formatter:on
+		return collectedClasses;
+	}
+
+	private static List<File> getAllClasspathRootDirectories() {
+		//TODO This is quite a hack, since sometimes the classpath is quite different
+		//A real solution would require the build tools / IDEs to hand in all root directories
+		String fullClassPath = System.getProperty("java.class.path");
+		final String separator = System.getProperty("path.separator");
+		// @formatter:off
+		return Arrays.stream(fullClassPath.split(separator))
+				.filter(part -> !part.endsWith(".jar"))
+				.map(dirPath -> new File(dirPath))
+				.collect(Collectors.toList());
+		// @formatter:on
+	}
+
+	public static List<Class<?>> findAllClassesInClasspathRoot(File root, Predicate<Class<?>> classTester) {
+		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
+			ReflectionUtils::loadClass).scanForClassesInClasspathRoot(root, classTester);
 	}
 
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester) {
