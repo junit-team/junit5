@@ -12,7 +12,8 @@ package org.junit.gen5.api;
 
 import java.util.Optional;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 
 import org.junit.gen5.api.extension.TestExecutionContext;
 
@@ -21,9 +22,12 @@ import org.junit.gen5.api.extension.TestExecutionContext;
  * if a given test (e.g., class or method) should be executed based on the
  * supplied {@link TestExecutionContext}.
  *
+ * <p>Implementations must provide a no-args constructor.
+ *
  * @author Sam Brannen
  * @since 5.0
  * @see Conditional
+ * @see Disabled
  */
 @FunctionalInterface
 public interface Condition {
@@ -41,25 +45,31 @@ public interface Condition {
 	/**
 	 * The result of evaluating a condition.
 	 */
-	@Data(staticConstructor = "of")
+	@Getter
+	@ToString
 	public static class Result {
 
 		/**
 		 * Factory for creating <em>success</em> results.
 		 */
 		public static Result success(String reason) {
-			return of(true, Optional.ofNullable(reason));
+			return new Result(true, Optional.ofNullable(reason));
 		}
 
 		/**
 		 * Factory for creating <em>failure</em> results.
 		 */
 		public static Result failure(String reason) {
-			return of(false, Optional.ofNullable(reason));
+			return new Result(false, Optional.ofNullable(reason));
 		}
 
 		private final boolean success;
 		private final Optional<String> reason;
+
+		private Result(boolean success, Optional<String> reason) {
+			this.success = success;
+			this.reason = reason;
+		}
 
 	}
 
