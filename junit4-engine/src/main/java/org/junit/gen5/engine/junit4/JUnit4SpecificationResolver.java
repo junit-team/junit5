@@ -10,8 +10,11 @@
 
 package org.junit.gen5.engine.junit4;
 
+import java.util.Arrays;
+
 import lombok.Data;
 
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationVisitor;
 import org.junit.internal.runners.ErrorReportingRunner;
@@ -24,6 +27,7 @@ import org.junit.runner.Runner;
 class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
 
 	private final EngineDescriptor engineDescriptor;
+	private final IsJUnit4TestClassWithTests isJUnit4TestClassWithTests = new IsJUnit4TestClassWithTests();
 
 	// TODO support more TestPlanSpecificationElements/visit methods
 
@@ -45,6 +49,12 @@ class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
 			engineDescriptor.addChild(testDescriptor);
 			addRecursively(testDescriptor);
 		}
+	}
+
+	@Override
+	public void visitPackageSpecification(String packageName) {
+		Class<?>[] candidateClasses = ReflectionUtils.findAllClassesInPackage(packageName);
+		Arrays.stream(candidateClasses).filter(isJUnit4TestClassWithTests::test).forEach(this::visitClassSpecification);
 	}
 
 	private void addRecursively(JUnit4TestDescriptor parent) {

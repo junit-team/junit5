@@ -57,8 +57,16 @@ public final class ReflectionUtils {
 		return Modifier.isPrivate(clazz.getModifiers());
 	}
 
+	public static boolean isPublic(Class<?> clazz) {
+		return Modifier.isPublic(clazz.getModifiers());
+	}
+
 	public static boolean isPrivate(Member member) {
 		return Modifier.isPrivate(member.getModifiers());
+	}
+
+	public static boolean isPublic(Member member) {
+		return Modifier.isPublic(member.getModifiers());
 	}
 
 	public static boolean isAbstract(Class<?> clazz) {

@@ -10,8 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.commons.util.ReflectionUtils.findInnerClasses;
-import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -62,15 +61,11 @@ public class SpecificationResolver {
 
 			@Override
 			public void visitPackageSpecification(String packageName) {
-				resolvePackageSpecification(packageName);
+				Class<?>[] candidateClasses = ReflectionUtils.findAllClassesInPackage(packageName);
+				Arrays.stream(candidateClasses).filter(isTestClassWithTests).forEach(
+					testClass -> visitClassSpecification(testClass));
 			}
 		});
-	}
-
-	private void resolvePackageSpecification(String packageName) {
-		Class<?>[] candidateClasses = ReflectionUtils.findAllClassesInPackage(packageName);
-		Arrays.stream(candidateClasses).filter(isTestClassWithTests).forEach(
-			testClass -> resolveTestable(JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueId())));
 	}
 
 	private void resolveClassSpecification(Class<?> testClass) {
