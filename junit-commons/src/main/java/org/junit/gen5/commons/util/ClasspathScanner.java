@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 /**
@@ -29,14 +30,16 @@ class ClasspathScanner {
 	private static final Logger LOG = Logger.getLogger(ClasspathScanner.class.getName());
 
 	private final String basePackageName;
+	private final Supplier<ClassLoader> classLoaderSupplier;
 
-	ClasspathScanner(String basePackageName) {
+	ClasspathScanner(String basePackageName, Supplier<ClassLoader> classLoaderSupplier) {
+		this.classLoaderSupplier = classLoaderSupplier;
 		Preconditions.notBlank(basePackageName, "basePackageName must not be null");
 		this.basePackageName = basePackageName;
 	}
 
 	boolean isPackage() {
-		ClassLoader classLoader = ReflectionUtils.getDefaultClassLoader();
+		ClassLoader classLoader = classLoaderSupplier.get();
 		String path = basePackagePath();
 		try {
 			classLoader.getResources(path);
@@ -69,7 +72,7 @@ class ClasspathScanner {
 	}
 
 	private List<File> allSourceDirsForPackage() throws IOException {
-		ClassLoader classLoader = ReflectionUtils.getDefaultClassLoader();
+		ClassLoader classLoader = classLoaderSupplier.get();
 		LOG.fine(() -> "ClassLoader: " + classLoader);
 		String path = basePackagePath();
 		Enumeration<URL> resources = classLoader.getResources(path);

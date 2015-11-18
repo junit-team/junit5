@@ -207,11 +207,12 @@ public final class ReflectionUtils {
 	}
 
 	public static boolean isPackage(String basePackageName) {
-		return new ClasspathScanner(basePackageName).isPackage();
+		return new ClasspathScanner(basePackageName, ReflectionUtils::getDefaultClassLoader).isPackage();
 	}
 
 	public static Class<?>[] findAllClassesInPackage(String basePackageName) {
-		return new ClasspathScanner(basePackageName).scanForClassesRecursively();
+		return new ClasspathScanner(basePackageName,
+			ReflectionUtils::getDefaultClassLoader).scanForClassesRecursively();
 	}
 
 	public static List<Class<?>> findInnerClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
