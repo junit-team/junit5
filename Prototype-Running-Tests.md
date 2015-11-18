@@ -40,10 +40,13 @@ We have prepared two small sample projects that use it through Gradle and Maven.
 	        ConsoleRunner - console test runner
 
 	SYNOPSIS
-	        ConsoleRunner [(-C | --disable-ansi-colors)] [(-h | --help)]
-	                [(-x | --enable-exit-code)] [--] [<arguments>...]
+	        ConsoleRunner [(-a | --all)] [(-C | --disable-ansi-colors)] 
+                        [(-h | --help)] [(-x | --enable-exit-code)] [--] [<arguments>...]
 
 	OPTIONS
+	        -a, --all
+                    Run all tests
+
 	        -C, --disable-ansi-colors
 	            Disable colored output (not supported by all terminals)
 
@@ -59,7 +62,8 @@ We have prepared two small sample projects that use it through Gradle and Maven.
 	            command-line options
 
 	        <arguments>
-	            Test classes, methods or packages to execute
+	            Test classes, methods or packages to execute 
+                    (ignore if --all|-a has been chosen)
 
 ## Using JUnit4 to Run JUnit5 Tests
 
