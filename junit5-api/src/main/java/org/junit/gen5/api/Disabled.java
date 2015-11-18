@@ -21,6 +21,12 @@ import java.lang.annotation.Target;
 import org.junit.gen5.api.extension.TestExecutionContext;
 
 /**
+ * {@code @Disabled} is used to signal that the annotated test class or
+ * test method is currently <em>disabled</em> and should not be executed.
+ *
+ * <p>When applied at the class level, all test methods within that class
+ * are automatically disabled as well.
+ *
  * @author Sam Brannen
  * @since 5.0
  */

@@ -16,11 +16,26 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * {@code @Tags} is a container for one or more {@code @Tag} declarations.
+ *
+ * <p>Note, however, that use of the {@code Tags} container is completely
+ * optional since {@code @Tag} is a {@linkplain java.lang.annotation.Repeatable
+ * repeatable} annotation.
+ *
+ * @author Johannes Link
+ * @author Sam Brannen
  * @since 5.0
+ * @see Tag
+ * @see TestName
+ * @see java.lang.annotation.Repeatable
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Tags {
 
+	/**
+	 * An array of one or more {@link Tag Tags}.
+	 */
 	Tag[]value();
+
 }

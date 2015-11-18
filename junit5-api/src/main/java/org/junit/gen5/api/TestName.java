@@ -17,7 +17,22 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * {@code @TestName} is used to inject the display name of the current test
+ * into to {@code @Test}, {@code @Before}, and {@code @After} methods.
+ *
+ * <p>If a method parameter is of type {@link String} and annotated with
+ * {@code @TestName}, JUnit will supply the display name of the current
+ * test as the value for the annotated parameter.
+ *
+ * <p>The display name is either the canonical name of the test or a custom
+ * name configured via {@link Name @Name}.
+ *
+ * @author Matthias Merdes
+ * @author Johannes Link
+ * @author Sam Brannen
  * @since 5.0
+ * @see Test
+ * @see Name
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)

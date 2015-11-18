@@ -17,12 +17,29 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * {@code @Tag} is a {@linkplain Repeatable repeatable} annotation that is
+ * used to declare a <em>tag</em> for the annotated test class or test method.
+ *
+ * <p>Tags are used to filter which tests are executed for a given test
+ * plan. For example, a development team may tag tests with values such as
+ * {@code "fast"}, {@code "slow"}, {@code "ci-server"}, etc. and then supply
+ * a list of tags to be used for the current test plan, potentially
+ * dependent on the current environment.
+ *
+ * @author Johannes Link
+ * @author Sam Brannen
  * @since 5.0
+ * @see Tags
+ * @see Test
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(Tags.class)
 public @interface Tag {
 
+	/**
+	 * The <em>tag</em>.
+	 */
 	String value();
+
 }

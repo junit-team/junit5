@@ -17,15 +17,23 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * {@code @Conditional} is used to register one or more {@link #value
+ * Conditions} to be evaluated for <em>conditional test execution</em>.
+ *
  * @author Sam Brannen
  * @since 5.0
  * @see Condition
+ * @see Disabled
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Conditional {
 
+	/**
+	 * One or more {@link #Condition Conditions} to be evaluated for
+	 * <em>conditional test execution</em>.
+	 */
 	Class<? extends Condition>[]value();
 
 }

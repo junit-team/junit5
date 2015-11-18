@@ -17,8 +17,27 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * {@code @Test} is used to signal that the annotated method is a
+ * <em>test</em> method.
+ *
+ * <p>{@code @Test} methods must not be {@code private} or {@code static}.
+ *
+ * <p>{@code @Test} methods may optionally declare parameters to be
+ * resolved by {@link org.junit.gen5.api.extension.MethodParameterResolver
+ * MethodParameterResolvers}.
+ *
+ * @author Johannes Link
+ * @author Marc Philipp
+ * @author Matthias Merdes
  * @author Sam Brannen
+ * @author Stefan Bechtold
  * @since 5.0
+ * @see TestInstance
+ * @see Name
+ * @see Before
+ * @see After
+ * @see BeforeAll
+ * @see AfterAll
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)

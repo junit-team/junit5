@@ -17,8 +17,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * {@code @Context} is used to signal that the annotated class is an inner
+ * test class.
+ *
+ * <p>{@code @Context} is often used in conjunction with
+ * {@link TestInstance @TestInstance(PER_CLASS)}.
+ *
  * @author Stefan Bechtold
+ * @author Sam Brannen
  * @since 5.0
+ * @see TestInstance
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

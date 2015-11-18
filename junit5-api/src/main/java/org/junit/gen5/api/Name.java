@@ -17,7 +17,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * {@code @Name} is used to declare a custom display name for the annotated
+ * test class or test method.
+ *
+ * <p>Display names are typically used for test reporting in IDEs and build
+ * tools and may contain spaces, special characters, and even emoji.
+ *
+ * @author Johannes Link
+ * @author Sam Brannen
  * @since 5.0
+ * @see Test
+ * @see TestName
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
