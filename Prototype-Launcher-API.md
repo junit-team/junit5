@@ -10,7 +10,7 @@ can be used to discover, filter, and execute JUnit tests. Moreover, we
 added a mechanism to allow third party test libraries -- like Spock, Cucumber,
 and FitNesse -- to plug into JUnit 5's launching infrastructure.
 
-The launching API is in [junit-launcher] project.
+The launching API is in the [junit-launcher] project.
 
 An example consumer of the launching API is our [Console Runner]
 in the [junit-console] project.
@@ -72,11 +72,12 @@ For an example see the [TestSummaryReportingTestListener].
 
 ## Plugging in Your Own Test Engine
 
-Other test engines have to follow the interfaces in [junit-engine-api].
-Currently we have two engine implementations:
+The prototype currently provides two `TestEngine` implementations out of the box:
 
 - [junit5-engine]: The core of the current prototype.
 - [junit4-engine]: A thin layer on top of JUnit 4 to allow running "old" tests with the launcher infrastructure.
+
+Third parties may also contribute their own `TestEngine` by implementing the interfaces in the [junit-engine-api] project and _registering_ their engine. Engine registration is currently supported via Java's `java.util.ServiceLoader` mechanism. For example, the `junit5-engine` project registers its `JUnit5TestEngine` [here](https://github.com/junit-team/junit-lambda/blob/master/junit5-engine/src/main/resources/META-INF/services/org.junit.gen5.engine.TestEngine).
 
 
 [Console Runner]: https://github.com/junit-team/junit-lambda/blob/master/junit-console/src/main/java/org/junit/gen5/console/ConsoleRunner.java
