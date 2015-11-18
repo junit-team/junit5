@@ -14,7 +14,6 @@ import static org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder.Hierar
 
 import java.util.function.Predicate;
 
-import org.junit.Test;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.runner.RunWith;
 

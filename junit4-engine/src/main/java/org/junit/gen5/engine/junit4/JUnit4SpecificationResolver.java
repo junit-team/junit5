@@ -24,8 +24,9 @@ import org.junit.runner.Runner;
 @Data
 class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
 
+	private static final IsJUnit4TestClassWithTests isJUnit4TestClassWithTests = new IsJUnit4TestClassWithTests();
+
 	private final EngineDescriptor engineDescriptor;
-	private final IsJUnit4TestClassWithTests isJUnit4TestClassWithTests = new IsJUnit4TestClassWithTests();
 
 	// TODO support more TestPlanSpecificationElements/visit methods
 

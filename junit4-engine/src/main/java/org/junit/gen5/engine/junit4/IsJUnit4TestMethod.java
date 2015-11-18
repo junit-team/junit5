@@ -10,8 +10,8 @@
 
 package org.junit.gen5.engine.junit4;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.isPublic;
+import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
 
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 import org.junit.Test;
 
 /**
- * @author Sam Brannen
+ * @author Johannes Link
  * @since 5.0
  */
 public class IsJUnit4TestMethod implements Predicate<Method> {
