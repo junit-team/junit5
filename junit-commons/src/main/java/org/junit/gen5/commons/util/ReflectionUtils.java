@@ -95,7 +95,7 @@ public final class ReflectionUtils {
 			makeAccessible(constructor);
 			return constructor.newInstance(args);
 		}
-		catch (Exception ex) {
+		catch (Throwable ex) {
 			handleException(ex);
 		}
 
@@ -105,13 +105,14 @@ public final class ReflectionUtils {
 
 	/**
 	 * Invoke the supplied method, making it accessible if necessary and
-	 * wrapping any runtime exception in an {@code IllegalStateException}.
+	 * wrapping any checked exception in an {@code IllegalStateException}.
 	 *
-	 * @param method the method to invoke.
+	 * @param method the method to invoke
 	 * @param target the object on which to invoke the method; may be
 	 * {@code null} if the method is {@code static}
 	 * @param args the arguments to pass to the method
-	 * @return the value returned by the method invocation
+	 * @return the value returned by the method invocation or {@code null}
+	 * if the return type is {@code void}
 	 */
 	public static Object invokeMethod(Method method, Object target, Object... args) {
 		Preconditions.notNull(method, "method must not be null");
@@ -122,7 +123,7 @@ public final class ReflectionUtils {
 			makeAccessible(method);
 			return method.invoke(target, args);
 		}
-		catch (Exception ex) {
+		catch (Throwable ex) {
 			handleException(ex);
 		}
 
@@ -394,6 +395,9 @@ public final class ReflectionUtils {
 		if (ex instanceof NoSuchMethodException) {
 			throw new IllegalStateException("No such method or constructor", ex);
 		}
+		if (ex instanceof NoSuchFieldException) {
+			throw new IllegalStateException("No such field", ex);
+		}
 		if (ex instanceof InstantiationException) {
 			throw new IllegalStateException("Instantiation failed", ex);
 		}
@@ -406,6 +410,7 @@ public final class ReflectionUtils {
 		if (ex instanceof Error) {
 			throw (Error) ex;
 		}
+		throw new IllegalStateException("Unhandled exception", ex);
 	}
 
 }
