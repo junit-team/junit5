@@ -206,13 +206,14 @@ public final class ReflectionUtils {
 		return outerInstance;
 	}
 
-	public static boolean isPackage(String basePackageName) {
-		return new ClasspathScanner(basePackageName, ReflectionUtils::getDefaultClassLoader).isPackage();
+	public static boolean isPackage(String packageName) {
+		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader, ReflectionUtils::loadClass).isPackage(
+			packageName);
 	}
 
 	public static Class<?>[] findAllClassesInPackage(String basePackageName) {
-		return new ClasspathScanner(basePackageName,
-			ReflectionUtils::getDefaultClassLoader).scanForClassesRecursively();
+		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
+			ReflectionUtils::loadClass).scanForClassesInPackage(basePackageName);
 	}
 
 	public static List<Class<?>> findInnerClasses(Class<?> clazz, Predicate<Class<?>> predicate) {

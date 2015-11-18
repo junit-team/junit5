@@ -15,9 +15,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
@@ -29,93 +31,116 @@ class ClasspathScanner {
 	private static final String CLASS_FILE_SUFFIX = ".class";
 	private static final Logger LOG = Logger.getLogger(ClasspathScanner.class.getName());
 
-	private final String basePackageName;
 	private final Supplier<ClassLoader> classLoaderSupplier;
+	private final BiFunction<String, ClassLoader, Optional<Class<?>>> loadClass;
 
-	ClasspathScanner(String basePackageName, Supplier<ClassLoader> classLoaderSupplier) {
+	ClasspathScanner(Supplier<ClassLoader> classLoaderSupplier,
+			BiFunction<String, ClassLoader, Optional<Class<?>>> loadClass) {
 		this.classLoaderSupplier = classLoaderSupplier;
-		Preconditions.notBlank(basePackageName, "basePackageName must not be null");
-		this.basePackageName = basePackageName;
+		this.loadClass = loadClass;
 	}
 
-	boolean isPackage() {
-		ClassLoader classLoader = classLoaderSupplier.get();
-		String path = basePackagePath();
+	boolean isPackage(String packageName) {
+		String path = packagePath(packageName);
 		try {
-			classLoader.getResources(path);
-			return true;
+			Enumeration<URL> resource = classLoaderSupplier.get().getResources(path);
+			return resource.hasMoreElements();
 		}
 		catch (IOException e) {
 			return false;
 		}
 	}
 
-	Class<?>[] scanForClassesRecursively() {
-		try {
-			List<File> dirs = allSourceDirsForPackage();
-			LOG.fine(() -> "Directories found: " + dirs);
-			List<Class<?>> classes = allClassesInSourceDirs(dirs);
-			return classes.toArray(new Class[classes.size()]);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-			return new Class[0];
-		}
+	Class<?>[] scanForClassesInPackage(String basePackageName) {
+		Preconditions.notBlank(basePackageName, "basePackageName must not be blank");
+
+		List<File> dirs = allSourceDirsForPackage(basePackageName);
+		LOG.fine(() -> "Directories found: " + dirs);
+		List<Class<?>> classes = allClassesInSourceDirs(dirs, basePackageName);
+		return classes.toArray(new Class[classes.size()]);
 	}
 
-	private List<Class<?>> allClassesInSourceDirs(List<File> sourceDirs) {
+	private List<Class<?>> allClassesInSourceDirs(List<File> sourceDirs, String basePackageName) {
 		List<Class<?>> classes = new ArrayList<>();
 		for (File aSourceDir : sourceDirs) {
-			classes.addAll(findClassesInSourceDirRecursively(aSourceDir, this.basePackageName));
+			classes.addAll(findClassesInSourceDirRecursively(aSourceDir, basePackageName));
 		}
 		return classes;
 	}
 
-	private List<File> allSourceDirsForPackage() throws IOException {
-		ClassLoader classLoader = classLoaderSupplier.get();
-		LOG.fine(() -> "ClassLoader: " + classLoader);
-		String path = basePackagePath();
-		Enumeration<URL> resources = classLoader.getResources(path);
-		List<File> dirs = new ArrayList<>();
-		while (resources.hasMoreElements()) {
-			URL resource = resources.nextElement();
-			dirs.add(new File(resource.getFile()));
+	Class<?>[] scanForClassesInClasspathRoot(File root) {
+		Preconditions.notNull(root, "root must not be null");
+		Preconditions.condition(root.exists(), "root must exist");
+		Preconditions.condition(root.isDirectory(), "root must be a directory");
+
+		List<Class<?>> classes = findClassesInSourceDirRecursively(root, "");
+		return classes.toArray(new Class[classes.size()]);
+	}
+
+	private List<File> allSourceDirsForPackage(String basePackageName) {
+		try {
+			ClassLoader classLoader = classLoaderSupplier.get();
+			LOG.fine(() -> "ClassLoader: " + classLoader);
+			String path = packagePath(basePackageName);
+			Enumeration<URL> resources = null;
+			resources = classLoader.getResources(path);
+			List<File> dirs = new ArrayList<>();
+			while (resources.hasMoreElements()) {
+				URL resource = resources.nextElement();
+				dirs.add(new File(resource.getFile()));
+			}
+			return dirs;
 		}
-		return dirs;
+		catch (IOException e) {
+			return Collections.emptyList();
+		}
 	}
 
-	private String basePackagePath() {
-		return this.basePackageName.replace('.', '/');
+	private String packagePath(String basePackageName) {
+		return basePackageName.replace('.', '/');
 	}
 
-	private static List<Class<?>> findClassesInSourceDirRecursively(File sourceDir, String packageName) {
+	private List<Class<?>> findClassesInSourceDirRecursively(File sourceDir, String packageName) {
+		List<Class<?>> classesCollector = new ArrayList<>();
+		if (collectClassesRecursively(sourceDir, packageName, classesCollector))
+			return classesCollector;
+		return classesCollector;
+	}
+
+	private boolean collectClassesRecursively(File sourceDir, String packageName, List<Class<?>> classesCollector) {
 		LOG.finer(() -> "Searching for classes in package: " + packageName);
-		List<Class<?>> classes = new ArrayList<>();
 		if (!sourceDir.exists()) {
-			return classes;
+			return true;
 		}
 		File[] files = sourceDir.listFiles();
 		LOG.finer(() -> "Files found: " + Arrays.toString(files));
 		for (File file : files) {
-			if (file.isDirectory()) {
-				classes.addAll(findClassesInSourceDirRecursively(file, packageName + "." + file.getName()));
-			}
-			else if (isClassFile(file)) {
+			if (isClassFile(file)) {
 				Optional<Class<?>> classForClassFile = loadClassForClassFile(file, packageName);
-				classForClassFile.ifPresent(clazz -> classes.add(clazz));
+				classForClassFile.ifPresent(clazz -> classesCollector.add(clazz));
+			}
+			else if (file.isDirectory()) {
+				collectClassesRecursively(file, appendPackageName(packageName, file.getName()), classesCollector);
 			}
 		}
-		return classes;
+		return false;
 	}
 
-	private static Optional<Class<?>> loadClassForClassFile(File file, String packageName) {
+	private String appendPackageName(String packageName, String subpackageName) {
+		if (packageName.isEmpty())
+			return subpackageName;
+		else
+			return packageName + "." + subpackageName;
+	}
+
+	private Optional<Class<?>> loadClassForClassFile(File file, String packageName) {
 		String className = packageName + '.'
 				+ file.getName().substring(0, file.getName().length() - CLASS_FILE_SUFFIX.length());
-		return ReflectionUtils.loadClass(className);
+		return loadClass.apply(className, classLoaderSupplier.get());
 	}
 
 	private static boolean isClassFile(File file) {
-		return file.getName().endsWith(CLASS_FILE_SUFFIX);
+		return file.isFile() && file.getName().endsWith(CLASS_FILE_SUFFIX);
 	}
 
 }
