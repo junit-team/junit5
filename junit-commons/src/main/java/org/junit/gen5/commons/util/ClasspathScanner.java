@@ -20,6 +20,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
@@ -51,30 +52,29 @@ class ClasspathScanner {
 		}
 	}
 
-	Class<?>[] scanForClassesInPackage(String basePackageName) {
+	List<Class<?>> scanForClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter) {
 		Preconditions.notBlank(basePackageName, "basePackageName must not be blank");
 
 		List<File> dirs = allSourceDirsForPackage(basePackageName);
 		LOG.fine(() -> "Directories found: " + dirs);
-		List<Class<?>> classes = allClassesInSourceDirs(dirs, basePackageName);
-		return classes.toArray(new Class[classes.size()]);
+		return allClassesInSourceDirs(dirs, basePackageName, classFilter);
 	}
 
-	private List<Class<?>> allClassesInSourceDirs(List<File> sourceDirs, String basePackageName) {
+	private List<Class<?>> allClassesInSourceDirs(List<File> sourceDirs, String basePackageName,
+			Predicate<Class<?>> classFilter) {
 		List<Class<?>> classes = new ArrayList<>();
 		for (File aSourceDir : sourceDirs) {
-			classes.addAll(findClassesInSourceDirRecursively(aSourceDir, basePackageName));
+			classes.addAll(findClassesInSourceDirRecursively(aSourceDir, basePackageName, classFilter));
 		}
 		return classes;
 	}
 
-	Class<?>[] scanForClassesInClasspathRoot(File root) {
+	List<Class<?>> scanForClassesInClasspathRoot(File root, Predicate<Class<?>> classFilter) {
 		Preconditions.notNull(root, "root must not be null");
 		Preconditions.condition(root.exists(), "root must exist");
 		Preconditions.condition(root.isDirectory(), "root must be a directory");
 
-		List<Class<?>> classes = findClassesInSourceDirRecursively(root, "");
-		return classes.toArray(new Class[classes.size()]);
+		return findClassesInSourceDirRecursively(root, "", classFilter);
 	}
 
 	private List<File> allSourceDirsForPackage(String basePackageName) {
@@ -100,14 +100,16 @@ class ClasspathScanner {
 		return basePackageName.replace('.', '/');
 	}
 
-	private List<Class<?>> findClassesInSourceDirRecursively(File sourceDir, String packageName) {
+	private List<Class<?>> findClassesInSourceDirRecursively(File sourceDir, String packageName,
+			Predicate<Class<?>> classFilter) {
 		List<Class<?>> classesCollector = new ArrayList<>();
-		if (collectClassesRecursively(sourceDir, packageName, classesCollector))
+		if (collectClassesRecursively(sourceDir, packageName, classesCollector, classFilter))
 			return classesCollector;
 		return classesCollector;
 	}
 
-	private boolean collectClassesRecursively(File sourceDir, String packageName, List<Class<?>> classesCollector) {
+	private boolean collectClassesRecursively(File sourceDir, String packageName, List<Class<?>> classesCollector,
+			Predicate<Class<?>> classFilter) {
 		LOG.finer(() -> "Searching for classes in package: " + packageName);
 		if (!sourceDir.exists()) {
 			return true;
@@ -117,10 +119,11 @@ class ClasspathScanner {
 		for (File file : files) {
 			if (isClassFile(file)) {
 				Optional<Class<?>> classForClassFile = loadClassForClassFile(file, packageName);
-				classForClassFile.ifPresent(clazz -> classesCollector.add(clazz));
+				classForClassFile.filter(classFilter).ifPresent(clazz -> classesCollector.add(clazz));
 			}
 			else if (file.isDirectory()) {
-				collectClassesRecursively(file, appendPackageName(packageName, file.getName()), classesCollector);
+				collectClassesRecursively(file, appendPackageName(packageName, file.getName()), classesCollector,
+					classFilter);
 			}
 		}
 		return false;

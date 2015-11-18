@@ -219,9 +219,9 @@ public final class ReflectionUtils {
 			packageName);
 	}
 
-	public static Class<?>[] findAllClassesInPackage(String basePackageName) {
+	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester) {
 		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
-			ReflectionUtils::loadClass).scanForClassesInPackage(basePackageName);
+			ReflectionUtils::loadClass).scanForClassesInPackage(basePackageName, classTester);
 	}
 
 	public static List<Class<?>> findInnerClasses(Class<?> clazz, Predicate<Class<?>> predicate) {

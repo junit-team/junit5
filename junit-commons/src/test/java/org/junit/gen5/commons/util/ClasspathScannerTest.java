@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import org.junit.Assert;
 import org.junit.Assume;
@@ -32,10 +33,17 @@ public class ClasspathScannerTest {
 
 	@Test
 	public void findAllClassesInThisPackage() throws IOException, ClassNotFoundException {
-		List<Class<?>> classes = Arrays.asList(classpathScanner.scanForClassesInPackage("org.junit.gen5.commons"));
+		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.gen5.commons", clazz -> true);
 		Assert.assertTrue("Should be at least 20 classes", classes.size() >= 20);
 		Assert.assertTrue(classes.contains(NestedClassToBeFound.class));
 		Assert.assertTrue(classes.contains(MemberClassToBeFound.class));
+	}
+
+	@Test
+	public void findAllClassesInThisPackageWithFilter() throws IOException, ClassNotFoundException {
+		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTest.class;
+		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.gen5.commons", thisClassOnly);
+		Assert.assertSame(ClasspathScannerTest.class, classes.get(0));
 	}
 
 	@Test
@@ -46,9 +54,17 @@ public class ClasspathScannerTest {
 	}
 
 	@Test
-	public void findAllClassesInRoot() throws IOException, ClassNotFoundException {
+	public void findAllClassesInClasspathRoot() throws IOException, ClassNotFoundException {
+		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTest.class;
 		File root = getTestClasspathRoot();
-		List<Class<?>> classes = Arrays.asList(classpathScanner.scanForClassesInClasspathRoot(root));
+		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(root, thisClassOnly);
+		Assert.assertSame(ClasspathScannerTest.class, classes.get(0));
+	}
+
+	@Test
+	public void findAllClassesInClasspathRootWithFilter() throws IOException, ClassNotFoundException {
+		File root = getTestClasspathRoot();
+		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(root, clazz -> true);
 
 		Assert.assertTrue("Should be at least 20 classes", classes.size() >= 20);
 		Assert.assertTrue(classes.contains(ClasspathScannerTest.class));

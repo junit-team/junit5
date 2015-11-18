@@ -61,9 +61,8 @@ public class SpecificationResolver {
 
 			@Override
 			public void visitPackageSpecification(String packageName) {
-				Class<?>[] candidateClasses = ReflectionUtils.findAllClassesInPackage(packageName);
-				Arrays.stream(candidateClasses).filter(isTestClassWithTests).forEach(
-					testClass -> visitClassSpecification(testClass));
+				List<Class<?>> candidateClasses = findAllClassesInPackage(packageName, isTestClassWithTests);
+				candidateClasses.stream().forEach(testClass -> visitClassSpecification(testClass));
 			}
 		});
 	}

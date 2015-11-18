@@ -31,7 +31,8 @@ public class IsJUnit4TestMethod implements Predicate<Method> {
 			return false;
 		if (!isPublic(candidate))
 			return false;
-		return (isAnnotated(candidate, Test.class));
+		//Don't use AnnotationUtils.hasAnnotation since JUnit4 does not support meta annotations
+		return candidate.isAnnotationPresent(Test.class);
 	}
 
 }

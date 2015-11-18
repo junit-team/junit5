@@ -14,7 +14,9 @@ import static org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder.Hierar
 
 import java.util.function.Predicate;
 
+import org.junit.Test;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.runner.RunWith;
 
 /**
  * @since 5.0
@@ -27,7 +29,10 @@ public class IsJUnit4TestClassWithTests implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> testClassCandidate) {
-		return canBeTestClass.test(testClassCandidate) && hasTestMethods(testClassCandidate);
+		if (!canBeTestClass.test(testClassCandidate))
+			return false;
+		//Don't use AnnotationUtils.hasAnnotation since JUnit4 does not support meta annotations
+		return testClassCandidate.isAnnotationPresent(RunWith.class) || hasTestMethods(testClassCandidate);
 	}
 
 	private boolean hasTestMethods(Class<?> testClassCandidate) {
