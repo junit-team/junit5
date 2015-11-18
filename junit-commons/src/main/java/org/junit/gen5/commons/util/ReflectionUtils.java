@@ -107,7 +107,7 @@ public final class ReflectionUtils {
 	public static Object invokeMethod(Method method, Object target, Object... args) {
 		Preconditions.notNull(method, "method must not be null");
 		Preconditions.condition((target != null || Modifier.isStatic(method.getModifiers())),
-			() -> String.format("Cannot invoke static method [%s] on a null target.", method.toGenericString()));
+			() -> String.format("Cannot invoke non-static method [%s] on a null target.", method.toGenericString()));
 
 		try {
 			makeAccessible(method);
