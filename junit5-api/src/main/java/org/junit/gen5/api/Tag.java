@@ -10,6 +10,7 @@
 
 package org.junit.gen5.api;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
@@ -34,6 +35,7 @@ import java.lang.annotation.Target;
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
+@Documented
 @Repeatable(Tags.class)
 public @interface Tag {
 
