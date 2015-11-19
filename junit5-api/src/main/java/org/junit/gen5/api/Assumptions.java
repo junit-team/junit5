@@ -12,11 +12,16 @@ package org.junit.gen5.api;
 
 import java.util.function.Supplier;
 
+import org.junit.gen5.commons.util.StringUtils;
 import org.opentestalliance.TestAbortedException;
 
 /**
+ * Collection of utility methods for aborting test execution based on failed
+ * assumptions.
+ *
  * @author Sam Brannen
  * @since 5.0
+ * @see TestAbortedException
  */
 public final class Assumptions {
 
@@ -26,37 +31,37 @@ public final class Assumptions {
 
 	public static void assumeTrue(boolean condition) {
 		if (!condition) {
-			throw new TestAbortedException("Assumption failed: condition is not true");
+			throwTestAbortedException("condition is not true");
 		}
 	}
 
 	public static void assumeTrue(boolean condition, String message) {
 		if (!condition) {
-			throw new TestAbortedException("Assumption failed: " + message);
+			throwTestAbortedException(message);
 		}
 	}
 
 	public static void assumeTrue(boolean condition, Supplier<String> messageSupplier) {
 		if (!condition) {
-			throw new TestAbortedException(messageSupplier.get());
+			throwTestAbortedException(messageSupplier.get());
 		}
 	}
 
 	public static void assumeFalse(boolean condition) {
 		if (condition) {
-			throw new TestAbortedException("Assumption failed: condition is not false");
+			throwTestAbortedException("condition is not false");
 		}
 	}
 
 	public static void assumeFalse(boolean condition, String message) {
 		if (condition) {
-			throw new TestAbortedException(message);
+			throwTestAbortedException(message);
 		}
 	}
 
 	public static void assumeFalse(boolean condition, Supplier<String> messageSupplier) {
 		if (condition) {
-			throw new TestAbortedException("Assumption failed: " + messageSupplier.get());
+			throwTestAbortedException(messageSupplier.get());
 		}
 	}
 
@@ -65,15 +70,19 @@ public final class Assumptions {
 			try {
 				executable.execute();
 			}
-			catch (AssertionError | RuntimeException e) {
+			catch (Error | RuntimeException ex) {
 				// rethrow
-				throw e;
+				throw ex;
 			}
-			catch (Throwable e) {
-				// TODO Don't wrap Throwables such as OutOfMemoryError, etc.
-				throw new RuntimeException("Wrapped exception thrown from Executable", e);
+			catch (Throwable ex) {
+				throw new RuntimeException("Wrapped checked exception thrown from Executable", ex);
 			}
 		}
+	}
+
+	private static void throwTestAbortedException(String message) {
+		throw new TestAbortedException(
+			StringUtils.isNotBlank(message) ? ("Assumption failed: " + message) : "Assumption failed");
 	}
 
 }
