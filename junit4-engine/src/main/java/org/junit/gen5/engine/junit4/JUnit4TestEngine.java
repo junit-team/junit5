@@ -66,10 +66,10 @@ public class JUnit4TestEngine implements TestEngine {
 	}
 
 	@Override
-	public void execute(ExecutionRequest context) {
+	public void execute(ExecutionRequest request) {
 
 		// TODO Use capabilities of engine node to build up tree or to visit nodes
-		List<TestDescriptor> originalTestDescriptors = new ArrayList<>(context.getEngineDescriptor().allChildren());
+		List<TestDescriptor> originalTestDescriptors = new ArrayList<>(request.getEngineDescriptor().allChildren());
 
 		//@formatter:off
 		Map<RunnerTestDescriptor, List<DescriptionTestDescriptor>> groupedByRunner = originalTestDescriptors.stream()
@@ -82,15 +82,15 @@ public class JUnit4TestEngine implements TestEngine {
 			RunnerTestDescriptor runnerTestDescriptor = entry.getKey();
 			List<DescriptionTestDescriptor> testDescriptors = entry.getValue();
 			try {
-				executeSingleRunnerSafely(context, runnerTestDescriptor, testDescriptors);
+				executeSingleRunnerSafely(request, runnerTestDescriptor, testDescriptors);
 			}
 			catch (Exception e) {
-				context.getTestExecutionListener().testFailed(runnerTestDescriptor, e);
+				request.getTestExecutionListener().testFailed(runnerTestDescriptor, e);
 			}
 		}
 	}
 
-	private void executeSingleRunnerSafely(ExecutionRequest context, RunnerTestDescriptor runnerTestDescriptor,
+	private void executeSingleRunnerSafely(ExecutionRequest request, RunnerTestDescriptor runnerTestDescriptor,
 			List<DescriptionTestDescriptor> testDescriptors) throws NoTestsRemainException {
 		Runner runner = runnerTestDescriptor.getRunner();
 
@@ -103,7 +103,7 @@ public class JUnit4TestEngine implements TestEngine {
 		filter.apply(runner);
 
 		RunNotifier notifier = new RunNotifier();
-		notifier.addListener(new RunListenerAdapter(description2descriptor, context.getTestExecutionListener()));
+		notifier.addListener(new RunListenerAdapter(description2descriptor, request.getTestExecutionListener()));
 
 		runner.run(notifier);
 	}

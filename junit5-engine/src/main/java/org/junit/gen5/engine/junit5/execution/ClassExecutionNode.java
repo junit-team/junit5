@@ -103,7 +103,7 @@ class ClassExecutionNode extends TestExecutionNode {
 		}
 	}
 
-	private void executeAfterAllMethods(ExecutionRequest context, Class<?> testClass, Object testInstance) {
+	private void executeAfterAllMethods(ExecutionRequest request, Class<?> testClass, Object testInstance) {
 		Class<AfterAll> annotationType = AfterAll.class;
 		Exception exceptionDuringAfterAll = null;
 
@@ -123,7 +123,7 @@ class ClassExecutionNode extends TestExecutionNode {
 		}
 
 		if (exceptionDuringAfterAll != null) {
-			context.getTestExecutionListener().testFailed(getTestDescriptor(), exceptionDuringAfterAll);
+			request.getTestExecutionListener().testFailed(getTestDescriptor(), exceptionDuringAfterAll);
 		}
 	}
 
