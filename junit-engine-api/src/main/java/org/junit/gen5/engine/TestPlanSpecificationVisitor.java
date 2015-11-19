@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 public interface TestPlanSpecificationVisitor {
@@ -26,7 +27,7 @@ public interface TestPlanSpecificationVisitor {
 	default void visitMethodSpecification(Class<?> testClass, Method testMethod) {
 	}
 
-	default void visitAllTestsSpecification() {
+	default void visitAllTestsSpecification(File rootDirectory) {
 	}
 
 }

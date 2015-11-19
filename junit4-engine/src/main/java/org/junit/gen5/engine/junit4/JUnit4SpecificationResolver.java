@@ -10,6 +10,8 @@
 
 package org.junit.gen5.engine.junit4;
 
+import java.io.File;
+
 import lombok.Data;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
@@ -57,8 +59,8 @@ class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
 	}
 
 	@Override
-	public void visitAllTestsSpecification() {
-		ReflectionUtils.findAllClassesInClassFiles(isJUnit4TestClassWithTests).stream().forEach(
+	public void visitAllTestsSpecification(File rootDirectory) {
+		ReflectionUtils.findAllClassesInClasspathRoot(rootDirectory, isJUnit4TestClassWithTests).stream().forEach(
 			testClass -> visitClassSpecification(testClass));
 	}
 

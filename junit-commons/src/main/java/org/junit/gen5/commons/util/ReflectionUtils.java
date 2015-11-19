@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -221,28 +222,15 @@ public final class ReflectionUtils {
 			packageName);
 	}
 
-	public static List<Class<?>> findAllClassesInClassFiles(Predicate<Class<?>> classTester) {
-		ClasspathScanner scanner = new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
-			ReflectionUtils::loadClass);
-		List<Class<?>> collectedClasses = new ArrayList<>();
-		// @formatter:off
-		getAllClasspathRootDirectories().stream()
-				.filter(File::exists)
-				.forEach(root -> collectedClasses.addAll(scanner.scanForClassesInClasspathRoot(root, classTester)));
-		// @formatter:on
-		return collectedClasses;
-	}
-
-	private static List<File> getAllClasspathRootDirectories() {
+	public static Set<File> getAllClasspathRootDirectories() {
 		//TODO This is quite a hack, since sometimes the classpath is quite different
-		//A real solution would require the build tools / IDEs to hand in all root directories
 		String fullClassPath = System.getProperty("java.class.path");
 		final String separator = System.getProperty("path.separator");
 		// @formatter:off
 		return Arrays.stream(fullClassPath.split(separator))
 				.filter(part -> !part.endsWith(".jar"))
 				.map(dirPath -> new File(dirPath))
-				.collect(Collectors.toList());
+				.collect(Collectors.toSet());
 		// @formatter:on
 	}
 

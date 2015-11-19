@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
@@ -66,8 +67,8 @@ public class SpecificationResolver {
 			}
 
 			@Override
-			public void visitAllTestsSpecification() {
-				ReflectionUtils.findAllClassesInClassFiles(isTestClassWithTests).stream().forEach(
+			public void visitAllTestsSpecification(File rootDirectory) {
+				ReflectionUtils.findAllClassesInClasspathRoot(rootDirectory, isTestClassWithTests).stream().forEach(
 					testClass -> visitClassSpecification(testClass));
 			}
 		});

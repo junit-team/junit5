@@ -13,6 +13,7 @@ package org.junit.gen5.engine;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +22,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.gen5.commons.util.Preconditions;
@@ -66,8 +69,13 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 			String.format("'%s' specifies neither a class, nor a method, nor a package.", anyName));
 	}
 
-	public static TestPlanSpecificationElement allTests() {
-		return new AllTestsSpecification();
+	public static List<TestPlanSpecificationElement> allTests(Set<File> rootDirectories) {
+		// @formatter:off
+		return rootDirectories.stream()
+				.filter(File::exists)
+				.map(root -> new AllTestsSpecification(root))
+				.collect(Collectors.toList());
+		// @formatter:on
 	}
 
 	public static List<TestPlanSpecificationElement> forNames(Collection<String> classNames) {

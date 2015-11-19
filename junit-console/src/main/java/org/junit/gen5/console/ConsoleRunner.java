@@ -12,7 +12,9 @@ package org.junit.gen5.console;
 
 import static io.airlift.airline.SingleCommand.singleCommand;
 
+import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -23,6 +25,7 @@ import io.airlift.airline.Option;
 import io.airlift.airline.model.CommandMetadata;
 
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.launcher.Launcher;
@@ -94,7 +97,8 @@ public class ConsoleRunner {
 
 		TestPlanSpecification testPlanSpecification = null;
 		if (runAllTests) {
-			testPlanSpecification = TestPlanSpecification.build(TestPlanSpecification.allTests());
+			Set<File> rootDirectories = ReflectionUtils.getAllClasspathRootDirectories();
+			testPlanSpecification = TestPlanSpecification.build(TestPlanSpecification.allTests(rootDirectories));
 		}
 		else {
 			testPlanSpecification = TestPlanSpecification.build(testPlanSpecificationElementsFromArguments());

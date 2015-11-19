@@ -10,16 +10,17 @@
 
 package org.junit.gen5.engine;
 
+import java.io.File;
+
 import lombok.Value;
 
 @Value
 public class AllTestsSpecification implements TestPlanSpecificationElement {
 
-	//TODO Should get list of classpath roots from build tools or IDEs
-	//private Set<File> classpathRoots;
+	private File classpathRoot;
 
 	@Override
 	public void accept(TestPlanSpecificationVisitor visitor) {
-		visitor.visitAllTestsSpecification();
+		visitor.visitAllTestsSpecification(classpathRoot);
 	}
 }
