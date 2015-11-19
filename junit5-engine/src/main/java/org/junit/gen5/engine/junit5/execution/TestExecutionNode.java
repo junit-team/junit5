@@ -65,7 +65,7 @@ abstract class TestExecutionNode {
 	}
 
 	protected String buildTestSkippedMessage(Result result, TestExecutionContext context) {
-		return String.format("Skipping [%s]; reason: %s", context.getDisplayName(),
+		return String.format("Skipped [%s]; reason: %s", context.getDisplayName(),
 			result.getReason().orElse("unknown"));
 	}
 

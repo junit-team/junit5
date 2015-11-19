@@ -86,7 +86,7 @@ class MethodTestExecutionNode extends TestExecutionNode {
 
 	@Override
 	protected String buildTestSkippedMessage(Result result, TestExecutionContext context) {
-		return String.format("Skipping test method [%s]; reason: %s", context.getTestMethod().get().toGenericString(),
+		return String.format("Skipped test method [%s]; reason: %s", context.getTestMethod().get().toGenericString(),
 			result.getReason().orElse("unknown"));
 	}
 
