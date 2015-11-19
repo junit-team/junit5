@@ -198,7 +198,7 @@ class MyTest {
 
 ## Disabling Tests
 
-Here's a disabled test case:
+Here´s a disabled test case:
 
 ```java
 import org.junit.gen5.api.*;
@@ -212,7 +212,7 @@ class MyTest {
 }
 ```
 
-And here's a test case with a disabled test method:
+And here´s a test case with a disabled test method:
 
 ```java
 import org.junit.gen5.api.*;
@@ -252,10 +252,10 @@ class FastModelTests {
 
 ----
 
-## Test Contexts
+## Nested Tests
 
-Test contexts give the test writer more capabilities to express the relationship
-among several group of tests. Here's an example:
+Nested tests give the test writer more capabilities to express the relationship
+among several group of tests. Here´s a somewhat contrived example:
 
 ```java
 import org.junit.gen5.api.*;
@@ -272,7 +272,7 @@ class MyObjectTest {
   @Test
   void testEmptyObject() {}
 
-  @Context
+  @Nested
   class WithChildren() {
 
     @Before
@@ -289,9 +289,11 @@ class MyObjectTest {
 }
 ```
 
-Notice that _only non-static inner classes_ can serve as contexts.
-Contexts can be arbitrarily nested and can be considered to be full members of
-the test class family.
+Notice that _only non-static inner classes_ can serve as nested tests.
+Nesting can be arbitrarily deep and those inner classes can be considered as
+full members of the test class family.
+
+For a more meaningful example have a look at [TestingAStack](https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/TestingAStack.java)
 
 ----
 
@@ -336,7 +338,7 @@ All other parameter resolvers must be explicitly enabled by registering a [test 
 
   import static org.mockito.Mockito.when;
   import com.example.mockito.MockitoExtension;
-  
+
   @ExtendWith(MockitoExtension.class)
   class MyMockitoTest {
 
