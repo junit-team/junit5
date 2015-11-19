@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
 /**
  * {@code @Tags} is a container for one or more {@code @Tag} declarations.
  *
- * <p>Note, however, that use of the {@code Tags} container is completely
+ * <p>Note, however, that use of the {@code @Tags} container is completely
  * optional since {@code @Tag} is a {@linkplain java.lang.annotation.Repeatable
  * repeatable} annotation.
  *

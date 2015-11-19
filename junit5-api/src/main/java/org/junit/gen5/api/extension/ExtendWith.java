@@ -20,13 +20,17 @@ import java.lang.annotation.Target;
 
 /**
  * {@code @ExtendWith} is a {@linkplain Repeatable repeatable} annotation
- * that is used to register test extensions for the annotated test class
- * or test method.
+ * that is used to register {@linkplain TestExtension test extensions} for
+ * the annotated test class or test method.
  *
- * <p>See concrete implementations of {@link TestExtension} for details.
+ * <h3>Supported Extension APIs</h3>
+ * <ul>
+ * <li>{@link MethodParameterResolver}</li>
+ * </ul>
  *
  * @author Sam Brannen
  * @since 5.0
+ * @see TestExtension
  * @see MethodParameterResolver
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
