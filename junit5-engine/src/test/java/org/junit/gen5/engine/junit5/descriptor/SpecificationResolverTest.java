@@ -273,6 +273,8 @@ public class SpecificationResolverTest {
 
 		resolver.resolveElement(specification);
 
+		engineDescriptor.allChildren().stream().forEach(d -> System.out.println(d));
+
 		List<String> uniqueIds = engineDescriptor.allChildren().stream().map(d -> d.getUniqueId()).collect(
 			Collectors.toList());
 		assertEquals(6, uniqueIds.size());

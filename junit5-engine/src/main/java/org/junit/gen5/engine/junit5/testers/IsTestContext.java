@@ -11,8 +11,7 @@
 package org.junit.gen5.engine.junit5.testers;
 
 import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
-import static org.junit.gen5.commons.util.ReflectionUtils.isPrivate;
-import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.util.function.Predicate;
 
@@ -26,8 +25,14 @@ public class IsTestContext implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> contextClassCandidate) {
-		return (contextClassCandidate.isMemberClass() && !isPrivate(contextClassCandidate)
-				&& !isStatic(contextClassCandidate) && isAnnotated(contextClassCandidate, Context.class));
+		//please do not collapse into single return
+		if (isStatic(contextClassCandidate))
+			return false;
+		if (isPrivate(contextClassCandidate))
+			return false;
+		if (!contextClassCandidate.isMemberClass())
+			return false;
+		return isAnnotated(contextClassCandidate, Context.class);
 	}
 
 }
