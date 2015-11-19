@@ -11,7 +11,13 @@
 package org.junit.gen5.api.extension;
 
 /**
+ * Thrown if an error is encountered in the configuration or execution of a
+ * {@link MethodParameterResolver}.
+ *
+ * @author Matthias Merdes
+ * @author Sam Brannen
  * @since 5.0
+ * @see MethodParameterResolver
  */
 public class ParameterResolutionException extends RuntimeException {
 
@@ -23,10 +29,6 @@ public class ParameterResolutionException extends RuntimeException {
 
 	public ParameterResolutionException(String message, Throwable cause) {
 		super(message, cause);
-	}
-
-	public ParameterResolutionException(Throwable cause) {
-		super(cause);
 	}
 
 }
