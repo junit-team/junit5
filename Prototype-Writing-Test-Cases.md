@@ -23,7 +23,7 @@ All core annotations are located in the [`org.junit.gen5.api`] package in the `j
 
 | Annotation | Description |
 |------------|-------------|
-| **`@Test`** | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test decorators in JUnit 5 operate based on their own dedicated annotations. |
+| **`@Test`** | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit 5 operate based on their own dedicated annotations. |
 | **`@TestInstance`** | Used to configure the lifecycle of a test instance. By default a test instance will be created for each test method within a class. Annotate your test class with `@TestInstance(PER_CLASS)` to override the default behavior and have the test instance retained across test methods. |
 | **`@Name`** | Declares a custom display name for the test class or test method |
 | **`@TestName`** | Allows the display name of the current test to be supplied as a method parameter to `@Test`, `@Before`, and `@After` methods; analogous to the JUnit 4's `TestName` rule |
@@ -35,7 +35,7 @@ All core annotations are located in the [`org.junit.gen5.api`] package in the `j
 | **`@Tag`** and **`@Tags`** | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4 |
 | **`@Conditional`** | Used to declare _conditions_ that will be evaluated to determine if a test is enabled. `@Disabled` is a built-in implementation of conditional test execution. |
 | **`@Disabled`** | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore` |
-| **`@TestDecorators`** | Used to register custom extensions and decorators for tests such as `MethodParameterResolver`. See [the page on test decorators](Prototype-Test-Decorators) |
+| **`@ExtendWith`** | Used to register custom extensions for tests such as `MethodParameterResolver`. See [the page on test extensions](Prototype-Test-Decorators) |
 
 ### Meta-Annotations and Composed Annotations
 
@@ -325,19 +325,19 @@ There are a few built-in resolvers in the prototype that need not be explicitly 
   }
   ```
 
-All other parameter resolvers must be explicitly enabled by registering a [test decorator](Prototype-Test-Decorators) via `@TestDecorators`.
+All other parameter resolvers must be explicitly enabled by registering a [test extension](Prototype-Test-Decorators) via `@ExtendWith`.
 
 -  Check out the `methodInjectionTest(...)` test method in [`SampleTestCase`] for an example that uses the built-in `TestNameParameterResolver` as well as two user-provided resolvers, [`CustomTypeParameterResolver`] and [`CustomAnnotationParameterResolver`].
 
--  The [`MockitoDecorator`] is another example of a `MethodParameterResolver`. While not intended to be production-ready, it demonstrates the simplicity and expressiveness of both the extension model and the parameter resolution process. Check out the source code for [`MockitoDecoratorInBaseClassTest`] for an example of injecting Mockito mocks into `@Before` and `@Test` methods:
+-  The [`MockitoExtension`] is another example of a `MethodParameterResolver`. While not intended to be production-ready, it demonstrates the simplicity and expressiveness of both the extension model and the parameter resolution process. Check out the source code for [`MockitoExtensionInBaseClassTest`] for an example of injecting Mockito mocks into `@Before` and `@Test` methods:
 
   ```java
   import org.junit.gen5.api.*;
 
   import static org.mockito.Mockito.when;
-  import com.example.mockito.MockitoDecorator;
+  import com.example.mockito.MockitoExtension;
   
-  @TestDecorators(MockitoDecorator.class)
+  @ExtendWith(MockitoExtension.class)
   class MyMockitoTest {
 
     @Before
@@ -361,8 +361,8 @@ All other parameter resolvers must be explicitly enabled by registering a [test 
 [junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer
 [junit5-samples]: https://github.com/junit-team/junit5-samples
 [`MethodParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java
-[`MockitoDecorator`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/main/java/com/example/mockito/MockitoDecorator.java
-[`MockitoDecoratorInBaseClassTest`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/test/java/com/example/mockito/MockitoDecoratorInBaseClassTest.java
+[`MockitoExtension`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java
+[`MockitoExtensionInBaseClassTest`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/test/java/com/example/mockito/MockitoExtensionInBaseClassTest.java
 [`org.junit.gen5.api`]: https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api
 [`org.junit.gen5.Assertions`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java
 [`org.junit.gen5.Assumptions`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Assumptions.java
