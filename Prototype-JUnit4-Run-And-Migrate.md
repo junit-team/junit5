@@ -33,7 +33,7 @@ JUnit 4 tests to JUnit 5.
 - `@BeforeClass` and `@AfterClass` no longer exist; use `@BeforeAll` and `@AfterAll` instead.
 - `@Ignore` no longer exists: use `@Disabled` instead.
 - `@Category` no longer exists; use `@Tag` instead.
-- `@RunWith` no longer exists.
-- `@Rule` no longer exists.
+- `@RunWith` no longer exists; superseded by `@ExtendWith`.
+- `@Rule` and `@ClassRule` no longer exist; superseded by `@ExtendWith`.
 
 [junit5-samples]: https://github.com/junit-team/junit5-samples
