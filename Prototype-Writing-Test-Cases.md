@@ -10,7 +10,7 @@
 - [Assumptions](#assumptions)
 - [Disabling Tests](#disabling-tests)
 - [Tagging and Filtering](#tagging-and-filtering)
-- [Nesting Tests](#nested-tests)
+- [Nested Tests](#nested-tests)
 - [Method Parameters and Dependency Injection](#method-parameters-and-dependency-injection)
 
 ----
@@ -293,7 +293,7 @@ Notice that _only non-static inner classes_ can serve as nested tests.
 Nesting can be arbitrarily deep and those inner classes can be considered as
 full members of the test class family.
 
-For a more meaningful example have a look at [TestingAStack](https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/TestingAStack.java)
+For a more meaningful example have a look at [TestingAStack](https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/TestingAStack.java).
 
 ----
 
