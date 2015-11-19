@@ -129,7 +129,7 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase 
 		void after() {
 			countAfterInvoked++;
 			if (this.throwExceptionInAfterMethod) {
-				throw new RuntimeException("Exception thrown from @After method");
+				throw new RuntimeException("Exception thrown from @AfterEach method");
 			}
 		}
 
