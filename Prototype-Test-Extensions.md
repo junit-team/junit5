@@ -1,16 +1,29 @@
-# Writing Extensions for JUnit 5
+# Writing Test Extensions for JUnit 5
 
-## Test Decorators
+In contrast to the competing `Runner`, `@Rule`, and `@ClassRule` extension points in JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the `TestExtension` API. Note, however, that `TestExtension` itself is just a marker interface.
 
-_TODO: provide an introductory discussion of test descriptors._
+Developers can register one or more extensions by annotating a test class or test method with `@ExtendWith(...)`, supplying class references for the extensions to register. For example, to register a custom `MockitoExtension`, you would annotate your test class as follows.
+
+```java
+import com.example.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class MockTests {
+  // ...
+}
+```
+
+Registered extensions are inherited within test class hierarchies.
 
 ## Parameter Resolution
 
-If a `@Test`, `@Before`, or `@After` method accepts a parameter, the parameter must be _resolved_ at runtime by a [`MethodParameterResolver`]. A `MethodParameterResolver` can either be built-in or registered by the user. Generally speaking, parameters may be resolved by *type* or by *annotation*. For concrete examples, consult the source code for [`CustomTypeParameterResolver`] and [`CustomAnnotationParameterResolver`], respectively.
+`MethodParameterResolver` is a `TestExtension` strategy for dynamically resolving method parameters at runtime.
+
+If a `@Test`, `@Before`, or `@After` method accepts a parameter, the parameter must be _resolved_ at runtime by a [`MethodParameterResolver`]. A `MethodParameterResolver` can either be built-in or registered by the user via `@ExtendWith`. Generally speaking, parameters may be resolved by *type* or by *annotation*. For concrete examples, consult the source code for [`CustomTypeParameterResolver`] and [`CustomAnnotationParameterResolver`], respectively.
 
 ## Additional Planned Extension Points
 
-_TODO: discuss additional planned extension points._
+...
 
 [CONTRIBUTING]: https://github.com/junit-team/junit-lambda/blob/master/CONTRIBUTING.md
 [`CustomAnnotationParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java
