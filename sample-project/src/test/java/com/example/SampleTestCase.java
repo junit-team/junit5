@@ -20,8 +20,8 @@ import static org.junit.gen5.api.Assumptions.assumeTrue;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.gen5.api.After;
-import org.junit.gen5.api.Before;
+import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
@@ -41,12 +41,12 @@ class SampleTestCase {
 
 	boolean throwExceptionInAfterMethod = false;
 
-	@Before
+	@BeforeEach
 	static void staticBefore() {
 		staticBeforeInvoked = true;
 	}
 
-	@Before
+	@BeforeEach
 	void before() {
 		this.beforeInvoked = true;
 		// Reset state, since the test instance is retained across all test methods;
@@ -54,17 +54,17 @@ class SampleTestCase {
 		this.throwExceptionInAfterMethod = false;
 	}
 
-	@After
+	@AfterEach
 	void after() {
 		if (this.throwExceptionInAfterMethod) {
-			throw new RuntimeException("Exception thrown from @After method");
+			throw new RuntimeException("Exception thrown from @AfterEach method");
 		}
 	}
 
 	@Test
 	void methodLevelCallbacks() {
-		assertTrue(this.beforeInvoked, "@Before was not invoked on instance method");
-		assertTrue(staticBeforeInvoked, "@Before was not invoked on static method");
+		assertTrue(this.beforeInvoked, "@BeforeEach was not invoked on instance method");
+		assertTrue(staticBeforeInvoked, "@BeforeEach was not invoked on static method");
 		this.throwExceptionInAfterMethod = true;
 	}
 

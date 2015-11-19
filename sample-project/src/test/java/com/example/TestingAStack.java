@@ -14,7 +14,7 @@ import java.util.EmptyStackException;
 import java.util.Stack;
 
 import org.junit.gen5.api.Assertions;
-import org.junit.gen5.api.Before;
+import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
@@ -25,22 +25,22 @@ import org.junit.runner.RunWith;
 @Name("A stack")
 public class TestingAStack {
 
-	Stack stack;
+	Stack<Object> stack;
 	boolean isRun = false;
 
 	@Test
 	@Name("is instantiated with new Stack()")
 	void isInstantiatedWithNew() {
-		new Stack();
+		new Stack<Object>();
 	}
 
 	@Context
 	@Name("when new")
 	class WhenNew {
 
-		@Before
+		@BeforeEach
 		void init() {
-			stack = new Stack();
+			stack = new Stack<Object>();
 		}
 
 		@Test
@@ -67,7 +67,7 @@ public class TestingAStack {
 
 			String anElement = "an element";
 
-			@Before
+			@BeforeEach
 			void init() {
 				stack.push(anElement);
 			}

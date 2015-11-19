@@ -15,8 +15,8 @@ import static org.junit.gen5.engine.TestPlanSpecification.build;
 import static org.junit.gen5.engine.TestPlanSpecification.forClass;
 
 import org.junit.Assert;
-import org.junit.gen5.api.After;
-import org.junit.gen5.api.Before;
+import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -55,12 +55,12 @@ public class NestedContextTests extends AbstractJUnit5TestEngineTestCase {
 
 		static int countAfterInvoked = 0;
 
-		@Before
+		@BeforeEach
 		void init() {
 			beforeInvoked = true;
 		}
 
-		@After
+		@AfterEach
 		void after() {
 			countAfterInvoked++;
 		}
@@ -72,15 +72,15 @@ public class NestedContextTests extends AbstractJUnit5TestEngineTestCase {
 		@Context
 		class InnerTestCase {
 
-			@Before
+			@BeforeEach
 			void innerInit() {
 				innerBeforeInvoked = true;
 			}
 
 			@Test
 			void innerTest() {
-				assertTrue(beforeInvoked, "before of parent context was not invoked");
-				assertTrue(innerBeforeInvoked, "before of nested test was not invoked");
+				assertTrue(beforeInvoked, "beforeEach of parent context was not invoked");
+				assertTrue(innerBeforeInvoked, "beforeEach of nested test was not invoked");
 			}
 
 			@Context
@@ -88,7 +88,7 @@ public class NestedContextTests extends AbstractJUnit5TestEngineTestCase {
 
 				@Test
 				void innerInnerTest() {
-					assertTrue(beforeInvoked, "before of parent context was not invoked");
+					assertTrue(beforeInvoked, "beforeEach of parent context was not invoked");
 				}
 			}
 		}

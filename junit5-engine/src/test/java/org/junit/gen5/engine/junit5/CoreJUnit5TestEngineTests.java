@@ -21,8 +21,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import org.junit.Assert;
-import org.junit.gen5.api.After;
-import org.junit.gen5.api.Before;
+import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestPlanSpecification;
 
@@ -112,12 +112,12 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase 
 
 		static int countAfterInvoked = 0;
 
-		@Before
+		@BeforeEach
 		static void staticBefore() {
 			staticBeforeInvoked = true;
 		}
 
-		@Before
+		@BeforeEach
 		void before() {
 			this.beforeInvoked = true;
 			// Reset state, since the test instance is retained across all test methods;
@@ -125,7 +125,7 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase 
 			this.throwExceptionInAfterMethod = false;
 		}
 
-		@After
+		@AfterEach
 		void after() {
 			countAfterInvoked++;
 			if (this.throwExceptionInAfterMethod) {
@@ -135,8 +135,8 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase 
 
 		@Test
 		void methodLevelCallbacks() {
-			assertTrue(this.beforeInvoked, "@Before was not invoked on instance method");
-			assertTrue(staticBeforeInvoked, "@Before was not invoked on static method");
+			assertTrue(this.beforeInvoked, "@BeforeEach was not invoked on instance method");
+			assertTrue(staticBeforeInvoked, "@BeforeEach was not invoked on static method");
 		}
 
 		@Test

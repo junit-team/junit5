@@ -20,10 +20,10 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.gen5.api.After;
 import org.junit.gen5.api.AfterAll;
-import org.junit.gen5.api.Before;
+import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeAll;
+import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Condition.Result;
 import org.junit.gen5.api.TestInstance;
 import org.junit.gen5.api.TestInstance.Lifecycle;
@@ -161,7 +161,8 @@ class ClassTestExecutionNode extends TestExecutionNode {
 	}
 
 	protected List<Method> getBeforeEachMethods() {
-		return findAnnotatedMethods(getTestDescriptor().getTestClass(), Before.class, MethodSortOrder.HierarchyDown);
+		return findAnnotatedMethods(getTestDescriptor().getTestClass(), BeforeEach.class,
+			MethodSortOrder.HierarchyDown);
 	}
 
 	@Override
@@ -178,7 +179,7 @@ class ClassTestExecutionNode extends TestExecutionNode {
 	}
 
 	protected List<Method> getAfterEachMethods() {
-		return findAnnotatedMethods(getTestDescriptor().getTestClass(), After.class, MethodSortOrder.HierarchyUp);
+		return findAnnotatedMethods(getTestDescriptor().getTestClass(), AfterEach.class, MethodSortOrder.HierarchyUp);
 	}
 
 }

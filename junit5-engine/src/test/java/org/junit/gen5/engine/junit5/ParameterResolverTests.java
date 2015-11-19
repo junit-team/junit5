@@ -15,8 +15,8 @@ import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.api.Assertions.assertTrue;
 
 import org.junit.Assert;
-import org.junit.gen5.api.After;
-import org.junit.gen5.api.Before;
+import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestName;
@@ -122,7 +122,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 
 	private static class BeforeAndAfterMethodInjectionTestCase {
 
-		@Before
+		@BeforeEach
 		void before(@TestName String name) {
 			assertEquals("custom name", name);
 		}
@@ -132,7 +132,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 		void customNamedTest() {
 		}
 
-		@After
+		@AfterEach
 		void after(@TestName String name) {
 			assertEquals("custom name", name);
 		}

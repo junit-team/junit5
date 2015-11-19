@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
  * executed <em>before</em> <strong>all</strong> tests in the current test
  * class or test class hierarchy.
  *
- * <p>In contrast to {@code @Before} methods, {@code @BeforeAll} methods
+ * <p>In contrast to {@code @BeforeEach} methods, {@code @BeforeAll} methods
  * are only executed once for a given test class.
  *
  * <p>{@code @BeforeAll} methods must not be {@code private} but may
@@ -32,8 +32,8 @@ import java.lang.annotation.Target;
  * @author Sam Brannen
  * @since 5.0
  * @see AfterAll
- * @see Before
- * @see After
+ * @see BeforeEach
+ * @see AfterEach
  * @see TestInstance
  * @see Test
  */

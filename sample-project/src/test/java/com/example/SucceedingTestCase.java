@@ -13,10 +13,10 @@ package com.example;
 import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.api.TestInstance.Lifecycle.PER_CLASS;
 
-import org.junit.gen5.api.After;
 import org.junit.gen5.api.AfterAll;
-import org.junit.gen5.api.Before;
+import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeAll;
+import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
@@ -40,14 +40,14 @@ class SucceedingTestCase extends AbstractSuperTest implements InterfaceWithTestC
 		System.out.println(getClass().getName() + " after all called");
 	}
 
-	@Before
+	@BeforeEach
 	void before() {
-		System.out.println(getClass().getName() + " before called");
+		System.out.println(getClass().getName() + " before each called");
 	}
 
-	@After
+	@AfterEach
 	void after() {
-		System.out.println(getClass().getName() + " after called");
+		System.out.println(getClass().getName() + " after each called");
 	}
 
 	@Disabled
@@ -83,7 +83,7 @@ abstract class AbstractSuperTest {
 		System.out.println(getClass().getName() + " before all from super class called");
 	}
 
-	@Before
+	@BeforeEach
 	void beforeFromSuperclass() {
 		System.out.println(getClass().getName() + " before from super class called");
 	}
@@ -99,7 +99,7 @@ abstract class AbstractSuperTest {
 		System.out.println("test2 from superclass should never be called because it's shadowed");
 	}
 
-	@After
+	@AfterEach
 	void afterFromSuperclass() {
 		System.out.println(getClass().getName() + " after from super class called");
 	}
@@ -112,9 +112,9 @@ abstract class AbstractSuperTest {
 
 interface InterfaceWithTestCases extends SuperInterface {
 
-	@Before
+	@BeforeEach
 	default void beforeFromInterface() {
-		System.out.println(getClass().getName() + " before from interface called");
+		System.out.println(getClass().getName() + " beforeEach from interface called");
 	}
 
 	@Test
@@ -122,9 +122,9 @@ interface InterfaceWithTestCases extends SuperInterface {
 		System.out.println("test from interface");
 	}
 
-	@After
+	@AfterEach
 	default void afterFromInterface() {
-		System.out.println(getClass().getName() + " after from interface called");
+		System.out.println(getClass().getName() + " afterEach from interface called");
 	}
 
 }

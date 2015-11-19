@@ -17,20 +17,20 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@code @Before} is used to signal that the annotated method should be
+ * {@code @BeforeEach} is used to signal that the annotated method should be
  * executed <em>before</em> <strong>each</strong> {@code @Test} method in
  * the current test class or test class hierarchy.
  *
- * <p>{@code @Before} methods must not be {@code private} or {@code static}.
+ * <p>{@code @BeforeEach} methods must not be {@code private} or {@code static}.
  *
- * <p>{@code @Before} methods may optionally declare parameters to be
+ * <p>{@code @BeforeEach} methods may optionally declare parameters to be
  * resolved by {@link org.junit.gen5.api.extension.MethodParameterResolver
  * MethodParameterResolvers}.
  *
  * @author Matthias Merdes
  * @author Sam Brannen
  * @since 5.0
- * @see After
+ * @see AfterEach
  * @see BeforeAll
  * @see AfterAll
  * @see Test
@@ -38,5 +38,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Before {
+public @interface BeforeEach {
 }

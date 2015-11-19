@@ -13,7 +13,7 @@ package com.example.mockito;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-import org.junit.gen5.api.Before;
+import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestName;
 import org.junit.gen5.api.extension.ExtendWith;
@@ -30,7 +30,7 @@ import org.junit.runner.RunWith;
 //public to be picked up by IDE JUnit4 test runner
 public class MockitoExtensionInBaseClassTest {
 
-	@Before
+	@BeforeEach
 	void initialize(@InjectMock MyType myType, @TestName String testName) {
 		when(myType.getName()).thenReturn(testName);
 	}

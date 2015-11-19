@@ -12,10 +12,10 @@ package com.example;
 
 import static org.junit.gen5.api.TestInstance.Lifecycle.PER_CLASS;
 
-import org.junit.gen5.api.After;
 import org.junit.gen5.api.AfterAll;
-import org.junit.gen5.api.Before;
+import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeAll;
+import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
@@ -66,16 +66,16 @@ public class HierarchyTestCase {
 		System.out.println(getClass().getName() + " afterAll called");
 	}
 
-	@Before
+	@BeforeEach
 	void topLevelBefore() {
 		topLevelBeforeInvocationCount++;
-		System.out.println(getClass().getName() + " before called");
+		System.out.println(getClass().getName() + " beforeEach called");
 	}
 
-	@After
+	@AfterEach
 	void topLevelAfter() {
 		topLevelAfterInvocationCount++;
-		System.out.println(getClass().getName() + " after called");
+		System.out.println(getClass().getName() + " afterEach called");
 	}
 
 	@Test
@@ -107,16 +107,16 @@ public class HierarchyTestCase {
 			System.out.println(getClass().getName() + " afterAll called");
 		}
 
-		@Before
+		@BeforeEach
 		void secondLevelBefore() {
 			secondLevelBeforeInvocationCount++;
-			System.out.println(getClass().getName() + " before called");
+			System.out.println(getClass().getName() + " beforeEach called");
 		}
 
-		@After
+		@AfterEach
 		void secondLevelAfter() {
 			secondLevelAfterInvocationCount++;
-			System.out.println(getClass().getName() + " after called");
+			System.out.println(getClass().getName() + " afterEach called");
 		}
 
 		@Test
@@ -148,16 +148,16 @@ public class HierarchyTestCase {
 				System.out.println(getClass().getName() + " afterAll called");
 			}
 
-			@Before
+			@BeforeEach
 			void secondLevelBefore() {
 				thirdLevelBeforeInvocationCount++;
-				System.out.println(getClass().getName() + " before called");
+				System.out.println(getClass().getName() + " beforeEach called");
 			}
 
-			@After
+			@AfterEach
 			void secondLevelAfter() {
 				thirdLevelAfterInvocationCount++;
-				System.out.println(getClass().getName() + " after called");
+				System.out.println(getClass().getName() + " afterEach called");
 			}
 
 			@Test

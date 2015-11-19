@@ -14,8 +14,8 @@ import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
-import org.junit.gen5.api.After;
-import org.junit.gen5.api.Before;
+import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtendWith;
@@ -34,7 +34,7 @@ public class MockitoExtensionWithNestedContextsTest {
 
 	boolean baseClassTestRun = false;
 
-	@Before
+	@BeforeEach
 	void initializeBaseClass(@InjectMock MyType myType) {
 		when(myType.getName()).thenReturn("base class");
 	}
@@ -48,7 +48,7 @@ public class MockitoExtensionWithNestedContextsTest {
 	@Context
 	class FirstContext {
 
-		@Before
+		@BeforeEach
 		void initializeFirstContext(@InjectMock YourType yourType, @InjectMock MyType myType) {
 			when(yourType.getName()).thenReturn("first context");
 			assertEquals("base class", myType.getName());
@@ -62,7 +62,7 @@ public class MockitoExtensionWithNestedContextsTest {
 		@Context
 		class SecondContext {
 
-			@Before
+			@BeforeEach
 			void initializeSecondContext(@InjectMock YourType yourType, @InjectMock MyType myType,
 					@InjectMock TheirType theirType) {
 				when(theirType.getName()).thenReturn("second context");
@@ -77,7 +77,7 @@ public class MockitoExtensionWithNestedContextsTest {
 
 		}
 
-		@After
+		@AfterEach
 		void afterFirstContext(@InjectMock YourType yourType, @InjectMock MyType myType,
 				@InjectMock TheirType theirType) {
 			assertEquals("base class", myType.getName());

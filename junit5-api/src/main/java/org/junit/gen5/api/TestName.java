@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 
 /**
  * {@code @TestName} is used to inject the display name of the current test
- * into to {@code @Test}, {@code @Before}, and {@code @After} methods.
+ * into to {@code @Test}, {@code @BeforeEach}, and {@code @AfterEach} methods.
  *
  * <p>If a method parameter is of type {@link String} and annotated with
  * {@code @TestName}, JUnit will supply the display name of the current
