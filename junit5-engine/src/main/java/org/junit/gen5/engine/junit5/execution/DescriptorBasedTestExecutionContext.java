@@ -155,7 +155,7 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 
 	@Override
 	public String toString() {
-		return getDisplayName();
+		return "TestExecutionContext for " + getDisplayName();
 	}
 
 }

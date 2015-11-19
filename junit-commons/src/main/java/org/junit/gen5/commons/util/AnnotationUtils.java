@@ -217,8 +217,7 @@ public final class AnnotationUtils {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 
-		return ReflectionUtils.findMethods(clazz, method -> findAnnotation(method, annotationType).isPresent(),
-			sortOrder);
+		return ReflectionUtils.findMethods(clazz, method -> isAnnotated(method, annotationType), sortOrder);
 	}
 
 	public static boolean isInJavaLangAnnotationPackage(Annotation annotation) {
