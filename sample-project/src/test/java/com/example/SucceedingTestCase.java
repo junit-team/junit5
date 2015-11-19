@@ -50,7 +50,7 @@ class SucceedingTestCase extends AbstractSuperTest implements InterfaceWithTestC
 		System.out.println(getClass().getName() + " after each called");
 	}
 
-	@Disabled
+	@Disabled("custom reason for disabling the test")
 	@Test
 	void disabled() {
 		fail("this test should be disabled");
