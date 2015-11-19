@@ -31,7 +31,7 @@ All core annotations are located in the [`org.junit.gen5.api`] package in the `j
 | **`@AfterEach`** | Denotes that the annotated method should be executed _after_ **each** `@Test` method in the current class or class hierarchy |
 | **`@BeforeAll`** | Denotes that the annotated method should be executed _before_ **all** `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@BeforeClass`. Such methods must be `static` unless the test class is annotated with `@TestInstance(PER_CLASS)`. |
 | **`@AfterAll`** | Denotes that the annotated method should be executed _after_ **all** `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@AfterClass`. Such methods must be `static` unless the test class is annotated with `@TestInstance(PER_CLASS)`. |
-| **`@Context`** | Denotes that the annotated class is an inner test class; typically used in conjunction with `@TestInstance(PER_CLASS)`. |
+| **`@Nested`** | Denotes that the annotated class is a nested test class; often - but not necessarily - used in conjunction with `@TestInstance(PER_CLASS)`. |
 | **`@Tag`** and **`@Tags`** | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4 |
 | **`@Conditional`** | Used to declare _conditions_ that will be evaluated to determine if a test is enabled. `@Disabled` is a built-in implementation of conditional test execution. |
 | **`@Disabled`** | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore` |
