@@ -103,8 +103,8 @@ public class SpecificationResolver {
 			}
 
 			@Override
-			public void visitContext(String uniqueId, Class<?> testClass, Class<?> containerClass) {
-				resolveContextTestable(uniqueId, testClass, containerClass, withChildren);
+			public void visitNestedClass(String uniqueId, Class<?> testClass, Class<?> containerClass) {
+				resolveNestedClassTestable(uniqueId, testClass, containerClass, withChildren);
 			}
 		});
 	}
@@ -126,20 +126,20 @@ public class SpecificationResolver {
 		parentDescriptor.addChild(descriptor);
 
 		if (withChildren) {
-			resolveContainedContexts(testClass);
+			resolveContainedNestedClasses(testClass);
 			resolveContainedTestMethods(testClass, descriptor);
 		}
 	}
 
-	private void resolveContextTestable(String uniqueId, Class<?> testClass, Class<?> containerClass,
+	private void resolveNestedClassTestable(String uniqueId, Class<?> testClass, Class<?> containerClass,
 			boolean withChildren) {
 		JUnit5Testable containerTestable = JUnit5Testable.fromClass(containerClass, engineDescriptor.getUniqueId());
 		TestDescriptor parentDescriptor = resolveAndReturnParentTestable(containerTestable);
-		ContextTestDescriptor descriptor = getOrCreateContextDescriptor(testClass, uniqueId);
+		NestedClassTestDescriptor descriptor = getOrCreateNestedClassDescriptor(testClass, uniqueId);
 		parentDescriptor.addChild(descriptor);
 
 		if (withChildren) {
-			resolveContainedContexts(testClass);
+			resolveContainedNestedClasses(testClass);
 			resolveContainedTestMethods(testClass, descriptor);
 		}
 	}
@@ -164,11 +164,11 @@ public class SpecificationResolver {
 		}
 	}
 
-	private void resolveContainedContexts(Class<?> clazz) {
-		List<Class<?>> contextClasses = findInnerClasses(clazz, isNestedTestClass);
-		for (Class<?> contextClass : contextClasses) {
-			JUnit5Testable contextTestable = JUnit5Testable.fromClass(contextClass, engineDescriptor.getUniqueId());
-			resolveTestable(contextTestable);
+	private void resolveContainedNestedClasses(Class<?> clazz) {
+		List<Class<?>> nestedClasses = findInnerClasses(clazz, isNestedTestClass);
+		for (Class<?> nestedClass : nestedClasses) {
+			JUnit5Testable nestedClassTestable = JUnit5Testable.fromClass(nestedClass, engineDescriptor.getUniqueId());
+			resolveTestable(nestedClassTestable);
 		}
 	}
 
@@ -177,9 +177,9 @@ public class SpecificationResolver {
 			() -> new MethodTestDescriptor(uniqueId, method));
 	}
 
-	private ContextTestDescriptor getOrCreateContextDescriptor(Class<?> clazz, String uniqueId) {
-		return (ContextTestDescriptor) descriptorByUniqueId(uniqueId).orElseGet(
-			() -> new ContextTestDescriptor(uniqueId, clazz));
+	private NestedClassTestDescriptor getOrCreateNestedClassDescriptor(Class<?> clazz, String uniqueId) {
+		return (NestedClassTestDescriptor) descriptorByUniqueId(uniqueId).orElseGet(
+			() -> new NestedClassTestDescriptor(uniqueId, clazz));
 	}
 
 	private ClassTestDescriptor getOrCreateClassDescriptor(Class<?> clazz, String uniqueId) {

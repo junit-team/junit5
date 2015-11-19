@@ -44,15 +44,6 @@ class JUnit5TestableFactory {
 		return createTestable(uniqueId, engineId, parts, null);
 	}
 
-	JUnit5Testable fromClassName(String className, String engineId) {
-		Preconditions.notBlank(className, "className must not be null or empty");
-		Class<?> clazz = loadClassByName(className);
-		if (clazz == null) {
-			throw new IllegalArgumentException(String.format("Cannot resolve class name '%s'", className));
-		}
-		return fromClass(clazz, engineId);
-	}
-
 	JUnit5Testable fromClass(Class<?> clazz, String engineId) {
 		Preconditions.notNull(clazz, "clazz must not be null");
 		Preconditions.notBlank(engineId, "Engine ID must not be null or empty");
@@ -61,15 +52,15 @@ class JUnit5TestableFactory {
 			return new JUnit5Class(uniqueId, clazz);
 		}
 		if (isNestedTestClass.test(clazz)) {
-			return createContextTestable(clazz, clazz.getEnclosingClass(), engineId);
+			return createNestedClassTestable(clazz, clazz.getEnclosingClass(), engineId);
 		}
 		throwCannotResolveClassException(clazz);
 		return null; //cannot happen
 	}
 
-	private JUnit5Testable createContextTestable(Class<?> testClass, Class<?> container, String engineId) {
+	private JUnit5Testable createNestedClassTestable(Class<?> testClass, Class<?> container, String engineId) {
 		String uniqueId = fromClass(container, engineId).getUniqueId() + "@" + testClass.getSimpleName();
-		return new JUnit5Context(uniqueId, testClass, container);
+		return new JUnit5NestedClass(uniqueId, testClass, container);
 	}
 
 	JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
@@ -106,7 +97,7 @@ class JUnit5TestableFactory {
 				break;
 			case '@': {
 				Class<?> container = ((JUnit5Class) last).getJavaClass();
-				next = fromClass(findNestedContext(head, container), engineId);
+				next = fromClass(findNestedClass(head, container), engineId);
 				break;
 			}
 			case '#': {
@@ -150,7 +141,7 @@ class JUnit5TestableFactory {
 				methodName, ObjectUtils.nullSafeToString(parameterTypes))));
 	}
 
-	private Class<?> findNestedContext(String nameExtension, Class<?> containerClass) {
+	private Class<?> findNestedClass(String nameExtension, Class<?> containerClass) {
 		return classByName(containerClass.getName() + "$" + nameExtension.substring(1));
 	}
 

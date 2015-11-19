@@ -24,15 +24,15 @@ import org.junit.gen5.api.Nested;
 public class IsNestedTestClass implements Predicate<Class<?>> {
 
 	@Override
-	public boolean test(Class<?> contextClassCandidate) {
+	public boolean test(Class<?> nestedClassCandidate) {
 		//please do not collapse into single return
-		if (isStatic(contextClassCandidate))
+		if (isStatic(nestedClassCandidate))
 			return false;
-		if (isPrivate(contextClassCandidate))
+		if (isPrivate(nestedClassCandidate))
 			return false;
-		if (!contextClassCandidate.isMemberClass())
+		if (!nestedClassCandidate.isMemberClass())
 			return false;
-		return isAnnotated(contextClassCandidate, Nested.class);
+		return isAnnotated(nestedClassCandidate, Nested.class);
 	}
 
 }

@@ -134,7 +134,7 @@ class SampleTestCase {
 
 	@Nested
 	@Name("An inner test context")
-	class AnInnerTestContext {
+	class ANestedTestCase {
 
 		@Test
 		void innerTest() {

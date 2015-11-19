@@ -44,7 +44,7 @@ abstract class JUnit5Testable {
 
 		void visitMethod(String uniqueId, Method method, Class<?> container);
 
-		void visitContext(String uniqueId, Class<?> javaClass, Class<?> containerClass);
+		void visitNestedClass(String uniqueId, Class<?> javaClass, Class<?> containerClass);
 	}
 
 }

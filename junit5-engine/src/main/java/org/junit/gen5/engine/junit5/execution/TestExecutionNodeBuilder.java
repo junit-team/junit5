@@ -14,8 +14,8 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.ContextTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
 
 /**
  * @author Stefan Bechtold
@@ -44,13 +44,13 @@ public class TestExecutionNodeBuilder {
 		Preconditions.notNull(testDescriptor, "testDescriptor must not be null");
 
 		if (testDescriptor.getClass() == MethodTestDescriptor.class) {
-			return new MethodTestExecutionNode((MethodTestDescriptor) testDescriptor);
+			return new MethodExecutionNode((MethodTestDescriptor) testDescriptor);
 		}
 		else if (testDescriptor.getClass() == ClassTestDescriptor.class) {
-			return new ClassTestExecutionNode((ClassTestDescriptor) testDescriptor);
+			return new ClassExecutionNode((ClassTestDescriptor) testDescriptor);
 		}
-		else if (testDescriptor.getClass() == ContextTestDescriptor.class) {
-			return new ContextTestExecutionNode((ContextTestDescriptor) testDescriptor);
+		else if (testDescriptor.getClass() == NestedClassTestDescriptor.class) {
+			return new NestedClassExecutionNode((NestedClassTestDescriptor) testDescriptor);
 		}
 		else if (testDescriptor.getClass() == EngineDescriptor.class) {
 			return new EngineTestExecutionNode((EngineDescriptor) testDescriptor);

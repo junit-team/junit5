@@ -20,15 +20,15 @@ import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 /**
  * @since 5.0
  */
-class ContextTestExecutionNode extends ClassTestExecutionNode {
+class NestedClassExecutionNode extends ClassExecutionNode {
 
-	ContextTestExecutionNode(ClassTestDescriptor testDescriptor) {
+	NestedClassExecutionNode(ClassTestDescriptor testDescriptor) {
 		super(testDescriptor);
 	}
 
 	@Override
 	Object createTestInstance() {
-		Object parentInstance = ((ClassTestExecutionNode) getParent()).createTestInstance();
+		Object parentInstance = ((ClassExecutionNode) getParent()).createTestInstance();
 		return ReflectionUtils.newInstance(getTestDescriptor().getTestClass(), parentInstance);
 	}
 

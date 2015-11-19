@@ -10,18 +10,18 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-class JUnit5Context extends JUnit5Class {
+class JUnit5NestedClass extends JUnit5Class {
 
 	private final Class<?> containerClass;
 
-	JUnit5Context(String uniqueId, Class<?> javaClass, Class<?> containerClass) {
+	JUnit5NestedClass(String uniqueId, Class<?> javaClass, Class<?> containerClass) {
 		super(uniqueId, javaClass);
 		this.containerClass = containerClass;
 	}
 
 	@Override
 	void accept(Visitor visitor) {
-		visitor.visitContext(getUniqueId(), getJavaClass(), this.containerClass);
+		visitor.visitNestedClass(getUniqueId(), getJavaClass(), this.containerClass);
 	}
 
 	Class<?> getContainerClass() {

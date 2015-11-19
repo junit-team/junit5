@@ -39,11 +39,11 @@ import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
  * @author Sam Brannen
  * @since 5.0
  */
-class ClassTestExecutionNode extends TestExecutionNode {
+class ClassExecutionNode extends TestExecutionNode {
 
 	private final ClassTestDescriptor testDescriptor;
 
-	ClassTestExecutionNode(ClassTestDescriptor testDescriptor) {
+	ClassExecutionNode(ClassTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
 	}
 

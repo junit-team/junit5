@@ -26,11 +26,11 @@ import org.opentestalliance.TestSkippedException;
  * @author Stefan Bechtold
  * @since 5.0
  */
-class MethodTestExecutionNode extends TestExecutionNode {
+class MethodExecutionNode extends TestExecutionNode {
 
 	private final MethodTestDescriptor testDescriptor;
 
-	MethodTestExecutionNode(MethodTestDescriptor testDescriptor) {
+	MethodExecutionNode(MethodTestDescriptor testDescriptor) {
 		this.testDescriptor = testDescriptor;
 	}
 
