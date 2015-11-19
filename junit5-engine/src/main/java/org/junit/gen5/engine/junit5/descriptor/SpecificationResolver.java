@@ -173,16 +173,18 @@ public class SpecificationResolver {
 	}
 
 	private MethodTestDescriptor getOrCreateMethodDescriptor(Method method, String uniqueId) {
-		return (MethodTestDescriptor) descriptorByUniqueId(uniqueId).orElse(new MethodTestDescriptor(uniqueId, method));
+		return (MethodTestDescriptor) descriptorByUniqueId(uniqueId).orElseGet(
+			() -> new MethodTestDescriptor(uniqueId, method));
 	}
 
 	private ContextTestDescriptor getOrCreateContextDescriptor(Class<?> clazz, String uniqueId) {
-		return (ContextTestDescriptor) descriptorByUniqueId(uniqueId).orElse(
-			new ContextTestDescriptor(uniqueId, clazz));
+		return (ContextTestDescriptor) descriptorByUniqueId(uniqueId).orElseGet(
+			() -> new ContextTestDescriptor(uniqueId, clazz));
 	}
 
 	private ClassTestDescriptor getOrCreateClassDescriptor(Class<?> clazz, String uniqueId) {
-		return (ClassTestDescriptor) descriptorByUniqueId(uniqueId).orElse(new ClassTestDescriptor(uniqueId, clazz));
+		return (ClassTestDescriptor) descriptorByUniqueId(uniqueId).orElseGet(
+			() -> new ClassTestDescriptor(uniqueId, clazz));
 	}
 
 	private Optional<TestDescriptor> descriptorByUniqueId(String uniqueId) {
