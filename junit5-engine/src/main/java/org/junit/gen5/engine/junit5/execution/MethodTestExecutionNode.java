@@ -51,14 +51,14 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		List<Throwable> exceptionsCollector = new ArrayList<>();
 
 		try {
-			executeBeforeMethods(context);
+			executeBeforeEachMethods(context);
 			invokeTestMethod(context.getTestMethod().get(), context);
 		}
 		catch (Throwable ex) {
 			exceptionsCollector.add(ex);
 		}
 		finally {
-			executeAfterMethods(context, exceptionsCollector);
+			executeAfterEachMethods(context, exceptionsCollector);
 		}
 
 		if (!exceptionsCollector.isEmpty()) {
@@ -95,12 +95,12 @@ class MethodTestExecutionNode extends TestExecutionNode {
 		invokeMethodInContext(method, context, context.getParameterResolvers(), target);
 	}
 
-	private void executeBeforeMethods(TestExecutionContext context) {
+	private void executeBeforeEachMethods(TestExecutionContext context) {
 		Object target = context.getTestInstance().get();
 		getParent().executeBeforeEachTest(context, context.getParent().get(), target);
 	}
 
-	private void executeAfterMethods(TestExecutionContext context, List<Throwable> exceptionsCollector) {
+	private void executeAfterEachMethods(TestExecutionContext context, List<Throwable> exceptionsCollector) {
 		Object target = context.getTestInstance().get();
 		getParent().executeAfterEachTest(context, context.getParent().get(), target, exceptionsCollector);
 	}

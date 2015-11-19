@@ -88,12 +88,11 @@ class ClassTestExecutionNode extends TestExecutionNode {
 
 	private boolean isInstancePerClassMode(Class<?> testClass) {
 		// @formatter:off
-		Lifecycle testInstanceLifecycle = AnnotationUtils.findAnnotation(testClass, TestInstance.class)
+		return AnnotationUtils.findAnnotation(testClass, TestInstance.class)
 				.map(TestInstance::value)
-				.orElse(Lifecycle.PER_METHOD);
+				.map(lifecycle -> (lifecycle == Lifecycle.PER_CLASS))
+				.orElse(false);
 		// @formatter:on
-
-		return (testInstanceLifecycle == Lifecycle.PER_CLASS);
 	}
 
 	private void executeBeforeAllMethods(Class<?> testClass, Object testInstance) throws Exception {
