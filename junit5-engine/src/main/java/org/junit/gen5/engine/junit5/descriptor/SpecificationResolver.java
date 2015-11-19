@@ -63,13 +63,13 @@ public class SpecificationResolver {
 			@Override
 			public void visitPackageSpecification(String packageName) {
 				findAllClassesInPackage(packageName, isTestClassWithTests).stream().forEach(
-					testClass -> visitClassSpecification(testClass));
+					this::visitClassSpecification);
 			}
 
 			@Override
 			public void visitAllTestsSpecification(File rootDirectory) {
 				ReflectionUtils.findAllClassesInClasspathRoot(rootDirectory, isTestClassWithTests).stream().forEach(
-					testClass -> visitClassSpecification(testClass));
+					this::visitClassSpecification);
 			}
 		});
 	}

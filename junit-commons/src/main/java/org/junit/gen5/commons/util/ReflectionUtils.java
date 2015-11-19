@@ -203,7 +203,8 @@ public final class ReflectionUtils {
 	public static Optional<Object> getOuterInstance(Object inner) {
 		// This is risky since it depends on the name of the field which is nowhere guaranteed
 		// but has been stable so far in all JDKs
-		Optional<Object> outerInstance = Arrays.stream(inner.getClass().getDeclaredFields()).filter(
+
+		return Arrays.stream(inner.getClass().getDeclaredFields()).filter(
 			f -> f.getName().startsWith("this$")).findFirst().map(f -> {
 				makeAccessible(f);
 				try {
@@ -213,8 +214,6 @@ public final class ReflectionUtils {
 					return Optional.empty();
 				}
 			});
-
-		return outerInstance;
 	}
 
 	public static boolean isPackage(String packageName) {
@@ -229,7 +228,7 @@ public final class ReflectionUtils {
 		// @formatter:off
 		return Arrays.stream(fullClassPath.split(separator))
 				.filter(part -> !part.endsWith(".jar"))
-				.map(dirPath -> new File(dirPath))
+				.map(File::new)
 				.collect(Collectors.toSet());
 		// @formatter:on
 	}
@@ -319,8 +318,8 @@ public final class ReflectionUtils {
 		List<Method> allInterfaceMethods = new ArrayList<>();
 		for (Class<?> ifc : clazz.getInterfaces()) {
 
-			List<Method> localMethods = Arrays.stream(ifc.getDeclaredMethods()).filter(
-				method -> method.isDefault()).collect(Collectors.toList());
+			List<Method> localMethods = Arrays.stream(ifc.getDeclaredMethods()).filter(Method::isDefault).collect(
+				Collectors.toList());
 
 			// @formatter:off
 			List<Method> subInterfaceMethods = getInterfaceMethods(ifc, sortOrder).stream()

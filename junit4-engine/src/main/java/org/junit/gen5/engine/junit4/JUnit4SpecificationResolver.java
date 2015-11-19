@@ -61,7 +61,7 @@ class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
 	@Override
 	public void visitAllTestsSpecification(File rootDirectory) {
 		ReflectionUtils.findAllClassesInClasspathRoot(rootDirectory, isJUnit4TestClassWithTests).stream().forEach(
-			testClass -> visitClassSpecification(testClass));
+			this::visitClassSpecification);
 	}
 
 	private void addRecursively(JUnit4TestDescriptor parent) {

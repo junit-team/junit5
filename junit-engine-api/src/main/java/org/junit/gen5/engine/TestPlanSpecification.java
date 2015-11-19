@@ -41,7 +41,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 	}
 
 	public static List<TestPlanSpecificationElement> forPackages(Collection<String> packageNames) {
-		return packageNames.stream().map(packageName -> forPackage(packageName)).collect(toList());
+		return packageNames.stream().map(TestPlanSpecification::forPackage).collect(toList());
 	}
 
 	public static TestPlanSpecificationElement forMethod(Class<?> testClass, Method testMethod) {
@@ -73,7 +73,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		// @formatter:off
 		return rootDirectories.stream()
 				.filter(File::exists)
-				.map(root -> new AllTestsSpecification(root))
+				.map(AllTestsSpecification::new)
 				.collect(Collectors.toList());
 		// @formatter:on
 	}
@@ -83,7 +83,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 	}
 
 	private static List<TestPlanSpecificationElement> forNames(Stream<String> classNames) {
-		return classNames.map(name -> forName(name)).collect(toList());
+		return classNames.map(TestPlanSpecification::forName).collect(toList());
 	}
 
 	public static TestPlanSpecificationElement forClass(Class<?> testClass) {

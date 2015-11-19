@@ -95,7 +95,7 @@ public class ConsoleRunner {
 			// @formatter:on
 		);
 
-		TestPlanSpecification testPlanSpecification = null;
+		TestPlanSpecification testPlanSpecification;
 		if (runAllTests) {
 			Set<File> rootDirectories = ReflectionUtils.getAllClasspathRootDirectories();
 			testPlanSpecification = TestPlanSpecification.build(TestPlanSpecification.allTests(rootDirectories));
