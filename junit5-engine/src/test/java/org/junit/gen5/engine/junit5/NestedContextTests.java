@@ -18,10 +18,8 @@ import org.junit.Assert;
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Context;
-import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.runner.RunWith;
 
 /**
  * Integration tests that verify support for {@linkplain Context nested contexts}
