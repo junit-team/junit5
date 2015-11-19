@@ -23,7 +23,12 @@ If a `@Test`, `@Before`, or `@After` method accepts a parameter, the parameter m
 
 ## Additional Planned Extension Points
 
-...
+As of the time of this writing, `MethodParameterResolver` is the only supported extension point; however, the JUnit Lambda team is planning several additional extension points, including but not limited to the following.
+
+1. Test instantiation post-processing callbacks
+1. BeforeAll / AfterAll callbacks
+1. BeforeEach / AfterEach callbacks
+1. Dynamic test registration -- for example, for computing parameterized tests at runtime
 
 [CONTRIBUTING]: https://github.com/junit-team/junit-lambda/blob/master/CONTRIBUTING.md
 [`CustomAnnotationParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java
