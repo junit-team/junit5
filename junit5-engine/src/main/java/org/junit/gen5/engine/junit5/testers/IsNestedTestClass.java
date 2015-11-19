@@ -15,13 +15,13 @@ import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.util.function.Predicate;
 
-import org.junit.gen5.api.Context;
+import org.junit.gen5.api.Nested;
 
 /**
  * @author Stefan Bechtold
  * @since 5.0
  */
-public class IsTestContext implements Predicate<Class<?>> {
+public class IsNestedTestClass implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> contextClassCandidate) {
@@ -32,7 +32,7 @@ public class IsTestContext implements Predicate<Class<?>> {
 			return false;
 		if (!contextClassCandidate.isMemberClass())
 			return false;
-		return isAnnotated(contextClassCandidate, Context.class);
+		return isAnnotated(contextClassCandidate, Nested.class);
 	}
 
 }

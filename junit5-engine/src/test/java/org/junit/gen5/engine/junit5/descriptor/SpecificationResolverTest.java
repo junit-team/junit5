@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.gen5.api.Context;
+import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ClassSpecification;
 import org.junit.gen5.engine.EngineDescriptor;
@@ -268,8 +268,8 @@ public class SpecificationResolverTest {
 	}
 
 	@org.junit.Test
-	public void testContextResolutionFromBaseClass() {
-		ClassSpecification specification = new ClassSpecification(TestCaseWithContexts.class);
+	public void testNestedTestResolutionFromBaseClass() {
+		ClassSpecification specification = new ClassSpecification(TestCaseWithNesting.class);
 
 		resolver.resolveElement(specification);
 
@@ -279,21 +279,20 @@ public class SpecificationResolverTest {
 			Collectors.toList());
 		assertEquals(6, uniqueIds.size());
 
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts#testA()"));
-		assertTrue(
-			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext"));
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting"));
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting#testA()"));
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext#testB()"));
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest#testB()"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext"));
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext#testC()"));
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
 	}
 
 	@org.junit.Test
-	public void testContextResolutionFromContextClass() {
-		ClassSpecification specification = new ClassSpecification(TestCaseWithContexts.InnerContext.class);
+	public void testNestedTestResolutionFromNestedTestClass() {
+		ClassSpecification specification = new ClassSpecification(TestCaseWithNesting.NestedTest.class);
 
 		resolver.resolveElement(specification);
 
@@ -301,21 +300,20 @@ public class SpecificationResolverTest {
 			Collectors.toList());
 		assertEquals(5, uniqueIds.size());
 
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts"));
-		assertTrue(
-			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext"));
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting"));
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext#testB()"));
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest#testB()"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext"));
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext#testC()"));
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
 	}
 
 	@org.junit.Test
-	public void testContextResolutionFromUniqueId() {
+	public void testNestedTestResolutionFromUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext");
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest");
 
 		resolver.resolveElement(specification);
 
@@ -323,19 +321,18 @@ public class SpecificationResolverTest {
 			Collectors.toList());
 		assertEquals(4, uniqueIds.size());
 
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts"));
-		assertTrue(
-			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext"));
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting"));
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext"));
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext#testC()"));
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
 	}
 
 	@org.junit.Test
-	public void testContextResolutionFromClass() {
+	public void testNestedTestResolutionFromClass() {
 		ClassSpecification specification = new ClassSpecification(
-			TestCaseWithContexts.InnerContext.InnerInnerContext.class);
+			TestCaseWithNesting.NestedTest.DoubleNestedTest.class);
 
 		resolver.resolveElement(specification);
 
@@ -343,19 +340,18 @@ public class SpecificationResolverTest {
 			Collectors.toList());
 		assertEquals(4, uniqueIds.size());
 
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts"));
-		assertTrue(
-			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext"));
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting"));
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext"));
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext@InnerInnerContext#testC()"));
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
 	}
 
 	@org.junit.Test
-	public void testContextResolutionFromUniqueIdToMethod() {
+	public void testNestedTestResolutionFromUniqueIdToMethod() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext#testB()");
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest#testB()");
 
 		resolver.resolveElement(specification);
 
@@ -365,11 +361,10 @@ public class SpecificationResolverTest {
 			Collectors.toList());
 		assertEquals(3, uniqueIds.size());
 
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts"));
-		assertTrue(
-			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext"));
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting"));
+		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithContexts@InnerContext#testB()"));
+			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest#testB()"));
 	}
 
 	private TestDescriptor descriptorByUniqueId(String id) {
@@ -438,23 +433,23 @@ class OtherTestClass {
 	}
 }
 
-class TestCaseWithContexts {
+class TestCaseWithNesting {
 
 	@Test
 	void testA() {
 
 	}
 
-	@Context
-	class InnerContext {
+	@Nested
+	class NestedTest {
 
 		@Test
 		void testB() {
 
 		}
 
-		@Context
-		class InnerInnerContext {
+		@Nested
+		class DoubleNestedTest {
 
 			@Test
 			void testC() {

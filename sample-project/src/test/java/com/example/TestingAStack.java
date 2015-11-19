@@ -15,8 +15,8 @@ import java.util.Stack;
 
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Name;
+import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.junit4runner.JUnit5;
 import org.junit.runner.RunWith;
@@ -34,7 +34,7 @@ public class TestingAStack {
 		new Stack<Object>();
 	}
 
-	@Context
+	@Nested
 	@Name("when new")
 	class WhenNew {
 
@@ -61,7 +61,7 @@ public class TestingAStack {
 			Assertions.expectThrows(EmptyStackException.class, () -> stack.peek());
 		}
 
-		@Context
+		@Nested
 		@Name("after pushing an element")
 		class AfterPushing {
 

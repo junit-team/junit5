@@ -23,8 +23,8 @@ import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.TestPlanSpecificationVisitor;
+import org.junit.gen5.engine.junit5.testers.IsNestedTestClass;
 import org.junit.gen5.engine.junit5.testers.IsTestClassWithTests;
-import org.junit.gen5.engine.junit5.testers.IsTestContext;
 import org.junit.gen5.engine.junit5.testers.IsTestMethod;
 
 /**
@@ -34,7 +34,7 @@ public class SpecificationResolver {
 
 	private final EngineDescriptor engineDescriptor;
 
-	private final IsTestContext isTestContext = new IsTestContext();
+	private final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
 	private final IsTestMethod isTestMethod = new IsTestMethod();
 	private final IsTestClassWithTests isTestClassWithTests = new IsTestClassWithTests();
 
@@ -165,7 +165,7 @@ public class SpecificationResolver {
 	}
 
 	private void resolveContainedContexts(Class<?> clazz) {
-		List<Class<?>> contextClasses = findInnerClasses(clazz, isTestContext);
+		List<Class<?>> contextClasses = findInnerClasses(clazz, isNestedTestClass);
 		for (Class<?> contextClass : contextClasses) {
 			JUnit5Testable contextTestable = JUnit5Testable.fromClass(contextClass, engineDescriptor.getUniqueId());
 			resolveTestable(contextTestable);

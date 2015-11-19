@@ -22,7 +22,7 @@ import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.testers.CanBeTestClass;
-import org.junit.gen5.engine.junit5.testers.IsTestContext;
+import org.junit.gen5.engine.junit5.testers.IsNestedTestClass;
 import org.junit.gen5.engine.junit5.testers.IsTestMethod;
 
 /**
@@ -33,7 +33,7 @@ class JUnit5TestableFactory {
 	private static final String SEPARATORS = ":@#";
 
 	private CanBeTestClass canBeTestClass = new CanBeTestClass();
-	private IsTestContext isTestContext = new IsTestContext();
+	private IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
 	private IsTestMethod isTestMethod = new IsTestMethod();
 
 	JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
@@ -60,7 +60,7 @@ class JUnit5TestableFactory {
 			String uniqueId = engineId + ":" + clazz.getName();
 			return new JUnit5Class(uniqueId, clazz);
 		}
-		if (isTestContext.test(clazz)) {
+		if (isNestedTestClass.test(clazz)) {
 			return createContextTestable(clazz, clazz.getEnclosingClass(), engineId);
 		}
 		throwCannotResolveClassException(clazz);

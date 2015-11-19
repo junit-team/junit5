@@ -17,24 +17,24 @@ import static org.junit.gen5.engine.TestPlanSpecification.forClass;
 import org.junit.Assert;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.Context;
+import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
- * Integration tests that verify support for {@linkplain Context nested contexts}
+ * Integration tests that verify support for {@linkplain Nested nested contexts}
  * in the {@link JUnit5TestEngine}.
  *
  * @author Sam Brannen
  * @since 5.0
  */
-public class NestedContextTests extends AbstractJUnit5TestEngineTestCase {
+public class NestedTestClassesTests extends AbstractJUnit5TestEngineTestCase {
 
 	@org.junit.Test
-	public void executeTestCaseWithInnerContext() {
-		TestCaseWithContext.countAfterInvoked = 0;
+	public void executeTestCaseWithNestedTests() {
+		TestCaseWithNesting.countAfterInvoked = 0;
 
-		TestPlanSpecification spec = build(forClass(TestCaseWithContext.class));
+		TestPlanSpecification spec = build(forClass(TestCaseWithNesting.class));
 		TrackingTestExecutionListener listener = executeTests(spec, 6);
 
 		Assert.assertEquals("# tests started", 3, listener.testStartedCount.get());
@@ -43,12 +43,12 @@ public class NestedContextTests extends AbstractJUnit5TestEngineTestCase {
 		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
 
-		Assert.assertEquals("# after calls", 3, TestCaseWithContext.countAfterInvoked);
+		Assert.assertEquals("# after calls", 3, TestCaseWithNesting.countAfterInvoked);
 	}
 
 	// -------------------------------------------------------------------
 
-	private static class TestCaseWithContext {
+	private static class TestCaseWithNesting {
 
 		boolean beforeInvoked = false;
 		boolean innerBeforeInvoked = false;
@@ -69,7 +69,7 @@ public class NestedContextTests extends AbstractJUnit5TestEngineTestCase {
 		void enabledTest() {
 		}
 
-		@Context
+		@Nested
 		class InnerTestCase {
 
 			@BeforeEach
@@ -83,7 +83,7 @@ public class NestedContextTests extends AbstractJUnit5TestEngineTestCase {
 				assertTrue(innerBeforeInvoked, "beforeEach of nested test was not invoked");
 			}
 
-			@Context
+			@Nested
 			class InnerInnerTestCase {
 
 				@Test

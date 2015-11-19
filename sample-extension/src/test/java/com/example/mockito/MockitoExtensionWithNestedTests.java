@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.Context;
+import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.junit4runner.JUnit5;
@@ -30,7 +30,7 @@ import org.junit.runner.RunWith;
 @RunWith(JUnit5.class)
 @ExtendWith(MockitoExtension.class)
 //public to be picked up by IDE JUnit4 test runner
-public class MockitoExtensionWithNestedContextsTest {
+public class MockitoExtensionWithNestedTests {
 
 	boolean baseClassTestRun = false;
 
@@ -45,34 +45,34 @@ public class MockitoExtensionWithNestedContextsTest {
 		baseClassTestRun = true;
 	}
 
-	@Context
+	@Nested
 	class FirstContext {
 
 		@BeforeEach
-		void initializeFirstContext(@InjectMock YourType yourType, @InjectMock MyType myType) {
-			when(yourType.getName()).thenReturn("first context");
+		void initializeFirstNesting(@InjectMock YourType yourType, @InjectMock MyType myType) {
+			when(yourType.getName()).thenReturn("first nesting");
 			assertEquals("base class", myType.getName());
 		}
 
 		@Test
-		void firstContextTest(@InjectMock YourType yourType) {
-			assertEquals("first context", yourType.getName());
+		void firstNestedTest(@InjectMock YourType yourType) {
+			assertEquals("first nesting", yourType.getName());
 		}
 
-		@Context
+		@Nested
 		class SecondContext {
 
 			@BeforeEach
-			void initializeSecondContext(@InjectMock YourType yourType, @InjectMock MyType myType,
+			void initializeSecondNesting(@InjectMock YourType yourType, @InjectMock MyType myType,
 					@InjectMock TheirType theirType) {
-				when(theirType.getName()).thenReturn("second context");
+				when(theirType.getName()).thenReturn("second nesting");
 				assertEquals("base class", myType.getName());
-				assertEquals("first context", yourType.getName());
+				assertEquals("first nesting", yourType.getName());
 			}
 
 			@Test
 			void secondContextTest(@InjectMock TheirType theirType) {
-				assertEquals("second context", theirType.getName());
+				assertEquals("second nesting", theirType.getName());
 			}
 
 		}

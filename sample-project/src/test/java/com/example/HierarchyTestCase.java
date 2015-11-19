@@ -16,8 +16,8 @@ import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Name;
+import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInstance;
 import org.junit.gen5.junit4runner.JUnit5;
@@ -90,7 +90,7 @@ public class HierarchyTestCase {
 		System.out.println(getClass().getName() + " top level test2 called");
 	}
 
-	@Context
+	@Nested
 	@Name("Second Level Context")
 	@TestInstance(PER_CLASS)
 	class SecondLevelTestContext {
@@ -131,7 +131,7 @@ public class HierarchyTestCase {
 			System.out.println(getClass().getName() + " second level test2 called");
 		}
 
-		@Context
+		@Nested
 		@Name("Third Level Context")
 		@TestInstance(PER_CLASS)
 		class ThirdLevelTestContext {
