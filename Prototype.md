@@ -86,10 +86,9 @@ For the time being we have begun with a small hierarchy of exceptions that we co
 ----
 
 [CONTRIBUTING]: https://github.com/junit-team/junit-lambda/blob/master/CONTRIBUTING.md
-[`CustomAnnotationParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java
-[`CustomTypeParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java
 [issue tracker]: https://github.com/junit-team/junit-lambda/issues
 [junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer
 [junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer
 [junit5-samples]: https://github.com/junit-team/junit5-samples
+[snapshots repository]: https://oss.sonatype.org/content/repositories/snapshots/
 [Twitter]: https://twitter.com/junitlambda
