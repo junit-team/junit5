@@ -35,7 +35,7 @@ All core annotations are located in the [`org.junit.gen5.api`] package in the `j
 | **`@Tag`** and **`@Tags`** | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4 |
 | **`@Conditional`** | Used to declare _conditions_ that will be evaluated to determine if a test is enabled. `@Disabled` is a built-in implementation of conditional test execution. |
 | **`@Disabled`** | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore` |
-| **`@ExtendWith`** | Used to register custom extensions for tests such as `MethodParameterResolver`. See [the page on test extensions](Prototype-Test-Decorators) |
+| **`@ExtendWith`** | Used to register custom extensions for tests such as `MethodParameterResolver`. See [the page on test extensions](Prototype-Test-Extensions) |
 
 ### Meta-Annotations and Composed Annotations
 
@@ -325,7 +325,7 @@ There are a few built-in resolvers in the prototype that need not be explicitly 
   }
   ```
 
-All other parameter resolvers must be explicitly enabled by registering a [test extension](Prototype-Test-Decorators) via `@ExtendWith`.
+All other parameter resolvers must be explicitly enabled by registering a [test extension](Prototype-Test-Extensions) via `@ExtendWith`.
 
 -  Check out the `methodInjectionTest(...)` test method in [`SampleTestCase`] for an example that uses the built-in `TestNameParameterResolver` as well as two user-provided resolvers, [`CustomTypeParameterResolver`] and [`CustomAnnotationParameterResolver`].
 
