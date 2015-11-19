@@ -14,6 +14,7 @@ import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
@@ -144,7 +145,11 @@ public class SpecificationResolver {
 
 	private TestDescriptor resolveAndReturnParentTestable(JUnit5Testable containerTestable) {
 		resolveTestable(containerTestable, false);
-		return descriptorByUniqueId(containerTestable.getUniqueId());
+		return descriptorByUniqueId(containerTestable.getUniqueId()).orElseThrow(() -> {
+			String errorMessage = String.format("Testable with unique id %s could not be resolved. Programming error!",
+				containerTestable.getUniqueId());
+			return new RuntimeException(errorMessage);
+		});
 	}
 
 	private void resolveContainedTestMethods(Class<?> testClass, AbstractTestDescriptor parentDescriptor) {
@@ -167,32 +172,20 @@ public class SpecificationResolver {
 	}
 
 	private MethodTestDescriptor getOrCreateMethodDescriptor(Method method, String uniqueId) {
-		MethodTestDescriptor methodTestDescriptor = (MethodTestDescriptor) descriptorByUniqueId(uniqueId);
-		if (methodTestDescriptor == null) {
-			methodTestDescriptor = new MethodTestDescriptor(uniqueId, method);
-		}
-		return methodTestDescriptor;
+		return (MethodTestDescriptor) descriptorByUniqueId(uniqueId).orElse(new MethodTestDescriptor(uniqueId, method));
 	}
 
 	private ContextTestDescriptor getOrCreateContextDescriptor(Class<?> clazz, String uniqueId) {
-		ContextTestDescriptor contextTestDescriptor = (ContextTestDescriptor) descriptorByUniqueId(uniqueId);
-		if (contextTestDescriptor == null) {
-			contextTestDescriptor = new ContextTestDescriptor(uniqueId, clazz);
-		}
-		return contextTestDescriptor;
+		return (ContextTestDescriptor) descriptorByUniqueId(uniqueId).orElse(
+			new ContextTestDescriptor(uniqueId, clazz));
 	}
 
 	private ClassTestDescriptor getOrCreateClassDescriptor(Class<?> clazz, String uniqueId) {
-		ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptorByUniqueId(uniqueId);
-		if (classTestDescriptor == null) {
-			classTestDescriptor = new ClassTestDescriptor(uniqueId, clazz);
-		}
-		return classTestDescriptor;
+		return (ClassTestDescriptor) descriptorByUniqueId(uniqueId).orElse(new ClassTestDescriptor(uniqueId, clazz));
 	}
 
-	private TestDescriptor descriptorByUniqueId(String uniqueId) {
-		// TODO Users of this method should use Optional directly but I couldn't figure out how.
-		return engineDescriptor.findByUniqueId(uniqueId).orElse(null);
+	private Optional<TestDescriptor> descriptorByUniqueId(String uniqueId) {
+		return engineDescriptor.findByUniqueId(uniqueId);
 	}
 
 }
