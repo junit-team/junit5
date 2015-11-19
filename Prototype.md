@@ -57,9 +57,9 @@ and `pom.xml` in the projects below:
 
 ----
 
-# Extending JUnit 5 with Test Decorators
+# Extending JUnit 5
 
-[How to extend JUnit 5?](Prototype-Test-Decorators)
+[How to extend JUnit 5?](Prototype-Test-Extensions)
 
 ----
 
@@ -92,11 +92,4 @@ For the time being we have begun with a small hierarchy of exceptions that we co
 [junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer
 [junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer
 [junit5-samples]: https://github.com/junit-team/junit5-samples
-[`MethodParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java
-[`MockitoDecorator`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/main/java/com/example/mockito/MockitoDecorator.java
-[`MockitoDecoratorInBaseClassTest`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/test/java/com/example/mockito/MockitoDecoratorInBaseClassTest.java
-[`org.junit.gen5.api`]: https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api
-[`SampleTestCase`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/SampleTestCase.java
-[snapshots repository]: https://oss.sonatype.org/content/repositories/snapshots/
-[`TestNameParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java
 [Twitter]: https://twitter.com/junitlambda
