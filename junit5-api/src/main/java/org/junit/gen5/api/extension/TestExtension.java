@@ -11,10 +11,10 @@
 package org.junit.gen5.api.extension;
 
 /**
- * Marker interface for all test decorators.
+ * Marker interface for all test extensions.
  *
  * @author Sam Brannen
  * @since 5.0
  */
-public interface TestDecorator {
+public interface TestExtension {
 }

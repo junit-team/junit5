@@ -21,7 +21,7 @@ import org.junit.gen5.commons.util.ReflectionUtils;
  * @author Sam Brannen
  * @since 5.0
  */
-public interface MethodParameterResolver extends TestDecorator {
+public interface MethodParameterResolver extends TestExtension {
 
 	boolean supports(Parameter parameter);
 

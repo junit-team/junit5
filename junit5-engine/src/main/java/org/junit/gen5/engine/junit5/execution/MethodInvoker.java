@@ -28,7 +28,7 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 /**
  * {@code MethodInvoker} encapsulates the invocation of a method, including
  * support for dynamic resolution of method parameters via {@link MethodParameterResolver
- * MethodParameterResolvers} registered in the supplied {@link MethodParameterResolverRegistry}.
+ * MethodParameterResolvers}.
  *
  * @author Sam Brannen
  * @author Matthias Merdes

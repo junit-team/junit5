@@ -10,10 +10,11 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
+import static org.junit.gen5.commons.util.AnnotationUtils.findRepeatableAnnotations;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,9 +23,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.MethodParameterResolver;
-import org.junit.gen5.api.extension.TestDecorator;
-import org.junit.gen5.api.extension.TestDecorators;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
@@ -83,13 +83,16 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 
 		// TODO Determine where the MethodParameterResolverRegistry should be created.
 		MethodParameterResolverRegistry resolverRegistry = new MethodParameterResolverRegistry(parentResolvers);
-		findAnnotation(annotatedElement, TestDecorators.class).map(TestDecorators::value).ifPresent(clazzes -> {
-			for (Class<? extends TestDecorator> clazz : clazzes) {
-				if (MethodParameterResolver.class.isAssignableFrom(clazz)) {
-					resolverRegistry.addResolverWithClass((Class<? extends MethodParameterResolver>) clazz);
-				}
-			}
-		});
+
+		// @formatter:off
+		findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
+				.map(ExtendWith::value)
+				.flatMap(Arrays::stream)
+				.filter(MethodParameterResolver.class::isAssignableFrom)
+				.forEach(clazz -> {
+					resolverRegistry.addResolver((Class<? extends MethodParameterResolver>) clazz);
+				});
+		// @formatter:off
 
 		return resolverRegistry.getResolvers();
 	}

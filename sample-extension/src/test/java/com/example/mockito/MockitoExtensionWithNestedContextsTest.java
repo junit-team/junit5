@@ -18,7 +18,7 @@ import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.TestDecorators;
+import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.junit4runner.JUnit5;
 import org.junit.runner.RunWith;
 
@@ -28,9 +28,9 @@ import org.junit.runner.RunWith;
  * @since 5.0
  */
 @RunWith(JUnit5.class)
-@TestDecorators(MockitoDecorator.class)
+@ExtendWith(MockitoExtension.class)
 //public to be picked up by IDE JUnit4 test runner
-public class MockitoDecoratorWithNestedContextsTest {
+public class MockitoExtensionWithNestedContextsTest {
 
 	boolean baseClassTestRun = false;
 

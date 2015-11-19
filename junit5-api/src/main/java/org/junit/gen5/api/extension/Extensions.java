@@ -18,20 +18,27 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used to declare all types of test decorators.
+ * {@code @Extensions} is a container for one or more {@code @ExtendWith}
+ * declarations.
  *
- * <p>See concrete implementations of {@link TestDecorator} for details.
+ * <p>Note, however, that use of the {@code @Extensions} container is completely
+ * optional since {@code @ExtendWith} is a {@linkplain java.lang.annotation.Repeatable
+ * repeatable} annotation.
  *
  * @author Sam Brannen
  * @since 5.0
- * @see MethodParameterResolver
+ * @see ExtendWith
+ * @see java.lang.annotation.Repeatable
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface TestDecorators {
+public @interface Extensions {
 
-	Class<? extends TestDecorator>[]value();
+	/**
+	 * An array of one or more {@link ExtendWith @ExtendWith} declarations.
+	 */
+	ExtendWith[]value();
 
 }

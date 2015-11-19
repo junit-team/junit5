@@ -20,8 +20,8 @@ import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestName;
+import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.MethodParameterResolver;
-import org.junit.gen5.api.extension.TestDecorators;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotationParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomType;
@@ -60,8 +60,8 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 	}
 
 	@org.junit.Test
-	public void executeTestsForMethodWithTestDecoratorAnnotation() {
-		TrackingTestExecutionListener listener = executeTestsForClass(TestDecoratorOnMethodTestCase.class, 2);
+	public void executeTestsForMethodWithExtendWithAnnotation() {
+		TrackingTestExecutionListener listener = executeTestsForClass(ExtendWithOnMethodTestCase.class, 2);
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
@@ -72,7 +72,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 
 	// -------------------------------------------------------------------
 
-	@TestDecorators({ CustomTypeParameterResolver.class, CustomAnnotationParameterResolver.class })
+	@ExtendWith({ CustomTypeParameterResolver.class, CustomAnnotationParameterResolver.class })
 	private static class MethodInjectionTestCase {
 
 		@Test
@@ -138,11 +138,12 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 		}
 	}
 
-	private static class TestDecoratorOnMethodTestCase {
+	private static class ExtendWithOnMethodTestCase {
 
 		@Test
-		@TestDecorators({ CustomTypeParameterResolver.class, CustomAnnotationParameterResolver.class })
-		void testMethodWithDecoratorAnnotation(CustomType customType, @CustomAnnotation String value) {
+		@ExtendWith(CustomTypeParameterResolver.class)
+		@ExtendWith(CustomAnnotationParameterResolver.class)
+		void testMethodWithExtensionAnnotation(CustomType customType, @CustomAnnotation String value) {
 			assertNotNull(customType);
 			assertNotNull(value);
 		}

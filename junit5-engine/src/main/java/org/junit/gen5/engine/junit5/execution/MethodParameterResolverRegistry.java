@@ -28,30 +28,29 @@ class MethodParameterResolverRegistry {
 	private final Set<MethodParameterResolver> resolvers = new LinkedHashSet<>();
 
 	/**
-	 * Create a new {@link MethodParameterResolverRegistry} with
-	 * global, default parameter resolvers pre-registered.
+	 * Create a new {@link MethodParameterResolverRegistry} with global,
+	 * default parameter resolvers pre-registered.
 	 *
 	 * @see TestNameParameterResolver
 	 */
 	MethodParameterResolverRegistry(Set<MethodParameterResolver> parentResolvers) {
 		parentResolvers.stream().forEach(resolvers::add);
-		addResolverWithClass(TestNameParameterResolver.class);
+		addResolver(TestNameParameterResolver.class);
 	}
 
 	Set<MethodParameterResolver> getResolvers() {
 		return Collections.unmodifiableSet(this.resolvers);
 	}
 
-	void addResolverWithClass(Class<? extends MethodParameterResolver> resolverClass) {
-		if (resolverAlreadyPresent(resolverClass)) {
-			return;
+	void addResolver(Class<? extends MethodParameterResolver> resolverClass) {
+		if (!resolverAlreadyPresent(resolverClass)) {
+			this.resolvers.add(ReflectionUtils.newInstance(resolverClass));
 		}
-		this.resolvers.add(ReflectionUtils.newInstance(resolverClass));
 	}
 
 	private boolean resolverAlreadyPresent(Class<? extends MethodParameterResolver> resolverClass) {
 		// Only one resolver of same type needed since resolvers are stateless.
-		return resolvers.stream().anyMatch(r -> r.getClass().equals(resolverClass));
+		return this.resolvers.stream().anyMatch(r -> r.getClass().equals(resolverClass));
 	}
 
 }

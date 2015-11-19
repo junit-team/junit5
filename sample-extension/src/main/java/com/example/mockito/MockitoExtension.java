@@ -25,11 +25,11 @@ import org.junit.gen5.commons.util.AnnotationUtils;
  * @author Sam Brannen
  * @since 5.0
  */
-public class MockitoDecorator implements MethodParameterResolver {
+public class MockitoExtension implements MethodParameterResolver {
 
 	private final ContextScope<Class<?>, Object> mocksInScope;
 
-	public MockitoDecorator() {
+	public MockitoExtension() {
 		mocksInScope = new ContextScope<Class<?>, Object>(type -> mock(type), ContextScope.LifeCycle.OncePerTest,
 			ContextScope.Inheritance.Yes);
 	}

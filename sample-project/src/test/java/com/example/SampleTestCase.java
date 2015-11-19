@@ -26,13 +26,13 @@ import org.junit.gen5.api.Context;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestName;
-import org.junit.gen5.api.extension.TestDecorators;
+import org.junit.gen5.api.extension.ExtendWith;
 import org.opentestalliance.TestSkippedException;
 
 /**
  * Named *TestCase so Gradle will not try to run it.
  */
-@TestDecorators({ CustomTypeParameterResolver.class, CustomAnnotationParameterResolver.class })
+@ExtendWith({ CustomTypeParameterResolver.class, CustomAnnotationParameterResolver.class })
 class SampleTestCase {
 
 	static boolean staticBeforeInvoked = false;
