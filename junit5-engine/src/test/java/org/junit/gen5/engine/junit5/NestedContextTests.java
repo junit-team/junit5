@@ -18,8 +18,10 @@ import org.junit.Assert;
 import org.junit.gen5.api.After;
 import org.junit.gen5.api.Before;
 import org.junit.gen5.api.Context;
+import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.runner.RunWith;
 
 /**
  * Integration tests that verify support for {@linkplain Context nested contexts}
@@ -51,6 +53,7 @@ public class NestedContextTests extends AbstractJUnit5TestEngineTestCase {
 	private static class TestCaseWithContext {
 
 		boolean beforeInvoked = false;
+		boolean innerBeforeInvoked = false;
 
 		static int countAfterInvoked = 0;
 
@@ -71,9 +74,15 @@ public class NestedContextTests extends AbstractJUnit5TestEngineTestCase {
 		@Context
 		class InnerTestCase {
 
+			@Before
+			void innerInit() {
+				innerBeforeInvoked = true;
+			}
+
 			@Test
 			void innerTest() {
 				assertTrue(beforeInvoked, "before of parent context was not invoked");
+				assertTrue(innerBeforeInvoked, "before of nested test was not invoked");
 			}
 
 			@Context
