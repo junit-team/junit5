@@ -15,6 +15,8 @@ package org.junit.gen5.api.extension;
  *
  * @author Sam Brannen
  * @since 5.0
+ * @see InstancePostProcessor
+ * @see MethodParameterResolver
  */
 public interface TestExtension {
 }

@@ -25,12 +25,14 @@ import java.lang.annotation.Target;
  *
  * <h3>Supported Extension APIs</h3>
  * <ul>
+ * <li>{@link InstancePostProcessor}</li>
  * <li>{@link MethodParameterResolver}</li>
  * </ul>
  *
  * @author Sam Brannen
  * @since 5.0
  * @see TestExtension
+ * @see InstancePostProcessor
  * @see MethodParameterResolver
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
