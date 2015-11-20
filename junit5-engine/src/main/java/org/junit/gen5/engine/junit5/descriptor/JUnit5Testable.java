@@ -14,16 +14,18 @@ import java.lang.reflect.Method;
 
 abstract class JUnit5Testable {
 
+	private static final JUnit5TestableFactory testableFactory = new JUnit5TestableFactory();
+
 	static JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
-		return new JUnit5TestableFactory().fromUniqueId(uniqueId, engineId);
+		return testableFactory.fromUniqueId(uniqueId, engineId);
 	}
 
 	static JUnit5Testable fromClass(Class<?> clazz, String engineId) {
-		return new JUnit5TestableFactory().fromClass(clazz, engineId);
+		return testableFactory.fromClass(clazz, engineId);
 	}
 
 	static JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
-		return new JUnit5TestableFactory().fromMethod(testMethod, clazz, engineId);
+		return testableFactory.fromMethod(testMethod, clazz, engineId);
 	}
 
 	private final String uniqueId;

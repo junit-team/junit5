@@ -32,9 +32,9 @@ class JUnit5TestableFactory {
 
 	private static final String SEPARATORS = ":@#";
 
-	private IsPotentialTestClass isPotentialTestClass = new IsPotentialTestClass();
-	private IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
-	private IsTestMethod isTestMethod = new IsTestMethod();
+	private static final IsPotentialTestClass isPotentialTestClass = new IsPotentialTestClass();
+	private static final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
+	private static final IsTestMethod isTestMethod = new IsTestMethod();
 
 	JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
 		Preconditions.notBlank(uniqueId, "Unique ID must not be null or empty");
