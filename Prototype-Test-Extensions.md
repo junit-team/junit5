@@ -17,7 +17,7 @@ Registered extensions are inherited within test class hierarchies.
 
 ## Test Instance Post-processing
 
-`InstancePostProcessor` defines the API for `TestExtensions` that
+[`InstancePostProcessor`] defines the API for `TestExtensions` that
 wish to _post process_ test instances.
 
 Common use cases include injecting dependencies into the test instance,
@@ -43,6 +43,7 @@ As of the time of this writing, `InstancePostProcessor` and `MethodParameterReso
 [CONTRIBUTING]: https://github.com/junit-team/junit-lambda/blob/master/CONTRIBUTING.md
 [`CustomAnnotationParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java
 [`CustomTypeParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java
+[`InstancePostProcessor`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/InstancePostProcessor.java
 [issue tracker]: https://github.com/junit-team/junit-lambda/issues
 [junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer
 [junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer
