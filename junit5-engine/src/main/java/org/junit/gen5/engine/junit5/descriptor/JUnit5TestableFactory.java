@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.junit5.testers.CanBeTestClass;
 import org.junit.gen5.engine.junit5.testers.IsNestedTestClass;
+import org.junit.gen5.engine.junit5.testers.IsPotentialTestClass;
 import org.junit.gen5.engine.junit5.testers.IsTestMethod;
 
 /**
@@ -32,7 +32,7 @@ class JUnit5TestableFactory {
 
 	private static final String SEPARATORS = ":@#";
 
-	private CanBeTestClass canBeTestClass = new CanBeTestClass();
+	private IsPotentialTestClass isPotentialTestClass = new IsPotentialTestClass();
 	private IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
 	private IsTestMethod isTestMethod = new IsTestMethod();
 
@@ -47,7 +47,7 @@ class JUnit5TestableFactory {
 	JUnit5Testable fromClass(Class<?> clazz, String engineId) {
 		Preconditions.notNull(clazz, "clazz must not be null");
 		Preconditions.notBlank(engineId, "Engine ID must not be null or empty");
-		if (canBeTestClass.test(clazz)) {
+		if (isPotentialTestClass.test(clazz)) {
 			String uniqueId = engineId + ":" + clazz.getName();
 			return new JUnit5Class(uniqueId, clazz);
 		}

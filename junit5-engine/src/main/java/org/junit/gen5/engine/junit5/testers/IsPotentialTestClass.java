@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 /**
  * @since 5.0
  */
-public class CanBeTestClass implements Predicate<Class<?>> {
+public class IsPotentialTestClass implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> candidate) {

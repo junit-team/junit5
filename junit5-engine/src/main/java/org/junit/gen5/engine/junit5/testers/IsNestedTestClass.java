@@ -11,7 +11,8 @@
 package org.junit.gen5.engine.junit5.testers;
 
 import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.isPrivate;
+import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
 
 import java.util.function.Predicate;
 
@@ -24,15 +25,15 @@ import org.junit.gen5.api.Nested;
 public class IsNestedTestClass implements Predicate<Class<?>> {
 
 	@Override
-	public boolean test(Class<?> nestedClassCandidate) {
+	public boolean test(Class<?> candidate) {
 		//please do not collapse into single return
-		if (isStatic(nestedClassCandidate))
+		if (isStatic(candidate))
 			return false;
-		if (isPrivate(nestedClassCandidate))
+		if (isPrivate(candidate))
 			return false;
-		if (!nestedClassCandidate.isMemberClass())
+		if (!candidate.isMemberClass())
 			return false;
-		return isAnnotated(nestedClassCandidate, Nested.class);
+		return isAnnotated(candidate, Nested.class);
 	}
 
 }

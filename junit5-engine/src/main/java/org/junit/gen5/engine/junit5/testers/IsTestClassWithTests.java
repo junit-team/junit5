@@ -23,15 +23,15 @@ public class IsTestClassWithTests implements Predicate<Class<?>> {
 
 	private static final IsTestMethod isTestMethod = new IsTestMethod();
 
-	private static final CanBeTestClass canBeTestClass = new CanBeTestClass();
+	private static final IsPotentialTestClass isPotentialTestClass = new IsPotentialTestClass();
 
 	@Override
-	public boolean test(Class<?> testClassCandidate) {
-		return canBeTestClass.test(testClassCandidate) && hasTestMethods(testClassCandidate);
+	public boolean test(Class<?> candidate) {
+		return isPotentialTestClass.test(candidate) && hasTestMethods(candidate);
 	}
 
-	private boolean hasTestMethods(Class<?> testClassCandidate) {
-		return !ReflectionUtils.findMethods(testClassCandidate, isTestMethod, HierarchyDown).isEmpty();
+	private boolean hasTestMethods(Class<?> candidate) {
+		return !ReflectionUtils.findMethods(candidate, isTestMethod, HierarchyDown).isEmpty();
 	}
 
 }
