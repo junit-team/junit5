@@ -10,18 +10,19 @@
 
 package org.junit.gen5.engine.junit4;
 
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.gen5.commons.util.ReflectionUtils.isPublic;
 
 import java.util.function.Predicate;
 
 /**
  * @since 5.0
  */
-public class CanBeJUnit4TestClass implements Predicate<Class<?>> {
+public class IsPotentialJUnit4TestClass implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> candidate) {
-		//Don't collapse into single return (JL)
+		// Do not collapse into single return.
 		if (isAbstract(candidate))
 			return false;
 		if (!isPublic(candidate))

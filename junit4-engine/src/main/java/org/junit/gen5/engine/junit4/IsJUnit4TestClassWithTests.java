@@ -24,13 +24,13 @@ public class IsJUnit4TestClassWithTests implements Predicate<Class<?>> {
 
 	private static final IsJUnit4TestMethod isTestMethod = new IsJUnit4TestMethod();
 
-	private static final CanBeJUnit4TestClass canBeTestClass = new CanBeJUnit4TestClass();
+	private static final IsPotentialJUnit4TestClass isPotentialTestClass = new IsPotentialJUnit4TestClass();
 
 	@Override
 	public boolean test(Class<?> testClassCandidate) {
-		if (!canBeTestClass.test(testClassCandidate))
+		if (!isPotentialTestClass.test(testClassCandidate))
 			return false;
-		//Don't use AnnotationUtils.hasAnnotation since JUnit4 does not support meta annotations
+		// Do not use AnnotationUtils.hasAnnotation since JUnit4 does not support meta annotations.
 		return testClassCandidate.isAnnotationPresent(RunWith.class) || hasTestMethods(testClassCandidate);
 	}
 
