@@ -28,9 +28,9 @@ For a concrete example, consult the source code for the [`MockitoExtension`].
 
 ## Parameter Resolution
 
-`MethodParameterResolver` is a `TestExtension` strategy for dynamically resolving method parameters at runtime.
+[`MethodParameterResolver`] is a `TestExtension` strategy for dynamically resolving method parameters at runtime.
 
-If a `@Test`, `@BeforeEach`, or `@AfterEach` method accepts a parameter, the parameter must be _resolved_ at runtime by a [`MethodParameterResolver`]. A `MethodParameterResolver` can either be built-in or registered by the user via `@ExtendWith`. Generally speaking, parameters may be resolved by *type* or by *annotation*. For concrete examples, consult the source code for [`CustomTypeParameterResolver`] and [`CustomAnnotationParameterResolver`], respectively.
+If a `@Test`, `@BeforeEach`, or `@AfterEach` method accepts a parameter, the parameter must be _resolved_ at runtime by a `MethodParameterResolver`. A `MethodParameterResolver` can either be built-in or registered by the user via `@ExtendWith`. Generally speaking, parameters may be resolved by *type* or by *annotation*. For concrete examples, consult the source code for [`CustomTypeParameterResolver`] and [`CustomAnnotationParameterResolver`], respectively.
 
 ## Additional Planned Extension Points
 
