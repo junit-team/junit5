@@ -57,7 +57,7 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 		this.displayName = descriptor.getDisplayName();
 		this.parent = parent;
 
-		this.registry = createRegistry(parent);
+		this.registry = createRegistry();
 
 		if (descriptor instanceof ClassTestDescriptor) {
 			// Also handles ContextTestDescriptor which extends ClassTestDescriptor.
@@ -90,15 +90,15 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 
 	}
 
-	private TestExtensionsRegistry createRegistry(TestExecutionContext parent) {
-		if (parent == null)
+	private TestExtensionsRegistry createRegistry() {
+		if (this.parent == null)
 			return new TestExtensionsRegistry();
 
-		if (! (parent instanceof DescriptorBasedTestExecutionContext))
+		if (! (this.parent instanceof DescriptorBasedTestExecutionContext))
 			return new TestExtensionsRegistry();
 
 		//TODO Get rid of casting. Maybe move getRegistry into TestExecutionInterface?
-		//     Would require TestExtensionsRegistry will move to junit-engine-api.
+		//     Would require TestExtensionsRegistry to move to junit-engine-api.
 		DescriptorBasedTestExecutionContext parentContext = (DescriptorBasedTestExecutionContext) parent;
 		return new TestExtensionsRegistry(parentContext.registry);
 	}
