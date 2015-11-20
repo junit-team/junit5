@@ -20,7 +20,7 @@ public class AllTestsSpecification implements TestPlanSpecificationElement {
 	private File classpathRoot;
 
 	@Override
-	public void accept(TestPlanSpecificationVisitor visitor) {
-		visitor.visitAllTestsSpecification(classpathRoot);
+	public void accept(TestPlanSpecificationElementVisitor visitor) {
+		visitor.visitAllTests(classpathRoot);
 	}
 }

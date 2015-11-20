@@ -66,7 +66,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		}
 
 		throw new IllegalArgumentException(
-			String.format("'%s' specifies neither a class, nor a method, nor a package.", anyName));
+			String.format("'%s' specifies neither a class, method, nor package.", anyName));
 	}
 
 	public static List<TestPlanSpecificationElement> allTests(Set<File> rootDirectories) {
@@ -137,7 +137,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return unmodifiableList(this.elements).iterator();
 	}
 
-	public void accept(TestPlanSpecificationVisitor visitor) {
+	public void accept(TestPlanSpecificationElementVisitor visitor) {
 		elements.forEach(element -> element.accept(visitor));
 	}
 

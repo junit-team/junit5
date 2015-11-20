@@ -26,7 +26,7 @@ public class MethodSpecification implements TestPlanSpecificationElement {
 	}
 
 	@Override
-	public void accept(TestPlanSpecificationVisitor visitor) {
-		visitor.visitMethodSpecification(testClass, testMethod);
+	public void accept(TestPlanSpecificationElementVisitor visitor) {
+		visitor.visitMethod(testClass, testMethod);
 	}
 }

@@ -16,7 +16,7 @@ import lombok.Data;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.TestPlanSpecificationVisitor;
+import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
 import org.junit.internal.runners.ErrorReportingRunner;
 import org.junit.runner.Description;
 import org.junit.runner.Request;
@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 
 @Data
-class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
+class JUnit4SpecificationResolver implements TestPlanSpecificationElementVisitor {
 
 	private static final IsJUnit4TestClassWithTests isJUnit4TestClassWithTests = new IsJUnit4TestClassWithTests();
 
@@ -33,7 +33,7 @@ class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
 	// TODO support more TestPlanSpecificationElements/visit methods
 
 	@Override
-	public void visitClassSpecification(Class<?> testClass) {
+	public void visitClass(Class<?> testClass) {
 
 		// TODO JL: Hack to break endless recursion if runner will lead to the
 		// execution of JUnit5 test (eg. @RunWith(JUnit5.class))
@@ -53,15 +53,15 @@ class JUnit4SpecificationResolver implements TestPlanSpecificationVisitor {
 	}
 
 	@Override
-	public void visitPackageSpecification(String packageName) {
+	public void visitPackage(String packageName) {
 		ReflectionUtils.findAllClassesInPackage(packageName, isJUnit4TestClassWithTests).stream().forEach(
-			this::visitClassSpecification);
+			this::visitClass);
 	}
 
 	@Override
-	public void visitAllTestsSpecification(File rootDirectory) {
+	public void visitAllTests(File rootDirectory) {
 		ReflectionUtils.findAllClassesInClasspathRoot(rootDirectory, isJUnit4TestClassWithTests).stream().forEach(
-			this::visitClassSpecification);
+			this::visitClass);
 	}
 
 	private void addRecursively(JUnit4TestDescriptor parent) {

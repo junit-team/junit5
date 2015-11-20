@@ -22,7 +22,7 @@ import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.gen5.engine.TestPlanSpecificationVisitor;
+import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
 import org.junit.gen5.engine.junit5.testers.IsNestedTestClass;
 import org.junit.gen5.engine.junit5.testers.IsTestClassWithTests;
 import org.junit.gen5.engine.junit5.testers.IsTestMethod;
@@ -43,33 +43,32 @@ public class SpecificationResolver {
 	}
 
 	public void resolveElement(TestPlanSpecificationElement element) {
-		element.accept(new TestPlanSpecificationVisitor() {
+		element.accept(new TestPlanSpecificationElementVisitor() {
 
 			@Override
-			public void visitClassSpecification(Class<?> testClass) {
+			public void visitClass(Class<?> testClass) {
 				resolveClassSpecification(testClass);
 			}
 
 			@Override
-			public void visitMethodSpecification(Class<?> testClass, Method testMethod) {
+			public void visitMethod(Class<?> testClass, Method testMethod) {
 				resolveMethodSpecification(testClass, testMethod);
 			}
 
 			@Override
-			public void visitUniqueIdSpecification(String uniqueId) {
+			public void visitUniqueId(String uniqueId) {
 				resolveUniqueIdSpecification(uniqueId);
 			}
 
 			@Override
-			public void visitPackageSpecification(String packageName) {
-				findAllClassesInPackage(packageName, isTestClassWithTests).stream().forEach(
-					this::visitClassSpecification);
+			public void visitPackage(String packageName) {
+				findAllClassesInPackage(packageName, isTestClassWithTests).stream().forEach(this::visitClass);
 			}
 
 			@Override
-			public void visitAllTestsSpecification(File rootDirectory) {
+			public void visitAllTests(File rootDirectory) {
 				ReflectionUtils.findAllClassesInClasspathRoot(rootDirectory, isTestClassWithTests).stream().forEach(
-					this::visitClassSpecification);
+					this::visitClass);
 			}
 		});
 	}

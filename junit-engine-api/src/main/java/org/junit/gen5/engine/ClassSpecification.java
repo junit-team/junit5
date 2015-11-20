@@ -18,7 +18,7 @@ public class ClassSpecification implements TestPlanSpecificationElement {
 	private Class<?> testClass;
 
 	@Override
-	public void accept(TestPlanSpecificationVisitor visitor) {
-		visitor.visitClassSpecification(testClass);
+	public void accept(TestPlanSpecificationElementVisitor visitor) {
+		visitor.visitClass(testClass);
 	}
 }

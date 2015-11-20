@@ -13,21 +13,24 @@ package org.junit.gen5.engine;
 import java.io.File;
 import java.lang.reflect.Method;
 
-public interface TestPlanSpecificationVisitor {
+/**
+ * @since 5.0
+ */
+public interface TestPlanSpecificationElementVisitor {
 
-	default void visitUniqueIdSpecification(String uniqueId) {
+	default void visitUniqueId(String uniqueId) {
 	}
 
-	default void visitPackageSpecification(String packageName) {
+	default void visitPackage(String packageName) {
 	}
 
-	default void visitClassSpecification(Class<?> testClass) {
+	default void visitClass(Class<?> testClass) {
 	}
 
-	default void visitMethodSpecification(Class<?> testClass, Method testMethod) {
+	default void visitMethod(Class<?> testClass, Method testMethod) {
 	}
 
-	default void visitAllTestsSpecification(File rootDirectory) {
+	default void visitAllTests(File rootDirectory) {
 	}
 
 }
