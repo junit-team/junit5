@@ -11,9 +11,9 @@
 package org.junit.gen5.api.extension;
 
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * {@code TestExecutionContext} encapsulates the <em>context</em> in which
@@ -43,5 +43,6 @@ public interface TestExecutionContext {
 
 	Optional<TestExecutionContext> getParent();
 
-	List<TestExtension> getExtensions();
+	Set<TestExtension> getExtensions();
+
 }

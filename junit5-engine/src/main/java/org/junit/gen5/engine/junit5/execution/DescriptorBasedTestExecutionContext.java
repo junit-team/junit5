@@ -16,10 +16,10 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.MethodParameterResolver;
@@ -47,7 +47,7 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 
 	private final TestExecutionContext parent;
 
-	protected final TestExtensionsRegistry registry;
+	protected final TestExtensionRegistry registry;
 
 	DescriptorBasedTestExecutionContext(TestDescriptor descriptor, TestExecutionContext parent, Object testInstance) {
 
@@ -82,23 +82,23 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 				.flatMap(Arrays::stream)
 				.filter(MethodParameterResolver.class::isAssignableFrom)
 				.forEach(clazz -> {
-					registry.addExtensionFromClass(clazz);
+					registry.addExtension(clazz);
 				});
 		// @formatter:off
 
 	}
 
-	private TestExtensionsRegistry createRegistry() {
+	private TestExtensionRegistry createRegistry() {
 		if (this.parent == null)
-			return new TestExtensionsRegistry();
+			return new TestExtensionRegistry();
 
 		if (! (this.parent instanceof DescriptorBasedTestExecutionContext))
-			return new TestExtensionsRegistry();
+			return new TestExtensionRegistry();
 
 		//TODO Get rid of casting. Maybe move getRegistry into TestExecutionInterface?
 		//     Would require TestExtensionsRegistry to move to junit-engine-api.
 		DescriptorBasedTestExecutionContext parentContext = (DescriptorBasedTestExecutionContext) parent;
-		return new TestExtensionsRegistry(parentContext.registry);
+		return new TestExtensionRegistry(parentContext.registry);
 	}
 
 	@Override
@@ -132,7 +132,7 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 	}
 
 	@Override
-	public List<TestExtension> getExtensions() {
+	public Set<TestExtension> getExtensions() {
 		return registry.getExtensions();
 	}
 

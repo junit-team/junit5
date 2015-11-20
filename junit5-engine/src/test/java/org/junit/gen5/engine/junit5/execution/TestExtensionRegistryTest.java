@@ -10,80 +10,81 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
 
-public class TestExtensionsRegistryTest {
+/**
+ * @since 5.0
+ */
+public class TestExtensionRegistryTest {
 
-	private TestExtensionsRegistry registry;
+	private TestExtensionRegistry registry;
 
 	@Test
 	public void checkJUnit5DefaultExtensions() {
-		Assert.assertEquals(1, TestExtensionsRegistry.getDefaultExtensionClasses().size());
+		Assert.assertEquals(1, TestExtensionRegistry.getDefaultExtensionClasses().size());
 
 		assertDefaultExtensionType(TestNameParameterResolver.class);
 	}
 
 	@Test
 	public void newRegistryWithoutParentHasDefaultExtensions() {
-		registry = new TestExtensionsRegistry();
-		List<? extends TestExtension> extensions = registry.getExtensions();
+		registry = new TestExtensionRegistry();
+		Set<? extends TestExtension> extensions = registry.getExtensions();
 
-		Assert.assertEquals(TestExtensionsRegistry.getDefaultExtensionClasses().size(), extensions.size());
+		Assert.assertEquals(TestExtensionRegistry.getDefaultExtensionClasses().size(), extensions.size());
 		assertExtensionPresent(TestNameParameterResolver.class);
 	}
 
 	@Test
 	public void addNewExtensionByClass() {
 
-		registry = new TestExtensionsRegistry();
-		registry.addExtensionFromClass(MyExtension.class);
+		registry = new TestExtensionRegistry();
+		registry.addExtension(MyExtension.class);
 
 		assertExtensionPresent(MyExtension.class);
 
 		int rememberSize = registry.getExtensions().size();
-		registry.addExtensionFromClass(MyExtension.class);
-		registry.addExtensionFromClass(MyExtension.class);
-		registry.addExtensionFromClass(MyExtension.class);
+		registry.addExtension(MyExtension.class);
+		registry.addExtension(MyExtension.class);
+		registry.addExtension(MyExtension.class);
 		Assert.assertEquals(rememberSize, registry.getExtensions().size());
 	}
 
 	@Test
 	public void extensionsAreInheritedFromParent() {
 
-		TestExtensionsRegistry parent = new TestExtensionsRegistry();
-		parent.addExtensionFromClass(MyExtension.class);
+		TestExtensionRegistry parent = new TestExtensionRegistry();
+		parent.addExtension(MyExtension.class);
 
-		registry = new TestExtensionsRegistry(parent);
-		registry.addExtensionFromClass(YourExtension.class);
+		registry = new TestExtensionRegistry(parent);
+		registry.addExtension(YourExtension.class);
 
 		assertExtensionPresent(MyExtension.class);
 		assertExtensionPresent(YourExtension.class);
 
-		TestExtensionsRegistry grandChild = new TestExtensionsRegistry(registry);
+		TestExtensionRegistry grandChild = new TestExtensionRegistry(registry);
 		assertExtensionPresentIn(MyExtension.class, grandChild.getExtensions());
 	}
 
 	private void assertExtensionPresent(Class<? extends TestExtension> extensionClass) {
-		List<TestExtension> extensions = registry.getExtensions();
-		assertExtensionPresentIn(extensionClass, extensions);
+		assertExtensionPresentIn(extensionClass, registry.getExtensions());
 	}
 
 	private void assertExtensionPresentIn(Class<? extends TestExtension> extensionClass,
-			List<TestExtension> extensions) {
+			Set<TestExtension> extensions) {
 		String assertionMessage = extensionClass.getSimpleName() + " should be present";
-		Assert.assertTrue(assertionMessage, extensions.stream().anyMatch(extension -> {
-			return extension.getClass().equals(extensionClass);
-		}));
+		Assert.assertTrue(assertionMessage,
+			extensions.stream().anyMatch(extension -> extension.getClass().equals(extensionClass)));
 	}
 
-	private void assertDefaultExtensionType(Class<TestNameParameterResolver> defaultExtension) {
-		Assert.assertTrue(defaultExtension.getName() + " should be default extension",
-			TestExtensionsRegistry.getDefaultExtensionClasses().contains(defaultExtension));
+	private void assertDefaultExtensionType(Class<?> extensionType) {
+		Assert.assertTrue(extensionType.getName() + " should be default extension",
+			TestExtensionRegistry.getDefaultExtensionClasses().contains(extensionType));
 	}
 
 }
