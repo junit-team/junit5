@@ -22,7 +22,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.engine.TestDescriptor;
@@ -61,13 +60,13 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 			// Also handles ContextTestDescriptor which extends ClassTestDescriptor.
 			this.testClass = ((ClassTestDescriptor) descriptor).getTestClass();
 			this.testMethod = null;
-			fillRegistryWithTestExtensions(this.testClass);
+			populateTestExtensionRegistry(this.testClass);
 		}
 		else if (descriptor instanceof MethodTestDescriptor) {
 			MethodTestDescriptor methodTestDescriptor = (MethodTestDescriptor) descriptor;
 			this.testClass = ((ClassTestDescriptor) methodTestDescriptor.getParent().get()).getTestClass();
 			this.testMethod = methodTestDescriptor.getTestMethod();
-			fillRegistryWithTestExtensions(this.testMethod);
+			populateTestExtensionRegistry(this.testMethod);
 		}
 		else {
 			this.testClass = null;
@@ -75,28 +74,21 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 		}
 	}
 
-	private void fillRegistryWithTestExtensions(AnnotatedElement annotatedElement) {
+	private void populateTestExtensionRegistry(AnnotatedElement annotatedElement) {
 		// @formatter:off
 		findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
 				.map(ExtendWith::value)
 				.flatMap(Arrays::stream)
-				.filter(MethodParameterResolver.class::isAssignableFrom)
-				.forEach(clazz -> {
-					registry.addExtension(clazz);
-				});
+				.forEach(this.registry::addExtension);
 		// @formatter:off
-
 	}
 
 	private TestExtensionRegistry createRegistry() {
-		if (this.parent == null)
-			return new TestExtensionRegistry();
-
 		if (! (this.parent instanceof DescriptorBasedTestExecutionContext))
 			return new TestExtensionRegistry();
 
-		//TODO Get rid of casting. Maybe move getRegistry into TestExecutionInterface?
-		//     Would require TestExtensionsRegistry to move to junit-engine-api.
+		// TODO Get rid of casting. Maybe move createRegistry() into TestExecutionContext?
+		//      Would require TestExtensionRegistry to move to junit-engine-api.
 		DescriptorBasedTestExecutionContext parentContext = (DescriptorBasedTestExecutionContext) parent;
 		return new TestExtensionRegistry(parentContext.registry);
 	}
@@ -133,7 +125,7 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 
 	@Override
 	public Set<TestExtension> getExtensions() {
-		return registry.getExtensions();
+		return this.registry.getExtensions();
 	}
 
 	@Override
