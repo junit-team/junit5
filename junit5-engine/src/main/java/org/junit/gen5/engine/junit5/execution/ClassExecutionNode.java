@@ -11,8 +11,7 @@
 package org.junit.gen5.engine.junit5.execution;
 
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
-import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
-import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -155,9 +154,7 @@ class ClassExecutionNode extends TestExecutionNode {
 	protected void postProcessTestInstance(TestExecutionContext context, Object testInstance) {
 		try {
 			// @formatter:off
-			context.getExtensions().stream()
-					.filter(extension -> extension instanceof InstancePostProcessor)
-					.map(extension -> (InstancePostProcessor) extension)
+			context.getExtensions(InstancePostProcessor.class)
 					.forEach(postProcessor -> postProcessor.postProcessTestInstance(testInstance));
 			// @formatter:on
 		}

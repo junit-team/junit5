@@ -73,9 +73,7 @@ class MethodInvoker {
 	private Object resolveParameter(Parameter parameter, TestExecutionContext testExecutionContext) {
 		try {
 			// @formatter:off
-			List<MethodParameterResolver> matchingResolvers = this.resolutionContext.getExtensions().stream()
-					.filter(extension -> extension instanceof MethodParameterResolver)
-					.map(extension -> (MethodParameterResolver) extension)
+			List<MethodParameterResolver> matchingResolvers = this.resolutionContext.getExtensions(MethodParameterResolver.class)
 					.filter(resolver -> resolver.supports(parameter))
 					.collect(toList());
 			// @formatter:on

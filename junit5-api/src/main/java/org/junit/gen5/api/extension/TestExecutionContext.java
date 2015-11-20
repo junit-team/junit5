@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * {@code TestExecutionContext} encapsulates the <em>context</em> in which
@@ -44,5 +45,13 @@ public interface TestExecutionContext {
 	Optional<TestExecutionContext> getParent();
 
 	Set<TestExtension> getExtensions();
+
+	default <T extends TestExtension> Stream<T> getExtensions(Class<T> extensionClass) {
+		//@formatter:off
+		return getExtensions().stream()
+				.filter(extensionClass::isInstance)
+				.map(extensionClass::cast);
+		//@formatter:on
+	}
 
 }
