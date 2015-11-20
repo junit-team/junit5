@@ -13,16 +13,15 @@ package org.junit.gen5.launcher.listeners;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import lombok.Value;
 
+import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.launcher.TestPlan;
 
 // TODO Give it a REAL interface and make it threadsafe
 public class TestExecutionSummary {
@@ -61,11 +60,42 @@ public class TestExecutionSummary {
 			this.testsSkipped.get(), this.testsAborted.get(), this.testsSucceeded.get(), this.testsFailed.get()));
 		// @formatter:on
 
-		//		if (countFailedTests() > 0) {
-		//			writer.println("Test failures: ");
-		//		}
+		writer.flush();
+	}
+
+	public void printFailuresOn(PrintWriter writer) {
+
+		if (countFailedTests() > 0) {
+			writer.println();
+			writer.println(String.format("Test failures (%d):", testsFailed.get()));
+			failures.stream().forEach(failure -> {
+				//TODO Add source description to text
+				writer.println(String.format("  %s", describeTest(failure.getDescriptor())));
+				writer.println(String.format("    => Exception: %s", failure.getException().getLocalizedMessage()));
+			});
+		}
 
 		writer.flush();
+	}
+
+	private String describeTest(TestDescriptor descriptor) {
+		List<String> descriptionParts = new ArrayList<>();
+		collectTestDescription(Optional.of(descriptor), descriptionParts);
+		return descriptionParts.stream().collect(Collectors.joining(":"));
+	}
+
+	private void collectTestDescription(Optional<TestDescriptor> optionalDescriptor, List<String> descriptionParts) {
+		optionalDescriptor.ifPresent(descriptor -> {
+			if (descriptor instanceof TestPlan) {
+			}
+			else if (descriptor instanceof EngineDescriptor) {
+				descriptionParts.add(0, descriptor.getUniqueId());
+			}
+			else {
+				descriptionParts.add(0, descriptor.getDisplayName());
+			}
+			collectTestDescription(descriptor.getParent(), descriptionParts);
+		});
 	}
 
 	public long countFailedTests() {

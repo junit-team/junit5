@@ -56,6 +56,9 @@ public class ConsoleRunner {
 	@Option(name = {"-a", "--all"}, description = "Run all tests")
 	private boolean runAllTests;
 
+	@Option(name = {"-D", "--hide-details"}, description = "Hide details while tests are being executed")
+	private boolean hideDetails;
+
 	@Arguments(description = "Test classes, methods or packages to execute (ignore if --all|-a has been chosen)")
 	private List<String> arguments;
 
@@ -109,12 +112,10 @@ public class ConsoleRunner {
 
 	private void registerListeners(Launcher launcher, TestExecutionSummary summary) {
 		SummaryCreatingTestListener testSummaryListener = new SummaryCreatingTestListener(summary);
-		launcher.registerTestPlanExecutionListeners(
-			// @formatter:off
-			new ColoredPrintingTestListener(System.out, disableAnsiColors),
-			testSummaryListener
-			// @formatter:on
-		);
+		launcher.registerTestPlanExecutionListeners(testSummaryListener);
+		if (!hideDetails) {
+			launcher.registerTestPlanExecutionListeners(new ColoredPrintingTestListener(System.out, disableAnsiColors));
+		}
 	}
 
 	private TestPlanSpecification createTestPlanSpecification() {
@@ -130,9 +131,14 @@ public class ConsoleRunner {
 	}
 
 	private void printSummaryToStandardOut(TestExecutionSummary summary) {
-		PrintWriter soutWriter = new PrintWriter(System.out);
-		summary.printOn(soutWriter);
-		soutWriter.close();
+		PrintWriter stdout = new PrintWriter(System.out);
+
+		if (hideDetails) { //Otherwise the failures have already been printed
+			summary.printFailuresOn(stdout);
+		}
+
+		summary.printOn(stdout);
+		stdout.close();
 	}
 
 	private List<TestPlanSpecificationElement> testPlanSpecificationElementsFromArguments() {
