@@ -15,6 +15,17 @@ class MockTests {
 
 Registered extensions are inherited within test class hierarchies.
 
+## Test Instance Post-processing
+
+`InstancePostProcessor` defines the API for `TestExtensions` that
+wish to _post process_ test instances.
+
+Common use cases include injecting dependencies into the test instance,
+invoking custom initialization methods on the test instance, etc.
+
+For a concrete example, consult the source code for the [`MockitoExtension`].
+
+
 ## Parameter Resolution
 
 `MethodParameterResolver` is a `TestExtension` strategy for dynamically resolving method parameters at runtime.
@@ -23,9 +34,8 @@ If a `@Test`, `@BeforeEach`, or `@AfterEach` method accepts a parameter, the par
 
 ## Additional Planned Extension Points
 
-As of the time of this writing, `MethodParameterResolver` is the only supported extension point; however, the JUnit Lambda team is planning several additional extension points, including but not limited to the following.
+As of the time of this writing, `InstancePostProcessor` and `MethodParameterResolver` are the only supported extension points; however, the JUnit Lambda team is planning several additional extension points, including but not limited to the following.
 
-1. Test instantiation post-processing callbacks
 1. BeforeAll / AfterAll callbacks
 1. BeforeEach / AfterEach callbacks
 1. Dynamic test registration -- for example, for computing parameterized tests at runtime
@@ -40,6 +50,7 @@ As of the time of this writing, `MethodParameterResolver` is the only supported 
 [`MethodParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java
 [`MockitoDecorator`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/main/java/com/example/mockito/MockitoDecorator.java
 [`MockitoDecoratorInBaseClassTest`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/test/java/com/example/mockito/MockitoDecoratorInBaseClassTest.java
+[`MockitoExtension`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java
 [`org.junit.gen5.api`]: https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api
 [`org.junit.gen5.Assertions`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java
 [`SampleTestCase`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/SampleTestCase.java
