@@ -13,6 +13,7 @@ package org.junit.gen5.console;
 import static io.airlift.airline.SingleCommand.singleCommand;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +30,8 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.launcher.Launcher;
+import org.junit.gen5.launcher.listeners.SummaryCreatingTestListener;
+import org.junit.gen5.launcher.listeners.TestExecutionSummary;
 
 /**
  * @author Stefan Bechtold
@@ -87,14 +90,34 @@ public class ConsoleRunner {
 		// TODO Configure launcher?
 		Launcher launcher = new Launcher();
 
-		TestSummaryReportingTestListener testSummaryListener = new TestSummaryReportingTestListener(System.out);
+		TestExecutionSummary summary = new TestExecutionSummary();
+
+		registerListeners(launcher, summary);
+
+		TestPlanSpecification testPlanSpecification = createTestPlanSpecification();
+
+		launcher.execute(testPlanSpecification);
+
+		printSummaryToStandardOut(summary);
+
+		if (enableExitCode) {
+			long failedTests = summary.countFailedTests();
+			int exitCode = (int) Math.min(Integer.MAX_VALUE, failedTests);
+			System.exit(exitCode);
+		}
+	}
+
+	private void registerListeners(Launcher launcher, TestExecutionSummary summary) {
+		SummaryCreatingTestListener testSummaryListener = new SummaryCreatingTestListener(summary);
 		launcher.registerTestPlanExecutionListeners(
 			// @formatter:off
 			new ColoredPrintingTestListener(System.out, disableAnsiColors),
 			testSummaryListener
 			// @formatter:on
 		);
+	}
 
+	private TestPlanSpecification createTestPlanSpecification() {
 		TestPlanSpecification testPlanSpecification;
 		if (runAllTests) {
 			Set<File> rootDirectories = ReflectionUtils.getAllClasspathRootDirectories();
@@ -103,15 +126,13 @@ public class ConsoleRunner {
 		else {
 			testPlanSpecification = TestPlanSpecification.build(testPlanSpecificationElementsFromArguments());
 		}
+		return testPlanSpecification;
+	}
 
-		// TODO Provide means to allow manipulation of test plan?
-		launcher.execute(testPlanSpecification);
-
-		if (enableExitCode) {
-			long failedTests = testSummaryListener.getNumberOfFailedTests();
-			int exitCode = (int) Math.min(Integer.MAX_VALUE, failedTests);
-			System.exit(exitCode);
-		}
+	private void printSummaryToStandardOut(TestExecutionSummary summary) {
+		PrintWriter soutWriter = new PrintWriter(System.out);
+		summary.printOn(soutWriter);
+		soutWriter.close();
 	}
 
 	private List<TestPlanSpecificationElement> testPlanSpecificationElementsFromArguments() {
