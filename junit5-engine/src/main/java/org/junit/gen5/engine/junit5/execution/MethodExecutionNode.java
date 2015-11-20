@@ -92,7 +92,7 @@ class MethodExecutionNode extends TestExecutionNode {
 
 	private void invokeTestMethod(Method method, TestExecutionContext context) {
 		Object target = context.getTestInstance().get();
-		invokeMethodInContext(method, context, context.getParameterResolvers(), target);
+		invokeMethodInContext(method, context, context, target);
 	}
 
 	private void executeBeforeEachMethods(TestExecutionContext context) {

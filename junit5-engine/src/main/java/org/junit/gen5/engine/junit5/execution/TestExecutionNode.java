@@ -14,10 +14,8 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.gen5.api.Condition.Result;
-import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -90,16 +88,16 @@ abstract class TestExecutionNode {
 	}
 
 	protected void invokeMethodInContext(Method method, TestExecutionContext methodContext,
-			Set<MethodParameterResolver> parameterResolvers, Object target) {
-		MethodInvoker methodInvoker = new MethodInvoker(method, target, parameterResolvers);
+			TestExecutionContext resolutionContext, Object target) {
+		MethodInvoker methodInvoker = new MethodInvoker(method, target, resolutionContext);
 		methodInvoker.invoke(methodContext);
 	}
 
 	protected void invokeMethodInContextWithAggregatingExceptions(Method method, TestExecutionContext methodContext,
-			Set<MethodParameterResolver> parameterResolvers, Object target, List<Throwable> exceptionsCollector) {
+			TestExecutionContext resolutionContext, Object target, List<Throwable> exceptionsCollector) {
 
 		try {
-			invokeMethodInContext(method, methodContext, parameterResolvers, target);
+			invokeMethodInContext(method, methodContext, resolutionContext, target);
 		}
 		catch (Throwable currentException) {
 			// InvocationTargetException already handled in ReflectionUtils.invokeMethod()

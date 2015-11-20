@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.MethodParameterResolver;
@@ -131,16 +129,6 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 	@Override
 	public Optional<TestExecutionContext> getParent() {
 		return Optional.ofNullable(this.parent);
-	}
-
-	@Override
-	public Set<MethodParameterResolver> getParameterResolvers() {
-		// @formatter:off
-		return getExtensions().stream()
-				.filter(extension -> extension instanceof MethodParameterResolver)
-				.map(extension -> (MethodParameterResolver) extension)
-				.collect(Collectors.toSet());
-		// @formatter:on
 	}
 
 	@Override

@@ -152,9 +152,8 @@ class ClassExecutionNode extends TestExecutionNode {
 			Object testInstance) {
 		List<Method> beforeEachMethods = getBeforeEachMethods();
 
-		Set<MethodParameterResolver> parentResolvers = resolutionContext.getParameterResolvers();
 		for (Method method : beforeEachMethods) {
-			invokeMethodInContext(method, methodContext, parentResolvers, testInstance);
+			invokeMethodInContext(method, methodContext, resolutionContext, testInstance);
 		}
 
 	}
@@ -170,9 +169,8 @@ class ClassExecutionNode extends TestExecutionNode {
 
 		List<Method> afterEachMethods = getAfterEachMethods();
 
-		Set<MethodParameterResolver> parentResolvers = resolutionContext.getParameterResolvers();
 		for (Method method : afterEachMethods) {
-			invokeMethodInContextWithAggregatingExceptions(method, methodContext, parentResolvers, testInstance,
+			invokeMethodInContextWithAggregatingExceptions(method, methodContext, resolutionContext, testInstance,
 				exceptionCollector);
 		}
 	}

@@ -10,14 +10,12 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
@@ -40,16 +38,16 @@ class MethodInvoker {
 
 	private final Object target;
 
-	private final Set<MethodParameterResolver> resolvers;
+	private TestExecutionContext resolutionContext;
 
-	MethodInvoker(Method method, Object target, Set<MethodParameterResolver> resolvers) {
+	MethodInvoker(Method method, Object target, TestExecutionContext resolutionContext) {
 		Preconditions.notNull(method, "method must not be null");
 		Preconditions.notNull(target, "target object must not be null");
-		Preconditions.notNull(resolvers, "resolvers must not be null");
+		Preconditions.notNull(resolutionContext, "resolutionContext must not be null");
 
 		this.method = method;
 		this.target = target;
-		this.resolvers = resolvers;
+		this.resolutionContext = resolutionContext;
 	}
 
 	Object invoke(TestExecutionContext testExecutionContext) {
@@ -75,7 +73,9 @@ class MethodInvoker {
 	private Object resolveParameter(Parameter parameter, TestExecutionContext testExecutionContext) {
 		try {
 			// @formatter:off
-			List<MethodParameterResolver> matchingResolvers = this.resolvers.stream()
+			List<MethodParameterResolver> matchingResolvers = this.resolutionContext.getExtensions().stream()
+					.filter(extension -> extension instanceof MethodParameterResolver)
+					.map(extension -> (MethodParameterResolver) extension)
 					.filter(resolver -> resolver.supports(parameter))
 					.collect(toList());
 			// @formatter:on
