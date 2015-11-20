@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -27,14 +27,11 @@ import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
  */
 public class TestExtensionRegistry {
 
-	private static final List<Class<? extends TestExtension>> defaultExtensionClasses = new ArrayList<>();
-
-	static {
-		defaultExtensionClasses.add(TestNameParameterResolver.class);
-	}
+	private static final List<Class<? extends TestExtension>> defaultExtensionClasses = Collections.unmodifiableList(
+		Arrays.asList(TestNameParameterResolver.class));
 
 	static List<Class<? extends TestExtension>> getDefaultExtensionClasses() {
-		return Collections.unmodifiableList(defaultExtensionClasses);
+		return defaultExtensionClasses;
 	}
 
 	private final Set<TestExtension> extensions = new LinkedHashSet<>();
