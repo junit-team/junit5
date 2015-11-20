@@ -11,6 +11,7 @@
 package org.junit.gen5.launcher.listeners;
 
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import lombok.Data;
 
@@ -22,7 +23,9 @@ import org.junit.gen5.launcher.TestPlanExecutionListener;
 @Data
 public class LoggingListener implements TestPlanExecutionListener {
 
-	private Consumer<String> logger = (aString -> System.out.println(aString));
+	private static final Logger LOG = Logger.getLogger(LoggingListener.class.getName());
+
+	private Consumer<String> logger = (aString -> LOG.fine(() -> aString));
 
 	private void log(String logString, Object... args) {
 		logger.accept("> " + String.format(logString, args));
