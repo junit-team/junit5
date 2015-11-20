@@ -11,6 +11,7 @@
 package org.junit.gen5.api.extension;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -43,6 +44,11 @@ public interface TestExecutionContext {
 
 	Optional<TestExecutionContext> getParent();
 
+	/**
+	 * @deprecated Use getExtensions() instead
+	 */
+	@Deprecated
 	Set<MethodParameterResolver> getParameterResolvers();
 
+	List<TestExtension> getExtensions();
 }

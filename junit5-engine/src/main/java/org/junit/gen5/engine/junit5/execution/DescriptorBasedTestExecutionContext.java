@@ -15,17 +15,18 @@ import static org.junit.gen5.commons.util.AnnotationUtils.findRepeatableAnnotati
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestExecutionContext;
+import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
@@ -48,7 +49,7 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 
 	private final TestExecutionContext parent;
 
-	private final Set<MethodParameterResolver> resolvers = new HashSet<>();
+	protected final TestExtensionsRegistry registry;
 
 	DescriptorBasedTestExecutionContext(TestDescriptor descriptor, TestExecutionContext parent, Object testInstance) {
 
@@ -56,20 +57,19 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 		this.displayName = descriptor.getDisplayName();
 		this.parent = parent;
 
-		Set<MethodParameterResolver> parentResolvers = (parent != null ? parent.getParameterResolvers()
-				: Collections.emptySet());
+		this.registry = createRegistry(parent);
 
 		if (descriptor instanceof ClassTestDescriptor) {
 			// Also handles ContextTestDescriptor which extends ClassTestDescriptor.
 			this.testClass = ((ClassTestDescriptor) descriptor).getTestClass();
 			this.testMethod = null;
-			this.resolvers.addAll(getMethodParameterResolvers(this.testClass, parentResolvers));
+			fillRegistryWithTestExtensions(this.testClass);
 		}
 		else if (descriptor instanceof MethodTestDescriptor) {
 			MethodTestDescriptor methodTestDescriptor = (MethodTestDescriptor) descriptor;
 			this.testClass = ((ClassTestDescriptor) methodTestDescriptor.getParent().get()).getTestClass();
 			this.testMethod = methodTestDescriptor.getTestMethod();
-			this.resolvers.addAll(getMethodParameterResolvers(this.testMethod, parentResolvers));
+			fillRegistryWithTestExtensions(this.testMethod);
 		}
 		else {
 			this.testClass = null;
@@ -77,24 +77,31 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private Set<MethodParameterResolver> getMethodParameterResolvers(AnnotatedElement annotatedElement,
-			Set<MethodParameterResolver> parentResolvers) {
-
-		// TODO Determine where the MethodParameterResolverRegistry should be created.
-		MethodParameterResolverRegistry resolverRegistry = new MethodParameterResolverRegistry(parentResolvers);
-
+	private void fillRegistryWithTestExtensions(AnnotatedElement annotatedElement) {
 		// @formatter:off
 		findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
 				.map(ExtendWith::value)
 				.flatMap(Arrays::stream)
 				.filter(MethodParameterResolver.class::isAssignableFrom)
 				.forEach(clazz -> {
-					resolverRegistry.addResolver((Class<? extends MethodParameterResolver>) clazz);
+					registry.addExtensionFromClass(clazz);
 				});
 		// @formatter:off
 
-		return resolverRegistry.getResolvers();
+	}
+
+	private TestExtensionsRegistry createRegistry(TestExecutionContext parent) {
+		//TODO Get rid of casting. Maybe move getRegistry into TestExecutionInterface?
+
+		TestExtensionsRegistry registry = null;
+		if (! (parent instanceof DescriptorBasedTestExecutionContext))
+			registry = new TestExtensionsRegistry();
+
+		DescriptorBasedTestExecutionContext parentContext = (DescriptorBasedTestExecutionContext) parent;
+		if (parent == null)
+			return new TestExtensionsRegistry();
+
+		return new TestExtensionsRegistry(parentContext.registry);
 	}
 
 	@Override
@@ -129,7 +136,17 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 
 	@Override
 	public Set<MethodParameterResolver> getParameterResolvers() {
-		return this.resolvers;
+		// @formatter:off
+		return getExtensions().stream()
+				.filter(extension -> extension instanceof MethodParameterResolver)
+				.map(extension -> (MethodParameterResolver) extension)
+				.collect(Collectors.toSet());
+		// @formatter:on
+	}
+
+	@Override
+	public List<TestExtension> getExtensions() {
+		return registry.getExtensions();
 	}
 
 	@Override
