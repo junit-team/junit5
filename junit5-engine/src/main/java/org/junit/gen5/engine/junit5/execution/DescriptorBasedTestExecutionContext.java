@@ -91,16 +91,15 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 	}
 
 	private TestExtensionsRegistry createRegistry(TestExecutionContext parent) {
-		//TODO Get rid of casting. Maybe move getRegistry into TestExecutionInterface?
-
-		TestExtensionsRegistry registry = null;
-		if (! (parent instanceof DescriptorBasedTestExecutionContext))
-			registry = new TestExtensionsRegistry();
-
-		DescriptorBasedTestExecutionContext parentContext = (DescriptorBasedTestExecutionContext) parent;
 		if (parent == null)
 			return new TestExtensionsRegistry();
 
+		if (! (parent instanceof DescriptorBasedTestExecutionContext))
+			return new TestExtensionsRegistry();
+
+		//TODO Get rid of casting. Maybe move getRegistry into TestExecutionInterface?
+		//     Would require TestExtensionsRegistry will move to junit-engine-api.
+		DescriptorBasedTestExecutionContext parentContext = (DescriptorBasedTestExecutionContext) parent;
 		return new TestExtensionsRegistry(parentContext.registry);
 	}
 
