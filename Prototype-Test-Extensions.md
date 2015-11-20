@@ -1,6 +1,18 @@
 # Writing Test Extensions for JUnit 5
 
+**Table of Contents**
+
+- [Overview](#overview)
+- [Registering Extensions](#registering-extensions)
+- [Test Instance Post-processing](#test-instance-post-processing)
+- [Parameter Resolution](#parameter-resolution)
+- [Additional Planned Extension Points](#additional-planned-extension-points)
+
+## Overview
+
 In contrast to the competing `Runner`, `@Rule`, and `@ClassRule` extension points in JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the `TestExtension` API. Note, however, that `TestExtension` itself is just a marker interface.
+
+## Registering Extensions
 
 Developers can register one or more extensions by annotating a test class or test method with `@ExtendWith(...)`, supplying class references for the extensions to register. For example, to register a custom `MockitoExtension`, you would annotate your test class as follows.
 
@@ -24,7 +36,6 @@ Common use cases include injecting dependencies into the test instance,
 invoking custom initialization methods on the test instance, etc.
 
 For a concrete example, consult the source code for the [`MockitoExtension`].
-
 
 ## Parameter Resolution
 
