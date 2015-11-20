@@ -19,30 +19,38 @@ import org.junit.gen5.api.TestName;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.junit4runner.JUnit5;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 
 /**
  * @author Johannes Link
  * @author Sam Brannen
  * @since 5.0
+ * @see MockitoExtension
  */
 @RunWith(JUnit5.class)
 @ExtendWith(MockitoExtension.class)
-//public to be picked up by IDE JUnit4 test runner
+// Must be public to be picked up by JUnit4 test runner in IDEs.
 public class MockitoExtensionInBaseClassTest {
+
+	@Mock
+	private NumberGenerator numberGenerator;
 
 	@BeforeEach
 	void initialize(@InjectMock MyType myType, @TestName String testName) {
 		when(myType.getName()).thenReturn(testName);
+		when(numberGenerator.next()).thenReturn(42);
 	}
 
 	@Test
 	void simpleTestWithInjectedMock(@InjectMock MyType myType) {
 		assertEquals("simpleTestWithInjectedMock", myType.getName());
+		assertEquals(42, numberGenerator.next());
 	}
 
 	@Test
 	void secondTestWithInjectedMock(@InjectMock MyType myType) {
 		assertEquals("secondTestWithInjectedMock", myType.getName());
+		assertEquals(42, numberGenerator.next());
 	}
 
 }

@@ -27,9 +27,11 @@ class NestedClassExecutionNode extends ClassExecutionNode {
 	}
 
 	@Override
-	Object createTestInstance() {
-		Object parentInstance = ((ClassExecutionNode) getParent()).createTestInstance();
-		return ReflectionUtils.newInstance(getTestDescriptor().getTestClass(), parentInstance);
+	protected Object createAndPostProcessTestInstance(TestExecutionContext context) {
+		Object parentInstance = ((ClassExecutionNode) getParent()).createAndPostProcessTestInstance(context);
+		final Object testInstance = ReflectionUtils.newInstance(getTestDescriptor().getTestClass(), parentInstance);
+		postProcessTestInstance(context, testInstance);
+		return testInstance;
 	}
 
 	@Override

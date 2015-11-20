@@ -15,23 +15,37 @@ import static org.mockito.Mockito.mock;
 import java.lang.reflect.Parameter;
 
 import org.junit.gen5.api.extension.ContextScope;
+import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.AnnotationUtils;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
+ * {@code MockitoExtension} showcases the {@link InstancePostProcessor}
+ * and {@link MethodParameterResolver} extension points of JUnit 5 by
+ * providing dependency injection support at the field level via Mockito's
+ * {@link Mock @Mock} annotation and at the method level via our demo
+ * {@link InjectMock @InjectMock} annotation.
+ *
  * @author Johannes Link
  * @author Sam Brannen
  * @since 5.0
  */
-public class MockitoExtension implements MethodParameterResolver {
+public class MockitoExtension implements InstancePostProcessor, MethodParameterResolver {
 
 	private final ContextScope<Class<?>, Object> mocksInScope;
 
 	public MockitoExtension() {
 		mocksInScope = new ContextScope<Class<?>, Object>(type -> mock(type), ContextScope.LifeCycle.OncePerTest,
 			ContextScope.Inheritance.Yes);
+	}
+
+	@Override
+	public void postProcessTestInstance(Object testInstance) {
+		MockitoAnnotations.initMocks(testInstance);
 	}
 
 	@Override

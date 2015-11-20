@@ -26,6 +26,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Condition.Result;
 import org.junit.gen5.api.TestInstance;
 import org.junit.gen5.api.TestInstance.Lifecycle;
+import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
@@ -59,13 +60,13 @@ class ClassExecutionNode extends TestExecutionNode {
 
 		Class<?> testClass = context.getTestClass().get();
 		boolean instancePerClass = isInstancePerClassMode(testClass);
-		Object testInstance = (instancePerClass ? createTestInstance() : null);
+		Object testInstance = (instancePerClass ? createAndPostProcessTestInstance(context) : null);
 
 		try {
 			executeBeforeAllMethods(testClass, testInstance);
 			for (TestExecutionNode child : getChildren()) {
 				if (!instancePerClass) {
-					testInstance = createTestInstance();
+					testInstance = createAndPostProcessTestInstance(context);
 				}
 				executeChild(child, request, context, testInstance);
 			}
@@ -134,26 +135,47 @@ class ClassExecutionNode extends TestExecutionNode {
 		}
 	}
 
-	Object createTestInstance() {
+	protected Object createAndPostProcessTestInstance(TestExecutionContext context) {
+		final Class<?> testClass = getTestDescriptor().getTestClass();
+		Object testInstance;
 		try {
-			return newInstance(getTestDescriptor().getTestClass());
+			testInstance = newInstance(testClass);
 		}
 		catch (Exception ex) {
-			throw new IllegalStateException(
-				String.format("Test %s is not well-formed and cannot be executed", getTestDescriptor().getUniqueId()),
-				ex);
+			String message = String.format(
+				"Failed to create test instance of type [%s] for test descriptor with unique ID [%s]",
+				testClass.getName(), getTestDescriptor().getUniqueId());
+			throw new IllegalStateException(message, ex);
+		}
+
+		postProcessTestInstance(context, testInstance);
+		return testInstance;
+	}
+
+	protected void postProcessTestInstance(TestExecutionContext context, Object testInstance) {
+		try {
+			// @formatter:off
+			context.getExtensions().stream()
+					.filter(extension -> extension instanceof InstancePostProcessor)
+					.map(extension -> (InstancePostProcessor) extension)
+					.forEach(postProcessor -> postProcessor.postProcessTestInstance(testInstance));
+			// @formatter:on
+		}
+		catch (Exception ex) {
+			String message = String.format(
+				"Failed to post-process test instance of type [%s] for test descriptor with unique ID [%s]",
+				testInstance.getClass().getName(), getTestDescriptor().getUniqueId());
+			throw new IllegalStateException(message, ex);
 		}
 	}
 
 	@Override
 	void executeBeforeEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
 			Object testInstance) {
-		List<Method> beforeEachMethods = getBeforeEachMethods();
 
-		for (Method method : beforeEachMethods) {
+		for (Method method : getBeforeEachMethods()) {
 			invokeMethodInContext(method, methodContext, resolutionContext, testInstance);
 		}
-
 	}
 
 	protected List<Method> getBeforeEachMethods() {
@@ -165,9 +187,7 @@ class ClassExecutionNode extends TestExecutionNode {
 	void executeAfterEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
 			Object testInstance, List<Throwable> exceptionCollector) {
 
-		List<Method> afterEachMethods = getAfterEachMethods();
-
-		for (Method method : afterEachMethods) {
+		for (Method method : getAfterEachMethods()) {
 			invokeMethodInContextWithAggregatingExceptions(method, methodContext, resolutionContext, testInstance,
 				exceptionCollector);
 		}
