@@ -63,7 +63,7 @@ and `pom.xml` in the projects below:
 
 ----
 
-# Integrating JUnit 5 in JUnit 4 Test Suites
+# From JUnit 4 to 5: Integration and Migration
 
 [How to run existing JUnit 4 tests with JUnit5 and migrate from JUnit 4 to JUnit 5?](Prototype-JUnit4-Run-And-Migrate)
 
