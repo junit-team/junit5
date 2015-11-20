@@ -61,4 +61,16 @@ public class JavaSource implements TestSource {
 	public Optional<Method> getJavaMethod() {
 		return Optional.ofNullable(javaMethod);
 	}
+
+	@Override
+	public String toString() {
+		//TODO Add parameters to method string
+		StringBuilder builder = new StringBuilder();
+		getJavaClass().ifPresent(clazz -> builder.append(clazz.getName()));
+		getJavaMethod().ifPresent(method -> {
+			builder.append('#');
+			builder.append(method.getName());
+		});
+		return builder.toString();
+	}
 }

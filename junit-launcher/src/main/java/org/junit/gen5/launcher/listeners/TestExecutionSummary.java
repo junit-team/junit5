@@ -21,6 +21,7 @@ import lombok.Value;
 
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.launcher.TestPlan;
 
 // TODO Give it a REAL interface and make it threadsafe
@@ -71,6 +72,9 @@ public class TestExecutionSummary {
 			failures.stream().forEach(failure -> {
 				//TODO Add source description to text
 				writer.println(String.format("  %s", describeTest(failure.getDescriptor())));
+				failure.getDescriptor().getSource().ifPresent(scource -> {
+					writer.println(String.format("    %s", scource.toString()));
+				});
 				writer.println(String.format("    => Exception: %s", failure.getException().getLocalizedMessage()));
 			});
 		}
