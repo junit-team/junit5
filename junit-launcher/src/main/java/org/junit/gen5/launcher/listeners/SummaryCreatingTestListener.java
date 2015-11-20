@@ -10,9 +10,6 @@
 
 package org.junit.gen5.launcher.listeners;
 
-import java.io.PrintStream;
-import java.util.concurrent.atomic.AtomicLong;
-
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.launcher.TestPlan;
