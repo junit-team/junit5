@@ -26,8 +26,10 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Condition.Result;
+import org.junit.gen5.api.Executable;
 import org.junit.gen5.api.TestInstance;
 import org.junit.gen5.api.TestInstance.Lifecycle;
+import org.junit.gen5.api.extension.AfterAllCallbacks;
 import org.junit.gen5.api.extension.AfterEachCallbacks;
 import org.junit.gen5.api.extension.BeforeAllCallbacks;
 import org.junit.gen5.api.extension.BeforeEachCallbacks;
@@ -125,26 +127,55 @@ class ClassExecutionNode extends TestExecutionNode {
 		Object testInstance = context.getTestInstance().orElse(null);
 
 		Class<AfterAll> annotationType = AfterAll.class;
-		Exception exceptionDuringAfterAll = null;
+		Throwable exception = null;
+
+		List<AfterAllCallbacks> callbacks = context.getExtensions(AfterAllCallbacks.class).collect(toList());
+
+		// Execute "afters" in reverse order.
+		Collections.reverse(callbacks);
+
+		for (AfterAllCallbacks callback : callbacks) {
+			exception = executeAndAggregateExceptions(exception, () -> callback.preAfterAll(context));
+		}
 
 		for (Method method : findAnnotatedMethods(testClass, annotationType, MethodSortOrder.HierarchyUp)) {
-			try {
+			exception = executeAndAggregateExceptions(exception, () -> {
 				validateBeforeAllOrAfterAllMethod(annotationType, method, testInstance);
 				invokeMethod(method, testInstance);
-			}
-			catch (Exception e) {
-				if (exceptionDuringAfterAll == null) {
-					exceptionDuringAfterAll = e;
-				}
-				else {
-					exceptionDuringAfterAll.addSuppressed(e);
-				}
-			}
+			});
 		}
 
-		if (exceptionDuringAfterAll != null) {
-			request.getTestExecutionListener().testFailed(getTestDescriptor(), exceptionDuringAfterAll);
+		for (AfterAllCallbacks callback : callbacks) {
+			exception = executeAndAggregateExceptions(exception, () -> callback.postAfterAll(context));
 		}
+
+		if (exception != null) {
+			request.getTestExecutionListener().testFailed(getTestDescriptor(), exception);
+		}
+	}
+
+	/**
+	 * Execute the supplied {@link Executable} and aggregate any exception
+	 * thrown by the executable.
+	 *
+	 * <p>If the supplied {@code exception} is {@code null}, this method
+	 * will return any exception thrown by the executable. Otherwise, this
+	 * method will {@linkplain Throwable#addSuppressed suppress} any thrown
+	 * exception and return the supplied exception.
+	 */
+	Throwable executeAndAggregateExceptions(Throwable exception, Executable executable) {
+		try {
+			executable.execute();
+		}
+		catch (Throwable ex) {
+			if (exception == null) {
+				exception = ex;
+			}
+			else {
+				exception.addSuppressed(ex);
+			}
+		}
+		return exception;
 	}
 
 	private void validateBeforeAllOrAfterAllMethod(Class<? extends Annotation> annotationType, Method method,

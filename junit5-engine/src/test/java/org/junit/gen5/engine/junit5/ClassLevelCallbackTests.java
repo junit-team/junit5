@@ -23,6 +23,7 @@ import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInstance;
+import org.junit.gen5.api.extension.AfterAllCallbacks;
 import org.junit.gen5.api.extension.BeforeAllCallbacks;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExecutionContext;
@@ -40,6 +41,7 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 	@org.junit.Before
 	public void reset() {
 		preBeforeAllMethods.clear();
+		postAfterAllMethods.clear();
 	}
 
 	@org.junit.Test
@@ -58,6 +60,7 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 		Assert.assertTrue("@AfterAll was not invoked", InstancePerMethodTestCase.afterAllInvoked);
 
 		Assert.assertEquals("preBeforeAll()", asList("foo", "bar"), preBeforeAllMethods);
+		Assert.assertEquals("postAfterAll()", asList("bar", "foo"), postAfterAllMethods);
 	}
 
 	@org.junit.Test
@@ -76,6 +79,7 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 		Assert.assertTrue("@AfterAll was not invoked", InstancePerClassTestCase.afterAllInvoked);
 
 		Assert.assertEquals("preBeforeAll()", asList("foo", "bar"), preBeforeAllMethods);
+		Assert.assertEquals("postAfterAll()", asList("bar", "foo"), postAfterAllMethods);
 	}
 
 	// -------------------------------------------------------------------
@@ -130,23 +134,32 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 	}
 
 	private static List<String> preBeforeAllMethods = new ArrayList<>();
+	private static List<String> postAfterAllMethods = new ArrayList<>();
 
-	private static class FooClassLevelCallbacks implements BeforeAllCallbacks {
+	private static class FooClassLevelCallbacks implements BeforeAllCallbacks, AfterAllCallbacks {
 
 		@Override
 		public void preBeforeAll(TestExecutionContext testExecutionContext) {
 			preBeforeAllMethods.add("foo");
 		}
 
+		@Override
+		public void postAfterAll(TestExecutionContext testExecutionContext) {
+			postAfterAllMethods.add("foo");
+		}
 	}
 
-	private static class BarClassLevelCallbacks implements BeforeAllCallbacks {
+	private static class BarClassLevelCallbacks implements BeforeAllCallbacks, AfterAllCallbacks {
 
 		@Override
 		public void preBeforeAll(TestExecutionContext testExecutionContext) {
 			preBeforeAllMethods.add("bar");
 		}
 
+		@Override
+		public void postAfterAll(TestExecutionContext testExecutionContext) {
+			postAfterAllMethods.add("bar");
+		}
 	}
 
 }
