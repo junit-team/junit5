@@ -89,6 +89,7 @@ abstract class TestExecutionNode {
 
 	protected void invokeMethodInContext(Method method, TestExecutionContext methodContext,
 			TestExecutionContext resolutionContext, Object target) {
+
 		MethodInvoker methodInvoker = new MethodInvoker(method, target, resolutionContext);
 		methodInvoker.invoke(methodContext);
 	}

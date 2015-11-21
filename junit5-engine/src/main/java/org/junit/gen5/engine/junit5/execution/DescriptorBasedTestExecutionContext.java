@@ -36,7 +36,7 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 
 	private final Class<?> testClass;
 
-	private final Object testInstance;
+	private Object testInstance;
 
 	private final Method testMethod;
 
@@ -96,6 +96,10 @@ class DescriptorBasedTestExecutionContext implements TestExecutionContext {
 	@Override
 	public Optional<Class<?>> getTestClass() {
 		return Optional.ofNullable(this.testClass);
+	}
+
+	public void setTestInstance(Object testInstance) {
+		this.testInstance = testInstance;
 	}
 
 	@Override

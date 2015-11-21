@@ -11,7 +11,8 @@
 package org.junit.gen5.engine.junit5.execution;
 
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
+import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -57,24 +58,28 @@ class ClassExecutionNode extends TestExecutionNode {
 			return;
 		}
 
-		Class<?> testClass = context.getTestClass().get();
-		boolean instancePerClass = isInstancePerClassMode(testClass);
-		Object testInstance = (instancePerClass ? createAndPostProcessTestInstance(context) : null);
+		boolean instancePerClass = isInstancePerClassMode(context.getTestClass().get());
+		if (instancePerClass) {
+			createTestInstanceAndUpdateContext(context);
+		}
 
 		try {
-			executeBeforeAllMethods(testClass, testInstance);
+			executeBeforeAllMethods(context);
 			for (TestExecutionNode child : getChildren()) {
 				if (!instancePerClass) {
-					testInstance = createAndPostProcessTestInstance(context);
+					createTestInstanceAndUpdateContext(context);
 				}
-				executeChild(child, request, context, testInstance);
+				executeChild(child, request, context, context.getTestInstance().orElse(null));
 			}
 		}
 		catch (Exception e) {
 			request.getTestExecutionListener().testFailed(getTestDescriptor(), e);
 		}
 		finally {
-			executeAfterAllMethods(request, testClass, (instancePerClass ? testInstance : null));
+			if (!instancePerClass) {
+				((DescriptorBasedTestExecutionContext) context).setTestInstance(null);
+			}
+			executeAfterAllMethods(request, context);
 		}
 	}
 
@@ -93,7 +98,10 @@ class ClassExecutionNode extends TestExecutionNode {
 		// @formatter:on
 	}
 
-	private void executeBeforeAllMethods(Class<?> testClass, Object testInstance) throws Exception {
+	private void executeBeforeAllMethods(TestExecutionContext context) throws Exception {
+		Class<?> testClass = context.getTestClass().get();
+		Object testInstance = context.getTestInstance().orElse(null);
+
 		Class<BeforeAll> annotationType = BeforeAll.class;
 		for (Method method : findAnnotatedMethods(testClass, annotationType, MethodSortOrder.HierarchyDown)) {
 			validateBeforeAllOrAfterAllMethod(annotationType, method, testInstance);
@@ -101,7 +109,10 @@ class ClassExecutionNode extends TestExecutionNode {
 		}
 	}
 
-	private void executeAfterAllMethods(ExecutionRequest request, Class<?> testClass, Object testInstance) {
+	private void executeAfterAllMethods(ExecutionRequest request, TestExecutionContext context) {
+		Class<?> testClass = context.getTestClass().get();
+		Object testInstance = context.getTestInstance().orElse(null);
+
 		Class<AfterAll> annotationType = AfterAll.class;
 		Exception exceptionDuringAfterAll = null;
 
@@ -134,11 +145,15 @@ class ClassExecutionNode extends TestExecutionNode {
 		}
 	}
 
-	protected Object createAndPostProcessTestInstance(TestExecutionContext context) {
+	/**
+	 * Create the test instance, {@link #postProcessTestInstance post process}
+	 * it, and update the test instance in the supplied context.
+	 */
+	protected void createTestInstanceAndUpdateContext(TestExecutionContext context) {
 		final Class<?> testClass = getTestDescriptor().getTestClass();
-		Object testInstance;
 		try {
-			testInstance = newInstance(testClass);
+			Object testInstance = newInstance(testClass);
+			((DescriptorBasedTestExecutionContext) context).setTestInstance(testInstance);
 		}
 		catch (Exception ex) {
 			String message = String.format(
@@ -146,22 +161,20 @@ class ClassExecutionNode extends TestExecutionNode {
 				testClass.getName(), getTestDescriptor().getUniqueId());
 			throw new IllegalStateException(message, ex);
 		}
-
-		postProcessTestInstance(context, testInstance);
-		return testInstance;
+		postProcessTestInstance(context);
 	}
 
-	protected void postProcessTestInstance(TestExecutionContext context, Object testInstance) {
+	protected void postProcessTestInstance(TestExecutionContext context) {
 		try {
 			// @formatter:off
 			context.getExtensions(InstancePostProcessor.class)
-					.forEach(postProcessor -> postProcessor.postProcessTestInstance(testInstance));
+					.forEach(postProcessor -> postProcessor.postProcessTestInstance(context));
 			// @formatter:on
 		}
 		catch (Exception ex) {
 			String message = String.format(
 				"Failed to post-process test instance of type [%s] for test descriptor with unique ID [%s]",
-				testInstance.getClass().getName(), getTestDescriptor().getUniqueId());
+				context.getTestClass().get().getName(), getTestDescriptor().getUniqueId());
 			throw new IllegalStateException(message, ex);
 		}
 	}

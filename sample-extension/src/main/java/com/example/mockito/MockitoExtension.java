@@ -44,8 +44,8 @@ public class MockitoExtension implements InstancePostProcessor, MethodParameterR
 	}
 
 	@Override
-	public void postProcessTestInstance(Object testInstance) {
-		MockitoAnnotations.initMocks(testInstance);
+	public void postProcessTestInstance(TestExecutionContext context) {
+		MockitoAnnotations.initMocks(context.getTestInstance().get());
 	}
 
 	@Override

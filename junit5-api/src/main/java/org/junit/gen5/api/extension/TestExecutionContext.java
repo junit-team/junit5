@@ -20,8 +20,8 @@ import java.util.stream.Stream;
  * {@code TestExecutionContext} encapsulates the <em>context</em> in which
  * the current test is being executed.
  *
- * <p>Test extensions are provided an instance of {@code TestExecutionContext}
- * to perform their work.
+ * <p>{@link TestExtension TestExtensions} are provided an instance of
+ * {@code TestExecutionContext} to perform their work.
  *
  * @author Sam Brannen
  * @since 5.0

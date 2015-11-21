@@ -26,10 +26,11 @@ package org.junit.gen5.api.extension;
 public interface InstancePostProcessor extends TestExtension {
 
 	/**
-	 * Callback for post-processing a test instance.
+	 * Callback for post-processing the test instance in the supplied 
+	 * {@link TestExecutionContext}.
 	 *
-	 * @param testInstance the test instance to process
+	 * @param testExecutionContext the current test execution context
 	 */
-	void postProcessTestInstance(Object testInstance);
+	void postProcessTestInstance(TestExecutionContext testExecutionContext);
 
 }
