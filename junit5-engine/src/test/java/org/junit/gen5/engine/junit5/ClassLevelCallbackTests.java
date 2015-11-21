@@ -10,25 +10,37 @@
 
 package org.junit.gen5.engine.junit5;
 
+import static java.util.Arrays.asList;
 import static org.junit.gen5.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.gen5.engine.TestPlanSpecification.build;
 import static org.junit.gen5.engine.TestPlanSpecification.forClass;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInstance;
+import org.junit.gen5.api.extension.BeforeAllCallbacks;
+import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
- * Integration tests that verify support of {@link BeforeAll} and {@link AfterAll}
- * in the {@link JUnit5TestEngine}.
+ * Integration tests that verify support of {@link BeforeAll}, {@link AfterAll},
+ * and {@link BeforeAllCallbacks} in the {@link JUnit5TestEngine}.
  *
  * @author Sam Brannen
  * @since 5.0
  */
 public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
+
+	@org.junit.Before
+	public void reset() {
+		preBeforeAllMethods.clear();
+	}
 
 	@org.junit.Test
 	public void beforeAllAndAfterAllCallbacksWithTestInstancePerMethod() {
@@ -44,6 +56,8 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
 		Assert.assertTrue("@BeforeAll was not invoked", InstancePerMethodTestCase.beforeAllInvoked);
 		Assert.assertTrue("@AfterAll was not invoked", InstancePerMethodTestCase.afterAllInvoked);
+
+		Assert.assertEquals("preBeforeAll()", asList("foo", "bar"), preBeforeAllMethods);
 	}
 
 	@org.junit.Test
@@ -60,10 +74,13 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
 		Assert.assertTrue("@BeforeAll was not invoked", InstancePerClassTestCase.beforeAllInvoked);
 		Assert.assertTrue("@AfterAll was not invoked", InstancePerClassTestCase.afterAllInvoked);
+
+		Assert.assertEquals("preBeforeAll()", asList("foo", "bar"), preBeforeAllMethods);
 	}
 
 	// -------------------------------------------------------------------
 
+	@ExtendWith({ FooClassLevelCallbacks.class, BarClassLevelCallbacks.class })
 	private static class InstancePerMethodTestCase {
 
 		static boolean beforeAllInvoked = false;
@@ -88,6 +105,7 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 		}
 	}
 
+	@ExtendWith({ FooClassLevelCallbacks.class, BarClassLevelCallbacks.class })
 	@TestInstance(PER_CLASS)
 	private static class InstancePerClassTestCase {
 
@@ -109,6 +127,26 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 		void alwaysPasses() {
 			/* no-op */
 		}
+	}
+
+	private static List<String> preBeforeAllMethods = new ArrayList<>();
+
+	private static class FooClassLevelCallbacks implements BeforeAllCallbacks {
+
+		@Override
+		public void preBeforeAll(TestExecutionContext testExecutionContext) {
+			preBeforeAllMethods.add("foo");
+		}
+
+	}
+
+	private static class BarClassLevelCallbacks implements BeforeAllCallbacks {
+
+		@Override
+		public void preBeforeAll(TestExecutionContext testExecutionContext) {
+			preBeforeAllMethods.add("bar");
+		}
+
 	}
 
 }

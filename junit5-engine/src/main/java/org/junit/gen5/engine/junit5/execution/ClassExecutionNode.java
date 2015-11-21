@@ -29,6 +29,7 @@ import org.junit.gen5.api.Condition.Result;
 import org.junit.gen5.api.TestInstance;
 import org.junit.gen5.api.TestInstance.Lifecycle;
 import org.junit.gen5.api.extension.AfterEachCallbacks;
+import org.junit.gen5.api.extension.BeforeAllCallbacks;
 import org.junit.gen5.api.extension.BeforeEachCallbacks;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.TestExecutionContext;
@@ -106,11 +107,17 @@ class ClassExecutionNode extends TestExecutionNode {
 		Class<?> testClass = context.getTestClass().get();
 		Object testInstance = context.getTestInstance().orElse(null);
 
+		List<BeforeAllCallbacks> callbacks = context.getExtensions(BeforeAllCallbacks.class).collect(toList());
+
+		callbacks.stream().forEachOrdered(callback -> callback.preBeforeAll(context));
+
 		Class<BeforeAll> annotationType = BeforeAll.class;
 		for (Method method : findAnnotatedMethods(testClass, annotationType, MethodSortOrder.HierarchyDown)) {
 			validateBeforeAllOrAfterAllMethod(annotationType, method, testInstance);
 			invokeMethod(method, testInstance);
 		}
+
+		callbacks.stream().forEachOrdered(callback -> callback.postBeforeAll(context));
 	}
 
 	private void executeAfterAllMethods(ExecutionRequest request, TestExecutionContext context) {
