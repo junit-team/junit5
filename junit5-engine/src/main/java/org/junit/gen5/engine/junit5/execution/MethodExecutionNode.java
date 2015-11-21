@@ -96,7 +96,7 @@ class MethodExecutionNode extends TestExecutionNode {
 		invokeMethodInContext(method, context, context, target);
 	}
 
-	private void executeBeforeEachMethods(TestExecutionContext context) {
+	private void executeBeforeEachMethods(TestExecutionContext context) throws Exception {
 		Object target = context.getTestInstance().get();
 		getParent().executeBeforeEachTest(context, context.getParent().get(), target);
 	}

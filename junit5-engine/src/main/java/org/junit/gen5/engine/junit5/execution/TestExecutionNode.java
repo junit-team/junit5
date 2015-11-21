@@ -80,7 +80,7 @@ abstract class TestExecutionNode {
 	}
 
 	void executeBeforeEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
-			Object testInstance) {
+			Object testInstance) throws Exception {
 	}
 
 	void executeAfterEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,

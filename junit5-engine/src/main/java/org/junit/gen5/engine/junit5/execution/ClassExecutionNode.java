@@ -111,7 +111,9 @@ class ClassExecutionNode extends TestExecutionNode {
 
 		List<BeforeAllCallbacks> callbacks = context.getExtensions(BeforeAllCallbacks.class).collect(toList());
 
-		callbacks.stream().forEachOrdered(callback -> callback.preBeforeAll(context));
+		for (BeforeAllCallbacks callback : callbacks) {
+			callback.preBeforeAll(context);
+		}
 
 		Class<BeforeAll> annotationType = BeforeAll.class;
 		for (Method method : findAnnotatedMethods(testClass, annotationType, MethodSortOrder.HierarchyDown)) {
@@ -119,7 +121,9 @@ class ClassExecutionNode extends TestExecutionNode {
 			invokeMethod(method, testInstance);
 		}
 
-		callbacks.stream().forEachOrdered(callback -> callback.postBeforeAll(context));
+		for (BeforeAllCallbacks callback : callbacks) {
+			callback.postBeforeAll(context);
+		}
 	}
 
 	private void executeAfterAllMethods(ExecutionRequest request, TestExecutionContext context) {
@@ -207,11 +211,13 @@ class ClassExecutionNode extends TestExecutionNode {
 	}
 
 	protected void postProcessTestInstance(TestExecutionContext context) {
+		List<InstancePostProcessor> postProcessors = context.getExtensions(InstancePostProcessor.class).collect(
+			toList());
+
 		try {
-			// @formatter:off
-			context.getExtensions(InstancePostProcessor.class)
-					.forEach(postProcessor -> postProcessor.postProcessTestInstance(context));
-			// @formatter:on
+			for (InstancePostProcessor postProcessor : postProcessors) {
+				postProcessor.postProcessTestInstance(context);
+			}
 		}
 		catch (Exception ex) {
 			String message = String.format(
@@ -223,18 +229,22 @@ class ClassExecutionNode extends TestExecutionNode {
 
 	@Override
 	void executeBeforeEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
-			Object testInstance) {
+			Object testInstance) throws Exception {
 
 		List<BeforeEachCallbacks> callbacks = resolutionContext.getExtensions(BeforeEachCallbacks.class).collect(
 			toList());
 
-		callbacks.stream().forEachOrdered(callback -> callback.preBeforeEach(methodContext));
+		for (BeforeEachCallbacks callback : callbacks) {
+			callback.preBeforeEach(methodContext);
+		}
 
 		for (Method method : getBeforeEachMethods()) {
 			invokeMethodInContext(method, methodContext, resolutionContext, testInstance);
 		}
 
-		callbacks.stream().forEachOrdered(callback -> callback.postBeforeEach(methodContext));
+		for (BeforeEachCallbacks callback : callbacks) {
+			callback.postBeforeEach(methodContext);
+		}
 	}
 
 	protected List<Method> getBeforeEachMethods() {
@@ -252,14 +262,28 @@ class ClassExecutionNode extends TestExecutionNode {
 		// Execute "afters" in reverse order.
 		Collections.reverse(callbacks);
 
-		callbacks.stream().forEachOrdered(callback -> callback.preAfterEach(methodContext));
+		for (AfterEachCallbacks callback : callbacks) {
+			try {
+				callback.preAfterEach(methodContext);
+			}
+			catch (Exception ex) {
+				exceptionCollector.add(ex);
+			}
+		}
 
 		for (Method method : getAfterEachMethods()) {
 			invokeMethodInContextWithAggregatingExceptions(method, methodContext, resolutionContext, testInstance,
 				exceptionCollector);
 		}
 
-		callbacks.stream().forEachOrdered(callback -> callback.postAfterEach(methodContext));
+		for (AfterEachCallbacks callback : callbacks) {
+			try {
+				callback.postAfterEach(methodContext);
+			}
+			catch (Exception ex) {
+				exceptionCollector.add(ex);
+			}
+		}
 	}
 
 	protected List<Method> getAfterEachMethods() {

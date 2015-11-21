@@ -37,7 +37,7 @@ public interface AfterAllCallbacks extends TestExtension {
 	 *
 	 * @param testExecutionContext the current test execution context
 	 */
-	default void preAfterAll(TestExecutionContext testExecutionContext) {
+	default void preAfterAll(TestExecutionContext testExecutionContext) throws Exception {
 		/* no-op */
 	}
 
@@ -47,7 +47,7 @@ public interface AfterAllCallbacks extends TestExtension {
 	 *
 	 * @param testExecutionContext the current test execution context
 	 */
-	default void postAfterAll(TestExecutionContext testExecutionContext) {
+	default void postAfterAll(TestExecutionContext testExecutionContext) throws Exception {
 		/* no-op */
 	}
 

@@ -39,17 +39,18 @@ class NestedClassExecutionNode extends ClassExecutionNode {
 
 	@Override
 	void executeBeforeEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
-			Object testInstance) {
+			Object testInstance) throws Exception {
 		executeBeforeEachTestOfParent(methodContext, resolutionContext, testInstance);
 		super.executeBeforeEachTest(methodContext, resolutionContext, testInstance);
 	}
 
 	private void executeBeforeEachTestOfParent(TestExecutionContext methodContext,
-			TestExecutionContext resolutionContext, Object testInstance) {
+			TestExecutionContext resolutionContext, Object testInstance) throws Exception {
 		Optional<Object> optionalParentInstance = ReflectionUtils.getOuterInstance(testInstance);
-		optionalParentInstance.ifPresent(parentInstance -> {
-			getParent().executeBeforeEachTest(methodContext, resolutionContext.getParent().get(), parentInstance);
-		});
+		if (optionalParentInstance.isPresent()) {
+			getParent().executeBeforeEachTest(methodContext, resolutionContext.getParent().get(),
+				optionalParentInstance.get());
+		}
 	}
 
 	@Override

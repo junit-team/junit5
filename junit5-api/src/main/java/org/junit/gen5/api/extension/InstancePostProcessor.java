@@ -32,6 +32,6 @@ public interface InstancePostProcessor extends TestExtension {
 	 *
 	 * @param testExecutionContext the current test execution context
 	 */
-	void postProcessTestInstance(TestExecutionContext testExecutionContext);
+	void postProcessTestInstance(TestExecutionContext testExecutionContext) throws Exception;
 
 }
