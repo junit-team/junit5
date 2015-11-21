@@ -17,6 +17,10 @@ package org.junit.gen5.api.extension;
  * @since 5.0
  * @see InstancePostProcessor
  * @see MethodParameterResolver
+ * @see BeforeEachCallbacks
+ * @see AfterEachCallbacks
+ * @see BeforeAllCallbacks
+ * @see AfterAllCallbacks
  */
 public interface TestExtension {
 }

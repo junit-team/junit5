@@ -17,11 +17,17 @@ package org.junit.gen5.api.extension;
  * been invoked <em>or</em> {@linkplain #postBeforeEach after} all
  * {@code @BeforeEach} methods have been invoked.
  *
+ * <p>Concrete implementations often implement {@link AfterEachCallbacks}
+ * as well.
+ *
  * <p>Implementations must provide a no-args constructor.
  *
  * @author Sam Brannen
  * @since 5.0
  * @see org.junit.gen5.api.BeforeEach
+ * @see AfterEachCallbacks
+ * @see BeforeAllCallbacks
+ * @see AfterAllCallbacks
  */
 public interface BeforeEachCallbacks extends TestExtension {
 
