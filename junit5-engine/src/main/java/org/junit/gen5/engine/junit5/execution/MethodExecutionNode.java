@@ -58,6 +58,7 @@ class MethodExecutionNode extends TestExecutionNode {
 			exceptionsCollector.add(ex);
 		}
 		finally {
+			// TODO Set exception in TestExecutionContext before invoking "afters".
 			executeAfterEachMethods(context, exceptionsCollector);
 		}
 

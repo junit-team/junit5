@@ -18,6 +18,7 @@ import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.gen5.api.AfterAll;
@@ -27,6 +28,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Condition.Result;
 import org.junit.gen5.api.TestInstance;
 import org.junit.gen5.api.TestInstance.Lifecycle;
+import org.junit.gen5.api.extension.AfterEachCallbacks;
 import org.junit.gen5.api.extension.BeforeEachCallbacks;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.TestExecutionContext;
@@ -148,8 +150,8 @@ class ClassExecutionNode extends TestExecutionNode {
 	}
 
 	/**
-	 * Create the test instance, {@link #postProcessTestInstance post process}
-	 * it, and update the test instance in the supplied context.
+	 * Create the test instance, store it in the supplied context, and
+	 * then {@link #postProcessTestInstance post process} it.
 	 */
 	protected void createTestInstanceAndUpdateContext(TestExecutionContext context) {
 		final Class<?> testClass = getTestDescriptor().getTestClass();
@@ -206,10 +208,20 @@ class ClassExecutionNode extends TestExecutionNode {
 	void executeAfterEachTest(TestExecutionContext methodContext, TestExecutionContext resolutionContext,
 			Object testInstance, List<Throwable> exceptionCollector) {
 
+		List<AfterEachCallbacks> callbacks = resolutionContext.getExtensions(AfterEachCallbacks.class).collect(
+			toList());
+
+		// Execute "afters" in reverse order.
+		Collections.reverse(callbacks);
+
+		callbacks.stream().forEachOrdered(callback -> callback.preAfterEach(methodContext));
+
 		for (Method method : getAfterEachMethods()) {
 			invokeMethodInContextWithAggregatingExceptions(method, methodContext, resolutionContext, testInstance,
 				exceptionCollector);
 		}
+
+		callbacks.stream().forEachOrdered(callback -> callback.postAfterEach(methodContext));
 	}
 
 	protected List<Method> getAfterEachMethods() {
