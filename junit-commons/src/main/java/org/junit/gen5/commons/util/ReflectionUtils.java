@@ -37,6 +37,8 @@ import java.util.stream.Collectors;
  */
 public final class ReflectionUtils {
 
+	private static ClassLoader explicitClassloader = null;
+
 	public enum MethodSortOrder {
 		HierarchyDown, HierarchyUp
 	}
@@ -45,7 +47,13 @@ public final class ReflectionUtils {
 		/* no-op */
 	}
 
+	public static void setDefaultClassLoader(ClassLoader classLoader) {
+		explicitClassloader = classLoader;
+	}
+
 	public static ClassLoader getDefaultClassLoader() {
+		if (explicitClassloader != null)
+			return explicitClassloader;
 		try {
 			return Thread.currentThread().getContextClassLoader();
 		}
