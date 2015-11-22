@@ -259,7 +259,7 @@ class ClassExecutionNode extends TestExecutionNode {
 
 		for (AfterEachCallbacks callback : callbacks) {
 			try {
-				callback.preAfterEach(methodContext);
+				callback.preAfterEach(methodContext, testInstance);
 			}
 			catch (Exception ex) {
 				exceptionCollector.add(ex);
