@@ -12,7 +12,8 @@ package org.junit.gen5.engine.junit5.execution;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
+import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -35,7 +36,7 @@ import org.junit.gen5.api.extension.BeforeEachCallbacks;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.AnnotationUtils;
-import org.junit.gen5.commons.util.ReflectionUtils.*;
+import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 
@@ -83,6 +84,9 @@ class ClassExecutionNode extends TestExecutionNode {
 			request.getTestExecutionListener().testFailed(getTestDescriptor(), e);
 		}
 		finally {
+			if (instanceLifecycle == Lifecycle.PER_METHOD) {
+				testInstance = null;
+			}
 			executeAfterAllMethods(request, context, testInstance);
 		}
 	}
