@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.ExecutionRequest;
@@ -30,6 +31,8 @@ import org.junit.gen5.engine.TestPlanSpecification;
  */
 public class Launcher {
 
+	private static final Logger LOG = Logger.getLogger(Launcher.class.getName());
+
 	private final TestListenerRegistry listenerRegistry = new TestListenerRegistry();
 
 	public void registerTestPlanExecutionListeners(TestExecutionListener... testListeners) {
@@ -39,6 +42,7 @@ public class Launcher {
 	public TestPlan discover(TestPlanSpecification specification) {
 		TestPlan testPlan = new TestPlan();
 		for (TestEngine testEngine : lookupAllTestEngines()) {
+			LOG.info("Discovering tests in enginge " + testEngine.getId());
 			EngineDescriptor engineDescriptor = new EngineDescriptor(testEngine);
 			testEngine.discoverTests(specification, engineDescriptor);
 			testPlan.addEngineDescriptor(engineDescriptor);
