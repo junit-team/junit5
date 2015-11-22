@@ -1,3 +1,5 @@
+uploadArchives.enabled = false
+
 dependencies {
 	compile(project(':junit5-api'))
 	compile "org.mockito:mockito-core:1.+"

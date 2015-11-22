@@ -1,5 +1,7 @@
 apply plugin: 'java'
 
+uploadArchives.enabled = false
+
 dependencies {
 	testCompile(project(':sample-extension'))
 	testCompile(project(':junit5-api'))
