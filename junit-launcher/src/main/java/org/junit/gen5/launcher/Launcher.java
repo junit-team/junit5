@@ -10,10 +10,10 @@
 
 package org.junit.gen5.launcher;
 
+import static java.util.stream.Collectors.toSet;
+import static java.util.stream.StreamSupport.stream;
 import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -73,12 +73,7 @@ public class Launcher {
 	}
 
 	public Set<TestEngine> getAvailableEngines() {
-		Iterator<TestEngine> iterator = TestEngineRegistry.lookupAllTestEngines().iterator();
-		Set<TestEngine> testEngines = new HashSet<TestEngine>();
-		while (iterator.hasNext()) {
-			testEngines.add(iterator.next());
-		}
-		return testEngines;
+		return stream(lookupAllTestEngines().spliterator(), false).collect(toSet());
 	}
 
 }
