@@ -42,7 +42,7 @@ public class Launcher {
 	public TestPlan discover(TestPlanSpecification specification) {
 		TestPlan testPlan = new TestPlan();
 		for (TestEngine testEngine : lookupAllTestEngines()) {
-			LOG.info("Discovering tests in enginge " + testEngine.getId());
+			LOG.info("Discovering tests in engine " + testEngine.getId());
 			EngineDescriptor engineDescriptor = new EngineDescriptor(testEngine);
 			testEngine.discoverTests(specification, engineDescriptor);
 			testPlan.addEngineDescriptor(engineDescriptor);
