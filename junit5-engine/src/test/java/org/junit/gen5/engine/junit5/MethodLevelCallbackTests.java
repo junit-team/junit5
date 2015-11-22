@@ -87,12 +87,12 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 	private static class FooMethodLevelCallbacks implements BeforeEachCallbacks, AfterEachCallbacks {
 
 		@Override
-		public void preBeforeEach(TestExecutionContext testExecutionContext) {
+		public void preBeforeEach(TestExecutionContext methodExecutionContext, Object testInstance) {
 			preBeforeEachMethods.add("foo");
 		}
 
 		@Override
-		public void postAfterEach(TestExecutionContext testExecutionContext) {
+		public void postAfterEach(TestExecutionContext methodExecutionContext, Object testInstance) {
 			postAfterEachMethods.add("foo");
 		}
 
@@ -101,12 +101,12 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 	private static class BarMethodLevelCallbacks implements BeforeEachCallbacks, AfterEachCallbacks {
 
 		@Override
-		public void preBeforeEach(TestExecutionContext testExecutionContext) {
+		public void preBeforeEach(TestExecutionContext methodExecutionContext, Object testInstance) {
 			preBeforeEachMethods.add("bar");
 		}
 
 		@Override
-		public void postAfterEach(TestExecutionContext testExecutionContext) {
+		public void postAfterEach(TestExecutionContext methodExecutionContext, Object testInstance) {
 			postAfterEachMethods.add("bar");
 		}
 

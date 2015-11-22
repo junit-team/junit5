@@ -46,8 +46,9 @@ public interface AfterEachCallbacks extends TestExtension {
 	 * methods have been invoked.
 	 *
 	 * @param testExecutionContext the current test execution context
+	 * @param testInstance
 	 */
-	default void postAfterEach(TestExecutionContext testExecutionContext) throws Exception {
+	default void postAfterEach(TestExecutionContext testExecutionContext, Object testInstance) throws Exception {
 		/* no-op */
 	}
 

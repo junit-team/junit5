@@ -12,8 +12,7 @@ package org.junit.gen5.engine.junit5.execution;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
-import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
-import static org.junit.gen5.commons.util.ReflectionUtils.newInstance;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -36,7 +35,7 @@ import org.junit.gen5.api.extension.BeforeEachCallbacks;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.AnnotationUtils;
-import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
+import org.junit.gen5.commons.util.ReflectionUtils.*;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 
@@ -66,27 +65,25 @@ class ClassExecutionNode extends TestExecutionNode {
 		}
 
 		boolean instancePerClass = isInstancePerClassMode(context.getTestClass().get());
+		Object testInstance = null;
 		if (instancePerClass) {
-			createTestInstanceAndUpdateContext(context);
+			testInstance = createTestInstance(context);
 		}
 
 		try {
-			executeBeforeAllMethods(context);
+			executeBeforeAllMethods(context, testInstance);
 			for (TestExecutionNode child : getChildren()) {
 				if (!instancePerClass) {
-					createTestInstanceAndUpdateContext(context);
+					testInstance = createTestInstance(context);
 				}
-				executeChild(child, request, context, context.getTestInstance().orElse(null));
+				executeChild(child, request, context, testInstance);
 			}
 		}
 		catch (Exception e) {
 			request.getTestExecutionListener().testFailed(getTestDescriptor(), e);
 		}
 		finally {
-			if (!instancePerClass) {
-				((DescriptorBasedTestExecutionContext) context).setTestInstance(null);
-			}
-			executeAfterAllMethods(request, context);
+			executeAfterAllMethods(request, context, testInstance);
 		}
 	}
 
@@ -105,9 +102,8 @@ class ClassExecutionNode extends TestExecutionNode {
 		// @formatter:on
 	}
 
-	private void executeBeforeAllMethods(TestExecutionContext context) throws Exception {
+	private void executeBeforeAllMethods(TestExecutionContext context, Object testInstance) throws Exception {
 		Class<?> testClass = context.getTestClass().get();
-		Object testInstance = context.getTestInstance().orElse(null);
 
 		List<BeforeAllCallbacks> callbacks = context.getExtensions(BeforeAllCallbacks.class).collect(toList());
 
@@ -126,9 +122,8 @@ class ClassExecutionNode extends TestExecutionNode {
 		}
 	}
 
-	private void executeAfterAllMethods(ExecutionRequest request, TestExecutionContext context) {
+	private void executeAfterAllMethods(ExecutionRequest request, TestExecutionContext context, Object testInstance) {
 		Class<?> testClass = context.getTestClass().get();
-		Object testInstance = context.getTestInstance().orElse(null);
 
 		Class<AfterAll> annotationType = AfterAll.class;
 		Throwable exception = null;
@@ -195,11 +190,11 @@ class ClassExecutionNode extends TestExecutionNode {
 	 * Create the test instance, store it in the supplied context, and
 	 * then {@link #postProcessTestInstance post process} it.
 	 */
-	protected void createTestInstanceAndUpdateContext(TestExecutionContext context) {
+	protected Object createTestInstance(TestExecutionContext context) {
 		final Class<?> testClass = getTestDescriptor().getTestClass();
+		Object testInstance = null;
 		try {
-			Object testInstance = newInstance(testClass);
-			((DescriptorBasedTestExecutionContext) context).setTestInstance(testInstance);
+			testInstance = newInstance(testClass);
 		}
 		catch (Exception ex) {
 			String message = String.format(
@@ -207,16 +202,17 @@ class ClassExecutionNode extends TestExecutionNode {
 				testClass.getName(), getTestDescriptor().getUniqueId());
 			throw new IllegalStateException(message, ex);
 		}
-		postProcessTestInstance(context);
+		postProcessTestInstance(context, testInstance);
+		return testInstance;
 	}
 
-	protected void postProcessTestInstance(TestExecutionContext context) {
+	protected void postProcessTestInstance(TestExecutionContext context, Object testInstance) {
 		List<InstancePostProcessor> postProcessors = context.getExtensions(InstancePostProcessor.class).collect(
 			toList());
 
 		try {
 			for (InstancePostProcessor postProcessor : postProcessors) {
-				postProcessor.postProcessTestInstance(context);
+				postProcessor.postProcessTestInstance(context, testInstance);
 			}
 		}
 		catch (Exception ex) {
@@ -235,7 +231,7 @@ class ClassExecutionNode extends TestExecutionNode {
 			toList());
 
 		for (BeforeEachCallbacks callback : callbacks) {
-			callback.preBeforeEach(methodContext);
+			callback.preBeforeEach(methodContext, testInstance);
 		}
 
 		for (Method method : getBeforeEachMethods()) {
@@ -243,7 +239,7 @@ class ClassExecutionNode extends TestExecutionNode {
 		}
 
 		for (BeforeEachCallbacks callback : callbacks) {
-			callback.postBeforeEach(methodContext);
+			callback.postBeforeEach(methodContext, testInstance);
 		}
 	}
 
@@ -278,7 +274,7 @@ class ClassExecutionNode extends TestExecutionNode {
 
 		for (AfterEachCallbacks callback : callbacks) {
 			try {
-				callback.postAfterEach(methodContext);
+				callback.postAfterEach(methodContext, testInstance);
 			}
 			catch (Exception ex) {
 				exceptionCollector.add(ex);

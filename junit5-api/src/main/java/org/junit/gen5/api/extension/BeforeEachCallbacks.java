@@ -35,9 +35,9 @@ public interface BeforeEachCallbacks extends TestExtension {
 	 * Callback that is invoked <em>before</em> all {@code @BeforeEach}
 	 * methods have been invoked.
 	 *
-	 * @param testExecutionContext the current test execution context
+	 * @param methodExecutionContext the current test execution context
 	 */
-	default void preBeforeEach(TestExecutionContext testExecutionContext) throws Exception {
+	default void preBeforeEach(TestExecutionContext methodExecutionContext, Object testInstance) throws Exception {
 		/* no-op */
 	}
 
@@ -46,9 +46,9 @@ public interface BeforeEachCallbacks extends TestExtension {
 	 * methods have been invoked but <em>before</em> the actual test method
 	 * is invoked.
 	 *
-	 * @param testExecutionContext the current test execution context
+	 * @param methodExecutionContext the current test execution context
 	 */
-	default void postBeforeEach(TestExecutionContext testExecutionContext) throws Exception {
+	default void postBeforeEach(TestExecutionContext methodExecutionContext, Object testInstance) throws Exception {
 		/* no-op */
 	}
 
