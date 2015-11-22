@@ -12,7 +12,10 @@ package org.junit.gen5.launcher;
 
 import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.ExecutionRequest;
@@ -63,6 +66,15 @@ public class Launcher {
 			});
 		}
 		testPlanExecutionListener.testPlanExecutionFinished(testPlan);
+	}
+
+	public Set<TestEngine> getAvailableEngines() {
+		Iterator<TestEngine> iterator = TestEngineRegistry.lookupAllTestEngines().iterator();
+		Set<TestEngine> testEngines = new HashSet<TestEngine>();
+		while (iterator.hasNext()) {
+			testEngines.add(iterator.next());
+		}
+		return testEngines;
 	}
 
 }
