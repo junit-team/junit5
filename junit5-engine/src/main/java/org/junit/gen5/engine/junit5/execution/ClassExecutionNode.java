@@ -64,16 +64,16 @@ class ClassExecutionNode extends TestExecutionNode {
 			return;
 		}
 
-		boolean instancePerClass = isInstancePerClassMode(context.getTestClass().get());
+		Lifecycle instanceLifecycle = getInstanceLifecycle(context.getTestClass().get());
 		Object testInstance = null;
-		if (instancePerClass) {
+		if (instanceLifecycle == Lifecycle.PER_CLASS) {
 			testInstance = createTestInstance(context);
 		}
 
 		try {
 			executeBeforeAllMethods(context, testInstance);
 			for (TestExecutionNode child : getChildren()) {
-				if (!instancePerClass) {
+				if (instanceLifecycle == Lifecycle.PER_METHOD) {
 					testInstance = createTestInstance(context);
 				}
 				executeChild(child, request, context, testInstance);
@@ -93,12 +93,11 @@ class ClassExecutionNode extends TestExecutionNode {
 			result.getReason().orElse("unknown"));
 	}
 
-	private boolean isInstancePerClassMode(Class<?> testClass) {
+	private TestInstance.Lifecycle getInstanceLifecycle(Class<?> testClass) {
 		// @formatter:off
 		return AnnotationUtils.findAnnotation(testClass, TestInstance.class)
 				.map(TestInstance::value)
-				.map(lifecycle -> (lifecycle == Lifecycle.PER_CLASS))
-				.orElse(false);
+				.orElse(Lifecycle.PER_METHOD);
 		// @formatter:on
 	}
 
