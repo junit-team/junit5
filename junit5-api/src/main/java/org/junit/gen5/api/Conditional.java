@@ -34,6 +34,6 @@ public @interface Conditional {
 	 * The {@link Condition Conditions} to be evaluated for <em>conditional
 	 * test execution</em>.
 	 */
-	Class<? extends Condition>[]value();
+	Class<? extends Condition>[] value();
 
 }
