@@ -1,31 +1,91 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 
 package org.junit.gen5.surefire;
+
+import static org.junit.gen5.engine.TestPlanSpecification.build;
 
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.maven.surefire.providerapi.AbstractProvider;
 import org.apache.maven.surefire.providerapi.ProviderParameters;
 import org.apache.maven.surefire.report.ReporterException;
+import org.apache.maven.surefire.report.ReporterFactory;
+import org.apache.maven.surefire.report.RunListener;
+import org.apache.maven.surefire.report.SimpleReportEntry;
 import org.apache.maven.surefire.suite.RunResult;
 import org.apache.maven.surefire.testset.TestSetFailedException;
+import org.apache.maven.surefire.util.TestsToRun;
+import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.launcher.Launcher;
 
 public class JUnitGen5Provider extends AbstractProvider {
 
-	public JUnitGen5Provider(ProviderParameters booterParameters) {
-		// TODO Implement this.
+	private final ProviderParameters parameters;
+
+	public JUnitGen5Provider(ProviderParameters parameters) {
+		this.parameters = parameters;
 	}
 
 	@Override
 	public Iterable<Class<?>> getSuites() {
 		// TODO Implement this.
-		return null;
+		throw new UnsupportedOperationException("Not yet supported.");
 	}
 
 	@Override
 	public RunResult invoke(Object forkTestSet)
 			throws TestSetFailedException, ReporterException, InvocationTargetException {
-		// TODO Implement this.
-		throw new TestSetFailedException("Hello from JUnit5!");
+		if (forkTestSet != null) {
+			// TODO Implement this.
+			throw new UnsupportedOperationException("Not yet supported.");
+		}
+
+		TestsToRun testsToRun = scanClasspath();
+		return invoke(testsToRun);
+	}
+
+	private RunResult invoke(TestsToRun testsToRun) {
+		RunResult runResult;
+		ReporterFactory reporterFactory = parameters.getReporterFactory();
+		try {
+			RunListener runListener = reporterFactory.createReporter();
+
+			Launcher launcher = new Launcher();
+			launcher.registerTestPlanExecutionListeners(new RunListenerAdapter(runListener));
+
+			for (Class<?> testClass : testsToRun) {
+				invoke(testClass, launcher, runListener);
+			}
+		}
+		finally {
+			runResult = reporterFactory.close();
+		}
+		return runResult;
+	}
+
+	private TestsToRun scanClasspath() {
+		TestsToRun scannedClasses = parameters.getScanResult().applyFilter(new AcceptAllClassesScannerFilter(),
+			parameters.getTestClassLoader());
+		TestsToRun orderedClasses = parameters.getRunOrderCalculator().orderTestClasses(scannedClasses);
+		return orderedClasses;
+	}
+
+	private void invoke(Class<?> testClass, Launcher launcher, RunListener runListener) {
+		SimpleReportEntry classEntry = new SimpleReportEntry(getClass().getName(), testClass.getName());
+		runListener.testSetStarting(classEntry);
+
+		TestPlanSpecification specification = build(TestPlanSpecification.forClass(testClass));
+		launcher.execute(specification);
+
+		runListener.testSetCompleted(classEntry);
 	}
 
 }
