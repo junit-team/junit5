@@ -115,6 +115,9 @@ subprojects {
 
 			custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
 		}
+//		groovy {
+//			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java')
+//		}
 	}
 
 	def signArtifacts = !project.version.contains('SNAPSHOT')
