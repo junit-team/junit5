@@ -12,3 +12,5 @@ include "open-test-alliance"
 
 include "sample-extension"
 include "sample-project"
+
+include "surefire-junit5"
