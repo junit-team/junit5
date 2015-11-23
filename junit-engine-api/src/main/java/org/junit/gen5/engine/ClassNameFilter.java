@@ -19,7 +19,7 @@ public class ClassNameFilter implements ClassFilter {
 
 	@Override
 	public boolean acceptClass(Class<?> clazz) {
-		return clazz.getSimpleName().matches(regex);
+		return clazz.getName().matches(regex);
 	}
 
 	@Override

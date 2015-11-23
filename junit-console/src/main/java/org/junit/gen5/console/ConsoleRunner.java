@@ -11,9 +11,11 @@
 package org.junit.gen5.console;
 
 import static io.airlift.airline.SingleCommand.singleCommand;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,10 +58,19 @@ public class ConsoleRunner {
 	@Option(name = {"-a", "--all"}, description = "Run all tests")
 	private boolean runAllTests;
 
-	@Option(name = {"-D", "--hide-details"}, description = "Hide details while tests are being executed")
+	@Option(name = {"-D", "--hide-details"}, description = "Hide details while tests are being executed. "
+			+ "Only show the summary and test failures.")
 	private boolean hideDetails;
 
-	@Arguments(description = "Test classes, methods or packages to execute (ignore if --all|-a has been chosen)")
+	@Option(name = {"-n", "--filter-classname"}, description = "Give a regular expression to include only classes whose fully qualified names match.")
+	private String classnameFilter;
+
+	@Option(name = {"-t", "--filter-tags"}, description = "Give a tag to include in the test run. This option can be repeated.")
+	private List<String> tagsFilter;
+
+	@Arguments(description = "Test classes, methods or packages to execute."
+			+ " If --all|-a has been chosen, arguments can list all classpath roots that should be considered for test scanning,"
+			+ " or none if the full classpath shall be scanned.")
 	private List<String> arguments;
 
 	// @formatter:on
@@ -121,11 +132,23 @@ public class ConsoleRunner {
 	private TestPlanSpecification createTestPlanSpecification() {
 		TestPlanSpecification testPlanSpecification;
 		if (runAllTests) {
-			Set<File> rootDirectories = ReflectionUtils.getAllClasspathRootDirectories();
-			testPlanSpecification = TestPlanSpecification.build(TestPlanSpecification.allTests(rootDirectories));
+			Set<File> rootDirectoriesToScan = new HashSet<>();
+			if (arguments == null || arguments.isEmpty()) {
+				rootDirectoriesToScan.addAll(ReflectionUtils.getAllClasspathRootDirectories());
+			}
+			else {
+				arguments.stream().map(File::new).forEach(rootDirectoriesToScan::add);
+			}
+			testPlanSpecification = TestPlanSpecification.build(allTests(rootDirectoriesToScan));
 		}
 		else {
 			testPlanSpecification = TestPlanSpecification.build(testPlanSpecificationElementsFromArguments());
+		}
+		if (classnameFilter != null) {
+			testPlanSpecification.filterWith(classNameMatches(classnameFilter));
+		}
+		if (tagsFilter != null && !tagsFilter.isEmpty()) {
+			testPlanSpecification.filterWith(byTags(tagsFilter));
 		}
 		return testPlanSpecification;
 	}

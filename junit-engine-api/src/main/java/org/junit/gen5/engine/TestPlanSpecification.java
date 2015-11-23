@@ -95,7 +95,10 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 	}
 
 	public static Predicate<TestDescriptor> byTags(String... tagNames) {
-		List<String> includeTags = Arrays.asList(tagNames);
+		return byTags(Arrays.asList(tagNames));
+	}
+
+	public static Predicate<TestDescriptor> byTags(List<String> includeTags) {
 		// @formatter:off
 		return (TestDescriptor descriptor) -> descriptor.getTags().stream()
 				.map(TestTag::getName)
