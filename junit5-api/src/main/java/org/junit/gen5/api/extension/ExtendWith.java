@@ -36,6 +36,6 @@ import java.lang.annotation.Target;
 @Repeatable(Extensions.class)
 public @interface ExtendWith {
 
-	Class<? extends TestExtension>[]value();
+	Class<? extends TestExtension>[] value();
 
 }

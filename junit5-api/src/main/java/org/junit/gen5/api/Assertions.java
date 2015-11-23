@@ -249,11 +249,11 @@ public final class Assertions {
 	}
 
 	private static void failEqual(Object actual, String message) {
-		String prefix = "Values should be different. ";
+		String prefix = "Values should be different. Actual: ";
 		if (StringUtils.isNotEmpty(message)) {
-			prefix = message + ". ";
+			prefix = message + ". Actual: ";
 		}
-		fail(prefix + "Actual: " + actual);
+		fail(prefix + actual);
 	}
 
 	private static void failNull(String message) {
