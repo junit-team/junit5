@@ -36,34 +36,54 @@ We have prepared two small sample projects that use it through Gradle and Maven.
 
 *Caution:* These options are very likely to change as we continue to work on the prototype.
 
-	NAME
-	        ConsoleRunner - console test runner
+```
+NAME
+        ConsoleRunner - console test runner
 
-	SYNOPSIS
-	        ConsoleRunner [(-a | --all)] [(-C | --disable-ansi-colors)] 
-                        [(-h | --help)] [(-x | --enable-exit-code)] [--] [<arguments>...]
+SYNOPSIS
+        ConsoleRunner [(-a | --all)] [(-C | --disable-ansi-colors)]
+                [(-D | --hide-details)] [(-h | --help)]
+                [(-n <classnameFilter> | --filter-classname <classnameFilter>)]
+                [(-t <tagsFilter> | --filter-tags <tagsFilter>)...]
+                [(-x | --enable-exit-code)] [--] [<arguments>...]
 
-	OPTIONS
-	        -a, --all
-                    Run all tests
+OPTIONS
+        -a, --all
+            Run all tests
 
-	        -C, --disable-ansi-colors
-	            Disable colored output (not supported by all terminals)
+        -C, --disable-ansi-colors
+            Disable colored output (not supported by all terminals)
 
-	        -h, --help
-	            Display help information
+        -D, --hide-details
+            Hide details while tests are being executed. Only show the summary
+            and test failures.
 
-	        -x, --enable-exit-code
-	            Exit process with number of failing tests as exit code
+        -h, --help
+            Display help information
 
-	        --
-	            This option can be used to separate command-line options from the
-	            list of argument, (useful when arguments might be mistaken for
-	            command-line options
+        -n <classnameFilter>, --filter-classname <classnameFilter>
+            Give a regular expression to include only classes whose fully
+            qualified names match.
 
-	        <arguments>
-	            Test classes, methods or packages to execute 
-                    (ignore if --all|-a has been chosen)
+        -t <tagsFilter>, --filter-tags <tagsFilter>
+            Give a tag to include in the test run. This option can be repeated.
+
+        -x, --enable-exit-code
+            Exit process with number of failing tests as exit code
+
+        --
+            This option can be used to separate command-line options from the
+            list of argument, (useful when arguments might be mistaken for
+            command-line options
+
+        <arguments>
+            Test classes, methods or packages to execute. If --all|-a has been
+            chosen, arguments can list all classpath roots that should be
+            considered for test scanning, or none if the full classpath shall be
+            scanned.
+
+
+```
 
 ## Using JUnit4 to Run JUnit5 Tests
 
