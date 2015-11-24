@@ -48,21 +48,27 @@ public class JUnitGen5Provider extends AbstractProvider {
 			throw new UnsupportedOperationException("Not yet supported.");
 		}
 
-		TestsToRun testsToRun = scanClasspath();
-		return invoke(testsToRun);
+		Launcher launcher = new Launcher();
+		TestsToRun testsToRun = scanClasspath(launcher);
+		return invokeAllTests(testsToRun, launcher);
 	}
 
-	private RunResult invoke(TestsToRun testsToRun) {
+	private TestsToRun scanClasspath(Launcher launcher) {
+		TestsToRun scannedClasses = parameters.getScanResult().applyFilter(new TestPlanScannerFilter(launcher),
+			parameters.getTestClassLoader());
+		TestsToRun orderedClasses = parameters.getRunOrderCalculator().orderTestClasses(scannedClasses);
+		return orderedClasses;
+	}
+
+	private RunResult invokeAllTests(TestsToRun testsToRun, Launcher launcher) {
 		RunResult runResult;
 		ReporterFactory reporterFactory = parameters.getReporterFactory();
 		try {
 			RunListener runListener = reporterFactory.createReporter();
-
-			Launcher launcher = new Launcher();
 			launcher.registerTestPlanExecutionListeners(new RunListenerAdapter(runListener));
 
 			for (Class<?> testClass : testsToRun) {
-				invoke(testClass, launcher, runListener);
+				invokeSingleClass(testClass, launcher, runListener);
 			}
 		}
 		finally {
@@ -71,14 +77,7 @@ public class JUnitGen5Provider extends AbstractProvider {
 		return runResult;
 	}
 
-	private TestsToRun scanClasspath() {
-		TestsToRun scannedClasses = parameters.getScanResult().applyFilter(new AcceptAllClassesScannerFilter(),
-			parameters.getTestClassLoader());
-		TestsToRun orderedClasses = parameters.getRunOrderCalculator().orderTestClasses(scannedClasses);
-		return orderedClasses;
-	}
-
-	private void invoke(Class<?> testClass, Launcher launcher, RunListener runListener) {
+	private void invokeSingleClass(Class<?> testClass, Launcher launcher, RunListener runListener) {
 		SimpleReportEntry classEntry = new SimpleReportEntry(getClass().getName(), testClass.getName());
 		runListener.testSetStarting(classEntry);
 
