@@ -40,7 +40,7 @@ public class JUnitGen5Provider extends AbstractProvider {
 	@Override
 	public Iterable<Class<?>> getSuites() {
 		// TODO Implement this.
-		throw new UnsupportedOperationException("Not yet supported.");
+		throw new UnsupportedOperationException("Forking is not yet supported.");
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class JUnitGen5Provider extends AbstractProvider {
 			throws TestSetFailedException, ReporterException, InvocationTargetException {
 		if (forkTestSet != null) {
 			// TODO Implement this.
-			throw new UnsupportedOperationException("Not yet supported.");
+			throw new UnsupportedOperationException("Forking is not yet supported.");
 		}
 
 		Launcher launcher = new Launcher();
