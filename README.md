@@ -40,12 +40,14 @@ gradlew clean install
 	- `junit-commons`
 	- `junit-console`
 	- `junit-engine-api`
+	- `junit-gradle`
 	- `junit-launcher`
 	- `junit4-engine`
 	- `junit4-launcher-runner`
 	- `junit5-api`
 	- `junit5-engine`
 	- `open-test-alliance` (Version `1.0.0-SNAPSHOT`)
+	- `surefire-junit5`
 
 See also: <https://oss.sonatype.org/content/repositories/snapshots/org/junit/prototype/>
 
