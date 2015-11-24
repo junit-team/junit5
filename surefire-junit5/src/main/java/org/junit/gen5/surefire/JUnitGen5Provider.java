@@ -13,6 +13,8 @@ package org.junit.gen5.surefire;
 import static org.junit.gen5.engine.TestPlanSpecification.build;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.maven.surefire.providerapi.AbstractProvider;
 import org.apache.maven.surefire.providerapi.ProviderParameters;
@@ -32,6 +34,7 @@ public class JUnitGen5Provider extends AbstractProvider {
 
 	public JUnitGen5Provider(ProviderParameters parameters) {
 		this.parameters = parameters;
+		Logger.getLogger("org.junit").setLevel(Level.WARNING);
 	}
 
 	@Override
