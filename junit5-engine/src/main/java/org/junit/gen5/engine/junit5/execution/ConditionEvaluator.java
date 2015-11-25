@@ -47,9 +47,12 @@ class ConditionEvaluator {
 
 		// TODO Introduce support for finding *all* @Conditional annotations.
 		Optional<Conditional> classLevelAnno = findAnnotation(context.getTestClass(), Conditional.class);
+
+		// TODO Don't search at the method level if disabled at the class level.
 		Optional<Conditional> methodLevelAnno = findAnnotation(context.getTestMethod(), Conditional.class);
 
 		Conditional conditional = classLevelAnno.orElse(methodLevelAnno.orElse(null));
+
 		if (conditional != null) {
 			// @formatter:off
 			result = Arrays.stream(conditional.value())
