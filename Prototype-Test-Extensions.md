@@ -25,6 +25,27 @@ class MockTests {
 }
 ```
 
+Multiple extensions can be registered together like this:
+
+```java
+@ExtendWith({ FooExtension.class, BarExtension.class })
+class MyTestsV1 {
+  // ...
+}
+```
+
+As an alternative, multiple extensions can be registered separately like this:
+
+```java
+@ExtendWith(FooExtension.class)
+@ExtendWith(BarExtension.class)
+class MyTestsV2 {
+  // ...
+}
+```
+
+The execution of tests in both `MyTestsV1` and `MyTestsV2` will be extended by the `FooExtension` and `BarExtension`, in exactly that order.
+
 Registered extensions are inherited within test class hierarchies.
 
 ## Test Instance Post-processing
