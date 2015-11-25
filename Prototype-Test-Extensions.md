@@ -69,11 +69,13 @@ wish to _post process_ test instances.
 Common use cases include injecting dependencies into the test instance,
 invoking custom initialization methods on the test instance, etc.
 
-For a concrete example, consult the source code for the [`MockitoExtension`].
+For concrete examples, consult the source code for [`MockitoExtension`]
+and [`SpringExtension`].
 
 ## Parameter Resolution
 
-[`MethodParameterResolver`] is a `TestExtension` strategy for dynamically resolving method parameters at runtime.
+[`MethodParameterResolver`] is a `TestExtension` strategy for dynamically resolving
+method parameters at runtime.
 
 If a `@Test`, `@BeforeEach`, or `@AfterEach` method accepts a parameter, the parameter
 must be _resolved_ at runtime by a `MethodParameterResolver`. A `MethodParameterResolver`
