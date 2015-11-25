@@ -1,5 +1,12 @@
 # Running JUnit 5 Tests
 
+**Table of Contents**
+
+- [IDE Support](#ide-support)
+- [Build Support](#build-support)
+- [Console Runner](#console-runner)
+- [Using JUnit4 to Run JUnit5 Tests](#using-junit4-to-run-junit5-tests)
+
 ----
 ## IDE Support
 
