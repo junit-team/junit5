@@ -49,7 +49,7 @@ public class MockitoExtension implements InstancePostProcessor, MethodParameterR
 	}
 
 	@Override
-	public boolean supports(Parameter parameter) {
+	public boolean supports(Parameter parameter, TestExecutionContext testExecutionContext) {
 		return AnnotationUtils.isAnnotated(parameter, InjectMock.class);
 	}
 

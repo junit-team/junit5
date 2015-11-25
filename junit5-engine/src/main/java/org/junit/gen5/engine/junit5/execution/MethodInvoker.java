@@ -74,7 +74,7 @@ class MethodInvoker {
 		try {
 			// @formatter:off
 			List<MethodParameterResolver> matchingResolvers = this.resolutionContext.getExtensions(MethodParameterResolver.class)
-					.filter(resolver -> resolver.supports(parameter))
+					.filter(resolver -> resolver.supports(parameter, testExecutionContext))
 					.collect(toList());
 			// @formatter:on
 

@@ -29,7 +29,7 @@ import org.junit.gen5.api.extension.TestExecutionContext;
 public class TestNameParameterResolver implements MethodParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter) {
+	public boolean supports(Parameter parameter, TestExecutionContext testExecutionContext) {
 		return (parameter.getType() == String.class && isAnnotated(parameter, TestName.class));
 	}
 
