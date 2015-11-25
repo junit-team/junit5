@@ -50,16 +50,13 @@ Registered extensions are inherited within test class hierarchies.
 
 ## Conditional Test Execution
 
-[`Condition`] defines the test extension API for programmatic, _conditional test execution_.
+[`Condition`] defines the `TestExtension` API for programmatic, _conditional test execution_.
 
 A `Condition` is _evaluated_ to determine if a given test (e.g., class or method) should
-be executed based on the supplied `TestExecutionContext`. When registered at the class
+be executed based on the supplied `TestExecutionContext`. When evaluated at the class
 level, a `Condition` applies to all test methods within that class.
 
-[`@Conditional`] is used to register one or more `Conditions`. Futhermore, `@Conditional`
-can be used as a meta-annotation.
-
-See the source code of [`@Disabled`] for a concrete example.
+See the source code of [`DisabledCondition`] and [`@Disabled`] for a concrete example.
 
 ## Test Instance Post-processing
 
@@ -107,19 +104,16 @@ The JUnit Lambda team is planning several additional extension points, including
 
 
 [`Condition`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/Condition.java
-[`@Conditional`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/Conditional.java
-[CONTRIBUTING]: https://github.com/junit-team/junit-lambda/blob/master/CONTRIBUTING.md
 [`CustomAnnotationParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java
 [`CustomTypeParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java
 [`@Disabled`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Disabled.java
+[`DisabledCondition`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/DisabledCondition.java
 [`InstancePostProcessor`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/InstancePostProcessor.java
 [issue tracker]: https://github.com/junit-team/junit-lambda/issues
 [junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer
 [junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer
 [junit5-samples]: https://github.com/junit-team/junit5-samples
 [`MethodParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java
-[`MockitoDecorator`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/main/java/com/example/mockito/MockitoDecorator.java
-[`MockitoDecoratorInBaseClassTest`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/test/java/com/example/mockito/MockitoDecoratorInBaseClassTest.java
 [`MockitoExtension`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java
 [`org.junit.gen5.api`]: https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api
 [`org.junit.gen5.api.extension`]: https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension
