@@ -1,6 +1,50 @@
 # Running JUnit 5 Tests
 
-At this stage there is no direct support to run JUnit 5 tests in build tools and IDEs. We provide two intermediate solutions so you can go ahead and try out the prototype. You can use the `ConsoleRunner` or execute JUnit 5 tests with a JUnit 4 style runner.
+## IDE Support
+
+At this stage there is no direct support to run JUnit 5 tests in IDEs. We provide two intermediate solutions so you can go ahead and try out the prototype. You can use the `ConsoleRunner` or execute JUnit 5 tests with a JUnit 4 style runner.
+
+
+## Gradle
+
+The [junit5-gradle-consumer](https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer) project demonstrates how to run tests based on the JUnit 5 prototype using Gradle with the help of a very basic `JUnit5Plugin` that is currently inlined in the `build.gradle` script.
+
+Basic usage in [`build.gradle`](https://github.com/junit-team/junit5-samples/blob/master/junit5-gradle-consumer/build.gradle):
+
+```groovy
+junit5 {
+	version '5.0.0-SNAPSHOT'
+	runJunit4 true
+	matchClassName '.*Test'
+}
+```
+
+## Maven
+
+We have developed a very basic provider for Maven Surefire that lets you run JUnit 4/5 tests through `mvn test`. The [junit5-maven-consumer](https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer) demonstrates how to use it and can serve as a starting point.
+
+Basic usage in [`pom.xml`](https://github.com/junit-team/junit5-samples/blob/master/junit5-maven-consumer/pom.xml):
+
+```xml
+	... 
+	<build>
+		<plugins>
+			...
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.junit.prototype</groupId>
+						<artifactId>surefire-junit5</artifactId>
+						<version>5.0.0-SNAPSHOT</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+	...
+```
 
 
 ## Console Runner
@@ -27,10 +71,6 @@ Test run finished after 29 ms
 [         1 tests successful]
 [         0 tests failed    ]
 ```
-
-### Gradle/Maven usage
-
-We have prepared two small sample projects that use it through Gradle and Maven. Please see [junit5-gradle-consumer](https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer) and [junit5-maven-consumer](https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer), respectively.
 
 ### Options
 
