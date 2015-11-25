@@ -39,10 +39,9 @@ class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testIgnored(Description description) throws Exception {
-		// TODO this looks weird
-		notifyTestExecutionListener(description, testExecutionListener::testStarted);
-		notifyTestExecutionListener(description, new TestSkippedException("ignored"),
-			testExecutionListener::testSkipped);
+		TestSkippedException ex = new TestSkippedException("ignored");
+		ex.fillInStackTrace();
+		notifyTestExecutionListener(description, ex, testExecutionListener::testSkipped);
 	}
 
 	@Override

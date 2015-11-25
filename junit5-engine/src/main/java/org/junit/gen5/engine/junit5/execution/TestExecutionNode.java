@@ -55,8 +55,9 @@ abstract class TestExecutionNode {
 		Result result = this.conditionEvaluator.evaluate(context);
 		if (result.isDisabled()) {
 			// TODO Determine if we really need an explicit TestSkippedException.
-			request.getTestExecutionListener().testSkipped(getTestDescriptor(),
-				new TestSkippedException(buildTestSkippedMessage(result, context)));
+			TestSkippedException ex = new TestSkippedException(buildTestSkippedMessage(result, context));
+			ex.fillInStackTrace();
+			request.getTestExecutionListener().testSkipped(getTestDescriptor(), ex);
 			return true;
 		}
 		return false;
