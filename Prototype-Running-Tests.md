@@ -4,6 +4,8 @@
 
 - [IDE Support](#ide-support)
 - [Build Support](#build-support)
+  - [Gradle](#gradle)
+  - [Maven](#maven)
 - [Console Runner](#console-runner)
 - [Using JUnit4 to Run JUnit5 Tests](#using-junit4-to-run-junit5-tests)
 
