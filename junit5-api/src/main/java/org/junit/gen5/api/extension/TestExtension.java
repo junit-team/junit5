@@ -13,6 +13,8 @@ package org.junit.gen5.api.extension;
 /**
  * Marker interface for all test extensions.
  *
+ * <p>{@code TestExtensions} can be registered via {@link ExtendWith @ExtendWith}.
+ *
  * @author Sam Brannen
  * @since 5.0
  * @see InstancePostProcessor
