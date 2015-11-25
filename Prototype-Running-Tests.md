@@ -2,12 +2,11 @@
 
 ## IDE Support
 
-At this stage there is no direct support to run JUnit 5 tests in IDEs. We provide two intermediate solutions so you can go ahead and try out the prototype. You can use the `ConsoleRunner` or execute JUnit 5 tests with a JUnit 4 style runner.
-
+At this stage there is no direct support for running JUnit 5 tests in IDEs. However, we provide two intermediate solutions so that you can go ahead and try out the prototype today. You can use the `ConsoleRunner` or execute JUnit 5 tests with a JUnit 4 style runner.
 
 ## Gradle
 
-The [junit5-gradle-consumer](https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer) project demonstrates how to run tests based on the JUnit 5 prototype using Gradle with the help of a very basic `JUnit5Plugin` that is currently inlined in the `build.gradle` script.
+The [junit5-gradle-consumer] project demonstrates how to run tests based on the JUnit 5 prototype using Gradle with the help of a very basic `JUnit5Plugin` that is currently inlined in the `build.gradle` script.
 
 Basic usage in [`build.gradle`](https://github.com/junit-team/junit5-samples/blob/master/junit5-gradle-consumer/build.gradle):
 
@@ -21,7 +20,7 @@ junit5 {
 
 ## Maven
 
-We have developed a very basic provider for Maven Surefire that lets you run JUnit 4/5 tests through `mvn test`. The [junit5-maven-consumer](https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer) demonstrates how to use it and can serve as a starting point.
+We have developed a very basic provider for Maven Surefire that lets you run JUnit 4/5 tests through `mvn test`. The [junit5-maven-consumer] demonstrates how to use it and can serve as a starting point.
 
 Basic usage in [`pom.xml`](https://github.com/junit-team/junit5-samples/blob/master/junit5-maven-consumer/pom.xml):
 
@@ -127,14 +126,14 @@ OPTIONS
 
 ## Using JUnit4 to Run JUnit5 Tests
 
-The `JUnit5` runner lets you run JUnit 5 tests with JUnit 4. This way you can run JUnit 5 tests in IDEs and build tools that only know about JUnit 4. As soon as we add reporting-related features to JUnit 5 that JUnit 4 does not have, the runner will only be able to support a subset of the functionality. But for the time being it's an easy way to get started.
+The `JUnit5` runner lets you run JUnit 5 tests with JUnit 4. This way you can run JUnit 5 tests in IDEs and build tools that only know about JUnit 4. As soon as we add reporting features to JUnit 5 that JUnit 4 does not have, the runner will only be able to support a subset of the JUnit 5 functionality. But for the time being the `JUnit5` runner is an easy way to get started.
 
 ### Setup
 
 You need the following artifacts and their dependencies on the classpath:
 
 - _junit5-api_ (`org.junit.prototype:junit5-api:5.0.0-SNAPSHOT`) in _test_ scope:
-  API for writing tests, includes `@Test` etc.
+  API for writing tests; includes `@Test` etc.
 
 - _junit4-launcher-runner_ (`org.junit.prototype:junit4-launcher-runner:5.0.0-SNAPSHOT`) in _test_ scope:
   Location of the `JUnit5` runner.
@@ -144,7 +143,7 @@ You need the following artifacts and their dependencies on the classpath:
 
 ### Single Test Class
 
-One way to use the `JUnit5` runner is to annotate a JUnit 5 test class with `@RunWith(JUnit5.class)` directly. Please note that the tests are annotated with  `org.junit.gen5.api.Test` (JUnit 5), not `org.junit.Test` (JUnit 4). Moreover, in this case the test class has to be `public` because otherwise the IDEs won't recognize it as a test class.
+One way to use the `JUnit5` runner is to annotate a JUnit 5 test class with `@RunWith(JUnit5.class)` directly. Please note that the tests are annotated with `org.junit.gen5.api.Test` (JUnit 5), not `org.junit.Test` (JUnit 4). Moreover, in this case the test class must be `public` because; otherwise, the IDEs won't recognize it as a test class.
 
 ```java
 package com.example;
@@ -188,6 +187,10 @@ public class JUnit4SamplesSuite {
 }
 ```
 
-This test will discover and run all tests in the `com.example` package and its subpackages.
+This suite will discover and run all tests in the `com.example` package and its subpackages.
 
 There are more options to discover and filter tests besides `@Packages`. Please have a look at the [Javadoc](https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc/org/junit/gen5/junit4runner/package-summary.html) or the [code](https://github.com/junit-team/junit-lambda/blob/master/junit4-launcher-runner/src/main/java/org/junit/gen5/junit4runner/JUnit5.java).
+
+
+[junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer
+[junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer
