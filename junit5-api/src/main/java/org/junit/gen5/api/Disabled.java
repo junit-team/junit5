@@ -68,10 +68,10 @@ public @interface Disabled {
 			if (disabled.isPresent()) {
 				String reason = disabled.map(Disabled::value).filter(StringUtils::isNotBlank).orElse(
 					reasonBuilder.apply(context));
-				return Result.failure(reason);
+				return Result.disabled(reason);
 			}
 
-			return Result.success("@Disabled is not present");
+			return Result.enabled("@Disabled is not present");
 		}
 
 		private static String buildClassLevelReason(TestExecutionContext context) {

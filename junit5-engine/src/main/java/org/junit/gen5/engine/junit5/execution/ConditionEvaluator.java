@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit5.execution;
 
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
 
-import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.junit.gen5.api.extension.Condition;
@@ -32,43 +32,46 @@ import org.junit.gen5.commons.util.ReflectionUtils;
  */
 class ConditionEvaluator {
 
+	private static final Result ENABLED = Result.enabled("No 'disabled' conditions encountered");
+
 	/**
-	 * Determine if the test represented by the supplied {@link TestExecutionContext}
-	 * is <em>disabled</em> by evaluating all {@link Condition Conditions}
-	 * configured via {@link Conditional @Conditional}.
+	 * Evaluate all {@link Condition Conditions} configured via
+	 * {@link Conditional @Conditional} for the supplied {@link TestExecutionContext}.
+	 *
+	 * @param context the current {@code TestExecutionContext}
+	 * @return the first <em>disabled</em> {@code Result}, or an <em>enabled</em>
+	 * {@code Result} if no disabled conditions are encountered.
 	 */
 	Result evaluate(TestExecutionContext context) {
-
-		final Class<?> testClass = context.getTestClass().orElse(null);
-		final Method testMethod = context.getTestMethod().orElse(null);
+		Result result = ENABLED;
 
 		// TODO Introduce support for finding *all* @Conditional annotations.
-		Optional<Conditional> classLevelAnno = findAnnotation(testClass, Conditional.class);
-		Optional<Conditional> methodLevelAnno = findAnnotation(testMethod, Conditional.class);
+		Optional<Conditional> classLevelAnno = findAnnotation(context.getTestClass(), Conditional.class);
+		Optional<Conditional> methodLevelAnno = findAnnotation(context.getTestMethod(), Conditional.class);
 
-		Conditional conditional = classLevelAnno.isPresent() ? classLevelAnno.get()
-				: methodLevelAnno.isPresent() ? methodLevelAnno.get() : null;
-
+		Conditional conditional = classLevelAnno.orElse(methodLevelAnno.orElse(null));
 		if (conditional != null) {
-			Class<? extends Condition>[] classes = conditional.value();
-			for (Class<? extends Condition> conditionClass : classes) {
-				try {
-					Condition condition = ReflectionUtils.newInstance(conditionClass);
-
-					Result result = condition.evaluate(context);
-					if (!result.isSuccess()) {
-						// We found a failing condition, so there is no need to continue.
-						return result;
-					}
-				}
-				catch (Exception e) {
-					throw new IllegalStateException(
-						String.format("Failed to evaluate condition [%s]", conditionClass.getName()), e);
-				}
-			}
+			// @formatter:off
+			result = Arrays.stream(conditional.value())
+					.map(clazz -> evaluate(context, clazz))
+					.filter(Result::isDisabled)
+					.findFirst()
+					.orElse(ENABLED);
+			// @formatter:on
 		}
 
-		return Result.success("No failed conditions encountered");
+		return result;
+	}
+
+	private Result evaluate(TestExecutionContext context, Class<? extends Condition> conditionClass) {
+		try {
+			Condition condition = ReflectionUtils.newInstance(conditionClass);
+			return condition.evaluate(context);
+		}
+		catch (Exception e) {
+			throw new IllegalStateException(
+				String.format("Failed to evaluate condition [%s]", conditionClass.getName()), e);
+		}
 	}
 
 }

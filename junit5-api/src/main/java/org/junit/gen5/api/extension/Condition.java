@@ -16,11 +16,18 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * A {@code Condition} can be {@linkplain #evaluate evaluated} to determine
+ * {@code Condition} defines the test extension API for programmatic,
+ * <em>conditional test execution</em>.
+ *
+ * <p>A {@code Condition} is {@linkplain #evaluate evaluated} to determine
  * if a given test (e.g., class or method) should be executed based on the
  * supplied {@link TestExecutionContext}.
  *
- * <p>Implementations must provide a no-args constructor.
+ * <p>Implementations must be registered via {@link Conditional @Conditional}
+ * and must provide a no-args constructor.
+ *
+ * <p>When registered at the class level, a {@code Condition} applies to
+ * all test methods within that class.
  *
  * @author Sam Brannen
  * @since 5.0
@@ -33,40 +40,46 @@ public interface Condition {
 	/**
 	 * Evaluate this condition for the supplied {@link TestExecutionContext}.
 	 *
-	 * <p>A {@linkplain Result#success successful} result implies that the
-	 * test should be executed; whereas, a {@linkplain Result#failure failed}
-	 * result implies that the condition failed and the test should not be
-	 * executed.
+	 * <p>An {@linkplain Result#enabled enabled} result indicates that the
+	 * test should be executed; whereas, a {@linkplain Result#disabled disabled}
+	 * result indicates that the test should not be executed.
+	 *
+	 * @param context the current {@code TestExecutionContext}
 	 */
 	Result evaluate(TestExecutionContext context);
 
 	/**
-	 * The result of evaluating a condition.
+	 * The result of evaluating a {@code Condition}.
 	 */
 	@Getter
 	@ToString
-	public static class Result {
+	public class Result {
 
 		/**
-		 * Factory for creating <em>success</em> results.
+		 * Factory for creating <em>enabled</em> results.
 		 */
-		public static Result success(String reason) {
-			return new Result(true, Optional.ofNullable(reason));
+		public static Result enabled(String reason) {
+			return new Result(true, reason);
 		}
 
 		/**
-		 * Factory for creating <em>failure</em> results.
+		 * Factory for creating <em>disabled</em> results.
 		 */
-		public static Result failure(String reason) {
-			return new Result(false, Optional.ofNullable(reason));
+		public static Result disabled(String reason) {
+			return new Result(false, reason);
 		}
 
-		private final boolean success;
+		private final boolean enabled;
+
 		private final Optional<String> reason;
 
-		private Result(boolean success, Optional<String> reason) {
-			this.success = success;
-			this.reason = reason;
+		private Result(boolean enabled, String reason) {
+			this.enabled = enabled;
+			this.reason = Optional.ofNullable(reason);
+		}
+
+		public boolean isDisabled() {
+			return !enabled;
 		}
 
 	}

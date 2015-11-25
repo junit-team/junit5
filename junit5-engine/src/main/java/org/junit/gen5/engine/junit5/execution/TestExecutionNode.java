@@ -53,7 +53,7 @@ abstract class TestExecutionNode {
 
 	protected final boolean isTestDisabled(ExecutionRequest request, TestExecutionContext context) {
 		Result result = this.conditionEvaluator.evaluate(context);
-		if (!result.isSuccess()) {
+		if (result.isDisabled()) {
 			// TODO Determine if we really need an explicit TestSkippedException.
 			request.getTestExecutionListener().testSkipped(getTestDescriptor(),
 				new TestSkippedException(buildTestSkippedMessage(result, context)));

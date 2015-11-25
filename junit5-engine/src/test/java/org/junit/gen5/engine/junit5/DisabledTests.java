@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5;
 
+import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.engine.TestPlanSpecification.build;
 import static org.junit.gen5.engine.TestPlanSpecification.forClass;
 
@@ -57,6 +58,7 @@ public class DisabledTests extends AbstractJUnit5TestEngineTestCase {
 
 		@Test
 		void disabledTest() {
+			fail("this should be @Disabled");
 		}
 	}
 
@@ -69,6 +71,7 @@ public class DisabledTests extends AbstractJUnit5TestEngineTestCase {
 		@Test
 		@Disabled
 		void disabledTest() {
+			fail("this should be @Disabled");
 		}
 	}
 
