@@ -1,10 +1,14 @@
 # Running JUnit 5 Tests
 
+----
 ## IDE Support
 
 At this stage there is no direct support for running JUnit 5 tests in IDEs. However, we provide two intermediate solutions so that you can go ahead and try out the prototype today. You can use the `ConsoleRunner` or execute JUnit 5 tests with a JUnit 4 style runner.
 
-## Gradle
+----
+## Build Support
+
+### Gradle
 
 The [junit5-gradle-consumer] project demonstrates how to run tests based on the JUnit 5 prototype using Gradle with the help of a very basic `JUnit5Plugin` that is currently inlined in the `build.gradle` script.
 
@@ -18,7 +22,7 @@ junit5 {
 }
 ```
 
-## Maven
+### Maven
 
 We have developed a very basic provider for Maven Surefire that lets you run JUnit 4/5 tests through `mvn test`. The [junit5-maven-consumer] demonstrates how to use it and can serve as a starting point.
 
@@ -45,7 +49,7 @@ Basic usage in [`pom.xml`](https://github.com/junit-team/junit5-samples/blob/mas
 	...
 ```
 
-
+----
 ## Console Runner
 
 The `ConsoleRunner` is a command-line Java application that lets you run JUnit 4/5 tests and prints out test executions and results to the console.
@@ -124,6 +128,7 @@ OPTIONS
 
 ```
 
+----
 ## Using JUnit4 to Run JUnit5 Tests
 
 The `JUnit5` runner lets you run JUnit 5 tests with JUnit 4. This way you can run JUnit 5 tests in IDEs and build tools that only know about JUnit 4. As soon as we add reporting features to JUnit 5 that JUnit 4 does not have, the runner will only be able to support a subset of the JUnit 5 functionality. But for the time being the `JUnit5` runner is an easy way to get started.
@@ -191,6 +196,7 @@ This suite will discover and run all tests in the `com.example` package and its 
 
 There are more options to discover and filter tests besides `@Packages`. Please have a look at the [Javadoc](https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc/org/junit/gen5/junit4runner/package-summary.html) or the [code](https://github.com/junit-team/junit-lambda/blob/master/junit4-launcher-runner/src/main/java/org/junit/gen5/junit4runner/JUnit5.java).
 
+----
 
 [junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer
 [junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer
