@@ -20,6 +20,10 @@ import java.lang.annotation.Target;
  * {@code @Conditional} is used to register one or more {@link Condition
  * Conditions} to be evaluated for <em>conditional test execution</em>.
  *
+ * <p>{@code @Conditional} may be used as a meta-annotation. See the source
+ * code of {@link org.junit.gen5.api.Disabled @Disabled} for a concrete
+ * example.
+ *
  * @author Sam Brannen
  * @since 5.0
  * @see Condition
