@@ -4,6 +4,7 @@
 
 - [Overview](#overview)
 - [Registering Extensions](#registering-extensions)
+- [Conditional Test Execution](#conditional-test-execution)
 - [Test Instance Post-processing](#test-instance-post-processing)
 - [Parameter Resolution](#parameter-resolution)
 - [Additional Planned Extension Points](#additional-planned-extension-points)
@@ -48,6 +49,19 @@ The execution of tests in both `MyTestsV1` and `MyTestsV2` will be extended by t
 
 Registered extensions are inherited within test class hierarchies.
 
+## Conditional Test Execution
+
+[`Condition`] defines the test extension API for programmatic, _conditional test execution_.
+
+A `Condition` is _evaluated_ to determine if a given test (e.g., class or method) should
+be executed based on the supplied `TestExecutionContext`. When registered at the class
+level, a `Condition` applies to all test methods within that class.
+
+[`@Conditional`] is used to register one or more `Conditions`. Futhermore, `@Conditional`
+can be used as a meta-annotation.
+
+See the source code of [`@Disabled`] for a concrete example.
+
 ## Test Instance Post-processing
 
 [`InstancePostProcessor`] defines the API for `TestExtensions` that
@@ -66,15 +80,19 @@ If a `@Test`, `@BeforeEach`, or `@AfterEach` method accepts a parameter, the par
 
 ## Additional Planned Extension Points
 
-As of the time of this writing, `InstancePostProcessor` and `MethodParameterResolver` are the only supported extension points; however, the JUnit Lambda team is planning several additional extension points, including but not limited to the following.
+As of the time of this writing, `@Conditional`/`Condition`, `InstancePostProcessor`, and `MethodParameterResolver` are the only supported extension points; however, the JUnit Lambda team is planning several additional extension points, including but not limited to the following.
 
 1. BeforeAll / AfterAll callbacks
 1. BeforeEach / AfterEach callbacks
 1. Dynamic test registration -- for example, for computing parameterized tests at runtime
 
+
+[`Condition`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/Condition.java
+[`@Conditional`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/Conditional.java
 [CONTRIBUTING]: https://github.com/junit-team/junit-lambda/blob/master/CONTRIBUTING.md
 [`CustomAnnotationParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java
 [`CustomTypeParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java
+[`@Disabled`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Disabled.java
 [`InstancePostProcessor`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/InstancePostProcessor.java
 [issue tracker]: https://github.com/junit-team/junit-lambda/issues
 [junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer
