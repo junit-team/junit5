@@ -16,26 +16,22 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * {@code Condition} defines the test extension API for programmatic,
+ * {@code Condition} defines the {@link TestExtension} API for programmatic,
  * <em>conditional test execution</em>.
  *
  * <p>A {@code Condition} is {@linkplain #evaluate evaluated} to determine
  * if a given test (e.g., class or method) should be executed based on the
- * supplied {@link TestExecutionContext}.
+ * supplied {@link TestExecutionContext}. When evaluated at the class level,
+ * a condition applies to all test methods within that class.
  *
- * <p>Implementations must be registered via {@link Conditional @Conditional}
- * and must provide a no-args constructor.
- *
- * <p>When registered at the class level, a {@code Condition} applies to
- * all test methods within that class.
+ * <p>Implementations must provide a no-args constructor.
  *
  * @author Sam Brannen
  * @since 5.0
- * @see Conditional
  * @see org.junit.gen5.api.Disabled
  */
 @FunctionalInterface
-public interface Condition {
+public interface Condition extends TestExtension {
 
 	/**
 	 * Evaluate this condition for the supplied {@link TestExecutionContext}.

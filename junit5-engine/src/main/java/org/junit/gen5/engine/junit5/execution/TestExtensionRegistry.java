@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.engine.junit5.extension.DisabledCondition;
 import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
 
 /**
@@ -28,7 +29,7 @@ import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
 public class TestExtensionRegistry {
 
 	private static final List<Class<? extends TestExtension>> defaultExtensionClasses = Collections.unmodifiableList(
-		Arrays.asList(TestNameParameterResolver.class));
+		Arrays.asList(DisabledCondition.class, TestNameParameterResolver.class));
 
 	static List<Class<? extends TestExtension>> getDefaultExtensionClasses() {
 		return defaultExtensionClasses;

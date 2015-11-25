@@ -25,8 +25,13 @@ import java.lang.annotation.Target;
  *
  * <h3>Supported Extension APIs</h3>
  * <ul>
+ * <li>{@link Condition}</li>
  * <li>{@link InstancePostProcessor}</li>
  * <li>{@link MethodParameterResolver}</li>
+ * <li>{@link BeforeEachCallbacks}</li>
+ * <li>{@link AfterEachCallbacks}</li>
+ * <li>{@link BeforeAllCallbacks}</li>
+ * <li>{@link AfterAllCallbacks}</li>
  * </ul>
  *
  * @author Sam Brannen

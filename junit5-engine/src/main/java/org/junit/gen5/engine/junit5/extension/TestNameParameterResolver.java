@@ -19,7 +19,7 @@ import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestExecutionContext;
 
 /**
- * {@code MethodParameterResolver} that resolves the name of the currently
+ * {@link MethodParameterResolver} that resolves the name of the currently
  * executing test for {@code String} method parameters annotated with
  * {@link TestName @TestName}.
  *

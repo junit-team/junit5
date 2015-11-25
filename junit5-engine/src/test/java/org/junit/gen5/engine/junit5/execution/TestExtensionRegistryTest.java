@@ -15,6 +15,7 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.gen5.api.extension.TestExtension;
+import org.junit.gen5.engine.junit5.extension.DisabledCondition;
 import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
 
 /**
@@ -26,8 +27,9 @@ public class TestExtensionRegistryTest {
 
 	@Test
 	public void checkJUnit5DefaultExtensions() {
-		Assert.assertEquals(1, TestExtensionRegistry.getDefaultExtensionClasses().size());
+		Assert.assertEquals(2, TestExtensionRegistry.getDefaultExtensionClasses().size());
 
+		assertDefaultExtensionType(DisabledCondition.class);
 		assertDefaultExtensionType(TestNameParameterResolver.class);
 	}
 
@@ -37,6 +39,7 @@ public class TestExtensionRegistryTest {
 		Set<? extends TestExtension> extensions = registry.getExtensions();
 
 		Assert.assertEquals(TestExtensionRegistry.getDefaultExtensionClasses().size(), extensions.size());
+		assertExtensionPresent(DisabledCondition.class);
 		assertExtensionPresent(TestNameParameterResolver.class);
 	}
 
@@ -83,7 +86,7 @@ public class TestExtensionRegistryTest {
 	}
 
 	private void assertDefaultExtensionType(Class<?> extensionType) {
-		Assert.assertTrue(extensionType.getName() + " should be default extension",
+		Assert.assertTrue(extensionType.getName() + " should be a default extension",
 			TestExtensionRegistry.getDefaultExtensionClasses().contains(extensionType));
 	}
 
