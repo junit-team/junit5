@@ -10,7 +10,7 @@
 ----
 ## IDE Support
 
-At this stage there is no direct support for running JUnit 5 tests in IDEs. However, we provide two intermediate solutions so that you can go ahead and try out the prototype today. You can use the `ConsoleRunner` or execute JUnit 5 tests with a JUnit 4 style runner.
+At this stage there is no direct support for running JUnit 5 tests in IDEs. However, we provide two intermediate solutions so that you can go ahead and try out the prototype today. You can use the [`ConsoleRunner`](#console-runner) or execute JUnit 5 tests with a [JUnit 4 style runner](#using-junit4-to-run-junit5-tests).
 
 ----
 ## Build Support
