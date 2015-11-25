@@ -7,6 +7,7 @@
 - [Conditional Test Execution](#conditional-test-execution)
 - [Test Instance Post-processing](#test-instance-post-processing)
 - [Parameter Resolution](#parameter-resolution)
+- [Test Lifecycle Callbacks](#test-lifecycle-callbacks)
 - [Additional Planned Extension Points](#additional-planned-extension-points)
 
 ## Overview
@@ -18,8 +19,6 @@ In contrast to the competing `Runner`, `@Rule`, and `@ClassRule` extension point
 Developers can register one or more extensions by annotating a test class or test method with `@ExtendWith(...)`, supplying class references for the extensions to register. For example, to register a custom `MockitoExtension`, you would annotate your test class as follows.
 
 ```java
-import com.example.MockitoExtension;
-
 @ExtendWith(MockitoExtension.class)
 class MockTests {
   // ...
@@ -76,15 +75,33 @@ For a concrete example, consult the source code for the [`MockitoExtension`].
 
 [`MethodParameterResolver`] is a `TestExtension` strategy for dynamically resolving method parameters at runtime.
 
-If a `@Test`, `@BeforeEach`, or `@AfterEach` method accepts a parameter, the parameter must be _resolved_ at runtime by a `MethodParameterResolver`. A `MethodParameterResolver` can either be built-in or registered by the user via `@ExtendWith`. Generally speaking, parameters may be resolved by *type* or by *annotation*. For concrete examples, consult the source code for [`CustomTypeParameterResolver`] and [`CustomAnnotationParameterResolver`], respectively.
+If a `@Test`, `@BeforeEach`, or `@AfterEach` method accepts a parameter, the parameter
+must be _resolved_ at runtime by a `MethodParameterResolver`. A `MethodParameterResolver`
+can either be built-in (see [`TestNameParameterResolver`]) or registered by the user via
+`@ExtendWith`. Generally speaking, parameters may be resolved by *type* or by *annotation*.
+For concrete examples, consult the source code for [`CustomTypeParameterResolver`] and 
+[`CustomAnnotationParameterResolver`], respectively.
+
+## Test Lifecycle Callbacks
+
+The following interfaces define the APIs for extending tests at various points in the
+test execution lifecycle. Consult the Javadoc for each of these in the
+[`org.junit.gen5.api.extension`] package.
+
+- `BeforeEachCallbacks`
+- `AfterEachCallbacks`
+- `BeforeAllCallbacks`
+- `AfterAllCallbacks`
+
+Note that extension developers may choose to implement any number of these
+interfaces within a single extension. Consult the source code of the
+[`SpringExtension`] for a concrete example.
 
 ## Additional Planned Extension Points
 
-As of the time of this writing, `@Conditional`/`Condition`, `InstancePostProcessor`, and `MethodParameterResolver` are the only supported extension points; however, the JUnit Lambda team is planning several additional extension points, including but not limited to the following.
+The JUnit Lambda team is planning several additional extension points, including but not limited to the following.
 
-1. BeforeAll / AfterAll callbacks
-1. BeforeEach / AfterEach callbacks
-1. Dynamic test registration -- for example, for computing parameterized tests at runtime
+- Dynamic test registration -- for example, for computing parameterized tests at runtime
 
 
 [`Condition`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/Condition.java
@@ -103,8 +120,9 @@ As of the time of this writing, `@Conditional`/`Condition`, `InstancePostProcess
 [`MockitoDecoratorInBaseClassTest`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/test/java/com/example/mockito/MockitoDecoratorInBaseClassTest.java
 [`MockitoExtension`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java
 [`org.junit.gen5.api`]: https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api
-[`org.junit.gen5.Assertions`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java
+[`org.junit.gen5.api.extension`]: https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension
 [`SampleTestCase`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/SampleTestCase.java
 [snapshots repository]: https://oss.sonatype.org/content/repositories/snapshots/
+[`SpringExtension`]: https://github.com/sbrannen/spring-test-junit5/blob/master/src/main/java/org/springframework/test/context/junit5/SpringExtension.java
 [`TestNameParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java
 [Twitter]: https://twitter.com/junitlambda
