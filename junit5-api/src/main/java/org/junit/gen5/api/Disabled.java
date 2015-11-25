@@ -20,6 +20,8 @@ import java.lang.annotation.Target;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.junit.gen5.api.extension.Condition;
+import org.junit.gen5.api.extension.Conditional;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.StringUtils;
 

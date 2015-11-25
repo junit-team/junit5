@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.gen5.api.Condition.Result;
+import org.junit.gen5.api.extension.Condition.Result;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;

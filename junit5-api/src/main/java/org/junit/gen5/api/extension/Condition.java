@@ -8,14 +8,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.api;
+package org.junit.gen5.api.extension;
 
 import java.util.Optional;
 
 import lombok.Getter;
 import lombok.ToString;
-
-import org.junit.gen5.api.extension.TestExecutionContext;
 
 /**
  * A {@code Condition} can be {@linkplain #evaluate evaluated} to determine
@@ -27,7 +25,7 @@ import org.junit.gen5.api.extension.TestExecutionContext;
  * @author Sam Brannen
  * @since 5.0
  * @see Conditional
- * @see Disabled
+ * @see org.junit.gen5.api.Disabled
  */
 @FunctionalInterface
 public interface Condition {

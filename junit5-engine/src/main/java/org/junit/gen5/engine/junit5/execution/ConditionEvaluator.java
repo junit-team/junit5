@@ -15,9 +15,9 @@ import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import org.junit.gen5.api.Condition;
-import org.junit.gen5.api.Condition.Result;
-import org.junit.gen5.api.Conditional;
+import org.junit.gen5.api.extension.Condition;
+import org.junit.gen5.api.extension.Condition.Result;
+import org.junit.gen5.api.extension.Conditional;
 import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.ReflectionUtils;
 

@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.api;
+package org.junit.gen5.api.extension;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
  * @author Sam Brannen
  * @since 5.0
  * @see Condition
- * @see Disabled
+ * @see org.junit.gen5.api.Disabled
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
