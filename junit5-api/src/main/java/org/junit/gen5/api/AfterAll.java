@@ -24,9 +24,11 @@ import java.lang.annotation.Target;
  * <p>In contrast to {@code @AfterEach} methods, {@code @AfterAll} methods
  * are only executed once for a given test class.
  *
- * <p>{@code @AfterAll} methods must not be {@code private} but may
- * optionally be {@code static} if the test class is annotated with
- * {@link TestInstance @TestInstance(PER_CLASS)}.
+ * <p>{@code @AfterAll} methods must not be {@code private} and are typically
+ * {@code static} unless the test class is annotated with
+ * {@link TestInstance @TestInstance(PER_CLASS)}. In addition, an {@code @AfterAll}
+ * method may be declared as a {@linkplain java.lang.reflect.Method#isDefault
+ * default method} if the test class is annotated with {@code @TestInstance(PER_CLASS)}.
  *
  * @author Stefan Bechtold
  * @author Sam Brannen

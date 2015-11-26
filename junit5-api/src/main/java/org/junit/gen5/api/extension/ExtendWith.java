@@ -37,8 +37,6 @@ import java.lang.annotation.Target;
  * @author Sam Brannen
  * @since 5.0
  * @see TestExtension
- * @see InstancePostProcessor
- * @see MethodParameterResolver
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)

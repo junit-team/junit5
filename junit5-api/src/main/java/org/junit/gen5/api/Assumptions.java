@@ -16,8 +16,8 @@ import org.junit.gen5.commons.util.StringUtils;
 import org.opentestalliance.TestAbortedException;
 
 /**
- * Collection of utility methods for aborting test execution based on failed
- * assumptions.
+ * Collection of utility methods for conditional test execution based on
+ * <em>assumptions</em>.
  *
  * @author Sam Brannen
  * @since 5.0
