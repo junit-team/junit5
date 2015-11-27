@@ -10,9 +10,6 @@
 
 package org.junit.gen5.engine.junit5;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 import org.junit.Assert;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Assertions;
@@ -75,10 +72,4 @@ public class ForAllExtensionTests extends AbstractJUnit5TestEngineTestCase {
 		}
 
 	}
-
-	@Test
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface CustomTestAnnotation {
-	}
-
 }
