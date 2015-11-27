@@ -15,12 +15,12 @@ import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.ForAll;
+import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 
 /**
  * Core integration tests for the {@link JUnit5TestEngine}.
  *
- * @author Sam Brannen
  * @since 5.0
  */
 public class ForAllExtensionTests extends AbstractJUnit5TestEngineTestCase {
@@ -30,10 +30,10 @@ public class ForAllExtensionTests extends AbstractJUnit5TestEngineTestCase {
 		ForAllTestCase.countBeforeInvoked = 0;
 		ForAllTestCase.countAfterInvoked = 0;
 
-		TrackingTestExecutionListener listener = executeTestsForClass(ForAllTestCase.class, 3);
+		TrackingTestExecutionListener listener = executeTestsForClass(ForAllTestCase.class, 5);
 
-		Assert.assertEquals("# tests started", 2, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests started", 3, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 3, listener.testSucceededCount.get());
 
 		Assert.assertEquals("# before all calls", 1, ForAllTestCase.countBeforeInvoked);
 		Assert.assertEquals("# after all calls", 1, ForAllTestCase.countAfterInvoked);
@@ -69,6 +69,16 @@ public class ForAllExtensionTests extends AbstractJUnit5TestEngineTestCase {
 		@Test
 		void test2() {
 
+		}
+
+		@Nested
+		class NestedTests {
+
+			@Test
+			void test3() { //MyForAll my) {
+				//Does not work
+				//Assertions.assertEquals("variable changed", my.aVariable);
+			}
 		}
 
 	}
