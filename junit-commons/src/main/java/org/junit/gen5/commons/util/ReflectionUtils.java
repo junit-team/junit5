@@ -11,6 +11,7 @@
 package org.junit.gen5.commons.util;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 import java.io.File;
 import java.lang.reflect.AccessibleObject;
@@ -26,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Collection of utilities for working with Java reflection APIs.
@@ -237,7 +237,7 @@ public final class ReflectionUtils {
 		return Arrays.stream(fullClassPath.split(separator))
 				.filter(part -> !part.endsWith(".jar"))
 				.map(File::new)
-				.collect(Collectors.toSet());
+				.collect(toSet());
 		// @formatter:on
 	}
 
@@ -251,11 +251,11 @@ public final class ReflectionUtils {
 			ReflectionUtils::loadClass).scanForClassesInPackage(basePackageName, classTester);
 	}
 
-	public static List<Class<?>> findInnerClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
+	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "predicate must not be null");
 
-		return Arrays.stream(clazz.getDeclaredClasses()).filter(predicate).collect(Collectors.toList());
+		return Arrays.stream(clazz.getDeclaredClasses()).filter(predicate).collect(toList());
 	}
 
 	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
@@ -327,7 +327,7 @@ public final class ReflectionUtils {
 		for (Class<?> ifc : clazz.getInterfaces()) {
 
 			List<Method> localMethods = Arrays.stream(ifc.getDeclaredMethods()).filter(Method::isDefault).collect(
-				Collectors.toList());
+				toList());
 
 			// @formatter:off
 			List<Method> subInterfaceMethods = getInterfaceMethods(ifc, sortOrder).stream()

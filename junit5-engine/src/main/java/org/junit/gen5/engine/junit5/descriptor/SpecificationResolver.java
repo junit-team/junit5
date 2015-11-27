@@ -164,7 +164,7 @@ public class SpecificationResolver {
 	}
 
 	private void resolveContainedNestedClasses(Class<?> clazz) {
-		List<Class<?>> nestedClasses = findInnerClasses(clazz, isNestedTestClass);
+		List<Class<?>> nestedClasses = findNestedClasses(clazz, isNestedTestClass);
 		for (Class<?> nestedClass : nestedClasses) {
 			JUnit5Testable nestedClassTestable = JUnit5Testable.fromClass(nestedClass, engineDescriptor.getUniqueId());
 			resolveTestable(nestedClassTestable);

@@ -64,7 +64,7 @@ public class ForAllExtension implements MethodParameterResolver, BeforeAllCallba
 
 	private List<Object> getObjectsInScope(TestExecutionContext testExecutionContext) {
 		Predicate<Class<?>> forAllFilter = clazz -> AnnotationUtils.isAnnotated(clazz, ForAll.class);
-		List<Class<?>> forAllClasses = ReflectionUtils.findInnerClasses(testExecutionContext.getTestClass().get(),
+		List<Class<?>> forAllClasses = ReflectionUtils.findNestedClasses(testExecutionContext.getTestClass().get(),
 			forAllFilter);
 		return forAllClasses.stream().map(clazz -> forAllObjects.get(testExecutionContext, clazz)).collect(
 			Collectors.toList());
