@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
+import org.junit.gen5.engine.junit5.extension.ForAllExtension;
 import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
 
 /**
@@ -27,10 +28,11 @@ public class TestExtensionRegistryTest {
 
 	@Test
 	public void checkJUnit5DefaultExtensions() {
-		Assert.assertEquals(2, TestExtensionRegistry.getDefaultExtensionClasses().size());
+		Assert.assertEquals(3, TestExtensionRegistry.getDefaultExtensionClasses().size());
 
 		assertDefaultExtensionType(DisabledCondition.class);
 		assertDefaultExtensionType(TestNameParameterResolver.class);
+		assertDefaultExtensionType(ForAllExtension.class);
 	}
 
 	@Test

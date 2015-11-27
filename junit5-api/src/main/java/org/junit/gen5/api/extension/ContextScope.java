@@ -20,10 +20,6 @@ import org.junit.gen5.commons.util.Preconditions;
 // TODO: Implement support for other LifeCyle and Inheritance configurations
 public class ContextScope<K, V> {
 
-	public enum LifeCycle {
-		OncePerTest, OncePerContext, OncePerClass, Singleton
-	}
-
 	public enum Inheritance {
 		Yes, No
 	}
@@ -32,8 +28,7 @@ public class ContextScope<K, V> {
 
 	private Map<TestExecutionContext, Map<K, V>> values = new HashMap<>();
 
-	public ContextScope(Function<K, V> creator, LifeCycle lifeCycle, Inheritance inheritance) {
-		Preconditions.condition(lifeCycle == LifeCycle.OncePerTest, "Only OncePerTest supported");
+	public ContextScope(Function<K, V> creator, Inheritance inheritance) {
 		Preconditions.condition(inheritance == Inheritance.Yes, "Only Inheritance.Yes supported");
 		this.creator = creator;
 	}

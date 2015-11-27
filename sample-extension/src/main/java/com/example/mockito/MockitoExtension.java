@@ -39,8 +39,7 @@ public class MockitoExtension implements InstancePostProcessor, MethodParameterR
 	private final ContextScope<Class<?>, Object> mocksInScope;
 
 	public MockitoExtension() {
-		mocksInScope = new ContextScope<Class<?>, Object>(type -> mock(type), ContextScope.LifeCycle.OncePerTest,
-			ContextScope.Inheritance.Yes);
+		mocksInScope = new ContextScope<Class<?>, Object>(type -> mock(type), ContextScope.Inheritance.Yes);
 	}
 
 	@Override
