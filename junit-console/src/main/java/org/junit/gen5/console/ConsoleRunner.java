@@ -23,6 +23,12 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import io.airlift.airline.Arguments;
+import io.airlift.airline.Command;
+import io.airlift.airline.Help;
+import io.airlift.airline.Option;
+import io.airlift.airline.model.CommandMetadata;
+
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -30,12 +36,6 @@ import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.listeners.SummaryCreatingTestListener;
 import org.junit.gen5.launcher.listeners.TestExecutionSummary;
-
-import io.airlift.airline.Arguments;
-import io.airlift.airline.Command;
-import io.airlift.airline.Help;
-import io.airlift.airline.Option;
-import io.airlift.airline.model.CommandMetadata;
 
 /**
  * @author Stefan Bechtold
