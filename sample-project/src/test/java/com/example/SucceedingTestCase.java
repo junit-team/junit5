@@ -11,7 +11,6 @@
 package com.example;
 
 import static org.junit.gen5.api.Assertions.fail;
-import static org.junit.gen5.api.TestInstance.Lifecycle.PER_CLASS;
 
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
@@ -20,14 +19,12 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.TestInstance;
 
 /**
  * Named *TestCase so Gradle will not try to run it.
  */
 @Name("A succeeding test case")
 @Fast
-@TestInstance(PER_CLASS)
 class SucceedingTestCase extends AbstractSuperTest implements InterfaceWithTestCases {
 
 	@BeforeAll

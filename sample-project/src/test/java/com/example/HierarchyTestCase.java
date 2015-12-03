@@ -10,8 +10,6 @@
 
 package com.example;
 
-import static org.junit.gen5.api.TestInstance.Lifecycle.PER_CLASS;
-
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeAll;
@@ -19,7 +17,6 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.TestInstance;
 import org.junit.gen5.junit4runner.JUnit5;
 import org.junit.runner.RunWith;
 
@@ -30,7 +27,6 @@ import org.junit.runner.RunWith;
  * @since 5.0.0
  */
 @RunWith(JUnit5.class)
-@TestInstance(PER_CLASS)
 public class HierarchyTestCase {
 
 	static int topLevelBeforeAllInvocationCount = 0;
@@ -92,7 +88,6 @@ public class HierarchyTestCase {
 
 	@Nested
 	@Name("Second Level Context")
-	@TestInstance(PER_CLASS)
 	class SecondLevelTestContext {
 
 		@BeforeAll
@@ -133,7 +128,6 @@ public class HierarchyTestCase {
 
 		@Nested
 		@Name("Third Level Context")
-		@TestInstance(PER_CLASS)
 		class ThirdLevelTestContext {
 
 			@BeforeAll

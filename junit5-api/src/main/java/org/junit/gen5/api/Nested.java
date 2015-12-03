@@ -23,7 +23,6 @@ import java.lang.annotation.Target;
  * @author Stefan Bechtold
  * @author Sam Brannen
  * @since 5.0
- * @see TestInstance
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

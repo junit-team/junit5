@@ -32,7 +32,6 @@ import java.lang.annotation.Target;
  * @author Sam Brannen
  * @author Stefan Bechtold
  * @since 5.0
- * @see TestInstance
  * @see Name
  * @see BeforeEach
  * @see AfterEach
