@@ -9,6 +9,8 @@ include "junit4-engine"
 include "junit5-api"
 include "junit5-engine"
 include "junit-gradle"
+include "junit-tests"
+
 include "open-test-alliance"
 
 include "sample-extension"
