@@ -27,12 +27,12 @@ public class AbstractTestDescriptorTest {
 		engineDescriptor = new EngineDescriptor(new TestEngine() {
 
 			@Override
-			public void discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
+			public TestDescriptor discoverTests(TestPlanSpecification specification) {
+				return engineDescriptor;
 			}
 
 			@Override
 			public void execute(ExecutionRequest request) {
-
 			}
 
 			@Override

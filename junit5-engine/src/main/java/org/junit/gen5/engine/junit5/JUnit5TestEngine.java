@@ -11,13 +11,9 @@
 package org.junit.gen5.engine.junit5;
 
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.ExecutionRequest;
-import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.*;
 
 public class JUnit5TestEngine implements TestEngine {
-
 	@Override
 	public String getId() {
 		// TODO Consider using class names for engine IDs.
@@ -25,14 +21,12 @@ public class JUnit5TestEngine implements TestEngine {
 	}
 
 	@Override
-	public void discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
+	public TestDescriptor discoverTests(TestPlanSpecification specification) {
 		Preconditions.notNull(specification, "specification must not be null");
-		Preconditions.notNull(engineDescriptor, "engineDescriptor must not be null");
-
+		return null;
 	}
 
 	@Override
 	public void execute(ExecutionRequest request) {
 	}
-
 }

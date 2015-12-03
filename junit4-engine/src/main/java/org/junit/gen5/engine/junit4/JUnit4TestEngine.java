@@ -10,24 +10,20 @@
 
 package org.junit.gen5.engine.junit4;
 
-import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.ExecutionRequest;
-import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.*;
 
 public class JUnit4TestEngine implements TestEngine {
-
 	@Override
 	public String getId() {
 		return "junit4";
 	}
 
 	@Override
-	public void discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor) {
+	public TestDescriptor discoverTests(TestPlanSpecification specification) {
+		return null;
 	}
 
 	@Override
 	public void execute(ExecutionRequest request) {
 	}
-
 }

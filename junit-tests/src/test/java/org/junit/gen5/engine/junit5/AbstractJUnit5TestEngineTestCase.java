@@ -13,9 +13,8 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.engine.TestPlanSpecification.build;
 import static org.junit.gen5.engine.TestPlanSpecification.forClass;
 
-import org.junit.Assert;
-import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.ExecutionRequest;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -33,18 +32,14 @@ abstract class AbstractJUnit5TestEngineTestCase {
 	}
 
 	protected TrackingTestExecutionListener executeTests(TestPlanSpecification spec, int expectedDescriptorCount) {
-		EngineDescriptor engineDescriptor = discoverTests(spec);
-		Assert.assertEquals("# descriptors", expectedDescriptorCount, engineDescriptor.allChildren().size());
-
+		TestDescriptor testDescriptor = discoverTests(spec);
 		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
-		engine.execute(new ExecutionRequest(engineDescriptor, listener));
+		engine.execute(new ExecutionRequest(testDescriptor, listener));
 		return listener;
 	}
 
-	private EngineDescriptor discoverTests(TestPlanSpecification spec) {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(engine);
-		engine.discoverTests(spec, engineDescriptor);
-		return engineDescriptor;
+	private TestDescriptor discoverTests(TestPlanSpecification spec) {
+		return engine.discoverTests(spec);
 	}
 
 }
