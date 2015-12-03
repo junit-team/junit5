@@ -1,21 +1,18 @@
 dependencies {
-    compile(project(':junit-commons'))
-    compile(project(':junit-console'))
-    compile(project(':junit-engine-api'))
-    compile(project(':junit-launcher'))
-    compile(project(':junit4-launcher-runner'))
-    compile(project(':junit4-engine'))
-    compile(project(':junit5-api'))
-    compile(project(':junit5-engine'))
+	compile(project(':junit-commons'))
+	compile(project(':junit-console'))
+	compile(project(':junit-engine-api'))
+	compile(project(':junit-launcher'))
+	compile(project(':junit4-launcher-runner'))
+	compile(project(':junit4-engine'))
+	compile(project(':junit5-api'))
+	compile(project(':junit5-engine'))
 
 
-    testCompile("org.assertj:assertj-core:${assertJVersion}")
-    testCompile("junit:junit:${junit4Version}")
+	testCompile("org.assertj:assertj-core:${assertJVersion}")
+	testCompile("junit:junit:${junit4Version}")
 
-    testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
-    testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
+	testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
+	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 
 }
-
-
-
