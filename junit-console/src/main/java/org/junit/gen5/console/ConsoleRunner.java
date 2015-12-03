@@ -10,10 +10,7 @@
 
 package org.junit.gen5.console;
 
-import static io.airlift.airline.SingleCommand.singleCommand;
-import static org.junit.gen5.engine.TestPlanSpecification.allTests;
-import static org.junit.gen5.engine.TestPlanSpecification.byTags;
-import static org.junit.gen5.engine.TestPlanSpecification.classNameMatches;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -21,16 +18,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.inject.Inject;
-
-import io.airlift.airline.Arguments;
-import io.airlift.airline.Command;
-import io.airlift.airline.Help;
-import io.airlift.airline.Option;
-import io.airlift.airline.model.CommandMetadata;
-
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.console.options.AirlineCommandLineOptionsParser;
+import org.junit.gen5.console.options.CommandLineOptions;
+import org.junit.gen5.console.options.CommandLineOptionsParser;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.launcher.Launcher;
@@ -40,67 +32,45 @@ import org.junit.gen5.launcher.listeners.TestExecutionSummary;
 /**
  * @since 5.0
  */
-@Command(name = "ConsoleRunner", description = "console test runner")
 public class ConsoleRunner {
 
-	// @formatter:off
-    @Option(name = {"-h", "--help"}, description = "Display help information")
-    private boolean help;
-
-	@Option(name = { "-x", "--enable-exit-code" },
-			description = "Exit process with number of failing tests as exit code")
-	private boolean enableExitCode;
-
-	@Option(name = { "-C", "--disable-ansi-colors" },
-			description = "Disable colored output (not supported by all terminals)")
-	private boolean disableAnsiColors;
-
-	@Option(name = {"-a", "--all"}, description = "Run all tests")
-	private boolean runAllTests;
-
-	@Option(name = {"-D", "--hide-details"}, description = "Hide details while tests are being executed. "
-			+ "Only show the summary and test failures.")
-	private boolean hideDetails;
-
-	@Option(name = {"-n", "--filter-classname"}, description = "Give a regular expression to include only classes whose fully qualified names match.")
-	private String classnameFilter;
-
-	@Option(name = {"-t", "--filter-tags"}, description = "Give a tag to include in the test run. This option can be repeated.")
-	private List<String> tagsFilter;
-
-	@Arguments(description = "Test classes, methods or packages to execute."
-			+ " If --all|-a has been chosen, arguments can list all classpath roots that should be considered for test scanning,"
-			+ " or none if the full classpath shall be scanned.")
-	private List<String> arguments;
-
-	// @formatter:on
-
-	@Inject
-	public CommandMetadata commandMetadata;
+	private CommandLineOptions options;
 
 	public static void main(String... args) {
-		ConsoleRunner consoleRunner = singleCommand(ConsoleRunner.class).parse(args);
+		CommandLineOptionsParser parser = new AirlineCommandLineOptionsParser();
+		CommandLineOptions options = parser.parse(args);
 
-		if (consoleRunner.help) {
-			showHelp(consoleRunner);
+		if (options.isDisplayHelp()) {
+			parser.printHelp();
+			System.exit(0);
 		}
 
 		try {
-			consoleRunner.run();
+			TestExecutionSummary summary = new ConsoleRunner(options).run();
+			int exitCode = computeExitCode(options, summary);
+			System.exit(exitCode);
 		}
 		catch (Exception e) {
 			e.printStackTrace(System.err);
 			System.err.println();
-			showHelp(consoleRunner);
+			parser.printHelp();
 			System.exit(-1);
 		}
 	}
 
-	private static void showHelp(ConsoleRunner consoleRunner) {
-		Help.help(consoleRunner.commandMetadata);
+	private static int computeExitCode(CommandLineOptions options, TestExecutionSummary summary) {
+		if (options.isExitCodeEnabled()) {
+			long failedTests = summary.countFailedTests();
+			return (int) Math.min(Integer.MAX_VALUE, failedTests);
+		}
+		return 0;
 	}
 
-	private void run() {
+	public ConsoleRunner(CommandLineOptions options) {
+		this.options = options;
+	}
+
+	private TestExecutionSummary run() {
 		// TODO Configure launcher?
 		Launcher launcher = new Launcher();
 
@@ -114,41 +84,38 @@ public class ConsoleRunner {
 
 		printSummaryToStandardOut(summary);
 
-		if (enableExitCode) {
-			long failedTests = summary.countFailedTests();
-			int exitCode = (int) Math.min(Integer.MAX_VALUE, failedTests);
-			System.exit(exitCode);
-		}
+		return summary;
 	}
 
 	private void registerListeners(Launcher launcher, TestExecutionSummary summary) {
 		SummaryCreatingTestListener testSummaryListener = new SummaryCreatingTestListener(summary);
 		launcher.registerTestPlanExecutionListeners(testSummaryListener);
-		if (!hideDetails) {
-			launcher.registerTestPlanExecutionListeners(new ColoredPrintingTestListener(System.out, disableAnsiColors));
+		if (!options.isHideDetails()) {
+			launcher.registerTestPlanExecutionListeners(
+				new ColoredPrintingTestListener(System.out, options.isAnsiColorOutputDisabled()));
 		}
 	}
 
 	private TestPlanSpecification createTestPlanSpecification() {
 		TestPlanSpecification testPlanSpecification;
-		if (runAllTests) {
+		if (options.isRunAllTests()) {
 			Set<File> rootDirectoriesToScan = new HashSet<>();
-			if (arguments == null || arguments.isEmpty()) {
+			if (options.getArguments() == null || options.getArguments().isEmpty()) {
 				rootDirectoriesToScan.addAll(ReflectionUtils.getAllClasspathRootDirectories());
 			}
 			else {
-				arguments.stream().map(File::new).forEach(rootDirectoriesToScan::add);
+				options.getArguments().stream().map(File::new).forEach(rootDirectoriesToScan::add);
 			}
 			testPlanSpecification = TestPlanSpecification.build(allTests(rootDirectoriesToScan));
 		}
 		else {
 			testPlanSpecification = TestPlanSpecification.build(testPlanSpecificationElementsFromArguments());
 		}
-		if (classnameFilter != null) {
-			testPlanSpecification.filterWith(classNameMatches(classnameFilter));
+		if (options.getClassnameFilter() != null) {
+			testPlanSpecification.filterWith(classNameMatches(options.getClassnameFilter()));
 		}
-		if (tagsFilter != null && !tagsFilter.isEmpty()) {
-			testPlanSpecification.filterWith(byTags(tagsFilter));
+		if (options.getTagsFilter() != null && !options.getTagsFilter().isEmpty()) {
+			testPlanSpecification.filterWith(byTags(options.getTagsFilter()));
 		}
 		return testPlanSpecification;
 	}
@@ -156,7 +123,7 @@ public class ConsoleRunner {
 	private void printSummaryToStandardOut(TestExecutionSummary summary) {
 		PrintWriter stdout = new PrintWriter(System.out);
 
-		if (hideDetails) { //Otherwise the failures have already been printed
+		if (options.isHideDetails()) { // Otherwise the failures have already been printed
 			summary.printFailuresOn(stdout);
 		}
 
@@ -165,8 +132,8 @@ public class ConsoleRunner {
 	}
 
 	private List<TestPlanSpecificationElement> testPlanSpecificationElementsFromArguments() {
-		Preconditions.notNull(arguments, "No arguments given");
-		return toTestPlanSpecificationElements(arguments);
+		Preconditions.notNull(options.getArguments(), "No arguments given");
+		return toTestPlanSpecificationElements(options.getArguments());
 	}
 
 	List<TestPlanSpecificationElement> toTestPlanSpecificationElements(List<String> arguments) {
