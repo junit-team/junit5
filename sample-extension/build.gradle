@@ -5,4 +5,6 @@ dependencies {
 	compile "org.mockito:mockito-core:1.+"
 	testCompile(project(':junit4-launcher-runner'))
 	testRuntime(project(':junit5-engine'))
+	testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
+	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 }
