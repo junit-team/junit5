@@ -10,7 +10,9 @@
 
 package org.junit.gen5.console.options;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import io.airlift.airline.Arguments;
 import io.airlift.airline.Command;
@@ -42,12 +44,12 @@ public class AirlineCommandLineOptions implements CommandLineOptions {
 	private String classnameFilter;
 
 	@Option(name = {"-t", "--filter-tags"}, description = "Give a tag to include in the test run. This option can be repeated.")
-	private List<String> tagsFilter;
+	private List<String> tagsFilter = new ArrayList<>();
 
 	@Arguments(description = "Test classes, methods or packages to execute."
 			+ " If --all|-a has been chosen, arguments can list all classpath roots that should be considered for test scanning,"
 			+ " or none if the full classpath shall be scanned.")
-	private List<String> arguments;
+	private List<String> arguments = new ArrayList<>();
 	// @formatter:on
 
 	@Override
@@ -76,8 +78,8 @@ public class AirlineCommandLineOptions implements CommandLineOptions {
 	}
 
 	@Override
-	public String getClassnameFilter() {
-		return classnameFilter;
+	public Optional<String> getClassnameFilter() {
+		return Optional.ofNullable(classnameFilter);
 	}
 
 	@Override

@@ -10,6 +10,7 @@
 
 package org.junit.gen5.commons.util;
 
+import java.util.Collection;
 import java.util.function.Supplier;
 
 /**
@@ -41,6 +42,10 @@ public final class Preconditions {
 	 */
 	public static void notEmpty(String str, Supplier<String> messageSupplier) {
 		condition(StringUtils.isNotEmpty(str), messageSupplier);
+	}
+
+	public static void notEmpty(Collection<?> collection, String message) {
+		condition(collection != null && !collection.isEmpty(), message);
 	}
 
 	/**

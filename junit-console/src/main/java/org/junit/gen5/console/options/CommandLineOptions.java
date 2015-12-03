@@ -11,6 +11,7 @@
 package org.junit.gen5.console.options;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CommandLineOptions {
 
@@ -24,7 +25,7 @@ public interface CommandLineOptions {
 
 	boolean isHideDetails();
 
-	String getClassnameFilter();
+	Optional<String> getClassnameFilter();
 
 	List<String> getTagsFilter();
 

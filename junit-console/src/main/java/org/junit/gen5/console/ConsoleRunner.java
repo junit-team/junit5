@@ -111,10 +111,9 @@ public class ConsoleRunner {
 		else {
 			testPlanSpecification = TestPlanSpecification.build(testPlanSpecificationElementsFromArguments());
 		}
-		if (options.getClassnameFilter() != null) {
-			testPlanSpecification.filterWith(classNameMatches(options.getClassnameFilter()));
-		}
-		if (options.getTagsFilter() != null && !options.getTagsFilter().isEmpty()) {
+		options.getClassnameFilter().ifPresent(
+			classnameFilter -> testPlanSpecification.filterWith(classNameMatches(classnameFilter)));
+		if (!options.getTagsFilter().isEmpty()) {
 			testPlanSpecification.filterWith(byTags(options.getTagsFilter()));
 		}
 		return testPlanSpecification;
@@ -132,7 +131,7 @@ public class ConsoleRunner {
 	}
 
 	private List<TestPlanSpecificationElement> testPlanSpecificationElementsFromArguments() {
-		Preconditions.notNull(options.getArguments(), "No arguments given");
+		Preconditions.notEmpty(options.getArguments(), "No arguments given");
 		return toTestPlanSpecificationElements(options.getArguments());
 	}
 
