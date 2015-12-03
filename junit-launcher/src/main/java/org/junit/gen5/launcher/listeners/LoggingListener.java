@@ -13,14 +13,11 @@ package org.junit.gen5.launcher.listeners;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-import lombok.Data;
-
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.gen5.launcher.TestPlanExecutionListener;
 
-@Data
 public class LoggingListener implements TestPlanExecutionListener {
 
 	private static final Logger LOG = Logger.getLogger(LoggingListener.class.getName());

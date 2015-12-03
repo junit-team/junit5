@@ -12,21 +12,23 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import java.lang.reflect.Method;
 
-import lombok.EqualsAndHashCode;
-import lombok.Value;
-
-@Value
-@EqualsAndHashCode(callSuper = false)
 class JUnit5Method extends JUnit5Testable {
 
+	private final Method javaMethod;
 	private final Class<?> containerClass;
 
-	private final Method javaMethod;
-
-	JUnit5Method(String uniqueId, Method javaElement, Class<?> containerClass) {
+	JUnit5Method(String uniqueId, Method javaMethod, Class<?> containerClass) {
 		super(uniqueId);
-		this.javaMethod = javaElement;
+		this.javaMethod = javaMethod;
 		this.containerClass = containerClass;
+	}
+
+	public Method getJavaMethod() {
+		return javaMethod;
+	}
+
+	public Class<?> getContainerClass() {
+		return containerClass;
 	}
 
 	@Override

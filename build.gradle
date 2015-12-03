@@ -18,14 +18,6 @@ subprojects {
 	apply plugin: 'signing'
 	apply plugin: 'com.diffplug.gradle.spotless'
 
-	configurations {
-		provided
-	}
-
-	sourceSets.each { sourceSet ->
-		sourceSet.compileClasspath += configurations.provided
-	}
-
 	repositories {
 		mavenCentral()
 	}
@@ -42,7 +34,6 @@ subprojects {
 	}
 
 	dependencies {
-		provided("org.projectlombok:lombok:${lombokVersion}")
 		testCompile("org.assertj:assertj-core:${assertJVersion}")
 		testCompile("junit:junit:${junit4Version}")
 		testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
@@ -51,15 +42,8 @@ subprojects {
 
 	eclipse {
 		classpath {
-			plusConfigurations += [ configurations.provided ]
 			containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
 			containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
-		}
-	}
-
-	idea {
-		module {
-			scopes.PROVIDED.plus += [ configurations.provided ]
 		}
 	}
 
@@ -80,7 +64,6 @@ subprojects {
 	}
 
 	javadoc {
-		classpath += configurations.provided
 		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = project.name
@@ -110,7 +93,7 @@ subprojects {
 			} else {
 				licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java')
 			}
-			importOrder(['java', 'javax', 'com', 'lombok', 'org'])
+			importOrder(['java', 'javax', 'com', 'org'])
 			eclipseFormatFile rootProject.file('src/eclipse/junit-lambda-eclipse-formatter-settings.xml')
 
 			custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }

@@ -12,9 +12,6 @@ package org.junit.gen5.api.extension;
 
 import java.util.Optional;
 
-import lombok.Getter;
-import lombok.ToString;
-
 /**
  * {@code Condition} defines the {@link TestExtension} API for programmatic,
  * <em>conditional test execution</em>.
@@ -47,8 +44,6 @@ public interface Condition extends TestExtension {
 	/**
 	 * The result of evaluating a {@code Condition}.
 	 */
-	@Getter
-	@ToString
 	public class Result {
 
 		/**
@@ -76,6 +71,10 @@ public interface Condition extends TestExtension {
 
 		public boolean isDisabled() {
 			return !enabled;
+		}
+
+		public Optional<String> getReason() {
+			return reason;
 		}
 
 	}

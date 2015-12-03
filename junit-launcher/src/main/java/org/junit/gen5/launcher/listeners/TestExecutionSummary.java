@@ -17,8 +17,6 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import lombok.Value;
-
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.launcher.TestPlan;
@@ -69,7 +67,7 @@ public class TestExecutionSummary {
 			writer.println();
 			writer.println(String.format("Test failures (%d):", testsFailed.get()));
 			failures.stream().forEach(failure -> {
-				//TODO Add source description to text
+				// TODO Add source description to text
 				writer.println(String.format("  %s", describeTest(failure.getDescriptor())));
 				failure.getDescriptor().getSource().ifPresent(scource -> {
 					writer.println(String.format("    %s", scource.toString()));
@@ -109,10 +107,23 @@ public class TestExecutionSummary {
 		failures.add(new Failure(testDescriptor, throwable));
 	}
 
-	@Value
 	static class Failure {
 
-		final private TestDescriptor descriptor;
-		final private Throwable exception;
+		private final TestDescriptor descriptor;
+		private final Throwable exception;
+
+		public Failure(TestDescriptor descriptor, Throwable exception) {
+			this.descriptor = descriptor;
+			this.exception = exception;
+		}
+
+		public TestDescriptor getDescriptor() {
+			return descriptor;
+		}
+
+		public Throwable getException() {
+			return exception;
+		}
+
 	}
 }

@@ -21,11 +21,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import lombok.Value;
 
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 
@@ -225,13 +224,33 @@ public final class AnnotationUtils {
 				&& annotation.annotationType().getPackage().getName().startsWith("java.lang.annotation"));
 	}
 
-	@Value
 	private static class AnnotationCacheKey implements Serializable {
 
 		private static final long serialVersionUID = 4611807332019442648L;
 
-		private AnnotatedElement element;
-		private Class<? extends Annotation> annotationType;
+		private final AnnotatedElement element;
+		private final Class<? extends Annotation> annotationType;
+
+		public AnnotationCacheKey(AnnotatedElement element, Class<? extends Annotation> annotationType) {
+			this.element = element;
+			this.annotationType = annotationType;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj instanceof AnnotationCacheKey) {
+				AnnotationCacheKey that = (AnnotationCacheKey) obj;
+				return Objects.equals(this.element, that.element)
+						&& Objects.equals(this.annotationType, that.annotationType);
+			}
+			return false;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(this.element, this.annotationType);
+		}
+
 	}
 
 }

@@ -13,8 +13,6 @@ package org.junit.gen5.engine;
 import java.io.File;
 import java.util.Optional;
 
-import lombok.Value;
-
 public class FileSystemSource implements TestSource {
 
 	final private File sourceFileOrDirectory;
@@ -55,11 +53,24 @@ public class FileSystemSource implements TestSource {
 		return getPosition().isPresent();
 	}
 
-	@Value
 	static public class FilePosition {
 
-		final private int line;
-		final private int column;
+		private final int line;
+		private final int column;
+
+		public FilePosition(int line, int column) {
+			this.line = line;
+			this.column = column;
+		}
+
+		public int getLine() {
+			return line;
+		}
+
+		public int getColumn() {
+			return column;
+		}
+
 	}
 
 	public Optional<File> getFile() {

@@ -13,15 +13,25 @@ package org.junit.gen5.engine;
 import java.util.HashMap;
 import java.util.Map;
 
-import lombok.Value;
-
-@Value
 public class ExecutionRequest {
 
-	private EngineDescriptor engineDescriptor;
+	private final EngineDescriptor engineDescriptor;
 
-	private TestExecutionListener testExecutionListener;
+	private final TestExecutionListener testExecutionListener;
 
-	private Map<String, Object> attributes = new HashMap<>();
+	private final Map<String, Object> attributes = new HashMap<>();
+
+	public ExecutionRequest(EngineDescriptor engineDescriptor, TestExecutionListener testExecutionListener) {
+		this.engineDescriptor = engineDescriptor;
+		this.testExecutionListener = testExecutionListener;
+	}
+
+	public EngineDescriptor getEngineDescriptor() {
+		return engineDescriptor;
+	}
+
+	public TestExecutionListener getTestExecutionListener() {
+		return testExecutionListener;
+	}
 
 }

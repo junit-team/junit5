@@ -12,12 +12,13 @@ package org.junit.gen5.engine;
 
 import java.io.File;
 
-import lombok.Value;
-
-@Value
 public class AllTestsSpecification implements TestPlanSpecificationElement {
 
-	private File classpathRoot;
+	private final File classpathRoot;
+
+	public AllTestsSpecification(File classpathRoot) {
+		this.classpathRoot = classpathRoot;
+	}
 
 	@Override
 	public void accept(TestPlanSpecificationElementVisitor visitor) {

@@ -12,13 +12,10 @@ package org.junit.gen5.engine;
 
 import java.lang.reflect.Method;
 
-import lombok.Value;
-
-@Value
 public class MethodSpecification implements TestPlanSpecificationElement {
 
-	private Class<?> testClass;
-	private Method testMethod;
+	private final Class<?> testClass;
+	private final Method testMethod;
 
 	public MethodSpecification(Class<?> testClass, Method testMethod) {
 		this.testClass = testClass;

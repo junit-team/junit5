@@ -10,12 +10,13 @@
 
 package org.junit.gen5.engine;
 
-import lombok.Value;
-
-@Value
 public class ClassSpecification implements TestPlanSpecificationElement {
 
-	private Class<?> testClass;
+	private final Class<?> testClass;
+
+	public ClassSpecification(Class<?> testClass) {
+		this.testClass = testClass;
+	}
 
 	@Override
 	public void accept(TestPlanSpecificationElementVisitor visitor) {

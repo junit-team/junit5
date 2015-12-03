@@ -10,12 +10,13 @@
 
 package org.junit.gen5.engine;
 
-import lombok.Value;
-
-@Value
 public class ClassNameFilter implements ClassFilter {
 
-	final private String regex;
+	private final String regex;
+
+	public ClassNameFilter(String regex) {
+		this.regex = regex;
+	}
 
 	@Override
 	public boolean acceptClass(Class<?> clazz) {

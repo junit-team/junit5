@@ -12,8 +12,6 @@ package org.junit.gen5.engine.junit4;
 
 import java.io.File;
 
-import lombok.Data;
-
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
@@ -23,12 +21,15 @@ import org.junit.runner.Request;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 
-@Data
 class JUnit4SpecificationResolver implements TestPlanSpecificationElementVisitor {
 
 	private static final IsJUnit4TestClassWithTests isJUnit4TestClassWithTests = new IsJUnit4TestClassWithTests();
 
 	private final EngineDescriptor engineDescriptor;
+
+	public JUnit4SpecificationResolver(EngineDescriptor engineDescriptor) {
+		this.engineDescriptor = engineDescriptor;
+	}
 
 	// TODO support more TestPlanSpecificationElements/visit methods
 

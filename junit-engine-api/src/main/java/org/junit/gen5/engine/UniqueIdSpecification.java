@@ -10,12 +10,13 @@
 
 package org.junit.gen5.engine;
 
-import lombok.Value;
-
-@Value
 public class UniqueIdSpecification implements TestPlanSpecificationElement {
 
-	private String uniqueId;
+	private final String uniqueId;
+
+	public UniqueIdSpecification(String uniqueId) {
+		this.uniqueId = uniqueId;
+	}
 
 	@Override
 	public void accept(TestPlanSpecificationElementVisitor visitor) {
