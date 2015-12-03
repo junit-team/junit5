@@ -17,12 +17,9 @@ import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
-import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.ExecutionRequest;
-import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestExecutionListener;
-import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.*;
 
 /**
  * @since 5.0
@@ -41,9 +38,8 @@ public class Launcher {
 		TestPlan testPlan = new TestPlan();
 		for (TestEngine testEngine : lookupAllTestEngines()) {
 			LOG.info("Discovering tests in engine " + testEngine.getId());
-			EngineDescriptor engineDescriptor = new EngineDescriptor(testEngine);
-			testEngine.discoverTests(specification, engineDescriptor);
-			testPlan.addEngineDescriptor(engineDescriptor);
+			TestDescriptor rootTestDescriptor = testEngine.discoverTests(specification);
+			testPlan.addTestDescriptorForEngine(testEngine, rootTestDescriptor);
 		}
 		testPlan.applyFilters(specification);
 		testPlan.prune();
@@ -59,11 +55,11 @@ public class Launcher {
 		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
 
 		testPlanExecutionListener.testPlanExecutionStarted(testPlan);
-		for (TestEngine testEngine : lookupAllTestEngines()) {
-			Optional<EngineDescriptor> engineDescriptorOptional = testPlan.getEngineDescriptorFor(testEngine);
-			engineDescriptorOptional.ifPresent(engineDescriptor -> {
+		for (TestEngine testEngine : getAvailableEngines()) {
+			Optional<TestDescriptor> testDescriptorOptional = testPlan.getTestDescriptorFor(testEngine);
+			testDescriptorOptional.ifPresent(testDescriptor -> {
 				testPlanExecutionListener.testPlanExecutionStartedOnEngine(testPlan, testEngine);
-				testEngine.execute(new ExecutionRequest(engineDescriptor, testExecutionListener));
+				testEngine.execute(new ExecutionRequest(testDescriptor, testExecutionListener));
 				testPlanExecutionListener.testPlanExecutionFinishedOnEngine(testPlan, testEngine);
 			});
 		}
@@ -71,7 +67,11 @@ public class Launcher {
 	}
 
 	public Set<TestEngine> getAvailableEngines() {
-		return stream(lookupAllTestEngines().spliterator(), false).collect(toSet());
+		return getTestEngineStream().collect(toSet());
+	}
+
+	private Stream<TestEngine> getTestEngineStream() {
+		return stream(lookupAllTestEngines().spliterator(), false);
 	}
 
 }

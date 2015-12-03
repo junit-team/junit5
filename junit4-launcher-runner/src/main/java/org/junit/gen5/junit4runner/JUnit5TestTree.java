@@ -41,7 +41,7 @@ class JUnit5TestTree {
 	}
 
 	private void buildDescriptionTree(Description suiteDescription, TestPlan plan) {
-		plan.getEngineDescriptors().stream().forEach(
+		plan.getEngineRootTestDescriptors().stream().forEach(
 			testDescriptor -> buildDescription(testDescriptor, suiteDescription));
 	}
 

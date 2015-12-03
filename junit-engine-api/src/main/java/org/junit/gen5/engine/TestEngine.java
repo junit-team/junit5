@@ -16,7 +16,7 @@ public interface TestEngine {
 		return getClass().getCanonicalName();
 	}
 
-	void discoverTests(TestPlanSpecification specification, EngineDescriptor engineDescriptor);
+	TestDescriptor discoverTests(TestPlanSpecification specification);
 
 	void execute(ExecutionRequest request);
 }

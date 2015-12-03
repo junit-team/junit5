@@ -10,13 +10,8 @@
 
 package org.junit.gen5.launcher;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
-import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -27,32 +22,27 @@ import org.junit.gen5.engine.TestTag;
  * @since 5.0
  */
 public final class TestPlan implements TestDescriptor {
-
-	/**
-	 * List of all TestDescriptors, including children.
-	 */
-	private final Set<EngineDescriptor> engineDescriptors = new HashSet<>();
+	private final HashMap<String, TestDescriptor> engineRootTestDescriptors = new HashMap<>();
 
 	TestPlan() {
 		/* no-op */
 	}
 
-	public void addEngineDescriptor(EngineDescriptor engineDescriptor) {
-		engineDescriptor.setParent(this);
-		engineDescriptors.add(engineDescriptor);
+	public void addTestDescriptorForEngine(TestEngine testEngine, TestDescriptor testDescriptor) {
+		engineRootTestDescriptors.put(testEngine.getId(), testDescriptor);
 	}
 
-	public Collection<TestDescriptor> getEngineDescriptors() {
-		return Collections.unmodifiableCollection(engineDescriptors);
-	}
-
-	public Optional<EngineDescriptor> getEngineDescriptorFor(TestEngine testEngine) {
-		return this.engineDescriptors.stream().filter(
-			descriptor -> descriptor.getEngine().equals(testEngine)).findFirst();
+	public Collection<TestDescriptor> getEngineRootTestDescriptors() {
+		return Collections.unmodifiableCollection(engineRootTestDescriptors.values());
 	}
 
 	public long countStaticTests() {
-		return this.engineDescriptors.stream().mapToLong(engineDescriptor -> engineDescriptor.countStaticTests()).sum();
+		return this.engineRootTestDescriptors.values().stream().mapToLong(
+			engineDescriptor -> engineDescriptor.countStaticTests()).sum();
+	}
+
+	public Optional<TestDescriptor> getTestDescriptorFor(TestEngine testEngine) {
+		return Optional.of(this.engineRootTestDescriptors.get(testEngine.getId()));
 	}
 
 	@Override
@@ -82,17 +72,19 @@ public final class TestPlan implements TestDescriptor {
 
 	@Override
 	public void addChild(TestDescriptor descriptor) {
-		throw new UnsupportedOperationException("Only use addEngineDescriptor to add children");
+		throw new UnsupportedOperationException("Only use addTestDescriptor to add children");
 	}
 
 	@Override
 	public void removeChild(TestDescriptor descriptor) {
-		engineDescriptors.remove(descriptor);
+		engineRootTestDescriptors.remove(descriptor);
 	}
 
 	@Override
 	public Set<TestDescriptor> getChildren() {
-		return Collections.unmodifiableSet(engineDescriptors);
+		Set<TestDescriptor> children = new HashSet<>();
+		engineRootTestDescriptors.values().forEach(descriptor -> children.add(descriptor));
+		return children;
 	}
 
 	@Override
@@ -100,7 +92,7 @@ public final class TestPlan implements TestDescriptor {
 		visitor.visit(this, () -> {
 			//the test plan itself will never be removed
 		});
-		new HashSet<>(engineDescriptors).forEach(child -> child.accept(visitor));
+		new HashSet<>(engineRootTestDescriptors.values()).forEach(child -> child.accept(visitor));
 	}
 
 	@Override
@@ -126,5 +118,4 @@ public final class TestPlan implements TestDescriptor {
 		};
 		accept(pruningVisitor);
 	}
-
 }

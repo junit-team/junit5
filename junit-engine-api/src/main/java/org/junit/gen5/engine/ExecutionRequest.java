@@ -15,19 +15,19 @@ import java.util.Map;
 
 public class ExecutionRequest {
 
-	private final EngineDescriptor engineDescriptor;
+	private final TestDescriptor rootTestDescriptor;
 
 	private final TestExecutionListener testExecutionListener;
 
 	private final Map<String, Object> attributes = new HashMap<>();
 
-	public ExecutionRequest(EngineDescriptor engineDescriptor, TestExecutionListener testExecutionListener) {
-		this.engineDescriptor = engineDescriptor;
+	public ExecutionRequest(TestDescriptor rootTestDescriptor, TestExecutionListener testExecutionListener) {
+		this.rootTestDescriptor = rootTestDescriptor;
 		this.testExecutionListener = testExecutionListener;
 	}
 
-	public EngineDescriptor getEngineDescriptor() {
-		return engineDescriptor;
+	public TestDescriptor getRootTestDescriptor() {
+		return rootTestDescriptor;
 	}
 
 	public TestExecutionListener getTestExecutionListener() {
