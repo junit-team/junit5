@@ -83,14 +83,14 @@ There is also a short paragraph on [how to plug other test engines into the laun
 
 Based on discussions with IDE and build tool developers from Eclipse, Gradle, and IntelliJ, the JUnit Lambda team has developed a proposal for an open source project to provide a minimal common foundation for testing libraries on the JVM. The primary goal of the project is to enable testing frameworks like JUnit, TestNG, Spock, etc. and third-party assertion libraries like Hamcrest, AssertJ, etc. to use a common set of exceptions that IDEs and build tools can support in a consistent manner across all testing scenarios -- for example, for consistent reporting and test execution visualization.
 
-For the time being we have begun with a small hierarchy of exceptions that we consider to be common for all testing and assertion frameworks. Please check out the [open-test-alliance](https://github.com/junit-team/junit-lambda/tree/master/open-test-alliance) project and [provide us feedback](https://github.com/junit-team/junit-lambda/issues/12).
+For the time being we have begun with a small hierarchy of exceptions that we consider to be common for all testing and assertion frameworks. Please check out the [open-test-alliance](https://github.com/junit-team/junit-lambda/tree/prototype-1/open-test-alliance) project and [provide us feedback](https://github.com/junit-team/junit-lambda/issues/12).
 
 ----
 
-[CONTRIBUTING]: https://github.com/junit-team/junit-lambda/blob/master/CONTRIBUTING.md
+[CONTRIBUTING]: https://github.com/junit-team/junit-lambda/blob/prototype-1/CONTRIBUTING.md
 [issue tracker]: https://github.com/junit-team/junit-lambda/issues
-[junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer
-[junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer
+[junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/prototype-1/junit5-gradle-consumer
+[junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/prototype-1/junit5-maven-consumer
 [junit5-samples]: https://github.com/junit-team/junit5-samples
 [snapshots repository]: https://oss.sonatype.org/content/repositories/snapshots/
 [Twitter]: https://twitter.com/junitlambda

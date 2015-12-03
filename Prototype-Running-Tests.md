@@ -19,7 +19,7 @@ At this stage there is no direct support for running JUnit 5 tests in IDEs. Howe
 
 ### Gradle
 
-The JUnit team has developed a very basic `JUnit5Plugin` that lets you run JUnit 4/5 tests in Gradle builds. See [`build.gradle`](https://github.com/junit-team/junit5-samples/blob/master/junit5-gradle-consumer/build.gradle) in the [junit5-gradle-consumer] project for an example of the plugin in action.
+The JUnit team has developed a very basic `JUnit5Plugin` that lets you run JUnit 4/5 tests in Gradle builds. See [`build.gradle`](https://github.com/junit-team/junit5-samples/blob/prototype-1/junit5-gradle-consumer/build.gradle) in the [junit5-gradle-consumer] project for an example of the plugin in action.
 
 #### Enabling the `JUnit5Plugin`
 
@@ -137,7 +137,7 @@ Execution failed for task ':junit5Test'.
 
 We have developed a very basic provider for Maven Surefire that lets you run JUnit 4/5 tests through `mvn test`. The [junit5-maven-consumer] demonstrates how to use it and can serve as a starting point.
 
-Basic usage in [`pom.xml`](https://github.com/junit-team/junit5-samples/blob/master/junit5-maven-consumer/pom.xml):
+Basic usage in [`pom.xml`](https://github.com/junit-team/junit5-samples/blob/prototype-1/junit5-maven-consumer/pom.xml):
 
 ```xml
 	... 
@@ -305,9 +305,9 @@ public class JUnit4SamplesSuite {
 
 This suite will discover and run all tests in the `com.example` package and its subpackages.
 
-There are more options to discover and filter tests besides `@Packages`. Please have a look at the [Javadoc](https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc/org/junit/gen5/junit4runner/package-summary.html) or the [code](https://github.com/junit-team/junit-lambda/blob/master/junit4-launcher-runner/src/main/java/org/junit/gen5/junit4runner/JUnit5.java).
+There are more options to discover and filter tests besides `@Packages`. Please have a look at the [Javadoc](https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc/org/junit/gen5/junit4runner/package-summary.html) or the [code](https://github.com/junit-team/junit-lambda/blob/prototype-1/junit4-launcher-runner/src/main/java/org/junit/gen5/junit4runner/JUnit5.java).
 
 ----
 
-[junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer
-[junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer
+[junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/prototype-1/junit5-gradle-consumer
+[junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/prototype-1/junit5-maven-consumer

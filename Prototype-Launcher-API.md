@@ -77,14 +77,14 @@ The prototype currently provides two `TestEngine` implementations out of the box
 - [junit5-engine]: The core of the current prototype.
 - [junit4-engine]: A thin layer on top of JUnit 4 to allow running "old" tests with the launcher infrastructure.
 
-Third parties may also contribute their own `TestEngine` by implementing the interfaces in the [junit-engine-api] project and _registering_ their engine. Engine registration is currently supported via Java's `java.util.ServiceLoader` mechanism. For example, the `junit5-engine` project registers its `JUnit5TestEngine` [here](https://github.com/junit-team/junit-lambda/blob/master/junit5-engine/src/main/resources/META-INF/services/org.junit.gen5.engine.TestEngine).
+Third parties may also contribute their own `TestEngine` by implementing the interfaces in the [junit-engine-api] project and _registering_ their engine. Engine registration is currently supported via Java's `java.util.ServiceLoader` mechanism. For example, the `junit5-engine` project registers its `JUnit5TestEngine` [here](https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-engine/src/main/resources/META-INF/services/org.junit.gen5.engine.TestEngine).
 
 
-[Console Runner]: https://github.com/junit-team/junit-lambda/blob/master/junit-console/src/main/java/org/junit/gen5/console/ConsoleRunner.java
-[junit-console]: https://github.com/junit-team/junit-lambda/tree/master/junit-console
-[junit-engine-api]: https://github.com/junit-team/junit-lambda/tree/master/junit-engine-api
-[junit-launcher]: https://github.com/junit-team/junit-lambda/tree/master/junit-launcher
-[junit4-engine]: https://github.com/junit-team/junit-lambda/tree/master/junit4-engine
-[junit5-engine]: https://github.com/junit-team/junit-lambda/tree/master/junit5-engine
-[TestPlanExecutionListener]: https://github.com/junit-team/junit-lambda/blob/master/junit-launcher/src/main/java/org/junit/gen5/launcher/TestPlanExecutionListener.java
-[TestSummaryReportingTestListener]: https://github.com/junit-team/junit-lambda/blob/master/junit-console/src/main/java/org/junit/gen5/console/TestSummaryReportingTestListener.java
+[Console Runner]: https://github.com/junit-team/junit-lambda/blob/prototype-1/junit-console/src/main/java/org/junit/gen5/console/ConsoleRunner.java
+[junit-console]: https://github.com/junit-team/junit-lambda/tree/prototype-1/junit-console
+[junit-engine-api]: https://github.com/junit-team/junit-lambda/tree/prototype-1/junit-engine-api
+[junit-launcher]: https://github.com/junit-team/junit-lambda/tree/prototype-1/junit-launcher
+[junit4-engine]: https://github.com/junit-team/junit-lambda/tree/prototype-1/junit4-engine
+[junit5-engine]: https://github.com/junit-team/junit-lambda/tree/prototype-1/junit5-engine
+[TestPlanExecutionListener]: https://github.com/junit-team/junit-lambda/blob/prototype-1/junit-launcher/src/main/java/org/junit/gen5/launcher/TestPlanExecutionListener.java
+[TestSummaryReportingTestListener]: https://github.com/junit-team/junit-lambda/blob/prototype-1/junit-console/src/main/java/org/junit/gen5/console/TestSummaryReportingTestListener.java

@@ -293,7 +293,7 @@ Notice that _only non-static inner classes_ can serve as nested tests.
 Nesting can be arbitrarily deep and those inner classes can be considered as
 full members of the test class family.
 
-For a more meaningful example have a look at [TestingAStack](https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/TestingAStack.java).
+For a more meaningful example have a look at [TestingAStack](https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-project/src/test/java/com/example/TestingAStack.java).
 
 ----
 
@@ -356,19 +356,19 @@ All other parameter resolvers must be explicitly enabled by registering a [test 
   ```
 
 [CONTRIBUTING]: https://github.com/junit-team/junit-lambda/blob/master/CONTRIBUTING.md
-[`CustomAnnotationParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java
-[`CustomTypeParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java
+[`CustomAnnotationParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java
+[`CustomTypeParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java
 [issue tracker]: https://github.com/junit-team/junit-lambda/issues
-[junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer
-[junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer
+[junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/prototype-1/junit5-gradle-consumer
+[junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/prototype-1/junit5-maven-consumer
 [junit5-samples]: https://github.com/junit-team/junit5-samples
-[`MethodParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java
-[`MockitoExtension`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java
-[`MockitoExtensionInBaseClassTest`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/test/java/com/example/mockito/MockitoExtensionInBaseClassTest.java
-[`org.junit.gen5.api`]: https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api
-[`org.junit.gen5.Assertions`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java
-[`org.junit.gen5.Assumptions`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Assumptions.java
-[`SampleTestCase`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/SampleTestCase.java
+[`MethodParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java
+[`MockitoExtension`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java
+[`MockitoExtensionInBaseClassTest`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-extension/src/test/java/com/example/mockito/MockitoExtensionInBaseClassTest.java
+[`org.junit.gen5.api`]: https://github.com/junit-team/junit-lambda/tree/prototype-1/junit5-api/src/main/java/org/junit/gen5/api
+[`org.junit.gen5.Assertions`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java
+[`org.junit.gen5.Assumptions`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-api/src/main/java/org/junit/gen5/api/Assumptions.java
+[`SampleTestCase`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-project/src/test/java/com/example/SampleTestCase.java
 [snapshots repository]: https://oss.sonatype.org/content/repositories/snapshots/
-[`TestNameParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java
+[`TestNameParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java
 [Twitter]: https://twitter.com/junitlambda

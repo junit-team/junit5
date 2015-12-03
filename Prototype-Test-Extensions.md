@@ -103,22 +103,22 @@ The JUnit Lambda team is planning several additional extension points, including
 - Dynamic test registration -- for example, for computing parameterized tests at runtime
 
 
-[`Condition`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/Condition.java
-[`CustomAnnotationParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java
-[`CustomTypeParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java
-[`@Disabled`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Disabled.java
-[`DisabledCondition`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/DisabledCondition.java
-[`InstancePostProcessor`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/InstancePostProcessor.java
+[`Condition`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-api/src/main/java/org/junit/gen5/api/extension/Condition.java
+[`CustomAnnotationParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java
+[`CustomTypeParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java
+[`@Disabled`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-api/src/main/java/org/junit/gen5/api/Disabled.java
+[`DisabledCondition`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/DisabledCondition.java
+[`InstancePostProcessor`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-api/src/main/java/org/junit/gen5/api/extension/InstancePostProcessor.java
 [issue tracker]: https://github.com/junit-team/junit-lambda/issues
-[junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer
-[junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer
+[junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/prototype-1/junit5-gradle-consumer
+[junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/prototype-1/junit5-maven-consumer
 [junit5-samples]: https://github.com/junit-team/junit5-samples
-[`MethodParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java
-[`MockitoExtension`]: https://github.com/junit-team/junit-lambda/blob/master/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java
-[`org.junit.gen5.api`]: https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api
-[`org.junit.gen5.api.extension`]: https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension
-[`SampleTestCase`]: https://github.com/junit-team/junit-lambda/blob/master/sample-project/src/test/java/com/example/SampleTestCase.java
+[`MethodParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java
+[`MockitoExtension`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java
+[`org.junit.gen5.api`]: https://github.com/junit-team/junit-lambda/tree/prototype-1/junit5-api/src/main/java/org/junit/gen5/api
+[`org.junit.gen5.api.extension`]: https://github.com/junit-team/junit-lambda/tree/prototype-1/junit5-api/src/main/java/org/junit/gen5/api/extension
+[`SampleTestCase`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-project/src/test/java/com/example/SampleTestCase.java
 [snapshots repository]: https://oss.sonatype.org/content/repositories/snapshots/
-[`SpringExtension`]: https://github.com/sbrannen/spring-test-junit5/blob/master/src/main/java/org/springframework/test/context/junit5/SpringExtension.java
-[`TestNameParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java
+[`SpringExtension`]: https://github.com/sbrannen/spring-test-junit5/blob/prototype-1/src/main/java/org/springframework/test/context/junit5/SpringExtension.java
+[`TestNameParameterResolver`]: https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java
 [Twitter]: https://twitter.com/junitlambda
