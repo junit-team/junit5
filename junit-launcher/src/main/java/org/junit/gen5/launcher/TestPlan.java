@@ -10,7 +10,12 @@
 
 package org.junit.gen5.launcher;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
@@ -22,6 +27,7 @@ import org.junit.gen5.engine.TestTag;
  * @since 5.0
  */
 public final class TestPlan implements TestDescriptor {
+
 	private final HashMap<String, TestDescriptor> engineRootTestDescriptors = new HashMap<>();
 
 	TestPlan() {
@@ -36,6 +42,7 @@ public final class TestPlan implements TestDescriptor {
 		return Collections.unmodifiableCollection(engineRootTestDescriptors.values());
 	}
 
+	@Override
 	public long countStaticTests() {
 		return this.engineRootTestDescriptors.values().stream().mapToLong(
 			engineDescriptor -> engineDescriptor.countStaticTests()).sum();
@@ -71,16 +78,6 @@ public final class TestPlan implements TestDescriptor {
 	}
 
 	@Override
-	public void addChild(TestDescriptor descriptor) {
-		throw new UnsupportedOperationException("Only use addTestDescriptor to add children");
-	}
-
-	@Override
-	public void removeChild(TestDescriptor descriptor) {
-		engineRootTestDescriptors.remove(descriptor);
-	}
-
-	@Override
 	public Set<TestDescriptor> getChildren() {
 		Set<TestDescriptor> children = new HashSet<>();
 		engineRootTestDescriptors.values().forEach(descriptor -> children.add(descriptor));
@@ -90,7 +87,7 @@ public final class TestPlan implements TestDescriptor {
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visit(this, () -> {
-			//the test plan itself will never be removed
+			// the test plan itself will never be removed
 		});
 		new HashSet<>(engineRootTestDescriptors.values()).forEach(child -> child.accept(visitor));
 	}

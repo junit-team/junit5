@@ -85,7 +85,8 @@ public class TestExecutionSummary {
 		return descriptionParts.stream().collect(Collectors.joining(":"));
 	}
 
-	private void collectTestDescription(Optional<TestDescriptor> optionalDescriptor, List<String> descriptionParts) {
+	private void collectTestDescription(Optional<? extends TestDescriptor> optionalDescriptor,
+			List<String> descriptionParts) {
 		optionalDescriptor.ifPresent(descriptor -> {
 			if (descriptor instanceof TestPlan) {
 			}

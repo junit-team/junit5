@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -17,11 +18,6 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * @since 5.0
  */
-// TODO Divide into public facing TestDescriptor and engine-internal MutableTestDescriptor.
-//
-// The tree of TestDescriptors should be parallel to (and not just a super type of)
-// MutableTestDescriptor so that clients won't rely on implementation details of
-// MutableTestDescriptor.
 public interface TestDescriptor {
 
 	/**
@@ -34,7 +30,7 @@ public interface TestDescriptor {
 
 	String getDisplayName();
 
-	Optional<TestDescriptor> getParent();
+	Optional<? extends TestDescriptor> getParent();
 
 	boolean isTest();
 
@@ -44,11 +40,16 @@ public interface TestDescriptor {
 
 	Set<TestTag> getTags();
 
-	void addChild(TestDescriptor descriptor);
+	Set<? extends TestDescriptor> getChildren();
 
-	void removeChild(TestDescriptor descriptor);
-
-	Set<TestDescriptor> getChildren();
+	default Set<? extends TestDescriptor> allDescendants() {
+		Set<TestDescriptor> all = new HashSet<>();
+		all.addAll(getChildren());
+		for (TestDescriptor child : getChildren()) {
+			all.addAll(child.allDescendants());
+		}
+		return all;
+	}
 
 	default long countStaticTests() {
 		AtomicLong staticTests = new AtomicLong(0);
@@ -65,7 +66,7 @@ public interface TestDescriptor {
 		return (isTest() || getChildren().stream().anyMatch(TestDescriptor::hasTests));
 	}
 
-	default Optional<TestDescriptor> findByUniqueId(String uniqueId) {
+	default Optional<? extends TestDescriptor> findByUniqueId(String uniqueId) {
 		if (getUniqueId().equals(uniqueId)) {
 			return Optional.of(this);
 		}

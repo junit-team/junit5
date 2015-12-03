@@ -10,6 +10,8 @@
 
 package org.junit.gen5.engine;
 
+import static java.util.Collections.emptySet;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -21,15 +23,15 @@ import org.junit.gen5.commons.util.Preconditions;
 /**
  * @since 5.0
  */
-public abstract class AbstractTestDescriptor implements TestDescriptor {
+public abstract class AbstractTestDescriptor implements MutableTestDescriptor {
 
 	private final String uniqueId;
 
-	private TestDescriptor parent;
+	private MutableTestDescriptor parent;
 
 	private TestSource source;
 
-	private final Set<TestDescriptor> children = new LinkedHashSet<>();
+	private final Set<MutableTestDescriptor> children = new LinkedHashSet<>();
 
 	protected AbstractTestDescriptor(String uniqueId) {
 		Preconditions.notBlank(uniqueId, "uniqueId must not be null or empty");
@@ -42,20 +44,19 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public Optional<TestDescriptor> getParent() {
+	public Optional<MutableTestDescriptor> getParent() {
 		return Optional.ofNullable(this.parent);
 	}
 
-	public final void setParent(TestDescriptor parent) {
+	@Override
+	public final void setParent(MutableTestDescriptor parent) {
 		this.parent = parent;
 	}
 
 	@Override
-	public void removeChild(TestDescriptor child) {
+	public void removeChild(MutableTestDescriptor child) {
 		this.children.remove(child);
-		if (child instanceof AbstractTestDescriptor) {
-			((AbstractTestDescriptor) child).setParent(null);
-		}
+		child.setParent(null);
 	}
 
 	protected void removeFromHierarchy() {
@@ -66,21 +67,13 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		this.children.clear();
 	}
 
-	public Set<TestDescriptor> allChildren() {
-		Set<TestDescriptor> all = new HashSet<>();
-		all.addAll(this.children);
-		for (TestDescriptor child : this.children) {
-			all.addAll(((AbstractTestDescriptor) child).allChildren());
-		}
-		return all;
-	}
-
-	public Optional<TestDescriptor> findByUniqueId(String uniqueId) {
+	@Override
+	public Optional<? extends TestDescriptor> findByUniqueId(String uniqueId) {
 		if (getUniqueId().equals(uniqueId)) {
 			return Optional.of(this);
 		}
 		for (TestDescriptor child : this.children) {
-			Optional<TestDescriptor> result = child.findByUniqueId(uniqueId);
+			Optional<? extends TestDescriptor> result = child.findByUniqueId(uniqueId);
 			if (result.isPresent()) {
 				return result;
 			}
@@ -89,16 +82,14 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public final void addChild(TestDescriptor child) {
+	public final void addChild(MutableTestDescriptor child) {
 		Preconditions.notNull(child, "child must not be null");
-		if (child instanceof AbstractTestDescriptor) {
-			((AbstractTestDescriptor) child).setParent(this);
-		}
+		child.setParent(this);
 		this.children.add(child);
 	}
 
 	@Override
-	public final Set<TestDescriptor> getChildren() {
+	public final Set<MutableTestDescriptor> getChildren() {
 		return Collections.unmodifiableSet(this.children);
 	}
 
@@ -116,7 +107,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public Set<TestTag> getTags() {
-		return Collections.emptySet();
+		return emptySet();
 	}
 
 	@Override
