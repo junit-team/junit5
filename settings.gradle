@@ -11,6 +11,7 @@ include "junit4-engine"
 include "junit4-runner"
 include "junit5-api"
 include "junit5-engine"
+include "junit5-extensible-engine"
 
 include "sample-extension"
 include "sample-project"
