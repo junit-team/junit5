@@ -13,7 +13,6 @@ package org.junit.gen5.commons.util;
 import java.util.function.Supplier;
 
 /**
- * @author Sam Brannen
  * @since 5.0
  */
 public final class Preconditions {

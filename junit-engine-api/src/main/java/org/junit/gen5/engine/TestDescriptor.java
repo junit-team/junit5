@@ -15,7 +15,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * @author Sam Brannen
  * @since 5.0
  */
 // TODO Divide into public facing TestDescriptor and engine-internal MutableTestDescriptor.

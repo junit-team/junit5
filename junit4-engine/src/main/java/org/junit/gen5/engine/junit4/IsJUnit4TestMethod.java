@@ -19,7 +19,6 @@ import java.util.function.Predicate;
 import org.junit.Test;
 
 /**
- * @author Johannes Link
  * @since 5.0
  */
 public class IsJUnit4TestMethod implements Predicate<Method> {

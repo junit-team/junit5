@@ -23,8 +23,6 @@ import java.lang.annotation.Target;
  * <p>Display names are typically used for test reporting in IDEs and build
  * tools and may contain spaces, special characters, and even emoji.
  *
- * @author Johannes Link
- * @author Sam Brannen
  * @since 5.0
  * @see Test
  * @see TestName

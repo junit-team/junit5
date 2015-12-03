@@ -23,7 +23,6 @@ import java.lang.annotation.Target;
  * <p>When applied at the class level, all test methods within that class
  * are automatically disabled as well.
  *
- * @author Sam Brannen
  * @since 5.0
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })

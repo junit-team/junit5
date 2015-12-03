@@ -21,7 +21,6 @@ import java.util.function.Predicate;
 import org.junit.gen5.api.Test;
 
 /**
- * @author Sam Brannen
  * @since 5.0
  */
 public class IsTestMethod implements Predicate<Method> {

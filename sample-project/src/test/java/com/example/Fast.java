@@ -22,7 +22,6 @@ import org.junit.gen5.api.Tag;
 /**
  * Custom {@link Tag @Tag} for <em>fast</em> tests.
  *
- * @author Sam Brannen
  * @since 5.0
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })

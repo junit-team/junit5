@@ -19,8 +19,6 @@ import org.opentestalliance.AssertionFailedError;
 import org.opentestalliance.MultipleFailuresException;
 
 /**
- * @author JUnit Community
- * @author Sam Brannen
  * @since 5.0
  */
 public final class Assertions {

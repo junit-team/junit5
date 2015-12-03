@@ -32,8 +32,6 @@ import org.junit.gen5.engine.junit5.execution.injection.sample.CustomTypeParamet
  * Integration tests that verify support for {@link MethodParameterResolver}
  * in the {@link JUnit5TestEngine}.
  *
- * @author Matthias Merdes
- * @author Sam Brannen
  * @since 5.0
  */
 @Ignore("https://github.com/junit-team/junit-lambda/issues/39")

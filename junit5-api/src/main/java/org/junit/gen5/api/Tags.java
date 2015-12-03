@@ -23,8 +23,6 @@ import java.lang.annotation.Target;
  * optional since {@code @Tag} is a {@linkplain java.lang.annotation.Repeatable
  * repeatable} annotation.
  *
- * @author Johannes Link
- * @author Sam Brannen
  * @since 5.0
  * @see Tag
  * @see TestName

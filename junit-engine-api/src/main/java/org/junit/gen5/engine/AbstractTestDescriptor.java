@@ -19,7 +19,6 @@ import java.util.Set;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
- * @author Sam Brannen
  * @since 5.0
  */
 public abstract class AbstractTestDescriptor implements TestDescriptor {

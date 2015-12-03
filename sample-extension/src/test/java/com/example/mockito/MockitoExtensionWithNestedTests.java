@@ -23,8 +23,6 @@ import org.junit.gen5.junit4runner.JUnit5;
 import org.junit.runner.RunWith;
 
 /**
- * @author Johannes Link
- * @author Sam Brannen
  * @since 5.0
  */
 @RunWith(JUnit5.class)

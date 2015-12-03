@@ -22,7 +22,6 @@ package org.junit.gen5.api.extension;
  *
  * <p>Implementations must provide a no-args constructor.
  *
- * @author Sam Brannen
  * @since 5.0
  * @see org.junit.gen5.api.AfterAll
  * @see BeforeAllCallbacks

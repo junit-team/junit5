@@ -27,9 +27,6 @@ import java.lang.annotation.Target;
  * <p>The display name is either the canonical name of the test or a custom
  * name configured via {@link Name @Name}.
  *
- * @author Matthias Merdes
- * @author Johannes Link
- * @author Sam Brannen
  * @since 5.0
  * @see Test
  * @see Name

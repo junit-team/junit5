@@ -21,7 +21,6 @@ import org.junit.gen5.engine.TestPlanSpecification;
 /**
  * Abstract base class for tests involving the {@link JUnit5TestEngine}.
  *
- * @author Sam Brannen
  * @since 5.0
  */
 abstract class AbstractJUnit5TestEngineTestCase {

@@ -32,7 +32,6 @@ import org.junit.gen5.engine.TestPlanSpecification;
  * Integration tests that verify support for {@link BeforeEach}, {@link AfterEach},
  * {@link BeforeEachCallbacks}, and {@link AfterEachCallbacks} in the {@link JUnit5TestEngine}.
  *
- * @author Sam Brannen
  * @since 5.0
  */
 @Ignore("https://github.com/junit-team/junit-lambda/issues/39")

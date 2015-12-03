@@ -18,7 +18,6 @@ import org.junit.Test;
 /**
  * Unit tests for {@link TestPlanSpecification}.
  *
- * @author Sam Brannen
  * @since 5.0
  */
 public class TestPlanSpecificationTests {

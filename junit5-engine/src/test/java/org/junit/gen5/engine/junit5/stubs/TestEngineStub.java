@@ -16,7 +16,6 @@ import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
- * @author Stefan Bechtold
  * @since 5.0
  */
 public class TestEngineStub implements TestEngine {

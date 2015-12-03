@@ -27,7 +27,6 @@ import java.lang.annotation.Target;
  * resolved by {@link org.junit.gen5.api.extension.MethodParameterResolver
  * MethodParameterResolvers}.
  *
- * @author Sam Brannen
  * @since 5.0
  * @see BeforeEach
  * @see BeforeAll

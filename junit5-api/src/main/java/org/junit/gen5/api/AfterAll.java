@@ -27,8 +27,6 @@ import java.lang.annotation.Target;
  * <p>{@code @AfterAll} methods must not be {@code private} and must be
  * {@code static}.
  *
- * @author Stefan Bechtold
- * @author Sam Brannen
  * @since 5.0
  * @see BeforeAll
  * @see BeforeEach

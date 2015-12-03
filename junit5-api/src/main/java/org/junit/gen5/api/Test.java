@@ -26,11 +26,6 @@ import java.lang.annotation.Target;
  * resolved by {@link org.junit.gen5.api.extension.MethodParameterResolver
  * MethodParameterResolvers}.
  *
- * @author Johannes Link
- * @author Marc Philipp
- * @author Matthias Merdes
- * @author Sam Brannen
- * @author Stefan Bechtold
  * @since 5.0
  * @see Name
  * @see BeforeEach

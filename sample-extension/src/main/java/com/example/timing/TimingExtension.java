@@ -20,7 +20,6 @@ import org.junit.gen5.api.extension.TestExecutionContext;
  * Simple extension that <em>times</em> the execution of test methods and
  * prints the results to {@link System#out}.
  *
- * @author Sam Brannen
  * @since 5.0
  */
 public class TimingExtension implements BeforeEachCallbacks, AfterEachCallbacks {

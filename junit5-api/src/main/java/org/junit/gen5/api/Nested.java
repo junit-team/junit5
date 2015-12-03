@@ -20,8 +20,6 @@ import java.lang.annotation.Target;
  * {@code @Nested} is used to signal that the annotated class is a nested
  * test class.
  *
- * @author Stefan Bechtold
- * @author Sam Brannen
  * @since 5.0
  */
 @Target(ElementType.TYPE)

@@ -31,7 +31,6 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
- * @author Sam Brannen
  * @since 5.0
  */
 public final class TestPlanSpecification implements Iterable<TestPlanSpecificationElement> {

@@ -22,8 +22,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 /**
- * @author Johannes Link
- * @author Sam Brannen
  * @since 5.0
  * @see MockitoExtension
  */

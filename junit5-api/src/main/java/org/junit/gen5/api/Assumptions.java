@@ -19,7 +19,6 @@ import org.opentestalliance.TestAbortedException;
  * Collection of utility methods for conditional test execution based on
  * <em>assumptions</em>.
  *
- * @author Sam Brannen
  * @since 5.0
  * @see TestAbortedException
  */

@@ -30,7 +30,6 @@ import org.junit.gen5.engine.TestPlanSpecification;
 /**
  * Core integration tests for the {@link JUnit5TestEngine}.
  *
- * @author Sam Brannen
  * @since 5.0
  */
 

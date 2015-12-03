@@ -22,7 +22,6 @@ import org.junit.gen5.commons.util.StringUtils;
 /**
  * {@link Condition} that supports the {@link Disabled @Disabled} annotation.
  *
- * @author Sam Brannen
  * @since 5.0
  * @see Disabled
  */

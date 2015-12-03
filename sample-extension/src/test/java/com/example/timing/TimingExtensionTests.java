@@ -18,7 +18,6 @@ import org.junit.runner.RunWith;
 /**
  * Tests that demonstrate the example {@link TimingExtension}.
  *
- * @author Sam Brannen
  * @since 5.0
  */
 @RunWith(JUnit5.class)

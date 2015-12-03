@@ -11,7 +11,6 @@
 package org.junit.gen5.commons.util;
 
 /**
- * @author Sam Brannen
  * @since 5.0
  */
 public final class StringUtils {

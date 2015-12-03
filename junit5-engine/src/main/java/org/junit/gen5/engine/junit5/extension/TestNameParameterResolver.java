@@ -23,7 +23,6 @@ import org.junit.gen5.api.extension.TestExecutionContext;
  * executing test for {@code String} method parameters annotated with
  * {@link TestName @TestName}.
  *
- * @author Sam Brannen
  * @since 5.0
  */
 public class TestNameParameterResolver implements MethodParameterResolver {

@@ -19,8 +19,6 @@ import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestExecutionListener;
 
 /**
- * @author Stefan Bechtold
- * @author Sam Brannen
  * @since 5.0
  */
 class TestListenerRegistry {

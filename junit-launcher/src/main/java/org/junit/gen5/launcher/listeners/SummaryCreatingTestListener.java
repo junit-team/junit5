@@ -16,8 +16,6 @@ import org.junit.gen5.launcher.TestPlan;
 import org.junit.gen5.launcher.TestPlanExecutionListener;
 
 /**
- * @author Stefan Bechtold
- * @author Sam Brannen
  * @since 5.0
  */
 public class SummaryCreatingTestListener implements TestPlanExecutionListener, TestExecutionListener {

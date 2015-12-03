@@ -25,8 +25,6 @@ import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
- * @author Stefan Bechtold
- * @author Sam Brannen
  * @since 5.0
  */
 public class Launcher {

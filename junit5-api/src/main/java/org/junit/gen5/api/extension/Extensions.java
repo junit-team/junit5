@@ -25,7 +25,6 @@ import java.lang.annotation.Target;
  * optional since {@code @ExtendWith} is a {@linkplain java.lang.annotation.Repeatable
  * repeatable} annotation.
  *
- * @author Sam Brannen
  * @since 5.0
  * @see ExtendWith
  * @see java.lang.annotation.Repeatable

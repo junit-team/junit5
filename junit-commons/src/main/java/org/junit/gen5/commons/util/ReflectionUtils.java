@@ -31,8 +31,6 @@ import java.util.function.Predicate;
 /**
  * Collection of utilities for working with Java reflection APIs.
  *
- * @author Sam Brannen
- * @author Stefan Bechtold
  * @since 5.0
  */
 public final class ReflectionUtils {

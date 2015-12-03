@@ -18,7 +18,6 @@ package org.junit.gen5.api;
  * <p>The {@code Executable} interface is similar to {@link java.lang.Runnable},
  * except that an {@code Executable} can throw any kind of exception.
  *
- * @author Sam Brannen
  * @since 5.0
  * @see Assertions#assertAll(Executable...)
  * @see Assertions#assertAll(String, Executable...)

@@ -19,7 +19,6 @@ import org.junit.gen5.engine.TestExecutionListener;
  * Simple {@link TestExecutionListener} that tracks the number of times
  * that certain callbacks are invoked.
  *
- * @author Sam Brannen
  * @since 5.0
  */
 public class TrackingTestExecutionListener implements TestExecutionListener {

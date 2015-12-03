@@ -14,7 +14,6 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 
 /**
- * @author Sam Brannen
  * @since 5.0
  */
 public final class ObjectUtils {

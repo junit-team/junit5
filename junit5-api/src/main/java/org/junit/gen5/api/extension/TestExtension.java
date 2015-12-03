@@ -15,7 +15,6 @@ package org.junit.gen5.api.extension;
  *
  * <p>{@code TestExtensions} can be registered via {@link ExtendWith @ExtendWith}.
  *
- * @author Sam Brannen
  * @since 5.0
  * @see InstancePostProcessor
  * @see MethodParameterResolver

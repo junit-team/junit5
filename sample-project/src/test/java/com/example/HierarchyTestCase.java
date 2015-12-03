@@ -23,7 +23,6 @@ import org.junit.runner.RunWith;
 /**
  * Named *TestCase so Gradle will not try to run it.
  *
- * @author Stefan Bechtold
  * @since 5.0.0
  */
 @RunWith(JUnit5.class)

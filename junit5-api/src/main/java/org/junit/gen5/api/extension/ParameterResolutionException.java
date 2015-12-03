@@ -14,8 +14,6 @@ package org.junit.gen5.api.extension;
  * Thrown if an error is encountered in the configuration or execution of a
  * {@link MethodParameterResolver}.
  *
- * @author Matthias Merdes
- * @author Sam Brannen
  * @since 5.0
  * @see MethodParameterResolver
  */

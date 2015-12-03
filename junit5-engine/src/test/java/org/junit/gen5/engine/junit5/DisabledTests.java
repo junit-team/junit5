@@ -35,7 +35,6 @@ import org.junit.gen5.engine.TestPlanSpecification;
  * Integration tests that verify support for {@link Disabled @Disabled} and
  * custom {@link Condition Conditions} in the {@link JUnit5TestEngine}.
  *
- * @author Sam Brannen
  * @since 5.0
  */
 @Ignore("https://github.com/junit-team/junit-lambda/issues/39")

@@ -25,9 +25,6 @@ import org.junit.gen5.launcher.TestPlan;
 import org.junit.gen5.launcher.TestPlanExecutionListener;
 
 /**
- * @author Stefan Bechtold
- * @author Marc Philipp
- * @author Sam Brannen
  * @since 5.0
  */
 public class ColoredPrintingTestListener implements TestPlanExecutionListener, TestExecutionListener {

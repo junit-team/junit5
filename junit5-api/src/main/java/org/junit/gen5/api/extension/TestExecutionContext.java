@@ -23,7 +23,6 @@ import java.util.stream.Stream;
  * <p>{@link TestExtension TestExtensions} are provided an instance of
  * {@code TestExecutionContext} to perform their work.
  *
- * @author Sam Brannen
  * @since 5.0
  */
 public interface TestExecutionContext {

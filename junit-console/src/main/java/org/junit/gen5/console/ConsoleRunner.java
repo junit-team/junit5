@@ -38,8 +38,6 @@ import org.junit.gen5.launcher.listeners.SummaryCreatingTestListener;
 import org.junit.gen5.launcher.listeners.TestExecutionSummary;
 
 /**
- * @author Stefan Bechtold
- * @author Sam Brannen
  * @since 5.0
  */
 @Command(name = "ConsoleRunner", description = "console test runner")

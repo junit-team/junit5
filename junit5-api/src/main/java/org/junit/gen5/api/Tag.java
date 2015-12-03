@@ -27,8 +27,6 @@ import java.lang.annotation.Target;
  * a list of tags to be used for the current test plan, potentially
  * dependent on the current environment.
  *
- * @author Johannes Link
- * @author Sam Brannen
  * @since 5.0
  * @see Tags
  * @see Test

@@ -23,7 +23,6 @@ import org.junit.gen5.engine.junit5.extension.DisabledCondition;
 import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
 
 /**
- * @author Sam Brannen
  * @since 5.0
  */
 public class TestExtensionRegistry {

@@ -33,7 +33,6 @@ import org.junit.Test;
 /**
  * Unit tests for {@link AnnotationUtils}.
  *
- * @author Sam Brannen
  * @since 5.0
  */
 public final class AnnotationUtilsTests {

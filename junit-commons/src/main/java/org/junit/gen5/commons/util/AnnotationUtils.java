@@ -31,8 +31,6 @@ import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 /**
  * Collection of utilities for working with {@linkplain Annotation annotations}.
  *
- * @author Sam Brannen
- * @author Stefan Bechtold
  * @since 5.0
  * @see Annotation
  * @see AnnotatedElement
