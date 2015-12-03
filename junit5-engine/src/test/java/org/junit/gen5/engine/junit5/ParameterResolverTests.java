@@ -15,6 +15,7 @@ import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.api.Assertions.assertTrue;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Name;
@@ -35,6 +36,7 @@ import org.junit.gen5.engine.junit5.execution.injection.sample.CustomTypeParamet
  * @author Sam Brannen
  * @since 5.0
  */
+@Ignore("https://github.com/junit-team/junit-lambda/issues/39")
 public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 
 	@org.junit.Test

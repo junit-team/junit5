@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.Condition;
@@ -37,6 +38,8 @@ import org.junit.gen5.engine.TestPlanSpecification;
  * @author Sam Brannen
  * @since 5.0
  */
+@Ignore("https://github.com/junit-team/junit-lambda/issues/39")
+
 public class DisabledTests extends AbstractJUnit5TestEngineTestCase {
 
 	private static final String FOO = "DisabledTests.foo";

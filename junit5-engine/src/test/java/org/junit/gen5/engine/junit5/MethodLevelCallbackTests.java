@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
@@ -34,6 +35,8 @@ import org.junit.gen5.engine.TestPlanSpecification;
  * @author Sam Brannen
  * @since 5.0
  */
+@Ignore("https://github.com/junit-team/junit-lambda/issues/39")
+
 public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
 	@org.junit.Test

@@ -27,7 +27,7 @@ public class TestExtensionRegistryTest {
 
 	@Test
 	public void checkJUnit5DefaultExtensions() {
-		Assert.assertEquals(3, TestExtensionRegistry.getDefaultExtensionClasses().size());
+		Assert.assertEquals(2, TestExtensionRegistry.getDefaultExtensionClasses().size());
 
 		assertDefaultExtensionType(DisabledCondition.class);
 		assertDefaultExtensionType(TestNameParameterResolver.class);
