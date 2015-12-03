@@ -10,7 +10,9 @@
 
 package org.junit.gen5.console;
 
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.engine.TestPlanSpecification.allTests;
+import static org.junit.gen5.engine.TestPlanSpecification.byTags;
+import static org.junit.gen5.engine.TestPlanSpecification.classNameMatches;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -20,9 +22,9 @@ import java.util.Set;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.console.options.AirlineCommandLineOptionsParser;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.console.options.CommandLineOptionsParser;
+import org.junit.gen5.console.options.JOptSimpleCommandLineOptionsParser;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.launcher.Launcher;
@@ -37,7 +39,7 @@ public class ConsoleRunner {
 	private CommandLineOptions options;
 
 	public static void main(String... args) {
-		CommandLineOptionsParser parser = new AirlineCommandLineOptionsParser();
+		CommandLineOptionsParser parser = new JOptSimpleCommandLineOptionsParser();
 		CommandLineOptions options = parser.parse(args);
 
 		if (options.isDisplayHelp()) {

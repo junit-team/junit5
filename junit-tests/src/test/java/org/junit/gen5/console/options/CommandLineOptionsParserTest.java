@@ -124,6 +124,6 @@ public class CommandLineOptionsParserTest {
 	}
 
 	private CommandLineOptionsParser createParser() {
-		return new AirlineCommandLineOptionsParser();
+		return new JOptSimpleCommandLineOptionsParser();
 	}
 }

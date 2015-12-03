@@ -1,6 +1,6 @@
 dependencies {
 	compile(project(':junit-launcher'))
-	compile('io.airlift:airline:0.7')
+	compile('net.sf.jopt-simple:jopt-simple:4.9')
 }
 
 jar {
