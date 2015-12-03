@@ -10,8 +10,6 @@
 
 package org.junit.gen5.console.options;
 
-import static java.util.Arrays.asList;
-
 import java.io.IOException;
 
 import joptsimple.BuiltinHelpFormatter;
@@ -22,14 +20,15 @@ public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsPar
 
 	@Override
 	public CommandLineOptions parse(String... arguments) {
-		OptionParser parser = getOptionParser();
+		AvailableOptions availableOptions = getAvailableOptions();
+		OptionParser parser = availableOptions.getParser();
 		OptionSet optionSet = parser.parse(arguments);
-		return new JOptSimpleCommandLineOptions(optionSet);
+		return new JOptSimpleCommandLineOptions(availableOptions, optionSet);
 	}
 
 	@Override
 	public void printHelp() {
-		OptionParser optionParser = getOptionParser();
+		OptionParser optionParser = getAvailableOptions().getParser();
 		optionParser.formatHelpWith(new BuiltinHelpFormatter(100, 4));
 		try {
 			optionParser.printHelpOn(System.out);
@@ -39,26 +38,8 @@ public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsPar
 		}
 	}
 
-	private OptionParser getOptionParser() {
-		OptionParser parser = new OptionParser();
-		parser.acceptsAll(asList("h", "help"), //
-			"Display help information");
-		parser.acceptsAll(asList("x", "enable-exit-code"), //
-			"Exit process with number of failing tests as exit code");
-		parser.acceptsAll(asList("C", "disable-ansi-colors"),
-			"Disable colored output (not supported by all terminals)");
-		parser.acceptsAll(asList("a", "all"), //
-			"Run all tests");
-		parser.acceptsAll(asList("D", "hide-details"),
-			"Hide details while tests are being executed. Only show the summary and test failures.");
-		parser.acceptsAll(asList("n", "filter-classname"),
-			"Give a regular expression to include only classes whose fully qualified names match.")//
-			.withRequiredArg();
-		parser.acceptsAll(asList("t", "filter-tags"),
-			"Give a tag to include in the test run. This option can be repeated.")//
-			.withRequiredArg();
-		parser.allowsUnrecognizedOptions();
-		return parser;
+	private AvailableOptions getAvailableOptions() {
+		return new AvailableOptions();
 	}
 
 }

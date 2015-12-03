@@ -10,63 +10,59 @@
 
 package org.junit.gen5.console.options;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.List;
 import java.util.Optional;
 
 import joptsimple.OptionSet;
 
-public class JOptSimpleCommandLineOptions implements CommandLineOptions {
+class JOptSimpleCommandLineOptions implements CommandLineOptions {
 
-	private final OptionSet optionSet;
+	private final AvailableOptions options;
+	private final OptionSet detectedOptions;
 
-	public JOptSimpleCommandLineOptions(OptionSet optionSet) {
-		this.optionSet = optionSet;
+	JOptSimpleCommandLineOptions(AvailableOptions options, OptionSet detectedOptions) {
+		this.options = options;
+		this.detectedOptions = detectedOptions;
 	}
 
 	@Override
 	public boolean isDisplayHelp() {
-		return optionSet.has("help");
+		return detectedOptions.has(options.help);
 	}
 
 	@Override
 	public boolean isExitCodeEnabled() {
-		return optionSet.has("enable-exit-code");
+		return detectedOptions.has(options.enableExitCode);
 	}
 
 	@Override
 	public boolean isAnsiColorOutputDisabled() {
-		return optionSet.has("disable-ansi-colors");
+		return detectedOptions.has(options.disableAnsiColors);
 	}
 
 	@Override
 	public boolean isRunAllTests() {
-		return optionSet.has("all");
+		return detectedOptions.has(options.runAllTests);
 	}
 
 	@Override
 	public boolean isHideDetails() {
-		return optionSet.has("hide-details");
+		return detectedOptions.has(options.hideDetails);
 	}
 
 	@Override
 	public Optional<String> getClassnameFilter() {
-		return Optional.ofNullable((String) optionSet.valueOf("filter-classname"));
+		return Optional.ofNullable(detectedOptions.valueOf(options.classnameFilter));
 	}
 
 	@Override
 	public List<String> getTagsFilter() {
-		return toStrings(optionSet.valuesOf("filter-tags"));
+		return detectedOptions.valuesOf(options.tagFilter);
 	}
 
 	@Override
 	public List<String> getArguments() {
-		return toStrings(optionSet.nonOptionArguments());
-	}
-
-	private List<String> toStrings(List<?> arguments) {
-		return arguments.stream().map(String.class::cast).collect(toList());
+		return detectedOptions.valuesOf(options.arguments);
 	}
 
 }
