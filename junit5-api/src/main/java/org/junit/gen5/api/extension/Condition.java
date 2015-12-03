@@ -76,6 +76,18 @@ public interface Condition extends TestExtension {
 			return reason;
 		}
 
+		@Override
+		public String toString() {
+			// @formatter:off
+			return new StringBuilder(getClass().getSimpleName()).append(" ")
+				.append("[")
+				.append("enabled = ").append(this.enabled).append(", ")
+				.append("reason = ").append(this.reason)
+				.append("]")
+				.toString();
+			// @formatter:on
+		}
+
 	}
 
 }
