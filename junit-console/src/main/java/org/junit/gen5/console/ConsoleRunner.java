@@ -36,8 +36,6 @@ import org.junit.gen5.launcher.listeners.TestExecutionSummary;
  */
 public class ConsoleRunner {
 
-	private CommandLineOptions options;
-
 	public static void main(String... args) {
 		CommandLineOptionsParser parser = new JOptSimpleCommandLineOptionsParser();
 		CommandLineOptions options = parser.parse(args);
@@ -68,6 +66,8 @@ public class ConsoleRunner {
 		return 0;
 	}
 
+	private final CommandLineOptions options;
+
 	public ConsoleRunner(CommandLineOptions options) {
 		this.options = options;
 	}
@@ -77,15 +77,12 @@ public class ConsoleRunner {
 		Launcher launcher = new Launcher();
 
 		TestExecutionSummary summary = new TestExecutionSummary();
-
 		registerListeners(launcher, summary);
 
 		TestPlanSpecification testPlanSpecification = createTestPlanSpecification();
-
 		launcher.execute(testPlanSpecification);
 
 		printSummaryToStandardOut(summary);
-
 		return summary;
 	}
 
@@ -102,7 +99,7 @@ public class ConsoleRunner {
 		TestPlanSpecification testPlanSpecification;
 		if (options.isRunAllTests()) {
 			Set<File> rootDirectoriesToScan = new HashSet<>();
-			if (options.getArguments() == null || options.getArguments().isEmpty()) {
+			if (options.getArguments().isEmpty()) {
 				rootDirectoriesToScan.addAll(ReflectionUtils.getAllClasspathRootDirectories());
 			}
 			else {
