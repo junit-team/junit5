@@ -10,48 +10,53 @@
 
 package org.junit.gen5.console.tasks;
 
-import static org.junit.gen5.engine.TestPlanSpecification.allTests;
-import static org.junit.gen5.engine.TestPlanSpecification.byTags;
-import static org.junit.gen5.engine.TestPlanSpecification.classNameMatches;
+import static java.util.stream.Collectors.toSet;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
 
 class TestPlanSpecificationCreator {
 
 	TestPlanSpecification toTestPlanSpecification(CommandLineOptions options) {
-		TestPlanSpecification testPlanSpecification;
-		if (options.isRunAllTests()) {
-			Set<File> rootDirectoriesToScan = new HashSet<>();
-			if (options.getArguments().isEmpty()) {
-				rootDirectoriesToScan.addAll(ReflectionUtils.getAllClasspathRootDirectories());
-			}
-			else {
-				options.getArguments().stream().map(File::new).forEach(rootDirectoriesToScan::add);
-			}
-			testPlanSpecification = TestPlanSpecification.build(allTests(rootDirectoriesToScan));
-		}
-		else {
-			testPlanSpecification = TestPlanSpecification.build(testPlanSpecificationElementsFromArguments(options));
-		}
-		options.getClassnameFilter().ifPresent(
-			classnameFilter -> testPlanSpecification.filterWith(classNameMatches(classnameFilter)));
-		if (!options.getTagsFilter().isEmpty()) {
-			testPlanSpecification.filterWith(byTags(options.getTagsFilter()));
-		}
-		return testPlanSpecification;
+		TestPlanSpecification specification = buildSpecification(options);
+		applyFilters(specification, options);
+		return specification;
 	}
 
-	private List<TestPlanSpecificationElement> testPlanSpecificationElementsFromArguments(CommandLineOptions options) {
+	private TestPlanSpecification buildSpecification(CommandLineOptions options) {
+		if (options.isRunAllTests()) {
+			return buildAllTestsSpecification(options);
+		}
+		return buildNameBasedSpecification(options);
+	}
+
+	private TestPlanSpecification buildAllTestsSpecification(CommandLineOptions options) {
+		Set<File> rootDirectoriesToScan = determineClasspathRootDirectories(options);
+		return build(allTests(rootDirectoriesToScan));
+	}
+
+	private Set<File> determineClasspathRootDirectories(CommandLineOptions options) {
+		if (options.getArguments().isEmpty()) {
+			return ReflectionUtils.getAllClasspathRootDirectories();
+		}
+		return options.getArguments().stream().map(File::new).collect(toSet());
+	}
+
+	private TestPlanSpecification buildNameBasedSpecification(CommandLineOptions options) {
 		Preconditions.notEmpty(options.getArguments(), "No arguments given");
-		return TestPlanSpecification.forNames(options.getArguments());
+		return build(TestPlanSpecification.forNames(options.getArguments()));
+	}
+
+	private void applyFilters(TestPlanSpecification specification, CommandLineOptions options) {
+		options.getClassnameFilter().ifPresent(regex -> specification.filterWith(classNameMatches(regex)));
+		if (!options.getTagsFilter().isEmpty()) {
+			specification.filterWith(byTags(options.getTagsFilter()));
+		}
 	}
 }
