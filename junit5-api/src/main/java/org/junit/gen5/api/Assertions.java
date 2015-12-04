@@ -196,11 +196,11 @@ public final class Assertions {
 	}
 
 	public static void assertAll(Executable... asserts) {
-		assertAll("Multiple failures:", asserts);
+		assertAll(null, asserts);
 	}
 
-	public static void assertAll(String groupName, Executable... asserts) {
-		MultipleFailuresException multipleFailuresException = new MultipleFailuresException(groupName);
+	public static void assertAll(String heading, Executable... asserts) {
+		MultipleFailuresException multipleFailuresException = new MultipleFailuresException(heading);
 		for (Executable executable : asserts) {
 			try {
 				executable.execute();
@@ -208,8 +208,8 @@ public final class Assertions {
 			catch (AssertionError failure) {
 				multipleFailuresException.addFailure(failure);
 			}
-			catch (RuntimeException rte) {
-				throw rte;
+			catch (Error | RuntimeException ex) {
+				throw ex;
 			}
 			catch (Throwable throwable) {
 				throw new RuntimeException(throwable);
