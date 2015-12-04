@@ -11,7 +11,6 @@
 package org.junit.gen5.console.tasks;
 
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
@@ -75,14 +74,11 @@ public class ExecuteTestsTask implements ConsoleTask {
 		}
 	}
 
-	private void printSummary(TestExecutionSummary summary, Writer out) {
-		PrintWriter printWriter = new PrintWriter(out);
-
+	private void printSummary(TestExecutionSummary summary, PrintWriter out) {
 		if (options.isHideDetails()) { // Otherwise the failures have already been printed
-			summary.printFailuresOn(printWriter);
+			summary.printFailuresOn(out);
 		}
-
-		summary.printOn(printWriter);
+		summary.printOn(out);
 	}
 
 	private int computeExitCode(TestExecutionSummary summary) {
