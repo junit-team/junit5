@@ -10,8 +10,15 @@
 
 package org.junit.gen5.engine;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.gen5.engine.TestPlanSpecification.build;
+import static org.junit.gen5.engine.TestPlanSpecification.forName;
+import static org.junit.gen5.engine.TestPlanSpecification.forUniqueId;
+
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -23,38 +30,54 @@ import org.junit.Test;
 public class TestPlanSpecificationTests {
 
 	@Test
-	public void testPlanBuilderDemo() {
-		TestPlanSpecification specification = TestPlanSpecification.build(
-			TestPlanSpecification.forUniqueId("junit5:org.example.UserTests#fullname()"));
-
-		assertNotNull(specification);
+	public void forUniqueIdForMethod() {
+		TestPlanSpecificationElement element = forUniqueId("junit5:org.example.UserTests#fullname()");
+		assertEquals(UniqueIdSpecification.class, element.getClass());
 	}
 
 	@Test
-	public void testForNameWithClass() {
-		TestPlanSpecificationElement specification = TestPlanSpecification.forName(MyTestClass.class.getName());
-		assertEquals(ClassSpecification.class, specification.getClass());
+	public void forNameWithClass() {
+		TestPlanSpecificationElement element = forName(MyTestClass.class.getName());
+		assertEquals(ClassSpecification.class, element.getClass());
 	}
 
 	@Test
-	public void testForNameWithMethod() throws NoSuchMethodException {
-		String methodName = MyTestClass.class.getName() + "#" + MyTestClass.class.getDeclaredMethod("myTest").getName();
-		TestPlanSpecificationElement specification = TestPlanSpecification.forName(methodName);
-		assertEquals(MethodSpecification.class, specification.getClass());
+	public void forNameWithMethod() throws Exception {
+		TestPlanSpecificationElement element = forName(fullyQualifiedMethodName());
+		assertEquals(MethodSpecification.class, element.getClass());
 	}
 
 	@Test
-	public void testForNameWithPackage() throws NoSuchMethodException {
-		String packageName = "org.junit.gen5";
-		TestPlanSpecificationElement specification = TestPlanSpecification.forName(packageName);
-		assertEquals(PackageSpecification.class, specification.getClass());
+	public void forNameWithPackage() {
+		TestPlanSpecificationElement element = forName("org.junit.gen5");
+		assertEquals(PackageSpecification.class, element.getClass());
 	}
 
-	class MyTestClass {
+	@Test
+	public void buildSpecification() throws Exception {
+		// @formatter:off
+		TestPlanSpecification spec = build(
+			forUniqueId("junit5:org.example.UserTests#fullname()"),
+			forName(MyTestClass.class.getName()),
+			forName("org.junit.gen5"),
+			forName(fullyQualifiedMethodName())
+		);
+		// @formatter:on
 
-		@Test
+		assertNotNull(spec);
+		List<Class<? extends TestPlanSpecificationElement>> expected = Arrays.asList(UniqueIdSpecification.class,
+			ClassSpecification.class, PackageSpecification.class, MethodSpecification.class);
+		assertEquals(expected, spec.getElements().stream().map(Object::getClass).collect(toList()));
+	}
+
+	private String fullyQualifiedMethodName() throws Exception {
+		return MyTestClass.class.getName() + "#" + MyTestClass.class.getDeclaredMethod("myTest").getName();
+	}
+
+	static class MyTestClass {
+
 		void myTest() {
-
 		}
 	}
+
 }

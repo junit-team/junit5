@@ -136,7 +136,11 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 
 	@Override
 	public Iterator<TestPlanSpecificationElement> iterator() {
-		return unmodifiableList(this.elements).iterator();
+		return getElements().iterator();
+	}
+
+	List<TestPlanSpecificationElement> getElements() {
+		return unmodifiableList(this.elements);
 	}
 
 	public void accept(TestPlanSpecificationElementVisitor visitor) {
