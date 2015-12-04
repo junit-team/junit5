@@ -10,35 +10,35 @@
 
 package org.junit.gen5.console.tasks;
 
-import static java.util.stream.Collectors.toList;
-
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+/**
+ * @since 5.0
+ */
 class ClasspathEntriesParser {
 
+	private static final String PATH_SEPARATOR_PATTERN = Pattern.quote(File.pathSeparator);
+
 	URL[] toURLs(List<String> additionalClasspathEntries) {
-		String pathSeparatorPattern = Pattern.quote(File.pathSeparator);
 		// @formatter:off
-		List<URL> urls = additionalClasspathEntries.stream()
-				.map(entry -> entry.split(pathSeparatorPattern))
+		return additionalClasspathEntries.stream()
+				.map(entry -> entry.split(PATH_SEPARATOR_PATTERN))
 				.flatMap(Arrays::stream)
 				.map(this::toURL)
-				.collect(toList());
+				.toArray(URL[]::new);
 		// @formatter:on
-		return urls.toArray(new URL[urls.size()]);
 	}
 
 	private URL toURL(String value) {
 		try {
 			return new File(value).toURI().toURL();
 		}
-		catch (MalformedURLException e) {
-			throw new RuntimeException("Erroneous classpath entry: " + value, e);
+		catch (Exception ex) {
+			throw new IllegalStateException("Invalid classpath entry: " + value, ex);
 		}
 	}
 
