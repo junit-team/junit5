@@ -34,4 +34,8 @@ public class ExecutionRequest {
 		return testExecutionListener;
 	}
 
+	public Map<String, Object> getAttributes() {
+		return this.attributes;
+	}
+
 }
