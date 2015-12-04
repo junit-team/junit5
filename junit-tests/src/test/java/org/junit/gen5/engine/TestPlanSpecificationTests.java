@@ -49,12 +49,12 @@ public class TestPlanSpecificationTests {
 		TestPlanSpecificationElement specification = TestPlanSpecification.forName(packageName);
 		assertEquals(PackageSpecification.class, specification.getClass());
 	}
-}
 
-class MyTestClass {
+	class MyTestClass {
 
-	@Test
-	void myTest() {
+		@Test
+		void myTest() {
 
+		}
 	}
 }
