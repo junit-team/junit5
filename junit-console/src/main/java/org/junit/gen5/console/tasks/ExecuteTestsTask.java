@@ -15,6 +15,7 @@ import java.io.Writer;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
@@ -35,39 +36,34 @@ public class ExecuteTestsTask implements ConsoleTask {
 	}
 
 	@Override
-	public int execute(PrintWriter out) {
-		// Track original Thread Context ClassLoader
-		ClassLoader originalTccl = Thread.currentThread().getContextClassLoader();
-
-		try {
-			replaceThreadContextClassLoader();
-
-			// TODO Configure launcher?
-			Launcher launcher = new Launcher();
-
-			TestExecutionSummary summary = new TestExecutionSummary();
-			registerListeners(launcher, summary, out);
-
-			TestPlanSpecification specification = new TestPlanSpecificationCreator().toTestPlanSpecification(options);
-			launcher.execute(specification);
-
-			printSummary(summary, out);
-
-			return computeExitCode(summary);
-		}
-		finally {
-			Thread.currentThread().setContextClassLoader(originalTccl);
-		}
+	public int execute(PrintWriter out) throws Exception {
+		return new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> executeTests(out));
 	}
 
-	private void replaceThreadContextClassLoader() {
+	private int executeTests(PrintWriter out) {
+		// TODO Configure launcher?
+		Launcher launcher = new Launcher();
+
+		TestExecutionSummary summary = new TestExecutionSummary();
+		registerListeners(launcher, summary, out);
+
+		TestPlanSpecification specification = new TestPlanSpecificationCreator().toTestPlanSpecification(options);
+		launcher.execute(specification);
+
+		printSummary(summary, out);
+
+		return computeExitCode(summary);
+	}
+
+	private Optional<ClassLoader> createCustomClassLoader() {
 		List<String> additionalClasspathEntries = options.getAdditionalClasspathEntries();
 		if (!additionalClasspathEntries.isEmpty()) {
 			URL[] urls = new ClasspathEntriesParser().toURLs(additionalClasspathEntries);
 			ClassLoader parentClassLoader = ReflectionUtils.getDefaultClassLoader();
-			URLClassLoader customClassLoader = URLClassLoader.newInstance(urls, parentClassLoader);
-			Thread.currentThread().setContextClassLoader(customClassLoader);
+			ClassLoader customClassLoader = URLClassLoader.newInstance(urls, parentClassLoader);
+			return Optional.of(customClassLoader);
 		}
+		return Optional.empty();
 	}
 
 	private void registerListeners(Launcher launcher, TestExecutionSummary summary, PrintWriter out) {
