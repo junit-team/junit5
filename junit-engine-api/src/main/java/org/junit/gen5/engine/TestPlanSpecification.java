@@ -99,14 +99,14 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 
 	public static Predicate<TestDescriptor> byTags(List<String> includeTags) {
 		// @formatter:off
-		return (TestDescriptor descriptor) -> descriptor.getTags().stream()
+		return descriptor -> descriptor.getTags().stream()
 				.map(TestTag::getName)
 				.anyMatch(includeTags::contains);
 		// @formatter:on
 	}
 
 	public static Predicate<TestDescriptor> byEngine(String engineId) {
-		return (TestDescriptor descriptor) -> descriptor.getUniqueId().startsWith(engineId);
+		return descriptor -> descriptor.getUniqueId().startsWith(engineId);
 	}
 
 	public static EngineFilter classNameMatches(String regex) {
@@ -125,7 +125,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 
 	// Descriptor Filters are evaluated by the launcher itself after engines have done their discovery.
 	// Begin predicate chain with a predicate that always evaluates to true.
-	private Predicate<TestDescriptor> descriptorFilter = (TestDescriptor descriptor) -> true;
+	private Predicate<TestDescriptor> descriptorFilter = descriptor -> true;
 
 	// Engine filters are handed through to all test engines to be applied during discovery
 	private List<EngineFilter> engineFilters = new ArrayList<>();
