@@ -30,8 +30,6 @@ import org.mockito.MockitoAnnotations;
  * {@link Mock @Mock} annotation and at the method level via our demo
  * {@link InjectMock @InjectMock} annotation.
  *
- * @author Johannes Link
- * @author Sam Brannen
  * @since 5.0
  */
 public class MockitoExtension implements InstancePostProcessor, MethodParameterResolver {
