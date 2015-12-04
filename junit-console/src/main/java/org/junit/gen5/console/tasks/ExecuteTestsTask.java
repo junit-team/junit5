@@ -32,6 +32,9 @@ import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.listeners.SummaryCreatingTestListener;
 import org.junit.gen5.launcher.listeners.TestExecutionSummary;
 
+/**
+ * @since 5.0
+ */
 public class ExecuteTestsTask implements ConsoleTask {
 
 	private final CommandLineOptions options;
@@ -42,23 +45,31 @@ public class ExecuteTestsTask implements ConsoleTask {
 
 	@Override
 	public int execute(PrintWriter out) {
-		updateClassLoader();
+		// Track original Thread Context ClassLoader
+		ClassLoader originalTccl = Thread.currentThread().getContextClassLoader();
 
-		// TODO Configure launcher?
-		Launcher launcher = new Launcher();
+		try {
+			replaceThreadContextClassLoader();
 
-		TestExecutionSummary summary = new TestExecutionSummary();
-		registerListeners(launcher, summary, out);
+			// TODO Configure launcher?
+			Launcher launcher = new Launcher();
 
-		TestPlanSpecification testPlanSpecification = createTestPlanSpecification();
-		launcher.execute(testPlanSpecification);
+			TestExecutionSummary summary = new TestExecutionSummary();
+			registerListeners(launcher, summary, out);
 
-		printSummary(summary, out);
+			TestPlanSpecification testPlanSpecification = createTestPlanSpecification();
+			launcher.execute(testPlanSpecification);
 
-		return computeExitCode(summary);
+			printSummary(summary, out);
+
+			return computeExitCode(summary);
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(originalTccl);
+		}
 	}
 
-	private void updateClassLoader() {
+	private void replaceThreadContextClassLoader() {
 		List<String> additionalClasspathEntries = options.getAdditionalClasspathEntries();
 		if (!additionalClasspathEntries.isEmpty()) {
 			URL[] urls = new ClasspathEntriesParser().toURLs(additionalClasspathEntries);
