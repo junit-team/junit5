@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.console;
+package org.junit.gen5.console.tasks;
 
 import static java.lang.String.join;
 import static java.util.Arrays.asList;

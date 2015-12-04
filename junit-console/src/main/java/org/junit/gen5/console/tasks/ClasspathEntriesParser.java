@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.console;
+package org.junit.gen5.console.tasks;
 
 import static java.util.stream.Collectors.toList;
 

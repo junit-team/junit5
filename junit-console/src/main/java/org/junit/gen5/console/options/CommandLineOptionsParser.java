@@ -10,10 +10,12 @@
 
 package org.junit.gen5.console.options;
 
+import java.io.Writer;
+
 public interface CommandLineOptionsParser {
 
 	CommandLineOptions parse(String... arguments);
 
-	void printHelp();
+	void printHelp(Writer writer);
 
 }

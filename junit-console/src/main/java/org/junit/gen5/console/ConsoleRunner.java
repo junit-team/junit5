@@ -10,28 +10,15 @@
 
 package org.junit.gen5.console;
 
-import static org.junit.gen5.engine.TestPlanSpecification.allTests;
-import static org.junit.gen5.engine.TestPlanSpecification.byTags;
-import static org.junit.gen5.engine.TestPlanSpecification.classNameMatches;
-
-import java.io.File;
+import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.console.options.CommandLineOptionsParser;
 import org.junit.gen5.console.options.JOptSimpleCommandLineOptionsParser;
-import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.gen5.launcher.Launcher;
-import org.junit.gen5.launcher.listeners.SummaryCreatingTestListener;
-import org.junit.gen5.launcher.listeners.TestExecutionSummary;
+import org.junit.gen5.console.tasks.ConsoleTask;
+import org.junit.gen5.console.tasks.DisplayHelpTask;
+import org.junit.gen5.console.tasks.ExecuteTestsTask;
 
 /**
  * @since 5.0
@@ -41,115 +28,34 @@ public class ConsoleRunner {
 	public static void main(String... args) {
 		CommandLineOptionsParser parser = new JOptSimpleCommandLineOptionsParser();
 		CommandLineOptions options = parser.parse(args);
+		ConsoleTask task = determineTask(parser, options);
 
-		if (options.isDisplayHelp()) {
-			parser.printHelp();
-			System.exit(0);
-		}
-
+		PrintWriter out = new PrintWriter(System.out);
 		try {
-			TestExecutionSummary summary = new ConsoleRunner(options).run();
-			int exitCode = computeExitCode(options, summary);
+			int exitCode = task.execute(out);
 			System.exit(exitCode);
 		}
 		catch (Exception e) {
-			e.printStackTrace(System.err);
-			System.err.println();
-			parser.printHelp();
+			printException(e, System.err);
+			displayHelp(parser, out);
 			System.exit(-1);
 		}
 	}
 
-	private static int computeExitCode(CommandLineOptions options, TestExecutionSummary summary) {
-		if (options.isExitCodeEnabled()) {
-			long failedTests = summary.countFailedTests();
-			return (int) Math.min(Integer.MAX_VALUE, failedTests);
+	private static ConsoleTask determineTask(CommandLineOptionsParser parser, CommandLineOptions options) {
+		if (options.isDisplayHelp()) {
+			return new DisplayHelpTask(parser);
 		}
-		return 0;
+		return new ExecuteTestsTask(options);
 	}
 
-	private final CommandLineOptions options;
-
-	public ConsoleRunner(CommandLineOptions options) {
-		this.options = options;
+	private static void printException(Exception exception, PrintStream out) {
+		exception.printStackTrace(out);
+		out.println();
 	}
 
-	private TestExecutionSummary run() {
-		updateClassLoader();
-
-		// TODO Configure launcher?
-		Launcher launcher = new Launcher();
-
-		TestExecutionSummary summary = new TestExecutionSummary();
-		registerListeners(launcher, summary);
-
-		TestPlanSpecification testPlanSpecification = createTestPlanSpecification();
-		launcher.execute(testPlanSpecification);
-
-		printSummaryToStandardOut(summary);
-		return summary;
-	}
-
-	private void updateClassLoader() {
-		List<String> additionalClasspathEntries = options.getAdditionalClasspathEntries();
-		if (!additionalClasspathEntries.isEmpty()) {
-			URL[] urls = new ClasspathEntriesParser().toURLs(additionalClasspathEntries);
-			ClassLoader parentClassLoader = ReflectionUtils.getDefaultClassLoader();
-			URLClassLoader customClassLoader = URLClassLoader.newInstance(urls, parentClassLoader);
-			Thread.currentThread().setContextClassLoader(customClassLoader);
-		}
-	}
-
-	private void registerListeners(Launcher launcher, TestExecutionSummary summary) {
-		SummaryCreatingTestListener testSummaryListener = new SummaryCreatingTestListener(summary);
-		launcher.registerTestPlanExecutionListeners(testSummaryListener);
-		if (!options.isHideDetails()) {
-			launcher.registerTestPlanExecutionListeners(
-				new ColoredPrintingTestListener(System.out, options.isAnsiColorOutputDisabled()));
-		}
-	}
-
-	private TestPlanSpecification createTestPlanSpecification() {
-		TestPlanSpecification testPlanSpecification;
-		if (options.isRunAllTests()) {
-			Set<File> rootDirectoriesToScan = new HashSet<>();
-			if (options.getArguments().isEmpty()) {
-				rootDirectoriesToScan.addAll(ReflectionUtils.getAllClasspathRootDirectories());
-			}
-			else {
-				options.getArguments().stream().map(File::new).forEach(rootDirectoriesToScan::add);
-			}
-			testPlanSpecification = TestPlanSpecification.build(allTests(rootDirectoriesToScan));
-		}
-		else {
-			testPlanSpecification = TestPlanSpecification.build(testPlanSpecificationElementsFromArguments());
-		}
-		options.getClassnameFilter().ifPresent(
-			classnameFilter -> testPlanSpecification.filterWith(classNameMatches(classnameFilter)));
-		if (!options.getTagsFilter().isEmpty()) {
-			testPlanSpecification.filterWith(byTags(options.getTagsFilter()));
-		}
-		return testPlanSpecification;
-	}
-
-	private void printSummaryToStandardOut(TestExecutionSummary summary) {
-		PrintWriter stdout = new PrintWriter(System.out);
-
-		if (options.isHideDetails()) { // Otherwise the failures have already been printed
-			summary.printFailuresOn(stdout);
-		}
-
-		summary.printOn(stdout);
-		stdout.close();
-	}
-
-	private List<TestPlanSpecificationElement> testPlanSpecificationElementsFromArguments() {
-		Preconditions.notEmpty(options.getArguments(), "No arguments given");
-		return toTestPlanSpecificationElements(options.getArguments());
-	}
-
-	List<TestPlanSpecificationElement> toTestPlanSpecificationElements(List<String> arguments) {
-		return TestPlanSpecification.forNames(arguments);
+	private static void displayHelp(CommandLineOptionsParser parser, PrintWriter out) {
+		new DisplayHelpTask(parser).execute(out);
 	}
 
 }

@@ -11,6 +11,7 @@
 package org.junit.gen5.console.options;
 
 import java.io.IOException;
+import java.io.Writer;
 
 import joptsimple.BuiltinHelpFormatter;
 import joptsimple.OptionParser;
@@ -27,11 +28,11 @@ public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsPar
 	}
 
 	@Override
-	public void printHelp() {
+	public void printHelp(Writer writer) {
 		OptionParser optionParser = getAvailableOptions().getParser();
 		optionParser.formatHelpWith(new BuiltinHelpFormatter(100, 4));
 		try {
-			optionParser.printHelpOn(System.out);
+			optionParser.printHelpOn(writer);
 		}
 		catch (IOException e) {
 			throw new RuntimeException("Error printing help", e);

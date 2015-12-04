@@ -8,15 +8,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.console;
+package org.junit.gen5.console.tasks;
 
-import static org.junit.gen5.console.ColoredPrintingTestListener.Color.BLUE;
-import static org.junit.gen5.console.ColoredPrintingTestListener.Color.GREEN;
-import static org.junit.gen5.console.ColoredPrintingTestListener.Color.NONE;
-import static org.junit.gen5.console.ColoredPrintingTestListener.Color.RED;
-import static org.junit.gen5.console.ColoredPrintingTestListener.Color.YELLOW;
+import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.BLUE;
+import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.GREEN;
+import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.NONE;
+import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.RED;
+import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.YELLOW;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
@@ -27,12 +27,12 @@ import org.junit.gen5.launcher.TestPlanExecutionListener;
 /**
  * @since 5.0
  */
-public class ColoredPrintingTestListener implements TestPlanExecutionListener, TestExecutionListener {
+class ColoredPrintingTestListener implements TestPlanExecutionListener, TestExecutionListener {
 
-	private final PrintStream out;
+	private final PrintWriter out;
 	private final boolean disableAnsiColors;
 
-	public ColoredPrintingTestListener(PrintStream out, boolean disableAnsiColors) {
+	ColoredPrintingTestListener(PrintWriter out, boolean disableAnsiColors) {
 		this.out = out;
 		this.disableAnsiColors = disableAnsiColors;
 	}
