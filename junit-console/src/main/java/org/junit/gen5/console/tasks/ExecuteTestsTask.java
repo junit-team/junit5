@@ -10,24 +10,15 @@
 
 package org.junit.gen5.console.tasks;
 
-import static org.junit.gen5.engine.TestPlanSpecification.allTests;
-import static org.junit.gen5.engine.TestPlanSpecification.byTags;
-import static org.junit.gen5.engine.TestPlanSpecification.classNameMatches;
-
-import java.io.File;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.listeners.SummaryCreatingTestListener;
 import org.junit.gen5.launcher.listeners.TestExecutionSummary;
@@ -57,8 +48,8 @@ public class ExecuteTestsTask implements ConsoleTask {
 			TestExecutionSummary summary = new TestExecutionSummary();
 			registerListeners(launcher, summary, out);
 
-			TestPlanSpecification testPlanSpecification = createTestPlanSpecification();
-			launcher.execute(testPlanSpecification);
+			TestPlanSpecification specification = new TestPlanSpecificationCreator().toTestPlanSpecification(options);
+			launcher.execute(specification);
 
 			printSummary(summary, out);
 
@@ -88,29 +79,6 @@ public class ExecuteTestsTask implements ConsoleTask {
 		}
 	}
 
-	private TestPlanSpecification createTestPlanSpecification() {
-		TestPlanSpecification testPlanSpecification;
-		if (options.isRunAllTests()) {
-			Set<File> rootDirectoriesToScan = new HashSet<>();
-			if (options.getArguments().isEmpty()) {
-				rootDirectoriesToScan.addAll(ReflectionUtils.getAllClasspathRootDirectories());
-			}
-			else {
-				options.getArguments().stream().map(File::new).forEach(rootDirectoriesToScan::add);
-			}
-			testPlanSpecification = TestPlanSpecification.build(allTests(rootDirectoriesToScan));
-		}
-		else {
-			testPlanSpecification = TestPlanSpecification.build(testPlanSpecificationElementsFromArguments());
-		}
-		options.getClassnameFilter().ifPresent(
-			classnameFilter -> testPlanSpecification.filterWith(classNameMatches(classnameFilter)));
-		if (!options.getTagsFilter().isEmpty()) {
-			testPlanSpecification.filterWith(byTags(options.getTagsFilter()));
-		}
-		return testPlanSpecification;
-	}
-
 	private void printSummary(TestExecutionSummary summary, Writer out) {
 		PrintWriter printWriter = new PrintWriter(out);
 
@@ -119,15 +87,6 @@ public class ExecuteTestsTask implements ConsoleTask {
 		}
 
 		summary.printOn(printWriter);
-	}
-
-	private List<TestPlanSpecificationElement> testPlanSpecificationElementsFromArguments() {
-		Preconditions.notEmpty(options.getArguments(), "No arguments given");
-		return toTestPlanSpecificationElements(options.getArguments());
-	}
-
-	private List<TestPlanSpecificationElement> toTestPlanSpecificationElements(List<String> arguments) {
-		return TestPlanSpecification.forNames(arguments);
 	}
 
 	private int computeExitCode(TestExecutionSummary summary) {
