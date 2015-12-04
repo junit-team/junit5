@@ -1,10 +1,8 @@
+apply plugin: 'application'
+
 dependencies {
 	compile(project(':junit-launcher'))
 	compile('net.sf.jopt-simple:jopt-simple:4.9')
 }
 
-jar {
-	manifest {
-		attributes 'Main-Class': 'org.junit.gen5.console.ConsoleRunner'
-	}
-}
+mainClassName = "org.junit.gen5.console.ConsoleRunner"
