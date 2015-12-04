@@ -72,12 +72,7 @@ public class CommandLineOptionsParserTest {
 
 	@Test
 	public void parseInvalidClassnameFilter() throws Exception {
-		// @formatter:off
-		assertAll(
-			() -> assertThrows(Exception.class, () -> parseArgLine("-n")),
-			() -> assertThrows(Exception.class, () -> parseArgLine("--filter-classname"))
-		);
-		// @formatter:on
+		assertOptionWithRequiredArgumentThrowsExceptionWithoutArgument("-n", "--filter-classname");
 	}
 
 	@Test
@@ -94,12 +89,7 @@ public class CommandLineOptionsParserTest {
 
 	@Test
 	public void parseInvalidTagFilter() {
-		// @formatter:off
-		assertAll(
-			() -> assertThrows(Exception.class, () -> parseArgLine("-t")),
-			() -> assertThrows(Exception.class, () -> parseArgLine("--filter-tags"))
-		);
-		// @formatter:on
+		assertOptionWithRequiredArgumentThrowsExceptionWithoutArgument("-t", "--filter-tags");
 	}
 
 	@Test
@@ -117,12 +107,7 @@ public class CommandLineOptionsParserTest {
 
 	@Test
 	public void parseInvalidAdditionalClasspathEntries() {
-		// @formatter:off
-		assertAll(
-			() -> assertThrows(Exception.class, () -> parseArgLine("-p")),
-			() -> assertThrows(Exception.class, () -> parseArgLine("--classpath"))
-		);
-		// @formatter:on
+		assertOptionWithRequiredArgumentThrowsExceptionWithoutArgument("-p", "--classpath");
 	}
 
 	@Test
@@ -132,6 +117,15 @@ public class CommandLineOptionsParserTest {
 			() -> assertEquals(asList("foo"), parseArgLine("foo").getArguments()),
 			() -> assertEquals(asList("foo", "bar"), parseArgLine("-h foo bar").getArguments()),
 			() -> assertEquals(asList("foo", "bar"), parseArgLine("-h -- foo bar").getArguments())
+		);
+		// @formatter:on
+	}
+
+	private void assertOptionWithRequiredArgumentThrowsExceptionWithoutArgument(String shortOption, String longOption) {
+		// @formatter:off
+		assertAll(
+			() -> assertThrows(Exception.class, () -> parseArgLine(shortOption)),
+			() -> assertThrows(Exception.class, () -> parseArgLine(longOption))
 		);
 		// @formatter:on
 	}
