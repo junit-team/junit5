@@ -10,6 +10,8 @@
 
 package org.junit.gen5.launcher;
 
+import static java.util.stream.Collectors.toCollection;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -59,7 +61,7 @@ public final class TestPlan implements TestDescriptor {
 
 	@Override
 	public String getDisplayName() {
-		return "testplan";
+		return "Test Plan";
 	}
 
 	@Override
@@ -79,9 +81,7 @@ public final class TestPlan implements TestDescriptor {
 
 	@Override
 	public Set<TestDescriptor> getChildren() {
-		Set<TestDescriptor> children = new HashSet<>();
-		engineRootTestDescriptors.values().forEach(descriptor -> children.add(descriptor));
-		return children;
+		return engineRootTestDescriptors.values().stream().collect(toCollection(HashSet::new));
 	}
 
 	@Override
@@ -115,4 +115,5 @@ public final class TestPlan implements TestDescriptor {
 		};
 		accept(pruningVisitor);
 	}
+
 }
