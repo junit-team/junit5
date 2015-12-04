@@ -25,11 +25,12 @@ import java.util.function.Predicate;
 
 import org.junit.Test;
 
-public class CommandLineOptionsParserTest {
+public class JOptSimpleCommandLineOptionsParserTest {
 
 	@Test
 	public void parseNoArguments() {
-		CommandLineOptions options = createParser().parse();
+		String[] noArguments = {};
+		CommandLineOptions options = createParser().parse(noArguments);
 
 		// @formatter:off
 		assertAll(
