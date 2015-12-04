@@ -26,6 +26,7 @@ class AvailableOptions {
 	final OptionSpec<Void> hideDetails;
 	final OptionSpec<String> classnameFilter;
 	final OptionSpec<String> tagFilter;
+	final OptionSpec<String> additionalClasspathEntries;
 	final OptionSpec<String> arguments;
 
 	AvailableOptions() {
@@ -44,6 +45,9 @@ class AvailableOptions {
 			.withRequiredArg();
 		tagFilter = parser.acceptsAll(asList("t", "filter-tags"),
 			"Give a tag to include in the test run. This option can be repeated.") //
+			.withRequiredArg();
+		additionalClasspathEntries = parser.acceptsAll(asList("p", "classpath"), //
+			"Additional classpath entries, e.g. for adding engines and their dependencies") //
 			.withRequiredArg();
 		arguments = parser.nonOptions("Test classes, methods or packages to execute. If --all|-a has been chosen, "
 				+ "arguments can list all classpath roots that should be considered for test scanning, "

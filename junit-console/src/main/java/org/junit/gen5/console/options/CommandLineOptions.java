@@ -31,4 +31,6 @@ public interface CommandLineOptions {
 
 	List<String> getArguments();
 
+	List<String> getAdditionalClasspathEntries();
+
 }

@@ -61,6 +61,11 @@ class JOptSimpleCommandLineOptions implements CommandLineOptions {
 	}
 
 	@Override
+	public List<String> getAdditionalClasspathEntries() {
+		return detectedOptions.valuesOf(options.additionalClasspathEntries);
+	}
+
+	@Override
 	public List<String> getArguments() {
 		return detectedOptions.valuesOf(options.arguments);
 	}

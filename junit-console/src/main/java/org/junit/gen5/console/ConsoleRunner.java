@@ -16,6 +16,8 @@ import static org.junit.gen5.engine.TestPlanSpecification.classNameMatches;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -73,6 +75,8 @@ public class ConsoleRunner {
 	}
 
 	private TestExecutionSummary run() {
+		updateClassLoader();
+
 		// TODO Configure launcher?
 		Launcher launcher = new Launcher();
 
@@ -84,6 +88,16 @@ public class ConsoleRunner {
 
 		printSummaryToStandardOut(summary);
 		return summary;
+	}
+
+	private void updateClassLoader() {
+		List<String> additionalClasspathEntries = options.getAdditionalClasspathEntries();
+		if (!additionalClasspathEntries.isEmpty()) {
+			URL[] urls = new ClasspathEntriesParser().toURLs(additionalClasspathEntries);
+			ClassLoader parentClassLoader = ReflectionUtils.getDefaultClassLoader();
+			URLClassLoader customClassLoader = URLClassLoader.newInstance(urls, parentClassLoader);
+			Thread.currentThread().setContextClassLoader(customClassLoader);
+		}
 	}
 
 	private void registerListeners(Launcher launcher, TestExecutionSummary summary) {

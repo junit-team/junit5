@@ -19,6 +19,7 @@ import static org.junit.gen5.api.Assertions.assertFalse;
 import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
 
+import java.io.File;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -39,6 +40,7 @@ public class CommandLineOptionsParserTest {
 			() -> assertFalse(options.isRunAllTests()),
 			() -> assertEquals(Optional.empty(), options.getClassnameFilter()),
 			() -> assertEquals(emptyList(), options.getTagsFilter()),
+			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
 			() -> assertEquals(emptyList(), options.getArguments())
 		);
 		// @formatter:on
@@ -96,6 +98,29 @@ public class CommandLineOptionsParserTest {
 		assertAll(
 			() -> assertThrows(Exception.class, () -> parseArgLine("-t")),
 			() -> assertThrows(Exception.class, () -> parseArgLine("--filter-tags"))
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseValidAdditionalClasspathEntries() {
+		// @formatter:off
+		assertAll(
+			() -> assertEquals(asList("."), parseArgLine("-p .").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList("."), parseArgLine("--classpath .").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList("."), parseArgLine("--classpath=.").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList(".", "lib/some.jar"), parseArgLine("-p . -p lib/some.jar").getAdditionalClasspathEntries()),
+			() -> assertEquals(asList("." + File.pathSeparator + "lib/some.jar"), parseArgLine("-p ." + File.pathSeparator + "lib/some.jar").getAdditionalClasspathEntries())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidAdditionalClasspathEntries() {
+		// @formatter:off
+		assertAll(
+			() -> assertThrows(Exception.class, () -> parseArgLine("-p")),
+			() -> assertThrows(Exception.class, () -> parseArgLine("--classpath"))
 		);
 		// @formatter:on
 	}
