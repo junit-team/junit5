@@ -26,14 +26,14 @@ public class ContextScope<K, V> {
 
 	private final Function<K, V> creator;
 
-	private Map<TestExecutionContext, Map<K, V>> values = new HashMap<>();
+	private Map<ExtensionContext, Map<K, V>> values = new HashMap<>();
 
 	public ContextScope(Function<K, V> creator, Inheritance inheritance) {
 		Preconditions.condition(inheritance == Inheritance.Yes, "Only Inheritance.Yes supported");
 		this.creator = creator;
 	}
 
-	public V get(TestExecutionContext context, K key) {
+	public V get(ExtensionContext context, K key) {
 		V value = getInContext(Optional.of(context), key);
 		if (value == null) {
 			value = creator.apply(key);
@@ -42,10 +42,10 @@ public class ContextScope<K, V> {
 		return value;
 	}
 
-	private V getInContext(Optional<TestExecutionContext> optionalContext, K key) {
+	private V getInContext(Optional<ExtensionContext> optionalContext, K key) {
 		if (!optionalContext.isPresent())
 			return null;
-		TestExecutionContext context = optionalContext.get();
+		ExtensionContext context = optionalContext.get();
 		Map<K, V> valuesMap = valuesFor(context);
 		V value = valuesMap.get(key);
 		if (value == null)
@@ -54,11 +54,11 @@ public class ContextScope<K, V> {
 			return value;
 	}
 
-	private void putInContext(TestExecutionContext context, K key, V value) {
+	private void putInContext(ExtensionContext context, K key, V value) {
 		valuesFor(context).put(key, value);
 	}
 
-	private Map<K, V> valuesFor(TestExecutionContext context) {
+	private Map<K, V> valuesFor(ExtensionContext context) {
 		return this.values.computeIfAbsent(context, key -> new HashMap<>());
 	}
 

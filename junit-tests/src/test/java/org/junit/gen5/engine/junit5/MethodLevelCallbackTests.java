@@ -22,15 +22,14 @@ import org.junit.Ignore;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.AfterEachCallbacks;
-import org.junit.gen5.api.extension.BeforeEachCallbacks;
 import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.api.extension.TestExecutionContext;
+import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.api.extension.TestLifecycleExtension;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
  * Integration tests that verify support for {@link BeforeEach}, {@link AfterEach},
- * {@link BeforeEachCallbacks}, and {@link AfterEachCallbacks} in the {@link JUnit5TestEngine}.
+ * {@link org.junit.gen5.api.extension.TestLifecycleExtension}in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
@@ -86,29 +85,29 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 	private static List<String> preBeforeEachMethods = new ArrayList<>();
 	private static List<String> postAfterEachMethods = new ArrayList<>();
 
-	private static class FooMethodLevelCallbacks implements BeforeEachCallbacks, AfterEachCallbacks {
+	private static class FooMethodLevelCallbacks implements TestLifecycleExtension {
 
 		@Override
-		public void preBeforeEach(TestExecutionContext methodExecutionContext, Object testInstance) {
+		public void beforeEach(TestExtensionContext methodExecutionContext) {
 			preBeforeEachMethods.add("foo");
 		}
 
 		@Override
-		public void postAfterEach(TestExecutionContext methodExecutionContext, Object testInstance) {
+		public void afterEach(TestExtensionContext methodExecutionContext) {
 			postAfterEachMethods.add("foo");
 		}
 
 	}
 
-	private static class BarMethodLevelCallbacks implements BeforeEachCallbacks, AfterEachCallbacks {
+	private static class BarMethodLevelCallbacks implements TestLifecycleExtension {
 
 		@Override
-		public void preBeforeEach(TestExecutionContext methodExecutionContext, Object testInstance) {
+		public void beforeEach(TestExtensionContext testExtensionContext) {
 			preBeforeEachMethods.add("bar");
 		}
 
 		@Override
-		public void postAfterEach(TestExecutionContext methodExecutionContext, Object testInstance) {
+		public void afterEach(TestExtensionContext testExtensionContext) {
 			postAfterEachMethods.add("bar");
 		}
 

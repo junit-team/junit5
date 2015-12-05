@@ -12,29 +12,29 @@ package com.example.timing;
 
 import java.lang.reflect.Method;
 
-import org.junit.gen5.api.extension.AfterEachCallbacks;
-import org.junit.gen5.api.extension.BeforeEachCallbacks;
-import org.junit.gen5.api.extension.TestExecutionContext;
+import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.api.extension.TestLifecycleExtension;
 
 /**
- * Simple extension that <em>times</em> the execution of test methods and
- * prints the results to {@link System#out}.
+ * Simple extension that <em>times</em> the execution of test methods and prints the results to {@link System#out}.
  *
  * @since 5.0
  */
-public class TimingExtension implements BeforeEachCallbacks, AfterEachCallbacks {
+public class TimingExtension implements TestLifecycleExtension {
 
 	private static final String TIMING_KEY_PREFIX = "TIMING:";
 
+	@Order(OrderPosition.INNERMOST)
 	@Override
-	public void postBeforeEach(TestExecutionContext testExecutionContext, Object testInstance) throws Exception {
-		Method testMethod = testExecutionContext.getTestMethod().get();
+	public void beforeEach(TestExtensionContext testExecutionContext) throws Exception {
+		Method testMethod = testExecutionContext.getTestMethod();
 		testExecutionContext.getAttributes().put(createKey(testMethod), System.currentTimeMillis());
 	}
 
+	@Order(OrderPosition.INNERMOST)
 	@Override
-	public void preAfterEach(TestExecutionContext testExecutionContext, Object testInstance) throws Exception {
-		Method testMethod = testExecutionContext.getTestMethod().get();
+	public void afterEach(TestExtensionContext testExecutionContext) throws Exception {
+		Method testMethod = testExecutionContext.getTestMethod();
 		String key = createKey(testMethod);
 		long start = (long) testExecutionContext.getAttributes().get(key);
 		long end = System.currentTimeMillis();
