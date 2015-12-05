@@ -10,18 +10,38 @@
 
 package org.junit.gen5.api.extension;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * Marker interface for all test extensions.
  *
  * <p>{@code TestExtensions} can be registered via {@link ExtendWith @ExtendWith}.
  *
  * @since 5.0
- * @see InstancePostProcessor
  * @see MethodParameterResolver
- * @see BeforeEachCallbacks
- * @see AfterEachCallbacks
- * @see BeforeAllCallbacks
- * @see AfterAllCallbacks
+ * @see ContainerLifecycleExtension
+ * @see TestLifecycleExtension
  */
 public interface TestExtension {
+
+	@Target({ ElementType.TYPE, ElementType.METHOD })
+	@Retention(RetentionPolicy.RUNTIME)
+	@Documented
+	@Inherited
+	public @interface Order {
+		OrderPosition value();
+
+		boolean unique() default false;
+	}
+
+	enum OrderPosition {
+		MIDDLE, OUTERMOST, INNERMOST, OUTSIDE, INSIDE
+	}
+
 }

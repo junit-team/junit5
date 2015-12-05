@@ -25,25 +25,17 @@ import java.util.stream.Stream;
  *
  * @since 5.0
  */
-public interface TestExecutionContext {
-
-	Optional<Class<?>> getTestClass();
-
-	Optional<Object> getTestInstance();
-
-	Optional<Method> getTestMethod();
-
-	default Optional<Throwable> getTestException() {
-		return Optional.empty();
-	}
-
-	Map<String, Object> getAttributes();
+public interface ExtensionContext {
 
 	String getDisplayName();
 
-	Optional<TestExecutionContext> getParent();
+	Class<?> getTestClass();
+
+	Optional<ExtensionContext> getParent();
 
 	Set<TestExtension> getExtensions();
+
+	Map<String, Object> getAttributes();
 
 	default <T extends TestExtension> Stream<T> getExtensions(Class<T> extensionClass) {
 		//@formatter:off

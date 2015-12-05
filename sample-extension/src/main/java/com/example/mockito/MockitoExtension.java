@@ -15,16 +15,17 @@ import static org.mockito.Mockito.mock;
 import java.lang.reflect.Parameter;
 
 import org.junit.gen5.api.extension.ContextScope;
-import org.junit.gen5.api.extension.InstancePostProcessor;
+import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
-import org.junit.gen5.api.extension.TestExecutionContext;
+import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.api.extension.TestLifecycleExtension;
 import org.junit.gen5.commons.util.AnnotationUtils;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * {@code MockitoExtension} showcases the {@link InstancePostProcessor}
+ * {@code MockitoExtension} showcases the {@link TestLifecycleExtension}
  * and {@link MethodParameterResolver} extension points of JUnit 5 by
  * providing dependency injection support at the field level via Mockito's
  * {@link Mock @Mock} annotation and at the method level via our demo
@@ -32,7 +33,7 @@ import org.mockito.MockitoAnnotations;
  *
  * @since 5.0
  */
-public class MockitoExtension implements InstancePostProcessor, MethodParameterResolver {
+public class MockitoExtension implements TestLifecycleExtension, MethodParameterResolver {
 
 	private final ContextScope<Class<?>, Object> mocksInScope;
 
@@ -41,17 +42,18 @@ public class MockitoExtension implements InstancePostProcessor, MethodParameterR
 	}
 
 	@Override
-	public void postProcessTestInstance(TestExecutionContext context, Object testInstance) {
-		MockitoAnnotations.initMocks(testInstance);
+	public Object postProcessTestInstance(TestExtensionContext context) {
+		MockitoAnnotations.initMocks(context.getTestInstance());
+		return context.getTestInstance();
 	}
 
 	@Override
-	public boolean supports(Parameter parameter, TestExecutionContext testExecutionContext) {
+	public boolean supports(Parameter parameter, ExtensionContext testExecutionContext) {
 		return AnnotationUtils.isAnnotated(parameter, InjectMock.class);
 	}
 
 	@Override
-	public Object resolve(Parameter parameter, TestExecutionContext testExecutionContext)
+	public Object resolve(Parameter parameter, ExtensionContext testExecutionContext)
 			throws ParameterResolutionException {
 
 		Class<?> mockType = parameter.getType();
