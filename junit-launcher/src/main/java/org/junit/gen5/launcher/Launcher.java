@@ -12,14 +12,16 @@ package org.junit.gen5.launcher;
 
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
-import static org.junit.gen5.launcher.TestEngineRegistry.lookupAllTestEngines;
 
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
-import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.ExecutionRequest;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.TestExecutionListener;
+import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
  * @since 5.0
@@ -29,6 +31,16 @@ public class Launcher {
 	private static final Logger LOG = Logger.getLogger(Launcher.class.getName());
 
 	private final TestListenerRegistry listenerRegistry = new TestListenerRegistry();
+	private final TestEngineRegistry testEngineRegistry;
+
+	public Launcher() {
+		this(new ServiceLoaderTestEngineRegistry());
+	}
+
+	// for tests only
+	Launcher(TestEngineRegistry testEngineRegistry) {
+		this.testEngineRegistry = testEngineRegistry;
+	}
 
 	public void registerTestPlanExecutionListeners(TestExecutionListener... testListeners) {
 		listenerRegistry.registerListener(testListeners);
@@ -36,7 +48,7 @@ public class Launcher {
 
 	public TestPlan discover(TestPlanSpecification specification) {
 		TestPlan testPlan = new TestPlan();
-		for (TestEngine testEngine : lookupAllTestEngines()) {
+		for (TestEngine testEngine : testEngineRegistry.lookupAllTestEngines()) {
 			LOG.info("Discovering tests in engine " + testEngine.getId());
 			TestDescriptor rootTestDescriptor = testEngine.discoverTests(specification);
 			testPlan.addTestDescriptorForEngine(testEngine, rootTestDescriptor);
@@ -67,11 +79,7 @@ public class Launcher {
 	}
 
 	public Set<TestEngine> getAvailableEngines() {
-		return getTestEngineStream().collect(toSet());
-	}
-
-	private Stream<TestEngine> getTestEngineStream() {
-		return stream(lookupAllTestEngines().spliterator(), false);
+		return stream(testEngineRegistry.lookupAllTestEngines().spliterator(), false).collect(toSet());
 	}
 
 }

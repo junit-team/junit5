@@ -15,6 +15,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
@@ -29,9 +30,16 @@ import org.junit.gen5.launcher.listeners.TestExecutionSummary;
 public class ExecuteTestsTask implements ConsoleTask {
 
 	private final CommandLineOptions options;
+	private final Supplier<Launcher> launcherSupplier;
 
 	public ExecuteTestsTask(CommandLineOptions options) {
+		this(options, Launcher::new);
+	}
+
+	// for tests only
+	ExecuteTestsTask(CommandLineOptions options, Supplier<Launcher> launcherSupplier) {
 		this.options = options;
+		this.launcherSupplier = launcherSupplier;
 	}
 
 	@Override
@@ -40,8 +48,8 @@ public class ExecuteTestsTask implements ConsoleTask {
 	}
 
 	private int executeTests(PrintWriter out) {
+		Launcher launcher = launcherSupplier.get();
 		// TODO Configure launcher?
-		Launcher launcher = new Launcher();
 
 		TestExecutionSummary summary = new TestExecutionSummary();
 		registerListeners(launcher, summary, out);

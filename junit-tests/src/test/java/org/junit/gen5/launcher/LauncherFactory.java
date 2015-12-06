@@ -10,13 +10,18 @@
 
 package org.junit.gen5.launcher;
 
+import static java.util.Arrays.asList;
+
 import org.junit.gen5.engine.TestEngine;
 
-/**
- * @since 5.0
- */
-interface TestEngineRegistry {
+public class LauncherFactory {
 
-	Iterable<TestEngine> lookupAllTestEngines();
+	public static Launcher createLauncher(TestEngine... engines) {
+		return createLauncher(asList(engines));
+	}
+
+	public static Launcher createLauncher(Iterable<TestEngine> engines) {
+		return new Launcher(() -> engines);
+	}
 
 }

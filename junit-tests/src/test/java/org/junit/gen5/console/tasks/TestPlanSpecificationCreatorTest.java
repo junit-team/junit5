@@ -14,6 +14,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.console.options.CommandLineOptionsStubs.validCommandLineOptions;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.*;
 
@@ -117,14 +118,6 @@ public class TestPlanSpecificationCreatorTest {
 	private TestPlanSpecification convert() {
 		TestPlanSpecificationCreator creator = new TestPlanSpecificationCreator();
 		return creator.toTestPlanSpecification(options);
-	}
-
-	private CommandLineOptions validCommandLineOptions() {
-		CommandLineOptions options = mock(CommandLineOptions.class);
-		when(options.getClassnameFilter()).thenReturn(Optional.empty());
-		when(options.getTagsFilter()).thenReturn(emptyList());
-		when(options.getArguments()).thenReturn(emptyList());
-		return options;
 	}
 
 	private TestDescriptor testDescriptorWithTag(String tag) {
