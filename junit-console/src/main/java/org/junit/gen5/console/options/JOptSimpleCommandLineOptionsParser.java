@@ -24,7 +24,7 @@ public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsPar
 		AvailableOptions availableOptions = getAvailableOptions();
 		OptionParser parser = availableOptions.getParser();
 		OptionSet detectedOptions = parser.parse(arguments);
-		return toCommandLineOptions(availableOptions, detectedOptions);
+		return availableOptions.toCommandLineOptions(detectedOptions);
 	}
 
 	@Override
@@ -37,20 +37,6 @@ public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsPar
 		catch (IOException e) {
 			throw new RuntimeException("Error printing help", e);
 		}
-	}
-
-	private CommandLineOptions toCommandLineOptions(AvailableOptions options, OptionSet detectedOptions) {
-		CommandLineOptions result = new CommandLineOptions();
-		result.setDisplayHelp(detectedOptions.has(options.help));
-		result.setExitCodeEnabled(detectedOptions.has(options.enableExitCode));
-		result.setAnsiColorOutputDisabled(detectedOptions.has(options.disableAnsiColors));
-		result.setRunAllTests(detectedOptions.has(options.runAllTests));
-		result.setHideDetails(detectedOptions.has(options.hideDetails));
-		result.setClassnameFilter(detectedOptions.valueOf(options.classnameFilter));
-		result.setTagsFilter(detectedOptions.valuesOf(options.tagFilter));
-		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(options.additionalClasspathEntries));
-		result.setArguments(detectedOptions.valuesOf(options.arguments));
-		return result;
 	}
 
 	private AvailableOptions getAvailableOptions() {

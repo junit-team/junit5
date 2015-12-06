@@ -13,21 +13,22 @@ package org.junit.gen5.console.options;
 import static java.util.Arrays.asList;
 
 import joptsimple.OptionParser;
+import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
 class AvailableOptions {
 
 	private final OptionParser parser = new OptionParser();
 
-	final OptionSpec<Void> help;
-	final OptionSpec<Void> enableExitCode;
-	final OptionSpec<Void> disableAnsiColors;
-	final OptionSpec<Void> runAllTests;
-	final OptionSpec<Void> hideDetails;
-	final OptionSpec<String> classnameFilter;
-	final OptionSpec<String> tagFilter;
-	final OptionSpec<String> additionalClasspathEntries;
-	final OptionSpec<String> arguments;
+	private final OptionSpec<Void> help;
+	private final OptionSpec<Void> enableExitCode;
+	private final OptionSpec<Void> disableAnsiColors;
+	private final OptionSpec<Void> runAllTests;
+	private final OptionSpec<Void> hideDetails;
+	private final OptionSpec<String> classnameFilter;
+	private final OptionSpec<String> tagFilter;
+	private final OptionSpec<String> additionalClasspathEntries;
+	private final OptionSpec<String> arguments;
 
 	AvailableOptions() {
 		help = parser.acceptsAll(asList("h", "help"), //
@@ -54,7 +55,21 @@ class AvailableOptions {
 				+ "or none if the full classpath shall be scanned.");
 	}
 
-	public OptionParser getParser() {
+	OptionParser getParser() {
 		return parser;
+	}
+
+	CommandLineOptions toCommandLineOptions(OptionSet detectedOptions) {
+		CommandLineOptions result = new CommandLineOptions();
+		result.setDisplayHelp(detectedOptions.has(help));
+		result.setExitCodeEnabled(detectedOptions.has(enableExitCode));
+		result.setAnsiColorOutputDisabled(detectedOptions.has(disableAnsiColors));
+		result.setRunAllTests(detectedOptions.has(runAllTests));
+		result.setHideDetails(detectedOptions.has(hideDetails));
+		result.setClassnameFilter(detectedOptions.valueOf(classnameFilter));
+		result.setTagsFilter(detectedOptions.valuesOf(tagFilter));
+		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(additionalClasspathEntries));
+		result.setArguments(detectedOptions.valuesOf(arguments));
+		return result;
 	}
 }
