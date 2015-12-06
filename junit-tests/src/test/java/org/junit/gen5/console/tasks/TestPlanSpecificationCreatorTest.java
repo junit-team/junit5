@@ -14,13 +14,11 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.console.options.CommandLineOptionsStubs.validCommandLineOptions;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.gen5.console.options.CommandLineOptions;
@@ -31,13 +29,13 @@ import org.junit.gen5.engine.TestTag;
 
 public class TestPlanSpecificationCreatorTest {
 
-	private CommandLineOptions options = validCommandLineOptions();
+	private CommandLineOptions options = new CommandLineOptions();
 	private TestPlanSpecificationElementVisitor visitor = mock(TestPlanSpecificationElementVisitor.class);
 
 	@Test
 	public void convertsClassArgument() {
 		Class<?> testClass = getClass();
-		when(options.getArguments()).thenReturn(singletonList(testClass.getName()));
+		options.setArguments(singletonList(testClass.getName()));
 
 		convertAndVisit();
 
@@ -49,7 +47,7 @@ public class TestPlanSpecificationCreatorTest {
 		Class<?> testClass = getClass();
 		// TODO #39 Use @TestName
 		Method testMethod = testClass.getDeclaredMethod("convertsMethodArgument");
-		when(options.getArguments()).thenReturn(singletonList(testClass.getName() + "#" + testMethod.getName()));
+		options.setArguments(singletonList(testClass.getName() + "#" + testMethod.getName()));
 
 		convertAndVisit();
 
@@ -59,7 +57,7 @@ public class TestPlanSpecificationCreatorTest {
 	@Test
 	public void convertsPackageArgument() {
 		String packageName = getClass().getPackage().getName();
-		when(options.getArguments()).thenReturn(singletonList(packageName));
+		options.setArguments(singletonList(packageName));
 
 		convertAndVisit();
 
@@ -68,7 +66,7 @@ public class TestPlanSpecificationCreatorTest {
 
 	@Test
 	public void convertsAllOptionWithoutExplicitRootDirectories() {
-		when(options.isRunAllTests()).thenReturn(true);
+		options.setRunAllTests(true);
 
 		convertAndVisit();
 
@@ -77,8 +75,8 @@ public class TestPlanSpecificationCreatorTest {
 
 	@Test
 	public void convertsAllOptionWithExplicitRootDirectories() {
-		when(options.isRunAllTests()).thenReturn(true);
-		when(options.getArguments()).thenReturn(asList(".", ".."));
+		options.setRunAllTests(true);
+		options.setArguments(asList(".", ".."));
 
 		convertAndVisit();
 
@@ -89,8 +87,8 @@ public class TestPlanSpecificationCreatorTest {
 
 	@Test
 	public void convertsClassnameFilterOption() {
-		when(options.isRunAllTests()).thenReturn(true);
-		when(options.getClassnameFilter()).thenReturn(Optional.of(".*Test"));
+		options.setRunAllTests(true);
+		options.setClassnameFilter(".*Test");
 
 		TestPlanSpecification specification = convert();
 
@@ -100,8 +98,8 @@ public class TestPlanSpecificationCreatorTest {
 
 	@Test
 	public void convertsTagFilterOption() {
-		when(options.isRunAllTests()).thenReturn(true);
-		when(options.getTagsFilter()).thenReturn(asList("fast", "slow"));
+		options.setRunAllTests(true);
+		options.setTagsFilter(asList("fast", "slow"));
 
 		TestPlanSpecification specification = convert();
 

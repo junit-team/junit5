@@ -10,27 +10,93 @@
 
 package org.junit.gen5.console.options;
 
+import static java.util.Collections.emptyList;
+
 import java.util.List;
 import java.util.Optional;
 
-public interface CommandLineOptions {
+public class CommandLineOptions {
 
-	boolean isDisplayHelp();
+	private boolean displayHelp;
+	private boolean exitCodeEnabled;
+	private boolean ansiColorOutputDisabled;
+	private boolean runAllTests;
+	private boolean hideDetails;
+	private String classnameFilter;
+	private List<String> tagsFilter = emptyList();
+	private List<String> additionalClasspathEntries = emptyList();
+	private List<String> arguments = emptyList();
 
-	boolean isExitCodeEnabled();
+	public boolean isDisplayHelp() {
+		return displayHelp;
+	}
 
-	boolean isAnsiColorOutputDisabled();
+	public void setDisplayHelp(boolean displayHelp) {
+		this.displayHelp = displayHelp;
+	}
 
-	boolean isRunAllTests();
+	public boolean isExitCodeEnabled() {
+		return exitCodeEnabled;
+	}
 
-	boolean isHideDetails();
+	public void setExitCodeEnabled(boolean exitCodeEnabled) {
+		this.exitCodeEnabled = exitCodeEnabled;
+	}
 
-	Optional<String> getClassnameFilter();
+	public boolean isAnsiColorOutputDisabled() {
+		return ansiColorOutputDisabled;
+	}
 
-	List<String> getTagsFilter();
+	public void setAnsiColorOutputDisabled(boolean ansiColorOutputDisabled) {
+		this.ansiColorOutputDisabled = ansiColorOutputDisabled;
+	}
 
-	List<String> getArguments();
+	public boolean isRunAllTests() {
+		return runAllTests;
+	}
 
-	List<String> getAdditionalClasspathEntries();
+	public void setRunAllTests(boolean runAllTests) {
+		this.runAllTests = runAllTests;
+	}
+
+	public boolean isHideDetails() {
+		return hideDetails;
+	}
+
+	public void setHideDetails(boolean hideDetails) {
+		this.hideDetails = hideDetails;
+	}
+
+	public Optional<String> getClassnameFilter() {
+		return Optional.ofNullable(classnameFilter);
+	}
+
+	public void setClassnameFilter(String classnameFilter) {
+		this.classnameFilter = classnameFilter;
+	}
+
+	public List<String> getTagsFilter() {
+		return tagsFilter;
+	}
+
+	public void setTagsFilter(List<String> tagsFilter) {
+		this.tagsFilter = tagsFilter;
+	}
+
+	public List<String> getAdditionalClasspathEntries() {
+		return additionalClasspathEntries;
+	}
+
+	public void setAdditionalClasspathEntries(List<String> additionalClasspathEntries) {
+		this.additionalClasspathEntries = additionalClasspathEntries;
+	}
+
+	public List<String> getArguments() {
+		return arguments;
+	}
+
+	public void setArguments(List<String> arguments) {
+		this.arguments = arguments;
+	}
 
 }

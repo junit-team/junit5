@@ -13,10 +13,8 @@ package org.junit.gen5.console.tasks;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.console.options.CommandLineOptionsStubs.runAllTestCommandLineOptions;
 import static org.junit.gen5.engine.DummyTestEngine.TestResult.*;
 import static org.junit.gen5.launcher.LauncherFactory.createLauncher;
-import static org.mockito.Mockito.when;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -31,7 +29,9 @@ public class ExecuteTestsTaskTest {
 	@Test
 	public void executeWithoutExitCode() throws Exception {
 		StringWriter stringWriter = new StringWriter();
-		CommandLineOptions options = runAllTestCommandLineOptions();
+
+		CommandLineOptions options = new CommandLineOptions();
+		options.setRunAllTests(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
 		dummyTestEngine.addTest("succeedingTest", SUCCESS, noOp());
@@ -46,8 +46,9 @@ public class ExecuteTestsTaskTest {
 
 	@Test
 	public void executeWithExitCode() throws Exception {
-		CommandLineOptions options = runAllTestCommandLineOptions();
-		when(options.isExitCodeEnabled()).thenReturn(true);
+		CommandLineOptions options = new CommandLineOptions();
+		options.setRunAllTests(true);
+		options.setExitCodeEnabled(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
 		dummyTestEngine.addTest("succeedingTest", SUCCESS, noOp());
@@ -62,9 +63,9 @@ public class ExecuteTestsTaskTest {
 	@Test
 	public void executeWithCustomClassLoader() throws Exception {
 		StringWriter stringWriter = new StringWriter();
-
-		CommandLineOptions options = runAllTestCommandLineOptions();
-		when(options.getAdditionalClasspathEntries()).thenReturn(singletonList("."));
+		CommandLineOptions options = new CommandLineOptions();
+		options.setRunAllTests(true);
+		options.setAdditionalClasspathEntries(singletonList("."));
 
 		ClassLoader oldClassLoader = ReflectionUtils.getDefaultClassLoader();
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
@@ -82,8 +83,9 @@ public class ExecuteTestsTaskTest {
 	public void executeWithHiddenDetails() throws Exception {
 		StringWriter stringWriter = new StringWriter();
 
-		CommandLineOptions options = runAllTestCommandLineOptions();
-		when(options.isHideDetails()).thenReturn(true);
+		CommandLineOptions options = new CommandLineOptions();
+		options.setRunAllTests(true);
+		options.setHideDetails(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
 		dummyTestEngine.addTest("failingTest", FAILURE, noOp());
