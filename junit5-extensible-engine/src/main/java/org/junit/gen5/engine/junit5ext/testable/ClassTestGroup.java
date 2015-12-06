@@ -7,4 +7,8 @@ public class ClassTestGroup extends TestGroup {
         super(uniqueId, displayName);
         this.testClass = testClass;
     }
+
+    public Class<?> getTestClass() {
+        return testClass;
+    }
 }
