@@ -25,13 +25,9 @@ import java.lang.annotation.Target;
  *
  * <h3>Supported Extension APIs</h3>
  * <ul>
- * <li>{@link Condition}</li>
- * <li>{@link InstancePostProcessor}</li>
+ * <li>{@link ContainerLifecycleExtension}</li>
+ * <li>{@link TestLifecycleExtension}</li>
  * <li>{@link MethodParameterResolver}</li>
- * <li>{@link BeforeEachCallbacks}</li>
- * <li>{@link AfterEachCallbacks}</li>
- * <li>{@link BeforeAllCallbacks}</li>
- * <li>{@link AfterAllCallbacks}</li>
  * </ul>
  *
  * @since 5.0
@@ -45,5 +41,7 @@ import java.lang.annotation.Target;
 public @interface ExtendWith {
 
 	Class<? extends TestExtension>[]value();
+
+	TestExtension.OrderPosition order() default TestExtension.OrderPosition.DEFAULT;
 
 }

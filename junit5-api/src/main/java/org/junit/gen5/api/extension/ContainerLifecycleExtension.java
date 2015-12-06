@@ -16,7 +16,7 @@ import org.junit.gen5.api.Executable;
  * {@code ContainerLifecycleExtension} defines the API for {@link TestExtension
  * TestExtensions} that wish to provide additional behavior to containers...
  *
- * <p>Implementers can annotate themselves or individual methods with {@linkplain org.junit.gen5.api.extension.TestExtension.Order}</p>
+ * Implementers can be annotate with {@link TestExtension.DefaultOrder} to determine the order of extension application.
  *
  * <p>Implementations must provide a no-args constructor.
  *

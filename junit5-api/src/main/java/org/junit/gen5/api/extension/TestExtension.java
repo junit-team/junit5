@@ -30,18 +30,18 @@ import java.lang.annotation.Target;
  */
 public interface TestExtension {
 
-	@Target({ ElementType.TYPE, ElementType.METHOD })
+	@Target({ ElementType.TYPE })
 	@Retention(RetentionPolicy.RUNTIME)
 	@Documented
 	@Inherited
-	public @interface Order {
+	@interface DefaultOrder {
 		OrderPosition value();
 
 		boolean unique() default false;
 	}
 
 	enum OrderPosition {
-		MIDDLE, OUTERMOST, INNERMOST, OUTSIDE, INSIDE
+		DEFAULT, MIDDLE, OUTERMOST, INNERMOST, OUTSIDE, INSIDE
 	}
 
 }

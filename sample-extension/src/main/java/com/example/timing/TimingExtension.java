@@ -12,6 +12,7 @@ package com.example.timing;
 
 import java.lang.reflect.Method;
 
+import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.api.extension.TestLifecycleExtension;
 
@@ -20,18 +21,17 @@ import org.junit.gen5.api.extension.TestLifecycleExtension;
  *
  * @since 5.0
  */
+@TestExtension.DefaultOrder(TestExtension.OrderPosition.INNERMOST)
 public class TimingExtension implements TestLifecycleExtension {
 
 	private static final String TIMING_KEY_PREFIX = "TIMING:";
 
-	@Order(OrderPosition.INNERMOST)
 	@Override
 	public void beforeEach(TestExtensionContext testExecutionContext) throws Exception {
 		Method testMethod = testExecutionContext.getTestMethod();
 		testExecutionContext.getAttributes().put(createKey(testMethod), System.currentTimeMillis());
 	}
 
-	@Order(OrderPosition.INNERMOST)
 	@Override
 	public void afterEach(TestExtensionContext testExecutionContext) throws Exception {
 		Method testMethod = testExecutionContext.getTestMethod();
