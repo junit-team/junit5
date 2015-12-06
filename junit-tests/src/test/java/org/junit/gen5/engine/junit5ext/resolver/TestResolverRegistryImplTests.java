@@ -1,9 +1,10 @@
 
-package org.junit.gen5.engine.junit5ext;
+package org.junit.gen5.engine.junit5ext.resolver;
 
 import org.junit.Test;
 import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.junit5ext.testable.TestGroup;
 import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverRequest;
 import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverSpy;
 

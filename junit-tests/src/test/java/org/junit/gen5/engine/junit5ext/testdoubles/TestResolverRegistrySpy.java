@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.junit5ext.TestResolver;
-import org.junit.gen5.engine.junit5ext.TestResolverRegistry;
+import org.junit.gen5.engine.junit5ext.resolver.TestResolver;
+import org.junit.gen5.engine.junit5ext.resolver.TestResolverRegistry;
 
 public class TestResolverRegistrySpy implements TestResolverRegistry {
 	public List<TestResolverRequest> notifications = new LinkedList<>();

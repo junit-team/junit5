@@ -1,8 +1,10 @@
 
-package org.junit.gen5.engine.junit5ext;
+package org.junit.gen5.engine.junit5ext.resolver;
 
 import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.junit5ext.resolver.TestResolver;
+import org.junit.gen5.engine.junit5ext.resolver.TestResolverRegistry;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -2,7 +2,7 @@ package org.junit.gen5.engine.junit5ext.testdoubles;
 
 import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.junit5ext.TestResolver;
+import org.junit.gen5.engine.junit5ext.resolver.TestResolver;
 
 import java.util.Collections;
 import java.util.LinkedList;

@@ -4,6 +4,8 @@ import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.junit5ext.resolver.TestResolverRegistry;
+import org.junit.gen5.engine.junit5ext.testable.TestGroup;
 
 public class ExtensibleJUnit5TestEngine implements TestEngine {
     public static final String ENGINE_ID = "junit5ext";
