@@ -4,7 +4,7 @@ import org.junit.gen5.api.Test;
 
 public class SinglePassingTestSampleClass {
   @Test
-  void test() throws Exception {
+  void singlePassingTest() throws Exception {
     System.out.println("Test got executed!");
   }
 }

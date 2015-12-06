@@ -1,25 +1,52 @@
 
 package org.junit.gen5.engine.junit5ext;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.TestPlanSpecification.build;
 import static org.junit.gen5.engine.TestPlanSpecification.forClass;
-import static org.assertj.core.api.Assertions.*;
+import static org.junit.gen5.engine.junit5ext.ExtensibleJUnit5TestEngine.DISPLAY_NAME;
+import static org.junit.gen5.engine.junit5ext.ExtensibleJUnit5TestEngine.ENGINE_ID;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5ext.samples.EmptyTestSampleClass;
+import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverRequest;
+import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverRegistrySpy;
 
 public class ExtensibleJUnit5TestEngineClassLevelTests {
 	private ExtensibleJUnit5TestEngine testEngine = new ExtensibleJUnit5TestEngine();
+	private TestResolverRegistrySpy testResolverRegistrySpy = new TestResolverRegistrySpy();
+
+	@Before
+	public void setUp() throws Exception {
+		testEngine.setTestResolverRegistry(testResolverRegistrySpy);
+	}
 
 	@Test
 	public void givenEmptyTestClass_discoverTestsReturnsOnlyTestEngineDescriptor() throws Exception {
-		TestDescriptor testDescriptor = testEngine.discoverTests(build(forClass(EmptyTestSampleClass.class)));
+		TestPlanSpecification testPlanSpecification = build(forClass(EmptyTestSampleClass.class));
+		TestDescriptor testDescriptor = testEngine.discoverTests(testPlanSpecification);
 
+		Assertions.assertAll(() -> assertThat(testDescriptor.getUniqueId()).isEqualTo(ENGINE_ID),
+			() -> assertThat(testDescriptor.getChildren()).isEmpty());
+	}
+
+	@Test
+	public void givenEmptyTestClass_discoverTestsNotifiesTestResolverRegistry() throws Exception {
+		TestPlanSpecification testPlanSpecification = build(forClass(EmptyTestSampleClass.class));
+		testEngine.discoverTests(testPlanSpecification);
+
+		assertThat(testResolverRegistrySpy.notifications).hasSize(1);
+
+		TestResolverRequest notification = testResolverRegistrySpy.notifications.get(0);
 		Assertions.assertAll(
-			() -> assertThat(testDescriptor.getUniqueId()).isEqualTo(testEngine.getId()),
-			() -> assertThat(testDescriptor.getChildren()).isEmpty()
+				() -> assertThat(notification.parent.getUniqueId()).isEqualTo(ENGINE_ID),
+				() -> assertThat(notification.parent.getDisplayName()).isEqualTo(DISPLAY_NAME),
+				() -> assertThat(notification.parent.getChildren()).isEmpty(),
+				() -> assertThat(notification.testPlanSpecification).isEqualTo(testPlanSpecification)
 		);
 	}
 }
