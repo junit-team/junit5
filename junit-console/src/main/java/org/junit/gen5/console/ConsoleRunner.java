@@ -10,13 +10,13 @@
 
 package org.junit.gen5.console;
 
-import java.io.PrintStream;
 import java.io.PrintWriter;
 
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.console.options.CommandLineOptionsParser;
 import org.junit.gen5.console.options.JOptSimpleCommandLineOptionsParser;
 import org.junit.gen5.console.tasks.ConsoleTask;
+import org.junit.gen5.console.tasks.ConsoleTaskExecutor;
 import org.junit.gen5.console.tasks.DisplayHelpTask;
 import org.junit.gen5.console.tasks.ExecuteTestsTask;
 
@@ -26,36 +26,35 @@ import org.junit.gen5.console.tasks.ExecuteTestsTask;
 public class ConsoleRunner {
 
 	public static void main(String... args) {
-		CommandLineOptionsParser parser = new JOptSimpleCommandLineOptionsParser();
-		CommandLineOptions options = parser.parse(args);
-		ConsoleTask task = determineTask(parser, options);
-
-		PrintWriter out = new PrintWriter(System.out);
-		try {
-			int exitCode = task.execute(out);
-			System.exit(exitCode);
-		}
-		catch (Exception e) {
-			printException(e, System.err);
-			displayHelp(parser, out);
-			System.exit(-1);
-		}
+		ConsoleRunner consoleRunner = new ConsoleRunner(new JOptSimpleCommandLineOptionsParser(),
+			new ConsoleTaskExecutor(System.out, System.err));
+		int exitCode = consoleRunner.execute(args);
+		System.exit(exitCode);
 	}
 
-	private static ConsoleTask determineTask(CommandLineOptionsParser parser, CommandLineOptions options) {
+	private final CommandLineOptionsParser commandLineOptionsParser;
+	private final ConsoleTaskExecutor consoleTaskExecutor;
+
+	ConsoleRunner(CommandLineOptionsParser commandLineOptionsParser, ConsoleTaskExecutor consoleTaskExecutor) {
+		this.commandLineOptionsParser = commandLineOptionsParser;
+		this.consoleTaskExecutor = consoleTaskExecutor;
+	}
+
+	int execute(String... args) {
+		CommandLineOptions options = commandLineOptionsParser.parse(args);
+		ConsoleTask task = determineTask(options);
+		return consoleTaskExecutor.executeTask(task, out -> displayHelp(out));
+	}
+
+	private ConsoleTask determineTask(CommandLineOptions options) {
 		if (options.isDisplayHelp()) {
-			return new DisplayHelpTask(parser);
+			return new DisplayHelpTask(commandLineOptionsParser);
 		}
 		return new ExecuteTestsTask(options);
 	}
 
-	private static void printException(Exception exception, PrintStream out) {
-		exception.printStackTrace(out);
-		out.println();
-	}
-
-	private static void displayHelp(CommandLineOptionsParser parser, PrintWriter out) {
-		new DisplayHelpTask(parser).execute(out);
+	void displayHelp(PrintWriter out) {
+		new DisplayHelpTask(commandLineOptionsParser).execute(out);
 	}
 
 }
