@@ -18,10 +18,16 @@ import java.io.PrintWriter;
 public interface ConsoleTask {
 
 	/**
+	 * Exit code indicating successful execution
+	 */
+	int SUCCESS = 0;
+
+	/**
 	 * Execute this task and return an exit code.
 	 * 
 	 * @param out writer for console output
 	 * @return exit code indicating success ({@code 0}) or failure ({@code != 0})
+	 * @see ConsoleTask#SUCCESS
 	 */
 	int execute(PrintWriter out) throws Exception;
 

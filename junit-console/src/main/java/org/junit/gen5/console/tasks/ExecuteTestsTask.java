@@ -94,6 +94,6 @@ public class ExecuteTestsTask implements ConsoleTask {
 			long failedTests = summary.countFailedTests();
 			return (int) Math.min(Integer.MAX_VALUE, failedTests);
 		}
-		return 0;
+		return SUCCESS;
 	}
 }

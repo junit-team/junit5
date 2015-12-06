@@ -24,8 +24,8 @@ public class DisplayHelpTask implements ConsoleTask {
 
 	@Override
 	public int execute(PrintWriter out) {
-		parser.printHelp(new PrintWriter(out));
-		return 0;
+		parser.printHelp(out);
+		return SUCCESS;
 	}
 
 }
