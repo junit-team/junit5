@@ -29,7 +29,7 @@ public class ConsoleTaskExecutorTest {
 		int exitCode = executor.executeTask(writer -> {
 			writer.print("Test");
 			return 42;
-		} , writer -> {
+		}, writer -> {
 			fail("should not be called");
 		});
 
@@ -42,7 +42,7 @@ public class ConsoleTaskExecutorTest {
 	public void executeFailingTask() {
 		int exitCode = executor.executeTask(writer -> {
 			throw new RuntimeException("something went wrong");
-		} , writer -> {
+		}, writer -> {
 			writer.print("Help");
 		});
 
@@ -55,7 +55,7 @@ public class ConsoleTaskExecutorTest {
 	public void executeWithExceptionWhilePrintingHelp() {
 		int exitCode = executor.executeTask(writer -> {
 			throw new RuntimeException("something went wrong");
-		} , writer -> {
+		}, writer -> {
 			throw new RuntimeException("could not print help");
 		});
 
