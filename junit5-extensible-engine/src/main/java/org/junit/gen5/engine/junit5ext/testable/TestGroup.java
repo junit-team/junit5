@@ -10,6 +10,7 @@ import org.junit.gen5.engine.TestTag;
 public class TestGroup implements MutableTestDescriptor {
 	private String displayName;
 	private String uniqueId;
+	private MutableTestDescriptor parent;
 
 	public TestGroup(String uniqueId, String displayName) {
 		this.uniqueId = uniqueId;
@@ -32,6 +33,16 @@ public class TestGroup implements MutableTestDescriptor {
 	}
 
 	@Override
+	public Optional<MutableTestDescriptor> getParent() {
+		return Optional.ofNullable(parent);
+	}
+
+	@Override
+	public void setParent(MutableTestDescriptor parent) {
+		this.parent = parent;
+	}
+
+	@Override
 	public Set<MutableTestDescriptor> getChildren() {
 		return Collections.emptySet();
 	}
@@ -44,16 +55,6 @@ public class TestGroup implements MutableTestDescriptor {
 	@Override
 	public void removeChild(MutableTestDescriptor descriptor) {
 		throw new UnsupportedOperationException("TestGroup does not support removeChild(), yet.");
-	}
-
-	@Override
-	public Optional<MutableTestDescriptor> getParent() {
-		throw new UnsupportedOperationException("TestGroup does not support getParent(), yet.");
-	}
-
-	@Override
-	public void setParent(MutableTestDescriptor parent) {
-		throw new UnsupportedOperationException("TestGroup does not support setParent(), yet.");
 	}
 
 	@Override
