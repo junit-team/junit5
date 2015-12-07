@@ -52,6 +52,13 @@ public interface TestLifecycleExtension extends TestExtension {
 		/* no-op */
 	}
 
+	/**
+	 * Should only be implemented by a single extension.
+	 *
+	 * @param testExtensionContext
+	 * @param testExecutable
+	 * @throws Throwable
+	 */
 	default void executeTest(TestExtensionContext testExtensionContext, Executable testExecutable) throws Throwable {
 		testExecutable.execute();
 	}
