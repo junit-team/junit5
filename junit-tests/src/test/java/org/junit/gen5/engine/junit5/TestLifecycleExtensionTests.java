@@ -23,6 +23,7 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.api.extension.TestLifecycleExtension;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -35,11 +36,11 @@ import org.junit.gen5.engine.TestPlanSpecification;
  */
 @Ignore("https://github.com/junit-team/junit-lambda/issues/39")
 
-public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
+public class TestLifecycleExtensionTests extends AbstractJUnit5TestEngineTestCase {
 
 	@org.junit.Test
 	public void beforeEachAndAfterEachCallbacksWithTestInstancePerMethod() {
-		TestPlanSpecification spec = build(forClass(InstancePerMethodTestCase.class));
+		TestPlanSpecification spec = build(forClass(TestLifecycleTestCase.class));
 
 		TrackingTestExecutionListener listener = executeTests(spec, 2);
 
@@ -49,8 +50,8 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
 
-		Assert.assertTrue("@BeforeEach was not invoked", InstancePerMethodTestCase.beforeEachInvoked);
-		Assert.assertTrue("@AfterEach was not invoked", InstancePerMethodTestCase.afterEachInvoked);
+		Assert.assertTrue("@BeforeEach was not invoked", TestLifecycleTestCase.beforeEachInvoked);
+		Assert.assertTrue("@AfterEach was not invoked", TestLifecycleTestCase.afterEachInvoked);
 
 		Assert.assertEquals("preBeforeEach()", asList("foo", "bar"), preBeforeEachMethods);
 		Assert.assertEquals("postAfterEach()", asList("bar", "foo"), postAfterEachMethods);
@@ -58,8 +59,9 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
 	// -------------------------------------------------------------------
 
-	@ExtendWith({ FooMethodLevelCallbacks.class, BarMethodLevelCallbacks.class })
-	private static class InstancePerMethodTestCase {
+	@ExtendWith(value = { FooTestLifecycleExtension.class,
+			BarTestLifecycleExtension.class }, order = TestExtension.OrderPosition.INNERMOST)
+	private static class TestLifecycleTestCase {
 
 		static boolean beforeEachInvoked = false;
 
@@ -85,7 +87,7 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 	private static List<String> preBeforeEachMethods = new ArrayList<>();
 	private static List<String> postAfterEachMethods = new ArrayList<>();
 
-	private static class FooMethodLevelCallbacks implements TestLifecycleExtension {
+	private static class FooTestLifecycleExtension implements TestLifecycleExtension {
 
 		@Override
 		public void beforeEach(TestExtensionContext methodExecutionContext) {
@@ -99,7 +101,7 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
 	}
 
-	private static class BarMethodLevelCallbacks implements TestLifecycleExtension {
+	private static class BarTestLifecycleExtension implements TestLifecycleExtension {
 
 		@Override
 		public void beforeEach(TestExtensionContext testExtensionContext) {
