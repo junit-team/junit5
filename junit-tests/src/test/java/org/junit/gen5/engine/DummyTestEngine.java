@@ -64,6 +64,7 @@ public final class DummyTestEngine implements TestEngine {
 		when(descriptor.getUniqueId()).thenReturn(ENGINE_ID + ":" + name);
 		when(descriptor.getParent()).thenReturn((Optional) Optional.empty());
 		when(descriptor.getSource()).thenReturn((Optional) Optional.empty());
+		when(descriptor.getTags()).thenReturn(emptySet());
 		when(descriptor.getChildren()).thenAnswer(invocation -> children);
 		when(descriptor.countStaticTests()).thenAnswer(invocation -> children.size());
 		return descriptor;

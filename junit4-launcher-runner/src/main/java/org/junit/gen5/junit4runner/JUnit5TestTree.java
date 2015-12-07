@@ -13,14 +13,14 @@ package org.junit.gen5.junit4runner;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.runner.Description;
 
 class JUnit5TestTree {
 
 	private final Description suiteDescription;
-	private final Map<TestDescriptor, Description> descriptions = new HashMap<>();
+	private final Map<TestIdentifier, Description> descriptions = new HashMap<>();
 
 	JUnit5TestTree(TestPlan plan, Class<?> testClass) {
 		suiteDescription = generateDescription(plan, testClass);
@@ -30,35 +30,36 @@ class JUnit5TestTree {
 		return suiteDescription;
 	}
 
-	Description getDescription(TestDescriptor testDescriptor) {
-		return descriptions.get(testDescriptor);
+	Description getDescription(TestIdentifier identifier) {
+		return descriptions.get(identifier);
 	}
 
-	private Description generateDescription(TestPlan plan, Class<?> testClass) {
+	private Description generateDescription(TestPlan testPlan, Class<?> testClass) {
 		Description suiteDescription = Description.createSuiteDescription(testClass.getName());
-		buildDescriptionTree(suiteDescription, plan);
+		buildDescriptionTree(suiteDescription, testPlan);
 		return suiteDescription;
 	}
 
-	private void buildDescriptionTree(Description suiteDescription, TestPlan plan) {
-		plan.getEngineRootTestDescriptors().stream().forEach(
-			testDescriptor -> buildDescription(testDescriptor, suiteDescription));
+	private void buildDescriptionTree(Description suiteDescription, TestPlan testPlan) {
+		testPlan.getRoots().stream().forEach(
+			testIdentifier -> buildDescription(testIdentifier, suiteDescription, testPlan));
 	}
 
-	private void buildDescription(TestDescriptor descriptor, Description parent) {
-		Description newDescription = createJUnit4Description(descriptor);
+	private void buildDescription(TestIdentifier identifier, Description parent, TestPlan testPlan) {
+		Description newDescription = createJUnit4Description(identifier, testPlan);
 		parent.addChild(newDescription);
-		descriptions.put(descriptor, newDescription);
-		descriptor.getChildren().stream().forEach(testDescriptor -> buildDescription(testDescriptor, newDescription));
+		descriptions.put(identifier, newDescription);
+		testPlan.getChildren(identifier).stream().forEach(
+			testIdentifier -> buildDescription(testIdentifier, newDescription, testPlan));
 	}
 
-	private Description createJUnit4Description(TestDescriptor testDescriptor) {
-		if (testDescriptor.isTest()) {
-			return Description.createTestDescription(testDescriptor.getParent().get().getDisplayName(),
-				testDescriptor.getDisplayName(), testDescriptor.getUniqueId());
+	private Description createJUnit4Description(TestIdentifier identifier, TestPlan testPlan) {
+		if (identifier.isTest()) {
+			return Description.createTestDescription(testPlan.getParent(identifier).get().getDisplayName(),
+				identifier.getDisplayName(), identifier.getUniqueId());
 		}
 		else {
-			return Description.createSuiteDescription(testDescriptor.getDisplayName(), testDescriptor.getUniqueId());
+			return Description.createSuiteDescription(identifier.getDisplayName(), identifier.getUniqueId());
 		}
 	}
 }

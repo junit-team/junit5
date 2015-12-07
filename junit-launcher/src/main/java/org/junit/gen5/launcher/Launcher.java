@@ -47,28 +47,33 @@ public class Launcher {
 	}
 
 	public TestPlan discover(TestPlanSpecification specification) {
-		TestPlan testPlan = new TestPlan();
+		return TestPlan.from(discoverRootDescriptor(specification));
+	}
+
+	private RootTestDescriptor discoverRootDescriptor(TestPlanSpecification specification) {
+		RootTestDescriptor root = new RootTestDescriptor();
 		for (TestEngine testEngine : testEngineRegistry.lookupAllTestEngines()) {
 			LOG.info("Discovering tests in engine " + testEngine.getId());
-			TestDescriptor rootTestDescriptor = testEngine.discoverTests(specification);
-			testPlan.addTestDescriptorForEngine(testEngine, rootTestDescriptor);
+			TestDescriptor engineRoot = testEngine.discoverTests(specification);
+			root.addTestDescriptorForEngine(testEngine, engineRoot);
 		}
-		testPlan.applyFilters(specification);
-		testPlan.prune();
-		return testPlan;
+		root.applyFilters(specification);
+		root.prune();
+		return root;
 	}
 
 	public void execute(TestPlanSpecification specification) {
-		execute(discover(specification));
+		execute(discoverRootDescriptor(specification));
 	}
 
-	public void execute(TestPlan testPlan) {
+	private void execute(RootTestDescriptor root) {
 		TestPlanExecutionListener testPlanExecutionListener = listenerRegistry.getCompositeTestPlanExecutionListener();
 		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
 
+		TestPlan testPlan = TestPlan.from(root);
 		testPlanExecutionListener.testPlanExecutionStarted(testPlan);
 		for (TestEngine testEngine : getAvailableEngines()) {
-			Optional<TestDescriptor> testDescriptorOptional = testPlan.getTestDescriptorFor(testEngine);
+			Optional<TestDescriptor> testDescriptorOptional = root.getTestDescriptorFor(testEngine);
 			testDescriptorOptional.ifPresent(testDescriptor -> {
 				testPlanExecutionListener.testPlanExecutionStartedOnEngine(testPlan, testEngine);
 				testEngine.execute(new ExecutionRequest(testDescriptor, testExecutionListener));
