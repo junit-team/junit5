@@ -1,4 +1,5 @@
 apply plugin: 'org.asciidoctor.convert'
+apply plugin: "org.ajoberstar.github-pages"
 
 uploadArchives.enabled = false
 test.enabled = false
@@ -13,6 +14,22 @@ dependencies {
 	compile(project(':junit5-api'))
 	compile(project(':junit5-engine'))
 }
+
+githubPages {
+	repoUri = 'https://github.com/junit-team/junit-lambda.git'
+
+	credentials {
+		username = project.hasProperty('githubToken') ? project.githubToken : ''
+		password = ''
+	}
+
+	pages {
+		from file(asciidoctor.outputDir.path + '/html5')
+		from file('src/docs/static')
+	}
+}
+
+publishGhPages.dependsOn asciidoctor
 
 asciidoctor {
 	attributes	'mainDir': project.sourceSets.main.java.srcDirs[0],
