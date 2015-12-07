@@ -17,10 +17,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -30,7 +30,7 @@ public class Launcher {
 
 	private static final Logger LOG = Logger.getLogger(Launcher.class.getName());
 
-	private final TestListenerRegistry listenerRegistry = new TestListenerRegistry();
+	private final TestExecutionListenerRegistry listenerRegistry = new TestExecutionListenerRegistry();
 	private final TestEngineRegistry testEngineRegistry;
 
 	public Launcher() {
@@ -42,7 +42,7 @@ public class Launcher {
 		this.testEngineRegistry = testEngineRegistry;
 	}
 
-	public void registerTestPlanExecutionListeners(TestExecutionListener... testListeners) {
+	public void registerTestExecutionListeners(TestExecutionListener... testListeners) {
 		listenerRegistry.registerListener(testListeners);
 	}
 
@@ -67,24 +67,69 @@ public class Launcher {
 	}
 
 	private void execute(RootTestDescriptor root) {
-		TestPlanExecutionListener testPlanExecutionListener = listenerRegistry.getCompositeTestPlanExecutionListener();
 		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
 
 		TestPlan testPlan = TestPlan.from(root);
-		testPlanExecutionListener.testPlanExecutionStarted(testPlan);
+		testExecutionListener.testPlanExecutionStarted(testPlan);
 		for (TestEngine testEngine : getAvailableEngines()) {
 			Optional<TestDescriptor> testDescriptorOptional = root.getTestDescriptorFor(testEngine);
 			testDescriptorOptional.ifPresent(testDescriptor -> {
-				testPlanExecutionListener.testPlanExecutionStartedOnEngine(testPlan, testEngine);
-				testEngine.execute(new ExecutionRequest(testDescriptor, testExecutionListener));
-				testPlanExecutionListener.testPlanExecutionFinishedOnEngine(testPlan, testEngine);
+				testExecutionListener.testPlanExecutionStartedOnEngine(testPlan, testEngine);
+				testEngine.execute(new ExecutionRequest(testDescriptor,
+					new ExecutionListenerAdapter(testPlan, testExecutionListener)));
+				testExecutionListener.testPlanExecutionFinishedOnEngine(testPlan, testEngine);
 			});
 		}
-		testPlanExecutionListener.testPlanExecutionFinished(testPlan);
+		testExecutionListener.testPlanExecutionFinished(testPlan);
 	}
 
 	public Set<TestEngine> getAvailableEngines() {
 		return stream(testEngineRegistry.lookupAllTestEngines().spliterator(), false).collect(toSet());
+	}
+
+	static class ExecutionListenerAdapter implements EngineExecutionListener {
+
+		private final TestPlan testPlan;
+		private final TestExecutionListener testExecutionListener;
+
+		public ExecutionListenerAdapter(TestPlan testPlan, TestExecutionListener testExecutionListener) {
+			this.testPlan = testPlan;
+			this.testExecutionListener = testExecutionListener;
+		}
+
+		@Override
+		public void dynamicTestFound(TestDescriptor testDescriptor) {
+			testExecutionListener.dynamicTestFound(getTestIdentifier(testDescriptor));
+		}
+
+		@Override
+		public void testStarted(TestDescriptor testDescriptor) {
+			testExecutionListener.testStarted(getTestIdentifier(testDescriptor));
+		}
+
+		@Override
+		public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
+			testExecutionListener.testSkipped(getTestIdentifier(testDescriptor), t);
+		}
+
+		@Override
+		public void testAborted(TestDescriptor testDescriptor, Throwable t) {
+			testExecutionListener.testAborted(getTestIdentifier(testDescriptor), t);
+		}
+
+		@Override
+		public void testFailed(TestDescriptor testDescriptor, Throwable t) {
+			testExecutionListener.testFailed(getTestIdentifier(testDescriptor), t);
+		}
+
+		@Override
+		public void testSucceeded(TestDescriptor testDescriptor) {
+			testExecutionListener.testSucceeded(getTestIdentifier(testDescriptor));
+		}
+
+		private TestIdentifier getTestIdentifier(TestDescriptor testDescriptor) {
+			return testPlan.getTestIdentifier(new TestId(testDescriptor.getUniqueId()));
+		}
 	}
 
 }

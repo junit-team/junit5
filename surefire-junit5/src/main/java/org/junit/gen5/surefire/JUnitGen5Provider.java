@@ -68,7 +68,7 @@ public class JUnitGen5Provider extends AbstractProvider {
 		ReporterFactory reporterFactory = parameters.getReporterFactory();
 		try {
 			RunListener runListener = reporterFactory.createReporter();
-			launcher.registerTestPlanExecutionListeners(new RunListenerAdapter(runListener));
+			launcher.registerTestExecutionListeners(new RunListenerAdapter(runListener));
 
 			for (Class<?> testClass : testsToRun) {
 				invokeSingleClass(testClass, launcher, runListener);

@@ -10,8 +10,7 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.engine.TestPlanSpecification.build;
-import static org.junit.gen5.engine.TestPlanSpecification.forClass;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -26,14 +25,14 @@ abstract class AbstractJUnit5TestEngineTestCase {
 
 	protected final JUnit5TestEngine engine = new JUnit5TestEngine();
 
-	protected TrackingTestExecutionListener executeTestsForClass(Class<?> testClass, int expectedDescriptorCount) {
+	protected TrackingEngineExecutionListener executeTestsForClass(Class<?> testClass, int expectedDescriptorCount) {
 		TestPlanSpecification spec = build(forClass(testClass));
 		return executeTests(spec, expectedDescriptorCount);
 	}
 
-	protected TrackingTestExecutionListener executeTests(TestPlanSpecification spec, int expectedDescriptorCount) {
+	protected TrackingEngineExecutionListener executeTests(TestPlanSpecification spec, int expectedDescriptorCount) {
 		TestDescriptor testDescriptor = discoverTests(spec);
-		TrackingTestExecutionListener listener = new TrackingTestExecutionListener();
+		TrackingEngineExecutionListener listener = new TrackingEngineExecutionListener();
 		engine.execute(new ExecutionRequest(testDescriptor, listener));
 		return listener;
 	}

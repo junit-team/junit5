@@ -41,7 +41,7 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase 
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.CoreJUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
 			forClass(LocalTestCase.class));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 8);
+		TrackingEngineExecutionListener listener = executeTests(spec, 8);
 
 		Assert.assertEquals("# tests started", 7, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 4, listener.testSucceededCount.get());
@@ -54,7 +54,7 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase 
 	public void executeTestsForClass() {
 		LocalTestCase.countAfterInvoked = 0;
 
-		TrackingTestExecutionListener listener = executeTestsForClass(LocalTestCase.class, 8);
+		TrackingEngineExecutionListener listener = executeTestsForClass(LocalTestCase.class, 8);
 
 		Assert.assertEquals("# tests started", 7, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 4, listener.testSucceededCount.get());
@@ -70,7 +70,7 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase 
 		TestPlanSpecification spec = build(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.CoreJUnit5TestEngineTests$LocalTestCase#alwaysPasses()"));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 2);
+		TrackingEngineExecutionListener listener = executeTests(spec, 2);
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
@@ -84,7 +84,7 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase 
 		TestPlanSpecification spec = build(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.CoreJUnit5TestEngineTests$LocalTestCase#throwExceptionInAfterMethod()"));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 2);
+		TrackingEngineExecutionListener listener = executeTests(spec, 2);
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());

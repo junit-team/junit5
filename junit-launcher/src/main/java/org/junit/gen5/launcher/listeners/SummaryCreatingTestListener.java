@@ -10,25 +10,31 @@
 
 package org.junit.gen5.launcher.listeners;
 
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestExecutionListener;
+import static java.util.stream.Stream.concat;
+
+import java.util.stream.Stream;
+
+import org.junit.gen5.launcher.TestExecutionListener;
+import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
-import org.junit.gen5.launcher.TestPlanExecutionListener;
 
 /**
  * @since 5.0
  */
-public class SummaryCreatingTestListener implements TestPlanExecutionListener, TestExecutionListener {
+public class SummaryCreatingTestListener implements TestExecutionListener {
 
-	private final TestExecutionSummary summary;
+	private TestPlan testPlan;
+	private TestExecutionSummary summary;
 
-	public SummaryCreatingTestListener(TestExecutionSummary summary) {
-		this.summary = summary;
+	public TestExecutionSummary getSummary() {
+		return summary;
 	}
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
-		summary.testsFound.set(testPlan.countStaticTests());
+		this.testPlan = testPlan;
+		this.summary = new TestExecutionSummary(testPlan);
+		summary.testsFound.set(testPlan.countTestIdentifiers(TestIdentifier::isTest));
 		summary.timeStarted = System.currentTimeMillis();
 	}
 
@@ -54,33 +60,38 @@ public class SummaryCreatingTestListener implements TestPlanExecutionListener, T
 	}
 
 	@Override
-	public void dynamicTestFound(TestDescriptor testDescriptor) {
+	public void dynamicTestFound(TestIdentifier testIdentifier) {
 		summary.testsFound.incrementAndGet();
 	}
 
 	@Override
-	public void testStarted(TestDescriptor testDescriptor) {
+	public void testStarted(TestIdentifier testIdentifier) {
 		summary.testsStarted.incrementAndGet();
 	}
 
 	@Override
-	public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-		summary.testsSkipped.addAndGet(testDescriptor.countStaticTests());
+	public void testSkipped(TestIdentifier testIdentifier, Throwable t) {
+		// @formatter:off
+		long skippedTests = concat(Stream.of(testIdentifier), testPlan.getDescendants(testIdentifier).stream())
+				.filter(TestIdentifier::isTest)
+				.count();
+		// @formatter:on
+		summary.testsSkipped.addAndGet(skippedTests);
 	}
 
 	@Override
-	public void testAborted(TestDescriptor testDescriptor, Throwable t) {
+	public void testAborted(TestIdentifier testIdentifier, Throwable t) {
 		summary.testsAborted.incrementAndGet();
 	}
 
 	@Override
-	public void testFailed(TestDescriptor testDescriptor, Throwable t) {
+	public void testFailed(TestIdentifier testIdentifier, Throwable t) {
 		summary.testsFailed.incrementAndGet();
-		summary.addFailure(testDescriptor, t);
+		summary.addFailure(testIdentifier, t);
 	}
 
 	@Override
-	public void testSucceeded(TestDescriptor testDescriptor) {
+	public void testSucceeded(TestIdentifier testIdentifier) {
 		summary.testsSucceeded.incrementAndGet();
 	}
 

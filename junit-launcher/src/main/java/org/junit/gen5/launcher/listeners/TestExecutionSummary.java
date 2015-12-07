@@ -17,12 +17,13 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.launcher.RootTestDescriptor;
+import org.junit.gen5.launcher.TestIdentifier;
+import org.junit.gen5.launcher.TestPlan;
 
 // TODO Give it a REAL interface and make it threadsafe
 public class TestExecutionSummary {
+
+	private final TestPlan testPlan;
 
 	final AtomicLong testsStarted = new AtomicLong();
 	final AtomicLong testsFound = new AtomicLong();
@@ -37,6 +38,10 @@ public class TestExecutionSummary {
 
 	private String message;
 	private List<Failure> failures = new ArrayList<>();
+
+	public TestExecutionSummary(TestPlan testPlan) {
+		this.testPlan = testPlan;
+	}
 
 	void finishTestRun(String message) {
 		this.timeFinished = System.currentTimeMillis();
@@ -68,8 +73,8 @@ public class TestExecutionSummary {
 			writer.println(String.format("Test failures (%d):", testsFailed.get()));
 			failures.stream().forEach(failure -> {
 				// TODO Add source description to text
-				writer.println(String.format("  %s", describeTest(failure.getDescriptor())));
-				failure.getDescriptor().getSource().ifPresent(scource -> {
+				writer.println(String.format("  %s", describeTest(failure.getTestIdentifier())));
+				failure.getTestIdentifier().getSource().ifPresent(scource -> {
 					writer.println(String.format("    %s", scource.toString()));
 				});
 				writer.println(String.format("    => Exception: %s", failure.getException().getLocalizedMessage()));
@@ -79,24 +84,16 @@ public class TestExecutionSummary {
 		writer.flush();
 	}
 
-	private String describeTest(TestDescriptor descriptor) {
+	private String describeTest(TestIdentifier testIdentifier) {
 		List<String> descriptionParts = new ArrayList<>();
-		collectTestDescription(Optional.of(descriptor), descriptionParts);
+		collectTestDescription(Optional.of(testIdentifier), descriptionParts);
 		return descriptionParts.stream().collect(Collectors.joining(":"));
 	}
 
-	private void collectTestDescription(Optional<? extends TestDescriptor> optionalDescriptor,
-			List<String> descriptionParts) {
-		optionalDescriptor.ifPresent(descriptor -> {
-			if (descriptor instanceof RootTestDescriptor) {
-			}
-			else if (descriptor instanceof EngineDescriptor) {
-				descriptionParts.add(0, descriptor.getUniqueId());
-			}
-			else {
-				descriptionParts.add(0, descriptor.getDisplayName());
-			}
-			collectTestDescription(descriptor.getParent(), descriptionParts);
+	private void collectTestDescription(Optional<TestIdentifier> optionalIdentifier, List<String> descriptionParts) {
+		optionalIdentifier.ifPresent(testIdentifier -> {
+			descriptionParts.add(0, testIdentifier.getDisplayName());
+			collectTestDescription(testPlan.getParent(testIdentifier), descriptionParts);
 		});
 	}
 
@@ -104,22 +101,22 @@ public class TestExecutionSummary {
 		return testsFailed.get();
 	}
 
-	public void addFailure(TestDescriptor testDescriptor, Throwable throwable) {
-		failures.add(new Failure(testDescriptor, throwable));
+	public void addFailure(TestIdentifier testIdentifier, Throwable throwable) {
+		failures.add(new Failure(testIdentifier, throwable));
 	}
 
 	static class Failure {
 
-		private final TestDescriptor descriptor;
+		private final TestIdentifier testIdentifier;
 		private final Throwable exception;
 
-		public Failure(TestDescriptor descriptor, Throwable exception) {
-			this.descriptor = descriptor;
+		public Failure(TestIdentifier testIdentifier, Throwable exception) {
+			this.testIdentifier = testIdentifier;
 			this.exception = exception;
 		}
 
-		public TestDescriptor getDescriptor() {
-			return descriptor;
+		public TestIdentifier getTestIdentifier() {
+			return testIdentifier;
 		}
 
 		public Throwable getException() {

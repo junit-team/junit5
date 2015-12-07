@@ -51,12 +51,12 @@ public class ExecuteTestsTask implements ConsoleTask {
 		Launcher launcher = launcherSupplier.get();
 		// TODO Configure launcher?
 
-		TestExecutionSummary summary = new TestExecutionSummary();
-		registerListeners(launcher, summary, out);
+		SummaryCreatingTestListener summaryListener = registerListeners(out, launcher);
 
 		TestPlanSpecification specification = new TestPlanSpecificationCreator().toTestPlanSpecification(options);
 		launcher.execute(specification);
 
+		TestExecutionSummary summary = summaryListener.getSummary();
 		printSummary(summary, out);
 
 		return computeExitCode(summary);
@@ -73,13 +73,14 @@ public class ExecuteTestsTask implements ConsoleTask {
 		return Optional.empty();
 	}
 
-	private void registerListeners(Launcher launcher, TestExecutionSummary summary, PrintWriter out) {
-		SummaryCreatingTestListener testSummaryListener = new SummaryCreatingTestListener(summary);
-		launcher.registerTestPlanExecutionListeners(testSummaryListener);
+	private SummaryCreatingTestListener registerListeners(PrintWriter out, Launcher launcher) {
+		SummaryCreatingTestListener summaryListener = new SummaryCreatingTestListener();
+		launcher.registerTestExecutionListeners(summaryListener);
 		if (!options.isHideDetails()) {
-			launcher.registerTestPlanExecutionListeners(
+			launcher.registerTestExecutionListeners(
 				new ColoredPrintingTestListener(out, options.isAnsiColorOutputDisabled()));
 		}
+		return summaryListener;
 	}
 
 	private void printSummary(TestExecutionSummary summary, PrintWriter out) {

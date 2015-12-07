@@ -19,6 +19,13 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.TestTag;
 
+/**
+ * Immutable data transfer object that describes a test or a test container.
+ * 
+ * @see TestPlan
+ * 
+ * @since 5.0
+ */
 public final class TestIdentifier {
 
 	private final TestId uniqueId;
@@ -31,7 +38,7 @@ public final class TestIdentifier {
 
 	private final TestId parentId;
 
-	public static TestIdentifier from(TestDescriptor testDescriptor) {
+	static TestIdentifier from(TestDescriptor testDescriptor) {
 		// TODO Use Flyweight Pattern for TestId?
 		TestId uniqueId = new TestId(testDescriptor.getUniqueId());
 		String displayName = testDescriptor.getDisplayName();
@@ -100,6 +107,11 @@ public final class TestIdentifier {
 	@Override
 	public int hashCode() {
 		return uniqueId.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return getDisplayName() + " [" + uniqueId + "]";
 	}
 
 }
