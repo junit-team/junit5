@@ -17,6 +17,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
@@ -87,7 +88,17 @@ public final class TestPlan {
 		return allIdentifiers.get(testId);
 	}
 
-	public long countStaticTests() {
-		return allIdentifiers.values().stream().filter(TestIdentifier::isTest).count();
+	public long countTestIdentifiers(Predicate<? super TestIdentifier> predicate) {
+		return allIdentifiers.values().stream().filter(predicate).count();
+	}
+
+	public Set<TestIdentifier> getDescendants(TestIdentifier parent) {
+		Set<TestIdentifier> result = new LinkedHashSet<>();
+		Set<TestIdentifier> children = getChildren(parent);
+		result.addAll(children);
+		for (TestIdentifier child : children) {
+			result.addAll(getDescendants(child));
+		}
+		return result;
 	}
 }

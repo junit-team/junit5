@@ -40,4 +40,9 @@ public final class TestId implements Serializable {
 		return uniqueId.hashCode();
 	}
 
+	@Override
+	public String toString() {
+		return uniqueId;
+	}
+
 }

@@ -10,16 +10,15 @@
 
 package org.junit.gen5.junit4runner;
 
-import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
-import org.junit.gen5.launcher.TestPlanExecutionListener;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
-class JUnit5RunnerListener implements TestPlanExecutionListener {
+class JUnit5RunnerListener implements TestExecutionListener {
 
 	private final JUnit5TestTree testTree;
 	private final RunNotifier notifier;
@@ -42,19 +41,19 @@ class JUnit5RunnerListener implements TestPlanExecutionListener {
 	}
 
 	@Override
-	public void dynamicTestFound(TestDescriptor testDescriptor) {
+	public void dynamicTestFound(TestIdentifier testIdentifier) {
 		System.out.println("JUnit5 test runner cannot handle dynamic tests");
 	}
 
 	@Override
-	public void testStarted(TestDescriptor testDescriptor) {
-		Description description = findJUnit4Description(testDescriptor);
+	public void testStarted(TestIdentifier testIdentifier) {
+		Description description = findJUnit4Description(testIdentifier);
 		notifier.fireTestStarted(description);
 	}
 
 	@Override
-	public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-		Description description = findJUnit4Description(testDescriptor);
+	public void testSkipped(TestIdentifier testIdentifier, Throwable t) {
+		Description description = findJUnit4Description(testIdentifier);
 		// TODO We call this after calling fireTestStarted. This leads to a wrong test
 		// count in Eclipse.
 		notifier.fireTestIgnored(description);
@@ -62,27 +61,27 @@ class JUnit5RunnerListener implements TestPlanExecutionListener {
 	}
 
 	@Override
-	public void testAborted(TestDescriptor testDescriptor, Throwable t) {
-		Description description = findJUnit4Description(testDescriptor);
+	public void testAborted(TestIdentifier testIdentifier, Throwable t) {
+		Description description = findJUnit4Description(testIdentifier);
 		notifier.fireTestAssumptionFailed(new Failure(description, t));
 		notifier.fireTestFinished(description);
 	}
 
 	@Override
-	public void testFailed(TestDescriptor testDescriptor, Throwable t) {
-		Description description = findJUnit4Description(testDescriptor);
+	public void testFailed(TestIdentifier testIdentifier, Throwable t) {
+		Description description = findJUnit4Description(testIdentifier);
 		notifier.fireTestFailure(new Failure(description, t));
 		notifier.fireTestFinished(description);
 	}
 
 	@Override
-	public void testSucceeded(TestDescriptor testDescriptor) {
-		Description description = findJUnit4Description(testDescriptor);
+	public void testSucceeded(TestIdentifier testIdentifier) {
+		Description description = findJUnit4Description(testIdentifier);
 		notifier.fireTestFinished(description);
 	}
 
-	private Description findJUnit4Description(TestDescriptor testDescriptor) {
-		return testTree.getDescription(TestIdentifier.from(testDescriptor));
+	private Description findJUnit4Description(TestIdentifier testIdentifier) {
+		return testTree.getDescription(testIdentifier);
 	}
 
 }

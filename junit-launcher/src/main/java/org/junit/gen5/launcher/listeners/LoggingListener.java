@@ -13,12 +13,12 @@ package org.junit.gen5.launcher.listeners;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.launcher.TestExecutionListener;
+import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
-import org.junit.gen5.launcher.TestPlanExecutionListener;
 
-public class LoggingListener implements TestPlanExecutionListener {
+public class LoggingListener implements TestExecutionListener {
 
 	private static final Logger LOG = Logger.getLogger(LoggingListener.class.getName());
 
@@ -64,32 +64,32 @@ public class LoggingListener implements TestPlanExecutionListener {
 	}
 
 	@Override
-	public void dynamicTestFound(TestDescriptor testDescriptor) {
-		log("dynamicTestFound: %s - %s", testDescriptor.getDisplayName(), testDescriptor.getUniqueId());
+	public void dynamicTestFound(TestIdentifier testIdentifier) {
+		log("dynamicTestFound: %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
 	}
 
 	@Override
-	public void testStarted(TestDescriptor testDescriptor) {
-		log("testStarted: %s - %s", testDescriptor.getDisplayName(), testDescriptor.getUniqueId());
+	public void testStarted(TestIdentifier testIdentifier) {
+		log("testStarted: %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
 	}
 
 	@Override
-	public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-		log("testSkipped: %s - %s - %s", testDescriptor.getDisplayName(), testDescriptor.getUniqueId(), t.getMessage());
+	public void testSkipped(TestIdentifier testIdentifier, Throwable t) {
+		log("testSkipped: %s - %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId(), t.getMessage());
 	}
 
 	@Override
-	public void testAborted(TestDescriptor testDescriptor, Throwable t) {
-		log("testAborted: %s - %s - %s", testDescriptor.getDisplayName(), testDescriptor.getUniqueId(), t.getMessage());
+	public void testAborted(TestIdentifier testIdentifier, Throwable t) {
+		log("testAborted: %s - %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId(), t.getMessage());
 	}
 
 	@Override
-	public void testFailed(TestDescriptor testDescriptor, Throwable t) {
-		log("testFailed: %s - %s - %s", testDescriptor.getDisplayName(), testDescriptor.getUniqueId(), t.getMessage());
+	public void testFailed(TestIdentifier testIdentifier, Throwable t) {
+		log("testFailed: %s - %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId(), t.getMessage());
 	}
 
 	@Override
-	public void testSucceeded(TestDescriptor testDescriptor) {
-		log("testSucceeded: %s - %s", testDescriptor.getDisplayName(), testDescriptor.getUniqueId());
+	public void testSucceeded(TestIdentifier testIdentifier) {
+		log("testSucceeded: %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
 	}
 }

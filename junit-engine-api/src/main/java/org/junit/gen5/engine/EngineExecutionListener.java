@@ -13,7 +13,7 @@ package org.junit.gen5.engine;
 /**
  * @since 5.0
  */
-public interface TestExecutionListener {
+public interface EngineExecutionListener {
 
 	default void dynamicTestFound(TestDescriptor testDescriptor) {
 	}

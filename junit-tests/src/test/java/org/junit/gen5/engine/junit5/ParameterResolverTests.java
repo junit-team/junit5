@@ -37,7 +37,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 
 	@org.junit.Test
 	public void executeTestsForMethodInjectionCases() {
-		TrackingTestExecutionListener listener = executeTestsForClass(MethodInjectionTestCase.class, 9);
+		TrackingEngineExecutionListener listener = executeTestsForClass(MethodInjectionTestCase.class, 9);
 
 		Assert.assertEquals("# tests started", 8, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 7, listener.testSucceededCount.get());
@@ -48,7 +48,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 
 	@org.junit.Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterMethodsCases() {
-		TrackingTestExecutionListener listener = executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class, 2);
+		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class, 2);
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
@@ -59,7 +59,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 
 	@org.junit.Test
 	public void executeTestsForMethodWithExtendWithAnnotation() {
-		TrackingTestExecutionListener listener = executeTestsForClass(ExtendWithOnMethodTestCase.class, 2);
+		TrackingEngineExecutionListener listener = executeTestsForClass(ExtendWithOnMethodTestCase.class, 2);
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());

@@ -12,8 +12,9 @@ package org.junit.gen5.engine.junit5;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestExecutionListener;
+import org.junit.gen5.launcher.TestExecutionListener;
 
 /**
  * Simple {@link TestExecutionListener} that tracks the number of times
@@ -21,7 +22,7 @@ import org.junit.gen5.engine.TestExecutionListener;
  *
  * @since 5.0
  */
-public class TrackingTestExecutionListener implements TestExecutionListener {
+public class TrackingEngineExecutionListener implements EngineExecutionListener {
 
 	public final AtomicInteger testStartedCount = new AtomicInteger();
 	public final AtomicInteger testSucceededCount = new AtomicInteger();

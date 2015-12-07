@@ -29,19 +29,15 @@ import org.junit.gen5.engine.TestTag;
 /**
  * @since 5.0
  */
-public final class RootTestDescriptor implements TestDescriptor {
+final class RootTestDescriptor implements TestDescriptor {
 
 	private final HashMap<String, TestDescriptor> engineRootTestDescriptors = new HashMap<>();
 
-	RootTestDescriptor() {
-		/* no-op */
-	}
-
-	public void addTestDescriptorForEngine(TestEngine testEngine, TestDescriptor testDescriptor) {
+	void addTestDescriptorForEngine(TestEngine testEngine, TestDescriptor testDescriptor) {
 		engineRootTestDescriptors.put(testEngine.getId(), testDescriptor);
 	}
 
-	public Collection<TestDescriptor> getEngineRootTestDescriptors() {
+	Collection<TestDescriptor> getEngineRootTestDescriptors() {
 		return Collections.unmodifiableCollection(engineRootTestDescriptors.values());
 	}
 
@@ -51,7 +47,7 @@ public final class RootTestDescriptor implements TestDescriptor {
 			engineDescriptor -> engineDescriptor.countStaticTests()).sum();
 	}
 
-	public Optional<TestDescriptor> getTestDescriptorFor(TestEngine testEngine) {
+	Optional<TestDescriptor> getTestDescriptorFor(TestEngine testEngine) {
 		return Optional.of(this.engineRootTestDescriptors.get(testEngine.getId()));
 	}
 
@@ -115,6 +111,11 @@ public final class RootTestDescriptor implements TestDescriptor {
 			remove.run();
 		};
 		accept(pruningVisitor);
+	}
+
+	@Override
+	public String toString() {
+		return engineRootTestDescriptors.values().toString();
 	}
 
 }
