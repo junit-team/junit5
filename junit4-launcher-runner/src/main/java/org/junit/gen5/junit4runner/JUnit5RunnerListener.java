@@ -11,6 +11,7 @@
 package org.junit.gen5.junit4runner;
 
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.gen5.launcher.TestPlanExecutionListener;
 import org.junit.runner.Description;
@@ -81,7 +82,7 @@ class JUnit5RunnerListener implements TestPlanExecutionListener {
 	}
 
 	private Description findJUnit4Description(TestDescriptor testDescriptor) {
-		return testTree.getDescription(testDescriptor);
+		return testTree.getDescription(TestIdentifier.from(testDescriptor));
 	}
 
 }

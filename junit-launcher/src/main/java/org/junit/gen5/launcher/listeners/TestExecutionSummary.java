@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.launcher.TestPlan;
+import org.junit.gen5.launcher.RootTestDescriptor;
 
 // TODO Give it a REAL interface and make it threadsafe
 public class TestExecutionSummary {
@@ -88,7 +88,7 @@ public class TestExecutionSummary {
 	private void collectTestDescription(Optional<? extends TestDescriptor> optionalDescriptor,
 			List<String> descriptionParts) {
 		optionalDescriptor.ifPresent(descriptor -> {
-			if (descriptor instanceof TestPlan) {
+			if (descriptor instanceof RootTestDescriptor) {
 			}
 			else if (descriptor instanceof EngineDescriptor) {
 				descriptionParts.add(0, descriptor.getUniqueId());

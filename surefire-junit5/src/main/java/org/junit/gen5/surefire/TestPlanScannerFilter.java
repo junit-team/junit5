@@ -30,6 +30,6 @@ final class TestPlanScannerFilter implements ScannerFilter {
 	public boolean accept(Class testClass) {
 		TestPlanSpecification specification = build(TestPlanSpecification.forClass(testClass));
 		TestPlan testPlan = launcher.discover(specification);
-		return testPlan.hasTests();
+		return testPlan.countStaticTests() > 0;
 	}
 }
