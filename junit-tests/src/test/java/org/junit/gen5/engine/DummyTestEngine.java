@@ -15,33 +15,28 @@ import static org.junit.gen5.engine.DummyTestDescriptor.ENGINE_ID;
 
 import java.util.LinkedHashMap;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.function.BiConsumer;
 
 public final class DummyTestEngine implements TestEngine {
 
-	private final LinkedHashMap<String, Callable<TestResult>> children = new LinkedHashMap<>();
+	private final LinkedHashMap<String, Runnable> children = new LinkedHashMap<>();
 
 	@Override
 	public String getId() {
 		return ENGINE_ID;
 	}
 
-	public void addTest(String uniqueName, TestResult result, Runnable runnable) {
-		children.put(uniqueName, () -> {
-			runnable.run();
-			return result;
-		});
+	public void addTest(String uniqueName, Runnable runnable) {
+		children.put(uniqueName, runnable);
 	}
 
 	@Override
 	public TestDescriptor discoverTests(TestPlanSpecification specification) {
-		DummyTestDescriptor root = new DummyTestDescriptor("root");
 		// @formatter:off
 		Set<DummyTestDescriptor> children = this.children.keySet().stream()
 				.map(DummyTestDescriptor::new)
 				.collect(toSet());
 		// @formatter:on
+		DummyTestDescriptor root = new DummyTestDescriptor("root");
 		children.forEach(root::addChild);
 		return root;
 	}
@@ -50,33 +45,15 @@ public final class DummyTestEngine implements TestEngine {
 	public void execute(ExecutionRequest request) {
 		EngineExecutionListener listener = request.getEngineExecutionListener();
 		for (TestDescriptor childDescriptor : request.getRootTestDescriptor().getChildren()) {
-			Callable<TestResult> callable = children.get(childDescriptor.getDisplayName());
+			Runnable runnable = children.get(childDescriptor.getDisplayName());
 			listener.testStarted(childDescriptor);
 			try {
-				TestResult testResult = callable.call();
-				testResult.accept(listener, childDescriptor);
+				runnable.run();
+				listener.testSucceeded(childDescriptor);
 			}
 			catch (Throwable t) {
 				listener.testFailed(childDescriptor, t);
 			}
 		}
-	}
-
-	public enum TestResult implements BiConsumer<EngineExecutionListener, TestDescriptor> {
-		SUCCESS {
-
-			@Override
-			public void accept(EngineExecutionListener listener, TestDescriptor descriptor) {
-				listener.testSucceeded(descriptor);
-			}
-		},
-
-		FAILURE {
-
-			@Override
-			public void accept(EngineExecutionListener listener, TestDescriptor descriptor) {
-				listener.testFailed(descriptor, new Exception("failure"));
-			}
-		};
 	}
 }

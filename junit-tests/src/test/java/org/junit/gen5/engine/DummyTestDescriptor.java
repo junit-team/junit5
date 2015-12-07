@@ -12,11 +12,12 @@ package org.junit.gen5.engine;
 
 public class DummyTestDescriptor extends AbstractTestDescriptor {
 
-	private final String displayName;
 	public static final String ENGINE_ID = "dummy";
 
+	private final String displayName;
+
 	public DummyTestDescriptor(String displayName) {
-		super(DummyTestDescriptor.ENGINE_ID + ":" + displayName);
+		super(ENGINE_ID + ":" + displayName);
 		this.displayName = displayName;
 	}
 
