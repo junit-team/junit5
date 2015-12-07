@@ -17,6 +17,8 @@ This subproject contains the AsciiDoc sources for the future JUnit 5 User Guide.
 gradle asciidoctor
 ```
 
+This task generates HTML files into `build/asciidoc/html5`.
+
 ### Publish it to GitHub Pages
 
 ```
