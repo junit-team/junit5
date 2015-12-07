@@ -1,0 +1,30 @@
+apply plugin: 'org.asciidoctor.convert'
+
+uploadArchives.enabled = false
+test.enabled = false
+
+dependencies {
+	compile(project(':junit-commons'))
+	compile(project(':junit-console'))
+	compile(project(':junit-engine-api'))
+	compile(project(':junit-launcher'))
+	compile(project(':junit4-launcher-runner'))
+	compile(project(':junit4-engine'))
+	compile(project(':junit5-api'))
+	compile(project(':junit5-engine'))
+}
+
+asciidoctor {
+	attributes	'mainDir': project.sourceSets.main.java.srcDirs[0],
+				'testDir': project.sourceSets.test.java.srcDirs[0],
+				'source-highlighter': 'highlightjs',
+				'highlightjs-theme': 'github',
+				'tabsize': '4',
+				'imagesdir': 'images',
+				'toc': 'left',
+				'icons': 'font',
+				'setanchors': 'true',
+				'idprefix': '',
+				'idseparator': '-',
+				'docinfo1': 'true'
+}
