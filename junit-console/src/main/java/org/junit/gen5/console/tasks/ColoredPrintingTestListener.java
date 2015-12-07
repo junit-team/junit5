@@ -10,24 +10,19 @@
 
 package org.junit.gen5.console.tasks;
 
-import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.BLUE;
-import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.GREEN;
-import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.NONE;
-import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.RED;
-import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.YELLOW;
+import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.*;
 
 import java.io.PrintWriter;
 
-import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestExecutionListener;
+import org.junit.gen5.launcher.TestExecutionListener;
+import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
-import org.junit.gen5.launcher.TestPlanExecutionListener;
 
 /**
  * @since 5.0
  */
-class ColoredPrintingTestListener implements TestPlanExecutionListener, TestExecutionListener {
+class ColoredPrintingTestListener implements TestExecutionListener {
 
 	private final PrintWriter out;
 	private final boolean disableAnsiColors;
@@ -39,7 +34,8 @@ class ColoredPrintingTestListener implements TestPlanExecutionListener, TestExec
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
-		out.printf("Test execution started. Number of static tests: %d%n", testPlan.countStaticTests());
+		out.printf("Test execution started. Number of static tests: %d%n",
+			testPlan.countTestIdentifiers(TestIdentifier::isTest));
 	}
 
 	@Override
@@ -73,40 +69,40 @@ class ColoredPrintingTestListener implements TestPlanExecutionListener, TestExec
 	}
 
 	@Override
-	public void dynamicTestFound(TestDescriptor testDescriptor) {
-		printlnTestDescriptor(BLUE, "Test found:", testDescriptor);
+	public void dynamicTestFound(TestIdentifier testIdentifier) {
+		printlnTestDescriptor(BLUE, "Test found:", testIdentifier);
 	}
 
 	@Override
-	public void testStarted(TestDescriptor testDescriptor) {
-		printlnTestDescriptor(NONE, "Test started:", testDescriptor);
+	public void testStarted(TestIdentifier testIdentifier) {
+		printlnTestDescriptor(NONE, "Test started:", testIdentifier);
 	}
 
 	@Override
-	public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-		printlnTestDescriptor(YELLOW, "Test skipped:", testDescriptor);
+	public void testSkipped(TestIdentifier testIdentifier, Throwable t) {
+		printlnTestDescriptor(YELLOW, "Test skipped:", testIdentifier);
 		printlnException(YELLOW, t);
 	}
 
 	@Override
-	public void testAborted(TestDescriptor testDescriptor, Throwable t) {
-		printlnTestDescriptor(YELLOW, "Test aborted:", testDescriptor);
+	public void testAborted(TestIdentifier testIdentifier, Throwable t) {
+		printlnTestDescriptor(YELLOW, "Test aborted:", testIdentifier);
 		printlnException(YELLOW, t);
 	}
 
 	@Override
-	public void testFailed(TestDescriptor testDescriptor, Throwable t) {
-		printlnTestDescriptor(RED, "Test failed:", testDescriptor);
+	public void testFailed(TestIdentifier testIdentifier, Throwable t) {
+		printlnTestDescriptor(RED, "Test failed:", testIdentifier);
 		printlnException(RED, t);
 	}
 
 	@Override
-	public void testSucceeded(TestDescriptor testDescriptor) {
-		printlnTestDescriptor(GREEN, "Test succeeded:", testDescriptor);
+	public void testSucceeded(TestIdentifier testIdentifier) {
+		printlnTestDescriptor(GREEN, "Test succeeded:", testIdentifier);
 	}
 
-	private void printlnTestDescriptor(Color color, String message, TestDescriptor testDescriptor) {
-		println(color, "%-15s   %s [%s]", message, testDescriptor.getDisplayName(), testDescriptor.getUniqueId());
+	private void printlnTestDescriptor(Color color, String message, TestIdentifier testIdentifier) {
+		println(color, "%-15s   %s [%s]", message, testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
 	}
 
 	private void printlnException(Color color, Throwable throwable) {

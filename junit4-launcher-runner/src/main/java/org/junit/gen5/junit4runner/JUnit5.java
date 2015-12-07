@@ -207,7 +207,7 @@ public class JUnit5 extends Runner {
 		specs.addAll(getUniqueIdSpecificationElements());
 		specs.addAll(getPackagesSpecificationElements());
 
-		//Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
+		// Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
 		if (specs.isEmpty()) {
 			specs.add(TestPlanSpecification.forClass(testClass));
 		}
@@ -269,7 +269,7 @@ public class JUnit5 extends Runner {
 		Result result = new Result();
 		notifier.addFirstListener(result.createListener());
 		JUnit5RunnerListener listener = new JUnit5RunnerListener(testTree, notifier, result);
-		launcher.registerTestPlanExecutionListeners(listener);
+		launcher.registerTestExecutionListeners(listener);
 		launcher.execute(specification);
 	}
 

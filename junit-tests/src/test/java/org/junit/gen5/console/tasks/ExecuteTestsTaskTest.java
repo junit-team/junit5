@@ -13,7 +13,6 @@ package org.junit.gen5.console.tasks;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.engine.DummyTestEngine.TestResult.*;
 import static org.junit.gen5.launcher.LauncherFactory.createLauncher;
 
 import java.io.PrintWriter;
@@ -34,8 +33,8 @@ public class ExecuteTestsTaskTest {
 		options.setRunAllTests(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("succeedingTest", SUCCESS, noOp());
-		dummyTestEngine.addTest("failingTest", FAILURE, noOp());
+		dummyTestEngine.addTest("succeedingTest", success());
+		dummyTestEngine.addTest("failingTest", () -> fail("should fail"));
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
 		int exitCode = task.execute(new PrintWriter(stringWriter));
@@ -51,8 +50,8 @@ public class ExecuteTestsTaskTest {
 		options.setExitCodeEnabled(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("succeedingTest", SUCCESS, noOp());
-		dummyTestEngine.addTest("failingTest", FAILURE, noOp());
+		dummyTestEngine.addTest("succeedingTest", success());
+		dummyTestEngine.addTest("failingTest", () -> fail("should fail"));
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
 		int exitCode = task.execute(new PrintWriter(new StringWriter()));
@@ -69,7 +68,7 @@ public class ExecuteTestsTaskTest {
 
 		ClassLoader oldClassLoader = ReflectionUtils.getDefaultClassLoader();
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("failingTest", FAILURE, () -> {
+		dummyTestEngine.addTest("failingTest", () -> {
 			assertSame(oldClassLoader, ReflectionUtils.getDefaultClassLoader(), "should fail");
 		});
 
@@ -88,7 +87,7 @@ public class ExecuteTestsTaskTest {
 		options.setHideDetails(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("failingTest", FAILURE, noOp());
+		dummyTestEngine.addTest("failingTest", () -> fail("should fail"));
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter));
@@ -100,7 +99,7 @@ public class ExecuteTestsTaskTest {
 		// @formatter:on
 	}
 
-	private static Runnable noOp() {
+	private static Runnable success() {
 		return () -> {
 		};
 	}

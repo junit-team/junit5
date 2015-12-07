@@ -58,7 +58,7 @@ public class DisabledTests extends AbstractJUnit5TestEngineTestCase {
 	@org.junit.Test
 	public void executeTestsWithDisabledTestClass() {
 		TestPlanSpecification spec = build(forClass(DisabledTestClassTestCase.class));
-		TrackingTestExecutionListener listener = executeTests(spec, 2);
+		TrackingEngineExecutionListener listener = executeTests(spec, 2);
 
 		Assert.assertEquals("# tests started", 0, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());
@@ -70,7 +70,7 @@ public class DisabledTests extends AbstractJUnit5TestEngineTestCase {
 	@org.junit.Test
 	public void executeTestsWithDisabledTestMethods() {
 		TestPlanSpecification spec = build(forClass(DisabledTestMethodsTestCase.class));
-		TrackingTestExecutionListener listener = executeTests(spec, 6);
+		TrackingEngineExecutionListener listener = executeTests(spec, 6);
 
 		Assert.assertEquals("# tests started", 2, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());

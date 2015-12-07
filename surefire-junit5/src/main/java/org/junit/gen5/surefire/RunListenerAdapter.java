@@ -20,8 +20,8 @@ import org.apache.maven.surefire.report.RunListener;
 import org.apache.maven.surefire.report.SimpleReportEntry;
 import org.apache.maven.surefire.report.StackTraceWriter;
 import org.junit.gen5.engine.JavaSource;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestExecutionListener;
+import org.junit.gen5.launcher.TestExecutionListener;
+import org.junit.gen5.launcher.TestIdentifier;
 
 final class RunListenerAdapter implements TestExecutionListener {
 
@@ -32,44 +32,44 @@ final class RunListenerAdapter implements TestExecutionListener {
 	}
 
 	@Override
-	public void testStarted(TestDescriptor testDescriptor) {
-		runListener.testStarting(createReportEntry(testDescriptor));
+	public void testStarted(TestIdentifier testIdentifier) {
+		runListener.testStarting(createReportEntry(testIdentifier));
 	}
 
 	@Override
-	public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-		runListener.testSkipped(createReportEntry(testDescriptor, t));
+	public void testSkipped(TestIdentifier testIdentifier, Throwable t) {
+		runListener.testSkipped(createReportEntry(testIdentifier, t));
 	}
 
 	@Override
-	public void testAborted(TestDescriptor testDescriptor, Throwable t) {
-		runListener.testAssumptionFailure(createReportEntry(testDescriptor, t));
+	public void testAborted(TestIdentifier testIdentifier, Throwable t) {
+		runListener.testAssumptionFailure(createReportEntry(testIdentifier, t));
 	}
 
 	@Override
-	public void testFailed(TestDescriptor testDescriptor, Throwable t) {
-		runListener.testFailed(createReportEntry(testDescriptor, t));
+	public void testFailed(TestIdentifier testIdentifier, Throwable t) {
+		runListener.testFailed(createReportEntry(testIdentifier, t));
 	}
 
 	@Override
-	public void testSucceeded(TestDescriptor testDescriptor) {
-		runListener.testSucceeded(createReportEntry(testDescriptor));
+	public void testSucceeded(TestIdentifier testIdentifier) {
+		runListener.testSucceeded(createReportEntry(testIdentifier));
 	}
 
-	private SimpleReportEntry createReportEntry(TestDescriptor testDescriptor) {
-		return new SimpleReportEntry(getClassNameOrUniqueId(testDescriptor), testDescriptor.getDisplayName());
+	private SimpleReportEntry createReportEntry(TestIdentifier testIdentifier) {
+		return new SimpleReportEntry(getClassNameOrUniqueId(testIdentifier), testIdentifier.getDisplayName());
 	}
 
-	private SimpleReportEntry createReportEntry(TestDescriptor testDescriptor, Throwable throwable) {
-		Optional<JavaSource> javaSource = getJavaSource(testDescriptor);
+	private SimpleReportEntry createReportEntry(TestIdentifier testIdentifier, Throwable throwable) {
+		Optional<JavaSource> javaSource = getJavaSource(testIdentifier);
 		if (javaSource.isPresent() && javaSource.get().getJavaClass().isPresent()) {
 			Class<?> sourceClass = javaSource.get().getJavaClass().get();
 			Optional<Method> sourceMethod = javaSource.get().getJavaMethod();
 			StackTraceWriter stackTraceWriter = getStackTraceWriter(sourceClass, sourceMethod, throwable);
-			return new SimpleReportEntry(getClassNameOrUniqueId(testDescriptor), testDescriptor.getDisplayName(),
+			return new SimpleReportEntry(getClassNameOrUniqueId(testIdentifier), testIdentifier.getDisplayName(),
 				stackTraceWriter, null);
 		}
-		return ignored(getClassNameOrUniqueId(testDescriptor), testDescriptor.getDisplayName(), throwable.getMessage());
+		return ignored(getClassNameOrUniqueId(testIdentifier), testIdentifier.getDisplayName(), throwable.getMessage());
 	}
 
 	private StackTraceWriter getStackTraceWriter(Class<?> sourceClass, Optional<Method> sourceMethod,
@@ -79,12 +79,12 @@ final class RunListenerAdapter implements TestExecutionListener {
 		return new PojoStackTraceWriter(className, methodName, throwable);
 	}
 
-	private String getClassNameOrUniqueId(TestDescriptor testDescriptor) {
-		return getClassName(testDescriptor).orElse(testDescriptor.getUniqueId());
+	private String getClassNameOrUniqueId(TestIdentifier testIdentifier) {
+		return getClassName(testIdentifier).orElse(testIdentifier.getUniqueId().toString());
 	}
 
-	private Optional<String> getClassName(TestDescriptor testDescriptor) {
-		Optional<JavaSource> javaSource = getJavaSource(testDescriptor);
+	private Optional<String> getClassName(TestIdentifier testIdentifier) {
+		Optional<JavaSource> javaSource = getJavaSource(testIdentifier);
 		if (javaSource.isPresent()) {
 			if (javaSource.get().getJavaClass().isPresent()) {
 				return javaSource.get().getJavaClass().map(Class::getName);
@@ -93,7 +93,7 @@ final class RunListenerAdapter implements TestExecutionListener {
 		return Optional.empty();
 	}
 
-	private Optional<JavaSource> getJavaSource(TestDescriptor testDescriptor) {
-		return testDescriptor.getSource().filter(JavaSource.class::isInstance).map(JavaSource.class::cast);
+	private Optional<JavaSource> getJavaSource(TestIdentifier testIdentifier) {
+		return testIdentifier.getSource().filter(JavaSource.class::isInstance).map(JavaSource.class::cast);
 	}
 }

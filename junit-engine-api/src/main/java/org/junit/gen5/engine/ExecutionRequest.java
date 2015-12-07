@@ -17,21 +17,21 @@ public class ExecutionRequest {
 
 	private final TestDescriptor rootTestDescriptor;
 
-	private final TestExecutionListener testExecutionListener;
+	private final EngineExecutionListener engineExecutionListener;
 
 	private final Map<String, Object> attributes = new HashMap<>();
 
-	public ExecutionRequest(TestDescriptor rootTestDescriptor, TestExecutionListener testExecutionListener) {
+	public ExecutionRequest(TestDescriptor rootTestDescriptor, EngineExecutionListener engineExecutionListener) {
 		this.rootTestDescriptor = rootTestDescriptor;
-		this.testExecutionListener = testExecutionListener;
+		this.engineExecutionListener = engineExecutionListener;
 	}
 
 	public TestDescriptor getRootTestDescriptor() {
 		return rootTestDescriptor;
 	}
 
-	public TestExecutionListener getTestExecutionListener() {
-		return testExecutionListener;
+	public EngineExecutionListener getEngineExecutionListener() {
+		return engineExecutionListener;
 	}
 
 	public Map<String, Object> getAttributes() {

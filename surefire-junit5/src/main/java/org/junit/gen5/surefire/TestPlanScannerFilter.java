@@ -15,6 +15,7 @@ import static org.junit.gen5.engine.TestPlanSpecification.build;
 import org.apache.maven.surefire.util.ScannerFilter;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.launcher.Launcher;
+import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 
 final class TestPlanScannerFilter implements ScannerFilter {
@@ -30,6 +31,6 @@ final class TestPlanScannerFilter implements ScannerFilter {
 	public boolean accept(Class testClass) {
 		TestPlanSpecification specification = build(TestPlanSpecification.forClass(testClass));
 		TestPlan testPlan = launcher.discover(specification);
-		return testPlan.hasTests();
+		return testPlan.countTestIdentifiers(TestIdentifier::isTest) > 0;
 	}
 }

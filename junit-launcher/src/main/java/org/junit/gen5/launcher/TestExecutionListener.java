@@ -11,12 +11,11 @@
 package org.junit.gen5.launcher;
 
 import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestExecutionListener;
 
 /**
  * @since 5.0
  */
-public interface TestPlanExecutionListener extends TestExecutionListener {
+public interface TestExecutionListener {
 
 	default void testPlanExecutionStarted(TestPlan testPlan) {
 	}
@@ -37,5 +36,23 @@ public interface TestPlanExecutionListener extends TestExecutionListener {
 	}
 
 	default void testPlanExecutionFinishedOnEngine(TestPlan testPlan, TestEngine testEngine) {
+	}
+
+	default void dynamicTestFound(TestIdentifier testIdentifier) {
+	}
+
+	default void testStarted(TestIdentifier testIdentifier) {
+	}
+
+	default void testSkipped(TestIdentifier testIdentifier, Throwable t) {
+	}
+
+	default void testAborted(TestIdentifier testIdentifier, Throwable t) {
+	}
+
+	default void testFailed(TestIdentifier testIdentifier, Throwable t) {
+	}
+
+	default void testSucceeded(TestIdentifier testIdentifier) {
 	}
 }

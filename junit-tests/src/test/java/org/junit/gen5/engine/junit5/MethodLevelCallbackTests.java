@@ -42,7 +42,7 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 	public void beforeEachAndAfterEachCallbacksWithTestInstancePerMethod() {
 		TestPlanSpecification spec = build(forClass(InstancePerMethodTestCase.class));
 
-		TrackingTestExecutionListener listener = executeTests(spec, 2);
+		TrackingEngineExecutionListener listener = executeTests(spec, 2);
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
