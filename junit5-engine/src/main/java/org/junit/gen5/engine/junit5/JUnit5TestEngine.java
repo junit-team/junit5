@@ -21,7 +21,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
 import org.junit.gen5.engine.TreeBasedTestEngine;
 
-public class JUnit5TestEngine extends TreeBasedTestEngine {
+public class JUnit5TestEngine extends TreeBasedTestEngine<JUnit5Context> {
 
 	private static final String ENGINE_ID = "junit5";
 
@@ -50,5 +50,10 @@ public class JUnit5TestEngine extends TreeBasedTestEngine {
 			}
 		});
 		return engineDescriptor;
+	}
+
+	@Override
+	protected JUnit5Context createContext() {
+		return new JUnit5Context();
 	}
 }

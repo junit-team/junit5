@@ -1,29 +1,14 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 
 package org.junit.gen5.engine;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class Context {
-
-	private final Map<String, Object> map;
-
-	public Context() {
-		this(new HashMap<>());
-	}
-
-	private Context(Map<String, Object> map) {
-		this.map = map;
-	}
-
-	public Context with(String key, Object value) {
-		Map<String, Object> newMap = new HashMap<>(map);
-		newMap.put(key, value);
-		return new Context(newMap);
-	}
-
-	public <T> T get(String key, Class<T> clazz) {
-		return clazz.cast(map.get(key));
-	}
-
+public interface Context {
 }

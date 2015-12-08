@@ -1,12 +1,20 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 
 package org.junit.gen5.engine.junit5;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
-import org.junit.gen5.engine.Context;
 import org.junit.gen5.engine.Parent;
 
-public class JUnit5ClassDescriptor extends AbstractTestDescriptor implements Parent {
+public class JUnit5ClassDescriptor extends AbstractTestDescriptor implements Parent<JUnit5Context> {
 
 	private final Class<?> testClass;
 
@@ -31,12 +39,12 @@ public class JUnit5ClassDescriptor extends AbstractTestDescriptor implements Par
 	}
 
 	@Override
-	public Context beforeAll(Context context) {
-		return context.with("TestInstanceProvider", testInstanceProvider());
+	public JUnit5Context beforeAll(JUnit5Context context) {
+		return context.withTestInstanceProvider(testInstanceProvider());
 	}
 
 	@Override
-	public Context afterAll(Context context) {
+	public JUnit5Context afterAll(JUnit5Context context) {
 		return context;
 	}
 

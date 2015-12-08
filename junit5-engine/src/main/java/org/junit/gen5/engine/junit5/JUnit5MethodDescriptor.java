@@ -1,3 +1,12 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 
 package org.junit.gen5.engine.junit5;
 
@@ -13,9 +22,8 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.Child;
-import org.junit.gen5.engine.Context;
 
-public class JUnit5MethodDescriptor extends AbstractTestDescriptor implements Child {
+public class JUnit5MethodDescriptor extends AbstractTestDescriptor implements Child<JUnit5Context> {
 
 	private final Class<?> testClass;
 	private final Method method;
@@ -42,8 +50,8 @@ public class JUnit5MethodDescriptor extends AbstractTestDescriptor implements Ch
 	}
 
 	@Override
-	public Context execute(Context context) throws Throwable {
-		TestInstanceProvider provider = context.get("TestInstanceProvider", TestInstanceProvider.class);
+	public JUnit5Context execute(JUnit5Context context) throws Throwable {
+		TestInstanceProvider provider = context.getTestInstanceProvider();
 		Object testInstance = provider.getTestInstance();
 		for (Method method : findAnnotatedMethods(testClass, BeforeEach.class, MethodSortOrder.HierarchyDown)) {
 			ReflectionUtils.invokeMethod(method, testInstance);
