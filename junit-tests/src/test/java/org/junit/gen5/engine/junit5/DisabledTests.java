@@ -27,13 +27,15 @@ import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
+import org.junit.gen5.api.extension.ShouldExecuteExtensionPoint;
+import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.api.extension.TestExtensionContext;
-import org.junit.gen5.api.extension.TestLifecycleExtension;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
- * Integration tests that verify support for {@link Disabled @Disabled} in the
- * {@link JUnit5TestEngine}.
+ * Integration tests that verify support for {@link Disabled @Disabled} in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
@@ -131,21 +133,29 @@ public class DisabledTests extends AbstractJUnit5TestEngineTestCase {
 		String value();
 	}
 
-	private static class SystemPropertyCondition implements TestLifecycleExtension {
+	private static class SystemPropertyCondition implements TestExtension {
 
 		@Override
-		public ConditionEvaluationResult shouldTestBeExecuted(TestExtensionContext context) {
-			Optional<SystemProperty> optional = findAnnotation(context.getTestMethod(), SystemProperty.class);
+		public void registerExtensionPoints(ExtensionPointRegistry registry) {
+			registry.register(this::shouldTestBeExecuted, ShouldExecuteExtensionPoint.class);
+		}
 
-			if (optional.isPresent()) {
-				SystemProperty systemProperty = optional.get();
-				String key = systemProperty.key();
-				String expected = systemProperty.value();
-				String actual = System.getProperty(key);
+		private ConditionEvaluationResult shouldTestBeExecuted(ExtensionContext context) {
+			if (context instanceof TestExtensionContext) {
+				TestExtensionContext testExtensionContext = (TestExtensionContext) context;
+				Optional<SystemProperty> optional = findAnnotation(testExtensionContext.getTestMethod(),
+					SystemProperty.class);
 
-				if (!Objects.equals(expected, actual)) {
-					return ConditionEvaluationResult.disabled(String.format(
-						"System property [%s] has a value of [%s] instead of [%s]", key, actual, expected));
+				if (optional.isPresent()) {
+					SystemProperty systemProperty = optional.get();
+					String key = systemProperty.key();
+					String expected = systemProperty.value();
+					String actual = System.getProperty(key);
+
+					if (!Objects.equals(expected, actual)) {
+						return ConditionEvaluationResult.disabled(String.format(
+							"System property [%s] has a value of [%s] instead of [%s]", key, actual, expected));
+					}
 				}
 			}
 

@@ -14,8 +14,8 @@ package org.junit.gen5.api.extension;
  * Is thrown to signal that the configuration of all extensions valid for a given test or container cannot be fullfilled
  * without violating some contraints.
  * <p>
- * Example: Two extensions declare a {@link org.junit.gen5.api.extension.TestExtension.DefaultOrder} of
- * {@link org.junit.gen5.api.extension.TestExtension.OrderPosition}.OUTERMOST.
+ * Example: Two extensions register the same extension point with position
+ * {@link org.junit.gen5.api.extension.ExtensionPoint.Position}.OUTERMOST.
  * </p>
  * <p>
  * The exception message must make the problem clear and suggest possible solutions.

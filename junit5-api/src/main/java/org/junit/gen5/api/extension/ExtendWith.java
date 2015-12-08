@@ -23,10 +23,14 @@ import java.lang.annotation.Target;
  * that is used to register {@linkplain TestExtension test extensions} for
  * the annotated test class or test method.
  *
- * <h3>Supported Extension APIs</h3>
+ * <h3>Supported Extension Points</h3>
  * <ul>
- * <li>{@link ContainerLifecycleExtension}</li>
- * <li>{@link TestLifecycleExtension}</li>
+ * <li>{@link BeforeEachExtensionPoint}</li>
+ * <li>{@link AfterEachExtensionPoint}</li>
+ * <li>{@link BeforeAllExtensionPoint}</li>
+ * <li>{@link AfterAllExtensionPoint}</li>
+ * <li>{@link ShouldExecuteExtensionPoint}</li>
+ * <li>{@link PostProcessTestInstanceExtensionPoint}</li>
  * <li>{@link MethodParameterResolver}</li>
  * </ul>
  *
@@ -41,7 +45,5 @@ import java.lang.annotation.Target;
 public @interface ExtendWith {
 
 	Class<? extends TestExtension>[]value();
-
-	TestExtension.OrderPosition order() default TestExtension.OrderPosition.DEFAULT;
 
 }

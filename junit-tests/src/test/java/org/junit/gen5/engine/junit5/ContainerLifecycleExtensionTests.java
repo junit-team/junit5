@@ -21,14 +21,17 @@ import org.junit.Ignore;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.api.extension.AfterAllExtensionPoint;
+import org.junit.gen5.api.extension.BeforeAllExtensionPoint;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
-import org.junit.gen5.api.extension.ContainerLifecycleExtension;
 import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
+import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
- * Integration tests that verify support of, and {@link org.junit.gen5.api.extension.ContainerLifecycleExtension} in the
- * {@link JUnit5TestEngine}.
+ * Integration tests that verify support of, and {@link org.junit.gen5.api.extension.AfterAllExtensionPoint} and
+ * {@link org.junit.gen5.api.extension.BeforeAllExtensionPoint} in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
@@ -90,28 +93,37 @@ public class ContainerLifecycleExtensionTests extends AbstractJUnit5TestEngineTe
 	private static List<String> preBeforeAllMethods = new ArrayList<>();
 	private static List<String> postAfterAllMethods = new ArrayList<>();
 
-	private static class FooContainerLifecycleExtension implements ContainerLifecycleExtension {
+	private static class FooContainerLifecycleExtension implements TestExtension {
 
 		@Override
-		public void beforeAll(ContainerExtensionContext containerExtensionContext) {
+		public void registerExtensionPoints(ExtensionPointRegistry registry) {
+			registry.register(this::beforeAll, BeforeAllExtensionPoint.class);
+			registry.register(this::afterAll, AfterAllExtensionPoint.class);
+		}
+
+		private void beforeAll(ContainerExtensionContext containerExtensionContext) {
 			preBeforeAllMethods.add("foo");
 		}
 
-		@Override
-		public void afterAll(ContainerExtensionContext containerExtensionContext) {
+		private void afterAll(ContainerExtensionContext containerExtensionContext) {
 			postAfterAllMethods.add("foo");
 		}
+
 	}
 
-	private static class BarContainerLifecycleExtension implements ContainerLifecycleExtension {
+	private static class BarContainerLifecycleExtension implements TestExtension {
 
 		@Override
-		public void beforeAll(ContainerExtensionContext containerExtensionContext) {
+		public void registerExtensionPoints(ExtensionPointRegistry registry) {
+			registry.register(this::beforeAll, BeforeAllExtensionPoint.class);
+			registry.register(this::afterAll, AfterAllExtensionPoint.class);
+		}
+
+		private void beforeAll(ContainerExtensionContext containerExtensionContext) {
 			preBeforeAllMethods.add("bar");
 		}
 
-		@Override
-		public void afterAll(ContainerExtensionContext containerExtensionContext) {
+		private void afterAll(ContainerExtensionContext containerExtensionContext) {
 			postAfterAllMethods.add("bar");
 		}
 	}

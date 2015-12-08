@@ -11,8 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import static java.util.Arrays.asList;
-import static org.junit.gen5.engine.TestPlanSpecification.build;
-import static org.junit.gen5.engine.TestPlanSpecification.forClass;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +21,17 @@ import org.junit.Ignore;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.api.extension.AfterEachExtensionPoint;
+import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
 import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.api.extension.TestExtensionContext;
-import org.junit.gen5.api.extension.TestLifecycleExtension;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
- * Integration tests that verify support for {@link BeforeEach}, {@link AfterEach},
- * {@link org.junit.gen5.api.extension.TestLifecycleExtension}in the {@link JUnit5TestEngine}.
+ * Integration tests that verify support for {@link org.junit.gen5.api.extension.BeforeEachExtensionPoint},
+ * {@link org.junit.gen5.api.extension.AfterEachExtensionPoint}, in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
@@ -59,8 +60,7 @@ public class TestLifecycleExtensionTests extends AbstractJUnit5TestEngineTestCas
 
 	// -------------------------------------------------------------------
 
-	@ExtendWith(value = { FooTestLifecycleExtension.class,
-			BarTestLifecycleExtension.class }, order = TestExtension.OrderPosition.INNERMOST)
+	@ExtendWith(value = { FooTestLifecycleExtension.class, BarTestLifecycleExtension.class })
 	private static class TestLifecycleTestCase {
 
 		static boolean beforeEachInvoked = false;
@@ -87,29 +87,37 @@ public class TestLifecycleExtensionTests extends AbstractJUnit5TestEngineTestCas
 	private static List<String> preBeforeEachMethods = new ArrayList<>();
 	private static List<String> postAfterEachMethods = new ArrayList<>();
 
-	private static class FooTestLifecycleExtension implements TestLifecycleExtension {
+	private static class FooTestLifecycleExtension implements TestExtension {
 
 		@Override
-		public void beforeEach(TestExtensionContext methodExecutionContext) {
+		public void registerExtensionPoints(ExtensionPointRegistry registry) {
+			registry.register(this::beforeEach, BeforeEachExtensionPoint.class);
+			registry.register(this::afterEach, AfterEachExtensionPoint.class);
+		}
+
+		private void beforeEach(TestExtensionContext methodExecutionContext) {
 			preBeforeEachMethods.add("foo");
 		}
 
-		@Override
-		public void afterEach(TestExtensionContext methodExecutionContext) {
+		private void afterEach(TestExtensionContext methodExecutionContext) {
 			postAfterEachMethods.add("foo");
 		}
 
 	}
 
-	private static class BarTestLifecycleExtension implements TestLifecycleExtension {
+	private static class BarTestLifecycleExtension implements TestExtension {
 
 		@Override
-		public void beforeEach(TestExtensionContext testExtensionContext) {
+		public void registerExtensionPoints(ExtensionPointRegistry registry) {
+			registry.register(this::beforeEach, BeforeEachExtensionPoint.class);
+			registry.register(this::afterEach, AfterEachExtensionPoint.class);
+		}
+
+		private void beforeEach(TestExtensionContext testExtensionContext) {
 			preBeforeEachMethods.add("bar");
 		}
 
-		@Override
-		public void afterEach(TestExtensionContext testExtensionContext) {
+		private void afterEach(TestExtensionContext testExtensionContext) {
 			postAfterEachMethods.add("bar");
 		}
 

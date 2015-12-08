@@ -16,24 +16,24 @@ import java.lang.reflect.Parameter;
 
 import org.junit.gen5.api.extension.ContextScope;
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
+import org.junit.gen5.api.extension.PostProcessTestInstanceExtensionPoint;
+import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.api.extension.TestExtensionContext;
-import org.junit.gen5.api.extension.TestLifecycleExtension;
 import org.junit.gen5.commons.util.AnnotationUtils;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * {@code MockitoExtension} showcases the {@link TestLifecycleExtension}
- * and {@link MethodParameterResolver} extension points of JUnit 5 by
- * providing dependency injection support at the field level via Mockito's
- * {@link Mock @Mock} annotation and at the method level via our demo
- * {@link InjectMock @InjectMock} annotation.
+ * {@code MockitoExtension} showcases {@link PostProcessTestInstanceExtensionPoint} and {@link MethodParameterResolver}
+ * extension points of JUnit 5 by providing dependency injection support at the field level via Mockito's
+ * {@link Mock @Mock} annotation and at the method level via our demo {@link InjectMock @InjectMock} annotation.
  *
  * @since 5.0
  */
-public class MockitoExtension implements TestLifecycleExtension, MethodParameterResolver {
+public class MockitoExtension implements TestExtension {
 
 	private final ContextScope<Class<?>, Object> mocksInScope;
 
@@ -42,22 +42,29 @@ public class MockitoExtension implements TestLifecycleExtension, MethodParameter
 	}
 
 	@Override
-	public Object postProcessTestInstance(TestExtensionContext context) {
+	public void registerExtensionPoints(ExtensionPointRegistry registry) {
+		registry.register(this::postProcessTestInstance, PostProcessTestInstanceExtensionPoint.class);
+		registry.register(new MockitoParameterResolver(), MethodParameterResolver.class);
+	}
+
+	private Object postProcessTestInstance(TestExtensionContext context) {
 		MockitoAnnotations.initMocks(context.getTestInstance());
 		return context.getTestInstance();
 	}
 
-	@Override
-	public boolean supports(Parameter parameter, ExtensionContext testExecutionContext) {
-		return AnnotationUtils.isAnnotated(parameter, InjectMock.class);
+	private class MockitoParameterResolver implements MethodParameterResolver {
+		@Override
+		public boolean supports(Parameter parameter, ExtensionContext testExecutionContext) {
+			return AnnotationUtils.isAnnotated(parameter, InjectMock.class);
+		}
+
+		@Override
+		public Object resolve(Parameter parameter, ExtensionContext testExecutionContext)
+				throws ParameterResolutionException {
+
+			Class<?> mockType = parameter.getType();
+			return mocksInScope.get(testExecutionContext, mockType);
+		}
+
 	}
-
-	@Override
-	public Object resolve(Parameter parameter, ExtensionContext testExecutionContext)
-			throws ParameterResolutionException {
-
-		Class<?> mockType = parameter.getType();
-		return mocksInScope.get(testExecutionContext, mockType);
-	}
-
 }

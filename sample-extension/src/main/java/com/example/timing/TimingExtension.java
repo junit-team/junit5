@@ -12,28 +12,34 @@ package com.example.timing;
 
 import java.lang.reflect.Method;
 
+import org.junit.gen5.api.extension.AfterEachExtensionPoint;
+import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.api.extension.TestExtensionContext;
-import org.junit.gen5.api.extension.TestLifecycleExtension;
 
 /**
  * Simple extension that <em>times</em> the execution of test methods and prints the results to {@link System#out}.
  *
  * @since 5.0
  */
-@TestExtension.DefaultOrder(TestExtension.OrderPosition.INNERMOST)
-public class TimingExtension implements TestLifecycleExtension {
+public class TimingExtension implements TestExtension {
 
 	private static final String TIMING_KEY_PREFIX = "TIMING:";
 
 	@Override
-	public void beforeEach(TestExtensionContext testExecutionContext) throws Exception {
+	public void registerExtensionPoints(ExtensionPointRegistry registry) {
+		registry.register(this::beforeEach, BeforeEachExtensionPoint.class, ExtensionPoint.Position.LAST);
+		registry.register(this::afterEach, AfterEachExtensionPoint.class, ExtensionPoint.Position.FIRST);
+	}
+
+	private void beforeEach(TestExtensionContext testExecutionContext) throws Exception {
 		Method testMethod = testExecutionContext.getTestMethod();
 		testExecutionContext.getAttributes().put(createKey(testMethod), System.currentTimeMillis());
 	}
 
-	@Override
-	public void afterEach(TestExtensionContext testExecutionContext) throws Exception {
+	private void afterEach(TestExtensionContext testExecutionContext) throws Exception {
 		Method testMethod = testExecutionContext.getTestMethod();
 		String key = createKey(testMethod);
 		long start = (long) testExecutionContext.getAttributes().get(key);

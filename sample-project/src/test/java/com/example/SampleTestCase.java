@@ -32,7 +32,7 @@ import org.opentestalliance.TestSkippedException;
 /**
  * Named *TestCase so Gradle will not try to run it.
  */
-@ExtendWith({ CustomTypeParameterResolver.class, CustomAnnotationParameterResolver.class })
+@ExtendWith({ CustomTypeParameterExtension.class, CustomAnnotationParameterExtension.class })
 class SampleTestCase {
 
 	static boolean staticBeforeInvoked = false;

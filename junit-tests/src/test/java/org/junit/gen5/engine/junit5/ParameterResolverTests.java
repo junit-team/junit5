@@ -22,13 +22,12 @@ import org.junit.gen5.api.TestName;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
-import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotationParameterResolver;
+import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotationParameterExtension;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomType;
-import org.junit.gen5.engine.junit5.execution.injection.sample.CustomTypeParameterResolver;
+import org.junit.gen5.engine.junit5.execution.injection.sample.CustomTypeParameterExtension;
 
 /**
- * Integration tests that verify support for {@link MethodParameterResolver}
- * in the {@link JUnit5TestEngine}.
+ * Integration tests that verify support for {@link MethodParameterResolver} in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
@@ -70,7 +69,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 
 	// -------------------------------------------------------------------
 
-	@ExtendWith({ CustomTypeParameterResolver.class, CustomAnnotationParameterResolver.class })
+	@ExtendWith({ CustomTypeParameterExtension.class, CustomAnnotationParameterExtension.class })
 	private static class MethodInjectionTestCase {
 
 		@Test
@@ -139,8 +138,8 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 	private static class ExtendWithOnMethodTestCase {
 
 		@Test
-		@ExtendWith(CustomTypeParameterResolver.class)
-		@ExtendWith(CustomAnnotationParameterResolver.class)
+		@ExtendWith(CustomTypeParameterExtension.class)
+		@ExtendWith(CustomAnnotationParameterExtension.class)
 		void testMethodWithExtensionAnnotation(CustomType customType, @CustomAnnotation String value) {
 			assertNotNull(customType);
 			assertNotNull(value);

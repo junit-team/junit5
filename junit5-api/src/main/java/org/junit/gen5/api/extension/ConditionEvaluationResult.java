@@ -13,7 +13,9 @@ package org.junit.gen5.api.extension;
 import java.util.Optional;
 
 /**
- * The result of evaluating a condition e.g. in {@link TestLifecycleExtension}.
+ * The result of evaluating a condition e.g. in {@link ShouldExecuteExtensionPoint}.
+ *
+ * @since 5.0.0
  */
 public class ConditionEvaluationResult {
 

@@ -15,31 +15,29 @@ import java.lang.reflect.Parameter;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
- * {@code MethodParameterResolver} is a {@link TestExtension} strategy for
- * dynamically resolving method parameters at runtime.
- *
- * <p>If a {@link org.junit.gen5.api.Test @Test},
- * {@link org.junit.gen5.api.BeforeEach @BeforeEach}, or
- * {@link org.junit.gen5.api.AfterEach @AfterEach} method accepts a parameter,
- * the parameter must be resolved at runtime by a {@code MethodParameterResolver}.
- *
- * <p>Implementations must provide a no-args constructor.
+ * {@code MethodParameterResolver} is a {@link ExtensionPoint} for dynamically resolving method parameters at runtime.
+ * <p>
+ * If a {@link org.junit.gen5.api.Test @Test}, {@link org.junit.gen5.api.BeforeEach @BeforeEach}, or
+ * {@link org.junit.gen5.api.AfterEach @AfterEach} method accepts a parameter, the parameter must be resolved at runtime
+ * by a {@code MethodParameterResolver}.
+ * <p>
+ * Implementations must provide a no-args constructor.
  *
  * @since 5.0
  */
-public interface MethodParameterResolver extends TestExtension {
+public interface MethodParameterResolver extends ExtensionPoint {
 
 	/**
-	 * Determine if this resolver supports resolution of the given {@link Parameter}
-	 * for the supplied {@link ExtensionContext}.
+	 * Determine if this resolver supports resolution of the given {@link Parameter} for the supplied
+	 * {@link ExtensionContext}.
 	 */
 	boolean supports(Parameter parameter, ExtensionContext extensionContext);
 
 	/**
 	 * Resolve the given {@link Parameter} for the supplied {@link ExtensionContext}.
-	 *
-	 * <p>The default implementation uses reflection to instantiate the
-	 * required {@link Parameter#getType type} via its default constructor.
+	 * <p>
+	 * The default implementation uses reflection to instantiate the required {@link Parameter#getType type} via its
+	 * default constructor.
 	 *
 	 * @see ReflectionUtils#newInstance(Class, Object...)
 	 */

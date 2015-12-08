@@ -15,6 +15,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -71,10 +72,12 @@ class MethodInvoker {
 
 	private Object resolveParameter(Parameter parameter, ExtensionContext testExecutionContext) {
 		try {
+			List<MethodParameterResolver> matchingResolvers = new ArrayList<>();
 			// @formatter:off
-			List<MethodParameterResolver> matchingResolvers = this.testExecutionContext.getExtensions(MethodParameterResolver.class)
-					.filter(resolver -> resolver.supports(parameter, testExecutionContext))
-					.collect(toList());
+//TODO: Would work differently now with ExtensionPointRegistry
+//			List<MethodParameterResolver> matchingResolvers = this.testExecutionContext.getExtensions(MethodParameterResolver.class)
+//					.filter(resolver -> resolver.supports(parameter, testExecutionContext))
+//					.collect(toList());
 			// @formatter:on
 
 			if (matchingResolvers.size() == 0) {
