@@ -30,9 +30,13 @@ public interface TestDescriptor {
 
 	String getDisplayName();
 
-	Optional<? extends TestDescriptor> getParent();
+	Optional<TestDescriptor> getParent();
+
+	void setParent(TestDescriptor parent);
 
 	boolean isTest();
+
+	boolean isContainer();
 
 	default boolean isRoot() {
 		return getParent() == null;
@@ -41,6 +45,10 @@ public interface TestDescriptor {
 	Set<TestTag> getTags();
 
 	Set<? extends TestDescriptor> getChildren();
+
+	void addChild(TestDescriptor descriptor);
+
+	void removeChild(TestDescriptor descriptor);
 
 	default Set<? extends TestDescriptor> allDescendants() {
 		Set<TestDescriptor> all = new HashSet<>();

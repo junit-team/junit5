@@ -31,4 +31,9 @@ public class DummyTestDescriptor extends AbstractTestDescriptor {
 		return getChildren().isEmpty();
 	}
 
+	@Override
+	public boolean isContainer() {
+		return !isTest();
+	}
+
 }

@@ -23,15 +23,15 @@ import org.junit.gen5.commons.util.Preconditions;
 /**
  * @since 5.0
  */
-public abstract class AbstractTestDescriptor implements MutableTestDescriptor {
+public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final String uniqueId;
 
-	private MutableTestDescriptor parent;
+	private TestDescriptor parent;
 
 	private TestSource source;
 
-	private final Set<MutableTestDescriptor> children = new LinkedHashSet<>();
+	private final Set<TestDescriptor> children = new LinkedHashSet<>();
 
 	protected AbstractTestDescriptor(String uniqueId) {
 		Preconditions.notBlank(uniqueId, "uniqueId must not be null or empty");
@@ -44,17 +44,17 @@ public abstract class AbstractTestDescriptor implements MutableTestDescriptor {
 	}
 
 	@Override
-	public Optional<MutableTestDescriptor> getParent() {
+	public Optional<TestDescriptor> getParent() {
 		return Optional.ofNullable(this.parent);
 	}
 
 	@Override
-	public final void setParent(MutableTestDescriptor parent) {
+	public final void setParent(TestDescriptor parent) {
 		this.parent = parent;
 	}
 
 	@Override
-	public void removeChild(MutableTestDescriptor child) {
+	public void removeChild(TestDescriptor child) {
 		this.children.remove(child);
 		child.setParent(null);
 	}
@@ -82,14 +82,14 @@ public abstract class AbstractTestDescriptor implements MutableTestDescriptor {
 	}
 
 	@Override
-	public final void addChild(MutableTestDescriptor child) {
+	public final void addChild(TestDescriptor child) {
 		Preconditions.notNull(child, "child must not be null");
 		child.setParent(this);
 		this.children.add(child);
 	}
 
 	@Override
-	public final Set<MutableTestDescriptor> getChildren() {
+	public Set<? extends TestDescriptor> getChildren() {
 		return Collections.unmodifiableSet(this.children);
 	}
 

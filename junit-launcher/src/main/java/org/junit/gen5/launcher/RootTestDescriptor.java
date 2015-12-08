@@ -118,4 +118,24 @@ final class RootTestDescriptor implements TestDescriptor {
 		return engineRootTestDescriptors.values().toString();
 	}
 
+	@Override
+	public void setParent(TestDescriptor parent) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean isContainer() {
+		return true;
+	}
+
+	@Override
+	public void addChild(TestDescriptor descriptor) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void removeChild(TestDescriptor descriptor) {
+		// TODO Auto-generated method stub
+	}
+
 }

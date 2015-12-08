@@ -32,6 +32,11 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 		return false;
 	}
 
+	@Override
+	public boolean isContainer() {
+		return true;
+	}
+
 	public TestEngine getEngine() {
 		return engine;
 	}
