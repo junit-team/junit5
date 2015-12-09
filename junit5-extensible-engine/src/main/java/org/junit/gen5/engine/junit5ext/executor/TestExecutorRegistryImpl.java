@@ -5,25 +5,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.gen5.engine.MutableTestDescriptor;
+import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.junit5ext.resolver.TestResolver;
-import org.junit.gen5.engine.junit5ext.resolver.TestResolverRegistry;
 
 // TODO This class should become some kind of "JUnit" component, that will be initialized during start up
 public class TestExecutorRegistryImpl implements TestExecutorRegistry {
 	private List<TestExecutor> testExecutors = new LinkedList<>();
 
 	@Override
-	public List<TestExecutor> lookupExecutors(TestDescriptor testDescriptor) {
-		return testExecutors.stream()
+	public void executeAll(ExecutionRequest request, TestDescriptor testDescriptor) {
+		testExecutors.stream()
 				.filter(testExecutor -> testExecutor.canExecute(testDescriptor))
-				.collect(Collectors.toList());
+				.forEach(testExecutor -> testExecutor.execute(request, testDescriptor));
 	}
 
 	@Override
 	public void register(TestExecutor testExecutor) {
-			testExecutors.add(testExecutor);
-		}
+		testExecutors.add(testExecutor);
+		testExecutor.setTestExecutorRegistry(this);
+	}
 }

@@ -53,13 +53,7 @@ public class ExtensibleJUnit5TestEngine implements TestEngine {
     @Override
     public void execute(ExecutionRequest request) {
         TestDescriptor rootTestDescriptor = request.getRootTestDescriptor();
-
-        List<TestExecutor> testExecutors = testExecutorRegistry.lookupExecutors(rootTestDescriptor);
-        for (TestExecutor testExecutor : testExecutors) {
-            request.getTestExecutionListener().testStarted(rootTestDescriptor);
-            testExecutor.execute(rootTestDescriptor);
-            request.getTestExecutionListener().testSucceeded(rootTestDescriptor);
-        }
+        testExecutorRegistry.executeAll(request, rootTestDescriptor);
     }
 
     public void setTestResolverRegistry(TestResolverRegistry testResolverRegistry) {

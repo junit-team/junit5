@@ -66,7 +66,7 @@ public class ExtensibleJUnit5TestEngineClassLevelTests {
 
 		ExecutionRequest executionRequest = new ExecutionRequest(testDescriptor, testExecutionListenerSpy);
 		testEngine.execute(executionRequest);
-		assertThat(testExecutionListenerSpy.foundStartedTests.size()).isEqualTo(1);
-		assertThat(testExecutionListenerSpy.foundSucceededTests.size()).isEqualTo(1);
+
+		assertThat(testExecutorRegistrySpy.testDescriptors).contains(testDescriptor);
 	}
 }

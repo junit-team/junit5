@@ -3,13 +3,12 @@ package org.junit.gen5.engine.junit5ext.executor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
-
 import org.junit.Test;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5ext.descriptor.GroupDescriptor;
-import org.junit.gen5.engine.junit5ext.testdoubles.AlwaysMatchingTestExecutorStub;
-import org.junit.gen5.engine.junit5ext.testdoubles.AlwaysNonMatchingTestExecutorStub;
+import org.junit.gen5.engine.junit5ext.testdoubles.AlwaysMatchingTestExecutorSpy;
+import org.junit.gen5.engine.junit5ext.testdoubles.AlwaysNonMatchingTestExecutorSpy;
+import org.junit.gen5.engine.junit5ext.testdoubles.ExecutionRequestDummy;
 
 public class TestExecutorRegistryImplTests {
 	private GroupDescriptor testGroup = new GroupDescriptor("testGroup", "Test Group");
@@ -17,26 +16,24 @@ public class TestExecutorRegistryImplTests {
 	private TestExecutorRegistryImpl testExecutorRegistry = new TestExecutorRegistryImpl();
 
 	@Test
-	public void givenNoTestExecutors_lookupWillReturnAnEmptyList() throws Exception {
-		List<TestExecutor> testExecutors = testExecutorRegistry.lookupExecutors(testGroup);
-		assertThat(testExecutors).isEmpty();
-	}
-
-	@Test
 	public void givenAMatchingTestExecutor_lookupReturnsExecutor() throws Exception {
-		TestExecutor testExecutor = new AlwaysMatchingTestExecutorStub();
+		AlwaysMatchingTestExecutorSpy testExecutor = new AlwaysMatchingTestExecutorSpy();
 		testExecutorRegistry.register(testExecutor);
 
-		List<TestExecutor> testExecutors = testExecutorRegistry.lookupExecutors(testGroup);
-		assertThat(testExecutors).contains(testExecutor);
+		testExecutorRegistry.executeAll(new ExecutionRequestDummy(), testGroup);
+
+		assertThat(testExecutor.foundTestDescriptor).isEqualTo(testGroup);
+		assertThat(testExecutor.foundTestDescriptorForExecution).isEqualTo(testGroup);
 	}
 
 	@Test
 	public void givenNonMatchingTestExecutor_lookupReturnsAnEmptyList() throws Exception {
-		TestExecutor testExecutor = new AlwaysNonMatchingTestExecutorStub();
+		AlwaysNonMatchingTestExecutorSpy testExecutor = new AlwaysNonMatchingTestExecutorSpy();
 		testExecutorRegistry.register(testExecutor);
 
-		List<TestExecutor> testExecutors = testExecutorRegistry.lookupExecutors(testGroup);
-		assertThat(testExecutors).isEmpty();
+		testExecutorRegistry.executeAll(new ExecutionRequestDummy(), testGroup);
+
+		assertThat(testExecutor.foundTestDescriptor).isEqualTo(testGroup);
+		assertThat(testExecutor.foundTestDescriptorForExecution).isNull();
 	}
 }
