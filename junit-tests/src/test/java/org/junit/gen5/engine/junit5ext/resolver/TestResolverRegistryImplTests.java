@@ -1,14 +1,18 @@
 
 package org.junit.gen5.engine.junit5ext.resolver;
 
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5ext.testable.TestGroup;
 import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverRequest;
 import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverSpy;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverSpyWithTestsForRoot;
 
 public class TestResolverRegistryImplTests {
 	private TestGroup testGroup = new TestGroup("testGroup", "Test Group");
@@ -27,7 +31,7 @@ public class TestResolverRegistryImplTests {
 		testResolverRegistry.register(testResolverSpy);
 		testResolverRegistry.notifyResolvers(testGroup, emptyTestPlanSpecification);
 
-		assertTestResolverWasNotified(testResolverSpy, testGroup, emptyTestPlanSpecification);
+		assertTestResolverWasNotified(testResolverSpy, asList(testGroup), emptyTestPlanSpecification);
 	}
 
 	@Test
@@ -39,15 +43,27 @@ public class TestResolverRegistryImplTests {
 		testResolverRegistry.register(testResolverSpy2);
 		testResolverRegistry.notifyResolvers(testGroup, emptyTestPlanSpecification);
 
-		assertTestResolverWasNotified(testResolverSpy1, testGroup, emptyTestPlanSpecification);
-		assertTestResolverWasNotified(testResolverSpy2, testGroup, emptyTestPlanSpecification);
+		assertTestResolverWasNotified(testResolverSpy1, asList(testGroup), emptyTestPlanSpecification);
+		assertTestResolverWasNotified(testResolverSpy2, asList(testGroup), emptyTestPlanSpecification);
 	}
 
-	private void assertTestResolverWasNotified(TestResolverSpy testResolverSpy, MutableTestDescriptor parent, TestPlanSpecification testPlanSpecification) {
-		assertThat(testResolverSpy.resolvedFor).hasSize(1);
+	@Test
+	public void givenTestResolverThatReturnsNewTests_TestResolversAreCalledForAllTests() throws Exception {
+		TestResolverSpyWithTestsForRoot testResolverSpy = new TestResolverSpyWithTestsForRoot(testGroup);
 
-		TestResolverRequest request = testResolverSpy.resolvedFor.get(0);
-		assertThat(request.parent).isEqualTo(parent);
-		assertThat(request.testPlanSpecification).isEqualTo(testPlanSpecification);
+		testResolverRegistry.register(testResolverSpy);
+		testResolverRegistry.notifyResolvers(testGroup, emptyTestPlanSpecification);
+
+		assertTestResolverWasNotified(testResolverSpy, asList(testGroup, testResolverSpy.getResolvedTest()), emptyTestPlanSpecification);
+	}
+
+	private void assertTestResolverWasNotified(TestResolverSpy testResolverSpy, List<MutableTestDescriptor> parents, TestPlanSpecification testPlanSpecification) {
+		assertThat(testResolverSpy.resolvedFor).hasSize(parents.size());
+
+		for (int i = 0; i < parents.size(); i++) {
+			TestResolverRequest request = testResolverSpy.resolvedFor.get(i);
+			assertThat(request.parent).isEqualTo(parents.get(i));
+			assertThat(request.testPlanSpecification).isEqualTo(testPlanSpecification);
+		}
 	}
 }

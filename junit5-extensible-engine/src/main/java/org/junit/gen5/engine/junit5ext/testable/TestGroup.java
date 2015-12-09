@@ -71,4 +71,28 @@ public class TestGroup implements MutableTestDescriptor {
 	public Optional<TestSource> getSource() {
 		throw new UnsupportedOperationException("TestGroup will not support getSource().");
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		TestGroup testGroup = (TestGroup) o;
+		return Objects.equals(uniqueId, testGroup.uniqueId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(uniqueId);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("TestGroup");
+		sb.append("{displayName='").append(displayName).append('\'');
+		sb.append(", uniqueId='").append(uniqueId).append('\'');
+		sb.append(", parent=").append(parent);
+		sb.append('}');
+		return sb.toString();
+	}
 }
