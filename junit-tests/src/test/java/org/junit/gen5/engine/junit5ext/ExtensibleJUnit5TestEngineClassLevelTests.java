@@ -10,19 +10,26 @@ import static org.junit.gen5.engine.junit5ext.ExtensibleJUnit5TestEngine.ENGINE_
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.gen5.api.Assertions;
+import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5ext.samples.EmptyTestSampleClass;
+import org.junit.gen5.engine.junit5ext.samples.SinglePassingTestSampleClass;
+import org.junit.gen5.engine.junit5ext.testdoubles.TestExecutionListenerSpy;
+import org.junit.gen5.engine.junit5ext.testdoubles.TestExecutorRegistrySpy;
 import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverRequest;
 import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverRegistrySpy;
 
 public class ExtensibleJUnit5TestEngineClassLevelTests {
 	private ExtensibleJUnit5TestEngine testEngine = new ExtensibleJUnit5TestEngine();
 	private TestResolverRegistrySpy testResolverRegistrySpy = new TestResolverRegistrySpy();
+	private TestExecutorRegistrySpy testExecutorRegistrySpy = new TestExecutorRegistrySpy();
 
 	@Before
 	public void setUp() throws Exception {
 		testEngine.setTestResolverRegistry(testResolverRegistrySpy);
+		testEngine.setTestExecutorRegistry(testExecutorRegistrySpy);
 	}
 
 	@Test
@@ -48,5 +55,18 @@ public class ExtensibleJUnit5TestEngineClassLevelTests {
 				() -> assertThat(notification.parent.getChildren()).isEmpty(),
 				() -> assertThat(notification.testPlanSpecification).isEqualTo(testPlanSpecification)
 		);
+	}
+
+	@Test
+	public void givenExecutionRequest_engineNotifiesStartAndEnd() throws Exception {
+		TestPlanSpecification testPlanSpecification = build(forClass(SinglePassingTestSampleClass.class));
+		TestDescriptor testDescriptor = testEngine.discoverTests(testPlanSpecification);
+
+		TestExecutionListenerSpy testExecutionListenerSpy = new TestExecutionListenerSpy();
+
+		ExecutionRequest executionRequest = new ExecutionRequest(testDescriptor, testExecutionListenerSpy);
+		testEngine.execute(executionRequest);
+		assertThat(testExecutionListenerSpy.foundStartedTests.size()).isEqualTo(1);
+		assertThat(testExecutionListenerSpy.foundSucceededTests.size()).isEqualTo(1);
 	}
 }
