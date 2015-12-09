@@ -48,18 +48,12 @@ public final class TestPlan {
 		allIdentifiers.put(testIdentifier.getUniqueId(), testIdentifier);
 		if (testIdentifier.getParentId().isPresent()) {
 			TestId parentId = testIdentifier.getParentId().get();
-			getOrCreateChildrenSet(parentId).add(testIdentifier);
+			Set<TestIdentifier> directChildren = children.computeIfAbsent(parentId, key -> new LinkedHashSet<>());
+			directChildren.add(testIdentifier);
 		}
 		else {
 			roots.add(testIdentifier);
 		}
-	}
-
-	private LinkedHashSet<TestIdentifier> getOrCreateChildrenSet(TestId parentId) {
-		if (!children.containsKey(parentId)) {
-			children.put(parentId, new LinkedHashSet<>());
-		}
-		return children.get(parentId);
 	}
 
 	public Set<TestIdentifier> getRoots() {
