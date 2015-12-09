@@ -10,8 +10,11 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import java.util.Optional;
+
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.junit5.BeforeEachCallback;
 import org.junit.gen5.engine.junit5.JUnit5Context;
 import org.junit.gen5.engine.junit5.TestInstanceProvider;
 
@@ -34,6 +37,17 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 		return () -> {
 			Object outerInstance = context.getTestInstanceProvider().getTestInstance();
 			return ReflectionUtils.newInstance(getTestClass(), outerInstance);
+		};
+	}
+
+	@Override
+	protected BeforeEachCallback beforeEachCallback(JUnit5Context context) {
+		return testInstance -> {
+			Optional<Object> outerInstance = ReflectionUtils.getOuterInstance(testInstance);
+			if (outerInstance.isPresent()) {
+				context.getBeforeEachCallback().beforeEach(outerInstance.get());
+			}
+			super.beforeEachCallback(context).beforeEach(testInstance);
 		};
 	}
 

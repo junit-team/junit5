@@ -31,8 +31,16 @@ public class JUnit5Context implements Context {
 		return with(TestInstanceProvider.class.getName(), testInstanceProvider);
 	}
 
+	public JUnit5Context withBeforeEachCallback(BeforeEachCallback beforeEachCallback) {
+		return with("beforeEachCallback", beforeEachCallback);
+	}
+
 	public TestInstanceProvider getTestInstanceProvider() {
 		return get(TestInstanceProvider.class.getName(), TestInstanceProvider.class);
+	}
+
+	public BeforeEachCallback getBeforeEachCallback() {
+		return get("beforeEachCallback", BeforeEachCallback.class);
 	}
 
 	private JUnit5Context with(String key, Object value) {

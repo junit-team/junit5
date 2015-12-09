@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.gen5.api.AfterEach;
-import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
@@ -83,9 +82,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Child<
 	public JUnit5Context execute(JUnit5Context context) throws Throwable {
 		TestInstanceProvider provider = context.getTestInstanceProvider();
 		Object testInstance = provider.getTestInstance();
-		for (Method method : findAnnotatedMethods(testClass, BeforeEach.class, MethodSortOrder.HierarchyDown)) {
-			ReflectionUtils.invokeMethod(method, testInstance);
-		}
+		context.getBeforeEachCallback().beforeEach(testInstance);
 		List<Throwable> throwables = new LinkedList<>();
 		try {
 			ReflectionUtils.invokeMethod(testMethod, testInstance);

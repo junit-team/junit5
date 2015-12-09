@@ -15,6 +15,7 @@ import static org.junit.gen5.api.Assertions.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
@@ -92,6 +93,20 @@ public class StandardTestClassTest extends AbstractJUnit5TestEngineTestCase {
 		Assert.assertEquals("# tests started", 3, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
 		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
+	}
+
+	@org.junit.Test
+	public void doublyNestedTestsAreExecuted() {
+		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithDoubleNesting.class, 8);
+
+		Assert.assertEquals("# tests started", 5, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 3, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
+
+		assertAll("before each counts", //
+			() -> Assert.assertEquals(5, TestCaseWithDoubleNesting.beforeTopCount),
+			() -> Assert.assertEquals(4, TestCaseWithDoubleNesting.beforeNestedCount),
+			() -> Assert.assertEquals(2, TestCaseWithDoubleNesting.beforeDoublyNestedCount));
 	}
 
 }
@@ -206,4 +221,76 @@ class TestCaseWithFailingAfter {
 		testExecuted = true;
 	}
 
+}
+
+class TestCaseWithNesting {
+
+	@Test
+	void someTest() {
+	}
+
+	@Nested
+	class NestedTestCase {
+
+		@Test
+		void successful() {
+		}
+
+		@Test
+		void failing() {
+			Assertions.fail("Something went horribly wrong");
+		}
+	}
+}
+
+class TestCaseWithDoubleNesting {
+
+	static int beforeTopCount = 0;
+	static int beforeNestedCount = 0;
+	static int beforeDoublyNestedCount = 0;
+
+	@BeforeEach
+	void top() {
+		beforeTopCount++;
+	}
+
+	@Test
+	void someTest() {
+	}
+
+	@Nested
+	class NestedTestCase {
+
+		@BeforeEach
+		void nested() {
+			beforeNestedCount++;
+		}
+
+		@Test
+		void successful() {
+		}
+
+		@Test
+		void failing() {
+			Assertions.fail("Something went horribly wrong");
+		}
+
+		@Nested
+		class DoublyNestedTestCase {
+
+			@BeforeEach
+			void doublyNested() {
+				beforeDoublyNestedCount++;
+			}
+
+			@Test
+			void successful() {
+			}
+
+			@Test
+			void failing() {
+				Assertions.fail("Something went horribly wrong");
+			}
+		}
+	}
 }
