@@ -11,15 +11,9 @@
 package org.junit.gen5.api.extension;
 
 /**
- * Interface to be implemented by all test extensions.
- * <p>
- * {@code TestExtensions} can be registered via {@link ExtendWith @ExtendWith}.
- *
  * @since 5.0
- * @see ExtensionPointRegistry
  */
-public interface TestExtension {
-
-	void registerExtensionPoints(ExtensionPointRegistry registry);
-
+@FunctionalInterface
+public interface BeforeAllExtensionPoint extends ExtensionPoint {
+	void beforeAll(ContainerExtensionContext containerExtensionContext) throws Exception;
 }

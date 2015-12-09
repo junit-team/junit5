@@ -10,16 +10,18 @@
 
 package org.junit.gen5.api.extension;
 
+import java.lang.reflect.Method;
+import java.util.Optional;
+
 /**
- * Interface to be implemented by all test extensions.
- * <p>
- * {@code TestExtensions} can be registered via {@link ExtendWith @ExtendWith}.
+ * {@code TestExecutionContext} encapsulates the <em>context</em> in which
+ * the current test is being executed.
  *
  * @since 5.0
- * @see ExtensionPointRegistry
  */
-public interface TestExtension {
+public interface TestExtensionContext extends ExtensionContext {
 
-	void registerExtensionPoints(ExtensionPointRegistry registry);
+	Object getTestInstance();
 
+	Method getTestMethod();
 }

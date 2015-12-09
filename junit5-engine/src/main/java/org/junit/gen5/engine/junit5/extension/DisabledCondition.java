@@ -12,42 +12,45 @@ package org.junit.gen5.engine.junit5.extension;
 
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
 
+import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.junit.gen5.api.Disabled;
-import org.junit.gen5.api.extension.Condition;
-import org.junit.gen5.api.extension.TestExecutionContext;
+import org.junit.gen5.api.extension.ConditionEvaluationResult;
+import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
+import org.junit.gen5.api.extension.ShouldExecuteExtensionPoint;
+import org.junit.gen5.api.extension.TestExtension;
+import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.StringUtils;
 
 /**
- * {@link Condition} that supports the {@link Disabled @Disabled} annotation.
- *
  * @since 5.0
  * @see Disabled
  */
-public class DisabledCondition implements Condition {
+public class DisabledCondition implements TestExtension {
 
-	/**
-	 * Tests are disabled if {@code @Disabled} is either present on the
-	 * test class or on the test method.
-	 */
 	@Override
-	public Result evaluate(TestExecutionContext context) {
+	public void registerExtensionPoints(ExtensionPointRegistry registry) {
+		registry.register(this::shouldTestBeExecuted, ShouldExecuteExtensionPoint.class);
+	}
 
+	private ConditionEvaluationResult shouldTestBeExecuted(ExtensionContext context) {
 		// Class level?
 		Optional<Disabled> disabled = findAnnotation(context.getTestClass(), Disabled.class);
 
 		// Method level?
-		if (!disabled.isPresent()) {
-			disabled = findAnnotation(context.getTestMethod(), Disabled.class);
+		if ((context instanceof TestExtensionContext) && !disabled.isPresent()) {
+			Method testMethod = ((TestExtensionContext) context).getTestMethod();
+			disabled = findAnnotation(testMethod, Disabled.class);
 		}
 
 		if (disabled.isPresent()) {
 			String reason = disabled.map(Disabled::value).filter(StringUtils::isNotBlank).orElse("Test is @Disabled");
-			return Result.disabled(reason);
+			return ConditionEvaluationResult.disabled(reason);
 		}
 
-		return Result.enabled("@Disabled is not present");
+		return ConditionEvaluationResult.enabled("@Disabled is not present");
 	}
 
 }

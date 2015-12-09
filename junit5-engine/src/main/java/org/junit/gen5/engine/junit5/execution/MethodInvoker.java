@@ -15,12 +15,13 @@ import static java.util.stream.Collectors.toList;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
-import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
@@ -37,9 +38,9 @@ class MethodInvoker {
 
 	private final Object target;
 
-	private final TestExecutionContext testExecutionContext;
+	private final ExtensionContext testExecutionContext;
 
-	MethodInvoker(Method method, Object target, TestExecutionContext testExecutionContext) {
+	MethodInvoker(Method method, Object target, ExtensionContext testExecutionContext) {
 		Preconditions.notNull(method, "method must not be null");
 		Preconditions.notNull(target, "target object must not be null");
 		Preconditions.notNull(testExecutionContext, "TestExecutionContext must not be null");
@@ -49,7 +50,7 @@ class MethodInvoker {
 		this.testExecutionContext = testExecutionContext;
 	}
 
-	Object invoke(TestExecutionContext testExecutionContext) {
+	Object invoke(ExtensionContext testExecutionContext) {
 		return ReflectionUtils.invokeMethod(this.method, this.target, resolveParameters(testExecutionContext));
 	}
 
@@ -61,7 +62,7 @@ class MethodInvoker {
 	 * invocation; never {@code null} though potentially empty
 	 * @throws ParameterResolutionException
 	 */
-	private Object[] resolveParameters(TestExecutionContext testExecutionContext) throws ParameterResolutionException {
+	private Object[] resolveParameters(ExtensionContext testExecutionContext) throws ParameterResolutionException {
 		// @formatter:off
 		return Arrays.stream(this.method.getParameters())
 				.map(param -> resolveParameter(param, testExecutionContext))
@@ -69,12 +70,14 @@ class MethodInvoker {
 		// @formatter:on
 	}
 
-	private Object resolveParameter(Parameter parameter, TestExecutionContext testExecutionContext) {
+	private Object resolveParameter(Parameter parameter, ExtensionContext testExecutionContext) {
 		try {
+			List<MethodParameterResolver> matchingResolvers = new ArrayList<>();
 			// @formatter:off
-			List<MethodParameterResolver> matchingResolvers = this.testExecutionContext.getExtensions(MethodParameterResolver.class)
-					.filter(resolver -> resolver.supports(parameter, testExecutionContext))
-					.collect(toList());
+//TODO: Would work differently now with ExtensionPointRegistry
+//			List<MethodParameterResolver> matchingResolvers = this.testExecutionContext.getExtensions(MethodParameterResolver.class)
+//					.filter(resolver -> resolver.supports(parameter, testExecutionContext))
+//					.collect(toList());
 			// @formatter:on
 
 			if (matchingResolvers.size() == 0) {

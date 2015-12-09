@@ -14,9 +14,10 @@ import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
-import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
+import org.junit.gen5.engine.junit5.extension.TestNameExtensionPoint;
 
 /**
  * @since 5.0
@@ -30,7 +31,7 @@ public class TestExtensionRegistryTest {
 		Assert.assertEquals(2, TestExtensionRegistry.getDefaultExtensionClasses().size());
 
 		assertDefaultExtensionType(DisabledCondition.class);
-		assertDefaultExtensionType(TestNameParameterResolver.class);
+		assertDefaultExtensionType(TestNameExtensionPoint.class);
 	}
 
 	@Test
@@ -40,7 +41,7 @@ public class TestExtensionRegistryTest {
 
 		Assert.assertEquals(TestExtensionRegistry.getDefaultExtensionClasses().size(), extensions.size());
 		assertExtensionPresent(DisabledCondition.class);
-		assertExtensionPresent(TestNameParameterResolver.class);
+		assertExtensionPresent(TestNameExtensionPoint.class);
 	}
 
 	@Test
@@ -93,7 +94,15 @@ public class TestExtensionRegistryTest {
 }
 
 class MyExtension implements TestExtension {
+	@Override
+	public void registerExtensionPoints(ExtensionPointRegistry registry) {
+
+	}
 }
 
 class YourExtension implements TestExtension {
+	@Override
+	public void registerExtensionPoints(ExtensionPointRegistry registry) {
+
+	}
 }

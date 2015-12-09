@@ -12,29 +12,35 @@ package com.example.timing;
 
 import java.lang.reflect.Method;
 
-import org.junit.gen5.api.extension.AfterEachCallbacks;
-import org.junit.gen5.api.extension.BeforeEachCallbacks;
-import org.junit.gen5.api.extension.TestExecutionContext;
+import org.junit.gen5.api.extension.AfterEachExtensionPoint;
+import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
+import org.junit.gen5.api.extension.TestExtension;
+import org.junit.gen5.api.extension.TestExtensionContext;
 
 /**
- * Simple extension that <em>times</em> the execution of test methods and
- * prints the results to {@link System#out}.
+ * Simple extension that <em>times</em> the execution of test methods and prints the results to {@link System#out}.
  *
  * @since 5.0
  */
-public class TimingExtension implements BeforeEachCallbacks, AfterEachCallbacks {
+public class TimingExtension implements TestExtension {
 
 	private static final String TIMING_KEY_PREFIX = "TIMING:";
 
 	@Override
-	public void postBeforeEach(TestExecutionContext testExecutionContext, Object testInstance) throws Exception {
-		Method testMethod = testExecutionContext.getTestMethod().get();
+	public void registerExtensionPoints(ExtensionPointRegistry registry) {
+		registry.register(this::beforeEach, BeforeEachExtensionPoint.class, ExtensionPoint.Position.LAST);
+		registry.register(this::afterEach, AfterEachExtensionPoint.class, ExtensionPoint.Position.FIRST);
+	}
+
+	private void beforeEach(TestExtensionContext testExecutionContext) throws Exception {
+		Method testMethod = testExecutionContext.getTestMethod();
 		testExecutionContext.getAttributes().put(createKey(testMethod), System.currentTimeMillis());
 	}
 
-	@Override
-	public void preAfterEach(TestExecutionContext testExecutionContext, Object testInstance) throws Exception {
-		Method testMethod = testExecutionContext.getTestMethod().get();
+	private void afterEach(TestExtensionContext testExecutionContext) throws Exception {
+		Method testMethod = testExecutionContext.getTestMethod();
 		String key = createKey(testMethod);
 		long start = (long) testExecutionContext.getAttributes().get(key);
 		long end = System.currentTimeMillis();
