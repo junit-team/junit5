@@ -10,12 +10,18 @@
 
 package org.junit.gen5.api.extension;
 
+import org.junit.gen5.api.extension.ExtensionPoint.Position;
+
+/**
+ * Used to register {@linkplain ExtensionPoint} instances in {@linkplain TestExtension}s.
+ *
+ * @since 5.0.0
+ */
 public interface ExtensionPointRegistry {
 
-	<T extends ExtensionPoint> void register(T extensionPoint, Class<T> extensionType,
-			ExtensionPoint.Position position);
+	<T extends ExtensionPoint> void register(T extensionPoint, Class<T> extensionType, Position position);
 
 	default <T extends ExtensionPoint> void register(T extensionPoint, Class<T> extensionType) {
-		register(extensionPoint, extensionType, ExtensionPoint.Position.DEFAULT);
+		register(extensionPoint, extensionType, Position.DEFAULT);
 	}
 }

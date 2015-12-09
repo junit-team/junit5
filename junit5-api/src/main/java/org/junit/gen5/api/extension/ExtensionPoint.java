@@ -13,6 +13,17 @@ package org.junit.gen5.api.extension;
 /**
  * Marker interface for all extension points that can be registered in {@link TestExtension}
  *
+ * <h3>Supported Extension Points</h3>
+ * <ul>
+ * <li>{@link BeforeEachExtensionPoint}</li>
+ * <li>{@link AfterEachExtensionPoint}</li>
+ * <li>{@link BeforeAllExtensionPoint}</li>
+ * <li>{@link AfterAllExtensionPoint}</li>
+ * <li>{@link ShouldExecuteExtensionPoint}</li>
+ * <li>{@link PostProcessTestInstanceExtensionPoint}</li>
+ * <li>{@link MethodParameterResolver}</li>
+ * </ul>
+ *
  * @since 5.0.0
  */
 public interface ExtensionPoint {

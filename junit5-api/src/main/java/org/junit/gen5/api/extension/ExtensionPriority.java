@@ -13,15 +13,16 @@ package org.junit.gen5.api.extension;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
-import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@code @ExtendWith} is a {@linkplain Repeatable repeatable} annotation
- * that is used to register {@linkplain TestExtension test extensions} for
- * the annotated test class or test method.
+ * {@code @ExtendWith} is an annotation that is used to prioritize {@linkplain TestExtension test extensions} in case a
+ * {@linkplain ExtensionConfigurationException} is thrown. The order of the extensions listed in {@code value()}
+ * determines prioritization. For example, when two extensions register an {@linkplain ExtensionPoint} with
+ * {@link ExtensionPoint.Postion}.FIRST than the first extension's extension point will really be first, the other one
+ * second..
  *
  * @since 5.0
  * @see TestExtension
@@ -30,8 +31,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Repeatable(Extensions.class)
-public @interface ExtendWith {
+public @interface ExtensionPriority {
 
 	Class<? extends TestExtension>[]value();
 

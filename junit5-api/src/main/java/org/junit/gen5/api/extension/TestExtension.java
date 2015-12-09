@@ -10,19 +10,13 @@
 
 package org.junit.gen5.api.extension;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 /**
- * Marker interface for all test extensions.
+ * Interface to be implemented by all test extensions.
  * <p>
  * {@code TestExtensions} can be registered via {@link ExtendWith @ExtendWith}.
  *
  * @since 5.0
+ * @see ExtensionPointRegistry
  */
 public interface TestExtension {
 
