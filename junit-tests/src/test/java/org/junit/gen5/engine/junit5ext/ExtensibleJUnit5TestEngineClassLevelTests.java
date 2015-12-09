@@ -1,3 +1,12 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 
 package org.junit.gen5.engine.junit5ext;
 
@@ -18,8 +27,8 @@ import org.junit.gen5.engine.junit5ext.samples.EmptyTestSampleClass;
 import org.junit.gen5.engine.junit5ext.samples.SinglePassingTestSampleClass;
 import org.junit.gen5.engine.junit5ext.testdoubles.TestExecutionListenerSpy;
 import org.junit.gen5.engine.junit5ext.testdoubles.TestExecutorRegistrySpy;
-import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverRequest;
 import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverRegistrySpy;
+import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverRequest;
 
 public class ExtensibleJUnit5TestEngineClassLevelTests {
 	private ExtensibleJUnit5TestEngine testEngine = new ExtensibleJUnit5TestEngine();
@@ -49,12 +58,10 @@ public class ExtensibleJUnit5TestEngineClassLevelTests {
 		assertThat(testResolverRegistrySpy.notifications).hasSize(1);
 
 		TestResolverRequest notification = testResolverRegistrySpy.notifications.get(0);
-		Assertions.assertAll(
-				() -> assertThat(notification.parent.getUniqueId()).isEqualTo(ENGINE_ID),
-				() -> assertThat(notification.parent.getDisplayName()).isEqualTo(DISPLAY_NAME),
-				() -> assertThat(notification.parent.getChildren()).isEmpty(),
-				() -> assertThat(notification.testPlanSpecification).isEqualTo(testPlanSpecification)
-		);
+		Assertions.assertAll(() -> assertThat(notification.parent.getUniqueId()).isEqualTo(ENGINE_ID),
+			() -> assertThat(notification.parent.getDisplayName()).isEqualTo(DISPLAY_NAME),
+			() -> assertThat(notification.parent.getChildren()).isEmpty(),
+			() -> assertThat(notification.testPlanSpecification).isEqualTo(testPlanSpecification));
 	}
 
 	@Test

@@ -1,14 +1,24 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
+
 package org.junit.gen5.engine.junit5ext.descriptor;
 
 public class ClassDescriptor extends GroupDescriptor {
-    private final Class<?> testClass;
+	private final Class<?> testClass;
 
-    public ClassDescriptor(Class<?> testClass, String uniqueId, String displayName) {
-        super(uniqueId, displayName);
-        this.testClass = testClass;
-    }
+	public ClassDescriptor(Class<?> testClass, String uniqueId, String displayName) {
+		super(uniqueId, displayName);
+		this.testClass = testClass;
+	}
 
-    public Class<?> getTestClass() {
-        return testClass;
-    }
+	public Class<?> getTestClass() {
+		return testClass;
+	}
 }

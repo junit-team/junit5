@@ -1,9 +1,19 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
+
 package org.junit.gen5.engine.junit5ext.resolver;
+
+import java.util.List;
 
 import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-
-import java.util.List;
 
 /**
  * A {@link TestResolver} is responsible for resolving different kind of test representatives.
@@ -12,5 +22,5 @@ import java.util.List;
  */
 @FunctionalInterface
 public interface TestResolver {
-    List<MutableTestDescriptor> resolveFor(MutableTestDescriptor parent, TestPlanSpecification testPlanSpecification);
+	List<MutableTestDescriptor> resolveFor(MutableTestDescriptor parent, TestPlanSpecification testPlanSpecification);
 }

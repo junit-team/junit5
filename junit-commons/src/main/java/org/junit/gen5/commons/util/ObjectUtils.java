@@ -10,10 +10,10 @@
 
 package org.junit.gen5.commons.util;
 
-import java.util.Objects;
-
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
+
+import java.util.Objects;
 
 /**
  * @since 5.0

@@ -1,3 +1,12 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 
 package org.junit.gen5.engine.junit5ext.resolver;
 
@@ -54,10 +63,12 @@ public class TestResolverRegistryImplTests {
 		testResolverRegistry.register(testResolverSpy);
 		testResolverRegistry.notifyResolvers(testGroup, emptyTestPlanSpecification);
 
-		assertTestResolverWasNotified(testResolverSpy, asList(testGroup, testResolverSpy.getResolvedTest()), emptyTestPlanSpecification);
+		assertTestResolverWasNotified(testResolverSpy, asList(testGroup, testResolverSpy.getResolvedTest()),
+			emptyTestPlanSpecification);
 	}
 
-	private void assertTestResolverWasNotified(TestResolverSpy testResolverSpy, List<MutableTestDescriptor> parents, TestPlanSpecification testPlanSpecification) {
+	private void assertTestResolverWasNotified(TestResolverSpy testResolverSpy, List<MutableTestDescriptor> parents,
+			TestPlanSpecification testPlanSpecification) {
 		assertThat(testResolverSpy.resolvedFor).hasSize(parents.size());
 
 		for (int i = 0; i < parents.size(); i++) {
