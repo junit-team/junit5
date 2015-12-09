@@ -12,17 +12,12 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
 
 public class StandardTestClassTest extends AbstractJUnit5TestEngineTestCase {
 
@@ -34,15 +29,12 @@ public class StandardTestClassTest extends AbstractJUnit5TestEngineTestCase {
 	}
 
 	@org.junit.Test
-	@Ignore
 	public void moreThanOneTestClassIsExecuted() {
+		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
+			TestPlanSpecification.forClass(FirstOfTwoTestCases.class),
+			TestPlanSpecification.forClass(SecondOfTwoTestCases.class));
 
-		List<TestPlanSpecificationElement> specificationElements = TestPlanSpecification.forNames(Arrays.asList(
-			"org.junit.gen5.engine.junit5.FirstOfTwoTestCases", "org.junit.gen5.engine.junit5.SecondOfTwoTestCases"));
-		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(specificationElements);
-
-		// TODO: the second parameter is ignored - why?? -> fix!!
-		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification, 77777);
+		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification, 6 + 2);
 
 		Assert.assertEquals("# tests started", 6, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 5, listener.testSucceededCount.get());

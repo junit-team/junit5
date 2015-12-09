@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5;
 
+import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import org.junit.gen5.engine.ExecutionRequest;
@@ -32,6 +33,7 @@ abstract class AbstractJUnit5TestEngineTestCase {
 
 	protected TrackingEngineExecutionListener executeTests(TestPlanSpecification spec, int expectedDescriptorCount) {
 		TestDescriptor testDescriptor = discoverTests(spec);
+		assertEquals(expectedDescriptorCount, testDescriptor.allDescendants().size());
 		TrackingEngineExecutionListener listener = new TrackingEngineExecutionListener();
 		engine.execute(new ExecutionRequest(testDescriptor, listener));
 		return listener;
