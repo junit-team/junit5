@@ -1,3 +1,5 @@
+uploadArchives.enabled = false
+
 dependencies {
 	compile(project(':junit-commons'))
 	compile(project(':junit-console'))

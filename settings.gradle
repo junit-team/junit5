@@ -1,5 +1,6 @@
 rootProject.name = "junit-lambda"
 
+include "documentation"
 include "junit-commons"
 include "junit-console"
 include "junit-engine-api"
