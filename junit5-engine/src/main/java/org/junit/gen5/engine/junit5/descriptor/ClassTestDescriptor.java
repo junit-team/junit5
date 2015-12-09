@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
+import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodContext;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
@@ -19,6 +20,7 @@ import java.util.Set;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
@@ -29,6 +31,8 @@ import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.execution.AfterEachCallback;
 import org.junit.gen5.engine.junit5.execution.BeforeEachCallback;
 import org.junit.gen5.engine.junit5.execution.JUnit5Context;
+import org.junit.gen5.engine.junit5.execution.MethodInvoker;
+import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
 import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
 
 /**
@@ -99,7 +103,8 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 	protected BeforeEachCallback beforeEachCallback(JUnit5Context context) {
 		return (testExtensionContext, testInstance) -> {
 			for (Method method : findAnnotatedMethods(testClass, BeforeEach.class, MethodSortOrder.HierarchyDown)) {
-				ReflectionUtils.invokeMethod(method, testInstance);
+				TestExtensionRegistry extensionRegistry = context.getTestExtensionRegistry();
+				invoke(testExtensionContext, testInstance, method, extensionRegistry);
 			}
 		};
 	}
@@ -110,7 +115,8 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 			throwable.ifPresent(throwables::add);
 			for (Method method : findAnnotatedMethods(testClass, AfterEach.class, MethodSortOrder.HierarchyUp)) {
 				try {
-					ReflectionUtils.invokeMethod(method, testInstance);
+					TestExtensionRegistry extensionRegistry = context.getTestExtensionRegistry();
+					invoke(testExtensionContext, testInstance, method, extensionRegistry);
 				}
 				catch (Throwable t) {
 					throwables.add(t);
@@ -123,6 +129,11 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 			}
 
 		};
+	}
+
+	private void invoke(TestExtensionContext testExtensionContext, Object testInstance, Method method,
+			TestExtensionRegistry extensionRegistry) {
+		new MethodInvoker(methodContext(testInstance, method), testExtensionContext, extensionRegistry).invoke();
 	}
 
 }

@@ -13,7 +13,6 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.api.Assertions.*;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Name;
@@ -46,7 +45,6 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 	}
 
 	@org.junit.Test
-	@Ignore("https://github.com/junit-team/junit-lambda/issues/39")
 	public void executeTestsForMethodInjectionInBeforeAndAfterMethodsCases() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class, 2);
 

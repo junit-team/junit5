@@ -10,6 +10,8 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodContext;
+
 import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.Set;
@@ -23,6 +25,7 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.execution.JUnit5Context;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
+import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
 
 /**
  * {@link TestDescriptor} for tests based on Java methods.
@@ -88,18 +91,19 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Child<
 
 		context.getBeforeEachCallback().beforeEach(testExtensionContext, testInstance);
 
-		Optional<Throwable> throwable = invokeTestMethod(newContext, testExtensionContext);
+		Optional<Throwable> throwable = invokeTestMethod(testExtensionContext, newContext.getTestExtensionRegistry());
 
 		context.getAfterEachCallback().afterEach(testExtensionContext, testInstance, throwable);
 
 		return newContext;
 	}
 
-	private Optional<Throwable> invokeTestMethod(JUnit5Context myContext, TestExtensionContext testExtensionContext) {
+	private Optional<Throwable> invokeTestMethod(TestExtensionContext testExtensionContext,
+			TestExtensionRegistry testExtensionRegistry) {
 		try {
-			MethodContext methodContext = new MethodContextImpl(testExtensionContext.getTestInstance(),
+			MethodContext methodContext = methodContext(testExtensionContext.getTestInstance(),
 				testExtensionContext.getTestMethod());
-			new MethodInvoker(methodContext, testExtensionContext, myContext.getTestExtensionRegistry()).invoke();
+			new MethodInvoker(methodContext, testExtensionContext, testExtensionRegistry).invoke();
 			return Optional.empty();
 		}
 		catch (Throwable t) {

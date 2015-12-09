@@ -19,7 +19,11 @@ public class MethodContextImpl implements MethodContext {
 	private final Object instance;
 	private final Method method;
 
-	public MethodContextImpl(Object instance, Method method) {
+	public static MethodContext methodContext(Object instance, Method method) {
+		return new MethodContextImpl(instance, method);
+	}
+
+	private MethodContextImpl(Object instance, Method method) {
 		this.instance = instance;
 		this.method = method;
 	}
