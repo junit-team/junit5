@@ -13,8 +13,11 @@ package org.junit.gen5.engine.junit5.descriptor;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
 
 import java.lang.reflect.Method;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
+import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
@@ -23,9 +26,10 @@ import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.Parent;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
-import org.junit.gen5.engine.junit5.BeforeEachCallback;
-import org.junit.gen5.engine.junit5.JUnit5Context;
-import org.junit.gen5.engine.junit5.TestInstanceProvider;
+import org.junit.gen5.engine.junit5.execution.AfterEachCallback;
+import org.junit.gen5.engine.junit5.execution.BeforeEachCallback;
+import org.junit.gen5.engine.junit5.execution.JUnit5Context;
+import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.
@@ -82,6 +86,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 		return context.extend()
 				.withTestInstanceProvider(testInstanceProvider(context))
 				.withBeforeEachCallback(beforeEachCallback(context))
+				.withAfterEachCallback(afterEachCallback(context))
 				.withTestExtensionRegistry(populateNewTestExtensionRegistryFromExtendWith(testClass, context.getTestExtensionRegistry()))
 				.build();
 		// @formatter:on
@@ -96,6 +101,27 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 			for (Method method : findAnnotatedMethods(testClass, BeforeEach.class, MethodSortOrder.HierarchyDown)) {
 				ReflectionUtils.invokeMethod(method, testInstance);
 			}
+		};
+	}
+
+	protected AfterEachCallback afterEachCallback(JUnit5Context context) {
+		return (testExtensionContext, testInstance, throwable) -> {
+			List<Throwable> throwables = new LinkedList<>();
+			throwable.ifPresent(throwables::add);
+			for (Method method : findAnnotatedMethods(testClass, AfterEach.class, MethodSortOrder.HierarchyUp)) {
+				try {
+					ReflectionUtils.invokeMethod(method, testInstance);
+				}
+				catch (Throwable t) {
+					throwables.add(t);
+				}
+			}
+			if (!throwables.isEmpty()) {
+				Throwable t = throwables.get(0);
+				throwables.stream().skip(1).forEach(t::addSuppressed);
+				throw t;
+			}
+
 		};
 	}
 

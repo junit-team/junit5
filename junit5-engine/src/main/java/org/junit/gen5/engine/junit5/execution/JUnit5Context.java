@@ -8,10 +8,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5;
+package org.junit.gen5.engine.junit5.execution;
 
 import org.junit.gen5.engine.Context;
-import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
 
 public class JUnit5Context implements Context {
 
@@ -31,6 +30,10 @@ public class JUnit5Context implements Context {
 
 	public BeforeEachCallback getBeforeEachCallback() {
 		return state.beforeEachCallback;
+	}
+
+	public AfterEachCallback getAfterEachCallback() {
+		return state.afterEachCallback;
 	}
 
 	public TestExtensionRegistry getTestExtensionRegistry() {
@@ -53,6 +56,7 @@ public class JUnit5Context implements Context {
 
 		TestInstanceProvider testInstanceProvider;
 		BeforeEachCallback beforeEachCallback;
+		AfterEachCallback afterEachCallback;
 		TestExtensionRegistry testExtensionRegistry;
 
 		@Override
@@ -84,6 +88,11 @@ public class JUnit5Context implements Context {
 
 		public Builder withBeforeEachCallback(BeforeEachCallback beforeEachCallback) {
 			newState().beforeEachCallback = beforeEachCallback;
+			return this;
+		}
+
+		public Builder withAfterEachCallback(AfterEachCallback afterEachCallback) {
+			newState().afterEachCallback = afterEachCallback;
 			return this;
 		}
 

@@ -10,8 +10,7 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.api.Assertions.fail;
+import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.api.Assumptions.assumeTrue;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
@@ -31,10 +30,9 @@ import org.junit.gen5.engine.TestPlanSpecification;
  * @since 5.0
  */
 
-@Ignore("https://github.com/junit-team/junit-lambda/issues/39")
-
 public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase {
 
+	@Ignore("https://github.com/junit-team/junit-lambda/issues/39")
 	@org.junit.Test
 	public void executeCompositeTestPlanSpecification() {
 		TestPlanSpecification spec = build(
@@ -50,6 +48,7 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase 
 		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
 	}
 
+	@Ignore("https://github.com/junit-team/junit-lambda/issues/39")
 	@org.junit.Test
 	public void executeTestsForClass() {
 		LocalTestCase.countAfterInvoked = 0;

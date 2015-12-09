@@ -10,25 +10,18 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
-
 import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
-import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.extension.MethodContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.Child;
 import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
-import org.junit.gen5.engine.junit5.JUnit5Context;
-import org.junit.gen5.engine.junit5.TestInstanceProvider;
+import org.junit.gen5.engine.junit5.execution.JUnit5Context;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 
 /**
@@ -87,39 +80,31 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Child<
 
 	@Override
 	public JUnit5Context execute(JUnit5Context context) throws Throwable {
-		JUnit5Context myContext = context.extend().withTestExtensionRegistry(
+		JUnit5Context newContext = context.extend().withTestExtensionRegistry(
 			populateNewTestExtensionRegistryFromExtendWith(testMethod, context.getTestExtensionRegistry())).build();
 
-		TestInstanceProvider provider = context.getTestInstanceProvider();
-		Object testInstance = provider.getTestInstance();
+		Object testInstance = context.getTestInstanceProvider().getTestInstance();
 		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(this, testInstance);
 
 		context.getBeforeEachCallback().beforeEach(testExtensionContext, testInstance);
 
-		List<Throwable> throwables = new LinkedList<>();
+		Optional<Throwable> throwable = invokeTestMethod(newContext, testExtensionContext);
+
+		context.getAfterEachCallback().afterEach(testExtensionContext, testInstance, throwable);
+
+		return newContext;
+	}
+
+	private Optional<Throwable> invokeTestMethod(JUnit5Context myContext, TestExtensionContext testExtensionContext) {
 		try {
-			MethodContext methodContext = new MethodContextImpl(testInstance, testMethod);
+			MethodContext methodContext = new MethodContextImpl(testExtensionContext.getTestInstance(),
+				testExtensionContext.getTestMethod());
 			new MethodInvoker(methodContext, testExtensionContext, myContext.getTestExtensionRegistry()).invoke();
+			return Optional.empty();
 		}
 		catch (Throwable t) {
-			throwables.add(t);
+			return Optional.of(t);
 		}
-		finally {
-			for (Method method : findAnnotatedMethods(testClass, AfterEach.class, MethodSortOrder.HierarchyUp)) {
-				try {
-					ReflectionUtils.invokeMethod(method, testInstance);
-				}
-				catch (Throwable t) {
-					throwables.add(t);
-				}
-			}
-		}
-		if (throwables.isEmpty()) {
-			return myContext;
-		}
-		Throwable t = throwables.get(0);
-		throwables.stream().skip(1).forEach(t::addSuppressed);
-		throw t;
 	}
 
 }

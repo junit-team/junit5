@@ -14,9 +14,10 @@ import java.util.Optional;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.junit5.BeforeEachCallback;
-import org.junit.gen5.engine.junit5.JUnit5Context;
-import org.junit.gen5.engine.junit5.TestInstanceProvider;
+import org.junit.gen5.engine.junit5.execution.AfterEachCallback;
+import org.junit.gen5.engine.junit5.execution.BeforeEachCallback;
+import org.junit.gen5.engine.junit5.execution.JUnit5Context;
+import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
 
 /**
  * {@link TestDescriptor} for tests based on nested (but not static) Java classes.
@@ -48,6 +49,17 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 				context.getBeforeEachCallback().beforeEach(testExtensionContext, outerInstance.get());
 			}
 			super.beforeEachCallback(context).beforeEach(testExtensionContext, testInstance);
+		};
+	}
+
+	@Override
+	protected AfterEachCallback afterEachCallback(JUnit5Context context) {
+		return (testExtensionContext, testInstance, throwable) -> {
+			super.afterEachCallback(context).afterEach(testExtensionContext, testInstance, throwable);
+			Optional<Object> outerInstance = ReflectionUtils.getOuterInstance(testInstance);
+			if (outerInstance.isPresent()) {
+				context.getAfterEachCallback().afterEach(testExtensionContext, outerInstance.get(), throwable);
+			}
 		};
 	}
 

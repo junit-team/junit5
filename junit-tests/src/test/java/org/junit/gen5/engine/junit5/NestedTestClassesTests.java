@@ -11,11 +11,9 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.engine.TestPlanSpecification.build;
-import static org.junit.gen5.engine.TestPlanSpecification.forClass;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
@@ -28,7 +26,6 @@ import org.junit.gen5.engine.TestPlanSpecification;
  *
  * @since 5.0
  */
-@Ignore("https://github.com/junit-team/junit-lambda/issues/39")
 public class NestedTestClassesTests extends AbstractJUnit5TestEngineTestCase {
 
 	@org.junit.Test
