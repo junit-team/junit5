@@ -1,10 +1,7 @@
 
 package org.junit.gen5.engine.junit5ext.descriptor;
 
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestSource;
@@ -14,10 +11,12 @@ public class GroupDescriptor implements MutableTestDescriptor {
 	private String displayName;
 	private String uniqueId;
 	private MutableTestDescriptor parent;
+	private Set<MutableTestDescriptor> children;
 
 	public GroupDescriptor(String uniqueId, String displayName) {
 		this.uniqueId = uniqueId;
 		this.displayName = displayName;
+		this.children = new LinkedHashSet<>();
 	}
 
 	@Override
@@ -47,17 +46,17 @@ public class GroupDescriptor implements MutableTestDescriptor {
 
 	@Override
 	public Set<MutableTestDescriptor> getChildren() {
-		return Collections.emptySet();
+		return Collections.unmodifiableSet(children);
 	}
 
 	@Override
 	public void addChild(MutableTestDescriptor descriptor) {
-		throw new UnsupportedOperationException("TestGroup does not support addChild(), yet.");
+		children.add(descriptor);
 	}
 
 	@Override
 	public void removeChild(MutableTestDescriptor descriptor) {
-		throw new UnsupportedOperationException("TestGroup does not support removeChild(), yet.");
+		children.remove(descriptor);
 	}
 
 	@Override
