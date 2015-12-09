@@ -11,7 +11,6 @@
 package org.junit.gen5.commons.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +31,7 @@ public class ClasspathScannerTest {
 	}
 
 	@Test
-	public void findAllClassesInThisPackage() throws IOException, ClassNotFoundException {
+	public void findAllClassesInThisPackage() throws Exception {
 		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.gen5.commons", clazz -> true);
 		Assert.assertTrue("Should be at least 20 classes", classes.size() >= 20);
 		Assert.assertTrue(classes.contains(NestedClassToBeFound.class));
@@ -40,21 +39,20 @@ public class ClasspathScannerTest {
 	}
 
 	@Test
-	public void findAllClassesInThisPackageWithFilter() throws IOException, ClassNotFoundException {
+	public void findAllClassesInThisPackageWithFilter() throws Exception {
 		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTest.class;
 		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.gen5.commons", thisClassOnly);
 		Assert.assertSame(ClasspathScannerTest.class, classes.get(0));
 	}
 
 	@Test
-	public void isPackage() throws IOException, ClassNotFoundException {
+	public void isPackage() throws Exception {
 		Assert.assertTrue(classpathScanner.isPackage("org.junit.gen5.commons"));
 		Assert.assertFalse(classpathScanner.isPackage("org.doesnotexist"));
-
 	}
 
 	@Test
-	public void findAllClassesInClasspathRoot() throws IOException, ClassNotFoundException {
+	public void findAllClassesInClasspathRoot() throws Exception {
 		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTest.class;
 		File root = getTestClasspathRoot();
 		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(root, thisClassOnly);
@@ -62,7 +60,7 @@ public class ClasspathScannerTest {
 	}
 
 	@Test
-	public void findAllClassesInClasspathRootWithFilter() throws IOException, ClassNotFoundException {
+	public void findAllClassesInClasspathRootWithFilter() throws Exception {
 		File root = getTestClasspathRoot();
 		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(root, clazz -> true);
 
@@ -72,8 +70,7 @@ public class ClasspathScannerTest {
 
 	private File getTestClasspathRoot() {
 		String fullClassPath = System.getProperty("java.class.path");
-		final String separator = System.getProperty("path.separator");
-		Optional<String> testRoot = Arrays.stream(fullClassPath.split(separator)).filter(
+		Optional<String> testRoot = Arrays.stream(fullClassPath.split(File.pathSeparator)).filter(
 			s -> s.endsWith("/classes/test")).findFirst();
 
 		Assume.assumeTrue("There should be a test root", testRoot.isPresent());
