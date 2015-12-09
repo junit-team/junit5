@@ -49,7 +49,7 @@ public class JUnit5TestDescriptorTests {
 
 	@org.junit.Test
 	public void constructFromMethodWithAnnotations() throws Exception {
-		ClassTestDescriptor classDescriptor = new ClassTestDescriptor("class id", getClass());
+		JUnit5TestDescriptor classDescriptor = new ClassTestDescriptor("class id", getClass());
 		Method testMethod = getClass().getDeclaredMethod("foo");
 		MethodTestDescriptor methodDescriptor = new MethodTestDescriptor("method id", getClass(), testMethod);
 		classDescriptor.addChild(methodDescriptor);

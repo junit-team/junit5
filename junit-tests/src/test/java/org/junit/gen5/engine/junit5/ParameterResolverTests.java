@@ -32,7 +32,6 @@ import org.junit.gen5.engine.junit5.execution.injection.sample.CustomTypeParamet
  *
  * @since 5.0
  */
-@Ignore("https://github.com/junit-team/junit-lambda/issues/39")
 public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 
 	@org.junit.Test
@@ -47,6 +46,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 	}
 
 	@org.junit.Test
+	@Ignore("https://github.com/junit-team/junit-lambda/issues/39")
 	public void executeTestsForMethodInjectionInBeforeAndAfterMethodsCases() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class, 2);
 

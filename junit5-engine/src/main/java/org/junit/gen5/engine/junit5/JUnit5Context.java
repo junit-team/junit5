@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.gen5.engine.Context;
+import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
 
 public class JUnit5Context implements Context {
 
@@ -31,16 +32,24 @@ public class JUnit5Context implements Context {
 		return with(TestInstanceProvider.class.getName(), testInstanceProvider);
 	}
 
-	public JUnit5Context withBeforeEachCallback(BeforeEachCallback beforeEachCallback) {
-		return with("beforeEachCallback", beforeEachCallback);
-	}
-
 	public TestInstanceProvider getTestInstanceProvider() {
 		return get(TestInstanceProvider.class.getName(), TestInstanceProvider.class);
 	}
 
+	public JUnit5Context withBeforeEachCallback(BeforeEachCallback beforeEachCallback) {
+		return with("beforeEachCallback", beforeEachCallback);
+	}
+
 	public BeforeEachCallback getBeforeEachCallback() {
 		return get("beforeEachCallback", BeforeEachCallback.class);
+	}
+
+	public JUnit5Context withTestExtensionRegistry(TestExtensionRegistry testExtensionRegistry) {
+		return with("testExtensionRegistry", testExtensionRegistry);
+	}
+
+	public TestExtensionRegistry getTestExtensionRegistry() {
+		return get("testExtensionRegistry", TestExtensionRegistry.class);
 	}
 
 	private JUnit5Context with(String key, Object value) {

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
@@ -27,6 +28,7 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.JUnit5Context;
 import org.junit.gen5.engine.junit5.TestInstanceProvider;
+import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 
 /**
  * {@link TestDescriptor} for tests based on Java methods.
@@ -80,12 +82,18 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Child<
 
 	@Override
 	public JUnit5Context execute(JUnit5Context context) throws Throwable {
+		JUnit5Context myContext = context.withTestExtensionRegistry(
+			populateNewTestExtensionRegistryFromExtendWith(testMethod, context.getTestExtensionRegistry()));
+
 		TestInstanceProvider provider = context.getTestInstanceProvider();
 		Object testInstance = provider.getTestInstance();
+
 		context.getBeforeEachCallback().beforeEach(testInstance);
+
 		List<Throwable> throwables = new LinkedList<>();
 		try {
-			ReflectionUtils.invokeMethod(testMethod, testInstance);
+			TestExecutionContext testExecutionContext = new TestExecutionContextImpl(this, myContext);
+			new MethodInvoker(testMethod, testInstance, testExecutionContext).invoke();
 		}
 		catch (Throwable t) {
 			throwables.add(t);
@@ -101,7 +109,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Child<
 			}
 		}
 		if (throwables.isEmpty()) {
-			return context;
+			return myContext;
 		}
 		Throwable t = throwables.get(0);
 		throwables.stream().skip(1).forEach(t::addSuppressed);

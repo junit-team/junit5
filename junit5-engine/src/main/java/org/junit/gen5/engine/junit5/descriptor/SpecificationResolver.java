@@ -120,7 +120,7 @@ public class SpecificationResolver {
 
 	private void resolveClassTestable(Class<?> testClass, String uniqueId, AbstractTestDescriptor parentDescriptor,
 			boolean withChildren) {
-		ClassTestDescriptor descriptor = getOrCreateClassDescriptor(testClass, uniqueId);
+		JUnit5TestDescriptor descriptor = getOrCreateClassDescriptor(testClass, uniqueId);
 		parentDescriptor.addChild(descriptor);
 
 		if (withChildren) {
@@ -181,8 +181,8 @@ public class SpecificationResolver {
 			() -> new NestedClassTestDescriptor(uniqueId, clazz));
 	}
 
-	private ClassTestDescriptor getOrCreateClassDescriptor(Class<?> clazz, String uniqueId) {
-		return (ClassTestDescriptor) descriptorByUniqueId(uniqueId).orElseGet(
+	private JUnit5TestDescriptor getOrCreateClassDescriptor(Class<?> clazz, String uniqueId) {
+		return (JUnit5TestDescriptor) descriptorByUniqueId(uniqueId).orElseGet(
 			() -> new ClassTestDescriptor(uniqueId, clazz));
 	}
 

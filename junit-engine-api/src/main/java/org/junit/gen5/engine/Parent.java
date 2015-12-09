@@ -12,8 +12,12 @@ package org.junit.gen5.engine;
 
 public interface Parent<C extends Context> {
 
-	C beforeAll(C context);
+	default C beforeAll(C context) {
+		return context;
+	}
 
-	C afterAll(C context);
+	default C afterAll(C context) {
+		return context;
+	}
 
 }

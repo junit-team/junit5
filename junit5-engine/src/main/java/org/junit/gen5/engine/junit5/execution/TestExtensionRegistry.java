@@ -38,11 +38,11 @@ public class TestExtensionRegistry {
 
 	private final Optional<TestExtensionRegistry> parent;
 
-	TestExtensionRegistry() {
+	public TestExtensionRegistry() {
 		this(null);
 	}
 
-	TestExtensionRegistry(TestExtensionRegistry parent) {
+	public TestExtensionRegistry(TestExtensionRegistry parent) {
 		this.parent = Optional.ofNullable(parent);
 		if (!this.parent.isPresent()) {
 			addDefaultExtensions();
