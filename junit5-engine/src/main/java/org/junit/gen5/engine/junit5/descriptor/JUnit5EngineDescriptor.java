@@ -24,7 +24,7 @@ public class JUnit5EngineDescriptor extends EngineDescriptor implements Parent<J
 
 	@Override
 	public JUnit5Context beforeAll(JUnit5Context context) {
-		return context.withTestExtensionRegistry(new TestExtensionRegistry());
+		return context.extend().withTestExtensionRegistry(new TestExtensionRegistry()).build();
 	}
 
 }

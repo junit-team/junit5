@@ -10,56 +10,103 @@
 
 package org.junit.gen5.engine.junit5;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.gen5.engine.Context;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
 
 public class JUnit5Context implements Context {
 
-	private final Map<String, Object> map;
+	private final State state;
 
 	public JUnit5Context() {
-		this(new HashMap<>());
+		this(new State());
 	}
 
-	private JUnit5Context(Map<String, Object> map) {
-		this.map = map;
-	}
-
-	public JUnit5Context withTestInstanceProvider(TestInstanceProvider testInstanceProvider) {
-		return with(TestInstanceProvider.class.getName(), testInstanceProvider);
+	private JUnit5Context(State state) {
+		this.state = state;
 	}
 
 	public TestInstanceProvider getTestInstanceProvider() {
-		return get(TestInstanceProvider.class.getName(), TestInstanceProvider.class);
-	}
-
-	public JUnit5Context withBeforeEachCallback(BeforeEachCallback beforeEachCallback) {
-		return with("beforeEachCallback", beforeEachCallback);
+		return state.testInstanceProvider;
 	}
 
 	public BeforeEachCallback getBeforeEachCallback() {
-		return get("beforeEachCallback", BeforeEachCallback.class);
-	}
-
-	public JUnit5Context withTestExtensionRegistry(TestExtensionRegistry testExtensionRegistry) {
-		return with("testExtensionRegistry", testExtensionRegistry);
+		return state.beforeEachCallback;
 	}
 
 	public TestExtensionRegistry getTestExtensionRegistry() {
-		return get("testExtensionRegistry", TestExtensionRegistry.class);
+		return state.testExtensionRegistry;
 	}
 
-	private JUnit5Context with(String key, Object value) {
-		Map<String, Object> newMap = new HashMap<>(map);
-		newMap.put(key, value);
-		return new JUnit5Context(newMap);
+	public Builder extend() {
+		return builder(this);
 	}
 
-	private <T> T get(String key, Class<T> clazz) {
-		return clazz.cast(map.get(key));
+	public static Builder builder() {
+		return new Builder(null, new State());
+	}
+
+	public static Builder builder(JUnit5Context context) {
+		return new Builder(context.state, null);
+	}
+
+	private static final class State implements Cloneable {
+
+		TestInstanceProvider testInstanceProvider;
+		BeforeEachCallback beforeEachCallback;
+		TestExtensionRegistry testExtensionRegistry;
+
+		@Override
+		public State clone() {
+			try {
+				return (State) super.clone();
+			}
+			catch (CloneNotSupportedException e) {
+				throw new RuntimeException("State could not be cloned", e);
+			}
+		}
+
+	}
+
+	public static class Builder {
+
+		private State originalState;
+		private State newState;
+
+		private Builder(State originalState, State state) {
+			this.originalState = originalState;
+			this.newState = state;
+		}
+
+		public Builder withTestInstanceProvider(TestInstanceProvider testInstanceProvider) {
+			newState().testInstanceProvider = testInstanceProvider;
+			return this;
+		}
+
+		public Builder withBeforeEachCallback(BeforeEachCallback beforeEachCallback) {
+			newState().beforeEachCallback = beforeEachCallback;
+			return this;
+		}
+
+		public Builder withTestExtensionRegistry(TestExtensionRegistry testExtensionRegistry) {
+			newState().testExtensionRegistry = testExtensionRegistry;
+			return this;
+		}
+
+		public JUnit5Context build() {
+			if (newState != null) {
+				originalState = newState;
+				newState = null;
+			}
+			return new JUnit5Context(originalState);
+		}
+
+		private State newState() {
+			if (newState == null) {
+				this.newState = originalState.clone();
+			}
+			return newState;
+		}
+
 	}
 
 }

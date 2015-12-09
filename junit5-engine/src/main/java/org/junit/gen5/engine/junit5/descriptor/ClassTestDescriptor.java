@@ -79,10 +79,11 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 	@Override
 	public JUnit5Context beforeAll(JUnit5Context context) {
 		// @formatter:off
-		return context
+		return context.extend()
 				.withTestInstanceProvider(testInstanceProvider(context))
 				.withBeforeEachCallback(beforeEachCallback(context))
-				.withTestExtensionRegistry(populateNewTestExtensionRegistryFromExtendWith(testClass, context.getTestExtensionRegistry()));
+				.withTestExtensionRegistry(populateNewTestExtensionRegistryFromExtendWith(testClass, context.getTestExtensionRegistry()))
+				.build();
 		// @formatter:on
 	}
 

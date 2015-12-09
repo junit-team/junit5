@@ -87,8 +87,8 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Child<
 
 	@Override
 	public JUnit5Context execute(JUnit5Context context) throws Throwable {
-		JUnit5Context myContext = context.withTestExtensionRegistry(
-			populateNewTestExtensionRegistryFromExtendWith(testMethod, context.getTestExtensionRegistry()));
+		JUnit5Context myContext = context.extend().withTestExtensionRegistry(
+			populateNewTestExtensionRegistryFromExtendWith(testMethod, context.getTestExtensionRegistry())).build();
 
 		TestInstanceProvider provider = context.getTestInstanceProvider();
 		Object testInstance = provider.getTestInstance();
