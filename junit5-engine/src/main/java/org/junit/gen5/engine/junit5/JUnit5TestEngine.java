@@ -10,16 +10,18 @@
 
 package org.junit.gen5.engine.junit5;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
-import org.junit.gen5.api.Test;
-import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
+import org.junit.gen5.engine.ClassFilter;
+import org.junit.gen5.engine.EngineFilter;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
+import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.TreeBasedTestEngine;
+import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.JUnit5EngineDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;
 
 public class JUnit5TestEngine extends TreeBasedTestEngine<JUnit5Context> {
 
@@ -35,21 +37,32 @@ public class JUnit5TestEngine extends TreeBasedTestEngine<JUnit5Context> {
 	public JUnit5EngineDescriptor discoverTests(TestPlanSpecification specification) {
 		Preconditions.notNull(specification, "specification must not be null");
 		JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(this);
-		specification.accept(new TestPlanSpecificationElementVisitor() {
-
-			@Override
-			public void visitClass(Class<?> testClass) {
-				JUnit5ClassDescriptor classDescriptor = new JUnit5ClassDescriptor(ENGINE_ID, testClass);
-				List<Method> methods = AnnotationUtils.findAnnotatedMethods(testClass, Test.class,
-					MethodSortOrder.HierarchyDown);
-				for (Method method : methods) {
-					classDescriptor.addChild(
-						new JUnit5MethodDescriptor(classDescriptor.getUniqueId(), testClass, method));
-				}
-				engineDescriptor.addChild(classDescriptor);
-			}
-		});
+		resolveSpecification(specification, engineDescriptor);
 		return engineDescriptor;
+	}
+
+	private void resolveSpecification(TestPlanSpecification specification, JUnit5EngineDescriptor engineDescriptor) {
+		SpecificationResolver resolver = new SpecificationResolver(engineDescriptor);
+		for (TestPlanSpecificationElement element : specification) {
+			resolver.resolveElement(element);
+		}
+		applyEngineFilters(specification.getEngineFilters(), engineDescriptor);
+	}
+
+	private void applyEngineFilters(List<EngineFilter> engineFilters, JUnit5EngineDescriptor engineDescriptor) {
+		// TODO Currently only works with a single ClassFilter
+		if (engineFilters.isEmpty()) {
+			return;
+		}
+		ClassFilter filter = (ClassFilter) engineFilters.get(0);
+		TestDescriptor.Visitor filteringVisitor = (descriptor, remove) -> {
+			if (descriptor.getClass() == ClassTestDescriptor.class) {
+				ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptor;
+				if (!filter.acceptClass(classTestDescriptor.getTestClass()))
+					remove.run();
+			}
+		};
+		engineDescriptor.accept(filteringVisitor);
 	}
 
 	@Override
