@@ -8,9 +8,9 @@ import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
-import org.junit.gen5.engine.junit5ext.testable.ClassTestGroup;
+import org.junit.gen5.engine.junit5ext.descriptor.ClassDescriptor;
 
-public class JavaClassResolver implements TestResolver {
+public class ClassResolver implements TestResolver {
     @Override
     public List<MutableTestDescriptor> resolveFor(MutableTestDescriptor parent, TestPlanSpecification testPlanSpecification) {
         ObjectUtils.verifyNonNull(parent, "Parent must not be null!");
@@ -41,8 +41,8 @@ public class JavaClassResolver implements TestResolver {
         String uniqueId = String.format("%s:%s", parentUniqueId, testClass.getCanonicalName());
         String displayName = testClass.getSimpleName();
 
-        ClassTestGroup classTestGroup = new ClassTestGroup(testClass, uniqueId, displayName);
-        classTestGroup.setParent(parent);
-        return classTestGroup;
+        ClassDescriptor classDescriptor = new ClassDescriptor(testClass, uniqueId, displayName);
+        classDescriptor.setParent(parent);
+        return classDescriptor;
     }
 }

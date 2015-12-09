@@ -10,19 +10,18 @@ import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
-import org.junit.gen5.engine.junit5ext.testable.ClassTestGroup;
-import org.junit.gen5.engine.junit5ext.testable.MethodTest;
+import org.junit.gen5.engine.junit5ext.descriptor.ClassDescriptor;
+import org.junit.gen5.engine.junit5ext.descriptor.MethodDescriptor;
 
-public class JavaMethodResolver implements TestResolver {
+public class MethodResolver implements TestResolver {
     @Override
     public List<MutableTestDescriptor> resolveFor(MutableTestDescriptor parent, TestPlanSpecification testPlanSpecification) {
         ObjectUtils.verifyNonNull(parent, "Parent must not be null!");
         ObjectUtils.verifyNonNull(testPlanSpecification, "TestPlanSpecification must not be null!");
 
-        if (parent instanceof ClassTestGroup) {
-            ClassTestGroup classTestGroup = (ClassTestGroup) parent;
-            Class<?> testClass = classTestGroup.getTestClass();
+        if (parent instanceof ClassDescriptor) {
+            ClassDescriptor classDescriptor = (ClassDescriptor) parent;
+            Class<?> testClass = classDescriptor.getTestClass();
             List<Method> methods = ReflectionUtils.findMethods(testClass, (method) -> method.isAnnotationPresent(Test.class));
 
             List<MutableTestDescriptor> result = new LinkedList<>();
@@ -40,8 +39,8 @@ public class JavaMethodResolver implements TestResolver {
         String uniqueId = String.format("%s#%s()", parentUniqueId, method.getName());
         String displayName = method.getName();
 
-        MethodTest methodTest = new MethodTest(method, uniqueId, displayName);
-        methodTest.setParent(parent);
-        return methodTest;
+        MethodDescriptor methodDescriptor = new MethodDescriptor(method, uniqueId, displayName);
+        methodDescriptor.setParent(parent);
+        return methodDescriptor;
     }
 }

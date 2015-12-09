@@ -1,18 +1,21 @@
 
-package org.junit.gen5.engine.junit5ext.testable;
+package org.junit.gen5.engine.junit5ext.descriptor;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.TestTag;
 
-public class TestGroup implements MutableTestDescriptor {
+public class GroupDescriptor implements MutableTestDescriptor {
 	private String displayName;
 	private String uniqueId;
 	private MutableTestDescriptor parent;
 
-	public TestGroup(String uniqueId, String displayName) {
+	public GroupDescriptor(String uniqueId, String displayName) {
 		this.uniqueId = uniqueId;
 		this.displayName = displayName;
 	}
@@ -74,9 +77,11 @@ public class TestGroup implements MutableTestDescriptor {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		TestGroup testGroup = (TestGroup) o;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		GroupDescriptor testGroup = (GroupDescriptor) o;
 		return Objects.equals(uniqueId, testGroup.uniqueId);
 	}
 

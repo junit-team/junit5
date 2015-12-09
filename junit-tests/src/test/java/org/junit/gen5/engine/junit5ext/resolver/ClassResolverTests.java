@@ -9,13 +9,12 @@ import org.junit.Test;
 import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5ext.samples.SinglePassingTestSampleClass;
-import org.junit.gen5.engine.junit5ext.testable.TestGroup;
+import org.junit.gen5.engine.junit5ext.descriptor.GroupDescriptor;
 
 import java.util.List;
-import java.util.Optional;
 
-public class JavaClassResolverTests {
-	private JavaClassResolver resolver = new JavaClassResolver();
+public class ClassResolverTests {
+	private ClassResolver resolver = new ClassResolver();
 
 	@Test(expected = IllegalArgumentException.class)
 	public void withIllegalParent_throwIllegalArgumentException() throws Exception {
@@ -24,12 +23,12 @@ public class JavaClassResolverTests {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void withIllegalSpecification_throwIllegalArgumentException() throws Exception {
-		resolver.resolveFor(new TestGroup("id", "name"), null);
+		resolver.resolveFor(new GroupDescriptor("id", "name"), null);
 	}
 
 	@Test
 	public void givenTestGroupRepresentingTheRoot_resolvesClassesFromTheSpecification() throws Exception {
-		TestGroup parent = new TestGroup("id", "name");
+		GroupDescriptor parent = new GroupDescriptor("id", "name");
 		TestPlanSpecification testPlanSpecification = build(forClass(SinglePassingTestSampleClass.class));
 		List<MutableTestDescriptor> result = resolver.resolveFor(parent, testPlanSpecification);
 

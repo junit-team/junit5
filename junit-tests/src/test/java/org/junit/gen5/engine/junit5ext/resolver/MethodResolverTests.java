@@ -11,11 +11,11 @@ import org.junit.Test;
 import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5ext.samples.SinglePassingTestSampleClass;
-import org.junit.gen5.engine.junit5ext.testable.ClassTestGroup;
-import org.junit.gen5.engine.junit5ext.testable.TestGroup;
+import org.junit.gen5.engine.junit5ext.descriptor.ClassDescriptor;
+import org.junit.gen5.engine.junit5ext.descriptor.GroupDescriptor;
 
-public class JavaMethodResolverTests {
-	private JavaMethodResolver resolver = new JavaMethodResolver();
+public class MethodResolverTests {
+	private MethodResolver resolver = new MethodResolver();
 
 	@Test(expected = IllegalArgumentException.class)
 	public void withIllegalParent_throwIllegalArgumentException() throws Exception {
@@ -24,12 +24,12 @@ public class JavaMethodResolverTests {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void withIllegalSpecification_throwIllegalArgumentException() throws Exception {
-		resolver.resolveFor(new ClassTestGroup(SinglePassingTestSampleClass.class, "id", "name"), null);
+		resolver.resolveFor(new ClassDescriptor(SinglePassingTestSampleClass.class, "id", "name"), null);
 	}
 
 	@Test
 	public void givenArbitraryTestDescriptor_nothingIsResolved() throws Exception {
-		TestGroup parent = new TestGroup("id", "name");
+		GroupDescriptor parent = new GroupDescriptor("id", "name");
 		TestPlanSpecification testPlanSpecification = build(forClass(SinglePassingTestSampleClass.class));
 		List<MutableTestDescriptor> result = resolver.resolveFor(parent, testPlanSpecification);
 
@@ -38,7 +38,7 @@ public class JavaMethodResolverTests {
 
 	@Test
 	public void givenClassTestGroup_resolvesMethodsWithinTestClassAnnotatedWithTest() throws Exception {
-		ClassTestGroup parent = new ClassTestGroup(SinglePassingTestSampleClass.class, "id", "name");
+		ClassDescriptor parent = new ClassDescriptor(SinglePassingTestSampleClass.class, "id", "name");
 		TestPlanSpecification testPlanSpecification = build(forClass(SinglePassingTestSampleClass.class));
 		List<MutableTestDescriptor> result = resolver.resolveFor(parent, testPlanSpecification);
 

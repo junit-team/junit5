@@ -9,13 +9,13 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.junit5ext.testable.TestGroup;
+import org.junit.gen5.engine.junit5ext.descriptor.GroupDescriptor;
 import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverRequest;
 import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverSpy;
 import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverSpyWithTestsForRoot;
 
 public class TestResolverRegistryImplTests {
-	private TestGroup testGroup = new TestGroup("testGroup", "Test Group");
+	private GroupDescriptor testGroup = new GroupDescriptor("testGroup", "Test Group");
 	private TestPlanSpecification emptyTestPlanSpecification = TestPlanSpecification.build();
 	private TestResolverRegistryImpl testResolverRegistry = new TestResolverRegistryImpl();
 

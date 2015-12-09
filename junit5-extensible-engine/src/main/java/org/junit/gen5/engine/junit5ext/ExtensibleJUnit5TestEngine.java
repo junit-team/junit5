@@ -5,7 +5,7 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5ext.resolver.TestResolverRegistry;
-import org.junit.gen5.engine.junit5ext.testable.TestGroup;
+import org.junit.gen5.engine.junit5ext.descriptor.GroupDescriptor;
 
 public class ExtensibleJUnit5TestEngine implements TestEngine {
     public static final String ENGINE_ID = "junit5ext";
@@ -25,7 +25,7 @@ public class ExtensibleJUnit5TestEngine implements TestEngine {
 
     @Override
     public TestDescriptor discoverTests(TestPlanSpecification specification) {
-        TestGroup root = new TestGroup(getId(), toString());
+        GroupDescriptor root = new GroupDescriptor(getId(), toString());
         testResolverRegistry.notifyResolvers(root, specification);
         return root;
     }
