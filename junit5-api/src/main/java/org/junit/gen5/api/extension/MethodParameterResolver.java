@@ -31,20 +31,19 @@ public interface MethodParameterResolver extends TestExtension {
 
 	/**
 	 * Determine if this resolver supports resolution of the given {@link Parameter}
-	 * for the supplied {@link TestExecutionContext}.
+	 * for the supplied {@link TestExtensionContext}.
 	 */
-	boolean supports(Parameter parameter, TestExecutionContext testExecutionContext);
+	boolean supports(Parameter parameter, TestExtensionContext context);
 
 	/**
-	 * Resolve the given {@link Parameter} for the supplied {@link TestExecutionContext}.
+	 * Resolve the given {@link Parameter} for the supplied {@link TestExtensionContext}.
 	 *
 	 * <p>The default implementation uses reflection to instantiate the
 	 * required {@link Parameter#getType type} via its default constructor.
 	 *
 	 * @see ReflectionUtils#newInstance(Class, Object...)
 	 */
-	default Object resolve(Parameter parameter, TestExecutionContext testExecutionContext)
-			throws ParameterResolutionException {
+	default Object resolve(Parameter parameter, TestExtensionContext context) throws ParameterResolutionException {
 
 		return ReflectionUtils.newInstance(parameter.getType());
 	}

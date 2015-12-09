@@ -18,7 +18,7 @@ import java.util.Optional;
  *
  * <p>A {@code Condition} is {@linkplain #evaluate evaluated} to determine
  * if a given test (e.g., class or method) should be executed based on the
- * supplied {@link TestExecutionContext}. When evaluated at the class level,
+ * supplied {@link ExtensionContext}. When evaluated at the class level,
  * a condition applies to all test methods within that class.
  *
  * <p>Implementations must provide a no-args constructor.
@@ -30,15 +30,15 @@ import java.util.Optional;
 public interface Condition extends TestExtension {
 
 	/**
-	 * Evaluate this condition for the supplied {@link TestExecutionContext}.
+	 * Evaluate this condition for the supplied {@link ExtensionContext}.
 	 *
 	 * <p>An {@linkplain Result#enabled enabled} result indicates that the
 	 * test should be executed; whereas, a {@linkplain Result#disabled disabled}
 	 * result indicates that the test should not be executed.
 	 *
-	 * @param context the current {@code TestExecutionContext}
+	 * @param context the current {@code ExtensionContext}
 	 */
-	Result evaluate(TestExecutionContext context);
+	Result evaluate(ExtensionContext context);
 
 	/**
 	 * The result of evaluating a {@code Condition}.

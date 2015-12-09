@@ -16,7 +16,8 @@ import java.util.Optional;
 
 import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.extension.Condition;
-import org.junit.gen5.api.extension.TestExecutionContext;
+import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.StringUtils;
 
 /**
@@ -32,14 +33,14 @@ public class DisabledCondition implements Condition {
 	 * test class or on the test method.
 	 */
 	@Override
-	public Result evaluate(TestExecutionContext context) {
+	public Result evaluate(ExtensionContext context) {
 
 		// Class level?
 		Optional<Disabled> disabled = findAnnotation(context.getTestClass(), Disabled.class);
 
 		// Method level?
-		if (!disabled.isPresent()) {
-			disabled = findAnnotation(context.getTestMethod(), Disabled.class);
+		if (!disabled.isPresent() && context instanceof TestExtensionContext) {
+			disabled = findAnnotation(((TestExtensionContext) context).getTestMethod(), Disabled.class);
 		}
 
 		if (disabled.isPresent()) {

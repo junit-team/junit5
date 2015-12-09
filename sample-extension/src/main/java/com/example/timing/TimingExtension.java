@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.api.extension.AfterEachCallbacks;
 import org.junit.gen5.api.extension.BeforeEachCallbacks;
-import org.junit.gen5.api.extension.TestExecutionContext;
+import org.junit.gen5.api.extension.TestExtensionContext;
 
 /**
  * Simple extension that <em>times</em> the execution of test methods and
@@ -27,20 +27,20 @@ public class TimingExtension implements BeforeEachCallbacks, AfterEachCallbacks 
 	private static final String TIMING_KEY_PREFIX = "TIMING:";
 
 	@Override
-	public void postBeforeEach(TestExecutionContext testExecutionContext, Object testInstance) throws Exception {
-		Method testMethod = testExecutionContext.getTestMethod().get();
-		testExecutionContext.getAttributes().put(createKey(testMethod), System.currentTimeMillis());
+	public void postBeforeEach(TestExtensionContext context) throws Exception {
+		Method testMethod = context.getTestMethod();
+		context.getAttributes().put(createKey(testMethod), System.currentTimeMillis());
 	}
 
 	@Override
-	public void preAfterEach(TestExecutionContext testExecutionContext, Object testInstance) throws Exception {
-		Method testMethod = testExecutionContext.getTestMethod().get();
+	public void preAfterEach(TestExtensionContext context) throws Exception {
+		Method testMethod = context.getTestMethod();
 		String key = createKey(testMethod);
-		long start = (long) testExecutionContext.getAttributes().get(key);
+		long start = (long) context.getAttributes().get(key);
 		long end = System.currentTimeMillis();
 
 		System.out.println(String.format("Method [%s] took %s ms", testMethod.getName(), (end - start)));
-		testExecutionContext.getAttributes().remove(key);
+		context.getAttributes().remove(key);
 	}
 
 	private String createKey(Method testMethod) {

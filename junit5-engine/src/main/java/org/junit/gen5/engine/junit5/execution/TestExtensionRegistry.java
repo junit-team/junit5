@@ -16,6 +16,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.commons.util.ReflectionUtils;
@@ -62,6 +63,14 @@ public class TestExtensionRegistry {
 		this.parent.ifPresent(parentRegistry -> allExtensions.addAll(parentRegistry.getExtensions()));
 		allExtensions.addAll(this.extensions);
 		return Collections.unmodifiableSet(allExtensions);
+	}
+
+	public <T extends TestExtension> Stream<T> getExtensions(Class<T> extensionClass) {
+		//@formatter:off
+		return getExtensions().stream()
+				.filter(extensionClass::isInstance)
+				.map(extensionClass::cast);
+		//@formatter:on
 	}
 
 	public void addExtension(Class<? extends TestExtension> extensionClass) {

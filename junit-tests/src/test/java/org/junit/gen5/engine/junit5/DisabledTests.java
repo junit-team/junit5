@@ -12,8 +12,7 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
-import static org.junit.gen5.engine.TestPlanSpecification.build;
-import static org.junit.gen5.engine.TestPlanSpecification.forClass;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -28,7 +27,7 @@ import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.Condition;
 import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.api.extension.TestExecutionContext;
+import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -134,8 +133,8 @@ public class DisabledTests extends AbstractJUnit5TestEngineTestCase {
 	private static class SystemPropertyCondition implements Condition {
 
 		@Override
-		public Result evaluate(TestExecutionContext context) {
-			Optional<SystemProperty> optional = findAnnotation(context.getTestMethod(), SystemProperty.class);
+		public Result evaluate(ExtensionContext context) {
+			Optional<SystemProperty> optional = findAnnotation(context.getElement(), SystemProperty.class);
 
 			if (optional.isPresent()) {
 				SystemProperty systemProperty = optional.get();

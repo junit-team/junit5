@@ -11,8 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import static java.util.Arrays.asList;
-import static org.junit.gen5.engine.TestPlanSpecification.build;
-import static org.junit.gen5.engine.TestPlanSpecification.forClass;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +23,8 @@ import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.AfterAllCallbacks;
 import org.junit.gen5.api.extension.BeforeAllCallbacks;
+import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.api.extension.TestExecutionContext;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -95,12 +94,12 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 	private static class FooClassLevelCallbacks implements BeforeAllCallbacks, AfterAllCallbacks {
 
 		@Override
-		public void preBeforeAll(TestExecutionContext testExecutionContext) {
+		public void preBeforeAll(ContainerExtensionContext testExecutionContext) {
 			preBeforeAllMethods.add("foo");
 		}
 
 		@Override
-		public void postAfterAll(TestExecutionContext testExecutionContext) {
+		public void postAfterAll(ContainerExtensionContext testExecutionContext) {
 			postAfterAllMethods.add("foo");
 		}
 	}
@@ -108,12 +107,12 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 	private static class BarClassLevelCallbacks implements BeforeAllCallbacks, AfterAllCallbacks {
 
 		@Override
-		public void preBeforeAll(TestExecutionContext testExecutionContext) {
+		public void preBeforeAll(ContainerExtensionContext testExecutionContext) {
 			preBeforeAllMethods.add("bar");
 		}
 
 		@Override
-		public void postAfterAll(TestExecutionContext testExecutionContext) {
+		public void postAfterAll(ContainerExtensionContext testExecutionContext) {
 			postAfterAllMethods.add("bar");
 		}
 	}

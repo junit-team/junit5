@@ -18,7 +18,7 @@ import org.junit.gen5.api.extension.ContextScope;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
-import org.junit.gen5.api.extension.TestExecutionContext;
+import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.AnnotationUtils;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -41,21 +41,20 @@ public class MockitoExtension implements InstancePostProcessor, MethodParameterR
 	}
 
 	@Override
-	public void postProcessTestInstance(TestExecutionContext context, Object testInstance) {
-		MockitoAnnotations.initMocks(testInstance);
+	public void postProcessTestInstance(TestExtensionContext context) {
+		MockitoAnnotations.initMocks(context.getTestInstance());
 	}
 
 	@Override
-	public boolean supports(Parameter parameter, TestExecutionContext testExecutionContext) {
+	public boolean supports(Parameter parameter, TestExtensionContext context) {
 		return AnnotationUtils.isAnnotated(parameter, InjectMock.class);
 	}
 
 	@Override
-	public Object resolve(Parameter parameter, TestExecutionContext testExecutionContext)
-			throws ParameterResolutionException {
+	public Object resolve(Parameter parameter, TestExtensionContext context) throws ParameterResolutionException {
 
 		Class<?> mockType = parameter.getType();
-		return mocksInScope.get(testExecutionContext, mockType);
+		return mocksInScope.get(context, mockType);
 	}
 
 }

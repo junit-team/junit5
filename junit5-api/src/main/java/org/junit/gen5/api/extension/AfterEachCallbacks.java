@@ -34,10 +34,9 @@ public interface AfterEachCallbacks extends TestExtension {
 	 * Callback that is invoked <em>before</em> all {@code @AfterEach}
 	 * methods have been invoked.
 	 *
-	 * @param testExecutionContext the current test execution context
-	 * @param testInstance the instance under test
+	 * @param context the current test extension context
 	 */
-	default void preAfterEach(TestExecutionContext testExecutionContext, Object testInstance) throws Exception {
+	default void preAfterEach(TestExtensionContext context) throws Exception {
 		/* no-op */
 	}
 
@@ -45,10 +44,9 @@ public interface AfterEachCallbacks extends TestExtension {
 	 * Callback that is invoked <em>after</em> all {@code @AfterEach}
 	 * methods have been invoked.
 	 *
-	 * @param testExecutionContext the current test execution context
-	 * @param testInstance the instance under test
+	 * @param context the current test extension context
 	 */
-	default void postAfterEach(TestExecutionContext testExecutionContext, Object testInstance) throws Exception {
+	default void postAfterEach(TestExtensionContext context) throws Exception {
 		/* no-op */
 	}
 

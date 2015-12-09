@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.gen5.api.AfterEach;
-import org.junit.gen5.api.extension.TestExecutionContext;
+import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
@@ -66,6 +66,10 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Child<
 		return this.displayName;
 	}
 
+	public Class<?> getTestClass() {
+		return testClass;
+	}
+
 	public final Method getTestMethod() {
 		return this.testMethod;
 	}
@@ -92,8 +96,8 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Child<
 
 		List<Throwable> throwables = new LinkedList<>();
 		try {
-			TestExecutionContext testExecutionContext = new TestExecutionContextImpl(this, myContext);
-			new MethodInvoker(testMethod, testInstance, testExecutionContext).invoke();
+			TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(this, testInstance);
+			new MethodInvoker(testMethod, testExtensionContext, myContext.getTestExtensionRegistry()).invoke();
 		}
 		catch (Throwable t) {
 			throwables.add(t);

@@ -34,9 +34,9 @@ public interface AfterAllCallbacks extends TestExtension {
 	 * Callback that is invoked <em>before</em> all {@code @AfterAll}
 	 * methods have been invoked.
 	 *
-	 * @param testExecutionContext the current test execution context
+	 * @param context the current container extension context
 	 */
-	default void preAfterAll(TestExecutionContext testExecutionContext) throws Exception {
+	default void preAfterAll(ContainerExtensionContext context) throws Exception {
 		/* no-op */
 	}
 
@@ -44,9 +44,9 @@ public interface AfterAllCallbacks extends TestExtension {
 	 * Callback that is invoked <em>after</em> all {@code @AfterAll}
 	 * methods have been invoked.
 	 *
-	 * @param testExecutionContext the current test execution context
+	 * @param context the current container extension context
 	 */
-	default void postAfterAll(TestExecutionContext testExecutionContext) throws Exception {
+	default void postAfterAll(ContainerExtensionContext context) throws Exception {
 		/* no-op */
 	}
 

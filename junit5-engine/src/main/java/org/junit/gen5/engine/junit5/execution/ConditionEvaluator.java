@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit5.execution;
 
 import org.junit.gen5.api.extension.Condition;
 import org.junit.gen5.api.extension.Condition.Result;
-import org.junit.gen5.api.extension.TestExecutionContext;
+import org.junit.gen5.api.extension.ExtensionContext;
 
 /**
  * {@code ConditionEvaluator} evaluates all {@link Condition Conditions}
@@ -34,9 +34,9 @@ class ConditionEvaluator {
 	 * <em>enabled</em> {@code Result} if no disabled conditions are
 	 * encountered.
 	 */
-	Result evaluate(TestExecutionContext context) {
+	Result evaluate(TestExtensionRegistry extensionRegistry, ExtensionContext context) {
 		// @formatter:off
-		return context.getExtensions(Condition.class)
+		return extensionRegistry.getExtensions(Condition.class)
 				.map(condition -> evaluate(context, condition))
 				.filter(Result::isDisabled)
 				.findFirst()
@@ -44,7 +44,7 @@ class ConditionEvaluator {
 		// @formatter:on
 	}
 
-	private Result evaluate(TestExecutionContext context, Condition condition) {
+	private Result evaluate(ExtensionContext context, Condition condition) {
 		try {
 			return condition.evaluate(context);
 		}

@@ -55,7 +55,8 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 		// @formatter:on
 	}
 
-	protected TestExtensionRegistry populateNewTestExtensionRegistryFromExtendWith(AnnotatedElement annotatedElement, TestExtensionRegistry existingTestExtensionRegistry) {
+	protected TestExtensionRegistry populateNewTestExtensionRegistryFromExtendWith(AnnotatedElement annotatedElement,
+			TestExtensionRegistry existingTestExtensionRegistry) {
 		TestExtensionRegistry newTestExtensionRegistry = new TestExtensionRegistry(existingTestExtensionRegistry);
 		// @formatter:off
 		findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
