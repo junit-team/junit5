@@ -127,13 +127,12 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 				throwables.stream().skip(1).forEach(t::addSuppressed);
 				throw t;
 			}
-
 		};
 	}
 
 	private void invoke(TestExtensionContext testExtensionContext, Object testInstance, Method method,
 			TestExtensionRegistry extensionRegistry) {
-		new MethodInvoker(methodContext(testInstance, method), testExtensionContext, extensionRegistry).invoke();
+		new MethodInvoker(testExtensionContext, extensionRegistry).invoke(methodContext(testInstance, method));
 	}
 
 }

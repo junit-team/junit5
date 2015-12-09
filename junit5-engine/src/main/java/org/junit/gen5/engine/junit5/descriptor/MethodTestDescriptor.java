@@ -103,7 +103,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Child<
 		try {
 			MethodContext methodContext = methodContext(testExtensionContext.getTestInstance(),
 				testExtensionContext.getTestMethod());
-			new MethodInvoker(methodContext, testExtensionContext, testExtensionRegistry).invoke();
+			new MethodInvoker(testExtensionContext, testExtensionRegistry).invoke(methodContext);
 			return Optional.empty();
 		}
 		catch (Throwable t) {

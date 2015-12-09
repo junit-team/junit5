@@ -20,7 +20,6 @@ import org.junit.gen5.api.extension.MethodContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.TestExtensionContext;
-import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
@@ -32,42 +31,37 @@ import org.junit.gen5.commons.util.ReflectionUtils;
  */
 public class MethodInvoker {
 
-	private final MethodContext methodContext;
 	private final TestExtensionContext testExtensionContext;
 	private final TestExtensionRegistry extensionRegistry;
 
-	public MethodInvoker(MethodContext methodContext, TestExtensionContext testExtensionContext,
-			TestExtensionRegistry extensionRegistry) {
-		Preconditions.notNull(methodContext, "methodContext must not be null");
-		Preconditions.notNull(testExtensionContext, "testExtensionContext must not be null");
-		Preconditions.notNull(extensionRegistry, "extensionRegistry must not be null");
-		this.methodContext = methodContext;
+	public MethodInvoker(TestExtensionContext testExtensionContext, TestExtensionRegistry extensionRegistry) {
 		this.testExtensionContext = testExtensionContext;
 		this.extensionRegistry = extensionRegistry;
 	}
 
-	public Object invoke() {
+	public Object invoke(MethodContext methodContext) {
 		return ReflectionUtils.invokeMethod(methodContext.getMethod(), methodContext.getInstance(),
-			resolveParameters());
+			resolveParameters(methodContext));
 	}
 
 	/**
 	 * Resolve the array of parameters for the configured method.
+	 * @param methodContext 
 	 *
 	 * @param testExecutionContext the current test execution context
 	 * @return the array of Objects to be used as parameters in the method
 	 * invocation; never {@code null} though potentially empty
 	 * @throws ParameterResolutionException
 	 */
-	private Object[] resolveParameters() throws ParameterResolutionException {
+	private Object[] resolveParameters(MethodContext methodContext) throws ParameterResolutionException {
 		// @formatter:off
 		return Arrays.stream(methodContext.getMethod().getParameters())
-				.map(param -> resolveParameter(param))
+				.map(param -> resolveParameter(param, methodContext))
 				.toArray(Object[]::new);
 		// @formatter:on
 	}
 
-	private Object resolveParameter(Parameter parameter) {
+	private Object resolveParameter(Parameter parameter, MethodContext methodContext) {
 		try {
 			// @formatter:off
 			List<MethodParameterResolver> matchingResolvers = extensionRegistry.getExtensions(MethodParameterResolver.class)
@@ -78,7 +72,7 @@ public class MethodInvoker {
 			if (matchingResolvers.size() == 0) {
 				throw new ParameterResolutionException(
 					String.format("No MethodParameterResolver registered for parameter [%s] in method [%s].", parameter,
-						this.methodContext.getMethod().toGenericString()));
+						methodContext.getMethod().toGenericString()));
 			}
 			if (matchingResolvers.size() > 1) {
 				// @formatter:off
@@ -88,7 +82,7 @@ public class MethodInvoker {
 				// @formatter:on
 				throw new ParameterResolutionException(String.format(
 					"Discovered multiple competing MethodParameterResolvers for parameter [%s] in method [%s]: %s",
-					parameter, this.methodContext.getMethod().toGenericString(), resolverNames));
+					parameter, methodContext.getMethod().toGenericString(), resolverNames));
 			}
 			return matchingResolvers.get(0).resolve(parameter, methodContext, testExtensionContext);
 		}
@@ -97,7 +91,7 @@ public class MethodInvoker {
 				throw (ParameterResolutionException) ex;
 			}
 			throw new ParameterResolutionException(String.format("Failed to resolve parameter [%s] in method [%s]",
-				parameter, this.methodContext.getMethod().toGenericString()), ex);
+				parameter, methodContext.getMethod().toGenericString()), ex);
 		}
 	}
 
