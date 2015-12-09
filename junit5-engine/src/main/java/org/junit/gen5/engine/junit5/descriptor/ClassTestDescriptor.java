@@ -101,21 +101,24 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 	}
 
 	protected BeforeEachCallback beforeEachCallback(JUnit5Context context) {
+		List<Method> beforeEachMethods = findAnnotatedMethods(testClass, BeforeEach.class,
+			MethodSortOrder.HierarchyDown);
+		TestExtensionRegistry extensionRegistry = context.getTestExtensionRegistry();
 		return (testExtensionContext, testInstance) -> {
-			for (Method method : findAnnotatedMethods(testClass, BeforeEach.class, MethodSortOrder.HierarchyDown)) {
-				TestExtensionRegistry extensionRegistry = context.getTestExtensionRegistry();
+			for (Method method : beforeEachMethods) {
 				invoke(testExtensionContext, testInstance, method, extensionRegistry);
 			}
 		};
 	}
 
 	protected AfterEachCallback afterEachCallback(JUnit5Context context) {
+		List<Method> afterEachMethods = findAnnotatedMethods(testClass, AfterEach.class, MethodSortOrder.HierarchyUp);
+		TestExtensionRegistry extensionRegistry = context.getTestExtensionRegistry();
 		return (testExtensionContext, testInstance, throwable) -> {
 			List<Throwable> throwables = new LinkedList<>();
 			throwable.ifPresent(throwables::add);
-			for (Method method : findAnnotatedMethods(testClass, AfterEach.class, MethodSortOrder.HierarchyUp)) {
+			for (Method method : afterEachMethods) {
 				try {
-					TestExtensionRegistry extensionRegistry = context.getTestExtensionRegistry();
 					invoke(testExtensionContext, testInstance, method, extensionRegistry);
 				}
 				catch (Throwable t) {
