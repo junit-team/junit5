@@ -72,7 +72,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 
 	@Override
 	public JUnit5Context beforeAll(JUnit5Context context) {
-		return context.withTestInstanceProvider(testInstanceProvider());
+		return context.withTestInstanceProvider(testInstanceProvider(context));
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 		return context;
 	}
 
-	private TestInstanceProvider testInstanceProvider() {
+	protected TestInstanceProvider testInstanceProvider(JUnit5Context context) {
 		return () -> ReflectionUtils.newInstance(testClass);
 	}
 

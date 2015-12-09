@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestPlanSpecification;
 
@@ -82,6 +83,15 @@ public class StandardTestClassTest extends AbstractJUnit5TestEngineTestCase {
 		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
 
 		Assert.assertTrue("test executed?", TestCaseWithFailingAfter.testExecuted);
+	}
+
+	@org.junit.Test
+	public void nestedTestsAreExecuted() {
+		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithNesting.class, 5);
+
+		Assert.assertEquals("# tests started", 3, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
 	}
 
 }

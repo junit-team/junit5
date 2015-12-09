@@ -10,7 +10,10 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.junit5.JUnit5Context;
+import org.junit.gen5.engine.junit5.TestInstanceProvider;
 
 /**
  * {@link TestDescriptor} for tests based on nested (but not static) Java classes.
@@ -24,6 +27,14 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 
 	NestedClassTestDescriptor(String uniqueId, Class<?> testClass) {
 		super(uniqueId, testClass);
+	}
+
+	@Override
+	protected TestInstanceProvider testInstanceProvider(JUnit5Context context) {
+		return () -> {
+			Object outerInstance = context.getTestInstanceProvider().getTestInstance();
+			return ReflectionUtils.newInstance(getTestClass(), outerInstance);
+		};
 	}
 
 }
