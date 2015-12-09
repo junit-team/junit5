@@ -20,7 +20,6 @@ import java.util.Set;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
@@ -106,7 +105,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 		TestExtensionRegistry extensionRegistry = context.getTestExtensionRegistry();
 		return (testExtensionContext, testInstance) -> {
 			for (Method method : beforeEachMethods) {
-				invoke(testExtensionContext, testInstance, method, extensionRegistry);
+				new MethodInvoker(testExtensionContext, extensionRegistry).invoke(methodContext(testInstance, method));
 			}
 		};
 	}
@@ -119,7 +118,8 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 			throwable.ifPresent(throwables::add);
 			for (Method method : afterEachMethods) {
 				try {
-					invoke(testExtensionContext, testInstance, method, extensionRegistry);
+					new MethodInvoker(testExtensionContext, extensionRegistry).invoke(
+						methodContext(testInstance, method));
 				}
 				catch (Throwable t) {
 					throwables.add(t);
@@ -131,11 +131,6 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 				throw t;
 			}
 		};
-	}
-
-	private void invoke(TestExtensionContext testExtensionContext, Object testInstance, Method method,
-			TestExtensionRegistry extensionRegistry) {
-		new MethodInvoker(testExtensionContext, extensionRegistry).invoke(methodContext(testInstance, method));
 	}
 
 }
