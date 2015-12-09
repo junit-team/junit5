@@ -12,11 +12,11 @@ package org.junit.gen5.engine.junit5.execution;
 
 import static java.util.stream.Collectors.*;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.gen5.api.extension.MethodContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.TestExtensionContext;
@@ -32,21 +32,23 @@ import org.junit.gen5.commons.util.ReflectionUtils;
  */
 public class MethodInvoker {
 
-	private final Method method;
-	private final TestExtensionContext context;
+	private final MethodContext methodContext;
+	private final TestExtensionContext testExtensionContext;
 	private final TestExtensionRegistry extensionRegistry;
 
-	public MethodInvoker(Method method, TestExtensionContext context, TestExtensionRegistry extensionRegistry) {
-		Preconditions.notNull(method, "method must not be null");
-		Preconditions.notNull(context, "context must not be null");
+	public MethodInvoker(MethodContext methodContext, TestExtensionContext testExtensionContext,
+			TestExtensionRegistry extensionRegistry) {
+		Preconditions.notNull(methodContext, "methodContext must not be null");
+		Preconditions.notNull(testExtensionContext, "testExtensionContext must not be null");
 		Preconditions.notNull(extensionRegistry, "extensionRegistry must not be null");
-		this.method = method;
-		this.context = context;
+		this.methodContext = methodContext;
+		this.testExtensionContext = testExtensionContext;
 		this.extensionRegistry = extensionRegistry;
 	}
 
 	public Object invoke() {
-		return ReflectionUtils.invokeMethod(this.method, context.getTestInstance(), resolveParameters());
+		return ReflectionUtils.invokeMethod(methodContext.getMethod(), methodContext.getInstance(),
+			resolveParameters());
 	}
 
 	/**
@@ -59,7 +61,7 @@ public class MethodInvoker {
 	 */
 	private Object[] resolveParameters() throws ParameterResolutionException {
 		// @formatter:off
-		return Arrays.stream(this.method.getParameters())
+		return Arrays.stream(methodContext.getMethod().getParameters())
 				.map(param -> resolveParameter(param))
 				.toArray(Object[]::new);
 		// @formatter:on
@@ -69,14 +71,14 @@ public class MethodInvoker {
 		try {
 			// @formatter:off
 			List<MethodParameterResolver> matchingResolvers = extensionRegistry.getExtensions(MethodParameterResolver.class)
-					.filter(resolver -> resolver.supports(parameter, context))
+					.filter(resolver -> resolver.supports(parameter, methodContext, testExtensionContext))
 					.collect(toList());
 			// @formatter:on
 
 			if (matchingResolvers.size() == 0) {
 				throw new ParameterResolutionException(
 					String.format("No MethodParameterResolver registered for parameter [%s] in method [%s].", parameter,
-						this.method.toGenericString()));
+						this.methodContext.getMethod().toGenericString()));
 			}
 			if (matchingResolvers.size() > 1) {
 				// @formatter:off
@@ -86,16 +88,16 @@ public class MethodInvoker {
 				// @formatter:on
 				throw new ParameterResolutionException(String.format(
 					"Discovered multiple competing MethodParameterResolvers for parameter [%s] in method [%s]: %s",
-					parameter, this.method.toGenericString(), resolverNames));
+					parameter, this.methodContext.getMethod().toGenericString(), resolverNames));
 			}
-			return matchingResolvers.get(0).resolve(parameter, context);
+			return matchingResolvers.get(0).resolve(parameter, methodContext, testExtensionContext);
 		}
 		catch (Exception ex) {
 			if (ex instanceof ParameterResolutionException) {
 				throw (ParameterResolutionException) ex;
 			}
 			throw new ParameterResolutionException(String.format("Failed to resolve parameter [%s] in method [%s]",
-				parameter, this.method.toGenericString()), ex);
+				parameter, this.methodContext.getMethod().toGenericString()), ex);
 		}
 	}
 

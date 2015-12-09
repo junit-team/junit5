@@ -42,12 +42,12 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 
 	@Override
 	protected BeforeEachCallback beforeEachCallback(JUnit5Context context) {
-		return testInstance -> {
+		return (testExtensionContext, testInstance) -> {
 			Optional<Object> outerInstance = ReflectionUtils.getOuterInstance(testInstance);
 			if (outerInstance.isPresent()) {
-				context.getBeforeEachCallback().beforeEach(outerInstance.get());
+				context.getBeforeEachCallback().beforeEach(testExtensionContext, outerInstance.get());
 			}
-			super.beforeEachCallback(context).beforeEach(testInstance);
+			super.beforeEachCallback(context).beforeEach(testExtensionContext, testInstance);
 		};
 	}
 

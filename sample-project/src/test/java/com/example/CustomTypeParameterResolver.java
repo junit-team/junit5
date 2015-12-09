@@ -12,6 +12,7 @@ package com.example;
 
 import java.lang.reflect.Parameter;
 
+import org.junit.gen5.api.extension.MethodContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestExtensionContext;
 
@@ -21,7 +22,7 @@ import org.junit.gen5.api.extension.TestExtensionContext;
 public class CustomTypeParameterResolver implements MethodParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter, TestExtensionContext context) {
+	public boolean supports(Parameter parameter, MethodContext methodContext, TestExtensionContext testContext) {
 		return parameter.getType().equals(CustomType.class);
 	}
 

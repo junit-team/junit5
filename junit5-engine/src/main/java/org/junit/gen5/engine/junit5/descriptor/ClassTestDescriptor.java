@@ -91,7 +91,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 	}
 
 	protected BeforeEachCallback beforeEachCallback(JUnit5Context context) {
-		return testInstance -> {
+		return (testExtensionContext, testInstance) -> {
 			for (Method method : findAnnotatedMethods(testClass, BeforeEach.class, MethodSortOrder.HierarchyDown)) {
 				ReflectionUtils.invokeMethod(method, testInstance);
 			}

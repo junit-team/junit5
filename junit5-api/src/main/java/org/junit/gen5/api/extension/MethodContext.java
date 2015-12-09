@@ -8,13 +8,20 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5;
+package org.junit.gen5.api.extension;
 
-import org.junit.gen5.api.extension.TestExtensionContext;
+import java.lang.reflect.Method;
 
-@FunctionalInterface
-public interface BeforeEachCallback {
+/**
+ * {@code MethodContext} encapsulates the <em>context</em> in which
+ * a method is to be invoked.
+ *
+ * @since 5.0
+ */
+public interface MethodContext {
 
-	void beforeEach(TestExtensionContext testExtensionContext, Object testInstance) throws Throwable;
+	Object getInstance();
+
+	Method getMethod();
 
 }
