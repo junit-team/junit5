@@ -55,7 +55,7 @@ public class ClassResolver implements TestResolver {
 		String displayName = testClass.getSimpleName();
 
 		ClassDescriptor classDescriptor = new ClassDescriptor(testClass, uniqueId, displayName);
-		classDescriptor.setParent(parent);
+		parent.addChild(classDescriptor);
 		return classDescriptor;
 	}
 }

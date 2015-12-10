@@ -12,11 +12,35 @@ package org.junit.gen5.engine.junit5ext.executor;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionListener;
+import org.junit.gen5.engine.junit5ext.TestHandler;
+import org.junit.gen5.engine.junit5ext.TestHandlerImpl;
 
-public class ExecutionContext {
+public class ExecutionContext implements Cloneable {
+	public static Builder contextForDescriptor(TestDescriptor testDescriptor) {
+		return new Builder().withTestDescriptor(testDescriptor);
+	}
+
+	public static Builder cloneContext(ExecutionContext context) {
+		return new Builder(context);
+	}
+
+	private TestHandler testHandler;
+
 	private TestExecutionListener testExecutionListener;
 
 	private TestDescriptor testDescriptor;
+
+	private Object testInstance;
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		ExecutionContext clone = new ExecutionContext();
+		clone.testExecutionListener = this.testExecutionListener;
+		clone.testDescriptor = this.testDescriptor;
+		clone.testInstance = this.testInstance;
+		clone.testHandler = this.testHandler;
+		return clone;
+	}
 
 	public TestExecutionListener getTestExecutionListener() {
 		return testExecutionListener;
@@ -34,17 +58,38 @@ public class ExecutionContext {
 		this.testDescriptor = testDescriptor;
 	}
 
-	public static Builder contextForDescriptor(TestDescriptor testDescriptor) {
-		return new Builder().withTestDescriptor(testDescriptor);
+	public Object getTestInstance() {
+		return testInstance;
 	}
 
-	public static Builder cloneContext(ExecutionContext context) {
-		return new Builder().withTestExecutionListener(context.getTestExecutionListener()).withTestDescriptor(
-			context.getTestDescriptor());
+	public void setTestInstance(Object testInstance) {
+		this.testInstance = testInstance;
+	}
+
+	public TestHandler getTestHandler() {
+		return testHandler;
+	}
+
+	public void setTestHandler(TestHandler testHandler) {
+		this.testHandler = testHandler;
 	}
 
 	public static class Builder {
-		ExecutionContext context = new ExecutionContext();
+		private ExecutionContext context;
+
+		private Builder() {
+			this.context = new ExecutionContext();
+			context.setTestHandler(new TestHandlerImpl());
+		}
+
+		private Builder(ExecutionContext context) {
+			try {
+				this.context = (ExecutionContext) context.clone();
+			}
+			catch (CloneNotSupportedException e) {
+				throw new IllegalStateException("Cannot clone execution context!", e);
+			}
+		}
 
 		public Builder withTestDescriptor(TestDescriptor testDescriptor) {
 			context.setTestDescriptor(testDescriptor);
@@ -57,6 +102,7 @@ public class ExecutionContext {
 		}
 
 		public ExecutionContext build() {
+			context.setTestHandler(new TestHandlerImpl());
 			return context;
 		}
 	}

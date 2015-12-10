@@ -53,7 +53,7 @@ public class MethodResolver implements TestResolver {
 		String displayName = method.getName();
 
 		MethodDescriptor methodDescriptor = new MethodDescriptor(method, uniqueId, displayName);
-		methodDescriptor.setParent(parent);
+		parent.addChild(methodDescriptor);
 		return methodDescriptor;
 	}
 }

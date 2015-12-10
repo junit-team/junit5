@@ -61,11 +61,11 @@ public class GroupDescriptor implements MutableTestDescriptor {
 	@Override
 	public void addChild(MutableTestDescriptor descriptor) {
 		children.add(descriptor);
+		descriptor.setParent(this);
 	}
 
 	@Override
 	public void removeChild(MutableTestDescriptor descriptor) {
-		children.remove(descriptor);
 	}
 
 	@Override

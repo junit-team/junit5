@@ -12,7 +12,9 @@ package org.junit.gen5.engine.junit5ext.executor;
 
 import static org.junit.gen5.engine.junit5ext.executor.ExecutionContext.cloneContext;
 
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.junit5ext.descriptor.ClassDescriptor;
 import org.junit.gen5.engine.junit5ext.descriptor.GroupDescriptor;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
@@ -34,8 +36,23 @@ public class GroupExecutor implements TestExecutor {
 	public void execute(ExecutionContext context) throws TestSkippedException, TestAbortedException, AssertionError {
 		GroupDescriptor groupDescriptor = context.getTestDescriptor();
 		for (TestDescriptor child : groupDescriptor.getChildren()) {
-			ExecutionContext subContext = cloneContext(context).withTestDescriptor(child).build();
-			testExecutorRegistry.executeAll(subContext);
+			testExecutorRegistry.executeAll(createContextForChild(context, child));
+		}
+	}
+
+	private ExecutionContext createContextForChild(ExecutionContext context, TestDescriptor child) {
+		ExecutionContext childContext = cloneContext(context).withTestDescriptor(child).build();
+
+		// TODO Add Extension Point
+		extensionPointForChildContextContribution(context, childContext);
+
+		return childContext;
+	}
+
+	private void extensionPointForChildContextContribution(ExecutionContext context, ExecutionContext childContext) {
+		if (context.getTestDescriptor() instanceof ClassDescriptor) {
+			ClassDescriptor classDescriptor = context.getTestDescriptor();
+			childContext.setTestInstance(ReflectionUtils.newInstance(classDescriptor.getTestClass()));
 		}
 	}
 }

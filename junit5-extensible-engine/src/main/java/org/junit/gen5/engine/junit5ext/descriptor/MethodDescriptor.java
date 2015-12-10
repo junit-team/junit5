@@ -19,4 +19,8 @@ public class MethodDescriptor extends GroupDescriptor {
 		super(uniqueId, displayName);
 		this.method = method;
 	}
+
+	public Method getMethod() {
+		return method;
+	}
 }
