@@ -10,5 +10,14 @@
 
 package org.junit.gen5.engine;
 
-public interface Context {
+public interface Container<C extends EngineExecutionContext> {
+
+	default C beforeAll(C context) {
+		return context;
+	}
+
+	default C afterAll(C context) {
+		return context;
+	}
+
 }

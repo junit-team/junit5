@@ -10,17 +10,17 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import org.junit.gen5.engine.Context;
+import org.junit.gen5.engine.EngineExecutionContext;
 
-public class JUnit5Context implements Context {
+public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 
 	private final State state;
 
-	public JUnit5Context() {
+	public JUnit5EngineExecutionContext() {
 		this(new State());
 	}
 
-	private JUnit5Context(State state) {
+	private JUnit5EngineExecutionContext(State state) {
 		this.state = state;
 	}
 
@@ -48,7 +48,7 @@ public class JUnit5Context implements Context {
 		return new Builder(null, new State());
 	}
 
-	public static Builder builder(JUnit5Context context) {
+	public static Builder builder(JUnit5EngineExecutionContext context) {
 		return new Builder(context.state, null);
 	}
 
@@ -101,12 +101,12 @@ public class JUnit5Context implements Context {
 			return this;
 		}
 
-		public JUnit5Context build() {
+		public JUnit5EngineExecutionContext build() {
 			if (newState != null) {
 				originalState = newState;
 				newState = null;
 			}
-			return new JUnit5Context(originalState);
+			return new JUnit5EngineExecutionContext(originalState);
 		}
 
 		private State newState() {

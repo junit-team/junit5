@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine;
 
-public abstract class TreeBasedTestEngine<C extends Context> implements TestEngine {
+public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> implements TestEngine {
 
 	@Override
 	public abstract TestDescriptor discoverTests(TestPlanSpecification specification);
@@ -32,12 +32,12 @@ public abstract class TreeBasedTestEngine<C extends Context> implements TestEngi
 	private <T> void executeAll(TestDescriptor parentDescriptor, EngineExecutionListener listener, C parentContext)
 			throws Exception {
 		C context = parentContext;
-		if (parentDescriptor instanceof Parent) {
-			context = ((Parent<C>) parentDescriptor).beforeAll(context);
+		if (parentDescriptor instanceof Container) {
+			context = ((Container<C>) parentDescriptor).beforeAll(context);
 		}
 		for (TestDescriptor childDescriptor : parentDescriptor.getChildren()) {
-			if (childDescriptor instanceof Child) {
-				Child<C> child = (Child<C>) childDescriptor;
+			if (childDescriptor instanceof Leaf) {
+				Leaf<C> child = (Leaf<C>) childDescriptor;
 				try {
 					listener.testStarted(childDescriptor);
 					C childContext = child.execute(context);
@@ -49,8 +49,8 @@ public abstract class TreeBasedTestEngine<C extends Context> implements TestEngi
 			}
 			executeAll(childDescriptor, listener, context);
 		}
-		if (parentDescriptor instanceof Parent) {
-			context = ((Parent<C>) parentDescriptor).afterAll(context);
+		if (parentDescriptor instanceof Container) {
+			context = ((Container<C>) parentDescriptor).afterAll(context);
 		}
 	}
 

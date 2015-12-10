@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine;
 
-public interface Child<C extends Context> {
+public interface Leaf<C extends EngineExecutionContext> {
 
 	C execute(C context) throws Throwable;
 

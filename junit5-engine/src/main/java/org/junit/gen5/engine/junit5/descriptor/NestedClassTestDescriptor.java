@@ -16,7 +16,7 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.execution.AfterEachCallback;
 import org.junit.gen5.engine.junit5.execution.BeforeEachCallback;
-import org.junit.gen5.engine.junit5.execution.JUnit5Context;
+import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
 
 /**
@@ -34,7 +34,7 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 	}
 
 	@Override
-	protected TestInstanceProvider testInstanceProvider(JUnit5Context context) {
+	protected TestInstanceProvider testInstanceProvider(JUnit5EngineExecutionContext context) {
 		return () -> {
 			Object outerInstance = context.getTestInstanceProvider().getTestInstance();
 			return ReflectionUtils.newInstance(getTestClass(), outerInstance);
@@ -42,7 +42,7 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 	}
 
 	@Override
-	protected BeforeEachCallback beforeEachCallback(JUnit5Context context) {
+	protected BeforeEachCallback beforeEachCallback(JUnit5EngineExecutionContext context) {
 		return (testExtensionContext, testInstance) -> {
 			Optional<Object> outerInstance = ReflectionUtils.getOuterInstance(testInstance);
 			if (outerInstance.isPresent()) {
@@ -53,7 +53,7 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 	}
 
 	@Override
-	protected AfterEachCallback afterEachCallback(JUnit5Context context) {
+	protected AfterEachCallback afterEachCallback(JUnit5EngineExecutionContext context) {
 		return (testExtensionContext, testInstance, throwable) -> {
 			super.afterEachCallback(context).afterEach(testExtensionContext, testInstance, throwable);
 			Optional<Object> outerInstance = ReflectionUtils.getOuterInstance(testInstance);

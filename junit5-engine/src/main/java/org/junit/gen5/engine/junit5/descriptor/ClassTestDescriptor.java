@@ -23,13 +23,13 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
+import org.junit.gen5.engine.Container;
 import org.junit.gen5.engine.JavaSource;
-import org.junit.gen5.engine.Parent;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.execution.AfterEachCallback;
 import org.junit.gen5.engine.junit5.execution.BeforeEachCallback;
-import org.junit.gen5.engine.junit5.execution.JUnit5Context;
+import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
 import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
@@ -42,7 +42,7 @@ import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
  *
  * @since 5.0
  */
-public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<JUnit5Context> {
+public class ClassTestDescriptor extends JUnit5TestDescriptor implements Container<JUnit5EngineExecutionContext> {
 
 	private final String displayName;
 
@@ -84,7 +84,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 	}
 
 	@Override
-	public JUnit5Context beforeAll(JUnit5Context context) {
+	public JUnit5EngineExecutionContext beforeAll(JUnit5EngineExecutionContext context) {
 		// @formatter:off
 		return context.extend()
 				.withTestInstanceProvider(testInstanceProvider(context))
@@ -95,11 +95,11 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 		// @formatter:on
 	}
 
-	protected TestInstanceProvider testInstanceProvider(JUnit5Context context) {
+	protected TestInstanceProvider testInstanceProvider(JUnit5EngineExecutionContext context) {
 		return () -> ReflectionUtils.newInstance(testClass);
 	}
 
-	protected BeforeEachCallback beforeEachCallback(JUnit5Context context) {
+	protected BeforeEachCallback beforeEachCallback(JUnit5EngineExecutionContext context) {
 		List<Method> beforeEachMethods = findAnnotatedMethods(testClass, BeforeEach.class,
 			MethodSortOrder.HierarchyDown);
 		TestExtensionRegistry extensionRegistry = context.getTestExtensionRegistry();
@@ -110,7 +110,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Parent<
 		};
 	}
 
-	protected AfterEachCallback afterEachCallback(JUnit5Context context) {
+	protected AfterEachCallback afterEachCallback(JUnit5EngineExecutionContext context) {
 		List<Method> afterEachMethods = findAnnotatedMethods(testClass, AfterEach.class, MethodSortOrder.HierarchyUp);
 		TestExtensionRegistry extensionRegistry = context.getTestExtensionRegistry();
 		return (testExtensionContext, testInstance, throwable) -> {

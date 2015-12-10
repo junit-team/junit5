@@ -19,11 +19,11 @@ import java.util.Set;
 import org.junit.gen5.api.extension.MethodContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.engine.Child;
 import org.junit.gen5.engine.JavaSource;
+import org.junit.gen5.engine.Leaf;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
-import org.junit.gen5.engine.junit5.execution.JUnit5Context;
+import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
 
@@ -32,7 +32,7 @@ import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
  *
  * @since 5.0
  */
-public class MethodTestDescriptor extends JUnit5TestDescriptor implements Child<JUnit5Context> {
+public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
 
 	private final String displayName;
 
@@ -82,8 +82,8 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Child<
 	}
 
 	@Override
-	public JUnit5Context execute(JUnit5Context context) throws Throwable {
-		JUnit5Context newContext = context.extend().withTestExtensionRegistry(
+	public JUnit5EngineExecutionContext execute(JUnit5EngineExecutionContext context) throws Throwable {
+		JUnit5EngineExecutionContext newContext = context.extend().withTestExtensionRegistry(
 			populateNewTestExtensionRegistryFromExtendWith(testMethod, context.getTestExtensionRegistry())).build();
 
 		Object testInstance = context.getTestInstanceProvider().getTestInstance();

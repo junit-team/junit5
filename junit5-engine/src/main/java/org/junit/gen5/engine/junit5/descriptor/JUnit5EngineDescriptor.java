@@ -10,20 +10,20 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import org.junit.gen5.engine.Container;
 import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.Parent;
 import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.junit5.execution.JUnit5Context;
+import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
 
-public class JUnit5EngineDescriptor extends EngineDescriptor implements Parent<JUnit5Context> {
+public class JUnit5EngineDescriptor extends EngineDescriptor implements Container<JUnit5EngineExecutionContext> {
 
 	public JUnit5EngineDescriptor(TestEngine engine) {
 		super(engine);
 	}
 
 	@Override
-	public JUnit5Context beforeAll(JUnit5Context context) {
+	public JUnit5EngineExecutionContext beforeAll(JUnit5EngineExecutionContext context) {
 		return context.extend().withTestExtensionRegistry(new TestExtensionRegistry()).build();
 	}
 
