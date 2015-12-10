@@ -22,6 +22,7 @@ public class TestHandlerImpl implements TestHandler {
 		try {
 			context.getTestExecutionListener().testStarted(context.getTestDescriptor());
 			try {
+				// TODO Add Extension Point for test execution
 				runnable.runTest();
 			}
 			catch (InvocationTargetException e) {

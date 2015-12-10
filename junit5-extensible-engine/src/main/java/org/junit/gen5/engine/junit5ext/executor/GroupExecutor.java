@@ -43,13 +43,13 @@ public class GroupExecutor implements TestExecutor {
 	private ExecutionContext createContextForChild(ExecutionContext context, TestDescriptor child) {
 		ExecutionContext childContext = cloneContext(context).withTestDescriptor(child).build();
 
-		// TODO Add Extension Point
-		extensionPointForChildContextContribution(context, childContext);
+		// TODO Add Extension Point for child context contribution
+		pluginForTestInstanceCreation(context, childContext);
 
 		return childContext;
 	}
 
-	private void extensionPointForChildContextContribution(ExecutionContext context, ExecutionContext childContext) {
+	private void pluginForTestInstanceCreation(ExecutionContext context, ExecutionContext childContext) {
 		if (context.getTestDescriptor() instanceof ClassDescriptor) {
 			ClassDescriptor classDescriptor = context.getTestDescriptor();
 			childContext.setTestInstance(ReflectionUtils.newInstance(classDescriptor.getTestClass()));
