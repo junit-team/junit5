@@ -10,14 +10,15 @@
 
 package org.junit.gen5.api.extension;
 
+import org.junit.gen5.api.extension.ExtensionPoint.Position;
+
 /**
- * Marker interface for all test extensions.
+ * Used to register {@linkplain ExtensionPoint} instances in {@linkplain TestExtension}s.
  *
- * <p>{@code TestExtensions} can be registered via {@link ExtendWith @ExtendWith}.
- *
- * @since 5.0
- * @see ExtensionPoint
- * @see ExtensionPointRegistrar
+ * @since 5.0.0
  */
-public interface TestExtension {
+public interface ExtensionPointRegistry {
+
+	<T extends ExtensionPoint> void register(T extensionPoint, Class<T> extensionType, Position position);
+
 }

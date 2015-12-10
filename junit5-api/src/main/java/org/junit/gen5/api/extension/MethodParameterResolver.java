@@ -27,7 +27,7 @@ import org.junit.gen5.commons.util.ReflectionUtils;
  *
  * @since 5.0
  */
-public interface MethodParameterResolver extends TestExtension {
+public interface MethodParameterResolver extends ExtensionPoint {
 
 	/**
 	 * Determine if this resolver supports resolution of the given {@link Parameter}

@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
@@ -35,7 +37,9 @@ public class TestExtensionRegistry {
 		return defaultExtensionClasses;
 	}
 
-	private final Set<TestExtension> extensions = new LinkedHashSet<>();
+	private final Set<Class<? extends TestExtension>> registeredExtensionClasses = new LinkedHashSet<>();
+
+	private final List<RegisteredExtensionPoint> registeredExtensionPoints = new ArrayList<>();
 
 	private final Optional<TestExtensionRegistry> parent;
 
@@ -53,32 +57,53 @@ public class TestExtensionRegistry {
 	private void addDefaultExtensions() {
 		// @formatter:off
 		getDefaultExtensionClasses().stream()
-			.map(extensionClass -> ReflectionUtils.newInstance(extensionClass))
-			.forEach(this.extensions::add);
+			.forEach(extensionClass -> addExtension(extensionClass));
 		// @formatter:on
 	}
 
-	public Set<TestExtension> getExtensions() {
-		Set<TestExtension> allExtensions = new LinkedHashSet<>();
-		this.parent.ifPresent(parentRegistry -> allExtensions.addAll(parentRegistry.getExtensions()));
-		allExtensions.addAll(this.extensions);
-		return Collections.unmodifiableSet(allExtensions);
+	public Set<Class<? extends TestExtension>> getRegisteredExtensionClasses() {
+		Set<Class<? extends TestExtension>> allRegisteredExtensionClasses = new LinkedHashSet<>();
+		this.parent.ifPresent(
+			parentRegistry -> allRegisteredExtensionClasses.addAll(parentRegistry.getRegisteredExtensionClasses()));
+		allRegisteredExtensionClasses.addAll(this.registeredExtensionClasses);
+		return Collections.unmodifiableSet(allRegisteredExtensionClasses);
 	}
 
-	public <T extends TestExtension> Stream<T> getExtensions(Class<T> extensionClass) {
+	public <T extends ExtensionPoint> Stream<T> getExtensionPoints(Class<T> extensionClass) {
+		//TODO: Consider Position
+		//TODO: Consider reverse order for AfterExtensionPoints
+		//TODO: Get all extension points from parent
 		//@formatter:off
-		return getExtensions().stream()
-				.filter(extensionClass::isInstance)
-				.map(extensionClass::cast);
+		return registeredExtensionPoints.stream()
+				.filter(registeredExtensionPoint -> extensionClass.isAssignableFrom(registeredExtensionPoint.extensionPoint.getClass()))
+				.map(registeredExtensionPoint -> extensionClass.cast(registeredExtensionPoint.extensionPoint));
 		//@formatter:on
 	}
 
 	public void addExtension(Class<? extends TestExtension> extensionClass) {
-		boolean extensionExists = getExtensions().stream().anyMatch(
-			extension -> extension.getClass().equals(extensionClass));
+		boolean extensionExists = getRegisteredExtensionClasses().stream().anyMatch(
+			registeredClass -> registeredClass.equals(extensionClass));
 		if (!extensionExists) {
-			this.extensions.add(ReflectionUtils.newInstance(extensionClass));
+			TestExtension testExtension = ReflectionUtils.newInstance(extensionClass);
+			if (testExtension instanceof ExtensionPoint) {
+				register((ExtensionPoint) testExtension, ExtensionPoint.Position.DEFAULT);
+			}
+			this.registeredExtensionClasses.add(extensionClass);
 		}
 	}
 
+	public <T extends ExtensionPoint> void register(T extensionPoint, ExtensionPoint.Position position) {
+		RegisteredExtensionPoint registeredExtensionPoint = new RegisteredExtensionPoint(extensionPoint, position);
+		registeredExtensionPoints.add(registeredExtensionPoint);
+	}
+
+	private static class RegisteredExtensionPoint {
+		private final ExtensionPoint extensionPoint;
+		private final ExtensionPoint.Position position;
+
+		private RegisteredExtensionPoint(ExtensionPoint extensionPoint, ExtensionPoint.Position position) {
+			this.extensionPoint = extensionPoint;
+			this.position = position;
+		}
+	}
 }

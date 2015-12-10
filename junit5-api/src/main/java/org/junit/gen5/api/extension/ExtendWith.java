@@ -25,13 +25,13 @@ import java.lang.annotation.Target;
  *
  * <h3>Supported Extension APIs</h3>
  * <ul>
- * <li>{@link Condition}</li>
+ * <li>{@link ShouldTestBeExecutedCondition}</li>
  * <li>{@link InstancePostProcessor}</li>
  * <li>{@link MethodParameterResolver}</li>
- * <li>{@link BeforeEachCallbacks}</li>
- * <li>{@link AfterEachCallbacks}</li>
- * <li>{@link BeforeAllCallbacks}</li>
- * <li>{@link AfterAllCallbacks}</li>
+ * <li>{@link BeforeEachExtensionPoint}</li>
+ * <li>{@link AfterEachExtensionPoint}</li>
+ * <li>{@link BeforeAllCallback}</li>
+ * <li>{@link AfterAllCallback}</li>
  * </ul>
  *
  * @since 5.0

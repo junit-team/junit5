@@ -25,14 +25,16 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.Condition;
+import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ShouldTestBeExecutedCondition;
+import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
  * Integration tests that verify support for {@link Disabled @Disabled} and
- * custom {@link Condition Conditions} in the {@link JUnit5TestEngine}.
+ * custom {@link ShouldTestBeExecutedCondition Conditions} in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
@@ -130,10 +132,10 @@ public class DisabledTests extends AbstractJUnit5TestEngineTestCase {
 		String value();
 	}
 
-	private static class SystemPropertyCondition implements Condition {
+	private static class SystemPropertyCondition implements ShouldTestBeExecutedCondition {
 
 		@Override
-		public Result evaluate(ExtensionContext context) {
+		public ConditionEvaluationResult shouldTestBeExecuted(TestExtensionContext context) {
 			Optional<SystemProperty> optional = findAnnotation(context.getElement(), SystemProperty.class);
 
 			if (optional.isPresent()) {
@@ -143,12 +145,12 @@ public class DisabledTests extends AbstractJUnit5TestEngineTestCase {
 				String actual = System.getProperty(key);
 
 				if (!Objects.equals(expected, actual)) {
-					return Result.disabled(String.format("System property [%s] has a value of [%s] instead of [%s]",
-						key, actual, expected));
+					return ConditionEvaluationResult.disabled(String.format(
+						"System property [%s] has a value of [%s] instead of [%s]", key, actual, expected));
 				}
 			}
 
-			return Result.enabled("@SystemProperty is not present");
+			return ConditionEvaluationResult.enabled("@SystemProperty is not present");
 		}
 
 	}

@@ -21,15 +21,15 @@ import org.junit.Ignore;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.AfterAllCallbacks;
-import org.junit.gen5.api.extension.BeforeAllCallbacks;
+import org.junit.gen5.api.extension.AfterAllCallback;
+import org.junit.gen5.api.extension.BeforeAllCallback;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
  * Integration tests that verify support of {@link BeforeAll}, {@link AfterAll},
- * and {@link BeforeAllCallbacks} in the {@link JUnit5TestEngine}.
+ * and {@link BeforeAllCallback} in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
@@ -91,28 +91,28 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 	private static List<String> preBeforeAllMethods = new ArrayList<>();
 	private static List<String> postAfterAllMethods = new ArrayList<>();
 
-	private static class FooClassLevelCallbacks implements BeforeAllCallbacks, AfterAllCallbacks {
+	private static class FooClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
-		public void preBeforeAll(ContainerExtensionContext testExecutionContext) {
+		public void beforeAll(ContainerExtensionContext testExecutionContext) {
 			preBeforeAllMethods.add("foo");
 		}
 
 		@Override
-		public void postAfterAll(ContainerExtensionContext testExecutionContext) {
+		public void afterAll(ContainerExtensionContext testExecutionContext) {
 			postAfterAllMethods.add("foo");
 		}
 	}
 
-	private static class BarClassLevelCallbacks implements BeforeAllCallbacks, AfterAllCallbacks {
+	private static class BarClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
-		public void preBeforeAll(ContainerExtensionContext testExecutionContext) {
+		public void beforeAll(ContainerExtensionContext testExecutionContext) {
 			preBeforeAllMethods.add("bar");
 		}
 
 		@Override
-		public void postAfterAll(ContainerExtensionContext testExecutionContext) {
+		public void afterAll(ContainerExtensionContext testExecutionContext) {
 			postAfterAllMethods.add("bar");
 		}
 	}

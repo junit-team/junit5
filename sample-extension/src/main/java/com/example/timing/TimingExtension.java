@@ -12,8 +12,11 @@ package com.example.timing;
 
 import java.lang.reflect.Method;
 
-import org.junit.gen5.api.extension.AfterEachCallbacks;
-import org.junit.gen5.api.extension.BeforeEachCallbacks;
+import org.junit.gen5.api.extension.AfterEachExtensionPoint;
+import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionPointRegistrar;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.TestExtensionContext;
 
 /**
@@ -22,18 +25,22 @@ import org.junit.gen5.api.extension.TestExtensionContext;
  *
  * @since 5.0
  */
-public class TimingExtension implements BeforeEachCallbacks, AfterEachCallbacks {
+public class TimingExtension implements ExtensionPointRegistrar {
 
 	private static final String TIMING_KEY_PREFIX = "TIMING:";
 
 	@Override
-	public void postBeforeEach(TestExtensionContext context) throws Exception {
+	public void registerExtensionPoints(ExtensionPointRegistry registry) {
+		registry.register(this::beforeEach, BeforeEachExtensionPoint.class, ExtensionPoint.Position.LAST);
+		registry.register(this::afterEach, AfterEachExtensionPoint.class, ExtensionPoint.Position.FIRST);
+	}
+
+	private void beforeEach(TestExtensionContext context) throws Exception {
 		Method testMethod = context.getTestMethod();
 		context.getAttributes().put(createKey(testMethod), System.currentTimeMillis());
 	}
 
-	@Override
-	public void preAfterEach(TestExtensionContext context) throws Exception {
+	private void afterEach(TestExtensionContext context) throws Exception {
 		Method testMethod = context.getTestMethod();
 		String key = createKey(testMethod);
 		long start = (long) context.getAttributes().get(key);

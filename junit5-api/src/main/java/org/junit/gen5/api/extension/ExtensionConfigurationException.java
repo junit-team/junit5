@@ -10,14 +10,8 @@
 
 package org.junit.gen5.api.extension;
 
-/**
- * Marker interface for all test extensions.
- *
- * <p>{@code TestExtensions} can be registered via {@link ExtendWith @ExtendWith}.
- *
- * @since 5.0
- * @see ExtensionPoint
- * @see ExtensionPointRegistrar
- */
-public interface TestExtension {
+public class ExtensionConfigurationException extends RuntimeException {
+	public ExtensionConfigurationException(String message) {
+		super(message);
+	}
 }

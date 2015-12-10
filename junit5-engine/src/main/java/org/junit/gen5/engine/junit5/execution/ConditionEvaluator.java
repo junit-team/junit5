@@ -10,48 +10,51 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import org.junit.gen5.api.extension.Condition;
-import org.junit.gen5.api.extension.Condition.Result;
+import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ShouldTestBeExecutedCondition;
 
 /**
- * {@code ConditionEvaluator} evaluates all {@link Condition Conditions}
- * registered in a {@link TestExecutionContext}.
+ * {@code ConditionEvaluator} evaluates all {@link ShouldTestBeExecutedCondition Conditions}
+ * registered in a {@link ExtensionContext}.
  *
  * @since 5.0
- * @see Condition
+ * @see ShouldTestBeExecutedCondition
  */
 class ConditionEvaluator {
 
-	private static final Result ENABLED = Result.enabled("No 'disabled' conditions encountered");
+	private static final ConditionEvaluationResult ENABLED = ConditionEvaluationResult.enabled(
+		"No 'disabled' conditions encountered");
 
 	/**
-	 * Evaluate all {@link Condition Conditions} registered for the supplied
-	 * {@link TestExecutionContext}.
+	 * Evaluate all {@link ShouldTestBeExecutedCondition Conditions} registered for the supplied
+	 * {@link ExtensionContext}.
 	 *
 	 * @param context the current {@code TestExecutionContext}
 	 * @return the first <em>disabled</em> {@code Result}, or a default
 	 * <em>enabled</em> {@code Result} if no disabled conditions are
 	 * encountered.
 	 */
-	Result evaluate(TestExtensionRegistry extensionRegistry, ExtensionContext context) {
+	ConditionEvaluationResult evaluate(TestExtensionRegistry extensionRegistry, ExtensionContext context) {
 		// @formatter:off
-		return extensionRegistry.getExtensions(Condition.class)
-				.map(condition -> evaluate(context, condition))
-				.filter(Result::isDisabled)
-				.findFirst()
-				.orElse(ENABLED);
+//		return extensionRegistry.getRegisteredExtensionClasses(ShouldTestBeExecutedCondition.class)
+//				.map(condition -> evaluate(context, condition))
+//				.filter(ConditionEvaluationResult::isDisabled)
+//				.findFirst()
+//				.orElse(ENABLED);
 		// @formatter:on
+		return null;
 	}
 
-	private Result evaluate(ExtensionContext context, Condition condition) {
-		try {
-			return condition.evaluate(context);
-		}
-		catch (Exception ex) {
-			throw new IllegalStateException(
-				String.format("Failed to evaluate condition [%s]", condition.getClass().getName()), ex);
-		}
+	private ConditionEvaluationResult evaluate(ExtensionContext context, ShouldTestBeExecutedCondition condition) {
+		//		try {
+		//			return condition.shouldTestBeExecuted(context);
+		//		}
+		//		catch (Exception ex) {
+		//			throw new IllegalStateException(
+		//				String.format("Failed to evaluate condition [%s]", condition.getClass().getName()), ex);
+		//		}
+		return null;
 	}
 
 }

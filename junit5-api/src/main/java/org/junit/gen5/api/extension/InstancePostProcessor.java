@@ -22,7 +22,7 @@ package org.junit.gen5.api.extension;
  *
  * @since 5.0
  */
-public interface InstancePostProcessor extends TestExtension {
+public interface InstancePostProcessor extends ExtensionPoint {
 
 	/**
 	 * Callback for post-processing the test instance in the supplied 
