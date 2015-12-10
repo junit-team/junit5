@@ -10,7 +10,8 @@
 
 package org.junit.gen5.engine.junit5ext;
 
-import java.util.List;
+import static org.junit.gen5.engine.junit5ext.executor.ExecutionContext.contextForDescriptor;
+
 import java.util.ServiceLoader;
 
 import org.junit.gen5.engine.ExecutionRequest;
@@ -18,6 +19,7 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5ext.descriptor.GroupDescriptor;
+import org.junit.gen5.engine.junit5ext.executor.ExecutionContext;
 import org.junit.gen5.engine.junit5ext.executor.TestExecutor;
 import org.junit.gen5.engine.junit5ext.executor.TestExecutorRegistry;
 import org.junit.gen5.engine.junit5ext.executor.TestExecutorRegistryImpl;
@@ -62,8 +64,10 @@ public class ExtensibleJUnit5TestEngine implements TestEngine {
 
 	@Override
 	public void execute(ExecutionRequest request) {
-		TestDescriptor rootTestDescriptor = request.getRootTestDescriptor();
-		testExecutorRegistry.executeAll(request, rootTestDescriptor);
+		ExecutionContext context = contextForDescriptor(request.getRootTestDescriptor()).withTestExecutionListener(
+			request.getTestExecutionListener()).build();
+
+		testExecutorRegistry.executeAll(context);
 	}
 
 	public void setTestResolverRegistry(TestResolverRegistry testResolverRegistry) {

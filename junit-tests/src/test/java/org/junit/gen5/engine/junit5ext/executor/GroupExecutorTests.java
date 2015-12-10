@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5ext.executor;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.engine.junit5ext.executor.ExecutionContext.contextForDescriptor;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,25 +33,25 @@ public class GroupExecutorTests {
 
 	@Test
 	public void givenAnArbitraryDescriptor_executorDeclinesRequest() throws Exception {
-		boolean result = groupExecutor.canExecute(new TestDescriptorStub());
+		boolean result = groupExecutor.canExecute(contextForDescriptor(new TestDescriptorStub()).build());
 		assertThat(result).isFalse();
 	}
 
 	@Test
 	public void givenAGroupDescriptor_executorAcceptsRequest() throws Exception {
-		boolean result = groupExecutor.canExecute(emptyGroupDescriptor);
+		boolean result = groupExecutor.canExecute(contextForDescriptor(emptyGroupDescriptor).build());
 		assertThat(result).isTrue();
 	}
 
 	@Test
 	public void givenGroupWithoutChildren_noFurtherExecutionIsTriggered() throws Exception {
-		groupExecutor.execute(null, emptyGroupDescriptor);
+		groupExecutor.execute(contextForDescriptor(emptyGroupDescriptor).build());
 		assertThat(testExecutorRegistrySpy.testDescriptors).isEmpty();
 	}
 
 	@Test
 	public void givenGroupWithOneChild_childExecutionIsTriggered() throws Exception {
-		groupExecutor.execute(null, singleGroupDescriptor);
+		groupExecutor.execute(contextForDescriptor(singleGroupDescriptor).build());
 		assertThat(testExecutorRegistrySpy.testDescriptors).contains(emptyGroupDescriptor);
 	}
 }

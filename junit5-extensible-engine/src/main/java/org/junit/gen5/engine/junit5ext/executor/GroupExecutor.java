@@ -10,7 +10,8 @@
 
 package org.junit.gen5.engine.junit5ext.executor;
 
-import org.junit.gen5.engine.ExecutionRequest;
+import static org.junit.gen5.engine.junit5ext.executor.ExecutionContext.cloneContext;
+
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5ext.descriptor.GroupDescriptor;
 import org.opentestalliance.TestAbortedException;
@@ -25,14 +26,16 @@ public class GroupExecutor implements TestExecutor {
 	}
 
 	@Override
-	public boolean canExecute(TestDescriptor testDescriptor) {
-		return testDescriptor instanceof GroupDescriptor;
+	public boolean canExecute(ExecutionContext context) {
+		return context.getTestDescriptor() instanceof GroupDescriptor;
 	}
 
 	@Override
-	public void execute(ExecutionRequest request, TestDescriptor testDescriptor)
-			throws TestSkippedException, TestAbortedException, AssertionError {
-		GroupDescriptor groupDescriptor = (GroupDescriptor) testDescriptor;
-		groupDescriptor.getChildren().forEach(child -> testExecutorRegistry.executeAll(request, child));
+	public void execute(ExecutionContext context) throws TestSkippedException, TestAbortedException, AssertionError {
+		GroupDescriptor groupDescriptor = context.getTestDescriptor();
+		for (TestDescriptor child : groupDescriptor.getChildren()) {
+			ExecutionContext subContext = cloneContext(context).withTestDescriptor(child).build();
+			testExecutorRegistry.executeAll(subContext);
+		}
 	}
 }

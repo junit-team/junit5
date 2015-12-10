@@ -13,15 +13,13 @@ package org.junit.gen5.engine.junit5ext.executor;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
-import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5ext.descriptor.GroupDescriptor;
 import org.junit.gen5.engine.junit5ext.testdoubles.AlwaysMatchingTestExecutorSpy;
 import org.junit.gen5.engine.junit5ext.testdoubles.AlwaysNonMatchingTestExecutorSpy;
-import org.junit.gen5.engine.junit5ext.testdoubles.ExecutionRequestDummy;
+import org.junit.gen5.engine.junit5ext.testdoubles.ExecutionContextStubForTestDescriptor;
 
 public class TestExecutorRegistryImplTests {
 	private GroupDescriptor testGroup = new GroupDescriptor("testGroup", "Test Group");
-	private TestPlanSpecification emptyTestPlanSpecification = TestPlanSpecification.build();
 	private TestExecutorRegistryImpl testExecutorRegistry = new TestExecutorRegistryImpl();
 
 	@Test
@@ -29,7 +27,7 @@ public class TestExecutorRegistryImplTests {
 		AlwaysMatchingTestExecutorSpy testExecutor = new AlwaysMatchingTestExecutorSpy();
 		testExecutorRegistry.register(testExecutor);
 
-		testExecutorRegistry.executeAll(new ExecutionRequestDummy(), testGroup);
+		testExecutorRegistry.executeAll(new ExecutionContextStubForTestDescriptor(testGroup));
 
 		assertThat(testExecutor.foundTestDescriptor).isEqualTo(testGroup);
 		assertThat(testExecutor.foundTestDescriptorForExecution).isEqualTo(testGroup);
@@ -40,7 +38,7 @@ public class TestExecutorRegistryImplTests {
 		AlwaysNonMatchingTestExecutorSpy testExecutor = new AlwaysNonMatchingTestExecutorSpy();
 		testExecutorRegistry.register(testExecutor);
 
-		testExecutorRegistry.executeAll(new ExecutionRequestDummy(), testGroup);
+		testExecutorRegistry.executeAll(new ExecutionContextStubForTestDescriptor(testGroup));
 
 		assertThat(testExecutor.foundTestDescriptor).isEqualTo(testGroup);
 		assertThat(testExecutor.foundTestDescriptorForExecution).isNull();
