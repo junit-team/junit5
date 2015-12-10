@@ -23,8 +23,8 @@ package org.junit.gen5.api.extension;
  * @since 5.0
  * @see org.junit.gen5.api.AfterEach
  * @see BeforeEachExtensionPoint
- * @see BeforeAllCallback
- * @see AfterAllCallback
+ * @see BeforeAllExtensionPoint
+ * @see AfterAllExtensionPoint
  */
 @FunctionalInterface
 public interface AfterEachExtensionPoint extends ExtensionPoint {
@@ -36,5 +36,9 @@ public interface AfterEachExtensionPoint extends ExtensionPoint {
 	 * @param context the current test extension context
 	 */
 	void afterEach(TestExtensionContext context) throws Exception;
+
+	default boolean sortBackwards() {
+		return true;
+	}
 
 }

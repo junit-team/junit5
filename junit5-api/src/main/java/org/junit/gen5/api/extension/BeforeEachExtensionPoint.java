@@ -21,8 +21,8 @@ package org.junit.gen5.api.extension;
  * @since 5.0
  * @see org.junit.gen5.api.BeforeEach
  * @see AfterEachExtensionPoint
- * @see BeforeAllCallback
- * @see AfterAllCallback
+ * @see BeforeAllExtensionPoint
+ * @see AfterAllExtensionPoint
  */
 @FunctionalInterface
 public interface BeforeEachExtensionPoint extends ExtensionPoint {

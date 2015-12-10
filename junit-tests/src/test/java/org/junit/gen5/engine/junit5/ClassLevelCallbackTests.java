@@ -21,15 +21,15 @@ import org.junit.Ignore;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.AfterAllCallback;
-import org.junit.gen5.api.extension.BeforeAllCallback;
+import org.junit.gen5.api.extension.AfterAllExtensionPoint;
+import org.junit.gen5.api.extension.BeforeAllExtensionPoint;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
  * Integration tests that verify support of {@link BeforeAll}, {@link AfterAll},
- * and {@link BeforeAllCallback} in the {@link JUnit5TestEngine}.
+ * and {@link BeforeAllExtensionPoint} in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
@@ -91,7 +91,7 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 	private static List<String> preBeforeAllMethods = new ArrayList<>();
 	private static List<String> postAfterAllMethods = new ArrayList<>();
 
-	private static class FooClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
+	private static class FooClassLevelCallbacks implements BeforeAllExtensionPoint, AfterAllExtensionPoint {
 
 		@Override
 		public void beforeAll(ContainerExtensionContext testExecutionContext) {
@@ -104,7 +104,7 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 		}
 	}
 
-	private static class BarClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
+	private static class BarClassLevelCallbacks implements BeforeAllExtensionPoint, AfterAllExtensionPoint {
 
 		@Override
 		public void beforeAll(ContainerExtensionContext testExecutionContext) {

@@ -14,18 +14,18 @@ package org.junit.gen5.api.extension;
  * {@code BeforeAllCallbacks} defines the API for {@link TestExtension TestExtensions} that wish to provide additional
  * behavior to tests before all test methods have been invoked.
  * <p>
- * Concrete implementations often implement {@link AfterAllCallback} as well.
+ * Concrete implementations often implement {@link AfterAllExtensionPoint} as well.
  * <p>
  * Implementations must provide a no-args constructor.
  *
  * @since 5.0
  * @see org.junit.gen5.api.BeforeAll
- * @see AfterAllCallback
+ * @see AfterAllExtensionPoint
  * @see BeforeEachExtensionPoint
  * @see AfterEachExtensionPoint
  */
 @FunctionalInterface
-public interface BeforeAllCallback extends ExtensionPoint {
+public interface BeforeAllExtensionPoint extends ExtensionPoint {
 
 	/**
 	 * Callback that is invoked <em>before</em> all {@code @BeforeAll} methods have been invoked.

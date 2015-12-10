@@ -20,8 +20,8 @@ package org.junit.gen5.api.extension;
  * @see MethodParameterResolver
  * @see BeforeEachExtensionPoint
  * @see AfterEachExtensionPoint
- * @see BeforeAllCallback
- * @see AfterAllCallback
+ * @see BeforeAllExtensionPoint
+ * @see AfterAllExtensionPoint
  * @see ShouldTestBeExecutedCondition
  * @see ShouldContainerBeExecutedCondition
  */
@@ -44,5 +44,9 @@ public interface ExtensionPoint extends TestExtension {
 	 */
 	enum Position {
 		FIRST, BEFORE, DEFAULT, AFTER, LAST
+	}
+
+	default boolean sortBackwards() {
+		return false;
 	}
 }

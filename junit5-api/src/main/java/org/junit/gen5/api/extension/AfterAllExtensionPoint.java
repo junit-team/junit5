@@ -14,18 +14,18 @@ package org.junit.gen5.api.extension;
  * {@code AfterAllCallbacks} defines the API for {@link TestExtension TestExtensions} that wish to provide additional
  * behavior to tests after all test methods have been invoked.
  * <p>
- * Concrete implementations often implement {@link BeforeAllCallback} as well.
+ * Concrete implementations often implement {@link BeforeAllExtensionPoint} as well.
  * <p>
  * Implementations must provide a no-args constructor.
  *
  * @since 5.0
  * @see org.junit.gen5.api.AfterAll
- * @see BeforeAllCallback
+ * @see BeforeAllExtensionPoint
  * @see BeforeEachExtensionPoint
  * @see AfterEachExtensionPoint
  */
 @FunctionalInterface
-public interface AfterAllCallback extends ExtensionPoint {
+public interface AfterAllExtensionPoint extends ExtensionPoint {
 
 	/**
 	 * Callback that is invoked <em>after</em> all test methods have been invoked.
@@ -33,5 +33,9 @@ public interface AfterAllCallback extends ExtensionPoint {
 	 * @param context the current container extension context
 	 */
 	void afterAll(ContainerExtensionContext context) throws Exception;
+
+	default boolean sortBackwards() {
+		return true;
+	}
 
 }

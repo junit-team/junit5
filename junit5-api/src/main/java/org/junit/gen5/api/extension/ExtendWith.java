@@ -30,8 +30,8 @@ import java.lang.annotation.Target;
  * <li>{@link MethodParameterResolver}</li>
  * <li>{@link BeforeEachExtensionPoint}</li>
  * <li>{@link AfterEachExtensionPoint}</li>
- * <li>{@link BeforeAllCallback}</li>
- * <li>{@link AfterAllCallback}</li>
+ * <li>{@link BeforeAllExtensionPoint}</li>
+ * <li>{@link AfterAllExtensionPoint}</li>
  * </ul>
  *
  * @since 5.0
