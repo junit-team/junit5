@@ -23,4 +23,9 @@ public class MethodDescriptor extends GroupDescriptor {
 	public Method getMethod() {
 		return method;
 	}
+
+	@Override
+	public boolean isTest() {
+		return true;
+	}
 }
