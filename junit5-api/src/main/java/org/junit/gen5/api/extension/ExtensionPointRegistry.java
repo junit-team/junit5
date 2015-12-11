@@ -21,4 +21,7 @@ public interface ExtensionPointRegistry {
 
 	<T extends ExtensionPoint> void register(T extensionPoint, Class<T> extensionType, Position position);
 
+	default <T extends ExtensionPoint> void register(T extensionPoint, Class<T> extensionType) {
+		register(extensionPoint, extensionType, Position.DEFAULT);
+	}
 }
