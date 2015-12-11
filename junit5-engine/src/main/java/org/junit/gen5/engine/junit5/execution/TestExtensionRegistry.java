@@ -33,6 +33,13 @@ import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
  */
 public class TestExtensionRegistry {
 
+	public static TestExtensionRegistry newRegistryFrom(TestExtensionRegistry parentRegistry,
+			List<Class<? extends TestExtension>> extensionClasses) {
+		TestExtensionRegistry newTestExtensionRegistry = new TestExtensionRegistry(parentRegistry);
+		extensionClasses.forEach(newTestExtensionRegistry::addExtension);
+		return newTestExtensionRegistry;
+	}
+
 	private static final List<Class<? extends TestExtension>> defaultExtensionClasses = Collections.unmodifiableList(
 		Arrays.asList(DisabledCondition.class, TestNameParameterResolver.class));
 

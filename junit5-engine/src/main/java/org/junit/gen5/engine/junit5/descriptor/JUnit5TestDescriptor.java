@@ -17,11 +17,14 @@ import static org.junit.gen5.commons.util.AnnotationUtils.findRepeatableAnnotati
 import java.lang.reflect.AnnotatedElement;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestTag;
@@ -57,14 +60,13 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 
 	protected TestExtensionRegistry populateNewTestExtensionRegistryFromExtendWith(AnnotatedElement annotatedElement,
 			TestExtensionRegistry existingTestExtensionRegistry) {
-		TestExtensionRegistry newTestExtensionRegistry = new TestExtensionRegistry(existingTestExtensionRegistry);
 		// @formatter:off
-		findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
+		List<Class<? extends TestExtension>> extensionClasses = findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
 				.map(ExtendWith::value)
 				.flatMap(Arrays::stream)
-				.forEach(newTestExtensionRegistry::addExtension);
-		// @formatter:off
-		return newTestExtensionRegistry;
+				.collect(Collectors.toList());
+		// @formatter:on
+		return TestExtensionRegistry.newRegistryFrom(existingTestExtensionRegistry, extensionClasses);
 	}
 
 }
