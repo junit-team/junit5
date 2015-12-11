@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.engine.junit5ext.executor.GroupExecutor;
 import org.junit.gen5.engine.junit5ext.executor.MethodExecutor;
 import org.junit.gen5.engine.junit5ext.executor.TestExecutorRegistryImpl;
@@ -30,8 +31,7 @@ import org.junit.gen5.engine.junit5.testdoubles.TestExecutionListenerSpy;
 
 public class JUnit5TestEngineRegressionTests {
 	private TestResolverRegistryImpl testResolverRegistry = new TestResolverRegistryImpl();
-	private TestExecutorRegistryImpl testExecutorRegistry = new TestExecutorRegistryImpl();
-	private ExtensibleJUnit5TestEngine testEngine = new ExtensibleJUnit5TestEngine();
+	private JUnit5TestEngine testEngine = new JUnit5TestEngine();
 
 	@Before
 	public void setUp() throws Exception {

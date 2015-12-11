@@ -16,7 +16,5 @@ import org.junit.gen5.engine.TestEngine;
  * @since 5.0
  */
 interface TestEngineRegistry {
-
 	Iterable<TestEngine> getTestEngines();
-
 }

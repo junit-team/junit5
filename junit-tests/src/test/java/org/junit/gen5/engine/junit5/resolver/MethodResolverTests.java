@@ -21,7 +21,7 @@ import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5ext.descriptor.ClassDescriptor;
 import org.junit.gen5.engine.junit5ext.descriptor.GroupDescriptor;
-import org.junit.gen5.engine.junit5ext.samples.SinglePassingTestSampleClass;
+import org.junit.gen5.engine.junit5.samples.SinglePassingTestSampleClass;
 
 public class MethodResolverTests {
 	private MethodResolver resolver = new MethodResolver();

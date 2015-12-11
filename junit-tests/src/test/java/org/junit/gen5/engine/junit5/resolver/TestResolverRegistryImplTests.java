@@ -18,9 +18,9 @@ import org.junit.Test;
 import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5ext.descriptor.GroupDescriptor;
-import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverRequest;
-import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverSpy;
-import org.junit.gen5.engine.junit5ext.testdoubles.TestResolverSpyWithTestsForRoot;
+import org.junit.gen5.engine.junit5.testdoubles.TestResolverRequest;
+import org.junit.gen5.engine.junit5.testdoubles.TestResolverSpy;
+import org.junit.gen5.engine.junit5.testdoubles.TestResolverSpyWithTestsForRoot;
 
 public class TestResolverRegistryImplTests {
 	private GroupDescriptor testGroup = new GroupDescriptor("testGroup", "Test Group");

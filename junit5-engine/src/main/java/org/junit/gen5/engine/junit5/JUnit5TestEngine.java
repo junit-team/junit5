@@ -11,23 +11,36 @@
 package org.junit.gen5.engine.junit5;
 
 import java.util.List;
+import java.util.ServiceLoader;
 
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.engine.ClassFilter;
-import org.junit.gen5.engine.EngineFilter;
-import org.junit.gen5.engine.ExecutionRequest;
-import org.junit.gen5.engine.HierarchicalTestEngine;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.*;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.JUnit5EngineDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
+import org.junit.gen5.engine.junit5.resolver.TestResolver;
+import org.junit.gen5.engine.junit5.resolver.TestResolverRegistry;
+import org.junit.gen5.engine.junit5.resolver.TestResolverRegistryImpl;
 
 public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecutionContext> {
+	private static final String ENGINE_ID = "junit5";
 
-	public static final String ENGINE_ID = "junit5";
+	private TestResolverRegistry testResolverRegistry;
+
+	public JUnit5TestEngine() {
+		initialize();
+	}
+
+	JUnit5TestEngine(TestResolverRegistry testResolverRegistry) {
+		this.testResolverRegistry = testResolverRegistry;
+	}
+
+	@Override
+	public void initialize() {
+		testResolverRegistry = new TestResolverRegistryImpl();
+		ServiceLoader<TestResolver> serviceLoader = ServiceLoader.load(TestResolver.class);
+		serviceLoader.forEach(testResolver -> testResolverRegistry.register(testResolver));
+	}
 
 	@Override
 	public String getId() {
@@ -38,17 +51,14 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 	@Override
 	public JUnit5EngineDescriptor discoverTests(TestPlanSpecification specification) {
 		Preconditions.notNull(specification, "specification must not be null");
-		JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(this);
-		resolveSpecification(specification, engineDescriptor);
-		return engineDescriptor;
-	}
 
-	private void resolveSpecification(TestPlanSpecification specification, JUnit5EngineDescriptor engineDescriptor) {
-		SpecificationResolver resolver = new SpecificationResolver(engineDescriptor);
-		for (TestPlanSpecificationElement element : specification) {
-			resolver.resolveElement(element);
-		}
-		applyEngineFilters(specification.getEngineFilters(), engineDescriptor);
+		JUnit5EngineDescriptor root = new JUnit5EngineDescriptor(this);
+		testResolverRegistry.notifyResolvers(root, specification);
+
+		// TODO Rework filter mechanism
+		applyEngineFilters(specification.getEngineFilters(), root);
+
+		return root;
 	}
 
 	private void applyEngineFilters(List<EngineFilter> engineFilters, JUnit5EngineDescriptor engineDescriptor) {
