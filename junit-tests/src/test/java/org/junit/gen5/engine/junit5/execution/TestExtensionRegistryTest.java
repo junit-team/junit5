@@ -15,6 +15,8 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.gen5.api.extension.ExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionRegistrar;
+import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ShouldContainerBeExecutedCondition;
 import org.junit.gen5.api.extension.ShouldTestBeExecutedCondition;
@@ -104,6 +106,17 @@ public class TestExtensionRegistryTest {
 		Assert.assertEquals(2, registry.getExtensionPoints(MyExtensionPoint.class).size());
 	}
 
+	@Test
+	public void addExtensionPointsByExtensionRegistrar() {
+
+		registry = new TestExtensionRegistry();
+		registry.addExtension(MyExtensionRegistrar.class);
+
+		assertExtensionRegistered(registry, MyExtensionRegistrar.class);
+		Assert.assertEquals(1, registry.getExtensionPoints(MyExtensionPoint.class).size());
+		Assert.assertEquals(1, registry.getExtensionPoints(AnotherExtensionPoint.class).size());
+	}
+
 	private void assertExtensionRegistered(TestExtensionRegistry registry,
 			Class<? extends TestExtension> extensionClass) {
 		String assertionMessage = extensionClass.getSimpleName() + " should be present";
@@ -118,7 +131,7 @@ public class TestExtensionRegistryTest {
 }
 
 interface MyExtensionPoint extends ExtensionPoint {
-	void doNothing();
+	void doNothing(String test);
 }
 
 interface AnotherExtensionPoint extends ExtensionPoint {
@@ -127,26 +140,41 @@ interface AnotherExtensionPoint extends ExtensionPoint {
 
 class MyExtension implements MyExtensionPoint {
 	@Override
-	public void doNothing() {
+	public void doNothing(String test) {
 
 	}
 }
 
 class YourExtension implements MyExtensionPoint {
 	@Override
-	public void doNothing() {
+	public void doNothing(String test) {
 
 	}
 }
 
 class MultipleExtension implements MyExtensionPoint, AnotherExtensionPoint {
 	@Override
-	public void doNothing() {
+	public void doNothing(String test) {
 
 	}
 
 	@Override
 	public void doMore() {
 
+	}
+}
+
+class MyExtensionRegistrar implements ExtensionRegistrar {
+
+	@Override
+	public void registerExtensions(ExtensionRegistry registry) {
+		registry.register(this::doNothing, MyExtensionPoint.class);
+		registry.register(this::doMore, AnotherExtensionPoint.class);
+	}
+
+	private void doMore() {
+	}
+
+	private void doNothing(String s) {
 	}
 }

@@ -20,6 +20,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.api.extension.ExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionPoint.Position;
+import org.junit.gen5.api.extension.ExtensionRegistrar;
+import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
@@ -99,24 +102,37 @@ public class TestExtensionRegistry {
 		if (!extensionExists) {
 			TestExtension testExtension = ReflectionUtils.newInstance(extensionClass);
 			if (testExtension instanceof ExtensionPoint) {
-				register((ExtensionPoint) testExtension, ExtensionPoint.Position.DEFAULT);
+				ExtensionPoint extension = (ExtensionPoint) testExtension;
+				registerExtension(extension, Position.DEFAULT);
+			}
+			if (testExtension instanceof ExtensionRegistrar) {
+				ExtensionRegistrar extensionRegistrar = (ExtensionRegistrar) testExtension;
+				ExtensionRegistry extensionRegistry = new LocalExtensionRegistry();
+				extensionRegistrar.registerExtensions(extensionRegistry);
 			}
 			this.registeredExtensionClasses.add(extensionClass);
 		}
 	}
 
-	public <T extends ExtensionPoint> void register(T extensionPoint, ExtensionPoint.Position position) {
-		RegisteredExtensionPoint<T> registeredExtensionPoint = new RegisteredExtensionPoint<>(extensionPoint, position);
+	private <E extends ExtensionPoint> void registerExtension(E extension, Position position) {
+		RegisteredExtensionPoint<E> registeredExtensionPoint = new RegisteredExtensionPoint<>(extension, position);
 		registeredExtensionPoints.add(registeredExtensionPoint);
 	}
 
 	private static class RegisteredExtensionPoint<T extends ExtensionPoint> {
 		private final T extensionPoint;
-		private final ExtensionPoint.Position position;
+		private final Position position;
 
-		private RegisteredExtensionPoint(T extensionPoint, ExtensionPoint.Position position) {
+		private RegisteredExtensionPoint(T extensionPoint, Position position) {
 			this.extensionPoint = extensionPoint;
 			this.position = position;
+		}
+	}
+
+	private class LocalExtensionRegistry implements ExtensionRegistry {
+		@Override
+		public <E extends ExtensionPoint> void register(E extension, Class<E> extensionPointType, Position position) {
+			registerExtension(extension, position);
 		}
 	}
 }
