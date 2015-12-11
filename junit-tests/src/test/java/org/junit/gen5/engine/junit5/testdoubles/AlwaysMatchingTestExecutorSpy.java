@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5ext.testdoubles;
+package org.junit.gen5.engine.junit5.testdoubles;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5ext.executor.ExecutionContext;
@@ -17,7 +17,7 @@ import org.junit.gen5.engine.junit5ext.executor.TestExecutorRegistry;
 import org.opentestalliance.TestAbortedException;
 import org.opentestalliance.TestSkippedException;
 
-public class AlwaysNonMatchingTestExecutorSpy implements TestExecutor {
+public class AlwaysMatchingTestExecutorSpy implements TestExecutor {
 	public TestExecutorRegistry foundTestExecutorRegistry;
 	public TestDescriptor foundTestDescriptor;
 	public ExecutionContext foundExecutionContext;
@@ -31,7 +31,7 @@ public class AlwaysNonMatchingTestExecutorSpy implements TestExecutor {
 	@Override
 	public boolean canExecute(ExecutionContext context) {
 		foundTestDescriptor = context.getTestDescriptor();
-		return false;
+		return true;
 	}
 
 	@Override

@@ -8,27 +8,28 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5ext.testdoubles;
+package org.junit.gen5.engine.junit5.resolver;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.gen5.engine.MutableTestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.junit5ext.resolver.TestResolver;
-import org.junit.gen5.engine.junit5ext.resolver.TestResolverRegistry;
 
-public class TestResolverRegistrySpy implements TestResolverRegistry {
-	public List<TestResolverRequest> notifications = new LinkedList<>();
-	public List<TestResolver> registeredTestResolvers = new LinkedList<>();
+// TODO This class should become some kind of "JUnit" component, that will be initialized during start up
+public class TestResolverRegistryImpl implements TestResolverRegistry {
+	private List<TestResolver> testResolvers = new LinkedList<>();
 
 	@Override
 	public void notifyResolvers(MutableTestDescriptor parent, TestPlanSpecification testPlanSpecification) {
-		notifications.add(new TestResolverRequest(parent, testPlanSpecification));
+		for (TestResolver testResolver : testResolvers) {
+			List<MutableTestDescriptor> tests = testResolver.resolveFor(parent, testPlanSpecification);
+			tests.forEach(test -> notifyResolvers(test, testPlanSpecification));
+		}
 	}
 
 	@Override
 	public void register(TestResolver testResolver) {
-		registeredTestResolvers.add(testResolver);
+		testResolvers.add(testResolver);
 	}
 }

@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5ext.testdoubles;
+package org.junit.gen5.engine.junit5.testdoubles;
 
 import java.util.Collections;
 import java.util.Optional;

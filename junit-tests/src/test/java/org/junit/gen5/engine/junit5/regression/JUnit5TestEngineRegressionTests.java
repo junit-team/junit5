@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5ext;
+package org.junit.gen5.engine.junit5.regression;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.TestPlanSpecification.build;
@@ -21,14 +21,14 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5ext.executor.GroupExecutor;
 import org.junit.gen5.engine.junit5ext.executor.MethodExecutor;
 import org.junit.gen5.engine.junit5ext.executor.TestExecutorRegistryImpl;
-import org.junit.gen5.engine.junit5ext.resolver.ClassResolver;
-import org.junit.gen5.engine.junit5ext.resolver.MethodResolver;
-import org.junit.gen5.engine.junit5ext.resolver.TestResolverRegistryImpl;
-import org.junit.gen5.engine.junit5ext.samples.EmptyTestSampleClass;
-import org.junit.gen5.engine.junit5ext.samples.SinglePassingTestSampleClass;
-import org.junit.gen5.engine.junit5ext.testdoubles.TestExecutionListenerSpy;
+import org.junit.gen5.engine.junit5.resolver.ClassResolver;
+import org.junit.gen5.engine.junit5.resolver.MethodResolver;
+import org.junit.gen5.engine.junit5.resolver.TestResolverRegistryImpl;
+import org.junit.gen5.engine.junit5.samples.EmptyTestSampleClass;
+import org.junit.gen5.engine.junit5.samples.SinglePassingTestSampleClass;
+import org.junit.gen5.engine.junit5.testdoubles.TestExecutionListenerSpy;
 
-public class ExtensibleJUnit5TestEngineRegressionTests {
+public class JUnit5TestEngineRegressionTests {
 	private TestResolverRegistryImpl testResolverRegistry = new TestResolverRegistryImpl();
 	private TestExecutorRegistryImpl testExecutorRegistry = new TestExecutorRegistryImpl();
 	private ExtensibleJUnit5TestEngine testEngine = new ExtensibleJUnit5TestEngine();

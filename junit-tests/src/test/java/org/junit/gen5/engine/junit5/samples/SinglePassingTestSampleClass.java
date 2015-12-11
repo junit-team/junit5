@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5ext.samples;
+package org.junit.gen5.engine.junit5.samples;
 
 import org.junit.gen5.api.Test;
 
