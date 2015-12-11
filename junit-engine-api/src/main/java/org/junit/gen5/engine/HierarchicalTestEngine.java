@@ -29,6 +29,7 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 
 	protected abstract C createContext();
 
+	@SuppressWarnings({ "unused", "unchecked" })
 	private void executeAll(TestDescriptor parentDescriptor, EngineExecutionListener listener, C parentContext)
 			throws Exception {
 		C context = parentContext;

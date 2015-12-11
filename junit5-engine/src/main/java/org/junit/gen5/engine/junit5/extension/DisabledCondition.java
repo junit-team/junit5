@@ -17,7 +17,6 @@ import java.util.Optional;
 import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
-import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.ShouldContainerBeExecutedCondition;
 import org.junit.gen5.api.extension.ShouldTestBeExecutedCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;

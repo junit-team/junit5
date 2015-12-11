@@ -10,7 +10,12 @@
 
 package org.junit.gen5.api.extension;
 
+/**
+ * @since 5.0
+ */
+@SuppressWarnings("serial")
 public class ExtensionConfigurationException extends RuntimeException {
+
 	public ExtensionConfigurationException(String message) {
 		super(message);
 	}

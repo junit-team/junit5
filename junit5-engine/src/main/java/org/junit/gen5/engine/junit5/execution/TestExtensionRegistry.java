@@ -126,6 +126,7 @@ public class TestExtensionRegistry {
 		registeredExtensionPoints.add(registeredExtensionPoint);
 	}
 
+	@SuppressWarnings("unused")
 	private static class RegisteredExtensionPoint<T extends ExtensionPoint> {
 		private final T extensionPoint;
 		private final Position position;

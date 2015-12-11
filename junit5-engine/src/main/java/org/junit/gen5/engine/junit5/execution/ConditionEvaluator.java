@@ -21,6 +21,7 @@ import org.junit.gen5.api.extension.ShouldTestBeExecutedCondition;
  * @since 5.0
  * @see ShouldTestBeExecutedCondition
  */
+@SuppressWarnings("unused")
 class ConditionEvaluator {
 
 	private static final ConditionEvaluationResult ENABLED = ConditionEvaluationResult.enabled(

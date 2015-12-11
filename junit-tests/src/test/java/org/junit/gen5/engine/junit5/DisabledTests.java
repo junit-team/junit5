@@ -12,7 +12,8 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.engine.TestPlanSpecification.build;
+import static org.junit.gen5.engine.TestPlanSpecification.forClass;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -27,7 +28,6 @@ import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.ShouldTestBeExecutedCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.TestPlanSpecification;
