@@ -12,12 +12,12 @@ package org.junit.gen5.engine.junit5.samples;
 
 import org.junit.gen5.api.Test;
 
-public class YourTestClass {
+public class TwoPassingTestsSampleClass {
 	@Test
-	void test3() {
+	void test1() {
 	}
 
 	@Test
-	void test4() {
+	void test2() {
 	}
 }
