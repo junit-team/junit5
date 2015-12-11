@@ -96,8 +96,10 @@ public class Launcher {
 		}
 
 		@Override
-		public void dynamicTestFound(TestDescriptor testDescriptor) {
-			testExecutionListener.dynamicTestFound(getTestIdentifier(testDescriptor));
+		public void dynamicTestRegistered(TestDescriptor testDescriptor) {
+			TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
+			testPlan.add(testIdentifier);
+			testExecutionListener.dynamicTestRegistered(getTestIdentifier(testDescriptor));
 		}
 
 		@Override

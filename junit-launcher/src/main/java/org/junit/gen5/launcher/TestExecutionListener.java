@@ -21,7 +21,7 @@ public interface TestExecutionListener {
 	default void testPlanExecutionFinished(TestPlan testPlan) {
 	}
 
-	default void dynamicTestFound(TestIdentifier testIdentifier) {
+	default void dynamicTestRegistered(TestIdentifier testIdentifier) {
 	}
 
 	default void testStarted(TestIdentifier testIdentifier) {

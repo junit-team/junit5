@@ -43,7 +43,7 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void dynamicTestFound(TestIdentifier testIdentifier) {
+	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
 		printlnTestDescriptor(BLUE, "Test found:", testIdentifier);
 	}
 

@@ -15,7 +15,7 @@ package org.junit.gen5.engine;
  */
 public interface EngineExecutionListener {
 
-	default void dynamicTestFound(TestDescriptor testDescriptor) {
+	default void dynamicTestRegistered(TestDescriptor testDescriptor) {
 	}
 
 	default void testStarted(TestDescriptor testDescriptor) {

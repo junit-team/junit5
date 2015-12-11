@@ -38,8 +38,8 @@ class TestExecutionListenerRegistry {
 	private class CompositeTestExecutionListener implements TestExecutionListener {
 
 		@Override
-		public void dynamicTestFound(TestIdentifier testIdentifier) {
-			notifyTestExecutionListeners(listener -> listener.dynamicTestFound(testIdentifier));
+		public void dynamicTestRegistered(TestIdentifier testIdentifier) {
+			notifyTestExecutionListeners(listener -> listener.dynamicTestRegistered(testIdentifier));
 		}
 
 		@Override

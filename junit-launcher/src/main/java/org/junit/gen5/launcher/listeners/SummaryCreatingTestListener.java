@@ -44,7 +44,7 @@ public class SummaryCreatingTestListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void dynamicTestFound(TestIdentifier testIdentifier) {
+	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
 		summary.testsFound.incrementAndGet();
 	}
 

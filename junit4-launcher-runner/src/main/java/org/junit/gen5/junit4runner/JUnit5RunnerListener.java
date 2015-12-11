@@ -41,7 +41,7 @@ class JUnit5RunnerListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void dynamicTestFound(TestIdentifier testIdentifier) {
+	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
 		System.out.println("JUnit5 test runner cannot handle dynamic tests");
 	}
 

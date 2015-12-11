@@ -38,7 +38,7 @@ public class LoggingListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void dynamicTestFound(TestIdentifier testIdentifier) {
+	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
 		log("dynamicTestFound: %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
 	}
 
