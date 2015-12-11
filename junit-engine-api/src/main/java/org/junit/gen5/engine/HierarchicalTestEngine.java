@@ -17,42 +17,57 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 
 	@Override
 	public final void execute(ExecutionRequest request) {
-		try {
-			TestDescriptor rootTestDescriptor = request.getRootTestDescriptor();
-			executeAll(rootTestDescriptor, request.getEngineExecutionListener(), createContext());
-		}
-		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		TestDescriptor rootTestDescriptor = request.getRootTestDescriptor();
+		EngineExecutionListener engineExecutionListener = request.getEngineExecutionListener();
+		executeAll(rootTestDescriptor, engineExecutionListener, createContext());
 	}
 
 	protected abstract C createContext();
 
-	@SuppressWarnings({ "unused", "unchecked" })
-	private void executeAll(TestDescriptor parentDescriptor, EngineExecutionListener listener, C parentContext)
-			throws Exception {
-		C context = parentContext;
-		if (parentDescriptor instanceof Container) {
-			context = ((Container<C>) parentDescriptor).beforeAll(context);
+	private void executeAll(TestDescriptor testDescriptor, EngineExecutionListener listener, C parentContext) {
+		if (testDescriptor.isTest()) {
+			listener.testStarted(testDescriptor);
 		}
-		for (TestDescriptor childDescriptor : parentDescriptor.getChildren()) {
-			if (childDescriptor instanceof Leaf) {
-				Leaf<C> child = (Leaf<C>) childDescriptor;
-				try {
-					listener.testStarted(childDescriptor);
-					C childContext = child.execute(context);
-					listener.testSucceeded(childDescriptor);
-				}
-				catch (Throwable t) {
-					listener.testFailed(childDescriptor, t);
-				}
+		try {
+			C context = executeBeforeAll(testDescriptor, parentContext);
+			context = executeLeaf(testDescriptor, context);
+			for (TestDescriptor child : testDescriptor.getChildren()) {
+				executeAll(child, listener, context);
 			}
-			executeAll(childDescriptor, listener, context);
+			context = executeAfterAll(testDescriptor, context);
+			if (testDescriptor.isTest()) {
+				listener.testSucceeded(testDescriptor);
+			}
 		}
-		if (parentDescriptor instanceof Container) {
-			context = ((Container<C>) parentDescriptor).afterAll(context);
+		catch (Throwable t) {
+			if (testDescriptor.isTest()) {
+				listener.testFailed(testDescriptor, t);
+			}
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private C executeBeforeAll(TestDescriptor testDescriptor, C context) {
+		if (testDescriptor instanceof Container) {
+			return ((Container<C>) testDescriptor).beforeAll(context);
+		}
+		return context;
+	}
+
+	@SuppressWarnings("unchecked")
+	private C executeLeaf(TestDescriptor testDescriptor, C context) throws Throwable {
+		if (testDescriptor instanceof Leaf) {
+			return ((Leaf<C>) testDescriptor).execute(context);
+		}
+		return context;
+	}
+
+	@SuppressWarnings("unchecked")
+	private C executeAfterAll(TestDescriptor testDescriptor, C context) {
+		if (testDescriptor instanceof Container) {
+			return ((Container<C>) testDescriptor).afterAll(context);
+		}
+		return context;
 	}
 
 }
