@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit5.samples;
 
 import org.junit.gen5.api.Test;
 
-public class HerTestClass extends MyTestClass {
+public class ExtendingOtherTestSampleClass extends TwoTestAndOneNonTestMethodsSampleClass {
 	@Test
 	void test7(String param) {
 	}

@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit5.samples;
 
 import org.junit.gen5.api.Test;
 
-public class MyTestClass {
+public class TwoTestAndOneNonTestMethodsSampleClass {
 	@Test
 	void test1() {
 	}
