@@ -49,17 +49,17 @@ public class LoggingListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testStarted(TestIdentifier testIdentifier) {
+	public void executionStarted(TestIdentifier testIdentifier) {
 		log("testStarted: %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
 	}
 
 	@Override
-	public void testSkipped(TestIdentifier testIdentifier, String reason) {
+	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		log("testSkipped: %s - %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId(), reason);
 	}
 
 	@Override
-	public void testFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		logWithThrowable("testFinished: %s - %s - %s", testExecutionResult.getThrowable().orElse(null),
 			testIdentifier.getDisplayName(), testIdentifier.getUniqueId(), testExecutionResult);
 	}

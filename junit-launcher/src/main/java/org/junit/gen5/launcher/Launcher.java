@@ -104,18 +104,18 @@ public class Launcher {
 		}
 
 		@Override
-		public void testStarted(TestDescriptor testDescriptor) {
-			testExecutionListener.testStarted(getTestIdentifier(testDescriptor));
+		public void executionStarted(TestDescriptor testDescriptor) {
+			testExecutionListener.executionStarted(getTestIdentifier(testDescriptor));
 		}
 
 		@Override
-		public void testSkipped(TestDescriptor testDescriptor, String reason) {
-			testExecutionListener.testSkipped(getTestIdentifier(testDescriptor), reason);
+		public void executionSkipped(TestDescriptor testDescriptor, String reason) {
+			testExecutionListener.executionSkipped(getTestIdentifier(testDescriptor), reason);
 		}
 
 		@Override
-		public void testFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
-			testExecutionListener.testFinished(getTestIdentifier(testDescriptor), testExecutionResult);
+		public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
+			testExecutionListener.executionFinished(getTestIdentifier(testDescriptor), testExecutionResult);
 		}
 
 		private TestIdentifier getTestIdentifier(TestDescriptor testDescriptor) {

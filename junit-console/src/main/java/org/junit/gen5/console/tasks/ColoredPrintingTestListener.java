@@ -50,18 +50,18 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testSkipped(TestIdentifier testIdentifier, String reason) {
+	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		printlnTestDescriptor(YELLOW, "Test skipped:", testIdentifier);
 		printlnMessage(YELLOW, "Reason", reason);
 	}
 
 	@Override
-	public void testStarted(TestIdentifier testIdentifier) {
+	public void executionStarted(TestIdentifier testIdentifier) {
 		printlnTestDescriptor(NONE, "Test started:", testIdentifier);
 	}
 
 	@Override
-	public void testFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		Color color = determineColor(testExecutionResult.getStatus());
 		printlnTestDescriptor(color, "Test finished:", testIdentifier);
 		testExecutionResult.getThrowable().ifPresent(t -> printlnException(color, t));

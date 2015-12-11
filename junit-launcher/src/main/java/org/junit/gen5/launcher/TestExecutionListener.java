@@ -26,13 +26,13 @@ public interface TestExecutionListener {
 	default void dynamicTestRegistered(TestIdentifier testIdentifier) {
 	}
 
-	default void testSkipped(TestIdentifier testIdentifier, String reason) {
+	default void executionSkipped(TestIdentifier testIdentifier, String reason) {
 	}
 
-	default void testStarted(TestIdentifier testIdentifier) {
+	default void executionStarted(TestIdentifier testIdentifier) {
 	}
 
-	default void testFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+	default void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 	}
 
 }

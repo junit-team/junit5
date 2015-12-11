@@ -46,7 +46,7 @@ public final class DummyTestEngine implements TestEngine {
 		EngineExecutionListener listener = request.getEngineExecutionListener();
 		for (TestDescriptor childDescriptor : request.getRootTestDescriptor().getChildren()) {
 			Runnable runnable = children.get(childDescriptor.getDisplayName());
-			listener.testStarted(childDescriptor);
+			listener.executionStarted(childDescriptor);
 			TestExecutionResult result;
 			try {
 				runnable.run();
@@ -55,7 +55,7 @@ public final class DummyTestEngine implements TestEngine {
 			catch (Throwable t) {
 				result = TestExecutionResult.failed(t);
 			}
-			listener.testFinished(childDescriptor, result);
+			listener.executionFinished(childDescriptor, result);
 		}
 	}
 }

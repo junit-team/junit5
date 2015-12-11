@@ -42,6 +42,8 @@ public class StandardTestClassTest extends AbstractJUnit5TestEngineTestCase {
 		Assert.assertEquals("# tests succeeded", 5, listener.testSucceededCount.get());
 		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
 
+		Assert.assertEquals("# containers started", 3, listener.containerStartedCount.get());
+		Assert.assertEquals("# containers finished", 3, listener.containerFinishedCount.get());
 	}
 
 	@org.junit.Test
@@ -51,6 +53,9 @@ public class StandardTestClassTest extends AbstractJUnit5TestEngineTestCase {
 		Assert.assertEquals("# tests started", 3, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
 		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
+
+		Assert.assertEquals("# containers started", 2, listener.containerStartedCount.get());
+		Assert.assertEquals("# containers finished", 2, listener.containerFinishedCount.get());
 
 		Assert.assertEquals("# before1 calls", 3, MyStandardTestCase.countBefore1);
 		Assert.assertEquals("# before2 calls", 3, MyStandardTestCase.countBefore2);
@@ -62,6 +67,9 @@ public class StandardTestClassTest extends AbstractJUnit5TestEngineTestCase {
 
 		Assert.assertEquals("# tests started", 3, listener.testStartedCount.get());
 		Assert.assertEquals("# after each calls", 3, MyStandardTestCase.countAfter);
+
+		Assert.assertEquals("# containers started", 2, listener.containerStartedCount.get());
+		Assert.assertEquals("# containers finished", 2, listener.containerFinishedCount.get());
 	}
 
 	@org.junit.Test
@@ -71,6 +79,9 @@ public class StandardTestClassTest extends AbstractJUnit5TestEngineTestCase {
 		Assert.assertEquals("# tests started", 2, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());
 		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
+
+		Assert.assertEquals("# containers started", 2, listener.containerStartedCount.get());
+		Assert.assertEquals("# containers finished", 2, listener.containerFinishedCount.get());
 
 		Assert.assertEquals("# before each calls", 2, TestCaseWithFailingBefore.countBefore);
 	}
@@ -83,6 +94,9 @@ public class StandardTestClassTest extends AbstractJUnit5TestEngineTestCase {
 		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());
 		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
 
+		Assert.assertEquals("# containers started", 2, listener.containerStartedCount.get());
+		Assert.assertEquals("# containers finished", 2, listener.containerFinishedCount.get());
+
 		Assert.assertTrue("test executed?", TestCaseWithFailingAfter.testExecuted);
 	}
 
@@ -93,6 +107,9 @@ public class StandardTestClassTest extends AbstractJUnit5TestEngineTestCase {
 		Assert.assertEquals("# tests started", 3, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
 		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
+
+		Assert.assertEquals("# containers started", 3, listener.containerStartedCount.get());
+		Assert.assertEquals("# containers finished", 3, listener.containerFinishedCount.get());
 	}
 
 	@org.junit.Test
@@ -102,6 +119,9 @@ public class StandardTestClassTest extends AbstractJUnit5TestEngineTestCase {
 		Assert.assertEquals("# tests started", 5, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 3, listener.testSucceededCount.get());
 		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
+
+		Assert.assertEquals("# containers started", 4, listener.containerStartedCount.get());
+		Assert.assertEquals("# containers finished", 4, listener.containerFinishedCount.get());
 
 		assertAll("before each counts", //
 			() -> Assert.assertEquals(5, TestCaseWithDoubleNesting.beforeTopCount),

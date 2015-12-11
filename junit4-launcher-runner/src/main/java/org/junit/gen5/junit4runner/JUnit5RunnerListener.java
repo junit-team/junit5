@@ -49,20 +49,20 @@ class JUnit5RunnerListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testSkipped(TestIdentifier testIdentifier, String reason) {
+	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		Description description = findJUnit4Description(testIdentifier);
 		notifier.fireTestIgnored(description);
 		notifier.fireTestFinished(description);
 	}
 
 	@Override
-	public void testStarted(TestIdentifier testIdentifier) {
+	public void executionStarted(TestIdentifier testIdentifier) {
 		Description description = findJUnit4Description(testIdentifier);
 		notifier.fireTestStarted(description);
 	}
 
 	@Override
-	public void testFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		Description description = findJUnit4Description(testIdentifier);
 		if (testExecutionResult.getStatus() == ABORTED) {
 			notifier.fireTestAssumptionFailed(toFailure(testExecutionResult, description));

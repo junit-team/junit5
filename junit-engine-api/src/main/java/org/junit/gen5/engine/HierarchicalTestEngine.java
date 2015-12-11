@@ -25,9 +25,9 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 	protected abstract C createContext();
 
 	private void executeAll(TestDescriptor testDescriptor, EngineExecutionListener listener, C parentContext) {
-		if (testDescriptor.isTest()) {
-			listener.testStarted(testDescriptor);
-		}
+		// TODO Check whether TestDescriptor should be skipped and fire executionSkipped
+		// event instead.
+		listener.executionStarted(testDescriptor);
 		TestExecutionResult result;
 		try {
 			C context = executeBeforeAll(testDescriptor, parentContext);
@@ -41,9 +41,7 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 		catch (Throwable t) {
 			result = TestExecutionResult.failed(t);
 		}
-		if (testDescriptor.isTest()) {
-			listener.testFinished(testDescriptor, result);
-		}
+		listener.executionFinished(testDescriptor, result);
 	}
 
 	@SuppressWarnings("unchecked")

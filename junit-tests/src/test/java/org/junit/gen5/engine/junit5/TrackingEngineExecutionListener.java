@@ -32,25 +32,39 @@ public class TrackingEngineExecutionListener implements EngineExecutionListener 
 	public final AtomicInteger testAbortedCount = new AtomicInteger();
 	public final AtomicInteger testFailedCount = new AtomicInteger();
 
+	public final AtomicInteger containerStartedCount = new AtomicInteger();
+	public final AtomicInteger containerFinishedCount = new AtomicInteger();
+
 	@Override
 	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
 		// no-op
 	}
 
 	@Override
-	public void testStarted(TestDescriptor testDescriptor) {
-		testStartedCount.incrementAndGet();
+	public void executionStarted(TestDescriptor testDescriptor) {
+		if (testDescriptor.isTest()) {
+			testStartedCount.incrementAndGet();
+		}
+		else {
+			containerStartedCount.incrementAndGet();
+		}
 	}
 
 	@Override
-	public void testSkipped(TestDescriptor testDescriptor, String reason) {
-		testSkippedCount.incrementAndGet();
+	public void executionSkipped(TestDescriptor testDescriptor, String reason) {
+		if (testDescriptor.isTest()) {
+			testSkippedCount.incrementAndGet();
+		}
 	}
 
 	@Override
-	public void testFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
-		getCounter(testExecutionResult.getStatus()).incrementAndGet();
-
+	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
+		if (testDescriptor.isTest()) {
+			getCounter(testExecutionResult.getStatus()).incrementAndGet();
+		}
+		else {
+			containerFinishedCount.incrementAndGet();
+		}
 	}
 
 	private AtomicInteger getCounter(Status status) {

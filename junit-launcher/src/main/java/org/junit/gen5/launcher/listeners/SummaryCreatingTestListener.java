@@ -51,7 +51,7 @@ public class SummaryCreatingTestListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testSkipped(TestIdentifier testIdentifier, String reason) {
+	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		// @formatter:off
 		long skippedTests = concat(Stream.of(testIdentifier), testPlan.getDescendants(testIdentifier).stream())
 				.filter(TestIdentifier::isTest)
@@ -61,12 +61,12 @@ public class SummaryCreatingTestListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testStarted(TestIdentifier testIdentifier) {
+	public void executionStarted(TestIdentifier testIdentifier) {
 		summary.testsStarted.incrementAndGet();
 	}
 
 	@Override
-	public void testFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		if (testExecutionResult.getStatus() == SUCCESSFUL) {
 			summary.testsSucceeded.incrementAndGet();
 		}

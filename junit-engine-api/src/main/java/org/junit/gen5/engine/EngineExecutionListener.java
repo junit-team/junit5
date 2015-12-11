@@ -17,10 +17,10 @@ public interface EngineExecutionListener {
 
 	void dynamicTestRegistered(TestDescriptor testDescriptor);
 
-	void testSkipped(TestDescriptor testDescriptor, String reason);
+	void executionSkipped(TestDescriptor testDescriptor, String reason);
 
-	void testStarted(TestDescriptor testDescriptor);
+	void executionStarted(TestDescriptor testDescriptor);
 
-	void testFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult);
+	void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult);
 
 }

@@ -34,18 +34,18 @@ final class RunListenerAdapter implements TestExecutionListener {
 	}
 
 	@Override
-	public void testStarted(TestIdentifier testIdentifier) {
+	public void executionStarted(TestIdentifier testIdentifier) {
 		runListener.testStarting(createReportEntry(testIdentifier));
 	}
 
 	@Override
-	public void testSkipped(TestIdentifier testIdentifier, String reason) {
+	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		runListener.testSkipped(
 			ignored(getClassNameOrUniqueId(testIdentifier), testIdentifier.getDisplayName(), reason));
 	}
 
 	@Override
-	public void testFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		if (testExecutionResult.getStatus() == SUCCESSFUL) {
 			runListener.testSucceeded(createReportEntry(testIdentifier));
 		}

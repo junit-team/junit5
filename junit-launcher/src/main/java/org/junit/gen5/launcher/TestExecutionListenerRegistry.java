@@ -45,18 +45,18 @@ class TestExecutionListenerRegistry {
 		}
 
 		@Override
-		public void testSkipped(TestIdentifier testIdentifier, String reason) {
-			notifyTestExecutionListeners(listener -> listener.testSkipped(testIdentifier, reason));
+		public void executionSkipped(TestIdentifier testIdentifier, String reason) {
+			notifyTestExecutionListeners(listener -> listener.executionSkipped(testIdentifier, reason));
 		}
 
 		@Override
-		public void testStarted(TestIdentifier testIdentifier) {
-			notifyTestExecutionListeners(listener -> listener.testStarted(testIdentifier));
+		public void executionStarted(TestIdentifier testIdentifier) {
+			notifyTestExecutionListeners(listener -> listener.executionStarted(testIdentifier));
 		}
 
 		@Override
-		public void testFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-			notifyTestExecutionListeners(listener -> listener.testFinished(testIdentifier, testExecutionResult));
+		public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+			notifyTestExecutionListeners(listener -> listener.executionFinished(testIdentifier, testExecutionResult));
 		}
 
 		@Override
