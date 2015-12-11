@@ -95,7 +95,7 @@ subprojects {
 			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java')
 			importOrder(['java', 'javax', 'com', 'org'])
 			eclipseFormatFile rootProject.file('src/eclipse/junit-lambda-eclipse-formatter-settings.xml')
-			// trimTrailingWhitespace()
+			trimTrailingWhitespace()
 			// endWithNewline()
 
 			custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }

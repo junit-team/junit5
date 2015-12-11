@@ -34,7 +34,7 @@ public class JOptSimpleCommandLineOptionsParserTest {
 
 		// @formatter:off
 		assertAll(
-			() -> assertFalse(options.isAnsiColorOutputDisabled()), 
+			() -> assertFalse(options.isAnsiColorOutputDisabled()),
 			() -> assertFalse(options.isDisplayHelp()),
 			() -> assertFalse(options.isExitCodeEnabled()),
 			() -> assertFalse(options.isHideDetails()),

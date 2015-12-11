@@ -25,7 +25,7 @@ package org.junit.gen5.api.extension;
 public interface InstancePostProcessor extends ExtensionPoint {
 
 	/**
-	 * Callback for post-processing the test instance in the supplied 
+	 * Callback for post-processing the test instance in the supplied
 	 * {@link TestExtensionContext}.
 	 *
 	 * @param context the current test extension context

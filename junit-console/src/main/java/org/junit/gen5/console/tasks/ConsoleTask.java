@@ -24,7 +24,7 @@ public interface ConsoleTask {
 
 	/**
 	 * Execute this task and return an exit code.
-	 * 
+	 *
 	 * @param out writer for console output
 	 * @return exit code indicating success ({@code 0}) or failure ({@code != 0})
 	 * @see ConsoleTask#SUCCESS
