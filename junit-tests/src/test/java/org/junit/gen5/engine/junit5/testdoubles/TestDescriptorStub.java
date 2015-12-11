@@ -29,12 +29,21 @@ public class TestDescriptorStub implements TestDescriptor {
 	}
 
 	@Override
-	public Optional<? extends TestDescriptor> getParent() {
+	public Optional<TestDescriptor> getParent() {
 		return null;
 	}
 
 	@Override
+	public void setParent(TestDescriptor parent) {
+	}
+
+	@Override
 	public boolean isTest() {
+		return false;
+	}
+
+	@Override
+	public boolean isContainer() {
 		return false;
 	}
 
@@ -46,6 +55,16 @@ public class TestDescriptorStub implements TestDescriptor {
 	@Override
 	public Set<? extends TestDescriptor> getChildren() {
 		return null;
+	}
+
+	@Override
+	public void addChild(TestDescriptor descriptor) {
+
+	}
+
+	@Override
+	public void removeChild(TestDescriptor descriptor) {
+
 	}
 
 	@Override

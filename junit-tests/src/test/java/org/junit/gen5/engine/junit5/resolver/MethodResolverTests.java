@@ -17,11 +17,11 @@ import static org.junit.gen5.engine.TestPlanSpecification.forClass;
 import java.util.List;
 
 import org.junit.Test;
-import org.junit.gen5.engine.MutableTestDescriptor;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.junit5ext.descriptor.ClassDescriptor;
-import org.junit.gen5.engine.junit5ext.descriptor.GroupDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.samples.SinglePassingTestSampleClass;
+import org.junit.gen5.engine.junit5.testdoubles.TestDescriptorStub;
 
 public class MethodResolverTests {
 	private MethodResolver resolver = new MethodResolver();
@@ -33,26 +33,26 @@ public class MethodResolverTests {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void withIllegalSpecification_throwIllegalArgumentException() throws Exception {
-		resolver.resolveFor(new ClassDescriptor(SinglePassingTestSampleClass.class, "id", "name"), null);
+		resolver.resolveFor(new ClassTestDescriptor("id", SinglePassingTestSampleClass.class), null);
 	}
 
 	@Test
 	public void givenArbitraryTestDescriptor_nothingIsResolved() throws Exception {
-		GroupDescriptor parent = new GroupDescriptor("id", "name");
+		TestDescriptor parent = new TestDescriptorStub();
 		TestPlanSpecification testPlanSpecification = build(forClass(SinglePassingTestSampleClass.class));
-		List<MutableTestDescriptor> result = resolver.resolveFor(parent, testPlanSpecification);
+		List<TestDescriptor> result = resolver.resolveFor(parent, testPlanSpecification);
 
 		assertThat(result).hasSize(0);
 	}
 
 	@Test
 	public void givenClassTestGroup_resolvesMethodsWithinTestClassAnnotatedWithTest() throws Exception {
-		ClassDescriptor parent = new ClassDescriptor(SinglePassingTestSampleClass.class, "id", "name");
+		ClassTestDescriptor parent = new ClassTestDescriptor("id", SinglePassingTestSampleClass.class);
 		TestPlanSpecification testPlanSpecification = build(forClass(SinglePassingTestSampleClass.class));
-		List<MutableTestDescriptor> result = resolver.resolveFor(parent, testPlanSpecification);
+		List<TestDescriptor> result = resolver.resolveFor(parent, testPlanSpecification);
 
 		assertThat(result).hasSize(1);
-		MutableTestDescriptor resolvedChild = result.get(0);
+		TestDescriptor resolvedChild = result.get(0);
 
 		assertThat(resolvedChild.getParent().isPresent());
 		assertThat(resolvedChild.getParent().get()).isEqualTo(parent);

@@ -14,25 +14,24 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.gen5.engine.MutableTestDescriptor;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 public class TestResolverSpyWithTestsForRoot extends TestResolverSpy {
-	private final MutableTestDescriptor root;
-	private final MutableTestDescriptor resolvedTest;
+	private final TestDescriptor root;
+	private final TestDescriptor resolvedTest;
 
-	public TestResolverSpyWithTestsForRoot(MutableTestDescriptor root) {
+	public TestResolverSpyWithTestsForRoot(TestDescriptor root) {
 		this.root = root;
-		this.resolvedTest = new MutableTestDescriptorStub(root);
+		this.resolvedTest = new TestDescriptorWithParentStub(root);
 	}
 
-	public MutableTestDescriptor getResolvedTest() {
+	public TestDescriptor getResolvedTest() {
 		return resolvedTest;
 	}
 
 	@Override
-	public List<MutableTestDescriptor> resolveFor(MutableTestDescriptor parent,
-			TestPlanSpecification testPlanSpecification) {
+	public List<TestDescriptor> resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
 		super.resolveFor(parent, testPlanSpecification);
 
 		if (root.equals(parent)) {

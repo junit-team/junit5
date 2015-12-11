@@ -126,4 +126,13 @@ public class JUnit5TestDescriptorTests {
 		}
 
 	}
+
+	@Test
+	@Name("custom name")
+	@Tag("custom tag")
+	@Target(ElementType.METHOD)
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface CustomTestAnnotation {
+	}
+
 }

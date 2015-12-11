@@ -33,8 +33,8 @@ class ServiceLoaderTestEngineRegistry implements TestEngineRegistry {
 			for (TestEngine testEngine : testEngines) {
 				LOG.info(() -> String.format("Discovered test engine with id: '%s'", testEngine.getId()));
 				testEngine.initialize();
-				LOG.info(() -> String.format("Initialization finished for test engine with id: '%s'",
-					testEngine.getId()));
+				LOG.info(
+					() -> String.format("Initialization finished for test engine with id: '%s'", testEngine.getId()));
 			}
 		}
 		return testEngines;

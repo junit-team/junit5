@@ -10,20 +10,21 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
 import org.junit.Test;
-import org.junit.gen5.engine.MutableTestDescriptor;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.junit5ext.descriptor.GroupDescriptor;
+import org.junit.gen5.engine.junit5.testdoubles.TestDescriptorStub;
 import org.junit.gen5.engine.junit5.testdoubles.TestResolverRequest;
 import org.junit.gen5.engine.junit5.testdoubles.TestResolverSpy;
 import org.junit.gen5.engine.junit5.testdoubles.TestResolverSpyWithTestsForRoot;
 
 public class TestResolverRegistryImplTests {
-	private GroupDescriptor testGroup = new GroupDescriptor("testGroup", "Test Group");
+	private TestDescriptor testGroup = new TestDescriptorStub();
 	private TestPlanSpecification emptyTestPlanSpecification = TestPlanSpecification.build();
 	private TestResolverRegistryImpl testResolverRegistry = new TestResolverRegistryImpl();
 
@@ -66,7 +67,7 @@ public class TestResolverRegistryImplTests {
 			emptyTestPlanSpecification);
 	}
 
-	private void assertTestResolverWasNotified(TestResolverSpy testResolverSpy, List<MutableTestDescriptor> parents,
+	private void assertTestResolverWasNotified(TestResolverSpy testResolverSpy, List<TestDescriptor> parents,
 			TestPlanSpecification testPlanSpecification) {
 		assertThat(testResolverSpy.resolvedFor).hasSize(parents.size());
 

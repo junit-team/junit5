@@ -13,7 +13,7 @@ package org.junit.gen5.engine.junit5.testdoubles;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.gen5.engine.MutableTestDescriptor;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.resolver.TestResolver;
 import org.junit.gen5.engine.junit5.resolver.TestResolverRegistry;
@@ -23,7 +23,7 @@ public class TestResolverRegistrySpy implements TestResolverRegistry {
 	public List<TestResolver> registeredTestResolvers = new LinkedList<>();
 
 	@Override
-	public void notifyResolvers(MutableTestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+	public void notifyResolvers(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
 		notifications.add(new TestResolverRequest(parent, testPlanSpecification));
 	}
 

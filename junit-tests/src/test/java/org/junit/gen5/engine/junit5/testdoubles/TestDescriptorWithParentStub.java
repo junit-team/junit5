@@ -14,17 +14,18 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.gen5.engine.MutableTestDescriptor;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.TestTag;
 
-public class MutableTestDescriptorStub implements MutableTestDescriptor {
-	public static final String UNIQUE_ID = "MutableTestDescriptorStub.ID";
-	public static final String DISPLAY_NAME = "MutableTestDescriptorStub.Name";
+public class TestDescriptorWithParentStub implements TestDescriptor {
+	public static final String UNIQUE_ID = "TestDescriptorStub.ID";
+	public static final String DISPLAY_NAME = "TestDescriptorStub.Name";
 
-	private MutableTestDescriptor parent;
+	private TestDescriptor parent;
 
-	public MutableTestDescriptorStub(MutableTestDescriptor parent) {
+	public TestDescriptorWithParentStub(TestDescriptor parent) {
 		this.parent = parent;
 	}
 
@@ -39,12 +40,22 @@ public class MutableTestDescriptorStub implements MutableTestDescriptor {
 	}
 
 	@Override
-	public Optional<MutableTestDescriptor> getParent() {
+	public Optional<TestDescriptor> getParent() {
 		return Optional.ofNullable(parent);
 	}
 
 	@Override
 	public boolean isTest() {
+		return true;
+	}
+
+	@Override
+	public boolean isContainer() {
+		return false;
+	}
+
+	@Override
+	public boolean isRoot() {
 		return false;
 	}
 
@@ -54,11 +65,11 @@ public class MutableTestDescriptorStub implements MutableTestDescriptor {
 	}
 
 	@Override
-	public void setParent(MutableTestDescriptor parent) {
+	public void setParent(TestDescriptor parent) {
 	}
 
 	@Override
-	public Set<MutableTestDescriptor> getChildren() {
+	public Set<TestDescriptor> getChildren() {
 		return Collections.emptySet();
 	}
 
@@ -72,10 +83,30 @@ public class MutableTestDescriptorStub implements MutableTestDescriptor {
 	}
 
 	@Override
-	public void addChild(MutableTestDescriptor descriptor) {
+	public void addChild(TestDescriptor descriptor) {
 	}
 
 	@Override
-	public void removeChild(MutableTestDescriptor descriptor) {
+	public void removeChild(TestDescriptor descriptor) {
+	}
+
+	@Override
+	public Set<? extends TestDescriptor> allDescendants() {
+		return null;
+	}
+
+	@Override
+	public long countStaticTests() {
+		return 1;
+	}
+
+	@Override
+	public boolean hasTests() {
+		return false;
+	}
+
+	@Override
+	public Optional<? extends TestDescriptor> findByUniqueId(String uniqueId) {
+		return null;
 	}
 }
