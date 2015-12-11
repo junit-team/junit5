@@ -46,24 +46,24 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 
 	@Override
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
-		printlnTestDescriptor(BLUE, "Test found:", testIdentifier);
+		printlnTestDescriptor(BLUE, "Test registered:", testIdentifier);
 	}
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		printlnTestDescriptor(YELLOW, "Test skipped:", testIdentifier);
+		printlnTestDescriptor(YELLOW, "Skipped:", testIdentifier);
 		printlnMessage(YELLOW, "Reason", reason);
 	}
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		printlnTestDescriptor(NONE, "Test started:", testIdentifier);
+		printlnTestDescriptor(NONE, "Started:", testIdentifier);
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		Color color = determineColor(testExecutionResult.getStatus());
-		printlnTestDescriptor(color, "Test finished:", testIdentifier);
+		printlnTestDescriptor(color, "Finished:", testIdentifier);
 		testExecutionResult.getThrowable().ifPresent(t -> printlnException(color, t));
 	}
 
@@ -81,7 +81,7 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	}
 
 	private void printlnTestDescriptor(Color color, String message, TestIdentifier testIdentifier) {
-		println(color, "%-15s   %s [%s]", message, testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
+		println(color, "%-10s   %s [%s]", message, testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
 	}
 
 	private void printlnException(Color color, Throwable throwable) {
@@ -89,7 +89,7 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	}
 
 	private void printlnMessage(Color color, String message, String detail) {
-		println(color, "                  => " + message + ": %s", detail);
+		println(color, "             => " + message + ": %s", detail);
 	}
 
 	private void println(Color color, String format, Object... args) {
