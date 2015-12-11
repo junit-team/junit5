@@ -33,7 +33,7 @@ import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
  * {@linkplain ExtensionPoint}) for a given {@linkplain org.junit.gen5.engine.Container} or
  * {@linkplain org.junit.gen5.engine.Leaf}. A registry has a reference to a parent registry and all lookups are done in
  * itself and in its parent and thereby all its ancestors.
- * 
+ *
  * @since 5.0
  */
 public class TestExtensionRegistry {
@@ -127,7 +127,7 @@ public class TestExtensionRegistry {
 	/**
 	 * Register an extension class which can be either an {@linkplain ExtensionPoint} implementatio or an
 	 * {@linkplain ExtensionRegistrar}
-	 * 
+	 *
 	 * @param extensionClass The test extension class to be registered
 	 */
 	public void addExtension(Class<? extends TestExtension> extensionClass) {
