@@ -52,7 +52,7 @@ public class TestExtensionRegistryTest {
 	}
 
 	@Test
-	public void adExtensionPointsByClass() {
+	public void addExtensionPointsByClass() {
 
 		registry = new TestExtensionRegistry();
 		registry.addExtension(MyExtension.class);
@@ -71,6 +71,18 @@ public class TestExtensionRegistryTest {
 		registry.addExtension(YourExtension.class);
 		assertExtensionRegistered(registry, YourExtension.class);
 		Assert.assertEquals(2, registry.getExtensionPoints(MyExtensionPoint.class).size());
+	}
+
+	@Test
+	public void addTestExtensionThatImplementsMultipleExtensionPoints() {
+
+		registry = new TestExtensionRegistry();
+		registry.addExtension(MultipleExtension.class);
+
+		assertExtensionRegistered(registry, MultipleExtension.class);
+
+		Assert.assertEquals(1, registry.getExtensionPoints(MyExtensionPoint.class).size());
+		Assert.assertEquals(1, registry.getExtensionPoints(AnotherExtensionPoint.class).size());
 	}
 
 	@Test
@@ -109,6 +121,10 @@ interface MyExtensionPoint extends ExtensionPoint {
 	void doNothing();
 }
 
+interface AnotherExtensionPoint extends ExtensionPoint {
+	void doMore();
+}
+
 class MyExtension implements MyExtensionPoint {
 	@Override
 	public void doNothing() {
@@ -119,6 +135,18 @@ class MyExtension implements MyExtensionPoint {
 class YourExtension implements MyExtensionPoint {
 	@Override
 	public void doNothing() {
+
+	}
+}
+
+class MultipleExtension implements MyExtensionPoint, AnotherExtensionPoint {
+	@Override
+	public void doNothing() {
+
+	}
+
+	@Override
+	public void doMore() {
 
 	}
 }
