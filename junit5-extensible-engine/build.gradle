@@ -1,4 +1,0 @@
-dependencies {
-	compile(project(':junit-engine-api'))
-	compile(project(':junit5-api'))
-}
