@@ -13,7 +13,7 @@ package org.junit.gen5.api;
 import java.util.function.Supplier;
 
 import org.junit.gen5.commons.util.StringUtils;
-import org.opentestalliance.TestAbortedException;
+import org.opentest4j.TestAbortedException;
 
 /**
  * Collection of utility methods for conditional test execution based on

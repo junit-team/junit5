@@ -27,7 +27,7 @@ import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestName;
 import org.junit.gen5.api.extension.ExtendWith;
-import org.opentestalliance.TestSkippedException;
+import org.opentest4j.TestSkippedException;
 
 /**
  * Named *TestCase so Gradle will not try to run it.

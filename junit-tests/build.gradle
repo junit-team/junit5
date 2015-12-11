@@ -10,12 +10,10 @@ dependencies {
 	compile(project(':junit5-api'))
 	compile(project(':junit5-engine'))
 
-
 	testCompile("org.assertj:assertj-core:${assertJVersion}")
 	testCompile("junit:junit:${junit4Version}")
 	testCompile("org.mockito:mockito-core:${mockitoVersion}")
 
 	testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
-
 }

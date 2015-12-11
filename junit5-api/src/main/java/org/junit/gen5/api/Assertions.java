@@ -15,8 +15,8 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.junit.gen5.commons.util.StringUtils;
-import org.opentestalliance.AssertionFailedError;
-import org.opentestalliance.MultipleFailuresException;
+import org.opentest4j.AssertionFailedError;
+import org.opentest4j.MultipleFailuresError;
 
 /**
  * @since 5.0
@@ -200,13 +200,13 @@ public final class Assertions {
 	}
 
 	public static void assertAll(String heading, Executable... asserts) {
-		MultipleFailuresException multipleFailuresException = new MultipleFailuresException(heading);
+		MultipleFailuresError multipleFailuresError = new MultipleFailuresError(heading);
 		for (Executable executable : asserts) {
 			try {
 				executable.execute();
 			}
 			catch (AssertionError failure) {
-				multipleFailuresException.addFailure(failure);
+				multipleFailuresError.addFailure(failure);
 			}
 			catch (Error | RuntimeException ex) {
 				throw ex;
@@ -215,8 +215,8 @@ public final class Assertions {
 				throw new RuntimeException(throwable);
 			}
 		}
-		if (multipleFailuresException.hasFailures()) {
-			throw multipleFailuresException;
+		if (multipleFailuresError.hasFailures()) {
+			throw multipleFailuresError;
 		}
 	}
 

@@ -12,8 +12,6 @@ include "junit5-engine"
 include "junit-gradle"
 include "junit-tests"
 
-include "open-test-alliance"
-
 include "sample-extension"
 include "sample-project"
 
