@@ -10,15 +10,14 @@
 
 package org.junit.gen5.engine;
 
-import static java.util.stream.Collectors.toSet;
 import static org.junit.gen5.engine.DummyTestDescriptor.ENGINE_ID;
 
-import java.util.LinkedHashMap;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
 
-public final class DummyTestEngine implements TestEngine {
+public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExecutionContext> {
 
-	private final LinkedHashMap<String, Runnable> children = new LinkedHashMap<>();
+	private final List<DummyTestDescriptor> children = new LinkedList<>();
 
 	@Override
 	public String getId() {
@@ -26,36 +25,18 @@ public final class DummyTestEngine implements TestEngine {
 	}
 
 	public void addTest(String uniqueName, Runnable runnable) {
-		children.put(uniqueName, runnable);
+		children.add(new DummyTestDescriptor(uniqueName, runnable));
 	}
 
 	@Override
 	public TestDescriptor discoverTests(TestPlanSpecification specification) {
-		// @formatter:off
-		Set<DummyTestDescriptor> children = this.children.keySet().stream()
-				.map(DummyTestDescriptor::new)
-				.collect(toSet());
-		// @formatter:on
-		DummyTestDescriptor root = new DummyTestDescriptor("root");
+		DummyTestDescriptor root = new DummyTestDescriptor("root", null);
 		children.forEach(root::addChild);
 		return root;
 	}
 
 	@Override
-	public void execute(ExecutionRequest request) {
-		EngineExecutionListener listener = request.getEngineExecutionListener();
-		for (TestDescriptor childDescriptor : request.getRootTestDescriptor().getChildren()) {
-			Runnable runnable = children.get(childDescriptor.getDisplayName());
-			listener.executionStarted(childDescriptor);
-			TestExecutionResult result;
-			try {
-				runnable.run();
-				result = TestExecutionResult.successful();
-			}
-			catch (Throwable t) {
-				result = TestExecutionResult.failed(t);
-			}
-			listener.executionFinished(childDescriptor, result);
-		}
+	protected DummyEngineExecutionContext createContext() {
+		return new DummyEngineExecutionContext();
 	}
 }
