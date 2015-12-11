@@ -62,21 +62,25 @@ public class SummaryCreatingTestListener implements TestExecutionListener {
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		summary.testsStarted.incrementAndGet();
+		if (testIdentifier.isTest()) {
+			summary.testsStarted.incrementAndGet();
+		}
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-		if (testExecutionResult.getStatus() == SUCCESSFUL) {
-			summary.testsSucceeded.incrementAndGet();
+		if (testIdentifier.isTest()) {
+			if (testExecutionResult.getStatus() == SUCCESSFUL) {
+				summary.testsSucceeded.incrementAndGet();
+			}
+			else if (testExecutionResult.getStatus() == ABORTED) {
+				summary.testsAborted.incrementAndGet();
+			}
+			else if (testExecutionResult.getStatus() == FAILED) {
+				summary.testsFailed.incrementAndGet();
+			}
 		}
-		else if (testExecutionResult.getStatus() == ABORTED) {
-			summary.testsAborted.incrementAndGet();
-		}
-		else if (testExecutionResult.getStatus() == FAILED) {
-			summary.testsFailed.incrementAndGet();
-			testExecutionResult.getThrowable().ifPresent(throwable -> summary.addFailure(testIdentifier, throwable));
-		}
+		testExecutionResult.getThrowable().ifPresent(throwable -> summary.addFailure(testIdentifier, throwable));
 	}
 
 }
