@@ -14,6 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.TestExecutionResult.Status;
 import org.junit.gen5.launcher.TestExecutionListener;
 
 /**
@@ -31,13 +33,13 @@ public class TrackingEngineExecutionListener implements EngineExecutionListener 
 	public final AtomicInteger testFailedCount = new AtomicInteger();
 
 	@Override
-	public void testStarted(TestDescriptor testDescriptor) {
-		testStartedCount.incrementAndGet();
+	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
+		// no-op
 	}
 
 	@Override
-	public void testSucceeded(TestDescriptor testDescriptor) {
-		testSucceededCount.incrementAndGet();
+	public void testStarted(TestDescriptor testDescriptor) {
+		testStartedCount.incrementAndGet();
 	}
 
 	@Override
@@ -46,13 +48,22 @@ public class TrackingEngineExecutionListener implements EngineExecutionListener 
 	}
 
 	@Override
-	public void testAborted(TestDescriptor testDescriptor, Throwable t) {
-		testAbortedCount.incrementAndGet();
+	public void testFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
+		getCounter(testExecutionResult.getStatus()).incrementAndGet();
+
 	}
 
-	@Override
-	public void testFailed(TestDescriptor testDescriptor, Throwable t) {
-		testFailedCount.incrementAndGet();
+	private AtomicInteger getCounter(Status status) {
+		switch (status) {
+			case SUCCESSFUL:
+				return testSucceededCount;
+			case ABORTED:
+				return testAbortedCount;
+			case FAILED:
+				return testFailedCount;
+			default:
+				throw new IllegalArgumentException("Unknown status: " + status);
+		}
 	}
 
 }

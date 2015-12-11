@@ -14,6 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.junit.gen5.engine.TestExecutionResult;
+
 /**
  * @since 5.0
  */
@@ -43,28 +45,18 @@ class TestExecutionListenerRegistry {
 		}
 
 		@Override
-		public void testStarted(TestIdentifier testIdentifier) {
-			notifyTestExecutionListeners(listener -> listener.testStarted(testIdentifier));
-		}
-
-		@Override
 		public void testSkipped(TestIdentifier testIdentifier, String reason) {
 			notifyTestExecutionListeners(listener -> listener.testSkipped(testIdentifier, reason));
 		}
 
 		@Override
-		public void testAborted(TestIdentifier testIdentifier, Throwable t) {
-			notifyTestExecutionListeners(listener -> listener.testAborted(testIdentifier, t));
+		public void testStarted(TestIdentifier testIdentifier) {
+			notifyTestExecutionListeners(listener -> listener.testStarted(testIdentifier));
 		}
 
 		@Override
-		public void testFailed(TestIdentifier testIdentifier, Throwable t) {
-			notifyTestExecutionListeners(listener -> listener.testFailed(testIdentifier, t));
-		}
-
-		@Override
-		public void testSucceeded(TestIdentifier testIdentifier) {
-			notifyTestExecutionListeners(listener -> listener.testSucceeded(testIdentifier));
+		public void testFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+			notifyTestExecutionListeners(listener -> listener.testFinished(testIdentifier, testExecutionResult));
 		}
 
 		@Override

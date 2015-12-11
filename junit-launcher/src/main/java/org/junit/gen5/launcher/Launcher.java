@@ -21,6 +21,7 @@ import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -113,18 +114,8 @@ public class Launcher {
 		}
 
 		@Override
-		public void testAborted(TestDescriptor testDescriptor, Throwable t) {
-			testExecutionListener.testAborted(getTestIdentifier(testDescriptor), t);
-		}
-
-		@Override
-		public void testFailed(TestDescriptor testDescriptor, Throwable t) {
-			testExecutionListener.testFailed(getTestIdentifier(testDescriptor), t);
-		}
-
-		@Override
-		public void testSucceeded(TestDescriptor testDescriptor) {
-			testExecutionListener.testSucceeded(getTestIdentifier(testDescriptor));
+		public void testFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
+			testExecutionListener.testFinished(getTestIdentifier(testDescriptor), testExecutionResult);
 		}
 
 		private TestIdentifier getTestIdentifier(TestDescriptor testDescriptor) {

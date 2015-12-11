@@ -10,6 +10,8 @@
 
 package org.junit.gen5.launcher;
 
+import org.junit.gen5.engine.TestExecutionResult;
+
 /**
  * @since 5.0
  */
@@ -30,12 +32,7 @@ public interface TestExecutionListener {
 	default void testStarted(TestIdentifier testIdentifier) {
 	}
 
-	default void testAborted(TestIdentifier testIdentifier, Throwable t) {
+	default void testFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 	}
 
-	default void testFailed(TestIdentifier testIdentifier, Throwable t) {
-	}
-
-	default void testSucceeded(TestIdentifier testIdentifier) {
-	}
 }

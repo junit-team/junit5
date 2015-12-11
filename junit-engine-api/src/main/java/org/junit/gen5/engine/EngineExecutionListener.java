@@ -15,21 +15,12 @@ package org.junit.gen5.engine;
  */
 public interface EngineExecutionListener {
 
-	default void dynamicTestRegistered(TestDescriptor testDescriptor) {
-	}
+	void dynamicTestRegistered(TestDescriptor testDescriptor);
 
-	default void testSkipped(TestDescriptor testDescriptor, String reason) {
-	}
+	void testSkipped(TestDescriptor testDescriptor, String reason);
 
-	default void testStarted(TestDescriptor testDescriptor) {
-	}
+	void testStarted(TestDescriptor testDescriptor);
 
-	default void testAborted(TestDescriptor testDescriptor, Throwable t) {
-	}
+	void testFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult);
 
-	default void testFailed(TestDescriptor testDescriptor, Throwable t) {
-	}
-
-	default void testSucceeded(TestDescriptor testDescriptor) {
-	}
 }

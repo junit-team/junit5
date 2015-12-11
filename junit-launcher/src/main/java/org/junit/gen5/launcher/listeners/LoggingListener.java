@@ -10,21 +10,27 @@
 
 package org.junit.gen5.launcher.listeners;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 
 public class LoggingListener implements TestExecutionListener {
 
-	private static final Logger LOG = Logger.getLogger(LoggingListener.class.getName());
+	public static LoggingListener forJUL() {
+		Logger logger = Logger.getLogger(LoggingListener.class.getName());
+		return new LoggingListener((thrown, messageSupplier) -> logger.log(Level.FINE, thrown, messageSupplier));
+	}
 
-	private Consumer<String> logger = (aString -> LOG.fine(() -> aString));
+	private final BiConsumer<Throwable, Supplier<String>> logger;
 
-	private void log(String logString, Object... args) {
-		logger.accept("> " + String.format(logString, args));
+	public LoggingListener(BiConsumer<Throwable, Supplier<String>> logger) {
+		this.logger = logger;
 	}
 
 	@Override
@@ -39,7 +45,7 @@ public class LoggingListener implements TestExecutionListener {
 
 	@Override
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
-		log("dynamicTestFound: %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
+		log("dynamicTestRegistered: %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
 	}
 
 	@Override
@@ -53,17 +59,16 @@ public class LoggingListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testAborted(TestIdentifier testIdentifier, Throwable t) {
-		log("testAborted: %s - %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId(), t.getMessage());
+	public void testFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+		logWithThrowable("testFinished: %s - %s - %s", testExecutionResult.getThrowable().orElse(null),
+			testIdentifier.getDisplayName(), testIdentifier.getUniqueId(), testExecutionResult);
 	}
 
-	@Override
-	public void testFailed(TestIdentifier testIdentifier, Throwable t) {
-		log("testFailed: %s - %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId(), t.getMessage());
+	private void log(String message, Object... args) {
+		logWithThrowable(message, null, args);
 	}
 
-	@Override
-	public void testSucceeded(TestIdentifier testIdentifier) {
-		log("testSucceeded: %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
+	private void logWithThrowable(String message, Throwable thrown, Object... args) {
+		logger.accept(thrown, () -> String.format(message, args));
 	}
 }

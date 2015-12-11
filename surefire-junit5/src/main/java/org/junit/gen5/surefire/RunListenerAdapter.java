@@ -11,6 +11,7 @@
 package org.junit.gen5.surefire;
 
 import static org.apache.maven.surefire.report.SimpleReportEntry.ignored;
+import static org.junit.gen5.engine.TestExecutionResult.Status.*;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import org.apache.maven.surefire.report.RunListener;
 import org.apache.maven.surefire.report.SimpleReportEntry;
 import org.apache.maven.surefire.report.StackTraceWriter;
 import org.junit.gen5.engine.JavaSource;
+import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 
@@ -43,25 +45,23 @@ final class RunListenerAdapter implements TestExecutionListener {
 	}
 
 	@Override
-	public void testAborted(TestIdentifier testIdentifier, Throwable t) {
-		runListener.testAssumptionFailure(createReportEntry(testIdentifier, t));
-	}
-
-	@Override
-	public void testFailed(TestIdentifier testIdentifier, Throwable t) {
-		runListener.testFailed(createReportEntry(testIdentifier, t));
-	}
-
-	@Override
-	public void testSucceeded(TestIdentifier testIdentifier) {
-		runListener.testSucceeded(createReportEntry(testIdentifier));
+	public void testFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+		if (testExecutionResult.getStatus() == SUCCESSFUL) {
+			runListener.testSucceeded(createReportEntry(testIdentifier));
+		}
+		else if (testExecutionResult.getStatus() == ABORTED) {
+			runListener.testAssumptionFailure(createReportEntry(testIdentifier, testExecutionResult.getThrowable()));
+		}
+		else {
+			runListener.testFailed(createReportEntry(testIdentifier, testExecutionResult.getThrowable()));
+		}
 	}
 
 	private SimpleReportEntry createReportEntry(TestIdentifier testIdentifier) {
 		return new SimpleReportEntry(getClassNameOrUniqueId(testIdentifier), testIdentifier.getDisplayName());
 	}
 
-	private SimpleReportEntry createReportEntry(TestIdentifier testIdentifier, Throwable throwable) {
+	private SimpleReportEntry createReportEntry(TestIdentifier testIdentifier, Optional<Throwable> throwable) {
 		Optional<JavaSource> javaSource = getJavaSource(testIdentifier);
 		if (javaSource.isPresent() && javaSource.get().getJavaClass().isPresent()) {
 			Class<?> sourceClass = javaSource.get().getJavaClass().get();
@@ -70,14 +70,15 @@ final class RunListenerAdapter implements TestExecutionListener {
 			return new SimpleReportEntry(getClassNameOrUniqueId(testIdentifier), testIdentifier.getDisplayName(),
 				stackTraceWriter, null);
 		}
-		return ignored(getClassNameOrUniqueId(testIdentifier), testIdentifier.getDisplayName(), throwable.getMessage());
+		return ignored(getClassNameOrUniqueId(testIdentifier), testIdentifier.getDisplayName(),
+			throwable.map(Throwable::getMessage).orElse(null));
 	}
 
 	private StackTraceWriter getStackTraceWriter(Class<?> sourceClass, Optional<Method> sourceMethod,
-			Throwable throwable) {
+			Optional<Throwable> throwable) {
 		String className = sourceClass.getName();
 		String methodName = sourceMethod.map(Method::getName).orElse("");
-		return new PojoStackTraceWriter(className, methodName, throwable);
+		return new PojoStackTraceWriter(className, methodName, throwable.orElse(null));
 	}
 
 	private String getClassNameOrUniqueId(TestIdentifier testIdentifier) {

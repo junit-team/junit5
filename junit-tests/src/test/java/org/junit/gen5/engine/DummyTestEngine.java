@@ -47,13 +47,15 @@ public final class DummyTestEngine implements TestEngine {
 		for (TestDescriptor childDescriptor : request.getRootTestDescriptor().getChildren()) {
 			Runnable runnable = children.get(childDescriptor.getDisplayName());
 			listener.testStarted(childDescriptor);
+			TestExecutionResult result;
 			try {
 				runnable.run();
-				listener.testSucceeded(childDescriptor);
+				result = TestExecutionResult.successful();
 			}
 			catch (Throwable t) {
-				listener.testFailed(childDescriptor, t);
+				result = TestExecutionResult.failed(t);
 			}
+			listener.testFinished(childDescriptor, result);
 		}
 	}
 }

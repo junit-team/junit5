@@ -28,6 +28,7 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 		if (testDescriptor.isTest()) {
 			listener.testStarted(testDescriptor);
 		}
+		TestExecutionResult result;
 		try {
 			C context = executeBeforeAll(testDescriptor, parentContext);
 			context = executeLeaf(testDescriptor, context);
@@ -35,14 +36,13 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 				executeAll(child, listener, context);
 			}
 			context = executeAfterAll(testDescriptor, context);
-			if (testDescriptor.isTest()) {
-				listener.testSucceeded(testDescriptor);
-			}
+			result = TestExecutionResult.successful();
 		}
 		catch (Throwable t) {
-			if (testDescriptor.isTest()) {
-				listener.testFailed(testDescriptor, t);
-			}
+			result = TestExecutionResult.failed(t);
+		}
+		if (testDescriptor.isTest()) {
+			listener.testFinished(testDescriptor, result);
 		}
 	}
 

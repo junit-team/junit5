@@ -14,6 +14,8 @@ import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.*;
 
 import java.io.PrintWriter;
 
+import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.TestExecutionResult.Status;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -48,31 +50,34 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testStarted(TestIdentifier testIdentifier) {
-		printlnTestDescriptor(NONE, "Test started:", testIdentifier);
-	}
-
-	@Override
 	public void testSkipped(TestIdentifier testIdentifier, String reason) {
 		printlnTestDescriptor(YELLOW, "Test skipped:", testIdentifier);
 		printlnMessage(YELLOW, "Reason", reason);
 	}
 
 	@Override
-	public void testAborted(TestIdentifier testIdentifier, Throwable t) {
-		printlnTestDescriptor(YELLOW, "Test aborted:", testIdentifier);
-		printlnException(YELLOW, t);
+	public void testStarted(TestIdentifier testIdentifier) {
+		printlnTestDescriptor(NONE, "Test started:", testIdentifier);
 	}
 
 	@Override
-	public void testFailed(TestIdentifier testIdentifier, Throwable t) {
-		printlnTestDescriptor(RED, "Test failed:", testIdentifier);
-		printlnException(RED, t);
+	public void testFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+		Color color = determineColor(testExecutionResult.getStatus());
+		printlnTestDescriptor(color, "Test finished:", testIdentifier);
+		testExecutionResult.getThrowable().ifPresent(t -> printlnException(color, t));
 	}
 
-	@Override
-	public void testSucceeded(TestIdentifier testIdentifier) {
-		printlnTestDescriptor(GREEN, "Test succeeded:", testIdentifier);
+	private Color determineColor(Status status) {
+		switch (status) {
+			case SUCCESSFUL:
+				return GREEN;
+			case ABORTED:
+				return YELLOW;
+			case FAILED:
+				return RED;
+			default:
+				return NONE;
+		}
 	}
 
 	private void printlnTestDescriptor(Color color, String message, TestIdentifier testIdentifier) {

@@ -11,9 +11,11 @@
 package org.junit.gen5.launcher.listeners;
 
 import static java.util.stream.Stream.concat;
+import static org.junit.gen5.engine.TestExecutionResult.Status.*;
 
 import java.util.stream.Stream;
 
+import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -49,11 +51,6 @@ public class SummaryCreatingTestListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testStarted(TestIdentifier testIdentifier) {
-		summary.testsStarted.incrementAndGet();
-	}
-
-	@Override
 	public void testSkipped(TestIdentifier testIdentifier, String reason) {
 		// @formatter:off
 		long skippedTests = concat(Stream.of(testIdentifier), testPlan.getDescendants(testIdentifier).stream())
@@ -64,19 +61,22 @@ public class SummaryCreatingTestListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testAborted(TestIdentifier testIdentifier, Throwable t) {
-		summary.testsAborted.incrementAndGet();
+	public void testStarted(TestIdentifier testIdentifier) {
+		summary.testsStarted.incrementAndGet();
 	}
 
 	@Override
-	public void testFailed(TestIdentifier testIdentifier, Throwable t) {
-		summary.testsFailed.incrementAndGet();
-		summary.addFailure(testIdentifier, t);
-	}
-
-	@Override
-	public void testSucceeded(TestIdentifier testIdentifier) {
-		summary.testsSucceeded.incrementAndGet();
+	public void testFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+		if (testExecutionResult.getStatus() == SUCCESSFUL) {
+			summary.testsSucceeded.incrementAndGet();
+		}
+		else if (testExecutionResult.getStatus() == ABORTED) {
+			summary.testsAborted.incrementAndGet();
+		}
+		else if (testExecutionResult.getStatus() == FAILED) {
+			summary.testsFailed.incrementAndGet();
+			testExecutionResult.getThrowable().ifPresent(throwable -> summary.addFailure(testIdentifier, throwable));
+		}
 	}
 
 }
