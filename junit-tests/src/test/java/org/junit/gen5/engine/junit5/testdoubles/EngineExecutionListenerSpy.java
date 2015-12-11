@@ -13,10 +13,10 @@ package org.junit.gen5.engine.junit5.testdoubles;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestExecutionListener;
 
-public class TestExecutionListenerSpy implements TestExecutionListener {
+public class EngineExecutionListenerSpy implements EngineExecutionListener {
 	public List<TestDescriptor> foundDynamicTests = new LinkedList<>();
 	public List<TestDescriptor> foundStartedTests = new LinkedList<>();
 	public List<TestDescriptor> foundSkippedTests = new LinkedList<>();

@@ -10,14 +10,14 @@
 
 package org.junit.gen5.engine.junit5.testdoubles;
 
-import org.junit.gen5.engine.MutableTestDescriptor;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 public class TestResolverRequest {
-	public MutableTestDescriptor parent;
+	public TestDescriptor parent;
 	public TestPlanSpecification testPlanSpecification;
 
-	public TestResolverRequest(MutableTestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+	public TestResolverRequest(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
 		this.parent = parent;
 		this.testPlanSpecification = testPlanSpecification;
 	}

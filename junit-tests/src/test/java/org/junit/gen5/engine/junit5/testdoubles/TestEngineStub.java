@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.stubs;
+package org.junit.gen5.engine.junit5.testdoubles;
 
 import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.ExecutionRequest;

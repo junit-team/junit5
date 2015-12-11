@@ -19,35 +19,30 @@ import org.junit.Test;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
-import org.junit.gen5.engine.junit5ext.executor.GroupExecutor;
-import org.junit.gen5.engine.junit5ext.executor.MethodExecutor;
-import org.junit.gen5.engine.junit5ext.executor.TestExecutorRegistryImpl;
 import org.junit.gen5.engine.junit5.resolver.ClassResolver;
 import org.junit.gen5.engine.junit5.resolver.MethodResolver;
 import org.junit.gen5.engine.junit5.resolver.TestResolverRegistryImpl;
 import org.junit.gen5.engine.junit5.samples.EmptyTestSampleClass;
 import org.junit.gen5.engine.junit5.samples.SinglePassingTestSampleClass;
-import org.junit.gen5.engine.junit5.testdoubles.TestExecutionListenerSpy;
+import org.junit.gen5.engine.junit5.testdoubles.EngineExecutionListenerSpy;
 
 public class JUnit5TestEngineRegressionTests {
-	private TestResolverRegistryImpl testResolverRegistry = new TestResolverRegistryImpl();
-	private JUnit5TestEngine testEngine = new JUnit5TestEngine();
+	private TestResolverRegistryImpl testResolverRegistry;
+	private JUnit5TestEngine testEngine;
 
 	@Before
 	public void setUp() throws Exception {
+		testResolverRegistry = new TestResolverRegistryImpl();
 		testResolverRegistry.register(new ClassResolver());
 		testResolverRegistry.register(new MethodResolver());
 
-		testExecutorRegistry.register(new GroupExecutor());
-		testExecutorRegistry.register(new MethodExecutor());
-
+		testEngine = new JUnit5TestEngine();
 		testEngine.setTestResolverRegistry(testResolverRegistry);
-		testEngine.setTestExecutorRegistry(testExecutorRegistry);
 	}
 
 	@Test
 	public void noTests() throws Exception {
-		TestExecutionListenerSpy testExecutionListener = new TestExecutionListenerSpy();
+		EngineExecutionListenerSpy testExecutionListener = new EngineExecutionListenerSpy();
 
 		TestDescriptor testDescriptor = testEngine.discoverTests(build(forClass(EmptyTestSampleClass.class)));
 		testEngine.execute(new ExecutionRequest(testDescriptor, testExecutionListener));
@@ -62,7 +57,7 @@ public class JUnit5TestEngineRegressionTests {
 
 	@Test
 	public void singlePassingTest() throws Exception {
-		TestExecutionListenerSpy testExecutionListener = new TestExecutionListenerSpy();
+		EngineExecutionListenerSpy testExecutionListener = new EngineExecutionListenerSpy();
 
 		TestDescriptor testDescriptor = testEngine.discoverTests(build(forClass(SinglePassingTestSampleClass.class)));
 		testEngine.execute(new ExecutionRequest(testDescriptor, testExecutionListener));
