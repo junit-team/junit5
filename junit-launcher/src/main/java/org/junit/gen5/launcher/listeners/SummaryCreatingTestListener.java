@@ -39,22 +39,6 @@ public class SummaryCreatingTestListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testPlanExecutionPaused(TestPlan testPlan) {
-		summary.timePaused = System.currentTimeMillis();
-	}
-
-	@Override
-	public void testPlanExecutionRestarted(TestPlan testPlan) {
-		summary.timeStarted += System.currentTimeMillis() - summary.timePaused;
-		summary.timePaused = 0;
-	}
-
-	@Override
-	public void testPlanExecutionStopped(TestPlan testPlan) {
-		summary.finishTestRun("Test run stopped");
-	}
-
-	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
 		summary.finishTestRun("Test run finished");
 	}

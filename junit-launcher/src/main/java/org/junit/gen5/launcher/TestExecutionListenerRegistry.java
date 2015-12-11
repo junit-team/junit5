@@ -14,8 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.junit.gen5.engine.TestEngine;
-
 /**
  * @since 5.0
  */
@@ -75,33 +73,8 @@ class TestExecutionListenerRegistry {
 		}
 
 		@Override
-		public void testPlanExecutionPaused(TestPlan testPlan) {
-			notifyTestExecutionListeners(listener -> listener.testPlanExecutionPaused(testPlan));
-		}
-
-		@Override
-		public void testPlanExecutionRestarted(TestPlan testPlan) {
-			notifyTestExecutionListeners(listener -> listener.testPlanExecutionRestarted(testPlan));
-		}
-
-		@Override
-		public void testPlanExecutionStopped(TestPlan testPlan) {
-			notifyTestExecutionListeners(listener -> listener.testPlanExecutionStopped(testPlan));
-		}
-
-		@Override
 		public void testPlanExecutionFinished(TestPlan testPlan) {
 			notifyTestExecutionListeners(listener -> listener.testPlanExecutionFinished(testPlan));
-		}
-
-		@Override
-		public void testPlanExecutionStartedOnEngine(TestPlan testPlan, TestEngine testEngine) {
-			notifyTestExecutionListeners(listener -> listener.testPlanExecutionStartedOnEngine(testPlan, testEngine));
-		}
-
-		@Override
-		public void testPlanExecutionFinishedOnEngine(TestPlan testPlan, TestEngine testEngine) {
-			notifyTestExecutionListeners(listener -> listener.testPlanExecutionFinishedOnEngine(testPlan, testEngine));
 		}
 	}
 }

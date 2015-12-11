@@ -74,10 +74,8 @@ public class Launcher {
 		for (TestEngine testEngine : getAvailableEngines()) {
 			Optional<TestDescriptor> testDescriptorOptional = root.getTestDescriptorFor(testEngine);
 			testDescriptorOptional.ifPresent(testDescriptor -> {
-				testExecutionListener.testPlanExecutionStartedOnEngine(testPlan, testEngine);
 				testEngine.execute(new ExecutionRequest(testDescriptor,
 					new ExecutionListenerAdapter(testPlan, testExecutionListener)));
-				testExecutionListener.testPlanExecutionFinishedOnEngine(testPlan, testEngine);
 			});
 		}
 		testExecutionListener.testPlanExecutionFinished(testPlan);

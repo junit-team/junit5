@@ -10,8 +10,6 @@
 
 package org.junit.gen5.launcher;
 
-import org.junit.gen5.engine.TestEngine;
-
 /**
  * @since 5.0
  */
@@ -20,22 +18,7 @@ public interface TestExecutionListener {
 	default void testPlanExecutionStarted(TestPlan testPlan) {
 	}
 
-	default void testPlanExecutionPaused(TestPlan testPlan) {
-	}
-
-	default void testPlanExecutionRestarted(TestPlan testPlan) {
-	}
-
-	default void testPlanExecutionStopped(TestPlan testPlan) {
-	}
-
 	default void testPlanExecutionFinished(TestPlan testPlan) {
-	}
-
-	default void testPlanExecutionStartedOnEngine(TestPlan testPlan, TestEngine testEngine) {
-	}
-
-	default void testPlanExecutionFinishedOnEngine(TestPlan testPlan, TestEngine testEngine) {
 	}
 
 	default void dynamicTestFound(TestIdentifier testIdentifier) {

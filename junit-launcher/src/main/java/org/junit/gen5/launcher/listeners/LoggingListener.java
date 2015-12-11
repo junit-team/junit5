@@ -13,7 +13,6 @@ package org.junit.gen5.launcher.listeners;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -34,33 +33,8 @@ public class LoggingListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testPlanExecutionPaused(TestPlan testPlan) {
-		log("testPlanExecutionPaused: %s", testPlan);
-	}
-
-	@Override
-	public void testPlanExecutionRestarted(TestPlan testPlan) {
-		log("testPlanExecutionRestarted: %s", testPlan);
-	}
-
-	@Override
-	public void testPlanExecutionStopped(TestPlan testPlan) {
-		log("testPlanExecutionStopped: %s", testPlan);
-	}
-
-	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
 		log("testPlanExecutionFinished: %s", testPlan);
-	}
-
-	@Override
-	public void testPlanExecutionStartedOnEngine(TestPlan testPlan, TestEngine testEngine) {
-		log("testPlanExecutionStartedOnEngine: %s %s", testPlan, testEngine);
-	}
-
-	@Override
-	public void testPlanExecutionFinishedOnEngine(TestPlan testPlan, TestEngine testEngine) {
-		log("testPlanExecutionFinishedOnEngine: %s %s", testPlan, testEngine);
 	}
 
 	@Override
