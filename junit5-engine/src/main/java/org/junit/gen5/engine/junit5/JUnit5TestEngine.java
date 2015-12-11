@@ -27,14 +27,6 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 
 	private TestResolverRegistry testResolverRegistry;
 
-	public JUnit5TestEngine() {
-		initialize();
-	}
-
-	JUnit5TestEngine(TestResolverRegistry testResolverRegistry) {
-		this.testResolverRegistry = testResolverRegistry;
-	}
-
 	@Override
 	public void initialize() {
 		testResolverRegistry = new TestResolverRegistryImpl();
@@ -80,5 +72,9 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 	@Override
 	protected JUnit5EngineExecutionContext createExecutionContext(ExecutionRequest request) {
 		return new JUnit5EngineExecutionContext();
+	}
+
+	public void setTestResolverRegistry(TestResolverRegistry testResolverRegistry) {
+		this.testResolverRegistry = testResolverRegistry;
 	}
 }

@@ -61,7 +61,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 	private final Class<?> testClass;
 
-	ClassTestDescriptor(String uniqueId, Class<?> testClass) {
+	public ClassTestDescriptor(String uniqueId, Class<?> testClass) {
 		super(uniqueId);
 
 		Preconditions.notNull(testClass, "Class must not be null");
