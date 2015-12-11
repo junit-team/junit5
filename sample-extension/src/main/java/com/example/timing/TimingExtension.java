@@ -15,8 +15,8 @@ import java.lang.reflect.Method;
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint;
-import org.junit.gen5.api.extension.ExtensionPointRegistrar;
-import org.junit.gen5.api.extension.ExtensionPointRegistry;
+import org.junit.gen5.api.extension.ExtensionRegistrar;
+import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.api.extension.TestExtensionContext;
 
 /**
@@ -25,12 +25,12 @@ import org.junit.gen5.api.extension.TestExtensionContext;
  *
  * @since 5.0
  */
-public class TimingExtension implements ExtensionPointRegistrar {
+public class TimingExtension implements ExtensionRegistrar {
 
 	private static final String TIMING_KEY_PREFIX = "TIMING:";
 
 	@Override
-	public void registerExtensionPoints(ExtensionPointRegistry registry) {
+	public void registerExtensions(ExtensionRegistry registry) {
 		registry.register(this::beforeEach, BeforeEachExtensionPoint.class, ExtensionPoint.Position.INNERMOST);
 		registry.register(this::afterEach, AfterEachExtensionPoint.class, ExtensionPoint.Position.INNERMOST);
 	}

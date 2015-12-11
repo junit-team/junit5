@@ -17,7 +17,7 @@ package org.junit.gen5.api.extension;
  *
  * @since 5.0
  * @see ExtensionPoint
- * @see ExtensionPointRegistrar
+ * @see ExtensionRegistrar
  */
 public interface TestExtension {
 }

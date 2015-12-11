@@ -29,7 +29,7 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 
 	protected abstract C createContext();
 
-	private <T> void executeAll(TestDescriptor parentDescriptor, EngineExecutionListener listener, C parentContext)
+	private void executeAll(TestDescriptor parentDescriptor, EngineExecutionListener listener, C parentContext)
 			throws Exception {
 		C context = parentContext;
 		if (parentDescriptor instanceof Container) {

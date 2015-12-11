@@ -17,11 +17,11 @@ import org.junit.gen5.api.extension.ExtensionPoint.Position;
  *
  * @since 5.0.0
  */
-public interface ExtensionPointRegistry {
+public interface ExtensionRegistry {
 
-	<T extends ExtensionPoint> void register(T extensionPoint, Class<T> extensionType, Position position);
+	<E extends ExtensionPoint> void register(E extension, Class<E> extensionPointType, Position position);
 
-	default <T extends ExtensionPoint> void register(T extensionPoint, Class<T> extensionType) {
-		register(extensionPoint, extensionType, Position.DEFAULT);
+	default <E extends ExtensionPoint> void register(E extension, Class<E> extensionPointType) {
+		register(extension, extensionPointType, Position.DEFAULT);
 	}
 }
