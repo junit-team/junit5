@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.engine.junit5.execution.*;
 
 final class MethodBasedTestExtensionContext implements TestExtensionContext {
 
@@ -25,10 +26,13 @@ final class MethodBasedTestExtensionContext implements TestExtensionContext {
 
 	private final MethodTestDescriptor testDescriptor;
 	private final Object testInstance;
+	private final JUnit5EngineExecutionContext engineExecutionContext;
 
-	public MethodBasedTestExtensionContext(MethodTestDescriptor testDescriptor, Object testInstance) {
+	public MethodBasedTestExtensionContext(MethodTestDescriptor testDescriptor, Object testInstance,
+			JUnit5EngineExecutionContext context) {
 		this.testDescriptor = testDescriptor;
 		this.testInstance = testInstance;
+		engineExecutionContext = context;
 	}
 
 	@Override
@@ -44,6 +48,11 @@ final class MethodBasedTestExtensionContext implements TestExtensionContext {
 	@Override
 	public Class<?> getTestClass() {
 		return testDescriptor.getTestClass();
+	}
+
+	@Override
+	public void publishReportEntry(Map<String, String> entry) {
+		engineExecutionContext.publishReportEntry(testDescriptor, entry);
 	}
 
 	@Override

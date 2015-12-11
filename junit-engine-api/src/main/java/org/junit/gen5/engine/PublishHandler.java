@@ -10,7 +10,10 @@
 
 package org.junit.gen5.engine;
 
-public interface EngineExecutionContext {
+import java.util.*;
 
-	void registerPublishHandler(PublishHandler handler);
+public interface PublishHandler {
+
+	void publishReportEntry(TestDescriptor testDescriptor, Map<String, String> entry);
+
 }

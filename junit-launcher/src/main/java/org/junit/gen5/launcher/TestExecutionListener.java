@@ -10,12 +10,18 @@
 
 package org.junit.gen5.launcher;
 
+import java.util.*;
+
 import org.junit.gen5.engine.TestEngine;
 
 /**
  * @since 5.0
  */
 public interface TestExecutionListener {
+
+	default void reportingEntryPublished(TestIdentifier testIdentifier, Map<String, String> entry) {
+
+	}
 
 	default void testPlanExecutionStarted(TestPlan testPlan) {
 	}

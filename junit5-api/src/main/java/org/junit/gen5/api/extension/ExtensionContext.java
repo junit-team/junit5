@@ -25,6 +25,8 @@ import java.util.Optional;
  */
 public interface ExtensionContext {
 
+	void publishReportEntry(Map<String, String> entry);
+
 	Optional<ExtensionContext> getParent();
 
 	String getDisplayName();

@@ -33,6 +33,8 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 	private void executeAll(TestDescriptor parentDescriptor, EngineExecutionListener listener, C parentContext)
 			throws Exception {
 		C context = parentContext;
+		context.registerPublishHandler(
+			(testDescriptor, entry) -> listener.reportingEntryPublished(testDescriptor, entry));
 		if (parentDescriptor instanceof Container) {
 			context = ((Container<C>) parentDescriptor).beforeAll(context);
 		}

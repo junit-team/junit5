@@ -33,7 +33,7 @@ public class TestExtensionRegistryTest {
 
 	@Test
 	public void checkJUnit5DefaultExtensions() {
-		Assert.assertEquals(2, TestExtensionRegistry.getDefaultExtensionClasses().size());
+		Assert.assertEquals(3, TestExtensionRegistry.getDefaultExtensionClasses().size());
 
 		assertDefaultExtensionType(DisabledCondition.class);
 		assertDefaultExtensionType(TestNameParameterResolver.class);
@@ -48,7 +48,7 @@ public class TestExtensionRegistryTest {
 		assertExtensionRegistered(registry, DisabledCondition.class);
 		assertExtensionRegistered(registry, TestNameParameterResolver.class);
 
-		Assert.assertEquals(1, registry.getExtensionPoints(MethodParameterResolver.class).size());
+		Assert.assertEquals(2, registry.getExtensionPoints(MethodParameterResolver.class).size());
 		Assert.assertEquals(1, registry.getExtensionPoints(ShouldContainerBeExecutedCondition.class).size());
 		Assert.assertEquals(1, registry.getExtensionPoints(ShouldTestBeExecutedCondition.class).size());
 	}

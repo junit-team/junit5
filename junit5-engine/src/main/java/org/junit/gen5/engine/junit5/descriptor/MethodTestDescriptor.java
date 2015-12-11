@@ -87,7 +87,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 			populateNewTestExtensionRegistryFromExtendWith(testMethod, context.getTestExtensionRegistry())).build();
 
 		Object testInstance = context.getTestInstanceProvider().getTestInstance();
-		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(this, testInstance);
+		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(this, testInstance, context);
 
 		context.getBeforeEachCallback().beforeEach(testExtensionContext, testInstance);
 

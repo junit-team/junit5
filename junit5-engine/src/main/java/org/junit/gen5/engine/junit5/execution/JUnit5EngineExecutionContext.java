@@ -10,7 +10,9 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import org.junit.gen5.engine.EngineExecutionContext;
+import java.util.*;
+
+import org.junit.gen5.engine.*;
 
 public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 
@@ -52,12 +54,23 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 		return new Builder(context.state, null);
 	}
 
+	@Override
+	public void registerPublishHandler(PublishHandler handler) {
+		state.publishHandler = handler;
+	}
+
+	public void publishReportEntry(TestDescriptor descriptor, Map<String, String> entry) {
+		state.publishHandler.publishReportEntry(descriptor, entry);
+	}
+
 	private static final class State implements Cloneable {
 
 		TestInstanceProvider testInstanceProvider;
 		BeforeEachCallback beforeEachCallback;
 		AfterEachCallback afterEachCallback;
 		TestExtensionRegistry testExtensionRegistry;
+		PublishHandler publishHandler = (testDescriptor, entry) -> {
+		};
 
 		@Override
 		public State clone() {

@@ -10,10 +10,15 @@
 
 package org.junit.gen5.engine;
 
+import java.util.*;
+
 /**
  * @since 5.0
  */
 public interface EngineExecutionListener {
+
+	default void reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry) {
+	}
 
 	default void dynamicTestFound(TestDescriptor testDescriptor) {
 	}
