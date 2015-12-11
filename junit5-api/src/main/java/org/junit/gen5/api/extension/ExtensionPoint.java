@@ -33,20 +33,17 @@ public interface ExtensionPoint extends TestExtension {
 	 * extension points of the same type. The order can be specified when registering an extension point. Possible
 	 * values:
 	 * <ul>
-	 * <li>{@code FIRST}: Apply first in order. Only a single extension is allowed to use this value, otherwise
+	 * <li>{@code OUTERMOST}: Apply first in order. Only a single extension is allowed to use this value, otherwise
 	 * {@link ExtensionConfigurationException} should be thrown.</li>
-	 * <li>{@code BEFORE}: Apply after {@code FIRST}, but before {@code DEFAULT}, {@code AFTER} and {@code LAST}. Many
+	 * <li>{@code OUTSIDE_DEFAULT}: Apply after {@code OUTERMOST}, but before {@code DEFAULT}, {@code INSIDE_DEFAULT} and {@code INNERMOST}. Many
 	 * extensions can have this value - the order among those is undefined.</li>
 	 * <li>{@code DEFAULT}: ...</li>
-	 * <li>{@code AFTER}: ...</li>
-	 * <li>{@code LAST}: ...</li>
+	 * <li>{@code INSIDE_DEFAULT}: ...</li>
+	 * <li>{@code INNERMOST}: ...</li>
 	 * </ul>
 	 */
 	enum Position {
-		FIRST, BEFORE, DEFAULT, AFTER, LAST
+		OUTERMOST, OUTSIDE_DEFAULT, DEFAULT, INSIDE_DEFAULT, INNERMOST
 	}
 
-	default boolean sortBackwards() {
-		return false;
-	}
 }

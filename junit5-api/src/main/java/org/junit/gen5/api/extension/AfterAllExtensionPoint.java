@@ -34,8 +34,4 @@ public interface AfterAllExtensionPoint extends ExtensionPoint {
 	 */
 	void afterAll(ContainerExtensionContext context) throws Exception;
 
-	default boolean sortBackwards() {
-		return true;
-	}
-
 }

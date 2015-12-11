@@ -31,8 +31,8 @@ public class TimingExtension implements ExtensionPointRegistrar {
 
 	@Override
 	public void registerExtensionPoints(ExtensionPointRegistry registry) {
-		registry.register(this::beforeEach, BeforeEachExtensionPoint.class, ExtensionPoint.Position.LAST);
-		registry.register(this::afterEach, AfterEachExtensionPoint.class, ExtensionPoint.Position.FIRST);
+		registry.register(this::beforeEach, BeforeEachExtensionPoint.class, ExtensionPoint.Position.INNERMOST);
+		registry.register(this::afterEach, AfterEachExtensionPoint.class, ExtensionPoint.Position.INNERMOST);
 	}
 
 	private void beforeEach(TestExtensionContext context) throws Exception {
