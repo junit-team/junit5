@@ -18,10 +18,10 @@ public interface EngineExecutionListener {
 	default void dynamicTestRegistered(TestDescriptor testDescriptor) {
 	}
 
-	default void testStarted(TestDescriptor testDescriptor) {
+	default void testSkipped(TestDescriptor testDescriptor, String reason) {
 	}
 
-	default void testSkipped(TestDescriptor testDescriptor, Throwable t) {
+	default void testStarted(TestDescriptor testDescriptor) {
 	}
 
 	default void testAborted(TestDescriptor testDescriptor, Throwable t) {

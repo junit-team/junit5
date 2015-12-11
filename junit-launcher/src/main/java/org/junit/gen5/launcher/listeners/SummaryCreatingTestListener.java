@@ -54,7 +54,7 @@ public class SummaryCreatingTestListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testSkipped(TestIdentifier testIdentifier, Throwable t) {
+	public void testSkipped(TestIdentifier testIdentifier, String reason) {
 		// @formatter:off
 		long skippedTests = concat(Stream.of(testIdentifier), testPlan.getDescendants(testIdentifier).stream())
 				.filter(TestIdentifier::isTest)

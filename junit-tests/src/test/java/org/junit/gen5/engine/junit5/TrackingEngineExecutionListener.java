@@ -41,7 +41,7 @@ public class TrackingEngineExecutionListener implements EngineExecutionListener 
 	}
 
 	@Override
-	public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
+	public void testSkipped(TestDescriptor testDescriptor, String reason) {
 		testSkippedCount.incrementAndGet();
 	}
 

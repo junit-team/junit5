@@ -24,10 +24,10 @@ public interface TestExecutionListener {
 	default void dynamicTestRegistered(TestIdentifier testIdentifier) {
 	}
 
-	default void testStarted(TestIdentifier testIdentifier) {
+	default void testSkipped(TestIdentifier testIdentifier, String reason) {
 	}
 
-	default void testSkipped(TestIdentifier testIdentifier, Throwable t) {
+	default void testStarted(TestIdentifier testIdentifier) {
 	}
 
 	default void testAborted(TestIdentifier testIdentifier, Throwable t) {

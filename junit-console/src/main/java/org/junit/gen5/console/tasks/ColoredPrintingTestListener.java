@@ -53,9 +53,9 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testSkipped(TestIdentifier testIdentifier, Throwable t) {
+	public void testSkipped(TestIdentifier testIdentifier, String reason) {
 		printlnTestDescriptor(YELLOW, "Test skipped:", testIdentifier);
-		printlnException(YELLOW, t);
+		printlnMessage(YELLOW, "Reason", reason);
 	}
 
 	@Override
@@ -80,7 +80,11 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	}
 
 	private void printlnException(Color color, Throwable throwable) {
-		println(color, "                  => Exception: %s", throwable.getLocalizedMessage());
+		printlnMessage(color, "Exception", throwable.getLocalizedMessage());
+	}
+
+	private void printlnMessage(Color color, String message, String detail) {
+		println(color, "                  => " + message + ": %s", detail);
 	}
 
 	private void println(Color color, String format, Object... args) {

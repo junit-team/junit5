@@ -52,7 +52,7 @@ class JUnit5RunnerListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testSkipped(TestIdentifier testIdentifier, Throwable t) {
+	public void testSkipped(TestIdentifier testIdentifier, String reason) {
 		Description description = findJUnit4Description(testIdentifier);
 		// TODO We call this after calling fireTestStarted. This leads to a wrong test
 		// count in Eclipse.

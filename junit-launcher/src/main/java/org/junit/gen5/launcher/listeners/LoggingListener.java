@@ -48,8 +48,8 @@ public class LoggingListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testSkipped(TestIdentifier testIdentifier, Throwable t) {
-		log("testSkipped: %s - %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId(), t.getMessage());
+	public void testSkipped(TestIdentifier testIdentifier, String reason) {
+		log("testSkipped: %s - %s - %s", testIdentifier.getDisplayName(), testIdentifier.getUniqueId(), reason);
 	}
 
 	@Override

@@ -108,8 +108,8 @@ public class Launcher {
 		}
 
 		@Override
-		public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-			testExecutionListener.testSkipped(getTestIdentifier(testDescriptor), t);
+		public void testSkipped(TestDescriptor testDescriptor, String reason) {
+			testExecutionListener.testSkipped(getTestIdentifier(testDescriptor), reason);
 		}
 
 		@Override

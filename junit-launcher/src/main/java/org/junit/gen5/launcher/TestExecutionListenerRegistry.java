@@ -48,8 +48,8 @@ class TestExecutionListenerRegistry {
 		}
 
 		@Override
-		public void testSkipped(TestIdentifier testIdentifier, Throwable t) {
-			notifyTestExecutionListeners(listener -> listener.testSkipped(testIdentifier, t));
+		public void testSkipped(TestIdentifier testIdentifier, String reason) {
+			notifyTestExecutionListeners(listener -> listener.testSkipped(testIdentifier, reason));
 		}
 
 		@Override

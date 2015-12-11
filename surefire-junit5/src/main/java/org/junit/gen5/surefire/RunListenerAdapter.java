@@ -37,8 +37,9 @@ final class RunListenerAdapter implements TestExecutionListener {
 	}
 
 	@Override
-	public void testSkipped(TestIdentifier testIdentifier, Throwable t) {
-		runListener.testSkipped(createReportEntry(testIdentifier, t));
+	public void testSkipped(TestIdentifier testIdentifier, String reason) {
+		runListener.testSkipped(
+			ignored(getClassNameOrUniqueId(testIdentifier), testIdentifier.getDisplayName(), reason));
 	}
 
 	@Override
