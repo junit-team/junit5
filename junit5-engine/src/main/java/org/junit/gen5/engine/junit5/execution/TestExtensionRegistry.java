@@ -17,7 +17,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.TestExtension;
@@ -39,7 +39,7 @@ public class TestExtensionRegistry {
 
 	private final Set<Class<? extends TestExtension>> registeredExtensionClasses = new LinkedHashSet<>();
 
-	private final List<RegisteredExtensionPoint> registeredExtensionPoints = new ArrayList<>();
+	private final List<RegisteredExtensionPoint<?>> registeredExtensionPoints = new ArrayList<>();
 
 	private final Optional<TestExtensionRegistry> parent;
 
@@ -69,15 +69,27 @@ public class TestExtensionRegistry {
 		return Collections.unmodifiableSet(allRegisteredExtensionClasses);
 	}
 
-	public <T extends ExtensionPoint> Stream<T> getExtensionPoints(Class<T> extensionClass) {
-		//TODO: Consider Position
-		//TODO: Consider reverse order for AfterExtensionPoints
-		//TODO: Get all extension points from parent
+	protected <T extends ExtensionPoint> List<RegisteredExtensionPoint<T>> getRegisteredExtensionPoints(
+			Class<T> extensionClass) {
+
+		List<RegisteredExtensionPoint<T>> allExtensionPoints = new ArrayList<>();
+		this.parent.ifPresent(
+			parentRegistry -> allExtensionPoints.addAll(parentRegistry.getRegisteredExtensionPoints(extensionClass)));
+
 		//@formatter:off
-		return registeredExtensionPoints.stream()
+		registeredExtensionPoints.stream()
 				.filter(registeredExtensionPoint -> extensionClass.isAssignableFrom(registeredExtensionPoint.extensionPoint.getClass()))
-				.map(registeredExtensionPoint -> extensionClass.cast(registeredExtensionPoint.extensionPoint));
+				.forEach(extensionPoint -> allExtensionPoints.add((RegisteredExtensionPoint<T>) extensionPoint));
 		//@formatter:on
+
+		//TODO: Reorder by using the position
+		return allExtensionPoints;
+	}
+
+	public <T extends ExtensionPoint> List<T> getExtensionPoints(Class<T> extensionClass) {
+
+		return getRegisteredExtensionPoints(extensionClass).stream().map(
+			registeredExtensionPoint -> registeredExtensionPoint.extensionPoint).collect(Collectors.toList());
 	}
 
 	public void addExtension(Class<? extends TestExtension> extensionClass) {
@@ -93,15 +105,15 @@ public class TestExtensionRegistry {
 	}
 
 	public <T extends ExtensionPoint> void register(T extensionPoint, ExtensionPoint.Position position) {
-		RegisteredExtensionPoint registeredExtensionPoint = new RegisteredExtensionPoint(extensionPoint, position);
+		RegisteredExtensionPoint<T> registeredExtensionPoint = new RegisteredExtensionPoint<>(extensionPoint, position);
 		registeredExtensionPoints.add(registeredExtensionPoint);
 	}
 
-	private static class RegisteredExtensionPoint {
-		private final ExtensionPoint extensionPoint;
+	private static class RegisteredExtensionPoint<T extends ExtensionPoint> {
+		private final T extensionPoint;
 		private final ExtensionPoint.Position position;
 
-		private RegisteredExtensionPoint(ExtensionPoint extensionPoint, ExtensionPoint.Position position) {
+		private RegisteredExtensionPoint(T extensionPoint, ExtensionPoint.Position position) {
 			this.extensionPoint = extensionPoint;
 			this.position = position;
 		}

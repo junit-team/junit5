@@ -46,9 +46,9 @@ public class TestExtensionRegistryTest {
 		assertExtensionRegistered(registry, DisabledCondition.class);
 		assertExtensionRegistered(registry, TestNameParameterResolver.class);
 
-		Assert.assertEquals(1, registry.getExtensionPoints(MethodParameterResolver.class).count());
-		Assert.assertEquals(1, registry.getExtensionPoints(ShouldContainerBeExecutedCondition.class).count());
-		Assert.assertEquals(1, registry.getExtensionPoints(ShouldTestBeExecutedCondition.class).count());
+		Assert.assertEquals(1, registry.getExtensionPoints(MethodParameterResolver.class).size());
+		Assert.assertEquals(1, registry.getExtensionPoints(ShouldContainerBeExecutedCondition.class).size());
+		Assert.assertEquals(1, registry.getExtensionPoints(ShouldTestBeExecutedCondition.class).size());
 	}
 
 	@Test
@@ -66,11 +66,11 @@ public class TestExtensionRegistryTest {
 
 		Assert.assertEquals(rememberSize, registry.getRegisteredExtensionClasses().size());
 		assertExtensionRegistered(registry, MyExtension.class);
-		Assert.assertEquals(1, registry.getExtensionPoints(MyExtensionPoint.class).count());
+		Assert.assertEquals(1, registry.getExtensionPoints(MyExtensionPoint.class).size());
 
 		registry.addExtension(YourExtension.class);
 		assertExtensionRegistered(registry, YourExtension.class);
-		Assert.assertEquals(2, registry.getExtensionPoints(MyExtensionPoint.class).count());
+		Assert.assertEquals(2, registry.getExtensionPoints(MyExtensionPoint.class).size());
 	}
 
 	@Test
@@ -84,12 +84,12 @@ public class TestExtensionRegistryTest {
 
 		assertExtensionRegistered(registry, MyExtension.class);
 		assertExtensionRegistered(registry, YourExtension.class);
-		Assert.assertEquals(2, registry.getExtensionPoints(MyExtensionPoint.class).count());
+		Assert.assertEquals(2, registry.getExtensionPoints(MyExtensionPoint.class).size());
 
 		TestExtensionRegistry grandChild = new TestExtensionRegistry(registry);
 		assertExtensionRegistered(grandChild, MyExtension.class);
 		assertExtensionRegistered(registry, YourExtension.class);
-		Assert.assertEquals(2, registry.getExtensionPoints(MyExtensionPoint.class).count());
+		Assert.assertEquals(2, registry.getExtensionPoints(MyExtensionPoint.class).size());
 	}
 
 	private void assertExtensionRegistered(TestExtensionRegistry registry,

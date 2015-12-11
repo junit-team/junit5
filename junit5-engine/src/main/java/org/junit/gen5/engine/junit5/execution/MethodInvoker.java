@@ -65,6 +65,7 @@ public class MethodInvoker {
 		try {
 			// @formatter:off
 			List<MethodParameterResolver> matchingResolvers = extensionRegistry.getExtensionPoints(MethodParameterResolver.class)
+					.stream()
 					.filter(resolver -> resolver.supports(parameter, methodContext, testExtensionContext))
 					.collect(toList());
 			// @formatter:on
