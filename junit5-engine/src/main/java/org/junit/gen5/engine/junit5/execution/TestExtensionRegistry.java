@@ -57,7 +57,7 @@ public class TestExtensionRegistry {
 	private void addDefaultExtensions() {
 		// @formatter:off
 		getDefaultExtensionClasses().stream()
-			.forEach(extensionClass -> addExtension(extensionClass));
+			.forEach(this::addExtension);
 		// @formatter:on
 	}
 
@@ -69,6 +69,7 @@ public class TestExtensionRegistry {
 		return Collections.unmodifiableSet(allRegisteredExtensionClasses);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected <T extends ExtensionPoint> List<RegisteredExtensionPoint<T>> getRegisteredExtensionPoints(
 			Class<T> extensionClass) {
 
