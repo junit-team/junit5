@@ -13,7 +13,7 @@ package org.junit.gen5.api.extension;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
 
 /**
- * Used to register {@linkplain ExtensionPoint} instances in {@linkplain TestExtension}s.
+ * Used to register {@linkplain ExtensionPoint} instances in {@linkplain ExtensionRegistrar}.
  *
  * @since 5.0.0
  */

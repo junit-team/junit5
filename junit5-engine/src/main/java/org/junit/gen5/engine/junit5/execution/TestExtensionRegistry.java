@@ -34,6 +34,8 @@ import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
  * {@linkplain org.junit.gen5.engine.Leaf}. A registry has a reference to a parent registry and all lookups are done in
  * itself and in its parent and thereby all its ancestors.
  *
+ * Do not confuse with {@linkplain ExtensionRegistry} which is an interface used by {@linkplain ExtensionRegistrar}
+ *
  * @since 5.0
  */
 public class TestExtensionRegistry {
@@ -108,7 +110,6 @@ public class TestExtensionRegistry {
 				.forEach(extensionPoint -> allExtensionPoints.add((RegisteredExtensionPoint<T>) extensionPoint));
 		//@formatter:on
 
-		//TODO: Reorder by using the position
 		return allExtensionPoints;
 	}
 
@@ -120,7 +121,9 @@ public class TestExtensionRegistry {
 	 * @return a list of all fitting extensions in the correct order considering all Position values
 	 */
 	public <T extends ExtensionPoint> List<T> getExtensionPoints(Class<T> extensionClass) {
-		return getRegisteredExtensionPoints(extensionClass).stream().map(
+		List<RegisteredExtensionPoint<T>> registeredExtensionPoints = getRegisteredExtensionPoints(extensionClass);
+		ExtensionPointSorter sorter = new ExtensionPointSorter();
+		return sorter.sort(registeredExtensionPoints).stream().map(
 			registeredExtensionPoint -> registeredExtensionPoint.getExtensionPoint()).collect(Collectors.toList());
 	}
 
@@ -144,10 +147,14 @@ public class TestExtensionRegistry {
 	private void registerFromExtensionRegistrar(TestExtension testExtension) {
 		if (testExtension instanceof ExtensionRegistrar) {
 			ExtensionRegistrar extensionRegistrar = (ExtensionRegistrar) testExtension;
-			ExtensionRegistry extensionRegistry = new TestExtensionRegistry.LocalExtensionRegistry(
-				testExtension.getClass().getName());
+			String extensionName = testExtension.getClass().getName();
+			ExtensionRegistry extensionRegistry = createExtensionRegistry(extensionName);
 			extensionRegistrar.registerExtensions(extensionRegistry);
 		}
+	}
+
+	private TestExtensionRegistry.LocalExtensionRegistry createExtensionRegistry(String extensionName) {
+		return new TestExtensionRegistry.LocalExtensionRegistry(extensionName);
 	}
 
 	private void registerExtensionPointImplementors(TestExtension testExtension) {
@@ -163,14 +170,11 @@ public class TestExtensionRegistry {
 		registeredExtensionPoints.add(registeredExtensionPoint);
 	}
 
-	/**
-	 * Public for testing purposes only
-	 */
-	public class LocalExtensionRegistry implements ExtensionRegistry {
+	private class LocalExtensionRegistry implements ExtensionRegistry {
 
 		private String extensionName;
 
-		public LocalExtensionRegistry(String extensionName) {
+		private LocalExtensionRegistry(String extensionName) {
 			this.extensionName = extensionName;
 		}
 

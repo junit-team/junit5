@@ -43,4 +43,8 @@ public class RegisteredExtensionPoint<T extends ExtensionPoint> {
 		return extensionName;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("RegisteredExtensionPoint(%s, '%s')", position, extensionName);
+	}
 }
