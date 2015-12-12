@@ -10,15 +10,11 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.TestPlanSpecification.build;
-import static org.junit.gen5.engine.TestPlanSpecification.forClass;
-
-import java.util.List;
 
 import org.junit.Test;
-import org.junit.gen5.engine.*;
-import org.junit.gen5.engine.junit5.samples.SinglePassingTestSampleClass;
+import org.junit.gen5.engine.DummyTestEngine;
+import org.junit.gen5.engine.EngineDescriptor;
 
 public class ClassResolverTests {
 	private ClassResolver resolver = new ClassResolver();

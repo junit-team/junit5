@@ -23,8 +23,10 @@ public class TestResolverRegistryImpl implements TestResolverRegistry {
 	@Override
 	public void notifyResolvers(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
 		for (TestResolver testResolver : testResolvers) {
-			List<TestDescriptor> tests = testResolver.resolveFor(parent, testPlanSpecification);
-			tests.forEach(test -> notifyResolvers(test, testPlanSpecification));
+			TestResolverResult result = testResolver.resolveFor(parent, testPlanSpecification);
+			if (result.isProceedResolution()) {
+				result.getResolvedTests().forEach(test -> notifyResolvers(test, testPlanSpecification));
+			}
 		}
 	}
 

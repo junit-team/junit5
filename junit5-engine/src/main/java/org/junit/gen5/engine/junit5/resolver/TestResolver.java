@@ -22,5 +22,5 @@ import org.junit.gen5.engine.TestPlanSpecification;
  */
 @FunctionalInterface
 public interface TestResolver {
-	List<TestDescriptor> resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification);
+	TestResolverResult resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification);
 }

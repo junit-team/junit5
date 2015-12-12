@@ -40,19 +40,19 @@ public class MethodResolverTests {
 	public void givenArbitraryTestDescriptor_nothingIsResolved() throws Exception {
 		TestDescriptor parent = new TestDescriptorStub();
 		TestPlanSpecification testPlanSpecification = build(forClass(SinglePassingTestSampleClass.class));
-		List<TestDescriptor> result = resolver.resolveFor(parent, testPlanSpecification);
+		TestResolverResult testResolverResult = resolver.resolveFor(parent, testPlanSpecification);
 
-		assertThat(result).hasSize(0);
+		assertThat(testResolverResult.getResolvedTests()).hasSize(0);
 	}
 
 	@Test
 	public void givenClassTestGroup_resolvesMethodsWithinTestClassAnnotatedWithTest() throws Exception {
 		ClassTestDescriptor parent = new ClassTestDescriptor("id", SinglePassingTestSampleClass.class);
 		TestPlanSpecification testPlanSpecification = build(forClass(SinglePassingTestSampleClass.class));
-		List<TestDescriptor> result = resolver.resolveFor(parent, testPlanSpecification);
+		TestResolverResult testResolverResult = resolver.resolveFor(parent, testPlanSpecification);
 
-		assertThat(result).hasSize(1);
-		TestDescriptor resolvedChild = result.get(0);
+		assertThat(testResolverResult.getResolvedTests()).hasSize(1);
+		TestDescriptor resolvedChild = testResolverResult.getResolvedTests().get(0);
 
 		assertThat(resolvedChild.getParent().isPresent());
 		assertThat(resolvedChild.getParent().get()).isEqualTo(parent);

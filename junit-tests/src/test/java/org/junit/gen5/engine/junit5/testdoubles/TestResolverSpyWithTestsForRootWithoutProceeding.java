@@ -10,19 +10,15 @@
 
 package org.junit.gen5.engine.junit5.testdoubles;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.resolver.TestResolverResult;
 
-public class TestResolverSpyWithTestsForRoot extends TestResolverSpy {
+public class TestResolverSpyWithTestsForRootWithoutProceeding extends TestResolverSpy {
 	private final TestDescriptor root;
 	private final TestDescriptor resolvedTest;
 
-	public TestResolverSpyWithTestsForRoot(TestDescriptor root) {
+	public TestResolverSpyWithTestsForRootWithoutProceeding(TestDescriptor root) {
 		this.root = root;
 		this.resolvedTest = new TestDescriptorWithParentStub(root);
 	}
@@ -36,7 +32,7 @@ public class TestResolverSpyWithTestsForRoot extends TestResolverSpy {
 		super.resolveFor(parent, testPlanSpecification);
 
 		if (root.equals(parent)) {
-			return TestResolverResult.proceedResolving(resolvedTest);
+			return TestResolverResult.stopResolving(resolvedTest);
 		}
 		else {
 			return TestResolverResult.empty();

@@ -25,15 +25,16 @@ import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 
 public class MethodResolver implements TestResolver {
 	@Override
-	public List<TestDescriptor> resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+	public TestResolverResult resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
 		ObjectUtils.verifyNonNull(parent, "Parent must not be null!");
 		ObjectUtils.verifyNonNull(testPlanSpecification, "TestPlanSpecification must not be null!");
 
 		if (parent instanceof ClassTestDescriptor) {
-			return resolveTestMethodsOfTestClass(parent);
+			List<TestDescriptor> resolvedTests = resolveTestMethodsOfTestClass(parent);
+			return TestResolverResult.proceedResolving(resolvedTests);
 		}
 		else {
-			return Collections.emptyList();
+			return TestResolverResult.empty();
 		}
 	}
 

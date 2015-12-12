@@ -10,20 +10,20 @@
 
 package org.junit.gen5.engine.junit5.testdoubles;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.resolver.TestResolver;
+import org.junit.gen5.engine.junit5.resolver.TestResolverResult;
 
 public class TestResolverSpy implements TestResolver {
 	public List<TestResolverRequest> resolvedFor = new LinkedList<>();
 
 	@Override
-	public List<TestDescriptor> resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+	public TestResolverResult resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
 		resolvedFor.add(new TestResolverRequest(parent, testPlanSpecification));
-		return Collections.emptyList();
+		return TestResolverResult.empty();
 	}
 }

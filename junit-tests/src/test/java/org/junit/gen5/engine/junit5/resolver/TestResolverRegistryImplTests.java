@@ -18,10 +18,7 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.junit5.testdoubles.TestDescriptorStub;
-import org.junit.gen5.engine.junit5.testdoubles.TestResolverRequest;
-import org.junit.gen5.engine.junit5.testdoubles.TestResolverSpy;
-import org.junit.gen5.engine.junit5.testdoubles.TestResolverSpyWithTestsForRoot;
+import org.junit.gen5.engine.junit5.testdoubles.*;
 
 public class TestResolverRegistryImplTests {
 	private TestDescriptor testGroup = new TestDescriptorStub();
@@ -65,6 +62,17 @@ public class TestResolverRegistryImplTests {
 
 		assertTestResolverWasNotified(testResolverSpy, asList(testGroup, testResolverSpy.getResolvedTest()),
 			emptyTestPlanSpecification);
+	}
+
+	@Test
+	public void givenTestResolverThatReturnsNewTestsWithoutProcessingResolving_TestResolversAreNotCalledReturnedTests()
+			throws Exception {
+		TestResolverSpyWithTestsForRootWithoutProceeding testResolverSpy = new TestResolverSpyWithTestsForRootWithoutProceeding(testGroup);
+
+		testResolverRegistry.register(testResolverSpy);
+		testResolverRegistry.notifyResolvers(testGroup, emptyTestPlanSpecification);
+
+		assertTestResolverWasNotified(testResolverSpy, asList(testGroup), emptyTestPlanSpecification);
 	}
 
 	private void assertTestResolverWasNotified(TestResolverSpy testResolverSpy, List<TestDescriptor> parents,
