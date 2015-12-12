@@ -104,7 +104,7 @@ public class TestExtensionRegistry {
 
 		//@formatter:off
 		registeredExtensionPoints.stream()
-				.filter(registeredExtensionPoint -> extensionClass.isAssignableFrom(registeredExtensionPoint.extensionPoint.getClass()))
+				.filter(registeredExtensionPoint -> extensionClass.isAssignableFrom(registeredExtensionPoint.getExtensionPoint().getClass()))
 				.forEach(extensionPoint -> allExtensionPoints.add((RegisteredExtensionPoint<T>) extensionPoint));
 		//@formatter:on
 
@@ -121,7 +121,7 @@ public class TestExtensionRegistry {
 	 */
 	public <T extends ExtensionPoint> List<T> getExtensionPoints(Class<T> extensionClass) {
 		return getRegisteredExtensionPoints(extensionClass).stream().map(
-			registeredExtensionPoint -> registeredExtensionPoint.extensionPoint).collect(Collectors.toList());
+			registeredExtensionPoint -> registeredExtensionPoint.getExtensionPoint()).collect(Collectors.toList());
 	}
 
 	/**
@@ -144,7 +144,8 @@ public class TestExtensionRegistry {
 	private void registerFromExtensionRegistrar(TestExtension testExtension) {
 		if (testExtension instanceof ExtensionRegistrar) {
 			ExtensionRegistrar extensionRegistrar = (ExtensionRegistrar) testExtension;
-			ExtensionRegistry extensionRegistry = new TestExtensionRegistry.LocalExtensionRegistry();
+			ExtensionRegistry extensionRegistry = new TestExtensionRegistry.LocalExtensionRegistry(
+				testExtension.getClass().getName());
 			extensionRegistrar.registerExtensions(extensionRegistry);
 		}
 	}
@@ -152,33 +153,30 @@ public class TestExtensionRegistry {
 	private void registerExtensionPointImplementors(TestExtension testExtension) {
 		if (testExtension instanceof ExtensionPoint) {
 			ExtensionPoint extension = (ExtensionPoint) testExtension;
-			registerExtension(extension, Position.DEFAULT);
+			registerExtension(extension, Position.DEFAULT, testExtension.getClass().getName());
 		}
 	}
 
-	private <E extends ExtensionPoint> void registerExtension(E extension, Position position) {
-		RegisteredExtensionPoint<E> registeredExtensionPoint = new RegisteredExtensionPoint<>(extension, position);
+	private <E extends ExtensionPoint> void registerExtension(E extension, Position position, String extensionName) {
+		RegisteredExtensionPoint<E> registeredExtensionPoint = new RegisteredExtensionPoint<>(extension, position,
+			extensionName);
 		registeredExtensionPoints.add(registeredExtensionPoint);
-	}
-
-	@SuppressWarnings("unused")
-	private static class RegisteredExtensionPoint<T extends ExtensionPoint> {
-		private final T extensionPoint;
-		private final Position position;
-
-		private RegisteredExtensionPoint(T extensionPoint, Position position) {
-			this.extensionPoint = extensionPoint;
-			this.position = position;
-		}
 	}
 
 	/**
 	 * Public for testing purposes only
 	 */
 	public class LocalExtensionRegistry implements ExtensionRegistry {
+
+		private String extensionName;
+
+		public LocalExtensionRegistry(String extensionName) {
+			this.extensionName = extensionName;
+		}
+
 		@Override
 		public <E extends ExtensionPoint> void register(E extension, Class<E> extensionPointType, Position position) {
-			registerExtension(extension, position);
+			registerExtension(extension, position, extensionName);
 		}
 	}
 }
