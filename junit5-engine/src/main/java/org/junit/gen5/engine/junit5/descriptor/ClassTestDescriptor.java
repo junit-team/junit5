@@ -91,6 +91,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 				.withBeforeEachCallback(beforeEachCallback(context))
 				.withAfterEachCallback(afterEachCallback(context))
 				.withTestExtensionRegistry(populateNewTestExtensionRegistryFromExtendWith(testClass, context.getTestExtensionRegistry()))
+				.withExtensionContext(new ClassBasedContainerExtensionContext(context.getExtensionContext(), this))
 				.build();
 		// @formatter:on
 	}

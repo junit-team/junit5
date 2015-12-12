@@ -11,37 +11,23 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.api.extension.TestExtensionContext;
 
-final class MethodBasedTestExtensionContext implements TestExtensionContext {
+final class ClassBasedContainerExtensionContext implements ContainerExtensionContext {
 
 	private final Map<String, Object> attributes = new LinkedHashMap<>();
 
 	private ExtensionContext parent;
-	private final MethodTestDescriptor testDescriptor;
-	private final Object testInstance;
+	private final ClassTestDescriptor testDescriptor;
 
-	public MethodBasedTestExtensionContext(ExtensionContext parent, MethodTestDescriptor testDescriptor,
-			Object testInstance) {
+	public ClassBasedContainerExtensionContext(ExtensionContext parent, ClassTestDescriptor testDescriptor) {
 		this.parent = parent;
 		this.testDescriptor = testDescriptor;
-		this.testInstance = testInstance;
-	}
-
-	@Override
-	public Method getTestMethod() {
-		return testDescriptor.getTestMethod();
-	}
-
-	@Override
-	public Object getTestInstance() {
-		return testInstance;
 	}
 
 	@Override
@@ -66,6 +52,12 @@ final class MethodBasedTestExtensionContext implements TestExtensionContext {
 
 	@Override
 	public AnnotatedElement getElement() {
-		return getTestMethod();
+		return getTestClass();
+	}
+
+	@Override
+	public Optional<Object> getContainerInstance() {
+		// TODO implement this
+		return Optional.empty();
 	}
 }

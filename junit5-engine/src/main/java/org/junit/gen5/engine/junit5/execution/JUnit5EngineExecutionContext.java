@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.engine.EngineExecutionContext;
 
 public class JUnit5EngineExecutionContext implements EngineExecutionContext {
@@ -40,6 +41,10 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 		return state.testExtensionRegistry;
 	}
 
+	public ExtensionContext getExtensionContext() {
+		return state.extensionContext;
+	}
+
 	public Builder extend() {
 		return builder(this);
 	}
@@ -58,6 +63,7 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 		BeforeEachCallback beforeEachCallback;
 		AfterEachCallback afterEachCallback;
 		TestExtensionRegistry testExtensionRegistry;
+		ExtensionContext extensionContext;
 
 		@Override
 		public State clone() {
@@ -98,6 +104,11 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 
 		public Builder withTestExtensionRegistry(TestExtensionRegistry testExtensionRegistry) {
 			newState().testExtensionRegistry = testExtensionRegistry;
+			return this;
+		}
+
+		public Builder withExtensionContext(ExtensionContext extensionContext) {
+			newState().extensionContext = extensionContext;
 			return this;
 		}
 
