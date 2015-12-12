@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestExecutionResult;
 
 public class EngineExecutionListenerSpy implements EngineExecutionListener {
 	public List<TestDescriptor> foundDynamicTests = new LinkedList<>();
@@ -25,32 +26,32 @@ public class EngineExecutionListenerSpy implements EngineExecutionListener {
 	public List<TestDescriptor> foundSucceededTests = new LinkedList<>();
 
 	@Override
-	public void dynamicTestFound(TestDescriptor testDescriptor) {
+	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
 		foundDynamicTests.add(testDescriptor);
 	}
 
 	@Override
-	public void testStarted(TestDescriptor testDescriptor) {
+	public void executionStarted(TestDescriptor testDescriptor) {
 		foundStartedTests.add(testDescriptor);
 	}
 
 	@Override
-	public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
+	public void executionSkipped(TestDescriptor testDescriptor, String reason) {
 		foundSkippedTests.add(testDescriptor);
 	}
 
 	@Override
-	public void testAborted(TestDescriptor testDescriptor, Throwable t) {
-		foundAbortedTests.add(testDescriptor);
-	}
-
-	@Override
-	public void testFailed(TestDescriptor testDescriptor, Throwable t) {
-		foundFailedTests.add(testDescriptor);
-	}
-
-	@Override
-	public void testSucceeded(TestDescriptor testDescriptor) {
-		foundSucceededTests.add(testDescriptor);
+	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
+		switch (testExecutionResult.getStatus()) {
+			case SUCCESSFUL:
+				foundSucceededTests.add(testDescriptor);
+				break;
+			case ABORTED:
+				foundAbortedTests.add(testDescriptor);
+				break;
+			case FAILED:
+				foundFailedTests.add(testDescriptor);
+				break;
+		}
 	}
 }
