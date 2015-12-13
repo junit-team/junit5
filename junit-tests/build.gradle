@@ -33,4 +33,8 @@ jacocoTestReport {
 		additionalSourceDirs = files(additionalSourceDirs, project.sourceSets.main.allSource.srcDirs)
 		additionalClassDirs = files(additionalClassDirs, project.sourceSets.main.output)
 	}
+	reports {
+		xml.enabled = true
+		html.enabled = true
+	}
 }
