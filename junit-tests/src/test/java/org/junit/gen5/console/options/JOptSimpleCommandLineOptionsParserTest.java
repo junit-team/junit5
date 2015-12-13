@@ -10,16 +10,15 @@
 
 package org.junit.gen5.console.options;
 
-import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
+import static java.util.Arrays.*;
 import static java.util.Collections.emptyList;
-import static org.junit.gen5.api.Assertions.assertAll;
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertFalse;
-import static org.junit.gen5.api.Assertions.assertThrows;
-import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.api.Assertions.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -120,6 +119,40 @@ public class JOptSimpleCommandLineOptionsParserTest {
 			() -> assertEquals(asList("foo", "bar"), parseArgLine("-h -- foo bar").getArguments())
 		);
 		// @formatter:on
+	}
+
+	@Test
+	public void printHelpOutputsHelpOption() {
+		StringWriter writer = new StringWriter();
+
+		createParser().printHelp(writer);
+
+		assertThat(writer.toString()).contains("--help");
+	}
+
+	@Test
+	public void printHelpPreservesOriginalIOException() {
+		Writer writer = new Writer() {
+
+			@Override
+			public void write(char[] cbuf, int off, int len) throws IOException {
+				throw new IOException("Something went wrong");
+			}
+
+			@Override
+			public void flush() {
+			}
+
+			@Override
+			public void close() {
+			}
+		};
+
+		CommandLineOptionsParser parser = createParser();
+		RuntimeException exception = expectThrows(RuntimeException.class, () -> parser.printHelp(writer));
+
+		assertThat(exception).hasCauseInstanceOf(IOException.class);
+		assertThat(exception.getCause()).hasMessage("Something went wrong");
 	}
 
 	private void assertOptionWithRequiredArgumentThrowsExceptionWithoutArgument(String shortOption, String longOption) {
