@@ -173,7 +173,7 @@ public class TestExtensionRegistry {
 		}
 	}
 
-	private <E extends ExtensionPoint> void registerExtension(E extension, Position position, String extensionName) {
+	public <E extends ExtensionPoint> void registerExtension(E extension, Position position, String extensionName) {
 		RegisteredExtensionPoint<E> registeredExtensionPoint = new RegisteredExtensionPoint<>(extension, position,
 			extensionName);
 		registeredExtensionPoints.add(registeredExtensionPoint);
