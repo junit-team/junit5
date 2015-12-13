@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine;
 
-public class HierarchicalTestExecutor<C extends EngineExecutionContext> {
+class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
 	private final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
 
@@ -18,13 +18,13 @@ public class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	private final EngineExecutionListener listener;
 	private final C rootContext;
 
-	public HierarchicalTestExecutor(ExecutionRequest request, C rootContext) {
+	HierarchicalTestExecutor(ExecutionRequest request, C rootContext) {
 		this.rootTestDescriptor = request.getRootTestDescriptor();
 		this.listener = request.getEngineExecutionListener();
 		this.rootContext = rootContext;
 	}
 
-	public void execute() {
+	void execute() {
 		executeAll(rootTestDescriptor, rootContext);
 	}
 

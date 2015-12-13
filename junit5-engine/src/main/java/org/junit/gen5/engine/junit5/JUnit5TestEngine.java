@@ -16,9 +16,8 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.ClassFilter;
 import org.junit.gen5.engine.EngineFilter;
 import org.junit.gen5.engine.ExecutionRequest;
-import org.junit.gen5.engine.HierarchicalTestExecutor;
+import org.junit.gen5.engine.HierarchicalTestEngine;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
@@ -26,7 +25,7 @@ import org.junit.gen5.engine.junit5.descriptor.JUnit5EngineDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 
-public class JUnit5TestEngine implements TestEngine {
+public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecutionContext> {
 
 	private static final String ENGINE_ID = "junit5";
 
@@ -69,7 +68,7 @@ public class JUnit5TestEngine implements TestEngine {
 	}
 
 	@Override
-	public void execute(ExecutionRequest request) {
-		new HierarchicalTestExecutor<>(request, new JUnit5EngineExecutionContext()).execute();
+	protected JUnit5EngineExecutionContext createExecutionContext(ExecutionRequest request) {
+		return new JUnit5EngineExecutionContext();
 	}
 }
