@@ -132,13 +132,13 @@ public class ExtensionPointSortingTest {
 	}
 
 	protected void assertSorting(RegisteredExtensionPoint... points) {
-		List<RegisteredExtensionPoint<LocalExtensionPoint>> sortedPoints = sorter.sort(pointsToSort);
+		sorter.sort(pointsToSort);
 
-		String failureMessage = String.format("Expected %s but was %s", Arrays.asList(points), sortedPoints);
+		String failureMessage = String.format("Expected %s but was %s", Arrays.asList(points), pointsToSort);
 
-		assertEquals(failureMessage, points.length, sortedPoints.size());
+		assertEquals(failureMessage, points.length, pointsToSort.size());
 		for (int i = 0; i < points.length; i++) {
-			assertTrue(failureMessage, points[i] == sortedPoints.get(i));
+			assertTrue(failureMessage, points[i] == pointsToSort.get(i));
 		}
 	}
 

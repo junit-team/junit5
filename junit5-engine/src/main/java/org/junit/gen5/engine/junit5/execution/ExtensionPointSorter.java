@@ -27,20 +27,17 @@ import org.junit.gen5.api.extension.ExtensionPoint.Position;
 public class ExtensionPointSorter {
 
 	/**
-	 * Sort the list of extension points according to their specified {@linkplain Position}
+	 * Sort the list of extension points according to their specified {@linkplain Position}.
+	 * The list instance will be resorted.
 	 *
 	 * @param registeredExtensionPoints List of extension points in order of registration
 	 * @param <T> concrete subtype of {@linkplain ExtensionPoint}
-	 * @return sorted extension points
 	 */
-	public <T extends ExtensionPoint> List<RegisteredExtensionPoint<T>> sort(
-			List<RegisteredExtensionPoint<T>> registeredExtensionPoints) {
+	public <T extends ExtensionPoint> void sort(List<RegisteredExtensionPoint<T>> registeredExtensionPoints) {
 
 		checkPositionUnique(registeredExtensionPoints, Position.INNERMOST);
 		checkPositionUnique(registeredExtensionPoints, Position.OUTERMOST);
-
 		registeredExtensionPoints.sort(new LocalComparator());
-		return registeredExtensionPoints;
 	}
 
 	private <T extends ExtensionPoint> void checkPositionUnique(
@@ -63,7 +60,7 @@ public class ExtensionPointSorter {
 			List<RegisteredExtensionPoint<T>> registeredExtensionPoints, Position positionToFind) {
 		return registeredExtensionPoints.stream() //
 		.filter(point -> point.getPosition() == positionToFind) //
-		.map(point -> point.getExtensionName()) //
+		.map(RegisteredExtensionPoint::getExtensionName) //
 		.collect(Collectors.toList());
 	}
 

@@ -17,7 +17,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
@@ -32,13 +32,16 @@ import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
  * A {@code TestExtensionRegistry registry} serves to hold all registered extensions (i.e. instances of
  * {@linkplain ExtensionPoint}) for a given {@linkplain org.junit.gen5.engine.Container} or
  * {@linkplain org.junit.gen5.engine.Leaf}. A registry has a reference to a parent registry and all lookups are done in
- * itself and in its parent and thereby all its ancestors.
- *
- * Do not confuse with {@linkplain ExtensionRegistry} which is an interface used by {@linkplain ExtensionRegistrar}
+ * itself and in its parent and thereby all its ancestors. Do not confuse with {@linkplain ExtensionRegistry} which is
+ * an interface used by {@linkplain ExtensionRegistrar}
  *
  * @since 5.0
  */
 public class TestExtensionRegistry {
+
+	public enum ApplicationOrder {
+		FORWARD, BACKWARD
+	}
 
 	/**
 	 * Used to create and populate a new registry from a list of extensions and a parent.
@@ -114,17 +117,23 @@ public class TestExtensionRegistry {
 	}
 
 	/**
-	 * Find all extension points for a given type in the right order.
+	 * Apply all extension points for a given type in the right order.
 	 *
-	 * @param extensionClass
 	 * @param <T> The exact {@linkplain ExtensionPoint} for which to find all extensions
-	 * @return a list of all fitting extensions in the correct order considering all Position values
+	 * @param extensionClass
+	 * @param order The order in which to apply the extension points after sorting. FORWARD or BACKWARD.
+	 * @param extensionPointApplier The code to execute for each extension point
 	 */
-	public <T extends ExtensionPoint> List<T> getExtensionPoints(Class<T> extensionClass) {
+	public <T extends ExtensionPoint> void applyExtensionPoints(Class<T> extensionClass, ApplicationOrder order,
+			Consumer<RegisteredExtensionPoint<T>> extensionPointApplier) {
 		List<RegisteredExtensionPoint<T>> registeredExtensionPoints = getRegisteredExtensionPoints(extensionClass);
-		ExtensionPointSorter sorter = new ExtensionPointSorter();
-		return sorter.sort(registeredExtensionPoints).stream().map(
-			registeredExtensionPoint -> registeredExtensionPoint.getExtensionPoint()).collect(Collectors.toList());
+		new ExtensionPointSorter().sort(registeredExtensionPoints);
+		if (order == ApplicationOrder.BACKWARD) {
+			Collections.reverse(registeredExtensionPoints);
+		}
+
+		registeredExtensionPoints.stream().forEach(
+			registeredExtensionPoint -> extensionPointApplier.accept(registeredExtensionPoint));
 	}
 
 	/**

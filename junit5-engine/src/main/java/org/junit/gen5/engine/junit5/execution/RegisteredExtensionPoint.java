@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5.execution;
 
 import org.junit.gen5.api.extension.ExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionPoint.Position;
 
 /**
  * Represents an {@linkplain ExtensionPoint extension} registered within a
@@ -22,10 +23,10 @@ import org.junit.gen5.api.extension.ExtensionPoint;
 public class RegisteredExtensionPoint<T extends ExtensionPoint> {
 
 	private final T extensionPoint;
-	private final ExtensionPoint.Position position;
+	private final Position position;
 	private String extensionName;
 
-	public RegisteredExtensionPoint(T extensionPoint, ExtensionPoint.Position position, String extensionName) {
+	public RegisteredExtensionPoint(T extensionPoint, Position position, String extensionName) {
 		this.extensionPoint = extensionPoint;
 		this.position = position;
 		this.extensionName = extensionName;
@@ -35,7 +36,7 @@ public class RegisteredExtensionPoint<T extends ExtensionPoint> {
 		return extensionPoint;
 	}
 
-	public ExtensionPoint.Position getPosition() {
+	public Position getPosition() {
 		return position;
 	}
 

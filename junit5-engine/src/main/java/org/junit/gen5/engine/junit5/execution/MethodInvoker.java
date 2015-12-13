@@ -10,9 +10,10 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.joining;
 
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,11 +22,11 @@ import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry.ApplicationOrder;
 
 /**
- * {@code MethodInvoker} encapsulates the invocation of a method,
- * including support for dynamic resolution of method parameters via
- * {@link MethodParameterResolver MethodParameterResolvers}.
+ * {@code MethodInvoker} encapsulates the invocation of a method, including support for dynamic resolution of method
+ * parameters via {@link MethodParameterResolver MethodParameterResolvers}.
  *
  * @since 5.0
  */
@@ -46,11 +47,10 @@ public class MethodInvoker {
 
 	/**
 	 * Resolve the array of parameters for the configured method.
-	 * @param methodContext
 	 *
-	 * @param testExecutionContext the current test execution context
-	 * @return the array of Objects to be used as parameters in the method
-	 * invocation; never {@code null} though potentially empty
+	 * @param methodContext
+	 * @return the array of Objects to be used as parameters in the method invocation; never {@code null} though
+	 *         potentially empty
 	 * @throws ParameterResolutionException
 	 */
 	private Object[] resolveParameters(MethodContext methodContext) throws ParameterResolutionException {
@@ -63,12 +63,13 @@ public class MethodInvoker {
 
 	private Object resolveParameter(Parameter parameter, MethodContext methodContext) {
 		try {
-			// @formatter:off
-			List<MethodParameterResolver> matchingResolvers = extensionRegistry.getExtensionPoints(MethodParameterResolver.class)
-					.stream()
-					.filter(resolver -> resolver.supports(parameter, methodContext, testExtensionContext))
-					.collect(toList());
-			// @formatter:on
+			final List<MethodParameterResolver> matchingResolvers = new ArrayList<>();
+			extensionRegistry.applyExtensionPoints(MethodParameterResolver.class, ApplicationOrder.FORWARD,
+				registeredExtensionPoint -> {
+					if (registeredExtensionPoint.getExtensionPoint().supports(parameter, methodContext,
+						testExtensionContext))
+						matchingResolvers.add(registeredExtensionPoint.getExtensionPoint());
+				});
 
 			if (matchingResolvers.size() == 0) {
 				throw new ParameterResolutionException(
