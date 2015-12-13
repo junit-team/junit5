@@ -13,10 +13,16 @@ package org.junit.gen5.engine.junit5.resolver;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.engine.MethodSpecification;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -24,11 +30,16 @@ import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 
 public class MethodResolver implements TestResolver {
+	private static final Logger LOG = Logger.getLogger(MethodResolver.class.getName());
+
 	private TestEngine testEngine;
+	private Pattern uniqueIdRegExPattern;
 
 	@Override
 	public void setTestEngine(TestEngine testEngine) {
 		this.testEngine = testEngine;
+		this.uniqueIdRegExPattern = Pattern.compile(String.format("^%s:([^#]+)#([^(]+)\\(((?:[^,)]+,?)*)\\)$",
+			testEngine.getId()));
 	}
 
 	@Override
@@ -37,11 +48,13 @@ public class MethodResolver implements TestResolver {
 		ObjectUtils.verifyNonNull(testPlanSpecification, "TestPlanSpecification must not be null!");
 
 		if (parent.isRoot()) {
-			List<TestDescriptor> resolvedTests = resolveAllMethodsFromSpecification(parent, testPlanSpecification);
-			return TestResolverResult.stopResolving(resolvedTests);
+			List<TestDescriptor> resolvedTests = new LinkedList<>();
+			resolvedTests.addAll(resolveAllMethodsFromSpecification(parent, testPlanSpecification));
+			resolvedTests.addAll(resolveUniqueIdsFromSpecification(parent, testPlanSpecification));
+			return TestResolverResult.proceedResolving(resolvedTests);
 		}
 		if (parent instanceof ClassTestDescriptor) {
-			List<TestDescriptor> resolvedTests = resolveTestMethodsOfTestClass(parent);
+			List<TestDescriptor> resolvedTests = resolveTestMethodsOfTestClass((ClassTestDescriptor) parent);
 			return TestResolverResult.proceedResolving(resolvedTests);
 		}
 		else {
@@ -49,37 +62,82 @@ public class MethodResolver implements TestResolver {
 		}
 	}
 
-	private List<TestDescriptor> resolveAllMethodsFromSpecification(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+	private List<TestDescriptor> resolveAllMethodsFromSpecification(TestDescriptor parent,
+			TestPlanSpecification testPlanSpecification) {
 		List<TestDescriptor> result = new LinkedList<>();
-
-		testPlanSpecification.getMethods().forEach(
-				method -> {
-					result.add(getTestForMethod(parent, method.getTestClass(), method.getTestMethod()));
-				}
-		);
-		return result;
-	}
-
-	private List<TestDescriptor> resolveTestMethodsOfTestClass(TestDescriptor parent) {
-		ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) parent;
-		Class<?> testClass = classTestDescriptor.getTestClass();
-		List<Method> methods = ReflectionUtils.findMethods(testClass,
-			(method) -> method.isAnnotationPresent(Test.class));
-
-		List<TestDescriptor> result = new LinkedList<>();
-		for (Method method : methods) {
-			result.add(getTestForMethod(classTestDescriptor, method));
+		for (MethodSpecification method : testPlanSpecification.getMethods()) {
+			result.add(getTestDescriptorForTestMethod(parent, method.getTestClass(), method.getTestMethod()));
 		}
 		return result;
 	}
 
-	private TestDescriptor getTestForMethod(ClassTestDescriptor parent, Method method) {
-		return getTestForMethod(parent, parent.getTestClass(), method);
+	private List<TestDescriptor> resolveUniqueIdsFromSpecification(TestDescriptor parent,
+			TestPlanSpecification testPlanSpecification) {
+		List<String> uniqueIds = testPlanSpecification.getUniqueIds();
+		List<TestDescriptor> result = new LinkedList<>();
+
+		for (String uniqueId : uniqueIds) {
+			Matcher matcher = uniqueIdRegExPattern.matcher(uniqueId);
+			if (matcher.matches()) {
+				try {
+					Class<?> testClass = Class.forName(matcher.group(1));
+					String methodName = matcher.group(2);
+
+					Optional<Method> testMethodOptional = Optional.empty();
+
+					if (matcher.group(3).isEmpty()) {
+						testMethodOptional = ReflectionUtils.findMethod(testClass, methodName);
+					}
+					else {
+						Class<?>[] parameterTypes = getParameterTypes(matcher.group(3).split(","));
+						testMethodOptional = ReflectionUtils.findMethod(testClass, methodName, parameterTypes);
+					}
+
+					if (testMethodOptional.isPresent()) {
+						result.add(getTestDescriptorForTestMethod(parent, testClass, testMethodOptional.get()));
+					}
+					else {
+						LOG.fine(() -> "Skipping uniqueId " + uniqueId
+								+ ": UniqueId does not seem to represent a valid test method.");
+					}
+				}
+				catch (ClassNotFoundException e) {
+					LOG.fine(() -> "Skipping uniqueId " + uniqueId
+							+ ": UniqueId does not seem to represent a valid test method.");
+				}
+			}
+		}
+
+		return result;
 	}
 
-	private TestDescriptor getTestForMethod(TestDescriptor parent, Class<?> testClass, Method method) {
+	private List<TestDescriptor> resolveTestMethodsOfTestClass(ClassTestDescriptor parent) {
+		Class<?> testClass = parent.getTestClass();
+		List<Method> methods = ReflectionUtils.findMethods(testClass,
+			(method) -> AnnotationUtils.isAnnotated(method, Test.class));
+
+		List<TestDescriptor> result = new LinkedList<>();
+		for (Method method : methods) {
+			result.add(getTestDescriptorForTestMethod(parent, method));
+		}
+		return result;
+	}
+
+	private TestDescriptor getTestDescriptorForTestMethod(ClassTestDescriptor parent, Method method) {
+		return getTestDescriptorForTestMethod(parent, parent.getTestClass(), method);
+	}
+
+	private TestDescriptor getTestDescriptorForTestMethod(TestDescriptor parent, Class<?> testClass, Method method) {
 		MethodTestDescriptor testDescriptor = new MethodTestDescriptor(testEngine, testClass, method);
 		parent.addChild(testDescriptor);
 		return testDescriptor;
+	}
+
+	private Class<?>[] getParameterTypes(String[] parameterTypeNames) throws ClassNotFoundException {
+		Class<?>[] parameterTypes = new Class[parameterTypeNames.length];
+		for (int i = 0; i < parameterTypeNames.length; i++) {
+			parameterTypes[i] = Class.forName(parameterTypeNames[i]);
+		}
+		return parameterTypes;
 	}
 }

@@ -141,7 +141,6 @@ public class SpecificationResolverTest {
 	}
 
 	@org.junit.Test
-	@org.junit.Ignore
 	public void testMethodOfInnerClassByUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"junit5:org.junit.gen5.engine.junit5.samples.OtherTestClass$NestedTestClass#test5()");
@@ -150,12 +149,12 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
-			"junit5:org.junit.gen5.engine.junit5.samples.OtherTestClass$NestedTestClass",
 			"junit5:org.junit.gen5.engine.junit5.samples.OtherTestClass$NestedTestClass#test5()");
 	}
 
 	@org.junit.Test(expected = IllegalArgumentException.class)
 	@org.junit.Ignore
+	// TODO: Should this really throw an exception?
 	public void testNonResolvableUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification("junit5:poops-machine");
 
@@ -175,7 +174,6 @@ public class SpecificationResolverTest {
 	}
 
 	@org.junit.Test
-	@org.junit.Ignore
 	public void testMethodResolutionByUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"junit5:org.junit.gen5.engine.junit5.samples.TwoTestAndOneNonTestMethodsSampleClass#test1()");
@@ -184,50 +182,45 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
-			"junit5:org.junit.gen5.engine.junit5.samples.TwoTestAndOneNonTestMethodsSampleClass",
 			"junit5:org.junit.gen5.engine.junit5.samples.TwoTestAndOneNonTestMethodsSampleClass#test1()");
 	}
 
 	@org.junit.Test
-	@org.junit.Ignore
 	public void testMethodResolutionByUniqueIdFromInheritedClass() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.samples.HerTestClass#test1()");
+			"junit5:org.junit.gen5.engine.junit5.samples.ExtendingOtherTestSampleClass#test1()");
 
 		TestPlanSpecification testPlanSpecification = build(specification);
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
-			"junit5:org.junit.gen5.engine.junit5.samples.HerTestClass",
-			"junit5:org.junit.gen5.engine.junit5.samples.HerTestClass#test1()");
+			"junit5:org.junit.gen5.engine.junit5.samples.ExtendingOtherTestSampleClass#test1()");
 	}
 
 	@org.junit.Test
-	@org.junit.Ignore
 	public void testMethodResolutionByUniqueIdWithParams() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.samples.HerTestClass#test7(java.lang.String)");
+			"junit5:org.junit.gen5.engine.junit5.samples.ExtendingOtherTestSampleClass#test7(java.lang.String)");
 
 		TestPlanSpecification testPlanSpecification = build(specification);
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
-			"junit5:org.junit.gen5.engine.junit5.samples.HerTestClass",
-			"junit5:org.junit.gen5.engine.junit5.samples.HerTestClass#test7(java.lang.String)");
+			"junit5:org.junit.gen5.engine.junit5.samples.ExtendingOtherTestSampleClass#test7(java.lang.String)");
 	}
 
 	@org.junit.Test(expected = IllegalArgumentException.class)
 	@org.junit.Ignore
+	// TODO: Should this really throw an exception?
 	public void testMethodResolutionByUniqueIdWithWrongParams() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.samples.HerTestClass#test7(java.math.BigDecimal)");
+			"junit5:org.junit.gen5.engine.junit5.samples.ExtendingOtherTestSampleClass#test7(java.math.BigDecimal)");
 
 		TestPlanSpecification testPlanSpecification = build(specification);
 		testEngine.discoverTests(testPlanSpecification);
 	}
 
 	@org.junit.Test
-	@org.junit.Ignore
 	public void testTwoMethodResolutionsByUniqueId() {
 		UniqueIdSpecification specification1 = new UniqueIdSpecification(
 			"junit5:org.junit.gen5.engine.junit5.samples.TwoTestAndOneNonTestMethodsSampleClass#test1()");
@@ -239,7 +232,6 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
-			"junit5:org.junit.gen5.engine.junit5.samples.TwoTestAndOneNonTestMethodsSampleClass",
 			"junit5:org.junit.gen5.engine.junit5.samples.TwoTestAndOneNonTestMethodsSampleClass#test1()",
 			"junit5:org.junit.gen5.engine.junit5.samples.TwoTestAndOneNonTestMethodsSampleClass#test2()");
 
@@ -322,7 +314,6 @@ public class SpecificationResolverTest {
 	}
 
 	@org.junit.Test
-	@org.junit.Ignore
 	public void testNestedTestResolutionFromUniqueIdToMethod() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting$NestedTest#testB()");
@@ -331,8 +322,6 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
-			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting",
-			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting$NestedTest",
 			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting$NestedTest#testB()");
 	}
 

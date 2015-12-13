@@ -90,7 +90,7 @@ public class ClassResolver implements TestResolver {
 					String className = matcher.group(1);
 					foundClasses.add(Class.forName(className));
 				} catch (ClassNotFoundException e) {
-					LOG.fine(() -> "Skipping uniqueId " + uniqueId + ": UniqueId does not seem to represent a test class.");
+					LOG.fine(() -> "Skipping uniqueId " + uniqueId + ": UniqueId does not seem to represent a valid test class.");
 				}
 			}
 		}
