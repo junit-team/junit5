@@ -68,7 +68,6 @@ public class SpecificationResolverTest {
 	}
 
 	@org.junit.Test
-	@org.junit.Ignore
 	public void testClassResolutionOfNestedClass() {
 		ClassSpecification specification = new ClassSpecification(OtherTestClass.NestedTestClass.class);
 
@@ -76,9 +75,9 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
-				"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass",
-				"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()",
-				"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test6()");
+				"junit5:org.junit.gen5.engine.junit5.samples.OtherTestClass.NestedTestClass",
+				"junit5:org.junit.gen5.engine.junit5.samples.OtherTestClass.NestedTestClass#test5()",
+				"junit5:org.junit.gen5.engine.junit5.samples.OtherTestClass.NestedTestClass#test6()");
 	}
 
 	@org.junit.Test

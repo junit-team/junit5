@@ -72,6 +72,9 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		if (getUniqueId().equals(uniqueId)) {
 			return Optional.of(this);
 		}
+
+		// TODO check parent for uniqueId!
+
 		for (TestDescriptor child : this.children) {
 			Optional<? extends TestDescriptor> result = child.findByUniqueId(uniqueId);
 			if (result.isPresent()) {

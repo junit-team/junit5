@@ -55,6 +55,7 @@ public class ClassResolver implements TestResolver {
 
 	private TestDescriptor getTestGroupForClass(TestDescriptor parentTestDescriptor, Class<?> testClass) {
 		String parentUniqueId = parentTestDescriptor.getUniqueId();
+
 		String uniqueId = String.format("%s:%s", parentUniqueId, testClass.getCanonicalName());
 
 		ClassTestDescriptor testDescriptor = new ClassTestDescriptor(uniqueId, testClass);
