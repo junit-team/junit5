@@ -14,6 +14,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.gen5.api.Nested;
+import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
@@ -38,6 +40,12 @@ public class ClassResolver implements TestResolver {
 			List<TestDescriptor> resolvedTests = new LinkedList<>();
 			resolvedTests.addAll(resolveAllPackagesFromSpecification(parent, testPlanSpecification));
 			resolvedTests.addAll(resolveAllClassesFromSpecification(parent, testPlanSpecification));
+			return TestResolverResult.proceedResolving(resolvedTests);
+		}
+		else if (parent instanceof ClassTestDescriptor) {
+			Class<?> parentClass = ((ClassTestDescriptor) parent).getTestClass();
+			List<Class<?>> nestedClasses = ReflectionUtils.findNestedClasses(parentClass, nestedClass -> AnnotationUtils.isAnnotated(nestedClass, Nested.class));
+			List<TestDescriptor> resolvedTests = getTestDescriptorForTestClasses(parent, nestedClasses);
 			return TestResolverResult.proceedResolving(resolvedTests);
 		}
 		else {

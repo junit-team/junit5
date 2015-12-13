@@ -269,7 +269,6 @@ public class SpecificationResolverTest {
 	}
 
 	@org.junit.Test
-	@org.junit.Ignore
 	public void testNestedTestResolutionFromBaseClass() {
 		ClassSpecification specification = new ClassSpecification(TestCaseWithNesting.class);
 
@@ -279,14 +278,13 @@ public class SpecificationResolverTest {
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
 			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting",
 			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting#testA()",
-			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting@NestedTest",
-			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting@NestedTest#testB()",
-			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting@NestedTest@DoubleNestedTest",
-			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()");
+			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting.NestedTest",
+			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting.NestedTest#testB()",
+			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting.NestedTest.DoubleNestedTest",
+			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting.NestedTest.DoubleNestedTest#testC()");
 	}
 
 	@org.junit.Test
-	@org.junit.Ignore
 	public void testNestedTestResolutionFromNestedTestClass() {
 		ClassSpecification specification = new ClassSpecification(TestCaseWithNesting.NestedTest.class);
 
@@ -294,11 +292,10 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
-			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting",
-			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting@NestedTest",
-			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting@NestedTest#testB()",
-			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting@NestedTest@DoubleNestedTest",
-			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()");
+			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting.NestedTest",
+			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting.NestedTest#testB()",
+			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting.NestedTest.DoubleNestedTest",
+			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting.NestedTest.DoubleNestedTest#testC()");
 	}
 
 	@org.junit.Test
@@ -318,7 +315,6 @@ public class SpecificationResolverTest {
 	}
 
 	@org.junit.Test
-	@org.junit.Ignore
 	public void testNestedTestResolutionFromClass() {
 		ClassSpecification specification = new ClassSpecification(TestCaseWithNesting.NestedTest.DoubleNestedTest.class);
 
@@ -326,10 +322,8 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
-			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting",
-			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting@NestedTest",
-			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting@NestedTest@DoubleNestedTest",
-			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()");
+			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting.NestedTest.DoubleNestedTest",
+			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting.NestedTest.DoubleNestedTest#testC()");
 	}
 
 	@org.junit.Test
