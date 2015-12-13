@@ -3,5 +3,7 @@ jdk:
   - oraclejdk8
 before_install:
   - pip install --user codecov
+script:
+  - ./gradlew check jacocoTestReport
 after_success:
   - codecov
