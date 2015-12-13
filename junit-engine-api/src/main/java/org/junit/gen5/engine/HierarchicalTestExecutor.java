@@ -13,6 +13,7 @@ package org.junit.gen5.engine;
 class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
 	private final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
+	private final MixinAdapter<C> adapter = new MixinAdapter<>();
 
 	private final TestDescriptor rootTestDescriptor;
 	private final EngineExecutionListener listener;
@@ -33,38 +34,32 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		// event instead.
 		listener.executionStarted(testDescriptor);
 		TestExecutionResult result = singleTestExecutor.executeSafely(() -> {
-			C context = executeBeforeAll(testDescriptor, parentContext);
-			context = executeLeaf(testDescriptor, context);
+			C context = adapter.asContainer(testDescriptor).beforeAll(parentContext);
+			context = adapter.asLeaf(testDescriptor).execute(context);
 			for (TestDescriptor child : testDescriptor.getChildren()) {
 				executeAll(child, context);
 			}
-			context = executeAfterAll(testDescriptor, context);
+			context = adapter.asContainer(testDescriptor).afterAll(context);
 		});
 		listener.executionFinished(testDescriptor, result);
 	}
 
-	@SuppressWarnings("unchecked")
-	private C executeBeforeAll(TestDescriptor testDescriptor, C context) {
-		if (testDescriptor instanceof Container) {
-			return ((Container<C>) testDescriptor).beforeAll(context);
-		}
-		return context;
-	}
+	private static class MixinAdapter<C extends EngineExecutionContext> {
 
-	@SuppressWarnings("unchecked")
-	private C executeLeaf(TestDescriptor testDescriptor, C context) throws Throwable {
-		if (testDescriptor instanceof Leaf) {
-			return ((Leaf<C>) testDescriptor).execute(context);
-		}
-		return context;
-	}
+		private final Leaf<C> nullLeaf = c -> c;
 
-	@SuppressWarnings("unchecked")
-	private C executeAfterAll(TestDescriptor testDescriptor, C context) {
-		if (testDescriptor instanceof Container) {
-			return ((Container<C>) testDescriptor).afterAll(context);
+		private final Container<C> nullContainer = new Container<C>() {
+		};
+
+		@SuppressWarnings("unchecked")
+		Container<C> asContainer(TestDescriptor testDescriptor) {
+			return testDescriptor instanceof Container ? (Container<C>) testDescriptor : nullContainer;
 		}
-		return context;
+
+		@SuppressWarnings("unchecked")
+		Leaf<C> asLeaf(TestDescriptor testDescriptor) {
+			return testDescriptor instanceof Leaf ? (Leaf<C>) testDescriptor : nullLeaf;
+		}
 	}
 
 }
