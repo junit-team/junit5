@@ -167,6 +167,7 @@ public class SpecificationResolverTest {
 
 	@org.junit.Test(expected = IllegalArgumentException.class)
 	@org.junit.Ignore
+	// TODO: Should this really throw an exception?
 	public void testUniqueIdOfNotTestMethod() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"junit5:org.junit.gen5.engine.junit5.samples.TwoTestAndOneNonTestMethodsSampleClass#notATest()");
