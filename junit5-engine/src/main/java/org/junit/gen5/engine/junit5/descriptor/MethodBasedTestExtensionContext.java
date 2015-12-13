@@ -12,24 +12,18 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
 
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 
-final class MethodBasedTestExtensionContext implements TestExtensionContext {
+final class MethodBasedTestExtensionContext extends AbstractExtensionContext implements TestExtensionContext {
 
-	private final Map<String, Object> attributes = new LinkedHashMap<>();
-
-	private ExtensionContext parent;
 	private final MethodTestDescriptor testDescriptor;
 	private final Object testInstance;
 
 	public MethodBasedTestExtensionContext(ExtensionContext parent, MethodTestDescriptor testDescriptor,
 			Object testInstance) {
-		this.parent = parent;
+		super(parent);
 		this.testDescriptor = testDescriptor;
 		this.testInstance = testInstance;
 	}
@@ -50,18 +44,8 @@ final class MethodBasedTestExtensionContext implements TestExtensionContext {
 	}
 
 	@Override
-	public Optional<ExtensionContext> getParent() {
-		return Optional.ofNullable(parent);
-	}
-
-	@Override
 	public String getDisplayName() {
 		return testDescriptor.getDisplayName();
-	}
-
-	@Override
-	public Map<String, Object> getAttributes() {
-		return attributes;
 	}
 
 	@Override

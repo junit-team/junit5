@@ -18,7 +18,6 @@ import org.junit.gen5.api.Assertions;
 public class ExtensionContextTest {
 
 	@Test
-
 	public void fromClassTestDescriptor() {
 		ClassTestDescriptor outerClassDescriptor = new ClassTestDescriptor("OuterClass", OuterClass.class);
 		ClassTestDescriptor nestedClassDescriptor = new ClassTestDescriptor("NestedClass",
