@@ -15,15 +15,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.testdoubles.*;
 
 public class TestResolverRegistryImplTests {
-	private TestDescriptor testGroup = new TestDescriptorStub();
-	private TestPlanSpecification emptyTestPlanSpecification = TestPlanSpecification.build();
-	private TestResolverRegistryImpl testResolverRegistry = new TestResolverRegistryImpl();
+	private TestEngine testEngine;
+	private TestDescriptor testGroup;
+	private TestPlanSpecification emptyTestPlanSpecification;
+	private TestResolverRegistryImpl testResolverRegistry;
+
+	@Before
+	public void setUp() throws Exception {
+		testEngine = new TestEngineStub();
+		testGroup = new TestDescriptorStub();
+		emptyTestPlanSpecification = TestPlanSpecification.build();
+		testResolverRegistry = new TestResolverRegistryImpl(testEngine);
+	}
 
 	@Test
 	public void givenNoTestResolvers_notifyTestResolvers_existsSilently() throws Exception {

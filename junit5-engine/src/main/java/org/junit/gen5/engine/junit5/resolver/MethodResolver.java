@@ -11,7 +11,6 @@
 package org.junit.gen5.engine.junit5.resolver;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,16 +18,28 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 
 public class MethodResolver implements TestResolver {
+	private TestEngine testEngine;
+
+	@Override
+	public void setTestEngine(TestEngine testEngine) {
+		this.testEngine = testEngine;
+	}
+
 	@Override
 	public TestResolverResult resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
 		ObjectUtils.verifyNonNull(parent, "Parent must not be null!");
 		ObjectUtils.verifyNonNull(testPlanSpecification, "TestPlanSpecification must not be null!");
 
+		if (parent.isRoot()) {
+			List<TestDescriptor> resolvedTests = resolveAllMethodsFromSpecification(parent, testPlanSpecification);
+			return TestResolverResult.stopResolving(resolvedTests);
+		}
 		if (parent instanceof ClassTestDescriptor) {
 			List<TestDescriptor> resolvedTests = resolveTestMethodsOfTestClass(parent);
 			return TestResolverResult.proceedResolving(resolvedTests);
@@ -38,9 +49,16 @@ public class MethodResolver implements TestResolver {
 		}
 	}
 
-	@Override
-	public TestResolverResult resolveFor(String uniqueId, TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
-		return null;
+	private List<TestDescriptor> resolveAllMethodsFromSpecification(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+		List<TestDescriptor> result = new LinkedList<>();
+
+		testPlanSpecification.getMethods().forEach(
+				method -> {
+					Class<?> testClass = method.getDeclaringClass();
+					result.add(getTestForMethod(parent, testClass, method));
+				}
+		);
+		return result;
 	}
 
 	private List<TestDescriptor> resolveTestMethodsOfTestClass(TestDescriptor parent) {
@@ -57,10 +75,11 @@ public class MethodResolver implements TestResolver {
 	}
 
 	private TestDescriptor getTestForMethod(ClassTestDescriptor parent, Method method) {
-		String parentUniqueId = parent.getUniqueId();
-		String uniqueId = String.format("%s#%s()", parentUniqueId, method.getName());
+		return getTestForMethod(parent, parent.getTestClass(), method);
+	}
 
-		MethodTestDescriptor testDescriptor = new MethodTestDescriptor(uniqueId, parent.getTestClass(), method);
+	private TestDescriptor getTestForMethod(TestDescriptor parent, Class<?> testClass, Method method) {
+		MethodTestDescriptor testDescriptor = new MethodTestDescriptor(testEngine, testClass, method);
 		parent.addChild(testDescriptor);
 		return testDescriptor;
 	}

@@ -11,7 +11,9 @@
 package org.junit.gen5.engine.junit5.testdoubles;
 
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.junit5.resolver.TestResolverRegistry;
 import org.junit.gen5.engine.junit5.resolver.TestResolverResult;
 
 public class TestResolverSpyWithTestsForRootWithoutProceeding extends TestResolverSpy {
@@ -40,7 +42,6 @@ public class TestResolverSpyWithTestsForRootWithoutProceeding extends TestResolv
 	}
 
 	@Override
-	public TestResolverResult resolveFor(String uniqueId, TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
-		return null;
+	public void setTestEngine(TestEngine testEngine) {
 	}
 }

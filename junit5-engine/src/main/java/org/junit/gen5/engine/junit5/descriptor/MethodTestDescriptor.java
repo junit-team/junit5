@@ -22,12 +22,14 @@ import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.Leaf;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.execution.ConditionEvaluator;
+import org.junit.gen5.engine.*;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.RegisteredExtensionPoint;
@@ -39,24 +41,33 @@ import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
  * @since 5.0
  */
 public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
-
 	private final String displayName;
-
 	private final Class<?> testClass;
 
 	private final Method testMethod;
 
-	public MethodTestDescriptor(String uniqueId, Class<?> testClass, Method testMethod) {
-		super(uniqueId);
+	public MethodTestDescriptor(TestEngine testEngine, Class<?> testClass, Method testMethod) {
+		super(testEngine);
 
-		Preconditions.notNull(testClass, "Class must not be null");
-		Preconditions.notNull(testMethod, "Method must not be null");
+		Preconditions.notNull(testMethod, "testClass must not be null");
+		Preconditions.notNull(testMethod, "testMethod must not be null");
 
 		this.testClass = testClass;
 		this.testMethod = testMethod;
 		this.displayName = determineDisplayName(testMethod, testMethod.getName());
 
 		setSource(new JavaSource(testMethod));
+	}
+
+	@Override
+	public String getUniqueId() {
+		// @formatter:off
+		return String.format("%s:%s#%s(%s)",
+				getTestEngine().getId(),
+				getTestClass().getCanonicalName(),
+				getTestMethod().getName(),
+				ObjectUtils.nullSafeToString(getTestMethod().getParameterTypes()));
+		// @formatter:on
 	}
 
 	@Override

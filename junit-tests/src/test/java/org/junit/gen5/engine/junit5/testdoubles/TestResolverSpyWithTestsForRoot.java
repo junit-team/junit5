@@ -15,7 +15,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.junit5.resolver.TestResolverRegistry;
 import org.junit.gen5.engine.junit5.resolver.TestResolverResult;
 
 public class TestResolverSpyWithTestsForRoot extends TestResolverSpy {
@@ -44,7 +46,6 @@ public class TestResolverSpyWithTestsForRoot extends TestResolverSpy {
 	}
 
 	@Override
-	public TestResolverResult resolveFor(String uniqueId, TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
-		return null;
+	public void setTestEngine(TestEngine testEngine) {
 	}
 }

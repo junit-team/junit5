@@ -15,9 +15,13 @@ class DummyTestEngineDescriptor extends AbstractTestDescriptor implements Engine
 	private final Runnable runnable;
 
 	DummyTestEngineDescriptor(String displayName, Runnable runnable) {
-		super(DummyTestEngine.ENGINE_ID + ":" + displayName);
 		this.displayName = displayName;
 		this.runnable = runnable;
+	}
+
+	@Override
+	public String getUniqueId() {
+		return DummyTestEngine.ENGINE_ID + ":" + displayName;
 	}
 
 	@Override

@@ -18,8 +18,12 @@ public class EngineDescriptor extends AbstractTestDescriptor implements EngineAw
 	private final TestEngine engine;
 
 	public EngineDescriptor(TestEngine engine) {
-		super(engine.getId());
 		this.engine = engine;
+	}
+
+	@Override
+	public String getUniqueId() {
+		return engine.getId();
 	}
 
 	@Override

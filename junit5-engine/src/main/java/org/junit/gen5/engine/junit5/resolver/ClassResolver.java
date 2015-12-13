@@ -15,11 +15,18 @@ import java.util.List;
 
 import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 
 public class ClassResolver implements TestResolver {
+	private TestEngine testEngine;
+
+	@Override
+	public void setTestEngine(TestEngine testEngine) {
+		this.testEngine = testEngine;
+	}
+
 	@Override
 	public TestResolverResult resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
 		ObjectUtils.verifyNonNull(parent, "Parent must not be null!");
@@ -34,21 +41,13 @@ public class ClassResolver implements TestResolver {
 		}
 	}
 
-	@Override
-	public TestResolverResult resolveFor(String uniqueId, TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
-		return null;
-	}
-
 	private List<TestDescriptor> resolveAllClassesFromSpecification(TestDescriptor parent,
 			TestPlanSpecification testPlanSpecification) {
 		List<TestDescriptor> result = new LinkedList<>();
 
-		testPlanSpecification.accept(new TestPlanSpecificationElementVisitor() {
-			@Override
-			public void visitClass(Class<?> testClass) {
-				result.add(getTestGroupForClass(parent, testClass));
-			}
-		});
+		for (Class<?> testClass : testPlanSpecification.getClasses()) {
+			result.add(getTestGroupForClass(parent, testClass));
+		}
 
 		return result;
 	}
@@ -58,7 +57,7 @@ public class ClassResolver implements TestResolver {
 
 		String uniqueId = String.format("%s:%s", parentUniqueId, testClass.getCanonicalName());
 
-		ClassTestDescriptor testDescriptor = new ClassTestDescriptor(uniqueId, testClass);
+		ClassTestDescriptor testDescriptor = new ClassTestDescriptor(testEngine, testClass);
 		parentTestDescriptor.addChild(testDescriptor);
 		return testDescriptor;
 	}

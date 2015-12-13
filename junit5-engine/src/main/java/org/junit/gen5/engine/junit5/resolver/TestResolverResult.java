@@ -52,4 +52,8 @@ public class TestResolverResult {
 	public boolean isProceedResolution() {
 		return proceedResolution;
 	}
+
+	public boolean isEmpty() {
+		return resolvedTests.isEmpty();
+	}
 }

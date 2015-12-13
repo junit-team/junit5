@@ -10,9 +10,8 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
-import java.util.List;
-
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -21,7 +20,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
  * {@link TestPlanSpecification}. The children are returned as list.
  */
 public interface TestResolver {
-	TestResolverResult resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification);
+	void setTestEngine(TestEngine testEngine);
 
-	TestResolverResult resolveFor(String uniqueId, TestDescriptor parent, TestPlanSpecification testPlanSpecification);
+	TestResolverResult resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification);
 }

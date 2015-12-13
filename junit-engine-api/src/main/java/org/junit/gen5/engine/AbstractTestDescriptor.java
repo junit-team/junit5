@@ -24,24 +24,11 @@ import org.junit.gen5.commons.util.Preconditions;
  * @since 5.0
  */
 public abstract class AbstractTestDescriptor implements TestDescriptor {
-
-	private final String uniqueId;
-
 	private TestDescriptor parent;
 
 	private TestSource source;
 
 	private final Set<TestDescriptor> children = new LinkedHashSet<>();
-
-	protected AbstractTestDescriptor(String uniqueId) {
-		Preconditions.notBlank(uniqueId, "uniqueId must not be null or empty");
-		this.uniqueId = uniqueId;
-	}
-
-	@Override
-	public final String getUniqueId() {
-		return this.uniqueId;
-	}
 
 	@Override
 	public Optional<TestDescriptor> getParent() {
@@ -132,12 +119,12 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public final int hashCode() {
-		return this.uniqueId.hashCode();
+		return getUniqueId().hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + ": " + getUniqueId();
+		return getUniqueId();
 	}
 
 }

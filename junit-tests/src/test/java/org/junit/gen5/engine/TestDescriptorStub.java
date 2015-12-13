@@ -11,9 +11,15 @@
 package org.junit.gen5.engine;
 
 final class TestDescriptorStub extends AbstractTestDescriptor {
+	private final String uniqueId;
 
 	TestDescriptorStub(String uniqueId) {
-		super(uniqueId);
+		this.uniqueId = uniqueId;
+	}
+
+	@Override
+	public String getUniqueId() {
+		return uniqueId;
 	}
 
 	@Override

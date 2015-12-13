@@ -46,6 +46,7 @@ import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.RegisteredExtensionPoint;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
 import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
+import org.junit.gen5.engine.*;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.
@@ -56,13 +57,11 @@ import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
  * @since 5.0
  */
 public class ClassTestDescriptor extends JUnit5TestDescriptor implements Container<JUnit5EngineExecutionContext> {
-
 	private final String displayName;
-
 	private final Class<?> testClass;
 
-	public ClassTestDescriptor(String uniqueId, Class<?> testClass) {
-		super(uniqueId);
+	public ClassTestDescriptor(TestEngine testEngine, Class<?> testClass) {
+		super(testEngine);
 
 		Preconditions.notNull(testClass, "Class must not be null");
 
@@ -74,6 +73,15 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 	public final Class<?> getTestClass() {
 		return this.testClass;
+	}
+
+	@Override
+	public String getUniqueId() {
+		// @formatter:off
+		return String.format("%s:%s",
+				getTestEngine().getId(),
+				getTestClass().getCanonicalName());
+		// @formatter:on
 	}
 
 	@Override

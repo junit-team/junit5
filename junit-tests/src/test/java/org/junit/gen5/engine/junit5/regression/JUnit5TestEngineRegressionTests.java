@@ -32,12 +32,12 @@ public class JUnit5TestEngineRegressionTests {
 
 	@Before
 	public void setUp() throws Exception {
-		testResolverRegistry = new TestResolverRegistryImpl();
+		testEngine = new JUnit5TestEngine();
+		testResolverRegistry = new TestResolverRegistryImpl(testEngine);
+		testEngine.setTestResolverRegistry(testResolverRegistry);
+
 		testResolverRegistry.register(new ClassResolver());
 		testResolverRegistry.register(new MethodResolver());
-
-		testEngine = new JUnit5TestEngine();
-		testEngine.setTestResolverRegistry(testResolverRegistry);
 	}
 
 	@Test
