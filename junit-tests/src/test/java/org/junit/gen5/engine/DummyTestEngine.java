@@ -15,7 +15,7 @@ import static org.junit.gen5.engine.DummyTestDescriptor.ENGINE_ID;
 import java.util.LinkedList;
 import java.util.List;
 
-public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExecutionContext> {
+public final class DummyTestEngine implements TestEngine {
 
 	private final List<DummyTestDescriptor> children = new LinkedList<>();
 
@@ -36,7 +36,7 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 	}
 
 	@Override
-	protected DummyEngineExecutionContext createContext() {
-		return new DummyEngineExecutionContext();
+	public void execute(ExecutionRequest request) {
+		new HierarchicalTestExecutor<>(request, new DummyEngineExecutionContext()).execute();
 	}
 }

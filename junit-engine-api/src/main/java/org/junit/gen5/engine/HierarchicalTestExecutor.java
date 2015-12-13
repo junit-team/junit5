@@ -10,29 +10,33 @@
 
 package org.junit.gen5.engine;
 
-public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> implements TestEngine {
+public class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
-	@Override
-	public abstract TestDescriptor discoverTests(TestPlanSpecification specification);
+	private final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
 
-	@Override
-	public final void execute(ExecutionRequest request) {
-		TestDescriptor rootTestDescriptor = request.getRootTestDescriptor();
-		EngineExecutionListener engineExecutionListener = request.getEngineExecutionListener();
-		executeAll(rootTestDescriptor, engineExecutionListener, createContext());
+	private final TestDescriptor rootTestDescriptor;
+	private final EngineExecutionListener listener;
+	private final C rootContext;
+
+	public HierarchicalTestExecutor(ExecutionRequest request, C rootContext) {
+		this.rootTestDescriptor = request.getRootTestDescriptor();
+		this.listener = request.getEngineExecutionListener();
+		this.rootContext = rootContext;
 	}
 
-	protected abstract C createContext();
+	public void execute() {
+		executeAll(rootTestDescriptor, rootContext);
+	}
 
-	private void executeAll(TestDescriptor testDescriptor, EngineExecutionListener listener, C parentContext) {
+	private void executeAll(TestDescriptor testDescriptor, C parentContext) {
 		// TODO Check whether TestDescriptor should be skipped and fire executionSkipped
 		// event instead.
 		listener.executionStarted(testDescriptor);
-		TestExecutionResult result = new SingleTestExecutor().executeSafely(() -> {
+		TestExecutionResult result = singleTestExecutor.executeSafely(() -> {
 			C context = executeBeforeAll(testDescriptor, parentContext);
 			context = executeLeaf(testDescriptor, context);
 			for (TestDescriptor child : testDescriptor.getChildren()) {
-				executeAll(child, listener, context);
+				executeAll(child, context);
 			}
 			context = executeAfterAll(testDescriptor, context);
 		});
