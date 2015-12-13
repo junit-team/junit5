@@ -42,4 +42,9 @@ public class TestResolverSpyWithTestsForRoot extends TestResolverSpy {
 			return TestResolverResult.empty();
 		}
 	}
+
+	@Override
+	public TestResolverResult resolveFor(String uniqueId, TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+		return null;
+	}
 }

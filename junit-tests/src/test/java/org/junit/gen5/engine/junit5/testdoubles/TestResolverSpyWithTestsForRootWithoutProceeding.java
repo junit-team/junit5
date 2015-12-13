@@ -38,4 +38,9 @@ public class TestResolverSpyWithTestsForRootWithoutProceeding extends TestResolv
 			return TestResolverResult.empty();
 		}
 	}
+
+	@Override
+	public TestResolverResult resolveFor(String uniqueId, TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+		return null;
+	}
 }

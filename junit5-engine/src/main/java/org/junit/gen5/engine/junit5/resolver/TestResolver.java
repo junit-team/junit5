@@ -20,7 +20,8 @@ import org.junit.gen5.engine.TestPlanSpecification;
  * contribute to the list of children of the given parent. It may only resolve children, that accomplish the
  * {@link TestPlanSpecification}. The children are returned as list.
  */
-@FunctionalInterface
 public interface TestResolver {
 	TestResolverResult resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification);
+
+	TestResolverResult resolveFor(String uniqueId, TestDescriptor parent, TestPlanSpecification testPlanSpecification);
 }

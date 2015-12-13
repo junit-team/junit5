@@ -26,4 +26,9 @@ public class TestResolverSpy implements TestResolver {
 		resolvedFor.add(new TestResolverRequest(parent, testPlanSpecification));
 		return TestResolverResult.empty();
 	}
+
+	@Override
+	public TestResolverResult resolveFor(String uniqueId, TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+		return null;
+	}
 }

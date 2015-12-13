@@ -38,6 +38,11 @@ public class MethodResolver implements TestResolver {
 		}
 	}
 
+	@Override
+	public TestResolverResult resolveFor(String uniqueId, TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+		return null;
+	}
+
 	private List<TestDescriptor> resolveTestMethodsOfTestClass(TestDescriptor parent) {
 		ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) parent;
 		Class<?> testClass = classTestDescriptor.getTestClass();

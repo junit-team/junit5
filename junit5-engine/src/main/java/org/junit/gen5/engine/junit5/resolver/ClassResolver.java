@@ -34,6 +34,11 @@ public class ClassResolver implements TestResolver {
 		}
 	}
 
+	@Override
+	public TestResolverResult resolveFor(String uniqueId, TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+		return null;
+	}
+
 	private List<TestDescriptor> resolveAllClassesFromSpecification(TestDescriptor parent,
 			TestPlanSpecification testPlanSpecification) {
 		List<TestDescriptor> result = new LinkedList<>();
