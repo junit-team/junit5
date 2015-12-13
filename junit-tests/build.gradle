@@ -1,14 +1,22 @@
+apply plugin: 'jacoco'
+
 uploadArchives.enabled = false
 
+def testedProjects = [
+	project(':junit-commons'),
+	project(':junit-console'),
+	project(':junit-engine-api'),
+	project(':junit-launcher'),
+	project(':junit4-launcher-runner'),
+	project(':junit4-engine'),
+	project(':junit5-api'),
+	project(':junit5-engine')
+]
+
 dependencies {
-	compile(project(':junit-commons'))
-	compile(project(':junit-console'))
-	compile(project(':junit-engine-api'))
-	compile(project(':junit-launcher'))
-	compile(project(':junit4-launcher-runner'))
-	compile(project(':junit4-engine'))
-	compile(project(':junit5-api'))
-	compile(project(':junit5-engine'))
+	testedProjects.each { project ->
+		testCompile(project)
+	}
 
 	testCompile("org.assertj:assertj-core:${assertJVersion}")
 	testCompile("junit:junit:${junit4Version}")
@@ -16,4 +24,13 @@ dependencies {
 
 	testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
+}
+
+jacocoTestReport {
+	additionalSourceDirs = files()
+	additionalClassDirs = files()
+	testedProjects.each { project ->
+		additionalSourceDirs = files(additionalSourceDirs, project.sourceSets.main.allSource.srcDirs)
+		additionalClassDirs = files(additionalClassDirs, project.sourceSets.main.output)
+	}
 }
