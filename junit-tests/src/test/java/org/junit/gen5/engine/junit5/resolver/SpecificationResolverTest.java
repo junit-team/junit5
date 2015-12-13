@@ -255,7 +255,6 @@ public class SpecificationResolverTest {
 	}
 
 	@org.junit.Test
-	@org.junit.Ignore
 	public void testPackageResolution() {
 		PackageSpecification specification = new PackageSpecification("org.junit.gen5.engine.junit5.samples.subpackage");
 

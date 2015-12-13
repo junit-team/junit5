@@ -49,6 +49,11 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 
 		// TODO Rework filter mechanism
 		applyEngineFilters(specification.getEngineFilters(), root);
+		root.accept((descriptor, remove) -> {
+			if (!descriptor.isRoot() && !descriptor.hasTests()) {
+				remove.run();
+			}
+		});
 
 		return root;
 	}

@@ -10,10 +10,12 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.gen5.commons.util.ObjectUtils;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -33,7 +35,9 @@ public class ClassResolver implements TestResolver {
 		ObjectUtils.verifyNonNull(testPlanSpecification, "TestPlanSpecification must not be null!");
 
 		if (parent.isRoot()) {
-			List<TestDescriptor> resolvedTests = resolveAllClassesFromSpecification(parent, testPlanSpecification);
+			List<TestDescriptor> resolvedTests = new LinkedList<>();
+			resolvedTests.addAll(resolveAllPackagesFromSpecification(parent, testPlanSpecification));
+			resolvedTests.addAll(resolveAllClassesFromSpecification(parent, testPlanSpecification));
 			return TestResolverResult.proceedResolving(resolvedTests);
 		}
 		else {
@@ -41,22 +45,34 @@ public class ClassResolver implements TestResolver {
 		}
 	}
 
-	private List<TestDescriptor> resolveAllClassesFromSpecification(TestDescriptor parent,
-			TestPlanSpecification testPlanSpecification) {
+	private List<TestDescriptor> resolveAllPackagesFromSpecification(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
 		List<TestDescriptor> result = new LinkedList<>();
 
-		for (Class<?> testClass : testPlanSpecification.getClasses()) {
-			result.add(getTestGroupForClass(parent, testClass));
+		for (String packageName : testPlanSpecification.getPackages()) {
+			List<Class<?>> testClasses = ReflectionUtils.findAllClassesInPackage(packageName, aClass -> true);
+			result.addAll(getTestDescriptorForTestClasses(parent, testClasses));
 		}
 
 		return result;
 	}
 
+	private List<TestDescriptor> resolveAllClassesFromSpecification(TestDescriptor parent,
+			TestPlanSpecification testPlanSpecification) {
+
+		List<Class<?>> testClasses = testPlanSpecification.getClasses();
+		return getTestDescriptorForTestClasses(parent, testClasses);
+
+	}
+
+	private List<TestDescriptor> getTestDescriptorForTestClasses(TestDescriptor parent, List<Class<?>> testClasses) {
+		List<TestDescriptor> result = new LinkedList<>();
+		for (Class<?> testClass : testClasses) {
+			result.add(getTestGroupForClass(parent, testClass));
+		}
+		return result;
+	}
+
 	private TestDescriptor getTestGroupForClass(TestDescriptor parentTestDescriptor, Class<?> testClass) {
-		String parentUniqueId = parentTestDescriptor.getUniqueId();
-
-		String uniqueId = String.format("%s:%s", parentUniqueId, testClass.getCanonicalName());
-
 		ClassTestDescriptor testDescriptor = new ClassTestDescriptor(testEngine, testClass);
 		parentTestDescriptor.addChild(testDescriptor);
 		return testDescriptor;
