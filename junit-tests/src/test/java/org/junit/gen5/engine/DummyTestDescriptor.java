@@ -39,7 +39,7 @@ class DummyTestDescriptor extends AbstractTestDescriptor implements Leaf<DummyEn
 	}
 
 	@Override
-	public DummyEngineExecutionContext execute(DummyEngineExecutionContext context) throws Throwable {
+	public DummyEngineExecutionContext execute(DummyEngineExecutionContext context) {
 		if (runnable != null) {
 			runnable.run();
 		}

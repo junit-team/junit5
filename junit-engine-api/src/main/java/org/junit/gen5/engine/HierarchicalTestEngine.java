@@ -28,19 +28,14 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 		// TODO Check whether TestDescriptor should be skipped and fire executionSkipped
 		// event instead.
 		listener.executionStarted(testDescriptor);
-		TestExecutionResult result;
-		try {
+		TestExecutionResult result = new SingleTestExecutor().executeSafely(() -> {
 			C context = executeBeforeAll(testDescriptor, parentContext);
 			context = executeLeaf(testDescriptor, context);
 			for (TestDescriptor child : testDescriptor.getChildren()) {
 				executeAll(child, listener, context);
 			}
 			context = executeAfterAll(testDescriptor, context);
-			result = TestExecutionResult.successful();
-		}
-		catch (Throwable t) {
-			result = TestExecutionResult.failed(t);
-		}
+		});
 		listener.executionFinished(testDescriptor, result);
 	}
 

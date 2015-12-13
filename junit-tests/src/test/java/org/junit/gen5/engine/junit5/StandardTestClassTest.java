@@ -20,6 +20,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.opentest4j.TestAbortedException;
 
 public class StandardTestClassTest extends AbstractJUnit5TestEngineTestCase {
 
@@ -48,25 +49,26 @@ public class StandardTestClassTest extends AbstractJUnit5TestEngineTestCase {
 
 	@org.junit.Test
 	public void allTestsInClassAreRunWithBeforeEach() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(MyStandardTestCase.class, 4);
+		TrackingEngineExecutionListener listener = executeTestsForClass(MyStandardTestCase.class, 5);
 
-		Assert.assertEquals("# tests started", 3, listener.testStartedCount.get());
+		Assert.assertEquals("# tests started", 4, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests aborted", 1, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
 
 		Assert.assertEquals("# containers started", 2, listener.containerStartedCount.get());
 		Assert.assertEquals("# containers finished", 2, listener.containerFinishedCount.get());
 
-		Assert.assertEquals("# before1 calls", 3, MyStandardTestCase.countBefore1);
-		Assert.assertEquals("# before2 calls", 3, MyStandardTestCase.countBefore2);
+		Assert.assertEquals("# before1 calls", 4, MyStandardTestCase.countBefore1);
+		Assert.assertEquals("# before2 calls", 4, MyStandardTestCase.countBefore2);
 	}
 
 	@org.junit.Test
 	public void allTestsInClassAreRunWithAfterEach() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(MyStandardTestCase.class, 4);
+		TrackingEngineExecutionListener listener = executeTestsForClass(MyStandardTestCase.class, 5);
 
-		Assert.assertEquals("# tests started", 3, listener.testStartedCount.get());
-		Assert.assertEquals("# after each calls", 3, MyStandardTestCase.countAfter);
+		Assert.assertEquals("# tests started", 4, listener.testStartedCount.get());
+		Assert.assertEquals("# after each calls", 4, MyStandardTestCase.countAfter);
 
 		Assert.assertEquals("# containers started", 2, listener.containerStartedCount.get());
 		Assert.assertEquals("# containers finished", 2, listener.containerFinishedCount.get());
@@ -165,6 +167,11 @@ class MyStandardTestCase {
 	@Test
 	void failingTest() {
 		fail("always fails");
+	}
+
+	@Test
+	void abortedTest() {
+		throw new TestAbortedException("aborted!");
 	}
 
 }
