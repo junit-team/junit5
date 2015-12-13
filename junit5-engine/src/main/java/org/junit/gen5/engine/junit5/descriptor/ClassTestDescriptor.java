@@ -80,7 +80,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		// @formatter:off
 		return String.format("%s:%s",
 				getTestEngine().getId(),
-				getTestClass().getCanonicalName());
+				getTestClass().getName());
 		// @formatter:on
 	}
 

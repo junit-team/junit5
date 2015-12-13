@@ -64,7 +64,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		// @formatter:off
 		return String.format("%s:%s#%s(%s)",
 				getTestEngine().getId(),
-				getTestClass().getCanonicalName(),
+				getTestClass().getName(),
 				getTestMethod().getName(),
 				ObjectUtils.nullSafeToString(getTestMethod().getParameterTypes()));
 		// @formatter:on

@@ -10,9 +10,11 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.commons.util.AnnotationUtils;
@@ -24,11 +26,15 @@ import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 
 public class ClassResolver implements TestResolver {
+	private static final Logger LOG = Logger.getLogger(ClassResolver.class.getName());
+
 	private TestEngine testEngine;
+	private Pattern uniqueIdRegExPattern;
 
 	@Override
 	public void setTestEngine(TestEngine testEngine) {
 		this.testEngine = testEngine;
+		this.uniqueIdRegExPattern = Pattern.compile(String.format("^%s:([^#]+)$", testEngine.getId()));
 	}
 
 	@Override
@@ -40,12 +46,13 @@ public class ClassResolver implements TestResolver {
 			List<TestDescriptor> resolvedTests = new LinkedList<>();
 			resolvedTests.addAll(resolveAllPackagesFromSpecification(parent, testPlanSpecification));
 			resolvedTests.addAll(resolveAllClassesFromSpecification(parent, testPlanSpecification));
+			resolvedTests.addAll(resolveUniqueIdsFromSpecification(parent, testPlanSpecification));
 			return TestResolverResult.proceedResolving(resolvedTests);
 		}
 		else if (parent instanceof ClassTestDescriptor) {
 			Class<?> parentClass = ((ClassTestDescriptor) parent).getTestClass();
 			List<Class<?>> nestedClasses = ReflectionUtils.findNestedClasses(parentClass, nestedClass -> AnnotationUtils.isAnnotated(nestedClass, Nested.class));
-			List<TestDescriptor> resolvedTests = getTestDescriptorForTestClasses(parent, nestedClasses);
+			List<TestDescriptor> resolvedTests = getTestDescriptorsForTestClasses(parent, nestedClasses);
 			return TestResolverResult.proceedResolving(resolvedTests);
 		}
 		else {
@@ -58,7 +65,7 @@ public class ClassResolver implements TestResolver {
 
 		for (String packageName : testPlanSpecification.getPackages()) {
 			List<Class<?>> testClasses = ReflectionUtils.findAllClassesInPackage(packageName, aClass -> true);
-			result.addAll(getTestDescriptorForTestClasses(parent, testClasses));
+			result.addAll(getTestDescriptorsForTestClasses(parent, testClasses));
 		}
 
 		return result;
@@ -68,19 +75,38 @@ public class ClassResolver implements TestResolver {
 			TestPlanSpecification testPlanSpecification) {
 
 		List<Class<?>> testClasses = testPlanSpecification.getClasses();
-		return getTestDescriptorForTestClasses(parent, testClasses);
+		return getTestDescriptorsForTestClasses(parent, testClasses);
 
 	}
 
-	private List<TestDescriptor> getTestDescriptorForTestClasses(TestDescriptor parent, List<Class<?>> testClasses) {
+	private List<TestDescriptor> resolveUniqueIdsFromSpecification(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+		List<String> uniqueIds = testPlanSpecification.getUniqueIds();
+		List<Class<?>> foundClasses = new LinkedList<>();
+
+		for (String uniqueId : uniqueIds) {
+			Matcher matcher = uniqueIdRegExPattern.matcher(uniqueId);
+			if (matcher.matches()) {
+				try {
+					String className = matcher.group(1);
+					foundClasses.add(Class.forName(className));
+				} catch (ClassNotFoundException e) {
+					LOG.fine(() -> "Skipping uniqueId " + uniqueId + ": UniqueId does not seem to represent a test class.");
+				}
+			}
+		}
+
+		return getTestDescriptorsForTestClasses(parent, foundClasses);
+	}
+
+	private List<TestDescriptor> getTestDescriptorsForTestClasses(TestDescriptor parent, List<Class<?>> testClasses) {
 		List<TestDescriptor> result = new LinkedList<>();
 		for (Class<?> testClass : testClasses) {
-			result.add(getTestGroupForClass(parent, testClass));
+			result.add(getTestDescriptorForTestClass(parent, testClass));
 		}
 		return result;
 	}
 
-	private TestDescriptor getTestGroupForClass(TestDescriptor parentTestDescriptor, Class<?> testClass) {
+	private TestDescriptor getTestDescriptorForTestClass(TestDescriptor parentTestDescriptor, Class<?> testClass) {
 		ClassTestDescriptor testDescriptor = new ClassTestDescriptor(testEngine, testClass);
 		parentTestDescriptor.addChild(testDescriptor);
 		return testDescriptor;
