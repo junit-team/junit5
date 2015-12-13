@@ -15,14 +15,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -144,6 +137,32 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 
 	public TestPlanSpecification(List<TestPlanSpecificationElement> elements) {
 		this.elements = elements;
+		this.accept(new TestPlanSpecificationElementVisitor() {
+			@Override
+			public void visitUniqueId(String uniqueId) {
+				uniqueIds.add(uniqueId);
+			}
+
+			@Override
+			public void visitPackage(String packageName) {
+				packages.add(packageName);
+			}
+
+			@Override
+			public void visitClass(Class<?> testClass) {
+				classes.add(testClass);
+			}
+
+			@Override
+			public void visitMethod(Class<?> testClass, Method testMethod) {
+				methods.add(testMethod);
+			}
+
+			@Override
+			public void visitAllTests(File rootDirectory) {
+				folders.add(rootDirectory);
+			}
+		});
 	}
 
 	@Override
@@ -178,4 +197,29 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return this.descriptorFilter.test(testDescriptor);
 	}
 
+	private List<String> uniqueIds = new LinkedList<>();
+	private List<String> packages = new LinkedList<>();
+	private List<Class<?>> classes = new LinkedList<>();
+	private List<Method> methods = new LinkedList<>();
+	private List<File> folders = new LinkedList<>();
+
+	public List<String> getUniqueIds() {
+		return uniqueIds;
+	}
+
+	public List<String> getPackages() {
+		return packages;
+	}
+
+	public List<Class<?>> getClasses() {
+		return classes;
+	}
+
+	public List<Method> getMethods() {
+		return methods;
+	}
+
+	public List<File> getFolders() {
+		return folders;
+	}
 }
