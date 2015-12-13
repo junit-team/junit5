@@ -155,7 +155,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 
 			@Override
 			public void visitMethod(Class<?> testClass, Method testMethod) {
-				methods.add(testMethod);
+				methods.add(new MethodSpecification(testClass, testMethod));
 			}
 
 			@Override
@@ -200,7 +200,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 	private List<String> uniqueIds = new LinkedList<>();
 	private List<String> packages = new LinkedList<>();
 	private List<Class<?>> classes = new LinkedList<>();
-	private List<Method> methods = new LinkedList<>();
+	private List<MethodSpecification> methods = new LinkedList<>();
 	private List<File> folders = new LinkedList<>();
 
 	public List<String> getUniqueIds() {
@@ -215,7 +215,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return classes;
 	}
 
-	public List<Method> getMethods() {
+	public List<MethodSpecification> getMethods() {
 		return methods;
 	}
 

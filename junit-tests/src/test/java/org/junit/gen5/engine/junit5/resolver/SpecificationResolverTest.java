@@ -90,7 +90,6 @@ public class SpecificationResolverTest {
 	}
 
 	@org.junit.Test
-	@org.junit.Ignore
 	public void testMethodResolutionFromInheritedMethod() throws NoSuchMethodException {
 		MethodSpecification specification = new MethodSpecification(ExtendingOtherTestSampleClass.class,
 			TwoTestAndOneNonTestMethodsSampleClass.class.getDeclaredMethod("test1"));
@@ -99,8 +98,7 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
-			"junit5:org.junit.gen5.engine.junit5.samples.HerTestClass",
-			"junit5:org.junit.gen5.engine.junit5.samples.HerTestClass#test1()");
+			"junit5:org.junit.gen5.engine.junit5.samples.ExtendingOtherTestSampleClass#test1()");
 	}
 
 	@org.junit.Test(expected = IllegalArgumentException.class)

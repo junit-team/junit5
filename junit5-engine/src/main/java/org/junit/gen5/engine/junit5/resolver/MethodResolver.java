@@ -54,8 +54,7 @@ public class MethodResolver implements TestResolver {
 
 		testPlanSpecification.getMethods().forEach(
 				method -> {
-					Class<?> testClass = method.getDeclaringClass();
-					result.add(getTestForMethod(parent, testClass, method));
+					result.add(getTestForMethod(parent, method.getTestClass(), method.getTestMethod()));
 				}
 		);
 		return result;
