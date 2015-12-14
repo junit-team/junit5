@@ -27,16 +27,16 @@ import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
- * Integration tests that verify support for {@link BeforeEach}, {@link AfterEach},
- * {@link BeforeEachExtensionPoint}, and {@link AfterEachExtensionPoint} in the {@link JUnit5TestEngine}.
+ * Integration tests that verify support for {@link BeforeEach}, {@link AfterEach}, {@link BeforeEachExtensionPoint},
+ * and {@link AfterEachExtensionPoint} in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
 public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
 	@org.junit.Test
-	public void beforeEachAndAfterEachCallbacksWithTestInstancePerMethod() {
-		TestPlanSpecification spec = build(forClass(InstancePerMethodTestCase.class));
+	public void beforeEachAndAfterEachCallbacks_WithoutNestedClass() {
+		TestPlanSpecification spec = build(forClass(OuterTestCase.class));
 
 		TrackingEngineExecutionListener listener = executeTests(spec, 2);
 
@@ -46,32 +46,58 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
 		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
 
-		Assert.assertEquals("wrong before each call sequence", asList("foo", "bar", "method"), beforeEachCalls);
-		Assert.assertEquals("wrong after each call sequence", asList("method", "bar", "foo"), afterEachCalls);
+		Assert.assertEquals("wrong call sequence",
+			asList("fooBefore", "barBefore", "beforeMethod", "testOuter", "afterMethod", "barAfter", "fooAfter"),
+			callSequence);
+	}
+
+	//@org.junit.Test
+	public void beforeEachAndAfterEachCallbacks_WithNestedClass() {
+		TestPlanSpecification spec = build(forClass(OuterTestCase.class));
+
+		TrackingEngineExecutionListener listener = executeTests(spec, 4);
+
+		Assert.assertEquals("# tests started", 2, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
+		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
+		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+
+		Assert.assertEquals("wrong call sequence",
+			asList("fooBefore", "barBefore", "beforeMethod", "testInner", "afterMethod", "barAfter", "fooAfter",
+				"fooBefore", "barBefore", "beforeMethod", "testOuter", "afterMethod", "barAfter", "fooAfter"),
+			callSequence);
 	}
 
 	// -------------------------------------------------------------------
 
-	private static List<String> beforeEachCalls = new ArrayList<>();
-	private static List<String> afterEachCalls = new ArrayList<>();
+	private static List<String> callSequence = new ArrayList<>();
 
 	@ExtendWith({ FooMethodLevelCallbacks.class, BarMethodLevelCallbacks.class })
-	private static class InstancePerMethodTestCase {
+	private static class OuterTestCase {
 
 		@BeforeEach
 		void beforeEach() {
-			beforeEachCalls.add("method");
+			callSequence.add("beforeMethod");
 		}
 
 		@Test
-		void alwaysPasses() {
-			/* no-op */
+		void testOuter() {
+			callSequence.add("testOuter");
 		}
 
 		@AfterEach
 		void afterEach() {
-			afterEachCalls.add("method");
+			callSequence.add("afterMethod");
 		}
+
+		//		@Nested
+		//		class InnerTestCase {
+		//			@Test
+		//			void testInner() {
+		//				callSequence.add("testInner");
+		//			}
+		//		}
 
 	}
 
@@ -79,12 +105,12 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
 		@Override
 		public void beforeEach(TestExtensionContext context) {
-			beforeEachCalls.add("foo");
+			callSequence.add("fooBefore");
 		}
 
 		@Override
 		public void afterEach(TestExtensionContext context) {
-			afterEachCalls.add("foo");
+			callSequence.add("fooAfter");
 		}
 
 	}
@@ -93,12 +119,12 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
 		@Override
 		public void beforeEach(TestExtensionContext context) {
-			beforeEachCalls.add("bar");
+			callSequence.add("barBefore");
 		}
 
 		@Override
 		public void afterEach(TestExtensionContext context) {
-			afterEachCalls.add("bar");
+			callSequence.add("barAfter");
 		}
 
 	}
