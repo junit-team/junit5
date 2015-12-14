@@ -25,17 +25,10 @@ import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 
-public class ClassResolver implements TestResolver {
+public class ClassResolver extends JUnit5TestResolver {
 	private static final Logger LOG = Logger.getLogger(ClassResolver.class.getName());
 
-	private TestEngine testEngine;
-	private Pattern uniqueIdRegExPattern;
-
-	@Override
-	public void setTestEngine(TestEngine testEngine) {
-		this.testEngine = testEngine;
-		this.uniqueIdRegExPattern = Pattern.compile(String.format("^%s:([^#]+)$", testEngine.getId()));
-	}
+	private Pattern uniqueIdRegExPattern = Pattern.compile("^(.+?):([^#]+)$");
 
 	@Override
 	public TestResolverResult resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
@@ -90,7 +83,7 @@ public class ClassResolver implements TestResolver {
 			Matcher matcher = uniqueIdRegExPattern.matcher(uniqueId);
 			if (matcher.matches()) {
 				try {
-					String className = matcher.group(1);
+					String className = matcher.group(2);
 					foundClasses.add(Class.forName(className));
 				}
 				catch (ClassNotFoundException e) {
@@ -114,10 +107,10 @@ public class ClassResolver implements TestResolver {
 	private TestDescriptor getTestDescriptorForTestClass(TestDescriptor parentTestDescriptor, Class<?> testClass) {
 		ClassTestDescriptor testDescriptor;
 		if (testClass.isMemberClass()) {
-			testDescriptor = new ClassTestDescriptor(testEngine, testClass);
+			testDescriptor = new ClassTestDescriptor(getTestEngine(), testClass);
 		}
 		else {
-			testDescriptor = new ClassTestDescriptor(testEngine, testClass);
+			testDescriptor = new ClassTestDescriptor(getTestEngine(), testClass);
 		}
 		parentTestDescriptor.addChild(testDescriptor);
 		return testDescriptor;

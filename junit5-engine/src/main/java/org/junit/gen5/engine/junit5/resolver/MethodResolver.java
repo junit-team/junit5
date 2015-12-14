@@ -29,18 +29,10 @@ import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 
-public class MethodResolver implements TestResolver {
+public class MethodResolver extends JUnit5TestResolver {
 	private static final Logger LOG = Logger.getLogger(MethodResolver.class.getName());
 
-	private TestEngine testEngine;
-	private Pattern uniqueIdRegExPattern;
-
-	@Override
-	public void setTestEngine(TestEngine testEngine) {
-		this.testEngine = testEngine;
-		this.uniqueIdRegExPattern = Pattern.compile(
-			String.format("^%s:([^#]+)#([^(]+)\\(((?:[^,)]+,?)*)\\)$", testEngine.getId()));
-	}
+	private Pattern uniqueIdRegExPattern = Pattern.compile("^(.+?):([^#]+)#([^(]+)\\(((?:[^,)]+,?)*)\\)$");
 
 	@Override
 	public TestResolverResult resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
@@ -80,16 +72,18 @@ public class MethodResolver implements TestResolver {
 			Matcher matcher = uniqueIdRegExPattern.matcher(uniqueId);
 			if (matcher.matches()) {
 				try {
-					Class<?> testClass = Class.forName(matcher.group(1));
-					String methodName = matcher.group(2);
+					String className = matcher.group(2);
+					String methodName = matcher.group(3);
+					String parameterTypeNames = matcher.group(4);
 
+					Class<?> testClass = Class.forName(className);
 					Optional<Method> testMethodOptional = Optional.empty();
 
-					if (matcher.group(3).isEmpty()) {
+					if (parameterTypeNames.isEmpty()) {
 						testMethodOptional = ReflectionUtils.findMethod(testClass, methodName);
 					}
 					else {
-						Class<?>[] parameterTypes = getParameterTypes(matcher.group(3).split(","));
+						Class<?>[] parameterTypes = getParameterTypes(parameterTypeNames.split(","));
 						testMethodOptional = ReflectionUtils.findMethod(testClass, methodName, parameterTypes);
 					}
 
@@ -128,7 +122,7 @@ public class MethodResolver implements TestResolver {
 	}
 
 	private TestDescriptor getTestDescriptorForTestMethod(TestDescriptor parent, Class<?> testClass, Method method) {
-		MethodTestDescriptor testDescriptor = new MethodTestDescriptor(testEngine, testClass, method);
+		MethodTestDescriptor testDescriptor = new MethodTestDescriptor(getTestEngine(), testClass, method);
 		parent.addChild(testDescriptor);
 		return testDescriptor;
 	}
