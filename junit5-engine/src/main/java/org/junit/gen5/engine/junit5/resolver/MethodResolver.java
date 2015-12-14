@@ -38,8 +38,8 @@ public class MethodResolver implements TestResolver {
 	@Override
 	public void setTestEngine(TestEngine testEngine) {
 		this.testEngine = testEngine;
-		this.uniqueIdRegExPattern = Pattern.compile(String.format("^%s:([^#]+)#([^(]+)\\(((?:[^,)]+,?)*)\\)$",
-			testEngine.getId()));
+		this.uniqueIdRegExPattern = Pattern.compile(
+			String.format("^%s:([^#]+)#([^(]+)\\(((?:[^,)]+,?)*)\\)$", testEngine.getId()));
 	}
 
 	@Override

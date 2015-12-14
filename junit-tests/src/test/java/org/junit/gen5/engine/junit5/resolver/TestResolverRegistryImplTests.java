@@ -78,7 +78,8 @@ public class TestResolverRegistryImplTests {
 	@Test
 	public void givenTestResolverThatReturnsNewTestsWithoutProcessingResolving_TestResolversAreNotCalledReturnedTests()
 			throws Exception {
-		TestResolverSpyWithTestsForRootWithoutProceeding testResolverSpy = new TestResolverSpyWithTestsForRootWithoutProceeding(testGroup);
+		TestResolverSpyWithTestsForRootWithoutProceeding testResolverSpy = new TestResolverSpyWithTestsForRootWithoutProceeding(
+			testGroup);
 
 		testResolverRegistry.register(testResolverSpy);
 		testResolverRegistry.notifyResolvers(testGroup, emptyTestPlanSpecification);

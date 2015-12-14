@@ -29,7 +29,7 @@ abstract class AbstractJUnit5TestEngineTests {
 	protected final JUnit5TestEngine engine = new JUnit5TestEngine();
 
 	@Before
-	public void setUp() throws Exception {
+	public void initializeEngine() throws Exception {
 		engine.initialize();
 	}
 

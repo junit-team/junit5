@@ -246,7 +246,8 @@ public class SpecificationResolverTest {
 
 	@org.junit.Test
 	public void testPackageResolution() {
-		PackageSpecification specification = new PackageSpecification("org.junit.gen5.engine.junit5.samples.subpackage");
+		PackageSpecification specification = new PackageSpecification(
+			"org.junit.gen5.engine.junit5.samples.subpackage");
 
 		TestPlanSpecification testPlanSpecification = build(specification);
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
@@ -303,7 +304,8 @@ public class SpecificationResolverTest {
 
 	@org.junit.Test
 	public void testNestedTestResolutionFromClass() {
-		ClassSpecification specification = new ClassSpecification(TestCaseWithNesting.NestedTest.DoubleNestedTest.class);
+		ClassSpecification specification = new ClassSpecification(
+			TestCaseWithNesting.NestedTest.DoubleNestedTest.class);
 
 		TestPlanSpecification testPlanSpecification = build(specification);
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);

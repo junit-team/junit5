@@ -51,7 +51,8 @@ public class ClassResolver implements TestResolver {
 		}
 		else if (parent instanceof ClassTestDescriptor) {
 			Class<?> parentClass = ((ClassTestDescriptor) parent).getTestClass();
-			List<Class<?>> nestedClasses = ReflectionUtils.findNestedClasses(parentClass, nestedClass -> AnnotationUtils.isAnnotated(nestedClass, Nested.class));
+			List<Class<?>> nestedClasses = ReflectionUtils.findNestedClasses(parentClass,
+				nestedClass -> AnnotationUtils.isAnnotated(nestedClass, Nested.class));
 			List<TestDescriptor> resolvedTests = getTestDescriptorsForTestClasses(parent, nestedClasses);
 			return TestResolverResult.proceedResolving(resolvedTests);
 		}
@@ -60,7 +61,8 @@ public class ClassResolver implements TestResolver {
 		}
 	}
 
-	private List<TestDescriptor> resolveAllPackagesFromSpecification(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+	private List<TestDescriptor> resolveAllPackagesFromSpecification(TestDescriptor parent,
+			TestPlanSpecification testPlanSpecification) {
 		List<TestDescriptor> result = new LinkedList<>();
 
 		for (String packageName : testPlanSpecification.getPackages()) {
@@ -79,7 +81,8 @@ public class ClassResolver implements TestResolver {
 
 	}
 
-	private List<TestDescriptor> resolveUniqueIdsFromSpecification(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+	private List<TestDescriptor> resolveUniqueIdsFromSpecification(TestDescriptor parent,
+			TestPlanSpecification testPlanSpecification) {
 		List<String> uniqueIds = testPlanSpecification.getUniqueIds();
 		List<Class<?>> foundClasses = new LinkedList<>();
 
@@ -89,8 +92,10 @@ public class ClassResolver implements TestResolver {
 				try {
 					String className = matcher.group(1);
 					foundClasses.add(Class.forName(className));
-				} catch (ClassNotFoundException e) {
-					LOG.fine(() -> "Skipping uniqueId " + uniqueId + ": UniqueId does not seem to represent a valid test class.");
+				}
+				catch (ClassNotFoundException e) {
+					LOG.fine(() -> "Skipping uniqueId " + uniqueId
+							+ ": UniqueId does not seem to represent a valid test class.");
 				}
 			}
 		}
@@ -107,7 +112,13 @@ public class ClassResolver implements TestResolver {
 	}
 
 	private TestDescriptor getTestDescriptorForTestClass(TestDescriptor parentTestDescriptor, Class<?> testClass) {
-		ClassTestDescriptor testDescriptor = new ClassTestDescriptor(testEngine, testClass);
+		ClassTestDescriptor testDescriptor;
+		if (testClass.isMemberClass()) {
+			testDescriptor = new ClassTestDescriptor(testEngine, testClass);
+		}
+		else {
+			testDescriptor = new ClassTestDescriptor(testEngine, testClass);
+		}
 		parentTestDescriptor.addChild(testDescriptor);
 		return testDescriptor;
 	}

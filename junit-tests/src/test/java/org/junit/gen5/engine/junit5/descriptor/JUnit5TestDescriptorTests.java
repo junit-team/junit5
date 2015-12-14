@@ -43,7 +43,8 @@ public class JUnit5TestDescriptorTests {
 		Method testMethod = testClass.getDeclaredMethod("test");
 		MethodTestDescriptor descriptor = new MethodTestDescriptor(testEngine, testClass, testMethod);
 
-		assertEquals("a method id", descriptor.getUniqueId());
+		assertEquals("TestEngineDummyID:org.junit.gen5.engine.junit5.descriptor.JUnit5TestDescriptorTests#test()",
+			descriptor.getUniqueId());
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test", descriptor.getDisplayName(), "display name:");
 	}

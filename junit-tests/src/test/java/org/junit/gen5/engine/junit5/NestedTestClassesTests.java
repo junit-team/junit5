@@ -27,7 +27,6 @@ import org.junit.gen5.engine.TrackingEngineExecutionListener;
  * @since 5.0
  */
 public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
-
 	@Test
 	public void executeTestCaseWithNestedTests() {
 		TestCaseWithNesting.countAfterInvoked = 0;

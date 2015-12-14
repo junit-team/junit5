@@ -14,14 +14,8 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -180,6 +174,7 @@ public final class ReflectionUtils {
 
 	/**
 	 * Try to load a method by its fully qualified name (if such a thing exists for methods).
+	 *
 	 * @param fullyQualifiedMethodName In the form 'package.subpackage.ClassName#methodName'
 	 * @return Optional of Method
 	 */
@@ -406,4 +401,71 @@ public final class ReflectionUtils {
 		return t;
 	}
 
+	/**
+	 * Returns the {@link Object} that encloses the given {@code target}. This method returns {@code null} if the given
+	 * {@code target} is null or its {@link Class} is not a member class.
+	 *
+	 * @param target the {@link Object} to retrieve the enclosing instance for
+	 * @return the enclosing {@link Object} of {@code target}
+	 * @throws IllegalArgumentException If {@code target} is {@code null}.
+	 * @throws IllegalAccessException An instance of the enclosing class is kept in a private field within the enclosed
+	 *         instance. Accessing the field might throw an {@link IllegalAccessException}.
+	 * @throws IllegalStateException If no field containing the enclosing instance can be found.
+	 */
+	public static Object getEnclosingInstance(final Object target) throws IllegalAccessException {
+		if (target == null)
+			throw new IllegalArgumentException("Target must not be null!");
+
+		final Class<?> targetClass = target.getClass();
+		if (isStatic(targetClass) || !targetClass.isMemberClass())
+			return null;
+
+		final Class<?> enclosingClass = targetClass.getEnclosingClass();
+		for (final Field field : targetClass.getDeclaredFields()) {
+			if (field.getType().equals(enclosingClass)) {
+				makeAccessible(field);
+				return field.get(target);
+			}
+		}
+
+		throw new IllegalStateException("Member instance has no field containing the enclosing instance!");
+	}
+
+	/**
+	 * Returns a {@link Stack} of classes, representing the hierarchy of the given {@link Class}.
+	 *
+	 * @param clazz the {@link Class} to retrieve the hierarchy for
+	 * @return the {@link Class} hierarchy
+	 */
+	public static Stack<Class<?>> getClassHierarchy(final Class<?> clazz) {
+		final Stack<Class<?>> classHierarchy = new Stack<Class<?>>();
+		Class<?> c = clazz;
+		while (c != null) {
+			classHierarchy.push(c);
+			c = (isStatic(c)) ? null : c.getEnclosingClass();
+		}
+		return classHierarchy;
+	}
+
+	/**
+	 * Returns an instance of the {@link Class}, represented by the given class hierarchy.
+	 *
+	 * @param classHierarchy the hierarchy representing a deep class
+	 * @return the newly created instance
+	 * @throws Throwable if errors occurred during construction of the instance
+	 */
+	public static Object createDeepInstance(final Stack<Class<?>> classHierarchy) throws Throwable {
+		if (classHierarchy == null || classHierarchy.isEmpty())
+			throw new IllegalArgumentException("Stack must not be null or empty!");
+
+		// Top level class has empty constructor
+		Object test = newInstance(classHierarchy.pop());
+
+		// Inner class constructors require the enclosing instance
+		while (!classHierarchy.empty()) {
+			final Class<?> innerClass = classHierarchy.pop();
+			test = newInstance(innerClass, test);
+		}
+		return test;
+	}
 }
