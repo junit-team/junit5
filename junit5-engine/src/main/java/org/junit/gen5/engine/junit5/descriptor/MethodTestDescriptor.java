@@ -13,6 +13,8 @@ package org.junit.gen5.engine.junit5.descriptor;
 import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodContext;
 
 import java.lang.reflect.Method;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -94,7 +96,15 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 		Optional<Throwable> throwable = invokeTestMethod(testExtensionContext, newContext.getTestExtensionRegistry());
 
-		context.getAfterEachCallback().afterEach(testExtensionContext, testInstance, throwable);
+		List<Throwable> throwables = new LinkedList<>();
+		throwable.ifPresent(throwables::add);
+
+		context.getAfterEachCallback().afterEach(testExtensionContext, testInstance, throwables);
+		if (!throwables.isEmpty()) {
+			Throwable t = throwables.get(0);
+			throwables.stream().skip(1).forEach(t::addSuppressed);
+			throw t;
+		}
 
 		return newContext;
 	}

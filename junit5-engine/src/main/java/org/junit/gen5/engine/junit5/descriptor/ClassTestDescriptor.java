@@ -14,7 +14,6 @@ import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
 import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodContext;
 
 import java.lang.reflect.Method;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -108,7 +107,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	protected BeforeEachCallback beforeEachCallback(JUnit5EngineExecutionContext context) {
 		List<Method> beforeEachMethods = findAnnotatedMethods(testClass, BeforeEach.class,
 			MethodSortOrder.HierarchyDown);
-		return (testExtensionContext, testInstance) -> {
+		return (testExtensionContext, currentInstance) -> {
 			ThrowingConsumer<RegisteredExtensionPoint<BeforeEachExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
 				try {
 					registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext);
@@ -123,26 +122,25 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 			//TODO: Register beforeEachMethods as extension points to enable correct sorting
 			for (Method method : beforeEachMethods) {
-				new MethodInvoker(testExtensionContext, extensionRegistry).invoke(methodContext(testInstance, method));
+				new MethodInvoker(testExtensionContext, extensionRegistry).invoke(
+					methodContext(currentInstance, method));
 			}
 		};
 	}
 
 	protected AfterEachCallback afterEachCallback(JUnit5EngineExecutionContext context) {
 		List<Method> afterEachMethods = findAnnotatedMethods(testClass, AfterEach.class, MethodSortOrder.HierarchyUp);
-		return (testExtensionContext, testInstance, throwable) -> {
+		return (testExtensionContext, currentInstance, throwablesCollector) -> {
 			TestExtensionRegistry extensionRegistry = context.getTestExtensionRegistry();
-			List<Throwable> throwables = new LinkedList<>();
-			throwable.ifPresent(throwables::add);
 
 			//TODO: Register afterEachMethods as extension points to enable correct sorting
 			for (Method method : afterEachMethods) {
 				try {
 					new MethodInvoker(testExtensionContext, extensionRegistry).invoke(
-						methodContext(testInstance, method));
+						methodContext(currentInstance, method));
 				}
 				catch (Throwable t) {
-					throwables.add(t);
+					throwablesCollector.add(t);
 				}
 			}
 
@@ -150,18 +148,13 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 				try {
 					registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext);
 				}
-				catch (Exception e) {
-					throwables.add(e);
+				catch (Throwable t) {
+					throwablesCollector.add(t);
 				}
 			};
 			extensionRegistry.applyExtensionPoints(AfterEachExtensionPoint.class,
 				TestExtensionRegistry.ApplicationOrder.BACKWARD, applyAfterEach);
 
-			if (!throwables.isEmpty()) {
-				Throwable t = throwables.get(0);
-				throwables.stream().skip(1).forEach(t::addSuppressed);
-				throw t;
-			}
 		};
 	}
 
