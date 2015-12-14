@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
@@ -37,6 +36,7 @@ import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.RegisteredExtensionPoint;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
 import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
+import org.junit.gen5.engine.junit5.execution.ThrowingConsumer;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.
@@ -109,7 +109,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		List<Method> beforeEachMethods = findAnnotatedMethods(testClass, BeforeEach.class,
 			MethodSortOrder.HierarchyDown);
 		return (testExtensionContext, testInstance) -> {
-			Consumer<RegisteredExtensionPoint<BeforeEachExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
+			ThrowingConsumer<RegisteredExtensionPoint<BeforeEachExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
 				try {
 					registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext);
 				}
@@ -146,7 +146,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 				}
 			}
 
-			Consumer<RegisteredExtensionPoint<AfterEachExtensionPoint>> applyAfterEach = registeredExtensionPoint -> {
+			ThrowingConsumer<RegisteredExtensionPoint<AfterEachExtensionPoint>> applyAfterEach = registeredExtensionPoint -> {
 				try {
 					registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext);
 				}

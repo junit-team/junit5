@@ -17,7 +17,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
@@ -125,15 +124,16 @@ public class TestExtensionRegistry {
 	 * @param extensionPointApplier The code to execute for each extension point
 	 */
 	public <T extends ExtensionPoint> void applyExtensionPoints(Class<T> extensionClass, ApplicationOrder order,
-			Consumer<RegisteredExtensionPoint<T>> extensionPointApplier) {
+			ThrowingConsumer<RegisteredExtensionPoint<T>> extensionPointApplier) throws Throwable {
 		List<RegisteredExtensionPoint<T>> registeredExtensionPoints = getRegisteredExtensionPoints(extensionClass);
 		new ExtensionPointSorter().sort(registeredExtensionPoints);
 		if (order == ApplicationOrder.BACKWARD) {
 			Collections.reverse(registeredExtensionPoints);
 		}
 
-		registeredExtensionPoints.stream().forEach(
-			registeredExtensionPoint -> extensionPointApplier.accept(registeredExtensionPoint));
+		for (RegisteredExtensionPoint<T> rep : registeredExtensionPoints) {
+			extensionPointApplier.accept(rep);
+		}
 	}
 
 	/**

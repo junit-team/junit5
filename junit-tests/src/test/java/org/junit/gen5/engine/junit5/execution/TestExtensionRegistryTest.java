@@ -46,7 +46,7 @@ public class TestExtensionRegistryTest {
 	}
 
 	@Test
-	public void newRegistryWithoutParentHasDefaultExtensions() throws Exception {
+	public void newRegistryWithoutParentHasDefaultExtensions() throws Throwable {
 		Set<Class<? extends TestExtension>> extensions = registry.getRegisteredExtensionClasses();
 
 		Assert.assertEquals(TestExtensionRegistry.getDefaultExtensionClasses().size(), extensions.size());
@@ -59,7 +59,7 @@ public class TestExtensionRegistryTest {
 	}
 
 	@Test
-	public void registerExtensionByImplementingClass() throws Exception {
+	public void registerExtensionByImplementingClass() throws Throwable {
 
 		registry.addExtension(MyExtension.class);
 
@@ -80,7 +80,7 @@ public class TestExtensionRegistryTest {
 	}
 
 	@Test
-	public void registerTestExtensionThatImplementsMultipleExtensionPoints() throws Exception {
+	public void registerTestExtensionThatImplementsMultipleExtensionPoints() throws Throwable {
 
 		registry.addExtension(MultipleExtension.class);
 
@@ -91,7 +91,7 @@ public class TestExtensionRegistryTest {
 	}
 
 	@Test
-	public void extensionsAreInheritedFromParent() throws Exception {
+	public void extensionsAreInheritedFromParent() throws Throwable {
 
 		TestExtensionRegistry parent = new TestExtensionRegistry();
 		parent.addExtension(MyExtension.class);
@@ -110,7 +110,7 @@ public class TestExtensionRegistryTest {
 	}
 
 	@Test
-	public void registerExtensionPointsByExtensionRegistrar() throws Exception {
+	public void registerExtensionPointsByExtensionRegistrar() throws Throwable {
 
 		registry.addExtension(MyExtensionRegistrar.class);
 
@@ -120,7 +120,7 @@ public class TestExtensionRegistryTest {
 	}
 
 	@Test
-	public void applyExtensionPointsInjectsCorrectRegisteredExceptionPoint() throws Exception {
+	public void applyExtensionPointsInjectsCorrectRegisteredExceptionPoint() throws Throwable {
 
 		registry.addExtension(MyExtension.class);
 
@@ -139,7 +139,7 @@ public class TestExtensionRegistryTest {
 	}
 
 	@Test
-	public void registerExtensionPointDirectly() throws Exception {
+	public void registerExtensionPointDirectly() throws Throwable {
 
 		registry.registerExtension((MyExtensionPoint) test -> {
 		}, Position.INNERMOST, "anonymous extension");
@@ -173,13 +173,13 @@ public class TestExtensionRegistryTest {
 					throw new RuntimeException("should stop iteration");
 				});
 		}
-		catch (RuntimeException expected) {
+		catch (Throwable expected) {
 		}
 		Assert.assertEquals(1, countCalledExtensions.get());
 
 	}
 
-	private int countExtensionPoints(Class<? extends ExtensionPoint> extensionPointType) throws Exception {
+	private int countExtensionPoints(Class<? extends ExtensionPoint> extensionPointType) throws Throwable {
 		AtomicInteger counter = new AtomicInteger();
 		registry.applyExtensionPoints(extensionPointType, TestExtensionRegistry.ApplicationOrder.FORWARD,
 			registeredExtensionPoint -> counter.incrementAndGet());

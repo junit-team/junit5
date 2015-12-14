@@ -64,12 +64,18 @@ public class MethodInvoker {
 	private Object resolveParameter(Parameter parameter, MethodContext methodContext) {
 		try {
 			final List<MethodParameterResolver> matchingResolvers = new ArrayList<>();
-			extensionRegistry.applyExtensionPoints(MethodParameterResolver.class, ApplicationOrder.FORWARD,
-				registeredExtensionPoint -> {
-					if (registeredExtensionPoint.getExtensionPoint().supports(parameter, methodContext,
-						testExtensionContext))
-						matchingResolvers.add(registeredExtensionPoint.getExtensionPoint());
-				});
+			try {
+				extensionRegistry.applyExtensionPoints(MethodParameterResolver.class, ApplicationOrder.FORWARD,
+					registeredExtensionPoint -> {
+						if (registeredExtensionPoint.getExtensionPoint().supports(parameter, methodContext,
+							testExtensionContext))
+							matchingResolvers.add(registeredExtensionPoint.getExtensionPoint());
+					});
+			}
+			catch (Throwable throwable) {
+				//TODO: How to handle exceptions during parameter resolution?
+				throwable.printStackTrace();
+			}
 
 			if (matchingResolvers.size() == 0) {
 				throw new ParameterResolutionException(
