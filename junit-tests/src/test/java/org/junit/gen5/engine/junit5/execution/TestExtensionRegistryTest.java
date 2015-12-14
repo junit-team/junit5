@@ -159,7 +159,7 @@ public class TestExtensionRegistryTest {
 	}
 
 	@Test
-	public void exceptionInApplierCodeStopsIterationThroughExtensionPoints() {
+	public void exceptionInApplierCodeStopsIterationThroughExtensionPoints() throws Throwable {
 		registry.registerExtension((MyExtensionPoint) test -> {
 		}, Position.DEFAULT, "anonymous extension 1");
 		registry.registerExtension((MyExtensionPoint) test -> {
@@ -172,8 +172,9 @@ public class TestExtensionRegistryTest {
 					countCalledExtensions.incrementAndGet();
 					throw new RuntimeException("should stop iteration");
 				});
+			Assert.fail("");
 		}
-		catch (Throwable expected) {
+		catch (RuntimeException expected) {
 		}
 		Assert.assertEquals(1, countCalledExtensions.get());
 
