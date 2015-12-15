@@ -15,9 +15,10 @@ import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodCo
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
+import org.junit.gen5.api.extension.AfterEachExtensionPoint;
+import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
 import org.junit.gen5.api.extension.MethodContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
@@ -27,7 +28,9 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
+import org.junit.gen5.engine.junit5.execution.RegisteredExtensionPoint;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
+import org.junit.gen5.engine.junit5.execution.ThrowingConsumer;
 
 /**
  * {@link TestDescriptor} for tests based on Java methods.
@@ -85,40 +88,74 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	@Override
 	public JUnit5EngineExecutionContext execute(JUnit5EngineExecutionContext context) throws Throwable {
+
+		TestExtensionRegistry newTestExtensionRegistry = populateNewTestExtensionRegistryFromExtendWith(testMethod,
+			context.getTestExtensionRegistry());
+
 		JUnit5EngineExecutionContext newContext = context.extend().withTestExtensionRegistry(
-			populateNewTestExtensionRegistryFromExtendWith(testMethod, context.getTestExtensionRegistry())).build();
+			newTestExtensionRegistry).build();
 
 		Object testInstance = context.getTestInstanceProvider().getTestInstance();
 		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(context.getExtensionContext(),
 			this, testInstance);
 
+		invokeBeforeEachExtensionPoints(newTestExtensionRegistry, testExtensionContext);
+
 		context.getBeforeEachCallback().beforeEach(testExtensionContext, testInstance);
 
-		Optional<Throwable> throwable = invokeTestMethod(testExtensionContext, newContext.getTestExtensionRegistry());
+		List<Throwable> throwablesCollector = new LinkedList<>();
+		invokeTestMethod(testExtensionContext, newTestExtensionRegistry, throwablesCollector);
 
-		List<Throwable> throwables = new LinkedList<>();
-		throwable.ifPresent(throwables::add);
+		context.getAfterEachCallback().afterEach(testExtensionContext, testInstance, throwablesCollector);
 
-		context.getAfterEachCallback().afterEach(testExtensionContext, testInstance, throwables);
-		if (!throwables.isEmpty()) {
-			Throwable t = throwables.get(0);
-			throwables.stream().skip(1).forEach(t::addSuppressed);
+		invokeAfterEachExtensionPoints(newTestExtensionRegistry, testExtensionContext, throwablesCollector);
+
+		if (!throwablesCollector.isEmpty()) {
+			Throwable t = throwablesCollector.get(0);
+			throwablesCollector.stream().skip(1).forEach(t::addSuppressed);
 			throw t;
 		}
 
 		return newContext;
 	}
 
-	private Optional<Throwable> invokeTestMethod(TestExtensionContext testExtensionContext,
-			TestExtensionRegistry testExtensionRegistry) {
+	protected void invokeAfterEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+			TestExtensionContext testExtensionContext, List<Throwable> throwables) throws Throwable {
+		ThrowingConsumer<RegisteredExtensionPoint<AfterEachExtensionPoint>> applyAfterEach = registeredExtensionPoint -> {
+			try {
+				registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext);
+			}
+			catch (Throwable t) {
+				throwables.add(t);
+			}
+		};
+		newTestExtensionRegistry.applyExtensionPoints(AfterEachExtensionPoint.class,
+			TestExtensionRegistry.ApplicationOrder.BACKWARD, applyAfterEach);
+	}
+
+	protected void invokeBeforeEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+			TestExtensionContext testExtensionContext) throws Throwable {
+		ThrowingConsumer<RegisteredExtensionPoint<BeforeEachExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
+			try {
+				registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext);
+			}
+			catch (Exception e) { //TODO: Non RTEs should be allowed
+				throw new RuntimeException(e);
+			}
+		};
+		newTestExtensionRegistry.applyExtensionPoints(BeforeEachExtensionPoint.class,
+			TestExtensionRegistry.ApplicationOrder.FORWARD, applyBeforeEach);
+	}
+
+	private void invokeTestMethod(TestExtensionContext testExtensionContext,
+			TestExtensionRegistry testExtensionRegistry, List<Throwable> throwablesCollector) {
 		try {
 			MethodContext methodContext = methodContext(testExtensionContext.getTestInstance(),
 				testExtensionContext.getTestMethod());
 			new MethodInvoker(testExtensionContext, testExtensionRegistry).invoke(methodContext);
-			return Optional.empty();
 		}
 		catch (Throwable t) {
-			return Optional.of(t);
+			throwablesCollector.add(t);
 		}
 	}
 

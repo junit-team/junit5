@@ -19,6 +19,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
@@ -35,24 +36,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
 public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
 	@org.junit.Test
-	public void beforeEachAndAfterEachCallbacks_WithoutNestedClass() {
-		TestPlanSpecification spec = build(forClass(OuterTestCase.class));
-
-		TrackingEngineExecutionListener listener = executeTests(spec, 2);
-
-		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
-
-		Assert.assertEquals("wrong call sequence",
-			asList("fooBefore", "barBefore", "beforeMethod", "testOuter", "afterMethod", "barAfter", "fooAfter"),
-			callSequence);
-	}
-
-	//@org.junit.Test
-	public void beforeEachAndAfterEachCallbacks_WithNestedClass() {
+	public void beforeEachAndAfterEachCallbacks() {
 		TestPlanSpecification spec = build(forClass(OuterTestCase.class));
 
 		TrackingEngineExecutionListener listener = executeTests(spec, 4);
@@ -64,8 +48,9 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
 
 		Assert.assertEquals("wrong call sequence",
-			asList("fooBefore", "barBefore", "beforeMethod", "testInner", "afterMethod", "barAfter", "fooAfter",
-				"fooBefore", "barBefore", "beforeMethod", "testOuter", "afterMethod", "barAfter", "fooAfter"),
+			asList("fooBefore", "barBefore", "fizzBefore", "beforeMethod", "testInner", "afterMethod", "fizzAfter",
+				"barAfter", "fooAfter", "fooBefore", "barBefore", "beforeMethod", "testOuter", "afterMethod",
+				"barAfter", "fooAfter"),
 			callSequence);
 	}
 
@@ -91,13 +76,14 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 			callSequence.add("afterMethod");
 		}
 
-		//		@Nested
-		//		class InnerTestCase {
-		//			@Test
-		//			void testInner() {
-		//				callSequence.add("testInner");
-		//			}
-		//		}
+		@Nested
+		@ExtendWith(FizzMethodLevelCallbacks.class)
+		class InnerTestCase {
+			@Test
+			void testInner() {
+				callSequence.add("testInner");
+			}
+		}
 
 	}
 
@@ -129,4 +115,17 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
 	}
 
+	private static class FizzMethodLevelCallbacks implements BeforeEachExtensionPoint, AfterEachExtensionPoint {
+
+		@Override
+		public void beforeEach(TestExtensionContext context) {
+			callSequence.add("fizzBefore");
+		}
+
+		@Override
+		public void afterEach(TestExtensionContext context) {
+			callSequence.add("fizzAfter");
+		}
+
+	}
 }
