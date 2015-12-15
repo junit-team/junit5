@@ -66,7 +66,8 @@ public class TestResolverRegistryImplTests {
 
 	@Test
 	public void givenTestResolverThatReturnsNewTests_TestResolversAreCalledForAllTests() throws Exception {
-		TestResolverSpyWithTestsForRoot testResolverSpy = new TestResolverSpyWithTestsForRoot(testResolverRegistry, testGroup);
+		TestResolverSpyWithTestsForRoot testResolverSpy = new TestResolverSpyWithTestsForRoot(testResolverRegistry,
+			testGroup);
 
 		testResolverRegistry.register(testResolverSpy);
 		testResolverRegistry.notifyResolvers(testGroup, emptyTestPlanSpecification);

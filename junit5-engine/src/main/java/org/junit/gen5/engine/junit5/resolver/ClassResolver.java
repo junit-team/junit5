@@ -37,20 +37,24 @@ public class ClassResolver extends JUnit5TestResolver {
 		ObjectUtils.verifyNonNull(testPlanSpecification, "TestPlanSpecification must not be null!");
 
 		if (parent.isRoot()) {
-			List<TestDescriptor> packageBasedTestClasses = resolveAllPackagesFromSpecification(parent, testPlanSpecification);
+			List<TestDescriptor> packageBasedTestClasses = resolveAllPackagesFromSpecification(parent,
+				testPlanSpecification);
 			getTestResolverRegistry().notifyResolvers(packageBasedTestClasses, testPlanSpecification);
 
-			List<TestDescriptor> classBasedTestClasses = resolveAllClassesFromSpecification(parent, testPlanSpecification);
+			List<TestDescriptor> classBasedTestClasses = resolveAllClassesFromSpecification(parent,
+				testPlanSpecification);
 			getTestResolverRegistry().notifyResolvers(classBasedTestClasses, testPlanSpecification);
 
-			List<TestDescriptor> uniqueIdBasedTestClasses = resolveUniqueIdsFromSpecification(parent, testPlanSpecification);
-			getTestResolverRegistry().notifyResolvers(uniqueIdBasedTestClasses,testPlanSpecification);
+			List<TestDescriptor> uniqueIdBasedTestClasses = resolveUniqueIdsFromSpecification(parent,
+				testPlanSpecification);
+			getTestResolverRegistry().notifyResolvers(uniqueIdBasedTestClasses, testPlanSpecification);
 		}
 		else if (parent instanceof ClassTestDescriptor) {
 			Class<?> parentClass = ((ClassTestDescriptor) parent).getTestClass();
 			List<Class<?>> nestedClasses = ReflectionUtils.findNestedClasses(parentClass,
-					nestedClass -> AnnotationUtils.isAnnotated(nestedClass, Nested.class));
-			getTestResolverRegistry().notifyResolvers(getTestDescriptorsForTestClasses(parent, nestedClasses), testPlanSpecification);
+				nestedClass -> AnnotationUtils.isAnnotated(nestedClass, Nested.class));
+			getTestResolverRegistry().notifyResolvers(getTestDescriptorsForTestClasses(parent, nestedClasses),
+				testPlanSpecification);
 		}
 	}
 
@@ -116,10 +120,12 @@ public class ClassResolver extends JUnit5TestResolver {
 	}
 
 	private ClassTestDescriptor mergeIntoTree(TestDescriptor parentTestDescriptor, ClassTestDescriptor testDescriptor) {
-		Optional<? extends TestDescriptor> uniqueTestDescriptor = parentTestDescriptor.findByUniqueId(testDescriptor.getUniqueId());
+		Optional<? extends TestDescriptor> uniqueTestDescriptor = parentTestDescriptor.findByUniqueId(
+			testDescriptor.getUniqueId());
 		if (uniqueTestDescriptor.isPresent()) {
 			return (ClassTestDescriptor) uniqueTestDescriptor.get();
-		} else {
+		}
+		else {
 			parentTestDescriptor.addChild(testDescriptor);
 			return testDescriptor;
 		}
