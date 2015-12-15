@@ -17,7 +17,6 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.gen5.commons.util.Preconditions;
@@ -66,7 +65,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return rootDirectories.stream()
 				.filter(File::exists)
 				.map(AllTestsSpecification::new)
-				.collect(Collectors.toList());
+				.collect(toList());
 		// @formatter:on
 	}
 
@@ -137,32 +136,6 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 
 	public TestPlanSpecification(List<TestPlanSpecificationElement> elements) {
 		this.elements = elements;
-		this.accept(new TestPlanSpecificationElementVisitor() {
-			@Override
-			public void visitUniqueId(String uniqueId) {
-				uniqueIds.add(uniqueId);
-			}
-
-			@Override
-			public void visitPackage(String packageName) {
-				packages.add(packageName);
-			}
-
-			@Override
-			public void visitClass(Class<?> testClass) {
-				classes.add(testClass);
-			}
-
-			@Override
-			public void visitMethod(Class<?> testClass, Method testMethod) {
-				methods.add(new MethodSpecification(testClass, testMethod));
-			}
-
-			@Override
-			public void visitAllTests(File rootDirectory) {
-				folders.add(rootDirectory);
-			}
-		});
 	}
 
 	@Override
@@ -172,10 +145,6 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 
 	List<TestPlanSpecificationElement> getElements() {
 		return unmodifiableList(this.elements);
-	}
-
-	public void accept(TestPlanSpecificationElementVisitor visitor) {
-		elements.forEach(element -> element.accept(visitor));
 	}
 
 	public void filterWith(Predicate<TestDescriptor> filter) {
@@ -197,29 +166,48 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return this.descriptorFilter.test(testDescriptor);
 	}
 
-	private List<String> uniqueIds = new LinkedList<>();
-	private List<String> packages = new LinkedList<>();
-	private List<Class<?>> classes = new LinkedList<>();
-	private List<MethodSpecification> methods = new LinkedList<>();
-	private List<File> folders = new LinkedList<>();
-
 	public List<String> getUniqueIds() {
-		return uniqueIds;
+		// @formatter:off
+		return getElements().stream()
+				.filter(element -> element instanceof UniqueIdSpecification)
+				.map(element -> ((UniqueIdSpecification) element).getUniqueId())
+				.collect(toList());
+		// @formatter:on
 	}
 
 	public List<String> getPackages() {
-		return packages;
+		// @formatter:off
+		return getElements().stream()
+				.filter(element -> element instanceof PackageSpecification)
+				.map(element -> ((PackageSpecification)element).getPackageName())
+				.collect(toList());
+		// @formatter:on
 	}
 
 	public List<Class<?>> getClasses() {
-		return classes;
+		// @formatter:off
+		return getElements().stream()
+				.filter(element -> element instanceof ClassSpecification)
+				.map(element -> ((ClassSpecification)element).getTestClass())
+				.collect(toList());
+		// @formatter:on
 	}
 
 	public List<MethodSpecification> getMethods() {
-		return methods;
+		// @formatter:off
+		return getElements().stream()
+				.filter(element -> element instanceof MethodSpecification)
+				.map(element -> ((MethodSpecification)element))
+				.collect(toList());
+		// @formatter:on
 	}
 
 	public List<File> getFolders() {
-		return folders;
+		// @formatter:off
+		return getElements().stream()
+				.filter(element -> element instanceof AllTestsSpecification)
+				.map(element -> ((AllTestsSpecification)element).getClasspathRoot())
+				.collect(toList());
+		// @formatter:on
 	}
 }

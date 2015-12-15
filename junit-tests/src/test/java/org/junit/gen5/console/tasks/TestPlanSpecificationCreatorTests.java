@@ -22,24 +22,23 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.console.options.CommandLineOptions;
+import org.junit.gen5.engine.MethodSpecification;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
 import org.junit.gen5.engine.TestTag;
 
 public class TestPlanSpecificationCreatorTests {
 
 	private CommandLineOptions options = new CommandLineOptions();
-	private TestPlanSpecificationElementVisitor visitor = mock(TestPlanSpecificationElementVisitor.class);
 
 	@Test
 	public void convertsClassArgument() {
 		Class<?> testClass = getClass();
 		options.setArguments(singletonList(testClass.getName()));
 
-		convertAndVisit();
+		TestPlanSpecification specification = convert();
 
-		verify(visitor).visitClass(testClass);
+		assertThat(specification.getClasses()).containsOnly(testClass);
 	}
 
 	@Test
@@ -49,9 +48,12 @@ public class TestPlanSpecificationCreatorTests {
 		Method testMethod = testClass.getDeclaredMethod("convertsMethodArgument");
 		options.setArguments(singletonList(testClass.getName() + "#" + testMethod.getName()));
 
-		convertAndVisit();
+		TestPlanSpecification specification = convert();
 
-		verify(visitor).visitMethod(testClass, testMethod);
+		assertThat(specification.getMethods()).hasSize(1);
+		MethodSpecification methodSpecification = specification.getMethods().get(0);
+		assertThat(methodSpecification.getTestClass()).isEqualTo(testClass);
+		assertThat(methodSpecification.getTestMethod()).isEqualTo(testMethod);
 	}
 
 	@Test
@@ -59,18 +61,18 @@ public class TestPlanSpecificationCreatorTests {
 		String packageName = getClass().getPackage().getName();
 		options.setArguments(singletonList(packageName));
 
-		convertAndVisit();
+		TestPlanSpecification specification = convert();
 
-		verify(visitor).visitPackage(packageName);
+		assertThat(specification.getPackages()).containsOnly(packageName);
 	}
 
 	@Test
 	public void convertsAllOptionWithoutExplicitRootDirectories() {
 		options.setRunAllTests(true);
 
-		convertAndVisit();
+		TestPlanSpecification specification = convert();
 
-		verify(visitor, atLeastOnce()).visitAllTests(notNull(File.class));
+		assertThat(specification.getFolders()).isNotEmpty();
 	}
 
 	@Test
@@ -78,11 +80,9 @@ public class TestPlanSpecificationCreatorTests {
 		options.setRunAllTests(true);
 		options.setArguments(asList(".", ".."));
 
-		convertAndVisit();
+		TestPlanSpecification specification = convert();
 
-		verify(visitor, times(1)).visitAllTests(new File("."));
-		verify(visitor, times(1)).visitAllTests(new File(".."));
-		verifyNoMoreInteractions(visitor);
+		assertThat(specification.getFolders()).containsOnly(new File("."), new File(".."));
 	}
 
 	@Test
@@ -108,11 +108,6 @@ public class TestPlanSpecificationCreatorTests {
 		assertTrue(specification.acceptDescriptor(testDescriptorWithTag("medium")));
 		assertFalse(specification.acceptDescriptor(testDescriptorWithTag("slow")));
 		assertFalse(specification.acceptDescriptor(testDescriptorWithTag("very slow")));
-	}
-
-	private void convertAndVisit() {
-		TestPlanSpecification specification = convert();
-		specification.accept(visitor);
 	}
 
 	private TestPlanSpecification convert() {

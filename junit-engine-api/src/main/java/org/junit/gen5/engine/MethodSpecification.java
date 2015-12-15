@@ -13,18 +13,12 @@ package org.junit.gen5.engine;
 import java.lang.reflect.Method;
 
 public class MethodSpecification implements TestPlanSpecificationElement {
-
 	private final Class<?> testClass;
 	private final Method testMethod;
 
 	public MethodSpecification(Class<?> testClass, Method testMethod) {
 		this.testClass = testClass;
 		this.testMethod = testMethod;
-	}
-
-	@Override
-	public void accept(TestPlanSpecificationElementVisitor visitor) {
-		visitor.visitMethod(testClass, testMethod);
 	}
 
 	public Class<?> getTestClass() {

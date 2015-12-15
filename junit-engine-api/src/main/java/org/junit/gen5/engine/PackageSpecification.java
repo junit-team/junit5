@@ -11,15 +11,13 @@
 package org.junit.gen5.engine;
 
 public class PackageSpecification implements TestPlanSpecificationElement {
-
 	private final String packageName;
 
 	public PackageSpecification(String packageName) {
 		this.packageName = packageName;
 	}
 
-	@Override
-	public void accept(TestPlanSpecificationElementVisitor visitor) {
-		visitor.visitPackage(packageName);
+	public String getPackageName() {
+		return packageName;
 	}
 }
