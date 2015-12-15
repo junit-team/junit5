@@ -81,6 +81,8 @@ public interface TestDescriptor {
 		// else
 		return getChildren().stream().filter(
 			testDescriptor -> testDescriptor.getUniqueId().equals(uniqueId)).findFirst();
+
+		// TODO We might need to also lookup in other subtrees, e.g. by starting the search from the root node
 	}
 
 	interface Visitor {

@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit5.resolver;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,6 +22,7 @@ import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 
@@ -100,7 +102,7 @@ public class ClassResolver extends JUnit5TestResolver {
 		return result;
 	}
 
-	private ClassTestDescriptor getTestDescriptorForTestClass(TestDescriptor parentTestDescriptor, Class<?> testClass) {
+	ClassTestDescriptor getTestDescriptorForTestClass(TestDescriptor parentTestDescriptor, Class<?> testClass) {
 		ClassTestDescriptor testDescriptor;
 		if (ReflectionUtils.isNestedClass(testClass)) {
 			parentTestDescriptor = getTestDescriptorForTestClass(parentTestDescriptor, testClass.getEnclosingClass());
@@ -109,7 +111,17 @@ public class ClassResolver extends JUnit5TestResolver {
 		else {
 			testDescriptor = new ClassTestDescriptor(getTestEngine(), testClass);
 		}
-		parentTestDescriptor.addChild(testDescriptor);
+		testDescriptor = mergeIntoTree(parentTestDescriptor, testDescriptor);
 		return testDescriptor;
+	}
+
+	private ClassTestDescriptor mergeIntoTree(TestDescriptor parentTestDescriptor, ClassTestDescriptor testDescriptor) {
+		Optional<? extends TestDescriptor> uniqueTestDescriptor = parentTestDescriptor.findByUniqueId(testDescriptor.getUniqueId());
+		if (uniqueTestDescriptor.isPresent()) {
+			return (ClassTestDescriptor) uniqueTestDescriptor.get();
+		} else {
+			parentTestDescriptor.addChild(testDescriptor);
+			return testDescriptor;
+		}
 	}
 }

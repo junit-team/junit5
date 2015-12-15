@@ -38,8 +38,4 @@ public class TestResolverSpyWithTestsForRoot extends TestResolverSpy {
 			testResolverRegistry.notifyResolvers(resolvedTest, testPlanSpecification);
 		}
 	}
-
-	@Override
-	public void setTestEngine(TestEngine testEngine) {
-	}
 }

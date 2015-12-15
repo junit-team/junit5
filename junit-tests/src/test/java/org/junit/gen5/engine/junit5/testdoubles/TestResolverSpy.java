@@ -23,15 +23,11 @@ public class TestResolverSpy implements TestResolver {
 	public List<TestResolverRequest> resolvedFor = new LinkedList<>();
 
 	@Override
+	public void initialize(TestEngine testEngine, TestResolverRegistry testResolverRegistry) {
+	}
+
+	@Override
 	public void resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
 		resolvedFor.add(new TestResolverRequest(parent, testPlanSpecification));
-	}
-
-	@Override
-	public void setTestEngine(TestEngine testEngine) {
-	}
-
-	@Override
-	public void setTestResolverRegistry(TestResolverRegistry testResolverRegistry) {
 	}
 }

@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit5.testdoubles;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -35,5 +36,14 @@ public class TestResolverRegistrySpy implements TestResolverRegistry {
 	@Override
 	public void register(TestResolver testResolver) {
 		registeredTestResolvers.add(testResolver);
+	}
+
+	@Override
+	public void initialize() {
+	}
+
+	@Override
+	public <R extends TestResolver> Optional<R> lookupTestResolver(Class<R> resolverType) {
+		return Optional.empty();
 	}
 }

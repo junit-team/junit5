@@ -32,6 +32,7 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 		testResolverRegistry = new TestResolverRegistryImpl(this);
 		ServiceLoader<TestResolver> serviceLoader = ServiceLoader.load(TestResolver.class);
 		serviceLoader.forEach(testResolver -> testResolverRegistry.register(testResolver));
+		testResolverRegistry.initialize();
 	}
 
 	@Override

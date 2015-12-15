@@ -20,9 +20,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
  * {@link TestPlanSpecification}. The children are returned as list.
  */
 public interface TestResolver {
-	void setTestEngine(TestEngine testEngine);
-
-	void setTestResolverRegistry(TestResolverRegistry testResolverRegistry);
+	void initialize(TestEngine testEngine, TestResolverRegistry testResolverRegistry);
 
 	void resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification);
 }

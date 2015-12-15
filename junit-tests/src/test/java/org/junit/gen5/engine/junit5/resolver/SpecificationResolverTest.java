@@ -87,6 +87,7 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
+			"junit5:org.junit.gen5.engine.junit5.samples.TwoTestAndOneNonTestMethodsSampleClass",
 			"junit5:org.junit.gen5.engine.junit5.samples.TwoTestAndOneNonTestMethodsSampleClass#test1()");
 	}
 
@@ -99,6 +100,7 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
+			"junit5:org.junit.gen5.engine.junit5.samples.ExtendingOtherTestSampleClass",
 			"junit5:org.junit.gen5.engine.junit5.samples.ExtendingOtherTestSampleClass#test1()");
 	}
 
@@ -151,6 +153,8 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
+			"junit5:org.junit.gen5.engine.junit5.samples.OtherTestClass",
+			"junit5:org.junit.gen5.engine.junit5.samples.OtherTestClass$NestedTestClass",
 			"junit5:org.junit.gen5.engine.junit5.samples.OtherTestClass$NestedTestClass#test5()");
 	}
 
@@ -184,6 +188,7 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
+			"junit5:org.junit.gen5.engine.junit5.samples.TwoTestAndOneNonTestMethodsSampleClass",
 			"junit5:org.junit.gen5.engine.junit5.samples.TwoTestAndOneNonTestMethodsSampleClass#test1()");
 	}
 
@@ -196,6 +201,7 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
+			"junit5:org.junit.gen5.engine.junit5.samples.ExtendingOtherTestSampleClass",
 			"junit5:org.junit.gen5.engine.junit5.samples.ExtendingOtherTestSampleClass#test1()");
 	}
 
@@ -208,6 +214,7 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
+			"junit5:org.junit.gen5.engine.junit5.samples.ExtendingOtherTestSampleClass",
 			"junit5:org.junit.gen5.engine.junit5.samples.ExtendingOtherTestSampleClass#test7(java.lang.String)");
 	}
 
@@ -234,6 +241,7 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
+			"junit5:org.junit.gen5.engine.junit5.samples.TwoTestAndOneNonTestMethodsSampleClass",
 			"junit5:org.junit.gen5.engine.junit5.samples.TwoTestAndOneNonTestMethodsSampleClass#test1()",
 			"junit5:org.junit.gen5.engine.junit5.samples.TwoTestAndOneNonTestMethodsSampleClass#test2()");
 
@@ -331,6 +339,8 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
+			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting",
+			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting$NestedTest",
 			"junit5:org.junit.gen5.engine.junit5.samples.TestCaseWithNesting$NestedTest#testB()");
 	}
 

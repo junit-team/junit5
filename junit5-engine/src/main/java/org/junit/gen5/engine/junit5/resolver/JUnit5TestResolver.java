@@ -16,21 +16,17 @@ public abstract class JUnit5TestResolver implements TestResolver {
 	private TestEngine testEngine;
 	private TestResolverRegistry testResolverRegistry;
 
-	@Override
-	public void setTestEngine(TestEngine testEngine) {
-		this.testEngine = testEngine;
-	}
-
-	@Override
-	public void setTestResolverRegistry(TestResolverRegistry testResolverRegistry) {
-		this.testResolverRegistry = testResolverRegistry;
-	}
-
 	public TestEngine getTestEngine() {
 		return testEngine;
 	}
 
 	public TestResolverRegistry getTestResolverRegistry() {
 		return testResolverRegistry;
+	}
+
+	@Override
+	public void initialize(TestEngine testEngine, TestResolverRegistry testResolverRegistry) {
+		this.testEngine = testEngine;
+		this.testResolverRegistry = testResolverRegistry;
 	}
 }
