@@ -54,7 +54,7 @@ public class TestResolverRegistryImplTests {
 	@Test
 	public void givenMultipleTestResolvers_allTestResolversGetNotified() throws Exception {
 		TestResolverSpy testResolverSpy1 = new TestResolverSpy();
-		TestResolverSpy testResolverSpy2 = new TestResolverSpy();
+		TestResolverSpy testResolverSpy2 = new TestResolverSpy2();
 
 		testResolverRegistry.register(testResolverSpy1);
 		testResolverRegistry.register(testResolverSpy2);

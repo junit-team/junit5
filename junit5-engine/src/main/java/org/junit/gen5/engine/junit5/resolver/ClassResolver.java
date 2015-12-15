@@ -120,7 +120,7 @@ public class ClassResolver extends JUnit5TestResolver {
 	}
 
 	private ClassTestDescriptor mergeIntoTree(TestDescriptor parentTestDescriptor, ClassTestDescriptor testDescriptor) {
-		Optional<? extends TestDescriptor> uniqueTestDescriptor = parentTestDescriptor.findByUniqueId(
+		Optional<? extends TestDescriptor> uniqueTestDescriptor = parentTestDescriptor.getRoot().findByUniqueId(
 			testDescriptor.getUniqueId());
 		if (uniqueTestDescriptor.isPresent()) {
 			return (ClassTestDescriptor) uniqueTestDescriptor.get();

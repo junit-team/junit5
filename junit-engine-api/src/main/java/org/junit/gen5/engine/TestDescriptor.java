@@ -78,11 +78,14 @@ public interface TestDescriptor {
 		if (getUniqueId().equals(uniqueId)) {
 			return Optional.of(this);
 		}
-		// else
-		return getChildren().stream().filter(
-			testDescriptor -> testDescriptor.getUniqueId().equals(uniqueId)).findFirst();
 
-		// TODO We might need to also lookup in other subtrees, e.g. by starting the search from the root node
+		// else
+		return allDescendants().stream().filter(
+			testDescriptor -> testDescriptor.getUniqueId().equals(uniqueId)).findFirst();
+	}
+
+	default TestDescriptor getRoot() {
+		return isRoot() ? this : getParent().get().getRoot();
 	}
 
 	interface Visitor {
