@@ -160,7 +160,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	protected TestInstanceProvider testInstanceProvider(JUnit5EngineExecutionContext context) {
-		return () -> ReflectionUtils.createDeepInstance(ReflectionUtils.getClassHierarchy(testClass));
+		return () -> ReflectionUtils.newInstance(testClass);
 	}
 
 	private void invokeBeforeAllExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,

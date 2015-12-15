@@ -38,7 +38,7 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTests {
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.CoreJUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
 			forClass(LocalTestCase.class));
 
-		TrackingEngineExecutionListener listener = executeTests(spec, 9);
+		TrackingEngineExecutionListener listener = executeTests(spec, 8);
 
 		Assert.assertEquals("# tests started", 7, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 4, listener.testSucceededCount.get());
@@ -51,7 +51,7 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTests {
 	public void executeTestsForClass() {
 		LocalTestCase.countAfterInvoked = 0;
 
-		TrackingEngineExecutionListener listener = executeTestsForClass(LocalTestCase.class, 9);
+		TrackingEngineExecutionListener listener = executeTestsForClass(LocalTestCase.class, 8);
 
 		Assert.assertEquals("# tests started", 7, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 4, listener.testSucceededCount.get());

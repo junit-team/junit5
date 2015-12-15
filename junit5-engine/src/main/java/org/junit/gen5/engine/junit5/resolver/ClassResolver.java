@@ -25,6 +25,7 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
 
 public class ClassResolver extends JUnit5TestResolver {
 	private static final Logger LOG = Logger.getLogger(ClassResolver.class.getName());
@@ -110,7 +111,7 @@ public class ClassResolver extends JUnit5TestResolver {
 		ClassTestDescriptor testDescriptor;
 		if (ReflectionUtils.isNestedClass(testClass)) {
 			parentTestDescriptor = getTestDescriptorForTestClass(parentTestDescriptor, testClass.getEnclosingClass());
-			testDescriptor = new ClassTestDescriptor(getTestEngine(), testClass);
+			testDescriptor = new NestedClassTestDescriptor(getTestEngine(), testClass);
 		}
 		else {
 			testDescriptor = new ClassTestDescriptor(getTestEngine(), testClass);

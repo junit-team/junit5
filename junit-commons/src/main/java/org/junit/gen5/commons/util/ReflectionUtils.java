@@ -199,20 +199,34 @@ public final class ReflectionUtils {
 		return testMethodOptional;
 	}
 
-	public static Optional<Object> getOuterInstance(Object inner) {
-		// This is risky since it depends on the name of the field which is nowhere guaranteed
-		// but has been stable so far in all JDKs
+	/**
+	 * Returns the {@link Object} that encloses the given {@code target}. This method returns {@code null} if the given
+	 * {@code target} is null or its {@link Class} is not a member class.
+	 *
+	 * @param target the {@link Object} to retrieve the enclosing instance for
+	 * @return the enclosing {@link Object} of {@code target}
+	 */
+	public static Optional<Object> getOuterInstance(final Object target) {
+		ObjectUtils.verifyNonNull(target, "Target must not be null!");
 
-		return Arrays.stream(inner.getClass().getDeclaredFields()).filter(
-			f -> f.getName().startsWith("this$")).findFirst().map(f -> {
-				makeAccessible(f);
-				try {
-					return f.get(inner);
+		final Class<?> targetClass = target.getClass();
+		if (isStatic(targetClass) || !targetClass.isMemberClass()) {
+			return Optional.empty();
+		}
+
+		try {
+			final Class<?> enclosingClass = targetClass.getEnclosingClass();
+			Object outerInstance = null;
+			for (final Field field : targetClass.getDeclaredFields()) {
+				if (field.getType().equals(enclosingClass)) {
+					makeAccessible(field);
+					outerInstance = field.get(target);
 				}
-				catch (IllegalAccessException e) {
-					return Optional.empty();
-				}
-			});
+			}
+			return Optional.ofNullable(outerInstance);
+		} catch (Exception e) {
+			return Optional.empty();
+		}
 	}
 
 	public static Optional<Object> getOuterInstance(Object inner, Class<?> targetType) {
@@ -245,7 +259,7 @@ public final class ReflectionUtils {
 	public static boolean isNestedClass(Class<?> testClass) {
 		Preconditions.notNull(testClass, "test class must not be null");
 
-		return testClass.isMemberClass();
+		return testClass.isMemberClass() && !isStatic(testClass);
 	}
 
 	public static Set<File> getAllClasspathRootDirectories() {
@@ -417,36 +431,6 @@ public final class ReflectionUtils {
 			return getUnderlyingCause(((InvocationTargetException) t).getTargetException());
 		}
 		return t;
-	}
-
-	/**
-	 * Returns the {@link Object} that encloses the given {@code target}. This method returns {@code null} if the given
-	 * {@code target} is null or its {@link Class} is not a member class.
-	 *
-	 * @param target the {@link Object} to retrieve the enclosing instance for
-	 * @return the enclosing {@link Object} of {@code target}
-	 * @throws IllegalArgumentException If {@code target} is {@code null}.
-	 * @throws IllegalAccessException An instance of the enclosing class is kept in a private field within the enclosed
-	 *         instance. Accessing the field might throw an {@link IllegalAccessException}.
-	 * @throws IllegalStateException If no field containing the enclosing instance can be found.
-	 */
-	public static Object getEnclosingInstance(final Object target) throws IllegalAccessException {
-		if (target == null)
-			throw new IllegalArgumentException("Target must not be null!");
-
-		final Class<?> targetClass = target.getClass();
-		if (isStatic(targetClass) || !targetClass.isMemberClass())
-			return null;
-
-		final Class<?> enclosingClass = targetClass.getEnclosingClass();
-		for (final Field field : targetClass.getDeclaredFields()) {
-			if (field.getType().equals(enclosingClass)) {
-				makeAccessible(field);
-				return field.get(target);
-			}
-		}
-
-		throw new IllegalStateException("Member instance has no field containing the enclosing instance!");
 	}
 
 	/**
