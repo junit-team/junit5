@@ -75,8 +75,7 @@ public class MethodResolver extends JUnit5TestResolver {
 					String parameterTypeNames = matcher.group(4);
 
 					Class<?> testClass = Class.forName(className);
-					Optional<Method> testMethodOptional = Optional.empty();
-
+					Optional<Method> testMethodOptional;
 					if (parameterTypeNames.isEmpty()) {
 						testMethodOptional = ReflectionUtils.findMethod(testClass, methodName);
 					}

@@ -100,9 +100,10 @@ public class ClassResolver extends JUnit5TestResolver {
 		return result;
 	}
 
-	private TestDescriptor getTestDescriptorForTestClass(TestDescriptor parentTestDescriptor, Class<?> testClass) {
+	private ClassTestDescriptor getTestDescriptorForTestClass(TestDescriptor parentTestDescriptor, Class<?> testClass) {
 		ClassTestDescriptor testDescriptor;
-		if (testClass.isMemberClass()) {
+		if (ReflectionUtils.isNestedClass(testClass)) {
+			parentTestDescriptor = getTestDescriptorForTestClass(parentTestDescriptor, testClass.getEnclosingClass());
 			testDescriptor = new ClassTestDescriptor(getTestEngine(), testClass);
 		}
 		else {

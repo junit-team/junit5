@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 public final class ReflectionUtils {
 
 	public enum MethodSortOrder {
-		HierarchyDown, HierarchyUp
+		HierarchyDown, HierarchyUp;
 	}
 
 	private ReflectionUtils() {
@@ -230,8 +230,26 @@ public final class ReflectionUtils {
 			packageName);
 	}
 
+	public static boolean isNestedClass(String fullQualifiedClassName) {
+		Preconditions.notBlank(fullQualifiedClassName, "full class name must not be null or empty");
+
+		if (fullQualifiedClassName.contains("$")) {
+			Optional<Class<?>> testClass = loadClass(fullQualifiedClassName);
+			if (testClass.isPresent()) {
+				return isNestedClass(testClass.get());
+			}
+		}
+		return false;
+	}
+
+	public static boolean isNestedClass(Class<?> testClass) {
+		Preconditions.notNull(testClass, "test class must not be null");
+
+		return testClass.isMemberClass();
+	}
+
 	public static Set<File> getAllClasspathRootDirectories() {
-		// TODO This is quite a hack, since sometimes the classpath is quite different
+		//TODO This is quite a hack, since sometimes the classpath is quite different
 		String fullClassPath = System.getProperty("java.class.path");
 		final String separator = System.getProperty("path.separator");
 		// @formatter:off
