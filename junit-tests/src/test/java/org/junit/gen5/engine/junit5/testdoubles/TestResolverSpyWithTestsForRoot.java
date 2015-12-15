@@ -10,21 +10,18 @@
 
 package org.junit.gen5.engine.junit5.testdoubles;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.resolver.TestResolverRegistry;
-import org.junit.gen5.engine.junit5.resolver.TestResolverResult;
 
 public class TestResolverSpyWithTestsForRoot extends TestResolverSpy {
+	private final TestResolverRegistry testResolverRegistry;
 	private final TestDescriptor root;
 	private final TestDescriptor resolvedTest;
 
-	public TestResolverSpyWithTestsForRoot(TestDescriptor root) {
+	public TestResolverSpyWithTestsForRoot(TestResolverRegistry testResolverRegistry, TestDescriptor root) {
+		this.testResolverRegistry = testResolverRegistry;
 		this.root = root;
 		this.resolvedTest = new TestDescriptorWithParentStub(root);
 	}
@@ -34,14 +31,11 @@ public class TestResolverSpyWithTestsForRoot extends TestResolverSpy {
 	}
 
 	@Override
-	public TestResolverResult resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+	public void resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
 		super.resolveFor(parent, testPlanSpecification);
 
 		if (root.equals(parent)) {
-			return TestResolverResult.proceedResolving(resolvedTest);
-		}
-		else {
-			return TestResolverResult.empty();
+			testResolverRegistry.notifyResolvers(resolvedTest, testPlanSpecification);
 		}
 	}
 

@@ -30,10 +30,14 @@ public class TestResolverRegistryImpl implements TestResolverRegistry {
 	@Override
 	public void notifyResolvers(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
 		for (TestResolver testResolver : testResolvers) {
-			TestResolverResult result = testResolver.resolveFor(parent, testPlanSpecification);
-			if (result.isProceedResolution()) {
-				result.getResolvedTests().forEach(test -> notifyResolvers(test, testPlanSpecification));
-			}
+			testResolver.resolveFor(parent, testPlanSpecification);
+		}
+	}
+
+	@Override
+	public void notifyResolvers(List<TestDescriptor> parents, TestPlanSpecification testPlanSpecification) {
+		for (TestDescriptor parent : parents) {
+			notifyResolvers(parent, testPlanSpecification);
 		}
 	}
 
@@ -41,5 +45,6 @@ public class TestResolverRegistryImpl implements TestResolverRegistry {
 	public void register(TestResolver testResolver) {
 		testResolvers.add(testResolver);
 		testResolver.setTestEngine(testEngine);
+		testResolver.setTestResolverRegistry(this);
 	}
 }

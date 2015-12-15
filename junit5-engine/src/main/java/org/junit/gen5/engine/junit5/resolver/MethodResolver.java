@@ -35,22 +35,20 @@ public class MethodResolver extends JUnit5TestResolver {
 	private Pattern uniqueIdRegExPattern = Pattern.compile("^(.+?):([^#]+)#([^(]+)\\(((?:[^,)]+,?)*)\\)$");
 
 	@Override
-	public TestResolverResult resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+	public void resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
 		ObjectUtils.verifyNonNull(parent, "Parent must not be null!");
 		ObjectUtils.verifyNonNull(testPlanSpecification, "TestPlanSpecification must not be null!");
 
 		if (parent.isRoot()) {
-			List<TestDescriptor> resolvedTests = new LinkedList<>();
-			resolvedTests.addAll(resolveAllMethodsFromSpecification(parent, testPlanSpecification));
-			resolvedTests.addAll(resolveUniqueIdsFromSpecification(parent, testPlanSpecification));
-			return TestResolverResult.proceedResolving(resolvedTests);
+			List<TestDescriptor> methodBasedTestMethods = resolveAllMethodsFromSpecification(parent, testPlanSpecification);
+			getTestResolverRegistry().notifyResolvers(methodBasedTestMethods, testPlanSpecification);
+
+			List<TestDescriptor> uniqueIdBasedTestMethods = resolveUniqueIdsFromSpecification(parent, testPlanSpecification);
+			getTestResolverRegistry().notifyResolvers(uniqueIdBasedTestMethods, testPlanSpecification);
 		}
-		if (parent instanceof ClassTestDescriptor) {
+		else if (parent instanceof ClassTestDescriptor) {
 			List<TestDescriptor> resolvedTests = resolveTestMethodsOfTestClass((ClassTestDescriptor) parent);
-			return TestResolverResult.proceedResolving(resolvedTests);
-		}
-		else {
-			return TestResolverResult.empty();
+			getTestResolverRegistry().notifyResolvers(resolvedTests, testPlanSpecification);
 		}
 	}
 

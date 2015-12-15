@@ -22,5 +22,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
 public interface TestResolver {
 	void setTestEngine(TestEngine testEngine);
 
-	TestResolverResult resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification);
+	void setTestResolverRegistry(TestResolverRegistry testResolverRegistry);
+
+	void resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification);
 }

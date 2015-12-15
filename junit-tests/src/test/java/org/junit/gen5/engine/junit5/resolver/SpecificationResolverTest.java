@@ -71,6 +71,7 @@ public class SpecificationResolverTest {
 		JUnit5EngineDescriptor engineDescriptor = testEngine.discoverTests(testPlanSpecification);
 
 		assertThat(uniqueIdsOf(engineDescriptor)).containsOnly(
+			//"junit5:org.junit.gen5.engine.junit5.samples.OtherTestClass",
 			"junit5:org.junit.gen5.engine.junit5.samples.OtherTestClass$NestedTestClass",
 			"junit5:org.junit.gen5.engine.junit5.samples.OtherTestClass$NestedTestClass#test5()",
 			"junit5:org.junit.gen5.engine.junit5.samples.OtherTestClass$NestedTestClass#test6()");

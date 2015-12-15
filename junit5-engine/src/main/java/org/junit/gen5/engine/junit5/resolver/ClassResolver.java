@@ -21,7 +21,6 @@ import org.junit.gen5.commons.util.AnnotationUtils;
 import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 
@@ -31,26 +30,25 @@ public class ClassResolver extends JUnit5TestResolver {
 	private Pattern uniqueIdRegExPattern = Pattern.compile("^(.+?):([^#]+)$");
 
 	@Override
-	public TestResolverResult resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+	public void resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
 		ObjectUtils.verifyNonNull(parent, "Parent must not be null!");
 		ObjectUtils.verifyNonNull(testPlanSpecification, "TestPlanSpecification must not be null!");
 
 		if (parent.isRoot()) {
-			List<TestDescriptor> resolvedTests = new LinkedList<>();
-			resolvedTests.addAll(resolveAllPackagesFromSpecification(parent, testPlanSpecification));
-			resolvedTests.addAll(resolveAllClassesFromSpecification(parent, testPlanSpecification));
-			resolvedTests.addAll(resolveUniqueIdsFromSpecification(parent, testPlanSpecification));
-			return TestResolverResult.proceedResolving(resolvedTests);
+			List<TestDescriptor> packageBasedTestClasses = resolveAllPackagesFromSpecification(parent, testPlanSpecification);
+			getTestResolverRegistry().notifyResolvers(packageBasedTestClasses, testPlanSpecification);
+
+			List<TestDescriptor> classBasedTestClasses = resolveAllClassesFromSpecification(parent, testPlanSpecification);
+			getTestResolverRegistry().notifyResolvers(classBasedTestClasses, testPlanSpecification);
+
+			List<TestDescriptor> uniqueIdBasedTestClasses = resolveUniqueIdsFromSpecification(parent, testPlanSpecification);
+			getTestResolverRegistry().notifyResolvers(uniqueIdBasedTestClasses,testPlanSpecification);
 		}
 		else if (parent instanceof ClassTestDescriptor) {
 			Class<?> parentClass = ((ClassTestDescriptor) parent).getTestClass();
 			List<Class<?>> nestedClasses = ReflectionUtils.findNestedClasses(parentClass,
-				nestedClass -> AnnotationUtils.isAnnotated(nestedClass, Nested.class));
-			List<TestDescriptor> resolvedTests = getTestDescriptorsForTestClasses(parent, nestedClasses);
-			return TestResolverResult.proceedResolving(resolvedTests);
-		}
-		else {
-			return TestResolverResult.empty();
+					nestedClass -> AnnotationUtils.isAnnotated(nestedClass, Nested.class));
+			getTestResolverRegistry().notifyResolvers(getTestDescriptorsForTestClasses(parent, nestedClasses), testPlanSpecification);
 		}
 	}
 
@@ -68,10 +66,8 @@ public class ClassResolver extends JUnit5TestResolver {
 
 	private List<TestDescriptor> resolveAllClassesFromSpecification(TestDescriptor parent,
 			TestPlanSpecification testPlanSpecification) {
-
 		List<Class<?>> testClasses = testPlanSpecification.getClasses();
 		return getTestDescriptorsForTestClasses(parent, testClasses);
-
 	}
 
 	private List<TestDescriptor> resolveUniqueIdsFromSpecification(TestDescriptor parent,

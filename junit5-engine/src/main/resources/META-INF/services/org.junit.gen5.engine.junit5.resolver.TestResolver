@@ -1,2 +1,3 @@
+org.junit.gen5.engine.junit5.resolver.PackageResolver
 org.junit.gen5.engine.junit5.resolver.ClassResolver
 org.junit.gen5.engine.junit5.resolver.MethodResolver

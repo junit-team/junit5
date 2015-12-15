@@ -13,8 +13,12 @@ package org.junit.gen5.engine.junit5.resolver;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 
+import java.util.List;
+
 public interface TestResolverRegistry {
 	void notifyResolvers(TestDescriptor parent, TestPlanSpecification testPlanSpecification);
+
+	void notifyResolvers(List<TestDescriptor> parents, TestPlanSpecification testPlanSpecification);
 
 	void register(TestResolver testResolver);
 }

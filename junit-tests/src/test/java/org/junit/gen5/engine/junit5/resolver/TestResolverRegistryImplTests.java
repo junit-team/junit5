@@ -66,25 +66,13 @@ public class TestResolverRegistryImplTests {
 
 	@Test
 	public void givenTestResolverThatReturnsNewTests_TestResolversAreCalledForAllTests() throws Exception {
-		TestResolverSpyWithTestsForRoot testResolverSpy = new TestResolverSpyWithTestsForRoot(testGroup);
+		TestResolverSpyWithTestsForRoot testResolverSpy = new TestResolverSpyWithTestsForRoot(testResolverRegistry, testGroup);
 
 		testResolverRegistry.register(testResolverSpy);
 		testResolverRegistry.notifyResolvers(testGroup, emptyTestPlanSpecification);
 
 		assertTestResolverWasNotified(testResolverSpy, asList(testGroup, testResolverSpy.getResolvedTest()),
 			emptyTestPlanSpecification);
-	}
-
-	@Test
-	public void givenTestResolverThatReturnsNewTestsWithoutProcessingResolving_TestResolversAreNotCalledReturnedTests()
-			throws Exception {
-		TestResolverSpyWithTestsForRootWithoutProceeding testResolverSpy = new TestResolverSpyWithTestsForRootWithoutProceeding(
-			testGroup);
-
-		testResolverRegistry.register(testResolverSpy);
-		testResolverRegistry.notifyResolvers(testGroup, emptyTestPlanSpecification);
-
-		assertTestResolverWasNotified(testResolverSpy, asList(testGroup), emptyTestPlanSpecification);
 	}
 
 	private void assertTestResolverWasNotified(TestResolverSpy testResolverSpy, List<TestDescriptor> parents,

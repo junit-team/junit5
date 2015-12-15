@@ -28,6 +28,11 @@ public class TestResolverRegistrySpy implements TestResolverRegistry {
 	}
 
 	@Override
+	public void notifyResolvers(List<TestDescriptor> parents, TestPlanSpecification testPlanSpecification) {
+		parents.forEach(parent -> notifyResolvers(parent, testPlanSpecification));
+	}
+
+	@Override
 	public void register(TestResolver testResolver) {
 		registeredTestResolvers.add(testResolver);
 	}

@@ -18,18 +18,20 @@ import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.resolver.TestResolver;
 import org.junit.gen5.engine.junit5.resolver.TestResolverRegistry;
-import org.junit.gen5.engine.junit5.resolver.TestResolverResult;
 
 public class TestResolverSpy implements TestResolver {
 	public List<TestResolverRequest> resolvedFor = new LinkedList<>();
 
 	@Override
-	public TestResolverResult resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
+	public void resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
 		resolvedFor.add(new TestResolverRequest(parent, testPlanSpecification));
-		return TestResolverResult.empty();
 	}
 
 	@Override
 	public void setTestEngine(TestEngine testEngine) {
+	}
+
+	@Override
+	public void setTestResolverRegistry(TestResolverRegistry testResolverRegistry) {
 	}
 }

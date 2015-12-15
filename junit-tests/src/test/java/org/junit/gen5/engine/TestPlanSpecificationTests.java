@@ -25,7 +25,6 @@ import org.junit.gen5.api.Test;
  * @since 5.0
  */
 public class TestPlanSpecificationTests {
-
 	@Test
 	public void forUniqueIdForMethod() {
 		TestPlanSpecificationElement element = forUniqueId("junit5:org.example.UserTests#fullname()");
