@@ -224,7 +224,8 @@ public final class ReflectionUtils {
 				}
 			}
 			return Optional.ofNullable(outerInstance);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			return Optional.empty();
 		}
 	}
