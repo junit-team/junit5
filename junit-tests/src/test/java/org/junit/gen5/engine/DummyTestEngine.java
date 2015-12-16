@@ -16,7 +16,7 @@ import java.util.List;
 public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExecutionContext> {
 	public static final String ENGINE_ID = "dummy";
 
-	private final List<DummyTestEngineDescriptor> children = new LinkedList<>();
+	private final List<DummyTestDescriptor> children = new LinkedList<>();
 
 	@Override
 	public String getId() {
@@ -24,7 +24,7 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 	}
 
 	public void addTest(String uniqueName, Runnable runnable) {
-		children.add(new DummyTestEngineDescriptor(uniqueName, runnable));
+		children.add(new DummyTestDescriptor(uniqueName, runnable));
 	}
 
 	@Override

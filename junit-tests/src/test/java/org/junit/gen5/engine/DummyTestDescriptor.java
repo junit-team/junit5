@@ -14,7 +14,7 @@ class DummyTestEngineDescriptor extends AbstractTestDescriptor implements Engine
 	private final String displayName;
 	private final Runnable runnable;
 
-	DummyTestEngineDescriptor(String displayName, Runnable runnable) {
+	DummyTestDescriptor(String displayName, Runnable runnable) {
 		this.displayName = displayName;
 		this.runnable = runnable;
 	}
