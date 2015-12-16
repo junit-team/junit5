@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.AnnotationUtils;
-import org.junit.gen5.commons.util.ObjectUtils;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.MethodSpecification;
 import org.junit.gen5.engine.TestDescriptor;
@@ -44,8 +44,8 @@ public class MethodResolver extends JUnit5TestResolver {
 
 	@Override
 	public void resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
-		ObjectUtils.verifyNonNull(parent, "Parent must not be null!");
-		ObjectUtils.verifyNonNull(testPlanSpecification, "TestPlanSpecification must not be null!");
+		Preconditions.notNull(parent, "Parent must not be null!");
+		Preconditions.notNull(testPlanSpecification, "TestPlanSpecification must not be null!");
 
 		if (parent.isRoot()) {
 			List<TestDescriptor> methodBasedTestMethods = resolveAllMethodsFromSpecification(parent,

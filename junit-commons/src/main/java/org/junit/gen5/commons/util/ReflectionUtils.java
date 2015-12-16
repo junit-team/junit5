@@ -207,7 +207,7 @@ public final class ReflectionUtils {
 	 * @return the enclosing {@link Object} of {@code target}
 	 */
 	public static Optional<Object> getOuterInstance(final Object target) {
-		ObjectUtils.verifyNonNull(target, "Target must not be null!");
+		Preconditions.notNull(target, "Target must not be null!");
 
 		final Class<?> targetClass = target.getClass();
 		if (isStatic(targetClass) || !targetClass.isMemberClass()) {

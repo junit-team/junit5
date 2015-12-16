@@ -19,7 +19,6 @@ import java.util.Objects;
  * @since 5.0
  */
 public final class ObjectUtils {
-
 	private ObjectUtils() {
 		/* no-op */
 	}
@@ -29,10 +28,5 @@ public final class ObjectUtils {
 			return "";
 		}
 		return stream(classes).map(Class::getName).collect(joining(", "));
-	}
-
-	public static void verifyNonNull(Object obj, String message) {
-		if (obj == null)
-			throw new IllegalArgumentException(message);
 	}
 }

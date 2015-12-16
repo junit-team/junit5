@@ -19,10 +19,9 @@ import java.util.regex.Pattern;
 
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.commons.util.AnnotationUtils;
-import org.junit.gen5.commons.util.ObjectUtils;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
@@ -34,8 +33,8 @@ public class ClassResolver extends JUnit5TestResolver {
 
 	@Override
 	public void resolveFor(TestDescriptor parent, TestPlanSpecification testPlanSpecification) {
-		ObjectUtils.verifyNonNull(parent, "Parent must not be null!");
-		ObjectUtils.verifyNonNull(testPlanSpecification, "TestPlanSpecification must not be null!");
+		Preconditions.notNull(parent, "Parent must not be null!");
+		Preconditions.notNull(testPlanSpecification, "TestPlanSpecification must not be null!");
 
 		if (parent.isRoot()) {
 			List<TestDescriptor> packageBasedTestClasses = resolveAllPackagesFromSpecification(parent,
