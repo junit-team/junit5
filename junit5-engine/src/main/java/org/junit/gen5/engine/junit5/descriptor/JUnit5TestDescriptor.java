@@ -69,4 +69,12 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 		return TestExtensionRegistry.newRegistryFrom(existingTestExtensionRegistry, extensionClasses);
 	}
 
+	protected void throwIfAnyThrowablePresent(List<Throwable> throwablesCollector) throws Throwable {
+		if (!throwablesCollector.isEmpty()) {
+			Throwable t = throwablesCollector.get(0);
+			throwablesCollector.stream().skip(1).forEach(t::addSuppressed);
+			throw t;
+		}
+	}
+
 }

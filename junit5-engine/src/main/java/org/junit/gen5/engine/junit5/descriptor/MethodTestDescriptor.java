@@ -106,38 +106,15 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 		invokeAfterEachExtensionPoints(newTestExtensionRegistry, testExtensionContext, throwablesCollector);
 
-		if (!throwablesCollector.isEmpty()) {
-			Throwable t = throwablesCollector.get(0);
-			throwablesCollector.stream().skip(1).forEach(t::addSuppressed);
-			throw t;
-		}
+		throwIfAnyThrowablePresent(throwablesCollector);
 
 		return newContext;
 	}
 
-	protected void invokeAfterEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
-			TestExtensionContext testExtensionContext, List<Throwable> throwables) throws Throwable {
-		ThrowingConsumer<RegisteredExtensionPoint<AfterEachExtensionPoint>> applyAfterEach = registeredExtensionPoint -> {
-			try {
-				registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext);
-			}
-			catch (Throwable t) {
-				throwables.add(t);
-			}
-		};
-		newTestExtensionRegistry.applyExtensionPoints(AfterEachExtensionPoint.class,
-			TestExtensionRegistry.ApplicationOrder.BACKWARD, applyAfterEach);
-	}
-
-	protected void invokeBeforeEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+	private void invokeBeforeEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
 			TestExtensionContext testExtensionContext) throws Throwable {
 		ThrowingConsumer<RegisteredExtensionPoint<BeforeEachExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
-			try {
-				registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext);
-			}
-			catch (Exception e) { //TODO: Non RTEs should be allowed
-				throw new RuntimeException(e);
-			}
+			registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext);
 		};
 		newTestExtensionRegistry.applyExtensionPoints(BeforeEachExtensionPoint.class,
 			TestExtensionRegistry.ApplicationOrder.FORWARD, applyBeforeEach);
@@ -153,6 +130,20 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		catch (Throwable t) {
 			throwablesCollector.add(t);
 		}
+	}
+
+	private void invokeAfterEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+			TestExtensionContext testExtensionContext, List<Throwable> throwablesCollector) throws Throwable {
+		ThrowingConsumer<RegisteredExtensionPoint<AfterEachExtensionPoint>> applyAfterEach = registeredExtensionPoint -> {
+			try {
+				registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext);
+			}
+			catch (Throwable t) {
+				throwablesCollector.add(t);
+			}
+		};
+		newTestExtensionRegistry.applyExtensionPoints(AfterEachExtensionPoint.class,
+			TestExtensionRegistry.ApplicationOrder.BACKWARD, applyAfterEach);
 	}
 
 }

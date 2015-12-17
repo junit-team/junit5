@@ -14,14 +14,18 @@ import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
 import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodContext;
 
 import java.lang.reflect.Method;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.extension.AfterAllExtensionPoint;
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
+import org.junit.gen5.api.extension.BeforeAllExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
@@ -33,8 +37,10 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
+import org.junit.gen5.engine.junit5.execution.RegisteredExtensionPoint;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
 import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
+import org.junit.gen5.engine.junit5.execution.ThrowingConsumer;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.
@@ -86,7 +92,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext beforeAll(JUnit5EngineExecutionContext context) {
+	public JUnit5EngineExecutionContext beforeAll(JUnit5EngineExecutionContext context) throws Throwable {
 		TestExtensionRegistry newExtensionRegistry = populateNewTestExtensionRegistryFromExtendWith(testClass,
 			context.getTestExtensionRegistry());
 		registerBeforeEachMethods(newExtensionRegistry);
@@ -94,26 +100,60 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 		context = context.extend().withTestExtensionRegistry(newExtensionRegistry).build();
 
+		ContainerExtensionContext containerExtensionContext = new ClassBasedContainerExtensionContext(
+			context.getExtensionContext(), this);
+
+		invokeBeforeAllExtensionPoints(newExtensionRegistry, containerExtensionContext);
+
 		// @formatter:off
 		return context.extend()
 				.withTestInstanceProvider(testInstanceProvider(context))
-				.withExtensionContext(new ClassBasedContainerExtensionContext(context.getExtensionContext(), this))
+				.withExtensionContext(containerExtensionContext)
 				.build();
 		// @formatter:on
+	}
+
+	@Override
+	public JUnit5EngineExecutionContext afterAll(JUnit5EngineExecutionContext context) throws Throwable {
+		List<Throwable> throwablesCollector = new LinkedList<>();
+		try {
+			invokeAfterAllExtensionPoints(context.getTestExtensionRegistry(),
+				(ContainerExtensionContext) context.getExtensionContext(), throwablesCollector);
+		}
+		catch (Throwable throwable) {
+			throwablesCollector.add(throwable);
+		}
+
+		throwIfAnyThrowablePresent(throwablesCollector);
+
+		return context;
 	}
 
 	protected TestInstanceProvider testInstanceProvider(JUnit5EngineExecutionContext context) {
 		return () -> ReflectionUtils.newInstance(testClass);
 	}
 
-	private void registerAfterEachMethods(TestExtensionRegistry extensionRegistry) {
-		List<Method> afterEachMethods = findAnnotatedMethods(testClass, AfterEach.class, MethodSortOrder.HierarchyDown);
-		afterEachMethods.stream().forEach(method -> {
-			AfterEachExtensionPoint extensionPoint = testExtensionContext -> {
-				runMethodInExtensionContext(method, testExtensionContext, extensionRegistry);
-			};
-			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
-		});
+	private void invokeBeforeAllExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+			ContainerExtensionContext containerExtensionContext) throws Throwable {
+		ThrowingConsumer<RegisteredExtensionPoint<BeforeAllExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
+			registeredExtensionPoint.getExtensionPoint().beforeAll(containerExtensionContext);
+		};
+		newTestExtensionRegistry.applyExtensionPoints(BeforeAllExtensionPoint.class,
+			TestExtensionRegistry.ApplicationOrder.FORWARD, applyBeforeEach);
+	}
+
+	private void invokeAfterAllExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+			ContainerExtensionContext containerExtensionContext, List<Throwable> throwablesCollector) throws Throwable {
+		ThrowingConsumer<RegisteredExtensionPoint<AfterAllExtensionPoint>> applyAfterAll = registeredExtensionPoint -> {
+			try {
+				registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext);
+			}
+			catch (Throwable t) {
+				throwablesCollector.add(t);
+			}
+		};
+		newTestExtensionRegistry.applyExtensionPoints(AfterAllExtensionPoint.class,
+			TestExtensionRegistry.ApplicationOrder.BACKWARD, applyAfterAll);
 	}
 
 	private void registerBeforeEachMethods(TestExtensionRegistry extensionRegistry) {
@@ -121,6 +161,16 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			MethodSortOrder.HierarchyDown);
 		beforeEachMethods.stream().forEach(method -> {
 			BeforeEachExtensionPoint extensionPoint = testExtensionContext -> {
+				runMethodInExtensionContext(method, testExtensionContext, extensionRegistry);
+			};
+			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
+		});
+	}
+
+	private void registerAfterEachMethods(TestExtensionRegistry extensionRegistry) {
+		List<Method> afterEachMethods = findAnnotatedMethods(testClass, AfterEach.class, MethodSortOrder.HierarchyDown);
+		afterEachMethods.stream().forEach(method -> {
+			AfterEachExtensionPoint extensionPoint = testExtensionContext -> {
 				runMethodInExtensionContext(method, testExtensionContext, extensionRegistry);
 			};
 			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
