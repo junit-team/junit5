@@ -22,7 +22,7 @@ import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.testers.IsNestedTestClass;
-import org.junit.gen5.engine.junit5.testers.IsPotentialTestClass;
+import org.junit.gen5.engine.junit5.testers.IsPotentialTestContainer;
 import org.junit.gen5.engine.junit5.testers.IsTestMethod;
 
 /**
@@ -32,7 +32,7 @@ class JUnit5TestableFactory {
 
 	private static final String SEPARATORS = ":@#";
 
-	private static final IsPotentialTestClass isPotentialTestClass = new IsPotentialTestClass();
+	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();
 	private static final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
 	private static final IsTestMethod isTestMethod = new IsTestMethod();
 
@@ -47,7 +47,7 @@ class JUnit5TestableFactory {
 	JUnit5Testable fromClass(Class<?> clazz, String engineId) {
 		Preconditions.notNull(clazz, "clazz must not be null");
 		Preconditions.notBlank(engineId, "Engine ID must not be null or empty");
-		if (isPotentialTestClass.test(clazz)) {
+		if (isPotentialTestContainer.test(clazz)) {
 			String uniqueId = engineId + ":" + clazz.getName();
 			return new JUnit5Class(uniqueId, clazz);
 		}

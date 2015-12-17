@@ -21,14 +21,22 @@ import java.util.function.Predicate;
 import org.junit.gen5.api.Test;
 
 /**
+ * Test if a method really is a JUnit5 test method.
+ *
  * @since 5.0
  */
 public class IsTestMethod implements Predicate<Method> {
 
 	@Override
 	public boolean test(Method candidate) {
-		return (!isStatic(candidate) && !isPrivate(candidate) && !isAbstract(candidate)
-				&& isAnnotated(candidate, Test.class));
+		//please do not collapse into single return
+		if (isStatic(candidate))
+			return false;
+		if (isPrivate(candidate))
+			return false;
+		if (isAbstract(candidate))
+			return false;
+		return isAnnotated(candidate, Test.class);
 	}
 
 }
