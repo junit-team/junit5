@@ -24,6 +24,8 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
 import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.api.extension.ExtensionRegistrar;
+import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.TestPlanSpecification;
 
@@ -52,28 +54,36 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 		assertEquals(asList(
 
 			//InnerTestCase
-			"fooBefore",
-			"barBefore",
-				"beforeMethod",
-					"fizzBefore",
-						"beforeInnerMethod",
-							"testInner",
-						"afterInnerMethod",
-					"fizzAfter",
-				"afterMethod",
-			"barAfter",
-			"fooAfter",
+			"outermostBefore",
+				"fooBefore",
+				"barBefore",
+					"beforeMethod",
+						"fizzBefore",
+							"beforeInnerMethod",
+								"innermostBefore",
+									"testInner",
+								"innermostAfter",
+							"afterInnerMethod",
+						"fizzAfter",
+					"afterMethod",
+				"barAfter",
+				"fooAfter",
+			"outermostAfter",
 
 			//OuterTestCase
-			"fooBefore",
-			"barBefore",
-				"beforeMethod",
-					"testOuter",
-				"afterMethod",
-			"barAfter",
-			"fooAfter"),
+			"outermostBefore",
+				"fooBefore",
+				"barBefore",
+					"beforeMethod",
+						"innermostBefore",
+							"testOuter",
+						"innermostAfter",
+					"afterMethod",
+				"barAfter",
+				"fooAfter",
+			"outermostAfter"
 
-			callSequence, "wrong call sequence");
+			), callSequence, "wrong call sequence");
 		// @formatter:on
 	}
 
@@ -81,7 +91,7 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
 	private static List<String> callSequence = new ArrayList<>();
 
-	@ExtendWith({ FooMethodLevelCallbacks.class, BarMethodLevelCallbacks.class })
+	@ExtendWith({ FooMethodLevelCallbacks.class, BarMethodLevelCallbacks.class, InnermostAndOutermost.class })
 	private static class OuterTestCase {
 
 		@BeforeEach
@@ -118,6 +128,33 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 			}
 		}
 
+	}
+
+	private static class InnermostAndOutermost implements ExtensionRegistrar {
+
+		@Override
+		public void registerExtensions(ExtensionRegistry registry) {
+			registry.register(this::innermostBefore, BeforeEachExtensionPoint.class, Position.INNERMOST);
+			registry.register(this::innermostAfter, AfterEachExtensionPoint.class, Position.INNERMOST);
+			registry.register(this::outermostBefore, BeforeEachExtensionPoint.class, Position.OUTERMOST);
+			registry.register(this::outermostAfter, AfterEachExtensionPoint.class, Position.OUTERMOST);
+		}
+
+		private void outermostBefore(TestExtensionContext context) {
+			callSequence.add("outermostBefore");
+		}
+
+		private void innermostBefore(TestExtensionContext context) {
+			callSequence.add("innermostBefore");
+		}
+
+		private void outermostAfter(TestExtensionContext context) {
+			callSequence.add("outermostAfter");
+		}
+
+		private void innermostAfter(TestExtensionContext context) {
+			callSequence.add("innermostAfter");
+		}
 	}
 
 	private static class FooMethodLevelCallbacks implements BeforeEachExtensionPoint, AfterEachExtensionPoint {
