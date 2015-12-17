@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.gen5.engine.EngineExecutionListener;
@@ -34,6 +35,13 @@ public class TrackingEngineExecutionListener implements EngineExecutionListener 
 
 	public final AtomicInteger containerStartedCount = new AtomicInteger();
 	public final AtomicInteger containerFinishedCount = new AtomicInteger();
+
+	public final AtomicInteger reportEntriesCount = new AtomicInteger();
+
+	@Override
+	public void reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry) {
+		this.reportEntriesCount.getAndIncrement();
+	}
 
 	@Override
 	public void dynamicTestRegistered(TestDescriptor testDescriptor) {

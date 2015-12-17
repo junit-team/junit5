@@ -12,5 +12,8 @@ package org.junit.gen5.engine;
 
 public interface EngineExecutionContext {
 
-	void registerPublishHandler(PublishHandler handler);
+	default void registerPublishHandler(PublishHandler handler) {
+
+	}
+
 }

@@ -15,13 +15,16 @@ import java.util.Optional;
 
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 
 final class ClassBasedContainerExtensionContext extends AbstractExtensionContext implements ContainerExtensionContext {
 
 	private final ClassTestDescriptor testDescriptor;
 
-	public ClassBasedContainerExtensionContext(ExtensionContext parent, ClassTestDescriptor testDescriptor) {
-		super(parent);
+	public ClassBasedContainerExtensionContext(ExtensionContext parent, JUnit5EngineExecutionContext context,
+			ClassTestDescriptor testDescriptor) {
+		super(parent, context);
 		this.testDescriptor = testDescriptor;
 	}
 
@@ -45,4 +48,10 @@ final class ClassBasedContainerExtensionContext extends AbstractExtensionContext
 		// TODO implement this
 		return Optional.empty();
 	}
+
+	@Override
+	protected TestDescriptor getTestDescriptor() {
+		return this.testDescriptor;
+	}
+
 }

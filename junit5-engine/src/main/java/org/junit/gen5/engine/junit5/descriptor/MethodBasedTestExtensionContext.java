@@ -12,24 +12,22 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.Map;
 
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.execution.*;
 
 final class MethodBasedTestExtensionContext extends AbstractExtensionContext implements TestExtensionContext {
 
 	private final MethodTestDescriptor testDescriptor;
 	private final Object testInstance;
-	private final JUnit5EngineExecutionContext engineExecutionContext;
 
-	public MethodBasedTestExtensionContext(ExtensionContext parent, MethodTestDescriptor testDescriptor,
-			Object testInstance, JUnit5EngineExecutionContext context) {
-		super(parent);
+	public MethodBasedTestExtensionContext(ExtensionContext parent, JUnit5EngineExecutionContext context,
+			MethodTestDescriptor testDescriptor, Object testInstance) {
+		super(parent, context);
 		this.testDescriptor = testDescriptor;
 		this.testInstance = testInstance;
-		engineExecutionContext = context;
 	}
 
 	@Override
@@ -48,10 +46,9 @@ final class MethodBasedTestExtensionContext extends AbstractExtensionContext imp
 	}
 
 	@Override
-	public void publishReportEntry(Map<String, String> entry) {
-		engineExecutionContext.publishReportEntry(testDescriptor, entry);
+	protected TestDescriptor getTestDescriptor() {
+		return this.testDescriptor;
 	}
-
 
 	@Override
 	public String getDisplayName() {

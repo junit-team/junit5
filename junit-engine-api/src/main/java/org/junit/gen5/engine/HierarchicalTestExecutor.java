@@ -33,9 +33,13 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		// TODO Check whether TestDescriptor should be skipped and fire executionSkipped
 		// event instead.
 		listener.executionStarted(testDescriptor);
+
+		parentContext.registerPublishHandler(listener::reportingEntryPublished);
+
 		TestExecutionResult result = singleTestExecutor.executeSafely(() -> {
 			C context = adapter.asContainer(testDescriptor).beforeAll(parentContext);
 			context = adapter.asLeaf(testDescriptor).execute(context);
+
 			for (TestDescriptor child : testDescriptor.getChildren()) {
 				executeAll(child, context);
 			}

@@ -17,9 +17,9 @@ import java.util.*;
  */
 public interface EngineExecutionListener {
 
-	default void reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry) {
-	}
-    default void dynamicTestRegistered(TestDescriptor testDescriptor) {
+	void reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry);
+
+	default void dynamicTestRegistered(TestDescriptor testDescriptor) {
 	}
 
 	void executionSkipped(TestDescriptor testDescriptor, String reason);

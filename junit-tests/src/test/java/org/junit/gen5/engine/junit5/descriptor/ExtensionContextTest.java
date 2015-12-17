@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.gen5.api.Assertions;
+import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 
 public class ExtensionContextTest {
 
@@ -25,7 +26,7 @@ public class ExtensionContextTest {
 		outerClassDescriptor.addChild(nestedClassDescriptor);
 
 		ClassBasedContainerExtensionContext outerExtensionContext = new ClassBasedContainerExtensionContext(null,
-			outerClassDescriptor);
+			new JUnit5EngineExecutionContext(), outerClassDescriptor);
 		Assertions.assertAll("outerContext", //
 			() -> Assertions.assertEquals(OuterClass.class, outerExtensionContext.getTestClass()), //
 			() -> Assertions.assertEquals(outerClassDescriptor.getDisplayName(),
@@ -33,7 +34,7 @@ public class ExtensionContextTest {
 			() -> Assertions.assertEquals(Optional.empty(), outerExtensionContext.getParent()));
 
 		ClassBasedContainerExtensionContext nestedExtensionContext = new ClassBasedContainerExtensionContext(
-			outerExtensionContext, nestedClassDescriptor);
+			outerExtensionContext, new JUnit5EngineExecutionContext(), nestedClassDescriptor);
 		Assertions.assertSame(outerExtensionContext, nestedExtensionContext.getParent().get());
 	}
 
@@ -45,10 +46,10 @@ public class ExtensionContextTest {
 		classTestDescriptor.addChild(methodTestDescriptor);
 
 		ClassBasedContainerExtensionContext classExtensionContext = new ClassBasedContainerExtensionContext(null,
-			classTestDescriptor);
+			new JUnit5EngineExecutionContext(), classTestDescriptor);
 		OuterClass testInstance = new OuterClass();
 		MethodBasedTestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(
-			classExtensionContext, methodTestDescriptor, testInstance);
+			classExtensionContext, new JUnit5EngineExecutionContext(), methodTestDescriptor, testInstance);
 		Assertions.assertAll("methodContext", //
 			() -> Assertions.assertEquals(OuterClass.class, testExtensionContext.getTestClass()), //
 			() -> Assertions.assertEquals(methodTestDescriptor.getDisplayName(), testExtensionContext.getDisplayName()), //

@@ -97,7 +97,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		// @formatter:off
 		return context.extend()
 				.withTestInstanceProvider(testInstanceProvider(context))
-				.withExtensionContext(new ClassBasedContainerExtensionContext(context.getExtensionContext(), this))
+				.withExtensionContext(new ClassBasedContainerExtensionContext(context.getExtensionContext(), context, this))
 				.build();
 		// @formatter:on
 	}

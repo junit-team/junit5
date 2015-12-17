@@ -27,6 +27,7 @@ import org.junit.gen5.api.extension.ShouldTestBeExecutedCondition;
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
 import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
+import org.junit.gen5.engine.junit5.extension.TestReporterParameterResolver;
 
 public class TestExtensionRegistryTest {
 
@@ -52,9 +53,7 @@ public class TestExtensionRegistryTest {
 		Assert.assertEquals(TestExtensionRegistry.getDefaultExtensionClasses().size(), extensions.size());
 		assertExtensionRegistered(registry, DisabledCondition.class);
 		assertExtensionRegistered(registry, TestNameParameterResolver.class);
-
-        assertExtensionRegistered(registry, XXXX.class);
-
+		assertExtensionRegistered(registry, TestReporterParameterResolver.class);
 
 		Assert.assertEquals(2, countExtensionPoints(MethodParameterResolver.class));
 		Assert.assertEquals(1, countExtensionPoints(ShouldContainerBeExecutedCondition.class));

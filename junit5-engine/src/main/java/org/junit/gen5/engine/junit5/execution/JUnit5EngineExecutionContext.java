@@ -10,11 +10,11 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.engine.EngineExecutionContext;
 import java.util.*;
 
+import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.EngineExecutionContext;
 
 public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 
@@ -66,9 +66,8 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 		TestInstanceProvider testInstanceProvider;
 		TestExtensionRegistry testExtensionRegistry;
 		ExtensionContext extensionContext;
-        PublishHandler publishHandler = (testDescriptor, entry) -> {
-        };
-
+		PublishHandler publishHandler = (testDescriptor, entry) -> {
+		};
 
 		@Override
 		public State clone() {
