@@ -14,6 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.TestExecutionResult.Status;
 import org.junit.gen5.launcher.TestExecutionListener;
 
 /**
@@ -30,29 +32,52 @@ public class TrackingEngineExecutionListener implements EngineExecutionListener 
 	public final AtomicInteger testAbortedCount = new AtomicInteger();
 	public final AtomicInteger testFailedCount = new AtomicInteger();
 
+	public final AtomicInteger containerStartedCount = new AtomicInteger();
+	public final AtomicInteger containerFinishedCount = new AtomicInteger();
+
 	@Override
-	public void testStarted(TestDescriptor testDescriptor) {
-		testStartedCount.incrementAndGet();
+	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
+		// no-op
 	}
 
 	@Override
-	public void testSucceeded(TestDescriptor testDescriptor) {
-		testSucceededCount.incrementAndGet();
+	public void executionStarted(TestDescriptor testDescriptor) {
+		if (testDescriptor.isTest()) {
+			testStartedCount.incrementAndGet();
+		}
+		else {
+			containerStartedCount.incrementAndGet();
+		}
 	}
 
 	@Override
-	public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-		testSkippedCount.incrementAndGet();
+	public void executionSkipped(TestDescriptor testDescriptor, String reason) {
+		if (testDescriptor.isTest()) {
+			testSkippedCount.incrementAndGet();
+		}
 	}
 
 	@Override
-	public void testAborted(TestDescriptor testDescriptor, Throwable t) {
-		testAbortedCount.incrementAndGet();
+	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
+		if (testDescriptor.isTest()) {
+			getCounter(testExecutionResult.getStatus()).incrementAndGet();
+		}
+		else {
+			containerFinishedCount.incrementAndGet();
+		}
 	}
 
-	@Override
-	public void testFailed(TestDescriptor testDescriptor, Throwable t) {
-		testFailedCount.incrementAndGet();
+	private AtomicInteger getCounter(Status status) {
+		switch (status) {
+			case SUCCESSFUL:
+				return testSucceededCount;
+			case ABORTED:
+				return testAbortedCount;
+			case FAILED:
+				return testFailedCount;
+			default:
+				throw new IllegalArgumentException("Unknown status: " + status);
+		}
 	}
 
 }

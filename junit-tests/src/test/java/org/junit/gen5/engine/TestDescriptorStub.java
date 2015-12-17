@@ -10,13 +10,24 @@
 
 package org.junit.gen5.engine;
 
-public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> implements TestEngine {
+final class TestDescriptorStub extends AbstractTestDescriptor {
 
-	@Override
-	public final void execute(ExecutionRequest request) {
-		new HierarchicalTestExecutor<>(request, createExecutionContext(request)).execute();
+	TestDescriptorStub(String uniqueId) {
+		super(uniqueId);
 	}
 
-	protected abstract C createExecutionContext(ExecutionRequest request);
+	@Override
+	public String getDisplayName() {
+		return "name";
+	}
 
+	@Override
+	public boolean isTest() {
+		return false;
+	}
+
+	@Override
+	public boolean isContainer() {
+		return false;
+	}
 }

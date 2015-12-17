@@ -14,7 +14,8 @@ import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.*;
 
 import java.io.PrintWriter;
 
-import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.TestExecutionResult.Status;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -39,74 +40,56 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testPlanExecutionPaused(TestPlan testPlan) {
-		out.println("Test execution paused.");
-	}
-
-	@Override
-	public void testPlanExecutionRestarted(TestPlan testPlan) {
-		out.println("Test execution continued.");
-	}
-
-	@Override
-	public void testPlanExecutionStopped(TestPlan testPlan) {
-		out.println("Test execution canceled.");
-	}
-
-	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
 		out.println("Test execution finished.");
 	}
 
 	@Override
-	public void testPlanExecutionStartedOnEngine(TestPlan testPlan, TestEngine testEngine) {
-		println(BLUE, "Engine started: %s", testEngine.getId());
+	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
+		printlnTestDescriptor(BLUE, "Test registered:", testIdentifier);
 	}
 
 	@Override
-	public void testPlanExecutionFinishedOnEngine(TestPlan testPlan, TestEngine testEngine) {
-		println(BLUE, "Engine finished: %s", testEngine.getId());
+	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
+		printlnTestDescriptor(YELLOW, "Skipped:", testIdentifier);
+		printlnMessage(YELLOW, "Reason", reason);
 	}
 
 	@Override
-	public void dynamicTestFound(TestIdentifier testIdentifier) {
-		printlnTestDescriptor(BLUE, "Test found:", testIdentifier);
+	public void executionStarted(TestIdentifier testIdentifier) {
+		printlnTestDescriptor(NONE, "Started:", testIdentifier);
 	}
 
 	@Override
-	public void testStarted(TestIdentifier testIdentifier) {
-		printlnTestDescriptor(NONE, "Test started:", testIdentifier);
+	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+		Color color = determineColor(testExecutionResult.getStatus());
+		printlnTestDescriptor(color, "Finished:", testIdentifier);
+		testExecutionResult.getThrowable().ifPresent(t -> printlnException(color, t));
 	}
 
-	@Override
-	public void testSkipped(TestIdentifier testIdentifier, Throwable t) {
-		printlnTestDescriptor(YELLOW, "Test skipped:", testIdentifier);
-		printlnException(YELLOW, t);
-	}
-
-	@Override
-	public void testAborted(TestIdentifier testIdentifier, Throwable t) {
-		printlnTestDescriptor(YELLOW, "Test aborted:", testIdentifier);
-		printlnException(YELLOW, t);
-	}
-
-	@Override
-	public void testFailed(TestIdentifier testIdentifier, Throwable t) {
-		printlnTestDescriptor(RED, "Test failed:", testIdentifier);
-		printlnException(RED, t);
-	}
-
-	@Override
-	public void testSucceeded(TestIdentifier testIdentifier) {
-		printlnTestDescriptor(GREEN, "Test succeeded:", testIdentifier);
+	private Color determineColor(Status status) {
+		switch (status) {
+			case SUCCESSFUL:
+				return GREEN;
+			case ABORTED:
+				return YELLOW;
+			case FAILED:
+				return RED;
+			default:
+				return NONE;
+		}
 	}
 
 	private void printlnTestDescriptor(Color color, String message, TestIdentifier testIdentifier) {
-		println(color, "%-15s   %s [%s]", message, testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
+		println(color, "%-10s   %s [%s]", message, testIdentifier.getDisplayName(), testIdentifier.getUniqueId());
 	}
 
 	private void printlnException(Color color, Throwable throwable) {
-		println(color, "                  => Exception: %s", throwable.getLocalizedMessage());
+		printlnMessage(color, "Exception", throwable.getLocalizedMessage());
+	}
+
+	private void printlnMessage(Color color, String message, String detail) {
+		println(color, "             => " + message + ": %s", detail);
 	}
 
 	private void println(Color color, String format, Object... args) {

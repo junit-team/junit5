@@ -19,22 +19,13 @@ public interface EngineExecutionListener {
 
 	default void reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry) {
 	}
-
-	default void dynamicTestFound(TestDescriptor testDescriptor) {
+    default void dynamicTestRegistered(TestDescriptor testDescriptor) {
 	}
 
-	default void testStarted(TestDescriptor testDescriptor) {
-	}
+	void executionSkipped(TestDescriptor testDescriptor, String reason);
 
-	default void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-	}
+	void executionStarted(TestDescriptor testDescriptor);
 
-	default void testAborted(TestDescriptor testDescriptor, Throwable t) {
-	}
+	void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult);
 
-	default void testFailed(TestDescriptor testDescriptor, Throwable t) {
-	}
-
-	default void testSucceeded(TestDescriptor testDescriptor) {
-	}
 }

@@ -11,10 +11,14 @@
 package org.junit.gen5.engine.junit5.execution;
 
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.gen5.api.extension.ExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionPoint.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.api.extension.MethodParameterResolver;
@@ -24,15 +28,17 @@ import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
 import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
 
-/**
- * @since 5.0
- */
 public class TestExtensionRegistryTest {
 
 	private TestExtensionRegistry registry;
 
+	@Before
+	public void initRegistry() {
+		registry = new TestExtensionRegistry();
+	}
+
 	@Test
-	public void checkJUnit5DefaultExtensions() {
+	public void checkDefaultExtensions() {
 		Assert.assertEquals(3, TestExtensionRegistry.getDefaultExtensionClasses().size());
 
 		assertDefaultExtensionType(DisabledCondition.class);
@@ -40,23 +46,24 @@ public class TestExtensionRegistryTest {
 	}
 
 	@Test
-	public void newRegistryWithoutParentHasDefaultExtensions() {
-		registry = new TestExtensionRegistry();
+	public void newRegistryWithoutParentHasDefaultExtensions() throws Throwable {
 		Set<Class<? extends TestExtension>> extensions = registry.getRegisteredExtensionClasses();
 
 		Assert.assertEquals(TestExtensionRegistry.getDefaultExtensionClasses().size(), extensions.size());
 		assertExtensionRegistered(registry, DisabledCondition.class);
 		assertExtensionRegistered(registry, TestNameParameterResolver.class);
 
-		Assert.assertEquals(2, registry.getExtensionPoints(MethodParameterResolver.class).size());
-		Assert.assertEquals(1, registry.getExtensionPoints(ShouldContainerBeExecutedCondition.class).size());
-		Assert.assertEquals(1, registry.getExtensionPoints(ShouldTestBeExecutedCondition.class).size());
+        assertExtensionRegistered(registry, XXXX.class);
+
+
+		Assert.assertEquals(2, countExtensionPoints(MethodParameterResolver.class));
+		Assert.assertEquals(1, countExtensionPoints(ShouldContainerBeExecutedCondition.class));
+		Assert.assertEquals(1, countExtensionPoints(ShouldTestBeExecutedCondition.class));
 	}
 
 	@Test
-	public void addExtensionPointsByClass() {
+	public void registerExtensionByImplementingClass() throws Throwable {
 
-		registry = new TestExtensionRegistry();
 		registry.addExtension(MyExtension.class);
 
 		assertExtensionRegistered(registry, MyExtension.class);
@@ -68,27 +75,26 @@ public class TestExtensionRegistryTest {
 
 		Assert.assertEquals(rememberSize, registry.getRegisteredExtensionClasses().size());
 		assertExtensionRegistered(registry, MyExtension.class);
-		Assert.assertEquals(1, registry.getExtensionPoints(MyExtensionPoint.class).size());
+		Assert.assertEquals(1, countExtensionPoints(MyExtensionPoint.class));
 
 		registry.addExtension(YourExtension.class);
 		assertExtensionRegistered(registry, YourExtension.class);
-		Assert.assertEquals(2, registry.getExtensionPoints(MyExtensionPoint.class).size());
+		Assert.assertEquals(2, countExtensionPoints(MyExtensionPoint.class));
 	}
 
 	@Test
-	public void addTestExtensionThatImplementsMultipleExtensionPoints() {
+	public void registerTestExtensionThatImplementsMultipleExtensionPoints() throws Throwable {
 
-		registry = new TestExtensionRegistry();
 		registry.addExtension(MultipleExtension.class);
 
 		assertExtensionRegistered(registry, MultipleExtension.class);
 
-		Assert.assertEquals(1, registry.getExtensionPoints(MyExtensionPoint.class).size());
-		Assert.assertEquals(1, registry.getExtensionPoints(AnotherExtensionPoint.class).size());
+		Assert.assertEquals(1, countExtensionPoints(MyExtensionPoint.class));
+		Assert.assertEquals(1, countExtensionPoints(AnotherExtensionPoint.class));
 	}
 
 	@Test
-	public void extensionsAreInheritedFromParent() {
+	public void extensionsAreInheritedFromParent() throws Throwable {
 
 		TestExtensionRegistry parent = new TestExtensionRegistry();
 		parent.addExtension(MyExtension.class);
@@ -98,23 +104,90 @@ public class TestExtensionRegistryTest {
 
 		assertExtensionRegistered(registry, MyExtension.class);
 		assertExtensionRegistered(registry, YourExtension.class);
-		Assert.assertEquals(2, registry.getExtensionPoints(MyExtensionPoint.class).size());
+		Assert.assertEquals(2, countExtensionPoints(MyExtensionPoint.class));
 
 		TestExtensionRegistry grandChild = new TestExtensionRegistry(registry);
 		assertExtensionRegistered(grandChild, MyExtension.class);
 		assertExtensionRegistered(registry, YourExtension.class);
-		Assert.assertEquals(2, registry.getExtensionPoints(MyExtensionPoint.class).size());
+		Assert.assertEquals(2, countExtensionPoints(MyExtensionPoint.class));
 	}
 
 	@Test
-	public void addExtensionPointsByExtensionRegistrar() {
+	public void registerExtensionPointsByExtensionRegistrar() throws Throwable {
 
-		registry = new TestExtensionRegistry();
 		registry.addExtension(MyExtensionRegistrar.class);
 
 		assertExtensionRegistered(registry, MyExtensionRegistrar.class);
-		Assert.assertEquals(1, registry.getExtensionPoints(MyExtensionPoint.class).size());
-		Assert.assertEquals(1, registry.getExtensionPoints(AnotherExtensionPoint.class).size());
+		Assert.assertEquals(1, countExtensionPoints(MyExtensionPoint.class));
+		Assert.assertEquals(1, countExtensionPoints(AnotherExtensionPoint.class));
+	}
+
+	@Test
+	public void applyExtensionPointsInjectsCorrectRegisteredExceptionPoint() throws Throwable {
+
+		registry.addExtension(MyExtension.class);
+
+		AtomicBoolean hasRun = new AtomicBoolean(false);
+
+		registry.applyExtensionPoints(MyExtensionPoint.class, TestExtensionRegistry.ApplicationOrder.FORWARD,
+			registeredExtensionPoint -> {
+				Assert.assertEquals(MyExtension.class.getName(), registeredExtensionPoint.getExtensionName());
+				Assert.assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
+				Assert.assertTrue(registeredExtensionPoint.getExtensionPoint() instanceof MyExtensionPoint);
+				hasRun.set(true);
+			});
+
+		Assert.assertTrue(hasRun.get());
+
+	}
+
+	@Test
+	public void registerExtensionPointDirectly() throws Throwable {
+
+		registry.registerExtension((MyExtensionPoint) test -> {
+		}, Position.INNERMOST, "anonymous extension");
+
+		AtomicBoolean hasRun = new AtomicBoolean(false);
+
+		registry.applyExtensionPoints(MyExtensionPoint.class, TestExtensionRegistry.ApplicationOrder.FORWARD,
+			registeredExtensionPoint -> {
+				Assert.assertEquals("anonymous extension", registeredExtensionPoint.getExtensionName());
+				Assert.assertEquals(Position.INNERMOST, registeredExtensionPoint.getPosition());
+				Assert.assertTrue(registeredExtensionPoint.getExtensionPoint() instanceof MyExtensionPoint);
+				hasRun.set(true);
+			});
+
+		Assert.assertTrue(hasRun.get());
+
+	}
+
+	@Test
+	public void exceptionInApplierCodeStopsIterationThroughExtensionPoints() throws Throwable {
+		registry.registerExtension((MyExtensionPoint) test -> {
+		}, Position.DEFAULT, "anonymous extension 1");
+		registry.registerExtension((MyExtensionPoint) test -> {
+		}, Position.DEFAULT, "anonymous extension 2");
+
+		AtomicInteger countCalledExtensions = new AtomicInteger(0);
+		try {
+			registry.applyExtensionPoints(MyExtensionPoint.class, TestExtensionRegistry.ApplicationOrder.FORWARD,
+				registeredExtensionPoint -> {
+					countCalledExtensions.incrementAndGet();
+					throw new RuntimeException("should stop iteration");
+				});
+			Assert.fail("");
+		}
+		catch (RuntimeException expected) {
+		}
+		Assert.assertEquals(1, countCalledExtensions.get());
+
+	}
+
+	private int countExtensionPoints(Class<? extends ExtensionPoint> extensionPointType) throws Throwable {
+		AtomicInteger counter = new AtomicInteger();
+		registry.applyExtensionPoints(extensionPointType, TestExtensionRegistry.ApplicationOrder.FORWARD,
+			registeredExtensionPoint -> counter.incrementAndGet());
+		return counter.get();
 	}
 
 	private void assertExtensionRegistered(TestExtensionRegistry registry,

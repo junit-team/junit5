@@ -17,7 +17,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
@@ -31,11 +30,16 @@ import org.junit.gen5.engine.junit5.extension.*;
  * A {@code TestExtensionRegistry registry} serves to hold all registered extensions (i.e. instances of
  * {@linkplain ExtensionPoint}) for a given {@linkplain org.junit.gen5.engine.Container} or
  * {@linkplain org.junit.gen5.engine.Leaf}. A registry has a reference to a parent registry and all lookups are done in
- * itself and in its parent and thereby all its ancestors.
+ * itself and in its parent and thereby all its ancestors. Do not confuse with {@linkplain ExtensionRegistry} which is
+ * an interface used by {@linkplain ExtensionRegistrar}
  *
  * @since 5.0
  */
 public class TestExtensionRegistry {
+
+	public enum ApplicationOrder {
+		FORWARD, BACKWARD
+	}
 
 	/**
 	 * Used to create and populate a new registry from a list of extensions and a parent.
@@ -103,24 +107,32 @@ public class TestExtensionRegistry {
 
 		//@formatter:off
 		registeredExtensionPoints.stream()
-				.filter(registeredExtensionPoint -> extensionClass.isAssignableFrom(registeredExtensionPoint.extensionPoint.getClass()))
+				.filter(registeredExtensionPoint -> extensionClass.isAssignableFrom(registeredExtensionPoint.getExtensionPoint().getClass()))
 				.forEach(extensionPoint -> allExtensionPoints.add((RegisteredExtensionPoint<T>) extensionPoint));
 		//@formatter:on
 
-		//TODO: Reorder by using the position
 		return allExtensionPoints;
 	}
 
 	/**
-	 * Find all extension points for a given type in the right order.
+	 * Apply all extension points for a given type in the right order.
 	 *
-	 * @param extensionClass
 	 * @param <T> The exact {@linkplain ExtensionPoint} for which to find all extensions
-	 * @return a list of all fitting extensions in the correct order considering all Position values
+	 * @param extensionClass
+	 * @param order The order in which to apply the extension points after sorting. FORWARD or BACKWARD.
+	 * @param extensionPointApplier The code to execute for each extension point
 	 */
-	public <T extends ExtensionPoint> List<T> getExtensionPoints(Class<T> extensionClass) {
-		return getRegisteredExtensionPoints(extensionClass).stream().map(
-			registeredExtensionPoint -> registeredExtensionPoint.extensionPoint).collect(Collectors.toList());
+	public <T extends ExtensionPoint> void applyExtensionPoints(Class<T> extensionClass, ApplicationOrder order,
+			ThrowingConsumer<RegisteredExtensionPoint<T>> extensionPointApplier) throws Throwable {
+		List<RegisteredExtensionPoint<T>> registeredExtensionPoints = getRegisteredExtensionPoints(extensionClass);
+		new ExtensionPointSorter().sort(registeredExtensionPoints);
+		if (order == ApplicationOrder.BACKWARD) {
+			Collections.reverse(registeredExtensionPoints);
+		}
+
+		for (RegisteredExtensionPoint<T> rep : registeredExtensionPoints) {
+			extensionPointApplier.accept(rep);
+		}
 	}
 
 	/**
@@ -143,41 +155,40 @@ public class TestExtensionRegistry {
 	private void registerFromExtensionRegistrar(TestExtension testExtension) {
 		if (testExtension instanceof ExtensionRegistrar) {
 			ExtensionRegistrar extensionRegistrar = (ExtensionRegistrar) testExtension;
-			ExtensionRegistry extensionRegistry = new TestExtensionRegistry.LocalExtensionRegistry();
+			String extensionName = testExtension.getClass().getName();
+			ExtensionRegistry extensionRegistry = createExtensionRegistry(extensionName);
 			extensionRegistrar.registerExtensions(extensionRegistry);
 		}
+	}
+
+	private TestExtensionRegistry.LocalExtensionRegistry createExtensionRegistry(String extensionName) {
+		return new TestExtensionRegistry.LocalExtensionRegistry(extensionName);
 	}
 
 	private void registerExtensionPointImplementors(TestExtension testExtension) {
 		if (testExtension instanceof ExtensionPoint) {
 			ExtensionPoint extension = (ExtensionPoint) testExtension;
-			registerExtension(extension, Position.DEFAULT);
+			registerExtension(extension, Position.DEFAULT, testExtension.getClass().getName());
 		}
 	}
 
-	private <E extends ExtensionPoint> void registerExtension(E extension, Position position) {
-		RegisteredExtensionPoint<E> registeredExtensionPoint = new RegisteredExtensionPoint<>(extension, position);
+	public <E extends ExtensionPoint> void registerExtension(E extension, Position position, String extensionName) {
+		RegisteredExtensionPoint<E> registeredExtensionPoint = new RegisteredExtensionPoint<>(extension, position,
+			extensionName);
 		registeredExtensionPoints.add(registeredExtensionPoint);
 	}
 
-	@SuppressWarnings("unused")
-	private static class RegisteredExtensionPoint<T extends ExtensionPoint> {
-		private final T extensionPoint;
-		private final Position position;
+	private class LocalExtensionRegistry implements ExtensionRegistry {
 
-		private RegisteredExtensionPoint(T extensionPoint, Position position) {
-			this.extensionPoint = extensionPoint;
-			this.position = position;
+		private String extensionName;
+
+		private LocalExtensionRegistry(String extensionName) {
+			this.extensionName = extensionName;
 		}
-	}
 
-	/**
-	 * Public for testing purposes only
-	 */
-	public class LocalExtensionRegistry implements ExtensionRegistry {
 		@Override
 		public <E extends ExtensionPoint> void register(E extension, Class<E> extensionPointType, Position position) {
-			registerExtension(extension, position);
+			registerExtension(extension, position, extensionName);
 		}
 	}
 }

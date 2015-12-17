@@ -15,6 +15,7 @@ import java.util.List;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.ClassFilter;
 import org.junit.gen5.engine.EngineFilter;
+import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.HierarchicalTestEngine;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -67,7 +68,7 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 	}
 
 	@Override
-	protected JUnit5EngineExecutionContext createContext() {
+	protected JUnit5EngineExecutionContext createExecutionContext(ExecutionRequest request) {
 		return new JUnit5EngineExecutionContext();
 	}
 }

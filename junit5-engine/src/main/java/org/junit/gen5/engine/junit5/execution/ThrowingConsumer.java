@@ -10,14 +10,14 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import java.util.List;
-
-import org.junit.gen5.api.extension.TestExtensionContext;
-
 @FunctionalInterface
-public interface AfterEachCallback {
+public interface ThrowingConsumer<T> {
 
-	void afterEach(TestExtensionContext testExtensionContext, Object testInstance, List<Throwable> throwablesCollector)
-			throws Throwable;
+	/**
+	 * Performs this operation on the given argument.
+	 *
+	 * @param t the input argument
+	 */
+	void accept(T t) throws Throwable;
 
 }

@@ -20,6 +20,7 @@ import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -73,10 +74,8 @@ public class Launcher {
 		for (TestEngine testEngine : getAvailableEngines()) {
 			Optional<TestDescriptor> testDescriptorOptional = root.getTestDescriptorFor(testEngine);
 			testDescriptorOptional.ifPresent(testDescriptor -> {
-				testExecutionListener.testPlanExecutionStartedOnEngine(testPlan, testEngine);
 				testEngine.execute(new ExecutionRequest(testDescriptor,
 					new ExecutionListenerAdapter(testPlan, testExecutionListener)));
-				testExecutionListener.testPlanExecutionFinishedOnEngine(testPlan, testEngine);
 			});
 		}
 		testExecutionListener.testPlanExecutionFinished(testPlan);
@@ -102,33 +101,25 @@ public class Launcher {
 		}
 
 		@Override
-		public void dynamicTestFound(TestDescriptor testDescriptor) {
-			testExecutionListener.dynamicTestFound(getTestIdentifier(testDescriptor));
+		public void dynamicTestRegistered(TestDescriptor testDescriptor) {
+			TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
+			testPlan.add(testIdentifier);
+			testExecutionListener.dynamicTestRegistered(getTestIdentifier(testDescriptor));
 		}
 
 		@Override
-		public void testStarted(TestDescriptor testDescriptor) {
-			testExecutionListener.testStarted(getTestIdentifier(testDescriptor));
+		public void executionStarted(TestDescriptor testDescriptor) {
+			testExecutionListener.executionStarted(getTestIdentifier(testDescriptor));
 		}
 
 		@Override
-		public void testSkipped(TestDescriptor testDescriptor, Throwable t) {
-			testExecutionListener.testSkipped(getTestIdentifier(testDescriptor), t);
+		public void executionSkipped(TestDescriptor testDescriptor, String reason) {
+			testExecutionListener.executionSkipped(getTestIdentifier(testDescriptor), reason);
 		}
 
 		@Override
-		public void testAborted(TestDescriptor testDescriptor, Throwable t) {
-			testExecutionListener.testAborted(getTestIdentifier(testDescriptor), t);
-		}
-
-		@Override
-		public void testFailed(TestDescriptor testDescriptor, Throwable t) {
-			testExecutionListener.testFailed(getTestIdentifier(testDescriptor), t);
-		}
-
-		@Override
-		public void testSucceeded(TestDescriptor testDescriptor) {
-			testExecutionListener.testSucceeded(getTestIdentifier(testDescriptor));
+		public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
+			testExecutionListener.executionFinished(getTestIdentifier(testDescriptor), testExecutionResult);
 		}
 
 		private TestIdentifier getTestIdentifier(TestDescriptor testDescriptor) {

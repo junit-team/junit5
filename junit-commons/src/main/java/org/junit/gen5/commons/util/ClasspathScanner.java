@@ -103,18 +103,17 @@ class ClasspathScanner {
 	private List<Class<?>> findClassesInSourceDirRecursively(File sourceDir, String packageName,
 			Predicate<Class<?>> classFilter) {
 		List<Class<?>> classesCollector = new ArrayList<>();
-		if (collectClassesRecursively(sourceDir, packageName, classesCollector, classFilter))
-			return classesCollector;
+		collectClassesRecursively(sourceDir, packageName, classesCollector, classFilter);
 		return classesCollector;
 	}
 
-	private boolean collectClassesRecursively(File sourceDir, String packageName, List<Class<?>> classesCollector,
+	private void collectClassesRecursively(File sourceDir, String packageName, List<Class<?>> classesCollector,
 			Predicate<Class<?>> classFilter) {
 		LOG.finer(() -> "Searching for classes in package: " + packageName);
-		if (!sourceDir.exists()) {
-			return true;
-		}
 		File[] files = sourceDir.listFiles();
+		if (files == null) {
+			return;
+		}
 		LOG.finer(() -> "Files found: " + Arrays.toString(files));
 		for (File file : files) {
 			if (isClassFile(file)) {
@@ -126,7 +125,6 @@ class ClasspathScanner {
 					classFilter);
 			}
 		}
-		return false;
 	}
 
 	private String appendPackageName(String packageName, String subpackageName) {

@@ -34,7 +34,7 @@ gradlew clean install
 
 ## Dependency Metadata
 
-- **Group ID**: `org.junit.prototype`
+- **Group ID**: `org.junit`
 - **Version**: `5.0.0-SNAPSHOT`
 - **Artifact IDs**:
 	- `junit-commons`
@@ -46,10 +46,9 @@ gradlew clean install
 	- `junit4-launcher-runner`
 	- `junit5-api`
 	- `junit5-engine`
-	- `open-test-alliance` (Version `1.0.0-SNAPSHOT`)
 	- `surefire-junit5`
 
-See also: <https://oss.sonatype.org/content/repositories/snapshots/org/junit/prototype/>
+See also: <https://oss.sonatype.org/content/repositories/snapshots/org/junit/>
 
 ## Contributing
 

@@ -10,6 +10,8 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.engine.EngineExecutionContext;
 import java.util.*;
 
 import org.junit.gen5.engine.*;
@@ -30,16 +32,12 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 		return state.testInstanceProvider;
 	}
 
-	public BeforeEachCallback getBeforeEachCallback() {
-		return state.beforeEachCallback;
-	}
-
-	public AfterEachCallback getAfterEachCallback() {
-		return state.afterEachCallback;
-	}
-
 	public TestExtensionRegistry getTestExtensionRegistry() {
 		return state.testExtensionRegistry;
+	}
+
+	public ExtensionContext getExtensionContext() {
+		return state.extensionContext;
 	}
 
 	public Builder extend() {
@@ -66,11 +64,11 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 	private static final class State implements Cloneable {
 
 		TestInstanceProvider testInstanceProvider;
-		BeforeEachCallback beforeEachCallback;
-		AfterEachCallback afterEachCallback;
 		TestExtensionRegistry testExtensionRegistry;
-		PublishHandler publishHandler = (testDescriptor, entry) -> {
-		};
+		ExtensionContext extensionContext;
+        PublishHandler publishHandler = (testDescriptor, entry) -> {
+        };
+
 
 		@Override
 		public State clone() {
@@ -99,18 +97,13 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 			return this;
 		}
 
-		public Builder withBeforeEachCallback(BeforeEachCallback beforeEachCallback) {
-			newState().beforeEachCallback = beforeEachCallback;
-			return this;
-		}
-
-		public Builder withAfterEachCallback(AfterEachCallback afterEachCallback) {
-			newState().afterEachCallback = afterEachCallback;
-			return this;
-		}
-
 		public Builder withTestExtensionRegistry(TestExtensionRegistry testExtensionRegistry) {
 			newState().testExtensionRegistry = testExtensionRegistry;
+			return this;
+		}
+
+		public Builder withExtensionContext(ExtensionContext extensionContext) {
+			newState().extensionContext = extensionContext;
 			return this;
 		}
 

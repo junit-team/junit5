@@ -11,9 +11,11 @@
 package org.junit.gen5.launcher.listeners;
 
 import static java.util.stream.Stream.concat;
+import static org.junit.gen5.engine.TestExecutionResult.Status.*;
 
 import java.util.stream.Stream;
 
+import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -39,38 +41,17 @@ public class SummaryCreatingTestListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testPlanExecutionPaused(TestPlan testPlan) {
-		summary.timePaused = System.currentTimeMillis();
-	}
-
-	@Override
-	public void testPlanExecutionRestarted(TestPlan testPlan) {
-		summary.timeStarted += System.currentTimeMillis() - summary.timePaused;
-		summary.timePaused = 0;
-	}
-
-	@Override
-	public void testPlanExecutionStopped(TestPlan testPlan) {
-		summary.finishTestRun("Test run stopped");
-	}
-
-	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
 		summary.finishTestRun("Test run finished");
 	}
 
 	@Override
-	public void dynamicTestFound(TestIdentifier testIdentifier) {
+	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
 		summary.testsFound.incrementAndGet();
 	}
 
 	@Override
-	public void testStarted(TestIdentifier testIdentifier) {
-		summary.testsStarted.incrementAndGet();
-	}
-
-	@Override
-	public void testSkipped(TestIdentifier testIdentifier, Throwable t) {
+	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		// @formatter:off
 		long skippedTests = concat(Stream.of(testIdentifier), testPlan.getDescendants(testIdentifier).stream())
 				.filter(TestIdentifier::isTest)
@@ -80,19 +61,26 @@ public class SummaryCreatingTestListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void testAborted(TestIdentifier testIdentifier, Throwable t) {
-		summary.testsAborted.incrementAndGet();
+	public void executionStarted(TestIdentifier testIdentifier) {
+		if (testIdentifier.isTest()) {
+			summary.testsStarted.incrementAndGet();
+		}
 	}
 
 	@Override
-	public void testFailed(TestIdentifier testIdentifier, Throwable t) {
-		summary.testsFailed.incrementAndGet();
-		summary.addFailure(testIdentifier, t);
-	}
-
-	@Override
-	public void testSucceeded(TestIdentifier testIdentifier) {
-		summary.testsSucceeded.incrementAndGet();
+	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+		if (testIdentifier.isTest()) {
+			if (testExecutionResult.getStatus() == SUCCESSFUL) {
+				summary.testsSucceeded.incrementAndGet();
+			}
+			else if (testExecutionResult.getStatus() == ABORTED) {
+				summary.testsAborted.incrementAndGet();
+			}
+			else if (testExecutionResult.getStatus() == FAILED) {
+				summary.testsFailed.incrementAndGet();
+			}
+		}
+		testExecutionResult.getThrowable().ifPresent(throwable -> summary.addFailure(testIdentifier, throwable));
 	}
 
 }

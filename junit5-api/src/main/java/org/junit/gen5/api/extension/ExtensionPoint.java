@@ -43,7 +43,13 @@ public interface ExtensionPoint extends TestExtension {
 	 * </ul>
 	 */
 	enum Position {
-		OUTERMOST, OUTSIDE_DEFAULT, DEFAULT, INSIDE_DEFAULT, INNERMOST
+		OUTERMOST(1), OUTSIDE_DEFAULT(2), DEFAULT(3), INSIDE_DEFAULT(4), INNERMOST(5);
+
+		public final int sortingOrder;
+
+		Position(int sortingOrder) {
+			this.sortingOrder = sortingOrder;
+		}
 	}
 
 }

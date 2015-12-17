@@ -10,13 +10,5 @@
 
 package org.junit.gen5.engine;
 
-public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> implements TestEngine {
-
-	@Override
-	public final void execute(ExecutionRequest request) {
-		new HierarchicalTestExecutor<>(request, createExecutionContext(request)).execute();
-	}
-
-	protected abstract C createExecutionContext(ExecutionRequest request);
-
+class DummyEngineExecutionContext implements EngineExecutionContext {
 }

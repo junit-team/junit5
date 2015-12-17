@@ -39,7 +39,7 @@ public interface TestDescriptor {
 	boolean isContainer();
 
 	default boolean isRoot() {
-		return getParent() == null;
+		return !getParent().isPresent();
 	}
 
 	Set<TestTag> getTags();

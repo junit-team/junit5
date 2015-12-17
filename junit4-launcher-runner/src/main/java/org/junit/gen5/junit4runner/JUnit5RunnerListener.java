@@ -10,6 +10,9 @@
 
 package org.junit.gen5.junit4runner;
 
+import static org.junit.gen5.engine.TestExecutionResult.Status.*;
+
+import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -41,43 +44,37 @@ class JUnit5RunnerListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void dynamicTestFound(TestIdentifier testIdentifier) {
+	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
 		System.out.println("JUnit5 test runner cannot handle dynamic tests");
 	}
 
 	@Override
-	public void testStarted(TestIdentifier testIdentifier) {
+	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		Description description = findJUnit4Description(testIdentifier);
-		notifier.fireTestStarted(description);
-	}
-
-	@Override
-	public void testSkipped(TestIdentifier testIdentifier, Throwable t) {
-		Description description = findJUnit4Description(testIdentifier);
-		// TODO We call this after calling fireTestStarted. This leads to a wrong test
-		// count in Eclipse.
 		notifier.fireTestIgnored(description);
 		notifier.fireTestFinished(description);
 	}
 
 	@Override
-	public void testAborted(TestIdentifier testIdentifier, Throwable t) {
+	public void executionStarted(TestIdentifier testIdentifier) {
 		Description description = findJUnit4Description(testIdentifier);
-		notifier.fireTestAssumptionFailed(new Failure(description, t));
-		notifier.fireTestFinished(description);
+		notifier.fireTestStarted(description);
 	}
 
 	@Override
-	public void testFailed(TestIdentifier testIdentifier, Throwable t) {
+	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		Description description = findJUnit4Description(testIdentifier);
-		notifier.fireTestFailure(new Failure(description, t));
+		if (testExecutionResult.getStatus() == ABORTED) {
+			notifier.fireTestAssumptionFailed(toFailure(testExecutionResult, description));
+		}
+		else if (testExecutionResult.getStatus() == FAILED) {
+			notifier.fireTestFailure(toFailure(testExecutionResult, description));
+		}
 		notifier.fireTestFinished(description);
 	}
 
-	@Override
-	public void testSucceeded(TestIdentifier testIdentifier) {
-		Description description = findJUnit4Description(testIdentifier);
-		notifier.fireTestFinished(description);
+	private Failure toFailure(TestExecutionResult testExecutionResult, Description description) {
+		return new Failure(description, testExecutionResult.getThrowable().orElse(null));
 	}
 
 	private Description findJUnit4Description(TestIdentifier testIdentifier) {

@@ -12,24 +12,21 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.junit5.execution.*;
 
-final class MethodBasedTestExtensionContext implements TestExtensionContext {
-
-	private final Map<String, Object> attributes = new LinkedHashMap<>();
+final class MethodBasedTestExtensionContext extends AbstractExtensionContext implements TestExtensionContext {
 
 	private final MethodTestDescriptor testDescriptor;
 	private final Object testInstance;
 	private final JUnit5EngineExecutionContext engineExecutionContext;
 
-	public MethodBasedTestExtensionContext(MethodTestDescriptor testDescriptor, Object testInstance,
-			JUnit5EngineExecutionContext context) {
+	public MethodBasedTestExtensionContext(ExtensionContext parent, MethodTestDescriptor testDescriptor,
+			Object testInstance, JUnit5EngineExecutionContext context) {
+		super(parent);
 		this.testDescriptor = testDescriptor;
 		this.testInstance = testInstance;
 		engineExecutionContext = context;
@@ -55,20 +52,10 @@ final class MethodBasedTestExtensionContext implements TestExtensionContext {
 		engineExecutionContext.publishReportEntry(testDescriptor, entry);
 	}
 
-	@Override
-	public Optional<ExtensionContext> getParent() {
-		// TODO implement this
-		return Optional.empty();
-	}
 
 	@Override
 	public String getDisplayName() {
 		return testDescriptor.getDisplayName();
-	}
-
-	@Override
-	public Map<String, Object> getAttributes() {
-		return attributes;
 	}
 
 	@Override

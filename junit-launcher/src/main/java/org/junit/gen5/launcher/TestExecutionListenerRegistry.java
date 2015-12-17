@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.TestExecutionResult;
 
 /**
  * @since 5.0
@@ -40,33 +40,23 @@ class TestExecutionListenerRegistry {
 	private class CompositeTestExecutionListener implements TestExecutionListener {
 
 		@Override
-		public void dynamicTestFound(TestIdentifier testIdentifier) {
-			notifyTestExecutionListeners(listener -> listener.dynamicTestFound(testIdentifier));
+		public void dynamicTestRegistered(TestIdentifier testIdentifier) {
+			notifyTestExecutionListeners(listener -> listener.dynamicTestRegistered(testIdentifier));
 		}
 
 		@Override
-		public void testStarted(TestIdentifier testIdentifier) {
-			notifyTestExecutionListeners(listener -> listener.testStarted(testIdentifier));
+		public void executionSkipped(TestIdentifier testIdentifier, String reason) {
+			notifyTestExecutionListeners(listener -> listener.executionSkipped(testIdentifier, reason));
 		}
 
 		@Override
-		public void testSkipped(TestIdentifier testIdentifier, Throwable t) {
-			notifyTestExecutionListeners(listener -> listener.testSkipped(testIdentifier, t));
+		public void executionStarted(TestIdentifier testIdentifier) {
+			notifyTestExecutionListeners(listener -> listener.executionStarted(testIdentifier));
 		}
 
 		@Override
-		public void testAborted(TestIdentifier testIdentifier, Throwable t) {
-			notifyTestExecutionListeners(listener -> listener.testAborted(testIdentifier, t));
-		}
-
-		@Override
-		public void testFailed(TestIdentifier testIdentifier, Throwable t) {
-			notifyTestExecutionListeners(listener -> listener.testFailed(testIdentifier, t));
-		}
-
-		@Override
-		public void testSucceeded(TestIdentifier testIdentifier) {
-			notifyTestExecutionListeners(listener -> listener.testSucceeded(testIdentifier));
+		public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+			notifyTestExecutionListeners(listener -> listener.executionFinished(testIdentifier, testExecutionResult));
 		}
 
 		@Override
@@ -75,33 +65,8 @@ class TestExecutionListenerRegistry {
 		}
 
 		@Override
-		public void testPlanExecutionPaused(TestPlan testPlan) {
-			notifyTestExecutionListeners(listener -> listener.testPlanExecutionPaused(testPlan));
-		}
-
-		@Override
-		public void testPlanExecutionRestarted(TestPlan testPlan) {
-			notifyTestExecutionListeners(listener -> listener.testPlanExecutionRestarted(testPlan));
-		}
-
-		@Override
-		public void testPlanExecutionStopped(TestPlan testPlan) {
-			notifyTestExecutionListeners(listener -> listener.testPlanExecutionStopped(testPlan));
-		}
-
-		@Override
 		public void testPlanExecutionFinished(TestPlan testPlan) {
 			notifyTestExecutionListeners(listener -> listener.testPlanExecutionFinished(testPlan));
-		}
-
-		@Override
-		public void testPlanExecutionStartedOnEngine(TestPlan testPlan, TestEngine testEngine) {
-			notifyTestExecutionListeners(listener -> listener.testPlanExecutionStartedOnEngine(testPlan, testEngine));
-		}
-
-		@Override
-		public void testPlanExecutionFinishedOnEngine(TestPlan testPlan, TestEngine testEngine) {
-			notifyTestExecutionListeners(listener -> listener.testPlanExecutionFinishedOnEngine(testPlan, testEngine));
 		}
 	}
 }

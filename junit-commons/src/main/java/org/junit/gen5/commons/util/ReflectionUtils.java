@@ -222,6 +222,16 @@ public final class ReflectionUtils {
 			});
 	}
 
+	public static Optional<Object> getOuterInstance(Object inner, Class<?> targetType) {
+		if (targetType.isInstance(inner))
+			return Optional.of(inner);
+		Optional<Object> candidate = getOuterInstance(inner);
+		if (candidate.isPresent())
+			return getOuterInstance(candidate.get(), targetType);
+		else
+			return Optional.empty();
+	}
+
 	public static boolean isPackage(String packageName) {
 		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader, ReflectionUtils::loadClass).isPackage(
 			packageName);

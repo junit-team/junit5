@@ -13,6 +13,7 @@ package org.junit.gen5.launcher;
 import java.util.*;
 
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.TestExecutionResult;
 
 /**
  * @since 5.0
@@ -26,39 +27,19 @@ public interface TestExecutionListener {
 	default void testPlanExecutionStarted(TestPlan testPlan) {
 	}
 
-	default void testPlanExecutionPaused(TestPlan testPlan) {
-	}
-
-	default void testPlanExecutionRestarted(TestPlan testPlan) {
-	}
-
-	default void testPlanExecutionStopped(TestPlan testPlan) {
-	}
-
 	default void testPlanExecutionFinished(TestPlan testPlan) {
 	}
 
-	default void testPlanExecutionStartedOnEngine(TestPlan testPlan, TestEngine testEngine) {
+	default void dynamicTestRegistered(TestIdentifier testIdentifier) {
 	}
 
-	default void testPlanExecutionFinishedOnEngine(TestPlan testPlan, TestEngine testEngine) {
+	default void executionSkipped(TestIdentifier testIdentifier, String reason) {
 	}
 
-	default void dynamicTestFound(TestIdentifier testIdentifier) {
+	default void executionStarted(TestIdentifier testIdentifier) {
 	}
 
-	default void testStarted(TestIdentifier testIdentifier) {
+	default void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 	}
 
-	default void testSkipped(TestIdentifier testIdentifier, Throwable t) {
-	}
-
-	default void testAborted(TestIdentifier testIdentifier, Throwable t) {
-	}
-
-	default void testFailed(TestIdentifier testIdentifier, Throwable t) {
-	}
-
-	default void testSucceeded(TestIdentifier testIdentifier) {
-	}
 }
