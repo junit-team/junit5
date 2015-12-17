@@ -270,7 +270,7 @@ public class SpecificationResolverTest {
 
 		resolver.resolveElement(specification);
 
-		engineDescriptor.allDescendants().stream().forEach(d -> System.out.println(d));
+		//engineDescriptor.allDescendants().stream().forEach(d -> System.out.println(d));
 
 		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
 			Collectors.toList());
