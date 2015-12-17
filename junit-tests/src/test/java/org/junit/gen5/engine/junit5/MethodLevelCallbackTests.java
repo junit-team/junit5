@@ -11,12 +11,12 @@
 package org.junit.gen5.engine.junit5;
 
 import static java.util.Arrays.asList;
+import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
@@ -41,17 +41,40 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
 		TrackingEngineExecutionListener listener = executeTests(spec, 4);
 
-		Assert.assertEquals("# tests started", 2, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+		assertEquals(2, listener.testStartedCount.get(), "# tests started");
+		assertEquals(2, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
+		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
 
-		Assert.assertEquals("wrong call sequence",
-			asList("fooBefore", "barBefore", "fizzBefore", "beforeMethod", "testInner", "afterMethod", "fizzAfter",
-				"barAfter", "fooAfter", "fooBefore", "barBefore", "beforeMethod", "testOuter", "afterMethod",
-				"barAfter", "fooAfter"),
-			callSequence);
+		// @formatter:off
+
+		assertEquals(asList(
+
+			//InnerTestCase
+			"fooBefore",
+			"barBefore",
+				"beforeMethod",
+					"fizzBefore",
+						"beforeInnerMethod",
+							"testInner",
+						"afterInnerMethod",
+					"fizzAfter",
+				"afterMethod",
+			"barAfter",
+			"fooAfter",
+
+			//OuterTestCase
+			"fooBefore",
+			"barBefore",
+				"beforeMethod",
+					"testOuter",
+				"afterMethod",
+			"barAfter",
+			"fooAfter"),
+
+			callSequence, "wrong call sequence");
+		// @formatter:on
 	}
 
 	// -------------------------------------------------------------------
@@ -79,9 +102,19 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 		@Nested
 		@ExtendWith(FizzMethodLevelCallbacks.class)
 		class InnerTestCase {
+			@BeforeEach
+			void beforeInnerMethod() {
+				callSequence.add("beforeInnerMethod");
+			}
+
 			@Test
 			void testInner() {
 				callSequence.add("testInner");
+			}
+
+			@AfterEach
+			void afterInnerMethod() {
+				callSequence.add("afterInnerMethod");
 			}
 		}
 

@@ -101,12 +101,8 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 		invokeBeforeEachExtensionPoints(newTestExtensionRegistry, testExtensionContext);
 
-		context.getBeforeEachCallback().beforeEach(testExtensionContext, testInstance);
-
 		List<Throwable> throwablesCollector = new LinkedList<>();
 		invokeTestMethod(testExtensionContext, newTestExtensionRegistry, throwablesCollector);
-
-		context.getAfterEachCallback().afterEach(testExtensionContext, testInstance, throwablesCollector);
 
 		invokeAfterEachExtensionPoints(newTestExtensionRegistry, testExtensionContext, throwablesCollector);
 

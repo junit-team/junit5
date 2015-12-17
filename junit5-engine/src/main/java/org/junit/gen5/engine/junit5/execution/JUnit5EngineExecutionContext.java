@@ -29,14 +29,6 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 		return state.testInstanceProvider;
 	}
 
-	public BeforeEachCallback getBeforeEachCallback() {
-		return state.beforeEachCallback;
-	}
-
-	public AfterEachCallback getAfterEachCallback() {
-		return state.afterEachCallback;
-	}
-
 	public TestExtensionRegistry getTestExtensionRegistry() {
 		return state.testExtensionRegistry;
 	}
@@ -60,8 +52,6 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 	private static final class State implements Cloneable {
 
 		TestInstanceProvider testInstanceProvider;
-		BeforeEachCallback beforeEachCallback;
-		AfterEachCallback afterEachCallback;
 		TestExtensionRegistry testExtensionRegistry;
 		ExtensionContext extensionContext;
 
@@ -89,16 +79,6 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 
 		public Builder withTestInstanceProvider(TestInstanceProvider testInstanceProvider) {
 			newState().testInstanceProvider = testInstanceProvider;
-			return this;
-		}
-
-		public Builder withBeforeEachCallback(BeforeEachCallback beforeEachCallback) {
-			newState().beforeEachCallback = beforeEachCallback;
-			return this;
-		}
-
-		public Builder withAfterEachCallback(AfterEachCallback afterEachCallback) {
-			newState().afterEachCallback = afterEachCallback;
 			return this;
 		}
 
