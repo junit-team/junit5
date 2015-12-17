@@ -13,19 +13,26 @@ package org.junit.gen5.engine.junit5.descriptor;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
 import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodContext;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
+import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.extension.AfterAllExtensionPoint;
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeAllExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
+import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
@@ -95,6 +102,8 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	public JUnit5EngineExecutionContext beforeAll(JUnit5EngineExecutionContext context) throws Throwable {
 		TestExtensionRegistry newExtensionRegistry = populateNewTestExtensionRegistryFromExtendWith(testClass,
 			context.getTestExtensionRegistry());
+		registerBeforeAllMethods(newExtensionRegistry);
+		registerAfterAllMethods(newExtensionRegistry);
 		registerBeforeEachMethods(newExtensionRegistry);
 		registerAfterEachMethods(newExtensionRegistry);
 
@@ -156,28 +165,64 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			TestExtensionRegistry.ApplicationOrder.BACKWARD, applyAfterAll);
 	}
 
+	//TODO: Remove duplication with registerAfterAllMethods
+	private void registerBeforeAllMethods(TestExtensionRegistry extensionRegistry) {
+		List<Method> beforeAllMethods = findAnnotatedMethods(testClass, BeforeAll.class, MethodSortOrder.HierarchyDown);
+		beforeAllMethods.stream().forEach(method -> {
+			if (!ReflectionUtils.isStatic(method)) {
+				String message = String.format(
+					"Cannot register method '%s' as BeforeAll extension since it is not static.", method.getName());
+				throw new ExtensionConfigurationException(message);
+			}
+			BeforeAllExtensionPoint extensionPoint = containerExtensionContext -> {
+				//TODO: Apply MethodParameterResolvers
+				ReflectionUtils.invokeMethod(method, null);
+			};
+			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
+		});
+	}
+
+	//TODO: Remove duplication with registerBeforeAllMethods
+	private void registerAfterAllMethods(TestExtensionRegistry extensionRegistry) {
+		List<Method> beforeAllMethods = findAnnotatedMethods(testClass, AfterAll.class, MethodSortOrder.HierarchyDown);
+		beforeAllMethods.stream().forEach(method -> {
+			if (!ReflectionUtils.isStatic(method)) {
+				String message = String.format(
+					"Cannot register method '%s' as AfterAll extension since it is not static.", method.getName());
+				throw new ExtensionConfigurationException(message);
+			}
+			AfterAllExtensionPoint extensionPoint = containerExtensionContext -> {
+				//TODO: Apply MethodParameterResolvers
+				ReflectionUtils.invokeMethod(method, null);
+			};
+			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
+		});
+	}
+
+	//TODO: Remove duplication with registerAfterEachMethods
 	private void registerBeforeEachMethods(TestExtensionRegistry extensionRegistry) {
 		List<Method> beforeEachMethods = findAnnotatedMethods(testClass, BeforeEach.class,
 			MethodSortOrder.HierarchyDown);
 		beforeEachMethods.stream().forEach(method -> {
 			BeforeEachExtensionPoint extensionPoint = testExtensionContext -> {
-				runMethodInExtensionContext(method, testExtensionContext, extensionRegistry);
+				runMethodInTestExtensionContext(method, testExtensionContext, extensionRegistry);
 			};
 			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
 		});
 	}
 
+	//TODO: Remove duplication with registerBeforeEachMethods
 	private void registerAfterEachMethods(TestExtensionRegistry extensionRegistry) {
 		List<Method> afterEachMethods = findAnnotatedMethods(testClass, AfterEach.class, MethodSortOrder.HierarchyDown);
 		afterEachMethods.stream().forEach(method -> {
 			AfterEachExtensionPoint extensionPoint = testExtensionContext -> {
-				runMethodInExtensionContext(method, testExtensionContext, extensionRegistry);
+				runMethodInTestExtensionContext(method, testExtensionContext, extensionRegistry);
 			};
 			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
 		});
 	}
 
-	private void runMethodInExtensionContext(Method method, TestExtensionContext testExtensionContext,
+	private void runMethodInTestExtensionContext(Method method, TestExtensionContext testExtensionContext,
 			TestExtensionRegistry extensionRegistry) {
 		Optional<Object> optionalInstance = ReflectionUtils.getOuterInstance(testExtensionContext.getTestInstance(),
 			method.getDeclaringClass());

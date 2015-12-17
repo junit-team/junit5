@@ -22,9 +22,14 @@ import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.AfterAllExtensionPoint;
+import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeAllExtensionPoint;
+import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.api.extension.ExtensionRegistrar;
+import org.junit.gen5.api.extension.ExtensionRegistry;
+import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -46,24 +51,18 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
 		// @formatter:off
 		assertEquals(asList(
-
-//			"outermostBefore",
+			"outermostBefore",
 				"fooBeforeAll",
 				"barBeforeAll",
-//					"beforeAllMethod",
-//						"fizzBefore",
-//							"beforeInnerMethod",
-//								"innermostBefore",
-									"firstTest",
-									"secondTest",
-//								"innermostAfter",
-//							"afterInnerMethod",
-//						"fizzAfter",
-//					"afterAllMethod",
+					"beforeAllMethod",
+						"innermostBefore",
+							"firstTest",
+							"secondTest",
+						"innermostAfter",
+					"afterAllMethod",
 				"barAfterAll",
-				"fooAfterAll"
-//			"outermostAfter"
-
+				"fooAfterAll",
+			"outermostAfter"
 			), callSequence, "wrong call sequence");
 		// @formatter:on
 	}
@@ -72,7 +71,7 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
 	private static List<String> callSequence = new ArrayList<>();
 
-	@ExtendWith({ FooClassLevelCallbacks.class, BarClassLevelCallbacks.class })
+	@ExtendWith({ FooClassLevelCallbacks.class, BarClassLevelCallbacks.class, InnermostAndOutermost.class })
 	private static class InstancePerMethodTestCase {
 
 		@BeforeAll
@@ -94,6 +93,33 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 		void secondTest() {
 			callSequence.add("secondTest");
 
+		}
+	}
+
+	private static class InnermostAndOutermost implements ExtensionRegistrar {
+
+		@Override
+		public void registerExtensions(ExtensionRegistry registry) {
+			registry.register(this::innermostBefore, BeforeAllExtensionPoint.class, Position.INNERMOST);
+			registry.register(this::innermostAfter, AfterAllExtensionPoint.class, Position.INNERMOST);
+			registry.register(this::outermostBefore, BeforeAllExtensionPoint.class, Position.OUTERMOST);
+			registry.register(this::outermostAfter, AfterAllExtensionPoint.class, Position.OUTERMOST);
+		}
+
+		private void outermostBefore(ContainerExtensionContext context) {
+			callSequence.add("outermostBefore");
+		}
+
+		private void innermostBefore(ContainerExtensionContext context) {
+			callSequence.add("innermostBefore");
+		}
+
+		private void outermostAfter(ContainerExtensionContext context) {
+			callSequence.add("outermostAfter");
+		}
+
+		private void innermostAfter(ContainerExtensionContext context) {
+			callSequence.add("innermostAfter");
 		}
 	}
 

@@ -32,7 +32,6 @@ import org.junit.gen5.engine.TestPlanSpecification;
 
 public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase {
 
-	@Ignore("https://github.com/junit-team/junit-lambda/issues/39")
 	@org.junit.Test
 	public void executeCompositeTestPlanSpecification() {
 		TestPlanSpecification spec = build(
@@ -48,7 +47,6 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase 
 		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
 	}
 
-	@Ignore("https://github.com/junit-team/junit-lambda/issues/39")
 	@org.junit.Test
 	public void executeTestsForClass() {
 		LocalTestCase.countAfterInvoked = 0;
