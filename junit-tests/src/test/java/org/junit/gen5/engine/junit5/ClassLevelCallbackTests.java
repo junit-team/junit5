@@ -44,10 +44,10 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 	public void beforeAllAndAfterAllCallbacks() {
 		TestPlanSpecification spec = build(forClass(InstancePerMethodTestCase.class));
 
-		TrackingEngineExecutionListener listener = executeTests(spec, 3);
+		TrackingEngineExecutionListener listener = executeTests(spec, 2);
 
-		Assert.assertEquals("# tests started", 2, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
 
 		// @formatter:off
 		assertEquals(asList(
@@ -57,7 +57,6 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 					"beforeAllMethod",
 						"innermostBefore",
 							"firstTest",
-							"secondTest",
 						"innermostAfter",
 					"afterAllMethod",
 				"barAfterAll",
@@ -89,11 +88,6 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 			callSequence.add("firstTest");
 		}
 
-		@Test
-		void secondTest() {
-			callSequence.add("secondTest");
-
-		}
 	}
 
 	private static class InnermostAndOutermost implements ExtensionRegistrar {
