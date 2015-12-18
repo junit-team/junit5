@@ -13,15 +13,11 @@ package org.junit.gen5.engine.junit5.descriptor;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
 import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodContext;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
@@ -175,8 +171,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 				throw new ExtensionConfigurationException(message);
 			}
 			BeforeAllExtensionPoint extensionPoint = containerExtensionContext -> {
-				//TODO: Apply MethodParameterResolvers
-				ReflectionUtils.invokeMethod(method, null);
+				new MethodInvoker(containerExtensionContext, extensionRegistry).invoke(methodContext(null, method));
 			};
 			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
 		});
@@ -192,8 +187,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 				throw new ExtensionConfigurationException(message);
 			}
 			AfterAllExtensionPoint extensionPoint = containerExtensionContext -> {
-				//TODO: Apply MethodParameterResolvers
-				ReflectionUtils.invokeMethod(method, null);
+				new MethodInvoker(containerExtensionContext, extensionRegistry).invoke(methodContext(null, method));
 			};
 			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
 		});

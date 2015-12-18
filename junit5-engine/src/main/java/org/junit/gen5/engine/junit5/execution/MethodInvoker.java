@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.MethodContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
-import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry.ApplicationOrder;
 
@@ -32,11 +32,11 @@ import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry.ApplicationO
  */
 public class MethodInvoker {
 
-	private final TestExtensionContext testExtensionContext;
+	private final ExtensionContext extensionContext;
 	private final TestExtensionRegistry extensionRegistry;
 
-	public MethodInvoker(TestExtensionContext testExtensionContext, TestExtensionRegistry extensionRegistry) {
-		this.testExtensionContext = testExtensionContext;
+	public MethodInvoker(ExtensionContext extensionContext, TestExtensionRegistry extensionRegistry) {
+		this.extensionContext = extensionContext;
 		this.extensionRegistry = extensionRegistry;
 	}
 
@@ -68,7 +68,7 @@ public class MethodInvoker {
 				extensionRegistry.applyExtensionPoints(MethodParameterResolver.class, ApplicationOrder.FORWARD,
 					registeredExtensionPoint -> {
 						if (registeredExtensionPoint.getExtensionPoint().supports(parameter, methodContext,
-							testExtensionContext))
+							extensionContext))
 							matchingResolvers.add(registeredExtensionPoint.getExtensionPoint());
 					});
 			}
@@ -92,7 +92,7 @@ public class MethodInvoker {
 					"Discovered multiple competing MethodParameterResolvers for parameter [%s] in method [%s]: %s",
 					parameter, methodContext.getMethod().toGenericString(), resolverNames));
 			}
-			return matchingResolvers.get(0).resolve(parameter, methodContext, testExtensionContext);
+			return matchingResolvers.get(0).resolve(parameter, methodContext, extensionContext);
 		}
 		catch (Exception ex) {
 			if (ex instanceof ParameterResolutionException) {
