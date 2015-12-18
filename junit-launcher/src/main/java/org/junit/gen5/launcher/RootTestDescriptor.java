@@ -17,6 +17,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,10 +34,16 @@ import org.junit.gen5.engine.TestTag;
  */
 final class RootTestDescriptor implements TestDescriptor {
 
-	private final HashMap<String, TestDescriptor> engineRootTestDescriptors = new HashMap<>();
+	private final List<TestEngine> testEngines = new LinkedList<>();
+	private final Map<String, TestDescriptor> engineRootTestDescriptors = new HashMap<>();
 
 	void addTestDescriptorForEngine(TestEngine testEngine, TestDescriptor testDescriptor) {
+		testEngines.add(testEngine);
 		engineRootTestDescriptors.put(testEngine.getId(), testDescriptor);
+	}
+
+	Iterable<TestEngine> getTestEngines() {
+		return testEngines;
 	}
 
 	Collection<TestDescriptor> getEngineRootTestDescriptors() {
@@ -47,8 +56,8 @@ final class RootTestDescriptor implements TestDescriptor {
 			engineDescriptor -> engineDescriptor.countStaticTests()).sum();
 	}
 
-	Optional<TestDescriptor> getTestDescriptorFor(TestEngine testEngine) {
-		return Optional.of(this.engineRootTestDescriptors.get(testEngine.getId()));
+	TestDescriptor getTestDescriptorFor(TestEngine testEngine) {
+		return engineRootTestDescriptors.get(testEngine.getId());
 	}
 
 	@Override
