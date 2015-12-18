@@ -12,6 +12,7 @@ package org.junit.gen5.launcher;
 
 import java.util.logging.Logger;
 
+import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -50,8 +51,8 @@ public class Launcher {
 		RootTestDescriptor root = new RootTestDescriptor();
 		for (TestEngine testEngine : testEngineRegistry.lookupAllTestEngines()) {
 			LOG.info("Discovering tests in engine " + testEngine.getId());
-			TestDescriptor engineRoot = testEngine.discoverTests(specification);
-			root.addTestDescriptorForEngine(testEngine, engineRoot);
+			EngineAwareTestDescriptor engineRoot = testEngine.discoverTests(specification);
+			root.addChild(engineRoot);
 		}
 		root.applyFilters(specification);
 		root.prune();

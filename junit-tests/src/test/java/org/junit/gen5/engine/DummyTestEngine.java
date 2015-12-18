@@ -10,28 +10,33 @@
 
 package org.junit.gen5.engine;
 
-import static org.junit.gen5.engine.DummyTestDescriptor.ENGINE_ID;
-
-import java.util.LinkedList;
-import java.util.List;
-
 public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExecutionContext> {
 
-	private final List<DummyTestDescriptor> children = new LinkedList<>();
+	private final String engineId;
+	private final EngineDescriptor root;
+
+	public DummyTestEngine() {
+		this("dummy");
+	}
+
+	public DummyTestEngine(String engineId) {
+		this.engineId = engineId;
+		this.root = new EngineDescriptor(this);
+	}
 
 	@Override
 	public String getId() {
-		return ENGINE_ID;
+		return engineId;
 	}
 
-	public void addTest(String uniqueName, Runnable runnable) {
-		children.add(new DummyTestDescriptor(uniqueName, runnable));
+	public TestDescriptor addTest(String uniqueName, Runnable runnable) {
+		DummyTestDescriptor child = new DummyTestDescriptor(engineId + ":" + uniqueName, uniqueName, runnable);
+		root.addChild(child);
+		return child;
 	}
 
 	@Override
-	public TestDescriptor discoverTests(TestPlanSpecification specification) {
-		DummyTestDescriptor root = new DummyTestDescriptor("root", null);
-		children.forEach(root::addChild);
+	public EngineAwareTestDescriptor discoverTests(TestPlanSpecification specification) {
 		return root;
 	}
 

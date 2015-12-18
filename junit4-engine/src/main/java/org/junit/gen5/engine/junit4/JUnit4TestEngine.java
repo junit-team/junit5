@@ -10,9 +10,9 @@
 
 package org.junit.gen5.engine.junit4;
 
+import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.ExecutionRequest;
-import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 
@@ -24,7 +24,7 @@ public class JUnit4TestEngine implements TestEngine {
 	}
 
 	@Override
-	public TestDescriptor discoverTests(TestPlanSpecification specification) {
+	public EngineAwareTestDescriptor discoverTests(TestPlanSpecification specification) {
 		return new EngineDescriptor(this);
 	}
 
