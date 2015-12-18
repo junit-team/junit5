@@ -10,7 +10,9 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.Assert.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.expectThrows;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,12 +20,16 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
 
-@SuppressWarnings("unchecked")
+/**
+ * Unit tests for {@link ExtensionPointSorter}.
+ *
+ * @since 5.0
+ */
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class ExtensionPointSortingTest {
 
 	private ExtensionPointSorter sorter;
@@ -117,7 +123,7 @@ public class ExtensionPointSortingTest {
 		pointsToSort.add(point1);
 		pointsToSort.add(point2);
 
-		Assertions.expectThrows(ExtensionConfigurationException.class, () -> sorter.sort(pointsToSort));
+		expectThrows(ExtensionConfigurationException.class, () -> sorter.sort(pointsToSort));
 	}
 
 	@Test
@@ -128,7 +134,7 @@ public class ExtensionPointSortingTest {
 		pointsToSort.add(point1);
 		pointsToSort.add(point2);
 
-		Assertions.expectThrows(ExtensionConfigurationException.class, () -> sorter.sort(pointsToSort));
+		expectThrows(ExtensionConfigurationException.class, () -> sorter.sort(pointsToSort));
 	}
 
 	protected void assertSorting(RegisteredExtensionPoint... points) {
@@ -136,9 +142,9 @@ public class ExtensionPointSortingTest {
 
 		String failureMessage = String.format("Expected %s but was %s", Arrays.asList(points), pointsToSort);
 
-		assertEquals(failureMessage, points.length, pointsToSort.size());
+		assertEquals(points.length, pointsToSort.size(), failureMessage);
 		for (int i = 0; i < points.length; i++) {
-			assertTrue(failureMessage, points[i] == pointsToSort.get(i));
+			assertTrue(points[i] == pointsToSort.get(i), failureMessage);
 		}
 	}
 
