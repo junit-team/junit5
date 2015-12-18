@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
@@ -100,6 +101,8 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(context.getExtensionContext(),
 			this, testInstance);
 
+		invokeInstancePostProcessorExtensionPoints(newTestExtensionRegistry, testExtensionContext);
+
 		invokeBeforeEachExtensionPoints(newTestExtensionRegistry, testExtensionContext);
 
 		List<Throwable> throwablesCollector = new LinkedList<>();
@@ -110,6 +113,15 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		throwIfAnyThrowablePresent(throwablesCollector);
 
 		return newContext;
+	}
+
+	private void invokeInstancePostProcessorExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+			TestExtensionContext testExtensionContext) throws Throwable {
+		ThrowingConsumer<RegisteredExtensionPoint<InstancePostProcessor>> applyInstancePostProcessor = registeredExtensionPoint -> {
+			registeredExtensionPoint.getExtensionPoint().postProcessTestInstance(testExtensionContext);
+		};
+		newTestExtensionRegistry.applyExtensionPoints(InstancePostProcessor.class,
+			TestExtensionRegistry.ApplicationOrder.FORWARD, applyInstancePostProcessor);
 	}
 
 	private void invokeBeforeEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
