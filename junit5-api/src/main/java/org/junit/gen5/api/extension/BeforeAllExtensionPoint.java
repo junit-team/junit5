@@ -32,6 +32,6 @@ public interface BeforeAllExtensionPoint extends ExtensionPoint {
 	 *
 	 * @param context the current container extension context
 	 */
-	void beforeAll(ContainerExtensionContext context) throws Exception;
+	void beforeAll(ContainerExtensionContext context) throws Throwable;
 
 }

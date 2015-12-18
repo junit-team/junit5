@@ -125,6 +125,9 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			invokeAfterAllExtensionPoints(context.getTestExtensionRegistry(),
 				(ContainerExtensionContext) context.getExtensionContext(), throwablesCollector);
 		}
+		catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
+			throwablesCollector.add(wrapper.getTargetException());
+		}
 		catch (Throwable throwable) {
 			throwablesCollector.add(throwable);
 		}
@@ -153,6 +156,9 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			try {
 				registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext);
 			}
+			catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
+				throwablesCollector.add(wrapper.getTargetException());
+			}
 			catch (Throwable t) {
 				throwablesCollector.add(t);
 			}
@@ -171,7 +177,13 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 				throw new ExtensionConfigurationException(message);
 			}
 			BeforeAllExtensionPoint extensionPoint = containerExtensionContext -> {
-				new MethodInvoker(containerExtensionContext, extensionRegistry).invoke(methodContext(null, method));
+				try {
+					new MethodInvoker(containerExtensionContext, extensionRegistry).invoke(methodContext(null, method));
+				}
+				catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
+					throw wrapper.getTargetException();
+				}
+
 			};
 			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
 		});
@@ -199,7 +211,12 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			MethodSortOrder.HierarchyDown);
 		beforeEachMethods.stream().forEach(method -> {
 			BeforeEachExtensionPoint extensionPoint = testExtensionContext -> {
-				runMethodInTestExtensionContext(method, testExtensionContext, extensionRegistry);
+				try {
+					runMethodInTestExtensionContext(method, testExtensionContext, extensionRegistry);
+				}
+				catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
+					throw wrapper.getTargetException();
+				}
 			};
 			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
 		});

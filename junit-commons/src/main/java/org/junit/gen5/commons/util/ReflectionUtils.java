@@ -405,7 +405,20 @@ public final class ReflectionUtils {
 		if (ex instanceof Error) {
 			throw (Error) ex;
 		}
-		throw new IllegalStateException("Unhandled exception", ex);
+		//TODO: Research if throwing the exception itself would be a better option
+		throw new TargetExceptionWrapper(ex);
 	}
 
+	public static class TargetExceptionWrapper extends RuntimeException {
+		private final Throwable targetException;
+
+		private TargetExceptionWrapper(Throwable targetException) {
+			super();
+			this.targetException = targetException;
+		}
+
+		public Throwable getTargetException() {
+			return targetException;
+		}
+	}
 }
