@@ -89,7 +89,7 @@ public final class ReflectionUtils {
 		Preconditions.notNull(clazz, "class must not be null");
 
 		try {
-			Class<?>[] parameterTypes = Arrays.stream(args).map(Object::getClass).toArray(Class<?>[]::new);
+			Class<?>[] parameterTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
 			Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes);
 			makeAccessible(constructor);
 			return constructor.newInstance(args);
