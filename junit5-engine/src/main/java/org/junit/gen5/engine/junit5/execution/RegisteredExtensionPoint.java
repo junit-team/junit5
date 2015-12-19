@@ -18,8 +18,8 @@ import org.junit.gen5.commons.util.ToStringBuilder;
  * Represents an {@linkplain ExtensionPoint extension} registered in a
  * {@link TestExtensionRegistry}.
  *
- * @since 5.0
  * @param <T> the concrete subtype of {@link ExtensionPoint} to be registered
+ * @since 5.0
  */
 public class RegisteredExtensionPoint<T extends ExtensionPoint> {
 

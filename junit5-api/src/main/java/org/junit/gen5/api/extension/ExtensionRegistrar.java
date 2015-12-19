@@ -13,8 +13,8 @@ package org.junit.gen5.api.extension;
 /**
  * Interface to be implemented by more complex {@linkplain TestExtension}s that need to register
  * {@linkplain ExtensionPoint} instances with other Position than DEFAULT.
- * <p>
- * {@code ExtensionPointRegistrar} can be registered via {@link ExtendWith @ExtendWith}.
+ *
+ * <p>{@code ExtensionPointRegistrar} can be registered via {@link ExtendWith @ExtendWith}.
  *
  * @since 5.0
  */

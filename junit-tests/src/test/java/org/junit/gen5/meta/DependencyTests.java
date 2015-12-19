@@ -21,7 +21,7 @@ import org.junit.Test;
 /**
  * Checks against dependency cycles on package and module level.
  *
- * Modules in that sense are defined by the package name element after org.junit.gen5,
+ * <p>Modules in that sense are defined by the package name element after org.junit.gen5,
  * so "org.junit.gen5.console.ConsoleRunner" belongs to the module "console".
  */
 public class DependencyTests {
