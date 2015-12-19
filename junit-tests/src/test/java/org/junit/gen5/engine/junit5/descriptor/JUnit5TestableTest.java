@@ -16,11 +16,21 @@ import java.math.BigDecimal;
 import org.junit.Assert;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDescriptor;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class JUnit5TestableTest {
 
-	private final EngineDescriptor engineDescriptor = new EngineDescriptor(new JUnit5TestEngine());
+	private final EngineDescriptor engineDescriptor;
+
+	{
+		final TestEngine engine = mock(TestEngine.class);
+		when(engine.getId()).thenReturn("junit5");
+		engineDescriptor = new EngineDescriptor(engine);
+	}
 
 	@org.junit.Test
 	public void fromUniqueIdForTopLevelClass() {
