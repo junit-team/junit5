@@ -17,6 +17,7 @@ subprojects {
 	apply plugin: 'maven'
 	apply plugin: 'signing'
 	apply plugin: 'com.diffplug.gradle.spotless'
+	apply plugin: 'checkstyle'
 
 	repositories {
 		mavenCentral()
@@ -34,7 +35,9 @@ subprojects {
 		options.compilerArgs += '-parameters'
 	}
 
-	dependencies {
+	checkstyle {
+		toolVersion = 6.11
+		configFile = rootProject.file('src/checkstyle/checkstyle.xml')
 	}
 
 	eclipse {
