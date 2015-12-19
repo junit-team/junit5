@@ -22,7 +22,7 @@ package org.junit.gen5.api;
  * @see Assertions#assertAll(Executable...)
  * @see Assertions#assertAll(String, Executable...)
  * @see Assertions#assertThrows(Class, Executable)
- * @see Assumptions#assumingThat(boolean, Executable)
+ * @see Assumptions#assumingThat(java.util.function.BooleanSupplier, Executable)
  */
 @FunctionalInterface
 public interface Executable {
