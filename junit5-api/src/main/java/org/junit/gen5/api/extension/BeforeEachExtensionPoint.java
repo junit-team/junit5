@@ -13,10 +13,10 @@ package org.junit.gen5.api.extension;
 /**
  * {@code BeforeEachCallbacks} defines the API for {@link ExtensionPoint} that wish to provide additional
  * behavior to tests before each test method has been invoked.
- * <p>
- * Concrete implementations often implement {@link AfterEachExtensionPoint} as well.
- * <p>
- * Implementations must provide a no-args constructor.
+ *
+ * <p>Concrete implementations often implement {@link AfterEachExtensionPoint} as well.
+ *
+ * <p>Implementations must provide a no-args constructor.
  *
  * @since 5.0
  * @see org.junit.gen5.api.BeforeEach

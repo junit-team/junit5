@@ -22,9 +22,8 @@ import org.junit.gen5.engine.TestTag;
 /**
  * Immutable data transfer object that describes a test or a test container.
  *
- * @see TestPlan
- *
  * @since 5.0
+ * @see TestPlan
  */
 public final class TestIdentifier {
 

@@ -152,6 +152,7 @@ public final class AnnotationUtils {
 	 * {@code annotationType} that are either <em>present</em>,
 	 * <em>indirectly present</em>, or <em>meta-present</em> on the supplied
 	 * {@link AnnotatedElement}.
+	 *
 	 * <p>This method extends the functionality of
 	 * {@link java.lang.reflect.AnnotatedElement#getAnnotationsByType(Class)}
 	 * with additional support for meta-annotations.

@@ -47,8 +47,8 @@ import org.junit.gen5.engine.junit5.execution.ThrowingConsumer;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.
- * <p>
- * The pattern of the {@link #getUniqueId unique ID} takes the form of
+ *
+ * <p>The pattern of the {@link #getUniqueId unique ID} takes the form of
  * <code>{parent unique id}:{fully qualified class name}</code>.
  *
  * @since 5.0
