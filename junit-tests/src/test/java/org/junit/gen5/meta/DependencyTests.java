@@ -13,6 +13,8 @@ package org.junit.gen5.meta;
 import static de.schauderhaft.degraph.check.JCheck.*;
 import static org.hamcrest.Matchers.is;
 
+import de.schauderhaft.degraph.configuration.NamedPattern;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,7 +33,9 @@ public class DependencyTests {
 		Assert.assertThat(classpath() //
 		.printTo("dependencies.graphml") //
 		.including("org.junit.gen5.**") //
-		.withSlicing("module", "org.junit.gen5.(*).**"), //
+		.withSlicing("module", new NamedPattern("org.junit.gen5.engine.junit4.**", "junit4-engine"),
+			new NamedPattern("org.junit.gen5.engine.junit5.**", "junit5-engine"),
+			new NamedPattern("org.junit.gen5.engine.**", "engine-api"), "org.junit.gen5.(*).**"), //
 			is(violationFree()));
 	}
 }
