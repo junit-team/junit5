@@ -11,6 +11,8 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,13 +23,21 @@ import org.junit.gen5.engine.ClassSpecification;
 import org.junit.gen5.engine.MethodSpecification;
 import org.junit.gen5.engine.PackageSpecification;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.UniqueIdSpecification;
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 
 public class SpecificationResolverTest {
 
-	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(new JUnit5TestEngine());
-	private SpecificationResolver resolver = new SpecificationResolver(engineDescriptor);
+	private final JUnit5EngineDescriptor engineDescriptor;
+	private SpecificationResolver resolver;
+
+	{
+		final TestEngine engine = mock(TestEngine.class);
+		when(engine.getId()).thenReturn("ENGINE_ID");
+		engineDescriptor = new JUnit5EngineDescriptor(engine);
+		resolver = new SpecificationResolver(engineDescriptor);
+	}
 
 	@org.junit.Test
 	public void testSingleClassResolution() {
@@ -37,9 +47,9 @@ public class SpecificationResolverTest {
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()"));
 	}
 
 	@org.junit.Test
@@ -53,12 +63,12 @@ public class SpecificationResolverTest {
 		assertEquals(6, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
 			Collectors.toList());
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.YourTestClass"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.YourTestClass#test3()"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.YourTestClass#test4()"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.YourTestClass"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.YourTestClass#test3()"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.YourTestClass#test4()"));
 	}
 
 	@org.junit.Test
@@ -70,11 +80,12 @@ public class SpecificationResolverTest {
 		assertEquals(3, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
 			Collectors.toList());
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass"));
+		assertTrue(
+			uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test6()"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test6()"));
 	}
 
 	@org.junit.Test
@@ -87,8 +98,8 @@ public class SpecificationResolverTest {
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
 	}
 
 	@org.junit.Test
@@ -100,8 +111,8 @@ public class SpecificationResolverTest {
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.HerTestClass"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test1()"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test1()"));
 	}
 
 	@org.junit.Test(expected = IllegalArgumentException.class)
@@ -115,50 +126,52 @@ public class SpecificationResolverTest {
 	@org.junit.Test
 	public void testClassResolutionByUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass");
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass");
 
 		resolver.resolveElement(specification);
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()"));
 	}
 
 	@org.junit.Test
 	public void testInnerClassResolutionByUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass");
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass");
 
 		resolver.resolveElement(specification);
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass"));
+		assertTrue(
+			uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test6()"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test6()"));
 	}
 
 	@org.junit.Test
 	public void testMethodOfInnerClassByUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()");
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()");
 
 		resolver.resolveElement(specification);
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass"));
+		assertTrue(
+			uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()"));
 	}
 
 	@org.junit.Test(expected = IllegalArgumentException.class)
 	public void testNonResolvableUniqueId() {
-		UniqueIdSpecification specification1 = new UniqueIdSpecification("junit5:poops-machine");
+		UniqueIdSpecification specification1 = new UniqueIdSpecification("ENGINE_ID:poops-machine");
 
 		resolver.resolveElement(specification1);
 	}
@@ -166,27 +179,27 @@ public class SpecificationResolverTest {
 	@org.junit.Test(expected = IllegalArgumentException.class)
 	public void testUniqueIdOfNotTestMethod() {
 		UniqueIdSpecification specification1 = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#notATest()");
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#notATest()");
 		resolver.resolveElement(specification1);
 	}
 
 	@org.junit.Test
 	public void testMethodResolutionByUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()");
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()");
 
 		resolver.resolveElement(specification);
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
 	}
 
 	@org.junit.Test
 	public void testMethodResolutionByUniqueIdFromInheritedClass() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test1()");
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test1()");
 
 		resolver.resolveElement(specification);
 
@@ -194,14 +207,14 @@ public class SpecificationResolverTest {
 		List<String> uniqueIds = uniqueIds();
 
 		// System.out.println(uniqueIds);
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.HerTestClass"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test1()"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test1()"));
 	}
 
 	@org.junit.Test
 	public void testMethodResolutionByUniqueIdWithParams() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test7(java.lang.String)");
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test7(java.lang.String)");
 
 		resolver.resolveElement(specification);
 
@@ -209,15 +222,15 @@ public class SpecificationResolverTest {
 		List<String> uniqueIds = uniqueIds();
 
 		// System.out.println(uniqueIds);
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.HerTestClass"));
-		assertTrue(
-			uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test7(java.lang.String)"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass"));
+		assertTrue(uniqueIds.contains(
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test7(java.lang.String)"));
 	}
 
 	@org.junit.Test(expected = IllegalArgumentException.class)
 	public void testMethodResolutionByUniqueIdWithWrongParams() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test7(java.math.BigDecimal)");
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test7(java.math.BigDecimal)");
 
 		resolver.resolveElement(specification);
 	}
@@ -225,9 +238,9 @@ public class SpecificationResolverTest {
 	@org.junit.Test
 	public void testTwoMethodResolutionsByUniqueId() {
 		UniqueIdSpecification specification1 = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()");
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()");
 		UniqueIdSpecification specification2 = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()");
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()");
 
 		resolver.resolveElement(specification1);
 		resolver.resolveElement(specification2);
@@ -235,14 +248,14 @@ public class SpecificationResolverTest {
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()"));
 
 		TestDescriptor classFromMethod1 = descriptorByUniqueId(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()").getParent().get();
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()").getParent().get();
 		TestDescriptor classFromMethod2 = descriptorByUniqueId(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()").getParent().get();
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()").getParent().get();
 
 		assertEquals(classFromMethod1, classFromMethod2);
 		assertSame(classFromMethod1, classFromMethod2);
@@ -256,12 +269,14 @@ public class SpecificationResolverTest {
 
 		assertEquals(4, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.subpackage.Class1WithTestCases"));
+		assertTrue(
+			uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.subpackage.Class1WithTestCases"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.subpackage.Class1WithTestCases#test1()"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.subpackage.Class2WithTestCases"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.subpackage.Class1WithTestCases#test1()"));
+		assertTrue(
+			uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.subpackage.Class2WithTestCases"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.subpackage.Class2WithTestCases#test2()"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.subpackage.Class2WithTestCases#test2()"));
 	}
 
 	@org.junit.Test
@@ -276,15 +291,16 @@ public class SpecificationResolverTest {
 			Collectors.toList());
 		assertEquals(6, uniqueIds.size());
 
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting#testA()"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting#testA()"));
+		assertTrue(
+			uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest#testB()"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest#testB()"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
 	}
 
 	@org.junit.Test
@@ -297,20 +313,21 @@ public class SpecificationResolverTest {
 			Collectors.toList());
 		assertEquals(5, uniqueIds.size());
 
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting"));
+		assertTrue(
+			uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest#testB()"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest#testB()"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
 	}
 
 	@org.junit.Test
 	public void testNestedTestResolutionFromUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest");
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest");
 
 		resolver.resolveElement(specification);
 
@@ -318,12 +335,13 @@ public class SpecificationResolverTest {
 			Collectors.toList());
 		assertEquals(4, uniqueIds.size());
 
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting"));
+		assertTrue(
+			uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
 	}
 
 	@org.junit.Test
@@ -337,18 +355,19 @@ public class SpecificationResolverTest {
 			Collectors.toList());
 		assertEquals(4, uniqueIds.size());
 
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting"));
+		assertTrue(
+			uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
 	}
 
 	@org.junit.Test
 	public void testNestedTestResolutionFromUniqueIdToMethod() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest#testB()");
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest#testB()");
 
 		resolver.resolveElement(specification);
 
@@ -356,10 +375,11 @@ public class SpecificationResolverTest {
 			Collectors.toList());
 		assertEquals(3, uniqueIds.size());
 
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting"));
-		assertTrue(uniqueIds.contains("junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting"));
+		assertTrue(
+			uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest"));
 		assertTrue(uniqueIds.contains(
-			"junit5:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest#testB()"));
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest#testB()"));
 	}
 
 	private TestDescriptor descriptorByUniqueId(String id) {
