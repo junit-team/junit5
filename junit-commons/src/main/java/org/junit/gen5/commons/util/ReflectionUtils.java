@@ -411,6 +411,8 @@ public final class ReflectionUtils {
 
 	public static class TargetExceptionWrapper extends RuntimeException {
 
+		private static final long serialVersionUID = 3733792088719661853L;
+
 		private final Throwable targetException;
 
 		private TargetExceptionWrapper(Throwable targetException) {
