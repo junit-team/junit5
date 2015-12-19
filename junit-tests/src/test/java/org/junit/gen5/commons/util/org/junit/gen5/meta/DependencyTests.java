@@ -17,13 +17,21 @@ import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
 
+/**
+ * checks agains dependecy circles on package and module level.
+ *
+ * Modules in that sense are defined by the package name element after org.junit.gen5,
+ * so org.junit.gen5.engine.TestEngine belongs in the module engine.
+ */
 public class DependencyTests {
 
     @Test
     public void noCycles(){
         Assert.assertThat(classpath()
                 .noJars()
-                .printTo("dependencies.graphml"),
+                .printTo("dependencies.graphml")
+                .including("org.junit.**")
+                .withSlicing("module", "org.junit.gen5.(*).**"),
                 is(violationFree()));
     }
 }
