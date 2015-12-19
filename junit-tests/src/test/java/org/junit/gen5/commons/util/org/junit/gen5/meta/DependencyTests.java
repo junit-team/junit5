@@ -28,7 +28,10 @@ public class DependencyTests {
 	public void noCycles() {
 		// we can't use noJar(), because with gradle the dependencies of other modules are
 		// included as jar files in the path.
-		Assert.assertThat(classpath().printTo("dependencies.graphml").including("org.junit.**").withSlicing("module",
-			"org.junit.gen5.(*).**"), is(violationFree()));
+		Assert.assertThat(classpath() //
+		.printTo("dependencies.graphml") //
+		.including("org.junit.gen5.**") //
+		.withSlicing("module", "org.junit.gen5.(*).**"), //
+			is(violationFree()));
 	}
 }
