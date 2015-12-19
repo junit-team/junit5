@@ -167,7 +167,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			TestExtensionRegistry.ApplicationOrder.BACKWARD, applyAfterAll);
 	}
 
-	//TODO: Remove duplication with registerAfterAllMethods
+	// TODO Remove duplication with registerAfterAllMethods
 	private void registerBeforeAllMethods(TestExtensionRegistry extensionRegistry) {
 		List<Method> beforeAllMethods = findAnnotatedMethods(testClass, BeforeAll.class, MethodSortOrder.HierarchyDown);
 		beforeAllMethods.stream().forEach(method -> {
@@ -189,7 +189,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		});
 	}
 
-	//TODO: Remove duplication with registerBeforeAllMethods
+	// TODO Remove duplication with registerBeforeAllMethods
 	private void registerAfterAllMethods(TestExtensionRegistry extensionRegistry) {
 		List<Method> beforeAllMethods = findAnnotatedMethods(testClass, AfterAll.class, MethodSortOrder.HierarchyDown);
 		beforeAllMethods.stream().forEach(method -> {
@@ -205,7 +205,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		});
 	}
 
-	//TODO: Remove duplication with registerAfterEachMethods
+	// TODO Remove duplication with registerAfterEachMethods
 	private void registerBeforeEachMethods(TestExtensionRegistry extensionRegistry) {
 		List<Method> beforeEachMethods = findAnnotatedMethods(testClass, BeforeEach.class,
 			MethodSortOrder.HierarchyDown);
@@ -222,7 +222,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		});
 	}
 
-	//TODO: Remove duplication with registerBeforeEachMethods
+	// TODO Remove duplication with registerBeforeEachMethods
 	private void registerAfterEachMethods(TestExtensionRegistry extensionRegistry) {
 		List<Method> afterEachMethods = findAnnotatedMethods(testClass, AfterEach.class, MethodSortOrder.HierarchyDown);
 		afterEachMethods.stream().forEach(method -> {

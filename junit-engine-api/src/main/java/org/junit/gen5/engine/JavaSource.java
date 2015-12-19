@@ -64,7 +64,7 @@ public class JavaSource implements TestSource {
 
 	@Override
 	public String toString() {
-		//TODO Add parameters to method string
+		// TODO Add parameters to method string
 		StringBuilder builder = new StringBuilder();
 		getJavaClass().ifPresent(clazz -> builder.append(clazz.getName()));
 		getJavaMethod().ifPresent(method -> {

@@ -179,7 +179,7 @@ public final class ReflectionUtils {
 	 */
 	public static Optional<Method> loadMethod(String fullyQualifiedMethodName) {
 		Preconditions.notBlank(fullyQualifiedMethodName, "full method name must not be null or empty");
-		//TODO Handle overloaded and inherited methods
+		// TODO Handle overloaded and inherited methods
 
 		Optional<Method> testMethodOptional = Optional.empty();
 		int hashPosition = fullyQualifiedMethodName.lastIndexOf('#');
@@ -230,7 +230,7 @@ public final class ReflectionUtils {
 	}
 
 	public static Set<File> getAllClasspathRootDirectories() {
-		//TODO This is quite a hack, since sometimes the classpath is quite different
+		// TODO This is quite a hack, since sometimes the classpath is quite different
 		String fullClassPath = System.getProperty("java.class.path");
 		final String separator = System.getProperty("path.separator");
 		// @formatter:off
@@ -405,15 +405,15 @@ public final class ReflectionUtils {
 		if (ex instanceof Error) {
 			throw (Error) ex;
 		}
-		//TODO: Research if throwing the exception itself would be a better option
+		// TODO Research if throwing the exception itself would be a better option
 		throw new TargetExceptionWrapper(ex);
 	}
 
 	public static class TargetExceptionWrapper extends RuntimeException {
+
 		private final Throwable targetException;
 
 		private TargetExceptionWrapper(Throwable targetException) {
-			super();
 			this.targetException = targetException;
 		}
 
@@ -421,4 +421,5 @@ public final class ReflectionUtils {
 			return targetException;
 		}
 	}
+
 }
