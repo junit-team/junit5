@@ -35,8 +35,6 @@ import java.util.function.Predicate;
  */
 public final class ReflectionUtils {
 
-	private static ClassLoader explicitClassloader = null;
-
 	public enum MethodSortOrder {
 		HierarchyDown, HierarchyUp
 	}
@@ -45,13 +43,7 @@ public final class ReflectionUtils {
 		/* no-op */
 	}
 
-	public static void setDefaultClassLoader(ClassLoader classLoader) {
-		explicitClassloader = classLoader;
-	}
-
 	public static ClassLoader getDefaultClassLoader() {
-		if (explicitClassloader != null)
-			return explicitClassloader;
 		try {
 			return Thread.currentThread().getContextClassLoader();
 		}
@@ -61,20 +53,20 @@ public final class ReflectionUtils {
 		return ClassLoader.getSystemClassLoader();
 	}
 
-	public static boolean isPrivate(Class<?> clazz) {
-		return Modifier.isPrivate(clazz.getModifiers());
-	}
-
 	public static boolean isPublic(Class<?> clazz) {
 		return Modifier.isPublic(clazz.getModifiers());
 	}
 
-	public static boolean isPrivate(Member member) {
-		return Modifier.isPrivate(member.getModifiers());
-	}
-
 	public static boolean isPublic(Member member) {
 		return Modifier.isPublic(member.getModifiers());
+	}
+
+	public static boolean isPrivate(Class<?> clazz) {
+		return Modifier.isPrivate(clazz.getModifiers());
+	}
+
+	public static boolean isPrivate(Member member) {
+		return Modifier.isPrivate(member.getModifiers());
 	}
 
 	public static boolean isAbstract(Class<?> clazz) {
@@ -220,6 +212,16 @@ public final class ReflectionUtils {
 					return Optional.empty();
 				}
 			});
+	}
+
+	public static Optional<Object> getOuterInstance(Object inner, Class<?> targetType) {
+		if (targetType.isInstance(inner))
+			return Optional.of(inner);
+		Optional<Object> candidate = getOuterInstance(inner);
+		if (candidate.isPresent())
+			return getOuterInstance(candidate.get(), targetType);
+		else
+			return Optional.empty();
 	}
 
 	public static boolean isPackage(String packageName) {
@@ -403,7 +405,20 @@ public final class ReflectionUtils {
 		if (ex instanceof Error) {
 			throw (Error) ex;
 		}
-		throw new IllegalStateException("Unhandled exception", ex);
+		//TODO: Research if throwing the exception itself would be a better option
+		throw new TargetExceptionWrapper(ex);
 	}
 
+	public static class TargetExceptionWrapper extends RuntimeException {
+		private final Throwable targetException;
+
+		private TargetExceptionWrapper(Throwable targetException) {
+			super();
+			this.targetException = targetException;
+		}
+
+		public Throwable getTargetException() {
+			return targetException;
+		}
+	}
 }

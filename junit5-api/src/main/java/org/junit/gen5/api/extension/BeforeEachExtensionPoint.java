@@ -32,6 +32,6 @@ public interface BeforeEachExtensionPoint extends ExtensionPoint {
 	 *
 	 * @param context the current test extension context
 	 */
-	void beforeEach(TestExtensionContext context) throws Exception;
+	void beforeEach(TestExtensionContext context) throws Throwable;
 
 }

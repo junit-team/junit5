@@ -13,7 +13,7 @@ package org.junit.gen5.engine;
 /**
  * @since 5.0
  */
-public class EngineDescriptor extends AbstractTestDescriptor {
+public class EngineDescriptor extends AbstractTestDescriptor implements EngineAwareTestDescriptor {
 
 	private final TestEngine engine;
 
@@ -37,6 +37,7 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 		return true;
 	}
 
+	@Override
 	public TestEngine getEngine() {
 		return engine;
 	}

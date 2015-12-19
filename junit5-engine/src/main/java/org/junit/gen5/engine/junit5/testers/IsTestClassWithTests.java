@@ -17,21 +17,32 @@ import java.util.function.Predicate;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
+ * Test if a class really is a Junit5 test class with executable tests or nested tests.
+ *
  * @since 5.0
  */
 public class IsTestClassWithTests implements Predicate<Class<?>> {
 
 	private static final IsTestMethod isTestMethod = new IsTestMethod();
 
-	private static final IsPotentialTestClass isPotentialTestClass = new IsPotentialTestClass();
+	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();
+
+	private static final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
 
 	@Override
 	public boolean test(Class<?> candidate) {
-		return isPotentialTestClass.test(candidate) && hasTestMethods(candidate);
+		//please do not collapse into single return
+		if (!isPotentialTestContainer.test(candidate))
+			return false;
+		return hasTestMethods(candidate) || hasNestedTests(candidate);
 	}
 
 	private boolean hasTestMethods(Class<?> candidate) {
 		return !ReflectionUtils.findMethods(candidate, isTestMethod, HierarchyDown).isEmpty();
+	}
+
+	private boolean hasNestedTests(Class<?> candidate) {
+		return !ReflectionUtils.findNestedClasses(candidate, isNestedTestClass).isEmpty();
 	}
 
 }

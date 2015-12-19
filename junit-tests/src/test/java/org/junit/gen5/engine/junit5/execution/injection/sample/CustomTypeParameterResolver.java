@@ -12,9 +12,9 @@ package org.junit.gen5.engine.junit5.execution.injection.sample;
 
 import java.lang.reflect.Parameter;
 
+import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.MethodContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
-import org.junit.gen5.api.extension.TestExtensionContext;
 
 /**
  * @since 5.0
@@ -22,7 +22,7 @@ import org.junit.gen5.api.extension.TestExtensionContext;
 public class CustomTypeParameterResolver implements MethodParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter, MethodContext methodContext, TestExtensionContext testContext) {
+	public boolean supports(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext) {
 		return parameter.getType().equals(CustomType.class);
 	}
 

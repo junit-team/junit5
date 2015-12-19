@@ -82,7 +82,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public final void addChild(TestDescriptor child) {
+	public void addChild(TestDescriptor child) {
 		Preconditions.notNull(child, "child must not be null");
 		child.setParent(this);
 		this.children.add(child);

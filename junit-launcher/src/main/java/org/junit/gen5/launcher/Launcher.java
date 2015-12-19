@@ -10,13 +10,9 @@
 
 package org.junit.gen5.launcher;
 
-import static java.util.stream.Collectors.toSet;
-import static java.util.stream.StreamSupport.stream;
-
-import java.util.Optional;
-import java.util.Set;
 import java.util.logging.Logger;
 
+import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -55,8 +51,8 @@ public class Launcher {
 		RootTestDescriptor root = new RootTestDescriptor();
 		for (TestEngine testEngine : testEngineRegistry.lookupAllTestEngines()) {
 			LOG.info("Discovering tests in engine " + testEngine.getId());
-			TestDescriptor engineRoot = testEngine.discoverTests(specification);
-			root.addTestDescriptorForEngine(testEngine, engineRoot);
+			EngineAwareTestDescriptor engineRoot = testEngine.discoverTests(specification);
+			root.addChild(engineRoot);
 		}
 		root.applyFilters(specification);
 		root.prune();
@@ -68,22 +64,16 @@ public class Launcher {
 	}
 
 	private void execute(RootTestDescriptor root) {
-		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
-
 		TestPlan testPlan = TestPlan.from(root);
+		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
 		testExecutionListener.testPlanExecutionStarted(testPlan);
-		for (TestEngine testEngine : getAvailableEngines()) {
-			Optional<TestDescriptor> testDescriptorOptional = root.getTestDescriptorFor(testEngine);
-			testDescriptorOptional.ifPresent(testDescriptor -> {
-				testEngine.execute(new ExecutionRequest(testDescriptor,
-					new ExecutionListenerAdapter(testPlan, testExecutionListener)));
-			});
+		ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(testPlan,
+			testExecutionListener);
+		for (TestEngine testEngine : root.getTestEngines()) {
+			TestDescriptor testDescriptor = root.getTestDescriptorFor(testEngine);
+			testEngine.execute(new ExecutionRequest(testDescriptor, engineExecutionListener));
 		}
 		testExecutionListener.testPlanExecutionFinished(testPlan);
-	}
-
-	public Set<TestEngine> getAvailableEngines() {
-		return stream(testEngineRegistry.lookupAllTestEngines().spliterator(), false).collect(toSet());
 	}
 
 	static class ExecutionListenerAdapter implements EngineExecutionListener {
@@ -100,7 +90,7 @@ public class Launcher {
 		public void dynamicTestRegistered(TestDescriptor testDescriptor) {
 			TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
 			testPlan.add(testIdentifier);
-			testExecutionListener.dynamicTestRegistered(getTestIdentifier(testDescriptor));
+			testExecutionListener.dynamicTestRegistered(testIdentifier);
 		}
 
 		@Override

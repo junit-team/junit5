@@ -12,19 +12,22 @@ package org.junit.gen5.engine.junit5.execution;
 
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
+import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
- * Represents an {@linkplain ExtensionPoint extension} registered within a
- * {@linkplain TestExtensionRegistry}
+ * Represents an {@linkplain ExtensionPoint extension} registered in a
+ * {@link TestExtensionRegistry}.
  *
- * @param <T> The concrete subtype of {@linkplain ExtensionPoint} to be registered
+ * @since 5.0
+ * @param <T> the concrete subtype of {@link ExtensionPoint} to be registered
  */
-@SuppressWarnings("unused")
 public class RegisteredExtensionPoint<T extends ExtensionPoint> {
 
 	private final T extensionPoint;
+
 	private final Position position;
-	private String extensionName;
+
+	private final String extensionName;
 
 	public RegisteredExtensionPoint(T extensionPoint, Position position, String extensionName) {
 		this.extensionPoint = extensionPoint;
@@ -46,6 +49,12 @@ public class RegisteredExtensionPoint<T extends ExtensionPoint> {
 
 	@Override
 	public String toString() {
-		return String.format("RegisteredExtensionPoint(%s, '%s')", position, extensionName);
+		// @formatter:off
+		return new ToStringBuilder(this)
+				.append("position", this.position)
+				.append("extensionName", this.extensionName)
+				.toString();
+		// @formatter:on
 	}
+
 }

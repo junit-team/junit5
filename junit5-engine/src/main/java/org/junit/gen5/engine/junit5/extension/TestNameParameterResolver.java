@@ -15,9 +15,9 @@ import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
 import java.lang.reflect.Parameter;
 
 import org.junit.gen5.api.TestName;
+import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.MethodContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
-import org.junit.gen5.api.extension.TestExtensionContext;
 
 /**
  * {@link MethodParameterResolver} that resolves the name of the currently
@@ -29,13 +29,13 @@ import org.junit.gen5.api.extension.TestExtensionContext;
 public class TestNameParameterResolver implements MethodParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter, MethodContext methodContext, TestExtensionContext testContext) {
+	public boolean supports(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext) {
 		return (parameter.getType() == String.class && isAnnotated(parameter, TestName.class));
 	}
 
 	@Override
-	public String resolve(Parameter parameter, MethodContext methodContext, TestExtensionContext testContext) {
-		return testContext.getDisplayName();
+	public String resolve(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext) {
+		return extensionContext.getDisplayName();
 	}
 
 }

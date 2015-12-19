@@ -17,26 +17,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.MethodContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
-import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry.ApplicationOrder;
 
 /**
- * {@code MethodInvoker} encapsulates the invocation of a method, including support for dynamic resolution of method
- * parameters via {@link MethodParameterResolver MethodParameterResolvers}.
+ * {@code MethodInvoker} encapsulates the invocation of a method, including
+ * support for dynamic resolution of method parameters via
+ * {@link MethodParameterResolver MethodParameterResolvers}.
  *
  * @since 5.0
  */
 public class MethodInvoker {
 
-	private final TestExtensionContext testExtensionContext;
+	private final ExtensionContext extensionContext;
+
 	private final TestExtensionRegistry extensionRegistry;
 
-	public MethodInvoker(TestExtensionContext testExtensionContext, TestExtensionRegistry extensionRegistry) {
-		this.testExtensionContext = testExtensionContext;
+	public MethodInvoker(ExtensionContext extensionContext, TestExtensionRegistry extensionRegistry) {
+		this.extensionContext = extensionContext;
 		this.extensionRegistry = extensionRegistry;
 	}
 
@@ -49,9 +51,8 @@ public class MethodInvoker {
 	 * Resolve the array of parameters for the configured method.
 	 *
 	 * @param methodContext
-	 * @return the array of Objects to be used as parameters in the method invocation; never {@code null} though
-	 *         potentially empty
-	 * @throws ParameterResolutionException
+	 * @return the array of Objects to be used as parameters in the method
+	 * invocation; never {@code null} though potentially empty
 	 */
 	private Object[] resolveParameters(MethodContext methodContext) throws ParameterResolutionException {
 		// @formatter:off
@@ -61,21 +62,17 @@ public class MethodInvoker {
 		// @formatter:on
 	}
 
-	private Object resolveParameter(Parameter parameter, MethodContext methodContext) {
+	private Object resolveParameter(Parameter parameter, MethodContext methodContext)
+			throws ParameterResolutionException {
+
 		try {
 			final List<MethodParameterResolver> matchingResolvers = new ArrayList<>();
-			try {
-				extensionRegistry.applyExtensionPoints(MethodParameterResolver.class, ApplicationOrder.FORWARD,
-					registeredExtensionPoint -> {
-						if (registeredExtensionPoint.getExtensionPoint().supports(parameter, methodContext,
-							testExtensionContext))
-							matchingResolvers.add(registeredExtensionPoint.getExtensionPoint());
-					});
-			}
-			catch (Throwable throwable) {
-				//TODO: How to handle exceptions during parameter resolution?
-				throwable.printStackTrace();
-			}
+			extensionRegistry.applyExtensionPoints(MethodParameterResolver.class, ApplicationOrder.FORWARD,
+				registeredExtensionPoint -> {
+					if (registeredExtensionPoint.getExtensionPoint().supports(parameter, methodContext,
+						extensionContext))
+						matchingResolvers.add(registeredExtensionPoint.getExtensionPoint());
+				});
 
 			if (matchingResolvers.size() == 0) {
 				throw new ParameterResolutionException(
@@ -92,9 +89,9 @@ public class MethodInvoker {
 					"Discovered multiple competing MethodParameterResolvers for parameter [%s] in method [%s]: %s",
 					parameter, methodContext.getMethod().toGenericString(), resolverNames));
 			}
-			return matchingResolvers.get(0).resolve(parameter, methodContext, testExtensionContext);
+			return matchingResolvers.get(0).resolve(parameter, methodContext, extensionContext);
 		}
-		catch (Exception ex) {
+		catch (Throwable ex) {
 			if (ex instanceof ParameterResolutionException) {
 				throw (ParameterResolutionException) ex;
 			}

@@ -10,6 +10,8 @@
 
 package org.junit.gen5.engine.junit5;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.gen5.engine.EngineExecutionListener;
@@ -34,6 +36,8 @@ public class TrackingEngineExecutionListener implements EngineExecutionListener 
 
 	public final AtomicInteger containerStartedCount = new AtomicInteger();
 	public final AtomicInteger containerFinishedCount = new AtomicInteger();
+
+	public final List<Throwable> throwables = new ArrayList<>();
 
 	@Override
 	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
@@ -65,6 +69,7 @@ public class TrackingEngineExecutionListener implements EngineExecutionListener 
 		else {
 			containerFinishedCount.incrementAndGet();
 		}
+		testExecutionResult.getThrowable().ifPresent(throwables::add);
 	}
 
 	private AtomicInteger getCounter(Status status) {
