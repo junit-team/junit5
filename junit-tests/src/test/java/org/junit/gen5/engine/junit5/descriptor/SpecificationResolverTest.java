@@ -11,8 +11,6 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,24 +18,17 @@ import java.util.stream.Collectors;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ClassSpecification;
+import org.junit.gen5.engine.DummyTestEngine;
 import org.junit.gen5.engine.MethodSpecification;
 import org.junit.gen5.engine.PackageSpecification;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.UniqueIdSpecification;
-import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 
 public class SpecificationResolverTest {
 
-	private final JUnit5EngineDescriptor engineDescriptor;
-	private SpecificationResolver resolver;
-
-	{
-		final TestEngine engine = mock(TestEngine.class);
-		when(engine.getId()).thenReturn("ENGINE_ID");
-		engineDescriptor = new JUnit5EngineDescriptor(engine);
-		resolver = new SpecificationResolver(engineDescriptor);
-	}
+	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(
+		new DummyTestEngine("ENGINE_ID"));
+	private SpecificationResolver resolver = new SpecificationResolver(engineDescriptor);
 
 	@org.junit.Test
 	public void testSingleClassResolution() {
@@ -285,7 +276,7 @@ public class SpecificationResolverTest {
 
 		resolver.resolveElement(specification);
 
-		//engineDescriptor.allDescendants().stream().forEach(d -> System.out.println(d));
+		// engineDescriptor.allDescendants().stream().forEach(d -> System.out.println(d));
 
 		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
 			Collectors.toList());
