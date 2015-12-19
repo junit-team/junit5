@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.commons.util.org.junit.gen5.meta;
+package org.junit.gen5.meta;
 
 import static de.schauderhaft.degraph.check.JCheck.*;
 import static org.hamcrest.Matchers.is;
