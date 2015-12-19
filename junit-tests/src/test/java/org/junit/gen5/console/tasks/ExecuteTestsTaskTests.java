@@ -23,7 +23,7 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.DummyTestEngine;
 
-public class ExecuteTestsTaskTest {
+public class ExecuteTestsTaskTests {
 
 	@Test
 	public void executeWithoutExitCode() throws Exception {

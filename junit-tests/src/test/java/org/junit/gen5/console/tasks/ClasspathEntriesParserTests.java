@@ -23,7 +23,7 @@ import java.nio.file.Path;
 
 import org.junit.Test;
 
-public class ClasspathEntriesParserTest {
+public class ClasspathEntriesParserTests {
 
 	@Test
 	public void toURLsWithoutEntries() {

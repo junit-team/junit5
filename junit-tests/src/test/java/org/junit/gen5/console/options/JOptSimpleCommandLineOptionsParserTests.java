@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 
 import org.junit.Test;
 
-public class JOptSimpleCommandLineOptionsParserTest {
+public class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseNoArguments() {

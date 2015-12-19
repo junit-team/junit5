@@ -18,7 +18,7 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 
-public class ConsoleTaskExecutorTest {
+public class ConsoleTaskExecutorTests {
 
 	private ByteArrayOutputStream out = new ByteArrayOutputStream();
 	private ByteArrayOutputStream err = new ByteArrayOutputStream();

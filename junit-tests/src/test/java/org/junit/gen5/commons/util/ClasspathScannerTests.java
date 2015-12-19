@@ -21,7 +21,7 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ClasspathScannerTest {
+public class ClasspathScannerTests {
 
 	private ClasspathScanner classpathScanner;
 
@@ -40,9 +40,9 @@ public class ClasspathScannerTest {
 
 	@Test
 	public void findAllClassesInThisPackageWithFilter() throws Exception {
-		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTest.class;
+		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTests.class;
 		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.gen5.commons", thisClassOnly);
-		Assert.assertSame(ClasspathScannerTest.class, classes.get(0));
+		Assert.assertSame(ClasspathScannerTests.class, classes.get(0));
 	}
 
 	@Test
@@ -53,10 +53,10 @@ public class ClasspathScannerTest {
 
 	@Test
 	public void findAllClassesInClasspathRoot() throws Exception {
-		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTest.class;
+		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTests.class;
 		File root = getTestClasspathRoot();
 		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(root, thisClassOnly);
-		Assert.assertSame(ClasspathScannerTest.class, classes.get(0));
+		Assert.assertSame(ClasspathScannerTests.class, classes.get(0));
 	}
 
 	@Test
@@ -65,7 +65,7 @@ public class ClasspathScannerTest {
 		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(root, clazz -> true);
 
 		Assert.assertTrue("Should be at least 20 classes", classes.size() >= 20);
-		Assert.assertTrue(classes.contains(ClasspathScannerTest.class));
+		Assert.assertTrue(classes.contains(ClasspathScannerTests.class));
 	}
 
 	private File getTestClasspathRoot() {

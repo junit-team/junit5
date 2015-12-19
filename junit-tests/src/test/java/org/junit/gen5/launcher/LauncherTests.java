@@ -19,7 +19,7 @@ import org.junit.gen5.engine.DummyTestEngine;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 
-public class LauncherTest {
+public class LauncherTests {
 
 	@Test
 	public void discoverEmptyTestPlanWithoutAnyEngines() {
