@@ -19,10 +19,10 @@ import de.schauderhaft.degraph.configuration.NamedPattern;
 import org.junit.Test;
 
 /**
- * checks agains dependecy circles on package and module level.
+ * Checks against dependency cycles on package and module level.
  *
  * Modules in that sense are defined by the package name element after org.junit.gen5,
- * so org.junit.gen5.engine.TestEngine belongs in the module engine.
+ * so "org.junit.gen5.console.ConsoleRunner" belongs to the module "console".
  */
 public class DependencyTests {
 
@@ -30,12 +30,17 @@ public class DependencyTests {
 	public void noCycles() {
 		// we can't use noJar(), because with gradle the dependencies of other modules are
 		// included as jar files in the path.
-		assertThat(classpath() //
-		.printTo("dependencies.graphml") //
-		.including("org.junit.gen5.**") //
-		.withSlicing("module", new NamedPattern("org.junit.gen5.engine.junit4.**", "junit4-engine"),
-			new NamedPattern("org.junit.gen5.engine.junit5.**", "junit5-engine"),
-			new NamedPattern("org.junit.gen5.engine.**", "engine-api"), "org.junit.gen5.(*).**"), //
+		//@formatter:off
+		assertThat(
+			classpath()
+				.printTo("dependencies.graphml")
+				.including("org.junit.gen5.**")
+				.withSlicing("module",
+					new NamedPattern("org.junit.gen5.engine.junit4.**", "junit4-engine"),
+					new NamedPattern("org.junit.gen5.engine.junit5.**", "junit5-engine"),
+					new NamedPattern("org.junit.gen5.engine.**", "engine-api"),
+					"org.junit.gen5.(*).**"),
 			is(violationFree()));
+		//@formatter:on
 	}
 }
