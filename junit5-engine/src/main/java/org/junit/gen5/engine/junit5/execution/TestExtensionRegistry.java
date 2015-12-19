@@ -45,7 +45,7 @@ public class TestExtensionRegistry {
 	/**
 	 * Used to create and populate a new registry from a list of extensions and a parent.
 	 *
-	 * @param parentRegistry
+	 * @param parentRegistry The parent registry to be used.
 	 * @param extensionClasses The extensions to be registered in the new registry
 	 * @return a new TestExtensionRegistry
 	 */
@@ -118,8 +118,8 @@ public class TestExtensionRegistry {
 	/**
 	 * Apply all extension points for a given type in the right order.
 	 *
-	 * @param <T> The exact {@linkplain ExtensionPoint} for which to find all extensions
-	 * @param extensionClass
+	 * @param <T> The exact {@link ExtensionPoint} for which to find all extensions
+	 * @param extensionClass The {@link ExtensionPoint} class
 	 * @param order The order in which to apply the extension points after sorting. FORWARD or BACKWARD.
 	 * @param extensionPointApplier The code to execute for each extension point
 	 */
