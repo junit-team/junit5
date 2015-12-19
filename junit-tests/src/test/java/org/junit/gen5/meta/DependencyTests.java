@@ -11,11 +11,11 @@
 package org.junit.gen5.meta;
 
 import static de.schauderhaft.degraph.check.JCheck.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import de.schauderhaft.degraph.configuration.NamedPattern;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -30,7 +30,7 @@ public class DependencyTests {
 	public void noCycles() {
 		// we can't use noJar(), because with gradle the dependencies of other modules are
 		// included as jar files in the path.
-		Assert.assertThat(classpath() //
+		assertThat(classpath() //
 		.printTo("dependencies.graphml") //
 		.including("org.junit.gen5.**") //
 		.withSlicing("module", new NamedPattern("org.junit.gen5.engine.junit4.**", "junit4-engine"),
