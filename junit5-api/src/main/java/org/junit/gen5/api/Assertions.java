@@ -220,8 +220,7 @@ public final class Assertions {
 	}
 
 	private static void failEqual(Object actual, String message) {
-		String prefix = buildPrefix(message);
-		fail(prefix + "Values should not be equal. Actual: " + actual);
+		fail(buildPrefix(message) + "Values should not be equal. Actual: " + actual);
 	}
 
 	private static void failNull(String message) {
