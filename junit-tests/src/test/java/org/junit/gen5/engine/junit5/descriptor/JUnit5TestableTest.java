@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
@@ -18,9 +21,6 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class JUnit5TestableTest {
 

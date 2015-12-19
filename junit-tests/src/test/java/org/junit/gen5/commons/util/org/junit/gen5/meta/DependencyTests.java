@@ -11,11 +11,10 @@
 package org.junit.gen5.commons.util.org.junit.gen5.meta;
 
 import static de.schauderhaft.degraph.check.JCheck.*;
+import static org.hamcrest.Matchers.is;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import static org.hamcrest.Matchers.is;
 
 /**
  * checks agains dependecy circles on package and module level.
@@ -25,14 +24,11 @@ import static org.hamcrest.Matchers.is;
  */
 public class DependencyTests {
 
-    @Test
-    public void noCycles(){
-        // we can't use noJar(), because with gradle the dependencies of other modules are
-        // included as jar files in the path.
-        Assert.assertThat(classpath()
-                .printTo("dependencies.graphml")
-                .including("org.junit.**")
-                .withSlicing("module", "org.junit.gen5.(*).**"),
-                is(violationFree()));
-    }
+	@Test
+	public void noCycles() {
+		// we can't use noJar(), because with gradle the dependencies of other modules are
+		// included as jar files in the path.
+		Assert.assertThat(classpath().printTo("dependencies.graphml").including("org.junit.**").withSlicing("module",
+			"org.junit.gen5.(*).**"), is(violationFree()));
+	}
 }
