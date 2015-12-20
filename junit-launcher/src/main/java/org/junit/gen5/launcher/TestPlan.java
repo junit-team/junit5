@@ -24,7 +24,25 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestDescriptor.Visitor;
 
 /**
+ * Describes the tree of tests and containers as discovered by the
+ * {@link Launcher}.
+ *
+ * <p>Tests and containers are represented by {@link TestIdentifier} instances.
+ * The complete set of identifiers comprises a tree-like structure. However,
+ * each identifier only stores the unique ID of its parent. This class provides
+ * a number of helpful methods to retrieve the
+ * {@linkplain #getParent(TestIdentifier) parent},
+ * {@linkplain #getChildren(TestIdentifier) children}, and
+ * {@linkplain #getDescendants(TestIdentifier) descendants} of an identifier.
+ *
+ * <p>While the contained instances of {@link TestIdentifier} are immutable,
+ * instances of this class contain mutable state. E.g. when a dynamic test is
+ * registered at runtime, it is added to the original test plan as reported to
+ * {@link TestExecutionListener} implementations.
+ *
  * @since 5.0
+ * @see Launcher
+ * @see TestExecutionListener
  */
 public final class TestPlan {
 
@@ -56,10 +74,21 @@ public final class TestPlan {
 		}
 	}
 
+	/**
+	 * Returns the roots of this test plan.
+	 *
+	 * @return the unmodifiable set of root identifiers
+	 */
 	public Set<TestIdentifier> getRoots() {
 		return unmodifiableSet(roots);
 	}
 
+	/**
+	 * Returns the parent of an identifier, if present.
+	 *
+	 * @param child the identifier to look up the parent for
+	 * @return an {@link Optional} containing the parent, if present; otherwise empty.
+	 */
 	public Optional<TestIdentifier> getParent(TestIdentifier child) {
 		Optional<TestId> optionalParentId = child.getParentId();
 		if (optionalParentId.isPresent()) {
@@ -68,24 +97,63 @@ public final class TestPlan {
 		return Optional.empty();
 	}
 
+	/**
+	 * Returns the children of an identifier, possibly an empty set.
+	 *
+	 * @param parent the identifier to look up the children for
+	 * @return the unmodifiable set of the {@code parent}'s children, if any;
+	 * otherwise empty.
+	 */
 	public Set<TestIdentifier> getChildren(TestIdentifier parent) {
 		return getChildren(parent.getUniqueId());
 	}
 
+	/**
+	 * Returns the children of a parent {@link TestId}.
+	 *
+	 * @param parentId the parent ID to look up the children for
+	 * @return the unmodifiable set of the {@code parentId}'s children, if any;
+	 * otherwise empty.
+	 */
 	public Set<TestIdentifier> getChildren(TestId parentId) {
 		return children.containsKey(parentId) ? unmodifiableSet(children.get(parentId)) : emptySet();
 	}
 
+	/**
+	 * Returns the {@link TestIdentifier} for a {@link TestId}.
+	 *
+	 * @param testId the unique ID to look up the identifier for
+	 * @return the identifier with the specified unique ID
+	 * @throws IllegalArgumentException if no {@link TestIdentifier} with the
+	 * specified unique ID has been added to this test plan
+	 */
 	public TestIdentifier getTestIdentifier(TestId testId) {
 		Preconditions.condition(allIdentifiers.containsKey(testId),
 			() -> "No TestIdentifier with this TestId has been added to this TestPlan: " + testId);
 		return allIdentifiers.get(testId);
 	}
 
+	/**
+	 * Counts all {@linkplain TestIdentifier identifiers} that satisfy a given
+	 * {@linkplain Predicate predicate}.
+	 *
+	 * @param predicate a predicate which returns {@code true} for identifiers
+	 * to be counted
+	 * @return the number of identifiers that satisfy the specified
+	 * {@code predicate}.
+	 */
 	public long countTestIdentifiers(Predicate<? super TestIdentifier> predicate) {
 		return allIdentifiers.values().stream().filter(predicate).count();
 	}
 
+	/**
+	 * Returns all descendants of an identifier, i.e all of its children and
+	 * their children, recursively.
+	 *
+	 * @param parent the identifier to look up the descendants for
+	 * @return the unmodifiable set of the {@code parent}'s descendants, if
+	 * any; otherwise empty.
+	 */
 	public Set<TestIdentifier> getDescendants(TestIdentifier parent) {
 		Set<TestIdentifier> result = new LinkedHashSet<>();
 		Set<TestIdentifier> children = getChildren(parent);
