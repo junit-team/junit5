@@ -26,6 +26,7 @@ import org.junit.gen5.launcher.TestPlan;
 public class SummaryCreatingTestListener implements TestExecutionListener {
 
 	private TestPlan testPlan;
+
 	private TestExecutionSummary summary;
 
 	public TestExecutionSummary getSummary() {
