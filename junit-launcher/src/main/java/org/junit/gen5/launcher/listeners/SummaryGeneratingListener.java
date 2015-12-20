@@ -23,7 +23,7 @@ import org.junit.gen5.launcher.TestPlan;
 /**
  * @since 5.0
  */
-public class SummaryCreatingTestListener implements TestExecutionListener {
+public class SummaryGeneratingListener implements TestExecutionListener {
 
 	private TestPlan testPlan;
 

@@ -22,7 +22,7 @@ import org.junit.gen5.engine.TestExecutionResult.Status;
  * <p>JUnit provides two example implementations:
  * <ul>
  * <li>{@link org.junit.gen5.launcher.listeners.LoggingListener}</li>
- * <li>{@link org.junit.gen5.launcher.listeners.SummaryCreatingTestListener}</li>
+ * <li>{@link org.junit.gen5.launcher.listeners.SummaryGeneratingListener}</li>
  * </ul>
  *
  * <p>Contrary to JUnit 4, {@linkplain org.junit.gen5.engine.TestEngine test engines}

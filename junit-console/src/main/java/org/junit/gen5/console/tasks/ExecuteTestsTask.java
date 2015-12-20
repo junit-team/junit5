@@ -21,7 +21,7 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.launcher.Launcher;
-import org.junit.gen5.launcher.listeners.SummaryCreatingTestListener;
+import org.junit.gen5.launcher.listeners.SummaryGeneratingListener;
 import org.junit.gen5.launcher.listeners.TestExecutionSummary;
 
 /**
@@ -51,7 +51,7 @@ public class ExecuteTestsTask implements ConsoleTask {
 		Launcher launcher = launcherSupplier.get();
 		// TODO Configure launcher?
 
-		SummaryCreatingTestListener summaryListener = registerListeners(out, launcher);
+		SummaryGeneratingListener summaryListener = registerListeners(out, launcher);
 
 		TestPlanSpecification specification = new TestPlanSpecificationCreator().toTestPlanSpecification(options);
 		launcher.execute(specification);
@@ -73,8 +73,8 @@ public class ExecuteTestsTask implements ConsoleTask {
 		return Optional.empty();
 	}
 
-	private SummaryCreatingTestListener registerListeners(PrintWriter out, Launcher launcher) {
-		SummaryCreatingTestListener summaryListener = new SummaryCreatingTestListener();
+	private SummaryGeneratingListener registerListeners(PrintWriter out, Launcher launcher) {
+		SummaryGeneratingListener summaryListener = new SummaryGeneratingListener();
 		launcher.registerTestExecutionListeners(summaryListener);
 		if (!options.isHideDetails()) {
 			launcher.registerTestExecutionListeners(
