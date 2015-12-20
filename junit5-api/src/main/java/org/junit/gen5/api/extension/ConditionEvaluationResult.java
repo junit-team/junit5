@@ -15,7 +15,10 @@ import java.util.Optional;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
- * The result of evaluating a {@linkplain ShouldTestBeExecutedCondition}.
+ * The result of evaluating a {@link ContainerExecutionCondition} or
+ * {@linkplain TestExecutionCondition}.
+ *
+ * @since 5.0
  */
 public class ConditionEvaluationResult {
 

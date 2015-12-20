@@ -16,14 +16,14 @@ package org.junit.gen5.api.extension;
  * <p>{@code ExtensionPoint} can be registered via {@link ExtendWith @ExtendWith}.
  *
  * @since 5.0
+ * @see ContainerExecutionCondition
+ * @see TestExecutionCondition
  * @see InstancePostProcessor
  * @see MethodParameterResolver
  * @see BeforeEachExtensionPoint
  * @see AfterEachExtensionPoint
  * @see BeforeAllExtensionPoint
  * @see AfterAllExtensionPoint
- * @see ShouldTestBeExecutedCondition
- * @see ShouldContainerBeExecutedCondition
  */
 
 public interface ExtensionPoint extends TestExtension {
