@@ -21,7 +21,33 @@ import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
+ * Facade for <em>discovering</em> and <em>executing</em> tests using
+ * dynamically registered test engines.
+ *
+ * <p>Test engines are registered at runtime using the
+ * {@link java.util.ServiceLoader ServiceLoader} facility. For that purpose, a
+ * text file named {@code META-INF/services/org.junit.gen5.engine.TestEngine}
+ * has to be added to the engine's JAR file in which the fully qualified name
+ * of the implementation class of the {@link TestEngine} interface is stated.
+ *
+ * <p>Discovering or executing tests requires a {@link TestPlanSpecification}
+ * which is passed to all registered engines. Each engine decides which tests
+ * it can discover and later execute according to this specification.
+ *
+ * <p>Users of this class may optionally call {@link #discover} prior to
+ * {@link #execute} in order to inspect the {@link TestPlan} before executing
+ * it.
+ *
+ * <p>Prior to executing tests, users of this class should
+ * {@linkplain #registerTestExecutionListeners register} one or multiple
+ * {@link TestExecutionListener} instances in order to get feedback about the
+ * progress and results of test execution. The listeners are called in the order
+ * they have been registered.
+ *
  * @since 5.0
+ * @see TestPlanSpecification
+ * @see TestPlan
+ * @see TestExecutionListener
  */
 public class Launcher {
 
@@ -39,10 +65,24 @@ public class Launcher {
 		this.testEngineRegistry = testEngineRegistry;
 	}
 
-	public void registerTestExecutionListeners(TestExecutionListener... testListeners) {
-		listenerRegistry.registerListener(testListeners);
+	/**
+	 * Registers one or multiple listeners for test execution.
+	 *
+	 * @param listeners the listeners to be notified of test execution events
+	 */
+	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
+		listenerRegistry.registerListener(listeners);
 	}
 
+	/**
+	 * Discovers a {@link TestPlan} according to a
+	 * {@link TestPlanSpecification} by querying all registered engines and
+	 * collecting their results.
+	 *
+	 * @param specification the specification to be resolved
+	 * @return the {@code TestPlan} that contains all resolvable
+	 * {@linkplain TestIdentifier identifiers} from all registered engines
+	 */
 	public TestPlan discover(TestPlanSpecification specification) {
 		return TestPlan.from(discoverRootDescriptor(specification));
 	}
@@ -59,6 +99,14 @@ public class Launcher {
 		return root;
 	}
 
+	/**
+	 * Executes the {@link TestPlan} the given {@link TestPlanSpecification} is
+	 * resolved into using all registered engines and notifies the registered
+	 * {@link TestExecutionListener} instances about the progress and results
+	 * of the execution.
+	 *
+	 * @param specification the specification to be resolved and executed
+	 */
 	public void execute(TestPlanSpecification specification) {
 		execute(discoverRootDescriptor(specification));
 	}
