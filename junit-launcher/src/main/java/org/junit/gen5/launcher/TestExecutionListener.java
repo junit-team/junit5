@@ -10,28 +10,124 @@
 
 package org.junit.gen5.launcher;
 
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.TestExecutionResult.Status;
+import org.junit.gen5.launcher.listeners.LoggingListener;
+import org.junit.gen5.launcher.listeners.SummaryCreatingTestListener;
 
 /**
+ * Register an instance of this class with {@link Launcher} to be notified of
+ * events that occur during test execution. All of the methods in this class
+ * have empty default implementations; override one or more of them to receive
+ * events.
+ *
+ * <p>JUnit provides two example implementations:
+ * <ul>
+ * <li>{@link LoggingListener}</li>
+ * <li>{@link SummaryCreatingTestListener}</li>
+ * </ul>
+ *
+ * <p>Contrary to JUnit 4, {@linkplain TestEngine engines} are supposed to
+ * report events not only for {@linkplain TestIdentifier identifiers} that
+ * represent executable leafs in the {@linkplain TestPlan test plan} but for
+ * all intermediate containers, too. While both the JUnit 4 and 5 test engines
+ * comply with this contract, there is no way to guarantee this for third-party
+ * engines.
+ *
  * @since 5.0
+ *
+ * @see Launcher
+ * @see TestPlan
+ * @see TestIdentifier
  */
 public interface TestExecutionListener {
 
+	/**
+	 * Called when the execution of the {@link TestPlan} has started, before
+	 * any test has been executed.
+	 *
+	 * @param testPlan describes the tree of tests about to be executed
+	 */
 	default void testPlanExecutionStarted(TestPlan testPlan) {
 	}
 
+	/**
+	 * Called when the execution of the {@link TestPlan} has finished, after
+	 * all tests have been executed.
+	 *
+	 * @param testPlan describes the tree of tests that have been executed
+	 */
 	default void testPlanExecutionFinished(TestPlan testPlan) {
 	}
 
+	/**
+	 * Called when a new, dynamic {@link TestIdentifier} was registered.
+	 *
+	 * <p>A dynamic test is a test that is not known a-priori and therefore not
+	 * contained in the original {@link TestPlan}.
+	 *
+	 * @param testIdentifier the identifier of the newly registered test
+	 * or container
+	 */
 	default void dynamicTestRegistered(TestIdentifier testIdentifier) {
 	}
 
+	/**
+	 * Called when the execution of a leaf or subtree of the {@link TestPlan}
+	 * was skipped.
+	 *
+	 * <p>The {@link TestIdentifier} may be a test or a container.
+	 * A skipped test or subtree of tests is never started or finished.
+	 *
+	 * @param testIdentifier the identifier of the skipped test or container
+	 * @param reason a human-readable message describing why it was skipped
+	 */
 	default void executionSkipped(TestIdentifier testIdentifier, String reason) {
 	}
 
+	/**
+	 * Called when the execution of a leaf or subtree of the {@link TestPlan}
+	 * is about to be started.
+	 *
+	 * <p>The {@link TestIdentifier} may be a test or a
+	 * container. This method is only called when the test or container has
+	 * not been skipped.
+	 *
+	 * <p>This method is called for container
+	 * {@linkplain TestIdentifier identifiers} before starting or skipping any
+	 * of its children.
+	 *
+	 * @param testIdentifier the identifier of the started test or container
+	 */
 	default void executionStarted(TestIdentifier testIdentifier) {
 	}
 
+	/**
+	 * Called when the execution of a leaf or subtree of the {@link TestPlan}
+	 * has finished, regardless of its result.
+	 *
+	 * <p>The {@link TestIdentifier} may
+	 * be a test or a container. This method is only called when the test or
+	 * container has not been skipped.
+	 *
+	 * <p>This method is called for container
+	 * {@linkplain TestIdentifier identifiers} no sooner than all of its
+	 * children have been skipped or are finished.
+	 *
+	 * <p>The {@link TestExecutionResult} describes the result of the execution
+	 * of the {@code testIdentifier}. It does not include or aggregate the
+	 * results of its children. E.g. a container with a single failing test will
+	 * report a result with status {@link Status#SUCCESSFUL SUCCESSFUL} even
+	 * though its child has reported a result with status
+	 * {@link Status#FAILED FAILED}.
+	 *
+	 * @param testIdentifier the identifier of the finished test or container
+	 * @param testExecutionResult the (unaggregated) result of the execution of
+	 * {@code testIdentifier}
+	 *
+	 * @see TestExecutionResult
+	 */
 	default void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 	}
 
