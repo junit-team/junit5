@@ -24,7 +24,7 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestDescriptor.Visitor;
 
 /**
- * Describes the tree of tests and containers as discovered by the
+ * Describes the tree of tests and containers as discovered by a
  * {@link Launcher}.
  *
  * <p>Tests and containers are represented by {@link TestIdentifier} instances.
