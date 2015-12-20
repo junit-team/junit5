@@ -15,13 +15,18 @@ import java.util.Objects;
 
 import org.junit.gen5.commons.util.Preconditions;
 
+/**
+ * Immutable value object representing a unique test ID.
+ *
+ * @since 5.0
+ */
 public final class TestId implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private final String uniqueId;
 
-	public TestId(String uniqueId) {
+	TestId(String uniqueId) {
 		Preconditions.notNull(uniqueId, "uniqueId must not be null");
 		this.uniqueId = uniqueId;
 	}
