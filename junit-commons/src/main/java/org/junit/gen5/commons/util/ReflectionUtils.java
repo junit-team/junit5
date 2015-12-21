@@ -35,8 +35,6 @@ import java.util.function.Predicate;
  */
 public final class ReflectionUtils {
 
-	private static ClassLoader explicitClassloader = null;
-
 	public enum MethodSortOrder {
 		HierarchyDown, HierarchyUp
 	}
@@ -45,13 +43,7 @@ public final class ReflectionUtils {
 		/* no-op */
 	}
 
-	public static void setDefaultClassLoader(ClassLoader classLoader) {
-		explicitClassloader = classLoader;
-	}
-
 	public static ClassLoader getDefaultClassLoader() {
-		if (explicitClassloader != null)
-			return explicitClassloader;
 		try {
 			return Thread.currentThread().getContextClassLoader();
 		}
@@ -61,20 +53,20 @@ public final class ReflectionUtils {
 		return ClassLoader.getSystemClassLoader();
 	}
 
-	public static boolean isPrivate(Class<?> clazz) {
-		return Modifier.isPrivate(clazz.getModifiers());
-	}
-
 	public static boolean isPublic(Class<?> clazz) {
 		return Modifier.isPublic(clazz.getModifiers());
 	}
 
-	public static boolean isPrivate(Member member) {
-		return Modifier.isPrivate(member.getModifiers());
-	}
-
 	public static boolean isPublic(Member member) {
 		return Modifier.isPublic(member.getModifiers());
+	}
+
+	public static boolean isPrivate(Class<?> clazz) {
+		return Modifier.isPrivate(clazz.getModifiers());
+	}
+
+	public static boolean isPrivate(Member member) {
+		return Modifier.isPrivate(member.getModifiers());
 	}
 
 	public static boolean isAbstract(Class<?> clazz) {
@@ -97,7 +89,7 @@ public final class ReflectionUtils {
 		Preconditions.notNull(clazz, "class must not be null");
 
 		try {
-			Class<?>[] parameterTypes = Arrays.stream(args).map(Object::getClass).toArray(Class<?>[]::new);
+			Class<?>[] parameterTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
 			Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes);
 			makeAccessible(constructor);
 			return constructor.newInstance(args);
@@ -187,7 +179,7 @@ public final class ReflectionUtils {
 	 */
 	public static Optional<Method> loadMethod(String fullyQualifiedMethodName) {
 		Preconditions.notBlank(fullyQualifiedMethodName, "full method name must not be null or empty");
-		//TODO Handle overloaded and inherited methods
+		// TODO Handle overloaded and inherited methods
 
 		Optional<Method> testMethodOptional = Optional.empty();
 		int hashPosition = fullyQualifiedMethodName.lastIndexOf('#');
@@ -238,7 +230,7 @@ public final class ReflectionUtils {
 	}
 
 	public static Set<File> getAllClasspathRootDirectories() {
-		//TODO This is quite a hack, since sometimes the classpath is quite different
+		// TODO This is quite a hack, since sometimes the classpath is quite different
 		String fullClassPath = System.getProperty("java.class.path");
 		final String separator = System.getProperty("path.separator");
 		// @formatter:off
@@ -413,7 +405,23 @@ public final class ReflectionUtils {
 		if (ex instanceof Error) {
 			throw (Error) ex;
 		}
-		throw new IllegalStateException("Unhandled exception", ex);
+		// TODO Research if throwing the exception itself would be a better option
+		throw new TargetExceptionWrapper(ex);
+	}
+
+	public static class TargetExceptionWrapper extends RuntimeException {
+
+		private static final long serialVersionUID = 3733792088719661853L;
+
+		private final Throwable targetException;
+
+		private TargetExceptionWrapper(Throwable targetException) {
+			this.targetException = targetException;
+		}
+
+		public Throwable getTargetException() {
+			return targetException;
+		}
 	}
 
 }

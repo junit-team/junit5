@@ -28,18 +28,17 @@ import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.api.extension.ShouldTestBeExecutedCondition;
+import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
  * Integration tests that verify support for {@link Disabled @Disabled} and
- * custom {@link ShouldTestBeExecutedCondition Conditions} in the {@link JUnit5TestEngine}.
+ * custom {@link TestExecutionCondition Conditions} in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
 @Ignore("https://github.com/junit-team/junit-lambda/issues/39")
-
 public class DisabledTests extends AbstractJUnit5TestEngineTestCase {
 
 	private static final String FOO = "DisabledTests.foo";
@@ -132,10 +131,10 @@ public class DisabledTests extends AbstractJUnit5TestEngineTestCase {
 		String value();
 	}
 
-	private static class SystemPropertyCondition implements ShouldTestBeExecutedCondition {
+	private static class SystemPropertyCondition implements TestExecutionCondition {
 
 		@Override
-		public ConditionEvaluationResult shouldTestBeExecuted(TestExtensionContext context) {
+		public ConditionEvaluationResult evaluate(TestExtensionContext context) {
 			Optional<SystemProperty> optional = findAnnotation(context.getElement(), SystemProperty.class);
 
 			if (optional.isPresent()) {

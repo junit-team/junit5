@@ -10,6 +10,8 @@
 
 package org.junit.gen5.launcher;
 
+import static java.util.Collections.unmodifiableSet;
+
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -20,11 +22,11 @@ import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.TestTag;
 
 /**
- * Immutable data transfer object that describes a test or a test container.
- *
- * @see TestPlan
+ * Immutable data transfer object that represents a test or container which is
+ * usually part of a {@link TestPlan}.
  *
  * @since 5.0
+ * @see TestPlan
  */
 public final class TestIdentifier {
 
@@ -55,42 +57,73 @@ public final class TestIdentifier {
 		this.uniqueId = uniqueId;
 		this.displayName = displayName;
 		this.source = source.orElse(null);
-		this.tags = new LinkedHashSet<>(tags);
+		this.tags = unmodifiableSet(new LinkedHashSet<>(tags));
 		this.test = test;
 		this.container = container;
 		this.parentId = parentId.orElse(null);
 	}
 
 	/**
-	 * Get the unique identifier (UID) for the described test.
+	 * Get the unique ID of the represented test or container.
 	 *
-	 * <p>Uniqueness must be guaranteed across an entire test plan,
-	 * regardless of how many engines are used behind the scenes.
+	 * <p>Uniqueness must be guaranteed across an entire
+	 * {@linkplain TestPlan test plan}, regardless of how many engines are used
+	 * behind the scenes.
 	 */
 	public TestId getUniqueId() {
 		return uniqueId;
 	}
 
+	/**
+	 * Get the display name for the represented test or container.
+	 *
+	 * <p>The <em>display name</em> is a human-readable name for a test or
+	 * container. It must not be parsed or processed besides being displayed
+	 * to end-users.
+	 */
 	public String getDisplayName() {
 		return displayName;
 	}
 
+	/**
+	 * Returns {@code true} if this identifier represents a test.
+	 */
 	public boolean isTest() {
 		return test;
 	}
 
+	/**
+	 * Returns {@code true} if this identifier represents a container.
+	 */
 	public boolean isContainer() {
 		return container;
 	}
 
+	/**
+	 * Get the {@linkplain TestSource source location} of the represented test
+	 * or container, if available.
+	 *
+	 * @see TestSource
+	 */
 	public Optional<TestSource> getSource() {
 		return Optional.ofNullable(source);
 	}
 
+	/**
+	 * Get the set of {@linkplain TestTag tags} of the represented test or
+	 * container.
+	 *
+	 * @see TestTag
+	 */
 	public Set<TestTag> getTags() {
 		return tags;
 	}
 
+	/**
+	 * Get the unique ID of this identifier's parent, if available.
+	 *
+	 * <p>An identifier without a parent ID is called a <em>root</em>.
+	 */
 	public Optional<TestId> getParentId() {
 		return Optional.ofNullable(parentId);
 	}

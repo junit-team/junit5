@@ -10,14 +10,8 @@
 
 package org.junit.gen5.engine;
 
-public interface Container<C extends EngineExecutionContext> {
+public interface EngineAwareTestDescriptor extends TestDescriptor {
 
-	default C beforeAll(C context) throws Throwable {
-		return context;
-	}
-
-	default C afterAll(C context) throws Throwable {
-		return context;
-	}
+	TestEngine getEngine();
 
 }

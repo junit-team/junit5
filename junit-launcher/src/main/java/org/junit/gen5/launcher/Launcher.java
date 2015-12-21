@@ -16,6 +16,7 @@ import static java.util.stream.StreamSupport.stream;
 import java.util.*;
 import java.util.logging.Logger;
 
+import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -24,7 +25,33 @@ import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
+ * Facade for <em>discovering</em> and <em>executing</em> tests using
+ * dynamically registered test engines.
+ *
+ * <p>Test engines are registered at runtime using the
+ * {@link java.util.ServiceLoader ServiceLoader} facility. For that purpose, a
+ * text file named {@code META-INF/services/org.junit.gen5.engine.TestEngine}
+ * has to be added to the engine's JAR file in which the fully qualified name
+ * of the implementation class of the {@link TestEngine} interface is stated.
+ *
+ * <p>Discovering or executing tests requires a {@link TestPlanSpecification}
+ * which is passed to all registered engines. Each engine decides which tests
+ * it can discover and later execute according to this specification.
+ *
+ * <p>Users of this class may optionally call {@link #discover} prior to
+ * {@link #execute} in order to inspect the {@link TestPlan} before executing
+ * it.
+ *
+ * <p>Prior to executing tests, users of this class should
+ * {@linkplain #registerTestExecutionListeners register} one or multiple
+ * {@link TestExecutionListener} instances in order to get feedback about the
+ * progress and results of test execution. The listeners are called in the order
+ * they have been registered.
+ *
  * @since 5.0
+ * @see TestPlanSpecification
+ * @see TestPlan
+ * @see TestExecutionListener
  */
 public class Launcher {
 
@@ -42,10 +69,24 @@ public class Launcher {
 		this.testEngineRegistry = testEngineRegistry;
 	}
 
-	public void registerTestExecutionListeners(TestExecutionListener... testListeners) {
-		listenerRegistry.registerListener(testListeners);
+	/**
+	 * Registers one or multiple listeners for test execution.
+	 *
+	 * @param listeners the listeners to be notified of test execution events
+	 */
+	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
+		listenerRegistry.registerListener(listeners);
 	}
 
+	/**
+	 * Discovers a {@link TestPlan} according to a
+	 * {@link TestPlanSpecification} by querying all registered engines and
+	 * collecting their results.
+	 *
+	 * @param specification the specification to be resolved
+	 * @return the {@code TestPlan} that contains all resolvable
+	 * {@linkplain TestIdentifier identifiers} from all registered engines
+	 */
 	public TestPlan discover(TestPlanSpecification specification) {
 		return TestPlan.from(discoverRootDescriptor(specification));
 	}
@@ -54,35 +95,37 @@ public class Launcher {
 		RootTestDescriptor root = new RootTestDescriptor();
 		for (TestEngine testEngine : testEngineRegistry.lookupAllTestEngines()) {
 			LOG.info("Discovering tests in engine " + testEngine.getId());
-			TestDescriptor engineRoot = testEngine.discoverTests(specification);
-			root.addTestDescriptorForEngine(testEngine, engineRoot);
+			EngineAwareTestDescriptor engineRoot = testEngine.discoverTests(specification);
+			root.addChild(engineRoot);
 		}
 		root.applyFilters(specification);
 		root.prune();
 		return root;
 	}
 
+	/**
+	 * Executes the {@link TestPlan} the given {@link TestPlanSpecification} is
+	 * resolved into using all registered engines and notifies the registered
+	 * {@link TestExecutionListener} instances about the progress and results
+	 * of the execution.
+	 *
+	 * @param specification the specification to be resolved and executed
+	 */
 	public void execute(TestPlanSpecification specification) {
 		execute(discoverRootDescriptor(specification));
 	}
 
 	private void execute(RootTestDescriptor root) {
-		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
-
 		TestPlan testPlan = TestPlan.from(root);
+		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
 		testExecutionListener.testPlanExecutionStarted(testPlan);
-		for (TestEngine testEngine : getAvailableEngines()) {
-			Optional<TestDescriptor> testDescriptorOptional = root.getTestDescriptorFor(testEngine);
-			testDescriptorOptional.ifPresent(testDescriptor -> {
-				testEngine.execute(new ExecutionRequest(testDescriptor,
-					new ExecutionListenerAdapter(testPlan, testExecutionListener)));
-			});
+		ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(testPlan,
+			testExecutionListener);
+		for (TestEngine testEngine : root.getTestEngines()) {
+			TestDescriptor testDescriptor = root.getTestDescriptorFor(testEngine);
+			testEngine.execute(new ExecutionRequest(testDescriptor, engineExecutionListener));
 		}
 		testExecutionListener.testPlanExecutionFinished(testPlan);
-	}
-
-	public Set<TestEngine> getAvailableEngines() {
-		return stream(testEngineRegistry.lookupAllTestEngines().spliterator(), false).collect(toSet());
 	}
 
 	static class ExecutionListenerAdapter implements EngineExecutionListener {
@@ -104,7 +147,7 @@ public class Launcher {
 		public void dynamicTestRegistered(TestDescriptor testDescriptor) {
 			TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
 			testPlan.add(testIdentifier);
-			testExecutionListener.dynamicTestRegistered(getTestIdentifier(testDescriptor));
+			testExecutionListener.dynamicTestRegistered(testIdentifier);
 		}
 
 		@Override

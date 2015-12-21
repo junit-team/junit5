@@ -25,7 +25,7 @@ import org.junit.gen5.console.tasks.ConsoleTaskExecutor;
 import org.junit.gen5.console.tasks.DisplayHelpTask;
 import org.junit.gen5.console.tasks.ExecuteTestsTask;
 
-public class ConsoleRunnerTest {
+public class ConsoleRunnerTests {
 
 	@Test
 	public void executeDisplayHelpTask() {

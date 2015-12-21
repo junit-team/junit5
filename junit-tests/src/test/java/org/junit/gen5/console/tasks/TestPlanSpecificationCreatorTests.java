@@ -27,7 +27,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
 import org.junit.gen5.engine.TestTag;
 
-public class TestPlanSpecificationCreatorTest {
+public class TestPlanSpecificationCreatorTests {
 
 	private CommandLineOptions options = new CommandLineOptions();
 	private TestPlanSpecificationElementVisitor visitor = mock(TestPlanSpecificationElementVisitor.class);

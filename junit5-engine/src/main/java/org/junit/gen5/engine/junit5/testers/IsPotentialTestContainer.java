@@ -16,14 +16,20 @@ import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
 import java.util.function.Predicate;
 
 /**
+ * Test if a class could be a top level JUnit5 test container. It might still contain no tests.
+ *
  * @since 5.0
  */
-public class IsPotentialTestClass implements Predicate<Class<?>> {
+public class IsPotentialTestContainer implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> candidate) {
-		return (!isAbstract(candidate) && !candidate.isLocalClass()
-				&& (isStatic(candidate) || !candidate.isMemberClass()));
+		//please do not collapse into single return
+		if (isAbstract(candidate))
+			return false;
+		if (candidate.isLocalClass())
+			return false;
+		return (isStatic(candidate) || !candidate.isMemberClass());
 	}
 
 }

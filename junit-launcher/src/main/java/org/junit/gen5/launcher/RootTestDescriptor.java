@@ -10,50 +10,56 @@
 
 package org.junit.gen5.launcher;
 
-import static java.util.Collections.emptySet;
-import static java.util.stream.Collectors.toCollection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-
+import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.engine.AbstractTestDescriptor;
+import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestSource;
-import org.junit.gen5.engine.TestTag;
 
 /**
  * @since 5.0
  */
-final class RootTestDescriptor implements TestDescriptor {
+final class RootTestDescriptor extends AbstractTestDescriptor {
 
-	private final HashMap<String, TestDescriptor> engineRootTestDescriptors = new HashMap<>();
+	private final List<TestEngine> testEngines = new LinkedList<>();
 
-	void addTestDescriptorForEngine(TestEngine testEngine, TestDescriptor testDescriptor) {
-		engineRootTestDescriptors.put(testEngine.getId(), testDescriptor);
+	RootTestDescriptor() {
+		super("testPlan");
 	}
 
-	Collection<TestDescriptor> getEngineRootTestDescriptors() {
-		return Collections.unmodifiableCollection(engineRootTestDescriptors.values());
-	}
-
-	@Override
-	public long countStaticTests() {
-		return this.engineRootTestDescriptors.values().stream().mapToLong(
-			engineDescriptor -> engineDescriptor.countStaticTests()).sum();
-	}
-
-	Optional<TestDescriptor> getTestDescriptorFor(TestEngine testEngine) {
-		return Optional.of(this.engineRootTestDescriptors.get(testEngine.getId()));
+	Iterable<TestEngine> getTestEngines() {
+		return testEngines;
 	}
 
 	@Override
-	public String getUniqueId() {
-		return "testplan";
+	public void addChild(TestDescriptor child) {
+		Preconditions.condition(child instanceof EngineAwareTestDescriptor,
+			"TestDescriptors that are added to the root need to be aware of their engines");
+		super.addChild(child);
+		testEngines.add(((EngineAwareTestDescriptor) child).getEngine());
+	}
+
+	@Override
+	public void removeChild(TestDescriptor child) {
+		Preconditions.condition(child instanceof EngineAwareTestDescriptor,
+			"TestDescriptors that are added to the root need to be aware of their engines");
+		testEngines.remove(((EngineAwareTestDescriptor) child).getEngine());
+		super.removeChild(child);
+	}
+
+	TestDescriptor getTestDescriptorFor(TestEngine testEngine) {
+		// @formatter:off
+		return getChildren().stream()
+				.map(EngineAwareTestDescriptor.class::cast)
+				.filter(testDescriptor -> Objects.equals(testEngine, testDescriptor.getEngine()))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("No TestDescriptor for TestEngine with ID: " + testEngine.getId()));
+		// @formatter:on
 	}
 
 	@Override
@@ -62,36 +68,13 @@ final class RootTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public Optional<TestDescriptor> getParent() {
-		return Optional.empty();
-	}
-
-	@Override
 	public boolean isTest() {
 		return false;
 	}
 
 	@Override
-	public Set<TestTag> getTags() {
-		return emptySet();
-	}
-
-	@Override
-	public Set<TestDescriptor> getChildren() {
-		return engineRootTestDescriptors.values().stream().collect(toCollection(HashSet::new));
-	}
-
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visit(this, () -> {
-			// the test plan itself will never be removed
-		});
-		new HashSet<>(engineRootTestDescriptors.values()).forEach(child -> child.accept(visitor));
-	}
-
-	@Override
-	public Optional<TestSource> getSource() {
-		return Optional.empty();
+	public boolean isContainer() {
+		return true;
 	}
 
 	void applyFilters(TestPlanSpecification specification) {
@@ -115,27 +98,7 @@ final class RootTestDescriptor implements TestDescriptor {
 
 	@Override
 	public String toString() {
-		return engineRootTestDescriptors.values().toString();
-	}
-
-	@Override
-	public void setParent(TestDescriptor parent) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public boolean isContainer() {
-		return true;
-	}
-
-	@Override
-	public void addChild(TestDescriptor descriptor) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void removeChild(TestDescriptor descriptor) {
-		// TODO Auto-generated method stub
+		return getChildren().toString();
 	}
 
 }

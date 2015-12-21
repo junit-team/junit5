@@ -36,29 +36,23 @@ public final class Assertions {
 	}
 
 	public static void assertTrue(boolean condition) {
-		assertTrue(condition, (String) null);
-	}
-
-	public static void assertTrue(boolean condition, String message) {
-		if (!condition) {
-			fail(message);
-		}
+		assertTrue(() -> condition, () -> null);
 	}
 
 	public static void assertTrue(boolean condition, Supplier<String> messageSupplier) {
-		if (!condition) {
-			fail(messageSupplier);
-		}
+		assertTrue(() -> condition, messageSupplier);
 	}
 
 	public static void assertTrue(BooleanSupplier booleanSupplier) {
-		assertTrue(booleanSupplier.getAsBoolean(), (String) null);
+		assertTrue(booleanSupplier, () -> null);
 	}
 
 	public static void assertTrue(BooleanSupplier booleanSupplier, String message) {
-		if (!booleanSupplier.getAsBoolean()) {
-			fail(message);
-		}
+		assertTrue(booleanSupplier, () -> message);
+	}
+
+	public static void assertTrue(boolean condition, String message) {
+		assertTrue(() -> condition, () -> message);
 	}
 
 	public static void assertTrue(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
@@ -68,29 +62,23 @@ public final class Assertions {
 	}
 
 	public static void assertFalse(boolean condition) {
-		assertFalse(condition, (String) null);
+		assertFalse(() -> condition, () -> null);
 	}
 
 	public static void assertFalse(boolean condition, String message) {
-		if (condition) {
-			fail(message);
-		}
+		assertFalse(() -> condition, () -> message);
 	}
 
 	public static void assertFalse(boolean condition, Supplier<String> messageSupplier) {
-		if (condition) {
-			fail(messageSupplier);
-		}
+		assertFalse(() -> condition, messageSupplier);
 	}
 
 	public static void assertFalse(BooleanSupplier booleanSupplier) {
-		assertFalse(booleanSupplier.getAsBoolean(), (String) null);
+		assertFalse(booleanSupplier, () -> null);
 	}
 
 	public static void assertFalse(BooleanSupplier booleanSupplier, String message) {
-		if (booleanSupplier.getAsBoolean()) {
-			fail(message);
-		}
+		assertFalse(booleanSupplier, () -> message);
 	}
 
 	public static void assertFalse(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
@@ -100,13 +88,11 @@ public final class Assertions {
 	}
 
 	public static void assertNull(Object actual) {
-		assertNull(actual, (String) null);
+		assertNull(actual, () -> null);
 	}
 
 	public static void assertNull(Object actual, String message) {
-		if (actual != null) {
-			failNotNull(actual, message);
-		}
+		assertNull(actual, () -> message);
 	}
 
 	public static void assertNull(Object actual, Supplier<String> messageSupplier) {
@@ -116,13 +102,11 @@ public final class Assertions {
 	}
 
 	public static void assertNotNull(Object actual) {
-		assertNotNull(actual, (String) null);
+		assertNotNull(actual, () -> null);
 	}
 
 	public static void assertNotNull(Object actual, String message) {
-		if (actual == null) {
-			failNull(message);
-		}
+		assertNotNull(actual, () -> message);
 	}
 
 	public static void assertNotNull(Object actual, Supplier<String> messageSupplier) {
@@ -132,13 +116,11 @@ public final class Assertions {
 	}
 
 	public static void assertEquals(Object expected, Object actual) {
-		assertEquals(expected, actual, (String) null);
+		assertEquals(expected, actual, () -> null);
 	}
 
 	public static void assertEquals(Object expected, Object actual, String message) {
-		if (!Objects.equals(expected, actual)) {
-			failNotEqual(expected, actual, message);
-		}
+		assertEquals(expected, actual, () -> message);
 	}
 
 	public static void assertEquals(Object expected, Object actual, Supplier<String> messageSupplier) {
@@ -148,13 +130,11 @@ public final class Assertions {
 	}
 
 	public static void assertNotEquals(Object unexpected, Object actual) {
-		assertNotEquals(unexpected, actual, (String) null);
+		assertNotEquals(unexpected, actual, () -> null);
 	}
 
 	public static void assertNotEquals(Object unexpected, Object actual, String message) {
-		if (Objects.equals(unexpected, actual)) {
-			failEqual(actual, message);
-		}
+		assertNotEquals(unexpected, actual, () -> message);
 	}
 
 	public static void assertNotEquals(Object unexpected, Object actual, Supplier<String> messageSupplier) {
@@ -164,13 +144,11 @@ public final class Assertions {
 	}
 
 	public static void assertSame(Object expected, Object actual) {
-		assertSame(expected, actual, (String) null);
+		assertSame(expected, actual, () -> null);
 	}
 
 	public static void assertSame(Object expected, Object actual, String message) {
-		if (expected != actual) {
-			failNotSame(expected, actual, message);
-		}
+		assertSame(expected, actual, () -> message);
 	}
 
 	public static void assertSame(Object expected, Object actual, Supplier<String> messageSupplier) {
@@ -180,13 +158,11 @@ public final class Assertions {
 	}
 
 	public static void assertNotSame(Object unexpected, Object actual) {
-		assertNotSame(unexpected, actual, (String) null);
+		assertNotSame(unexpected, actual, () -> null);
 	}
 
 	public static void assertNotSame(Object unexpected, Object actual, String message) {
-		if (unexpected == actual) {
-			failSame(message);
-		}
+		assertNotSame(unexpected, actual, () -> message);
 	}
 
 	public static void assertNotSame(Object unexpected, Object actual, Supplier<String> messageSupplier) {
@@ -205,8 +181,8 @@ public final class Assertions {
 			try {
 				executable.execute();
 			}
-			catch (AssertionError failure) {
-				multipleFailuresError.addFailure(failure);
+			catch (AssertionError assertionError) {
+				multipleFailuresError.addFailure(assertionError);
 			}
 			catch (Error | RuntimeException ex) {
 				throw ex;
@@ -244,19 +220,15 @@ public final class Assertions {
 	}
 
 	private static void failEqual(Object actual, String message) {
-		String prefix = "Values should be different. ";
-		if (StringUtils.isNotEmpty(message)) {
-			prefix = message + ". ";
-		}
-		fail(prefix + "Actual: " + actual);
+		fail(buildPrefix(message) + "Values should not be equal. Actual: " + actual);
 	}
 
 	private static void failNull(String message) {
-		fail(buildPrefix(message) + "expected not null");
+		fail(buildPrefix(message) + "expected not <null>");
 	}
 
 	private static void failNotNull(Object actual, String message) {
-		fail(buildPrefix(message) + "expected null, but was:<" + actual + ">");
+		fail(buildPrefix(message) + "expected <null> but was:<" + actual + ">");
 	}
 
 	private static void failSame(String message) {
@@ -290,7 +262,7 @@ public final class Assertions {
 	}
 
 	private static String buildPrefix(String message) {
-		return (StringUtils.isNotEmpty(message) ? message + " ==> " : "");
+		return (StringUtils.isNotBlank(message) ? message + " ==> " : "");
 	}
 
 	private static String nullSafeGet(Supplier<String> messageSupplier) {

@@ -12,13 +12,11 @@ package org.junit.gen5.engine;
 
 class DummyTestDescriptor extends AbstractTestDescriptor implements Leaf<DummyEngineExecutionContext> {
 
-	public static final String ENGINE_ID = "dummy";
-
 	private final String displayName;
 	private final Runnable runnable;
 
-	DummyTestDescriptor(String displayName, Runnable runnable) {
-		super(ENGINE_ID + ":" + displayName);
+	DummyTestDescriptor(String uniqueId, String displayName, Runnable runnable) {
+		super(uniqueId);
 		this.displayName = displayName;
 		this.runnable = runnable;
 	}
@@ -30,19 +28,17 @@ class DummyTestDescriptor extends AbstractTestDescriptor implements Leaf<DummyEn
 
 	@Override
 	public boolean isTest() {
-		return getChildren().isEmpty();
+		return true;
 	}
 
 	@Override
 	public boolean isContainer() {
-		return !isTest();
+		return false;
 	}
 
 	@Override
 	public DummyEngineExecutionContext execute(DummyEngineExecutionContext context) {
-		if (runnable != null) {
-			runnable.run();
-		}
+		runnable.run();
 		return context;
 	}
 

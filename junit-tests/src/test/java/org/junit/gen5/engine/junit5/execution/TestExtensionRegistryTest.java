@@ -17,13 +17,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.gen5.api.extension.ContainerExecutionCondition;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.api.extension.MethodParameterResolver;
-import org.junit.gen5.api.extension.ShouldContainerBeExecutedCondition;
-import org.junit.gen5.api.extension.ShouldTestBeExecutedCondition;
+import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
 import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
@@ -56,8 +56,8 @@ public class TestExtensionRegistryTest {
 		assertExtensionRegistered(registry, TestReporterParameterResolver.class);
 
 		Assert.assertEquals(2, countExtensionPoints(MethodParameterResolver.class));
-		Assert.assertEquals(1, countExtensionPoints(ShouldContainerBeExecutedCondition.class));
-		Assert.assertEquals(1, countExtensionPoints(ShouldTestBeExecutedCondition.class));
+		Assert.assertEquals(1, countExtensionPoints(ContainerExecutionCondition.class));
+		Assert.assertEquals(1, countExtensionPoints(TestExecutionCondition.class));
 	}
 
 	@Test
@@ -203,14 +203,17 @@ public class TestExtensionRegistryTest {
 }
 
 interface MyExtensionPoint extends ExtensionPoint {
+
 	void doNothing(String test);
 }
 
 interface AnotherExtensionPoint extends ExtensionPoint {
+
 	void doMore();
 }
 
 class MyExtension implements MyExtensionPoint {
+
 	@Override
 	public void doNothing(String test) {
 
@@ -218,6 +221,7 @@ class MyExtension implements MyExtensionPoint {
 }
 
 class YourExtension implements MyExtensionPoint {
+
 	@Override
 	public void doNothing(String test) {
 
@@ -225,6 +229,7 @@ class YourExtension implements MyExtensionPoint {
 }
 
 class MultipleExtension implements MyExtensionPoint, AnotherExtensionPoint {
+
 	@Override
 	public void doNothing(String test) {
 

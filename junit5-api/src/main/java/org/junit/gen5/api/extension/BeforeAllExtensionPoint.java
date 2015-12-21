@@ -13,10 +13,10 @@ package org.junit.gen5.api.extension;
 /**
  * {@code BeforeAllCallbacks} defines the API for {@link TestExtension TestExtensions} that wish to provide additional
  * behavior to tests before all test methods have been invoked.
- * <p>
- * Concrete implementations often implement {@link AfterAllExtensionPoint} as well.
- * <p>
- * Implementations must provide a no-args constructor.
+ *
+ * <p>Concrete implementations often implement {@link AfterAllExtensionPoint} as well.
+ *
+ * <p>Implementations must provide a no-args constructor.
  *
  * @since 5.0
  * @see org.junit.gen5.api.BeforeAll
@@ -32,6 +32,6 @@ public interface BeforeAllExtensionPoint extends ExtensionPoint {
 	 *
 	 * @param context the current container extension context
 	 */
-	void beforeAll(ContainerExtensionContext context) throws Exception;
+	void beforeAll(ContainerExtensionContext context) throws Throwable;
 
 }

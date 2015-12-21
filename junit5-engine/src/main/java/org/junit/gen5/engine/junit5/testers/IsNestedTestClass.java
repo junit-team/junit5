@@ -19,6 +19,8 @@ import java.util.function.Predicate;
 import org.junit.gen5.api.Nested;
 
 /**
+ * Test if an inner class is a JUnit 5 nested test class.
+ *
  * @since 5.0
  */
 public class IsNestedTestClass implements Predicate<Class<?>> {

@@ -43,7 +43,7 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 	}
 
 	@Override
-	//TODO: Replace with methods to set and get attributes. Maybe with lifecycle?
+	// TODO Replace with methods to set and get attributes. Maybe with lifecycle?
 	public Map<String, Object> getAttributes() {
 		return attributes;
 	}

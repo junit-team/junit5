@@ -25,7 +25,8 @@ import java.lang.annotation.Target;
  *
  * <h3>Supported Extension APIs</h3>
  * <ul>
- * <li>{@link ShouldTestBeExecutedCondition}</li>
+ * <li>{@link ContainerExecutionCondition}</li>
+ * <li>{@link TestExecutionCondition}</li>
  * <li>{@link InstancePostProcessor}</li>
  * <li>{@link MethodParameterResolver}</li>
  * <li>{@link BeforeEachExtensionPoint}</li>

@@ -28,20 +28,22 @@ public class ExtensionPointSorter {
 
 	/**
 	 * Sort the list of extension points according to their specified {@linkplain Position}.
-	 * The list instance will be resorted.
+	 *
+	 * <p>The list instance will be resorted.
 	 *
 	 * @param registeredExtensionPoints List of extension points in order of registration
-	 * @param <T> concrete subtype of {@linkplain ExtensionPoint}
+	 * @param <T> concrete subtype of {@link ExtensionPoint}
 	 */
 	public <T extends ExtensionPoint> void sort(List<RegisteredExtensionPoint<T>> registeredExtensionPoints) {
 
 		checkPositionUnique(registeredExtensionPoints, Position.INNERMOST);
 		checkPositionUnique(registeredExtensionPoints, Position.OUTERMOST);
-		registeredExtensionPoints.sort(new LocalComparator());
+		registeredExtensionPoints.sort(new DefaultComparator());
 	}
 
 	private <T extends ExtensionPoint> void checkPositionUnique(
 			List<RegisteredExtensionPoint<T>> registeredExtensionPoints, Position positionType) {
+
 		if (countPosition(registeredExtensionPoints, positionType) > 1) {
 			List<String> conflictingExtensions = conflictingExtensions(registeredExtensionPoints, positionType);
 			String exceptionMessage = String.format("Conflicting extensions: %s", conflictingExtensions);
@@ -51,6 +53,7 @@ public class ExtensionPointSorter {
 
 	private <T extends ExtensionPoint> long countPosition(List<RegisteredExtensionPoint<T>> registeredExtensionPoints,
 			Position positionToCount) {
+
 		return registeredExtensionPoints.stream() //
 		.filter(point -> point.getPosition() == positionToCount) //
 		.count();
@@ -58,17 +61,20 @@ public class ExtensionPointSorter {
 
 	private <T extends ExtensionPoint> List<String> conflictingExtensions(
 			List<RegisteredExtensionPoint<T>> registeredExtensionPoints, Position positionToFind) {
+
 		return registeredExtensionPoints.stream() //
 		.filter(point -> point.getPosition() == positionToFind) //
 		.map(RegisteredExtensionPoint::getExtensionName) //
 		.collect(Collectors.toList());
 	}
 
-	private class LocalComparator implements Comparator<RegisteredExtensionPoint> {
+	private static class DefaultComparator implements Comparator<RegisteredExtensionPoint<?>> {
 
 		@Override
-		public int compare(RegisteredExtensionPoint first, RegisteredExtensionPoint second) {
+		public int compare(RegisteredExtensionPoint<?> first, RegisteredExtensionPoint<?> second) {
 			return Integer.compare(first.getPosition().sortingOrder, second.getPosition().sortingOrder);
 		}
+
 	}
+
 }

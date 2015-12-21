@@ -19,9 +19,11 @@ import java.util.Set;
 
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.Leaf;
 import org.junit.gen5.engine.TestDescriptor;
@@ -99,6 +101,8 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(context.getExtensionContext(),
 			context, this, testInstance);
 
+		invokeInstancePostProcessorExtensionPoints(newTestExtensionRegistry, testExtensionContext);
+
 		invokeBeforeEachExtensionPoints(newTestExtensionRegistry, testExtensionContext);
 
 		List<Throwable> throwablesCollector = new LinkedList<>();
@@ -106,38 +110,24 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 		invokeAfterEachExtensionPoints(newTestExtensionRegistry, testExtensionContext, throwablesCollector);
 
-		if (!throwablesCollector.isEmpty()) {
-			Throwable t = throwablesCollector.get(0);
-			throwablesCollector.stream().skip(1).forEach(t::addSuppressed);
-			throw t;
-		}
+		throwIfAnyThrowablePresent(throwablesCollector);
 
 		return newContext;
 	}
 
-	protected void invokeAfterEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
-			TestExtensionContext testExtensionContext, List<Throwable> throwables) throws Throwable {
-		ThrowingConsumer<RegisteredExtensionPoint<AfterEachExtensionPoint>> applyAfterEach = registeredExtensionPoint -> {
-			try {
-				registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext);
-			}
-			catch (Throwable t) {
-				throwables.add(t);
-			}
+	private void invokeInstancePostProcessorExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+			TestExtensionContext testExtensionContext) throws Throwable {
+		ThrowingConsumer<RegisteredExtensionPoint<InstancePostProcessor>> applyInstancePostProcessor = registeredExtensionPoint -> {
+			registeredExtensionPoint.getExtensionPoint().postProcessTestInstance(testExtensionContext);
 		};
-		newTestExtensionRegistry.applyExtensionPoints(AfterEachExtensionPoint.class,
-			TestExtensionRegistry.ApplicationOrder.BACKWARD, applyAfterEach);
+		newTestExtensionRegistry.applyExtensionPoints(InstancePostProcessor.class,
+			TestExtensionRegistry.ApplicationOrder.FORWARD, applyInstancePostProcessor);
 	}
 
-	protected void invokeBeforeEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+	private void invokeBeforeEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
 			TestExtensionContext testExtensionContext) throws Throwable {
 		ThrowingConsumer<RegisteredExtensionPoint<BeforeEachExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
-			try {
-				registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext);
-			}
-			catch (Exception e) { //TODO: Non RTEs should be allowed
-				throw new RuntimeException(e);
-			}
+			registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext);
 		};
 		newTestExtensionRegistry.applyExtensionPoints(BeforeEachExtensionPoint.class,
 			TestExtensionRegistry.ApplicationOrder.FORWARD, applyBeforeEach);
@@ -150,9 +140,29 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				testExtensionContext.getTestMethod());
 			new MethodInvoker(testExtensionContext, testExtensionRegistry).invoke(methodContext);
 		}
+		catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
+			throwablesCollector.add(wrapper.getTargetException());
+		}
 		catch (Throwable t) {
 			throwablesCollector.add(t);
 		}
+	}
+
+	private void invokeAfterEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+			TestExtensionContext testExtensionContext, List<Throwable> throwablesCollector) throws Throwable {
+		ThrowingConsumer<RegisteredExtensionPoint<AfterEachExtensionPoint>> applyAfterEach = registeredExtensionPoint -> {
+			try {
+				registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext);
+			}
+			catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
+				throwablesCollector.add(wrapper.getTargetException());
+			}
+			catch (Throwable t) {
+				throwablesCollector.add(t);
+			}
+		};
+		newTestExtensionRegistry.applyExtensionPoints(AfterEachExtensionPoint.class,
+			TestExtensionRegistry.ApplicationOrder.BACKWARD, applyAfterEach);
 	}
 
 }

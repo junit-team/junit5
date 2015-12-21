@@ -12,8 +12,13 @@ package org.junit.gen5.api.extension;
 
 import java.util.Optional;
 
+import org.junit.gen5.commons.util.ToStringBuilder;
+
 /**
- * The result of evaluating a {@linkplain ShouldTestBeExecutedCondition}.
+ * The result of evaluating a {@link ContainerExecutionCondition} or
+ * {@linkplain TestExecutionCondition}.
+ *
+ * @since 5.0
  */
 public class ConditionEvaluationResult {
 
@@ -51,11 +56,9 @@ public class ConditionEvaluationResult {
 	@Override
 	public String toString() {
 		// @formatter:off
-		return new StringBuilder(getClass().getSimpleName()).append(" ")
-			.append("[")
-			.append("enabled = ").append(this.enabled).append(", ")
-			.append("reason = ").append(this.reason)
-			.append("]")
+		return new ToStringBuilder(this)
+			.append("enabled", this.enabled)
+			.append("reason", this.reason)
 			.toString();
 		// @formatter:on
 	}

@@ -16,51 +16,49 @@ import java.util.Optional;
 
 import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
+import org.junit.gen5.api.extension.ContainerExecutionCondition;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
-import org.junit.gen5.api.extension.ShouldContainerBeExecutedCondition;
-import org.junit.gen5.api.extension.ShouldTestBeExecutedCondition;
+import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.StringUtils;
 
 /**
- * {@link ShouldTestBeExecutedCondition} that supports the {@link Disabled @Disabled} annotation.
+ * Composite {@link ContainerExecutionCondition} and {@link TestExecutionCondition}
+ * that supports the {@code @Disabled} annotation.
  *
  * @since 5.0
  * @see Disabled
+ * @see #evaluate(ContainerExtensionContext)
+ * @see #evaluate(TestExtensionContext)
  */
-public class DisabledCondition implements ShouldTestBeExecutedCondition, ShouldContainerBeExecutedCondition {
+public class DisabledCondition implements ContainerExecutionCondition, TestExecutionCondition {
+
+	private static final ConditionEvaluationResult ENABLED = ConditionEvaluationResult.enabled(
+		"@Disabled is not present");
 
 	/**
-	 * Tests are disabled if {@code @Disabled} is either present on the
-	 * test class or on the test method.
+	 * Containers are disabled if {@code @Disabled} is present on the test class.
 	 */
 	@Override
-	public ConditionEvaluationResult shouldTestBeExecuted(TestExtensionContext context) {
-
-		// Class level?
-		Optional<Disabled> disabled = findAnnotation(context.getTestMethod(), Disabled.class);
-
-		return evaluateDisabledCondition(disabled);
+	public ConditionEvaluationResult evaluate(ContainerExtensionContext context) {
+		return evaluate(findAnnotation(context.getTestClass(), Disabled.class));
 	}
 
 	/**
-	 * Containers are disabled if {@code @Disabled} is either present on the
-	 * test class or on the test method.
+	 * Tests are disabled if {@code @Disabled} is present on the test method.
 	 */
 	@Override
-	public ConditionEvaluationResult shouldContainerBeExecuted(ContainerExtensionContext context) {
-		Optional<Disabled> disabled = findAnnotation(context.getTestClass(), Disabled.class);
-
-		return evaluateDisabledCondition(disabled);
+	public ConditionEvaluationResult evaluate(TestExtensionContext context) {
+		return evaluate(findAnnotation(context.getTestMethod(), Disabled.class));
 	}
 
-	private ConditionEvaluationResult evaluateDisabledCondition(Optional<Disabled> disabled) {
+	private ConditionEvaluationResult evaluate(Optional<Disabled> disabled) {
 		if (disabled.isPresent()) {
 			String reason = disabled.map(Disabled::value).filter(StringUtils::isNotBlank).orElse("Test is @Disabled");
 			return ConditionEvaluationResult.disabled(reason);
 		}
 
-		return ConditionEvaluationResult.enabled("@Disabled is not present");
+		return ENABLED;
 	}
 
 }

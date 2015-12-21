@@ -11,13 +11,13 @@
 package org.junit.gen5.engine.junit5;
 
 import static java.util.Arrays.asList;
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.engine.TestPlanSpecification.build;
+import static org.junit.gen5.engine.TestPlanSpecification.forClass;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Test;
@@ -25,6 +25,8 @@ import org.junit.gen5.api.extension.AfterAllExtensionPoint;
 import org.junit.gen5.api.extension.BeforeAllExtensionPoint;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.api.extension.ExtensionRegistrar;
+import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -33,74 +35,95 @@ import org.junit.gen5.engine.TestPlanSpecification;
  *
  * @since 5.0
  */
-@Ignore("https://github.com/junit-team/junit-lambda/issues/39")
 public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
-	@org.junit.Before
-	public void reset() {
-		preBeforeAllMethods.clear();
-		postAfterAllMethods.clear();
-	}
-
 	@org.junit.Test
-	public void beforeAllAndAfterAllCallbacksWithTestInstancePerMethod() {
+	public void beforeAllAndAfterAllCallbacks() {
 		TestPlanSpecification spec = build(forClass(InstancePerMethodTestCase.class));
 
 		TrackingEngineExecutionListener listener = executeTests(spec, 2);
 
-		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+		assertEquals(1, listener.testStartedCount.get(), "# tests started");
+		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");
 
-		Assert.assertTrue("@BeforeAll was not invoked", InstancePerMethodTestCase.beforeAllInvoked);
-		Assert.assertTrue("@AfterAll was not invoked", InstancePerMethodTestCase.afterAllInvoked);
-
-		Assert.assertEquals("preBeforeAll()", asList("foo", "bar"), preBeforeAllMethods);
-		Assert.assertEquals("postAfterAll()", asList("bar", "foo"), postAfterAllMethods);
+		// @formatter:off
+		assertEquals(asList(
+			"outermostBefore",
+				"fooBeforeAll",
+				"barBeforeAll",
+					"beforeAllMethod",
+						"innermostBefore",
+							"firstTest",
+						"innermostAfter",
+					"afterAllMethod",
+				"barAfterAll",
+				"fooAfterAll",
+			"outermostAfter"
+			), callSequence, "wrong call sequence");
+		// @formatter:on
 	}
 
 	// -------------------------------------------------------------------
 
-	@ExtendWith({ FooClassLevelCallbacks.class, BarClassLevelCallbacks.class })
+	private static List<String> callSequence = new ArrayList<>();
+
+	@ExtendWith({ FooClassLevelCallbacks.class, BarClassLevelCallbacks.class, InnermostAndOutermost.class })
 	private static class InstancePerMethodTestCase {
 
-		static boolean beforeAllInvoked = false;
-
-		static boolean afterAllInvoked = false;
-
 		@BeforeAll
-		// MUST be static for TestInstance.Lifecycle.PER_METHOD!
 		static void beforeAll() {
-			beforeAllInvoked = true;
+			callSequence.add("beforeAllMethod");
 		}
 
 		@AfterAll
-		// MUST be static for TestInstance.Lifecycle.PER_METHOD!
 		static void afterAll() {
-			afterAllInvoked = true;
+			callSequence.add("afterAllMethod");
 		}
 
 		@Test
-		void alwaysPasses() {
-			/* no-op */
+		void firstTest() {
+			callSequence.add("firstTest");
 		}
+
 	}
 
-	private static List<String> preBeforeAllMethods = new ArrayList<>();
-	private static List<String> postAfterAllMethods = new ArrayList<>();
+	private static class InnermostAndOutermost implements ExtensionRegistrar {
+
+		@Override
+		public void registerExtensions(ExtensionRegistry registry) {
+			registry.register(this::innermostBefore, BeforeAllExtensionPoint.class, Position.INNERMOST);
+			registry.register(this::innermostAfter, AfterAllExtensionPoint.class, Position.INNERMOST);
+			registry.register(this::outermostBefore, BeforeAllExtensionPoint.class, Position.OUTERMOST);
+			registry.register(this::outermostAfter, AfterAllExtensionPoint.class, Position.OUTERMOST);
+		}
+
+		private void outermostBefore(ContainerExtensionContext context) {
+			callSequence.add("outermostBefore");
+		}
+
+		private void innermostBefore(ContainerExtensionContext context) {
+			callSequence.add("innermostBefore");
+		}
+
+		private void outermostAfter(ContainerExtensionContext context) {
+			callSequence.add("outermostAfter");
+		}
+
+		private void innermostAfter(ContainerExtensionContext context) {
+			callSequence.add("innermostAfter");
+		}
+	}
 
 	private static class FooClassLevelCallbacks implements BeforeAllExtensionPoint, AfterAllExtensionPoint {
 
 		@Override
 		public void beforeAll(ContainerExtensionContext testExecutionContext) {
-			preBeforeAllMethods.add("foo");
+			callSequence.add("fooBeforeAll");
 		}
 
 		@Override
 		public void afterAll(ContainerExtensionContext testExecutionContext) {
-			postAfterAllMethods.add("foo");
+			callSequence.add("fooAfterAll");
 		}
 	}
 
@@ -108,12 +131,12 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
 
 		@Override
 		public void beforeAll(ContainerExtensionContext testExecutionContext) {
-			preBeforeAllMethods.add("bar");
+			callSequence.add("barBeforeAll");
 		}
 
 		@Override
 		public void afterAll(ContainerExtensionContext testExecutionContext) {
-			postAfterAllMethods.add("bar");
+			callSequence.add("barAfterAll");
 		}
 	}
 

@@ -17,7 +17,7 @@ import java.util.function.Function;
 
 import org.junit.gen5.commons.util.Preconditions;
 
-// TODO: Implement support for other LifeCyle and Inheritance configurations
+// TODO Implement support for other LifeCyle and Inheritance configurations
 public class ContextScope<K, V> {
 
 	public enum Inheritance {

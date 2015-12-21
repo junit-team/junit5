@@ -20,7 +20,10 @@ import java.util.stream.Collectors;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 
-// TODO Give it a REAL interface and make it threadsafe
+/**
+ * @since 5.0
+ */
+// TODO Design a real interface for TestExecutionSummary and make it threadsafe.
 public class TestExecutionSummary {
 
 	private final TestPlan testPlan;
@@ -33,7 +36,6 @@ public class TestExecutionSummary {
 	final AtomicLong testsFailed = new AtomicLong();
 
 	long timeStarted;
-	long timePaused;
 	long timeFinished;
 
 	private String message;
@@ -124,4 +126,5 @@ public class TestExecutionSummary {
 		}
 
 	}
+
 }

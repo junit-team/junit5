@@ -10,6 +10,7 @@
 
 package org.junit.gen5.api;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.junit.gen5.commons.util.StringUtils;
@@ -28,44 +29,64 @@ public final class Assumptions {
 		/* no-op */
 	}
 
-	public static void assumeTrue(boolean condition) {
-		if (!condition) {
-			throwTestAbortedException("condition is not true");
-		}
+	public static void assumeTrue(boolean assumption) {
+		assumeTrue(() -> assumption);
 	}
 
-	public static void assumeTrue(boolean condition, String message) {
-		if (!condition) {
-			throwTestAbortedException(message);
-		}
+	public static void assumeTrue(BooleanSupplier booleanSupplier) {
+		assumeTrue(booleanSupplier, () -> "assumption is not true");
 	}
 
-	public static void assumeTrue(boolean condition, Supplier<String> messageSupplier) {
-		if (!condition) {
+	public static void assumeTrue(BooleanSupplier booleanSupplier, String message) {
+		assumeTrue(booleanSupplier, () -> message);
+	}
+
+	public static void assumeTrue(boolean assumption, Supplier<String> messageSupplier) {
+		assumeTrue(() -> assumption, messageSupplier);
+	}
+
+	public static void assumeTrue(boolean assumption, String message) {
+		assumeTrue(() -> assumption, () -> message);
+	}
+
+	public static void assumeTrue(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
+		if (!booleanSupplier.getAsBoolean()) {
 			throwTestAbortedException(messageSupplier.get());
 		}
 	}
 
-	public static void assumeFalse(boolean condition) {
-		if (condition) {
-			throwTestAbortedException("condition is not false");
-		}
+	public static void assumeFalse(boolean assumption) {
+		assumeFalse(() -> assumption);
 	}
 
-	public static void assumeFalse(boolean condition, String message) {
-		if (condition) {
-			throwTestAbortedException(message);
-		}
+	public static void assumeFalse(BooleanSupplier booleanSupplier) {
+		assumeFalse(booleanSupplier, () -> "assumption is not false");
 	}
 
-	public static void assumeFalse(boolean condition, Supplier<String> messageSupplier) {
-		if (condition) {
+	public static void assumeFalse(BooleanSupplier booleanSupplier, String message) {
+		assumeFalse(booleanSupplier, () -> message);
+	}
+
+	public static void assumeFalse(boolean assumption, Supplier<String> messageSupplier) {
+		assumeFalse(() -> assumption, messageSupplier);
+	}
+
+	public static void assumeFalse(boolean assumption, String message) {
+		assumeFalse(() -> assumption, () -> message);
+	}
+
+	public static void assumeFalse(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
+		if (booleanSupplier.getAsBoolean()) {
 			throwTestAbortedException(messageSupplier.get());
 		}
 	}
 
-	public static void assumingThat(boolean condition, Executable executable) {
-		if (condition) {
+	public static void assumingThat(BooleanSupplier booleanSupplier, Executable executable) {
+		assumingThat(booleanSupplier.getAsBoolean(), executable);
+	}
+
+	public static void assumingThat(boolean assumption, Executable executable) {
+		if (assumption) {
 			try {
 				executable.execute();
 			}

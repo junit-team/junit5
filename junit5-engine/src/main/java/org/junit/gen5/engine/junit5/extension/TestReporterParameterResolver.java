@@ -24,12 +24,12 @@ import org.junit.gen5.api.extension.*;
 public class TestReporterParameterResolver implements MethodParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter, MethodContext methodContext, TestExtensionContext testContext) {
+	public boolean supports(Parameter parameter, MethodContext methodContext, ExtensionContext testContext) {
 		return (parameter.getType() == TestReporter.class);
 	}
 
 	@Override
-	public TestReporter resolve(Parameter parameter, MethodContext methodContext, TestExtensionContext testContext) {
+	public TestReporter resolve(Parameter parameter, MethodContext methodContext, ExtensionContext testContext) {
 		return entry -> testContext.publishReportEntry(entry);
 	}
 

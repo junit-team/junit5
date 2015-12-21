@@ -10,6 +10,8 @@
 
 package org.junit.gen5.engine.junit5;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -37,6 +39,8 @@ public class TrackingEngineExecutionListener implements EngineExecutionListener 
 	public final AtomicInteger containerFinishedCount = new AtomicInteger();
 
 	public final AtomicInteger reportEntriesCount = new AtomicInteger();
+
+	public final List<Throwable> throwables = new ArrayList<>();
 
 	@Override
 	public void reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry) {
@@ -73,6 +77,7 @@ public class TrackingEngineExecutionListener implements EngineExecutionListener 
 		else {
 			containerFinishedCount.incrementAndGet();
 		}
+		testExecutionResult.getThrowable().ifPresent(throwables::add);
 	}
 
 	private AtomicInteger getCounter(Status status) {

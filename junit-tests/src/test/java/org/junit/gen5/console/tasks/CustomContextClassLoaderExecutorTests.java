@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import org.junit.Test;
 
-public class CustomContextClassLoaderExecutorTest {
+public class CustomContextClassLoaderExecutorTests {
 
 	@Test
 	public void invokeWithoutCustomClassLoaderDoesNotSetClassLoader() throws Exception {

@@ -13,7 +13,9 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.api.Assertions.*;
 
 import org.junit.Assert;
+import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
@@ -45,8 +47,20 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 	}
 
 	@org.junit.Test
-	public void executeTestsForMethodInjectionInBeforeAndAfterMethodsCases() {
+	public void executeTestsForMethodInjectionInBeforeAndAfterEachMethods() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class, 2);
+
+		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
+		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
+		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
+		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
+		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+	}
+
+	@org.junit.Test
+	public void executeTestsForMethodInjectionInBeforeAndAfterAllMethods() {
+		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterAllMethodInjectionTestCase.class,
+			2);
 
 		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
 		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
@@ -131,6 +145,24 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
 		@AfterEach
 		void after(@TestName String name) {
 			assertEquals("custom name", name);
+		}
+	}
+
+	@Name("custom class name")
+	private static class BeforeAndAfterAllMethodInjectionTestCase {
+
+		@BeforeAll
+		static void beforeAll(@TestName String name) {
+			assertEquals("custom class name", name);
+		}
+
+		@Test
+		void aTest() {
+		}
+
+		@AfterAll
+		static void afterAll(@TestName String name) {
+			assertEquals("custom class name", name);
 		}
 	}
 
