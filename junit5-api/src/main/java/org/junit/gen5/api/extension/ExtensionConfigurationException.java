@@ -16,6 +16,10 @@ package org.junit.gen5.api.extension;
 @SuppressWarnings("serial")
 public class ExtensionConfigurationException extends RuntimeException {
 
+	public ExtensionConfigurationException(Throwable cause) {
+		super(cause);
+	}
+
 	public ExtensionConfigurationException(String message) {
 		super(message);
 	}

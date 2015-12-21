@@ -125,9 +125,6 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			invokeAfterAllExtensionPoints(context.getTestExtensionRegistry(),
 				(ContainerExtensionContext) context.getExtensionContext(), throwablesCollector);
 		}
-		catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-			throwablesCollector.add(wrapper.getTargetException());
-		}
 		catch (Throwable throwable) {
 			throwablesCollector.add(throwable);
 		}
@@ -156,9 +153,6 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			try {
 				registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext);
 			}
-			catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-				throwablesCollector.add(wrapper.getTargetException());
-			}
 			catch (Throwable t) {
 				throwablesCollector.add(t);
 			}
@@ -177,12 +171,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 				throw new ExtensionConfigurationException(message);
 			}
 			BeforeAllExtensionPoint extensionPoint = containerExtensionContext -> {
-				try {
-					new MethodInvoker(containerExtensionContext, extensionRegistry).invoke(methodContext(null, method));
-				}
-				catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-					throw wrapper.getTargetException();
-				}
+				new MethodInvoker(containerExtensionContext, extensionRegistry).invoke(methodContext(null, method));
 
 			};
 			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
@@ -211,12 +200,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			MethodSortOrder.HierarchyDown);
 		beforeEachMethods.stream().forEach(method -> {
 			BeforeEachExtensionPoint extensionPoint = testExtensionContext -> {
-				try {
-					runMethodInTestExtensionContext(method, testExtensionContext, extensionRegistry);
-				}
-				catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-					throw wrapper.getTargetException();
-				}
+				runMethodInTestExtensionContext(method, testExtensionContext, extensionRegistry);
 			};
 			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
 		});
@@ -234,11 +218,13 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	private void runMethodInTestExtensionContext(Method method, TestExtensionContext testExtensionContext,
-			TestExtensionRegistry extensionRegistry) {
+			TestExtensionRegistry extensionRegistry) throws Throwable {
 		Optional<Object> optionalInstance = ReflectionUtils.getOuterInstance(testExtensionContext.getTestInstance(),
 			method.getDeclaringClass());
-		optionalInstance.ifPresent(instance -> new MethodInvoker(testExtensionContext, extensionRegistry).invoke(
-			methodContext(instance, method)));
+		if (optionalInstance.isPresent()) {
+			new MethodInvoker(testExtensionContext, extensionRegistry).invoke(
+				methodContext(optionalInstance.get(), method));
+		}
 	}
 
 }

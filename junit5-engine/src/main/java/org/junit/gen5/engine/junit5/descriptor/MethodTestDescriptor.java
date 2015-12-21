@@ -140,9 +140,6 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				testExtensionContext.getTestMethod());
 			new MethodInvoker(testExtensionContext, testExtensionRegistry).invoke(methodContext);
 		}
-		catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-			throwablesCollector.add(wrapper.getTargetException());
-		}
 		catch (Throwable t) {
 			throwablesCollector.add(t);
 		}
@@ -153,9 +150,6 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		ThrowingConsumer<RegisteredExtensionPoint<AfterEachExtensionPoint>> applyAfterEach = registeredExtensionPoint -> {
 			try {
 				registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext);
-			}
-			catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-				throwablesCollector.add(wrapper.getTargetException());
 			}
 			catch (Throwable t) {
 				throwablesCollector.add(t);

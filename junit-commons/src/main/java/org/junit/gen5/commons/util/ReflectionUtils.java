@@ -85,7 +85,7 @@ public final class ReflectionUtils {
 		return Modifier.isStatic(member.getModifiers());
 	}
 
-	public static <T> T newInstance(Class<T> clazz, Object... args) {
+	public static <T> T newInstance(Class<T> clazz, Object... args) throws Throwable {
 		Preconditions.notNull(clazz, "class must not be null");
 
 		try {
@@ -113,7 +113,7 @@ public final class ReflectionUtils {
 	 * @return the value returned by the method invocation or {@code null}
 	 * if the return type is {@code void}
 	 */
-	public static Object invokeMethod(Method method, Object target, Object... args) {
+	public static Object invokeMethod(Method method, Object target, Object... args) throws Throwable {
 		Preconditions.notNull(method, "method must not be null");
 		Preconditions.condition((target != null || Modifier.isStatic(method.getModifiers())),
 			() -> String.format("Cannot invoke non-static method [%s] on a null target.", method.toGenericString()));
@@ -383,7 +383,7 @@ public final class ReflectionUtils {
 		}
 	}
 
-	private static void handleException(Throwable ex) {
+	private static void handleException(Throwable ex) throws Throwable {
 		if (ex instanceof InvocationTargetException) {
 			handleException(((InvocationTargetException) ex).getTargetException());
 		}
@@ -405,23 +405,7 @@ public final class ReflectionUtils {
 		if (ex instanceof Error) {
 			throw (Error) ex;
 		}
-		// TODO Research if throwing the exception itself would be a better option
-		throw new TargetExceptionWrapper(ex);
-	}
-
-	public static class TargetExceptionWrapper extends RuntimeException {
-
-		private static final long serialVersionUID = 3733792088719661853L;
-
-		private final Throwable targetException;
-
-		private TargetExceptionWrapper(Throwable targetException) {
-			this.targetException = targetException;
-		}
-
-		public Throwable getTargetException() {
-			return targetException;
-		}
+		throw ex;
 	}
 
 }

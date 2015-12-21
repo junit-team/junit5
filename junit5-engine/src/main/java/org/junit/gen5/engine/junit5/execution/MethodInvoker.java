@@ -42,7 +42,7 @@ public class MethodInvoker {
 		this.extensionRegistry = extensionRegistry;
 	}
 
-	public Object invoke(MethodContext methodContext) {
+	public Object invoke(MethodContext methodContext) throws Throwable {
 		return ReflectionUtils.invokeMethod(methodContext.getMethod(), methodContext.getInstance(),
 			resolveParameters(methodContext));
 	}

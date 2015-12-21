@@ -51,7 +51,7 @@ public interface MethodParameterResolver extends ExtensionPoint {
 	 * @see ReflectionUtils#newInstance(Class, Object...)
 	 */
 	default Object resolve(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext)
-			throws ParameterResolutionException {
+			throws Throwable {
 
 		return ReflectionUtils.newInstance(parameter.getType());
 	}

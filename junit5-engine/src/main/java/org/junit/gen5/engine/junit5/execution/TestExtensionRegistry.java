@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
@@ -146,7 +147,13 @@ public class TestExtensionRegistry {
 		boolean extensionExists = getRegisteredExtensionClasses().stream().anyMatch(
 			registeredClass -> registeredClass.equals(extensionClass));
 		if (!extensionExists) {
-			TestExtension testExtension = ReflectionUtils.newInstance(extensionClass);
+			TestExtension testExtension = null;
+			try {
+				testExtension = ReflectionUtils.newInstance(extensionClass);
+			}
+			catch (Throwable throwable) {
+				throw new ExtensionConfigurationException(throwable);
+			}
 			registerExtensionPointImplementors(testExtension);
 			registerFromExtensionRegistrar(testExtension);
 			this.registeredExtensionClasses.add(extensionClass);
