@@ -415,7 +415,7 @@ public final class ReflectionUtils {
 
 		private final Throwable targetException;
 
-		private TargetExceptionWrapper(Throwable targetException) {
+		public TargetExceptionWrapper(Throwable targetException) {
 			this.targetException = targetException;
 		}
 

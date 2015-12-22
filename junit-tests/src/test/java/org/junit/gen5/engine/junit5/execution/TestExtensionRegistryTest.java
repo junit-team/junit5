@@ -120,13 +120,13 @@ public class TestExtensionRegistryTest {
 	}
 
 	@Test
-	public void applyExtensionPointsInjectsCorrectRegisteredExceptionPoint() throws Throwable {
+	public void canStreamOverRegisteredExceptionPoint() throws Throwable {
 
 		registry.addExtension(MyExtension.class);
 
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
-		registry.applyExtensionPoints(MyExtensionPoint.class, TestExtensionRegistry.ApplicationOrder.FORWARD,
+		registry.stream(MyExtensionPoint.class, TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(
 			registeredExtensionPoint -> {
 				Assert.assertEquals(MyExtension.class.getName(), registeredExtensionPoint.getExtensionName());
 				Assert.assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
@@ -146,7 +146,7 @@ public class TestExtensionRegistryTest {
 
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
-		registry.applyExtensionPoints(MyExtensionPoint.class, TestExtensionRegistry.ApplicationOrder.FORWARD,
+		registry.stream(MyExtensionPoint.class, TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(
 			registeredExtensionPoint -> {
 				Assert.assertEquals("anonymous extension", registeredExtensionPoint.getExtensionName());
 				Assert.assertEquals(Position.INNERMOST, registeredExtensionPoint.getPosition());
@@ -158,31 +158,9 @@ public class TestExtensionRegistryTest {
 
 	}
 
-	@Test
-	public void exceptionInApplierCodeStopsIterationThroughExtensionPoints() throws Throwable {
-		registry.registerExtension((MyExtensionPoint) test -> {
-		}, Position.DEFAULT, "anonymous extension 1");
-		registry.registerExtension((MyExtensionPoint) test -> {
-		}, Position.DEFAULT, "anonymous extension 2");
-
-		AtomicInteger countCalledExtensions = new AtomicInteger(0);
-		try {
-			registry.applyExtensionPoints(MyExtensionPoint.class, TestExtensionRegistry.ApplicationOrder.FORWARD,
-				registeredExtensionPoint -> {
-					countCalledExtensions.incrementAndGet();
-					throw new RuntimeException("should stop iteration");
-				});
-			Assert.fail("");
-		}
-		catch (RuntimeException expected) {
-		}
-		Assert.assertEquals(1, countCalledExtensions.get());
-
-	}
-
 	private int countExtensionPoints(Class<? extends ExtensionPoint> extensionPointType) throws Throwable {
 		AtomicInteger counter = new AtomicInteger();
-		registry.applyExtensionPoints(extensionPointType, TestExtensionRegistry.ApplicationOrder.FORWARD,
+		registry.stream(extensionPointType, TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(
 			registeredExtensionPoint -> counter.incrementAndGet());
 		return counter.get();
 	}

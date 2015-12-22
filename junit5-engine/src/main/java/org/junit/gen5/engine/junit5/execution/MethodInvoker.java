@@ -25,9 +25,8 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry.ApplicationOrder;
 
 /**
- * {@code MethodInvoker} encapsulates the invocation of a method, including
- * support for dynamic resolution of method parameters via
- * {@link MethodParameterResolver MethodParameterResolvers}.
+ * {@code MethodInvoker} encapsulates the invocation of a method, including support for dynamic resolution of method
+ * parameters via {@link MethodParameterResolver MethodParameterResolvers}.
  *
  * @since 5.0
  */
@@ -50,8 +49,8 @@ public class MethodInvoker {
 	/**
 	 * Resolve the array of parameters for the configured method.
 	 *
-	 * @return the array of Objects to be used as parameters in the method
-	 * invocation; never {@code null} though potentially empty
+	 * @return the array of Objects to be used as parameters in the method invocation; never {@code null} though
+	 *         potentially empty
 	 */
 	private Object[] resolveParameters(MethodContext methodContext) throws ParameterResolutionException {
 		// @formatter:off
@@ -66,7 +65,7 @@ public class MethodInvoker {
 
 		try {
 			final List<MethodParameterResolver> matchingResolvers = new ArrayList<>();
-			extensionRegistry.applyExtensionPoints(MethodParameterResolver.class, ApplicationOrder.FORWARD,
+			extensionRegistry.stream(MethodParameterResolver.class, ApplicationOrder.FORWARD).forEach(
 				registeredExtensionPoint -> {
 					if (registeredExtensionPoint.getExtensionPoint().supports(parameter, methodContext,
 						extensionContext))

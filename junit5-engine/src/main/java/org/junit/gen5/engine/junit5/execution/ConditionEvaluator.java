@@ -25,30 +25,51 @@ import org.junit.gen5.api.extension.TestExtensionContext;
  * @see ContainerExecutionCondition
  * @see TestExecutionCondition
  */
-@SuppressWarnings("unused")
-class ConditionEvaluator {
+public class ConditionEvaluator {
 
 	private static final ConditionEvaluationResult ENABLED = ConditionEvaluationResult.enabled(
 		"No 'disabled' conditions encountered");
 
 	/**
-	 * Evaluate all {@link ContainerExecutionCondition} and {@link TestExecutionCondition}
-	 * extensions registered for the supplied {@link ExtensionContext}.
+	 * Evaluate all {@link ContainerExecutionCondition}
+	 * extensions registered for the supplied {@link ContainerExtensionContext}.
 	 *
-	 * @param context the current {@code ExtensionContext}
+	 * @param context the current {@code ContainerExtensionContext}
 	 * @return the first <em>disabled</em> {@code ConditionEvaluationResult},
 	 * or a default <em>enabled</em> {@code ConditionEvaluationResult} if no
 	 * disabled conditions are encountered
 	 */
-	ConditionEvaluationResult evaluate(TestExtensionRegistry extensionRegistry, ExtensionContext context) {
+	public ConditionEvaluationResult evaluateForContainer(TestExtensionRegistry extensionRegistry,
+			ContainerExtensionContext context) {
 		// @formatter:off
-//		return extensionRegistry.getRegisteredExtensionClasses(TestExecutionCondition.class)
-//				.map(condition -> evaluate(condition, context))
-//				.filter(ConditionEvaluationResult::isDisabled)
-//				.findFirst()
-//				.orElse(ENABLED);
+		return extensionRegistry.stream(ContainerExecutionCondition.class, TestExtensionRegistry.ApplicationOrder.FORWARD)
+				.map(extensionPoint -> extensionPoint.getExtensionPoint())
+				.map(condition -> evaluate(condition, context))
+				.filter(ConditionEvaluationResult::isDisabled)
+				.findFirst()
+				.orElse(ENABLED);
 		// @formatter:on
-		return null;
+	}
+
+	/**
+	 * Evaluate all {@link TestExecutionCondition}
+	 * extensions registered for the supplied {@link TestExtensionContext}.
+	 *
+	 * @param context the current {@code TestExtensionContext}
+	 * @return the first <em>disabled</em> {@code ConditionEvaluationResult},
+	 * or a default <em>enabled</em> {@code ConditionEvaluationResult} if no
+	 * disabled conditions are encountered
+	 */
+	public ConditionEvaluationResult evaluateForTest(TestExtensionRegistry extensionRegistry,
+			TestExtensionContext context) {
+		// @formatter:off
+		return extensionRegistry.stream(TestExecutionCondition.class, TestExtensionRegistry.ApplicationOrder.FORWARD)
+				.map(extensionPoint -> extensionPoint.getExtensionPoint())
+				.map(condition -> evaluate(condition, context))
+				.filter(ConditionEvaluationResult::isDisabled)
+				.findFirst()
+				.orElse(ENABLED);
+		// @formatter:on
 	}
 
 	private ConditionEvaluationResult evaluate(ContainerExecutionCondition condition,
