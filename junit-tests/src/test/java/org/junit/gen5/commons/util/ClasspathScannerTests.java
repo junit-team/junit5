@@ -11,13 +11,11 @@
 package org.junit.gen5.commons.util;
 
 import java.io.File;
-import java.util.Arrays;
+import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -68,14 +66,9 @@ public class ClasspathScannerTests {
 		Assert.assertTrue(classes.contains(ClasspathScannerTests.class));
 	}
 
-	private File getTestClasspathRoot() {
-		String fullClassPath = System.getProperty("java.class.path");
-		Optional<String> testRoot = Arrays.stream(fullClassPath.split(File.pathSeparator)).filter(
-			s -> s.endsWith("/classes/test")).findFirst();
-
-		Assume.assumeTrue("There should be a test root", testRoot.isPresent());
-
-		return new File(testRoot.get());
+	private File getTestClasspathRoot() throws Exception {
+		URL location = getClass().getProtectionDomain().getCodeSource().getLocation();
+		return new File(location.toURI());
 	}
 
 	class MemberClassToBeFound {
