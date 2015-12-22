@@ -38,7 +38,6 @@ import org.junit.gen5.engine.TestPlanSpecification;
  *
  * @since 5.0
  */
-@Ignore("https://github.com/junit-team/junit-lambda/issues/39")
 public class DisabledTests extends AbstractJUnit5TestEngineTestCase {
 
 	private static final String FOO = "DisabledTests.foo";
@@ -60,11 +59,8 @@ public class DisabledTests extends AbstractJUnit5TestEngineTestCase {
 		TestPlanSpecification spec = build(forClass(DisabledTestClassTestCase.class));
 		TrackingEngineExecutionListener listener = executeTests(spec, 2);
 
+		Assert.assertEquals("# container skipped", 1, listener.containerSkippedCount.get());
 		Assert.assertEquals("# tests started", 0, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
 	}
 
 	@org.junit.Test

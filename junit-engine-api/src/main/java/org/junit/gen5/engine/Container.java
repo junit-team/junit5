@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine;
 
-public interface Container<C extends EngineExecutionContext> {
+public interface Container<C extends EngineExecutionContext> extends Node<C> {
 
 	default C beforeAll(C context) throws Throwable {
 		return context;

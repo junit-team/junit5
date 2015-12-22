@@ -10,6 +10,8 @@
 
 package org.junit.gen5.engine;
 
+import org.junit.gen5.engine.Node.SkipResult;
+
 class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
 	private final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
@@ -30,11 +32,24 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	}
 
 	private void executeAll(TestDescriptor testDescriptor, C parentContext) {
-		// TODO Check whether TestDescriptor should be skipped and fire executionSkipped
-		// event instead.
+
+		C preparedContext;
+		try {
+			preparedContext = adapter.asNode(testDescriptor).prepare(parentContext);
+			SkipResult skipResult = adapter.asNode(testDescriptor).shouldBeSkipped(preparedContext);
+			if (skipResult.isSkipped()) {
+				listener.executionSkipped(testDescriptor, skipResult.getReason().orElse(""));
+				return;
+			}
+		}
+		catch (Throwable throwable) {
+			//TODO: What should happen if prepare or shouldBeSkipped thrown an exception?
+			throw new RuntimeException(throwable);
+		}
+
 		listener.executionStarted(testDescriptor);
 		TestExecutionResult result = singleTestExecutor.executeSafely(() -> {
-			C context = adapter.asContainer(testDescriptor).beforeAll(parentContext);
+			C context = adapter.asContainer(testDescriptor).beforeAll(preparedContext);
 			context = adapter.asLeaf(testDescriptor).execute(context);
 			for (TestDescriptor child : testDescriptor.getChildren()) {
 				executeAll(child, context);
@@ -51,6 +66,9 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		private final Container<C> nullContainer = new Container<C>() {
 		};
 
+		private final Node<C> nullNode = new Node<C>() {
+		};
+
 		@SuppressWarnings("unchecked")
 		Container<C> asContainer(TestDescriptor testDescriptor) {
 			return testDescriptor instanceof Container ? (Container<C>) testDescriptor : nullContainer;
@@ -59,6 +77,11 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		@SuppressWarnings("unchecked")
 		Leaf<C> asLeaf(TestDescriptor testDescriptor) {
 			return testDescriptor instanceof Leaf ? (Leaf<C>) testDescriptor : nullLeaf;
+		}
+
+		@SuppressWarnings("unchecked")
+		Node<C> asNode(TestDescriptor testDescriptor) {
+			return testDescriptor instanceof Node ? (Node<C>) testDescriptor : nullNode;
 		}
 	}
 

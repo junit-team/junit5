@@ -13,19 +13,24 @@ package org.junit.gen5.engine.junit5.descriptor;
 import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodContext;
 
 import java.lang.reflect.Method;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodContext;
+import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.Leaf;
+import org.junit.gen5.engine.Node;
+import org.junit.gen5.engine.Node.SkipResult;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
@@ -89,30 +94,65 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext execute(JUnit5EngineExecutionContext context) throws Throwable {
-
+	public JUnit5EngineExecutionContext prepare(JUnit5EngineExecutionContext context) throws Throwable {
 		TestExtensionRegistry newTestExtensionRegistry = populateNewTestExtensionRegistryFromExtendWith(testMethod,
 			context.getTestExtensionRegistry());
-
-		JUnit5EngineExecutionContext newContext = context.extend().withTestExtensionRegistry(
-			newTestExtensionRegistry).build();
-
 		Object testInstance = context.getTestInstanceProvider().getTestInstance();
 		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(context.getExtensionContext(),
 			this, testInstance);
 
-		invokeInstancePostProcessorExtensionPoints(newTestExtensionRegistry, testExtensionContext);
+		// @formatter:off
+		return context.extend()
+				.withTestExtensionRegistry(newTestExtensionRegistry)
+				.withExtensionContext(testExtensionContext)
+				.build();
+		// @formatter:on
+	}
 
-		invokeBeforeEachExtensionPoints(newTestExtensionRegistry, testExtensionContext);
+	@Override
+	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Throwable {
+		return invokeTestExecutionConditionExtensionPoints(context.getTestExtensionRegistry(),
+			(TestExtensionContext) context.getExtensionContext());
+	}
+
+	@Override
+	public JUnit5EngineExecutionContext execute(JUnit5EngineExecutionContext context) throws Throwable {
+
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
+
+		invokeInstancePostProcessorExtensionPoints(context.getTestExtensionRegistry(), testExtensionContext);
+		invokeBeforeEachExtensionPoints(context.getTestExtensionRegistry(), testExtensionContext);
 
 		List<Throwable> throwablesCollector = new LinkedList<>();
-		invokeTestMethod(testExtensionContext, newTestExtensionRegistry, throwablesCollector);
+		invokeTestMethod(testExtensionContext, context.getTestExtensionRegistry(), throwablesCollector);
 
-		invokeAfterEachExtensionPoints(newTestExtensionRegistry, testExtensionContext, throwablesCollector);
-
+		invokeAfterEachExtensionPoints(context.getTestExtensionRegistry(), testExtensionContext, throwablesCollector);
 		throwIfAnyThrowablePresent(throwablesCollector);
 
-		return newContext;
+		return context;
+	}
+
+	//TODO: Remove duplication with ClassTestDescriptor.invokeContainerExecutionCondition
+	private SkipResult invokeTestExecutionConditionExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+			TestExtensionContext testExtensionContext) throws Throwable {
+
+		//TODO: Should all conditions be executed? Does the first failing win?
+		Set<ConditionEvaluationResult> conditionEvaluationResults = new HashSet<>();
+		ThrowingConsumer<RegisteredExtensionPoint<TestExecutionCondition>> applyTestExecutionCondition = registeredExtensionPoint -> {
+			conditionEvaluationResults.add(registeredExtensionPoint.getExtensionPoint().evaluate(testExtensionContext));
+		};
+		newTestExtensionRegistry.applyExtensionPoints(TestExecutionCondition.class,
+			TestExtensionRegistry.ApplicationOrder.FORWARD, applyTestExecutionCondition);
+
+		ConditionEvaluationResult conditionResult = conditionEvaluationResults.stream().filter(
+			result -> result.isDisabled()).findFirst().orElse(ConditionEvaluationResult.enabled(null));
+
+		if (conditionResult.isDisabled()) {
+			return SkipResult.skip(conditionResult.getReason().get());
+		}
+		else {
+			return SkipResult.dontSkip();
+		}
 	}
 
 	private void invokeInstancePostProcessorExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,

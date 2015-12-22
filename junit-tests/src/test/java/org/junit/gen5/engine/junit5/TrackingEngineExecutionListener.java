@@ -21,8 +21,7 @@ import org.junit.gen5.engine.TestExecutionResult.Status;
 import org.junit.gen5.launcher.TestExecutionListener;
 
 /**
- * Simple {@link TestExecutionListener} that tracks the number of times
- * that certain callbacks are invoked.
+ * Simple {@link TestExecutionListener} that tracks the number of times that certain callbacks are invoked.
  *
  * @since 5.0
  */
@@ -36,6 +35,7 @@ public class TrackingEngineExecutionListener implements EngineExecutionListener 
 
 	public final AtomicInteger containerStartedCount = new AtomicInteger();
 	public final AtomicInteger containerFinishedCount = new AtomicInteger();
+	public final AtomicInteger containerSkippedCount = new AtomicInteger();
 
 	public final List<Throwable> throwables = new ArrayList<>();
 
@@ -58,6 +58,9 @@ public class TrackingEngineExecutionListener implements EngineExecutionListener 
 	public void executionSkipped(TestDescriptor testDescriptor, String reason) {
 		if (testDescriptor.isTest()) {
 			testSkippedCount.incrementAndGet();
+		}
+		else {
+			containerSkippedCount.incrementAndGet();
 		}
 	}
 

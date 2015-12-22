@@ -48,6 +48,8 @@ public class HierarchicalTestExecutorTests {
 		executor.execute();
 
 		ArgumentCaptor<TestExecutionResult> aTestExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		inOrder.verify(root).prepare(rootContext);
+		inOrder.verify(root).shouldBeSkipped(rootContext);
 		inOrder.verify(listener).executionStarted(root);
 		inOrder.verify(root).beforeAll(rootContext);
 		inOrder.verify(root).afterAll(rootContext);
@@ -81,15 +83,6 @@ public class HierarchicalTestExecutorTests {
 			return true;
 		}
 
-		@Override
-		public MyEngineExecutionContext beforeAll(MyEngineExecutionContext context) throws Throwable {
-			return context;
-		}
-
-		@Override
-		public MyEngineExecutionContext afterAll(MyEngineExecutionContext context) throws Throwable {
-			return context;
-		}
 	}
 
 	private static class MyExecutor extends HierarchicalTestExecutor<MyEngineExecutionContext> {
