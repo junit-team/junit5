@@ -141,16 +141,8 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	@Override
 	public JUnit5EngineExecutionContext afterAll(JUnit5EngineExecutionContext context) throws Throwable {
 		List<Throwable> throwablesCollector = new LinkedList<>();
-		try {
-			invokeAfterAllExtensionPoints(context.getTestExtensionRegistry(),
-				(ContainerExtensionContext) context.getExtensionContext(), throwablesCollector);
-		}
-		catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-			throwablesCollector.add(wrapper.getTargetException());
-		}
-		catch (Throwable throwable) {
-			throwablesCollector.add(throwable);
-		}
+		executeAndCollectThrowables(() -> invokeAfterAllExtensionPoints(context.getTestExtensionRegistry(),
+			(ContainerExtensionContext) context.getExtensionContext(), throwablesCollector), throwablesCollector);
 
 		throwIfAnyThrowablePresent(throwablesCollector);
 
@@ -164,37 +156,19 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	private void invokeBeforeAllExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
 			ContainerExtensionContext containerExtensionContext) throws Throwable {
 		Consumer<RegisteredExtensionPoint<BeforeAllExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
-			try {
-				registeredExtensionPoint.getExtensionPoint().beforeAll(containerExtensionContext);
-			}
-			catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-				throw wrapper;
-			}
-			catch (Throwable throwable) {
-				throw new ReflectionUtils.TargetExceptionWrapper(throwable);
-			}
+			executeAndWrapThrowables(
+				() -> registeredExtensionPoint.getExtensionPoint().beforeAll(containerExtensionContext));
 		};
-		try {
-			newTestExtensionRegistry.stream(BeforeAllExtensionPoint.class,
-				TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(applyBeforeEach);
-		}
-		catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-			throw wrapper.getTargetException();
-		}
+		executeAndUnwrapTargetExceptionWrapper(() -> newTestExtensionRegistry.stream(BeforeAllExtensionPoint.class,
+			TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(applyBeforeEach));
 	}
 
 	private void invokeAfterAllExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
 			ContainerExtensionContext containerExtensionContext, List<Throwable> throwablesCollector) throws Throwable {
 		Consumer<RegisteredExtensionPoint<AfterAllExtensionPoint>> applyAfterAll = registeredExtensionPoint -> {
-			try {
-				registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext);
-			}
-			catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-				throwablesCollector.add(wrapper.getTargetException());
-			}
-			catch (Throwable t) {
-				throwablesCollector.add(t);
-			}
+			executeAndCollectThrowables(
+				() -> registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext),
+				throwablesCollector);
 		};
 		newTestExtensionRegistry.stream(AfterAllExtensionPoint.class,
 			TestExtensionRegistry.ApplicationOrder.BACKWARD).forEach(applyAfterAll);
@@ -238,12 +212,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			MethodSortOrder.HierarchyDown);
 		beforeEachMethods.stream().forEach(method -> {
 			BeforeEachExtensionPoint extensionPoint = testExtensionContext -> {
-				try {
-					runMethodInTestExtensionContext(method, testExtensionContext, extensionRegistry);
-				}
-				catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-					throw wrapper.getTargetException();
-				}
+				runMethodInTestExtensionContext(method, testExtensionContext, extensionRegistry);
 			};
 			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
 		});

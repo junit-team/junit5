@@ -21,10 +21,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.junit.gen5.api.Executable;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Tag;
+import org.junit.gen5.api.extension.BeforeAllExtensionPoint;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExtension;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestTag;
@@ -77,4 +80,36 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 		}
 	}
 
+	protected void executeAndCollectThrowables(Executable executable, List<Throwable> throwablesCollector) {
+		try {
+			executable.execute();
+		}
+		catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
+			throwablesCollector.add(wrapper.getTargetException());
+		}
+		catch (Throwable t) {
+			throwablesCollector.add(t);
+		}
+	}
+
+	protected void executeAndWrapThrowables(Executable executable) {
+		try {
+			executable.execute();
+		}
+		catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
+			throw wrapper;
+		}
+		catch (Throwable throwable) {
+			throw new ReflectionUtils.TargetExceptionWrapper(throwable);
+		}
+	}
+
+	protected void executeAndUnwrapTargetExceptionWrapper(Executable executable) throws Throwable {
+		try {
+			executable.execute();
+		}
+		catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
+			throw wrapper.getTargetException();
+		}
+	}
 }
