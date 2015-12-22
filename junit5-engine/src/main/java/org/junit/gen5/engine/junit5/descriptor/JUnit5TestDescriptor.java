@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import org.junit.gen5.api.Executable;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Tag;
-import org.junit.gen5.api.extension.BeforeAllExtensionPoint;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.commons.util.ReflectionUtils;
