@@ -43,8 +43,10 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 			}
 		}
 		catch (Throwable throwable) {
-			//TODO: What should happen if prepare or shouldBeSkipped thrown an exception?
-			throw new RuntimeException(throwable);
+			//TODO: Is this what we want?
+			listener.executionStarted(testDescriptor);
+			listener.executionFinished(testDescriptor, TestExecutionResult.failed(throwable));
+			return;
 		}
 
 		listener.executionStarted(testDescriptor);
