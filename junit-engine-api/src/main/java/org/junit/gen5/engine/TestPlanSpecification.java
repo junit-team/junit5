@@ -105,6 +105,18 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		// @formatter:on
 	}
 
+	public static Predicate<TestDescriptor> excludeTags(String... tagNames) {
+		return excludeTags(Arrays.asList(tagNames));
+	}
+
+	public static Predicate<TestDescriptor> excludeTags(List<String> includeTags) {
+		// @formatter:off
+		return descriptor -> descriptor.getTags().stream()
+				.map(TestTag::getName)
+				.allMatch(tagName -> !includeTags.contains(tagName));
+		// @formatter:on
+	}
+
 	public static Predicate<TestDescriptor> byEngine(String engineId) {
 		return descriptor -> descriptor.getUniqueId().startsWith(engineId);
 	}

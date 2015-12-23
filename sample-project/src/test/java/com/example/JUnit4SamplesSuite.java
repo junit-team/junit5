@@ -12,6 +12,7 @@ package com.example;
 
 import org.junit.gen5.junit4runner.JUnit5;
 import org.junit.gen5.junit4runner.JUnit5.Classes;
+import org.junit.gen5.junit4runner.JUnit5.ExcludeTags;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
@@ -22,6 +23,7 @@ import org.junit.runner.RunWith;
 //@Packages("com.example.subpackage")
 //@ClassNameMatches(".*TestCase.")
 //@OnlyIncludeTags({ "fast" })
+@ExcludeTags({ "fast" })
 //@OnlyEngine("junit5")
 public class JUnit4SamplesSuite {
 
