@@ -38,6 +38,7 @@ class JUnit5Plugin implements Plugin<Project> {
 				task.inputs.property('runJunit4', junit5.runJunit4)
 				task.inputs.property('classNameFilter', junit5.classNameFilter)
 				task.inputs.property('includeTags', junit5.includeTags)
+				task.inputs.property('excludeTags', junit5.excludeTags)
 				task.outputs.file testReport
 
 				defineTaskDependencies(project, task, junit5)
@@ -82,6 +83,11 @@ class JUnit5Plugin implements Plugin<Project> {
 
 		junit5.includeTags.each { String tag ->
 			args.add('-t')
+			args.add(tag)
+		}
+
+		junit5.excludeTags.each { String tag ->
+			args.add('-T')
 			args.add(tag)
 		}
 

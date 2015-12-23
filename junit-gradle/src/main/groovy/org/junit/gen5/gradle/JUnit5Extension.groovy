@@ -14,6 +14,11 @@ class JUnit5Extension {
 	boolean runJunit4
 	String classNameFilter
 	List includeTags = []
+	List excludeTags = []
+
+	void excludeTag(tag) {
+		excludeTags.add tag
+	}
 
 	void includeTag(tag) {
 		includeTags.add tag
