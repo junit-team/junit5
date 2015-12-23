@@ -99,12 +99,14 @@ public class TestPlanSpecificationCreatorTests {
 	@Test
 	public void convertsTagFilterOption() {
 		options.setRunAllTests(true);
-		options.setTagsFilter(asList("fast", "slow"));
+		options.setTagsFilter(asList("fast", "medium", "slow"));
+		options.setExcludeTags(asList("slow"));
 
 		TestPlanSpecification specification = convert();
 
 		assertTrue(specification.acceptDescriptor(testDescriptorWithTag("fast")));
-		assertTrue(specification.acceptDescriptor(testDescriptorWithTag("slow")));
+		assertTrue(specification.acceptDescriptor(testDescriptorWithTag("medium")));
+		assertFalse(specification.acceptDescriptor(testDescriptorWithTag("slow")));
 		assertFalse(specification.acceptDescriptor(testDescriptorWithTag("very slow")));
 	}
 

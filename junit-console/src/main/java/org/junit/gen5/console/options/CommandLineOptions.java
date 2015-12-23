@@ -26,6 +26,7 @@ public class CommandLineOptions {
 	private List<String> tagsFilter = emptyList();
 	private List<String> additionalClasspathEntries = emptyList();
 	private List<String> arguments = emptyList();
+	private List<String> excludeTags = emptyList();
 
 	public boolean isDisplayHelp() {
 		return displayHelp;
@@ -81,6 +82,14 @@ public class CommandLineOptions {
 
 	public void setTagsFilter(List<String> tagsFilter) {
 		this.tagsFilter = tagsFilter;
+	}
+
+	public List<String> getExcludeTags() {
+		return excludeTags;
+	}
+
+	public void setExcludeTags(List<String> excludeTags) {
+		this.excludeTags = excludeTags;
 	}
 
 	public List<String> getAdditionalClasspathEntries() {

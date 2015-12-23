@@ -58,5 +58,8 @@ class TestPlanSpecificationCreator {
 		if (!options.getTagsFilter().isEmpty()) {
 			specification.filterWith(byTags(options.getTagsFilter()));
 		}
+		if (!options.getExcludeTags().isEmpty()) {
+			specification.filterWith(excludeTags(options.getExcludeTags()));
+		}
 	}
 }

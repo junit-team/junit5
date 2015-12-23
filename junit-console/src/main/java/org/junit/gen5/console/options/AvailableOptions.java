@@ -27,6 +27,7 @@ class AvailableOptions {
 	private final OptionSpec<Void> hideDetails;
 	private final OptionSpec<String> classnameFilter;
 	private final OptionSpec<String> tagFilter;
+	private final OptionSpec<String> excludeTags;
 	private final OptionSpec<String> additionalClasspathEntries;
 	private final OptionSpec<String> arguments;
 
@@ -45,6 +46,9 @@ class AvailableOptions {
 			"Give a regular expression to include only classes whose fully qualified names match.") //
 			.withRequiredArg();
 		tagFilter = parser.acceptsAll(asList("t", "filter-tags"),
+			"Give a tag to include in the test run. This option can be repeated.") //
+			.withRequiredArg();
+		excludeTags = parser.acceptsAll(asList("T", "exclude-tags"),
 			"Give a tag to include in the test run. This option can be repeated.") //
 			.withRequiredArg();
 		additionalClasspathEntries = parser.acceptsAll(asList("p", "classpath"), //
@@ -68,6 +72,7 @@ class AvailableOptions {
 		result.setHideDetails(detectedOptions.has(hideDetails));
 		result.setClassnameFilter(detectedOptions.valueOf(classnameFilter));
 		result.setTagsFilter(detectedOptions.valuesOf(tagFilter));
+		result.setExcludeTags(detectedOptions.valuesOf(excludeTags));
 		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(additionalClasspathEntries));
 		result.setArguments(detectedOptions.valuesOf(arguments));
 		return result;
