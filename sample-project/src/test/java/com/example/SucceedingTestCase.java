@@ -19,6 +19,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.api.TestName;
 
 /**
  * Named *TestCase so Gradle will not try to run it.
@@ -28,13 +29,13 @@ import org.junit.gen5.api.Test;
 class SucceedingTestCase extends AbstractSuperTest implements InterfaceWithTestCases {
 
 	@BeforeAll
-	void initClass() {
-		System.out.println(getClass().getName() + " before all called");
+	static void initClass(@TestName String name) {
+		System.out.println(name + " before all called");
 	}
 
 	@AfterAll
-	void teardownClass() {
-		System.out.println(getClass().getName() + " after all called");
+	static void teardownClass(@TestName String name) {
+		System.out.println(name + " after all called");
 	}
 
 	@BeforeEach
@@ -76,8 +77,8 @@ class SucceedingTestCase extends AbstractSuperTest implements InterfaceWithTestC
 abstract class AbstractSuperTest {
 
 	@BeforeAll
-	void beforeAllFromSuperclass() {
-		System.out.println(getClass().getName() + " before all from super class called");
+	static void beforeAllFromSuperclass(@TestName String name) {
+		System.out.println(name + " before all from super class called");
 	}
 
 	@BeforeEach
@@ -102,8 +103,8 @@ abstract class AbstractSuperTest {
 	}
 
 	@AfterAll
-	void afterAllFromSuperclass() {
-		System.out.println(getClass().getName() + " after all from super class called");
+	static void afterAllFromSuperclass(@TestName String name) {
+		System.out.println(name + " after all from super class called");
 	}
 }
 

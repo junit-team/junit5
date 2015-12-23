@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
@@ -69,6 +70,7 @@ class SampleTestCase {
 	}
 
 	@Test
+	@Disabled
 	void skippedTest() {
 		throw new TestSkippedException("This test will be skipped");
 	}
