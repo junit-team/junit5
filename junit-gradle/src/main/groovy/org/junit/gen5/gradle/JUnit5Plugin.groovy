@@ -18,8 +18,8 @@ class JUnit5Plugin implements Plugin<Project> {
 
 		project.afterEvaluate {
 
-			def junit5Version = junit5.version
-			if (junit5Version) {
+			if (junit5.version) {
+				def junit5Version = junit5.version
 				project.dependencies.add("testRuntime", "org.junit:junit-console:${junit5Version}")
 				project.dependencies.add("testCompile", "org.junit:junit5-api:${junit5Version}")
 				project.dependencies.add("testRuntime", "org.junit:junit5-engine:${junit5Version}")
