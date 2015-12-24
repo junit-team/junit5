@@ -19,12 +19,14 @@ class JUnit5Plugin implements Plugin<Project> {
 		project.afterEvaluate {
 
 			def junit5Version = junit5.version
-			project.dependencies.add("testRuntime", "org.junit:junit-console:${junit5Version}")
-			project.dependencies.add("testCompile", "org.junit:junit5-api:${junit5Version}")
-			project.dependencies.add("testRuntime", "org.junit:junit5-engine:${junit5Version}")
+			if (junit5Version) {
+				project.dependencies.add("testRuntime", "org.junit:junit-console:${junit5Version}")
+				project.dependencies.add("testCompile", "org.junit:junit5-api:${junit5Version}")
+				project.dependencies.add("testRuntime", "org.junit:junit5-engine:${junit5Version}")
 
-			if (junit5.runJunit4) {
-				project.dependencies.add("testRuntime", "org.junit.prototype:junit4-engine:${junit5Version}")
+				if (junit5.runJunit4) {
+					project.dependencies.add("testRuntime", "org.junit.prototype:junit4-engine:${junit5Version}")
+				}
 			}
 
 			def reportsDir = new File("build/test-results")
