@@ -31,14 +31,11 @@ import org.junit.gen5.engine.TestTag;
  *
  * @since 5.0
  */
-@Tag("classTag1")
-@Tag("classTag2")
-@Name("custom class name")
 public class JUnit5TestDescriptorTests {
 
 	@org.junit.Test
 	public void constructFromMethod() throws Exception {
-		Class<?> testClass = getClass();
+		Class<?> testClass = ASampleTestCase.class;
 		Method testMethod = testClass.getDeclaredMethod("test");
 		MethodTestDescriptor descriptor = new MethodTestDescriptor("a method id", testClass, testMethod);
 
@@ -49,9 +46,10 @@ public class JUnit5TestDescriptorTests {
 
 	@org.junit.Test
 	public void constructFromMethodWithAnnotations() throws Exception {
-		JUnit5TestDescriptor classDescriptor = new ClassTestDescriptor("class id", getClass());
-		Method testMethod = getClass().getDeclaredMethod("foo");
-		MethodTestDescriptor methodDescriptor = new MethodTestDescriptor("method id", getClass(), testMethod);
+		JUnit5TestDescriptor classDescriptor = new ClassTestDescriptor("class id", ASampleTestCase.class);
+		Method testMethod = ASampleTestCase.class.getDeclaredMethod("foo");
+		MethodTestDescriptor methodDescriptor = new MethodTestDescriptor("method id", ASampleTestCase.class,
+			testMethod);
 		classDescriptor.addChild(methodDescriptor);
 
 		assertEquals(testMethod, methodDescriptor.getTestMethod());
@@ -69,9 +67,9 @@ public class JUnit5TestDescriptorTests {
 
 	@org.junit.Test
 	public void constructClassDescriptorWithAnnotations() throws Exception {
-		ClassTestDescriptor descriptor = new ClassTestDescriptor("any id", getClass());
+		ClassTestDescriptor descriptor = new ClassTestDescriptor("any id", ASampleTestCase.class);
 
-		assertEquals(getClass(), descriptor.getTestClass());
+		assertEquals(ASampleTestCase.class, descriptor.getTestClass());
 		assertEquals("custom class name", descriptor.getDisplayName(), "display name:");
 
 		List<String> tags = descriptor.getTags().stream().map(TestTag::getName).collect(Collectors.toList());
@@ -82,8 +80,8 @@ public class JUnit5TestDescriptorTests {
 
 	@org.junit.Test
 	public void constructFromMethodWithCustomTestAnnotation() throws Exception {
-		Method testMethod = getClass().getDeclaredMethod("customTestAnnotation");
-		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", getClass(), testMethod);
+		Method testMethod = ASampleTestCase.class.getDeclaredMethod("customTestAnnotation");
+		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", ASampleTestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom name", descriptor.getDisplayName(), "display name:");
@@ -93,36 +91,42 @@ public class JUnit5TestDescriptorTests {
 
 	@org.junit.Test
 	public void constructFromMethodWithParameters() throws Exception {
-		Method testMethod = getClass().getDeclaredMethod("test", String.class, BigDecimal.class);
-		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", getClass(), testMethod);
+		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", String.class, BigDecimal.class);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", ASampleTestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test", descriptor.getDisplayName(), "display name:");
 	}
 
-	void test() {
-	}
+	@Tag("classTag1")
+	@Tag("classTag2")
+	@Name("custom class name")
+	private static class ASampleTestCase {
 
-	void test(String txt, BigDecimal sum) {
-	}
+		void test() {
+		}
 
-	@Test
-	@Name("custom test name")
-	@Tag("methodTag1")
-	@Tag("methodTag2")
-	void foo() {
-	}
+		void test(String txt, BigDecimal sum) {
+		}
 
-	@CustomTestAnnotation
-	void customTestAnnotation() {
-	}
+		@Test
+		@Name("custom test name")
+		@Tag("methodTag1")
+		@Tag("methodTag2")
+		void foo() {
+		}
 
-	@Test
-	@Name("custom name")
-	@Tag("custom tag")
-	@Target(ElementType.METHOD)
-	@Retention(RetentionPolicy.RUNTIME)
-	@interface CustomTestAnnotation {
-	}
+		@CustomTestAnnotation
+		void customTestAnnotation() {
+		}
 
+		@Test
+		@Name("custom name")
+		@Tag("custom tag")
+		@Target(ElementType.METHOD)
+		@Retention(RetentionPolicy.RUNTIME)
+		@interface CustomTestAnnotation {
+		}
+
+	}
 }
