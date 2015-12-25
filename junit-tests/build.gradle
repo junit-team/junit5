@@ -4,7 +4,7 @@ apply plugin: 'org.junit.gen5.gradle'
 uploadArchives.enabled = false
 
 junit5 {
-	version '5.0.0-SNAPSHOT'
+	//version '5.0.0-SNAPSHOT' //not needed since all dependencies are given explicitly
 	runJunit4 false //Does not work yet in master
 	matchClassName '.*Test[s]'
 	// includeTag 'fast'

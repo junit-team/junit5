@@ -16,7 +16,8 @@ import static org.hamcrest.Matchers.is;
 
 import de.schauderhaft.degraph.configuration.NamedPattern;
 
-import org.junit.Test;
+import org.junit.gen5.api.Tag;
+import org.junit.gen5.api.Test;
 
 /**
  * Checks against dependency cycles on package and module level.
@@ -24,6 +25,7 @@ import org.junit.Test;
  * <p>Modules in that sense are defined by the package name element after org.junit.gen5,
  * so "org.junit.gen5.console.ConsoleRunner" belongs to the module "console".
  */
+@Tag("slow")
 public class DependencyTests {
 
 	@Test
