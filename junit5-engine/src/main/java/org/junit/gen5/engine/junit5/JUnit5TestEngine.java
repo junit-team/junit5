@@ -27,7 +27,7 @@ import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 
 public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecutionContext> {
 
-	private static final String ENGINE_ID = "junit5";
+	public static final String ENGINE_ID = "junit5";
 
 	@Override
 	public String getId() {

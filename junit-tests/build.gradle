@@ -1,6 +1,15 @@
 apply plugin: 'jacoco'
+apply plugin: 'org.junit.gen5.gradle'
 
 uploadArchives.enabled = false
+
+junit5 {
+	version '5.0.0-SNAPSHOT'
+	runJunit4 false //Does not work yet in master
+	matchClassName '.*Test[s]'
+	// includeTag 'fast'
+	// excludeTag 'slow'
+}
 
 def testedProjects = [
 	project(':junit-commons'),

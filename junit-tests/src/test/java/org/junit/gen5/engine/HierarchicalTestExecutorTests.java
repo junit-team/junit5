@@ -14,8 +14,8 @@ import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
@@ -30,7 +30,7 @@ public class HierarchicalTestExecutorTests {
 	MyEngineExecutionContext rootContext;
 	HierarchicalTestExecutor<MyEngineExecutionContext> executor;
 
-	@Before
+	@BeforeEach
 	public void init() {
 		root = Mockito.spy(new MyContainer("root"));
 		listener = Mockito.mock(EngineExecutionListener.class);
