@@ -10,6 +10,12 @@
 
 package org.junit.gen5.engine;
 
+/**
+ * Abstract superclass of all TestEngine implementations that are willing to use the {@linkplain Container} and
+ * {@linkplain Leaf} nodes as main principle to organize test suites.
+ *
+ * @param <C> The concrete type of {@linkplain EngineExecutionContext} used by a concrete subclass.
+ */
 public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> implements TestEngine {
 
 	@Override

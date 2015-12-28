@@ -17,6 +17,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
@@ -310,6 +311,33 @@ public class HierarchicalTestExecutorTests {
 		assertTrue(childExecutionResult.getValue().getStatus() == TestExecutionResult.Status.ABORTED,
 			"Execution of child should abort.");
 		assertSame(childExecutionResult.getValue().getThrowable().get(), anAbortedException);
+	}
+
+	@Test
+	@Disabled("Desired behaviour for nested tests.")
+	public void leavesAreExecutedBeforeContainersAreTraversed() throws Throwable {
+
+		MyContainer childContainer = spy(new MyContainer("child container"));
+		root.addChild(childContainer);
+		MyLeaf childLeaf = spy(new MyLeaf("child leaf"));
+		root.addChild(childLeaf);
+
+		InOrder inOrder = inOrder(listener, root, childContainer);
+
+		executor.execute();
+
+		inOrder.verify(listener).executionStarted(root);
+
+		//Execute leaves first
+		inOrder.verify(listener).executionStarted(childLeaf);
+		inOrder.verify(listener).executionFinished(eq(childLeaf), any(TestExecutionResult.class));
+
+		//Traverse containers later
+		inOrder.verify(listener).executionStarted(childContainer);
+		inOrder.verify(listener).executionFinished(eq(childContainer), any(TestExecutionResult.class));
+
+		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
+
 	}
 
 	private static class MyEngineExecutionContext implements EngineExecutionContext {
