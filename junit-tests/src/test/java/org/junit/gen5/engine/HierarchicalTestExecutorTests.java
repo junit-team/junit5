@@ -22,6 +22,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.mockito.internal.verification.Times;
+import org.opentest4j.TestAbortedException;
 
 /**
  * Microtests that verify behaviour of {@link HierarchicalTestExecutor}
@@ -175,7 +176,140 @@ public class HierarchicalTestExecutorTests {
 		assertTrue(childExecutionResult.getValue().getStatus() == TestExecutionResult.Status.FAILED,
 			"Execution of child should fail.");
 		assertSame(childExecutionResult.getValue().getThrowable().get(), anException);
+	}
 
+	@Test
+	public void exceptionInContainerBeforeAll() throws Throwable {
+
+		MyContainer child = spy(new MyContainer("child container"));
+		root.addChild(child);
+		RuntimeException anException = new RuntimeException("in test");
+		stub(root.beforeAll(rootContext)).toThrow(anException);
+
+		InOrder inOrder = inOrder(listener, root, child);
+
+		executor.execute();
+
+		ArgumentCaptor<TestExecutionResult> rootExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		inOrder.verify(root).prepare(rootContext);
+		inOrder.verify(root).shouldBeSkipped(rootContext);
+		inOrder.verify(listener).executionStarted(root);
+		inOrder.verify(root).beforeAll(rootContext);
+		inOrder.verify(root, never()).afterAll(rootContext);
+		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
+
+		assertTrue(rootExecutionResult.getValue().getStatus() == TestExecutionResult.Status.FAILED,
+			"Execution of root should fail.");
+		assertSame(rootExecutionResult.getValue().getThrowable().get(), anException);
+
+		verifyNoMoreInteractions(child);
+	}
+
+	@Test
+	public void exceptionInContainerAfterAll() throws Throwable {
+
+		MyLeaf child = spy(new MyLeaf("child container"));
+		root.addChild(child);
+		RuntimeException anException = new RuntimeException("in test");
+		stub(root.afterAll(rootContext)).toThrow(anException);
+
+		InOrder inOrder = inOrder(listener, root, child);
+
+		executor.execute();
+
+		ArgumentCaptor<TestExecutionResult> rootExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		inOrder.verify(root).prepare(rootContext);
+		inOrder.verify(root).shouldBeSkipped(rootContext);
+		inOrder.verify(listener).executionStarted(root);
+		inOrder.verify(root).beforeAll(rootContext);
+		inOrder.verify(listener).executionStarted(child);
+		inOrder.verify(child).execute(rootContext);
+		inOrder.verify(listener).executionFinished(eq(child), any(TestExecutionResult.class));
+		inOrder.verify(root).afterAll(rootContext);
+		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
+
+		assertTrue(rootExecutionResult.getValue().getStatus() == TestExecutionResult.Status.FAILED,
+			"Execution of root should fail.");
+		assertSame(rootExecutionResult.getValue().getThrowable().get(), anException);
+	}
+
+	@Test
+	public void exceptionInLeafExecute() throws Throwable {
+
+		MyLeaf child = spy(new MyLeaf("child container"));
+		RuntimeException anException = new RuntimeException("in test");
+		stub(child.execute(rootContext)).toThrow(anException);
+		root.addChild(child);
+
+		InOrder inOrder = inOrder(listener, root, child);
+
+		executor.execute();
+
+		ArgumentCaptor<TestExecutionResult> childExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		inOrder.verify(listener).executionStarted(root);
+		inOrder.verify(root).beforeAll(rootContext);
+		inOrder.verify(listener).executionStarted(child);
+		inOrder.verify(child).execute(rootContext);
+		inOrder.verify(listener).executionFinished(eq(child), childExecutionResult.capture());
+		inOrder.verify(root).afterAll(rootContext);
+		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
+
+		assertTrue(childExecutionResult.getValue().getStatus() == TestExecutionResult.Status.FAILED,
+			"Execution of child should fail.");
+		assertSame(childExecutionResult.getValue().getThrowable().get(), anException);
+	}
+
+	@Test
+	public void abortInContainerBeforeAll() throws Throwable {
+
+		MyContainer child = spy(new MyContainer("child container"));
+		root.addChild(child);
+		TestAbortedException anAbortedException = new TestAbortedException("in test");
+		stub(root.beforeAll(rootContext)).toThrow(anAbortedException);
+
+		InOrder inOrder = inOrder(listener, root, child);
+
+		executor.execute();
+
+		ArgumentCaptor<TestExecutionResult> rootExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		inOrder.verify(root).prepare(rootContext);
+		inOrder.verify(root).shouldBeSkipped(rootContext);
+		inOrder.verify(listener).executionStarted(root);
+		inOrder.verify(root).beforeAll(rootContext);
+		inOrder.verify(root, never()).afterAll(rootContext);
+		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
+
+		assertTrue(rootExecutionResult.getValue().getStatus() == TestExecutionResult.Status.ABORTED,
+			"Execution of root should abort.");
+		assertSame(rootExecutionResult.getValue().getThrowable().get(), anAbortedException);
+
+		verifyNoMoreInteractions(child);
+	}
+
+	@Test
+	public void abortInLeafExecute() throws Throwable {
+
+		MyLeaf child = spy(new MyLeaf("child container"));
+		TestAbortedException anAbortedException = new TestAbortedException("in test");
+		stub(child.execute(rootContext)).toThrow(anAbortedException);
+		root.addChild(child);
+
+		InOrder inOrder = inOrder(listener, root, child);
+
+		executor.execute();
+
+		ArgumentCaptor<TestExecutionResult> childExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		inOrder.verify(listener).executionStarted(root);
+		inOrder.verify(root).beforeAll(rootContext);
+		inOrder.verify(listener).executionStarted(child);
+		inOrder.verify(child).execute(rootContext);
+		inOrder.verify(listener).executionFinished(eq(child), childExecutionResult.capture());
+		inOrder.verify(root).afterAll(rootContext);
+		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
+
+		assertTrue(childExecutionResult.getValue().getStatus() == TestExecutionResult.Status.ABORTED,
+			"Execution of child should abort.");
+		assertSame(childExecutionResult.getValue().getThrowable().get(), anAbortedException);
 	}
 
 	private static class MyEngineExecutionContext implements EngineExecutionContext {

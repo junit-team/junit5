@@ -12,6 +12,15 @@ package org.junit.gen5.engine;
 
 import org.junit.gen5.engine.Node.SkipResult;
 
+/**
+ * Implementation core of all TestEngine implementors that are willing to use the {@linkplain Container} and {@linkplain Leaf}
+ * nodes as main principle to organize test suites.
+ *
+ * <p>This class is instantiated by concrete implementations of {@linkplain HierarchicalTestEngine} and takes care
+ * of calling containers and leafs in appropriate order and call the necessary events on {@linkplain EngineExecutionListener}</p>
+ *
+ * @param <C> The concrete type of {@linkplain EngineExecutionContext} used by a concrete {@linkplain TestEngine}.
+ */
 class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
 	private final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
