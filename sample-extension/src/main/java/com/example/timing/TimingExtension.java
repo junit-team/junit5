@@ -37,17 +37,17 @@ public class TimingExtension implements ExtensionRegistrar {
 
 	private void beforeEach(TestExtensionContext context) throws Exception {
 		Method testMethod = context.getTestMethod();
-		context.getAttributes().put(createKey(testMethod), System.currentTimeMillis());
+		context.putAttribute(createKey(testMethod), System.currentTimeMillis());
 	}
 
 	private void afterEach(TestExtensionContext context) throws Exception {
 		Method testMethod = context.getTestMethod();
 		String key = createKey(testMethod);
-		long start = (long) context.getAttributes().get(key);
+		long start = (long) context.getAttribute(key);
 		long end = System.currentTimeMillis();
 
 		System.out.println(String.format("Method [%s] took %s ms", testMethod.getName(), (end - start)));
-		context.getAttributes().remove(key);
+		context.removeAttribute(key);
 	}
 
 	private String createKey(Method testMethod) {

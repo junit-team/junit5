@@ -31,8 +31,11 @@ public interface ExtensionContext {
 
 	Class<?> getTestClass();
 
-	Map<String, Object> getAttributes();
-
 	AnnotatedElement getElement();
 
+	Object getAttribute(String key);
+
+	void putAttribute(String key, Object value);
+
+	Object removeAttribute(String key);
 }

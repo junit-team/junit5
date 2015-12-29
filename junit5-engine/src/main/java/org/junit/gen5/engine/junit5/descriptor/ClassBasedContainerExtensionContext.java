@@ -40,9 +40,4 @@ final class ClassBasedContainerExtensionContext extends AbstractExtensionContext
 		return getTestClass();
 	}
 
-	@Override
-	public Optional<Object> getContainerInstance() {
-		// TODO implement this
-		return Optional.empty();
-	}
 }

@@ -20,5 +20,4 @@ import java.util.Optional;
  */
 public interface ContainerExtensionContext extends ExtensionContext {
 
-	Optional<Object> getContainerInstance();
 }

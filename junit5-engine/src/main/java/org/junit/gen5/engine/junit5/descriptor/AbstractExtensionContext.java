@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -18,7 +18,7 @@ import org.junit.gen5.api.extension.ExtensionContext;
 
 abstract class AbstractExtensionContext implements ExtensionContext {
 
-	private final Map<String, Object> attributes = new LinkedHashMap<>();
+	private final Map<String, Object> attributes = new HashMap<>();
 
 	private ExtensionContext parent;
 
@@ -32,9 +32,20 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 	}
 
 	@Override
-	// TODO Replace with methods to set and get attributes. Maybe with lifecycle?
-	public Map<String, Object> getAttributes() {
-		return attributes;
+	public Object getAttribute(String key) {
+		Object value = attributes.get(key);
+		if (value == null && parent != null)
+			return parent.getAttribute(key);
+		return value;
 	}
 
+	@Override
+	public void putAttribute(String key, Object value) {
+		attributes.put(key, value);
+	}
+
+	@Override
+	public Object removeAttribute(String key) {
+		return attributes.remove(key);
+	}
 }

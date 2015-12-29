@@ -10,27 +10,33 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import static org.junit.gen5.api.Assertions.*;
+
 import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.gen5.api.Assertions;
+import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.engine.TestDescriptor;
 
+/**
+ * Microtests for implementors of {@linkplain ExtensionContext}: {@linkplain ClassBasedContainerExtensionContext} and
+ * {@linkplain MethodBasedTestExtensionContext}
+ */
 public class ExtensionContextTest {
 
 	@Test
 	public void fromClassTestDescriptor() {
-		ClassTestDescriptor outerClassDescriptor = new ClassTestDescriptor("OuterClass", OuterClass.class);
-		ClassTestDescriptor nestedClassDescriptor = new ClassTestDescriptor("NestedClass",
-			OuterClass.NestedClass.class);
-		outerClassDescriptor.addChild(nestedClassDescriptor);
+		ClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor();
+		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
 
 		ClassBasedContainerExtensionContext outerExtensionContext = new ClassBasedContainerExtensionContext(null,
 			outerClassDescriptor);
 		Assertions.assertAll("outerContext", //
-			() -> Assertions.assertEquals(OuterClass.class, outerExtensionContext.getTestClass()), //
-			() -> Assertions.assertEquals(outerClassDescriptor.getDisplayName(),
-				outerExtensionContext.getDisplayName()), //
-			() -> Assertions.assertEquals(Optional.empty(), outerExtensionContext.getParent()));
+			() -> assertEquals(OuterClass.class, outerExtensionContext.getTestClass()), //
+			() -> assertEquals(outerClassDescriptor.getDisplayName(), outerExtensionContext.getDisplayName()), //
+			() -> assertEquals(Optional.empty(), outerExtensionContext.getParent()) //
+		);
 
 		ClassBasedContainerExtensionContext nestedExtensionContext = new ClassBasedContainerExtensionContext(
 			outerExtensionContext, nestedClassDescriptor);
@@ -38,22 +44,79 @@ public class ExtensionContextTest {
 	}
 
 	@Test
-	public void fromMethodTestDescriptor() throws NoSuchMethodException {
-		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor("OuterClass", OuterClass.class);
-		MethodTestDescriptor methodTestDescriptor = new MethodTestDescriptor("aMethod", OuterClass.class,
-			OuterClass.class.getDeclaredMethod("aMethod"));
-		classTestDescriptor.addChild(methodTestDescriptor);
+	public void fromMethodTestDescriptor() {
+		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
+		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
 
 		ClassBasedContainerExtensionContext classExtensionContext = new ClassBasedContainerExtensionContext(null,
 			classTestDescriptor);
-		OuterClass testInstance = new OuterClass();
 		MethodBasedTestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(
-			classExtensionContext, methodTestDescriptor, testInstance);
+			classExtensionContext, methodTestDescriptor, new OuterClass());
 		Assertions.assertAll("methodContext", //
-			() -> Assertions.assertEquals(OuterClass.class, testExtensionContext.getTestClass()), //
-			() -> Assertions.assertEquals(methodTestDescriptor.getDisplayName(), testExtensionContext.getDisplayName()), //
-			() -> Assertions.assertEquals(classExtensionContext, testExtensionContext.getParent().get()));
+			() -> assertEquals(OuterClass.class, testExtensionContext.getTestClass()), //
+			() -> assertEquals(methodTestDescriptor.getDisplayName(), testExtensionContext.getDisplayName()), //
+			() -> assertEquals(classExtensionContext, testExtensionContext.getParent().get()), //
+			() -> assertEquals(OuterClass.class, testExtensionContext.getTestInstance().getClass()) //
+		);
 
+	}
+
+	@Test
+	public void flatAttributeAccess() {
+		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(null);
+
+		ExtensionContext parentContext = new ClassBasedContainerExtensionContext(null, classTestDescriptor);
+
+		assertNull(parentContext.getAttribute("not set"));
+
+		parentContext.putAttribute("attr1", "value1");
+		assertEquals("value1", parentContext.getAttribute("attr1"));
+
+		assertEquals("value1", parentContext.removeAttribute("attr1"));
+		assertNull(parentContext.getAttribute("attr1"));
+
+	}
+
+	@Test
+	public void nestedAttributeAccess() {
+		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
+		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
+
+		ExtensionContext parentContext = new ClassBasedContainerExtensionContext(null, classTestDescriptor);
+
+		MethodBasedTestExtensionContext childContext = new MethodBasedTestExtensionContext(parentContext,
+			methodTestDescriptor, new OuterClass());
+
+		parentContext.putAttribute("attr1", "value1");
+		assertEquals("value1", childContext.getAttribute("attr1"));
+
+		childContext.putAttribute("attr1", "value1 changed");
+		assertEquals("value1 changed", childContext.getAttribute("attr1"));
+		assertEquals("value1", parentContext.getAttribute("attr1"));
+
+		childContext.removeAttribute("attr1");
+		assertEquals("value1", childContext.getAttribute("attr1"));
+
+	}
+
+	private ClassTestDescriptor nestedClassDescriptor() {
+		return new ClassTestDescriptor("NestedClass", OuterClass.NestedClass.class);
+	}
+
+	private ClassTestDescriptor outerClassDescriptor(TestDescriptor child) {
+		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor("OuterClass", OuterClass.class);
+		if (child != null)
+			classTestDescriptor.addChild(child);
+		return classTestDescriptor;
+	}
+
+	private MethodTestDescriptor methodDescriptor() {
+		try {
+			return new MethodTestDescriptor("aMethod", OuterClass.class, OuterClass.class.getDeclaredMethod("aMethod"));
+		}
+		catch (NoSuchMethodException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	static class OuterClass {
