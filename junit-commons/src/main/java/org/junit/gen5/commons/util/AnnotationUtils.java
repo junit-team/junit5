@@ -186,7 +186,7 @@ public final class AnnotationUtils {
 		for (Annotation candidateAnnotation : element.getDeclaredAnnotations()) {
 			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
 				if (candidateAnnotation.annotationType().equals(annotationType)) {
-					collectedAnnotations.add((A) candidateAnnotation);
+					collectedAnnotations.add(annotationType.cast(candidateAnnotation));
 				}
 				else if (candidateAnnotation.annotationType().equals(containerTypeForRepeatable)) {
 					//TODO: Retrieve containedAnnotations from candidateAnnotation.value()
