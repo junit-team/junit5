@@ -109,7 +109,6 @@ public final class AnnotationUtilsTests {
 	}
 
 	@Test
-	@Ignore("Disabled until findRepeatableAnnotations() algorithm is refined")
 	public void findRepeatableAnnotationsWithComposedTagBeforeContainer() throws Exception {
 		assertTagsFound(ContainerAfterComposedTaggedClass.class, "fast", "a", "b", "c");
 	}

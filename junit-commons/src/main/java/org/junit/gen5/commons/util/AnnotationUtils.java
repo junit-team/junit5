@@ -14,11 +14,13 @@ import static java.util.Arrays.asList;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.annotation.Repeatable;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -44,9 +46,9 @@ public final class AnnotationUtils {
 	}
 
 	/**
-	 * Determine if an annotation of {@code annotationType} is either
-	 * <em>present</em> or <em>meta-present</em> on the supplied optional
-	 * {@code element}.
+	 * Determine if an annotation of {@code annotationType} is either <em>present</em> or <em>meta-present</em> on the
+	 * supplied optional {@code element}.
+	 *
 	 * @see #findAnnotation(Optional, Class)
 	 */
 	public static boolean isAnnotated(Optional<? extends AnnotatedElement> element,
@@ -56,8 +58,9 @@ public final class AnnotationUtils {
 	}
 
 	/**
-	 * Determine if an annotation of {@code annotationType} is either
-	 * <em>present</em> or <em>meta-present</em> on the supplied {@code element}.
+	 * Determine if an annotation of {@code annotationType} is either <em>present</em> or <em>meta-present</em> on the
+	 * supplied {@code element}.
+	 *
 	 * @see #findAnnotation(AnnotatedElement, Class)
 	 */
 	public static boolean isAnnotated(AnnotatedElement element, Class<? extends Annotation> annotationType) {
@@ -65,9 +68,9 @@ public final class AnnotationUtils {
 	}
 
 	/**
-	 * Find the first annotation of {@code annotationType} that is either
-	 * <em>present</em> or <em>meta-present</em> on the supplied optional
-	 * {@code element}.
+	 * Find the first annotation of {@code annotationType} that is either <em>present</em> or <em>meta-present</em> on
+	 * the supplied optional {@code element}.
+	 *
 	 * @see #findAnnotation(AnnotatedElement, Class)
 	 */
 	public static <A extends Annotation> Optional<A> findAnnotation(Optional<? extends AnnotatedElement> element,
@@ -81,8 +84,9 @@ public final class AnnotationUtils {
 	}
 
 	/**
-	 * Find the first annotation of {@code annotationType} that is either
-	 * <em>present</em> or <em>meta-present</em> on the supplied {@code element}.
+	 * Find the first annotation of {@code annotationType} that is either <em>present</em> or <em>meta-present</em> on
+	 * the supplied {@code element}.
+	 *
 	 * @see #findAnnotation(Optional, Class)
 	 */
 	public static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType) {
@@ -148,14 +152,12 @@ public final class AnnotationUtils {
 	}
 
 	/**
-	 * Find all <em>repeatable</em> {@linkplain Annotation annotations} of
-	 * {@code annotationType} that are either <em>present</em>,
-	 * <em>indirectly present</em>, or <em>meta-present</em> on the supplied
-	 * {@link AnnotatedElement}.
+	 * Find all <em>repeatable</em> {@linkplain Annotation annotations} of {@code annotationType} that are either
+	 * <em>present</em>, <em>indirectly present</em>, or <em>meta-present</em> on the supplied {@link AnnotatedElement}.
 	 *
-	 * <p>This method extends the functionality of
-	 * {@link java.lang.reflect.AnnotatedElement#getAnnotationsByType(Class)}
+	 * <p>This method extends the functionality of {@link java.lang.reflect.AnnotatedElement#getAnnotationsByType(Class)}
 	 * with additional support for meta-annotations.
+	 *
 	 * @return the list of all such annotations found; never {@code null}
 	 */
 	public static <A extends Annotation> List<A> findRepeatableAnnotations(AnnotatedElement element,
@@ -168,22 +170,34 @@ public final class AnnotationUtils {
 			Class<A> annotationType, Set<Annotation> visited) {
 
 		Preconditions.notNull(annotationType, "annotationType must not be null");
+		Class<? extends Annotation> containerTypeForRepeatable = annotationType.isAnnotationPresent(Repeatable.class)
+				? annotationType.getAnnotation(Repeatable.class).value() : null;
+		Preconditions.notNull(containerTypeForRepeatable, "annotationType must be @Repeatable");
 
 		if (element == null) {
 			return Collections.emptyList();
 		}
 
-		List<A> collectedAnnotations = new ArrayList<>();
+		// Use set because there can be duplicates in loop below.
+		Set<A> collectedAnnotations = new LinkedHashSet<>();
 
-		// Directly present?
-		collectedAnnotations.addAll(asList(element.getDeclaredAnnotationsByType(annotationType)));
-
-		// Meta-present on directly present annotations?
+		// Collect directly present annotations and meta-present on directly present annotations.
+		// Keep order of annotations.
 		for (Annotation candidateAnnotation : element.getDeclaredAnnotations()) {
 			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
-				List<A> metaAnnotations = findRepeatableAnnotations(candidateAnnotation.annotationType(),
-					annotationType, visited);
-				collectedAnnotations.addAll(metaAnnotations);
+				if (candidateAnnotation.annotationType().equals(annotationType)) {
+					collectedAnnotations.add((A) candidateAnnotation);
+				}
+				else if (candidateAnnotation.annotationType().equals(containerTypeForRepeatable)) {
+					//TODO: Retrieve containedAnnotations from candidateAnnotation.value()
+					List<A> containedAnnotations = asList(element.getDeclaredAnnotationsByType(annotationType));
+					collectedAnnotations.addAll(containedAnnotations);
+				}
+				else {
+					List<A> metaAnnotations = findRepeatableAnnotations(candidateAnnotation.annotationType(),
+						annotationType, visited);
+					collectedAnnotations.addAll(metaAnnotations);
+				}
 			}
 		}
 
@@ -206,7 +220,7 @@ public final class AnnotationUtils {
 			}
 		}
 
-		return collectedAnnotations;
+		return new ArrayList<>(collectedAnnotations);
 	}
 
 	public static List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType,
