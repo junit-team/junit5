@@ -22,7 +22,7 @@ import java.io.Writer;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 public class JOptSimpleCommandLineOptionsParserTests {
 

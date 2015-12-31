@@ -16,7 +16,7 @@ import static org.junit.gen5.api.Assertions.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 public class ConsoleTaskExecutorTests {
 

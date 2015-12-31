@@ -16,7 +16,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 public class CustomContextClassLoaderExecutorTests {
 

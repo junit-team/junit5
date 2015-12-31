@@ -21,7 +21,7 @@ import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 public class ClasspathEntriesParserTests {
 

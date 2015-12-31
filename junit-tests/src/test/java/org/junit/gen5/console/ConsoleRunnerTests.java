@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.console.options.CommandLineOptionsParser;
 import org.junit.gen5.console.tasks.ConsoleTaskExecutor;

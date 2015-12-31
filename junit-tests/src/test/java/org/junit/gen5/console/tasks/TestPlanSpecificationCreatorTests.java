@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 import java.io.File;
 import java.lang.reflect.Method;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
