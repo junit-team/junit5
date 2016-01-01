@@ -10,8 +10,6 @@
 
 package org.junit.gen5.api.extension;
 
-import java.util.Optional;
-
 /**
  * {@code ContainerExtensionContext} encapsulates the <em>context</em> in which
  * the current container is being executed.

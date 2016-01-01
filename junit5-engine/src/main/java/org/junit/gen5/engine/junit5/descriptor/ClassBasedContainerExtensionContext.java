@@ -11,7 +11,6 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.Optional;
 
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtensionContext;

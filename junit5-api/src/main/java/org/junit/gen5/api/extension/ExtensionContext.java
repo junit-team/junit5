@@ -11,7 +11,6 @@
 package org.junit.gen5.api.extension;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -38,4 +37,5 @@ public interface ExtensionContext {
 	void putAttribute(String key, Object value);
 
 	Object removeAttribute(String key);
+
 }

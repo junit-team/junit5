@@ -101,6 +101,7 @@ public class JUnit5TestDescriptorTests {
 	@Tag("classTag1")
 	@Tag("classTag2")
 	@Name("custom class name")
+	@SuppressWarnings("unused")
 	private static class ASampleTestCase {
 
 		void test() {
