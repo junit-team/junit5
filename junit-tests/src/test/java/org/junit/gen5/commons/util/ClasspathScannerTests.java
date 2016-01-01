@@ -18,14 +18,14 @@ import java.net.URL;
 import java.util.List;
 import java.util.function.Predicate;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Test;
 
 public class ClasspathScannerTests {
 
 	private ClasspathScanner classpathScanner;
 
-	@Before
+	@BeforeEach
 	public void init() {
 		classpathScanner = new ClasspathScanner(ReflectionUtils::getDefaultClassLoader, ReflectionUtils::loadClass);
 	}

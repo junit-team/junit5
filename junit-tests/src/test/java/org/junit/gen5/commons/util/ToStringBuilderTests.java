@@ -10,12 +10,12 @@
 
 package org.junit.gen5.commons.util;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 /**
  * Unit tests for {@link ToStringBuilder}.
@@ -24,14 +24,18 @@ import org.junit.Test;
  */
 public class ToStringBuilderTests {
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void withNullObject() {
-		new ToStringBuilder((Object) null);
+		assertThrows(IllegalArgumentException.class, () -> {
+			new ToStringBuilder((Object) null);
+		});
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void withNullClass() {
-		new ToStringBuilder((Class<?>) null);
+		assertThrows(IllegalArgumentException.class, () -> {
+			new ToStringBuilder((Class<?>) null);
+		});
 	}
 
 	@Test

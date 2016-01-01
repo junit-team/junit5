@@ -23,7 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 /**
  * Unit tests for {@link AnnotationUtils}.
