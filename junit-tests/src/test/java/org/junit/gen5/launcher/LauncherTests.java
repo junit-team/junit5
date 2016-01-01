@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 import static org.junit.gen5.launcher.LauncherFactory.createLauncher;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.DummyTestEngine;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
