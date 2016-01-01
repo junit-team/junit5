@@ -16,8 +16,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ContainerExecutionCondition;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
@@ -33,7 +33,7 @@ public class TestExtensionRegistryTests {
 
 	private TestExtensionRegistry registry;
 
-	@Before
+	@BeforeEach
 	public void initRegistry() {
 		registry = new TestExtensionRegistry();
 	}

@@ -21,6 +21,8 @@ import java.lang.annotation.Target;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
@@ -41,17 +43,17 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 	private static final String BAR = "DisabledTests.bar";
 	private static final String BOGUS = "DisabledTests.bogus";
 
-	@org.junit.Before
+	@BeforeEach
 	public void setUp() {
 		System.setProperty(FOO, BAR);
 	}
 
-	@org.junit.After
+	@AfterEach
 	public void tearDown() {
 		System.clearProperty(FOO);
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestsWithDisabledTestClass() {
 		TestPlanSpecification spec = build(forClass(DisabledTestClassTestCase.class));
 		TrackingEngineExecutionListener listener = executeTests(spec, 2);
@@ -60,7 +62,7 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(0, listener.testStartedCount.get(), "# tests started");
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestsWithDisabledTestMethods() {
 		TestPlanSpecification spec = build(forClass(DisabledTestMethodsTestCase.class));
 		TrackingEngineExecutionListener listener = executeTests(spec, 6);

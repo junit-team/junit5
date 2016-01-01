@@ -37,7 +37,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
  */
 public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTests {
 
-	@org.junit.Test
+	@Test
 	public void beforeEachAndAfterEachCallbacks() {
 		TestPlanSpecification spec = build(forClass(OuterTestCase.class));
 

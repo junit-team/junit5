@@ -31,7 +31,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
  */
 public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 
-	@org.junit.Test
+	@Test
 	public void instancePostProcessorInTopLevelClass() {
 		TestPlanSpecification spec = build(forClass(OuterTestCase.class));
 

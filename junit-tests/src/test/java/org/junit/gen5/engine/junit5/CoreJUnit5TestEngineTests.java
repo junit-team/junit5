@@ -30,7 +30,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
 
 public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTests {
 
-	@org.junit.Test
+	@Test
 	public void executeCompositeTestPlanSpecification() {
 		TestPlanSpecification spec = build(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.CoreJUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
@@ -45,7 +45,7 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(2, listener.testFailedCount.get(), "# tests failed");
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestsForClass() {
 		LocalTestCase.countAfterInvoked = 0;
 
@@ -60,7 +60,7 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(7, LocalTestCase.countAfterInvoked, "# after calls");
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestForUniqueId() {
 		TestPlanSpecification spec = build(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.CoreJUnit5TestEngineTests$LocalTestCase#alwaysPasses()"));
@@ -74,7 +74,7 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestForUniqueIdWithExceptionThrownInAfterMethod() {
 		TestPlanSpecification spec = build(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.CoreJUnit5TestEngineTests$LocalTestCase#throwExceptionInAfterMethod()"));

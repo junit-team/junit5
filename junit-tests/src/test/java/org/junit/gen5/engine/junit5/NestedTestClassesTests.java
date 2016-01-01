@@ -27,7 +27,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
  */
 public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 
-	@org.junit.Test
+	@Test
 	public void executeTestCaseWithNestedTests() {
 		TestCaseWithNesting.countAfterInvoked = 0;
 

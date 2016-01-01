@@ -34,7 +34,7 @@ import org.junit.gen5.engine.junit5.execution.injection.sample.CustomTypeParamet
  */
 public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 
-	@org.junit.Test
+	@Test
 	public void executeTestsForMethodInjectionCases() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(MethodInjectionTestCase.class, 9);
 
@@ -45,7 +45,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterEachMethods() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class, 2);
 
@@ -56,7 +56,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterAllMethods() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterAllMethodInjectionTestCase.class,
 			2);
@@ -68,7 +68,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestsForMethodWithExtendWithAnnotation() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(ExtendWithOnMethodTestCase.class, 2);
 

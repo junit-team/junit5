@@ -10,16 +10,14 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.api.Assertions.expectThrows;
+import static org.junit.gen5.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
@@ -36,7 +34,7 @@ public class ExtensionPointSortingTests {
 	private List<RegisteredExtensionPoint<LocalExtensionPoint>> pointsToSort;
 	private int pointIndex = 0;
 
-	@Before
+	@BeforeEach
 	public void init() {
 		sorter = new ExtensionPointSorter();
 		pointsToSort = new ArrayList<>();
@@ -155,6 +153,7 @@ public class ExtensionPointSortingTests {
 
 	@FunctionalInterface
 	interface LocalExtensionPoint extends ExtensionPoint {
+
 		void doSomething();
 	}
 

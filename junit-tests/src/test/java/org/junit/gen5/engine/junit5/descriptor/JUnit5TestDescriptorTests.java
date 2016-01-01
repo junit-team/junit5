@@ -33,7 +33,7 @@ import org.junit.gen5.engine.TestTag;
  */
 public class JUnit5TestDescriptorTests {
 
-	@org.junit.Test
+	@Test
 	public void constructFromMethod() throws Exception {
 		Class<?> testClass = ASampleTestCase.class;
 		Method testMethod = testClass.getDeclaredMethod("test");
@@ -44,7 +44,7 @@ public class JUnit5TestDescriptorTests {
 		assertEquals("test", descriptor.getDisplayName(), "display name:");
 	}
 
-	@org.junit.Test
+	@Test
 	public void constructFromMethodWithAnnotations() throws Exception {
 		JUnit5TestDescriptor classDescriptor = new ClassTestDescriptor("class id", ASampleTestCase.class);
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("foo");
@@ -65,7 +65,7 @@ public class JUnit5TestDescriptorTests {
 		assertTrue(tags.contains("classTag2"));
 	}
 
-	@org.junit.Test
+	@Test
 	public void constructClassDescriptorWithAnnotations() throws Exception {
 		ClassTestDescriptor descriptor = new ClassTestDescriptor("any id", ASampleTestCase.class);
 
@@ -78,7 +78,7 @@ public class JUnit5TestDescriptorTests {
 		assertTrue(tags.contains("classTag2"));
 	}
 
-	@org.junit.Test
+	@Test
 	public void constructFromMethodWithCustomTestAnnotation() throws Exception {
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("customTestAnnotation");
 		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", ASampleTestCase.class, testMethod);
@@ -89,7 +89,7 @@ public class JUnit5TestDescriptorTests {
 		assertEquals("custom tag", tags.get(0), "tags:");
 	}
 
-	@org.junit.Test
+	@Test
 	public void constructFromMethodWithParameters() throws Exception {
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", String.class, BigDecimal.class);
 		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", ASampleTestCase.class, testMethod);

@@ -12,7 +12,6 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
 
-import org.junit.Before;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.BeforeEach;
@@ -23,14 +22,14 @@ import org.opentest4j.TestAbortedException;
 
 public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
-	@Before
+	@BeforeEach
 	public void init() {
 		MyStandardTestCase.countBefore1 = 0;
 		MyStandardTestCase.countBefore2 = 0;
 		MyStandardTestCase.countAfter = 0;
 	}
 
-	@org.junit.Test
+	@Test
 	public void moreThanOneTestClassIsExecuted() {
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
 			TestPlanSpecification.forClass(FirstOfTwoTestCases.class),
@@ -46,7 +45,7 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(3, listener.containerFinishedCount.get(), "# containers finished");
 	}
 
-	@org.junit.Test
+	@Test
 	public void allTestsInClassAreRunWithBeforeEach() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(MyStandardTestCase.class, 5);
 
@@ -62,7 +61,7 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(4, MyStandardTestCase.countBefore2, "# before2 calls");
 	}
 
-	@org.junit.Test
+	@Test
 	public void allTestsInClassAreRunWithAfterEach() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(MyStandardTestCase.class, 5);
 
@@ -73,7 +72,7 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(2, listener.containerFinishedCount.get(), "# containers finished");
 	}
 
-	@org.junit.Test
+	@Test
 	public void testsFailWhenBeforeEachFails() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithFailingBefore.class, 3);
 
@@ -87,7 +86,7 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(2, TestCaseWithFailingBefore.countBefore, "# before each calls");
 	}
 
-	@org.junit.Test
+	@Test
 	public void testsFailWhenAfterEachFails() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithFailingAfter.class, 2);
 
@@ -101,7 +100,7 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 		assertTrue(TestCaseWithFailingAfter.testExecuted, "test executed?");
 	}
 
-	@org.junit.Test
+	@Test
 	public void nestedTestsAreExecuted() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithNesting.class, 5);
 
@@ -113,7 +112,7 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(3, listener.containerFinishedCount.get(), "# containers finished");
 	}
 
-	@org.junit.Test
+	@Test
 	public void doublyNestedTestsAreExecuted() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithDoubleNesting.class, 8);
 

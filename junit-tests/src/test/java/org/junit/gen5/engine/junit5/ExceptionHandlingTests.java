@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import org.junit.After;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.Assertions;
@@ -28,7 +27,7 @@ import org.opentest4j.AssertionFailedError;
 
 public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
-	@org.junit.Test
+	@Test
 	public void failureInTestMethodIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("failingTest");
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
@@ -44,7 +43,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals("always fails", failure.getMessage());
 	}
 
-	@org.junit.Test
+	@Test
 	public void uncheckedExceptionInTestMethodIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("testWithUncheckedException");
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
@@ -60,7 +59,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals("unchecked", failure.getMessage());
 	}
 
-	@org.junit.Test
+	@Test
 	public void checkedExceptionInTestMethodIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("testWithCheckedException");
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
@@ -76,7 +75,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals("checked", failure.getMessage());
 	}
 
-	@org.junit.Test
+	@Test
 	public void checkedExceptionInBeforeEachIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
@@ -94,7 +93,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals("checked", failure.getMessage());
 	}
 
-	@org.junit.Test
+	@Test
 	public void checkedExceptionInAfterEachIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
@@ -112,7 +111,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals("checked", failure.getMessage());
 	}
 
-	@org.junit.Test
+	@Test
 	public void checkedExceptionInAfterEachIsSuppressedByExceptionInTest() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("testWithUncheckedException");
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
@@ -132,7 +131,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals("checked", failure.getSuppressed()[0].getMessage());
 	}
 
-	@org.junit.Test
+	@Test
 	public void checkedExceptionInBeforeAllIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
@@ -151,7 +150,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals("checked", failure.getMessage());
 	}
 
-	@org.junit.Test
+	@Test
 	public void checkedExceptionInAfterAllIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
@@ -171,7 +170,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals("checked", failure.getMessage());
 	}
 
-	@After
+	@AfterEach
 	public void cleanUpExceptions() {
 		FailureTestCase.exceptionToThrowInBeforeAll = Optional.empty();
 		FailureTestCase.exceptionToThrowInAfterAll = Optional.empty();
