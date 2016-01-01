@@ -36,19 +36,26 @@ dependencies {
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 }
 
-jacoco {
-	toolVersion = '0.7.4.201502262128'
-}
+afterEvaluate {
+	
+	jacoco {
+		toolVersion = '0.7.4.201502262128'
+		applyTo junit5Test
+	}
 
-jacocoTestReport {
-	additionalSourceDirs = files()
-	additionalClassDirs = files()
-	testedProjects.each { project ->
-		additionalSourceDirs = files(additionalSourceDirs, project.sourceSets.main.allSource.srcDirs)
-		additionalClassDirs = files(additionalClassDirs, project.sourceSets.main.output)
+	task junit5CodeCoverageReport(type:JacocoReport){
+		executionData junit5Test
+		sourceSets sourceSets.main
+		sourceDirectories = files()
+		classDirectories = files()
+		testedProjects.each { project ->
+			sourceDirectories = files(sourceDirectories, project.sourceSets.main.allSource.srcDirs)
+			classDirectories = files(classDirectories, project.sourceSets.main.output)
+		}
+		reports {
+			xml.enabled = true
+			html.enabled = true
+		}
 	}
-	reports {
-		xml.enabled = true
-		html.enabled = true
-	}
+
 }
