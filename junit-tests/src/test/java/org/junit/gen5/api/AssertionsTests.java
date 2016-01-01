@@ -16,6 +16,8 @@ import static org.junit.gen5.api.Assertions.fail;
 
 import java.util.function.Supplier;
 
+import org.junit.gen5.junit4runner.JUnit5;
+import org.junit.runner.RunWith;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -23,11 +25,10 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-// TODO Fix DependencyTests so that JUnit5 Runner can be used.
-// @RunWith(JUnit5.class)
+@RunWith(JUnit5.class)
 public class AssertionsTests {
 
-	@org.junit.Test
+	@Test
 	public void failWithString() {
 		try {
 			fail("test");
@@ -38,7 +39,7 @@ public class AssertionsTests {
 		}
 	}
 
-	@org.junit.Test
+	@Test
 	public void failWithMessageSupplier() {
 		try {
 			fail(() -> "test");
@@ -49,7 +50,7 @@ public class AssertionsTests {
 		}
 	}
 
-	@org.junit.Test
+	@Test
 	public void failWithNullString() {
 		try {
 			fail((String) null);
@@ -60,7 +61,7 @@ public class AssertionsTests {
 		}
 	}
 
-	@org.junit.Test
+	@Test
 	public void failWithNullMessageSupplier() {
 		try {
 			fail((Supplier<String>) null);
@@ -71,22 +72,22 @@ public class AssertionsTests {
 		}
 	}
 
-	@org.junit.Test
+	@Test
 	public void assertTrueWithBooleanTrue() {
 		assertTrue(true);
 	}
 
-	@org.junit.Test
+	@Test
 	public void assertTrueWithBooleanSupplierTrue() {
 		assertTrue(() -> true);
 	}
 
-	@org.junit.Test
+	@Test
 	public void assertTrueWithBooleanTrueAndString() {
 		assertTrue(true, "test");
 	}
 
-	@org.junit.Test
+	@Test
 	public void assertTrueWithBooleanFalse() {
 		try {
 			assertTrue(false);
@@ -97,7 +98,7 @@ public class AssertionsTests {
 		}
 	}
 
-	@org.junit.Test
+	@Test
 	public void assertTrueWithBooleanFalseAndString() {
 		try {
 			assertTrue(false, "test");
@@ -108,7 +109,7 @@ public class AssertionsTests {
 		}
 	}
 
-	@org.junit.Test
+	@Test
 	public void assertTrueWithBooleanSupplierFalseAndMessageSupplier() {
 		try {
 			assertTrue(() -> false, () -> "test");
@@ -119,12 +120,12 @@ public class AssertionsTests {
 		}
 	}
 
-	@org.junit.Test
+	@Test
 	public void assertFalseWithBooleanFalse() {
 		assertFalse(false);
 	}
 
-	@org.junit.Test
+	@Test
 	public void assertFalseWithBooleanTrueAndString() {
 		try {
 			assertFalse(true, "test");
