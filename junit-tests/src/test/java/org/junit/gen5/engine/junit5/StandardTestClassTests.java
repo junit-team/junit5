@@ -12,7 +12,6 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.Assertions;
@@ -39,96 +38,96 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification, 6 + 2);
 
-		Assert.assertEquals("# tests started", 6, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 5, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
+		assertEquals(6, listener.testStartedCount.get(), "# tests started");
+		assertEquals(5, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
 
-		Assert.assertEquals("# containers started", 3, listener.containerStartedCount.get());
-		Assert.assertEquals("# containers finished", 3, listener.containerFinishedCount.get());
+		assertEquals(3, listener.containerStartedCount.get(), "# containers started");
+		assertEquals(3, listener.containerFinishedCount.get(), "# containers finished");
 	}
 
 	@org.junit.Test
 	public void allTestsInClassAreRunWithBeforeEach() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(MyStandardTestCase.class, 5);
 
-		Assert.assertEquals("# tests started", 4, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests aborted", 1, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
+		assertEquals(4, listener.testStartedCount.get(), "# tests started");
+		assertEquals(2, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(1, listener.testAbortedCount.get(), "# tests aborted");
+		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
 
-		Assert.assertEquals("# containers started", 2, listener.containerStartedCount.get());
-		Assert.assertEquals("# containers finished", 2, listener.containerFinishedCount.get());
+		assertEquals(2, listener.containerStartedCount.get(), "# containers started");
+		assertEquals(2, listener.containerFinishedCount.get(), "# containers finished");
 
-		Assert.assertEquals("# before1 calls", 4, MyStandardTestCase.countBefore1);
-		Assert.assertEquals("# before2 calls", 4, MyStandardTestCase.countBefore2);
+		assertEquals(4, MyStandardTestCase.countBefore1, "# before1 calls");
+		assertEquals(4, MyStandardTestCase.countBefore2, "# before2 calls");
 	}
 
 	@org.junit.Test
 	public void allTestsInClassAreRunWithAfterEach() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(MyStandardTestCase.class, 5);
 
-		Assert.assertEquals("# tests started", 4, listener.testStartedCount.get());
-		Assert.assertEquals("# after each calls", 4, MyStandardTestCase.countAfter);
+		assertEquals(4, listener.testStartedCount.get(), "# tests started");
+		assertEquals(4, MyStandardTestCase.countAfter, "# after each calls");
 
-		Assert.assertEquals("# containers started", 2, listener.containerStartedCount.get());
-		Assert.assertEquals("# containers finished", 2, listener.containerFinishedCount.get());
+		assertEquals(2, listener.containerStartedCount.get(), "# containers started");
+		assertEquals(2, listener.containerFinishedCount.get(), "# containers finished");
 	}
 
 	@org.junit.Test
 	public void testsFailWhenBeforeEachFails() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithFailingBefore.class, 3);
 
-		Assert.assertEquals("# tests started", 2, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
+		assertEquals(2, listener.testStartedCount.get(), "# tests started");
+		assertEquals(0, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(2, listener.testFailedCount.get(), "# tests failed");
 
-		Assert.assertEquals("# containers started", 2, listener.containerStartedCount.get());
-		Assert.assertEquals("# containers finished", 2, listener.containerFinishedCount.get());
+		assertEquals(2, listener.containerStartedCount.get(), "# containers started");
+		assertEquals(2, listener.containerFinishedCount.get(), "# containers finished");
 
-		Assert.assertEquals("# before each calls", 2, TestCaseWithFailingBefore.countBefore);
+		assertEquals(2, TestCaseWithFailingBefore.countBefore, "# before each calls");
 	}
 
 	@org.junit.Test
 	public void testsFailWhenAfterEachFails() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithFailingAfter.class, 2);
 
-		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
+		assertEquals(1, listener.testStartedCount.get(), "# tests started");
+		assertEquals(0, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
 
-		Assert.assertEquals("# containers started", 2, listener.containerStartedCount.get());
-		Assert.assertEquals("# containers finished", 2, listener.containerFinishedCount.get());
+		assertEquals(2, listener.containerStartedCount.get(), "# containers started");
+		assertEquals(2, listener.containerFinishedCount.get(), "# containers finished");
 
-		Assert.assertTrue("test executed?", TestCaseWithFailingAfter.testExecuted);
+		assertTrue(TestCaseWithFailingAfter.testExecuted, "test executed?");
 	}
 
 	@org.junit.Test
 	public void nestedTestsAreExecuted() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithNesting.class, 5);
 
-		Assert.assertEquals("# tests started", 3, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
+		assertEquals(3, listener.testStartedCount.get(), "# tests started");
+		assertEquals(2, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
 
-		Assert.assertEquals("# containers started", 3, listener.containerStartedCount.get());
-		Assert.assertEquals("# containers finished", 3, listener.containerFinishedCount.get());
+		assertEquals(3, listener.containerStartedCount.get(), "# containers started");
+		assertEquals(3, listener.containerFinishedCount.get(), "# containers finished");
 	}
 
 	@org.junit.Test
 	public void doublyNestedTestsAreExecuted() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithDoubleNesting.class, 8);
 
-		Assert.assertEquals("# tests started", 5, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 3, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
+		assertEquals(5, listener.testStartedCount.get(), "# tests started");
+		assertEquals(3, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(2, listener.testFailedCount.get(), "# tests failed");
 
-		Assert.assertEquals("# containers started", 4, listener.containerStartedCount.get());
-		Assert.assertEquals("# containers finished", 4, listener.containerFinishedCount.get());
+		assertEquals(4, listener.containerStartedCount.get(), "# containers started");
+		assertEquals(4, listener.containerFinishedCount.get(), "# containers finished");
 
 		assertAll("before each counts", //
-			() -> Assert.assertEquals(5, TestCaseWithDoubleNesting.beforeTopCount),
-			() -> Assert.assertEquals(4, TestCaseWithDoubleNesting.beforeNestedCount),
-			() -> Assert.assertEquals(2, TestCaseWithDoubleNesting.beforeDoublyNestedCount));
+			() -> assertEquals(5, TestCaseWithDoubleNesting.beforeTopCount),
+			() -> assertEquals(4, TestCaseWithDoubleNesting.beforeNestedCount),
+			() -> assertEquals(2, TestCaseWithDoubleNesting.beforeDoublyNestedCount));
 	}
 
 }

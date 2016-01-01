@@ -10,10 +10,9 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.fail;
+import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
-import static org.junit.gen5.engine.TestPlanSpecification.build;
-import static org.junit.gen5.engine.TestPlanSpecification.forClass;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -22,7 +21,6 @@ import java.lang.annotation.Target;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.junit.Assert;
 import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
@@ -58,8 +56,8 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 		TestPlanSpecification spec = build(forClass(DisabledTestClassTestCase.class));
 		TrackingEngineExecutionListener listener = executeTests(spec, 2);
 
-		Assert.assertEquals("# container skipped", 1, listener.containerSkippedCount.get());
-		Assert.assertEquals("# tests started", 0, listener.testStartedCount.get());
+		assertEquals(1, listener.containerSkippedCount.get(), "# container skipped");
+		assertEquals(0, listener.testStartedCount.get(), "# tests started");
 	}
 
 	@org.junit.Test
@@ -67,11 +65,11 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 		TestPlanSpecification spec = build(forClass(DisabledTestMethodsTestCase.class));
 		TrackingEngineExecutionListener listener = executeTests(spec, 6);
 
-		Assert.assertEquals("# tests started", 2, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 3, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+		assertEquals(2, listener.testStartedCount.get(), "# tests started");
+		assertEquals(2, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(3, listener.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
+		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
 	}
 
 	// -------------------------------------------------------------------

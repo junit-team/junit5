@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.Assert.*;
+import static org.junit.gen5.api.Assertions.*;
 
 import java.util.List;
 import java.util.stream.Collectors;

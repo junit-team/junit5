@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.Assertions;
@@ -41,7 +40,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
 
 		Throwable failure = listener.throwables.get(0);
-		Assert.assertEquals(AssertionFailedError.class, failure.getClass());
+		assertEquals(AssertionFailedError.class, failure.getClass());
 		assertEquals("always fails", failure.getMessage());
 	}
 
@@ -57,7 +56,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
 
 		Throwable failure = listener.throwables.get(0);
-		Assert.assertEquals(RuntimeException.class, failure.getClass());
+		assertEquals(RuntimeException.class, failure.getClass());
 		assertEquals("unchecked", failure.getMessage());
 	}
 
@@ -73,7 +72,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
 
 		Throwable failure = listener.throwables.get(0);
-		Assert.assertEquals(IOException.class, failure.getClass());
+		assertEquals(IOException.class, failure.getClass());
 		assertEquals("checked", failure.getMessage());
 	}
 
@@ -91,7 +90,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
 
 		Throwable failure = listener.throwables.get(0);
-		Assert.assertEquals(IOException.class, failure.getClass());
+		assertEquals(IOException.class, failure.getClass());
 		assertEquals("checked", failure.getMessage());
 	}
 
@@ -109,7 +108,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
 
 		Throwable failure = listener.throwables.get(0);
-		Assert.assertEquals(IOException.class, failure.getClass());
+		assertEquals(IOException.class, failure.getClass());
 		assertEquals("checked", failure.getMessage());
 	}
 
@@ -127,9 +126,9 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
 
 		Throwable failure = listener.throwables.get(0);
-		Assert.assertEquals(RuntimeException.class, failure.getClass());
+		assertEquals(RuntimeException.class, failure.getClass());
 		assertEquals("unchecked", failure.getMessage());
-		Assert.assertEquals(IOException.class, failure.getSuppressed()[0].getClass());
+		assertEquals(IOException.class, failure.getSuppressed()[0].getClass());
 		assertEquals("checked", failure.getSuppressed()[0].getMessage());
 	}
 
@@ -148,7 +147,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(2, listener.containerFinishedCount.get(), "# container finished");
 
 		Throwable failure = listener.throwables.get(0);
-		Assert.assertEquals(IOException.class, failure.getClass());
+		assertEquals(IOException.class, failure.getClass());
 		assertEquals("checked", failure.getMessage());
 	}
 
@@ -168,7 +167,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(2, listener.containerFinishedCount.get(), "# container finished");
 
 		Throwable failure = listener.throwables.get(0);
-		Assert.assertEquals(IOException.class, failure.getClass());
+		assertEquals(IOException.class, failure.getClass());
 		assertEquals("checked", failure.getMessage());
 	}
 
