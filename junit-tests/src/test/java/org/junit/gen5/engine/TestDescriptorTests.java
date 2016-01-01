@@ -12,7 +12,7 @@ package org.junit.gen5.engine;
 
 import static org.junit.gen5.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 public class TestDescriptorTests {
 

@@ -16,14 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Test;
 
 public class AbstractTestDescriptorTests {
 
 	EngineDescriptor engineDescriptor;
 
-	@Before
+	@BeforeEach
 	public void initTree() {
 		engineDescriptor = new EngineDescriptor(new TestEngine() {
 

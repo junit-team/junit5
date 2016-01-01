@@ -17,7 +17,7 @@ import static org.junit.gen5.engine.TestPlanSpecification.*;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 /**
  * Unit tests for {@link TestPlanSpecification}.

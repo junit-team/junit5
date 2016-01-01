@@ -15,7 +15,7 @@ import static org.junit.gen5.engine.TestExecutionResult.Status.*;
 
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 import org.opentest4j.TestAbortedException;
 
 public class SingleTestExecutorTests {
