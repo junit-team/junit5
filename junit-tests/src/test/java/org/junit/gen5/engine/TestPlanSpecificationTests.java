@@ -11,11 +11,8 @@
 package org.junit.gen5.engine;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.gen5.engine.TestPlanSpecification.build;
-import static org.junit.gen5.engine.TestPlanSpecification.forName;
-import static org.junit.gen5.engine.TestPlanSpecification.forUniqueId;
+import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.util.Arrays;
 import java.util.List;
