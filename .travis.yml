@@ -4,6 +4,6 @@ jdk:
 before_install:
   - pip install --user codecov
 script:
-  - ./gradlew check jacocoTestReport
+  - ./gradlew check junit5CodeCoverageReport
 after_success:
   - codecov
