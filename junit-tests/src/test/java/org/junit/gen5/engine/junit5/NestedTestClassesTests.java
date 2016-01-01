@@ -26,7 +26,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
  *
  * @since 5.0
  */
-public class NestedTestClassesTests extends AbstractJUnit5TestEngineTestCase {
+public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void executeTestCaseWithNestedTests() {

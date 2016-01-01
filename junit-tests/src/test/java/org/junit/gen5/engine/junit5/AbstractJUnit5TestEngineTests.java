@@ -22,7 +22,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
  *
  * @since 5.0
  */
-abstract class AbstractJUnit5TestEngineTestCase {
+abstract class AbstractJUnit5TestEngineTests {
 
 	protected final JUnit5TestEngine engine = new JUnit5TestEngine();
 

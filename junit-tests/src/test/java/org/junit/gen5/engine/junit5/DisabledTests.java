@@ -37,7 +37,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
  *
  * @since 5.0
  */
-public class DisabledTests extends AbstractJUnit5TestEngineTestCase {
+public class DisabledTests extends AbstractJUnit5TestEngineTests {
 
 	private static final String FOO = "DisabledTests.foo";
 	private static final String BAR = "DisabledTests.bar";

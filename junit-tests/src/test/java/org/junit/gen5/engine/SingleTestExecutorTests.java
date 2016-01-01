@@ -18,7 +18,7 @@ import java.util.Optional;
 import org.junit.Test;
 import org.opentest4j.TestAbortedException;
 
-public class SingleTestExecutorTest {
+public class SingleTestExecutorTests {
 
 	@Test
 	public void executeSafelySuccessful() {

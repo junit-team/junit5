@@ -28,7 +28,7 @@ import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
 import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
 
-public class TestExtensionRegistryTest {
+public class TestExtensionRegistryTests {
 
 	private TestExtensionRegistry registry;
 

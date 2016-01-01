@@ -27,7 +27,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.opentest4j.AssertionFailedError;
 
-public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTestCase {
+public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void failureInTestMethodIsRegistered() throws NoSuchMethodException {

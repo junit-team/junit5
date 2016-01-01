@@ -24,7 +24,7 @@ import org.junit.gen5.engine.PackageSpecification;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueIdSpecification;
 
-public class SpecificationResolverTest {
+public class SpecificationResolverTests {
 
 	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(
 		new DummyTestEngine("ENGINE_ID"));

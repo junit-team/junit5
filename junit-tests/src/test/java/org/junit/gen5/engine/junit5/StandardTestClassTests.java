@@ -22,7 +22,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.opentest4j.TestAbortedException;
 
-public class StandardTestClassTest extends AbstractJUnit5TestEngineTestCase {
+public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Before
 	public void init() {

@@ -29,7 +29,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
 /**
  * Integration tests that verify support for {@link org.junit.gen5.api.extension.InstancePostProcessor}.
  */
-public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTestCase {
+public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void instancePostProcessorInTopLevelClass() {

@@ -18,7 +18,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.DummyTestEngine;
 import org.junit.gen5.engine.EngineDescriptor;
 
-public class JUnit5TestableTest {
+public class JUnit5TestableTests {
 
 	private final EngineDescriptor engineDescriptor = new EngineDescriptor(new DummyTestEngine("ENGINE_ID"));;
 

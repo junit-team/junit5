@@ -33,7 +33,7 @@ import org.junit.gen5.engine.junit5.execution.injection.sample.CustomTypeParamet
  *
  * @since 5.0
  */
-public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
+public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void executeTestsForMethodInjectionCases() {

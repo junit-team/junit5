@@ -14,7 +14,7 @@ import static org.junit.gen5.api.Assertions.*;
 
 import org.junit.Test;
 
-public class TestDescriptorTest {
+public class TestDescriptorTests {
 
 	@Test
 	public void isRootWithoutParent() {

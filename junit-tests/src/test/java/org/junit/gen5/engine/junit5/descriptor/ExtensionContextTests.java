@@ -23,7 +23,7 @@ import org.junit.gen5.engine.TestDescriptor;
  * Microtests for implementors of {@linkplain ExtensionContext}: {@linkplain ClassBasedContainerExtensionContext} and
  * {@linkplain MethodBasedTestExtensionContext}
  */
-public class ExtensionContextTest {
+public class ExtensionContextTests {
 
 	@Test
 	public void fromClassTestDescriptor() {

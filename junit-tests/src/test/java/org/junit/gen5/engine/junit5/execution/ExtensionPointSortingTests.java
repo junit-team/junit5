@@ -30,7 +30,7 @@ import org.junit.gen5.api.extension.ExtensionPoint.Position;
  * @since 5.0
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class ExtensionPointSortingTest {
+public class ExtensionPointSortingTests {
 
 	private ExtensionPointSorter sorter;
 	private List<RegisteredExtensionPoint<LocalExtensionPoint>> pointsToSort;

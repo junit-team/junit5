@@ -32,7 +32,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
  * @since 5.0
  */
 
-public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase {
+public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void executeCompositeTestPlanSpecification() {
