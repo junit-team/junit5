@@ -12,12 +12,8 @@ package org.junit.gen5.commons.util;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
-import static org.junit.gen5.commons.util.AnnotationUtils.findRepeatableAnnotations;
+import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.commons.util.AnnotationUtils.*;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -113,8 +109,9 @@ public final class AnnotationUtilsTests {
 	}
 
 	private void assertTagsFound(Class<?> clazz, String... tags) throws Exception {
-		assertEquals("Tags found for class " + clazz.getName(), asList(tags),
-			findRepeatableAnnotations(clazz, Tag.class).stream().map(Tag::value).collect(toList()));
+		assertEquals(asList(tags),
+			findRepeatableAnnotations(clazz, Tag.class).stream().map(Tag::value).collect(toList()),
+			() -> "Tags found for class " + clazz.getName());
 	}
 
 	@Target({ ElementType.TYPE, ElementType.METHOD })

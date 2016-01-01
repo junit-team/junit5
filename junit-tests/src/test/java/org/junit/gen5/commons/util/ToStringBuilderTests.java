@@ -10,7 +10,7 @@
 
 package org.junit.gen5.commons.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.gen5.api.Assertions.assertEquals;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
