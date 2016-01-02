@@ -47,7 +47,7 @@ public class TestExtensionRegistryTests {
 	}
 
 	@Test
-	public void newRegistryWithoutParentHasDefaultExtensions() throws Throwable {
+	public void newRegistryWithoutParentHasDefaultExtensions() throws Exception {
 		Set<Class<? extends TestExtension>> extensions = registry.getRegisteredExtensionClasses();
 
 		assertEquals(TestExtensionRegistry.getDefaultExtensionClasses().size(), extensions.size());
@@ -60,7 +60,7 @@ public class TestExtensionRegistryTests {
 	}
 
 	@Test
-	public void registerExtensionByImplementingClass() throws Throwable {
+	public void registerExtensionByImplementingClass() throws Exception {
 
 		registry.addExtension(MyExtension.class);
 
@@ -81,7 +81,7 @@ public class TestExtensionRegistryTests {
 	}
 
 	@Test
-	public void registerTestExtensionThatImplementsMultipleExtensionPoints() throws Throwable {
+	public void registerTestExtensionThatImplementsMultipleExtensionPoints() throws Exception {
 
 		registry.addExtension(MultipleExtension.class);
 
@@ -92,7 +92,7 @@ public class TestExtensionRegistryTests {
 	}
 
 	@Test
-	public void extensionsAreInheritedFromParent() throws Throwable {
+	public void extensionsAreInheritedFromParent() throws Exception {
 
 		TestExtensionRegistry parent = new TestExtensionRegistry();
 		parent.addExtension(MyExtension.class);
@@ -111,7 +111,7 @@ public class TestExtensionRegistryTests {
 	}
 
 	@Test
-	public void registerExtensionPointsByExtensionRegistrar() throws Throwable {
+	public void registerExtensionPointsByExtensionRegistrar() throws Exception {
 
 		registry.addExtension(MyExtensionRegistrar.class);
 
@@ -121,7 +121,7 @@ public class TestExtensionRegistryTests {
 	}
 
 	@Test
-	public void canStreamOverRegisteredExceptionPoint() throws Throwable {
+	public void canStreamOverRegisteredExceptionPoint() throws Exception {
 
 		registry.addExtension(MyExtension.class);
 
@@ -140,7 +140,7 @@ public class TestExtensionRegistryTests {
 	}
 
 	@Test
-	public void registerExtensionPointDirectly() throws Throwable {
+	public void registerExtensionPointDirectly() throws Exception {
 
 		registry.registerExtension((MyExtensionPoint) test -> {
 		}, Position.INNERMOST, "anonymous extension");
@@ -159,7 +159,7 @@ public class TestExtensionRegistryTests {
 
 	}
 
-	private int countExtensionPoints(Class<? extends ExtensionPoint> extensionPointType) throws Throwable {
+	private int countExtensionPoints(Class<? extends ExtensionPoint> extensionPointType) throws Exception {
 		AtomicInteger counter = new AtomicInteger();
 		registry.stream(extensionPointType, TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(
 			registeredExtensionPoint -> counter.incrementAndGet());

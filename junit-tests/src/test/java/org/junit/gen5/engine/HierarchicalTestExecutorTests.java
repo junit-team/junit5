@@ -24,7 +24,7 @@ import org.mockito.Mockito;
 import org.opentest4j.TestAbortedException;
 
 /**
- * Microtests that verify behaviour of {@link HierarchicalTestExecutor}
+ * Microtests that verify behavior of {@link HierarchicalTestExecutor}.
  */
 public class HierarchicalTestExecutorTests {
 
@@ -43,7 +43,7 @@ public class HierarchicalTestExecutorTests {
 	}
 
 	@Test
-	public void emptyRootDescriptor() throws Throwable {
+	public void emptyRootDescriptor() throws Exception {
 
 		InOrder inOrder = inOrder(listener, root);
 
@@ -62,7 +62,7 @@ public class HierarchicalTestExecutorTests {
 	}
 
 	@Test
-	public void rootDescriptorWithOneChildContainer() throws Throwable {
+	public void rootDescriptorWithOneChildContainer() throws Exception {
 
 		MyContainer child = spy(new MyContainer("child container"));
 		root.addChild(child);
@@ -86,7 +86,7 @@ public class HierarchicalTestExecutorTests {
 	}
 
 	@Test
-	public void rootDescriptorWithOneChildLeaf() throws Throwable {
+	public void rootDescriptorWithOneChildLeaf() throws Exception {
 
 		MyLeaf child = spy(new MyLeaf("child leaf"));
 		root.addChild(child);
@@ -109,7 +109,7 @@ public class HierarchicalTestExecutorTests {
 	}
 
 	@Test
-	public void skippingAContainer() throws Throwable {
+	public void skippingAContainer() throws Exception {
 
 		MyContainer child = spy(new MyContainer("child container"));
 		stub(child.shouldBeSkipped(rootContext)).toReturn(Node.SkipResult.skip("in test"));
@@ -130,7 +130,7 @@ public class HierarchicalTestExecutorTests {
 	}
 
 	@Test
-	public void skippingALeaf() throws Throwable {
+	public void skippingALeaf() throws Exception {
 
 		MyLeaf child = spy(new MyLeaf("child leaf"));
 		stub(child.shouldBeSkipped(rootContext)).toReturn(Node.SkipResult.skip("in test"));
@@ -151,7 +151,7 @@ public class HierarchicalTestExecutorTests {
 	}
 
 	@Test
-	public void exceptionInShouldBeSkipped() throws Throwable {
+	public void exceptionInShouldBeSkipped() throws Exception {
 
 		MyContainer child = spy(new MyContainer("child container"));
 		RuntimeException anException = new RuntimeException("in test");
@@ -178,7 +178,7 @@ public class HierarchicalTestExecutorTests {
 	}
 
 	@Test
-	public void exceptionInContainerBeforeAll() throws Throwable {
+	public void exceptionInContainerBeforeAll() throws Exception {
 
 		MyContainer child = spy(new MyContainer("child container"));
 		root.addChild(child);
@@ -205,7 +205,7 @@ public class HierarchicalTestExecutorTests {
 	}
 
 	@Test
-	public void exceptionInContainerAfterAll() throws Throwable {
+	public void exceptionInContainerAfterAll() throws Exception {
 
 		MyLeaf child = spy(new MyLeaf("child container"));
 		root.addChild(child);
@@ -233,7 +233,7 @@ public class HierarchicalTestExecutorTests {
 	}
 
 	@Test
-	public void exceptionInLeafExecute() throws Throwable {
+	public void exceptionInLeafExecute() throws Exception {
 
 		MyLeaf child = spy(new MyLeaf("child container"));
 		RuntimeException anException = new RuntimeException("in test");
@@ -259,7 +259,7 @@ public class HierarchicalTestExecutorTests {
 	}
 
 	@Test
-	public void abortInContainerBeforeAll() throws Throwable {
+	public void abortInContainerBeforeAll() throws Exception {
 
 		MyContainer child = spy(new MyContainer("child container"));
 		root.addChild(child);
@@ -286,7 +286,7 @@ public class HierarchicalTestExecutorTests {
 	}
 
 	@Test
-	public void abortInLeafExecute() throws Throwable {
+	public void abortInLeafExecute() throws Exception {
 
 		MyLeaf child = spy(new MyLeaf("child container"));
 		TestAbortedException anAbortedException = new TestAbortedException("in test");
@@ -344,7 +344,7 @@ public class HierarchicalTestExecutorTests {
 		}
 
 		@Override
-		public MyEngineExecutionContext execute(MyEngineExecutionContext context) throws Throwable {
+		public MyEngineExecutionContext execute(MyEngineExecutionContext context) throws Exception {
 			return context;
 		}
 

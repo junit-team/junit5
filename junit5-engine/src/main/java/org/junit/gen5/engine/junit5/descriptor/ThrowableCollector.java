@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.junit.gen5.api.Executable;
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * Simple component that can be used to collect one or more instances of
@@ -74,15 +75,16 @@ class ThrowableCollector {
 	 * <p>If this collector is not empty, the first collected {@link Throwable}
 	 * will be thrown with any additional throwables
 	 * {@linkplain Throwable#addSuppressed(Throwable) suppressed} in the
-	 * first {@code Throwable}.
-	 *
-	 * @throws Throwable if this collector is not empty
+	 * first {@code Throwable}. Note, however, that the {@code Throwable}
+	 * will not be wrapped. Rather, it will be thrown as-is using a reflective
+	 * hack (based on generics and type erasure) that tricks the Java compiler
+	 * into believing that the thrown exception is an unchecked exception.
 	 */
-	void assertEmpty() throws Throwable {
+	void assertEmpty() {
 		if (!this.throwables.isEmpty()) {
 			Throwable t = this.throwables.get(0);
 			this.throwables.stream().skip(1).forEach(t::addSuppressed);
-			throw t;
+			ReflectionUtils.throwAsRuntimeException(t);
 		}
 	}
 

@@ -90,7 +90,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext prepare(JUnit5EngineExecutionContext context) throws Throwable {
+	public JUnit5EngineExecutionContext prepare(JUnit5EngineExecutionContext context) throws Exception {
 		TestExtensionRegistry newTestExtensionRegistry = populateNewTestExtensionRegistryFromExtendWith(testMethod,
 			context.getTestExtensionRegistry());
 		Object testInstance = context.getTestInstanceProvider().getTestInstance();
@@ -106,7 +106,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	}
 
 	@Override
-	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Throwable {
+	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Exception {
 		ConditionEvaluationResult evaluationResult = new ConditionEvaluator().evaluateForTest(
 			context.getTestExtensionRegistry(), (TestExtensionContext) context.getExtensionContext());
 		if (evaluationResult.isDisabled()) {
@@ -116,7 +116,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext execute(JUnit5EngineExecutionContext context) throws Throwable {
+	public JUnit5EngineExecutionContext execute(JUnit5EngineExecutionContext context) throws Exception {
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 
@@ -131,7 +131,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	}
 
 	private void invokeInstancePostProcessorExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
-			TestExtensionContext testExtensionContext) throws Throwable {
+			TestExtensionContext testExtensionContext) throws Exception {
 
 		Consumer<RegisteredExtensionPoint<InstancePostProcessor>> applyInstancePostProcessor = registeredExtensionPoint -> {
 			executeAndMaskThrowable(
@@ -143,7 +143,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	}
 
 	private void invokeBeforeEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
-			TestExtensionContext testExtensionContext) throws Throwable {
+			TestExtensionContext testExtensionContext) throws Exception {
 
 		Consumer<RegisteredExtensionPoint<BeforeEachExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
 			executeAndMaskThrowable(
@@ -165,7 +165,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	}
 
 	private void invokeAfterEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
-			TestExtensionContext testExtensionContext, ThrowableCollector throwableCollector) throws Throwable {
+			TestExtensionContext testExtensionContext, ThrowableCollector throwableCollector) throws Exception {
 
 		newTestExtensionRegistry.stream(AfterEachExtensionPoint.class,
 			TestExtensionRegistry.ApplicationOrder.BACKWARD).forEach(registeredExtensionPoint -> {

@@ -12,6 +12,6 @@ package org.junit.gen5.engine;
 
 public interface Leaf<C extends EngineExecutionContext> extends Node<C> {
 
-	C execute(C context) throws Throwable;
+	C execute(C context) throws Exception;
 
 }

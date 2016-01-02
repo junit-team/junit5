@@ -118,7 +118,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	@Override
-	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Throwable {
+	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Exception {
 		ConditionEvaluationResult evaluationResult = new ConditionEvaluator().evaluateForContainer(
 			context.getTestExtensionRegistry(), (ContainerExtensionContext) context.getExtensionContext());
 		if (evaluationResult.isDisabled()) {
@@ -128,7 +128,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext beforeAll(JUnit5EngineExecutionContext context) throws Throwable {
+	public JUnit5EngineExecutionContext beforeAll(JUnit5EngineExecutionContext context) throws Exception {
 		TestExtensionRegistry extensionRegistry = context.getTestExtensionRegistry();
 		ContainerExtensionContext containerExtensionContext = (ContainerExtensionContext) context.getExtensionContext();
 
@@ -138,7 +138,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext afterAll(JUnit5EngineExecutionContext context) throws Throwable {
+	public JUnit5EngineExecutionContext afterAll(JUnit5EngineExecutionContext context) throws Exception {
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 
 		throwableCollector.execute(() -> invokeAfterAllExtensionPoints(context.getTestExtensionRegistry(),
@@ -154,7 +154,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	private void invokeBeforeAllExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
-			ContainerExtensionContext containerExtensionContext) throws Throwable {
+			ContainerExtensionContext containerExtensionContext) throws Exception {
 
 		Consumer<RegisteredExtensionPoint<BeforeAllExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
 			executeAndMaskThrowable(
@@ -167,7 +167,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 	private void invokeAfterAllExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
 			ContainerExtensionContext containerExtensionContext, ThrowableCollector throwableCollector)
-					throws Throwable {
+					throws Exception {
 
 		Consumer<RegisteredExtensionPoint<AfterAllExtensionPoint>> applyAfterAll = registeredExtensionPoint -> {
 			throwableCollector.execute(

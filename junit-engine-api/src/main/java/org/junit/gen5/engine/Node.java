@@ -14,11 +14,11 @@ import java.util.Optional;
 
 public interface Node<C extends EngineExecutionContext> {
 
-	default C prepare(C context) throws Throwable {
+	default C prepare(C context) throws Exception {
 		return context;
 	}
 
-	default SkipResult shouldBeSkipped(C context) throws Throwable {
+	default SkipResult shouldBeSkipped(C context) throws Exception {
 		return SkipResult.dontSkip();
 	}
 

@@ -13,6 +13,6 @@ package org.junit.gen5.engine.junit5.execution;
 @FunctionalInterface
 public interface TestInstanceProvider {
 
-	Object getTestInstance() throws Throwable;
+	Object getTestInstance() throws Exception;
 
 }

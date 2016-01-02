@@ -12,11 +12,11 @@ package org.junit.gen5.engine;
 
 public interface Container<C extends EngineExecutionContext> extends Node<C> {
 
-	default C beforeAll(C context) throws Throwable {
+	default C beforeAll(C context) throws Exception {
 		return context;
 	}
 
-	default C afterAll(C context) throws Throwable {
+	default C afterAll(C context) throws Exception {
 		return context;
 	}
 
