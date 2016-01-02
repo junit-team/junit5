@@ -106,7 +106,7 @@ public final class ReflectionUtils {
 	 * Invoke the supplied method, making it accessible if necessary and
 	 * wrapping any checked exception in an {@code IllegalStateException}.
 	 *
-	 * @param method the method to invoke
+	 * @param method the method to invoke; never {@code null}
 	 * @param target the object on which to invoke the method; may be
 	 * {@code null} if the method is {@code static}
 	 * @param args the arguments to pass to the method
@@ -115,7 +115,7 @@ public final class ReflectionUtils {
 	 */
 	public static Object invokeMethod(Method method, Object target, Object... args) {
 		Preconditions.notNull(method, "method must not be null");
-		Preconditions.condition((target != null || Modifier.isStatic(method.getModifiers())),
+		Preconditions.condition((target != null || isStatic(method)),
 			() -> String.format("Cannot invoke non-static method [%s] on a null target.", method.toGenericString()));
 
 		try {

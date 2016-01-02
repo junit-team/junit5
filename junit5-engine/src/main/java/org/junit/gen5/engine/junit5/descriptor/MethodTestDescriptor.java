@@ -45,14 +45,16 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	private final String displayName;
 
 	private final Class<?> testClass;
+
 	private final Method testMethod;
 
 	MethodTestDescriptor(String uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId);
+
+		Preconditions.notNull(testClass, "Class must not be null");
+		Preconditions.notNull(testMethod, "Method must not be null");
+
 		this.testClass = testClass;
-
-		Preconditions.notNull(testMethod, "testMethod must not be null");
-
 		this.testMethod = testMethod;
 		this.displayName = determineDisplayName(testMethod, testMethod.getName());
 
@@ -71,8 +73,8 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		return this.displayName;
 	}
 
-	public Class<?> getTestClass() {
-		return testClass;
+	public final Class<?> getTestClass() {
+		return this.testClass;
 	}
 
 	public final Method getTestMethod() {
@@ -85,7 +87,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	}
 
 	@Override
-	public boolean isContainer() {
+	public final boolean isContainer() {
 		return false;
 	}
 
@@ -109,14 +111,14 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Throwable {
 		ConditionEvaluationResult evaluationResult = new ConditionEvaluator().evaluateForTest(
 			context.getTestExtensionRegistry(), (TestExtensionContext) context.getExtensionContext());
-		if (evaluationResult.isDisabled())
+		if (evaluationResult.isDisabled()) {
 			return SkipResult.skip(evaluationResult.getReason().orElse(""));
+		}
 		return SkipResult.dontSkip();
 	}
 
 	@Override
 	public JUnit5EngineExecutionContext execute(JUnit5EngineExecutionContext context) throws Throwable {
-
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 
 		invokeInstancePostProcessorExtensionPoints(context.getTestExtensionRegistry(), testExtensionContext);
@@ -133,6 +135,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	private void invokeInstancePostProcessorExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
 			TestExtensionContext testExtensionContext) throws Throwable {
+
 		Consumer<RegisteredExtensionPoint<InstancePostProcessor>> applyInstancePostProcessor = registeredExtensionPoint -> {
 			executeAndWrapThrowables(
 				() -> registeredExtensionPoint.getExtensionPoint().postProcessTestInstance(testExtensionContext));
@@ -143,6 +146,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	private void invokeBeforeEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
 			TestExtensionContext testExtensionContext) throws Throwable {
+
 		Consumer<RegisteredExtensionPoint<BeforeEachExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
 			executeAndWrapThrowables(
 				() -> registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext));

@@ -64,7 +64,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	ClassTestDescriptor(String uniqueId, Class<?> testClass) {
 		super(uniqueId);
 
-		Preconditions.notNull(testClass, "testClass must not be null");
+		Preconditions.notNull(testClass, "Class must not be null");
 
 		this.testClass = testClass;
 		this.displayName = determineDisplayName(testClass, testClass.getName());
@@ -92,7 +92,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	@Override
-	public boolean isContainer() {
+	public final boolean isContainer() {
 		return true;
 	}
 
@@ -122,14 +122,14 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Throwable {
 		ConditionEvaluationResult evaluationResult = new ConditionEvaluator().evaluateForContainer(
 			context.getTestExtensionRegistry(), (ContainerExtensionContext) context.getExtensionContext());
-		if (evaluationResult.isDisabled())
+		if (evaluationResult.isDisabled()) {
 			return SkipResult.skip(evaluationResult.getReason().orElse(""));
+		}
 		return SkipResult.dontSkip();
 	}
 
 	@Override
 	public JUnit5EngineExecutionContext beforeAll(JUnit5EngineExecutionContext context) throws Throwable {
-
 		TestExtensionRegistry extensionRegistry = context.getTestExtensionRegistry();
 		ContainerExtensionContext containerExtensionContext = (ContainerExtensionContext) context.getExtensionContext();
 
@@ -155,6 +155,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 	private void invokeBeforeAllExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
 			ContainerExtensionContext containerExtensionContext) throws Throwable {
+
 		Consumer<RegisteredExtensionPoint<BeforeAllExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
 			executeAndWrapThrowables(
 				() -> registeredExtensionPoint.getExtensionPoint().beforeAll(containerExtensionContext));
@@ -170,6 +171,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 				() -> registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext),
 				throwablesCollector);
 		};
+
 		newTestExtensionRegistry.stream(AfterAllExtensionPoint.class,
 			TestExtensionRegistry.ApplicationOrder.BACKWARD).forEach(applyAfterAll);
 	}

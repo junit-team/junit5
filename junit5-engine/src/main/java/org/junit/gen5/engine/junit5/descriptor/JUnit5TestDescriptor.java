@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.gen5.commons.util.AnnotationUtils.findRepeatableAnnotations;
 
@@ -19,7 +20,6 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.junit.gen5.api.Executable;
 import org.junit.gen5.api.Name;
@@ -66,7 +66,7 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 		List<Class<? extends TestExtension>> extensionClasses = findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
 				.map(ExtendWith::value)
 				.flatMap(Arrays::stream)
-				.collect(Collectors.toList());
+				.collect(toList());
 		// @formatter:on
 		return TestExtensionRegistry.newRegistryFrom(existingTestExtensionRegistry, extensionClasses);
 	}
