@@ -100,18 +100,11 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTests {
 
 	private static class LocalTestCase extends AbstractTestCase {
 
-		static boolean staticBeforeInvoked = false;
-
 		boolean beforeInvoked = false;
 
 		boolean throwExceptionInAfterMethod = false;
 
 		static int countAfterInvoked = 0;
-
-		@BeforeEach
-		static void staticBefore() {
-			staticBeforeInvoked = true;
-		}
 
 		@BeforeEach
 		void before() {
@@ -132,7 +125,6 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTests {
 		@Test
 		void methodLevelCallbacks() {
 			assertTrue(this.beforeInvoked, "@BeforeEach was not invoked on instance method");
-			assertTrue(staticBeforeInvoked, "@BeforeEach was not invoked on static method");
 		}
 
 		@Test

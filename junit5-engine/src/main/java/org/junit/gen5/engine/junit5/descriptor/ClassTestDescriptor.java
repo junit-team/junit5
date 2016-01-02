@@ -13,10 +13,11 @@ package org.junit.gen5.engine.junit5.descriptor;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
 import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodContext;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import org.junit.gen5.api.AfterAll;
@@ -99,6 +100,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	public JUnit5EngineExecutionContext prepare(JUnit5EngineExecutionContext context) {
 		TestExtensionRegistry newExtensionRegistry = populateNewTestExtensionRegistryFromExtendWith(testClass,
 			context.getTestExtensionRegistry());
+
 		registerBeforeAllMethods(newExtensionRegistry);
 		registerAfterAllMethods(newExtensionRegistry);
 		registerBeforeEachMethods(newExtensionRegistry);
@@ -178,67 +180,87 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			TestExtensionRegistry.ApplicationOrder.BACKWARD).forEach(applyAfterAll);
 	}
 
-	// TODO Remove duplication with registerAfterAllMethods
 	private void registerBeforeAllMethods(TestExtensionRegistry extensionRegistry) {
-		List<Method> beforeAllMethods = findAnnotatedMethods(testClass, BeforeAll.class, MethodSortOrder.HierarchyDown);
-		beforeAllMethods.stream().forEach(method -> {
-			if (!ReflectionUtils.isStatic(method)) {
-				String message = String.format(
-					"Cannot register method '%s' as BeforeAll extension since it is not static.", method.getName());
-				throw new ExtensionConfigurationException(message);
-			}
-			BeforeAllExtensionPoint extensionPoint = containerExtensionContext -> {
-				new MethodInvoker(containerExtensionContext, extensionRegistry).invoke(methodContext(null, method));
-			};
-			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
-		});
+		registerAnnotatedMethodsAsExtensions(extensionRegistry, BeforeAll.class, BeforeAllExtensionPoint.class,
+			this::assertStatic, this::synthesizeBeforeAllExtensionPoint);
 	}
 
-	// TODO Remove duplication with registerBeforeAllMethods
 	private void registerAfterAllMethods(TestExtensionRegistry extensionRegistry) {
-		List<Method> beforeAllMethods = findAnnotatedMethods(testClass, AfterAll.class, MethodSortOrder.HierarchyDown);
-		beforeAllMethods.stream().forEach(method -> {
-			if (!ReflectionUtils.isStatic(method)) {
-				String message = String.format(
-					"Cannot register method '%s' as AfterAll extension since it is not static.", method.getName());
-				throw new ExtensionConfigurationException(message);
-			}
-			AfterAllExtensionPoint extensionPoint = containerExtensionContext -> {
-				new MethodInvoker(containerExtensionContext, extensionRegistry).invoke(methodContext(null, method));
-			};
-			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
-		});
+		registerAnnotatedMethodsAsExtensions(extensionRegistry, AfterAll.class, AfterAllExtensionPoint.class,
+			this::assertStatic, this::synthesizeAfterAllExtensionPoint);
 	}
 
-	// TODO Remove duplication with registerAfterEachMethods
 	private void registerBeforeEachMethods(TestExtensionRegistry extensionRegistry) {
-		List<Method> beforeEachMethods = findAnnotatedMethods(testClass, BeforeEach.class,
-			MethodSortOrder.HierarchyDown);
-		beforeEachMethods.stream().forEach(method -> {
-			BeforeEachExtensionPoint extensionPoint = testExtensionContext -> {
-				runMethodInTestExtensionContext(method, testExtensionContext, extensionRegistry);
-			};
-			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
-		});
+		registerAnnotatedMethodsAsExtensions(extensionRegistry, BeforeEach.class, BeforeEachExtensionPoint.class,
+			this::assertNonStatic, this::synthesizeBeforeEachExtensionPoint);
 	}
 
-	// TODO Remove duplication with registerBeforeEachMethods
 	private void registerAfterEachMethods(TestExtensionRegistry extensionRegistry) {
-		List<Method> afterEachMethods = findAnnotatedMethods(testClass, AfterEach.class, MethodSortOrder.HierarchyDown);
-		afterEachMethods.stream().forEach(method -> {
-			AfterEachExtensionPoint extensionPoint = testExtensionContext -> {
-				runMethodInTestExtensionContext(method, testExtensionContext, extensionRegistry);
-			};
-			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
-		});
+		registerAnnotatedMethodsAsExtensions(extensionRegistry, AfterEach.class, AfterEachExtensionPoint.class,
+			this::assertNonStatic, this::synthesizeAfterEachExtensionPoint);
 	}
 
-	private void runMethodInTestExtensionContext(Method method, TestExtensionContext testExtensionContext,
-			TestExtensionRegistry extensionRegistry) {
-		Optional<Object> optionalInstance = ReflectionUtils.getOuterInstance(testExtensionContext.getTestInstance(),
-			method.getDeclaringClass());
-		optionalInstance.ifPresent(instance -> new MethodInvoker(testExtensionContext, extensionRegistry).invoke(
-			methodContext(instance, method)));
+	private void registerAnnotatedMethodsAsExtensions(TestExtensionRegistry extensionRegistry,
+			Class<? extends Annotation> annotationType, Class<?> extensionType,
+			BiConsumer<Class<?>, Method> methodValidator,
+			BiFunction<TestExtensionRegistry, Method, ExtensionPoint> extensionPointSynthesizer) {
+
+		// @formatter:off
+		findAnnotatedMethods(testClass, annotationType, MethodSortOrder.HierarchyDown).stream()
+			.peek(method -> methodValidator.accept(extensionType, method))
+			.forEach(method ->
+				extensionRegistry.registerExtension(extensionPointSynthesizer.apply(extensionRegistry, method),
+					ExtensionPoint.Position.DEFAULT, method.getName()));
+		// @formatter:on
+	}
+
+	private BeforeAllExtensionPoint synthesizeBeforeAllExtensionPoint(TestExtensionRegistry registry, Method method) {
+		return (BeforeAllExtensionPoint) extensionContext -> {
+			new MethodInvoker(extensionContext, registry).invoke(methodContext(null, method));
+		};
+	}
+
+	private AfterAllExtensionPoint synthesizeAfterAllExtensionPoint(TestExtensionRegistry registry, Method method) {
+		return (AfterAllExtensionPoint) extensionContext -> {
+			new MethodInvoker(extensionContext, registry).invoke(methodContext(null, method));
+		};
+	}
+
+	private BeforeEachExtensionPoint synthesizeBeforeEachExtensionPoint(TestExtensionRegistry registry, Method method) {
+		return (BeforeEachExtensionPoint) extensionContext -> {
+			runMethodInTestExtensionContext(method, extensionContext, registry);
+		};
+	}
+
+	private AfterEachExtensionPoint synthesizeAfterEachExtensionPoint(TestExtensionRegistry registry, Method method) {
+		return (AfterEachExtensionPoint) extensionContext -> {
+			runMethodInTestExtensionContext(method, extensionContext, registry);
+		};
+	}
+
+	private void runMethodInTestExtensionContext(Method method, TestExtensionContext context,
+			TestExtensionRegistry registry) {
+
+		// @formatter:off
+		ReflectionUtils.getOuterInstance(context.getTestInstance(), method.getDeclaringClass())
+			.ifPresent(instance -> new MethodInvoker(context, registry).invoke(methodContext(instance, method)));
+		// @formatter:on
+	}
+
+	private void assertStatic(Class<?> extensionType, Method method) {
+		if (!ReflectionUtils.isStatic(method)) {
+			String message = String.format("Cannot register method '%s' as a(n) %s since it is not static.",
+				method.getName(), extensionType.getSimpleName());
+			throw new ExtensionConfigurationException(message);
+		}
+	}
+
+	private void assertNonStatic(Class<?> extensionType, Method method) {
+		if (ReflectionUtils.isStatic(method)) {
+			String message = String.format("Cannot register method '%s' as a(n) %s since it is static.",
+				method.getName(), extensionType.getSimpleName());
+			throw new ExtensionConfigurationException(message);
+		}
 	}
 
 }
