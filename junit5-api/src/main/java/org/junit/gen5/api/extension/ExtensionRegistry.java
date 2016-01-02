@@ -13,9 +13,11 @@ package org.junit.gen5.api.extension;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
 
 /**
- * Used to register {@linkplain ExtensionPoint} instances in {@linkplain ExtensionRegistrar}.
+ * A registry for {@linkplain ExtensionPoint extensions}.
  *
- * @since 5.0.0
+ * @since 5.0
+ * @see ExtensionRegistrar
+ * @see ExtensionPoint
  */
 public interface ExtensionRegistry {
 
@@ -24,4 +26,5 @@ public interface ExtensionRegistry {
 	default <E extends ExtensionPoint> void register(E extension, Class<E> extensionPointType) {
 		register(extension, extensionPointType, Position.DEFAULT);
 	}
+
 }

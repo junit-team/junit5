@@ -15,8 +15,8 @@ import java.lang.reflect.Parameter;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
- * {@code MethodParameterResolver} is a {@link TestExtension} strategy for
- * dynamically resolving method parameters at runtime.
+ * {@code MethodParameterResolver} defines the API for {@link TestExtension
+ * TestExtensions} that wish to dynamically resolve method parameters at runtime.
  *
  * <p>If a {@link org.junit.gen5.api.Test @Test},
  * {@link org.junit.gen5.api.BeforeEach @BeforeEach}, or
@@ -32,7 +32,8 @@ public interface MethodParameterResolver extends ExtensionPoint {
 	/**
 	 * Determine if this resolver supports resolution of the given {@link Parameter}
 	 * for the supplied {@link TestExtensionContext}.
-	 *  @param parameter parameter to be resolved
+	 *
+	 * @param parameter parameter to be resolved
 	 * @param methodContext method context the parameter belongs to
 	 * @param extensionContext context of the test method about to be executed
 	 */

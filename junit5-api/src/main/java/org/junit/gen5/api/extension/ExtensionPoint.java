@@ -13,7 +13,7 @@ package org.junit.gen5.api.extension;
 /**
  * Super interface for all extension points.
  *
- * <p>{@code ExtensionPoint} can be registered via {@link ExtendWith @ExtendWith}.
+ * <p>An {@code ExtensionPoint} can be registered via {@link ExtendWith @ExtendWith}.
  *
  * @since 5.0
  * @see ContainerExecutionCondition
