@@ -10,7 +10,11 @@
 
 package org.junit.gen5.engine;
 
-public class TestTag {
+import java.io.Serializable;
+
+public class TestTag implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private final String name;
 

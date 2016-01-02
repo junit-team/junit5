@@ -12,6 +12,7 @@ package org.junit.gen5.launcher;
 
 import static java.util.Collections.unmodifiableSet;
 
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,7 +29,9 @@ import org.junit.gen5.engine.TestTag;
  * @since 5.0
  * @see TestPlan
  */
-public final class TestIdentifier {
+public final class TestIdentifier implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private final TestId uniqueId;
 	private final String displayName;
