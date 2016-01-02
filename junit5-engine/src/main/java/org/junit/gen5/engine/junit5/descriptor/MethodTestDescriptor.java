@@ -91,7 +91,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	@Override
 	public JUnit5EngineExecutionContext prepare(JUnit5EngineExecutionContext context) throws Exception {
-		TestExtensionRegistry newTestExtensionRegistry = populateNewTestExtensionRegistryFromExtendWith(testMethod,
+		TestExtensionRegistry testExtensionRegistry = populateNewTestExtensionRegistryFromExtendWith(testMethod,
 			context.getTestExtensionRegistry());
 		Object testInstance = context.getTestInstanceProvider().getTestInstance();
 		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(context.getExtensionContext(),
@@ -99,7 +99,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 		// @formatter:off
 		return context.extend()
-				.withTestExtensionRegistry(newTestExtensionRegistry)
+				.withTestExtensionRegistry(testExtensionRegistry)
 				.withExtensionContext(testExtensionContext)
 				.build();
 		// @formatter:on
@@ -130,7 +130,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		return context;
 	}
 
-	private void invokeInstancePostProcessorExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+	private void invokeInstancePostProcessorExtensionPoints(TestExtensionRegistry testExtensionRegistry,
 			TestExtensionContext testExtensionContext) throws Exception {
 
 		Consumer<RegisteredExtensionPoint<InstancePostProcessor>> applyInstancePostProcessor = registeredExtensionPoint -> {
@@ -138,11 +138,11 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				() -> registeredExtensionPoint.getExtensionPoint().postProcessTestInstance(testExtensionContext));
 		};
 
-		newTestExtensionRegistry.stream(InstancePostProcessor.class,
+		testExtensionRegistry.stream(InstancePostProcessor.class,
 			TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(applyInstancePostProcessor);
 	}
 
-	private void invokeBeforeEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+	private void invokeBeforeEachExtensionPoints(TestExtensionRegistry testExtensionRegistry,
 			TestExtensionContext testExtensionContext) throws Exception {
 
 		Consumer<RegisteredExtensionPoint<BeforeEachExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
@@ -150,7 +150,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				() -> registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext));
 		};
 
-		newTestExtensionRegistry.stream(BeforeEachExtensionPoint.class,
+		testExtensionRegistry.stream(BeforeEachExtensionPoint.class,
 			TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(applyBeforeEach);
 	}
 
@@ -164,10 +164,10 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		});
 	}
 
-	private void invokeAfterEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+	private void invokeAfterEachExtensionPoints(TestExtensionRegistry testExtensionRegistry,
 			TestExtensionContext testExtensionContext, ThrowableCollector throwableCollector) throws Exception {
 
-		newTestExtensionRegistry.stream(AfterEachExtensionPoint.class,
+		testExtensionRegistry.stream(AfterEachExtensionPoint.class,
 			TestExtensionRegistry.ApplicationOrder.BACKWARD).forEach(registeredExtensionPoint -> {
 				throwableCollector.execute(
 					() -> registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext));
