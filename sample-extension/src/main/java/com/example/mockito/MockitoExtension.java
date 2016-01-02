@@ -13,15 +13,15 @@ package com.example.mockito;
 import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Parameter;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.junit.gen5.api.extension.ContextScope;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.TestExtensionContext;
-import org.junit.gen5.commons.util.AnnotationUtils;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -36,11 +36,7 @@ import org.mockito.MockitoAnnotations;
  */
 public class MockitoExtension implements InstancePostProcessor, MethodParameterResolver {
 
-	private final ContextScope<Class<?>, Object> mocksInScope;
-
-	public MockitoExtension() {
-		mocksInScope = new ContextScope<Class<?>, Object>(type -> mock(type), ContextScope.Inheritance.Yes);
-	}
+	private final Map<Class<?>, Object> mocks = new ConcurrentHashMap<>();
 
 	@Override
 	public void postProcessTestInstance(TestExtensionContext context) {
@@ -49,15 +45,18 @@ public class MockitoExtension implements InstancePostProcessor, MethodParameterR
 
 	@Override
 	public boolean supports(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext) {
-		return AnnotationUtils.isAnnotated(parameter, InjectMock.class);
+		return parameter.isAnnotationPresent(InjectMock.class);
 	}
 
 	@Override
 	public Object resolve(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
 
-		Class<?> mockType = parameter.getType();
-		return mocksInScope.get(extensionContext, mockType);
+		return getMock(parameter.getType());
+	}
+
+	private Object getMock(Class<?> mockType) {
+		return this.mocks.computeIfAbsent(mockType, type -> mock(type));
 	}
 
 }
