@@ -10,7 +10,9 @@
 
 package org.junit.gen5.engine;
 
-public interface TestSource {
+import java.io.Serializable;
+
+public interface TestSource extends Serializable {
 
 	boolean isJavaClass();
 

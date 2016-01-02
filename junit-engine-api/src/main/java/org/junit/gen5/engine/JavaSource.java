@@ -10,33 +10,39 @@
 
 package org.junit.gen5.engine;
 
+import static org.junit.gen5.commons.util.ObjectUtils.nullSafeToString;
+
 import java.lang.reflect.Method;
 import java.util.Optional;
 
 public class JavaSource implements TestSource {
 
-	private final Class<?> javaClass;
+	private static final long serialVersionUID = 1L;
 
-	private final Method javaMethod;
+	private final Class<?> javaClass;
+	private final String javaMethodName;
+	private final Class<?>[] javaMethodParameterTypes;
 
 	public JavaSource(Class<?> clazz) {
 		javaClass = clazz;
-		javaMethod = null;
+		javaMethodName = null;
+		javaMethodParameterTypes = null;
 	}
 
 	public JavaSource(Method method) {
 		javaClass = method.getDeclaringClass();
-		javaMethod = method;
+		javaMethodName = method.getName();
+		javaMethodParameterTypes = method.getParameterTypes();
 	}
 
 	@Override
 	public boolean isJavaClass() {
-		return javaClass != null && javaMethod == null;
+		return javaClass != null && javaMethodName == null;
 	}
 
 	@Override
 	public boolean isJavaMethod() {
-		return javaMethod != null;
+		return javaMethodName != null;
 	}
 
 	@Override
@@ -58,18 +64,23 @@ public class JavaSource implements TestSource {
 		return Optional.ofNullable(javaClass);
 	}
 
-	public Optional<Method> getJavaMethod() {
-		return Optional.ofNullable(javaMethod);
+	public Optional<String> getJavaMethodName() {
+		return Optional.ofNullable(javaMethodName);
+	}
+
+	public Optional<Class<?>[]> getJavaMethodParameterTypes() {
+		return Optional.ofNullable(javaMethodParameterTypes);
 	}
 
 	@Override
 	public String toString() {
-		// TODO Add parameters to method string
 		StringBuilder builder = new StringBuilder();
 		getJavaClass().ifPresent(clazz -> builder.append(clazz.getName()));
-		getJavaMethod().ifPresent(method -> {
-			builder.append('#');
-			builder.append(method.getName());
+		getJavaMethodName().ifPresent(method -> {
+			builder.append('#').append(method);
+		});
+		getJavaMethodParameterTypes().ifPresent(parameterTypes -> {
+			builder.append('(').append(nullSafeToString(parameterTypes)).append(')');
 		});
 		return builder.toString();
 	}
