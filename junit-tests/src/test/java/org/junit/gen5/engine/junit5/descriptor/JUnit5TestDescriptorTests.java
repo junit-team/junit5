@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.*;
 
 import java.lang.annotation.ElementType;
@@ -71,11 +72,7 @@ public class JUnit5TestDescriptorTests {
 
 		assertEquals(ASampleTestCase.class, descriptor.getTestClass());
 		assertEquals("custom class name", descriptor.getDisplayName(), "display name:");
-
-		List<String> tags = descriptor.getTags().stream().map(TestTag::getName).collect(Collectors.toList());
-		assertEquals(2, descriptor.getTags().size());
-		assertTrue(tags.contains("classTag1"));
-		assertTrue(tags.contains("classTag2"));
+		assertThat(descriptor.getTags()).containsExactly(new TestTag("classTag1"), new TestTag("classTag2"));
 	}
 
 	@Test
@@ -85,8 +82,7 @@ public class JUnit5TestDescriptorTests {
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom name", descriptor.getDisplayName(), "display name:");
-		List<String> tags = descriptor.getTags().stream().map(TestTag::getName).collect(Collectors.toList());
-		assertEquals("custom tag", tags.get(0), "tags:");
+		assertThat(descriptor.getTags()).containsExactly(new TestTag("custom tag"));
 	}
 
 	@Test

@@ -11,8 +11,9 @@
 package org.junit.gen5.engine;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-public class TestTag implements Serializable {
+public final class TestTag implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -23,6 +24,25 @@ public class TestTag implements Serializable {
 	}
 
 	public String getName() {
+		return name;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof TestTag) {
+			TestTag that = (TestTag) obj;
+			return Objects.equals(this.name, that.name);
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+
+	@Override
+	public String toString() {
 		return name;
 	}
 
