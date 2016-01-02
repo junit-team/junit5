@@ -14,7 +14,6 @@ import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
 import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodContext;
 
 import java.lang.reflect.Method;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -140,11 +139,12 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 	@Override
 	public JUnit5EngineExecutionContext afterAll(JUnit5EngineExecutionContext context) throws Throwable {
-		List<Throwable> throwablesCollector = new LinkedList<>();
-		executeAndCollectThrowables(() -> invokeAfterAllExtensionPoints(context.getTestExtensionRegistry(),
-			(ContainerExtensionContext) context.getExtensionContext(), throwablesCollector), throwablesCollector);
+		ThrowableCollector throwableCollector = new ThrowableCollector();
 
-		throwIfAnyThrowablePresent(throwablesCollector);
+		throwableCollector.execute(() -> invokeAfterAllExtensionPoints(context.getTestExtensionRegistry(),
+			(ContainerExtensionContext) context.getExtensionContext(), throwableCollector));
+
+		throwableCollector.assertEmpty();
 
 		return context;
 	}
@@ -157,19 +157,21 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			ContainerExtensionContext containerExtensionContext) throws Throwable {
 
 		Consumer<RegisteredExtensionPoint<BeforeAllExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
-			executeAndWrapThrowables(
+			executeAndMaskThrowable(
 				() -> registeredExtensionPoint.getExtensionPoint().beforeAll(containerExtensionContext));
 		};
-		executeAndUnwrapTargetExceptionWrapper(() -> newTestExtensionRegistry.stream(BeforeAllExtensionPoint.class,
-			TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(applyBeforeEach));
+
+		newTestExtensionRegistry.stream(BeforeAllExtensionPoint.class,
+			TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(applyBeforeEach);
 	}
 
 	private void invokeAfterAllExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
-			ContainerExtensionContext containerExtensionContext, List<Throwable> throwablesCollector) throws Throwable {
+			ContainerExtensionContext containerExtensionContext, ThrowableCollector throwableCollector)
+					throws Throwable {
+
 		Consumer<RegisteredExtensionPoint<AfterAllExtensionPoint>> applyAfterAll = registeredExtensionPoint -> {
-			executeAndCollectThrowables(
-				() -> registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext),
-				throwablesCollector);
+			throwableCollector.execute(
+				() -> registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext));
 		};
 
 		newTestExtensionRegistry.stream(AfterAllExtensionPoint.class,

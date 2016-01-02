@@ -85,6 +85,20 @@ public final class ReflectionUtils {
 		return Modifier.isStatic(member.getModifiers());
 	}
 
+	/**
+	 * Create a new instance of the specified {@link Class} by invoking
+	 * the constructor whose argument list matches the types of the supplied
+	 * arguments.
+	 *
+	 * <p>The constructor will be made accessible if necessary and any checked
+	 * exception will be {@linkplain #throwAsRuntimeException masked} as a
+	 * {@code RuntimeException}.
+	 *
+	 * @param clazz the class to instantiate; never {@code null}
+	 * @param args the arguments to pass to the constructor
+	 * @return the new instance
+	 * @see #throwAsRuntimeException(Throwable)
+	 */
 	public static <T> T newInstance(Class<T> clazz, Object... args) {
 		Preconditions.notNull(clazz, "class must not be null");
 
@@ -104,7 +118,8 @@ public final class ReflectionUtils {
 
 	/**
 	 * Invoke the supplied method, making it accessible if necessary and
-	 * wrapping any checked exception in an {@code IllegalStateException}.
+	 * {@linkplain #throwAsRuntimeException masking} any checked exception
+	 * as a {@code RuntimeException}.
 	 *
 	 * @param method the method to invoke; never {@code null}
 	 * @param target the object on which to invoke the method; may be
@@ -112,6 +127,7 @@ public final class ReflectionUtils {
 	 * @param args the arguments to pass to the method
 	 * @return the value returned by the method invocation or {@code null}
 	 * if the return type is {@code void}
+	 * @see #throwAsRuntimeException(Throwable)
 	 */
 	public static Object invokeMethod(Method method, Object target, Object... args) {
 		Preconditions.notNull(method, "method must not be null");
@@ -383,45 +399,31 @@ public final class ReflectionUtils {
 		}
 	}
 
-	private static void handleException(Throwable ex) {
-		if (ex instanceof InvocationTargetException) {
-			handleException(((InvocationTargetException) ex).getTargetException());
+	private static void handleException(Throwable t) {
+		if (t instanceof InvocationTargetException) {
+			handleException(((InvocationTargetException) t).getTargetException());
 		}
-		if (ex instanceof NoSuchMethodException) {
-			throw new IllegalStateException("No such method or constructor", ex);
-		}
-		if (ex instanceof NoSuchFieldException) {
-			throw new IllegalStateException("No such field", ex);
-		}
-		if (ex instanceof InstantiationException) {
-			throw new IllegalStateException("Instantiation failed", ex);
-		}
-		if (ex instanceof IllegalAccessException) {
-			throw new IllegalStateException("Failed to access method or constructor", ex);
-		}
-		if (ex instanceof RuntimeException) {
-			throw (RuntimeException) ex;
-		}
-		if (ex instanceof Error) {
-			throw (Error) ex;
-		}
-		// TODO Research if throwing the exception itself would be a better option
-		throw new TargetExceptionWrapper(ex);
+		throwAsRuntimeException(t);
 	}
 
-	public static class TargetExceptionWrapper extends RuntimeException {
+	/**
+	 * Throw the supplied {@link Throwable}, <em>masked</em> as a
+	 * {@link RuntimeException}.
+	 *
+	 * <p>The supplied {@code Throwable} will not be wrapped. Rather, it
+	 * will be thrown as-is using a reflective hack (based on generics and
+	 * type erasure) that tricks the Java compiler into believing that the
+	 * thrown exception is an unchecked exception.
+	 *
+	 * @param t the Throwable to throw as a {@code RuntimeException}
+	 */
+	public static void throwAsRuntimeException(Throwable t) {
+		ReflectionUtils.<RuntimeException> throwAs(t);
+	}
 
-		private static final long serialVersionUID = 3733792088719661853L;
-
-		private final Throwable targetException;
-
-		public TargetExceptionWrapper(Throwable targetException) {
-			this.targetException = targetException;
-		}
-
-		public Throwable getTargetException() {
-			return targetException;
-		}
+	@SuppressWarnings("unchecked")
+	private static <T extends Throwable> void throwAs(Throwable t) throws T {
+		throw (T) t;
 	}
 
 }

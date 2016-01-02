@@ -13,8 +13,6 @@ package org.junit.gen5.engine.junit5.descriptor;
 import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodContext;
 
 import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -120,15 +118,14 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	@Override
 	public JUnit5EngineExecutionContext execute(JUnit5EngineExecutionContext context) throws Throwable {
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
+		ThrowableCollector throwableCollector = new ThrowableCollector();
 
 		invokeInstancePostProcessorExtensionPoints(context.getTestExtensionRegistry(), testExtensionContext);
 		invokeBeforeEachExtensionPoints(context.getTestExtensionRegistry(), testExtensionContext);
+		invokeTestMethod(testExtensionContext, context.getTestExtensionRegistry(), throwableCollector);
+		invokeAfterEachExtensionPoints(context.getTestExtensionRegistry(), testExtensionContext, throwableCollector);
 
-		List<Throwable> throwablesCollector = new LinkedList<>();
-		invokeTestMethod(testExtensionContext, context.getTestExtensionRegistry(), throwablesCollector);
-
-		invokeAfterEachExtensionPoints(context.getTestExtensionRegistry(), testExtensionContext, throwablesCollector);
-		throwIfAnyThrowablePresent(throwablesCollector);
+		throwableCollector.assertEmpty();
 
 		return context;
 	}
@@ -137,40 +134,43 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 			TestExtensionContext testExtensionContext) throws Throwable {
 
 		Consumer<RegisteredExtensionPoint<InstancePostProcessor>> applyInstancePostProcessor = registeredExtensionPoint -> {
-			executeAndWrapThrowables(
+			executeAndMaskThrowable(
 				() -> registeredExtensionPoint.getExtensionPoint().postProcessTestInstance(testExtensionContext));
 		};
-		executeAndUnwrapTargetExceptionWrapper(() -> newTestExtensionRegistry.stream(InstancePostProcessor.class,
-			TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(applyInstancePostProcessor));
+
+		newTestExtensionRegistry.stream(InstancePostProcessor.class,
+			TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(applyInstancePostProcessor);
 	}
 
 	private void invokeBeforeEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
 			TestExtensionContext testExtensionContext) throws Throwable {
 
 		Consumer<RegisteredExtensionPoint<BeforeEachExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
-			executeAndWrapThrowables(
+			executeAndMaskThrowable(
 				() -> registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext));
 		};
-		executeAndUnwrapTargetExceptionWrapper(() -> newTestExtensionRegistry.stream(BeforeEachExtensionPoint.class,
-			TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(applyBeforeEach));
+
+		newTestExtensionRegistry.stream(BeforeEachExtensionPoint.class,
+			TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(applyBeforeEach);
 	}
 
 	private void invokeTestMethod(TestExtensionContext testExtensionContext,
-			TestExtensionRegistry testExtensionRegistry, List<Throwable> throwablesCollector) {
-		executeAndCollectThrowables(() -> {
+			TestExtensionRegistry testExtensionRegistry, ThrowableCollector throwableCollector) {
+
+		throwableCollector.execute(() -> {
 			MethodContext methodContext = methodContext(testExtensionContext.getTestInstance(),
 				testExtensionContext.getTestMethod());
 			new MethodInvoker(testExtensionContext, testExtensionRegistry).invoke(methodContext);
-		}, throwablesCollector);
+		});
 	}
 
 	private void invokeAfterEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
-			TestExtensionContext testExtensionContext, List<Throwable> throwablesCollector) throws Throwable {
+			TestExtensionContext testExtensionContext, ThrowableCollector throwableCollector) throws Throwable {
+
 		newTestExtensionRegistry.stream(AfterEachExtensionPoint.class,
 			TestExtensionRegistry.ApplicationOrder.BACKWARD).forEach(registeredExtensionPoint -> {
-				executeAndCollectThrowables(
-					() -> registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext),
-					throwablesCollector);
+				throwableCollector.execute(
+					() -> registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext));
 			});
 	}
 

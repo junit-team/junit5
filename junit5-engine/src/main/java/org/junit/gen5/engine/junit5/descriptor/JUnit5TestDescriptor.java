@@ -71,44 +71,21 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 		return TestExtensionRegistry.newRegistryFrom(existingTestExtensionRegistry, extensionClasses);
 	}
 
-	protected void throwIfAnyThrowablePresent(List<Throwable> throwablesCollector) throws Throwable {
-		if (!throwablesCollector.isEmpty()) {
-			Throwable t = throwablesCollector.get(0);
-			throwablesCollector.stream().skip(1).forEach(t::addSuppressed);
-			throw t;
-		}
-	}
-
-	protected void executeAndCollectThrowables(Executable executable, List<Throwable> throwablesCollector) {
+	/**
+	 * Execute the supplied {@link Executable} and <em>mask</em> any
+	 * exception thrown as a {@link RuntimeException}.
+	 *
+	 * <p>Exceptions will not be wrapped. Rather, they will be thrown
+	 * as-is via a reflective hack that tricks the Java compiler into
+	 * believing that the thrown exception is an unchecked exception.
+	 */
+	protected void executeAndMaskThrowable(Executable executable) {
 		try {
 			executable.execute();
-		}
-		catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-			throwablesCollector.add(wrapper.getTargetException());
-		}
-		catch (Throwable t) {
-			throwablesCollector.add(t);
-		}
-	}
-
-	protected void executeAndWrapThrowables(Executable executable) {
-		try {
-			executable.execute();
-		}
-		catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-			throw wrapper;
 		}
 		catch (Throwable throwable) {
-			throw new ReflectionUtils.TargetExceptionWrapper(throwable);
+			ReflectionUtils.throwAsRuntimeException(throwable);
 		}
 	}
 
-	protected void executeAndUnwrapTargetExceptionWrapper(Executable executable) throws Throwable {
-		try {
-			executable.execute();
-		}
-		catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-			throw wrapper.getTargetException();
-		}
-	}
 }
