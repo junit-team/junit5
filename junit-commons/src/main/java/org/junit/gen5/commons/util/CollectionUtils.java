@@ -26,12 +26,13 @@ public class CollectionUtils {
 	/**
 	 * Read the only element of a collection of size 1.
 	 *
-	 * @param collection the collection to read the element from
+	 * @param collection the collection to get the element from
 	 * @return the only element of the collection
-	 * @throws IllegalArgumentException if the collection is empty or contains
-	 * more than one element
+	 * @throws IllegalArgumentException if the collection is {@code null}
+	 * or does not contain exactly one element
 	 */
 	public static <T> T getOnlyElement(Collection<T> collection) {
+		Preconditions.notNull(collection, "collection must not be null");
 		Preconditions.condition(collection.size() == 1,
 			() -> "collection must contain exactly one element: " + collection);
 		return collection.iterator().next();

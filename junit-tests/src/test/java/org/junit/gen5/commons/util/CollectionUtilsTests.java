@@ -11,12 +11,26 @@
 package org.junit.gen5.commons.util;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.*;
-import static org.junit.gen5.api.Assertions.*;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertSame;
+import static org.junit.gen5.api.Assertions.expectThrows;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.junit4runner.JUnit5;
+import org.junit.runner.RunWith;
 
-class CollectionUtilsTests {
+@RunWith(JUnit5.class)
+public class CollectionUtilsTests {
+
+	@Test
+	void getOnlyElementWithNullCollection() {
+		IllegalArgumentException exception = expectThrows(IllegalArgumentException.class, () -> {
+			CollectionUtils.getOnlyElement(null);
+		});
+		assertEquals("collection must not be null", exception.getMessage());
+	}
 
 	@Test
 	void getOnlyElementWithEmptyCollection() {
