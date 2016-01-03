@@ -49,7 +49,32 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 		assertThat(childDescriptor.getChildren()).isEmpty();
 	}
 
+	@Test
+	void resolvesIgnoredJUnit4TestClass() {
+		Class<?> testClass = IgnoredJUnit4TestCase.class;
+		TestPlanSpecification specification = build(forClass(testClass));
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertFalse(runnerDescriptor.isContainer());
+		assertTrue(runnerDescriptor.isTest());
+		assertEquals(testClass.getName(), runnerDescriptor.getDisplayName());
+		assertEquals("junit4:" + testClass.getName(), runnerDescriptor.getUniqueId());
+		assertThat(runnerDescriptor.getChildren()).isEmpty();
+	}
+
 	public static class PlainJUnit4TestCaseWithSingleTestWhichFails {
+
+		@org.junit.Test
+		public void test() {
+			Assert.fail("this test should fail");
+		}
+
+	}
+
+	@org.junit.Ignore
+	public static class IgnoredJUnit4TestCase {
 
 		@org.junit.Test
 		public void test() {
