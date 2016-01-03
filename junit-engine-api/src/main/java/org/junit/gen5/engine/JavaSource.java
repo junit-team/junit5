@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine;
 
-import static org.junit.gen5.commons.util.ObjectUtils.nullSafeToString;
+import static org.junit.gen5.commons.util.StringUtils.nullSafeToString;
 
 import java.lang.reflect.Method;
 import java.util.Optional;

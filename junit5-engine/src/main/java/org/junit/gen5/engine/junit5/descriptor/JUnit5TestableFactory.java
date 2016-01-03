@@ -18,9 +18,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.gen5.commons.util.ObjectUtils;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.junit5.testers.IsNestedTestClass;
 import org.junit.gen5.engine.junit5.testers.IsPotentialTestContainer;
 import org.junit.gen5.engine.junit5.testers.IsTestMethod;
@@ -68,7 +68,7 @@ class JUnit5TestableFactory {
 			throwCannotResolveMethodException(testMethod);
 		}
 		String uniqueId = String.format("%s#%s(%s)", fromClass(clazz, engineId).getUniqueId(), testMethod.getName(),
-			ObjectUtils.nullSafeToString(testMethod.getParameterTypes()));
+			StringUtils.nullSafeToString(testMethod.getParameterTypes()));
 		return new JUnit5Method(uniqueId, testMethod, clazz);
 	}
 
@@ -138,7 +138,7 @@ class JUnit5TestableFactory {
 	private Method findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
 		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes).orElseThrow(
 			() -> new IllegalArgumentException(String.format("No method with name '%s' and parameter types '%s'",
-				methodName, ObjectUtils.nullSafeToString(parameterTypes))));
+				methodName, StringUtils.nullSafeToString(parameterTypes))));
 	}
 
 	private Class<?> findNestedClass(String nameExtension, Class<?> containerClass) {
