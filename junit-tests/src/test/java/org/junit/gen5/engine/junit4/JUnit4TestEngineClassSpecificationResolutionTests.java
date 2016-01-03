@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
-import java.util.Iterator;
+import java.util.Collection;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.Preconditions;
@@ -163,11 +163,9 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 		assertThat(engineDescriptor.getChildren()).isEmpty();
 	}
 
-	private static <T> T getOnlyElement(Iterable<T> iterable) {
-		Iterator<T> iterator = iterable.iterator();
-		Preconditions.condition(iterator.hasNext(), () -> "iterable must not be empty: " + iterable);
-		T result = iterator.next();
-		Preconditions.condition(!iterator.hasNext(), () -> "iterable must not contain more than one item: " + iterable);
-		return result;
+	private static <T> T getOnlyElement(Collection<T> collection) {
+		Preconditions.condition(collection.size() == 1,
+			() -> "collection must contain exactly one element: " + collection);
+		return collection.iterator().next();
 	}
 }
