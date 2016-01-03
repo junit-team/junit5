@@ -15,7 +15,7 @@ import java.util.Optional;
 
 /**
  * {@code ExtensionContext} encapsulates the <em>context</em> in which
- * the current test is being executed.
+ * the current test or container is being executed.
  *
  * <p>{@link TestExtension TestExtensions} are provided an instance of
  * {@code ExtensionContext} to perform their work.
