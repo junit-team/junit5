@@ -17,6 +17,10 @@ package org.junit.gen5.commons.util;
  */
 public final class ExceptionUtils {
 
+	private ExceptionUtils() {
+		/* no-op */
+	}
+
 	/**
 	 * Throw the supplied {@link Throwable}, <em>masked</em> as a
 	 * {@link RuntimeException}.

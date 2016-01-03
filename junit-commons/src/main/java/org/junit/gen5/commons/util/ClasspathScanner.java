@@ -30,9 +30,11 @@ import java.util.logging.Logger;
 class ClasspathScanner {
 
 	private static final String CLASS_FILE_SUFFIX = ".class";
+
 	private static final Logger LOG = Logger.getLogger(ClasspathScanner.class.getName());
 
 	private final Supplier<ClassLoader> classLoaderSupplier;
+
 	private final BiFunction<String, ClassLoader, Optional<Class<?>>> loadClass;
 
 	ClasspathScanner(Supplier<ClassLoader> classLoaderSupplier,

@@ -189,7 +189,7 @@ public final class AnnotationUtils {
 					collectedAnnotations.add(annotationType.cast(candidateAnnotation));
 				}
 				else if (candidateAnnotation.annotationType().equals(containerTypeForRepeatable)) {
-					//TODO: Retrieve containedAnnotations from candidateAnnotation.value()
+					// TODO Retrieve containedAnnotations from candidateAnnotation.value()
 					List<A> containedAnnotations = asList(element.getDeclaredAnnotationsByType(annotationType));
 					collectedAnnotations.addAll(containedAnnotations);
 				}
@@ -233,8 +233,7 @@ public final class AnnotationUtils {
 	}
 
 	public static boolean isInJavaLangAnnotationPackage(Annotation annotation) {
-		return (annotation != null
-				&& annotation.annotationType().getPackage().getName().startsWith("java.lang.annotation"));
+		return (annotation != null && annotation.annotationType().getName().startsWith("java.lang.annotation"));
 	}
 
 	private static class AnnotationCacheKey implements Serializable {
