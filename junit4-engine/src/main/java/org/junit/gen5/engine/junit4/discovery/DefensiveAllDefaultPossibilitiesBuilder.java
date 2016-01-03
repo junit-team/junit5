@@ -71,6 +71,10 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 		}
 	}
 
+	/**
+	 * Customization of {@link JUnit4Builder} that ignores classes that do not
+	 * contain any test methods in order not to report errors for them.
+	 */
 	private static class DefensiveJUnit4Builder extends JUnit4Builder {
 
 		private final Predicate<Method> hasTestAnnotation = new IsPotentialJUnit4TestMethod();
