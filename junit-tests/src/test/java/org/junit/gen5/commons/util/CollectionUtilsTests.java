@@ -18,11 +18,8 @@ import static org.junit.gen5.api.Assertions.assertSame;
 import static org.junit.gen5.api.Assertions.expectThrows;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.junit4runner.JUnit5;
-import org.junit.runner.RunWith;
 
-@RunWith(JUnit5.class)
-public class CollectionUtilsTests {
+class CollectionUtilsTests {
 
 	@Test
 	void getOnlyElementWithNullCollection() {
