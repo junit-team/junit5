@@ -39,10 +39,10 @@ import org.junit.gen5.engine.TestPlanSpecification;
  * it.
  *
  * <p>Prior to executing tests, users of this class should
- * {@linkplain #registerTestExecutionListeners register} one or multiple
+ * {@linkplain #registerTestExecutionListeners register} one or more
  * {@link TestExecutionListener} instances in order to get feedback about the
- * progress and results of test execution. The listeners are called in the order
- * they have been registered.
+ * progress and results of test execution. Listeners are notified of events
+ * in the order in which they were registered.
  *
  * @since 5.0
  * @see TestPlanSpecification
@@ -54,6 +54,7 @@ public class Launcher {
 	private static final Logger LOG = Logger.getLogger(Launcher.class.getName());
 
 	private final TestExecutionListenerRegistry listenerRegistry = new TestExecutionListenerRegistry();
+
 	private final TestEngineRegistry testEngineRegistry;
 
 	public Launcher() {
@@ -66,7 +67,7 @@ public class Launcher {
 	}
 
 	/**
-	 * Registers one or multiple listeners for test execution.
+	 * Register one or more listeners for test execution.
 	 *
 	 * @param listeners the listeners to be notified of test execution events
 	 */
@@ -75,12 +76,12 @@ public class Launcher {
 	}
 
 	/**
-	 * Discovers a {@link TestPlan} according to a
+	 * Discover tests and build a {@link TestPlan} according to the supplied
 	 * {@link TestPlanSpecification} by querying all registered engines and
 	 * collecting their results.
 	 *
 	 * @param specification the specification to be resolved
-	 * @return the {@code TestPlan} that contains all resolvable
+	 * @return a {@code TestPlan} that contains all resolved
 	 * {@linkplain TestIdentifier identifiers} from all registered engines
 	 */
 	public TestPlan discover(TestPlanSpecification specification) {
@@ -88,12 +89,12 @@ public class Launcher {
 	}
 
 	/**
-	 * Executes the {@link TestPlan} the given {@link TestPlanSpecification} is
-	 * resolved into using all registered engines and notifies the registered
-	 * {@link TestExecutionListener} instances about the progress and results
-	 * of the execution.
+	 * Execute a {@link TestPlan} which is built according to the supplied
+	 * {@link TestPlanSpecification} by querying all registered engines and
+	 * collecting their results, and notify {@linkplain #registerTestExecutionListeners
+	 * registered listeners} about the progress and results of the execution.
 	 *
-	 * @param specification the specification to be resolved and executed
+	 * @param specification the specification to be resolved
 	 */
 	public void execute(TestPlanSpecification specification) {
 		execute(discoverRootDescriptor(specification, "execution"));
@@ -101,8 +102,8 @@ public class Launcher {
 
 	private RootTestDescriptor discoverRootDescriptor(TestPlanSpecification specification, String phase) {
 		RootTestDescriptor root = new RootTestDescriptor();
-		for (TestEngine testEngine : testEngineRegistry.lookupAllTestEngines()) {
-			LOG.info(() -> String.format("Discovering tests during launcher %s phase in engine %s.", phase,
+		for (TestEngine testEngine : testEngineRegistry.getTestEngines()) {
+			LOG.info(() -> String.format("Discovering tests during launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 			EngineAwareTestDescriptor engineRoot = testEngine.discoverTests(specification);
 			root.addChild(engineRoot);

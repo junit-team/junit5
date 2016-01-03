@@ -23,17 +23,21 @@ class ServiceLoaderTestEngineRegistry implements TestEngineRegistry {
 
 	private static final Logger LOG = Logger.getLogger(ServiceLoaderTestEngineRegistry.class.getName());
 
+	private static final Object monitor = new Object();
+
 	private static Iterable<TestEngine> testEngines;
 
 	@Override
-	public Iterable<TestEngine> lookupAllTestEngines() {
-		if (testEngines == null) {
-			testEngines = ServiceLoader.load(TestEngine.class, ReflectionUtils.getDefaultClassLoader());
-			for (TestEngine testEngine : testEngines) {
-				LOG.info(() -> String.format("Discovered test engine with id: '%s'", testEngine.getId()));
+	public Iterable<TestEngine> getTestEngines() {
+		synchronized (monitor) {
+			if (testEngines == null) {
+				testEngines = ServiceLoader.load(TestEngine.class, ReflectionUtils.getDefaultClassLoader());
+				for (TestEngine testEngine : testEngines) {
+					LOG.info(() -> String.format("Discovered TestEngine with ID '%s'.", testEngine.getId()));
+				}
 			}
+			return testEngines;
 		}
-		return testEngines;
 	}
 
 }
