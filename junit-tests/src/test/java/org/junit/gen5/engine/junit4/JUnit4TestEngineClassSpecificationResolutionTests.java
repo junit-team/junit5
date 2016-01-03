@@ -33,7 +33,7 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 	@Test
 	void resolvesSimpleJUnit4TestClass() {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
-		TestPlanSpecification specification = build(forClass(testClass));
+		TestPlanSpecification specification = buildClassSpecification(testClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
@@ -55,7 +55,7 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 	@Test
 	void resolvesIgnoredJUnit4TestClass() {
 		Class<?> testClass = IgnoredJUnit4TestCase.class;
-		TestPlanSpecification specification = build(forClass(testClass));
+		TestPlanSpecification specification = buildClassSpecification(testClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
@@ -70,7 +70,7 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 	@Test
 	void resolvesJUnit4TestClassWithCustomRunner() {
 		Class<?> testClass = SingleFailingTheoryTestCase.class;
-		TestPlanSpecification specification = build(forClass(testClass));
+		TestPlanSpecification specification = buildClassSpecification(testClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
@@ -92,7 +92,7 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 	@Test
 	void resolvesJUnit3TestCase() {
 		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
-		TestPlanSpecification specification = build(forClass(testClass));
+		TestPlanSpecification specification = buildClassSpecification(testClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
@@ -115,7 +115,7 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 	void resolvesJUnit3Suites() {
 		Class<?> suiteClass = JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails.class;
 		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
-		TestPlanSpecification specification = build(forClass(suiteClass));
+		TestPlanSpecification specification = buildClassSpecification(suiteClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
@@ -136,28 +136,30 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 		assertFalse(testMethodDescriptor.isContainer());
 		assertEquals("test", testMethodDescriptor.getDisplayName());
 		assertEquals(
-			"junit4:" + suiteClass.getName() + "/" + testClass.getName() + "/test(" + testClass.getName() + ")",
+			"junit4:" + suiteClass.getName() + "/" + testClass.getName() + "/test" + "(" + testClass.getName() + ")",
 			testMethodDescriptor.getUniqueId());
 		assertThat(testMethodDescriptor.getChildren()).isEmpty();
 	}
 
 	@Test
 	void doesNotResolvePlainOldJavaClassesWithoutAnyTest() {
-		Class<?> testClass = PlainOldJavaClassWithoutAnyTest.class;
-		TestPlanSpecification specification = build(forClass(testClass));
+		assertYieldsNoDescriptors(PlainOldJavaClassWithoutAnyTest.class);
+	}
+
+	@Test
+	void doesNotResolveClassRunWithJUnit5() {
+		assertYieldsNoDescriptors(TestCaseRunWithJUnit5.class);
+	}
+
+	private void assertYieldsNoDescriptors(Class<?> testClass) {
+		TestPlanSpecification specification = buildClassSpecification(testClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
 		assertThat(engineDescriptor.getChildren()).isEmpty();
 	}
 
-	@Test
-	void doesNotResolveClassRunWithJUnit5() {
-		Class<?> testClass = TestCaseRunWithJUnit5.class;
-		TestPlanSpecification specification = build(forClass(testClass));
-
-		TestDescriptor engineDescriptor = engine.discoverTests(specification);
-
-		assertThat(engineDescriptor.getChildren()).isEmpty();
+	private static TestPlanSpecification buildClassSpecification(Class<?> testClass) {
+		return build(forClass(testClass));
 	}
 }
