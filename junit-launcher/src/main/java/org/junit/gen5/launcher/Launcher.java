@@ -84,19 +84,7 @@ public class Launcher {
 	 * {@linkplain TestIdentifier identifiers} from all registered engines
 	 */
 	public TestPlan discover(TestPlanSpecification specification) {
-		return TestPlan.from(discoverRootDescriptor(specification));
-	}
-
-	private RootTestDescriptor discoverRootDescriptor(TestPlanSpecification specification) {
-		RootTestDescriptor root = new RootTestDescriptor();
-		for (TestEngine testEngine : testEngineRegistry.lookupAllTestEngines()) {
-			LOG.info("Discovering tests in engine " + testEngine.getId());
-			EngineAwareTestDescriptor engineRoot = testEngine.discoverTests(specification);
-			root.addChild(engineRoot);
-		}
-		root.applyFilters(specification);
-		root.prune();
-		return root;
+		return TestPlan.from(discoverRootDescriptor(specification, "discovery"));
 	}
 
 	/**
@@ -108,7 +96,20 @@ public class Launcher {
 	 * @param specification the specification to be resolved and executed
 	 */
 	public void execute(TestPlanSpecification specification) {
-		execute(discoverRootDescriptor(specification));
+		execute(discoverRootDescriptor(specification, "execution"));
+	}
+
+	private RootTestDescriptor discoverRootDescriptor(TestPlanSpecification specification, String phase) {
+		RootTestDescriptor root = new RootTestDescriptor();
+		for (TestEngine testEngine : testEngineRegistry.lookupAllTestEngines()) {
+			LOG.info(() -> String.format("Discovering tests during launcher %s phase in engine %s.", phase,
+				testEngine.getId()));
+			EngineAwareTestDescriptor engineRoot = testEngine.discoverTests(specification);
+			root.addChild(engineRoot);
+		}
+		root.applyFilters(specification);
+		root.prune();
+		return root;
 	}
 
 	private void execute(RootTestDescriptor root) {
