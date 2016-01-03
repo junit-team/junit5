@@ -38,7 +38,8 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 
 	@Override
 	public String getDisplayName() {
-		return description.getDisplayName();
+		String methodName = description.getMethodName();
+		return methodName != null ? methodName : description.getDisplayName();
 	}
 
 	@Override

@@ -51,8 +51,7 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 		TestDescriptor childDescriptor = getOnlyElement(runnerDescriptor.getChildren());
 		assertTrue(childDescriptor.isTest());
 		assertFalse(childDescriptor.isContainer());
-		// TODO #40 Get rid of "(className)" suffix?
-		assertEquals("test(" + testClass.getName() + ")", childDescriptor.getDisplayName());
+		assertEquals("test", childDescriptor.getDisplayName());
 		assertEquals("junit4:" + testClass.getName() + "/test(" + testClass.getName() + ")",
 			childDescriptor.getUniqueId());
 		assertThat(childDescriptor.getChildren()).isEmpty();
@@ -89,7 +88,7 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 		TestDescriptor childDescriptor = getOnlyElement(runnerDescriptor.getChildren());
 		assertTrue(childDescriptor.isTest());
 		assertFalse(childDescriptor.isContainer());
-		assertEquals("theory(" + testClass.getName() + ")", childDescriptor.getDisplayName());
+		assertEquals("theory", childDescriptor.getDisplayName());
 		assertEquals("junit4:" + testClass.getName() + "/theory(" + testClass.getName() + ")",
 			childDescriptor.getUniqueId());
 		assertThat(childDescriptor.getChildren()).isEmpty();
@@ -111,7 +110,7 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 		TestDescriptor childDescriptor = getOnlyElement(runnerDescriptor.getChildren());
 		assertTrue(childDescriptor.isTest());
 		assertFalse(childDescriptor.isContainer());
-		assertEquals("test(" + testClass.getName() + ")", childDescriptor.getDisplayName());
+		assertEquals("test", childDescriptor.getDisplayName());
 		assertEquals("junit4:" + testClass.getName() + "/test(" + testClass.getName() + ")",
 			childDescriptor.getUniqueId());
 		assertThat(childDescriptor.getChildren()).isEmpty();
@@ -140,7 +139,7 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 		TestDescriptor testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
 		assertTrue(testMethodDescriptor.isTest());
 		assertFalse(testMethodDescriptor.isContainer());
-		assertEquals("test(" + testClass.getName() + ")", testMethodDescriptor.getDisplayName());
+		assertEquals("test", testMethodDescriptor.getDisplayName());
 		assertEquals(
 			"junit4:" + suiteClass.getName() + "/" + testClass.getName() + "/test(" + testClass.getName() + ")",
 			testMethodDescriptor.getUniqueId());
