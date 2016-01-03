@@ -29,7 +29,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 /**
- * Collection of utilities for working with Java reflection APIs.
+ * Collection of utilities for working with the Java reflection APIs.
  *
  * @since 5.0
  */
@@ -91,13 +91,13 @@ public final class ReflectionUtils {
 	 * arguments.
 	 *
 	 * <p>The constructor will be made accessible if necessary, and any checked
-	 * exception will be {@linkplain #throwAsRuntimeException masked} as a
-	 * {@code RuntimeException}.
+	 * exception will be {@linkplain ExceptionUtils#throwAsRuntimeException masked}
+	 * as a {@code RuntimeException}.
 	 *
 	 * @param clazz the class to instantiate; never {@code null}
 	 * @param args the arguments to pass to the constructor
 	 * @return the new instance
-	 * @see #throwAsRuntimeException(Throwable)
+	 * @see ExceptionUtils#throwAsRuntimeException(Throwable)
 	 */
 	public static <T> T newInstance(Class<T> clazz, Object... args) {
 		Preconditions.notNull(clazz, "class must not be null");
@@ -108,18 +108,15 @@ public final class ReflectionUtils {
 			makeAccessible(constructor);
 			return constructor.newInstance(args);
 		}
-		catch (Throwable ex) {
-			handleException(ex);
+		catch (Throwable t) {
+			throw ExceptionUtils.throwAsRuntimeException(getUnderlyingCause(t));
 		}
-
-		// Appeasing the compiler: this should hopefully never happen...
-		throw new IllegalStateException("Exception handling algorithm in ReflectionUtils is incomplete");
 	}
 
 	/**
 	 * Invoke the supplied method, making it accessible if necessary and
-	 * {@linkplain #throwAsRuntimeException masking} any checked exception
-	 * as a {@code RuntimeException}.
+	 * {@linkplain ExceptionUtils#throwAsRuntimeException masking} any
+	 * checked exception as a {@code RuntimeException}.
 	 *
 	 * @param method the method to invoke; never {@code null}
 	 * @param target the object on which to invoke the method; may be
@@ -127,7 +124,7 @@ public final class ReflectionUtils {
 	 * @param args the arguments to pass to the method
 	 * @return the value returned by the method invocation or {@code null}
 	 * if the return type is {@code void}
-	 * @see #throwAsRuntimeException(Throwable)
+	 * @see ExceptionUtils#throwAsRuntimeException(Throwable)
 	 */
 	public static Object invokeMethod(Method method, Object target, Object... args) {
 		Preconditions.notNull(method, "method must not be null");
@@ -138,12 +135,9 @@ public final class ReflectionUtils {
 			makeAccessible(method);
 			return method.invoke(target, args);
 		}
-		catch (Throwable ex) {
-			handleException(ex);
+		catch (Throwable t) {
+			throw ExceptionUtils.throwAsRuntimeException(getUnderlyingCause(t));
 		}
-
-		// Appeasing the compiler: this should hopefully never happen...
-		throw new IllegalStateException("Exception handling algorithm in ReflectionUtils is incomplete");
 	}
 
 	public static Optional<Class<?>> loadClass(String name) {
@@ -399,31 +393,21 @@ public final class ReflectionUtils {
 		}
 	}
 
-	private static void handleException(Throwable t) {
-		if (t instanceof InvocationTargetException) {
-			handleException(((InvocationTargetException) t).getTargetException());
-		}
-		throwAsRuntimeException(t);
-	}
-
 	/**
-	 * Throw the supplied {@link Throwable}, <em>masked</em> as a
-	 * {@link RuntimeException}.
+	 * Get the underlying cause of the supplied {@link Throwable}.
 	 *
-	 * <p>The supplied {@code Throwable} will not be wrapped. Rather, it
-	 * will be thrown as-is using a hack based on generics and type erasure
-	 * that tricks the Java compiler into believing that the thrown exception
-	 * is an unchecked exception.
-	 *
-	 * @param t the Throwable to throw as a {@code RuntimeException}
+	 * <p>If the supplied {@code Throwable} is an instance of
+	 * {@link InvocationTargetException}, this method will be invoked
+	 * recursively with the underlying
+	 * {@linkplain InvocationTargetException#getTargetException() target
+	 * exception}; otherwise, this method simply returns the supplied
+	 * {@code Throwable}.
 	 */
-	public static void throwAsRuntimeException(Throwable t) {
-		ReflectionUtils.<RuntimeException> throwAs(t);
-	}
-
-	@SuppressWarnings("unchecked")
-	private static <T extends Throwable> void throwAs(Throwable t) throws T {
-		throw (T) t;
+	private static Throwable getUnderlyingCause(Throwable t) {
+		if (t instanceof InvocationTargetException) {
+			return getUnderlyingCause(((InvocationTargetException) t).getTargetException());
+		}
+		return t;
 	}
 
 }

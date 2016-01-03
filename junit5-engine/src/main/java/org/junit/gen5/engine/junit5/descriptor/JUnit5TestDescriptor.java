@@ -26,7 +26,7 @@ import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExtension;
-import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestTag;
@@ -84,7 +84,7 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 			executable.execute();
 		}
 		catch (Throwable throwable) {
-			ReflectionUtils.throwAsRuntimeException(throwable);
+			ExceptionUtils.throwAsRuntimeException(throwable);
 		}
 	}
 

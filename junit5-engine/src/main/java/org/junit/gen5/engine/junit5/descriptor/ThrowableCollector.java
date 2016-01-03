@@ -15,8 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.gen5.api.Executable;
+import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * Simple component that can be used to collect one or more instances of
@@ -47,7 +47,7 @@ class ThrowableCollector {
 	}
 
 	/**
-	 * Add the supplied {@link Throwable} to this collector.
+	 * Add the supplied {@link Throwable} to this {@code ThrowableCollector}.
 	 *
 	 * @param t the {@code Throwable} to add
 	 * @see #execute(Executable)
@@ -63,28 +63,32 @@ class ThrowableCollector {
 	 * Get the list of {@link Throwable Throwables} collected by this
 	 * {@code ThrowableCollector}.
 	 *
-	 * @return an unmodifiable list of throwables
+	 * @return an unmodifiable list of the throwables collected by this
+	 * {@code ThrowableCollector}
 	 */
 	List<Throwable> getThrowables() {
 		return Collections.unmodifiableList(this.throwables);
 	}
 
 	/**
-	 * Assert that this {@code ThrowableCollector} is <em>empty</em>.
+	 * Assert that this {@code ThrowableCollector} is <em>empty</em> (i.e.,
+	 * has not collected any {@link Throwable Throwables}).
 	 *
-	 * <p>If this collector is not empty, the first collected {@link Throwable}
+	 * <p>If this collector is not empty, the first collected {@code Throwable}
 	 * will be thrown with any additional throwables
 	 * {@linkplain Throwable#addSuppressed(Throwable) suppressed} in the
 	 * first {@code Throwable}. Note, however, that the {@code Throwable}
 	 * will not be wrapped. Rather, it will be thrown as-is using a hack
 	 * based on generics and type erasure that tricks the Java compiler
 	 * into believing that the thrown exception is an unchecked exception.
+	 *
+	 * @see ExceptionUtils#throwAsRuntimeException(Throwable)
 	 */
 	void assertEmpty() {
 		if (!this.throwables.isEmpty()) {
 			Throwable t = this.throwables.get(0);
 			this.throwables.stream().skip(1).forEach(t::addSuppressed);
-			ReflectionUtils.throwAsRuntimeException(t);
+			ExceptionUtils.throwAsRuntimeException(t);
 		}
 	}
 
