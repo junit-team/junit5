@@ -12,12 +12,10 @@ package org.junit.gen5.engine.junit4;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
-import java.util.Collection;
-
 import org.junit.gen5.api.Test;
-import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit4.samples.IgnoredJUnit4TestCase;
@@ -161,11 +159,5 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
 		assertThat(engineDescriptor.getChildren()).isEmpty();
-	}
-
-	private static <T> T getOnlyElement(Collection<T> collection) {
-		Preconditions.condition(collection.size() == 1,
-			() -> "collection must contain exactly one element: " + collection);
-		return collection.iterator().next();
 	}
 }
