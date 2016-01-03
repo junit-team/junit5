@@ -74,12 +74,11 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 		}
 
 		@Override
-		public Runner runnerForClass(Class<?> testClass) throws Exception {
-			Runner runner = super.runnerForClass(testClass);
-			if (junit5RunnerClass.isInstance(runner)) {
+		public Runner buildRunner(Class<? extends Runner> runnerClass, Class<?> testClass) throws Exception {
+			if (junit5RunnerClass.isAssignableFrom(runnerClass)) {
 				return null;
 			}
-			return runner;
+			return super.buildRunner(runnerClass, testClass);
 		}
 	}
 
