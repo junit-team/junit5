@@ -15,39 +15,44 @@ import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
 import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
-import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
+import org.junit.runners.model.RunnerBuilder;
 
 public class JUnit4TestPlanSpecificationResolver {
 
-	private EngineDescriptor engineDescriptor;
+	private final EngineDescriptor engineDescriptor;
 
 	public JUnit4TestPlanSpecificationResolver(EngineDescriptor engineDescriptor) {
 		this.engineDescriptor = engineDescriptor;
 	}
 
 	public void resolve(TestPlanSpecification specification) {
+		RunnerBuilder runnerBuilder = new DefensiveAllDefaultPossibilitiesBuilder();
 		specification.accept(new TestPlanSpecificationElementVisitor() {
 
 			@Override
 			public void visitClass(Class<?> testClass) {
-				Runner runner = new AllDefaultPossibilitiesBuilder(true).safeRunnerForClass(testClass);
-
-				RunnerTestDescriptor runnerDescriptor = new RunnerTestDescriptor(engineDescriptor, testClass, runner);
-				addChildrenRecursively(runnerDescriptor);
-
-				engineDescriptor.addChild(runnerDescriptor);
-			}
-
-			private void addChildrenRecursively(JUnit4TestDescriptor parent) {
-				for (Description description : parent.getDescription().getChildren()) {
-					JUnit4TestDescriptor child = new JUnit4TestDescriptor(parent, description);
-					parent.addChild(child);
-					addChildrenRecursively(child);
+				Runner runner = runnerBuilder.safeRunnerForClass(testClass);
+				if (runner != null) {
+					engineDescriptor.addChild(createCompleteRunnerTestDescriptor(testClass, runner));
 				}
 			}
 		});
+	}
+
+	private RunnerTestDescriptor createCompleteRunnerTestDescriptor(Class<?> testClass, Runner runner) {
+		RunnerTestDescriptor runnerTestDescriptor = new RunnerTestDescriptor(engineDescriptor, testClass, runner);
+		addChildrenRecursively(runnerTestDescriptor);
+		return runnerTestDescriptor;
+	}
+
+	private void addChildrenRecursively(JUnit4TestDescriptor parent) {
+		for (Description description : parent.getDescription().getChildren()) {
+			JUnit4TestDescriptor child = new JUnit4TestDescriptor(parent, description);
+			parent.addChild(child);
+			addChildrenRecursively(child);
+		}
 	}
 
 }

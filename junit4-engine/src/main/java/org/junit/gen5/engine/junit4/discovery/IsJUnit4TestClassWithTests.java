@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit4;
+package org.junit.gen5.engine.junit4.discovery;
 
 import static org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 
@@ -20,9 +20,9 @@ import org.junit.runner.RunWith;
 /**
  * @since 5.0
  */
-public class IsJUnit4TestClassWithTests implements Predicate<Class<?>> {
+class IsJUnit4TestClassWithTests implements Predicate<Class<?>> {
 
-	private static final IsJUnit4TestMethod isTestMethod = new IsJUnit4TestMethod();
+	private static final IsPotentialJUnit4TestMethod isTestMethod = new IsPotentialJUnit4TestMethod();
 
 	private static final IsPotentialJUnit4TestClass isPotentialTestClass = new IsPotentialJUnit4TestClass();
 
@@ -30,7 +30,8 @@ public class IsJUnit4TestClassWithTests implements Predicate<Class<?>> {
 	public boolean test(Class<?> testClassCandidate) {
 		if (!isPotentialTestClass.test(testClassCandidate))
 			return false;
-		// Do not use AnnotationUtils.hasAnnotation since JUnit4 does not support meta annotations.
+		// Do not use AnnotationUtils.hasAnnotation since JUnit4 does not support meta
+		// annotations.
 		return testClassCandidate.isAnnotationPresent(RunWith.class) || hasTestMethods(testClassCandidate);
 	}
 

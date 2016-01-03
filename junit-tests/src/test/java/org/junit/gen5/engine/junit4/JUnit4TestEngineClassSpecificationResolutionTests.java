@@ -145,6 +145,16 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 		assertThat(testMethodDescriptor.getChildren()).isEmpty();
 	}
 
+	@Test
+	void doesNotResolvePlainOldJavaClassesWithoutAnyTest() {
+		Class<?> testClass = PlainOldJavaClassWithoutAnyTest.class;
+		TestPlanSpecification specification = build(forClass(testClass));
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		assertThat(engineDescriptor.getChildren()).isEmpty();
+	}
+
 	public static class PlainJUnit4TestCaseWithSingleTestWhichFails {
 
 		@org.junit.Test
@@ -188,6 +198,14 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 			TestSuite suite = new TestSuite();
 			suite.addTestSuite(PlainJUnit3TestCaseWithSingleTestWhichFails.class);
 			return suite;
+		}
+
+	}
+
+	public static class PlainOldJavaClassWithoutAnyTest {
+
+		public void doSomething() {
+			// no-op
 		}
 
 	}
