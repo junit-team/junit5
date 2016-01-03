@@ -27,6 +27,8 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.junit4runner.JUnit5;
+import org.junit.gen5.junit4runner.JUnit5.Classes;
 import org.junit.runner.RunWith;
 
 class JUnit4TestEngineClassSpecificationResolutionTests {
@@ -155,6 +157,16 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 		assertThat(engineDescriptor.getChildren()).isEmpty();
 	}
 
+	@Test
+	void doesNotResolveClassRunWithJUnit5() {
+		Class<?> testClass = TestCaseRunWithJUnit5.class;
+		TestPlanSpecification specification = build(forClass(testClass));
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		assertThat(engineDescriptor.getChildren()).isEmpty();
+	}
+
 	public static class PlainJUnit4TestCaseWithSingleTestWhichFails {
 
 		@org.junit.Test
@@ -208,6 +220,11 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 			// no-op
 		}
 
+	}
+
+	@RunWith(JUnit5.class)
+	@Classes(PlainJUnit4TestCaseWithSingleTestWhichFails.class)
+	public static class TestCaseRunWithJUnit5 {
 	}
 
 	private static <T> T getOnlyElement(Iterable<T> iterable) {
