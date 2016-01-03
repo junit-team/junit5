@@ -16,20 +16,17 @@ import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.util.Iterator;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.experimental.theories.Theories;
-import org.junit.experimental.theories.Theory;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.junit4runner.JUnit5;
-import org.junit.gen5.junit4runner.JUnit5.Classes;
-import org.junit.runner.RunWith;
+import org.junit.gen5.engine.junit4.samples.IgnoredJUnit4TestCase;
+import org.junit.gen5.engine.junit4.samples.JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails;
+import org.junit.gen5.engine.junit4.samples.PlainJUnit3TestCaseWithSingleTestWhichFails;
+import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithSingleTestWhichFails;
+import org.junit.gen5.engine.junit4.samples.PlainOldJavaClassWithoutAnyTest;
+import org.junit.gen5.engine.junit4.samples.SingleFailingTheoryTestCase;
+import org.junit.gen5.engine.junit4.samples.TestCaseRunWithJUnit5;
 
 class JUnit4TestEngineClassSpecificationResolutionTests {
 
@@ -164,66 +161,6 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
 		assertThat(engineDescriptor.getChildren()).isEmpty();
-	}
-
-	public static class PlainJUnit4TestCaseWithSingleTestWhichFails {
-
-		@org.junit.Test
-		public void test() {
-			Assert.fail("this test should fail");
-		}
-
-	}
-
-	@Ignore
-	public static class IgnoredJUnit4TestCase {
-
-		@org.junit.Test
-		public void test() {
-			Assert.fail("this test is not even discovered");
-		}
-
-	}
-
-	@RunWith(Theories.class)
-	public static class SingleFailingTheoryTestCase {
-
-		@Theory
-		public void theory() {
-			Assert.fail("this theory should fail");
-		}
-
-	}
-
-	public static class PlainJUnit3TestCaseWithSingleTestWhichFails extends TestCase {
-
-		public void test() {
-			Assert.fail("this test should fail");
-		}
-
-	}
-
-	public static class JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails extends TestCase {
-
-		public static junit.framework.Test suite() {
-			TestSuite suite = new TestSuite();
-			suite.addTestSuite(PlainJUnit3TestCaseWithSingleTestWhichFails.class);
-			return suite;
-		}
-
-	}
-
-	public static class PlainOldJavaClassWithoutAnyTest {
-
-		public void doSomething() {
-			// no-op
-		}
-
-	}
-
-	@RunWith(JUnit5.class)
-	@Classes(PlainJUnit4TestCaseWithSingleTestWhichFails.class)
-	public static class TestCaseRunWithJUnit5 {
 	}
 
 	private static <T> T getOnlyElement(Iterable<T> iterable) {
