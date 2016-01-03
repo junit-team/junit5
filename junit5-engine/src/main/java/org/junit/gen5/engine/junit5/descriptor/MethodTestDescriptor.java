@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodContext;
+import static org.junit.gen5.engine.junit5.descriptor.MethodInvocationContextFactory.methodInvocationContext;
 
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -20,7 +20,7 @@ import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.InstancePostProcessor;
-import org.junit.gen5.api.extension.MethodContext;
+import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.JavaSource;
@@ -158,9 +158,9 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 			TestExtensionRegistry testExtensionRegistry, ThrowableCollector throwableCollector) {
 
 		throwableCollector.execute(() -> {
-			MethodContext methodContext = methodContext(testExtensionContext.getTestInstance(),
-				testExtensionContext.getTestMethod());
-			new MethodInvoker(testExtensionContext, testExtensionRegistry).invoke(methodContext);
+			MethodInvocationContext methodInvocationContext = methodInvocationContext(
+				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod());
+			new MethodInvoker(testExtensionContext, testExtensionRegistry).invoke(methodInvocationContext);
 		});
 	}
 

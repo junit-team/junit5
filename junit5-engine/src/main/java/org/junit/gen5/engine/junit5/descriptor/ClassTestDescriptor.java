@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
-import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodContext;
+import static org.junit.gen5.engine.junit5.descriptor.MethodInvocationContextFactory.methodInvocationContext;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -216,13 +216,13 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 	private BeforeAllExtensionPoint synthesizeBeforeAllExtensionPoint(TestExtensionRegistry registry, Method method) {
 		return (BeforeAllExtensionPoint) extensionContext -> {
-			new MethodInvoker(extensionContext, registry).invoke(methodContext(null, method));
+			new MethodInvoker(extensionContext, registry).invoke(methodInvocationContext(null, method));
 		};
 	}
 
 	private AfterAllExtensionPoint synthesizeAfterAllExtensionPoint(TestExtensionRegistry registry, Method method) {
 		return (AfterAllExtensionPoint) extensionContext -> {
-			new MethodInvoker(extensionContext, registry).invoke(methodContext(null, method));
+			new MethodInvoker(extensionContext, registry).invoke(methodInvocationContext(null, method));
 		};
 	}
 
@@ -243,7 +243,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 		// @formatter:off
 		ReflectionUtils.getOuterInstance(context.getTestInstance(), method.getDeclaringClass())
-			.ifPresent(instance -> new MethodInvoker(context, registry).invoke(methodContext(instance, method)));
+			.ifPresent(instance -> new MethodInvoker(context, registry).invoke(methodInvocationContext(instance, method)));
 		// @formatter:on
 	}
 

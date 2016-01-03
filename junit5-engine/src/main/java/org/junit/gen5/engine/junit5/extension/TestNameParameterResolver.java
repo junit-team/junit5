@@ -16,7 +16,7 @@ import java.lang.reflect.Parameter;
 
 import org.junit.gen5.api.TestName;
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.api.extension.MethodContext;
+import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 
 /**
@@ -29,12 +29,16 @@ import org.junit.gen5.api.extension.MethodParameterResolver;
 public class TestNameParameterResolver implements MethodParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext) {
+	public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,
+			ExtensionContext extensionContext) {
+
 		return (parameter.getType() == String.class && isAnnotated(parameter, TestName.class));
 	}
 
 	@Override
-	public String resolve(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext) {
+	public String resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
+			ExtensionContext extensionContext) {
+
 		return extensionContext.getDisplayName();
 	}
 

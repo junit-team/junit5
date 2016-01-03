@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.InstancePostProcessor;
-import org.junit.gen5.api.extension.MethodContext;
+import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.TestExtensionContext;
@@ -44,13 +44,15 @@ public class MockitoExtension implements InstancePostProcessor, MethodParameterR
 	}
 
 	@Override
-	public boolean supports(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext) {
+	public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,
+			ExtensionContext extensionContext) {
+
 		return parameter.isAnnotationPresent(InjectMock.class);
 	}
 
 	@Override
-	public Object resolve(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext)
-			throws ParameterResolutionException {
+	public Object resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
+			ExtensionContext extensionContext) throws ParameterResolutionException {
 
 		return getMock(parameter.getType());
 	}

@@ -13,7 +13,7 @@ package org.junit.gen5.engine.junit5.execution.injection.sample;
 import java.lang.reflect.Parameter;
 
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.api.extension.MethodContext;
+import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
@@ -23,12 +23,16 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 public class CustomAnnotationParameterResolver implements MethodParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext) {
+	public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,
+			ExtensionContext extensionContext) {
+
 		return parameter.isAnnotationPresent(CustomAnnotation.class);
 	}
 
 	@Override
-	public Object resolve(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext) {
+	public Object resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
+			ExtensionContext extensionContext) {
+
 		return ReflectionUtils.newInstance(parameter.getType());
 	}
 

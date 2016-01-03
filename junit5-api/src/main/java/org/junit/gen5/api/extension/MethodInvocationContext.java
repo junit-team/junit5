@@ -13,12 +13,12 @@ package org.junit.gen5.api.extension;
 import java.lang.reflect.Method;
 
 /**
- * {@code MethodContext} encapsulates the <em>context</em> in which
+ * {@code MethodInvocationContext} encapsulates the <em>context</em> in which
  * a method is to be invoked.
  *
  * @since 5.0
  */
-public interface MethodContext {
+public interface MethodInvocationContext {
 
 	Object getInstance();
 
