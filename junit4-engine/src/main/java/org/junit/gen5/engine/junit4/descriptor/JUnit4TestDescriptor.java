@@ -19,11 +19,11 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 	private final Description description;
 
 	public JUnit4TestDescriptor(TestDescriptor parent, Description description) {
-		this(parent, '/', description);
+		this(parent, '/', toUniqueId(description), description);
 	}
 
-	JUnit4TestDescriptor(TestDescriptor parent, char separator, Description description) {
-		super(parent.getUniqueId() + separator + toUniqueId(description));
+	JUnit4TestDescriptor(TestDescriptor parent, char separator, String uniqueIdSuffix, Description description) {
+		super(parent.getUniqueId() + separator + uniqueIdSuffix);
 		this.description = description;
 	}
 

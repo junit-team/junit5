@@ -13,17 +13,10 @@ package org.junit.gen5.engine.junit4.descriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.runner.Runner;
 
-public class RunnerDescriptor extends JUnit4TestDescriptor {
+public class RunnerTestDescriptor extends JUnit4TestDescriptor {
 
-	private final Runner runner;
-
-	public RunnerDescriptor(TestDescriptor parent, Runner runner) {
-		super(parent, ':', runner.getDescription());
-		this.runner = runner;
-	}
-
-	public Runner getRunner() {
-		return runner;
+	public RunnerTestDescriptor(TestDescriptor parent, Class<?> testClass, Runner runner) {
+		super(parent, ':', testClass.getName(), runner.getDescription());
 	}
 
 }

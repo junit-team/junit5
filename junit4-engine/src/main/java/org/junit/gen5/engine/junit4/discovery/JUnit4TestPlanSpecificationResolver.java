@@ -14,9 +14,8 @@ import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
 import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
-import org.junit.gen5.engine.junit4.descriptor.RunnerDescriptor;
-import org.junit.internal.builders.IgnoredBuilder;
-import org.junit.internal.builders.JUnit4Builder;
+import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
+import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 
@@ -33,12 +32,9 @@ public class JUnit4TestPlanSpecificationResolver {
 
 			@Override
 			public void visitClass(Class<?> testClass) {
-				Runner runner = new IgnoredBuilder().safeRunnerForClass(testClass);
-				if (runner == null) {
-					runner = new JUnit4Builder().safeRunnerForClass(testClass);
-				}
+				Runner runner = new AllDefaultPossibilitiesBuilder(true).safeRunnerForClass(testClass);
 
-				RunnerDescriptor runnerDescriptor = new RunnerDescriptor(engineDescriptor, runner);
+				RunnerTestDescriptor runnerDescriptor = new RunnerTestDescriptor(engineDescriptor, testClass, runner);
 				addChildrenRecursively(runnerDescriptor);
 
 				engineDescriptor.addChild(runnerDescriptor);
