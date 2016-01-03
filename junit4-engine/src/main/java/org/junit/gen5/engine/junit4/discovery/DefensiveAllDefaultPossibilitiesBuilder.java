@@ -52,6 +52,10 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 		return defensiveJUnit4Builder;
 	}
 
+	/**
+	 * Customization of {@link AnnotatedBuilder} that ignores classes annotated
+	 * with {@code @RunWith(JUnit5.class)} to avoid infinite recursion.
+	 */
 	private static class DefensiveAnnotatedBuilder extends AnnotatedBuilder {
 
 		private final Class<?> junit5RunnerClass;
