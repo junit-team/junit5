@@ -90,7 +90,7 @@ public final class ReflectionUtils {
 	 * the constructor whose argument list matches the types of the supplied
 	 * arguments.
 	 *
-	 * <p>The constructor will be made accessible if necessary and any checked
+	 * <p>The constructor will be made accessible if necessary, and any checked
 	 * exception will be {@linkplain #throwAsRuntimeException masked} as a
 	 * {@code RuntimeException}.
 	 *
@@ -411,9 +411,9 @@ public final class ReflectionUtils {
 	 * {@link RuntimeException}.
 	 *
 	 * <p>The supplied {@code Throwable} will not be wrapped. Rather, it
-	 * will be thrown as-is using a reflective hack (based on generics and
-	 * type erasure) that tricks the Java compiler into believing that the
-	 * thrown exception is an unchecked exception.
+	 * will be thrown as-is using a hack based on generics and type erasure
+	 * that tricks the Java compiler into believing that the thrown exception
+	 * is an unchecked exception.
 	 *
 	 * @param t the Throwable to throw as a {@code RuntimeException}
 	 */

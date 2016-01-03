@@ -75,9 +75,9 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 	 * Execute the supplied {@link Executable} and <em>mask</em> any
 	 * exception thrown as a {@link RuntimeException}.
 	 *
-	 * <p>Exceptions will not be wrapped. Rather, they will be thrown
-	 * as-is via a reflective hack that tricks the Java compiler into
-	 * believing that the thrown exception is an unchecked exception.
+	 * <p>Exceptions will not be wrapped. Rather, they will be thrown as-is
+	 * via a hack that tricks the Java compiler into believing that the
+	 * thrown exception is an unchecked exception.
 	 */
 	protected void executeAndMaskThrowable(Executable executable) {
 		try {
