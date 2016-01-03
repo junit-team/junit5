@@ -12,8 +12,6 @@ package org.junit.gen5.api.extension;
 
 import java.lang.reflect.Parameter;
 
-import org.junit.gen5.commons.util.ReflectionUtils;
-
 /**
  * {@code MethodParameterResolver} defines the API for {@link TestExtension
  * TestExtensions} that wish to dynamically resolve method parameters at runtime.
@@ -36,26 +34,23 @@ public interface MethodParameterResolver extends ExtensionPoint {
 	 * @param parameter parameter to be resolved
 	 * @param methodContext method context the parameter belongs to
 	 * @param extensionContext extension context of the method about to be executed
+	 * @return {@code true} if this resolver can resolve the parameter
+	 * @see #resolve
 	 */
-	boolean supports(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext);
+	boolean supports(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext)
+			throws ParameterResolutionException;
 
 	/**
 	 * Resolve the given {@link Parameter} for the supplied {@link MethodContext}
 	 * and {@link ExtensionContext}.
 	 *
-	 * <p>The default implementation uses reflection to instantiate the
-	 * required {@link Parameter#getType type} via its default constructor.
-	 *
 	 * @param parameter parameter to be resolved
 	 * @param methodContext method context the parameter belongs to
 	 * @param extensionContext extension context of the method about to be executed
-	 *
-	 * @see ReflectionUtils#newInstance(Class, Object...)
+	 * @return the resolved parameter object
+	 * @see #supports
 	 */
-	default Object resolve(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext)
-			throws ParameterResolutionException {
-
-		return ReflectionUtils.newInstance(parameter.getType());
-	}
+	Object resolve(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext)
+			throws ParameterResolutionException;
 
 }

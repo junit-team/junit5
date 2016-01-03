@@ -15,7 +15,7 @@ import java.lang.reflect.Parameter;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.MethodContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
-import org.junit.gen5.commons.util.AnnotationUtils;
+import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * @since 5.0
@@ -24,7 +24,12 @@ public class CustomAnnotationParameterResolver implements MethodParameterResolve
 
 	@Override
 	public boolean supports(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext) {
-		return AnnotationUtils.isAnnotated(parameter, CustomAnnotation.class);
+		return parameter.isAnnotationPresent(CustomAnnotation.class);
+	}
+
+	@Override
+	public Object resolve(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext) {
+		return ReflectionUtils.newInstance(parameter.getType());
 	}
 
 }

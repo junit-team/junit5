@@ -26,4 +26,9 @@ public class CustomTypeParameterResolver implements MethodParameterResolver {
 		return parameter.getType().equals(CustomType.class);
 	}
 
+	@Override
+	public Object resolve(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext) {
+		return new CustomType();
+	}
+
 }
