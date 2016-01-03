@@ -19,6 +19,10 @@ import java.util.Collection;
  */
 public class CollectionUtils {
 
+	private CollectionUtils() {
+		/* no-op */
+	}
+
 	/**
 	 * Read the only element of a collection of size 1.
 	 *
