@@ -22,6 +22,14 @@ import org.junit.internal.builders.JUnit4Builder;
 import org.junit.runner.Runner;
 import org.junit.runners.model.RunnerBuilder;
 
+/**
+ * Customization of {@link AllDefaultPossibilitiesBuilder} from JUnit 4 to
+ * ignore certain classes that would otherwise be reported as errors or cause
+ * infinite recursion.
+ *
+ * @see DefensiveAnnotatedBuilder
+ * @see DefensiveJUnit4Builder
+ */
 class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBuilder {
 
 	private final AnnotatedBuilder annotatedBuilder;
