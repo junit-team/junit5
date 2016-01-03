@@ -56,13 +56,13 @@ public class TestExecutionSummary {
 		writer.println(String.format(
 			"%n%s after %d ms\n"
 			+ "[%10d tests found     ]\n"
-			+ "[%10d tests started   ]\n"
 			+ "[%10d tests skipped   ]\n"
+			+ "[%10d tests started   ]\n"
 			+ "[%10d tests aborted   ]\n"
 			+ "[%10d tests successful]\n"
 			+ "[%10d tests failed    ]\n",
-			this.message, (this.timeFinished - this.timeStarted), this.testsFound.get(), this.testsStarted.get(),
-			this.testsSkipped.get(), this.testsAborted.get(), this.testsSucceeded.get(), this.testsFailed.get()));
+			this.message, (this.timeFinished - this.timeStarted), this.testsFound.get(), this.testsSkipped.get(),
+			this.testsStarted.get(), this.testsAborted.get(), this.testsSucceeded.get(), this.testsFailed.get()));
 		// @formatter:on
 
 		writer.flush();
