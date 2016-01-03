@@ -15,8 +15,15 @@ import org.junit.runner.Runner;
 
 public class RunnerTestDescriptor extends JUnit4TestDescriptor {
 
+	private final Runner runner;
+
 	public RunnerTestDescriptor(TestDescriptor parent, Class<?> testClass, Runner runner) {
 		super(parent, ':', testClass.getName(), runner.getDescription());
+		this.runner = runner;
+	}
+
+	public Runner getRunner() {
+		return runner;
 	}
 
 }

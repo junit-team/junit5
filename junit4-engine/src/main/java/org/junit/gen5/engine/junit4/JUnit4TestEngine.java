@@ -12,10 +12,15 @@ package org.junit.gen5.engine.junit4;
 
 import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.EngineDescriptor;
+import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.gen5.engine.junit4.discovery.JUnit4TestPlanSpecificationResolver;
+import org.junit.gen5.engine.junit4.execution.RunListenerAdapter;
+import org.junit.runner.Runner;
+import org.junit.runner.notification.RunNotifier;
 
 public class JUnit4TestEngine implements TestEngine {
 
@@ -33,5 +38,22 @@ public class JUnit4TestEngine implements TestEngine {
 
 	@Override
 	public void execute(ExecutionRequest request) {
+		EngineExecutionListener engineExecutionListener = request.getEngineExecutionListener();
+		// @formatter:off
+		request.getRootTestDescriptor()
+			.getChildren()
+			.stream()
+			.map(RunnerTestDescriptor.class::cast)
+			.forEach(runnerTestDescriptor -> executeSingleRunner(runnerTestDescriptor, engineExecutionListener));
+		// @formatter:on
+	}
+
+	private void executeSingleRunner(RunnerTestDescriptor runnerTestDescriptor,
+			EngineExecutionListener engineExecutionListener) {
+		RunNotifier notifier = new RunNotifier();
+		notifier.addListener(new RunListenerAdapter(runnerTestDescriptor, engineExecutionListener));
+
+		Runner runner = runnerTestDescriptor.getRunner();
+		runner.run(notifier);
 	}
 }
