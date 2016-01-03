@@ -10,6 +10,9 @@
 
 package org.junit.gen5.launcher;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
+
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
@@ -32,9 +35,8 @@ class ServiceLoaderTestEngineRegistry implements TestEngineRegistry {
 		synchronized (monitor) {
 			if (testEngines == null) {
 				testEngines = ServiceLoader.load(TestEngine.class, ReflectionUtils.getDefaultClassLoader());
-				for (TestEngine testEngine : testEngines) {
-					LOG.info(() -> String.format("Discovered TestEngine with ID '%s'.", testEngine.getId()));
-				}
+				LOG.info(() -> "Discovered TestEngines with IDs "
+						+ stream(testEngines.spliterator(), false).map(TestEngine::getId).collect(toList()));
 			}
 			return testEngines;
 		}
