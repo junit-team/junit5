@@ -31,23 +31,24 @@ public interface MethodParameterResolver extends ExtensionPoint {
 
 	/**
 	 * Determine if this resolver supports resolution of the given {@link Parameter}
-	 * for the supplied {@link TestExtensionContext}.
+	 * for the supplied {@link MethodContext} and {@link ExtensionContext}.
 	 *
 	 * @param parameter parameter to be resolved
 	 * @param methodContext method context the parameter belongs to
-	 * @param extensionContext context of the test method about to be executed
+	 * @param extensionContext extension context of the method about to be executed
 	 */
 	boolean supports(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext);
 
 	/**
-	 * Resolve the given {@link Parameter} for the supplied {@link TestExtensionContext}.
+	 * Resolve the given {@link Parameter} for the supplied {@link MethodContext}
+	 * and {@link ExtensionContext}.
 	 *
 	 * <p>The default implementation uses reflection to instantiate the
 	 * required {@link Parameter#getType type} via its default constructor.
 	 *
 	 * @param parameter parameter to be resolved
 	 * @param methodContext method context the parameter belongs to
-	 * @param extensionContext context of the test method about to be executed
+	 * @param extensionContext extension context of the method about to be executed
 	 *
 	 * @see ReflectionUtils#newInstance(Class, Object...)
 	 */
