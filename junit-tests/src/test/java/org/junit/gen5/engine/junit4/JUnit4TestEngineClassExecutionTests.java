@@ -21,6 +21,7 @@ import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithSingleTestWhichFails;
+import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithTwoTests;
 
 class JUnit4TestEngineClassExecutionTests {
 
@@ -39,6 +40,24 @@ class JUnit4TestEngineClassExecutionTests {
 			.has(allOf(test("failingTest"), started()), atIndex(1))
 			.has(allOf(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), atIndex(2))
 			.has(allOf(container(testClass.getName()), finishedSuccessfully()), atIndex(3));
+		// @formatter:on
+	}
+
+	@Test
+	void executesPlainJUnit4TestCaseWithTwoTests() {
+		Class<?> testClass = PlainJUnit4TestCaseWithTwoTests.class;
+
+		execute(testClass);
+
+		// @formatter:off
+		assertThat(listener.getExecutionEvents())
+			.hasSize(6)
+			.has(allOf(container(testClass.getName()), started()), atIndex(0))
+			.has(allOf(test("failingTest"), started()), atIndex(1))
+			.has(allOf(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), atIndex(2))
+			.has(allOf(test("successfulTest"), started()), atIndex(3))
+			.has(allOf(test("successfulTest"), finishedSuccessfully()), atIndex(4))
+			.has(allOf(container(testClass.getName()), finishedSuccessfully()), atIndex(5));
 		// @formatter:on
 	}
 

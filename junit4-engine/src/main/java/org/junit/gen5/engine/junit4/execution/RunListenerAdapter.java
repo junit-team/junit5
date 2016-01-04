@@ -14,6 +14,7 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.junit.gen5.engine.TestExecutionResult.*;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.junit.gen5.engine.EngineExecutionListener;
@@ -22,15 +23,20 @@ import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.runner.Description;
+import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
 public class RunListenerAdapter extends RunListener {
 
+	private final RunnerTestDescriptor runnerTestDescriptor;
 	private final EngineExecutionListener listener;
+
 	private final Map<Description, JUnit4TestDescriptor> descriptionToDescriptor;
+	private final Map<TestDescriptor, TestExecutionResult> executionResults = new LinkedHashMap<>();
 
 	public RunListenerAdapter(RunnerTestDescriptor runnerTestDescriptor, EngineExecutionListener listener) {
+		this.runnerTestDescriptor = runnerTestDescriptor;
 		this.listener = listener;
 		// @formatter:off
 		descriptionToDescriptor = runnerTestDescriptor.allDescendants().stream()
@@ -41,18 +47,37 @@ public class RunListenerAdapter extends RunListener {
 	}
 
 	@Override
+	public void testRunStarted(Description description) throws Exception {
+		fireExecutionStarted(runnerTestDescriptor);
+	}
+
+	@Override
 	public void testStarted(Description description) throws Exception {
-		TestDescriptor testDescriptor = lookupDescriptor(description);
-		listener.executionStarted(testDescriptor.getParent().get());
-		listener.executionStarted(testDescriptor);
+		fireExecutionStarted(lookupDescriptor(description));
 	}
 
 	@Override
 	public void testFailure(Failure failure) throws Exception {
 		TestDescriptor testDescriptor = lookupDescriptor(failure.getDescription());
-		TestExecutionResult result = failed(failure.getException());
-		listener.executionFinished(testDescriptor, result);
-		listener.executionFinished(testDescriptor.getParent().get(), successful());
+		executionResults.put(testDescriptor, failed(failure.getException()));
+	}
+
+	@Override
+	public void testFinished(Description description) throws Exception {
+		fireExecutionFinished(lookupDescriptor(description));
+	}
+
+	@Override
+	public void testRunFinished(Result result) throws Exception {
+		fireExecutionFinished(runnerTestDescriptor);
+	}
+
+	private void fireExecutionStarted(TestDescriptor testDescriptor) {
+		listener.executionStarted(testDescriptor);
+	}
+
+	private void fireExecutionFinished(TestDescriptor testDescriptor) {
+		listener.executionFinished(testDescriptor, executionResults.getOrDefault(testDescriptor, successful()));
 	}
 
 	private TestDescriptor lookupDescriptor(Description description) {

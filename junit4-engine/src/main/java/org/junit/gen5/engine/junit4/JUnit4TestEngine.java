@@ -19,8 +19,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.gen5.engine.junit4.discovery.JUnit4TestPlanSpecificationResolver;
 import org.junit.gen5.engine.junit4.execution.RunListenerAdapter;
-import org.junit.runner.Runner;
-import org.junit.runner.notification.RunNotifier;
+import org.junit.runner.JUnitCore;
 
 public class JUnit4TestEngine implements TestEngine {
 
@@ -50,10 +49,8 @@ public class JUnit4TestEngine implements TestEngine {
 
 	private void executeSingleRunner(RunnerTestDescriptor runnerTestDescriptor,
 			EngineExecutionListener engineExecutionListener) {
-		RunNotifier notifier = new RunNotifier();
-		notifier.addListener(new RunListenerAdapter(runnerTestDescriptor, engineExecutionListener));
-
-		Runner runner = runnerTestDescriptor.getRunner();
-		runner.run(notifier);
+		JUnitCore core = new JUnitCore();
+		core.addListener(new RunListenerAdapter(runnerTestDescriptor, engineExecutionListener));
+		core.run(runnerTestDescriptor.getRunner());
 	}
 }
