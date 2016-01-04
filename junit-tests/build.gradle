@@ -3,9 +3,6 @@ apply plugin: 'org.junit.gen5.gradle'
 
 uploadArchives.enabled = false
 
-// Tests are solely executed by the junit5Tests task, not the standard test task
-test.enabled = false
-
 junit5 {
 	// version '5.0.0-SNAPSHOT' // not needed since all dependencies are declared explicitly
 	runJunit4 false // Does not work yet in master
@@ -14,10 +11,20 @@ junit5 {
 	// excludeTag 'slow'
 }
 
+test {
+	description = 'Runs JUnit tests.'
+	scanForTestClasses = false
+	// Tests are solely executed by the junit5Test task, not the standard test task.
+	exclude(['**/*.class'])
+}
+
 // The JUnit5Plugin registers the junit5Test task *after* the project has
 // been evaluated. We can therefore only configure the junit5Test task
 // once it actually exists.
 project.afterEvaluate {
+
+	// Ensure that 'gradle test' executes the junit5Test task as well.
+	test.dependsOn(junit5Test)
 
 	// Ensure that log4j2 is properly configured.
 	junit5Test.systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
