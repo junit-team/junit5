@@ -53,12 +53,12 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 	}
 
 	@Override
-	public void registerPublishHandler(PublishHandler handler) {
-		state.publishHandler = handler;
+	public void registerPublishHandler(ReportEntryPublisher handler) {
+		state.reportEntryPublisher = handler;
 	}
 
 	public void publishReportEntry(TestDescriptor descriptor, Map<String, String> entry) {
-		state.publishHandler.publishReportEntry(descriptor, entry);
+		state.reportEntryPublisher.publishReportEntry(descriptor, entry);
 	}
 
 	private static final class State implements Cloneable {
@@ -66,7 +66,7 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 		TestInstanceProvider testInstanceProvider;
 		TestExtensionRegistry testExtensionRegistry;
 		ExtensionContext extensionContext;
-		PublishHandler publishHandler = (testDescriptor, entry) -> {
+		ReportEntryPublisher reportEntryPublisher = (testDescriptor, entry) -> {
 		};
 
 		@Override

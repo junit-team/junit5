@@ -12,7 +12,11 @@ package org.junit.gen5.engine;
 
 import java.util.*;
 
-public interface PublishHandler {
+@FunctionalInterface
+/**
+ *
+ */
+public interface ReportEntryPublisher {
 
 	void publishReportEntry(TestDescriptor testDescriptor, Map<String, String> entry);
 
