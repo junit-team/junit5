@@ -46,10 +46,10 @@ public interface TestExecutionListener {
 
 	/**
 	 * Called when a {@link TestIdentifier} is publishing addition test
-	 * reporting data
-	 * <em>before</em> any test has been executed.
+	 * reporting data. Can be called at all times.
 	 *
-	 * @param testIdentifier describes the tree of tests about to be executed
+	 * @param testIdentifier describes the test or container to which the entry belongs
+	 * @param entry a collection of key value pairs to be reported
 	 */
 	default void reportingEntryPublished(TestIdentifier testIdentifier, Map<String, String> entry) {
 

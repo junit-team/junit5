@@ -12,7 +12,7 @@ package org.junit.gen5.engine;
 
 public interface EngineExecutionContext {
 
-	default void registerPublishHandler(ReportEntryPublisher handler) {
+	default void registerPublisher(ReportEntryPublisher publisher) {
 
 	}
 

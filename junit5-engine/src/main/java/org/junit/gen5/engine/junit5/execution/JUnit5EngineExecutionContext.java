@@ -53,7 +53,7 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 	}
 
 	@Override
-	public void registerPublishHandler(ReportEntryPublisher handler) {
+	public void registerPublisher(ReportEntryPublisher handler) {
 		state.reportEntryPublisher = handler;
 	}
 

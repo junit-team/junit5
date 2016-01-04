@@ -60,7 +60,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
 		listener.executionStarted(testDescriptor);
 
-		parentContext.registerPublishHandler(listener::reportingEntryPublished);
+		parentContext.registerPublisher(listener::reportingEntryPublished);
 
 		TestExecutionResult result = singleTestExecutor.executeSafely(() -> {
 			C context = adapter.asContainer(testDescriptor).beforeAll(preparedContext);
