@@ -18,6 +18,19 @@ import org.junit.gen5.junit4runner.JUnit5.OnlyEngine;
 import org.junit.gen5.junit4runner.JUnit5.Packages;
 import org.junit.runner.RunWith;
 
+/**
+ * <h3>Logging Configuration</h3>
+ *
+ * <p>In order for our log4j2 configuration to be used in an IDE, you must
+ * set the following system property before running any tests &mdash; for
+ * example, in <em>Run Configurations</em> in Eclipse.
+ *
+ * <pre style="code">
+ * -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
+ * </pre>
+ *
+ * @since 5.0
+ */
 @RunWith(JUnit5.class)
 @Packages("org.junit.gen5")
 @ClassNameMatches(".*Test[s]")
