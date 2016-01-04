@@ -10,10 +10,13 @@
 
 package org.junit.gen5.engine.junit4;
 
+import static org.junit.gen5.engine.TestExecutionResult.successful;
+
 import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
@@ -38,12 +41,19 @@ public class JUnit4TestEngine implements TestEngine {
 	@Override
 	public void execute(ExecutionRequest request) {
 		EngineExecutionListener engineExecutionListener = request.getEngineExecutionListener();
+		TestDescriptor engineTestDescriptor = request.getRootTestDescriptor();
+		engineExecutionListener.executionStarted(engineTestDescriptor);
+		executeAllChildren(request);
+		engineExecutionListener.executionFinished(engineTestDescriptor, successful());
+	}
+
+	private void executeAllChildren(ExecutionRequest request) {
 		// @formatter:off
 		request.getRootTestDescriptor()
 			.getChildren()
 			.stream()
 			.map(RunnerTestDescriptor.class::cast)
-			.forEach(runnerTestDescriptor -> executeSingleRunner(runnerTestDescriptor, engineExecutionListener));
+			.forEach(runnerTestDescriptor -> executeSingleRunner(runnerTestDescriptor, request.getEngineExecutionListener()));
 		// @formatter:on
 	}
 

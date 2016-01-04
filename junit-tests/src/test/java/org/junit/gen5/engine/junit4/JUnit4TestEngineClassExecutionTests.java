@@ -36,11 +36,13 @@ class JUnit4TestEngineClassExecutionTests {
 
 		// @formatter:off
 		assertThat(listener.getExecutionEvents())
-			.hasSize(4)
-			.has(allOf(container(testClass.getName()), started()), atIndex(0))
-			.has(allOf(test("failingTest"), started()), atIndex(1))
-			.has(allOf(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), atIndex(2))
-			.has(allOf(container(testClass.getName()), finishedSuccessfully()), atIndex(3));
+			.hasSize(6)
+			.has(allOf(engine(), started()), atIndex(0))
+			.has(allOf(container(testClass.getName()), started()), atIndex(1))
+			.has(allOf(test("failingTest"), started()), atIndex(2))
+			.has(allOf(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), atIndex(3))
+			.has(allOf(container(testClass.getName()), finishedSuccessfully()), atIndex(4))
+			.has(allOf(engine(), finishedSuccessfully()), atIndex(5));
 		// @formatter:on
 	}
 
@@ -52,13 +54,15 @@ class JUnit4TestEngineClassExecutionTests {
 
 		// @formatter:off
 		assertThat(listener.getExecutionEvents())
-			.hasSize(6)
-			.has(allOf(container(testClass.getName()), started()), atIndex(0))
-			.has(allOf(test("failingTest"), started()), atIndex(1))
-			.has(allOf(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), atIndex(2))
-			.has(allOf(test("successfulTest"), started()), atIndex(3))
-			.has(allOf(test("successfulTest"), finishedSuccessfully()), atIndex(4))
-			.has(allOf(container(testClass.getName()), finishedSuccessfully()), atIndex(5));
+			.hasSize(8)
+			.has(allOf(engine(), started()), atIndex(0))
+			.has(allOf(container(testClass.getName()), started()), atIndex(1))
+			.has(allOf(test("failingTest"), started()), atIndex(2))
+			.has(allOf(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), atIndex(3))
+			.has(allOf(test("successfulTest"), started()), atIndex(4))
+			.has(allOf(test("successfulTest"), finishedSuccessfully()), atIndex(5))
+			.has(allOf(container(testClass.getName()), finishedSuccessfully()), atIndex(6))
+			.has(allOf(engine(), finishedSuccessfully()), atIndex(7));
 		// @formatter:on
 	}
 
@@ -70,16 +74,18 @@ class JUnit4TestEngineClassExecutionTests {
 
 		// @formatter:off
 		assertThat(listener.getExecutionEvents())
-			.hasSize(9)
-			.has(allOf(container(testClass.getName()), started()), atIndex(0))
-			.has(allOf(test("abortedTest"), started()), atIndex(1))
-			.has(allOf(test("abortedTest"), abortedWithReason(causeMessage("this test should be aborted"))), atIndex(2))
-			.has(allOf(test("failingTest"), started()), atIndex(3))
-			.has(allOf(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), atIndex(4))
-			.has(allOf(test("ignoredTest"), skippedWithReason("<unknown>")), atIndex(5))
-			.has(allOf(test("successfulTest"), started()), atIndex(6))
-			.has(allOf(test("successfulTest"), finishedSuccessfully()), atIndex(7))
-			.has(allOf(container(testClass.getName()), finishedSuccessfully()), atIndex(8));
+			.hasSize(11)
+			.has(allOf(engine(), started()), atIndex(0))
+			.has(allOf(container(testClass.getName()), started()), atIndex(1))
+			.has(allOf(test("abortedTest"), started()), atIndex(2))
+			.has(allOf(test("abortedTest"), abortedWithReason(causeMessage("this test should be aborted"))), atIndex(3))
+			.has(allOf(test("failingTest"), started()), atIndex(4))
+			.has(allOf(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), atIndex(5))
+			.has(allOf(test("ignoredTest"), skippedWithReason("<unknown>")), atIndex(6))
+			.has(allOf(test("successfulTest"), started()), atIndex(7))
+			.has(allOf(test("successfulTest"), finishedSuccessfully()), atIndex(8))
+			.has(allOf(container(testClass.getName()), finishedSuccessfully()), atIndex(9))
+			.has(allOf(engine(), finishedSuccessfully()), atIndex(10));
 		// @formatter:on
 	}
 

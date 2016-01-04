@@ -26,6 +26,10 @@ import org.junit.gen5.engine.ExecutionEvent.Type;
  */
 public class ExecutionEventConditions {
 
+	public static Condition<ExecutionEvent> engine() {
+		return new Condition<>(byTestDescriptor(EngineAwareTestDescriptor.class::isInstance), "is an engine");
+	}
+
 	public static Condition<ExecutionEvent> test(String uniqueIdSubstring) {
 		return allOf(test(), uniqueIdSubstring(uniqueIdSubstring));
 	}
