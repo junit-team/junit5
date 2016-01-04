@@ -17,6 +17,7 @@ import static org.junit.gen5.engine.TestExecutionResult.*;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.engine.EngineExecutionListener;
@@ -62,7 +63,9 @@ public class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testStarted(Description description) throws Exception {
-		fireExecutionStartedIncludingUnstartedAncestors(lookupDescriptor(description));
+		TestDescriptor testDescriptor = lookupDescriptor(description);
+		fireExecutionStartedIncludingUnstartedAncestors(testDescriptor.getParent());
+		fireExecutionStarted(testDescriptor);
 	}
 
 	@Override
@@ -80,7 +83,8 @@ public class RunListenerAdapter extends RunListener {
 	@Override
 	public void testFinished(Description description) throws Exception {
 		TestDescriptor descriptor = lookupDescriptor(description);
-		fireExecutionFinishedIncludingAncestorsWithoutUnfinishedDescendants(descriptor);
+		fireExecutionFinished(descriptor);
+		fireExecutionFinishedIncludingAncestorsWithoutUnfinishedChildren(descriptor.getParent());
 	}
 
 	@Override
@@ -88,12 +92,10 @@ public class RunListenerAdapter extends RunListener {
 		fireExecutionFinished(runnerTestDescriptor);
 	}
 
-	private void fireExecutionStartedIncludingUnstartedAncestors(TestDescriptor testDescriptor) {
-		if (!startedDescriptors.contains(testDescriptor)) {
-			testDescriptor.getParent().ifPresent(parent -> {
-				fireExecutionStartedIncludingUnstartedAncestors(parent);
-			});
-			fireExecutionStarted(testDescriptor);
+	private void fireExecutionStartedIncludingUnstartedAncestors(Optional<TestDescriptor> parent) {
+		if (parent.isPresent() && !startedDescriptors.contains(parent.get())) {
+			fireExecutionStartedIncludingUnstartedAncestors(parent.get().getParent());
+			fireExecutionStarted(parent.get());
 		}
 	}
 
@@ -102,18 +104,17 @@ public class RunListenerAdapter extends RunListener {
 		listener.executionStarted(testDescriptor);
 	}
 
-	private void fireExecutionFinishedIncludingAncestorsWithoutUnfinishedDescendants(TestDescriptor testDescriptor) {
-		if (!finishedDescriptors.contains(testDescriptor) && canFinish(testDescriptor)) {
-			fireExecutionFinished(testDescriptor);
-			testDescriptor.getParent().ifPresent(parent -> {
-				fireExecutionFinishedIncludingAncestorsWithoutUnfinishedDescendants(parent);
-			});
+	private void fireExecutionFinishedIncludingAncestorsWithoutUnfinishedChildren(Optional<TestDescriptor> parent) {
+		if (parent.isPresent() && canFinish(parent.get())) {
+			fireExecutionFinished(parent.get());
+			fireExecutionFinishedIncludingAncestorsWithoutUnfinishedChildren(parent.get().getParent());
 		}
 	}
 
 	private boolean canFinish(TestDescriptor testDescriptor) {
-		return !testDescriptor.equals(runnerTestDescriptor)
-				&& finishedDescriptors.containsAll(testDescriptor.allDescendants());
+		return !finishedDescriptors.contains(testDescriptor) //
+				&& !runnerTestDescriptor.equals(testDescriptor)
+				&& finishedDescriptors.containsAll(testDescriptor.getChildren());
 	}
 
 	private void fireExecutionFinished(TestDescriptor testDescriptor) {
