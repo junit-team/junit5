@@ -35,7 +35,6 @@ dependencies {
 	}
 
 	testCompile("org.assertj:assertj-core:${assertJVersion}")
-	testCompile("junit:junit:${junit4Version}")
 	testCompile("org.mockito:mockito-core:${mockitoVersion}")
 	testCompile("de.schauderhaft.degraph:degraph-check:${degraphVersion}")
 
