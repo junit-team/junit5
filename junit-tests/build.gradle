@@ -24,6 +24,7 @@ test {
 project.afterEvaluate {
 
 	// Ensure that 'gradle test' executes the junit5Test task as well.
+	// Please remove the next line if 'junit5.runJunit4' is set to 'true'
 	test.dependsOn(junit5Test)
 
 	// Ensure that log4j2 is properly configured.
