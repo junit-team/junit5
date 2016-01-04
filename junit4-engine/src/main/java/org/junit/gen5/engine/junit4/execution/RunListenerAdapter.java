@@ -53,19 +53,19 @@ public class RunListenerAdapter extends RunListener {
 	}
 
 	@Override
-	public void testRunStarted(Description description) throws Exception {
+	public void testRunStarted(Description description) {
 		fireExecutionStarted(runnerTestDescriptor);
 	}
 
 	@Override
-	public void testIgnored(Description description) throws Exception {
+	public void testIgnored(Description description) {
 		Ignore ignoreAnnotation = description.getAnnotation(Ignore.class);
 		String reason = Optional.ofNullable(ignoreAnnotation).map(Ignore::value).orElse("<unknown>");
 		listener.executionSkipped(lookupDescriptor(description), reason);
 	}
 
 	@Override
-	public void testStarted(Description description) throws Exception {
+	public void testStarted(Description description) {
 		TestDescriptor testDescriptor = lookupDescriptor(description);
 		fireExecutionStartedIncludingUnstartedAncestors(testDescriptor.getParent());
 		fireExecutionStarted(testDescriptor);
@@ -78,20 +78,20 @@ public class RunListenerAdapter extends RunListener {
 	}
 
 	@Override
-	public void testFailure(Failure failure) throws Exception {
+	public void testFailure(Failure failure) {
 		TestDescriptor testDescriptor = lookupDescriptor(failure.getDescription());
 		executionResults.put(testDescriptor, failed(failure.getException()));
 	}
 
 	@Override
-	public void testFinished(Description description) throws Exception {
+	public void testFinished(Description description) {
 		TestDescriptor descriptor = lookupDescriptor(description);
 		fireExecutionFinished(descriptor);
 		fireExecutionFinishedIncludingAncestorsWithoutUnfinishedChildren(descriptor.getParent());
 	}
 
 	@Override
-	public void testRunFinished(Result result) throws Exception {
+	public void testRunFinished(Result result) {
 		fireExecutionFinished(runnerTestDescriptor);
 	}
 
