@@ -19,7 +19,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 @FixMethodOrder(NAME_ASCENDING)
-public class PlainJUnit4TestCaseWithFourTests {
+public class PlainJUnit4TestCaseWithFiveTests {
 
 	@Test
 	public void abortedTest() {
@@ -33,7 +33,13 @@ public class PlainJUnit4TestCaseWithFourTests {
 
 	@Test
 	@Ignore
-	public void ignoredTest() {
+	public void ignoredTest1_withoutReason() {
+		fail("this should never be called");
+	}
+
+	@Test
+	@Ignore("a custom reason")
+	public void ignoredTest2_withReason() {
 		fail("this should never be called");
 	}
 

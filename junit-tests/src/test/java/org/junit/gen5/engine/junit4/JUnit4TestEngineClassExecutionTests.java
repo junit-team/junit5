@@ -24,7 +24,7 @@ import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit4.samples.EnclosedJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit3TestCaseWithSingleTestWhichFails;
-import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithFourTests;
+import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithFiveTests;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithTwoTests;
 
@@ -63,8 +63,8 @@ class JUnit4TestEngineClassExecutionTests {
 	}
 
 	@Test
-	void executesPlainJUnit4TestCaseWithFourTests() {
-		Class<?> testClass = PlainJUnit4TestCaseWithFourTests.class;
+	void executesPlainJUnit4TestCaseWithFiveTests() {
+		Class<?> testClass = PlainJUnit4TestCaseWithFiveTests.class;
 
 		List<ExecutionEvent> executionEvents = execute(testClass);
 
@@ -75,7 +75,8 @@ class JUnit4TestEngineClassExecutionTests {
 			event(test("abortedTest"), abortedWithReason(causeMessage("this test should be aborted"))), //
 			event(test("failingTest"), started()), //
 			event(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), //
-			event(test("ignoredTest"), skippedWithReason("<unknown>")), //
+			event(test("ignoredTest1_withoutReason"), skippedWithReason("")), //
+			event(test("ignoredTest2_withReason"), skippedWithReason("a custom reason")), //
 			event(test("successfulTest"), started()), //
 			event(test("successfulTest"), finishedSuccessfully()), //
 			event(container(testClass.getName()), finishedSuccessfully()), //
