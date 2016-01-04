@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit4.execution;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
-import static org.junit.gen5.engine.TestExecutionResult.failed;
+import static org.junit.gen5.engine.TestExecutionResult.*;
 
 import java.util.Map;
 
@@ -42,7 +42,9 @@ public class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testStarted(Description description) throws Exception {
-		listener.executionStarted(lookupDescriptor(description));
+		TestDescriptor testDescriptor = lookupDescriptor(description);
+		listener.executionStarted(testDescriptor.getParent().get());
+		listener.executionStarted(testDescriptor);
 	}
 
 	@Override
@@ -50,6 +52,7 @@ public class RunListenerAdapter extends RunListener {
 		TestDescriptor testDescriptor = lookupDescriptor(failure.getDescription());
 		TestExecutionResult result = failed(failure.getException());
 		listener.executionFinished(testDescriptor, result);
+		listener.executionFinished(testDescriptor.getParent().get(), successful());
 	}
 
 	private TestDescriptor lookupDescriptor(Description description) {

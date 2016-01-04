@@ -10,25 +10,34 @@
 
 package org.junit.gen5.engine.junit4;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.data.Index.atIndex;
+import static org.junit.gen5.engine.ExecutionEventConditions.*;
+import static org.junit.gen5.engine.TestExecutionResultConditions.causeMessage;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineAwareTestDescriptor;
+import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
-import org.junit.gen5.engine.TrackingEngineExecutionListener;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithSingleTestWhichFails;
 
 class JUnit4TestEngineClassExecutionTests {
 
-	TrackingEngineExecutionListener listener = new TrackingEngineExecutionListener();
+	ExecutionEventRecordingEngineExecutionListener listener = new ExecutionEventRecordingEngineExecutionListener();
 
 	@Test
 	void executesPlainJUnit4TestCaseWithSingleTestWhichFails() {
 		execute(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
 
-		assertEquals(1, listener.testStartedCount.get());
-		assertEquals(1, listener.testFailedCount.get());
+		// @formatter:off
+		assertThat(listener.getExecutionEvents())
+			.hasSize(4)
+			.has(allOf(container(), started()), atIndex(0))
+			.has(allOf(test(), started()), atIndex(1))
+			.has(allOf(test(), finishedWithFailure(causeMessage("this test should fail"))), atIndex(2))
+			.has(allOf(container(), finishedSuccessfully()), atIndex(3));
+		// @formatter:on
 	}
 
 	private void execute(Class<?> testClass) {
