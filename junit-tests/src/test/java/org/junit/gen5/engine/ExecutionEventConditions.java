@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine;
 
+import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.engine.ExecutionEvent.*;
@@ -47,12 +48,20 @@ public class ExecutionEventConditions {
 			"has descriptor with uniqueId substring '%s'", uniqueIdSubstring);
 	}
 
+	public static Condition<ExecutionEvent> skippedWithReason(String expectedReason) {
+		return allOf(type(SKIPPED), reason(expectedReason));
+	}
+
 	public static Condition<ExecutionEvent> started() {
 		return type(STARTED);
 	}
 
-	public static Condition<ExecutionEvent> finishedWithFailure(Condition<TestExecutionResult> causeMessage) {
-		return finished(allOf(status(FAILED), causeMessage));
+	public static Condition<ExecutionEvent> abortedWithReason(Condition<TestExecutionResult> resultCondition) {
+		return finished(allOf(status(ABORTED), resultCondition));
+	}
+
+	public static Condition<ExecutionEvent> finishedWithFailure(Condition<TestExecutionResult> resultCondition) {
+		return finished(allOf(status(FAILED), resultCondition));
 	}
 
 	public static Condition<ExecutionEvent> finishedSuccessfully() {
@@ -70,6 +79,11 @@ public class ExecutionEventConditions {
 	public static Condition<ExecutionEvent> result(Condition<TestExecutionResult> condition) {
 		return new Condition<>(byPayload(TestExecutionResult.class, condition::matches), "event with result where %s",
 			condition);
+	}
+
+	public static Condition<ExecutionEvent> reason(String expectedReason) {
+		return new Condition<>(byPayload(String.class, isEqual(expectedReason)), "event with reason '%s'",
+			expectedReason);
 	}
 
 }

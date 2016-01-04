@@ -52,8 +52,19 @@ public class RunListenerAdapter extends RunListener {
 	}
 
 	@Override
+	public void testIgnored(Description description) throws Exception {
+		listener.executionSkipped(lookupDescriptor(description), "<unknown>");
+	}
+
+	@Override
 	public void testStarted(Description description) throws Exception {
 		fireExecutionStarted(lookupDescriptor(description));
+	}
+
+	@Override
+	public void testAssumptionFailure(Failure failure) {
+		TestDescriptor testDescriptor = lookupDescriptor(failure.getDescription());
+		executionResults.put(testDescriptor, aborted(failure.getException()));
 	}
 
 	@Override

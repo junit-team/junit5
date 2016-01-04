@@ -20,6 +20,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
+import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithFourTests;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithTwoTests;
 
@@ -58,6 +59,27 @@ class JUnit4TestEngineClassExecutionTests {
 			.has(allOf(test("successfulTest"), started()), atIndex(3))
 			.has(allOf(test("successfulTest"), finishedSuccessfully()), atIndex(4))
 			.has(allOf(container(testClass.getName()), finishedSuccessfully()), atIndex(5));
+		// @formatter:on
+	}
+
+	@Test
+	void executesPlainJUnit4TestCaseWithFourTests() {
+		Class<?> testClass = PlainJUnit4TestCaseWithFourTests.class;
+
+		execute(testClass);
+
+		// @formatter:off
+		assertThat(listener.getExecutionEvents())
+			.hasSize(9)
+			.has(allOf(container(testClass.getName()), started()), atIndex(0))
+			.has(allOf(test("abortedTest"), started()), atIndex(1))
+			.has(allOf(test("abortedTest"), abortedWithReason(causeMessage("this test should be aborted"))), atIndex(2))
+			.has(allOf(test("failingTest"), started()), atIndex(3))
+			.has(allOf(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), atIndex(4))
+			.has(allOf(test("ignoredTest"), skippedWithReason("<unknown>")), atIndex(5))
+			.has(allOf(test("successfulTest"), started()), atIndex(6))
+			.has(allOf(test("successfulTest"), finishedSuccessfully()), atIndex(7))
+			.has(allOf(container(testClass.getName()), finishedSuccessfully()), atIndex(8));
 		// @formatter:on
 	}
 
