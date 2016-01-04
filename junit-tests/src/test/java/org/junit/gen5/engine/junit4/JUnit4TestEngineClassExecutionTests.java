@@ -20,6 +20,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
+import org.junit.gen5.engine.junit4.samples.EnclosedJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithFourTests;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithTwoTests;
@@ -86,6 +87,27 @@ class JUnit4TestEngineClassExecutionTests {
 			.has(allOf(test("successfulTest"), finishedSuccessfully()), atIndex(8))
 			.has(allOf(container(testClass.getName()), finishedSuccessfully()), atIndex(9))
 			.has(allOf(engine(), finishedSuccessfully()), atIndex(10));
+		// @formatter:on
+	}
+
+	@Test
+	void executesEnclosedJUnit4TestCase() {
+		Class<?> testClass = EnclosedJUnit4TestCase.class;
+		Class<?> nestedClass = EnclosedJUnit4TestCase.NestedClass.class;
+
+		execute(testClass);
+
+		// @formatter:off
+		assertThat(listener.getExecutionEvents())
+			.hasSize(8)
+			.has(allOf(engine(), started()), atIndex(0))
+			.has(allOf(container(testClass.getName()), started()), atIndex(1))
+			.has(allOf(container(nestedClass.getName()), started()), atIndex(2))
+			.has(allOf(test("failingTest"), started()), atIndex(3))
+			.has(allOf(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), atIndex(4))
+			.has(allOf(container(nestedClass.getName()), finishedSuccessfully()), atIndex(5))
+			.has(allOf(container(testClass.getName()), finishedSuccessfully()), atIndex(6))
+			.has(allOf(engine(), finishedSuccessfully()), atIndex(7));
 		// @formatter:on
 	}
 

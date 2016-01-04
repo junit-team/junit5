@@ -15,7 +15,9 @@ import static java.util.stream.Collectors.toMap;
 import static org.junit.gen5.engine.TestExecutionResult.*;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
@@ -34,6 +36,8 @@ public class RunListenerAdapter extends RunListener {
 
 	private final Map<Description, JUnit4TestDescriptor> descriptionToDescriptor;
 	private final Map<TestDescriptor, TestExecutionResult> executionResults = new LinkedHashMap<>();
+	private final Set<TestDescriptor> startedDescriptors = new LinkedHashSet<>();
+	private final Set<TestDescriptor> finishedDescriptors = new LinkedHashSet<>();
 
 	public RunListenerAdapter(RunnerTestDescriptor runnerTestDescriptor, EngineExecutionListener listener) {
 		this.runnerTestDescriptor = runnerTestDescriptor;
@@ -58,7 +62,7 @@ public class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testStarted(Description description) throws Exception {
-		fireExecutionStarted(lookupDescriptor(description));
+		fireExecutionStartedIncludingUnstartedAncestors(lookupDescriptor(description));
 	}
 
 	@Override
@@ -75,7 +79,8 @@ public class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testFinished(Description description) throws Exception {
-		fireExecutionFinished(lookupDescriptor(description));
+		TestDescriptor descriptor = lookupDescriptor(description);
+		fireExecutionFinishedIncludingAncestorsWithoutUnfinishedDescendants(descriptor);
 	}
 
 	@Override
@@ -83,11 +88,36 @@ public class RunListenerAdapter extends RunListener {
 		fireExecutionFinished(runnerTestDescriptor);
 	}
 
+	private void fireExecutionStartedIncludingUnstartedAncestors(TestDescriptor testDescriptor) {
+		if (!startedDescriptors.contains(testDescriptor)) {
+			testDescriptor.getParent().ifPresent(parent -> {
+				fireExecutionStartedIncludingUnstartedAncestors(parent);
+			});
+			fireExecutionStarted(testDescriptor);
+		}
+	}
+
 	private void fireExecutionStarted(TestDescriptor testDescriptor) {
+		startedDescriptors.add(testDescriptor);
 		listener.executionStarted(testDescriptor);
 	}
 
+	private void fireExecutionFinishedIncludingAncestorsWithoutUnfinishedDescendants(TestDescriptor testDescriptor) {
+		if (!finishedDescriptors.contains(testDescriptor) && canFinish(testDescriptor)) {
+			fireExecutionFinished(testDescriptor);
+			testDescriptor.getParent().ifPresent(parent -> {
+				fireExecutionFinishedIncludingAncestorsWithoutUnfinishedDescendants(parent);
+			});
+		}
+	}
+
+	private boolean canFinish(TestDescriptor testDescriptor) {
+		return !testDescriptor.equals(runnerTestDescriptor)
+				&& finishedDescriptors.containsAll(testDescriptor.allDescendants());
+	}
+
 	private void fireExecutionFinished(TestDescriptor testDescriptor) {
+		finishedDescriptors.add(testDescriptor);
 		listener.executionFinished(testDescriptor, executionResults.getOrDefault(testDescriptor, successful()));
 	}
 
