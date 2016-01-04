@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -20,19 +20,17 @@ import org.junit.gen5.engine.junit5.execution.*;
 
 final class MethodBasedTestExtensionContext extends AbstractExtensionContext implements TestExtensionContext {
 
-	private final MethodTestDescriptor testDescriptor;
 	private final Object testInstance;
 
 	public MethodBasedTestExtensionContext(ExtensionContext parent, JUnit5EngineExecutionContext context,
 			MethodTestDescriptor testDescriptor, Object testInstance) {
-		super(parent, context);
-		this.testDescriptor = testDescriptor;
+		super(parent, context, testDescriptor);
 		this.testInstance = testInstance;
 	}
 
 	@Override
 	public Method getTestMethod() {
-		return testDescriptor.getTestMethod();
+		return ((MethodTestDescriptor) getTestDescriptor()).getTestMethod();
 	}
 
 	@Override
@@ -42,17 +40,12 @@ final class MethodBasedTestExtensionContext extends AbstractExtensionContext imp
 
 	@Override
 	public Class<?> getTestClass() {
-		return testDescriptor.getTestClass();
-	}
-
-	@Override
-	protected TestDescriptor getTestDescriptor() {
-		return this.testDescriptor;
+		return ((MethodTestDescriptor) getTestDescriptor()).getTestClass();
 	}
 
 	@Override
 	public String getDisplayName() {
-		return testDescriptor.getDisplayName();
+		return getTestDescriptor().getDisplayName();
 	}
 
 	@Override

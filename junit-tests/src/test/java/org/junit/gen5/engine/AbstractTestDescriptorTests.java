@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,19 +10,20 @@
 
 package org.junit.gen5.engine;
 
+import static org.junit.gen5.api.Assertions.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Test;
 
-public class AbstractTestDescriptorTest {
+public class AbstractTestDescriptorTests {
 
 	EngineDescriptor engineDescriptor;
 
-	@Before
+	@BeforeEach
 	public void initTree() {
 		engineDescriptor = new EngineDescriptor(new TestEngine() {
 
@@ -60,7 +61,7 @@ public class AbstractTestDescriptorTest {
 		List<TestDescriptor> visited = new ArrayList<>();
 		engineDescriptor.accept((descriptor, delete) -> visited.add(descriptor));
 
-		Assert.assertEquals(8, visited.size());
+		assertEquals(8, visited.size());
 	}
 
 	@Test
@@ -74,9 +75,9 @@ public class AbstractTestDescriptorTest {
 		List<String> visited = new ArrayList<>();
 		engineDescriptor.accept((descriptor, delete) -> visited.add(descriptor.getUniqueId()));
 
-		Assert.assertEquals(7, visited.size());
-		Assert.assertTrue(visited.contains("group1"));
-		Assert.assertFalse(visited.contains("leaf1-1"));
+		assertEquals(7, visited.size());
+		assertTrue(visited.contains("group1"));
+		assertFalse(visited.contains("leaf1-1"));
 	}
 
 	@Test
@@ -89,13 +90,13 @@ public class AbstractTestDescriptorTest {
 		};
 		engineDescriptor.accept(visitor);
 
-		Assert.assertEquals("Children of pruned element are not visited", 4, countVisited.get());
+		assertEquals(4, countVisited.get(), "Children of pruned element are not visited");
 
 		List<String> visited = new ArrayList<>();
 		engineDescriptor.accept((descriptor, delete) -> visited.add(descriptor.getUniqueId()));
 
-		Assert.assertEquals(3, visited.size());
-		Assert.assertFalse(visited.contains("group1"));
+		assertEquals(3, visited.size());
+		assertFalse(visited.contains("group1"));
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.gen5.commons.util.AnnotationUtils.findRepeatableAnnotations;
 
@@ -19,12 +20,13 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
+import org.junit.gen5.api.Executable;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExtension;
+import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestTag;
@@ -64,16 +66,25 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 		List<Class<? extends TestExtension>> extensionClasses = findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
 				.map(ExtendWith::value)
 				.flatMap(Arrays::stream)
-				.collect(Collectors.toList());
+				.collect(toList());
 		// @formatter:on
 		return TestExtensionRegistry.newRegistryFrom(existingTestExtensionRegistry, extensionClasses);
 	}
 
-	protected void throwIfAnyThrowablePresent(List<Throwable> throwablesCollector) throws Throwable {
-		if (!throwablesCollector.isEmpty()) {
-			Throwable t = throwablesCollector.get(0);
-			throwablesCollector.stream().skip(1).forEach(t::addSuppressed);
-			throw t;
+	/**
+	 * Execute the supplied {@link Executable} and <em>mask</em> any
+	 * exception thrown as a {@link RuntimeException}.
+	 *
+	 * <p>Exceptions will not be wrapped. Rather, they will be thrown as-is
+	 * via a hack that tricks the Java compiler into believing that the
+	 * thrown exception is an unchecked exception.
+	 */
+	protected void executeAndMaskThrowable(Executable executable) {
+		try {
+			executable.execute();
+		}
+		catch (Throwable throwable) {
+			ExceptionUtils.throwAsRuntimeException(throwable);
 		}
 	}
 

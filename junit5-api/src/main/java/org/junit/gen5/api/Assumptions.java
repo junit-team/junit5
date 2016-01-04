@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -13,6 +13,7 @@ package org.junit.gen5.api;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
+import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.StringUtils;
 import org.opentest4j.TestAbortedException;
 
@@ -90,12 +91,8 @@ public final class Assumptions {
 			try {
 				executable.execute();
 			}
-			catch (Error | RuntimeException ex) {
-				// rethrow
-				throw ex;
-			}
-			catch (Throwable ex) {
-				throw new RuntimeException("Wrapped checked exception thrown from Executable", ex);
+			catch (Throwable t) {
+				throw ExceptionUtils.throwAsRuntimeException(t);
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5;
+package org.junit.gen5.engine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +22,7 @@ import org.junit.gen5.engine.TestExecutionResult.Status;
 import org.junit.gen5.launcher.TestExecutionListener;
 
 /**
- * Simple {@link TestExecutionListener} that tracks the number of times
- * that certain callbacks are invoked.
+ * Simple {@link TestExecutionListener} that tracks the number of times that certain callbacks are invoked.
  *
  * @since 5.0
  */
@@ -37,6 +36,7 @@ public class TrackingEngineExecutionListener implements EngineExecutionListener 
 
 	public final AtomicInteger containerStartedCount = new AtomicInteger();
 	public final AtomicInteger containerFinishedCount = new AtomicInteger();
+	public final AtomicInteger containerSkippedCount = new AtomicInteger();
 
 	public final AtomicInteger reportEntriesCount = new AtomicInteger();
 
@@ -66,6 +66,9 @@ public class TrackingEngineExecutionListener implements EngineExecutionListener 
 	public void executionSkipped(TestDescriptor testDescriptor, String reason) {
 		if (testDescriptor.isTest()) {
 			testSkippedCount.incrementAndGet();
+		}
+		else {
+			containerSkippedCount.incrementAndGet();
 		}
 	}
 

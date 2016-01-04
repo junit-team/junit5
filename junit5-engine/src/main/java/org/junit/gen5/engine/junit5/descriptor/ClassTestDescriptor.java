@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -11,13 +11,14 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
-import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodContext;
+import static org.junit.gen5.engine.junit5.descriptor.MethodInvocationContextFactory.methodInvocationContext;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
@@ -27,6 +28,7 @@ import org.junit.gen5.api.extension.AfterAllExtensionPoint;
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeAllExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
@@ -38,12 +40,12 @@ import org.junit.gen5.engine.Container;
 import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
+import org.junit.gen5.engine.junit5.execution.ConditionEvaluator;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.RegisteredExtensionPoint;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
 import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
-import org.junit.gen5.engine.junit5.execution.ThrowingConsumer;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.
@@ -62,7 +64,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	ClassTestDescriptor(String uniqueId, Class<?> testClass) {
 		super(uniqueId);
 
-		Preconditions.notNull(testClass, "testClass must not be null");
+		Preconditions.notNull(testClass, "Class must not be null");
 
 		this.testClass = testClass;
 		this.displayName = determineDisplayName(testClass, testClass.getName());
@@ -90,14 +92,15 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	@Override
-	public boolean isContainer() {
+	public final boolean isContainer() {
 		return true;
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext beforeAll(JUnit5EngineExecutionContext context) throws Throwable {
+	public JUnit5EngineExecutionContext prepare(JUnit5EngineExecutionContext context) {
 		TestExtensionRegistry newExtensionRegistry = populateNewTestExtensionRegistryFromExtendWith(testClass,
 			context.getTestExtensionRegistry());
+
 		registerBeforeAllMethods(newExtensionRegistry);
 		registerAfterAllMethods(newExtensionRegistry);
 		registerBeforeEachMethods(newExtensionRegistry);
@@ -108,8 +111,6 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		ContainerExtensionContext containerExtensionContext = new ClassBasedContainerExtensionContext(
 			context.getExtensionContext(), context, this);
 
-		invokeBeforeAllExtensionPoints(newExtensionRegistry, containerExtensionContext);
-
 		// @formatter:off
 		return context.extend()
 				.withTestInstanceProvider(testInstanceProvider(context))
@@ -119,20 +120,33 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext afterAll(JUnit5EngineExecutionContext context) throws Throwable {
-		List<Throwable> throwablesCollector = new LinkedList<>();
-		try {
-			invokeAfterAllExtensionPoints(context.getTestExtensionRegistry(),
-				(ContainerExtensionContext) context.getExtensionContext(), throwablesCollector);
+	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Exception {
+		ConditionEvaluationResult evaluationResult = new ConditionEvaluator().evaluateForContainer(
+			context.getTestExtensionRegistry(), (ContainerExtensionContext) context.getExtensionContext());
+		if (evaluationResult.isDisabled()) {
+			return SkipResult.skip(evaluationResult.getReason().orElse(""));
 		}
-		catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-			throwablesCollector.add(wrapper.getTargetException());
-		}
-		catch (Throwable throwable) {
-			throwablesCollector.add(throwable);
-		}
+		return SkipResult.dontSkip();
+	}
 
-		throwIfAnyThrowablePresent(throwablesCollector);
+	@Override
+	public JUnit5EngineExecutionContext beforeAll(JUnit5EngineExecutionContext context) throws Exception {
+		TestExtensionRegistry extensionRegistry = context.getTestExtensionRegistry();
+		ContainerExtensionContext containerExtensionContext = (ContainerExtensionContext) context.getExtensionContext();
+
+		invokeBeforeAllExtensionPoints(extensionRegistry, containerExtensionContext);
+
+		return context;
+	}
+
+	@Override
+	public JUnit5EngineExecutionContext afterAll(JUnit5EngineExecutionContext context) throws Exception {
+		ThrowableCollector throwableCollector = new ThrowableCollector();
+
+		throwableCollector.execute(() -> invokeAfterAllExtensionPoints(context.getTestExtensionRegistry(),
+			(ContainerExtensionContext) context.getExtensionContext(), throwableCollector));
+
+		throwableCollector.assertEmpty();
 
 		return context;
 	}
@@ -142,103 +156,111 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	private void invokeBeforeAllExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
-			ContainerExtensionContext containerExtensionContext) throws Throwable {
-		ThrowingConsumer<RegisteredExtensionPoint<BeforeAllExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
-			registeredExtensionPoint.getExtensionPoint().beforeAll(containerExtensionContext);
+			ContainerExtensionContext containerExtensionContext) throws Exception {
+
+		Consumer<RegisteredExtensionPoint<BeforeAllExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
+			executeAndMaskThrowable(
+				() -> registeredExtensionPoint.getExtensionPoint().beforeAll(containerExtensionContext));
 		};
-		newTestExtensionRegistry.applyExtensionPoints(BeforeAllExtensionPoint.class,
-			TestExtensionRegistry.ApplicationOrder.FORWARD, applyBeforeEach);
+
+		newTestExtensionRegistry.stream(BeforeAllExtensionPoint.class,
+			TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(applyBeforeEach);
 	}
 
 	private void invokeAfterAllExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
-			ContainerExtensionContext containerExtensionContext, List<Throwable> throwablesCollector) throws Throwable {
-		ThrowingConsumer<RegisteredExtensionPoint<AfterAllExtensionPoint>> applyAfterAll = registeredExtensionPoint -> {
-			try {
-				registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext);
-			}
-			catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-				throwablesCollector.add(wrapper.getTargetException());
-			}
-			catch (Throwable t) {
-				throwablesCollector.add(t);
-			}
+			ContainerExtensionContext containerExtensionContext, ThrowableCollector throwableCollector)
+					throws Exception {
+
+		Consumer<RegisteredExtensionPoint<AfterAllExtensionPoint>> applyAfterAll = registeredExtensionPoint -> {
+			throwableCollector.execute(
+				() -> registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext));
 		};
-		newTestExtensionRegistry.applyExtensionPoints(AfterAllExtensionPoint.class,
-			TestExtensionRegistry.ApplicationOrder.BACKWARD, applyAfterAll);
+
+		newTestExtensionRegistry.stream(AfterAllExtensionPoint.class,
+			TestExtensionRegistry.ApplicationOrder.BACKWARD).forEach(applyAfterAll);
 	}
 
-	// TODO Remove duplication with registerAfterAllMethods
 	private void registerBeforeAllMethods(TestExtensionRegistry extensionRegistry) {
-		List<Method> beforeAllMethods = findAnnotatedMethods(testClass, BeforeAll.class, MethodSortOrder.HierarchyDown);
-		beforeAllMethods.stream().forEach(method -> {
-			if (!ReflectionUtils.isStatic(method)) {
-				String message = String.format(
-					"Cannot register method '%s' as BeforeAll extension since it is not static.", method.getName());
-				throw new ExtensionConfigurationException(message);
-			}
-			BeforeAllExtensionPoint extensionPoint = containerExtensionContext -> {
-				try {
-					new MethodInvoker(containerExtensionContext, extensionRegistry).invoke(methodContext(null, method));
-				}
-				catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-					throw wrapper.getTargetException();
-				}
-
-			};
-			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
-		});
+		registerAnnotatedMethodsAsExtensions(extensionRegistry, BeforeAll.class, BeforeAllExtensionPoint.class,
+			this::assertStatic, this::synthesizeBeforeAllExtensionPoint);
 	}
 
-	// TODO Remove duplication with registerBeforeAllMethods
 	private void registerAfterAllMethods(TestExtensionRegistry extensionRegistry) {
-		List<Method> beforeAllMethods = findAnnotatedMethods(testClass, AfterAll.class, MethodSortOrder.HierarchyDown);
-		beforeAllMethods.stream().forEach(method -> {
-			if (!ReflectionUtils.isStatic(method)) {
-				String message = String.format(
-					"Cannot register method '%s' as AfterAll extension since it is not static.", method.getName());
-				throw new ExtensionConfigurationException(message);
-			}
-			AfterAllExtensionPoint extensionPoint = containerExtensionContext -> {
-				new MethodInvoker(containerExtensionContext, extensionRegistry).invoke(methodContext(null, method));
-			};
-			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
-		});
+		registerAnnotatedMethodsAsExtensions(extensionRegistry, AfterAll.class, AfterAllExtensionPoint.class,
+			this::assertStatic, this::synthesizeAfterAllExtensionPoint);
 	}
 
-	// TODO Remove duplication with registerAfterEachMethods
 	private void registerBeforeEachMethods(TestExtensionRegistry extensionRegistry) {
-		List<Method> beforeEachMethods = findAnnotatedMethods(testClass, BeforeEach.class,
-			MethodSortOrder.HierarchyDown);
-		beforeEachMethods.stream().forEach(method -> {
-			BeforeEachExtensionPoint extensionPoint = testExtensionContext -> {
-				try {
-					runMethodInTestExtensionContext(method, testExtensionContext, extensionRegistry);
-				}
-				catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-					throw wrapper.getTargetException();
-				}
-			};
-			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
-		});
+		registerAnnotatedMethodsAsExtensions(extensionRegistry, BeforeEach.class, BeforeEachExtensionPoint.class,
+			this::assertNonStatic, this::synthesizeBeforeEachExtensionPoint);
 	}
 
-	// TODO Remove duplication with registerBeforeEachMethods
 	private void registerAfterEachMethods(TestExtensionRegistry extensionRegistry) {
-		List<Method> afterEachMethods = findAnnotatedMethods(testClass, AfterEach.class, MethodSortOrder.HierarchyDown);
-		afterEachMethods.stream().forEach(method -> {
-			AfterEachExtensionPoint extensionPoint = testExtensionContext -> {
-				runMethodInTestExtensionContext(method, testExtensionContext, extensionRegistry);
-			};
-			extensionRegistry.registerExtension(extensionPoint, ExtensionPoint.Position.DEFAULT, method.getName());
-		});
+		registerAnnotatedMethodsAsExtensions(extensionRegistry, AfterEach.class, AfterEachExtensionPoint.class,
+			this::assertNonStatic, this::synthesizeAfterEachExtensionPoint);
 	}
 
-	private void runMethodInTestExtensionContext(Method method, TestExtensionContext testExtensionContext,
-			TestExtensionRegistry extensionRegistry) {
-		Optional<Object> optionalInstance = ReflectionUtils.getOuterInstance(testExtensionContext.getTestInstance(),
-			method.getDeclaringClass());
-		optionalInstance.ifPresent(instance -> new MethodInvoker(testExtensionContext, extensionRegistry).invoke(
-			methodContext(instance, method)));
+	private void registerAnnotatedMethodsAsExtensions(TestExtensionRegistry extensionRegistry,
+			Class<? extends Annotation> annotationType, Class<?> extensionType,
+			BiConsumer<Class<?>, Method> methodValidator,
+			BiFunction<TestExtensionRegistry, Method, ExtensionPoint> extensionPointSynthesizer) {
+
+		// @formatter:off
+		findAnnotatedMethods(testClass, annotationType, MethodSortOrder.HierarchyDown).stream()
+			.peek(method -> methodValidator.accept(extensionType, method))
+			.forEach(method ->
+				extensionRegistry.registerExtension(extensionPointSynthesizer.apply(extensionRegistry, method),
+					ExtensionPoint.Position.DEFAULT, method.getName()));
+		// @formatter:on
+	}
+
+	private BeforeAllExtensionPoint synthesizeBeforeAllExtensionPoint(TestExtensionRegistry registry, Method method) {
+		return (BeforeAllExtensionPoint) extensionContext -> {
+			new MethodInvoker(extensionContext, registry).invoke(methodInvocationContext(null, method));
+		};
+	}
+
+	private AfterAllExtensionPoint synthesizeAfterAllExtensionPoint(TestExtensionRegistry registry, Method method) {
+		return (AfterAllExtensionPoint) extensionContext -> {
+			new MethodInvoker(extensionContext, registry).invoke(methodInvocationContext(null, method));
+		};
+	}
+
+	private BeforeEachExtensionPoint synthesizeBeforeEachExtensionPoint(TestExtensionRegistry registry, Method method) {
+		return (BeforeEachExtensionPoint) extensionContext -> {
+			runMethodInTestExtensionContext(method, extensionContext, registry);
+		};
+	}
+
+	private AfterEachExtensionPoint synthesizeAfterEachExtensionPoint(TestExtensionRegistry registry, Method method) {
+		return (AfterEachExtensionPoint) extensionContext -> {
+			runMethodInTestExtensionContext(method, extensionContext, registry);
+		};
+	}
+
+	private void runMethodInTestExtensionContext(Method method, TestExtensionContext context,
+			TestExtensionRegistry registry) {
+
+		// @formatter:off
+		ReflectionUtils.getOuterInstance(context.getTestInstance(), method.getDeclaringClass())
+			.ifPresent(instance -> new MethodInvoker(context, registry).invoke(methodInvocationContext(instance, method)));
+		// @formatter:on
+	}
+
+	private void assertStatic(Class<?> extensionType, Method method) {
+		if (!ReflectionUtils.isStatic(method)) {
+			String message = String.format("Cannot register method '%s' as a(n) %s since it is not static.",
+				method.getName(), extensionType.getSimpleName());
+			throw new ExtensionConfigurationException(message);
+		}
+	}
+
+	private void assertNonStatic(Class<?> extensionType, Method method) {
+		if (ReflectionUtils.isStatic(method)) {
+			String message = String.format("Cannot register method '%s' as a(n) %s since it is static.",
+				method.getName(), extensionType.getSimpleName());
+			throw new ExtensionConfigurationException(message);
+		}
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,22 +10,22 @@
 
 package org.junit.gen5.commons.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.api.Assertions.*;
+
 import java.io.File;
-import java.util.Arrays;
+import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Test;
 
 public class ClasspathScannerTests {
 
 	private ClasspathScanner classpathScanner;
 
-	@Before
+	@BeforeEach
 	public void init() {
 		classpathScanner = new ClasspathScanner(ReflectionUtils::getDefaultClassLoader, ReflectionUtils::loadClass);
 	}
@@ -33,22 +33,22 @@ public class ClasspathScannerTests {
 	@Test
 	public void findAllClassesInThisPackage() throws Exception {
 		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.gen5.commons", clazz -> true);
-		Assert.assertTrue("Should be at least 20 classes", classes.size() >= 20);
-		Assert.assertTrue(classes.contains(NestedClassToBeFound.class));
-		Assert.assertTrue(classes.contains(MemberClassToBeFound.class));
+		assertThat(classes.size()).isGreaterThanOrEqualTo(20);
+		assertTrue(classes.contains(NestedClassToBeFound.class));
+		assertTrue(classes.contains(MemberClassToBeFound.class));
 	}
 
 	@Test
 	public void findAllClassesInThisPackageWithFilter() throws Exception {
 		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTests.class;
 		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.gen5.commons", thisClassOnly);
-		Assert.assertSame(ClasspathScannerTests.class, classes.get(0));
+		assertSame(ClasspathScannerTests.class, classes.get(0));
 	}
 
 	@Test
 	public void isPackage() throws Exception {
-		Assert.assertTrue(classpathScanner.isPackage("org.junit.gen5.commons"));
-		Assert.assertFalse(classpathScanner.isPackage("org.doesnotexist"));
+		assertTrue(classpathScanner.isPackage("org.junit.gen5.commons"));
+		assertFalse(classpathScanner.isPackage("org.doesnotexist"));
 	}
 
 	@Test
@@ -56,7 +56,7 @@ public class ClasspathScannerTests {
 		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTests.class;
 		File root = getTestClasspathRoot();
 		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(root, thisClassOnly);
-		Assert.assertSame(ClasspathScannerTests.class, classes.get(0));
+		assertSame(ClasspathScannerTests.class, classes.get(0));
 	}
 
 	@Test
@@ -64,18 +64,13 @@ public class ClasspathScannerTests {
 		File root = getTestClasspathRoot();
 		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(root, clazz -> true);
 
-		Assert.assertTrue("Should be at least 20 classes", classes.size() >= 20);
-		Assert.assertTrue(classes.contains(ClasspathScannerTests.class));
+		assertThat(classes.size()).isGreaterThanOrEqualTo(20);
+		assertTrue(classes.contains(ClasspathScannerTests.class));
 	}
 
-	private File getTestClasspathRoot() {
-		String fullClassPath = System.getProperty("java.class.path");
-		Optional<String> testRoot = Arrays.stream(fullClassPath.split(File.pathSeparator)).filter(
-			s -> s.endsWith("/classes/test")).findFirst();
-
-		Assume.assumeTrue("There should be a test root", testRoot.isPresent());
-
-		return new File(testRoot.get());
+	private File getTestClasspathRoot() throws Exception {
+		URL location = getClass().getProtectionDomain().getCodeSource().getLocation();
+		return new File(location.toURI());
 	}
 
 	class MemberClassToBeFound {

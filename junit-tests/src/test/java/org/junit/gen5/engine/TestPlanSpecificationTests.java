@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -11,16 +11,13 @@
 package org.junit.gen5.engine;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.gen5.engine.TestPlanSpecification.build;
-import static org.junit.gen5.engine.TestPlanSpecification.forName;
-import static org.junit.gen5.engine.TestPlanSpecification.forUniqueId;
+import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.gen5.api.Test;
 
 /**
  * Unit tests for {@link TestPlanSpecification}.

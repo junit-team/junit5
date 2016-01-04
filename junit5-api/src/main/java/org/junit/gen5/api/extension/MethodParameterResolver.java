@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -12,11 +12,9 @@ package org.junit.gen5.api.extension;
 
 import java.lang.reflect.Parameter;
 
-import org.junit.gen5.commons.util.ReflectionUtils;
-
 /**
- * {@code MethodParameterResolver} is a {@link TestExtension} strategy for
- * dynamically resolving method parameters at runtime.
+ * {@code MethodParameterResolver} defines the API for {@link TestExtension
+ * TestExtensions} that wish to dynamically resolve method parameters at runtime.
  *
  * <p>If a {@link org.junit.gen5.api.Test @Test},
  * {@link org.junit.gen5.api.BeforeEach @BeforeEach}, or
@@ -31,29 +29,28 @@ public interface MethodParameterResolver extends ExtensionPoint {
 
 	/**
 	 * Determine if this resolver supports resolution of the given {@link Parameter}
-	 * for the supplied {@link TestExtensionContext}.
-	 *  @param parameter parameter to be resolved
-	 * @param methodContext method context the parameter belongs to
-	 * @param extensionContext context of the test method about to be executed
-	 */
-	boolean supports(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext);
-
-	/**
-	 * Resolve the given {@link Parameter} for the supplied {@link TestExtensionContext}.
-	 *
-	 * <p>The default implementation uses reflection to instantiate the
-	 * required {@link Parameter#getType type} via its default constructor.
+	 * for the supplied {@link MethodInvocationContext} and {@link ExtensionContext}.
 	 *
 	 * @param parameter parameter to be resolved
-	 * @param methodContext method context the parameter belongs to
-	 * @param extensionContext context of the test method about to be executed
-	 *
-	 * @see ReflectionUtils#newInstance(Class, Object...)
+	 * @param methodInvocationContext method invocation context for the parameter
+	 * @param extensionContext extension context of the method about to be invoked
+	 * @return {@code true} if this resolver can resolve the parameter
+	 * @see #resolve
 	 */
-	default Object resolve(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext)
-			throws ParameterResolutionException {
+	boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,
+			ExtensionContext extensionContext) throws ParameterResolutionException;
 
-		return ReflectionUtils.newInstance(parameter.getType());
-	}
+	/**
+	 * Resolve the given {@link Parameter} for the supplied {@link MethodInvocationContext}
+	 * and {@link ExtensionContext}.
+	 *
+	 * @param parameter parameter to be resolved
+	 * @param methodInvocationContext method invocation context for the parameter
+	 * @param extensionContext extension context of the method about to be invoked
+	 * @return the resolved parameter object
+	 * @see #supports
+	 */
+	Object resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
+			ExtensionContext extensionContext) throws ParameterResolutionException;
 
 }

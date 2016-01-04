@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -12,6 +12,7 @@ package org.junit.gen5.launcher;
 
 import static java.util.Collections.unmodifiableSet;
 
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,7 +29,9 @@ import org.junit.gen5.engine.TestTag;
  * @since 5.0
  * @see TestPlan
  */
-public final class TestIdentifier {
+public final class TestIdentifier implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private final TestId uniqueId;
 	private final String displayName;

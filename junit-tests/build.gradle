@@ -1,6 +1,18 @@
 apply plugin: 'jacoco'
+apply plugin: 'org.junit.gen5.gradle'
 
 uploadArchives.enabled = false
+
+// Tests are solely executed by the junit5Tests task, not the standard test task
+test.enabled = false
+
+junit5 {
+	//version '5.0.0-SNAPSHOT' //not needed since all dependencies are given explicitly
+	runJunit4 false //Does not work yet in master
+	matchClassName '.*Test[s]'
+	// includeTag 'fast'
+	// excludeTag 'slow'
+}
 
 def testedProjects = [
 	project(':junit-commons'),
@@ -27,19 +39,26 @@ dependencies {
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 }
 
-jacoco {
-	toolVersion = '0.7.4.201502262128'
-}
+afterEvaluate {
 
-jacocoTestReport {
-	additionalSourceDirs = files()
-	additionalClassDirs = files()
-	testedProjects.each { project ->
-		additionalSourceDirs = files(additionalSourceDirs, project.sourceSets.main.allSource.srcDirs)
-		additionalClassDirs = files(additionalClassDirs, project.sourceSets.main.output)
+	jacoco {
+		toolVersion = '0.7.4.201502262128'
+		applyTo junit5Test
 	}
-	reports {
-		xml.enabled = true
-		html.enabled = true
+
+	task junit5CodeCoverageReport(type:JacocoReport){
+		executionData junit5Test
+		sourceSets sourceSets.main
+		sourceDirectories = files()
+		classDirectories = files()
+		testedProjects.each { project ->
+			sourceDirectories = files(sourceDirectories, project.sourceSets.main.allSource.srcDirs)
+			classDirectories = files(classDirectories, project.sourceSets.main.output)
+		}
+		reports {
+			xml.enabled = true
+			html.enabled = true
+		}
 	}
+
 }

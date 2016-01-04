@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -11,8 +11,9 @@
 package org.junit.gen5.api.extension;
 
 /**
- * {@code BeforeAllCallbacks} defines the API for {@link TestExtension TestExtensions} that wish to provide additional
- * behavior to tests before all test methods have been invoked.
+ * {@code BeforeAllExtensionPoint} defines the API for {@link TestExtension
+ * TestExtensions} that wish to provide additional behavior to tests before
+ * all test methods have been invoked.
  *
  * <p>Concrete implementations often implement {@link AfterAllExtensionPoint} as well.
  *
@@ -32,6 +33,6 @@ public interface BeforeAllExtensionPoint extends ExtensionPoint {
 	 *
 	 * @param context the current container extension context
 	 */
-	void beforeAll(ContainerExtensionContext context) throws Throwable;
+	void beforeAll(ContainerExtensionContext context) throws Exception;
 
 }

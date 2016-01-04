@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -12,9 +12,15 @@ package org.junit.gen5.engine.junit4;
 
 import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.EngineDescriptor;
+import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
+import org.junit.gen5.engine.junit4.discovery.JUnit4TestPlanSpecificationResolver;
+import org.junit.gen5.engine.junit4.execution.RunListenerAdapter;
+import org.junit.runner.Runner;
+import org.junit.runner.notification.RunNotifier;
 
 public class JUnit4TestEngine implements TestEngine {
 
@@ -25,10 +31,29 @@ public class JUnit4TestEngine implements TestEngine {
 
 	@Override
 	public EngineAwareTestDescriptor discoverTests(TestPlanSpecification specification) {
-		return new EngineDescriptor(this);
+		EngineDescriptor engineDescriptor = new EngineDescriptor(this);
+		new JUnit4TestPlanSpecificationResolver(engineDescriptor).resolve(specification);
+		return engineDescriptor;
 	}
 
 	@Override
 	public void execute(ExecutionRequest request) {
+		EngineExecutionListener engineExecutionListener = request.getEngineExecutionListener();
+		// @formatter:off
+		request.getRootTestDescriptor()
+			.getChildren()
+			.stream()
+			.map(RunnerTestDescriptor.class::cast)
+			.forEach(runnerTestDescriptor -> executeSingleRunner(runnerTestDescriptor, engineExecutionListener));
+		// @formatter:on
+	}
+
+	private void executeSingleRunner(RunnerTestDescriptor runnerTestDescriptor,
+			EngineExecutionListener engineExecutionListener) {
+		RunNotifier notifier = new RunNotifier();
+		notifier.addListener(new RunListenerAdapter(runnerTestDescriptor, engineExecutionListener));
+
+		Runner runner = runnerTestDescriptor.getRunner();
+		runner.run(notifier);
 	}
 }

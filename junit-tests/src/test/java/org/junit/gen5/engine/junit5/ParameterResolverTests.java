@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -12,7 +12,6 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
 
-import org.junit.Assert;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeAll;
@@ -22,6 +21,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestName;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.MethodParameterResolver;
+import org.junit.gen5.engine.TrackingEngineExecutionListener;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotationParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomType;
@@ -33,51 +33,51 @@ import org.junit.gen5.engine.junit5.execution.injection.sample.CustomTypeParamet
  *
  * @since 5.0
  */
-public class ParameterResolverTests extends AbstractJUnit5TestEngineTestCase {
+public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 
-	@org.junit.Test
+	@Test
 	public void executeTestsForMethodInjectionCases() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(MethodInjectionTestCase.class, 9);
 
-		Assert.assertEquals("# tests started", 8, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 7, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
+		assertEquals(8, listener.testStartedCount.get(), "# tests started");
+		assertEquals(7, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
+		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterEachMethods() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class, 2);
 
-		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+		assertEquals(1, listener.testStartedCount.get(), "# tests started");
+		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
+		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterAllMethods() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterAllMethodInjectionTestCase.class,
 			2);
 
-		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+		assertEquals(1, listener.testStartedCount.get(), "# tests started");
+		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
+		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestsForMethodWithExtendWithAnnotation() {
 		TrackingEngineExecutionListener listener = executeTestsForClass(ExtendWithOnMethodTestCase.class, 2);
 
-		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+		assertEquals(1, listener.testStartedCount.get(), "# tests started");
+		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
+		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
 	}
 
 	// -------------------------------------------------------------------

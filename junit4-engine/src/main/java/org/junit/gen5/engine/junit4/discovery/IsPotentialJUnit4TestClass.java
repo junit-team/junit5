@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -8,17 +8,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit4;
+package org.junit.gen5.engine.junit4.discovery;
 
-import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
-import static org.junit.gen5.commons.util.ReflectionUtils.isPublic;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.util.function.Predicate;
 
 /**
  * @since 5.0
  */
-public class IsPotentialJUnit4TestClass implements Predicate<Class<?>> {
+class IsPotentialJUnit4TestClass implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> candidate) {

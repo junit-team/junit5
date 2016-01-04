@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -13,7 +13,6 @@ package org.junit.gen5.surefire;
 import static org.apache.maven.surefire.report.SimpleReportEntry.ignored;
 import static org.junit.gen5.engine.TestExecutionResult.Status.*;
 
-import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.apache.maven.surefire.report.PojoStackTraceWriter;
@@ -65,8 +64,8 @@ final class RunListenerAdapter implements TestExecutionListener {
 		Optional<JavaSource> javaSource = getJavaSource(testIdentifier);
 		if (javaSource.isPresent() && javaSource.get().getJavaClass().isPresent()) {
 			Class<?> sourceClass = javaSource.get().getJavaClass().get();
-			Optional<Method> sourceMethod = javaSource.get().getJavaMethod();
-			StackTraceWriter stackTraceWriter = getStackTraceWriter(sourceClass, sourceMethod, throwable);
+			Optional<String> sourceMethodName = javaSource.get().getJavaMethodName();
+			StackTraceWriter stackTraceWriter = getStackTraceWriter(sourceClass, sourceMethodName, throwable);
 			return new SimpleReportEntry(getClassNameOrUniqueId(testIdentifier), testIdentifier.getDisplayName(),
 				stackTraceWriter, null);
 		}
@@ -74,10 +73,10 @@ final class RunListenerAdapter implements TestExecutionListener {
 			throwable.map(Throwable::getMessage).orElse(null));
 	}
 
-	private StackTraceWriter getStackTraceWriter(Class<?> sourceClass, Optional<Method> sourceMethod,
+	private StackTraceWriter getStackTraceWriter(Class<?> sourceClass, Optional<String> sourceMethodName,
 			Optional<Throwable> throwable) {
 		String className = sourceClass.getName();
-		String methodName = sourceMethod.map(Method::getName).orElse("");
+		String methodName = sourceMethodName.orElse("");
 		return new PojoStackTraceWriter(className, methodName, throwable.orElse(null));
 	}
 

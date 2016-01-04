@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -17,6 +17,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
@@ -115,24 +116,20 @@ public class TestExtensionRegistry {
 	}
 
 	/**
-	 * Apply all extension points for a given type in the right order.
+	 * Return a stream for iterating all registered extension points.
 	 *
 	 * @param <T> The exact {@link ExtensionPoint} for which to find all extensions
 	 * @param extensionClass The {@link ExtensionPoint} class
 	 * @param order The order in which to apply the extension points after sorting. FORWARD or BACKWARD.
-	 * @param extensionPointApplier The code to execute for each extension point
 	 */
-	public <T extends ExtensionPoint> void applyExtensionPoints(Class<T> extensionClass, ApplicationOrder order,
-			ThrowingConsumer<RegisteredExtensionPoint<T>> extensionPointApplier) throws Throwable {
+	public <T extends ExtensionPoint> Stream<RegisteredExtensionPoint<T>> stream(Class<T> extensionClass,
+			ApplicationOrder order) {
 		List<RegisteredExtensionPoint<T>> registeredExtensionPoints = getRegisteredExtensionPoints(extensionClass);
 		new ExtensionPointSorter().sort(registeredExtensionPoints);
 		if (order == ApplicationOrder.BACKWARD) {
 			Collections.reverse(registeredExtensionPoints);
 		}
-
-		for (RegisteredExtensionPoint<T> rep : registeredExtensionPoints) {
-			extensionPointApplier.accept(rep);
-		}
+		return registeredExtensionPoints.stream();
 	}
 
 	/**

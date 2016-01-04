@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -28,6 +28,7 @@ import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.TrackingEngineExecutionListener;
 
 /**
  * Integration tests that verify support of {@link BeforeAll}, {@link AfterAll},
@@ -35,9 +36,9 @@ import org.junit.gen5.engine.TestPlanSpecification;
  *
  * @since 5.0
  */
-public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTestCase {
+public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTests {
 
-	@org.junit.Test
+	@Test
 	public void beforeAllAndAfterAllCallbacks() {
 		TestPlanSpecification spec = build(forClass(InstancePerMethodTestCase.class));
 

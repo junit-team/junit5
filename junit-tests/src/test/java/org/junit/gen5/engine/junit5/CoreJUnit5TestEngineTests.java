@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,21 +10,18 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.api.Assertions.fail;
+import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.api.Assumptions.assumeTrue;
-import static org.junit.gen5.engine.TestPlanSpecification.build;
-import static org.junit.gen5.engine.TestPlanSpecification.forClass;
-import static org.junit.gen5.engine.TestPlanSpecification.forUniqueId;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import org.junit.Assert;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.TrackingEngineExecutionListener;
 
 /**
  * Core integration tests for the {@link JUnit5TestEngine}.
@@ -32,9 +29,9 @@ import org.junit.gen5.engine.TestPlanSpecification;
  * @since 5.0
  */
 
-public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase {
+public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTests {
 
-	@org.junit.Test
+	@Test
 	public void executeCompositeTestPlanSpecification() {
 		TestPlanSpecification spec = build(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.CoreJUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
@@ -42,54 +39,54 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase 
 
 		TrackingEngineExecutionListener listener = executeTests(spec, 8);
 
-		Assert.assertEquals("# tests started", 7, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 4, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 1, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
+		assertEquals(7, listener.testStartedCount.get(), "# tests started");
+		assertEquals(4, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
+		assertEquals(1, listener.testAbortedCount.get(), "# tests aborted");
+		assertEquals(2, listener.testFailedCount.get(), "# tests failed");
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestsForClass() {
 		LocalTestCase.countAfterInvoked = 0;
 
 		TrackingEngineExecutionListener listener = executeTestsForClass(LocalTestCase.class, 8);
 
-		Assert.assertEquals("# tests started", 7, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 4, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 1, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 2, listener.testFailedCount.get());
+		assertEquals(7, listener.testStartedCount.get(), "# tests started");
+		assertEquals(4, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
+		assertEquals(1, listener.testAbortedCount.get(), "# tests aborted");
+		assertEquals(2, listener.testFailedCount.get(), "# tests failed");
 
-		Assert.assertEquals("# after calls", 7, LocalTestCase.countAfterInvoked);
+		assertEquals(7, LocalTestCase.countAfterInvoked, "# after calls");
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestForUniqueId() {
 		TestPlanSpecification spec = build(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.CoreJUnit5TestEngineTests$LocalTestCase#alwaysPasses()"));
 
 		TrackingEngineExecutionListener listener = executeTests(spec, 2);
 
-		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+		assertEquals(1, listener.testStartedCount.get(), "# tests started");
+		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
+		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestForUniqueIdWithExceptionThrownInAfterMethod() {
 		TestPlanSpecification spec = build(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.CoreJUnit5TestEngineTests$LocalTestCase#throwExceptionInAfterMethod()"));
 
 		TrackingEngineExecutionListener listener = executeTests(spec, 2);
 
-		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 0, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 1, listener.testFailedCount.get());
+		assertEquals(1, listener.testStartedCount.get(), "# tests started");
+		assertEquals(0, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
+		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
 	}
 
 	// -------------------------------------------------------------------
@@ -104,18 +101,11 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase 
 
 	private static class LocalTestCase extends AbstractTestCase {
 
-		static boolean staticBeforeInvoked = false;
-
 		boolean beforeInvoked = false;
 
 		boolean throwExceptionInAfterMethod = false;
 
 		static int countAfterInvoked = 0;
-
-		@BeforeEach
-		static void staticBefore() {
-			staticBeforeInvoked = true;
-		}
 
 		@BeforeEach
 		void before() {
@@ -136,7 +126,6 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTestCase 
 		@Test
 		void methodLevelCallbacks() {
 			assertTrue(this.beforeInvoked, "@BeforeEach was not invoked on instance method");
-			assertTrue(staticBeforeInvoked, "@BeforeEach was not invoked on static method");
 		}
 
 		@Test

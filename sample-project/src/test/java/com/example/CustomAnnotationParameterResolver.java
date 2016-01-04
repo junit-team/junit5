@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -13,9 +13,9 @@ package com.example;
 import java.lang.reflect.Parameter;
 
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.api.extension.MethodContext;
+import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
-import org.junit.gen5.commons.util.AnnotationUtils;
+import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * @since 5.0
@@ -23,8 +23,17 @@ import org.junit.gen5.commons.util.AnnotationUtils;
 public class CustomAnnotationParameterResolver implements MethodParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter, MethodContext methodContext, ExtensionContext extensionContext) {
-		return AnnotationUtils.isAnnotated(parameter, CustomAnnotation.class);
+	public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,
+			ExtensionContext extensionContext) {
+
+		return parameter.isAnnotationPresent(CustomAnnotation.class);
+	}
+
+	@Override
+	public Object resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
+			ExtensionContext extensionContext) {
+
+		return ReflectionUtils.newInstance(parameter.getType());
 	}
 
 }

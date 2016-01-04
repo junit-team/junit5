@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,10 +10,9 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.fail;
+import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
-import static org.junit.gen5.engine.TestPlanSpecification.build;
-import static org.junit.gen5.engine.TestPlanSpecification.forClass;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -22,8 +21,8 @@ import java.lang.annotation.Target;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
@@ -31,6 +30,7 @@ import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.TrackingEngineExecutionListener;
 
 /**
  * Integration tests that verify support for {@link Disabled @Disabled} and
@@ -38,45 +38,41 @@ import org.junit.gen5.engine.TestPlanSpecification;
  *
  * @since 5.0
  */
-@Ignore("https://github.com/junit-team/junit-lambda/issues/39")
-public class DisabledTests extends AbstractJUnit5TestEngineTestCase {
+public class DisabledTests extends AbstractJUnit5TestEngineTests {
 
 	private static final String FOO = "DisabledTests.foo";
 	private static final String BAR = "DisabledTests.bar";
 	private static final String BOGUS = "DisabledTests.bogus";
 
-	@org.junit.Before
+	@BeforeEach
 	public void setUp() {
 		System.setProperty(FOO, BAR);
 	}
 
-	@org.junit.After
+	@AfterEach
 	public void tearDown() {
 		System.clearProperty(FOO);
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestsWithDisabledTestClass() {
 		TestPlanSpecification spec = build(forClass(DisabledTestClassTestCase.class));
 		TrackingEngineExecutionListener listener = executeTests(spec, 2);
 
-		Assert.assertEquals("# tests started", 0, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 0, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 1, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+		assertEquals(1, listener.containerSkippedCount.get(), "# container skipped");
+		assertEquals(0, listener.testStartedCount.get(), "# tests started");
 	}
 
-	@org.junit.Test
+	@Test
 	public void executeTestsWithDisabledTestMethods() {
 		TestPlanSpecification spec = build(forClass(DisabledTestMethodsTestCase.class));
 		TrackingEngineExecutionListener listener = executeTests(spec, 6);
 
-		Assert.assertEquals("# tests started", 2, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 2, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests skipped", 3, listener.testSkippedCount.get());
-		Assert.assertEquals("# tests aborted", 0, listener.testAbortedCount.get());
-		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+		assertEquals(2, listener.testStartedCount.get(), "# tests started");
+		assertEquals(2, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(3, listener.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
+		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
 	}
 
 	// -------------------------------------------------------------------

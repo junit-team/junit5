@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,6 +10,17 @@
 
 package org.junit.gen5.engine;
 
+import org.junit.gen5.engine.Node.SkipResult;
+
+/**
+ * Implementation core of all TestEngine implementors that are willing to use the {@linkplain Container} and {@linkplain Leaf}
+ * nodes as main principle to organize test suites.
+ *
+ * <p>This class is instantiated by concrete implementations of {@linkplain HierarchicalTestEngine} and takes care
+ * of calling containers and leafs in appropriate order and call the necessary events on {@linkplain EngineExecutionListener}</p>
+ *
+ * @param <C> The concrete type of {@linkplain EngineExecutionContext} used by a concrete {@linkplain TestEngine}.
+ */
 class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
 	private final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
@@ -30,14 +41,29 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	}
 
 	private void executeAll(TestDescriptor testDescriptor, C parentContext) {
-		// TODO Check whether TestDescriptor should be skipped and fire executionSkipped
-		// event instead.
+
+		C preparedContext;
+		try {
+			preparedContext = adapter.asNode(testDescriptor).prepare(parentContext);
+			SkipResult skipResult = adapter.asNode(testDescriptor).shouldBeSkipped(preparedContext);
+			if (skipResult.isSkipped()) {
+				listener.executionSkipped(testDescriptor, skipResult.getReason().orElse(""));
+				return;
+			}
+		}
+		catch (Throwable throwable) {
+			//TODO: Is this what we want?
+			listener.executionStarted(testDescriptor);
+			listener.executionFinished(testDescriptor, TestExecutionResult.failed(throwable));
+			return;
+		}
+
 		listener.executionStarted(testDescriptor);
 
 		parentContext.registerPublishHandler(listener::reportingEntryPublished);
 
 		TestExecutionResult result = singleTestExecutor.executeSafely(() -> {
-			C context = adapter.asContainer(testDescriptor).beforeAll(parentContext);
+			C context = adapter.asContainer(testDescriptor).beforeAll(preparedContext);
 			context = adapter.asLeaf(testDescriptor).execute(context);
 
 			for (TestDescriptor child : testDescriptor.getChildren()) {
@@ -55,6 +81,9 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		private final Container<C> nullContainer = new Container<C>() {
 		};
 
+		private final Node<C> nullNode = new Node<C>() {
+		};
+
 		@SuppressWarnings("unchecked")
 		Container<C> asContainer(TestDescriptor testDescriptor) {
 			return testDescriptor instanceof Container ? (Container<C>) testDescriptor : nullContainer;
@@ -63,6 +92,11 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		@SuppressWarnings("unchecked")
 		Leaf<C> asLeaf(TestDescriptor testDescriptor) {
 			return testDescriptor instanceof Leaf ? (Leaf<C>) testDescriptor : nullLeaf;
+		}
+
+		@SuppressWarnings("unchecked")
+		Node<C> asNode(TestDescriptor testDescriptor) {
+			return testDescriptor instanceof Node ? (Node<C>) testDescriptor : nullNode;
 		}
 	}
 

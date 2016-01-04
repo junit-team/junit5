@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -27,7 +27,7 @@ import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 
 public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecutionContext> {
 
-	private static final String ENGINE_ID = "junit5";
+	public static final String ENGINE_ID = "junit5";
 
 	@Override
 	public String getId() {

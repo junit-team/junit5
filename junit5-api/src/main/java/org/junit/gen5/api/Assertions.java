@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -201,22 +201,22 @@ public final class Assertions {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends Throwable> T expectThrows(Class<T> expected, Executable executable) {
+	public static <T extends Throwable> T expectThrows(Class<T> expectedType, Executable executable) {
 		try {
 			executable.execute();
 		}
-		catch (Throwable actual) {
-			if (expected.isInstance(actual)) {
-				return (T) actual;
+		catch (Throwable actualException) {
+			if (expectedType.isInstance(actualException)) {
+				return (T) actualException;
 			}
 			else {
-				String message = Assertions.format(expected.getName(), actual.getClass().getName(),
+				String message = Assertions.format(expectedType.getName(), actualException.getClass().getName(),
 					"unexpected exception type thrown;");
-				throw new AssertionFailedError(message, actual);
+				throw new AssertionFailedError(message, actualException);
 			}
 		}
 		throw new AssertionFailedError(
-			String.format("expected %s to be thrown, but nothing was thrown", expected.getName()));
+			String.format("Expected %s to be thrown, but nothing was thrown.", expectedType.getName()));
 	}
 
 	private static void failEqual(Object actual, String message) {
@@ -224,19 +224,19 @@ public final class Assertions {
 	}
 
 	private static void failNull(String message) {
-		fail(buildPrefix(message) + "expected not <null>");
+		fail(buildPrefix(message) + "expected: not <null>");
 	}
 
 	private static void failNotNull(Object actual, String message) {
-		fail(buildPrefix(message) + "expected <null> but was:<" + actual + ">");
+		fail(buildPrefix(message) + "expected: <null> but was: <" + actual + ">");
 	}
 
 	private static void failSame(String message) {
-		fail(buildPrefix(message) + "expected not same");
+		fail(buildPrefix(message) + "expected: not same");
 	}
 
 	private static void failNotSame(Object expected, Object actual, String message) {
-		fail(buildPrefix(message) + "expected same:<" + expected + "> was not:<" + actual + ">");
+		fail(buildPrefix(message) + "expected: same <" + expected + "> but was: <" + actual + ">");
 	}
 
 	private static void failNotEqual(Object expected, Object actual, String message) {
@@ -252,7 +252,7 @@ public final class Assertions {
 					+ formatClassAndValue(actual, actualString);
 		}
 		else {
-			return prefix + "expected:<" + expectedString + "> but was:<" + actualString + ">";
+			return prefix + "expected: <" + expectedString + "> but was: <" + actualString + ">";
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -24,13 +24,15 @@ import org.junit.gen5.api.extension.*;
 public class TestReporterParameterResolver implements MethodParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter, MethodContext methodContext, ExtensionContext testContext) {
+	public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,
+			ExtensionContext extensionContext) {
 		return (parameter.getType() == TestReporter.class);
 	}
 
 	@Override
-	public TestReporter resolve(Parameter parameter, MethodContext methodContext, ExtensionContext testContext) {
-		return entry -> testContext.publishReportEntry(entry);
+	public TestReporter resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
+			ExtensionContext extensionContext) {
+		return entry -> extensionContext.publishReportEntry(entry);
 	}
 
 }

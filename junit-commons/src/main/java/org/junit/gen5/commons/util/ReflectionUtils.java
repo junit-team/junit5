@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -29,7 +29,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 /**
- * Collection of utilities for working with Java reflection APIs.
+ * Collection of utilities for working with the Java reflection APIs.
  *
  * @since 5.0
  */
@@ -85,6 +85,20 @@ public final class ReflectionUtils {
 		return Modifier.isStatic(member.getModifiers());
 	}
 
+	/**
+	 * Create a new instance of the specified {@link Class} by invoking
+	 * the constructor whose argument list matches the types of the supplied
+	 * arguments.
+	 *
+	 * <p>The constructor will be made accessible if necessary, and any checked
+	 * exception will be {@linkplain ExceptionUtils#throwAsRuntimeException masked}
+	 * as a {@code RuntimeException}.
+	 *
+	 * @param clazz the class to instantiate; never {@code null}
+	 * @param args the arguments to pass to the constructor
+	 * @return the new instance
+	 * @see ExceptionUtils#throwAsRuntimeException(Throwable)
+	 */
 	public static <T> T newInstance(Class<T> clazz, Object... args) {
 		Preconditions.notNull(clazz, "class must not be null");
 
@@ -94,40 +108,36 @@ public final class ReflectionUtils {
 			makeAccessible(constructor);
 			return constructor.newInstance(args);
 		}
-		catch (Throwable ex) {
-			handleException(ex);
+		catch (Throwable t) {
+			throw ExceptionUtils.throwAsRuntimeException(getUnderlyingCause(t));
 		}
-
-		// Appeasing the compiler: this should hopefully never happen...
-		throw new IllegalStateException("Exception handling algorithm in ReflectionUtils is incomplete");
 	}
 
 	/**
 	 * Invoke the supplied method, making it accessible if necessary and
-	 * wrapping any checked exception in an {@code IllegalStateException}.
+	 * {@linkplain ExceptionUtils#throwAsRuntimeException masking} any
+	 * checked exception as a {@code RuntimeException}.
 	 *
-	 * @param method the method to invoke
+	 * @param method the method to invoke; never {@code null}
 	 * @param target the object on which to invoke the method; may be
 	 * {@code null} if the method is {@code static}
 	 * @param args the arguments to pass to the method
 	 * @return the value returned by the method invocation or {@code null}
 	 * if the return type is {@code void}
+	 * @see ExceptionUtils#throwAsRuntimeException(Throwable)
 	 */
 	public static Object invokeMethod(Method method, Object target, Object... args) {
 		Preconditions.notNull(method, "method must not be null");
-		Preconditions.condition((target != null || Modifier.isStatic(method.getModifiers())),
+		Preconditions.condition((target != null || isStatic(method)),
 			() -> String.format("Cannot invoke non-static method [%s] on a null target.", method.toGenericString()));
 
 		try {
 			makeAccessible(method);
 			return method.invoke(target, args);
 		}
-		catch (Throwable ex) {
-			handleException(ex);
+		catch (Throwable t) {
+			throw ExceptionUtils.throwAsRuntimeException(getUnderlyingCause(t));
 		}
-
-		// Appeasing the compiler: this should hopefully never happen...
-		throw new IllegalStateException("Exception handling algorithm in ReflectionUtils is incomplete");
 	}
 
 	public static Optional<Class<?>> loadClass(String name) {
@@ -383,45 +393,21 @@ public final class ReflectionUtils {
 		}
 	}
 
-	private static void handleException(Throwable ex) {
-		if (ex instanceof InvocationTargetException) {
-			handleException(((InvocationTargetException) ex).getTargetException());
+	/**
+	 * Get the underlying cause of the supplied {@link Throwable}.
+	 *
+	 * <p>If the supplied {@code Throwable} is an instance of
+	 * {@link InvocationTargetException}, this method will be invoked
+	 * recursively with the underlying
+	 * {@linkplain InvocationTargetException#getTargetException() target
+	 * exception}; otherwise, this method simply returns the supplied
+	 * {@code Throwable}.
+	 */
+	private static Throwable getUnderlyingCause(Throwable t) {
+		if (t instanceof InvocationTargetException) {
+			return getUnderlyingCause(((InvocationTargetException) t).getTargetException());
 		}
-		if (ex instanceof NoSuchMethodException) {
-			throw new IllegalStateException("No such method or constructor", ex);
-		}
-		if (ex instanceof NoSuchFieldException) {
-			throw new IllegalStateException("No such field", ex);
-		}
-		if (ex instanceof InstantiationException) {
-			throw new IllegalStateException("Instantiation failed", ex);
-		}
-		if (ex instanceof IllegalAccessException) {
-			throw new IllegalStateException("Failed to access method or constructor", ex);
-		}
-		if (ex instanceof RuntimeException) {
-			throw (RuntimeException) ex;
-		}
-		if (ex instanceof Error) {
-			throw (Error) ex;
-		}
-		// TODO Research if throwing the exception itself would be a better option
-		throw new TargetExceptionWrapper(ex);
-	}
-
-	public static class TargetExceptionWrapper extends RuntimeException {
-
-		private static final long serialVersionUID = 3733792088719661853L;
-
-		private final Throwable targetException;
-
-		private TargetExceptionWrapper(Throwable targetException) {
-			this.targetException = targetException;
-		}
-
-		public Throwable getTargetException() {
-			return targetException;
-		}
+		return t;
 	}
 
 }

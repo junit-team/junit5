@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -11,19 +11,24 @@
 package org.junit.gen5.engine;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Optional;
+
+import org.junit.gen5.commons.util.Preconditions;
 
 public class FileSystemSource implements TestSource {
 
-	final private File sourceFileOrDirectory;
+	private static final long serialVersionUID = 1L;
 
-	final private FilePosition positionInFile;
+	private final File sourceFileOrDirectory;
+	private final FilePosition positionInFile;
 
 	public FileSystemSource(File sourceFileOrDirectory) {
 		this(sourceFileOrDirectory, null);
 	}
 
 	public FileSystemSource(File sourceFileOrDirectory, FilePosition positionInFile) {
+		Preconditions.notNull(sourceFileOrDirectory, "source file or directory must not be null");
 		this.sourceFileOrDirectory = sourceFileOrDirectory;
 		this.positionInFile = positionInFile;
 	}
@@ -53,7 +58,9 @@ public class FileSystemSource implements TestSource {
 		return getPosition().isPresent();
 	}
 
-	static public class FilePosition {
+	static public class FilePosition implements Serializable {
+
+		private static final long serialVersionUID = 1L;
 
 		private final int line;
 		private final int column;
@@ -73,11 +80,24 @@ public class FileSystemSource implements TestSource {
 
 	}
 
-	public Optional<File> getFile() {
-		return Optional.ofNullable(sourceFileOrDirectory);
+	public File getFile() {
+		return sourceFileOrDirectory;
 	}
 
 	public Optional<FilePosition> getPosition() {
 		return Optional.ofNullable(positionInFile);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder(sourceFileOrDirectory.getAbsolutePath());
+		getPosition().ifPresent(position -> {
+			builder.append(" [");
+			builder.append(position.getLine());
+			builder.append(':');
+			builder.append(position.getColumn());
+			builder.append(']');
+		});
+		return builder.toString();
 	}
 }

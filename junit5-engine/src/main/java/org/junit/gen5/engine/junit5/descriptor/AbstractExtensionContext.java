@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,16 +20,17 @@ import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 
 abstract class AbstractExtensionContext implements ExtensionContext {
 
-	protected abstract TestDescriptor getTestDescriptor();
-
-	private final Map<String, Object> attributes = new LinkedHashMap<>();
+	private final Map<String, Object> attributes = new HashMap<>();
 
 	private ExtensionContext parent;
 	private final JUnit5EngineExecutionContext engineExecutionContext;
+	private final TestDescriptor testDescriptor;
 
-	AbstractExtensionContext(ExtensionContext parent, JUnit5EngineExecutionContext engineExecutionContext) {
+	AbstractExtensionContext(ExtensionContext parent, JUnit5EngineExecutionContext engineExecutionContext,
+			TestDescriptor testDescriptor) {
 		this.parent = parent;
 		this.engineExecutionContext = engineExecutionContext;
+		this.testDescriptor = testDescriptor;
 	}
 
 	@Override
@@ -43,9 +44,25 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 	}
 
 	@Override
-	// TODO Replace with methods to set and get attributes. Maybe with lifecycle?
-	public Map<String, Object> getAttributes() {
-		return attributes;
+	public Object getAttribute(String key) {
+		Object value = attributes.get(key);
+		if (value == null && parent != null)
+			return parent.getAttribute(key);
+		return value;
+	}
+
+	@Override
+	public void putAttribute(String key, Object value) {
+		attributes.put(key, value);
+	}
+
+	@Override
+	public Object removeAttribute(String key) {
+		return attributes.remove(key);
+	}
+
+	protected TestDescriptor getTestDescriptor() {
+		return testDescriptor;
 	}
 
 }

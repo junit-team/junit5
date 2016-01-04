@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,29 +10,28 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.engine.junit5.descriptor.MethodContextImpl.methodContext;
+import static org.junit.gen5.engine.junit5.descriptor.MethodInvocationContextFactory.methodInvocationContext;
 
 import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.InstancePostProcessor;
-import org.junit.gen5.api.extension.MethodContext;
+import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.Leaf;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
+import org.junit.gen5.engine.junit5.execution.ConditionEvaluator;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.RegisteredExtensionPoint;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
-import org.junit.gen5.engine.junit5.execution.ThrowingConsumer;
 
 /**
  * {@link TestDescriptor} for tests based on Java methods.
@@ -44,14 +43,16 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	private final String displayName;
 
 	private final Class<?> testClass;
+
 	private final Method testMethod;
 
 	MethodTestDescriptor(String uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId);
+
+		Preconditions.notNull(testClass, "Class must not be null");
+		Preconditions.notNull(testMethod, "Method must not be null");
+
 		this.testClass = testClass;
-
-		Preconditions.notNull(testMethod, "testMethod must not be null");
-
 		this.testMethod = testMethod;
 		this.displayName = determineDisplayName(testMethod, testMethod.getName());
 
@@ -70,8 +71,8 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		return this.displayName;
 	}
 
-	public Class<?> getTestClass() {
-		return testClass;
+	public final Class<?> getTestClass() {
+		return this.testClass;
 	}
 
 	public final Method getTestMethod() {
@@ -84,85 +85,93 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	}
 
 	@Override
-	public boolean isContainer() {
+	public final boolean isContainer() {
 		return false;
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext execute(JUnit5EngineExecutionContext context) throws Throwable {
-
-		TestExtensionRegistry newTestExtensionRegistry = populateNewTestExtensionRegistryFromExtendWith(testMethod,
+	public JUnit5EngineExecutionContext prepare(JUnit5EngineExecutionContext context) throws Exception {
+		TestExtensionRegistry testExtensionRegistry = populateNewTestExtensionRegistryFromExtendWith(testMethod,
 			context.getTestExtensionRegistry());
-
-		JUnit5EngineExecutionContext newContext = context.extend().withTestExtensionRegistry(
-			newTestExtensionRegistry).build();
-
 		Object testInstance = context.getTestInstanceProvider().getTestInstance();
 		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(context.getExtensionContext(),
 			context, this, testInstance);
 
-		invokeInstancePostProcessorExtensionPoints(newTestExtensionRegistry, testExtensionContext);
-
-		invokeBeforeEachExtensionPoints(newTestExtensionRegistry, testExtensionContext);
-
-		List<Throwable> throwablesCollector = new LinkedList<>();
-		invokeTestMethod(testExtensionContext, newTestExtensionRegistry, throwablesCollector);
-
-		invokeAfterEachExtensionPoints(newTestExtensionRegistry, testExtensionContext, throwablesCollector);
-
-		throwIfAnyThrowablePresent(throwablesCollector);
-
-		return newContext;
+		// @formatter:off
+		return context.extend()
+				.withTestExtensionRegistry(testExtensionRegistry)
+				.withExtensionContext(testExtensionContext)
+				.build();
+		// @formatter:on
 	}
 
-	private void invokeInstancePostProcessorExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
-			TestExtensionContext testExtensionContext) throws Throwable {
-		ThrowingConsumer<RegisteredExtensionPoint<InstancePostProcessor>> applyInstancePostProcessor = registeredExtensionPoint -> {
-			registeredExtensionPoint.getExtensionPoint().postProcessTestInstance(testExtensionContext);
-		};
-		newTestExtensionRegistry.applyExtensionPoints(InstancePostProcessor.class,
-			TestExtensionRegistry.ApplicationOrder.FORWARD, applyInstancePostProcessor);
+	@Override
+	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Exception {
+		ConditionEvaluationResult evaluationResult = new ConditionEvaluator().evaluateForTest(
+			context.getTestExtensionRegistry(), (TestExtensionContext) context.getExtensionContext());
+		if (evaluationResult.isDisabled()) {
+			return SkipResult.skip(evaluationResult.getReason().orElse(""));
+		}
+		return SkipResult.dontSkip();
 	}
 
-	private void invokeBeforeEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
-			TestExtensionContext testExtensionContext) throws Throwable {
-		ThrowingConsumer<RegisteredExtensionPoint<BeforeEachExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
-			registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext);
+	@Override
+	public JUnit5EngineExecutionContext execute(JUnit5EngineExecutionContext context) throws Exception {
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
+		ThrowableCollector throwableCollector = new ThrowableCollector();
+
+		invokeInstancePostProcessorExtensionPoints(context.getTestExtensionRegistry(), testExtensionContext);
+		invokeBeforeEachExtensionPoints(context.getTestExtensionRegistry(), testExtensionContext);
+		invokeTestMethod(testExtensionContext, context.getTestExtensionRegistry(), throwableCollector);
+		invokeAfterEachExtensionPoints(context.getTestExtensionRegistry(), testExtensionContext, throwableCollector);
+
+		throwableCollector.assertEmpty();
+
+		return context;
+	}
+
+	private void invokeInstancePostProcessorExtensionPoints(TestExtensionRegistry testExtensionRegistry,
+			TestExtensionContext testExtensionContext) throws Exception {
+
+		Consumer<RegisteredExtensionPoint<InstancePostProcessor>> applyInstancePostProcessor = registeredExtensionPoint -> {
+			executeAndMaskThrowable(
+				() -> registeredExtensionPoint.getExtensionPoint().postProcessTestInstance(testExtensionContext));
 		};
-		newTestExtensionRegistry.applyExtensionPoints(BeforeEachExtensionPoint.class,
-			TestExtensionRegistry.ApplicationOrder.FORWARD, applyBeforeEach);
+
+		testExtensionRegistry.stream(InstancePostProcessor.class,
+			TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(applyInstancePostProcessor);
+	}
+
+	private void invokeBeforeEachExtensionPoints(TestExtensionRegistry testExtensionRegistry,
+			TestExtensionContext testExtensionContext) throws Exception {
+
+		Consumer<RegisteredExtensionPoint<BeforeEachExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
+			executeAndMaskThrowable(
+				() -> registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext));
+		};
+
+		testExtensionRegistry.stream(BeforeEachExtensionPoint.class,
+			TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(applyBeforeEach);
 	}
 
 	private void invokeTestMethod(TestExtensionContext testExtensionContext,
-			TestExtensionRegistry testExtensionRegistry, List<Throwable> throwablesCollector) {
-		try {
-			MethodContext methodContext = methodContext(testExtensionContext.getTestInstance(),
-				testExtensionContext.getTestMethod());
-			new MethodInvoker(testExtensionContext, testExtensionRegistry).invoke(methodContext);
-		}
-		catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-			throwablesCollector.add(wrapper.getTargetException());
-		}
-		catch (Throwable t) {
-			throwablesCollector.add(t);
-		}
+			TestExtensionRegistry testExtensionRegistry, ThrowableCollector throwableCollector) {
+
+		throwableCollector.execute(() -> {
+			MethodInvocationContext methodInvocationContext = methodInvocationContext(
+				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod());
+			new MethodInvoker(testExtensionContext, testExtensionRegistry).invoke(methodInvocationContext);
+		});
 	}
 
-	private void invokeAfterEachExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
-			TestExtensionContext testExtensionContext, List<Throwable> throwablesCollector) throws Throwable {
-		ThrowingConsumer<RegisteredExtensionPoint<AfterEachExtensionPoint>> applyAfterEach = registeredExtensionPoint -> {
-			try {
-				registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext);
-			}
-			catch (ReflectionUtils.TargetExceptionWrapper wrapper) {
-				throwablesCollector.add(wrapper.getTargetException());
-			}
-			catch (Throwable t) {
-				throwablesCollector.add(t);
-			}
-		};
-		newTestExtensionRegistry.applyExtensionPoints(AfterEachExtensionPoint.class,
-			TestExtensionRegistry.ApplicationOrder.BACKWARD, applyAfterEach);
+	private void invokeAfterEachExtensionPoints(TestExtensionRegistry testExtensionRegistry,
+			TestExtensionContext testExtensionContext, ThrowableCollector throwableCollector) throws Exception {
+
+		testExtensionRegistry.stream(AfterEachExtensionPoint.class,
+			TestExtensionRegistry.ApplicationOrder.BACKWARD).forEach(registeredExtensionPoint -> {
+				throwableCollector.execute(
+					() -> registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext));
+			});
 	}
 
 }

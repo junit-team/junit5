@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.Assert.*;
+import static org.junit.gen5.api.Assertions.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,13 +24,13 @@ import org.junit.gen5.engine.PackageSpecification;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueIdSpecification;
 
-public class SpecificationResolverTest {
+public class SpecificationResolverTests {
 
 	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(
 		new DummyTestEngine("ENGINE_ID"));
 	private SpecificationResolver resolver = new SpecificationResolver(engineDescriptor);
 
-	@org.junit.Test
+	@Test
 	public void testSingleClassResolution() {
 		ClassSpecification specification = new ClassSpecification(MyTestClass.class);
 
@@ -43,7 +43,7 @@ public class SpecificationResolverTest {
 		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()"));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testTwoClassesResolution() {
 		ClassSpecification specification1 = new ClassSpecification(MyTestClass.class);
 		ClassSpecification specification2 = new ClassSpecification(YourTestClass.class);
@@ -62,7 +62,7 @@ public class SpecificationResolverTest {
 		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.YourTestClass#test4()"));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testClassResolutionOfNestedClass() {
 		ClassSpecification specification = new ClassSpecification(OtherTestClass.NestedTestClass.class);
 
@@ -79,7 +79,7 @@ public class SpecificationResolverTest {
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test6()"));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testMethodResolution() throws NoSuchMethodException {
 		MethodSpecification specification = new MethodSpecification(
 			MyTestClass.class.getDeclaredMethod("test1").getDeclaringClass(),
@@ -93,7 +93,7 @@ public class SpecificationResolverTest {
 		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testMethodResolutionFromInheritedMethod() throws NoSuchMethodException {
 		MethodSpecification specification = new MethodSpecification(HerTestClass.class,
 			MyTestClass.class.getDeclaredMethod("test1"));
@@ -106,15 +106,15 @@ public class SpecificationResolverTest {
 		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test1()"));
 	}
 
-	@org.junit.Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testResolutionOfNotTestMethod() throws NoSuchMethodException {
 		MethodSpecification specification = new MethodSpecification(
 			MyTestClass.class.getDeclaredMethod("notATest").getDeclaringClass(),
 			MyTestClass.class.getDeclaredMethod("notATest"));
-		resolver.resolveElement(specification);
+		assertThrows(IllegalArgumentException.class, () -> resolver.resolveElement(specification));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testClassResolutionByUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass");
@@ -128,7 +128,7 @@ public class SpecificationResolverTest {
 		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()"));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testInnerClassResolutionByUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass");
@@ -145,7 +145,7 @@ public class SpecificationResolverTest {
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test6()"));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testMethodOfInnerClassByUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()");
@@ -160,21 +160,22 @@ public class SpecificationResolverTest {
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()"));
 	}
 
-	@org.junit.Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testNonResolvableUniqueId() {
-		UniqueIdSpecification specification1 = new UniqueIdSpecification("ENGINE_ID:poops-machine");
+		UniqueIdSpecification specification = new UniqueIdSpecification("ENGINE_ID:poops-machine");
 
-		resolver.resolveElement(specification1);
+		assertThrows(IllegalArgumentException.class, () -> resolver.resolveElement(specification));
 	}
 
-	@org.junit.Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testUniqueIdOfNotTestMethod() {
-		UniqueIdSpecification specification1 = new UniqueIdSpecification(
+		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#notATest()");
-		resolver.resolveElement(specification1);
+
+		assertThrows(IllegalArgumentException.class, () -> resolver.resolveElement(specification));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testMethodResolutionByUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()");
@@ -187,7 +188,7 @@ public class SpecificationResolverTest {
 		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()"));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testMethodResolutionByUniqueIdFromInheritedClass() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test1()");
@@ -202,7 +203,7 @@ public class SpecificationResolverTest {
 		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test1()"));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testMethodResolutionByUniqueIdWithParams() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test7(java.lang.String)");
@@ -218,15 +219,15 @@ public class SpecificationResolverTest {
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test7(java.lang.String)"));
 	}
 
-	@org.junit.Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testMethodResolutionByUniqueIdWithWrongParams() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test7(java.math.BigDecimal)");
 
-		resolver.resolveElement(specification);
+		assertThrows(IllegalArgumentException.class, () -> resolver.resolveElement(specification));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testTwoMethodResolutionsByUniqueId() {
 		UniqueIdSpecification specification1 = new UniqueIdSpecification(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()");
@@ -252,7 +253,7 @@ public class SpecificationResolverTest {
 		assertSame(classFromMethod1, classFromMethod2);
 	}
 
-	@org.junit.Test
+	@Test
 	public void testPackageResolution() {
 		PackageSpecification specification = new PackageSpecification(
 			"org.junit.gen5.engine.junit5.descriptor.subpackage");
@@ -270,7 +271,7 @@ public class SpecificationResolverTest {
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.subpackage.Class2WithTestCases#test2()"));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testNestedTestResolutionFromBaseClass() {
 		ClassSpecification specification = new ClassSpecification(TestCaseWithNesting.class);
 
@@ -294,7 +295,7 @@ public class SpecificationResolverTest {
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testNestedTestResolutionFromNestedTestClass() {
 		ClassSpecification specification = new ClassSpecification(TestCaseWithNesting.NestedTest.class);
 
@@ -315,7 +316,7 @@ public class SpecificationResolverTest {
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testNestedTestResolutionFromUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest");
@@ -335,7 +336,7 @@ public class SpecificationResolverTest {
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testNestedTestResolutionFromClass() {
 		ClassSpecification specification = new ClassSpecification(
 			TestCaseWithNesting.NestedTest.DoubleNestedTest.class);
@@ -355,7 +356,7 @@ public class SpecificationResolverTest {
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest#testC()"));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testNestedTestResolutionFromUniqueIdToMethod() {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest#testB()");

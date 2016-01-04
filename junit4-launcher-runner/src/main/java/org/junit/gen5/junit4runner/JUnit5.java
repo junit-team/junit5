@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2016 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v1.0 which
@@ -104,7 +104,7 @@ public class JUnit5 extends Runner {
 	}
 
 	/**
-	 * The <code>OnlyIncludeTags</code> annotation specifies tag to be filtered when a class
+	 * The <code>OnlyIncludeTags</code> annotation specifies tags to be considered when a class
 	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
 	 */
 	@Retention(RetentionPolicy.RUNTIME)
@@ -117,6 +117,26 @@ public class JUnit5 extends Runner {
 
 	private static String[] getAnnotatedOnlyIncludeTags(Class<?> testClass) {
 		OnlyIncludeTags annotation = testClass.getAnnotation(OnlyIncludeTags.class);
+		if (annotation == null) {
+			return new String[0];
+		}
+		return annotation.value();
+	}
+
+	/**
+	 * The <code>ExcludeTags</code> annotation specifies tags to be filtered out when a class
+	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	@Inherited
+	public @interface ExcludeTags {
+
+		String[]value();
+	}
+
+	private static String[] getAnnotatedExcludeTags(Class<?> testClass) {
+		ExcludeTags annotation = testClass.getAnnotation(ExcludeTags.class);
 		if (annotation == null) {
 			return new String[0];
 		}
@@ -214,6 +234,7 @@ public class JUnit5 extends Runner {
 
 		TestPlanSpecification plan = TestPlanSpecification.build(specs);
 		addOnlyIncludeTagsFilter(plan);
+		addExcludeTagsFilter(plan);
 		addOnlyIncludeEngineFilter(plan);
 		addClassNameMatches(plan);
 
@@ -233,6 +254,14 @@ public class JUnit5 extends Runner {
 		if (onlyIncludeTags.length > 0) {
 			Predicate<TestDescriptor> tagNamesFilter = TestPlanSpecification.byTags(onlyIncludeTags);
 			plan.filterWith(tagNamesFilter);
+		}
+	}
+
+	private void addExcludeTagsFilter(TestPlanSpecification plan) {
+		String[] excludeTags = getAnnotatedExcludeTags(testClass);
+		if (excludeTags.length > 0) {
+			Predicate<TestDescriptor> excludeTagsFilter = TestPlanSpecification.excludeTags(excludeTags);
+			plan.filterWith(excludeTagsFilter);
 		}
 	}
 
