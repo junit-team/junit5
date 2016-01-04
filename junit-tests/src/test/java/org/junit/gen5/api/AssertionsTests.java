@@ -25,7 +25,6 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 5.0
  */
-@RunWith(JUnit5.class)
 public class AssertionsTests {
 
 	@Test
