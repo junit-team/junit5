@@ -7,8 +7,8 @@ uploadArchives.enabled = false
 test.enabled = false
 
 junit5 {
-	//version '5.0.0-SNAPSHOT' //not needed since all dependencies are given explicitly
-	runJunit4 false //Does not work yet in master
+	// version '5.0.0-SNAPSHOT' // not needed since all dependencies are declared explicitly
+	runJunit4 false // Does not work yet in master
 	matchClassName '.*Test[s]'
 	// includeTag 'fast'
 	// excludeTag 'slow'
