@@ -11,6 +11,7 @@
 package org.junit.gen5.engine;
 
 import static org.assertj.core.api.Assertions.allOf;
+import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.engine.ExecutionEvent.*;
 import static org.junit.gen5.engine.ExecutionEvent.Type.*;
 import static org.junit.gen5.engine.TestExecutionResult.Status.*;
@@ -24,12 +25,26 @@ import org.junit.gen5.engine.ExecutionEvent.Type;
  */
 public class ExecutionEventConditions {
 
+	public static Condition<ExecutionEvent> test(String uniqueIdSubstring) {
+		return allOf(test(), uniqueIdSubstring(uniqueIdSubstring));
+	}
+
 	public static Condition<ExecutionEvent> test() {
 		return new Condition<>(byTestDescriptor(TestDescriptor::isTest), "is a test");
 	}
 
+	public static Condition<ExecutionEvent> container(String uniqueIdSubstring) {
+		return allOf(container(), uniqueIdSubstring(uniqueIdSubstring));
+	}
+
 	public static Condition<ExecutionEvent> container() {
 		return new Condition<>(byTestDescriptor(TestDescriptor::isContainer), "is a container");
+	}
+
+	public static Condition<ExecutionEvent> uniqueIdSubstring(String uniqueIdSubstring) {
+		return new Condition<>(
+			byTestDescriptor(where(TestDescriptor::getUniqueId, uniqueId -> uniqueId.contains(uniqueIdSubstring))),
+			"has descriptor with uniqueId substring '%s'", uniqueIdSubstring);
 	}
 
 	public static Condition<ExecutionEvent> started() {

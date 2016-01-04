@@ -46,8 +46,8 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 		TestDescriptor childDescriptor = getOnlyElement(runnerDescriptor.getChildren());
 		assertTrue(childDescriptor.isTest());
 		assertFalse(childDescriptor.isContainer());
-		assertEquals("test", childDescriptor.getDisplayName());
-		assertEquals("junit4:" + testClass.getName() + "/test(" + testClass.getName() + ")",
+		assertEquals("failingTest", childDescriptor.getDisplayName());
+		assertEquals("junit4:" + testClass.getName() + "/failingTest(" + testClass.getName() + ")",
 			childDescriptor.getUniqueId());
 		assertThat(childDescriptor.getChildren()).isEmpty();
 	}

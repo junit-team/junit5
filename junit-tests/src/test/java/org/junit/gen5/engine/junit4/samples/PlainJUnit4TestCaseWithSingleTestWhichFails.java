@@ -15,7 +15,7 @@ import org.junit.Assert;
 public class PlainJUnit4TestCaseWithSingleTestWhichFails {
 
 	@org.junit.Test
-	public void test() {
+	public void failingTest() {
 		Assert.fail("this test should fail");
 	}
 

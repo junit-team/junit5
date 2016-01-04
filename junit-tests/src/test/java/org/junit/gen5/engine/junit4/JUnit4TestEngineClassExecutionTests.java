@@ -28,15 +28,17 @@ class JUnit4TestEngineClassExecutionTests {
 
 	@Test
 	void executesPlainJUnit4TestCaseWithSingleTestWhichFails() {
-		execute(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
+		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
+
+		execute(testClass);
 
 		// @formatter:off
 		assertThat(listener.getExecutionEvents())
 			.hasSize(4)
-			.has(allOf(container(), started()), atIndex(0))
-			.has(allOf(test(), started()), atIndex(1))
-			.has(allOf(test(), finishedWithFailure(causeMessage("this test should fail"))), atIndex(2))
-			.has(allOf(container(), finishedSuccessfully()), atIndex(3));
+			.has(allOf(container(testClass.getName()), started()), atIndex(0))
+			.has(allOf(test("failingTest"), started()), atIndex(1))
+			.has(allOf(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), atIndex(2))
+			.has(allOf(container(testClass.getName()), finishedSuccessfully()), atIndex(3));
 		// @formatter:on
 	}
 
