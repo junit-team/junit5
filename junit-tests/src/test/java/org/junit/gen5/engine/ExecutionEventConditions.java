@@ -11,12 +11,15 @@
 package org.junit.gen5.engine;
 
 import static java.util.function.Predicate.isEqual;
-import static org.assertj.core.api.Assertions.allOf;
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.data.Index.atIndex;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.engine.ExecutionEvent.*;
 import static org.junit.gen5.engine.ExecutionEvent.Type.*;
 import static org.junit.gen5.engine.TestExecutionResult.Status.*;
 import static org.junit.gen5.engine.TestExecutionResultConditions.status;
+
+import java.util.List;
 
 import org.assertj.core.api.Condition;
 import org.junit.gen5.engine.ExecutionEvent.Type;
@@ -25,6 +28,21 @@ import org.junit.gen5.engine.ExecutionEvent.Type;
  * Collection of AssertJ conditions for {@link ExecutionEvent}.
  */
 public class ExecutionEventConditions {
+
+	@SafeVarargs
+	public static void assertRecordedExecutionEventsContainsExactly(
+			ExecutionEventRecordingEngineExecutionListener listener, Condition<? super ExecutionEvent>... conditions) {
+		List<ExecutionEvent> executionEvents = listener.getExecutionEvents();
+		assertThat(executionEvents).hasSize(conditions.length);
+		for (int i = 0; i < conditions.length; i++) {
+			assertThat(executionEvents).has(conditions[i], atIndex(i));
+		}
+	}
+
+	@SafeVarargs
+	public static Condition<ExecutionEvent> event(Condition<? super ExecutionEvent>... conditions) {
+		return allOf(conditions);
+	}
 
 	public static Condition<ExecutionEvent> engine() {
 		return new Condition<>(byTestDescriptor(EngineAwareTestDescriptor.class::isInstance), "is an engine");
