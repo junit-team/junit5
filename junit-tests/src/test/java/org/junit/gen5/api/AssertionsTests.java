@@ -16,8 +16,6 @@ import static org.junit.gen5.api.Assertions.fail;
 
 import java.util.function.Supplier;
 
-import org.junit.gen5.junit4runner.JUnit5;
-import org.junit.runner.RunWith;
 import org.opentest4j.AssertionFailedError;
 
 /**
