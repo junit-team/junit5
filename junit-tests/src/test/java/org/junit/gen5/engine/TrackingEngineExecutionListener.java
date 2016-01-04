@@ -15,10 +15,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.gen5.engine.TestExecutionResult.Status;
-import org.junit.gen5.launcher.TestExecutionListener;
 
 /**
- * Simple {@link TestExecutionListener} that tracks the number of times that certain callbacks are invoked.
+ * Simple {@link EngineExecutionListener} that tracks the number of times that certain callbacks are invoked.
  *
  * @since 5.0
  */
