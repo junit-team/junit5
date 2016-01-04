@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.gen5.engine.EngineExecutionListener;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestExecutionResult.Status;
 import org.junit.gen5.launcher.TestExecutionListener;
 
