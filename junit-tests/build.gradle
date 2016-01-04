@@ -14,6 +14,15 @@ junit5 {
 	// excludeTag 'slow'
 }
 
+// The JUnit5Plugin registers the junit5Test task *after* the project has
+// been evaluated. We can therefore only configure the junit5Test task
+// once it actually exists.
+project.afterEvaluate {
+
+	// Ensure that log4j2 is properly configured.
+	junit5Test.systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
+}
+
 def testedProjects = [
 	project(':junit-commons'),
 	project(':junit-console'),
