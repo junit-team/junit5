@@ -10,15 +10,17 @@
 
 package org.junit.gen5.engine.junit4.samples;
 
-import org.junit.Assert;
+import static org.junit.Assert.fail;
+
 import org.junit.Ignore;
+import org.junit.Test;
 
 @Ignore
 public class IgnoredJUnit4TestCase {
 
-	@org.junit.Test
+	@Test
 	public void test() {
-		Assert.fail("this test is not even discovered");
+		fail("this test is not even discovered");
 	}
 
 }

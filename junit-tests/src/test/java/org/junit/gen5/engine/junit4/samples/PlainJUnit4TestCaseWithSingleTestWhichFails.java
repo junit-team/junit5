@@ -10,13 +10,15 @@
 
 package org.junit.gen5.engine.junit4.samples;
 
-import org.junit.Assert;
+import static org.junit.Assert.fail;
+
+import org.junit.Test;
 
 public class PlainJUnit4TestCaseWithSingleTestWhichFails {
 
-	@org.junit.Test
+	@Test
 	public void failingTest() {
-		Assert.fail("this test should fail");
+		fail("this test should fail");
 	}
 
 }
