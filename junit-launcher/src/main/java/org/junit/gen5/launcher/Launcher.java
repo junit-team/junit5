@@ -103,7 +103,7 @@ public class Launcher {
 	private RootTestDescriptor discoverRootDescriptor(TestPlanSpecification specification, String phase) {
 		RootTestDescriptor root = new RootTestDescriptor();
 		for (TestEngine testEngine : testEngineRegistry.getTestEngines()) {
-			LOG.info(() -> String.format("Discovering tests during launcher %s phase in engine '%s'.", phase,
+			LOG.fine(() -> String.format("Discovering tests during launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 			EngineAwareTestDescriptor engineRoot = testEngine.discoverTests(specification);
 			root.addChild(engineRoot);
