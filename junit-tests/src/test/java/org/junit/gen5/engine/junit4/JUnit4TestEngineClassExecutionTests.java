@@ -21,6 +21,8 @@ import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit4.samples.EnclosedJUnit4TestCase;
+import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
+import org.junit.gen5.engine.junit4.samples.PlainJUnit3TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithFourTests;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithTwoTests;
@@ -108,6 +110,29 @@ class JUnit4TestEngineClassExecutionTests {
 			.has(allOf(container(nestedClass.getName()), finishedSuccessfully()), atIndex(5))
 			.has(allOf(container(testClass.getName()), finishedSuccessfully()), atIndex(6))
 			.has(allOf(engine(), finishedSuccessfully()), atIndex(7));
+		// @formatter:on
+	}
+
+	@Test
+	void executesSuite() {
+		Class<?> junit4SuiteClass = JUnit4SuiteWithJUnit3SuiteWithSingleTestCase.class;
+		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
+
+		execute(junit4SuiteClass);
+
+		// @formatter:off
+		assertThat(listener.getExecutionEvents())
+			.hasSize(10)
+			.has(allOf(engine(), started()), atIndex(0))
+			.has(allOf(container(junit4SuiteClass.getName()), started()), atIndex(1))
+			.has(allOf(container("TestSuite with 1 tests"), started()), atIndex(2))
+			.has(allOf(container(testClass.getName()), started()), atIndex(3))
+			.has(allOf(test("test"), started()), atIndex(4))
+			.has(allOf(test("test"), finishedWithFailure(causeMessage("this test should fail"))), atIndex(5))
+			.has(allOf(container(testClass.getName()), finishedSuccessfully()), atIndex(6))
+			.has(allOf(container("TestSuite with 1 tests"), finishedSuccessfully()), atIndex(7))
+			.has(allOf(container(junit4SuiteClass.getName()), finishedSuccessfully()), atIndex(8))
+			.has(allOf(engine(), finishedSuccessfully()), atIndex(9));
 		// @formatter:on
 	}
 
