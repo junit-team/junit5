@@ -14,8 +14,11 @@ import static org.junit.gen5.engine.ExecutionEventConditions.*;
 import static org.junit.gen5.engine.TestExecutionResultConditions.causeMessage;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
+import java.util.List;
+
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineAwareTestDescriptor;
+import org.junit.gen5.engine.ExecutionEvent;
 import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit4.samples.EnclosedJUnit4TestCase;
@@ -27,15 +30,13 @@ import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithTwoTests;
 
 class JUnit4TestEngineClassExecutionTests {
 
-	ExecutionEventRecordingEngineExecutionListener listener = new ExecutionEventRecordingEngineExecutionListener();
-
 	@Test
 	void executesPlainJUnit4TestCaseWithSingleTestWhichFails() {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
 
-		execute(testClass);
+		List<ExecutionEvent> executionEvents = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(listener, //
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
 			event(container(testClass.getName()), started()), //
 			event(test("failingTest"), started()), //
@@ -48,9 +49,9 @@ class JUnit4TestEngineClassExecutionTests {
 	void executesPlainJUnit4TestCaseWithTwoTests() {
 		Class<?> testClass = PlainJUnit4TestCaseWithTwoTests.class;
 
-		execute(testClass);
+		List<ExecutionEvent> executionEvents = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(listener, //
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
 			event(container(testClass.getName()), started()), //
 			event(test("failingTest"), started()), //
@@ -65,9 +66,9 @@ class JUnit4TestEngineClassExecutionTests {
 	void executesPlainJUnit4TestCaseWithFourTests() {
 		Class<?> testClass = PlainJUnit4TestCaseWithFourTests.class;
 
-		execute(testClass);
+		List<ExecutionEvent> executionEvents = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(listener, //
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
 			event(container(testClass.getName()), started()), //
 			event(test("abortedTest"), started()), //
@@ -86,9 +87,9 @@ class JUnit4TestEngineClassExecutionTests {
 		Class<?> testClass = EnclosedJUnit4TestCase.class;
 		Class<?> nestedClass = EnclosedJUnit4TestCase.NestedClass.class;
 
-		execute(testClass);
+		List<ExecutionEvent> executionEvents = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(listener, //
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
 			event(container(testClass.getName()), started()), //
 			event(container(nestedClass.getName()), started()), //
@@ -104,9 +105,9 @@ class JUnit4TestEngineClassExecutionTests {
 		Class<?> junit4SuiteClass = JUnit4SuiteWithJUnit3SuiteWithSingleTestCase.class;
 		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
 
-		execute(junit4SuiteClass);
+		List<ExecutionEvent> executionEvents = execute(junit4SuiteClass);
 
-		assertRecordedExecutionEventsContainsExactly(listener, //
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
 			event(container(junit4SuiteClass.getName()), started()), //
 			event(container("TestSuite with 1 tests"), started()), //
@@ -119,9 +120,11 @@ class JUnit4TestEngineClassExecutionTests {
 			event(engine(), finishedSuccessfully()));
 	}
 
-	private void execute(Class<?> testClass) {
+	private List<ExecutionEvent> execute(Class<?> testClass) {
 		JUnit4TestEngine engine = new JUnit4TestEngine();
 		EngineAwareTestDescriptor engineTestDescriptor = engine.discoverTests(build(forClass(testClass)));
+		ExecutionEventRecordingEngineExecutionListener listener = new ExecutionEventRecordingEngineExecutionListener();
 		engine.execute(new ExecutionRequest(engineTestDescriptor, listener));
+		return listener.getExecutionEvents();
 	}
 }

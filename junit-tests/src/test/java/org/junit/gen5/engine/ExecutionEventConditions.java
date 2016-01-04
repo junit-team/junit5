@@ -30,9 +30,8 @@ import org.junit.gen5.engine.ExecutionEvent.Type;
 public class ExecutionEventConditions {
 
 	@SafeVarargs
-	public static void assertRecordedExecutionEventsContainsExactly(
-			ExecutionEventRecordingEngineExecutionListener listener, Condition<? super ExecutionEvent>... conditions) {
-		List<ExecutionEvent> executionEvents = listener.getExecutionEvents();
+	public static void assertRecordedExecutionEventsContainsExactly(List<ExecutionEvent> executionEvents,
+			Condition<? super ExecutionEvent>... conditions) {
 		assertThat(executionEvents).hasSize(conditions.length);
 		for (int i = 0; i < conditions.length; i++) {
 			assertThat(executionEvents).has(conditions[i], atIndex(i));
