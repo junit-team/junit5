@@ -26,20 +26,16 @@ class ServiceLoaderTestEngineRegistry implements TestEngineRegistry {
 
 	private static final Logger LOG = Logger.getLogger(ServiceLoaderTestEngineRegistry.class.getName());
 
-	private static final Object monitor = new Object();
-
 	private static Iterable<TestEngine> testEngines;
 
 	@Override
-	public Iterable<TestEngine> getTestEngines() {
-		synchronized (monitor) {
-			if (testEngines == null) {
-				testEngines = ServiceLoader.load(TestEngine.class, ReflectionUtils.getDefaultClassLoader());
-				LOG.info(() -> "Discovered TestEngines with IDs "
-						+ stream(testEngines.spliterator(), false).map(TestEngine::getId).collect(toList()));
-			}
-			return testEngines;
+	public synchronized Iterable<TestEngine> getTestEngines() {
+		if (testEngines == null) {
+			testEngines = ServiceLoader.load(TestEngine.class, ReflectionUtils.getDefaultClassLoader());
+			LOG.info(() -> "Discovered TestEngines with IDs "
+					+ stream(testEngines.spliterator(), false).map(TestEngine::getId).collect(toList()));
 		}
+		return testEngines;
 	}
 
 }
