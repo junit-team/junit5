@@ -29,7 +29,7 @@ class JUnit5Plugin implements Plugin<Project> {
 				}
 			}
 
-			def testReport = junit5.reportFile ?: file("build/test-results/junit5-report.txt")
+			def testReport = junit5.reportFile ?: project.file("build/test-results/junit5-report.txt")
 
 			project.task('junit5Test', group: 'verification', type: org.gradle.api.tasks.JavaExec) { task ->
 
@@ -51,7 +51,7 @@ class JUnit5Plugin implements Plugin<Project> {
 
 				doLast {
 
-					reportsDir.mkdirs()
+					testReport.parentFile.mkdirs()
 					testReport.withPrintWriter { writer ->
 						writer.println "JUnit 5 tests run at " + new Date().toString()
 					}
