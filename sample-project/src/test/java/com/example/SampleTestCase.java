@@ -40,7 +40,6 @@ class SampleTestCase {
 
 	boolean throwExceptionInAfterMethod = false;
 
-
 	@BeforeEach
 	void before() {
 		this.beforeInvoked = true;
