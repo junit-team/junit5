@@ -36,16 +36,10 @@ import org.opentest4j.TestSkippedException;
 @ExtendWith({ CustomTypeParameterResolver.class, CustomAnnotationParameterResolver.class })
 class SampleTestCase {
 
-	static boolean staticBeforeInvoked = false;
-
 	boolean beforeInvoked = false;
 
 	boolean throwExceptionInAfterMethod = false;
 
-	@BeforeEach
-	static void staticBefore() {
-		staticBeforeInvoked = true;
-	}
 
 	@BeforeEach
 	void before() {
@@ -65,7 +59,6 @@ class SampleTestCase {
 	@Test
 	void methodLevelCallbacks() {
 		assertTrue(this.beforeInvoked, "@BeforeEach was not invoked on instance method");
-		assertTrue(staticBeforeInvoked, "@BeforeEach was not invoked on static method");
 		this.throwExceptionInAfterMethod = true;
 	}
 
