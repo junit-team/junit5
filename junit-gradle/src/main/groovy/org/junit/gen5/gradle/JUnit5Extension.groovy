@@ -15,6 +15,7 @@ class JUnit5Extension {
 	String classNameFilter
 	List includeTags = []
 	List excludeTags = []
+	File reportFile
 
 	void excludeTag(tag) {
 		excludeTags.add tag

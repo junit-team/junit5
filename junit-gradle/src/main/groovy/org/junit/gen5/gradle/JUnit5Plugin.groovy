@@ -29,8 +29,7 @@ class JUnit5Plugin implements Plugin<Project> {
 				}
 			}
 
-			def reportsDir = new File("build/test-results")
-			def testReport = new File(reportsDir, "junit5-report.txt")
+			def testReport = junit5.reportFile ?: file("build/test-results/junit5-report.txt")
 
 			project.task('junit5Test', group: 'verification', type: org.gradle.api.tasks.JavaExec) { task ->
 
