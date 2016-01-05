@@ -8,9 +8,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.junit4runner;
+package org.junit.gen5.junit4.runner;
 
-import static org.junit.gen5.engine.TestExecutionResult.Status.*;
+import static org.junit.gen5.engine.TestExecutionResult.Status.ABORTED;
+import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
 
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.launcher.TestExecutionListener;
@@ -24,7 +25,9 @@ import org.junit.runner.notification.RunNotifier;
 class JUnit5RunnerListener implements TestExecutionListener {
 
 	private final JUnit5TestTree testTree;
+
 	private final RunNotifier notifier;
+
 	private final Result result;
 
 	JUnit5RunnerListener(JUnit5TestTree testTree, RunNotifier notifier, Result result) {
@@ -45,7 +48,7 @@ class JUnit5RunnerListener implements TestExecutionListener {
 
 	@Override
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
-		System.out.println("JUnit5 test runner cannot handle dynamic tests");
+		System.err.println("JUnit5 Runner does not support dynamic tests.");
 	}
 
 	@Override

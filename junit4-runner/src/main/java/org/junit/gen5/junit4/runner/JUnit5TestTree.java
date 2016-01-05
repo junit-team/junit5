@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.junit4runner;
+package org.junit.gen5.junit4.runner;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +20,7 @@ import org.junit.runner.Description;
 class JUnit5TestTree {
 
 	private final Description suiteDescription;
+
 	private final Map<TestIdentifier, Description> descriptions = new HashMap<>();
 
 	JUnit5TestTree(TestPlan plan, Class<?> testClass) {
@@ -62,4 +63,5 @@ class JUnit5TestTree {
 			return Description.createSuiteDescription(identifier.getDisplayName(), identifier.getUniqueId());
 		}
 	}
+
 }

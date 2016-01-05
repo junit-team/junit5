@@ -10,8 +10,8 @@
 
 package org.junit.gen5.engine.junit4.samples;
 
-import org.junit.gen5.junit4runner.JUnit5;
-import org.junit.gen5.junit4runner.JUnit5.Classes;
+import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.gen5.junit4.runner.JUnit5.Classes;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)

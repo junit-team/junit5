@@ -11,11 +11,11 @@
 package org.junit.gen5;
 
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
-import org.junit.gen5.junit4runner.JUnit5;
-import org.junit.gen5.junit4runner.JUnit5.ClassNameMatches;
-import org.junit.gen5.junit4runner.JUnit5.ExcludeTags;
-import org.junit.gen5.junit4runner.JUnit5.OnlyEngine;
-import org.junit.gen5.junit4runner.JUnit5.Packages;
+import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.gen5.junit4.runner.JUnit5.ClassNameMatches;
+import org.junit.gen5.junit4.runner.JUnit5.ExcludeTags;
+import org.junit.gen5.junit4.runner.JUnit5.OnlyEngine;
+import org.junit.gen5.junit4.runner.JUnit5.Packages;
 import org.junit.runner.RunWith;
 
 /**

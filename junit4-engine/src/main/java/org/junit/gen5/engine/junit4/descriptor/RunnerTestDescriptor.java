@@ -13,6 +13,9 @@ package org.junit.gen5.engine.junit4.descriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.runner.Runner;
 
+/**
+ * @since 5.0
+ */
 public class RunnerTestDescriptor extends JUnit4TestDescriptor {
 
 	private final Runner runner;

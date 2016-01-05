@@ -18,7 +18,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.junit4runner.JUnit5;
+import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)

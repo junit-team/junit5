@@ -12,7 +12,7 @@ package com.example.timing;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.junit4runner.JUnit5;
+import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.runner.RunWith;
 
 /**

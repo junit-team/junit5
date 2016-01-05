@@ -10,9 +10,9 @@
 
 package com.example;
 
-import org.junit.gen5.junit4runner.JUnit5;
-import org.junit.gen5.junit4runner.JUnit5.Classes;
-import org.junit.gen5.junit4runner.JUnit5.ExcludeTags;
+import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.gen5.junit4.runner.JUnit5.Classes;
+import org.junit.gen5.junit4.runner.JUnit5.ExcludeTags;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)

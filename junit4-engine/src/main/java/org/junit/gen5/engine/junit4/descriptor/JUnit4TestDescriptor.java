@@ -14,6 +14,9 @@ import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.runner.Description;
 
+/**
+ * @since 5.0
+ */
 public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 
 	private final Description description;
@@ -51,4 +54,5 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 	public boolean isContainer() {
 		return description.isSuite();
 	}
+
 }
