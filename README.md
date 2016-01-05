@@ -1,6 +1,6 @@
 # JUnit Lambda
 
-We are currently in _Phase 2_, building the prototype. Jump straight to the [Prototype](https://github.com/junit-team/junit-lambda/wiki/Prototype) page for full details.
+We are currently in _Phase 3_, building the _Alpha 1 milestone_ which is based on the feedback we got for the [Prototype](https://github.com/junit-team/junit-lambda/wiki/Prototype).
 
 ## Overview
 
