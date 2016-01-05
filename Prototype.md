@@ -29,7 +29,7 @@ Snapshot artifacts are deployed to Sonatype's [snapshots repository].
 	- `junit-gradle`
 	- `junit-launcher`
 	- `junit4-engine`
-	- `junit4-launcher-runner`
+	- `junit4-runner`
 	- `junit5-api`
 	- `junit5-engine`
 	- `open-test-alliance` (Version `1.0.0-SNAPSHOT`)
