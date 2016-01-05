@@ -47,8 +47,8 @@ public class ExecutionEventRecordingEngineExecutionListener implements EngineExe
 		return executionEvents;
 	}
 
-	private void addEvent(ExecutionEvent dynamicTestRegistered) {
-		executionEvents.add(dynamicTestRegistered);
+	private void addEvent(ExecutionEvent event) {
+		executionEvents.add(event);
 	}
 
 }
