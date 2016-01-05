@@ -7,6 +7,7 @@ junit5 {
 	// version '5.0.0-SNAPSHOT' // not needed since all dependencies are declared explicitly
 	runJunit4 false // Does not work yet in master
 	matchClassName '.*Test[s]'
+	reportFile file('build/test-results/JUNIT5-Tests.xml')
 	// includeTag 'fast'
 	// excludeTag 'slow'
 }
