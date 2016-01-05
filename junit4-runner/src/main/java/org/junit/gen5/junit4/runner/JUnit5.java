@@ -13,11 +13,6 @@ package org.junit.gen5.junit4.runner;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,162 +32,37 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
 /**
+ * JUnit4-based {@link Runner} which runs tests that use the JUnit5
+ * programming and extension models.
+ *
+ * <p>Annotating a test class with {@code @RunWith(JUnit5.class)} allows
+ * it to be run with IDEs and build systems that support JUnit 4 but do
+ * not yet support the JUnit 5 APIs directly.
+ *
+ * <p>Consult the various annotations in this package for configuration
+ * options.
+ *
  * @since 5.0
+ * @see Classes
+ * @see ClassNamePattern
+ * @see Packages
+ * @see UniqueIds
+ * @see OnlyIncludeTags
+ * @see ExcludeTags
+ * @see OnlyEngine
  */
 public class JUnit5 extends Runner {
 
 	public static final String CREATE_SPECIFICATION_METHOD_NAME = "createSpecification";
 
-	/**
-	 * The <code>Classes</code> annotation specifies the classes to be run when a class
-	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
-	 */
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	@Inherited
-	public @interface Classes {
+	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
+	private static final String[] EMPTY_STRING_ARRAY = new String[0];
+	private static final String EMPTY_STRING = "";
 
-		Class<?>[]value();
-	}
-
-	private static Class<?>[] getAnnotatedClasses(Class<?> testClass) {
-		Classes annotation = testClass.getAnnotation(Classes.class);
-		if (annotation == null) {
-			return new Class[0];
-		}
-		return annotation.value();
-	}
-
-	/**
-	 * The <code>UniqueIds</code> annotation specifies unique ids of classes or methods to be run when a class
-	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
-	 */
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	@Inherited
-	public @interface UniqueIds {
-
-		String[]value();
-	}
-
-	private static String[] getAnnotatedUniqueIds(Class<?> testClass) {
-		UniqueIds annotation = testClass.getAnnotation(UniqueIds.class);
-		if (annotation == null) {
-			return new String[0];
-		}
-		return annotation.value();
-	}
-
-	/**
-	 * The <code>Packages</code> annotation specifies names of packages to be run when a class
-	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
-	 */
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	@Inherited
-	public @interface Packages {
-
-		String[]value();
-	}
-
-	private static String[] getAnnotatedPackages(Class<?> testClass) {
-		Packages annotation = testClass.getAnnotation(Packages.class);
-		if (annotation == null) {
-			return new String[0];
-		}
-		return annotation.value();
-	}
-
-	/**
-	 * The <code>OnlyIncludeTags</code> annotation specifies tags to be considered when a class
-	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
-	 */
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	@Inherited
-	public @interface OnlyIncludeTags {
-
-		String[]value();
-	}
-
-	private static String[] getAnnotatedOnlyIncludeTags(Class<?> testClass) {
-		OnlyIncludeTags annotation = testClass.getAnnotation(OnlyIncludeTags.class);
-		if (annotation == null) {
-			return new String[0];
-		}
-		return annotation.value();
-	}
-
-	/**
-	 * The <code>ExcludeTags</code> annotation specifies tags to be filtered out when a class
-	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
-	 */
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	@Inherited
-	public @interface ExcludeTags {
-
-		String[]value();
-	}
-
-	private static String[] getAnnotatedExcludeTags(Class<?> testClass) {
-		ExcludeTags annotation = testClass.getAnnotation(ExcludeTags.class);
-		if (annotation == null) {
-			return new String[0];
-		}
-		return annotation.value();
-	}
-
-	/**
-	 * The <code>OnlyEngine</code> annotation specifies the engine ID to be filtered when a class
-	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
-	 */
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	@Inherited
-	public @interface OnlyEngine {
-
-		/**
-		 * @return engineId
-		 */
-		String value();
-	}
-
-	private static String getAnnotatedOnlyEngine(Class<?> testClass) {
-		OnlyEngine annotation = testClass.getAnnotation(OnlyEngine.class);
-		if (annotation == null) {
-			return "";
-		}
-		return annotation.value();
-	}
-
-	/**
-	 * The <code>OnlyEngine</code> annotation specifies the engine ID to be filtered when a class
-	 * annotated with <code>@RunWith(JUnit5.class)</code> is run.
-	 */
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	@Inherited
-	public @interface ClassNameMatches {
-
-		/**
-		 * @return regex
-		 */
-		String value();
-	}
-
-	private static String getAnnotatedClassNameMatches(Class<?> testClass) {
-		ClassNameMatches annotation = testClass.getAnnotation(ClassNameMatches.class);
-		if (annotation == null) {
-			return "";
-		}
-		return annotation.value();
-	}
-
+	private final Launcher launcher = new Launcher();
 	private final Class<?> testClass;
 	private final TestPlanSpecification specification;
 	private final JUnit5TestTree testTree;
-	private final Launcher launcher = new Launcher();
 
 	public JUnit5(Class<?> testClass) throws InitializationError {
 		this.testClass = testClass;
@@ -200,17 +70,31 @@ public class JUnit5 extends Runner {
 		this.testTree = generateTestTree(testClass);
 	}
 
-	protected JUnit5TestTree generateTestTree(Class<?> testClass) {
-		if (specification != null) {
-			TestPlan plan = launcher.discover(specification);
-			return new JUnit5TestTree(plan, testClass);
+	@Override
+	public Description getDescription() {
+		return this.testTree.getSuiteDescription();
+	}
+
+	@Override
+	public void run(RunNotifier notifier) {
+		Result result = new Result();
+		notifier.addFirstListener(result.createListener());
+		JUnit5RunnerListener listener = new JUnit5RunnerListener(this.testTree, notifier, result);
+		this.launcher.registerTestExecutionListeners(listener);
+		this.launcher.execute(this.specification);
+	}
+
+	private JUnit5TestTree generateTestTree(Class<?> testClass) {
+		if (this.specification == null) {
+			throw new IllegalStateException("TestPlanSpecification must not be null");
 		}
-		return testTree;
+		TestPlan plan = this.launcher.discover(this.specification);
+		return new JUnit5TestTree(plan, testClass);
 	}
 
 	private TestPlanSpecification createSpecification() throws InitializationError {
 		try {
-			Method createSpecMethod = testClass.getMethod(CREATE_SPECIFICATION_METHOD_NAME);
+			Method createSpecMethod = this.testClass.getMethod(CREATE_SPECIFICATION_METHOD_NAME);
 			return (TestPlanSpecification) createSpecMethod.invoke(null);
 		}
 		catch (NoSuchMethodException notUsed) {
@@ -222,84 +106,102 @@ public class JUnit5 extends Runner {
 	}
 
 	private TestPlanSpecification createSpecificationFromAnnotations() {
-		List<TestPlanSpecificationElement> specs = new ArrayList<>();
-		specs.addAll(getClassnameSpecificationElements());
-		specs.addAll(getUniqueIdSpecificationElements());
-		specs.addAll(getPackagesSpecificationElements());
+		List<TestPlanSpecificationElement> specElements = new ArrayList<>();
+		specElements.addAll(getClassSpecificationElements());
+		specElements.addAll(getUniqueIdSpecificationElements());
+		specElements.addAll(getPackageSpecificationElements());
 
 		// Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
-		if (specs.isEmpty()) {
-			specs.add(TestPlanSpecification.forClass(testClass));
+		if (specElements.isEmpty()) {
+			specElements.add(TestPlanSpecification.forClass(this.testClass));
 		}
 
-		TestPlanSpecification plan = TestPlanSpecification.build(specs);
-		addOnlyIncludeTagsFilter(plan);
-		addExcludeTagsFilter(plan);
-		addOnlyIncludeEngineFilter(plan);
-		addClassNameMatches(plan);
+		TestPlanSpecification spec = TestPlanSpecification.build(specElements);
+		addClassNameMatchesFilter(spec);
+		addIncludeTagsFilter(spec);
+		addExcludeTagsFilter(spec);
+		addEngineIdFilter(spec);
 
-		return plan;
+		return spec;
 	}
 
-	private void addClassNameMatches(TestPlanSpecification plan) {
-		String regex = getAnnotatedClassNameMatches(testClass).trim();
+	private List<TestPlanSpecificationElement> getClassSpecificationElements() {
+		return stream(getTestClasses()).map(TestPlanSpecification::forClass).collect(toList());
+	}
+
+	private List<TestPlanSpecificationElement> getUniqueIdSpecificationElements() {
+		return stream(getUniqueIds()).map(TestPlanSpecification::forUniqueId).collect(toList());
+	}
+
+	private List<TestPlanSpecificationElement> getPackageSpecificationElements() {
+		return stream(getPackageNames()).map(TestPlanSpecification::forPackage).collect(toList());
+	}
+
+	private void addClassNameMatchesFilter(TestPlanSpecification plan) {
+		String regex = getClassNameRegExPattern();
 		if (!regex.isEmpty()) {
 			EngineFilter classNameFilter = TestPlanSpecification.classNameMatches(regex);
 			plan.filterWith(classNameFilter);
 		}
 	}
 
-	private void addOnlyIncludeTagsFilter(TestPlanSpecification plan) {
-		String[] onlyIncludeTags = getAnnotatedOnlyIncludeTags(testClass);
-		if (onlyIncludeTags.length > 0) {
-			Predicate<TestDescriptor> tagNamesFilter = TestPlanSpecification.byTags(onlyIncludeTags);
+	private void addIncludeTagsFilter(TestPlanSpecification plan) {
+		String[] includeTags = getIncludeTags();
+		if (includeTags.length > 0) {
+			Predicate<TestDescriptor> tagNamesFilter = TestPlanSpecification.byTags(includeTags);
 			plan.filterWith(tagNamesFilter);
 		}
 	}
 
 	private void addExcludeTagsFilter(TestPlanSpecification plan) {
-		String[] excludeTags = getAnnotatedExcludeTags(testClass);
+		String[] excludeTags = getExcludeTags();
 		if (excludeTags.length > 0) {
 			Predicate<TestDescriptor> excludeTagsFilter = TestPlanSpecification.excludeTags(excludeTags);
 			plan.filterWith(excludeTagsFilter);
 		}
 	}
 
-	private void addOnlyIncludeEngineFilter(TestPlanSpecification plan) {
-		String onlyIncludeEngine = getAnnotatedOnlyEngine(testClass);
-		if (StringUtils.isNotBlank(onlyIncludeEngine)) {
-			Predicate<TestDescriptor> engineFilter = TestPlanSpecification.byEngine(onlyIncludeEngine);
+	private void addEngineIdFilter(TestPlanSpecification plan) {
+		String engineId = getExplicitEngineId();
+		if (StringUtils.isNotBlank(engineId)) {
+			Predicate<TestDescriptor> engineFilter = TestPlanSpecification.byEngine(engineId);
 			plan.filterWith(engineFilter);
 		}
 	}
 
-	private List<TestPlanSpecificationElement> getPackagesSpecificationElements() {
-		String[] packages = getAnnotatedPackages(testClass);
-		return stream(packages).map(TestPlanSpecification::forPackage).collect(toList());
+	private Class<?>[] getTestClasses() {
+		Classes annotation = this.testClass.getAnnotation(Classes.class);
+		return (annotation != null ? annotation.value() : EMPTY_CLASS_ARRAY);
 	}
 
-	private List<TestPlanSpecificationElement> getClassnameSpecificationElements() {
-		Class<?>[] testClasses = getAnnotatedClasses(testClass);
-		return stream(testClasses).map(TestPlanSpecification::forClass).collect(toList());
+	private String[] getUniqueIds() {
+		UniqueIds annotation = this.testClass.getAnnotation(UniqueIds.class);
+		return (annotation != null ? annotation.value() : EMPTY_STRING_ARRAY);
 	}
 
-	private List<TestPlanSpecificationElement> getUniqueIdSpecificationElements() {
-		String[] uniqueIds = getAnnotatedUniqueIds(testClass);
-		return stream(uniqueIds).map(TestPlanSpecification::forUniqueId).collect(toList());
+	private String[] getPackageNames() {
+		Packages annotation = this.testClass.getAnnotation(Packages.class);
+		return (annotation != null ? annotation.value() : EMPTY_STRING_ARRAY);
 	}
 
-	@Override
-	public Description getDescription() {
-		return testTree.getSuiteDescription();
+	private String[] getIncludeTags() {
+		OnlyIncludeTags annotation = this.testClass.getAnnotation(OnlyIncludeTags.class);
+		return (annotation != null ? annotation.value() : EMPTY_STRING_ARRAY);
 	}
 
-	@Override
-	public void run(RunNotifier notifier) {
-		Result result = new Result();
-		notifier.addFirstListener(result.createListener());
-		JUnit5RunnerListener listener = new JUnit5RunnerListener(testTree, notifier, result);
-		launcher.registerTestExecutionListeners(listener);
-		launcher.execute(specification);
+	private String[] getExcludeTags() {
+		ExcludeTags annotation = this.testClass.getAnnotation(ExcludeTags.class);
+		return (annotation != null ? annotation.value() : EMPTY_STRING_ARRAY);
+	}
+
+	private String getExplicitEngineId() {
+		OnlyEngine annotation = this.testClass.getAnnotation(OnlyEngine.class);
+		return (annotation != null ? annotation.value().trim() : EMPTY_STRING);
+	}
+
+	private String getClassNameRegExPattern() {
+		ClassNamePattern annotation = this.testClass.getAnnotation(ClassNamePattern.class);
+		return (annotation != null ? annotation.value().trim() : EMPTY_STRING);
 	}
 
 }

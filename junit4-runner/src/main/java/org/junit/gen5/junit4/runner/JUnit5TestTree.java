@@ -17,22 +17,24 @@ import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.runner.Description;
 
+/**
+ * @since 5.0
+ */
 class JUnit5TestTree {
 
+	private final Map<TestIdentifier, Description> descriptions = new HashMap<>();
 	private final Description suiteDescription;
 
-	private final Map<TestIdentifier, Description> descriptions = new HashMap<>();
-
 	JUnit5TestTree(TestPlan plan, Class<?> testClass) {
-		suiteDescription = generateDescription(plan, testClass);
+		this.suiteDescription = generateDescription(plan, testClass);
 	}
 
 	Description getSuiteDescription() {
-		return suiteDescription;
+		return this.suiteDescription;
 	}
 
 	Description getDescription(TestIdentifier identifier) {
-		return descriptions.get(identifier);
+		return this.descriptions.get(identifier);
 	}
 
 	private Description generateDescription(TestPlan testPlan, Class<?> testClass) {
@@ -49,7 +51,7 @@ class JUnit5TestTree {
 	private void buildDescription(TestIdentifier identifier, Description parent, TestPlan testPlan) {
 		Description newDescription = createJUnit4Description(identifier, testPlan);
 		parent.addChild(newDescription);
-		descriptions.put(identifier, newDescription);
+		this.descriptions.put(identifier, newDescription);
 		testPlan.getChildren(identifier).stream().forEach(
 			testIdentifier -> buildDescription(testIdentifier, newDescription, testPlan));
 	}
