@@ -23,6 +23,7 @@ import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit4.samples.EnclosedJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
+import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithErrorInAfterClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithErrorInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.MalformedJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit3TestCaseWithSingleTestWhichFails;
@@ -149,6 +150,23 @@ class JUnit4TestEngineClassExecutionTests {
 			event(engine(), started()), //
 			event(container(testClass.getName()), started()), //
 			event(container(testClass.getName()), finishedWithFailure(causeMessage("something went wrong"))), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesJUnit4TestCaseWithErrorInAfterClass() {
+		Class<?> testClass = JUnit4TestCaseWithErrorInAfterClass.class;
+
+		List<ExecutionEvent> executionEvents = execute(testClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(container(testClass.getName()), started()), //
+			event(test("failingTest"), started()), //
+			event(test("failingTest"), finishedWithFailure(causeMessage("expected to fail"))), //
+			event(test("succeedingTest"), started()), //
+			event(test("succeedingTest"), finishedSuccessfully()), //
+			event(container(testClass.getName()), finishedWithFailure(causeMessage("error in @AfterClass"))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
