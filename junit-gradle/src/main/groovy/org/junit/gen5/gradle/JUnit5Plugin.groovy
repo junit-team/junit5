@@ -25,7 +25,7 @@ class JUnit5Plugin implements Plugin<Project> {
 				project.dependencies.add("testRuntime", "org.junit:junit5-engine:${junit5Version}")
 
 				if (junit5.runJunit4) {
-					project.dependencies.add("testRuntime", "org.junit.prototype:junit4-engine:${junit5Version}")
+					project.dependencies.add("testRuntime", "org.junit:junit4-engine:${junit5Version}")
 				}
 			}
 
