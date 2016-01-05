@@ -50,15 +50,15 @@ public class HierarchyTestCase {
 	static boolean thirdLevelTest2Invoked;
 
 	@BeforeAll
-	void beforeAll() {
+	static void beforeAll() {
 		topLevelBeforeAllInvocationCount++;
-		System.out.println(getClass().getName() + " beforeAll called");
+		System.out.println(HierarchyTestCase.class.getName() + " beforeAll called");
 	}
 
 	@AfterAll
-	void afterAll() {
+	static void afterAll() {
 		topLevelAfterAllInvocationCount++;
-		System.out.println(getClass().getName() + " afterAll called");
+		System.out.println(HierarchyTestCase.class.getName() + " afterAll called");
 	}
 
 	@BeforeEach
@@ -89,16 +89,18 @@ public class HierarchyTestCase {
 	@Name("Second Level Context")
 	class SecondLevelTestContext {
 
-		@BeforeAll
+		// TODO [#88] @BeforeAll method cannot be used in @Nested class.
+		// @BeforeAll
 		void beforeAll() {
 			secondLevelBeforeAllInvocationCount++;
-			System.out.println(getClass().getName() + " beforeAll called");
+			System.out.println(SecondLevelTestContext.class.getName() + " beforeAll called");
 		}
 
-		@AfterAll
+		// TODO [#88] @AfterAll method cannot be used in @Nested class.
+		// @AfterAll
 		void afterAll() {
 			secondLevelAfterAllInvocationCount++;
-			System.out.println(getClass().getName() + " afterAll called");
+			System.out.println(SecondLevelTestContext.class.getName() + " afterAll called");
 		}
 
 		@BeforeEach
@@ -129,16 +131,18 @@ public class HierarchyTestCase {
 		@Name("Third Level Context")
 		class ThirdLevelTestContext {
 
-			@BeforeAll
+			// TODO [#88] @BeforeAll method cannot be used in @Nested class.
+			// @BeforeAll
 			void beforeAll() {
 				thirdLevelBeforeAllInvocationCount++;
-				System.out.println(getClass().getName() + " beforeAll called");
+				System.out.println(ThirdLevelTestContext.class.getName() + " beforeAll called");
 			}
 
-			@AfterAll
+			// TODO [#88] @AfterAll method cannot be used in @Nested class.
+			// @AfterAll
 			void afterAll() {
 				thirdLevelAfterAllInvocationCount++;
-				System.out.println(getClass().getName() + " afterAll called");
+				System.out.println(ThirdLevelTestContext.class.getName() + " afterAll called");
 			}
 
 			@BeforeEach
