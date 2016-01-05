@@ -17,7 +17,7 @@ import java.util.Collection;
  *
  * @since 5.0
  */
-public class CollectionUtils {
+public final class CollectionUtils {
 
 	private CollectionUtils() {
 		/* no-op */

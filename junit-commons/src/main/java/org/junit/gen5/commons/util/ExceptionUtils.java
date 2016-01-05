@@ -30,12 +30,18 @@ public final class ExceptionUtils {
 	 * that tricks the Java compiler into believing that the thrown exception
 	 * is an unchecked exception.
 	 *
-	 * @param t the Throwable to throw as a {@code RuntimeException}
+	 * <h3>Warning</h3>
+	 *
+	 * <p>This method should be used sparingly.
+	 *
+	 * @param t the {@code Throwable} to throw as a {@code RuntimeException};
+	 * never {@code null}
 	 * @return this method always throws an exception and therefore never
 	 * returns anything; the return type is merely present to allow this
 	 * method to be supplied as the operand in a {@code throw} statement
 	 */
 	public static RuntimeException throwAsRuntimeException(Throwable t) {
+		Preconditions.notNull(t, "Throwable must not be null");
 		ExceptionUtils.<RuntimeException> throwAs(t);
 
 		// Appeasing the compiler: the following line will never be executed.

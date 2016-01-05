@@ -19,7 +19,7 @@ import java.util.function.Predicate;
  *
  * @since 5.0
  */
-public class FunctionUtils {
+public final class FunctionUtils {
 
 	private FunctionUtils() {
 		/* no-op */
