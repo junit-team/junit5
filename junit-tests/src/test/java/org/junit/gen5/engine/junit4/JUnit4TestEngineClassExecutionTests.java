@@ -23,6 +23,7 @@ import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit4.samples.EnclosedJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
+import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithErrorInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.MalformedJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit3TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithFiveTests;
@@ -135,6 +136,19 @@ class JUnit4TestEngineClassExecutionTests {
 			event(test("initializationError"),
 				finishedWithFailure(causeMessage("Method nonPublicTest() should be public"))), //
 			event(container(testClass.getName()), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesJUnit4TestCaseWithErrorInBeforeClass() {
+		Class<?> testClass = JUnit4TestCaseWithErrorInBeforeClass.class;
+
+		List<ExecutionEvent> executionEvents = execute(testClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(container(testClass.getName()), started()), //
+			event(container(testClass.getName()), finishedWithFailure(causeMessage("something went wrong"))), //
 			event(engine(), finishedSuccessfully()));
 	}
 

@@ -50,6 +50,7 @@ public class RunListenerAdapter extends RunListener {
 			.map(JUnit4TestDescriptor.class::cast)
 			.collect(toMap(JUnit4TestDescriptor::getDescription, identity()));
 		// @formatter:on
+		descriptionToDescriptor.put(runnerTestDescriptor.getDescription(), runnerTestDescriptor);
 	}
 
 	@Override
