@@ -5,7 +5,7 @@ uploadArchives.enabled = false
 
 junit5 {
 	// version '5.0.0-SNAPSHOT' // not needed since all dependencies are declared explicitly
-	runJunit4 false // Does not work yet in master
+	runJunit4 true
 	matchClassName '.*Test[s]'
 	reportFile file('build/test-results/JUNIT5-Tests.xml')
 	// includeTag 'fast'
@@ -13,8 +13,6 @@ junit5 {
 }
 
 test {
-	description = 'Runs JUnit tests.'
-	scanForTestClasses = false
 	// Tests are solely executed by the junit5Test task, not the standard test task.
 	exclude(['**/*.class'])
 }
@@ -49,7 +47,6 @@ dependencies {
 afterEvaluate {
 
 	// Ensure that 'gradle test' executes the junit5Test task as well.
-	// Please remove the next line if 'junit5.runJunit4' is set to 'true'
 	test.dependsOn(junit5Test)
 
 	// Ensure that log4j2 is properly configured.
