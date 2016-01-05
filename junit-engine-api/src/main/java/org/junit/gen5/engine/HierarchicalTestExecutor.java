@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine;
 
-import static org.junit.gen5.engine.BlacklistedExceptions.rethrowIfBlackListed;
+import static org.junit.gen5.engine.BlacklistedExceptions.rethrowIfBlacklisted;
 
 import org.junit.gen5.engine.Node.SkipResult;
 
@@ -62,7 +62,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 			}
 		}
 		catch (Throwable throwable) {
-			rethrowIfBlackListed(throwable);
+			rethrowIfBlacklisted(throwable);
 
 			// TODO Is this what we want?
 			listener.executionStarted(testDescriptor);

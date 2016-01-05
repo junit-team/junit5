@@ -43,7 +43,7 @@ final class BlacklistedExceptions {
 	 * <p>If the supplied {@code exception} is not <em>blacklisted</em>,
 	 * this method does nothing.
 	 */
-	static void rethrowIfBlackListed(Throwable exception) {
+	static void rethrowIfBlacklisted(Throwable exception) {
 		if (blacklist.stream().anyMatch(exceptionType -> exceptionType.isInstance(exception))) {
 			ExceptionUtils.throwAsRuntimeException(exception);
 		}

@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine;
 
-import static org.junit.gen5.engine.BlacklistedExceptions.rethrowIfBlackListed;
+import static org.junit.gen5.engine.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.gen5.engine.TestExecutionResult.aborted;
 import static org.junit.gen5.engine.TestExecutionResult.failed;
 import static org.junit.gen5.engine.TestExecutionResult.successful;
@@ -37,7 +37,7 @@ class SingleTestExecutor {
 			return aborted(e);
 		}
 		catch (Throwable t) {
-			rethrowIfBlackListed(t);
+			rethrowIfBlacklisted(t);
 			return failed(t);
 		}
 	}
