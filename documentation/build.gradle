@@ -9,8 +9,8 @@ dependencies {
 	compile(project(':junit-console'))
 	compile(project(':junit-engine-api'))
 	compile(project(':junit-launcher'))
-	compile(project(':junit4-launcher-runner'))
 	compile(project(':junit4-engine'))
+	compile(project(':junit4-runner'))
 	compile(project(':junit5-api'))
 	compile(project(':junit5-engine'))
 }

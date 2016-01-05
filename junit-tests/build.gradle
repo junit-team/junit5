@@ -22,8 +22,8 @@ def testedProjects = [
 	project(':junit-console'),
 	project(':junit-engine-api'),
 	project(':junit-launcher'),
-	project(':junit4-launcher-runner'),
 	project(':junit4-engine'),
+	project(':junit4-runner'),
 	project(':junit5-api'),
 	project(':junit5-engine')
 ]

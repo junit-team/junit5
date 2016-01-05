@@ -7,7 +7,7 @@ dependencies {
 	testCompile(project(':sample-extension'))
 	testCompile(project(':junit5-api'))
 	testCompile("junit:junit:${junit4Version}")
-	testCompile(project(':junit4-launcher-runner'))
+	testCompile(project(':junit4-runner'))
 	testRuntime(project(':junit5-engine'))
 	testRuntime(project(':junit4-engine'))
 }
