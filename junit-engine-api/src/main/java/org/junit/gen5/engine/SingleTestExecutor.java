@@ -10,15 +10,20 @@
 
 package org.junit.gen5.engine;
 
-import static org.junit.gen5.engine.TestExecutionResult.*;
+import static org.junit.gen5.engine.TestExecutionResult.aborted;
+import static org.junit.gen5.engine.TestExecutionResult.failed;
+import static org.junit.gen5.engine.TestExecutionResult.successful;
 
 import org.opentest4j.TestAbortedException;
 
+/**
+ * @since 5.0
+ */
 class SingleTestExecutor {
 
 	interface TestExecutable {
 
-		void execute() throws Throwable;
+		void execute() throws Exception;
 
 	}
 
@@ -34,4 +39,5 @@ class SingleTestExecutor {
 			return failed(t);
 		}
 	}
+
 }
