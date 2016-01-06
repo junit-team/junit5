@@ -10,7 +10,8 @@
 
 package org.junit.gen5.engine;
 
-class DummyTestEngineDescriptor extends AbstractTestDescriptor implements EngineAwareTestDescriptor, Leaf<DummyEngineExecutionContext> {
+class DummyTestEngineDescriptor extends AbstractTestDescriptor
+		implements EngineAwareTestDescriptor, Leaf<DummyEngineExecutionContext> {
 	private final String displayName;
 	private final Runnable runnable;
 
@@ -29,10 +30,10 @@ class DummyTestEngineDescriptor extends AbstractTestDescriptor implements Engine
 		return displayName;
 	}
 
-  @Override
-  public TestEngine getEngine() {
-    return null;
-  }
+	@Override
+	public TestEngine getEngine() {
+		return null;
+	}
 
 	@Override
 	public boolean isTest() {

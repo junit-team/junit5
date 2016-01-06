@@ -49,8 +49,7 @@ public class JUnit5TestableTests {
 		JUnit5Class testable = (JUnit5Class) JUnit5Testable.fromUniqueId(
 			"dummy:org.junit.gen5.engine.junit5.descriptor.ATestClass$AnInnerTestClass$InnerInnerTestClass",
 			engineDescriptor.getUniqueId());
-		assertEquals(
-			"dummy:org.junit.gen5.engine.junit5.descriptor.ATestClass$AnInnerTestClass$InnerInnerTestClass",
+		assertEquals("dummy:org.junit.gen5.engine.junit5.descriptor.ATestClass$AnInnerTestClass$InnerInnerTestClass",
 			testable.getUniqueId());
 		assertSame(ATestClass.AnInnerTestClass.InnerInnerTestClass.class, testable.getJavaClass());
 	}
