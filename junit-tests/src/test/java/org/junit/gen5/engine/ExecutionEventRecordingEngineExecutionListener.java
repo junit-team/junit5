@@ -14,12 +14,18 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * {@link EngineExecutionListener} that records all events and makes them
- * available to tests.
+ * {@link EngineExecutionListener} that records all events and makes them available to tests.
  *
  * @see ExecutionEvent
  */
 public class ExecutionEventRecordingEngineExecutionListener implements EngineExecutionListener {
+
+	public static List<ExecutionEvent> execute(TestEngine testEngine, TestPlanSpecification testPlanSpecification) {
+		TestDescriptor engineTestDescriptor = testEngine.discoverTests(testPlanSpecification);
+		ExecutionEventRecordingEngineExecutionListener listener = new ExecutionEventRecordingEngineExecutionListener();
+		testEngine.execute(new ExecutionRequest(engineTestDescriptor, listener));
+		return listener.getExecutionEvents();
+	}
 
 	public final List<ExecutionEvent> executionEvents = new CopyOnWriteArrayList<>();
 

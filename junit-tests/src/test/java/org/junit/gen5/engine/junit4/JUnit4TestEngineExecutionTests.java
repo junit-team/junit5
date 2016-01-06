@@ -17,10 +17,9 @@ import static org.junit.gen5.engine.TestPlanSpecification.*;
 import java.util.List;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.ExecutionEvent;
 import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
-import org.junit.gen5.engine.ExecutionRequest;
+import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit4.samples.EnclosedJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.IgnoredJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteOfSuiteWithIgnoredJUnit4TestCase;
@@ -299,11 +298,9 @@ class JUnit4TestEngineExecutionTests {
 			event(engine(), finishedSuccessfully()));
 	}
 
-	private List<ExecutionEvent> execute(Class<?> testClass) {
+	private static List<ExecutionEvent> execute(Class<?> testClass) {
 		JUnit4TestEngine engine = new JUnit4TestEngine();
-		EngineAwareTestDescriptor engineTestDescriptor = engine.discoverTests(build(forClass(testClass)));
-		ExecutionEventRecordingEngineExecutionListener listener = new ExecutionEventRecordingEngineExecutionListener();
-		engine.execute(new ExecutionRequest(engineTestDescriptor, listener));
-		return listener.getExecutionEvents();
+		TestPlanSpecification testPlanSpecification = build(forClass(testClass));
+		return ExecutionEventRecordingEngineExecutionListener.execute(engine, testPlanSpecification);
 	}
 }
