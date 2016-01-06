@@ -30,6 +30,7 @@ import org.junit.runner.Description;
 class TestRun {
 
 	private final RunnerTestDescriptor runnerTestDescriptor;
+	private final Set<? extends TestDescriptor> runnerDescendants;
 	private final Map<Description, TestDescriptor> descriptionToDescriptor;
 	private final Map<TestDescriptor, TestExecutionResult> executionResults = new LinkedHashMap<>();
 	private final Set<TestDescriptor> skippedDescriptors = new LinkedHashSet<>();
@@ -38,8 +39,9 @@ class TestRun {
 
 	TestRun(RunnerTestDescriptor runnerTestDescriptor) {
 		this.runnerTestDescriptor = runnerTestDescriptor;
+		runnerDescendants = runnerTestDescriptor.allDescendants();
 		// @formatter:off
-		descriptionToDescriptor = concat(Stream.of(runnerTestDescriptor), runnerTestDescriptor.allDescendants().stream())
+		descriptionToDescriptor = concat(Stream.of(runnerTestDescriptor), runnerDescendants.stream())
 			.map(JUnit4TestDescriptor.class::cast)
 			.collect(toMap(JUnit4TestDescriptor::getDescription, identity()));
 		// @formatter:on
@@ -49,8 +51,8 @@ class TestRun {
 		return runnerTestDescriptor;
 	}
 
-	boolean isNotRunnerTestDescriptor(TestDescriptor testDescriptor) {
-		return !runnerTestDescriptor.equals(testDescriptor);
+	boolean isDescendantOfRunnerTestDescriptor(TestDescriptor testDescriptor) {
+		return runnerDescendants.contains(testDescriptor);
 	}
 
 	TestDescriptor lookupDescriptor(Description description) {
@@ -62,7 +64,11 @@ class TestRun {
 	}
 
 	boolean isNotSkipped(TestDescriptor testDescriptor) {
-		return !skippedDescriptors.contains(testDescriptor);
+		return !isSkipped(testDescriptor);
+	}
+
+	boolean isSkipped(TestDescriptor testDescriptor) {
+		return skippedDescriptors.contains(testDescriptor);
 	}
 
 	void markStarted(TestDescriptor testDescriptor) {
@@ -78,11 +84,19 @@ class TestRun {
 	}
 
 	boolean isNotFinished(TestDescriptor testDescriptor) {
-		return !finishedDescriptors.contains(testDescriptor);
+		return !isFinished(testDescriptor);
 	}
 
-	boolean areAllFinished(Set<? extends TestDescriptor> testDescriptors) {
-		return finishedDescriptors.containsAll(testDescriptors);
+	boolean isFinished(TestDescriptor testDescriptor) {
+		return finishedDescriptors.contains(testDescriptor);
+	}
+
+	boolean areAllFinishedOrSkipped(Set<? extends TestDescriptor> testDescriptors) {
+		return testDescriptors.stream().allMatch(this::isFinishedOrSkipped);
+	}
+
+	boolean isFinishedOrSkipped(TestDescriptor testDescriptor) {
+		return isFinished(testDescriptor) || isSkipped(testDescriptor);
 	}
 
 	void storeResult(TestDescriptor testDescriptor, TestExecutionResult result) {

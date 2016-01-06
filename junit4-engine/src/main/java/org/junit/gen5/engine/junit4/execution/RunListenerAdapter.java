@@ -46,7 +46,10 @@ public class RunListenerAdapter extends RunListener {
 		TestDescriptor testDescriptor = testRun.lookupDescriptor(description);
 		Ignore ignoreAnnotation = description.getAnnotation(Ignore.class);
 		String reason = Optional.ofNullable(ignoreAnnotation).map(Ignore::value).orElse("<unknown>");
+
+		fireExecutionStartedIncludingUnstartedAncestors(testDescriptor.getParent());
 		fireExecutionSkipped(testDescriptor, reason);
+		fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(testDescriptor.getParent());
 	}
 
 	@Override
@@ -71,7 +74,7 @@ public class RunListenerAdapter extends RunListener {
 		TestDescriptor testDescriptor = testRun.lookupDescriptor(description);
 		TestExecutionResult result = resultCreator.apply(failure.getException());
 		testRun.storeResult(testDescriptor, result);
-		if (testDescriptor.isContainer() && testRun.isNotRunnerTestDescriptor(testDescriptor)) {
+		if (testDescriptor.isContainer() && testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)) {
 			fireMissingContainerEvents(description, testDescriptor);
 		}
 	}
@@ -89,7 +92,7 @@ public class RunListenerAdapter extends RunListener {
 	public void testFinished(Description description) {
 		TestDescriptor descriptor = testRun.lookupDescriptor(description);
 		fireExecutionFinished(descriptor);
-		fireExecutionFinishedIncludingAncestorsWithoutUnfinishedChildren(descriptor.getParent());
+		fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(descriptor.getParent());
 	}
 
 	@Override
@@ -105,10 +108,15 @@ public class RunListenerAdapter extends RunListener {
 	}
 
 	private void fireExecutionStartedIncludingUnstartedAncestors(Optional<TestDescriptor> parent) {
-		if (parent.isPresent() && testRun.isNotStarted(parent.get())) {
+		if (parent.isPresent() && canStart(parent.get())) {
 			fireExecutionStartedIncludingUnstartedAncestors(parent.get().getParent());
 			fireExecutionStarted(parent.get());
 		}
+	}
+
+	private boolean canStart(TestDescriptor testDescriptor) {
+		return testRun.isNotStarted(testDescriptor) //
+				&& testRun.isDescendantOfRunnerTestDescriptor(testDescriptor);
 	}
 
 	private void fireExecutionStarted(TestDescriptor testDescriptor) {
@@ -116,17 +124,17 @@ public class RunListenerAdapter extends RunListener {
 		listener.executionStarted(testDescriptor);
 	}
 
-	private void fireExecutionFinishedIncludingAncestorsWithoutUnfinishedChildren(Optional<TestDescriptor> parent) {
+	private void fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(Optional<TestDescriptor> parent) {
 		if (parent.isPresent() && canFinish(parent.get())) {
 			fireExecutionFinished(parent.get());
-			fireExecutionFinishedIncludingAncestorsWithoutUnfinishedChildren(parent.get().getParent());
+			fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(parent.get().getParent());
 		}
 	}
 
 	private boolean canFinish(TestDescriptor testDescriptor) {
 		return testRun.isNotFinished(testDescriptor) //
-				&& testRun.isNotRunnerTestDescriptor(testDescriptor)
-				&& testRun.areAllFinished(testDescriptor.getChildren());
+				&& testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)
+				&& testRun.areAllFinishedOrSkipped(testDescriptor.getChildren());
 	}
 
 	private void fireExecutionFinished(TestDescriptor testDescriptor) {

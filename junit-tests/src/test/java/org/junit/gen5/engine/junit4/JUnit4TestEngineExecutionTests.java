@@ -28,6 +28,7 @@ import org.junit.gen5.engine.junit4.samples.JUnit4SuiteOfSuiteWithJUnit4TestCase
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit4TestCaseWithErrorInBeforeClass;
+import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithAssumptionFailureInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithErrorInAfterClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithErrorInBeforeClass;
@@ -36,6 +37,7 @@ import org.junit.gen5.engine.junit4.samples.MalformedJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit3TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithFiveTests;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithSingleTestWhichFails;
+import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithTwoTests;
 
 class JUnit4TestEngineExecutionTests {
@@ -257,6 +259,23 @@ class JUnit4TestEngineExecutionTests {
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
 			event(test(testClass.getName()), skippedWithReason("complete class is ignored")), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesJUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored() {
+		Class<?> suiteClass = JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored.class;
+		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichIsIgnored.class;
+
+		List<ExecutionEvent> executionEvents = execute(suiteClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(container(suiteClass.getName()), started()), //
+			event(container(testClass.getName()), started()), //
+			event(test("ignoredTest"), skippedWithReason("ignored test")), //
+			event(container(testClass.getName()), finishedSuccessfully()), //
+			event(container(suiteClass.getName()), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
