@@ -50,6 +50,8 @@ public class JUnit4TestPlanSpecificationResolver {
 	private void addChildrenRecursively(JUnit4TestDescriptor parent) {
 		for (Description description : parent.getDescription().getChildren()) {
 			JUnit4TestDescriptor child = new JUnit4TestDescriptor(parent, description);
+			// TODO #40 Ensure children are unique, i.e. generate different unique IDs for
+			// Descriptions that are equal
 			parent.addChild(child);
 			addChildrenRecursively(child);
 		}

@@ -25,6 +25,7 @@ import org.junit.gen5.engine.junit4.samples.EnclosedJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithErrorInAfterClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithErrorInBeforeClass;
+import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithOverloadedMethod;
 import org.junit.gen5.engine.junit4.samples.MalformedJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit3TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithFiveTests;
@@ -167,6 +168,23 @@ class JUnit4TestEngineClassExecutionTests {
 			event(test("succeedingTest"), started()), //
 			event(test("succeedingTest"), finishedSuccessfully()), //
 			event(container(testClass.getName()), finishedWithFailure(causeMessage("error in @AfterClass"))), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesJUnit4TestCaseWithOverloadedMethod() {
+		Class<?> testClass = JUnit4TestCaseWithOverloadedMethod.class;
+
+		List<ExecutionEvent> executionEvents = execute(testClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(container(testClass.getName()), started()), //
+			event(test("theory"), started()), //
+			event(test("theory"), finishedWithFailure()), //
+			event(test("theory"), started()), //
+			event(test("theory"), finishedWithFailure()), //
+			event(container(testClass.getName()), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 

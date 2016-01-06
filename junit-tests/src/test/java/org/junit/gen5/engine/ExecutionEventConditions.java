@@ -85,6 +85,10 @@ public class ExecutionEventConditions {
 		return finished(allOf(status(FAILED), resultCondition));
 	}
 
+	public static Condition<ExecutionEvent> finishedWithFailure() {
+		return finished(status(FAILED));
+	}
+
 	public static Condition<ExecutionEvent> finishedSuccessfully() {
 		return finished(status(SUCCESSFUL));
 	}

@@ -15,11 +15,13 @@ import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
+import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit4.samples.IgnoredJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails;
+import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithOverloadedMethod;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit3TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.PlainOldJavaClassWithoutAnyTest;
@@ -139,6 +141,24 @@ class JUnit4TestEngineClassSpecificationResolutionTests {
 			"junit4:" + suiteClass.getName() + "/" + testClass.getName() + "/test" + "(" + testClass.getName() + ")",
 			testMethodDescriptor.getUniqueId());
 		assertThat(testMethodDescriptor.getChildren()).isEmpty();
+	}
+
+	@Test
+	// TODO #40 Fix this
+	@Disabled("Runner description has two children that are equal")
+	void resolvesJUnit4TestCaseWithOverloadedMethod() {
+		Class<?> testClass = JUnit4TestCaseWithOverloadedMethod.class;
+		TestPlanSpecification specification = buildClassSpecification(testClass);
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertTrue(runnerDescriptor.isContainer());
+		assertFalse(runnerDescriptor.isTest());
+		assertEquals(testClass.getName(), runnerDescriptor.getDisplayName());
+		assertEquals("junit4:" + testClass.getName(), runnerDescriptor.getUniqueId());
+
+		assertThat(runnerDescriptor.getChildren()).hasSize(2);
 	}
 
 	@Test
