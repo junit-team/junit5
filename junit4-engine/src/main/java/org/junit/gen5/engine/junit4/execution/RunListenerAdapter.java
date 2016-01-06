@@ -35,14 +35,18 @@ public class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testRunStarted(Description description) {
-		fireExecutionStarted(testRun.getRunnerTestDescriptor());
+		// If it's not a suite it might be skipped entirely later on.
+		if (description.isSuite()) {
+			fireExecutionStarted(testRun.getRunnerTestDescriptor());
+		}
 	}
 
 	@Override
 	public void testIgnored(Description description) {
+		TestDescriptor testDescriptor = testRun.lookupDescriptor(description);
 		Ignore ignoreAnnotation = description.getAnnotation(Ignore.class);
 		String reason = Optional.ofNullable(ignoreAnnotation).map(Ignore::value).orElse("<unknown>");
-		listener.executionSkipped(testRun.lookupDescriptor(description), reason);
+		fireExecutionSkipped(testDescriptor, reason);
 	}
 
 	@Override
@@ -90,7 +94,14 @@ public class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testRunFinished(Result result) {
-		fireExecutionFinished(testRun.getRunnerTestDescriptor());
+		if (testRun.isNotSkipped(testRun.getRunnerTestDescriptor())) {
+			fireExecutionFinished(testRun.getRunnerTestDescriptor());
+		}
+	}
+
+	private void fireExecutionSkipped(TestDescriptor testDescriptor, String reason) {
+		testRun.markSkipped(testDescriptor);
+		listener.executionSkipped(testDescriptor, reason);
 	}
 
 	private void fireExecutionStartedIncludingUnstartedAncestors(Optional<TestDescriptor> parent) {

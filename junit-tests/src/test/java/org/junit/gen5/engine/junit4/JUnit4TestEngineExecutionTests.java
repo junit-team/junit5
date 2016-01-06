@@ -22,6 +22,7 @@ import org.junit.gen5.engine.ExecutionEvent;
 import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit4.samples.EnclosedJUnit4TestCase;
+import org.junit.gen5.engine.junit4.samples.IgnoredJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithErrorInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
@@ -244,6 +245,18 @@ class JUnit4TestEngineExecutionTests {
 			event(test("theory"), started()), //
 			event(test("theory"), finishedWithFailure()), //
 			event(container(testClass.getName()), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesIgnoredJUnit4TestCase() {
+		Class<?> testClass = IgnoredJUnit4TestCase.class;
+
+		List<ExecutionEvent> executionEvents = execute(testClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(test(testClass.getName()), skippedWithReason("complete class is ignored")), //
 			event(engine(), finishedSuccessfully()));
 	}
 

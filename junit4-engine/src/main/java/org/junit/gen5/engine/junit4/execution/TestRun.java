@@ -32,6 +32,7 @@ class TestRun {
 	private final RunnerTestDescriptor runnerTestDescriptor;
 	private final Map<Description, TestDescriptor> descriptionToDescriptor;
 	private final Map<TestDescriptor, TestExecutionResult> executionResults = new LinkedHashMap<>();
+	private final Set<TestDescriptor> skippedDescriptors = new LinkedHashSet<>();
 	private final Set<TestDescriptor> startedDescriptors = new LinkedHashSet<>();
 	private final Set<TestDescriptor> finishedDescriptors = new LinkedHashSet<>();
 
@@ -54,6 +55,14 @@ class TestRun {
 
 	TestDescriptor lookupDescriptor(Description description) {
 		return descriptionToDescriptor.get(description);
+	}
+
+	void markSkipped(TestDescriptor testDescriptor) {
+		skippedDescriptors.add(testDescriptor);
+	}
+
+	boolean isNotSkipped(TestDescriptor testDescriptor) {
+		return !skippedDescriptors.contains(testDescriptor);
 	}
 
 	void markStarted(TestDescriptor testDescriptor) {
