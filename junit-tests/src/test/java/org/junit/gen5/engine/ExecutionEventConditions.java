@@ -44,7 +44,7 @@ public class ExecutionEventConditions {
 	}
 
 	public static Condition<ExecutionEvent> engine() {
-		return new Condition<>(byTestDescriptor(EngineAwareTestDescriptor.class::isInstance), "is an engine");
+		return new Condition<>(byTestDescriptor(EngineDescriptor.class::isInstance), "is an engine");
 	}
 
 	public static Condition<ExecutionEvent> test(String uniqueIdSubstring) {
