@@ -80,14 +80,15 @@ public class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testFailure(Failure failure) {
-		TestDescriptor testDescriptor = lookupDescriptor(failure.getDescription());
+		Description description = failure.getDescription();
+		TestDescriptor testDescriptor = lookupDescriptor(description);
 		executionResults.put(testDescriptor, failed(failure.getException()));
 		if (testDescriptor.isContainer()) {
 			if (!startedDescriptors.contains(testDescriptor)) {
-				fireExecutionStarted(testDescriptor);
+				testStarted(description);
 			}
 			if (!finishedDescriptors.contains(testDescriptor) && !runnerTestDescriptor.equals(testDescriptor)) {
-				fireExecutionFinished(testDescriptor);
+				testFinished(description);
 			}
 		}
 	}
