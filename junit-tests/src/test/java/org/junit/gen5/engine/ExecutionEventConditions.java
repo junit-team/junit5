@@ -55,6 +55,10 @@ public class ExecutionEventConditions {
 		return new Condition<>(byTestDescriptor(TestDescriptor::isTest), "is a test");
 	}
 
+	public static Condition<ExecutionEvent> container(Class<?> clazz) {
+		return container(clazz.getName());
+	}
+
 	public static Condition<ExecutionEvent> container(String uniqueIdSubstring) {
 		return allOf(container(), uniqueIdSubstring(uniqueIdSubstring));
 	}

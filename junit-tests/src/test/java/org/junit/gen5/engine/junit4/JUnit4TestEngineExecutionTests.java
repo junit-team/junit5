@@ -51,10 +51,10 @@ class JUnit4TestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(container(testClass.getName()), started()), //
+			event(container(testClass), started()), //
 			event(test("failingTest"), started()), //
 			event(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), //
-			event(container(testClass.getName()), finishedSuccessfully()), //
+			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -66,12 +66,12 @@ class JUnit4TestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(container(testClass.getName()), started()), //
+			event(container(testClass), started()), //
 			event(test("failingTest"), started()), //
 			event(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), //
 			event(test("successfulTest"), started()), //
 			event(test("successfulTest"), finishedSuccessfully()), //
-			event(container(testClass.getName()), finishedSuccessfully()), //
+			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -83,7 +83,7 @@ class JUnit4TestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(container(testClass.getName()), started()), //
+			event(container(testClass), started()), //
 			event(test("abortedTest"), started()), //
 			event(test("abortedTest"), abortedWithReason(causeMessage("this test should be aborted"))), //
 			event(test("failingTest"), started()), //
@@ -92,7 +92,7 @@ class JUnit4TestEngineExecutionTests {
 			event(test("ignoredTest2_withReason"), skippedWithReason("a custom reason")), //
 			event(test("successfulTest"), started()), //
 			event(test("successfulTest"), finishedSuccessfully()), //
-			event(container(testClass.getName()), finishedSuccessfully()), //
+			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -105,12 +105,12 @@ class JUnit4TestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(container(testClass.getName()), started()), //
-			event(container(nestedClass.getName()), started()), //
+			event(container(testClass), started()), //
+			event(container(nestedClass), started()), //
 			event(test("failingTest"), started()), //
 			event(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), //
-			event(container(nestedClass.getName()), finishedSuccessfully()), //
-			event(container(testClass.getName()), finishedSuccessfully()), //
+			event(container(nestedClass), finishedSuccessfully()), //
+			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -123,14 +123,14 @@ class JUnit4TestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(container(junit4SuiteClass.getName()), started()), //
+			event(container(junit4SuiteClass), started()), //
 			event(container("TestSuite with 1 tests"), started()), //
-			event(container(testClass.getName()), started()), //
+			event(container(testClass), started()), //
 			event(test("test"), started()), //
 			event(test("test"), finishedWithFailure(causeMessage("this test should fail"))), //
-			event(container(testClass.getName()), finishedSuccessfully()), //
+			event(container(testClass), finishedSuccessfully()), //
 			event(container("TestSuite with 1 tests"), finishedSuccessfully()), //
-			event(container(junit4SuiteClass.getName()), finishedSuccessfully()), //
+			event(container(junit4SuiteClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -142,11 +142,11 @@ class JUnit4TestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(container(testClass.getName()), started()), //
+			event(container(testClass), started()), //
 			event(test("initializationError"), started()), //
 			event(test("initializationError"),
 				finishedWithFailure(causeMessage("Method nonPublicTest() should be public"))), //
-			event(container(testClass.getName()), finishedSuccessfully()), //
+			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -158,8 +158,8 @@ class JUnit4TestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(container(testClass.getName()), started()), //
-			event(container(testClass.getName()), finishedWithFailure(causeMessage("something went wrong"))), //
+			event(container(testClass), started()), //
+			event(container(testClass), finishedWithFailure(causeMessage("something went wrong"))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -172,10 +172,10 @@ class JUnit4TestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(container(suiteClass.getName()), started()), //
-			event(container(testClass.getName()), started()), //
-			event(container(testClass.getName()), finishedWithFailure(causeMessage("something went wrong"))), //
-			event(container(suiteClass.getName()), finishedSuccessfully()), //
+			event(container(suiteClass), started()), //
+			event(container(testClass), started()), //
+			event(container(testClass), finishedWithFailure(causeMessage("something went wrong"))), //
+			event(container(suiteClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -189,12 +189,12 @@ class JUnit4TestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(container(suiteOfSuiteClass.getName()), started()), //
-			event(container(suiteClass.getName()), started()), //
-			event(container(testClass.getName()), started()), //
-			event(container(testClass.getName()), finishedWithFailure(causeMessage("something went wrong"))), //
-			event(container(suiteClass.getName()), finishedSuccessfully()), //
-			event(container(suiteOfSuiteClass.getName()), finishedSuccessfully()), //
+			event(container(suiteOfSuiteClass), started()), //
+			event(container(suiteClass), started()), //
+			event(container(testClass), started()), //
+			event(container(testClass), finishedWithFailure(causeMessage("something went wrong"))), //
+			event(container(suiteClass), finishedSuccessfully()), //
+			event(container(suiteOfSuiteClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -208,12 +208,12 @@ class JUnit4TestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(container(suiteOfSuiteClass.getName()), started()), //
-			event(container(suiteClass.getName()), started()), //
-			event(container(testClass.getName()), started()), //
-			event(container(testClass.getName()), abortedWithReason(causeMessage("assumption violated"))), //
-			event(container(suiteClass.getName()), finishedSuccessfully()), //
-			event(container(suiteOfSuiteClass.getName()), finishedSuccessfully()), //
+			event(container(suiteOfSuiteClass), started()), //
+			event(container(suiteClass), started()), //
+			event(container(testClass), started()), //
+			event(container(testClass), abortedWithReason(causeMessage("assumption violated"))), //
+			event(container(suiteClass), finishedSuccessfully()), //
+			event(container(suiteOfSuiteClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -225,12 +225,12 @@ class JUnit4TestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(container(testClass.getName()), started()), //
+			event(container(testClass), started()), //
 			event(test("failingTest"), started()), //
 			event(test("failingTest"), finishedWithFailure(causeMessage("expected to fail"))), //
 			event(test("succeedingTest"), started()), //
 			event(test("succeedingTest"), finishedSuccessfully()), //
-			event(container(testClass.getName()), finishedWithFailure(causeMessage("error in @AfterClass"))), //
+			event(container(testClass), finishedWithFailure(causeMessage("error in @AfterClass"))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -242,12 +242,12 @@ class JUnit4TestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(container(testClass.getName()), started()), //
+			event(container(testClass), started()), //
 			event(test("theory"), started()), //
 			event(test("theory"), finishedWithFailure()), //
 			event(test("theory"), started()), //
 			event(test("theory"), finishedWithFailure()), //
-			event(container(testClass.getName()), finishedSuccessfully()), //
+			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -272,11 +272,11 @@ class JUnit4TestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(container(suiteClass.getName()), started()), //
-			event(container(testClass.getName()), started()), //
+			event(container(suiteClass), started()), //
+			event(container(testClass), started()), //
 			event(test("ignoredTest"), skippedWithReason("ignored test")), //
-			event(container(testClass.getName()), finishedSuccessfully()), //
-			event(container(suiteClass.getName()), finishedSuccessfully()), //
+			event(container(testClass), finishedSuccessfully()), //
+			event(container(suiteClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -290,11 +290,11 @@ class JUnit4TestEngineExecutionTests {
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
-			event(container(suiteOfSuiteClass.getName()), started()), //
-			event(container(suiteClass.getName()), started()), //
+			event(container(suiteOfSuiteClass), started()), //
+			event(container(suiteClass), started()), //
 			event(test(testClass.getName()), skippedWithReason("complete class is ignored")), //
-			event(container(suiteClass.getName()), finishedSuccessfully()), //
-			event(container(suiteOfSuiteClass.getName()), finishedSuccessfully()), //
+			event(container(suiteClass), finishedSuccessfully()), //
+			event(container(suiteOfSuiteClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
