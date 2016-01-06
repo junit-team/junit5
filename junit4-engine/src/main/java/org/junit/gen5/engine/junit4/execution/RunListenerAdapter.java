@@ -54,9 +54,7 @@ public class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testStarted(Description description) {
-		TestDescriptor testDescriptor = testRun.lookupDescriptor(description);
-		fireExecutionStartedIncludingUnstartedAncestors(testDescriptor.getParent());
-		fireExecutionStarted(testDescriptor);
+		testStarted(testRun.lookupDescriptor(description));
 	}
 
 	@Override
@@ -69,30 +67,9 @@ public class RunListenerAdapter extends RunListener {
 		handleFailure(failure, TestExecutionResult::failed);
 	}
 
-	private void handleFailure(Failure failure, Function<Throwable, TestExecutionResult> resultCreator) {
-		Description description = failure.getDescription();
-		TestDescriptor testDescriptor = testRun.lookupDescriptor(description);
-		TestExecutionResult result = resultCreator.apply(failure.getException());
-		testRun.storeResult(testDescriptor, result);
-		if (testDescriptor.isContainer() && testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)) {
-			fireMissingContainerEvents(description, testDescriptor);
-		}
-	}
-
-	private void fireMissingContainerEvents(Description description, TestDescriptor testDescriptor) {
-		if (testRun.isNotStarted(testDescriptor)) {
-			testStarted(description);
-		}
-		if (testRun.isNotFinished(testDescriptor)) {
-			testFinished(description);
-		}
-	}
-
 	@Override
 	public void testFinished(Description description) {
-		TestDescriptor descriptor = testRun.lookupDescriptor(description);
-		fireExecutionFinished(descriptor);
-		fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(descriptor.getParent());
+		testFinished(testRun.lookupDescriptor(description));
 	}
 
 	@Override
@@ -102,9 +79,32 @@ public class RunListenerAdapter extends RunListener {
 		}
 	}
 
-	private void fireExecutionSkipped(TestDescriptor testDescriptor, String reason) {
-		testRun.markSkipped(testDescriptor);
-		listener.executionSkipped(testDescriptor, reason);
+	private void handleFailure(Failure failure, Function<Throwable, TestExecutionResult> resultCreator) {
+		TestDescriptor testDescriptor = testRun.lookupDescriptor(failure.getDescription());
+		TestExecutionResult result = resultCreator.apply(failure.getException());
+		testRun.storeResult(testDescriptor, result);
+		if (testDescriptor.isContainer() && testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)) {
+			fireMissingContainerEvents(testDescriptor);
+		}
+	}
+
+	private void fireMissingContainerEvents(TestDescriptor testDescriptor) {
+		if (testRun.isNotStarted(testDescriptor)) {
+			testStarted(testDescriptor);
+		}
+		if (testRun.isNotFinished(testDescriptor)) {
+			testFinished(testDescriptor);
+		}
+	}
+
+	private void testStarted(TestDescriptor testDescriptor) {
+		fireExecutionStartedIncludingUnstartedAncestors(testDescriptor.getParent());
+		fireExecutionStarted(testDescriptor);
+	}
+
+	private void testFinished(TestDescriptor descriptor) {
+		fireExecutionFinished(descriptor);
+		fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(descriptor.getParent());
 	}
 
 	private void fireExecutionStartedIncludingUnstartedAncestors(Optional<TestDescriptor> parent) {
@@ -114,16 +114,6 @@ public class RunListenerAdapter extends RunListener {
 		}
 	}
 
-	private boolean canStart(TestDescriptor testDescriptor) {
-		return testRun.isNotStarted(testDescriptor) //
-				&& testRun.isDescendantOfRunnerTestDescriptor(testDescriptor);
-	}
-
-	private void fireExecutionStarted(TestDescriptor testDescriptor) {
-		testRun.markStarted(testDescriptor);
-		listener.executionStarted(testDescriptor);
-	}
-
 	private void fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(Optional<TestDescriptor> parent) {
 		if (parent.isPresent() && canFinish(parent.get())) {
 			fireExecutionFinished(parent.get());
@@ -131,10 +121,25 @@ public class RunListenerAdapter extends RunListener {
 		}
 	}
 
+	private boolean canStart(TestDescriptor testDescriptor) {
+		return testRun.isNotStarted(testDescriptor) //
+				&& testRun.isDescendantOfRunnerTestDescriptor(testDescriptor);
+	}
+
 	private boolean canFinish(TestDescriptor testDescriptor) {
 		return testRun.isNotFinished(testDescriptor) //
 				&& testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)
 				&& testRun.areAllFinishedOrSkipped(testDescriptor.getChildren());
+	}
+
+	private void fireExecutionSkipped(TestDescriptor testDescriptor, String reason) {
+		testRun.markSkipped(testDescriptor);
+		listener.executionSkipped(testDescriptor, reason);
+	}
+
+	private void fireExecutionStarted(TestDescriptor testDescriptor) {
+		testRun.markStarted(testDescriptor);
+		listener.executionStarted(testDescriptor);
 	}
 
 	private void fireExecutionFinished(TestDescriptor testDescriptor) {
