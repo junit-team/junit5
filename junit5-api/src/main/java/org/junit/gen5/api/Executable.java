@@ -13,10 +13,10 @@ package org.junit.gen5.api;
 /**
  * {@code Executable} is a functional interface that can be used to
  * implement any generic block of code that potentially throws an
- * {@link Exception}.
+ * {@link Throwable}.
  *
  * <p>The {@code Executable} interface is similar to {@link java.lang.Runnable},
- * except that an {@code Executable} can throw an {@link Exception}.
+ * except that an {@code Executable} can throw an {@link Throwable}.
  *
  * @since 5.0
  * @see Assertions#assertAll(Executable...)
@@ -27,6 +27,6 @@ package org.junit.gen5.api;
 @FunctionalInterface
 public interface Executable {
 
-	void execute() throws Exception;
+	void execute() throws Throwable;
 
 }
