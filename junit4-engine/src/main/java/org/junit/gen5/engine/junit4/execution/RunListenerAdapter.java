@@ -12,13 +12,14 @@ package org.junit.gen5.engine.junit4.execution;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
-import static org.junit.gen5.engine.TestExecutionResult.*;
+import static org.junit.gen5.engine.TestExecutionResult.successful;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.junit.Ignore;
 import org.junit.gen5.engine.EngineExecutionListener;
@@ -74,22 +75,30 @@ public class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testAssumptionFailure(Failure failure) {
-		TestDescriptor testDescriptor = lookupDescriptor(failure.getDescription());
-		executionResults.put(testDescriptor, aborted(failure.getException()));
+		handleFailure(failure, TestExecutionResult::aborted);
 	}
 
 	@Override
 	public void testFailure(Failure failure) {
+		handleFailure(failure, TestExecutionResult::failed);
+	}
+
+	private void handleFailure(Failure failure, Function<Throwable, TestExecutionResult> resultCreator) {
 		Description description = failure.getDescription();
 		TestDescriptor testDescriptor = lookupDescriptor(description);
-		executionResults.put(testDescriptor, failed(failure.getException()));
-		if (testDescriptor.isContainer()) {
-			if (!startedDescriptors.contains(testDescriptor)) {
-				testStarted(description);
-			}
-			if (!finishedDescriptors.contains(testDescriptor) && !runnerTestDescriptor.equals(testDescriptor)) {
-				testFinished(description);
-			}
+		TestExecutionResult result = resultCreator.apply(failure.getException());
+		executionResults.put(testDescriptor, result);
+		if (testDescriptor.isContainer() && !runnerTestDescriptor.equals(testDescriptor)) {
+			fireMissingContainerEvents(description, testDescriptor);
+		}
+	}
+
+	private void fireMissingContainerEvents(Description description, TestDescriptor testDescriptor) {
+		if (!startedDescriptors.contains(testDescriptor)) {
+			testStarted(description);
+		}
+		if (!finishedDescriptors.contains(testDescriptor)) {
+			testFinished(description);
 		}
 	}
 

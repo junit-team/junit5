@@ -22,9 +22,12 @@ import org.junit.gen5.engine.ExecutionEvent;
 import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit4.samples.EnclosedJUnit4TestCase;
+import org.junit.gen5.engine.junit4.samples.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithErrorInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
+import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit4TestCaseWithErrorInBeforeClass;
+import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithAssumptionFailureInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithErrorInAfterClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithErrorInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithOverloadedMethod;
@@ -186,6 +189,25 @@ class JUnit4TestEngineExecutionTests {
 			event(container(suiteClass.getName()), started()), //
 			event(container(testClass.getName()), started()), //
 			event(container(testClass.getName()), finishedWithFailure(causeMessage("something went wrong"))), //
+			event(container(suiteClass.getName()), finishedSuccessfully()), //
+			event(container(suiteOfSuiteClass.getName()), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesJUnit4SuiteOfSuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass() {
+		Class<?> suiteOfSuiteClass = JUnit4SuiteOfSuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass.class;
+		Class<?> suiteClass = JUnit4SuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass.class;
+		Class<?> testClass = JUnit4TestCaseWithAssumptionFailureInBeforeClass.class;
+
+		List<ExecutionEvent> executionEvents = execute(suiteOfSuiteClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(container(suiteOfSuiteClass.getName()), started()), //
+			event(container(suiteClass.getName()), started()), //
+			event(container(testClass.getName()), started()), //
+			event(container(testClass.getName()), abortedWithReason(causeMessage("assumption violated"))), //
 			event(container(suiteClass.getName()), finishedSuccessfully()), //
 			event(container(suiteOfSuiteClass.getName()), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
