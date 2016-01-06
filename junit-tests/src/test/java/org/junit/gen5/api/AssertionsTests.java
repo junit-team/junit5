@@ -26,7 +26,7 @@ import org.opentest4j.AssertionFailedError;
 public class AssertionsTests {
 
 	@Test
-	public void failWithString() {
+	void failWithString() {
 		try {
 			fail("test");
 			expectAssertionFailedError();
@@ -37,7 +37,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	public void failWithMessageSupplier() {
+	void failWithMessageSupplier() {
 		try {
 			fail(() -> "test");
 			expectAssertionFailedError();
@@ -48,7 +48,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	public void failWithNullString() {
+	void failWithNullString() {
 		try {
 			fail((String) null);
 			expectAssertionFailedError();
@@ -59,7 +59,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	public void failWithNullMessageSupplier() {
+	void failWithNullMessageSupplier() {
 		try {
 			fail((Supplier<String>) null);
 			expectAssertionFailedError();
@@ -70,22 +70,22 @@ public class AssertionsTests {
 	}
 
 	@Test
-	public void assertTrueWithBooleanTrue() {
+	void assertTrueWithBooleanTrue() {
 		assertTrue(true);
 	}
 
 	@Test
-	public void assertTrueWithBooleanSupplierTrue() {
+	void assertTrueWithBooleanSupplierTrue() {
 		assertTrue(() -> true);
 	}
 
 	@Test
-	public void assertTrueWithBooleanTrueAndString() {
+	void assertTrueWithBooleanTrueAndString() {
 		assertTrue(true, "test");
 	}
 
 	@Test
-	public void assertTrueWithBooleanFalse() {
+	void assertTrueWithBooleanFalse() {
 		try {
 			assertTrue(false);
 			expectAssertionFailedError();
@@ -96,7 +96,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	public void assertTrueWithBooleanFalseAndString() {
+	void assertTrueWithBooleanFalseAndString() {
 		try {
 			assertTrue(false, "test");
 			expectAssertionFailedError();
@@ -107,7 +107,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	public void assertTrueWithBooleanSupplierFalseAndMessageSupplier() {
+	void assertTrueWithBooleanSupplierFalseAndMessageSupplier() {
 		try {
 			assertTrue(() -> false, () -> "test");
 			expectAssertionFailedError();
@@ -118,12 +118,12 @@ public class AssertionsTests {
 	}
 
 	@Test
-	public void assertFalseWithBooleanFalse() {
+	void assertFalseWithBooleanFalse() {
 		assertFalse(false);
 	}
 
 	@Test
-	public void assertFalseWithBooleanTrueAndString() {
+	void assertFalseWithBooleanTrueAndString() {
 		try {
 			assertFalse(true, "test");
 			expectAssertionFailedError();
