@@ -106,7 +106,7 @@ class JUnit4TestEngineExecutionTests {
 	}
 
 	@Test
-	void executesSuite() {
+	void executesJUnit4SuiteWithJUnit3SuiteWithSingleTestCase() {
 		Class<?> junit4SuiteClass = JUnit4SuiteWithJUnit3SuiteWithSingleTestCase.class;
 		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
 
