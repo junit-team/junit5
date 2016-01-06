@@ -43,14 +43,14 @@ public class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testIgnored(Description description) {
-		TestDescriptor testDescriptor = testRun.lookupDescriptor(description);
+		TestDescriptor testDescriptor = testRun.lookupTestDescriptor(description);
 		String reason = determineReasonForIgnoredTest(description);
 		testIgnored(testDescriptor, reason);
 	}
 
 	@Override
 	public void testStarted(Description description) {
-		testStarted(testRun.lookupDescriptor(description));
+		testStarted(testRun.lookupTestDescriptor(description));
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testFinished(Description description) {
-		testFinished(testRun.lookupDescriptor(description));
+		testFinished(testRun.lookupTestDescriptor(description));
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class RunListenerAdapter extends RunListener {
 	}
 
 	private void handleFailure(Failure failure, Function<Throwable, TestExecutionResult> resultCreator) {
-		TestDescriptor testDescriptor = testRun.lookupDescriptor(failure.getDescription());
+		TestDescriptor testDescriptor = testRun.lookupTestDescriptor(failure.getDescription());
 		TestExecutionResult result = resultCreator.apply(failure.getException());
 		testRun.storeResult(testDescriptor, result);
 		if (testDescriptor.isContainer() && testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)) {
@@ -134,7 +134,8 @@ public class RunListenerAdapter extends RunListener {
 	}
 
 	private boolean canFinish(TestDescriptor testDescriptor) {
-		return testRun.isNotFinished(testDescriptor) && testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)
+		return testRun.isNotFinished(testDescriptor) //
+				&& testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)
 				&& testRun.areAllFinishedOrSkipped(testDescriptor.getChildren());
 	}
 

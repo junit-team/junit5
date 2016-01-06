@@ -55,7 +55,7 @@ class TestRun {
 		return runnerDescendants.contains(testDescriptor);
 	}
 
-	TestDescriptor lookupDescriptor(Description description) {
+	TestDescriptor lookupTestDescriptor(Description description) {
 		return descriptionToDescriptor.get(description);
 	}
 
