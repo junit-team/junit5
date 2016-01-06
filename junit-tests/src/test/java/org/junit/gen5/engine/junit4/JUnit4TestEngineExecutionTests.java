@@ -23,6 +23,7 @@ import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit4.samples.EnclosedJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
+import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit4TestCaseWithErrorInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithErrorInAfterClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithErrorInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithOverloadedMethod;
@@ -151,6 +152,22 @@ class JUnit4TestEngineExecutionTests {
 			event(engine(), started()), //
 			event(container(testClass.getName()), started()), //
 			event(container(testClass.getName()), finishedWithFailure(causeMessage("something went wrong"))), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesJUnit4SuiteWithJUnit4TestCaseWithErrorInBeforeClass() {
+		Class<?> suiteClass = JUnit4SuiteWithJUnit4TestCaseWithErrorInBeforeClass.class;
+		Class<?> testClass = JUnit4TestCaseWithErrorInBeforeClass.class;
+
+		List<ExecutionEvent> executionEvents = execute(suiteClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(container(suiteClass.getName()), started()), //
+			event(container(testClass.getName()), started()), //
+			event(container(testClass.getName()), finishedWithFailure(causeMessage("something went wrong"))), //
+			event(container(suiteClass.getName()), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
