@@ -11,6 +11,7 @@
 package org.junit.gen5.api;
 
 import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.fail;
 
@@ -131,6 +132,16 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "test");
 		}
+	}
+
+	@Test
+	void assertThrowsStackOverflowError() {
+		assertThrows(StackOverflowError.class, this::recurseIndefinitely);
+	}
+
+	private void recurseIndefinitely() {
+		// simulate infinite recursion
+		throw new StackOverflowError();
 	}
 
 	// -------------------------------------------------------------------
