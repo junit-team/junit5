@@ -32,7 +32,7 @@ import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithFiveTests;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithTwoTests;
 
-class JUnit4TestEngineClassExecutionTests {
+class JUnit4TestEngineExecutionTests {
 
 	@Test
 	void executesPlainJUnit4TestCaseWithSingleTestWhichFails() {

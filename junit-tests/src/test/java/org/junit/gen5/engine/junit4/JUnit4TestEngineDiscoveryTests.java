@@ -28,7 +28,7 @@ import org.junit.gen5.engine.junit4.samples.PlainOldJavaClassWithoutAnyTest;
 import org.junit.gen5.engine.junit4.samples.SingleFailingTheoryTestCase;
 import org.junit.gen5.engine.junit4.samples.TestCaseRunWithJUnit5;
 
-class JUnit4TestEngineClassSpecificationResolutionTests {
+class JUnit4TestEngineDiscoveryTests {
 
 	JUnit4TestEngine engine = new JUnit4TestEngine();
 
