@@ -23,8 +23,10 @@ import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.junit4.samples.EnclosedJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.IgnoredJUnit4TestCase;
+import org.junit.gen5.engine.junit4.samples.JUnit4SuiteOfSuiteWithIgnoredJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithErrorInBeforeClass;
+import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithIgnoredJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit4TestCaseWithErrorInBeforeClass;
@@ -276,6 +278,24 @@ class JUnit4TestEngineExecutionTests {
 			event(test("ignoredTest"), skippedWithReason("ignored test")), //
 			event(container(testClass.getName()), finishedSuccessfully()), //
 			event(container(suiteClass.getName()), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesJUnit4SuiteOfSuiteWithIgnoredJUnit4TestCase() {
+		Class<?> suiteOfSuiteClass = JUnit4SuiteOfSuiteWithIgnoredJUnit4TestCase.class;
+		Class<?> suiteClass = JUnit4SuiteWithIgnoredJUnit4TestCase.class;
+		Class<?> testClass = IgnoredJUnit4TestCase.class;
+
+		List<ExecutionEvent> executionEvents = execute(suiteOfSuiteClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(container(suiteOfSuiteClass.getName()), started()), //
+			event(container(suiteClass.getName()), started()), //
+			event(test(testClass.getName()), skippedWithReason("complete class is ignored")), //
+			event(container(suiteClass.getName()), finishedSuccessfully()), //
+			event(container(suiteOfSuiteClass.getName()), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
