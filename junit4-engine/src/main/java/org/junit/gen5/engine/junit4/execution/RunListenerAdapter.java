@@ -44,12 +44,8 @@ public class RunListenerAdapter extends RunListener {
 	@Override
 	public void testIgnored(Description description) {
 		TestDescriptor testDescriptor = testRun.lookupDescriptor(description);
-		Ignore ignoreAnnotation = description.getAnnotation(Ignore.class);
-		String reason = Optional.ofNullable(ignoreAnnotation).map(Ignore::value).orElse("<unknown>");
-
-		fireExecutionStartedIncludingUnstartedAncestors(testDescriptor.getParent());
-		fireExecutionSkipped(testDescriptor, reason);
-		fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(testDescriptor.getParent());
+		String reason = determineReasonForIgnoredTest(description);
+		testIgnored(testDescriptor, reason);
 	}
 
 	@Override
@@ -97,6 +93,17 @@ public class RunListenerAdapter extends RunListener {
 		}
 	}
 
+	private void testIgnored(TestDescriptor testDescriptor, String reason) {
+		fireExecutionStartedIncludingUnstartedAncestors(testDescriptor.getParent());
+		fireExecutionSkipped(testDescriptor, reason);
+		fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(testDescriptor.getParent());
+	}
+
+	private String determineReasonForIgnoredTest(Description description) {
+		Ignore ignoreAnnotation = description.getAnnotation(Ignore.class);
+		return Optional.ofNullable(ignoreAnnotation).map(Ignore::value).orElse("<unknown>");
+	}
+
 	private void testStarted(TestDescriptor testDescriptor) {
 		fireExecutionStartedIncludingUnstartedAncestors(testDescriptor.getParent());
 		fireExecutionStarted(testDescriptor);
@@ -127,8 +134,7 @@ public class RunListenerAdapter extends RunListener {
 	}
 
 	private boolean canFinish(TestDescriptor testDescriptor) {
-		return testRun.isNotFinished(testDescriptor) //
-				&& testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)
+		return testRun.isNotFinished(testDescriptor) && testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)
 				&& testRun.areAllFinishedOrSkipped(testDescriptor.getChildren());
 	}
 
