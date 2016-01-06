@@ -10,22 +10,13 @@
 
 package org.junit.gen5.engine.junit4.execution;
 
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toMap;
-import static org.junit.gen5.engine.TestExecutionResult.successful;
-
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 
 import org.junit.Ignore;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionResult;
-import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
@@ -34,41 +25,29 @@ import org.junit.runner.notification.RunListener;
 
 public class RunListenerAdapter extends RunListener {
 
-	private final RunnerTestDescriptor runnerTestDescriptor;
+	private final TestRun testRun;
 	private final EngineExecutionListener listener;
 
-	private final Map<Description, JUnit4TestDescriptor> descriptionToDescriptor;
-	private final Map<TestDescriptor, TestExecutionResult> executionResults = new LinkedHashMap<>();
-	private final Set<TestDescriptor> startedDescriptors = new LinkedHashSet<>();
-	private final Set<TestDescriptor> finishedDescriptors = new LinkedHashSet<>();
-
 	public RunListenerAdapter(RunnerTestDescriptor runnerTestDescriptor, EngineExecutionListener listener) {
-		this.runnerTestDescriptor = runnerTestDescriptor;
+		this.testRun = new TestRun(runnerTestDescriptor);
 		this.listener = listener;
-		// @formatter:off
-		descriptionToDescriptor = runnerTestDescriptor.allDescendants().stream()
-			.filter(JUnit4TestDescriptor.class::isInstance)
-			.map(JUnit4TestDescriptor.class::cast)
-			.collect(toMap(JUnit4TestDescriptor::getDescription, identity()));
-		// @formatter:on
-		descriptionToDescriptor.put(runnerTestDescriptor.getDescription(), runnerTestDescriptor);
 	}
 
 	@Override
 	public void testRunStarted(Description description) {
-		fireExecutionStarted(runnerTestDescriptor);
+		fireExecutionStarted(testRun.getRunnerTestDescriptor());
 	}
 
 	@Override
 	public void testIgnored(Description description) {
 		Ignore ignoreAnnotation = description.getAnnotation(Ignore.class);
 		String reason = Optional.ofNullable(ignoreAnnotation).map(Ignore::value).orElse("<unknown>");
-		listener.executionSkipped(lookupDescriptor(description), reason);
+		listener.executionSkipped(testRun.lookupDescriptor(description), reason);
 	}
 
 	@Override
 	public void testStarted(Description description) {
-		TestDescriptor testDescriptor = lookupDescriptor(description);
+		TestDescriptor testDescriptor = testRun.lookupDescriptor(description);
 		fireExecutionStartedIncludingUnstartedAncestors(testDescriptor.getParent());
 		fireExecutionStarted(testDescriptor);
 	}
@@ -85,44 +64,44 @@ public class RunListenerAdapter extends RunListener {
 
 	private void handleFailure(Failure failure, Function<Throwable, TestExecutionResult> resultCreator) {
 		Description description = failure.getDescription();
-		TestDescriptor testDescriptor = lookupDescriptor(description);
+		TestDescriptor testDescriptor = testRun.lookupDescriptor(description);
 		TestExecutionResult result = resultCreator.apply(failure.getException());
-		executionResults.put(testDescriptor, result);
-		if (testDescriptor.isContainer() && !runnerTestDescriptor.equals(testDescriptor)) {
+		testRun.storeResult(testDescriptor, result);
+		if (testDescriptor.isContainer() && testRun.isNotRunnerTestDescriptor(testDescriptor)) {
 			fireMissingContainerEvents(description, testDescriptor);
 		}
 	}
 
 	private void fireMissingContainerEvents(Description description, TestDescriptor testDescriptor) {
-		if (!startedDescriptors.contains(testDescriptor)) {
+		if (testRun.isNotStarted(testDescriptor)) {
 			testStarted(description);
 		}
-		if (!finishedDescriptors.contains(testDescriptor)) {
+		if (testRun.isNotFinished(testDescriptor)) {
 			testFinished(description);
 		}
 	}
 
 	@Override
 	public void testFinished(Description description) {
-		TestDescriptor descriptor = lookupDescriptor(description);
+		TestDescriptor descriptor = testRun.lookupDescriptor(description);
 		fireExecutionFinished(descriptor);
 		fireExecutionFinishedIncludingAncestorsWithoutUnfinishedChildren(descriptor.getParent());
 	}
 
 	@Override
 	public void testRunFinished(Result result) {
-		fireExecutionFinished(runnerTestDescriptor);
+		fireExecutionFinished(testRun.getRunnerTestDescriptor());
 	}
 
 	private void fireExecutionStartedIncludingUnstartedAncestors(Optional<TestDescriptor> parent) {
-		if (parent.isPresent() && !startedDescriptors.contains(parent.get())) {
+		if (parent.isPresent() && testRun.isNotStarted(parent.get())) {
 			fireExecutionStartedIncludingUnstartedAncestors(parent.get().getParent());
 			fireExecutionStarted(parent.get());
 		}
 	}
 
 	private void fireExecutionStarted(TestDescriptor testDescriptor) {
-		startedDescriptors.add(testDescriptor);
+		testRun.markStarted(testDescriptor);
 		listener.executionStarted(testDescriptor);
 	}
 
@@ -134,18 +113,14 @@ public class RunListenerAdapter extends RunListener {
 	}
 
 	private boolean canFinish(TestDescriptor testDescriptor) {
-		return !finishedDescriptors.contains(testDescriptor) //
-				&& !runnerTestDescriptor.equals(testDescriptor)
-				&& finishedDescriptors.containsAll(testDescriptor.getChildren());
+		return testRun.isNotFinished(testDescriptor) //
+				&& testRun.isNotRunnerTestDescriptor(testDescriptor)
+				&& testRun.areAllFinished(testDescriptor.getChildren());
 	}
 
 	private void fireExecutionFinished(TestDescriptor testDescriptor) {
-		finishedDescriptors.add(testDescriptor);
-		listener.executionFinished(testDescriptor, executionResults.getOrDefault(testDescriptor, successful()));
-	}
-
-	private TestDescriptor lookupDescriptor(Description description) {
-		return descriptionToDescriptor.get(description);
+		testRun.markFinished(testDescriptor);
+		listener.executionFinished(testDescriptor, testRun.getStoredResultOrSuccessful(testDescriptor));
 	}
 
 }
