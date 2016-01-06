@@ -24,7 +24,7 @@ class SingleTestExecutor {
 
 	interface Executable {
 
-		void execute() throws Exception;
+		void execute() throws Throwable;
 
 	}
 
