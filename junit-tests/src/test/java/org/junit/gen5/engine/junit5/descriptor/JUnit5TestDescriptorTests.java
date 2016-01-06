@@ -25,7 +25,9 @@ import java.util.stream.Collectors;
 import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestTag;
+import org.junit.gen5.engine.junit5.testdoubles.TestEngineStub;
 
 /**
  * Unit tests for {@link ClassTestDescriptor} and {@link MethodTestDescriptor}.
@@ -33,24 +35,25 @@ import org.junit.gen5.engine.TestTag;
  * @since 5.0
  */
 public class JUnit5TestDescriptorTests {
+	private TestEngine testEngine = new TestEngineStub();
 
 	@Test
 	public void constructFromMethod() throws Exception {
 		Class<?> testClass = ASampleTestCase.class;
 		Method testMethod = testClass.getDeclaredMethod("test");
-		MethodTestDescriptor descriptor = new MethodTestDescriptor("a method id", testClass, testMethod);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(testEngine, testClass, testMethod);
 
-		assertEquals("a method id", descriptor.getUniqueId());
+		assertEquals("TestEngineDummyID:org.junit.gen5.engine.junit5.descriptor.JUnit5TestDescriptorTests#test()",
+			descriptor.getUniqueId());
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test", descriptor.getDisplayName(), "display name:");
 	}
 
 	@Test
 	public void constructFromMethodWithAnnotations() throws Exception {
-		JUnit5TestDescriptor classDescriptor = new ClassTestDescriptor("class id", ASampleTestCase.class);
-		Method testMethod = ASampleTestCase.class.getDeclaredMethod("foo");
-		MethodTestDescriptor methodDescriptor = new MethodTestDescriptor("method id", ASampleTestCase.class,
-			testMethod);
+		JUnit5TestDescriptor classDescriptor = new ClassTestDescriptor(testEngine, ASampleTestCase.class);
+		Method testMethod = getClass().getDeclaredMethod("foo");
+		MethodTestDescriptor methodDescriptor = new MethodTestDescriptor(testEngine, ASampleTestCase.class, testMethod);
 		classDescriptor.addChild(methodDescriptor);
 
 		assertEquals(testMethod, methodDescriptor.getTestMethod());
@@ -68,7 +71,7 @@ public class JUnit5TestDescriptorTests {
 
 	@Test
 	public void constructClassDescriptorWithAnnotations() throws Exception {
-		ClassTestDescriptor descriptor = new ClassTestDescriptor("any id", ASampleTestCase.class);
+		ClassTestDescriptor descriptor = new ClassTestDescriptor(testEngine, ASampleTestCase.class);
 
 		assertEquals(ASampleTestCase.class, descriptor.getTestClass());
 		assertEquals("custom class name", descriptor.getDisplayName(), "display name:");
@@ -77,8 +80,8 @@ public class JUnit5TestDescriptorTests {
 
 	@Test
 	public void constructFromMethodWithCustomTestAnnotation() throws Exception {
-		Method testMethod = ASampleTestCase.class.getDeclaredMethod("customTestAnnotation");
-		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", ASampleTestCase.class, testMethod);
+		Method testMethod = getClass().getDeclaredMethod("customTestAnnotation");
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(testEngine, ASampleTestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom name", descriptor.getDisplayName(), "display name:");
@@ -87,8 +90,8 @@ public class JUnit5TestDescriptorTests {
 
 	@Test
 	public void constructFromMethodWithParameters() throws Exception {
-		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", String.class, BigDecimal.class);
-		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", ASampleTestCase.class, testMethod);
+		Method testMethod = getClass().getDeclaredMethod("test", String.class, BigDecimal.class);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(testEngine, ASampleTestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test", descriptor.getDisplayName(), "display name:");
@@ -126,4 +129,13 @@ public class JUnit5TestDescriptorTests {
 		}
 
 	}
+
+	@Test
+	@Name("custom name")
+	@Tag("custom tag")
+	@Target(ElementType.METHOD)
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface CustomTestAnnotation {
+	}
+
 }

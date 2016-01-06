@@ -19,6 +19,7 @@ import org.junit.runner.Description;
  */
 public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 
+	private final String uniqueId;
 	private final Description description;
 
 	public JUnit4TestDescriptor(TestDescriptor parent, Description description) {
@@ -26,7 +27,7 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 	}
 
 	JUnit4TestDescriptor(TestDescriptor parent, char separator, String uniqueIdSuffix, Description description) {
-		super(parent.getUniqueId() + separator + uniqueIdSuffix);
+		this.uniqueId = parent.getUniqueId() + separator + uniqueIdSuffix;
 		this.description = description;
 	}
 
@@ -37,6 +38,11 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 
 	public Description getDescription() {
 		return description;
+	}
+
+	@Override
+	public String getUniqueId() {
+		return uniqueId;
 	}
 
 	@Override

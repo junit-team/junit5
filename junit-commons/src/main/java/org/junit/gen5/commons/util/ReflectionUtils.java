@@ -14,18 +14,8 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 import java.io.File;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.lang.reflect.*;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -36,7 +26,7 @@ import java.util.function.Predicate;
 public final class ReflectionUtils {
 
 	public enum MethodSortOrder {
-		HierarchyDown, HierarchyUp
+		HierarchyDown, HierarchyUp;
 	}
 
 	private ReflectionUtils() {
@@ -184,6 +174,7 @@ public final class ReflectionUtils {
 
 	/**
 	 * Try to load a method by its fully qualified name (if such a thing exists for methods).
+	 *
 	 * @param fullyQualifiedMethodName In the form 'package.subpackage.ClassName#methodName'
 	 * @return Optional of Method
 	 */
@@ -208,20 +199,35 @@ public final class ReflectionUtils {
 		return testMethodOptional;
 	}
 
-	public static Optional<Object> getOuterInstance(Object inner) {
-		// This is risky since it depends on the name of the field which is nowhere guaranteed
-		// but has been stable so far in all JDKs
+	/**
+	 * Returns the {@link Object} that encloses the given {@code target}. This method returns {@code null} if the given
+	 * {@code target} is null or its {@link Class} is not a member class.
+	 *
+	 * @param target the {@link Object} to retrieve the enclosing instance for
+	 * @return the enclosing {@link Object} of {@code target}
+	 */
+	public static Optional<Object> getOuterInstance(final Object target) {
+		Preconditions.notNull(target, "Target must not be null!");
 
-		return Arrays.stream(inner.getClass().getDeclaredFields()).filter(
-			f -> f.getName().startsWith("this$")).findFirst().map(f -> {
-				makeAccessible(f);
-				try {
-					return f.get(inner);
+		final Class<?> targetClass = target.getClass();
+		if (isStatic(targetClass) || !targetClass.isMemberClass()) {
+			return Optional.empty();
+		}
+
+		try {
+			final Class<?> enclosingClass = targetClass.getEnclosingClass();
+			Object outerInstance = null;
+			for (final Field field : targetClass.getDeclaredFields()) {
+				if (field.getType().equals(enclosingClass)) {
+					makeAccessible(field);
+					outerInstance = field.get(target);
 				}
-				catch (IllegalAccessException e) {
-					return Optional.empty();
-				}
-			});
+			}
+			return Optional.ofNullable(outerInstance);
+		}
+		catch (Exception e) {
+			return Optional.empty();
+		}
 	}
 
 	public static Optional<Object> getOuterInstance(Object inner, Class<?> targetType) {
@@ -239,8 +245,26 @@ public final class ReflectionUtils {
 			packageName);
 	}
 
+	public static boolean isNestedClass(String fullQualifiedClassName) {
+		Preconditions.notBlank(fullQualifiedClassName, "full class name must not be null or empty");
+
+		if (fullQualifiedClassName.contains("$")) {
+			Optional<Class<?>> testClass = loadClass(fullQualifiedClassName);
+			if (testClass.isPresent()) {
+				return isNestedClass(testClass.get());
+			}
+		}
+		return false;
+	}
+
+	public static boolean isNestedClass(Class<?> testClass) {
+		Preconditions.notNull(testClass, "test class must not be null");
+
+		return testClass.isMemberClass() && !isStatic(testClass);
+	}
+
 	public static Set<File> getAllClasspathRootDirectories() {
-		// TODO This is quite a hack, since sometimes the classpath is quite different
+		//TODO This is quite a hack, since sometimes the classpath is quite different
 		String fullClassPath = System.getProperty("java.class.path");
 		final String separator = System.getProperty("path.separator");
 		// @formatter:off
@@ -410,4 +434,41 @@ public final class ReflectionUtils {
 		return t;
 	}
 
+	/**
+	 * Returns a {@link Stack} of classes, representing the hierarchy of the given {@link Class}.
+	 *
+	 * @param clazz the {@link Class} to retrieve the hierarchy for
+	 * @return the {@link Class} hierarchy
+	 */
+	public static Stack<Class<?>> getClassHierarchy(final Class<?> clazz) {
+		final Stack<Class<?>> classHierarchy = new Stack<Class<?>>();
+		Class<?> c = clazz;
+		while (c != null) {
+			classHierarchy.push(c);
+			c = (isStatic(c)) ? null : c.getEnclosingClass();
+		}
+		return classHierarchy;
+	}
+
+	/**
+	 * Returns an instance of the {@link Class}, represented by the given class hierarchy.
+	 *
+	 * @param classHierarchy the hierarchy representing a deep class
+	 * @return the newly created instance
+	 * @throws Throwable if errors occurred during construction of the instance
+	 */
+	public static Object createDeepInstance(final Stack<Class<?>> classHierarchy) throws Throwable {
+		if (classHierarchy == null || classHierarchy.isEmpty())
+			throw new IllegalArgumentException("Stack must not be null or empty!");
+
+		// Top level class has empty constructor
+		Object test = newInstance(classHierarchy.pop());
+
+		// Inner class constructors require the enclosing instance
+		while (!classHierarchy.empty()) {
+			final Class<?> innerClass = classHierarchy.pop();
+			test = newInstance(innerClass, test);
+		}
+		return test;
+	}
 }

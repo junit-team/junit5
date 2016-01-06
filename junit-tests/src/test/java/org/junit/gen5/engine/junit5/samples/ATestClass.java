@@ -8,7 +8,24 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor.subpackage;
+package org.junit.gen5.engine.junit5.samples;
 
-public class ClassWithoutTestCases {
+import org.junit.gen5.api.Test;
+
+public class ATestClass {
+	@Test
+	void test1() {
+	}
+
+	static class AnInnerTestClass {
+		@Test
+		void test2() {
+		}
+
+		static class InnerInnerTestClass {
+			@Test
+			void test3() {
+			}
+		}
+	}
 }

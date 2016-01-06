@@ -11,15 +11,13 @@
 package org.junit.gen5.engine;
 
 public class UniqueIdSpecification implements TestPlanSpecificationElement {
-
 	private final String uniqueId;
 
 	public UniqueIdSpecification(String uniqueId) {
 		this.uniqueId = uniqueId;
 	}
 
-	@Override
-	public void accept(TestPlanSpecificationElementVisitor visitor) {
-		visitor.visitUniqueId(uniqueId);
+	public String getUniqueId() {
+		return uniqueId;
 	}
 }

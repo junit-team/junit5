@@ -13,10 +13,7 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
-import org.junit.gen5.api.AfterEach;
-import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.Nested;
-import org.junit.gen5.api.Test;
+import org.junit.gen5.api.*;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TrackingEngineExecutionListener;
 
@@ -27,14 +24,15 @@ import org.junit.gen5.engine.TrackingEngineExecutionListener;
  * @since 5.0
  */
 public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
-
 	@Test
 	public void executeTestCaseWithNestedTests() {
 		TestCaseWithNesting.countAfterInvoked = 0;
 
 		TestPlanSpecification spec = build(forClass(TestCaseWithNesting.class));
-		TrackingEngineExecutionListener listener = executeTests(spec, 6);
+		TrackingEngineExecutionListener listener = executeTests(spec, 7);
 
+		assertEquals(5, listener.containerStartedCount.get(), "# container started");
+		assertEquals(5, listener.containerFinishedCount.get(), "# container finished");
 		assertEquals(3, listener.testStartedCount.get(), "# tests started");
 		assertEquals(3, listener.testSucceededCount.get(), "# tests succeeded");
 		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");

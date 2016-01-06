@@ -36,6 +36,7 @@ import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
+import org.junit.gen5.engine.*;
 import org.junit.gen5.engine.Container;
 import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.TestDescriptor;
@@ -56,13 +57,11 @@ import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
  * @since 5.0
  */
 public class ClassTestDescriptor extends JUnit5TestDescriptor implements Container<JUnit5EngineExecutionContext> {
-
 	private final String displayName;
-
 	private final Class<?> testClass;
 
-	ClassTestDescriptor(String uniqueId, Class<?> testClass) {
-		super(uniqueId);
+	public ClassTestDescriptor(TestEngine testEngine, Class<?> testClass) {
+		super(testEngine);
 
 		Preconditions.notNull(testClass, "Class must not be null");
 
@@ -74,6 +73,15 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 	public final Class<?> getTestClass() {
 		return this.testClass;
+	}
+
+	@Override
+	public String getUniqueId() {
+		// @formatter:off
+		return String.format("%s:%s",
+				getTestEngine().getId(),
+				getTestClass().getName());
+		// @formatter:on
 	}
 
 	@Override

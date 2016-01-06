@@ -102,9 +102,15 @@ public class AbstractTestDescriptorTests {
 }
 
 class GroupDescriptor extends AbstractTestDescriptor {
+	private final String uniqueId;
 
 	GroupDescriptor(String uniqueId) {
-		super(uniqueId);
+		this.uniqueId = uniqueId;
+	}
+
+	@Override
+	public String getUniqueId() {
+		return uniqueId;
 	}
 
 	@Override
@@ -124,9 +130,15 @@ class GroupDescriptor extends AbstractTestDescriptor {
 }
 
 class LeafDescriptor extends AbstractTestDescriptor {
+	private final String uniqueId;
 
 	LeafDescriptor(String uniqueId) {
-		super(uniqueId);
+		this.uniqueId = uniqueId;
+	}
+
+	@Override
+	public String getUniqueId() {
+		return uniqueId;
 	}
 
 	@Override

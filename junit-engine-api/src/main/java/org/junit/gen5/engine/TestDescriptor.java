@@ -78,9 +78,14 @@ public interface TestDescriptor {
 		if (getUniqueId().equals(uniqueId)) {
 			return Optional.of(this);
 		}
+
 		// else
-		return getChildren().stream().filter(
+		return allDescendants().stream().filter(
 			testDescriptor -> testDescriptor.getUniqueId().equals(uniqueId)).findFirst();
+	}
+
+	default TestDescriptor getRoot() {
+		return isRoot() ? this : getParent().get().getRoot();
 	}
 
 	interface Visitor {

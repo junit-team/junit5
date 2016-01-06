@@ -10,20 +10,29 @@
 
 package org.junit.gen5.engine;
 
-class DummyTestDescriptor extends AbstractTestDescriptor implements Leaf<DummyEngineExecutionContext> {
-
+class DummyTestEngineDescriptor extends AbstractTestDescriptor
+		implements EngineAwareTestDescriptor, Leaf<DummyEngineExecutionContext> {
 	private final String displayName;
 	private final Runnable runnable;
 
-	DummyTestDescriptor(String uniqueId, String displayName, Runnable runnable) {
-		super(uniqueId);
+	DummyTestEngineDescriptor(String displayName, Runnable runnable) {
 		this.displayName = displayName;
 		this.runnable = runnable;
 	}
 
 	@Override
+	public String getUniqueId() {
+		return DummyTestEngine.ENGINE_ID + ":" + displayName;
+	}
+
+	@Override
 	public String getDisplayName() {
 		return displayName;
+	}
+
+	@Override
+	public TestEngine getEngine() {
+		return null;
 	}
 
 	@Override
@@ -41,5 +50,4 @@ class DummyTestDescriptor extends AbstractTestDescriptor implements Leaf<DummyEn
 		runnable.run();
 		return context;
 	}
-
 }

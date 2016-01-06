@@ -18,6 +18,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.DummyTestEngine;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.junit5.testdoubles.TestEngineStub;
 
 public class LauncherTests {
 
@@ -45,12 +46,12 @@ public class LauncherTests {
 
 	@Test
 	public void discoverTestPlanForSingleEngineWithASingleTests() {
-		DummyTestEngine engine = new DummyTestEngine("myEngine");
-		TestDescriptor testDescriptor = engine.addTest("test", noOp());
+		DummyTestEngine engine = new DummyTestEngine();
+		engine.addTest("test", noOp());
 
 		Launcher launcher = createLauncher(engine);
 
-		TestPlan testPlan = launcher.discover(TestPlanSpecification.build(forUniqueId(testDescriptor.getUniqueId())));
+		TestPlan testPlan = launcher.discover(TestPlanSpecification.build(forUniqueId("test")));
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
@@ -60,15 +61,14 @@ public class LauncherTests {
 
 	@Test
 	public void discoverTestPlanForMultipleEngines() {
-		DummyTestEngine firstEngine = new DummyTestEngine("first");
-		TestDescriptor test1 = firstEngine.addTest("test1", noOp());
-		DummyTestEngine secondEngine = new DummyTestEngine("second");
-		TestDescriptor test2 = secondEngine.addTest("test2", noOp());
+		DummyTestEngine firstEngine = new DummyTestEngine();
+		firstEngine.addTest("test1", noOp());
+		DummyTestEngine secondEngine = new DummyTestEngine();
+		secondEngine.addTest("test2", noOp());
 
 		Launcher launcher = createLauncher(firstEngine, secondEngine);
 
-		TestPlan testPlan = launcher.discover(
-			TestPlanSpecification.build(forUniqueId(test1.getUniqueId()), forUniqueId(test2.getUniqueId())));
+		TestPlan testPlan = launcher.discover(TestPlanSpecification.build(forUniqueId("test1"), forUniqueId("test2")));
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
@@ -80,11 +80,11 @@ public class LauncherTests {
 	@Test
 	public void discoverPrunesEnginesWithoutTestsFromTestPlan() {
 		DummyTestEngine engine = new DummyTestEngine();
-		TestDescriptor test = engine.addTest("test", noOp());
+		engine.addTest("test", noOp());
 
 		Launcher launcher = createLauncher(engine);
 
-		TestPlanSpecification specification = TestPlanSpecification.build(forUniqueId(test.getUniqueId()));
+		TestPlanSpecification specification = TestPlanSpecification.build(forUniqueId("test"));
 		specification.filterWith(byEngine("doesNotExist"));
 
 		TestPlan testPlan = launcher.discover(specification);

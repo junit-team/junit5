@@ -13,15 +13,13 @@ package org.junit.gen5.engine;
 import java.io.File;
 
 public class AllTestsSpecification implements TestPlanSpecificationElement {
-
 	private final File classpathRoot;
 
 	public AllTestsSpecification(File classpathRoot) {
 		this.classpathRoot = classpathRoot;
 	}
 
-	@Override
-	public void accept(TestPlanSpecificationElementVisitor visitor) {
-		visitor.visitAllTests(classpathRoot);
+	public File getClasspathRoot() {
+		return classpathRoot;
 	}
 }

@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
+import org.junit.Before;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -26,6 +27,11 @@ import org.junit.gen5.engine.TrackingEngineExecutionListener;
 abstract class AbstractJUnit5TestEngineTests {
 
 	protected final JUnit5TestEngine engine = new JUnit5TestEngine();
+
+	@Before
+	public void initializeEngine() throws Exception {
+		engine.initialize();
+	}
 
 	protected TrackingEngineExecutionListener executeTestsForClass(Class<?> testClass, int expectedDescriptorCount) {
 		TestPlanSpecification spec = build(forClass(testClass));

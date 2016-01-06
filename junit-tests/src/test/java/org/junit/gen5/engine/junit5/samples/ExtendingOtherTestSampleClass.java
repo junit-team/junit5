@@ -8,14 +8,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor.subpackage;
+package org.junit.gen5.engine.junit5.samples;
 
 import org.junit.gen5.api.Test;
 
-public class Class1WithTestCases {
-
+public class ExtendingOtherTestSampleClass extends TwoTestAndOneNonTestMethodsSampleClass {
 	@Test
-	void test1() {
-
+	void test7(String param) {
 	}
 }

@@ -15,16 +15,8 @@ import static java.util.stream.Collectors.toList;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.gen5.commons.util.Preconditions;
@@ -73,7 +65,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return rootDirectories.stream()
 				.filter(File::exists)
 				.map(AllTestsSpecification::new)
-				.collect(Collectors.toList());
+				.collect(toList());
 		// @formatter:on
 	}
 
@@ -155,10 +147,6 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return unmodifiableList(this.elements);
 	}
 
-	public void accept(TestPlanSpecificationElementVisitor visitor) {
-		elements.forEach(element -> element.accept(visitor));
-	}
-
 	public void filterWith(Predicate<TestDescriptor> filter) {
 		Preconditions.notNull(filter, "filter must not be null");
 		this.descriptorFilter = this.descriptorFilter.and(filter);
@@ -178,4 +166,48 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return this.descriptorFilter.test(testDescriptor);
 	}
 
+	public List<String> getUniqueIds() {
+		// @formatter:off
+		return getElements().stream()
+				.filter(element -> element instanceof UniqueIdSpecification)
+				.map(element -> ((UniqueIdSpecification) element).getUniqueId())
+				.collect(toList());
+		// @formatter:on
+	}
+
+	public List<String> getPackages() {
+		// @formatter:off
+		return getElements().stream()
+				.filter(element -> element instanceof PackageSpecification)
+				.map(element -> ((PackageSpecification)element).getPackageName())
+				.collect(toList());
+		// @formatter:on
+	}
+
+	public List<Class<?>> getClasses() {
+		// @formatter:off
+		return getElements().stream()
+				.filter(element -> element instanceof ClassSpecification)
+				.map(element -> ((ClassSpecification)element).getTestClass())
+				.collect(toList());
+		// @formatter:on
+	}
+
+	public List<MethodSpecification> getMethods() {
+		// @formatter:off
+		return getElements().stream()
+				.filter(element -> element instanceof MethodSpecification)
+				.map(element -> ((MethodSpecification)element))
+				.collect(toList());
+		// @formatter:on
+	}
+
+	public List<File> getFolders() {
+		// @formatter:off
+		return getElements().stream()
+				.filter(element -> element instanceof AllTestsSpecification)
+				.map(element -> ((AllTestsSpecification)element).getClasspathRoot())
+				.collect(toList());
+		// @formatter:on
+	}
 }

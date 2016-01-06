@@ -27,8 +27,10 @@ import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.commons.util.ExceptionUtils;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
 
@@ -36,9 +38,15 @@ import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
  * @since 5.0
  */
 public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
+	private final TestEngine testEngine;
 
-	protected JUnit5TestDescriptor(String uniqueId) {
-		super(uniqueId);
+	public JUnit5TestDescriptor(TestEngine testEngine) {
+		Preconditions.notNull(testEngine, "testEngine must not be null");
+		this.testEngine = testEngine;
+	}
+
+	public TestEngine getTestEngine() {
+		return testEngine;
 	}
 
 	protected Set<TestTag> getTags(AnnotatedElement element) {

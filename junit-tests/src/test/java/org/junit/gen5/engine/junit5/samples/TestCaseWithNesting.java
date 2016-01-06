@@ -8,14 +8,27 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor.subpackage;
+package org.junit.gen5.engine.junit5.samples;
 
+import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 
-public class Class2WithTestCases {
-
+public class TestCaseWithNesting {
 	@Test
-	void test2() {
+	void testA() {
+	}
 
+	@Nested
+	public class NestedTest {
+		@Test
+		void testB() {
+		}
+
+		@Nested
+		public class DoubleNestedTest {
+			@Test
+			void testC() {
+			}
+		}
 	}
 }

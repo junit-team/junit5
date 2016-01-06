@@ -18,6 +18,7 @@ import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.junit5.testdoubles.TestEngineStub;
 
 /**
  * Microtests for implementors of {@linkplain ExtensionContext}: {@linkplain ClassBasedContainerExtensionContext} and
@@ -100,11 +101,11 @@ public class ExtensionContextTests {
 	}
 
 	private ClassTestDescriptor nestedClassDescriptor() {
-		return new ClassTestDescriptor("NestedClass", OuterClass.NestedClass.class);
+		return new ClassTestDescriptor(new TestEngineStub(), OuterClass.NestedClass.class);
 	}
 
 	private ClassTestDescriptor outerClassDescriptor(TestDescriptor child) {
-		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor("OuterClass", OuterClass.class);
+		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(new TestEngineStub(), OuterClass.class);
 		if (child != null)
 			classTestDescriptor.addChild(child);
 		return classTestDescriptor;
@@ -112,7 +113,8 @@ public class ExtensionContextTests {
 
 	private MethodTestDescriptor methodDescriptor() {
 		try {
-			return new MethodTestDescriptor("aMethod", OuterClass.class, OuterClass.class.getDeclaredMethod("aMethod"));
+			return new MethodTestDescriptor(new TestEngineStub(), OuterClass.class,
+				OuterClass.class.getDeclaredMethod("aMethod"));
 		}
 		catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);

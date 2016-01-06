@@ -29,7 +29,12 @@ final class RootTestDescriptor extends AbstractTestDescriptor {
 	private final List<TestEngine> testEngines = new LinkedList<>();
 
 	RootTestDescriptor() {
-		super("testPlan");
+		super();
+	}
+
+	@Override
+	public String getUniqueId() {
+		return "testPlan";
 	}
 
 	Iterable<TestEngine> getTestEngines() {
