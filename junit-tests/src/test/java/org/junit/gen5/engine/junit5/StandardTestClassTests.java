@@ -239,7 +239,7 @@ class TestCaseWithFailingAfter {
 
 	@AfterEach
 	void after() {
-		throw new RuntimeException("Problem during setup");
+		throw new RuntimeException("Problem during 'after'");
 	}
 
 	@Test
