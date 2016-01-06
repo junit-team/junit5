@@ -18,6 +18,8 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionResult;
 
 public class EngineExecutionListenerSpy implements EngineExecutionListener {
+	public List<TestDescriptor> foundStartedContainers = new LinkedList<>();
+	public List<TestDescriptor> foundFinishedContainers = new LinkedList<>();
 	public List<TestDescriptor> foundDynamicTests = new LinkedList<>();
 	public List<TestDescriptor> foundStartedTests = new LinkedList<>();
 	public List<TestDescriptor> foundSkippedTests = new LinkedList<>();
@@ -32,7 +34,11 @@ public class EngineExecutionListenerSpy implements EngineExecutionListener {
 
 	@Override
 	public void executionStarted(TestDescriptor testDescriptor) {
-		foundStartedTests.add(testDescriptor);
+		if (testDescriptor.isContainer()) {
+      foundStartedContainers.add(testDescriptor);
+    } else {
+      foundStartedTests.add(testDescriptor);
+    }
 	}
 
 	@Override
@@ -42,16 +48,20 @@ public class EngineExecutionListenerSpy implements EngineExecutionListener {
 
 	@Override
 	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
-		switch (testExecutionResult.getStatus()) {
-			case SUCCESSFUL:
-				foundSucceededTests.add(testDescriptor);
-				break;
-			case ABORTED:
-				foundAbortedTests.add(testDescriptor);
-				break;
-			case FAILED:
-				foundFailedTests.add(testDescriptor);
-				break;
-		}
+    if (testDescriptor.isContainer()) {
+      foundFinishedContainers.add(testDescriptor);
+    } else {
+      switch (testExecutionResult.getStatus()) {
+        case SUCCESSFUL:
+          foundSucceededTests.add(testDescriptor);
+          break;
+        case ABORTED:
+          foundAbortedTests.add(testDescriptor);
+          break;
+        case FAILED:
+          foundFailedTests.add(testDescriptor);
+          break;
+      }
+    }
 	}
 }

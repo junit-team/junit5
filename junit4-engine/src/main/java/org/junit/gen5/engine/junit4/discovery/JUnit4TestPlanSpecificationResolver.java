@@ -29,14 +29,10 @@ public class JUnit4TestPlanSpecificationResolver {
 
 	public void resolve(TestPlanSpecification specification) {
 		RunnerBuilder runnerBuilder = new DefensiveAllDefaultPossibilitiesBuilder();
-		specification.accept(new TestPlanSpecificationElementVisitor() {
-
-			@Override
-			public void visitClass(Class<?> testClass) {
-				Runner runner = runnerBuilder.safeRunnerForClass(testClass);
-				if (runner != null) {
-					engineDescriptor.addChild(createCompleteRunnerTestDescriptor(testClass, runner));
-				}
+		specification.getClasses().forEach((testClass) -> {
+			Runner runner = runnerBuilder.safeRunnerForClass(testClass);
+			if (runner != null) {
+				engineDescriptor.addChild(createCompleteRunnerTestDescriptor(testClass, runner));
 			}
 		});
 	}

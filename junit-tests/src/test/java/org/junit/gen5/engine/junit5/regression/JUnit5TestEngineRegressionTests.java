@@ -16,11 +16,9 @@ import static org.junit.gen5.engine.TestPlanSpecification.forClass;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.gen5.api.Assertions;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
-import org.junit.gen5.engine.junit5.TrackingEngineExecutionListener;
 import org.junit.gen5.engine.junit5.samples.EmptyTestSampleClass;
 import org.junit.gen5.engine.junit5.samples.SinglePassingTestSampleClass;
 import org.junit.gen5.engine.junit5.samples.TestCaseWithNesting;
@@ -37,49 +35,49 @@ public class JUnit5TestEngineRegressionTests {
 
 	@Test
 	public void noTests() throws Exception {
-		TrackingEngineExecutionListener testExecutionListener = new TrackingEngineExecutionListener();
+		EngineExecutionListenerSpy testExecutionListener = new EngineExecutionListenerSpy();
 
 		TestDescriptor testDescriptor = testEngine.discoverTests(build(forClass(EmptyTestSampleClass.class)));
 		testEngine.execute(new ExecutionRequest(testDescriptor, testExecutionListener));
 
-		assertThat(testExecutionListener.containerStartedCount.get()).isEqualTo(1);
-		assertThat(testExecutionListener.containerFinishedCount.get()).isEqualTo(1);
-		assertThat(testExecutionListener.testAbortedCount.get()).isEqualTo(0);
-		assertThat(testExecutionListener.testFailedCount.get()).isEqualTo(0);
-		assertThat(testExecutionListener.testSkippedCount.get()).isEqualTo(0);
-		assertThat(testExecutionListener.testStartedCount.get()).isEqualTo(0);
-		assertThat(testExecutionListener.testSucceededCount.get()).isEqualTo(0);
+    assertThat(testExecutionListener.foundStartedContainers.size()).isEqualTo(1);
+    assertThat(testExecutionListener.foundFinishedContainers.size()).isEqualTo(1);
+    assertThat(testExecutionListener.foundAbortedTests.size()).isEqualTo(0);
+		assertThat(testExecutionListener.foundFailedTests.size()).isEqualTo(0);
+		assertThat(testExecutionListener.foundSkippedTests.size()).isEqualTo(0);
+		assertThat(testExecutionListener.foundStartedTests.size()).isEqualTo(0);
+		assertThat(testExecutionListener.foundSucceededTests.size()).isEqualTo(0);
 	}
 
 	@Test
 	public void singlePassingTest() throws Exception {
-		TrackingEngineExecutionListener testExecutionListener = new TrackingEngineExecutionListener();
+		EngineExecutionListenerSpy testExecutionListener = new EngineExecutionListenerSpy();
 
 		TestDescriptor testDescriptor = testEngine.discoverTests(build(forClass(SinglePassingTestSampleClass.class)));
 		testEngine.execute(new ExecutionRequest(testDescriptor, testExecutionListener));
 
-		assertThat(testExecutionListener.containerStartedCount.get()).isEqualTo(2);
-		assertThat(testExecutionListener.containerFinishedCount.get()).isEqualTo(2);
-		assertThat(testExecutionListener.testAbortedCount.get()).isEqualTo(0);
-		assertThat(testExecutionListener.testFailedCount.get()).isEqualTo(0);
-		assertThat(testExecutionListener.testSkippedCount.get()).isEqualTo(0);
-		assertThat(testExecutionListener.testStartedCount.get()).isEqualTo(1);
-		assertThat(testExecutionListener.testSucceededCount.get()).isEqualTo(1);
+		assertThat(testExecutionListener.foundStartedContainers.size()).isEqualTo(2);
+		assertThat(testExecutionListener.foundFinishedContainers.size()).isEqualTo(2);
+		assertThat(testExecutionListener.foundAbortedTests.size()).isEqualTo(0);
+		assertThat(testExecutionListener.foundFailedTests.size()).isEqualTo(0);
+		assertThat(testExecutionListener.foundSkippedTests.size()).isEqualTo(0);
+		assertThat(testExecutionListener.foundStartedTests.size()).isEqualTo(1);
+		assertThat(testExecutionListener.foundSucceededTests.size()).isEqualTo(1);
 	}
 
 	@Test
 	public void nestedTestClassTest() throws Exception {
-		TrackingEngineExecutionListener testExecutionListener = new TrackingEngineExecutionListener();
+		EngineExecutionListenerSpy testExecutionListener = new EngineExecutionListenerSpy();
 
 		TestDescriptor testDescriptor = testEngine.discoverTests(build(forClass(TestCaseWithNesting.class)));
 		testEngine.execute(new ExecutionRequest(testDescriptor, testExecutionListener));
 
-		assertThat(testExecutionListener.containerStartedCount.get()).isEqualTo(4);
-		assertThat(testExecutionListener.containerFinishedCount.get()).isEqualTo(4);
-		assertThat(testExecutionListener.testAbortedCount.get()).isEqualTo(0);
-		assertThat(testExecutionListener.testFailedCount.get()).isEqualTo(0);
-		assertThat(testExecutionListener.testSkippedCount.get()).isEqualTo(0);
-		assertThat(testExecutionListener.testStartedCount.get()).isEqualTo(3);
-		assertThat(testExecutionListener.testSucceededCount.get()).isEqualTo(3);
+    assertThat(testExecutionListener.foundStartedContainers.size()).isEqualTo(4);
+    assertThat(testExecutionListener.foundFinishedContainers.size()).isEqualTo(4);
+		assertThat(testExecutionListener.foundAbortedTests.size()).isEqualTo(0);
+		assertThat(testExecutionListener.foundFailedTests.size()).isEqualTo(0);
+		assertThat(testExecutionListener.foundSkippedTests.size()).isEqualTo(0);
+		assertThat(testExecutionListener.foundStartedTests.size()).isEqualTo(3);
+		assertThat(testExecutionListener.foundSucceededTests.size()).isEqualTo(3);
 	}
 }

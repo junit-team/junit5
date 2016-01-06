@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
 
@@ -25,8 +26,8 @@ import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
  */
 public class NestedClassTestDescriptor extends ClassTestDescriptor {
 
-	NestedClassTestDescriptor(String uniqueId, Class<?> testClass) {
-		super(uniqueId, testClass);
+	public NestedClassTestDescriptor(TestEngine testEngine, Class<?> testClass) {
+		super(testEngine, testClass);
 	}
 
 	@Override

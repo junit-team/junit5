@@ -23,7 +23,7 @@ import org.junit.gen5.engine.junit5.resolver.TestResolverRegistry;
 import org.junit.gen5.engine.junit5.resolver.TestResolverRegistryImpl;
 
 public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecutionContext> {
-	private static final String ENGINE_ID = "junit5";
+	public static final String ENGINE_ID = "junit5";
 
 	private TestResolverRegistry testResolverRegistry;
 
