@@ -40,9 +40,9 @@ public class JUnit5TestEngineRegressionTests {
 		TestDescriptor testDescriptor = testEngine.discoverTests(build(forClass(EmptyTestSampleClass.class)));
 		testEngine.execute(new ExecutionRequest(testDescriptor, testExecutionListener));
 
-    assertThat(testExecutionListener.foundStartedContainers.size()).isEqualTo(1);
-    assertThat(testExecutionListener.foundFinishedContainers.size()).isEqualTo(1);
-    assertThat(testExecutionListener.foundAbortedTests.size()).isEqualTo(0);
+		assertThat(testExecutionListener.foundStartedContainers.size()).isEqualTo(1);
+		assertThat(testExecutionListener.foundFinishedContainers.size()).isEqualTo(1);
+		assertThat(testExecutionListener.foundAbortedTests.size()).isEqualTo(0);
 		assertThat(testExecutionListener.foundFailedTests.size()).isEqualTo(0);
 		assertThat(testExecutionListener.foundSkippedTests.size()).isEqualTo(0);
 		assertThat(testExecutionListener.foundStartedTests.size()).isEqualTo(0);
@@ -72,8 +72,8 @@ public class JUnit5TestEngineRegressionTests {
 		TestDescriptor testDescriptor = testEngine.discoverTests(build(forClass(TestCaseWithNesting.class)));
 		testEngine.execute(new ExecutionRequest(testDescriptor, testExecutionListener));
 
-    assertThat(testExecutionListener.foundStartedContainers.size()).isEqualTo(4);
-    assertThat(testExecutionListener.foundFinishedContainers.size()).isEqualTo(4);
+		assertThat(testExecutionListener.foundStartedContainers.size()).isEqualTo(4);
+		assertThat(testExecutionListener.foundFinishedContainers.size()).isEqualTo(4);
 		assertThat(testExecutionListener.foundAbortedTests.size()).isEqualTo(0);
 		assertThat(testExecutionListener.foundFailedTests.size()).isEqualTo(0);
 		assertThat(testExecutionListener.foundSkippedTests.size()).isEqualTo(0);

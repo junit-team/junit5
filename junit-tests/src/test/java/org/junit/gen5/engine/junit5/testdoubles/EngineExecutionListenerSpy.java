@@ -35,10 +35,11 @@ public class EngineExecutionListenerSpy implements EngineExecutionListener {
 	@Override
 	public void executionStarted(TestDescriptor testDescriptor) {
 		if (testDescriptor.isContainer()) {
-      foundStartedContainers.add(testDescriptor);
-    } else {
-      foundStartedTests.add(testDescriptor);
-    }
+			foundStartedContainers.add(testDescriptor);
+		}
+		else {
+			foundStartedTests.add(testDescriptor);
+		}
 	}
 
 	@Override
@@ -48,20 +49,21 @@ public class EngineExecutionListenerSpy implements EngineExecutionListener {
 
 	@Override
 	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
-    if (testDescriptor.isContainer()) {
-      foundFinishedContainers.add(testDescriptor);
-    } else {
-      switch (testExecutionResult.getStatus()) {
-        case SUCCESSFUL:
-          foundSucceededTests.add(testDescriptor);
-          break;
-        case ABORTED:
-          foundAbortedTests.add(testDescriptor);
-          break;
-        case FAILED:
-          foundFailedTests.add(testDescriptor);
-          break;
-      }
-    }
+		if (testDescriptor.isContainer()) {
+			foundFinishedContainers.add(testDescriptor);
+		}
+		else {
+			switch (testExecutionResult.getStatus()) {
+				case SUCCESSFUL:
+					foundSucceededTests.add(testDescriptor);
+					break;
+				case ABORTED:
+					foundAbortedTests.add(testDescriptor);
+					break;
+				case FAILED:
+					foundFailedTests.add(testDescriptor);
+					break;
+			}
+		}
 	}
 }
