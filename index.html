@@ -437,10 +437,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#dependency-metadata">Dependency Metadata</a></li>
 <li><a href="#junit-5-sample-projects">JUnit 5 Sample Projects</a></li>
-</ul>
-</li>
-<li><a href="#writing-tests">Writing Tests</a>
-<ul class="sectlevel2">
 <li><a href="#annotations">Annotations</a></li>
 <li><a href="#standard-test-class">Standard Test Class</a></li>
 <li><a href="#custom-names">Custom Names</a></li>
@@ -490,7 +486,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The goal of this document is to provide a comprehensive reference documentation for both programmers writing tests and extension authors.</p>
+<p>The goal of this document is to provide comprehensive reference documentation for both programmers writing tests and extension authors.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -517,11 +513,8 @@ Work in progress!
 <div class="sect1">
 <h2 id="installation">Installation</h2>
 <div class="sectionbody">
-<div class="literalblock">
-<div class="content">
-<pre> 
-Snapshot artifacts are deployed to Sonatype's https://oss.sonatype.org/content/repositories/snapshots/[snapshots repository].</pre>
-</div>
+<div class="paragraph">
+<p>Snapshot artifacts are deployed to Sonatype&#8217;s <a href="https://oss.sonatype.org/content/repositories/snapshots">snapshots repository</a>.</p>
 </div>
 <div class="sect2">
 <h3 id="dependency-metadata">Dependency Metadata</h3>
@@ -565,9 +558,6 @@ Snapshot artifacts are deployed to Sonatype's https://oss.sonatype.org/content/r
 <p><code>junit5-engine</code></p>
 </li>
 <li>
-<p><code>open-test-alliance</code> (Version <code>1.0.0-SNAPSHOT</code>)</p>
-</li>
-<li>
 <p><code>surefire-junit5</code></p>
 </li>
 </ul>
@@ -592,16 +582,10 @@ and <code>pom.xml</code> in the projects below:</p>
 </li>
 <li>
 <p>For Maven, check out the <a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer">junit5-maven-consumer</a> project.
-'''</p>
+== Writing Tests</p>
 </li>
 </ul>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="writing-tests">Writing Tests</h2>
-<div class="sectionbody">
 <div class="listingblock">
 <div class="title">A first test case</div>
 <div class="content">
@@ -617,6 +601,7 @@ class FirstTestCase {
     }
 
 }</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -769,9 +754,9 @@ are static methods in the <a href="https://github.com/junit-team/junit-lambda/tr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.<strong>;
 
-import org.junit.gen5.api.*;
+import org.junit.gen5.api.</strong>;
 
 class MyTest {
 
@@ -814,8 +799,8 @@ are static methods in the <a href="https://github.com/junit-team/junit-lambda/tr
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.api.Assumptions.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.<strong>;
+import static org.junit.gen5.api.Assumptions.</strong>;
 
 import org.junit.gen5.api.*;
 
@@ -852,7 +837,7 @@ class MyTest {
 <div class="sect2">
 <h3 id="disabling-tests">Disabling Tests</h3>
 <div class="paragraph">
-<p>Here´s a disabled test case:</p>
+<p>Here&#8217;s a disabled test case:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -868,7 +853,7 @@ class MyTest {
 </div>
 </div>
 <div class="paragraph">
-<p>And here´s a test case with a disabled test method:</p>
+<p>And here&#8217;s a test case with a disabled test method:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -913,7 +898,7 @@ class FastModelTests {
 <h3 id="nested-tests">Nested Tests</h3>
 <div class="paragraph">
 <p>Nested tests give the test writer more capabilities to express the relationship
-among several group of tests. Here´s a somewhat contrived example:</p>
+among several group of tests. Here&#8217;s a somewhat contrived example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -950,7 +935,7 @@ class MyObjectTest {
 </div>
 <div class="paragraph">
 <p>Notice that <em>only non-static inner classes</em> can serve as nested tests.
-Nesting can be arbitrarily deep and those inner classes can be considered as
+Nesting can be arbitrarily deep, and those inner classes can be considered as
 full members of the test class family.</p>
 </div>
 <div class="paragraph">
@@ -1042,9 +1027,6 @@ void simpleTestWithInjectedMock(@InjectMock MyType myType) {
 <div class="paragraph">
 <p>At this stage there is no direct support for running JUnit 5 tests in IDEs. However, we provide two intermediate solutions so that you can go ahead and try out the current snapshot today.
 You can use the <a href="#console-runner"><code>ConsoleRunner</code></a> or execute JUnit 5 tests with a <a href="#using-junit4-to-run-junit5-tests">JUnit 4 style runner</a>.</p>
-</div>
-<div class="paragraph">
-<p>—-</p>
 </div>
 </div>
 <div class="sect2">
@@ -1202,28 +1184,25 @@ generated by Gradle.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-xml" data-lang="xml">    ...
-    &lt;build&gt;
-        &lt;plugins&gt;
-            ...
-            &lt;plugin&gt;
-                &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
-                &lt;version&gt;2.19&lt;/version&gt;
-                &lt;dependencies&gt;
-                    &lt;dependency&gt;
-                        &lt;groupId&gt;org.junit&lt;/groupId&gt;
-                        &lt;artifactId&gt;surefire-junit5&lt;/artifactId&gt;
-                        &lt;version&gt;5.0.0-SNAPSHOT&lt;/version&gt;
-                    &lt;/dependency&gt;
-                &lt;/dependencies&gt;
-            &lt;/plugin&gt;
-        &lt;/plugins&gt;
-    &lt;/build&gt;
-    ...</code></pre>
+<pre class="highlightjs highlight"><code class="language-xml" data-lang="xml">...
+&lt;build&gt;
+    &lt;plugins&gt;
+        ...
+        &lt;plugin&gt;
+            &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.19&lt;/version&gt;
+            &lt;dependencies&gt;
+                &lt;dependency&gt;
+                    &lt;groupId&gt;org.junit&lt;/groupId&gt;
+                    &lt;artifactId&gt;surefire-junit5&lt;/artifactId&gt;
+                    &lt;version&gt;5.0.0-SNAPSHOT&lt;/version&gt;
+                &lt;/dependency&gt;
+            &lt;/dependencies&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;
+...</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>—-</p>
 </div>
 </div>
 </div>
@@ -1318,7 +1297,7 @@ Implementation of the Engine API for JUnit 5.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>package com.example;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">package com.example;
 
 import static org.junit.gen5.api.Assertions.fail;
 
@@ -1339,7 +1318,7 @@ public class AJUnit5TestCaseRunWithJUnit4 {
         fail("Failing for failing's sake.");
     }
 
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -1616,12 +1595,12 @@ to identify test classes and test methods in the past.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.engine.TestPlanSpecification.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.engine.TestPlanSpecification.<strong>;
 
 TestPlanSpecification specification === build(
     forPackage("com.mycompany.mytests"),
     forClass(MyTestClass.class)
-).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
+).filterWith(classNameMatches("*Test").or(classNameMatches("Test</strong>")));
 
 TestPlan plan === new Launcher().discover(specification);</code></pre>
 </div>
@@ -1655,7 +1634,7 @@ through a <a href="https://github.com/junit-team/junit-lambda/tree/master/junit-
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestPlanSpecification specification === build(
     forPackage("com.mycompany.mytests"),
     forClass(MyTestClass.class)
-).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
+).filterWith(classNameMatches("<strong>Test").or(classNameMatches("Test</strong>")));
 
 Launcher launcher === new Launcher();
 TestPlanExecutionListener listener === createListener();
@@ -1705,7 +1684,7 @@ For example, the <code>junit5-engine</code> project registers its <code>JUnit5Te
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-07 09:07:28 -05:00
+Last updated 2016-01-07 10:08:50 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
