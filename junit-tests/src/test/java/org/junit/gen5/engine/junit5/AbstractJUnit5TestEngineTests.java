@@ -30,24 +30,24 @@ import org.junit.gen5.engine.TrackingEngineExecutionListener;
 abstract class AbstractJUnit5TestEngineTests {
 
 	protected final JUnit5TestEngine engine = new JUnit5TestEngine();
+	private int testDescriptorCount;
 
-	protected TrackingEngineExecutionListener executeTestsForClass(Class<?> testClass, int expectedDescriptorCount) {
+	protected TrackingEngineExecutionListener executeTestsForClass(Class<?> testClass) {
 		TestPlanSpecification spec = build(forClass(testClass));
-		return executeTests(spec, expectedDescriptorCount);
+		return executeTests(spec);
 	}
 
-	protected TrackingEngineExecutionListener executeTests(TestPlanSpecification spec, int expectedDescriptorCount) {
+	protected TrackingEngineExecutionListener executeTests(TestPlanSpecification spec) {
 		TestDescriptor testDescriptor = discoverTests(spec);
-		assertEquals(expectedDescriptorCount, testDescriptor.allDescendants().size());
+		testDescriptorCount = testDescriptor.allDescendants().size();
 		TrackingEngineExecutionListener listener = new TrackingEngineExecutionListener();
 		engine.execute(new ExecutionRequest(testDescriptor, listener));
 		return listener;
 	}
 
-	protected List<ExecutionEvent> executeTestsAndRecordEvents(TestPlanSpecification spec,
-			int expectedDescriptorCount) {
+	protected List<ExecutionEvent> executeTestsAndRecordEvents(TestPlanSpecification spec) {
 		TestDescriptor testDescriptor = discoverTests(spec);
-		assertEquals(expectedDescriptorCount, testDescriptor.allDescendants().size());
+		testDescriptorCount = testDescriptor.allDescendants().size();
 		ExecutionEventRecordingEngineExecutionListener listener = new ExecutionEventRecordingEngineExecutionListener();
 		engine.execute(new ExecutionRequest(testDescriptor, listener));
 		return listener.getExecutionEvents();
@@ -57,4 +57,7 @@ abstract class AbstractJUnit5TestEngineTests {
 		return engine.discoverTests(spec);
 	}
 
+	protected int countResolvedTestDescriptors() {
+		return testDescriptorCount;
+	}
 }

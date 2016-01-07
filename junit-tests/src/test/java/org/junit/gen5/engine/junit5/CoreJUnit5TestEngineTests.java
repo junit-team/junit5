@@ -37,7 +37,9 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTests {
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.CoreJUnit5TestEngineTests$LocalTestCase#alwaysPasses()"),
 			forClass(LocalTestCase.class));
 
-		TrackingEngineExecutionListener listener = executeTests(spec, 8);
+		TrackingEngineExecutionListener listener = executeTests(spec);
+
+		assertEquals(8, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(7, listener.testStartedCount.get(), "# tests started");
 		assertEquals(4, listener.testSucceededCount.get(), "# tests succeeded");
@@ -50,7 +52,9 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTests {
 	public void executeTestsForClass() {
 		LocalTestCase.countAfterInvoked = 0;
 
-		TrackingEngineExecutionListener listener = executeTestsForClass(LocalTestCase.class, 8);
+		TrackingEngineExecutionListener listener = executeTestsForClass(LocalTestCase.class);
+
+		assertEquals(8, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(7, listener.testStartedCount.get(), "# tests started");
 		assertEquals(4, listener.testSucceededCount.get(), "# tests succeeded");
@@ -66,7 +70,9 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTests {
 		TestPlanSpecification spec = build(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.CoreJUnit5TestEngineTests$LocalTestCase#alwaysPasses()"));
 
-		TrackingEngineExecutionListener listener = executeTests(spec, 2);
+		TrackingEngineExecutionListener listener = executeTests(spec);
+
+		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(1, listener.testStartedCount.get(), "# tests started");
 		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");
@@ -80,7 +86,9 @@ public class CoreJUnit5TestEngineTests extends AbstractJUnit5TestEngineTests {
 		TestPlanSpecification spec = build(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.CoreJUnit5TestEngineTests$LocalTestCase#throwExceptionInAfterMethod()"));
 
-		TrackingEngineExecutionListener listener = executeTests(spec, 2);
+		TrackingEngineExecutionListener listener = executeTests(spec);
+
+		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(1, listener.testStartedCount.get(), "# tests started");
 		assertEquals(0, listener.testSucceededCount.get(), "# tests succeeded");

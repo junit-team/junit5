@@ -36,7 +36,9 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 			TestPlanSpecification.forClass(FirstOfTwoTestCases.class),
 			TestPlanSpecification.forClass(SecondOfTwoTestCases.class));
 
-		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification, 6 + 2);
+		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification);
+
+		assertEquals(6 + 2, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(6, listener.testStartedCount.get(), "# tests started");
 		assertEquals(5, listener.testSucceededCount.get(), "# tests succeeded");
@@ -48,7 +50,9 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void allTestsInClassAreRunWithBeforeEach() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(MyStandardTestCase.class, 5);
+		TrackingEngineExecutionListener listener = executeTestsForClass(MyStandardTestCase.class);
+
+		assertEquals(5, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(4, listener.testStartedCount.get(), "# tests started");
 		assertEquals(2, listener.testSucceededCount.get(), "# tests succeeded");
@@ -64,7 +68,9 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void allTestsInClassAreRunWithAfterEach() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(MyStandardTestCase.class, 5);
+		TrackingEngineExecutionListener listener = executeTestsForClass(MyStandardTestCase.class);
+
+		assertEquals(5, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(4, listener.testStartedCount.get(), "# tests started");
 		assertEquals(4, MyStandardTestCase.countAfter, "# after each calls");
@@ -75,7 +81,9 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void testsFailWhenBeforeEachFails() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithFailingBefore.class, 3);
+		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithFailingBefore.class);
+
+		assertEquals(3, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(2, listener.testStartedCount.get(), "# tests started");
 		assertEquals(0, listener.testSucceededCount.get(), "# tests succeeded");
@@ -89,7 +97,9 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void testsFailWhenAfterEachFails() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithFailingAfter.class, 2);
+		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithFailingAfter.class);
+
+		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(1, listener.testStartedCount.get(), "# tests started");
 		assertEquals(0, listener.testSucceededCount.get(), "# tests succeeded");
@@ -103,7 +113,9 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void nestedTestsAreExecuted() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithNesting.class, 5);
+		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithNesting.class);
+
+		assertEquals(5, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(3, listener.testStartedCount.get(), "# tests started");
 		assertEquals(2, listener.testSucceededCount.get(), "# tests succeeded");
@@ -115,7 +127,9 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void doublyNestedTestsAreExecuted() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithDoubleNesting.class, 8);
+		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithDoubleNesting.class);
+
+		assertEquals(8, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(5, listener.testStartedCount.get(), "# tests started");
 		assertEquals(3, listener.testSucceededCount.get(), "# tests succeeded");

@@ -39,7 +39,9 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
 			TestPlanSpecification.forMethod(FailureTestCase.class, method));
 
-		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification, 2);
+		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification);
+
+		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(1, listener.testStartedCount.get(), "# tests started");
 		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
@@ -55,7 +57,9 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
 			TestPlanSpecification.forMethod(FailureTestCase.class, method));
 
-		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification, 2);
+		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification);
+
+		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(1, listener.testStartedCount.get(), "# tests started");
 		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
@@ -71,7 +75,9 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
 			TestPlanSpecification.forMethod(FailureTestCase.class, method));
 
-		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification, 2);
+		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification);
+
+		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(1, listener.testStartedCount.get(), "# tests started");
 		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
@@ -89,7 +95,9 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		FailureTestCase.exceptionToThrowInBeforeEach = Optional.of(new IOException("checked"));
 
-		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification, 2);
+		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification);
+
+		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(1, listener.testStartedCount.get(), "# tests started");
 		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
@@ -107,7 +115,9 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		FailureTestCase.exceptionToThrowInAfterEach = Optional.of(new IOException("checked"));
 
-		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification, 2);
+		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification);
+
+		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(1, listener.testStartedCount.get(), "# tests started");
 		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
@@ -125,7 +135,9 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		FailureTestCase.exceptionToThrowInAfterEach = Optional.of(new IOException("checked"));
 
-		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification, 2);
+		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification);
+
+		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(1, listener.testStartedCount.get(), "# tests started");
 		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
@@ -145,7 +157,9 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		FailureTestCase.exceptionToThrowInBeforeAll = Optional.of(new IOException("checked"));
 
-		List<ExecutionEvent> executionEvents = executeTestsAndRecordEvents(testPlanSpecification, 2);
+		List<ExecutionEvent> executionEvents = executeTestsAndRecordEvents(testPlanSpecification);
+
+		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
@@ -163,7 +177,9 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		FailureTestCase.exceptionToThrowInAfterAll = Optional.of(new IOException("checked"));
 
-		List<ExecutionEvent> executionEvents = executeTestsAndRecordEvents(testPlanSpecification, 2);
+		List<ExecutionEvent> executionEvents = executeTestsAndRecordEvents(testPlanSpecification);
+
+		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //

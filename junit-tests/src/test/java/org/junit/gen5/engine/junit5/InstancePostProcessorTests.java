@@ -36,7 +36,9 @@ public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 	public void instancePostProcessorInTopLevelClass() {
 		TestPlanSpecification spec = build(forClass(OuterTestCase.class));
 
-		TrackingEngineExecutionListener listener = executeTests(spec, 4);
+		TrackingEngineExecutionListener listener = executeTests(spec);
+
+		assertEquals(4, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(2, listener.testStartedCount.get(), "# tests started");
 		assertEquals(2, listener.testSucceededCount.get(), "# tests succeeded");

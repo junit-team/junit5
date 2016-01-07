@@ -37,7 +37,9 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsForMethodInjectionCases() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(MethodInjectionTestCase.class, 9);
+		TrackingEngineExecutionListener listener = executeTestsForClass(MethodInjectionTestCase.class);
+
+		assertEquals(9, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(8, listener.testStartedCount.get(), "# tests started");
 		assertEquals(7, listener.testSucceededCount.get(), "# tests succeeded");
@@ -48,7 +50,9 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterEachMethods() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class, 2);
+		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class);
+
+		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(1, listener.testStartedCount.get(), "# tests started");
 		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");
@@ -59,8 +63,9 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterAllMethods() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterAllMethodInjectionTestCase.class,
-			2);
+		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterAllMethodInjectionTestCase.class);
+
+		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(1, listener.testStartedCount.get(), "# tests started");
 		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");
@@ -71,7 +76,9 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsForMethodWithExtendWithAnnotation() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(ExtendWithOnMethodTestCase.class, 2);
+		TrackingEngineExecutionListener listener = executeTestsForClass(ExtendWithOnMethodTestCase.class);
+
+		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(1, listener.testStartedCount.get(), "# tests started");
 		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");

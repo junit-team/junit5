@@ -33,7 +33,9 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 		TestCaseWithNesting.countAfterInvoked = 0;
 
 		TestPlanSpecification spec = build(forClass(TestCaseWithNesting.class));
-		TrackingEngineExecutionListener listener = executeTests(spec, 6);
+		TrackingEngineExecutionListener listener = executeTests(spec);
+
+		assertEquals(6, countResolvedTestDescriptors(), "# resolved test descriptors");
 
 		assertEquals(3, listener.testStartedCount.get(), "# tests started");
 		assertEquals(3, listener.testSucceededCount.get(), "# tests succeeded");
