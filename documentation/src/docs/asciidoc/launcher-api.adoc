@@ -35,8 +35,8 @@ Usage Example:
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 TestPlanSpecification specification = build(
-    forPackage("com.mycompany.mytests"),
-    forClass(MyTestClass.class)
+	forPackage("com.mycompany.mytests"),
+	forClass(MyTestClass.class)
 ).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
 
 TestPlan plan = new Launcher().discover(specification);
@@ -64,8 +64,8 @@ https://github.com/junit-team/junit-lambda/tree/master/junit-launcher/src/main/j
 [subs="verbatim"]
 ----
 TestPlanSpecification specification = build(
-    forPackage("com.mycompany.mytests"),
-    forClass(MyTestClass.class)
+	forPackage("com.mycompany.mytests"),
+	forClass(MyTestClass.class)
 ).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
 
 Launcher launcher = new Launcher();

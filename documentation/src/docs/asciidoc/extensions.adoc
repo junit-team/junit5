@@ -24,7 +24,7 @@ follows.
 ----
 @ExtendWith(MockitoExtension.class)
 class MockTests {
-  // ...
+	// ...
 }
 ----
 
@@ -35,7 +35,7 @@ Multiple extensions can be registered together like this:
 ----
 @ExtendWith({ FooExtension.class, BarExtension.class })
 class MyTestsV1 {
-  // ...
+	// ...
 }
 ----
 
@@ -47,7 +47,7 @@ As an alternative, multiple extensions can be registered separately like this:
 @ExtendWith(FooExtension.class)
 @ExtendWith(BarExtension.class)
 class MyTestsV2 {
-  // ...
+	// ...
 }
 ----
 
