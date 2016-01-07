@@ -140,7 +140,7 @@ Basic usage in https://github.com/junit-team/junit5-samples/tree/master/junit5-m
 [source,xml,indent=0]
 [subs="verbatim,quotes"]
 ----
-	... 
+	...
 	<build>
 		<plugins>
 			...
@@ -282,4 +282,3 @@ public class JUnit4SamplesSuite {
 This suite will discover and run all tests in the `com.example` package and its subpackages.
 
 There are more options to discover and filter tests besides `@Packages`. Please have a look at the https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc/org/junit/gen5/junit4runner/package-summary.html[Javadoc] or the https://github.com/junit-team/junit-lambda/tree/master/junit4-launcher-runner/src/main/java/org/junit/gen5/junit4runner/JUnit5.java[code].
-

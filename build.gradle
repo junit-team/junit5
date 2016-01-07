@@ -227,6 +227,12 @@ configure(rootProject) {
 			trimTrailingWhitespace()
 			endWithNewline()
 		}
+		format 'user_guide', {
+			target '**/*.adoc'
+			// indentWithTabs()
+			trimTrailingWhitespace()
+			endWithNewline()
+		}
 	}
 
 	task wrapper(type: Wrapper) {
