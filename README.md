@@ -1,10 +1,8 @@
 # JUnit Lambda
 
-We are currently in _Phase 3_, building the _Alpha 1 milestone_ which is based on the feedback we got for the [Prototype](https://github.com/junit-team/junit-lambda/wiki/Prototype).
+This repository is the home of the next generation of JUnit, codenamed  _JUnit Lambda_ (a.k.a., _JUnit 5_).
 
-## Overview
-
-This repository currently hosts the prototype for the next generation of JUnit, codenamed "JUnit Lambda".
+The project is currently in _Phase 3_, building the _Alpha 1 milestone_ which is based on feedback received for the [Prototype](https://github.com/junit-team/junit-lambda/wiki/Prototype).
 
 ## User Guide
 
