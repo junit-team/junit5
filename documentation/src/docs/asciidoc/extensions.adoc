@@ -2,9 +2,6 @@
 == Extension Model
 
 
-WARNING: The Extension Model chapter needs to be updated regarding the status quo.
-
-
 === Overview
 
 In contrast to the competing `Runner`, `@Rule`, and `@ClassRule` extension points in
@@ -57,26 +54,19 @@ The execution of tests in both `MyTestsV1` and `MyTestsV2` will be extended by t
 Registered extensions are inherited within test class hierarchies.
 
 
-//////////////////////////
-
-TODO needs to be updated to match status quo
-
 === Conditional Test Execution
 
-https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension/Condition.java[`Condition`]
-defines the `TestExtension` API for programmatic, _conditional test execution_.
+`{ContainerExecutionCondition}` and `{TestExecutionCondition}` define the `TestExtension`
+APIs for programmatic, _conditional test execution_.
 
-A `Condition` is _evaluated_ to determine if a given test (e.g., class or method) should
-be executed based on the supplied `TestExecutionContext`. When evaluated at the class
-level, a `Condition` applies to all test methods within that class.
+A `ContainerExecutionCondition` is _evaluated_ to determine if all tests in a given
+container (e.g., a test class) should be executed based on the supplied
+`ContainerExtensionContext`. Similarly, a `TestExecutionCondition` is _evaluated_ to
+determine if a given test method should be executed based on the supplied
+`TestExtensionContext`.
 
-See the source code of
-https://github.com/junit-team/junit-lambda/tree/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/DisabledCondition.java[`DisabledCondition`]
-and
-https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Disabled.java[`@Disabled`]
-for a concrete example.
+See the source code of `{DisabledCondition}` and `{Disabled}` for concrete examples.
 
-//////////////////////////
 
 === Test Instance Post-processing
 
