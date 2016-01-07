@@ -478,8 +478,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#advanced-topics">Advanced Topics</a>
 <ul class="sectlevel2">
+<li><a href="#the-junit5-launcher-api">The JUnit5 Launcher API</a></li>
 <li><a href="#modules">Modules</a></li>
-<li><a href="#launcher">Launcher</a></li>
 <li><a href="#engines">Engines</a></li>
 </ul>
 </li>
@@ -1378,6 +1378,18 @@ public class JUnit4SamplesSuite {
 <div class="sect1">
 <h2 id="writing-extensions">Writing Extensions</h2>
 <div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+needs major overhaul
+</td>
+</tr>
+</table>
+</div>
 <div class="sect2">
 <h3 id="overview">Overview</h3>
 <div class="paragraph">
@@ -1575,11 +1587,116 @@ JUnit 4 tests to JUnit 5.</p>
 <h2 id="advanced-topics">Advanced Topics</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="modules">Modules</h3>
+<h3 id="the-junit5-launcher-api">The JUnit5 Launcher API</h3>
+<div class="paragraph">
+<p>One of the prominent goals of JUnit 5 is to make the interface between JUnit
+and its programmatic clients – build tools and IDEs – more powerful and stable.
+The purpose is to decouple the internals of discovering and executing tests
+from all the filtering and configuration that&#8217;s necessary from the outside.</p>
+</div>
+<div class="paragraph">
+<p>For JUnit 5 we came up with the concept of a <code>Launcher</code> that
+can be used to discover, filter, and execute JUnit tests. Moreover, we
+added a mechanism to allow third party test libraries – like Spock, Cucumber,
+and FitNesse – to plug into JUnit 5&#8217;s launching infrastructure.</p>
+</div>
+<div class="paragraph">
+<p>The launching API is in the <a href="https://github.com/junit-team/junit-lambda/tree/master/junit-launcher">junit-launcher</a> project.</p>
+</div>
+<div class="paragraph">
+<p>An example consumer of the launching API is our <a href="https://github.com/junit-team/junit-lambda/tree/master/junit-console/src/main/java/org/junit/gen5/console/ConsoleRunner.java">Console Runner</a>
+in the <a href="https://github.com/junit-team/junit-lambda/tree/master/junit-console">junit-console</a> project.</p>
+</div>
+<div class="sect3">
+<h4 id="discovering-tests">Discovering Tests</h4>
+<div class="paragraph">
+<p>Introducing <em>test discovery</em> as a dedicated feature of JUnit itself will (hopefully)
+free IDEs and build tools from most of the difficulties they had to go through
+to identify test classes and test methods in the past.</p>
+</div>
+<div class="paragraph">
+<p>Usage Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.engine.TestPlanSpecification.*;
 
+TestPlanSpecification specification === build(
+    forPackage("com.mycompany.mytests"),
+    forClass(MyTestClass.class)
+).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
+
+TestPlan plan === new Launcher().discover(specification);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There&#8217;s currently the possibility to search for classes, methods,
+all classes in a package, or even all tests in the classpath. Discovery
+takes place across all participating test engines.</p>
+</div>
+<div class="paragraph">
+<p>The resulting test plan is basically a hierarchical (and read-only)
+description of all engines, classes, and test methods that fit
+the <code>specification</code> object. The client can traverse the tree, retrieve
+details about a node, and get a link to the original source (like class,
+method, or file position). Every node in the test plan tree has a
+<em>unique ID</em> that can be used to invoke a particular test or group of
+tests.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="running-tests-2">Running Tests</h4>
+<div class="paragraph">
+<p>There are two ways to execute tests. Clients can either use the same
+test specification object as in the discovery phase, or – to speed
+things up a bit – pass in the prepared <code>TestPlan</code> object from a previous
+discovery step. Test progress and result reporting can be achieved
+through a <a href="https://github.com/junit-team/junit-lambda/tree/master/junit-launcher/src/main/java/org/junit/gen5/launcher/TestPlanExecutionListener.java">TestPlanExecutionListener</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestPlanSpecification specification === build(
+    forPackage("com.mycompany.mytests"),
+    forClass(MyTestClass.class)
+).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
+
+Launcher launcher === new Launcher();
+TestPlanExecutionListener listener === createListener();
+launcher.registerTestPlanExecutionListener(listener);
+
+launcher.execute(specification);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There&#8217;s currently no result object, but you can easily use
+a listener to aggregate the final results in an object of your own.
+For an example see the <a href="https://github.com/junit-team/junit-lambda/tree/master/junit-console/src/main/java/org/junit/gen5/console/TestSummaryReportingTestListener.java">TestSummaryReportingTestListener</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="plugging-in-your-own-test-engine">Plugging in Your Own Test Engine</h4>
+<div class="paragraph">
+<p>The current snapshot provides two <code>TestEngine</code> implementations out of the box:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/junit-team/junit-lambda/tree/master/junit5-engine">junit5-engine</a>: The core of JUnit 5.</p>
+</li>
+<li>
+<p><a href="https://github.com/junit-team/junit-lambda/tree/master/junit4-engine">junit4-engine</a>: A thin layer on top of JUnit 4 to allow running "old" tests with the launcher infrastructure.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Third parties may also contribute their own <code>TestEngine</code> by implementing the interfaces in the <a href="https://github.com/junit-team/junit-lambda/tree/master/junit-engine-api">junit-engine-api</a> project and <em>registering</em> their engine.
+Engine registration is currently supported via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism.
+For example, the <code>junit5-engine</code> project registers its <code>JUnit5TestEngine</code> <a href="https://github.com/junit-team/junit-lambda/tree/master/junit5-engine/src/main/resources/META-INF/services/org.junit.gen5.engine.TestEngine">here</a>.</p>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="launcher">Launcher</h3>
+<h3 id="modules">Modules</h3>
 
 </div>
 <div class="sect2">
@@ -1591,7 +1708,7 @@ JUnit 4 tests to JUnit 5.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-07 07:16:27 -05:00
+Last updated 2016-01-07 07:28:45 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
