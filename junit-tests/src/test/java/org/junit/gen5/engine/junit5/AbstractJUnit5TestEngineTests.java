@@ -44,7 +44,8 @@ abstract class AbstractJUnit5TestEngineTests {
 		return listener;
 	}
 
-	protected List<ExecutionEvent> executeTestsAndRecordEvents(TestPlanSpecification spec, int expectedDescriptorCount) {
+	protected List<ExecutionEvent> executeTestsAndRecordEvents(TestPlanSpecification spec,
+			int expectedDescriptorCount) {
 		TestDescriptor testDescriptor = discoverTests(spec);
 		assertEquals(expectedDescriptorCount, testDescriptor.allDescendants().size());
 		ExecutionEventRecordingEngineExecutionListener listener = new ExecutionEventRecordingEngineExecutionListener();
