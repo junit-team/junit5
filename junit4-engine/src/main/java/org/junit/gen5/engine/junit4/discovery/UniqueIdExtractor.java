@@ -12,9 +12,9 @@ package org.junit.gen5.engine.junit4.discovery;
 
 import org.junit.runner.Description;
 
-public class UniqueIdExtractor {
+class UniqueIdExtractor {
 
-	public static String toUniqueId(Description description) {
+	static String toUniqueId(Description description) {
 		// TODO Consider fUniqueId?
 		return description.getDisplayName();
 	}
