@@ -10,12 +10,14 @@
 
 package org.junit.gen5.engine.junit4;
 
+import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.gen5.engine.ExecutionEventConditions.*;
-import static org.junit.gen5.engine.TestExecutionResultConditions.causeMessage;
+import static org.junit.gen5.engine.TestExecutionResultConditions.*;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.util.List;
 
+import org.junit.AssumptionViolatedException;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ExecutionEvent;
 import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
@@ -54,7 +56,8 @@ class JUnit4TestEngineExecutionTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("failingTest"), started()), //
-			event(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), //
+			event(test("failingTest"),
+				finishedWithFailure(allOf(isA(AssertionError.class), message("this test should fail")))), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -69,7 +72,8 @@ class JUnit4TestEngineExecutionTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("failingTest"), started()), //
-			event(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), //
+			event(test("failingTest"),
+				finishedWithFailure(allOf(isA(AssertionError.class), message("this test should fail")))), //
 			event(test("successfulTest"), started()), //
 			event(test("successfulTest"), finishedSuccessfully()), //
 			event(container(testClass), finishedSuccessfully()), //
@@ -86,9 +90,12 @@ class JUnit4TestEngineExecutionTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("abortedTest"), started()), //
-			event(test("abortedTest"), abortedWithReason(causeMessage("this test should be aborted"))), //
+			event(test("abortedTest"),
+				abortedWithReason(
+					allOf(isA(AssumptionViolatedException.class), message("this test should be aborted")))), //
 			event(test("failingTest"), started()), //
-			event(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), //
+			event(test("failingTest"),
+				finishedWithFailure(allOf(isA(AssertionError.class), message("this test should fail")))), //
 			event(test("ignoredTest1_withoutReason"), skippedWithReason("")), //
 			event(test("ignoredTest2_withReason"), skippedWithReason("a custom reason")), //
 			event(test("successfulTest"), started()), //
@@ -109,7 +116,8 @@ class JUnit4TestEngineExecutionTests {
 			event(container(testClass), started()), //
 			event(container(nestedClass), started()), //
 			event(test("failingTest"), started()), //
-			event(test("failingTest"), finishedWithFailure(causeMessage("this test should fail"))), //
+			event(test("failingTest"),
+				finishedWithFailure(allOf(isA(AssertionError.class), message("this test should fail")))), //
 			event(container(nestedClass), finishedSuccessfully()), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
@@ -128,7 +136,8 @@ class JUnit4TestEngineExecutionTests {
 			event(container("TestSuite with 1 tests"), started()), //
 			event(container(testClass), started()), //
 			event(test("test"), started()), //
-			event(test("test"), finishedWithFailure(causeMessage("this test should fail"))), //
+			event(test("test"),
+				finishedWithFailure(allOf(isA(AssertionError.class), message("this test should fail")))), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(container("TestSuite with 1 tests"), finishedSuccessfully()), //
 			event(container(junit4SuiteClass), finishedSuccessfully()), //
@@ -145,8 +154,7 @@ class JUnit4TestEngineExecutionTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("initializationError"), started()), //
-			event(test("initializationError"),
-				finishedWithFailure(causeMessage("Method nonPublicTest() should be public"))), //
+			event(test("initializationError"), finishedWithFailure(message("Method nonPublicTest() should be public"))), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -160,7 +168,8 @@ class JUnit4TestEngineExecutionTests {
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
-			event(container(testClass), finishedWithFailure(causeMessage("something went wrong"))), //
+			event(container(testClass),
+				finishedWithFailure(allOf(isA(AssertionError.class), message("something went wrong")))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -175,7 +184,8 @@ class JUnit4TestEngineExecutionTests {
 			event(engine(), started()), //
 			event(container(suiteClass), started()), //
 			event(container(testClass), started()), //
-			event(container(testClass), finishedWithFailure(causeMessage("something went wrong"))), //
+			event(container(testClass),
+				finishedWithFailure(allOf(isA(AssertionError.class), message("something went wrong")))), //
 			event(container(suiteClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -193,7 +203,8 @@ class JUnit4TestEngineExecutionTests {
 			event(container(suiteOfSuiteClass), started()), //
 			event(container(suiteClass), started()), //
 			event(container(testClass), started()), //
-			event(container(testClass), finishedWithFailure(causeMessage("something went wrong"))), //
+			event(container(testClass),
+				finishedWithFailure(allOf(isA(AssertionError.class), message("something went wrong")))), //
 			event(container(suiteClass), finishedSuccessfully()), //
 			event(container(suiteOfSuiteClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
@@ -212,7 +223,8 @@ class JUnit4TestEngineExecutionTests {
 			event(container(suiteOfSuiteClass), started()), //
 			event(container(suiteClass), started()), //
 			event(container(testClass), started()), //
-			event(container(testClass), abortedWithReason(causeMessage("assumption violated"))), //
+			event(container(testClass),
+				abortedWithReason(allOf(isA(AssumptionViolatedException.class), message("assumption violated")))), //
 			event(container(suiteClass), finishedSuccessfully()), //
 			event(container(suiteOfSuiteClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
@@ -228,10 +240,12 @@ class JUnit4TestEngineExecutionTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("failingTest"), started()), //
-			event(test("failingTest"), finishedWithFailure(causeMessage("expected to fail"))), //
+			event(test("failingTest"),
+				finishedWithFailure(allOf(isA(AssertionError.class), message("expected to fail")))), //
 			event(test("succeedingTest"), started()), //
 			event(test("succeedingTest"), finishedSuccessfully()), //
-			event(container(testClass), finishedWithFailure(causeMessage("error in @AfterClass"))), //
+			event(container(testClass),
+				finishedWithFailure(allOf(isA(AssertionError.class), message("error in @AfterClass")))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -314,7 +328,8 @@ class JUnit4TestEngineExecutionTests {
 			event(container("[foo]"), finishedSuccessfully()), //
 			event(container("[bar]"), started()), //
 			event(test("test[bar]"), started()), //
-			event(test("test[bar]"), finishedWithFailure(causeMessage("expected:<[foo]> but was:<[bar]>"))), //
+			event(test("test[bar]"),
+				finishedWithFailure(allOf(isA(AssertionError.class), message("expected:<[foo]> but was:<[bar]>")))), //
 			event(container("[bar]"), finishedSuccessfully()), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));

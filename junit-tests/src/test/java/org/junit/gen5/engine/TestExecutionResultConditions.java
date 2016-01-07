@@ -26,10 +26,19 @@ public class TestExecutionResultConditions {
 			expectedStatus);
 	}
 
-	public static Condition<TestExecutionResult> causeMessage(String expectedMessage) {
+	public static Condition<Throwable> message(String expectedMessage) {
+		return new Condition<>(where(Throwable::getMessage, isEqual(expectedMessage)), "message is \"%s\"",
+			expectedMessage);
+	}
+
+	public static Condition<Throwable> isA(Class<? extends Throwable> expectedClass) {
+		return new Condition<>(expectedClass::isInstance, "instance of %s", expectedClass.getName());
+	}
+
+	public static Condition<TestExecutionResult> cause(Condition<? super Throwable> condition) {
 		return new Condition<TestExecutionResult>(where(TestExecutionResult::getThrowable, throwable -> {
-			return throwable.isPresent() && expectedMessage.equals(throwable.get().getMessage());
-		}), "message of cause is %s", expectedMessage);
+			return throwable.isPresent() && condition.matches(throwable.get());
+		}), "cause where %s", condition);
 	}
 
 }

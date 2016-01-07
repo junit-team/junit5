@@ -10,9 +10,10 @@
 
 package org.junit.gen5.engine.junit5;
 
+import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.ExecutionEventConditions.*;
-import static org.junit.gen5.engine.TestExecutionResultConditions.causeMessage;
+import static org.junit.gen5.engine.TestExecutionResultConditions.*;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -149,7 +150,8 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
 			event(container(FailureTestCase.class), started()), //
-			event(container(FailureTestCase.class), finishedWithFailure(causeMessage("checked"))), //
+			event(container(FailureTestCase.class),
+				finishedWithFailure(allOf(isA(IOException.class), message("checked")))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -168,7 +170,8 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 			event(container(FailureTestCase.class), started()), //
 			event(test("succeedingTest"), started()), //
 			event(test("succeedingTest"), finishedSuccessfully()), //
-			event(container(FailureTestCase.class), finishedWithFailure(causeMessage("checked"))), //
+			event(container(FailureTestCase.class),
+				finishedWithFailure(allOf(isA(IOException.class), message("checked")))), //
 			event(engine(), finishedSuccessfully()));
 	}
 

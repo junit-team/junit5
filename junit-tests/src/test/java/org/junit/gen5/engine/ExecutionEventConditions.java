@@ -17,12 +17,13 @@ import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.engine.ExecutionEvent.*;
 import static org.junit.gen5.engine.ExecutionEvent.Type.*;
 import static org.junit.gen5.engine.TestExecutionResult.Status.*;
-import static org.junit.gen5.engine.TestExecutionResultConditions.status;
+import static org.junit.gen5.engine.TestExecutionResultConditions.*;
 
 import java.util.List;
 
 import org.assertj.core.api.Condition;
 import org.junit.gen5.engine.ExecutionEvent.Type;
+import org.junit.gen5.engine.TestExecutionResult.Status;
 
 /**
  * Collection of AssertJ conditions for {@link ExecutionEvent}.
@@ -81,12 +82,17 @@ public class ExecutionEventConditions {
 		return type(STARTED);
 	}
 
-	public static Condition<ExecutionEvent> abortedWithReason(Condition<TestExecutionResult> resultCondition) {
-		return finished(allOf(status(ABORTED), resultCondition));
+	public static Condition<ExecutionEvent> abortedWithReason(Condition<? super Throwable> causeCondition) {
+		return finishedWithCause(ABORTED, causeCondition);
 	}
 
-	public static Condition<ExecutionEvent> finishedWithFailure(Condition<TestExecutionResult> resultCondition) {
-		return finished(allOf(status(FAILED), resultCondition));
+	public static Condition<ExecutionEvent> finishedWithFailure(Condition<? super Throwable> causeCondition) {
+		return finishedWithCause(FAILED, causeCondition);
+	}
+
+	private static Condition<ExecutionEvent> finishedWithCause(Status expectedStatus,
+			Condition<? super Throwable> causeCondition) {
+		return finished(allOf(status(expectedStatus), cause(causeCondition)));
 	}
 
 	public static Condition<ExecutionEvent> finishedWithFailure() {
