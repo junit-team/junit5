@@ -16,8 +16,6 @@ import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.runner.JUnitCore;
-import org.junit.runner.Request;
-import org.junit.runner.Runner;
 
 public class RunnerExecutor {
 
@@ -32,14 +30,7 @@ public class RunnerExecutor {
 		JUnitCore core = new JUnitCore();
 		core.addListener(new RunListenerAdapter(testRun, engineExecutionListener));
 		try {
-			core.run(new Request() {
-
-				@Override
-				public Runner getRunner() {
-					return runnerTestDescriptor.getRunner();
-				}
-
-			});
+			core.run(new RunnerRequest(runnerTestDescriptor.getRunner()));
 		}
 		catch (Throwable t) {
 			reportUnexpectedFailure(testRun, runnerTestDescriptor, failed(t));
