@@ -562,20 +562,20 @@ public @interface Fast {
 
 class MyTest {
 
-  @BeforeAll
-  static void initAll() {}
+    @BeforeAll
+    static void initAll() {}
 
-  @BeforeEach
-  void init() {}
+    @BeforeEach
+    void init() {}
 
-  @Test
-  void succeedingTest() {}
+    @Test
+    void succeedingTest() {}
 
-  @AfterEach
-  void tearDown() {}
+    @AfterEach
+    void tearDown() {}
 
-  @AfterAll
-  static void tearDownAll() {}
+    @AfterAll
+    static void tearDownAll() {}
 
 }</code></pre>
 </div>
@@ -598,9 +598,9 @@ characters, and even emojis&#8201;&#8212;&#8201;that will be displayed by test r
 @Name("A special test case")
 class CanHaveAnyNameTest {
 
-  @Test
-  @Name("A nice name, isn't it?")
-  void testWithANiceName() {}
+    @Test
+    @Name("A nice name, isn't it?")
+    void testWithANiceName() {}
 
 }</code></pre>
 </div>
@@ -617,37 +617,37 @@ class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.<strong>;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.*;
 
-import org.junit.gen5.api.</strong>;
+import org.junit.gen5.api.*;
 
 class MyTest {
 
-  @Test
-  void standardAssertions() {
-    assertEquals(2, 2);
-    assertEquals(4, 4, "The optional assertion message is now the last parameter.");
-    assertTrue(2 == 2, () -&gt; "Assertion messages can be lazily evaluated -- " +
-                             "to avoid constructing complex messages unnecessarily.");
-  }
+    @Test
+    void standardAssertions() {
+        assertEquals(2, 2);
+        assertEquals(4, 4, "The optional assertion message is now the last parameter.");
+        assertTrue(2 == 2, () -&gt; "Assertion messages can be lazily evaluated -- " +
+                                 "to avoid constructing complex messages unnecessarily.");
+    }
 
-  @Test
-  void groupedAssertions() {
-    // In a grouped assertion all assertions are executed, and any
-    // failures will be reported together.
-    assertAll("address",
-      () -&gt; assertEquals("Johannes", address.getFirstName()),
-      () -&gt; assertEquals("Link", address.getLastName())
-    );
-  }
+    @Test
+    void groupedAssertions() {
+        // In a grouped assertion all assertions are executed, and any
+        // failures will be reported together.
+        assertAll("address",
+            () -&gt; assertEquals("Johannes", address.getFirstName()),
+            () -&gt; assertEquals("Link", address.getLastName())
+        );
+    }
 
-  @Test
-  void exceptionTesting() {
-    Throwable exception == expectThrows(IllegalArgumentException.class,
-      () -&gt; throw new IllegalArgumentException("a message")
-    );
-    assertEquals("a message", exception.getMessage());
-  }
+    @Test
+    void exceptionTesting() {
+        Throwable exception == expectThrows(IllegalArgumentException.class,
+            () -&gt; throw new IllegalArgumentException("a message")
+        );
+        assertEquals("a message", exception.getMessage());
+    }
 
 }</code></pre>
 </div>
@@ -664,36 +664,36 @@ class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.<strong>;
-import static org.junit.gen5.api.Assumptions.</strong>;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assumptions.*;
 
 import org.junit.gen5.api.*;
 
 class MyTest {
 
-  @Test
-  void testOnlyOnCiServer() {
-    assumeTrue("CI".equals(System.getenv("ENV"));
-    // remainder of test
-  }
+    @Test
+    void testOnlyOnCiServer() {
+        assumeTrue("CI".equals(System.getenv("ENV"));
+        // remainder of test
+    }
 
-  @Test
-  void testOnlyOnDeveloperWorkstation() {
-    assumeTrue("DEV".equals(System.getenv("ENV"),
-               () -&gt; "Aborting test: not on developer workstation");
-    // remainder of test
-  }
+    @Test
+    void testOnlyOnDeveloperWorkstation() {
+        assumeTrue("DEV".equals(System.getenv("ENV"),
+                   () -&gt; "Aborting test: not on developer workstation");
+        // remainder of test
+    }
 
-  @Test
-  void testInAllEnvironments() {
-    assumingThat("CI".equals(System.getenv("ENV"), () -&gt; {
-        // perform these assertions only on the CI server
+    @Test
+    void testInAllEnvironments() {
+        assumingThat("CI".equals(System.getenv("ENV"), () -&gt; {
+                // perform these assertions only on the CI server
+                assertEquals(...);
+        });
+
+        // perform these assertions in all environments
         assertEquals(...);
-    });
-
-    // perform these assertions in all environments
-    assertEquals(...);
-  }
+    }
 
 }</code></pre>
 </div>
@@ -711,8 +711,8 @@ class MyTest {
 @Disabled
 class MyTest {
 
-  @Test
-  void testWillBeSkipped() {}
+    @Test
+    void testWillBeSkipped() {}
 
 }</code></pre>
 </div>
@@ -726,12 +726,12 @@ class MyTest {
 
 class MyTest {
 
-  @Disabled
-  @Test
-  void testWillBeSkipped() {}
+    @Disabled
+    @Test
+    void testWillBeSkipped() {}
 
-  @Test
-  void testWillBeExecuted() {}
+    @Test
+    void testWillBeExecuted() {}
 
 }</code></pre>
 </div>
@@ -751,9 +751,9 @@ class MyTest {
 @Tag("model")
 class FastModelTests {
 
-  @Test
-  @Tag("taxes")
-  void testingTaxCalculation() {}
+    @Test
+    @Tag("taxes")
+    void testingTaxCalculation() {}
 
 }</code></pre>
 </div>
@@ -771,29 +771,29 @@ several group of tests. Here&#8217;s a somewhat contrived example:</p>
 
 class MyObjectTest {
 
-  MyObject myObject;
-
-  @BeforeEach
-  void init() {
-    myObject == new MyObject();
-  }
-
-  @Test
-  void testEmptyObject() {}
-
-  @Nested
-  class WithChildren() {
+    MyObject myObject;
 
     @BeforeEach
-    void initWithChildren() {
-      myObject.addChild(new MyObject());
-      myObject.addChild(new MyObject());
+    void init() {
+        myObject == new MyObject();
     }
 
     @Test
-    void testObjectWithChildren() {}
+    void testEmptyObject() {}
 
-  }
+    @Nested
+    class WithChildren() {
+
+        @BeforeEach
+        void initWithChildren() {
+            myObject.addChild(new MyObject());
+            myObject.addChild(new MyObject());
+        }
+
+        @Test
+        void testObjectWithChildren() {}
+
+    }
 
 }</code></pre>
 </div>
@@ -836,19 +836,19 @@ rule from JUnit 4:</p>
 
 class MyTest {
 
-@BeforeEach
-void init(@TestName name) {
-  assertTrue(name.equals("TEST 1") || name.equals("test2"));
-}
+    @BeforeEach
+    void init(@TestName name) {
+        assertTrue(name.equals("TEST 1") || name.equals("test2"));
+    }
 
-@Test
-@Name("TEST 1")
-void test1(@TestName name) {
-  assertEquals("TEST 1", name);
-}
+    @Test
+    @Name("TEST 1")
+    void test1(@TestName name) {
+        assertEquals("TEST 1", name);
+    }
 
-@Test
-void test2() {}
+    @Test
+    void test2() {}
 
 }</code></pre>
 </div>
@@ -887,15 +887,15 @@ import com.example.mockito.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class MyMockitoTest {
 
-@BeforeEach
-void init(@InjectMock MyType myType) {
-  when(myType.getName()).thenReturn("hello");
-}
+    @BeforeEach
+    void init(@InjectMock MyType myType) {
+        when(myType.getName()).thenReturn("hello");
+    }
 
-@Test
-void simpleTestWithInjectedMock(@InjectMock MyType myType) {
-  assertEquals("hello", myType.getName());
-}
+    @Test
+    void simpleTestWithInjectedMock(@InjectMock MyType myType) {
+        assertEquals("hello", myType.getName());
+    }
 
 }</code></pre>
 </div>
@@ -906,7 +906,7 @@ void simpleTestWithInjectedMock(@InjectMock MyType myType) {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-07 11:17:50 -05:00
+Last updated 2016-01-07 12:02:38 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

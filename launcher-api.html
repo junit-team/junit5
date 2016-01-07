@@ -466,12 +466,12 @@ test classes and test methods in the past.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.engine.TestPlanSpecification.<strong>;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 TestPlanSpecification specification = build(
     forPackage("com.mycompany.mytests"),
     forClass(MyTestClass.class)
-).filterWith(classNameMatches("*Test").or(classNameMatches("Test</strong>")));
+).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
 
 TestPlan plan = new Launcher().discover(specification);</code></pre>
 </div>
@@ -503,7 +503,7 @@ be achieved through a
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestPlanSpecification specification = build(
     forPackage("com.mycompany.mytests"),
     forClass(MyTestClass.class)
-).filterWith(classNameMatches("<strong>Test").or(classNameMatches("Test</strong>")));
+).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
 
 Launcher launcher = new Launcher();
 TestPlanExecutionListener listener = createListener();
@@ -549,7 +549,7 @@ registers its <code>JUnit5TestEngine</code>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-07 11:17:50 -05:00
+Last updated 2016-01-07 12:02:38 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
