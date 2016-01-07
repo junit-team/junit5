@@ -5,8 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
-<meta name="author" content="Stefan Bechtold, Sam Brannen, Johannes Link, Matthias Merdes, Marc Philipp">
-<title>JUnit 5 User Guide</title>
+<title>Supported Java Versions</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -421,14 +420,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>JUnit 5 User Guide</h1>
-<div class="details">
-<span id="author" class="author">Stefan Bechtold</span><br>
-<span id="author2" class="author">Sam Brannen</span><br>
-<span id="author3" class="author">Johannes Link</span><br>
-<span id="author4" class="author">Matthias Merdes</span><br>
-<span id="author5" class="author">Marc Philipp</span><br>
-</div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -439,50 +430,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#junit-5-sample-projects">JUnit 5 Sample Projects</a></li>
 </ul>
 </li>
-<li><a href="#writing-tests">Writing Tests</a>
-<ul class="sectlevel2">
-<li><a href="#naming-tests">Naming tests</a></li>
-<li><a href="#disabling-tests">Disabling tests</a></li>
-<li><a href="#nested-tests">Nested tests</a></li>
-<li><a href="#injecting-parameters">Injecting parameters</a></li>
-</ul>
-</li>
-<li><a href="#executing-tests">Executing Tests</a>
-<ul class="sectlevel2">
-<li><a href="#compatibility-with-junit-4">Compatibility with JUnit 4</a></li>
-</ul>
-</li>
-<li><a href="#test-extensions">Test Extensions</a></li>
-<li><a href="#advanced-topics">Advanced Topics</a>
-<ul class="sectlevel2">
-<li><a href="#modules">Modules</a></li>
-<li><a href="#launcher">Launcher</a></li>
-<li><a href="#engines">Engines</a></li>
-</ul>
-</li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>The goal of this document is to provide a comprehensive reference documentation for both programmers writing tests and extension authors.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Work in progress!
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
 <div class="sect1">
 <h2 id="supported-java-versions">Supported Java Versions</h2>
 <div class="sectionbody">
@@ -573,76 +524,6 @@ and <code>pom.xml</code> in the projects below:</p>
 </li>
 </ul>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="writing-tests">Writing Tests</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="title">A first test case</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertEquals;
-
-import org.junit.gen5.api.Test;
-
-class FirstTestCase {
-
-    @Test
-    void firstTest() {
-        assertEquals(2, 1 + 1);
-    }
-
-}</code></pre>
-</div>
-</div>
-<div class="sect2">
-<h3 id="naming-tests">Naming tests</h3>
-
-</div>
-<div class="sect2">
-<h3 id="disabling-tests">Disabling tests</h3>
-
-</div>
-<div class="sect2">
-<h3 id="nested-tests">Nested tests</h3>
-
-</div>
-<div class="sect2">
-<h3 id="injecting-parameters">Injecting parameters</h3>
-
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="executing-tests">Executing Tests</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="compatibility-with-junit-4">Compatibility with JUnit 4</h3>
-
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="test-extensions">Test Extensions</h2>
-<div class="sectionbody">
-
-</div>
-</div>
-<div class="sect1">
-<h2 id="advanced-topics">Advanced Topics</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="modules">Modules</h3>
-
-</div>
-<div class="sect2">
-<h3 id="launcher">Launcher</h3>
-
-</div>
-<div class="sect2">
-<h3 id="engines">Engines</h3>
-
 </div>
 </div>
 </div>

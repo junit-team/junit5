@@ -5,8 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
-<meta name="author" content="Stefan Bechtold, Sam Brannen, Johannes Link, Matthias Merdes, Marc Philipp">
-<title>JUnit 5 User Guide</title>
+<title>Writing Test Extensions for JUnit 5</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -421,45 +420,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>JUnit 5 User Guide</h1>
-<div class="details">
-<span id="author" class="author">Stefan Bechtold</span><br>
-<span id="author2" class="author">Sam Brannen</span><br>
-<span id="author3" class="author">Johannes Link</span><br>
-<span id="author4" class="author">Matthias Merdes</span><br>
-<span id="author5" class="author">Marc Philipp</span><br>
-</div>
+<h1>Writing Test Extensions for JUnit 5</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#supported-java-versions">Supported Java Versions</a></li>
-<li><a href="#installation">Installation</a>
-<ul class="sectlevel2">
-<li><a href="#dependency-metadata">Dependency Metadata</a></li>
-<li><a href="#junit-5-sample-projects">JUnit 5 Sample Projects</a></li>
-</ul>
-</li>
-<li><a href="#writing-tests">Writing Tests</a>
-<ul class="sectlevel2">
-<li><a href="#naming-tests">Naming tests</a></li>
-<li><a href="#disabling-tests">Disabling tests</a></li>
-<li><a href="#nested-tests">Nested tests</a></li>
-<li><a href="#injecting-parameters">Injecting parameters</a></li>
-</ul>
-</li>
-<li><a href="#executing-tests">Executing Tests</a>
-<ul class="sectlevel2">
-<li><a href="#compatibility-with-junit-4">Compatibility with JUnit 4</a></li>
-</ul>
-</li>
-<li><a href="#test-extensions">Test Extensions</a></li>
-<li><a href="#advanced-topics">Advanced Topics</a>
-<ul class="sectlevel2">
-<li><a href="#modules">Modules</a></li>
-<li><a href="#launcher">Launcher</a></li>
-<li><a href="#engines">Engines</a></li>
-</ul>
-</li>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#registering-extensions">Registering Extensions</a></li>
+<li><a href="#conditional-test-execution">Conditional Test Execution</a></li>
+<li><a href="#test-instance-post-processing">Test Instance Post-processing</a></li>
+<li><a href="#parameter-resolution">Parameter Resolution</a></li>
+<li><a href="#test-lifecycle-callbacks">Test Lifecycle Callbacks</a></li>
+<li><a href="#additional-planned-extension-points">Additional Planned Extension Points</a></li>
 </ul>
 </div>
 </div>
@@ -467,182 +438,181 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>The goal of this document is to provide a comprehensive reference documentation for both programmers writing tests and extension authors.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Work in progress!
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="supported-java-versions">Supported Java Versions</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>JUnit 5 only supports Java 8 and above. However, you can still test classes compiled with lower versions.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="installation">Installation</h2>
-<div class="sectionbody">
-<div class="literalblock">
-<div class="content">
-<pre> 
-Snapshot artifacts are deployed to Sonatype's https://oss.sonatype.org/content/repositories/snapshots/[snapshots repository].</pre>
-</div>
-</div>
-<div class="sect2">
-<h3 id="dependency-metadata">Dependency Metadata</h3>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Group ID</strong>: <code>org.junit</code></p>
-</li>
-<li>
-<p><strong>Version</strong>: <code>5.0.0-SNAPSHOT</code></p>
-</li>
-<li>
-<p><strong>Artifact IDs</strong>:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>junit-commons</code></p>
-</li>
-<li>
-<p><code>junit-console</code></p>
-</li>
-<li>
-<p><code>junit-engine-api</code></p>
-</li>
-<li>
-<p><code>junit-gradle</code></p>
-</li>
-<li>
-<p><code>junit-launcher</code></p>
-</li>
-<li>
-<p><code>junit4-engine</code></p>
-</li>
-<li>
-<p><code>junit4-runner</code></p>
-</li>
-<li>
-<p><code>junit5-api</code></p>
-</li>
-<li>
-<p><code>junit5-engine</code></p>
-</li>
-<li>
-<p><code>open-test-alliance</code> (Version <code>1.0.0-SNAPSHOT</code>)</p>
-</li>
-<li>
-<p><code>surefire-junit5</code></p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>See also: <a href="https://oss.sonatype.org/content/repositories/snapshots/org/junit/">https://oss.sonatype.org/content/repositories/snapshots/org/junit/</a></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="junit-5-sample-projects">JUnit 5 Sample Projects</h3>
-<div class="paragraph">
-<p>You can find a collection of sample projects based on the JUnit 5 prototype in the <a href="https://github.com/junit-team/junit5-samples">junit5-samples</a> repository. You&#8217;ll find the respective <code>build.gradle</code>
-and <code>pom.xml</code> in the projects below:</p>
+<p><strong>Table of Contents</strong></p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>For Gradle, check out the <a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a> project.</p>
+<p><a href="#overview">Overview</a></p>
 </li>
 <li>
-<p>For Maven, check out the <a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer">junit5-maven-consumer</a> project.
-'''</p>
+<p><a href="#registering-extensions">Registering Extensions</a></p>
+</li>
+<li>
+<p><a href="#conditional-test-execution">Conditional Test Execution</a></p>
+</li>
+<li>
+<p><a href="#test-instance-post-processing">Test Instance Post-processing</a></p>
+</li>
+<li>
+<p><a href="#parameter-resolution">Parameter Resolution</a></p>
+</li>
+<li>
+<p><a href="#test-lifecycle-callbacks">Test Lifecycle Callbacks</a></p>
+</li>
+<li>
+<p><a href="#additional-planned-extension-points">Additional Planned Extension Points</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="overview">Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In contrast to the competing <code>Runner</code>, <code>@Rule</code>, and <code>@ClassRule</code> extension points in JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the <code>TestExtension</code> API. Note, however, that <code>TestExtension</code> itself is just a marker interface.</p>
+</div>
+</div>
 </div>
 <div class="sect1">
-<h2 id="writing-tests">Writing Tests</h2>
+<h2 id="registering-extensions">Registering Extensions</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Developers can register one or more extensions by annotating a test class or test method with <code>@ExtendWith(&#8230;&#8203;)</code>, supplying class references for the extensions to register. For example, to register a custom <code>MockitoExtension</code>, you would annotate your test class as follows.</p>
+</div>
 <div class="listingblock">
-<div class="title">A first test case</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertEquals;
-
-import org.junit.gen5.api.Test;
-
-class FirstTestCase {
-
-    @Test
-    void firstTest() {
-        assertEquals(2, 1 + 1);
-    }
-
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">@ExtendWith(MockitoExtension.class)
+class MockTests {
+  // ...
 }</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="naming-tests">Naming tests</h3>
-
+<div class="paragraph">
+<p>Multiple extensions can be registered together like this:</p>
 </div>
-<div class="sect2">
-<h3 id="disabling-tests">Disabling tests</h3>
-
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">@ExtendWith({ FooExtension.class, BarExtension.class })
+class MyTestsV1 {
+  // ...
+}</code></pre>
 </div>
-<div class="sect2">
-<h3 id="nested-tests">Nested tests</h3>
-
 </div>
-<div class="sect2">
-<h3 id="injecting-parameters">Injecting parameters</h3>
-
+<div class="paragraph">
+<p>As an alternative, multiple extensions can be registered separately like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">@ExtendWith(FooExtension.class)
+@ExtendWith(BarExtension.class)
+class MyTestsV2 {
+  // ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The execution of tests in both <code>MyTestsV1</code> and <code>MyTestsV2</code> will be extended by the <code>FooExtension</code> and <code>BarExtension</code>, in exactly that order.</p>
+</div>
+<div class="paragraph">
+<p>Registered extensions are inherited within test class hierarchies.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="conditional-test-execution">Conditional Test Execution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-api/src/main/java/org/junit/gen5/api/extension/Condition.java"><code>Condition</code></a> defines the <code>TestExtension</code> API for programmatic, <em>conditional test execution</em>.</p>
+</div>
+<div class="paragraph">
+<p>A <code>Condition</code> is <em>evaluated</em> to determine if a given test (e.g., class or method) should
+be executed based on the supplied <code>TestExecutionContext</code>. When evaluated at the class
+level, a <code>Condition</code> applies to all test methods within that class.</p>
+</div>
+<div class="paragraph">
+<p>See the source code of <a href="https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/DisabledCondition.java"><code>DisabledCondition</code></a> and <a href="https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-api/src/main/java/org/junit/gen5/api/Disabled.java"><code>@Disabled</code></a> for a concrete example.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="executing-tests">Executing Tests</h2>
+<h2 id="test-instance-post-processing">Test Instance Post-processing</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="compatibility-with-junit-4">Compatibility with JUnit 4</h3>
-
+<div class="paragraph">
+<p><a href="https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-api/src/main/java/org/junit/gen5/api/extension/InstancePostProcessor.java"><code>InstancePostProcessor</code></a> defines the API for <code>TestExtensions</code> that
+wish to <em>post process</em> test instances.</p>
+</div>
+<div class="paragraph">
+<p>Common use cases include injecting dependencies into the test instance,
+invoking custom initialization methods on the test instance, etc.</p>
+</div>
+<div class="paragraph">
+<p>For concrete examples, consult the source code for <a href="https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java"><code>MockitoExtension</code></a>
+and <a href="https://github.com/sbrannen/spring-test-junit5/blob/prototype-1/src/main/java/org/springframework/test/context/junit5/SpringExtension.java"><code>SpringExtension</code></a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="test-extensions">Test Extensions</h2>
+<h2 id="parameter-resolution">Parameter Resolution</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p><a href="https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java"><code>MethodParameterResolver</code></a> is a <code>TestExtension</code> strategy for dynamically resolving
+method parameters at runtime.</p>
+</div>
+<div class="paragraph">
+<p>If a <code>@Test</code>, <code>@BeforeEach</code>, or <code>@AfterEach</code> method accepts a parameter, the parameter
+must be <em>resolved</em> at runtime by a <code>MethodParameterResolver</code>. A <code>MethodParameterResolver</code>
+can either be built-in (see <a href="https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java"><code>TestNameParameterResolver</code></a>) or registered by the user via
+<code>@ExtendWith</code>. Generally speaking, parameters may be resolved by <em>type</em> or by <em>annotation</em>.
+For concrete examples, consult the source code for <a href="https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java"><code>CustomTypeParameterResolver</code></a> and
+<a href="https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java"><code>CustomAnnotationParameterResolver</code></a>, respectively.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="advanced-topics">Advanced Topics</h2>
+<h2 id="test-lifecycle-callbacks">Test Lifecycle Callbacks</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="modules">Modules</h3>
-
+<div class="paragraph">
+<p>The following interfaces define the APIs for extending tests at various points in the
+test execution lifecycle. Consult the Javadoc for each of these in the
+<a href="https://github.com/junit-team/junit-lambda/tree/prototype-1/junit5-api/src/main/java/org/junit/gen5/api/extension"><code>org.junit.gen5.api.extension</code></a> package.</p>
 </div>
-<div class="sect2">
-<h3 id="launcher">Launcher</h3>
-
+<div class="ulist">
+<ul>
+<li>
+<p><code>BeforeEachCallbacks</code></p>
+</li>
+<li>
+<p><code>AfterEachCallbacks</code></p>
+</li>
+<li>
+<p><code>BeforeAllCallbacks</code></p>
+</li>
+<li>
+<p><code>AfterAllCallbacks</code></p>
+</li>
+</ul>
 </div>
-<div class="sect2">
-<h3 id="engines">Engines</h3>
-
+<div class="paragraph">
+<p>Note that extension developers may choose to implement any number of these
+interfaces within a single extension. Consult the source code of the
+<a href="https://github.com/sbrannen/spring-test-junit5/blob/prototype-1/src/main/java/org/springframework/test/context/junit5/SpringExtension.java"><code>SpringExtension</code></a> for a concrete example.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-planned-extension-points">Additional Planned Extension Points</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The JUnit Lambda team is planning several additional extension points, including but not limited to the following.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Dynamic test registration – for example, for computing parameterized tests at runtime</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
