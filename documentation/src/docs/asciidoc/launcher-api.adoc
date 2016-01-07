@@ -33,12 +33,12 @@ Usage Example:
 ----
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
-TestPlanSpecification specification === build(
+TestPlanSpecification specification = build(
     forPackage("com.mycompany.mytests"),
     forClass(MyTestClass.class)
 ).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
 
-TestPlan plan === new Launcher().discover(specification);
+TestPlan plan = new Launcher().discover(specification);
 ----
 
 There's currently the possibility to search for classes, methods, all classes in a
@@ -62,13 +62,13 @@ https://github.com/junit-team/junit-lambda/tree/master/junit-launcher/src/main/j
 [source,java,indent=0]
 [subs="verbatim,quotes"]
 ----
-TestPlanSpecification specification === build(
+TestPlanSpecification specification = build(
     forPackage("com.mycompany.mytests"),
     forClass(MyTestClass.class)
 ).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
 
-Launcher launcher === new Launcher();
-TestPlanExecutionListener listener === createListener();
+Launcher launcher = new Launcher();
+TestPlanExecutionListener listener = createListener();
 launcher.registerTestPlanExecutionListener(listener);
 
 launcher.execute(specification);
