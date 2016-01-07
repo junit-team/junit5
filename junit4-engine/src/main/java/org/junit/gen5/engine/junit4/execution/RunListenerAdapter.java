@@ -22,12 +22,12 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
-public class RunListenerAdapter extends RunListener {
+class RunListenerAdapter extends RunListener {
 
 	private final TestRun testRun;
 	private final EngineExecutionListener listener;
 
-	public RunListenerAdapter(TestRun testRun, EngineExecutionListener listener) {
+	RunListenerAdapter(TestRun testRun, EngineExecutionListener listener) {
 		this.testRun = testRun;
 		this.listener = listener;
 	}
