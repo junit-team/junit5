@@ -5,24 +5,11 @@ The goal of this document is to provide a comprehensive reference documentation 
 
 WARNING: Work in progress!
 
+
 include::overview.adoc[]
+include::writing-tests.adoc[]
 
 
-== Writing Tests
-
-[source,java]
-.A first test case
-----
-include::{testDir}/example/FirstTestCase.java[tags=complete]
-----
-
-=== Naming tests
-
-=== Disabling tests
-
-=== Nested tests
-
-=== Injecting parameters
 
 == Executing Tests
 
