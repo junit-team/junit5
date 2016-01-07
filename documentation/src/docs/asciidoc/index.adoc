@@ -1,7 +1,8 @@
 = JUnit 5 User Guide
 Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 
-The goal of this document is to provide comprehensive reference documentation for both programmers writing tests and extension authors.
+The goal of this document is to provide comprehensive reference documentation for both
+programmers writing tests and extension authors.
 
 WARNING: Work in progress!
 

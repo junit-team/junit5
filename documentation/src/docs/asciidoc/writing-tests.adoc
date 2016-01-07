@@ -14,7 +14,9 @@ include::{testDir}/example/FirstTestCase.java[tags=complete]
 
 JUnit 5 supports the following annotations for configuring tests and extending the framework.
 
-All core annotations are located in the https://github.com/junit-team/junit-lambda/tree/prototype-1/junit5-api/src/main/java/org/junit/gen5/api[`org.junit.gen5.api`] package in the `junit5-api` module.
+All core annotations are located in the
+https://github.com/junit-team/junit-lambda/tree/prototype-1/junit5-api/src/main/java/org/junit/gen5/api[`org.junit.gen5.api`]
+package in the `junit5-api` module.
 
 |===
 |Annotation |Description
@@ -34,11 +36,14 @@ All core annotations are located in the https://github.com/junit-team/junit-lamb
 
 ==== Meta-Annotations and Composed Annotations
 
-JUnit 5 annotations can be used as _meta-annotations_. That means that you can define your own
-_composed annotation_ that will automatically _inherit_ the semantics of its meta-annotations.
+JUnit 5 annotations can be used as _meta-annotations_. That means that you can define
+your own _composed annotation_ that will automatically _inherit_ the semantics of its
+meta-annotations.
 
-For example, instead of copying and pasting `@Tag(&quot;fast&quot;)` throughout your code base (see link:#tagging-and-filtering[Tagging and Filtering]), you can create a custom _composed annotation_ named `@Fast` as
-follows. `@Fast` can then be used as a drop-in replacement for `@Tag(&quot;fast&quot;)`.
+For example, instead of copying and pasting `@Tag("fast")` throughout your code base (see
+link:#tagging-and-filtering[Tagging and Filtering]), you can create a custom _composed
+annotation_ named `@Fast` as follows. `@Fast` can then be used as a drop-in replacement
+for `@Tag("fast")`.
 
 [source,java,indent=0]
 [subs="verbatim,quotes"]
@@ -81,15 +86,15 @@ class MyTest {
 }
 ----
 
-Notice that neither the test class nor the test method need to be `public`.
-`@BeforeAll` and `@AfterAll` must be static methods.
+Notice that neither the test class nor the test method need to be `public`. `@BeforeAll`
+and `@AfterAll` must be static methods.
 
 
 
 === Custom Names
 
-Test classes and test methods can declare a custom name – with spaces, special characters,
-and even emojis – that will be displayed by test runners and test reporting:
+Test classes and test methods can declare a custom name -- with spaces, special
+characters, and even emojis -- that will be displayed by test runners and test reporting:
 
 [source,java,indent=0]
 [subs="verbatim,quotes"]
@@ -110,9 +115,11 @@ class CanHaveAnyNameTest {
 
 === Assertions
 
-JUnit 5 comes with many of the assertion methods that JUnit 4 has and adds a few
-that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions
-are static methods in the https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java[`org.junit.gen5.Assertions`] class.
+JUnit 5 comes with many of the assertion methods that JUnit 4 has and adds a few that
+lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions are static
+methods in the
+https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java[`org.junit.gen5.Assertions`]
+class.
 
 [source,java,indent=0]
 [subs="verbatim,quotes"]
@@ -156,9 +163,11 @@ class MyTest {
 
 === Assumptions
 
-JUnit 5 comes with a subset of the assumption methods that JUnit 4 provides and adds a few
-that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assumptions
-are static methods in the https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Assumptions.java[`org.junit.gen5.Assumptions`] class.
+JUnit 5 comes with a subset of the assumption methods that JUnit 4 provides and adds a
+few that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assumptions
+are static methods in the
+https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Assumptions.java[`org.junit.gen5.Assumptions`]
+class.
 
 [source,java,indent=0]
 [subs="verbatim,quotes"]
@@ -263,8 +272,8 @@ class FastModelTests {
 
 === Nested Tests
 
-Nested tests give the test writer more capabilities to express the relationship
-among several group of tests. Here's a somewhat contrived example:
+Nested tests give the test writer more capabilities to express the relationship among
+several group of tests. Here's a somewhat contrived example:
 
 [source,java,indent=0]
 [subs="verbatim,quotes"]
@@ -300,21 +309,29 @@ class MyObjectTest {
 }
 ----
 
-Notice that _only non-static inner classes_ can serve as nested tests.
-Nesting can be arbitrarily deep, and those inner classes can be considered as
-full members of the test class family.
+Notice that _only non-static inner classes_ can serve as nested tests. Nesting can be
+arbitrarily deep, and those inner classes can be considered as full members of the test
+class family.
 
-For a more meaningful example have a look at https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/TestingAStack.java[TestingAStack].
+For a more meaningful example have a look at
+https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/TestingAStack.java[TestingAStack].
 
 
 
 === Method Parameters and Dependency Injection
 
-In all prior JUnit versions, `@Test`, `@BeforeEach`, and `@AfterEach` methods were not allowed to have parameters (at least not with the standard `Runner` implementations). As one of the major changes in JUnit 5, methods are now permitted to have parameters allowing for greater flexibility and enabling method-level _Dependency Injection_.
+In all prior JUnit versions, `@Test`, `@BeforeEach`, and `@AfterEach` methods were not
+allowed to have parameters (at least not with the standard `Runner` implementations). As
+one of the major changes in JUnit 5, methods are now permitted to have parameters
+allowing for greater flexibility and enabling method-level _Dependency Injection_.
 
 There is currently one built-in resolver that need not be explicitly enabled:
 
-* `@TestName`: If a method parameter is of type `String` and annotated with `@TestName`, the https://github.com/junit-team/junit-lambda/tree/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java[`TestNameParameterResolver`] will supply the _display name_ of the current test at runtime (either its canonical name or its user-provided `@Name`). This acts as a drop-in replacement for the `TestName` rule from JUnit 4:
+* `@TestName`: If a method parameter is of type `String` and annotated with `@TestName`, the
+  https://github.com/junit-team/junit-lambda/tree/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java[`TestNameParameterResolver`]
+  will supply the _display name_ of the current test at runtime (either its canonical name
+  or its user-provided `@Name`). This acts as a drop-in replacement for the `TestName`
+  rule from JUnit 4:
 
 [source,java,indent=0]
 [subs="verbatim,quotes"]
@@ -341,11 +358,22 @@ void test2() {}
 ----
 
 
-Other parameter resolvers must be explicitly enabled by registering a link:Prototype-Test-Extensions[test extension] via `@ExtendWith`.
+Other parameter resolvers must be explicitly enabled by registering a
+link:Prototype-Test-Extensions[test extension] via `@ExtendWith`.
 
-* Check out the `methodInjectionTest(...)` test method in https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/SampleTestCase.java[`SampleTestCase`] for an example that uses the built-in `TestNameParameterResolver` as well as two user-provided resolvers, https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java[`CustomTypeParameterResolver`] and https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java[`CustomAnnotationParameterResolver`].
+* Check out the `methodInjectionTest(...)` test method in
+  https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/SampleTestCase.java[`SampleTestCase`]
+  for an example that uses the built-in `TestNameParameterResolver` as well as two user-provided resolvers,
+  https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java[`CustomTypeParameterResolver`] and
+  https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java[`CustomAnnotationParameterResolver`].
 
-* The https://github.com/junit-team/junit-lambda/tree/master/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java[`MockitoExtension`] is another example of a `MethodParameterResolver`. While not intended to be production-ready, it demonstrates the simplicity and expressiveness of both the extension model and the parameter resolution process. Check out the source code for https://github.com/junit-team/junit-lambda/tree/master/sample-extension/src/test/java/com/example/mockito/MockitoExtensionInBaseClassTest.java[`MockitoExtensionInBaseClassTest`] for an example of injecting Mockito mocks into `@BeforeEach` and `@Test` methods:
+* The
+  https://github.com/junit-team/junit-lambda/tree/master/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java[`MockitoExtension`]
+  is another example of a `MethodParameterResolver`. While not intended to be production-ready,
+  it demonstrates the simplicity and expressiveness of both the extension model and the parameter
+  resolution process. Check out the source code for
+  https://github.com/junit-team/junit-lambda/tree/master/sample-extension/src/test/java/com/example/mockito/MockitoExtensionInBaseClassTest.java[`MockitoExtensionInBaseClassTest`]
+  for an example of injecting Mockito mocks into `@BeforeEach` and `@Test` methods:
 
 
 [source,java,indent=0]
