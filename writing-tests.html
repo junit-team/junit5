@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
-<title>Writing JUnit 5 Test Cases</title>
+<title>Writing Tests</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -420,15 +420,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Writing JUnit 5 Test Cases</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#annotations">Annotations</a>
+<li><a href="#writing-tests">Writing Tests</a>
 <ul class="sectlevel2">
-<li><a href="#meta-annotations-and-composed-annotations">Meta-Annotations and Composed Annotations</a></li>
-</ul>
-</li>
+<li><a href="#annotations">Annotations</a></li>
 <li><a href="#standard-test-class">Standard Test Class</a></li>
 <li><a href="#custom-names">Custom Names</a></li>
 <li><a href="#assertions">Assertions</a></li>
@@ -438,54 +435,33 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#nested-tests">Nested Tests</a></li>
 <li><a href="#method-parameters-and-dependency-injection">Method Parameters and Dependency Injection</a></li>
 </ul>
-</div>
-</div>
-<div id="content">
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Table of Contents</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="#annotations">Annotations</a></p>
-</li>
-<li>
-<p><a href="#meta-annotations-and-composed-annotations">Meta-Annotations and Composed Annotations</a></p>
-</li>
-<li>
-<p><a href="#standard-test-class">Standard Test Class</a></p>
-</li>
-<li>
-<p><a href="#custom-names">Custom Names</a></p>
-</li>
-<li>
-<p><a href="#assertions">Assertions</a></p>
-</li>
-<li>
-<p><a href="#assumptions">Assumptions</a></p>
-</li>
-<li>
-<p><a href="#disabling-tests">Disabling Tests</a></p>
-</li>
-<li>
-<p><a href="#tagging-and-filtering">Tagging and Filtering</a></p>
-</li>
-<li>
-<p><a href="#nested-tests">Nested Tests</a></p>
-</li>
-<li>
-<p><a href="#method-parameters-and-dependency-injection">Method Parameters and Dependency Injection</a>
-'''</p>
 </li>
 </ul>
 </div>
 </div>
-</div>
+<div id="content">
 <div class="sect1">
-<h2 id="annotations">Annotations</h2>
+<h2 id="writing-tests">Writing Tests</h2>
 <div class="sectionbody">
+<div class="listingblock">
+<div class="title">A first test case</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertEquals;
+
+import org.junit.gen5.api.Test;
+
+class FirstTestCase {
+
+    @Test
+    void firstTest() {
+        assertEquals(2, 1 + 1);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="annotations">Annotations</h3>
 <div class="paragraph">
 <p>JUnit 5 supports the following annotations for configuring tests and extending the framework.</p>
 </div>
@@ -509,10 +485,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test method. Unlike JUnit 4&#8217;s <code>@Test</code> annotation, this annotation does not declare any attributes, since test extensions in JUnit 5 operate based on their own dedicated annotations.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@TestInstance</code></strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used to configure the lifecycle of a test instance. By default a test instance will be created for each test method within a class. Annotate your test class with <code>@TestInstance(PER_CLASS)</code> to override the default behavior and have the test instance retained across test methods.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@Name</code></strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Declares a custom display name for the test class or test method</p></td>
 </tr>
@@ -530,23 +502,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@BeforeAll</code></strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>all</strong> <code>@Test</code> methods in the current class or class hierarchy; analogous to JUnit 4&#8217;s <code>@BeforeClass</code>. Such methods must be <code>static</code> unless the test class is annotated with <code>@TestInstance(PER_CLASS)</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>all</strong> <code>@Test</code> methods in the current class or class hierarchy; analogous to JUnit 4&#8217;s <code>@BeforeClass</code>. Such methods must be <code>static</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@AfterAll</code></strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>all</strong> <code>@Test</code> methods in the current class or class hierarchy; analogous to JUnit 4&#8217;s <code>@AfterClass</code>. Such methods must be <code>static</code> unless the test class is annotated with <code>@TestInstance(PER_CLASS)</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>all</strong> <code>@Test</code> methods in the current class or class hierarchy; analogous to JUnit 4&#8217;s <code>@AfterClass</code>. Such methods must be <code>static</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@Nested</code></strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated class is a nested test class; often - but not necessarily - used in conjunction with <code>@TestInstance(PER_CLASS)</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated class is a nested test class.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@Tag</code></strong> and <strong><code>@Tags</code></strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Used to declare <em>tags</em> for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@Conditional</code></strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used to declare <em>conditions</em> that will be evaluated to determine if a test is enabled. <code>@Disabled</code> is a built-in implementation of conditional test execution.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@Disabled</code></strong></p></td>
@@ -558,8 +526,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 </tbody>
 </table>
-<div class="sect2">
-<h3 id="meta-annotations-and-composed-annotations">Meta-Annotations and Composed Annotations</h3>
+<div class="sect3">
+<h4 id="meta-annotations-and-composed-annotations">Meta-Annotations and Composed Annotations</h4>
 <div class="paragraph">
 <p>JUnit 5 annotations can be used as <em>meta-annotations</em>. That means that you can define your own
 <em>composed annotation</em> that will automatically <em>inherit</em> the semantics of its meta-annotations.</p>
@@ -579,22 +547,18 @@ public @interface Fast {
 }</code></pre>
 </div>
 </div>
-<hr>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="standard-test-class">Standard Test Class</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="standard-test-class">Standard Test Class</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.*;
 
-@TestInstance(PER_CLASS)
 class MyTest {
 
   @BeforeAll
-  void initAll() {}
+  static void initAll() {}
 
   @BeforeEach
   void init() {}
@@ -606,22 +570,18 @@ class MyTest {
   void tearDown() {}
 
   @AfterAll
-  void tearDownAll() {}
+  static void tearDownAll() {}
 
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Notice that neither the test class nor the test method need to be <code>public</code>.
-Also, <code>@BeforeAll</code> and <code>@AfterAll</code> can be used on non-static methods if the
-test class is annotated with <code>@TestInstance(PER_CLASS)</code>.</p>
-</div>
-<hr>
+<code>@BeforeAll</code> and <code>@AfterAll</code> must be static methods.</p>
 </div>
 </div>
-<div class="sect1">
-<h2 id="custom-names">Custom Names</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="custom-names">Custom Names</h3>
 <div class="paragraph">
 <p>Test classes and test methods can declare a custom name – with spaces, special characters,
 and even emojis – that will be displayed by test runners and test reporting:</p>
@@ -640,16 +600,13 @@ class CanHaveAnyNameTest {
 }</code></pre>
 </div>
 </div>
-<hr>
 </div>
-</div>
-<div class="sect1">
-<h2 id="assertions">Assertions</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="assertions">Assertions</h3>
 <div class="paragraph">
 <p>JUnit 5 comes with many of the assertion methods that JUnit 4 has and adds a few
 that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions
-are static methods in the <a href="https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java"><code>org.junit.gen5.Assertions</code></a> class.</p>
+are static methods in the <a href="https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java"><code>org.junit.gen5.Assertions</code></a> class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -663,7 +620,7 @@ class MyTest {
   void standardAssertions() {
     assertEquals(2, 2);
     assertEquals(4, 4, "The optional assertion message is now the last parameter.");
-    assertTrue(2 == 2, () -&gt; "Assertion messages can be lazily evaluated -- " +
+    assertTrue(2 === 2, () -&gt; "Assertion messages can be lazily evaluated -- " +
                              "to avoid constructing complex messages unnecessarily.");
   }
 
@@ -679,7 +636,7 @@ class MyTest {
 
   @Test
   void exceptionTesting() {
-    Throwable exception = expectThrows(IllegalArgumentException.class,
+    Throwable exception == expectThrows(IllegalArgumentException.class,
       () -&gt; throw new IllegalArgumentException("a message")
     );
     assertEquals("a message", exception.getMessage());
@@ -688,16 +645,13 @@ class MyTest {
 }</code></pre>
 </div>
 </div>
-<hr>
 </div>
-</div>
-<div class="sect1">
-<h2 id="assumptions">Assumptions</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="assumptions">Assumptions</h3>
 <div class="paragraph">
 <p>JUnit 5 comes with a subset of the assumption methods that JUnit 4 provides and adds a few
 that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assumptions
-are static methods in the <a href="https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-api/src/main/java/org/junit/gen5/api/Assumptions.java"><code>org.junit.gen5.Assumptions</code></a> class.</p>
+are static methods in the <a href="https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Assumptions.java"><code>org.junit.gen5.Assumptions</code></a> class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -735,12 +689,9 @@ class MyTest {
 }</code></pre>
 </div>
 </div>
-<hr>
 </div>
-</div>
-<div class="sect1">
-<h2 id="disabling-tests">Disabling Tests</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="disabling-tests">Disabling Tests</h3>
 <div class="paragraph">
 <p>Here´s a disabled test case:</p>
 </div>
@@ -776,12 +727,9 @@ class MyTest {
 }</code></pre>
 </div>
 </div>
-<hr>
 </div>
-</div>
-<div class="sect1">
-<h2 id="tagging-and-filtering">Tagging and Filtering</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="tagging-and-filtering">Tagging and Filtering</h3>
 <div class="paragraph">
 <p>Test classes and methods can be tagged. Those tags can later be used to filter
 <a href="Prototype-Running-Tests">test discovery and execution</a>:</p>
@@ -801,12 +749,9 @@ class FastModelTests {
 }</code></pre>
 </div>
 </div>
-<hr>
 </div>
-</div>
-<div class="sect1">
-<h2 id="nested-tests">Nested Tests</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="nested-tests">Nested Tests</h3>
 <div class="paragraph">
 <p>Nested tests give the test writer more capabilities to express the relationship
 among several group of tests. Here´s a somewhat contrived example:</p>
@@ -821,7 +766,7 @@ class MyObjectTest {
 
   @BeforeEach
   void init() {
-    myObject = new MyObject();
+    myObject == new MyObject();
   }
 
   @Test
@@ -850,35 +795,30 @@ Nesting can be arbitrarily deep and those inner classes can be considered as
 full members of the test class family.</p>
 </div>
 <div class="paragraph">
-<p>For a more meaningful example have a look at <a href="https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-project/src/test/java/com/example/TestingAStack.java">TestingAStack</a>.</p>
-</div>
-<hr>
+<p>For a more meaningful example have a look at <a href="https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/TestingAStack.java">TestingAStack</a>.</p>
 </div>
 </div>
-<div class="sect1">
-<h2 id="method-parameters-and-dependency-injection">Method Parameters and Dependency Injection</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="method-parameters-and-dependency-injection">Method Parameters and Dependency Injection</h3>
 <div class="paragraph">
 <p>In all prior JUnit versions, <code>@Test</code>, <code>@BeforeEach</code>, and <code>@AfterEach</code> methods were not allowed to have parameters (at least not with the standard <code>Runner</code> implementations). As one of the major changes in JUnit 5, methods are now permitted to have parameters allowing for greater flexibility and enabling method-level <em>Dependency Injection</em>.</p>
 </div>
 <div class="paragraph">
-<p>There are a few built-in resolvers in the prototype that need not be explicitly enabled:</p>
+<p>There is currently one built-in resolver that need not be explicitly enabled:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>@TestName</code>: If a method parameter is of type <code>String</code> and annotated with <code>@TestName</code>, the <a href="https://github.com/junit-team/junit-lambda/blob/prototype-1/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java"><code>TestNameParameterResolver</code></a> will supply the <em>display name</em> of the current test at runtime (either its canonical name or its user-provided <code>@Name</code>). This acts as a drop-in replacement for the <code>TestName</code> rule from JUnit 4:</p>
+<p><code>@TestName</code>: If a method parameter is of type <code>String</code> and annotated with <code>@TestName</code>, the <a href="https://github.com/junit-team/junit-lambda/tree/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java"><code>TestNameParameterResolver</code></a> will supply the <em>display name</em> of the current test at runtime (either its canonical name or its user-provided <code>@Name</code>). This acts as a drop-in replacement for the <code>TestName</code> rule from JUnit 4:</p>
 </li>
 </ul>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java"> import org.junit.gen5.api.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.*;
 
 class MyTest {
 
-[source]
-----
 @BeforeEach
 void init(@TestName name) {
   assertTrue(name.equals("TEST 1") || name.equals("test2"));
@@ -892,32 +832,33 @@ void test1(@TestName name) {
 
 @Test
 void test2() {}
-----
 
-}
- ```
-
-All other parameter resolvers must be explicitly enabled by registering a link:Prototype-Test-Extensions[test extension] via `@ExtendWith`.
-
-*
-
-Check out the `methodInjectionTest(...)` test method in https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-project/src/test/java/com/example/SampleTestCase.java[`SampleTestCase`] for an example that uses the built-in `TestNameParameterResolver` as well as two user-provided resolvers, https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java[`CustomTypeParameterResolver`] and https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java[`CustomAnnotationParameterResolver`].
-
-*
-
-The https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java[`MockitoExtension`] is another example of a `MethodParameterResolver`. While not intended to be production-ready, it demonstrates the simplicity and expressiveness of both the extension model and the parameter resolution process. Check out the source code for https://github.com/junit-team/junit-lambda/blob/prototype-1/sample-extension/src/test/java/com/example/mockito/MockitoExtensionInBaseClassTest.java[`MockitoExtensionInBaseClassTest`] for an example of injecting Mockito mocks into `@BeforeEach` and `@Test` methods:
-
-```java
- import org.junit.gen5.api.*;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Other parameter resolvers must be explicitly enabled by registering a <a href="Prototype-Test-Extensions">test extension</a> via <code>@ExtendWith</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Check out the <code>methodInjectionTest(&#8230;&#8203;)</code> test method in <a href="https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/SampleTestCase.java"><code>SampleTestCase</code></a> for an example that uses the built-in <code>TestNameParameterResolver</code> as well as two user-provided resolvers, <a href="https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java"><code>CustomTypeParameterResolver</code></a> and <a href="https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java"><code>CustomAnnotationParameterResolver</code></a>.</p>
+</li>
+<li>
+<p>The <a href="https://github.com/junit-team/junit-lambda/tree/master/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java"><code>MockitoExtension</code></a> is another example of a <code>MethodParameterResolver</code>. While not intended to be production-ready, it demonstrates the simplicity and expressiveness of both the extension model and the parameter resolution process. Check out the source code for <a href="https://github.com/junit-team/junit-lambda/tree/master/sample-extension/src/test/java/com/example/mockito/MockitoExtensionInBaseClassTest.java"><code>MockitoExtensionInBaseClassTest</code></a> for an example of injecting Mockito mocks into <code>@BeforeEach</code> and <code>@Test</code> methods:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.*;
 
 import static org.mockito.Mockito.when;
- import com.example.mockito.MockitoExtension;
+import com.example.mockito.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
- class MyMockitoTest {
+class MyMockitoTest {
 
-[source]
-----
 @BeforeEach
 void init(@InjectMock MyType myType) {
   when(myType.getName()).thenReturn("hello");
@@ -927,10 +868,9 @@ void init(@InjectMock MyType myType) {
 void simpleTestWithInjectedMock(@InjectMock MyType myType) {
   assertEquals("hello", myType.getName());
 }
-----
 
-}
- ```</code></pre>
+}</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -938,7 +878,7 @@ void simpleTestWithInjectedMock(@InjectMock MyType myType) {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-07 06:29:35 -05:00
+Last updated 2016-01-07 06:41:28 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
