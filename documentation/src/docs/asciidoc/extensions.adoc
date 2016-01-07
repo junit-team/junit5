@@ -1,6 +1,9 @@
 == Writing Extensions
 
 
+WARNING: needs major overhaul
+
+
 === Overview
 
 In contrast to the competing `Runner`, `@Rule`, and `@ClassRule` extension points in JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the `TestExtension` API. Note, however, that `TestExtension` itself is just a marker interface.
