@@ -102,3 +102,4 @@ https://github.com/sbrannen/spring-test-junit5/blob/prototype-1/src/main/java/or
 The JUnit Lambda team is planning several additional extension points, including but not limited to the following.
 
 * Dynamic test registration – for example, for computing parameterized tests at runtime
+

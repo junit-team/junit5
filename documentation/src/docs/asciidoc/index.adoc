@@ -10,6 +10,7 @@ include::overview.adoc[]
 include::writing-tests.adoc[]
 include::running-tests.adoc[]
 include::extensions.adoc[]
+include::migration-from-junit4.adoc[]
 
 
 == Advanced Topics
