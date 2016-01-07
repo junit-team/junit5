@@ -8,12 +8,8 @@ WARNING: Work in progress!
 
 include::overview.adoc[]
 include::writing-tests.adoc[]
+include::running-tests.adoc[]
 
-
-
-== Executing Tests
-
-=== Compatibility with JUnit 4
 
 
 == Test Extensions
