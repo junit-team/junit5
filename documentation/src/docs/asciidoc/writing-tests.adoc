@@ -1,6 +1,8 @@
-
+[[writing-tests]]
 == Writing Tests
 
+:MockitoExtensionInBaseClassTest: {master-branch}/sample-extension/src/test/java/com/example/mockito/MockitoExtensionInBaseClassTest.java[MockitoExtensionInBaseClassTest]
+:SampleTestCase:                  {master-branch}/sample-project/src/test/java/com/example/SampleTestCase.java[SampleTestCase]
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -14,9 +16,8 @@ include::{testDir}/example/FirstTestCase.java[tags=complete]
 
 JUnit 5 supports the following annotations for configuring tests and extending the framework.
 
-All core annotations are located in the
-https://github.com/junit-team/junit-lambda/tree/prototype-1/junit5-api/src/main/java/org/junit/gen5/api[`org.junit.gen5.api`]
-package in the `junit5-api` module.
+All core annotations are located in the `{api-package}` package in the `junit5-api`
+module.
 
 |===
 |Annotation |Description
@@ -31,7 +32,7 @@ package in the `junit5-api` module.
 |*`@Nested`* |Denotes that the annotated class is a nested test class.
 |*`@Tag`* and *`@Tags`* |Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4
 |*`@Disabled`* |Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore`
-|*`@ExtendWith`* |Used to register custom extensions for tests such as `MethodParameterResolver`. See link:Prototype-Test-Extensions[the page on test extensions]
+|*`@ExtendWith`* |Used to register custom extensions for tests such as `MethodParameterResolver`. See the page on <<extension-model, test extensions>>.
 |===
 
 ==== Meta-Annotations and Composed Annotations
@@ -41,9 +42,8 @@ your own _composed annotation_ that will automatically _inherit_ the semantics o
 meta-annotations.
 
 For example, instead of copying and pasting `@Tag("fast")` throughout your code base (see
-link:#tagging-and-filtering[Tagging and Filtering]), you can create a custom _composed
-annotation_ named `@Fast` as follows. `@Fast` can then be used as a drop-in replacement
-for `@Tag("fast")`.
+<<tagging-and-filtering>>), you can create a custom _composed annotation_ named `@Fast`
+as follows. `@Fast` can then be used as a drop-in replacement for `@Tag("fast")`.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -117,9 +117,7 @@ class CanHaveAnyNameTest {
 
 JUnit 5 comes with many of the assertion methods that JUnit 4 has and adds a few that
 lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions are static
-methods in the
-https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java[`org.junit.gen5.Assertions`]
-class.
+methods in the `{Assertions}` class.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -165,9 +163,7 @@ class MyTest {
 
 JUnit 5 comes with a subset of the assumption methods that JUnit 4 provides and adds a
 few that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assumptions
-are static methods in the
-https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Assumptions.java[`org.junit.gen5.Assumptions`]
-class.
+are static methods in the `{Assumptions}` class.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -246,11 +242,11 @@ class MyTest {
 ----
 
 
-
+[[tagging-and-filtering]]
 === Tagging and Filtering
 
 Test classes and methods can be tagged. Those tags can later be used to filter
-link:Prototype-Running-Tests[test discovery and execution]:
+<<running-tests,test discovery and execution>>:
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -327,11 +323,10 @@ allowing for greater flexibility and enabling method-level _Dependency Injection
 
 There is currently one built-in resolver that need not be explicitly enabled:
 
-* `@TestName`: If a method parameter is of type `String` and annotated with `@TestName`, the
-  https://github.com/junit-team/junit-lambda/tree/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java[`TestNameParameterResolver`]
-  will supply the _display name_ of the current test at runtime (either its canonical name
-  or its user-provided `@Name`). This acts as a drop-in replacement for the `TestName`
-  rule from JUnit 4:
+* `@TestName`: If a method parameter is of type `String` and annotated with `@TestName`,
+  the `{TestNameParameterResolver}` will supply the _display name_ of the current test at
+  runtime (either its canonical name or its user-provided `@Name`). This acts as a
+  drop-in replacement for the `TestName` rule from JUnit 4:
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -358,22 +353,20 @@ class MyTest {
 ----
 
 
-Other parameter resolvers must be explicitly enabled by registering a
-link:Prototype-Test-Extensions[test extension] via `@ExtendWith`.
+Other parameter resolvers must be explicitly enabled by registering a <<extension-model,
+test extension>> via `@ExtendWith`.
 
 * Check out the `methodInjectionTest(...)` test method in
   https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/SampleTestCase.java[`SampleTestCase`]
-  for an example that uses the built-in `TestNameParameterResolver` as well as two user-provided resolvers,
-  https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java[`CustomTypeParameterResolver`] and
-  https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java[`CustomAnnotationParameterResolver`].
+  for an example that uses the built-in `TestNameParameterResolver` as well as two
+  user-provided resolvers, `{CustomTypeParameterResolver}` and
+  `{CustomAnnotationParameterResolver}`.
 
-* The
-  https://github.com/junit-team/junit-lambda/tree/master/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java[`MockitoExtension`]
-  is another example of a `MethodParameterResolver`. While not intended to be production-ready,
-  it demonstrates the simplicity and expressiveness of both the extension model and the parameter
-  resolution process. Check out the source code for
-  https://github.com/junit-team/junit-lambda/tree/master/sample-extension/src/test/java/com/example/mockito/MockitoExtensionInBaseClassTest.java[`MockitoExtensionInBaseClassTest`]
-  for an example of injecting Mockito mocks into `@BeforeEach` and `@Test` methods:
+* The `{MockitoExtension}` is another example of a `MethodParameterResolver`. While not
+  intended to be production-ready, it demonstrates the simplicity and expressiveness of
+  both the extension model and the parameter resolution process. Check out the source
+  code for `{MockitoExtensionInBaseClassTest}` for an example of injecting Mockito mocks
+  into `@BeforeEach` and `@Test` methods:
 
 
 [source,java,indent=0]

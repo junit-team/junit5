@@ -1,3 +1,4 @@
+[[migrating-from-junit4]]
 == Migrating from JUnit 4
 
 Although the JUnit 5 programming model and extension model will not support JUnit 4

@@ -1,3 +1,4 @@
+[[running-tests]]
 == Running Tests
 
 === IDE Support

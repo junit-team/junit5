@@ -1,4 +1,4 @@
-
+[[launcher-api]]
 === The JUnit5 Launcher API
 
 One of the prominent goals of JUnit 5 is to make the interface between JUnit and its
@@ -11,15 +11,10 @@ filter, and execute JUnit tests. Moreover, we added a mechanism to allow third p
 libraries – like Spock, Cucumber, and FitNesse – to plug into JUnit 5's launching
 infrastructure.
 
-The launching API is in the
-https://github.com/junit-team/junit-lambda/tree/master/junit-launcher[junit-launcher]
-project.
+The launching API is in the `{junit-launcher}` module.
 
-An example consumer of the launching API is the
-https://github.com/junit-team/junit-lambda/tree/master/junit-console/src/main/java/org/junit/gen5/console/ConsoleRunner.java[Console Runner]
-in the
-https://github.com/junit-team/junit-lambda/tree/master/junit-console[junit-console]
-project.
+An example consumer of the launching API is the `{ConsoleRunner}` in the
+`{junit-console}` project.
 
 ==== Discovering Tests
 
@@ -57,8 +52,7 @@ ID_ that can be used to invoke a particular test or group of tests.
 There are two ways to execute tests. Clients can either use the same test specification
 object as in the discovery phase, or – to speed things up a bit – pass in the prepared
 `TestPlan` object from a previous discovery step. Test progress and result reporting can
-be achieved through a
-https://github.com/junit-team/junit-lambda/tree/master/junit-launcher/src/main/java/org/junit/gen5/launcher/TestPlanExecutionListener.java[TestPlanExecutionListener]:
+be achieved through a `{TestExecutionListener}`:
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -77,17 +71,16 @@ launcher.execute(specification);
 
 There's currently no result object, but you can easily use a listener to aggregate the
 final results in an object of your own. For an example see the
-https://github.com/junit-team/junit-lambda/tree/master/junit-console/src/main/java/org/junit/gen5/console/TestSummaryReportingTestListener.java[TestSummaryReportingTestListener].
+`{SummaryGeneratingListener}`.
+
 
 ==== Plugging in Your Own Test Engine
 
 The current snapshot provides two `TestEngine` implementations out of the box:
 
-* https://github.com/junit-team/junit-lambda/tree/master/junit5-engine[junit5-engine]:
-  The core of JUnit 5.
-* https://github.com/junit-team/junit-lambda/tree/master/junit4-engine[junit4-engine]: A
-  thin layer on top of JUnit 4 to allow running "old" tests with the launcher
-  infrastructure.
+* `{junit5-engine}`: The core of JUnit 5.
+* `{junit4-engine}`: A thin layer on top of JUnit 4 to allow running "old" tests with the
+  launcher infrastructure.
 
 Third parties may also contribute their own `TestEngine` by implementing the interfaces in the
 https://github.com/junit-team/junit-lambda/tree/master/junit-engine-api[junit-engine-api]
