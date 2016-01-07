@@ -106,6 +106,20 @@ Note that extension developers may choose to implement any number of these inter
 within a single extension. Consult the source code of the `{SpringExtension}` for a
 concrete example.
 
+
+=== Extension Point Application Order
+
+Sometimes you want to influence the order in which several extensions of the same type are applied.
+This goal can be achieved by implementing the `{ExtensionRegistrar}` interface...
+
+
+=== Keeping State in Extensions
+
+Usually, an extension is instantiated only once. So the question becomes relevant: How do you keep the state
+from one invocation of an extension point to the next? ...
+
+
+
 === Additional Planned Extension Points
 
 The JUnit Lambda team is planning several additional extension points, including but not
