@@ -42,15 +42,14 @@ public class JUnit4TestEngine implements TestEngine {
 		EngineExecutionListener engineExecutionListener = request.getEngineExecutionListener();
 		TestDescriptor engineTestDescriptor = request.getRootTestDescriptor();
 		engineExecutionListener.executionStarted(engineTestDescriptor);
-		executeAllChildren(request);
+		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
+		executeAllChildren(runnerExecutor, engineTestDescriptor);
 		engineExecutionListener.executionFinished(engineTestDescriptor, successful());
 	}
 
-	private void executeAllChildren(ExecutionRequest request) {
-		RunnerExecutor runnerExecutor = new RunnerExecutor(request.getEngineExecutionListener());
+	private void executeAllChildren(RunnerExecutor runnerExecutor, TestDescriptor engineTestDescriptor) {
 		// @formatter:off
-		request.getRootTestDescriptor()
-			.getChildren()
+		engineTestDescriptor.getChildren()
 			.stream()
 			.map(RunnerTestDescriptor.class::cast)
 			.forEach(runnerExecutor::execute);
