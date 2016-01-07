@@ -13,6 +13,10 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
+import java.util.List;
+
+import org.junit.gen5.engine.ExecutionEvent;
+import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -38,6 +42,14 @@ abstract class AbstractJUnit5TestEngineTests {
 		TrackingEngineExecutionListener listener = new TrackingEngineExecutionListener();
 		engine.execute(new ExecutionRequest(testDescriptor, listener));
 		return listener;
+	}
+
+	protected List<ExecutionEvent> executeTestsAndRecordEvents(TestPlanSpecification spec, int expectedDescriptorCount) {
+		TestDescriptor testDescriptor = discoverTests(spec);
+		assertEquals(expectedDescriptorCount, testDescriptor.allDescendants().size());
+		ExecutionEventRecordingEngineExecutionListener listener = new ExecutionEventRecordingEngineExecutionListener();
+		engine.execute(new ExecutionRequest(testDescriptor, listener));
+		return listener.getExecutionEvents();
 	}
 
 	private TestDescriptor discoverTests(TestPlanSpecification spec) {
