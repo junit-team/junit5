@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
-<title>Migrating from JUnit 4 to JUnit 5</title>
+<title>Migrating from JUnit 4</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -420,17 +420,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Migrating from JUnit 4 to JUnit 5</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
+<li><a href="#migrating-from-junit-4">Migrating from JUnit 4</a>
+<ul class="sectlevel2">
 <li><a href="#running-junit-4-tests-with-junit-5">Running JUnit 4 Tests with JUnit 5</a></li>
 <li><a href="#migration-tips">Migration Tips</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="migrating-from-junit-4">Migrating from JUnit 4</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Although the JUnit 5 programming model and extension model will not support JUnit 4
@@ -448,11 +452,8 @@ tests. Furthermore, since the JUnit team will continue to provide maintenance an
 fix releases for the JUnit 4.x baseline, developers have plenty of time to migrate to
 JUnit 5 on their own schedule.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="running-junit-4-tests-with-junit-5">Running JUnit 4 Tests with JUnit 5</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="running-junit-4-tests-with-junit-5">Running JUnit 4 Tests with JUnit 5</h3>
 <div class="paragraph">
 <p>Just make sure that the <code>junit4-engine</code> artifact is in your test runtime path.
 In that case JUnit 4 tests will automatically be picked up by JUnit 5 test runners.</p>
@@ -462,10 +463,8 @@ In that case JUnit 4 tests will automatically be picked up by JUnit 5 test runne
 done with Gradle and Maven.</p>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="migration-tips">Migration Tips</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="migration-tips">Migration Tips</h3>
 <div class="paragraph">
 <p>The following are things you have to watch out for when migrating existing
 JUnit 4 tests to JUnit 5.</p>
@@ -504,9 +503,10 @@ JUnit 4 tests to JUnit 5.</p>
 </div>
 </div>
 </div>
+</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-07 06:41:28 -05:00
+Last updated 2016-01-07 07:16:27 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

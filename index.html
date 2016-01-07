@@ -470,6 +470,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#additional-planned-extension-points">Additional Planned Extension Points</a></li>
 </ul>
 </li>
+<li><a href="#migrating-from-junit-4">Migrating from JUnit 4</a>
+<ul class="sectlevel2">
+<li><a href="#running-junit-4-tests-with-junit-5">Running JUnit 4 Tests with JUnit 5</a></li>
+<li><a href="#migration-tips">Migration Tips</a></li>
+</ul>
+</li>
 <li><a href="#advanced-topics">Advanced Topics</a>
 <ul class="sectlevel2">
 <li><a href="#modules">Modules</a></li>
@@ -1496,6 +1502,76 @@ interfaces within a single extension. Consult the source code of the
 </div>
 </div>
 <div class="sect1">
+<h2 id="migrating-from-junit-4">Migrating from JUnit 4</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Although the JUnit 5 programming model and extension model will not support JUnit 4
+features such as <code>Rules</code> and <code>Runners</code>, it is not expected that source code maintainers
+will need to update all of their existing tests, test extensions, and custom build test
+infrastructure to migrate to JUnit 5.</p>
+</div>
+<div class="paragraph">
+<p>Instead, JUnit 5 provides a gentle migration path via a <em>JUnit 4 test engine</em> which
+allows existing tests based on JUnit 4 to be executed using the JUnit 5 infrastructure.
+Since all classes and annotations specific to JUnit 5 reside under a new <code>org.junit.gen5</code>
+base package, having both JUnit 4 and JUnit 5 in the classpath does not lead to any
+conflicts. It is therefore safe to maintain existing JUnit 4 tests alongside JUnit 5
+tests. Furthermore, since the JUnit team will continue to provide maintenance and bug
+fix releases for the JUnit 4.x baseline, developers have plenty of time to migrate to
+JUnit 5 on their own schedule.</p>
+</div>
+<div class="sect2">
+<h3 id="running-junit-4-tests-with-junit-5">Running JUnit 4 Tests with JUnit 5</h3>
+<div class="paragraph">
+<p>Just make sure that the <code>junit4-engine</code> artifact is in your test runtime path.
+In that case JUnit 4 tests will automatically be picked up by JUnit 5 test runners.</p>
+</div>
+<div class="paragraph">
+<p>See the example projects in the <a href="https://github.com/junit-team/junit5-samples">junit5-samples</a> repository to find out how this is
+done with Gradle and Maven.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="migration-tips">Migration Tips</h3>
+<div class="paragraph">
+<p>The following are things you have to watch out for when migrating existing
+JUnit 4 tests to JUnit 5.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Annotations reside in the <code>org.junit.gen5.api</code> package.</p>
+</li>
+<li>
+<p>Assertions reside in <code>org.junit.gen5.api.Assertions</code>.</p>
+</li>
+<li>
+<p>Assumptions reside in <code>org.junit.gen5.api.Assumptions</code>.</p>
+</li>
+<li>
+<p><code>@Before</code> and <code>@After</code> no longer exist; use <code>@BeforeEach</code> and <code>@AfterEach</code> instead.</p>
+</li>
+<li>
+<p><code>@BeforeClass</code> and <code>@AfterClass</code> no longer exist; use <code>@BeforeAll</code> and <code>@AfterAll</code> instead.</p>
+</li>
+<li>
+<p><code>@Ignore</code> no longer exists: use <code>@Disabled</code> instead.</p>
+</li>
+<li>
+<p><code>@Category</code> no longer exists; use <code>@Tag</code> instead.</p>
+</li>
+<li>
+<p><code>@RunWith</code> no longer exists; superseded by <code>@ExtendWith</code>.</p>
+</li>
+<li>
+<p><code>@Rule</code> and <code>@ClassRule</code> no longer exist; superseded by <code>@ExtendWith</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="advanced-topics">Advanced Topics</h2>
 <div class="sectionbody">
 <div class="sect2">
@@ -1515,7 +1591,7 @@ interfaces within a single extension. Consult the source code of the
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-07 07:11:47 -05:00
+Last updated 2016-01-07 07:16:27 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
