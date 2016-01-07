@@ -472,7 +472,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#test-instance-post-processing">5.4. Test Instance Post-processing</a></li>
 <li><a href="#parameter-resolution">5.5. Parameter Resolution</a></li>
 <li><a href="#test-lifecycle-callbacks">5.6. Test Lifecycle Callbacks</a></li>
-<li><a href="#additional-planned-extension-points">5.7. Additional Planned Extension Points</a></li>
+<li><a href="#extension-point-application-order">5.7. Extension Point Application Order</a></li>
+<li><a href="#keeping-state-in-extensions">5.8. Keeping State in Extensions</a></li>
+<li><a href="#additional-planned-extension-points">5.9. Additional Planned Extension Points</a></li>
 </ul>
 </li>
 <li><a href="#migrating-from-junit4">6. Migrating from JUnit 4</a>
@@ -1547,7 +1549,21 @@ concrete example.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="additional-planned-extension-points">5.7. Additional Planned Extension Points</h3>
+<h3 id="extension-point-application-order">5.7. Extension Point Application Order</h3>
+<div class="paragraph">
+<p>Sometimes you want to influence the order in which several extensions of the same type are applied.
+This goal can be achieved by implementing the <code><a href="https://github.com/junit-team/junit-lambda/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtensionRegistrar.java">ExtensionRegistrar</a></code> interface&#8230;&#8203;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="keeping-state-in-extensions">5.8. Keeping State in Extensions</h3>
+<div class="paragraph">
+<p>Usually, an extension is instantiated only once. So the question becomes relevant: How do you keep the state
+from one invocation of an extension point to the next? &#8230;&#8203;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="additional-planned-extension-points">5.9. Additional Planned Extension Points</h3>
 <div class="paragraph">
 <p>The JUnit Lambda team is planning several additional extension points, including but not
 limited to the following.</p>
@@ -1759,7 +1775,7 @@ registers its <code>JUnit5TestEngine</code>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-07 14:52:20 -05:00
+Last updated 2016-01-07 15:39:29 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
