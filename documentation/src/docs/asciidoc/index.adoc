@@ -9,10 +9,8 @@ WARNING: Work in progress!
 include::overview.adoc[]
 include::writing-tests.adoc[]
 include::running-tests.adoc[]
+include::extensions.adoc[]
 
-
-
-== Test Extensions
 
 == Advanced Topics
 
