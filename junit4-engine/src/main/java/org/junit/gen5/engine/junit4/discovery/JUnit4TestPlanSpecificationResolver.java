@@ -10,6 +10,15 @@
 
 package org.junit.gen5.engine.junit4.discovery;
 
+import static java.util.stream.Collectors.*;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.IntFunction;
+
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
@@ -48,13 +57,30 @@ public class JUnit4TestPlanSpecificationResolver {
 	}
 
 	private void addChildrenRecursively(JUnit4TestDescriptor parent) {
-		for (Description description : parent.getDescription().getChildren()) {
-			JUnit4TestDescriptor child = new JUnit4TestDescriptor(parent, description);
-			// TODO #40 Ensure children are unique, i.e. generate different unique IDs for
-			// Descriptions that are equal
-			parent.addChild(child);
-			addChildrenRecursively(child);
+		List<Description> children = parent.getDescription().getChildren();
+		// Use LinkedHashMap to preserve order, ArrayList to allow for fast access by index
+		Map<String, List<Description>> childrenByUniqueId = children.stream().collect(
+			groupingBy(UniqueIdExtractor::toUniqueId, LinkedHashMap::new, toCollection(ArrayList::new)));
+		for (Entry<String, List<Description>> entry : childrenByUniqueId.entrySet()) {
+			String uniqueId = entry.getKey();
+			List<Description> childrenWithSameUniqueId = entry.getValue();
+			IntFunction<String> uniqueIdGenerator = determineUniqueIdGenerator(uniqueId, childrenWithSameUniqueId);
+			for (int index = 0; index < childrenWithSameUniqueId.size(); index++) {
+				String reallyUniqueId = uniqueIdGenerator.apply(index);
+				Description description = childrenWithSameUniqueId.get(index);
+				JUnit4TestDescriptor child = new JUnit4TestDescriptor(parent, '/', reallyUniqueId, description);
+				parent.addChild(child);
+				addChildrenRecursively(child);
+			}
 		}
+	}
+
+	private IntFunction<String> determineUniqueIdGenerator(String uniqueId,
+			List<Description> childrenWithSameUniqueId) {
+		if (childrenWithSameUniqueId.size() == 1) {
+			return index -> uniqueId;
+		}
+		return index -> uniqueId + "[" + index + "]";
 	}
 
 }

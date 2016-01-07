@@ -15,7 +15,9 @@ import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
-import org.junit.gen5.api.Disabled;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -144,8 +146,6 @@ class JUnit4TestEngineDiscoveryTests {
 	}
 
 	@Test
-	// TODO #40 Fix this
-	@Disabled("Runner description has two children that are equal")
 	void resolvesJUnit4TestCaseWithOverloadedMethod() {
 		Class<?> testClass = JUnit4TestCaseWithOverloadedMethod.class;
 		TestPlanSpecification specification = buildClassSpecification(testClass);
@@ -158,7 +158,24 @@ class JUnit4TestEngineDiscoveryTests {
 		assertEquals(testClass.getName(), runnerDescriptor.getDisplayName());
 		assertEquals("junit4:" + testClass.getName(), runnerDescriptor.getUniqueId());
 
-		assertThat(runnerDescriptor.getChildren()).hasSize(2);
+		List<TestDescriptor> testMethodDescriptors = new ArrayList<>(runnerDescriptor.getChildren());
+		assertThat(testMethodDescriptors).hasSize(2);
+
+		TestDescriptor testMethodDescriptor = testMethodDescriptors.get(0);
+		assertTrue(testMethodDescriptor.isTest());
+		assertFalse(testMethodDescriptor.isContainer());
+		assertEquals("theory", testMethodDescriptor.getDisplayName());
+		assertEquals("junit4:" + testClass.getName() + "/theory" + "(" + testClass.getName() + ")[0]",
+			testMethodDescriptor.getUniqueId());
+		assertThat(testMethodDescriptor.getChildren()).isEmpty();
+
+		testMethodDescriptor = testMethodDescriptors.get(1);
+		assertTrue(testMethodDescriptor.isTest());
+		assertFalse(testMethodDescriptor.isContainer());
+		assertEquals("theory", testMethodDescriptor.getDisplayName());
+		assertEquals("junit4:" + testClass.getName() + "/theory" + "(" + testClass.getName() + ")[1]",
+			testMethodDescriptor.getUniqueId());
+		assertThat(testMethodDescriptor.getChildren()).isEmpty();
 	}
 
 	@Test

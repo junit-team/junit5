@@ -258,10 +258,10 @@ class JUnit4TestEngineExecutionTests {
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
-			event(test("theory"), started()), //
-			event(test("theory"), finishedWithFailure()), //
-			event(test("theory"), started()), //
-			event(test("theory"), finishedWithFailure()), //
+			event(test("theory(" + JUnit4TestCaseWithOverloadedMethod.class.getName() + ")[0]"), started()), //
+			event(test("theory(" + JUnit4TestCaseWithOverloadedMethod.class.getName() + ")[0]"), finishedWithFailure()), //
+			event(test("theory(" + JUnit4TestCaseWithOverloadedMethod.class.getName() + ")[1]"), started()), //
+			event(test("theory(" + JUnit4TestCaseWithOverloadedMethod.class.getName() + ")[1]"), finishedWithFailure()), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}

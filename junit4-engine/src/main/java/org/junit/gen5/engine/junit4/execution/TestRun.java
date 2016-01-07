@@ -10,13 +10,13 @@
 
 package org.junit.gen5.engine.junit4.execution;
 
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Stream.concat;
 import static org.junit.gen5.engine.TestExecutionResult.successful;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -31,7 +31,7 @@ class TestRun {
 
 	private final RunnerTestDescriptor runnerTestDescriptor;
 	private final Set<? extends TestDescriptor> runnerDescendants;
-	private final Map<Description, TestDescriptor> descriptionToDescriptor;
+	private final Map<Description, List<JUnit4TestDescriptor>> descriptionToDescriptors;
 	private final Map<TestDescriptor, TestExecutionResult> executionResults = new LinkedHashMap<>();
 	private final Set<TestDescriptor> skippedDescriptors = new LinkedHashSet<>();
 	private final Set<TestDescriptor> startedDescriptors = new LinkedHashSet<>();
@@ -41,9 +41,9 @@ class TestRun {
 		this.runnerTestDescriptor = runnerTestDescriptor;
 		runnerDescendants = runnerTestDescriptor.allDescendants();
 		// @formatter:off
-		descriptionToDescriptor = concat(Stream.of(runnerTestDescriptor), runnerDescendants.stream())
+		descriptionToDescriptors = concat(Stream.of(runnerTestDescriptor), runnerDescendants.stream())
 			.map(JUnit4TestDescriptor.class::cast)
-			.collect(toMap(JUnit4TestDescriptor::getDescription, identity()));
+			.collect(groupingBy(JUnit4TestDescriptor::getDescription));
 		// @formatter:on
 	}
 
@@ -55,8 +55,33 @@ class TestRun {
 		return runnerDescendants.contains(testDescriptor);
 	}
 
+	/**
+	 * Returns the {@link TestDescriptor} that represents the specified
+	 * {@link Description}.
+	 *
+	 * <p>There are edge cases where multiple {@link Description Descriptions}
+	 * with the same {@code uniqueId} exist, e.g. when using overloaded methods
+	 * to define {@linkplain org.junit.experimental.theories.Theory theories}.
+	 * In this case, we try to find the correct {@link TestDescriptor} by
+	 * checking for object identity on the {@link Description} it represents.
+	 *
+	 * @param description the {@code Description} to look up
+	 */
 	TestDescriptor lookupTestDescriptor(Description description) {
-		return descriptionToDescriptor.get(description);
+		List<JUnit4TestDescriptor> descriptors = descriptionToDescriptors.get(description);
+		if (descriptors == null) {
+			// TODO #40 Handle unknown description
+			return null;
+		}
+		if (descriptors.size() == 1) {
+			return descriptors.get(0);
+		}
+		// @formatter:off
+		return descriptors.stream()
+				.filter(testDescriptor -> description == testDescriptor.getDescription())
+				.findFirst()
+				.orElseGet(() -> descriptors.get(0));
+		// @formatter:on
 	}
 
 	void markSkipped(TestDescriptor testDescriptor) {
