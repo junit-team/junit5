@@ -35,6 +35,7 @@ import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithErrorInAfterClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithErrorInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithOverloadedMethod;
 import org.junit.gen5.engine.junit4.samples.MalformedJUnit4TestCase;
+import org.junit.gen5.engine.junit4.samples.ParameterizedTestCase;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit3TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithFiveTests;
 import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithSingleTestWhichFails;
@@ -295,6 +296,27 @@ class JUnit4TestEngineExecutionTests {
 			event(test(testClass.getName()), skippedWithReason("complete class is ignored")), //
 			event(container(suiteClass), finishedSuccessfully()), //
 			event(container(suiteOfSuiteClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesParameterizedTestCase() {
+		Class<?> testClass = ParameterizedTestCase.class;
+
+		List<ExecutionEvent> executionEvents = execute(testClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(container("[foo]"), started()), //
+			event(test("test[foo]"), started()), //
+			event(test("test[foo]"), finishedSuccessfully()), //
+			event(container("[foo]"), finishedSuccessfully()), //
+			event(container("[bar]"), started()), //
+			event(test("test[bar]"), started()), //
+			event(test("test[bar]"), finishedWithFailure(causeMessage("expected:<[foo]> but was:<[bar]>"))), //
+			event(container("[bar]"), finishedSuccessfully()), //
+			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
