@@ -468,12 +468,12 @@ test classes and test methods in the past.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.engine.TestPlanSpecification.<strong>;
 
-TestPlanSpecification specification === build(
+TestPlanSpecification specification = build(
     forPackage("com.mycompany.mytests"),
     forClass(MyTestClass.class)
 ).filterWith(classNameMatches("*Test").or(classNameMatches("Test</strong>")));
 
-TestPlan plan === new Launcher().discover(specification);</code></pre>
+TestPlan plan = new Launcher().discover(specification);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -500,13 +500,13 @@ be achieved through a
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestPlanSpecification specification === build(
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestPlanSpecification specification = build(
     forPackage("com.mycompany.mytests"),
     forClass(MyTestClass.class)
 ).filterWith(classNameMatches("<strong>Test").or(classNameMatches("Test</strong>")));
 
-Launcher launcher === new Launcher();
-TestPlanExecutionListener listener === createListener();
+Launcher launcher = new Launcher();
+TestPlanExecutionListener listener = createListener();
 launcher.registerTestPlanExecutionListener(listener);
 
 launcher.execute(specification);</code></pre>
@@ -549,7 +549,7 @@ registers its <code>JUnit5TestEngine</code>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-07 10:39:27 -05:00
+Last updated 2016-01-07 10:56:00 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

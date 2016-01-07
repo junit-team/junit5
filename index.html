@@ -772,7 +772,7 @@ class MyTest {
   void standardAssertions() {
     assertEquals(2, 2);
     assertEquals(4, 4, "The optional assertion message is now the last parameter.");
-    assertTrue(2 === 2, () -&gt; "Assertion messages can be lazily evaluated -- " +
+    assertTrue(2 == 2, () -&gt; "Assertion messages can be lazily evaluated -- " +
                              "to avoid constructing complex messages unnecessarily.");
   }
 
@@ -1661,12 +1661,12 @@ test classes and test methods in the past.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.engine.TestPlanSpecification.<strong>;
 
-TestPlanSpecification specification === build(
+TestPlanSpecification specification = build(
     forPackage("com.mycompany.mytests"),
     forClass(MyTestClass.class)
 ).filterWith(classNameMatches("*Test").or(classNameMatches("Test</strong>")));
 
-TestPlan plan === new Launcher().discover(specification);</code></pre>
+TestPlan plan = new Launcher().discover(specification);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1693,13 +1693,13 @@ be achieved through a
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestPlanSpecification specification === build(
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestPlanSpecification specification = build(
     forPackage("com.mycompany.mytests"),
     forClass(MyTestClass.class)
 ).filterWith(classNameMatches("<strong>Test").or(classNameMatches("Test</strong>")));
 
-Launcher launcher === new Launcher();
-TestPlanExecutionListener listener === createListener();
+Launcher launcher = new Launcher();
+TestPlanExecutionListener listener = createListener();
 launcher.registerTestPlanExecutionListener(listener);
 
 launcher.execute(specification);</code></pre>
