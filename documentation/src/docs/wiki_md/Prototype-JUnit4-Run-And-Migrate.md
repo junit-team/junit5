@@ -1,4 +1,4 @@
-# Migrating from JUnit 4 to JUnit 5
+= Migrating from JUnit 4 to JUnit 5
 
 Although the JUnit 5 programming model and extension model will not support JUnit 4
 features such as `Rules` and `Runners`, it is not expected that source code maintainers
@@ -14,27 +14,25 @@ tests. Furthermore, since the JUnit team will continue to provide maintenance an
 fix releases for the JUnit 4.x baseline, developers have plenty of time to migrate to
 JUnit 5 on their own schedule.
 
-## Running JUnit 4 Tests with JUnit 5
+== Running JUnit 4 Tests with JUnit 5
 
 Just make sure that the `junit4-engine` artifact is in your test runtime path.
 In that case JUnit 4 tests will automatically be picked up by JUnit 5 test runners.
 
-See the example projects in the [junit5-samples] repository to find out how this is
+See the example projects in the https://github.com/junit-team/junit5-samples[junit5-samples] repository to find out how this is
 done with Gradle and Maven.
 
-## Migration Tips
+== Migration Tips
 
 The following are things you have to watch out for when migrating existing
 JUnit 4 tests to JUnit 5.
 
-- Annotations reside in the `org.junit.gen5.api` package.
-- Assertions reside in `org.junit.gen5.api.Assertions`.
-- Assumptions reside in `org.junit.gen5.api.Assumptions`.
-- `@Before` and `@After` no longer exist; use `@BeforeEach` and `@AfterEach` instead.
-- `@BeforeClass` and `@AfterClass` no longer exist; use `@BeforeAll` and `@AfterAll` instead.
-- `@Ignore` no longer exists: use `@Disabled` instead.
-- `@Category` no longer exists; use `@Tag` instead.
-- `@RunWith` no longer exists; superseded by `@ExtendWith`.
-- `@Rule` and `@ClassRule` no longer exist; superseded by `@ExtendWith`.
-
-[junit5-samples]: https://github.com/junit-team/junit5-samples
+* Annotations reside in the `org.junit.gen5.api` package.
+* Assertions reside in `org.junit.gen5.api.Assertions`.
+* Assumptions reside in `org.junit.gen5.api.Assumptions`.
+* `@Before` and `@After` no longer exist; use `@BeforeEach` and `@AfterEach` instead.
+* `@BeforeClass` and `@AfterClass` no longer exist; use `@BeforeAll` and `@AfterAll` instead.
+* `@Ignore` no longer exists: use `@Disabled` instead.
+* `@Category` no longer exists; use `@Tag` instead.
+* `@RunWith` no longer exists; superseded by `@ExtendWith`.
+* `@Rule` and `@ClassRule` no longer exist; superseded by `@ExtendWith`.

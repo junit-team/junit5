@@ -1,31 +1,34 @@
-# Running JUnit 5 Tests
+= Running JUnit 5 Tests
 
-**Table of Contents**
+*Table of Contents*
 
-- [IDE Support](#ide-support)
-- [Build Support](#build-support)
-  - [Gradle](#gradle)
-  - [Maven](#maven)
-- [Console Runner](#console-runner)
-- [Using JUnit4 to Run JUnit5 Tests](#using-junit4-to-run-junit5-tests)
+* link:#ide-support[IDE Support]
+* link:#build-support[Build Support]
+* link:#gradle[Gradle]
+* link:#maven[Maven]
+* link:#console-runner[Console Runner]
+* link:#using-junit4-to-run-junit5-tests[Using JUnit4 to Run JUnit5 Tests]
 
-----
-## IDE Support
+—-
 
-At this stage there is no direct support for running JUnit 5 tests in IDEs. However, we provide two intermediate solutions so that you can go ahead and try out the prototype today. You can use the [`ConsoleRunner`](#console-runner) or execute JUnit 5 tests with a [JUnit 4 style runner](#using-junit4-to-run-junit5-tests).
+== IDE Support
 
-----
-## Build Support
+At this stage there is no direct support for running JUnit 5 tests in IDEs. However, we provide two intermediate solutions so that you can go ahead and try out the prototype today. You can use the link:#console-runner[`ConsoleRunner`] or execute JUnit 5 tests with a link:#using-junit4-to-run-junit5-tests[JUnit 4 style runner].
 
-### Gradle
+—-
 
-The JUnit team has developed a very basic `JUnit5Plugin` that lets you run JUnit 4/5 tests in Gradle builds. See [`build.gradle`](https://github.com/junit-team/junit5-samples/blob/prototype-1/junit5-gradle-consumer/build.gradle) in the [junit5-gradle-consumer] project for an example of the plugin in action.
+== Build Support
 
-#### Enabling the `JUnit5Plugin`
+=== Gradle
+
+The JUnit team has developed a very basic `JUnit5Plugin` that lets you run JUnit 4/5 tests in Gradle builds. See https://github.com/junit-team/junit5-samples/blob/prototype-1/junit5-gradle-consumer/build.gradle[`build.gradle`] in the https://github.com/junit-team/junit5-samples/tree/prototype-1/junit5-gradle-consumer[junit5-gradle-consumer] project for an example of the plugin in action.
+
+==== Enabling the `JUnit5Plugin`
 
 To use the `JUnit5Plugin`, you first need to configure `build.gradle` as follows.
 
-```groovy
+[source,groovy]
+----
 buildscript {
 	repositories {
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
@@ -36,15 +39,16 @@ buildscript {
 }
 
 apply plugin: 'org.junit.gen5.gradle'
-```
+----
 
-#### Configuring the `JUnit5Plugin`
+==== Configuring the `JUnit5Plugin`
 
 Once the `JUnit5Plugin` has been applied, you can configure it as follows.
 
-*Caution:* These options are very likely to change as we continue to work on the prototype.
+_Caution:_ These options are very likely to change as we continue to work on the prototype.
 
-```groovy
+[source,groovy]
+----
 junit5 {
 	version '5.0.0-SNAPSHOT'
 	runJunit4 true
@@ -52,23 +56,24 @@ junit5 {
 	includeTag 'fast'
 }
 
-```
+----
 
 Setting `runJunit4` to `true` instructs the `JUnit5Plugin` to run JUnit 4
 based tests as well. However, you will still need to configure a `testCompile`
 dependency on JUnit 4 in your project similar to the following.
 
-```groovy
+[source,groovy]
+----
 dependencies {
 	testCompile('junit:junit:4.12')
 }
-```
+----
 
 If you supply a _tag_ to the `includeTag` configuration method, the `JUnit5Plugin`
 will only run JUnit 5 based tests that are _tagged_ accordingly via the `@Tag`
 annotation.
 
-#### Using the `JUnit5Plugin`
+==== Using the `JUnit5Plugin`
 
 Once the `JUnit5Plugin` has been applied and configured, you have a new
 `junit5Test` task at your disposal.
@@ -77,10 +82,11 @@ Invoking `gradlew clean junit5Test` (or `gradlew clean check`) from the
 command line will execute all tests within the project whose class names
 match the regular expression supplied via `matchClassName`.
 
-Executing the `junit5Test` task in the [junit5-gradle-consumer] project
+Executing the `junit5Test` task in the https://github.com/junit-team/junit5-samples/tree/prototype-1/junit5-gradle-consumer[junit5-gradle-consumer] project
 results in output similar to the following:
 
-```
+[source]
+----
 :junit5Test
 
 Test run finished after 50 ms
@@ -92,11 +98,12 @@ Test run finished after 50 ms
 [         0 tests failed    ]
 
 BUILD SUCCESSFUL
-```
+----
 
 If a test fails, the build will fail with output similar to the following:
 
-```
+[source]
+----
 :junit5Test
 
 Test failures (1):
@@ -119,27 +126,28 @@ FAILURE: Build failed with an exception.
 * What went wrong:
 Execution failed for task ':junit5Test'.
 > Process 'command '/Library/Java/JavaVirtualMachines/jdk1.8.0_66.jdk/Contents/Home/bin/java'' finished with non-zero exit value 1
-```
+----
 
-**Note**: the _exit value_ corresponds to the number of _tests failed_.
+*Note*: the _exit value_ corresponds to the number of _tests failed_.
 
-#### Current Limitations of the `JUnit5Plugin`
+==== Current Limitations of the `JUnit5Plugin`
 
-- Even though the build will fail if a test fails, the results will not
-  be included in the test report generated by Gradle.
-- With `runJunit4` set to `true`, the `JUnit5Plugin` takes over the
-  responsibility of running JUnit 4 tests, and the `check` Gradle task
-  will no longer depend on the Gradle `test` task. Consequently, the
-  results for JUnit 4 tests will not be included in the test report
-  generated by Gradle.
+* Even though the build will fail if a test fails, the results will not
+ be included in the test report generated by Gradle.
+* With `runJunit4` set to `true`, the `JUnit5Plugin` takes over the
+ responsibility of running JUnit 4 tests, and the `check` Gradle task
+ will no longer depend on the Gradle `test` task. Consequently, the
+ results for JUnit 4 tests will not be included in the test report
+ generated by Gradle.
 
-### Maven
+=== Maven
 
-We have developed a very basic provider for Maven Surefire that lets you run JUnit 4/5 tests through `mvn test`. The [junit5-maven-consumer] demonstrates how to use it and can serve as a starting point.
+We have developed a very basic provider for Maven Surefire that lets you run JUnit 4/5 tests through `mvn test`. The https://github.com/junit-team/junit5-samples/tree/prototype-1/junit5-maven-consumer[junit5-maven-consumer] demonstrates how to use it and can serve as a starting point.
 
-Basic usage in [`pom.xml`](https://github.com/junit-team/junit5-samples/blob/prototype-1/junit5-maven-consumer/pom.xml):
+Basic usage in https://github.com/junit-team/junit5-samples/blob/prototype-1/junit5-maven-consumer/pom.xml[`pom.xml`]:
 
-```xml
+[source,xml]
+----
 	... 
 	<build>
 		<plugins>
@@ -158,16 +166,18 @@ Basic usage in [`pom.xml`](https://github.com/junit-team/junit5-samples/blob/pro
 		</plugins>
 	</build>
 	...
-```
-
 ----
-## Console Runner
+
+—-
+
+== Console Runner
 
 The `ConsoleRunner` is a command-line Java application that lets you run JUnit 4/5 tests and prints out test executions and results to the console.
 
 Here's an example of its output:
 
-```
+[source]
+----
 Test execution started. Number of static tests: 2
 Engine started: junit5
 Test started:     My 1st JUnit 5 test! 😎 [junit5:com.example.project.FirstTest#myFirstTest(java.lang.String)]
@@ -184,13 +194,14 @@ Test run finished after 29 ms
 [         0 tests aborted   ]
 [         1 tests successful]
 [         0 tests failed    ]
-```
+----
 
-### Options
+=== Options
 
-*Caution:* These options are very likely to change as we continue to work on the prototype.
+_Caution:_ These options are very likely to change as we continue to work on the prototype.
 
-```
+[source]
+----
 NAME
         ConsoleRunner - console test runner
 
@@ -236,32 +247,39 @@ OPTIONS
             considered for test scanning, or none if the full classpath shall be
             scanned.
 
-
-```
-
 ----
-## Using JUnit4 to Run JUnit5 Tests
+
+—-
+
+== Using JUnit4 to Run JUnit5 Tests
 
 The `JUnit5` runner lets you run JUnit 5 tests with JUnit 4. This way you can run JUnit 5 tests in IDEs and build tools that only know about JUnit 4. As soon as we add reporting features to JUnit 5 that JUnit 4 does not have, the runner will only be able to support a subset of the JUnit 5 functionality. But for the time being the `JUnit5` runner is an easy way to get started.
 
-### Setup
+=== Setup
 
 You need the following artifacts and their dependencies on the classpath:
 
-- _junit5-api_ (`org.junit.prototype:junit5-api:5.0.0-SNAPSHOT`) in _test_ scope:
-  API for writing tests; includes `@Test` etc.
+* 
 
-- _junit4-launcher-runner_ (`org.junit.prototype:junit4-launcher-runner:5.0.0-SNAPSHOT`) in _test_ scope:
-  Location of the `JUnit5` runner.
+_junit5-api_ (`org.junit.prototype:junit5-api:5.0.0-SNAPSHOT`) in _test_ scope:
+ API for writing tests; includes `@Test` etc.
 
-- _junit5-engine_ (`org.junit.prototype:junit5-engine:5.0.0-SNAPSHOT`) in _testRuntime_ scope:
-  Implementation of the Engine API for JUnit 5.
+* 
 
-### Single Test Class
+_junit4-launcher-runner_ (`org.junit.prototype:junit4-launcher-runner:5.0.0-SNAPSHOT`) in _test_ scope:
+ Location of the `JUnit5` runner.
+
+* 
+
+_junit5-engine_ (`org.junit.prototype:junit5-engine:5.0.0-SNAPSHOT`) in _testRuntime_ scope:
+ Implementation of the Engine API for JUnit 5.
+
+=== Single Test Class
 
 One way to use the `JUnit5` runner is to annotate a JUnit 5 test class with `@RunWith(JUnit5.class)` directly. Please note that the tests are annotated with `org.junit.gen5.api.Test` (JUnit 5), not `org.junit.Test` (JUnit 4). Moreover, in this case the test class must be `public` because; otherwise, the IDEs won't recognize it as a test class.
 
-```java
+[source,java]
+----
 package com.example;
 
 import static org.junit.gen5.api.Assertions.fail;
@@ -284,13 +302,14 @@ public class AJUnit5TestCaseRunWithJUnit4 {
 	}
 
 }
-```
+----
 
-### Multiple Tests
+=== Multiple Tests
 
 If you have multiple JUnit 5 tests you can create a test suite.
 
-```java
+[source,java]
+----
 package com.example;
 
 import org.junit.gen5.junit4runner.JUnit5;
@@ -301,13 +320,10 @@ import org.junit.runner.RunWith;
 @Packages("com.example")
 public class JUnit4SamplesSuite {
 }
-```
+----
 
 This suite will discover and run all tests in the `com.example` package and its subpackages.
 
-There are more options to discover and filter tests besides `@Packages`. Please have a look at the [Javadoc](https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc/org/junit/gen5/junit4runner/package-summary.html) or the [code](https://github.com/junit-team/junit-lambda/blob/prototype-1/junit4-launcher-runner/src/main/java/org/junit/gen5/junit4runner/JUnit5.java).
+There are more options to discover and filter tests besides `@Packages`. Please have a look at the https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc/org/junit/gen5/junit4runner/package-summary.html[Javadoc] or the https://github.com/junit-team/junit-lambda/blob/prototype-1/junit4-launcher-runner/src/main/java/org/junit/gen5/junit4runner/JUnit5.java[code].
 
-----
-
-[junit5-gradle-consumer]: https://github.com/junit-team/junit5-samples/tree/prototype-1/junit5-gradle-consumer
-[junit5-maven-consumer]: https://github.com/junit-team/junit5-samples/tree/prototype-1/junit5-maven-consumer
+'''
