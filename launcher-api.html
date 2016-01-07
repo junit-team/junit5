@@ -423,13 +423,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel2">
-<li><a href="#the-junit5-launcher-api">The JUnit5 Launcher API</a></li>
+<li><a href="#launcher-api">The JUnit5 Launcher API</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div class="sect2">
-<h3 id="the-junit5-launcher-api">The JUnit5 Launcher API</h3>
+<h3 id="launcher-api">The JUnit5 Launcher API</h3>
 <div class="paragraph">
 <p>One of the prominent goals of JUnit 5 is to make the interface between JUnit and its
 programmatic clients – build tools and IDEs – more powerful and stable. The purpose is to
@@ -443,16 +443,11 @@ libraries – like Spock, Cucumber, and FitNesse – to plug into JUnit 5&#8217;
 infrastructure.</p>
 </div>
 <div class="paragraph">
-<p>The launching API is in the
-<a href="https://github.com/junit-team/junit-lambda/tree/master/junit-launcher">junit-launcher</a>
-project.</p>
+<p>The launching API is in the <code>{junit-launcher}</code> module.</p>
 </div>
 <div class="paragraph">
-<p>An example consumer of the launching API is the
-<a href="https://github.com/junit-team/junit-lambda/tree/master/junit-console/src/main/java/org/junit/gen5/console/ConsoleRunner.java">Console Runner</a>
-in the
-<a href="https://github.com/junit-team/junit-lambda/tree/master/junit-console">junit-console</a>
-project.</p>
+<p>An example consumer of the launching API is the <code>{ConsoleRunner}</code> in the
+<code>{junit-console}</code> project.</p>
 </div>
 <div class="sect3">
 <h4 id="discovering-tests">Discovering Tests</h4>
@@ -495,8 +490,7 @@ ID</em> that can be used to invoke a particular test or group of tests.</p>
 <p>There are two ways to execute tests. Clients can either use the same test specification
 object as in the discovery phase, or – to speed things up a bit – pass in the prepared
 <code>TestPlan</code> object from a previous discovery step. Test progress and result reporting can
-be achieved through a
-<a href="https://github.com/junit-team/junit-lambda/tree/master/junit-launcher/src/main/java/org/junit/gen5/launcher/TestPlanExecutionListener.java">TestPlanExecutionListener</a>:</p>
+be achieved through a <code>{TestExecutionListener}</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -515,7 +509,7 @@ launcher.execute(specification);</code></pre>
 <div class="paragraph">
 <p>There&#8217;s currently no result object, but you can easily use a listener to aggregate the
 final results in an object of your own. For an example see the
-<a href="https://github.com/junit-team/junit-lambda/tree/master/junit-console/src/main/java/org/junit/gen5/console/TestSummaryReportingTestListener.java">TestSummaryReportingTestListener</a>.</p>
+<code>{SummaryGeneratingListener}</code>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -526,13 +520,11 @@ final results in an object of your own. For an example see the
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/junit-team/junit-lambda/tree/master/junit5-engine">junit5-engine</a>:
-The core of JUnit 5.</p>
+<p><code>{junit5-engine}</code>: The core of JUnit 5.</p>
 </li>
 <li>
-<p><a href="https://github.com/junit-team/junit-lambda/tree/master/junit4-engine">junit4-engine</a>: A
-thin layer on top of JUnit 4 to allow running "old" tests with the launcher
-infrastructure.</p>
+<p><code>{junit4-engine}</code>: A thin layer on top of JUnit 4 to allow running "old" tests with the
+launcher infrastructure.</p>
 </li>
 </ul>
 </div>
@@ -549,7 +541,7 @@ registers its <code>JUnit5TestEngine</code>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-07 12:02:38 -05:00
+Last updated 2016-01-07 13:41:59 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

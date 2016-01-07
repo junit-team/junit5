@@ -427,6 +427,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#overview">Overview</a></li>
 <li><a href="#registering-extensions">Registering Extensions</a></li>
+<li><a href="#conditional-test-execution">Conditional Test Execution</a></li>
 <li><a href="#test-instance-post-processing">Test Instance Post-processing</a></li>
 <li><a href="#parameter-resolution">Parameter Resolution</a></li>
 <li><a href="#test-lifecycle-callbacks">Test Lifecycle Callbacks</a></li>
@@ -440,18 +441,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="extension-model">Extension Model</h2>
 <div class="sectionbody">
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-The Extension Model chapter needs to be updated regarding the status quo.
-</td>
-</tr>
-</table>
-</div>
 <div class="sect2">
 <h3 id="overview">Overview</h3>
 <div class="paragraph">
@@ -509,39 +498,50 @@ class MyTestsV2 {
 </div>
 </div>
 <div class="sect2">
+<h3 id="conditional-test-execution">Conditional Test Execution</h3>
+<div class="paragraph">
+<p><code>{ContainerExecutionCondition}</code> and <code>{TestExecutionCondition}</code> define the <code>TestExtension</code>
+APIs for programmatic, <em>conditional test execution</em>.</p>
+</div>
+<div class="paragraph">
+<p>A <code>ContainerExecutionCondition</code> is <em>evaluated</em> to determine if all tests in a given
+container (e.g., a test class) should be executed based on the supplied
+<code>ContainerExtensionContext</code>. Similarly, a <code>TestExecutionCondition</code> is <em>evaluated</em> to
+determine if a given test method should be executed based on the supplied
+<code>TestExtensionContext</code>.</p>
+</div>
+<div class="paragraph">
+<p>See the source code of <code>{DisabledCondition}</code> and <code>{Disabled}</code> for concrete examples.</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="test-instance-post-processing">Test Instance Post-processing</h3>
 <div class="paragraph">
-<p><a href="https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension/InstancePostProcessor.java"><code>InstancePostProcessor</code></a>
-defines the API for <code>TestExtensions</code> that wish to <em>post process</em> test instances.</p>
+<p><code>{InstancePostProcessor}</code> defines the API for <code>TestExtensions</code> that wish to <em>post
+process</em> test instances.</p>
 </div>
 <div class="paragraph">
 <p>Common use cases include injecting dependencies into the test instance, invoking custom
 initialization methods on the test instance, etc.</p>
 </div>
 <div class="paragraph">
-<p>For concrete examples, consult the source code for
-<a href="https://github.com/junit-team/junit-lambda/tree/master/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java"><code>MockitoExtension</code></a>
-and
-<a href="https://github.com/sbrannen/spring-test-junit5/blob/prototype-1/src/main/java/org/springframework/test/context/junit5/SpringExtension.java"><code>SpringExtension</code></a>.</p>
+<p>For concrete examples, consult the source code for the <code>{MockitoExtension}</code> and the
+<code>{SpringExtension}</code>.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="parameter-resolution">Parameter Resolution</h3>
 <div class="paragraph">
-<p><a href="https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java"><code>MethodParameterResolver</code></a>
-is a <code>TestExtension</code> strategy for dynamically resolving method parameters at runtime.</p>
+<p><code>{MethodParameterResolver}</code> is a <code>TestExtension</code> strategy for dynamically resolving
+method parameters at runtime.</p>
 </div>
 <div class="paragraph">
 <p>If a <code>@Test</code>, <code>@BeforeEach</code>, <code>@AfterEach</code> , <code>@BeforeAll</code> or <code>@AfterAll</code> method accepts a
 parameter, the parameter must be <em>resolved</em> at runtime by a <code>MethodParameterResolver</code>. A
-<code>MethodParameterResolver</code> can either be built-in (see
-<a href="https://github.com/junit-team/junit-lambda/tree/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java"><code>TestNameParameterResolver</code></a>)
-or registered by the user via <code>@ExtendWith</code>. Generally speaking, parameters may be
-resolved by <em>type</em> or by <em>annotation</em>. For concrete examples, consult the source code for
-<a href="https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java"><code>CustomTypeParameterResolver</code></a>
-and
-<a href="https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java"><code>CustomAnnotationParameterResolver</code></a>,
-respectively.</p>
+<code>MethodParameterResolver</code> can either be built-in (see <code>{TestNameParameterResolver}</code>) or
+registered by the user via <code>@ExtendWith</code>. Generally speaking, parameters may be resolved
+by <em>type</em> or by <em>annotation</em>. For concrete examples, consult the source code for
+<code>{CustomTypeParameterResolver}</code> and <code>{CustomAnnotationParameterResolver}</code>, respectively.</p>
 </div>
 </div>
 <div class="sect2">
@@ -549,8 +549,7 @@ respectively.</p>
 <div class="paragraph">
 <p>The following interfaces define the APIs for extending tests at various points in the
 test execution lifecycle. Consult the Javadoc for each of these in the
-<a href="https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension"><code>org.junit.gen5.api.extension</code></a>
-package.</p>
+<code>{extension-api-package}</code> package.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -570,9 +569,8 @@ package.</p>
 </div>
 <div class="paragraph">
 <p>Note that extension developers may choose to implement any number of these interfaces
-within a single extension. Consult the source code of the
-<a href="https://github.com/sbrannen/spring-test-junit5/blob/prototype-1/src/main/java/org/springframework/test/context/junit5/SpringExtension.java"><code>SpringExtension</code></a>
-for a concrete example.</p>
+within a single extension. Consult the source code of the <code>{SpringExtension}</code> for a
+concrete example.</p>
 </div>
 </div>
 <div class="sect2">
@@ -594,7 +592,7 @@ limited to the following.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-07 12:02:38 -05:00
+Last updated 2016-01-07 13:41:59 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

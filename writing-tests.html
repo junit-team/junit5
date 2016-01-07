@@ -466,9 +466,8 @@ class FirstTestCase {
 <p>JUnit 5 supports the following annotations for configuring tests and extending the framework.</p>
 </div>
 <div class="paragraph">
-<p>All core annotations are located in the
-<a href="https://github.com/junit-team/junit-lambda/tree/prototype-1/junit5-api/src/main/java/org/junit/gen5/api"><code>org.junit.gen5.api</code></a>
-package in the <code>junit5-api</code> module.</p>
+<p>All core annotations are located in the <code>{api-package}</code> package in the <code>junit5-api</code>
+module.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -524,7 +523,7 @@ package in the <code>junit5-api</code> module.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@ExtendWith</code></strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used to register custom extensions for tests such as <code>MethodParameterResolver</code>. See <a href="Prototype-Test-Extensions">the page on test extensions</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to register custom extensions for tests such as <code>MethodParameterResolver</code>. See the page on <a href="#extension-model">test extensions</a>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -537,9 +536,8 @@ meta-annotations.</p>
 </div>
 <div class="paragraph">
 <p>For example, instead of copying and pasting <code>@Tag("fast")</code> throughout your code base (see
-<a href="#tagging-and-filtering">Tagging and Filtering</a>), you can create a custom <em>composed
-annotation</em> named <code>@Fast</code> as follows. <code>@Fast</code> can then be used as a drop-in replacement
-for <code>@Tag("fast")</code>.</p>
+<a href="#tagging-and-filtering">Tagging and Filtering</a>), you can create a custom <em>composed annotation</em> named <code>@Fast</code>
+as follows. <code>@Fast</code> can then be used as a drop-in replacement for <code>@Tag("fast")</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -611,9 +609,7 @@ class CanHaveAnyNameTest {
 <div class="paragraph">
 <p>JUnit 5 comes with many of the assertion methods that JUnit 4 has and adds a few that
 lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions are static
-methods in the
-<a href="https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java"><code>org.junit.gen5.Assertions</code></a>
-class.</p>
+methods in the <code>{Assertions}</code> class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -658,9 +654,7 @@ class MyTest {
 <div class="paragraph">
 <p>JUnit 5 comes with a subset of the assumption methods that JUnit 4 provides and adds a
 few that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assumptions
-are static methods in the
-<a href="https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Assumptions.java"><code>org.junit.gen5.Assumptions</code></a>
-class.</p>
+are static methods in the <code>{Assumptions}</code> class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -741,7 +735,7 @@ class MyTest {
 <h3 id="tagging-and-filtering">Tagging and Filtering</h3>
 <div class="paragraph">
 <p>Test classes and methods can be tagged. Those tags can later be used to filter
-<a href="Prototype-Running-Tests">test discovery and execution</a>:</p>
+<a href="#running-tests">test discovery and execution</a>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -822,11 +816,10 @@ allowing for greater flexibility and enabling method-level <em>Dependency Inject
 <div class="ulist">
 <ul>
 <li>
-<p><code>@TestName</code>: If a method parameter is of type <code>String</code> and annotated with <code>@TestName</code>, the
-<a href="https://github.com/junit-team/junit-lambda/tree/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java"><code>TestNameParameterResolver</code></a>
-will supply the <em>display name</em> of the current test at runtime (either its canonical name
-or its user-provided <code>@Name</code>). This acts as a drop-in replacement for the <code>TestName</code>
-rule from JUnit 4:</p>
+<p><code>@TestName</code>: If a method parameter is of type <code>String</code> and annotated with <code>@TestName</code>,
+the <code>{TestNameParameterResolver}</code> will supply the <em>display name</em> of the current test at
+runtime (either its canonical name or its user-provided <code>@Name</code>). This acts as a
+drop-in replacement for the <code>TestName</code> rule from JUnit 4:</p>
 </li>
 </ul>
 </div>
@@ -854,26 +847,23 @@ class MyTest {
 </div>
 </div>
 <div class="paragraph">
-<p>Other parameter resolvers must be explicitly enabled by registering a
-<a href="Prototype-Test-Extensions">test extension</a> via <code>@ExtendWith</code>.</p>
+<p>Other parameter resolvers must be explicitly enabled by registering a <a href="#extension-model">test extension</a> via <code>@ExtendWith</code>.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p>Check out the <code>methodInjectionTest(&#8230;&#8203;)</code> test method in
 <a href="https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/SampleTestCase.java"><code>SampleTestCase</code></a>
-for an example that uses the built-in <code>TestNameParameterResolver</code> as well as two user-provided resolvers,
-<a href="https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java"><code>CustomTypeParameterResolver</code></a> and
-<a href="https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java"><code>CustomAnnotationParameterResolver</code></a>.</p>
+for an example that uses the built-in <code>TestNameParameterResolver</code> as well as two
+user-provided resolvers, <code>{CustomTypeParameterResolver}</code> and
+<code>{CustomAnnotationParameterResolver}</code>.</p>
 </li>
 <li>
-<p>The
-<a href="https://github.com/junit-team/junit-lambda/tree/master/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java"><code>MockitoExtension</code></a>
-is another example of a <code>MethodParameterResolver</code>. While not intended to be production-ready,
-it demonstrates the simplicity and expressiveness of both the extension model and the parameter
-resolution process. Check out the source code for
-<a href="https://github.com/junit-team/junit-lambda/tree/master/sample-extension/src/test/java/com/example/mockito/MockitoExtensionInBaseClassTest.java"><code>MockitoExtensionInBaseClassTest</code></a>
-for an example of injecting Mockito mocks into <code>@BeforeEach</code> and <code>@Test</code> methods:</p>
+<p>The <code>{MockitoExtension}</code> is another example of a <code>MethodParameterResolver</code>. While not
+intended to be production-ready, it demonstrates the simplicity and expressiveness of
+both the extension model and the parameter resolution process. Check out the source
+code for <code>{master-branch}/sample-extension/src/test/java/com/example/mockito/MockitoExtensionInBaseClassTest.java[MockitoExtensionInBaseClassTest]</code> for an example of injecting Mockito mocks
+into <code>@BeforeEach</code> and <code>@Test</code> methods:</p>
 </li>
 </ul>
 </div>
@@ -906,7 +896,7 @@ class MyMockitoTest {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-07 12:02:38 -05:00
+Last updated 2016-01-07 13:41:59 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
