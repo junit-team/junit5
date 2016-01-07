@@ -432,50 +432,67 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#supported-java-versions">Supported Java Versions</a></li>
-<li><a href="#installation">Installation</a>
+<li><a href="#overview">1. Overview</a>
 <ul class="sectlevel2">
-<li><a href="#dependency-metadata">Dependency Metadata</a></li>
-<li><a href="#junit-5-sample-projects">JUnit 5 Sample Projects</a></li>
-<li><a href="#annotations">Annotations</a></li>
-<li><a href="#standard-test-class">Standard Test Class</a></li>
-<li><a href="#custom-names">Custom Names</a></li>
-<li><a href="#assertions">Assertions</a></li>
-<li><a href="#assumptions">Assumptions</a></li>
-<li><a href="#disabling-tests">Disabling Tests</a></li>
-<li><a href="#tagging-and-filtering">Tagging and Filtering</a></li>
-<li><a href="#nested-tests">Nested Tests</a></li>
-<li><a href="#method-parameters-and-dependency-injection">Method Parameters and Dependency Injection</a></li>
+<li><a href="#supported-java-versions">1.1. Supported Java Versions</a></li>
 </ul>
 </li>
-<li><a href="#running-tests">Running Tests</a>
+<li><a href="#installation">2. Installation</a>
 <ul class="sectlevel2">
-<li><a href="#ide-support">IDE Support</a></li>
-<li><a href="#build-support">Build Support</a></li>
-<li><a href="#console-runner">Console Runner</a></li>
-<li><a href="#using-junit4-to-run-junit5-tests">Using JUnit4 to Run JUnit5 Tests</a></li>
-<li><a href="#overview">Overview</a></li>
-<li><a href="#registering-extensions">Registering Extensions</a></li>
-<li><a href="#test-instance-post-processing">Test Instance Post-processing</a></li>
-<li><a href="#parameter-resolution">Parameter Resolution</a></li>
-<li><a href="#test-lifecycle-callbacks">Test Lifecycle Callbacks</a></li>
-<li><a href="#additional-planned-extension-points">Additional Planned Extension Points</a></li>
-<li><a href="#running-junit-4-tests-with-junit-5">Running JUnit 4 Tests with JUnit 5</a></li>
-<li><a href="#migration-tips">Migration Tips</a></li>
+<li><a href="#dependency-metadata">2.1. Dependency Metadata</a></li>
+<li><a href="#junit-5-sample-projects">2.2. JUnit 5 Sample Projects</a></li>
 </ul>
 </li>
-<li><a href="#advanced-topics">Advanced Topics</a>
+<li><a href="#writing-tests">3. Writing Tests</a>
 <ul class="sectlevel2">
-<li><a href="#the-junit5-launcher-api">The JUnit5 Launcher API</a></li>
-<li><a href="#modules">Modules</a></li>
-<li><a href="#engines">Engines</a></li>
+<li><a href="#annotations">3.1. Annotations</a></li>
+<li><a href="#standard-test-class">3.2. Standard Test Class</a></li>
+<li><a href="#custom-names">3.3. Custom Names</a></li>
+<li><a href="#assertions">3.4. Assertions</a></li>
+<li><a href="#assumptions">3.5. Assumptions</a></li>
+<li><a href="#disabling-tests">3.6. Disabling Tests</a></li>
+<li><a href="#tagging-and-filtering">3.7. Tagging and Filtering</a></li>
+<li><a href="#nested-tests">3.8. Nested Tests</a></li>
+<li><a href="#method-parameters-and-dependency-injection">3.9. Method Parameters and Dependency Injection</a></li>
+</ul>
+</li>
+<li><a href="#running-tests">4. Running Tests</a>
+<ul class="sectlevel2">
+<li><a href="#ide-support">4.1. IDE Support</a></li>
+<li><a href="#build-support">4.2. Build Support</a></li>
+<li><a href="#console-runner">4.3. Console Runner</a></li>
+<li><a href="#using-junit4-to-run-junit5-tests">4.4. Using JUnit4 to Run JUnit5 Tests</a></li>
+</ul>
+</li>
+<li><a href="#extension-model">5. Extension Model</a>
+<ul class="sectlevel2">
+<li><a href="#overview-2">5.1. Overview</a></li>
+<li><a href="#registering-extensions">5.2. Registering Extensions</a></li>
+<li><a href="#test-instance-post-processing">5.3. Test Instance Post-processing</a></li>
+<li><a href="#parameter-resolution">5.4. Parameter Resolution</a></li>
+<li><a href="#test-lifecycle-callbacks">5.5. Test Lifecycle Callbacks</a></li>
+<li><a href="#additional-planned-extension-points">5.6. Additional Planned Extension Points</a></li>
+</ul>
+</li>
+<li><a href="#migrating-from-junit-4">6. Migrating from JUnit 4</a>
+<ul class="sectlevel2">
+<li><a href="#running-junit-4-tests-with-junit-5">6.1. Running JUnit 4 Tests with JUnit 5</a></li>
+<li><a href="#migration-tips">6.2. Migration Tips</a></li>
+</ul>
+</li>
+<li><a href="#advanced-topics">7. Advanced Topics</a>
+<ul class="sectlevel2">
+<li><a href="#the-junit5-launcher-api">7.1. The JUnit5 Launcher API</a></li>
+<li><a href="#modules">7.2. Modules</a></li>
+<li><a href="#engines">7.3. Engines</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="overview">1. Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The goal of this document is to provide comprehensive reference documentation for both
@@ -493,26 +510,24 @@ Work in progress!
 </tr>
 </table>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="supported-java-versions">Supported Java Versions</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="supported-java-versions">1.1. Supported Java Versions</h3>
 <div class="paragraph">
 <p>JUnit 5 only supports Java 8 and above. However, you can still test classes compiled with
 lower versions.</p>
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="installation">Installation</h2>
+<h2 id="installation">2. Installation</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Snapshot artifacts are deployed to Sonatype&#8217;s
 <a href="https://oss.sonatype.org/content/repositories/snapshots">snapshots repository</a>.</p>
 </div>
 <div class="sect2">
-<h3 id="dependency-metadata">Dependency Metadata</h3>
+<h3 id="dependency-metadata">2.1. Dependency Metadata</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -566,7 +581,7 @@ lower versions.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="junit-5-sample-projects">JUnit 5 Sample Projects</h3>
+<h3 id="junit-5-sample-projects">2.2. JUnit 5 Sample Projects</h3>
 <div class="paragraph">
 <p>You can find a collection of sample projects based on the JUnit 5 prototype in the
 <a href="https://github.com/junit-team/junit5-samples">junit5-samples</a> repository. You&#8217;ll find the
@@ -581,12 +596,17 @@ project.</p>
 </li>
 <li>
 <p>For Maven, check out the
-  <a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer">junit5-maven-consumer</a>
-  project.
-== Writing Tests</p>
+<a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer">junit5-maven-consumer</a>
+project.</p>
 </li>
 </ul>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="writing-tests">3. Writing Tests</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="title">A first test case</div>
 <div class="content">
@@ -604,9 +624,8 @@ class FirstTestCase {
 }</code></pre>
 </div>
 </div>
-</div>
 <div class="sect2">
-<h3 id="annotations">Annotations</h3>
+<h3 id="annotations">3.1. Annotations</h3>
 <div class="paragraph">
 <p>JUnit 5 supports the following annotations for configuring tests and extending the framework.</p>
 </div>
@@ -674,7 +693,7 @@ package in the <code>junit5-api</code> module.</p>
 </tbody>
 </table>
 <div class="sect3">
-<h4 id="meta-annotations-and-composed-annotations">Meta-Annotations and Composed Annotations</h4>
+<h4 id="meta-annotations-and-composed-annotations">3.1.1. Meta-Annotations and Composed Annotations</h4>
 <div class="paragraph">
 <p>JUnit 5 annotations can be used as <em>meta-annotations</em>. That means that you can define
 your own <em>composed annotation</em> that will automatically <em>inherit</em> the semantics of its
@@ -700,7 +719,7 @@ public @interface Fast {
 </div>
 </div>
 <div class="sect2">
-<h3 id="standard-test-class">Standard Test Class</h3>
+<h3 id="standard-test-class">3.2. Standard Test Class</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.*;
@@ -731,7 +750,7 @@ and <code>@AfterAll</code> must be static methods.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="custom-names">Custom Names</h3>
+<h3 id="custom-names">3.3. Custom Names</h3>
 <div class="paragraph">
 <p>Test classes and test methods can declare a custom name&#8201;&#8212;&#8201;with spaces, special
 characters, and even emojis&#8201;&#8212;&#8201;that will be displayed by test runners and test reporting:</p>
@@ -752,7 +771,7 @@ class CanHaveAnyNameTest {
 </div>
 </div>
 <div class="sect2">
-<h3 id="assertions">Assertions</h3>
+<h3 id="assertions">3.4. Assertions</h3>
 <div class="paragraph">
 <p>JUnit 5 comes with many of the assertion methods that JUnit 4 has and adds a few that
 lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions are static
@@ -799,7 +818,7 @@ class MyTest {
 </div>
 </div>
 <div class="sect2">
-<h3 id="assumptions">Assumptions</h3>
+<h3 id="assumptions">3.5. Assumptions</h3>
 <div class="paragraph">
 <p>JUnit 5 comes with a subset of the assumption methods that JUnit 4 provides and adds a
 few that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assumptions
@@ -845,7 +864,7 @@ class MyTest {
 </div>
 </div>
 <div class="sect2">
-<h3 id="disabling-tests">Disabling Tests</h3>
+<h3 id="disabling-tests">3.6. Disabling Tests</h3>
 <div class="paragraph">
 <p>Here&#8217;s a disabled test case:</p>
 </div>
@@ -883,7 +902,7 @@ class MyTest {
 </div>
 </div>
 <div class="sect2">
-<h3 id="tagging-and-filtering">Tagging and Filtering</h3>
+<h3 id="tagging-and-filtering">3.7. Tagging and Filtering</h3>
 <div class="paragraph">
 <p>Test classes and methods can be tagged. Those tags can later be used to filter
 <a href="Prototype-Running-Tests">test discovery and execution</a>:</p>
@@ -905,7 +924,7 @@ class FastModelTests {
 </div>
 </div>
 <div class="sect2">
-<h3 id="nested-tests">Nested Tests</h3>
+<h3 id="nested-tests">3.8. Nested Tests</h3>
 <div class="paragraph">
 <p>Nested tests give the test writer more capabilities to express the relationship among
 several group of tests. Here&#8217;s a somewhat contrived example:</p>
@@ -954,7 +973,7 @@ class family.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="method-parameters-and-dependency-injection">Method Parameters and Dependency Injection</h3>
+<h3 id="method-parameters-and-dependency-injection">3.9. Method Parameters and Dependency Injection</h3>
 <div class="paragraph">
 <p>In all prior JUnit versions, <code>@Test</code>, <code>@BeforeEach</code>, and <code>@AfterEach</code> methods were not
 allowed to have parameters (at least not with the standard <code>Runner</code> implementations). As
@@ -1049,10 +1068,10 @@ void simpleTestWithInjectedMock(@InjectMock MyType myType) {
 </div>
 </div>
 <div class="sect1">
-<h2 id="running-tests">Running Tests</h2>
+<h2 id="running-tests">4. Running Tests</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="ide-support">IDE Support</h3>
+<h3 id="ide-support">4.1. IDE Support</h3>
 <div class="paragraph">
 <p>At this stage there is no direct support for running JUnit 5 tests in IDEs. However, we
 provide two intermediate solutions so that you can go ahead and try out the current
@@ -1061,9 +1080,9 @@ tests with a <a href="#using-junit4-to-run-junit5-tests">JUnit 4 style runner</a
 </div>
 </div>
 <div class="sect2">
-<h3 id="build-support">Build Support</h3>
+<h3 id="build-support">4.2. Build Support</h3>
 <div class="sect3">
-<h4 id="gradle">Gradle</h4>
+<h4 id="gradle">4.2.1. Gradle</h4>
 <div class="paragraph">
 <p>The JUnit team has developed a very basic <code>JUnit5Plugin</code> that lets you run JUnit 4 and
 JUnit 5 tests in Gradle builds. See
@@ -1210,7 +1229,7 @@ test report generated by Gradle.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="maven">Maven</h4>
+<h4 id="maven">4.2.2. Maven</h4>
 <div class="paragraph">
 <p>The JUnit team has developed a very basic provider for Maven Surefire that lets you run
 JUnit 4/5 tests through <code>mvn test</code>. The
@@ -1245,7 +1264,7 @@ demonstrates how to use it and can serve as a starting point.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="console-runner">Console Runner</h3>
+<h3 id="console-runner">4.3. Console Runner</h3>
 <div class="paragraph">
 <p>The <code>ConsoleRunner</code> is a command-line Java application that lets you run JUnit 4/5 tests
 and prints out test executions and results to the console.</p>
@@ -1274,7 +1293,7 @@ Test run finished after 29 ms
 </div>
 </div>
 <div class="sect3">
-<h4 id="options">Options</h4>
+<h4 id="options">4.3.1. Options</h4>
 <div class="paragraph">
 <p><em>Caution:</em> These options are very likely to change as we continue to work towards the
 final release.</p>
@@ -1304,7 +1323,7 @@ final release.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="using-junit4-to-run-junit5-tests">Using JUnit4 to Run JUnit5 Tests</h3>
+<h3 id="using-junit4-to-run-junit5-tests">4.4. Using JUnit4 to Run JUnit5 Tests</h3>
 <div class="paragraph">
 <p>The <code>JUnit5</code> runner lets you run JUnit 5 tests with JUnit 4. This way you can run JUnit 5
 tests in IDEs and build tools that only know about JUnit 4. As soon as we add reporting
@@ -1313,7 +1332,7 @@ subset of the JUnit 5 functionality. But for the time being the <code>JUnit5</co
 easy way to get started.</p>
 </div>
 <div class="sect3">
-<h4 id="setup">Setup</h4>
+<h4 id="setup">4.4.1. Setup</h4>
 <div class="paragraph">
 <p>You need the following artifacts and their dependencies on the classpath:</p>
 </div>
@@ -1335,7 +1354,7 @@ Implementation of the Engine API for JUnit 5.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="single-test-class">Single Test Class</h4>
+<h4 id="single-test-class">4.4.2. Single Test Class</h4>
 <div class="paragraph">
 <p>One way to use the <code>JUnit5</code> runner is to annotate a JUnit 5 test class with
 <code>@RunWith(JUnit5.class)</code> directly. Please note that the tests are annotated with
@@ -1371,7 +1390,7 @@ public class AJUnit5TestCaseRunWithJUnit4 {
 </div>
 </div>
 <div class="sect3">
-<h4 id="multiple-tests">Multiple Tests</h4>
+<h4 id="multiple-tests">4.4.3. Multiple Tests</h4>
 <div class="paragraph">
 <p>If you have multiple JUnit 5 tests you can create a test suite.</p>
 </div>
@@ -1395,9 +1414,15 @@ public class JUnit4SamplesSuite {
 <div class="paragraph">
 <p>There are more options to discover and filter tests besides <code>@Packages</code>. Please have a look at the
 <a href="https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc/org/junit/gen5/junit4runner/package-summary.html">Javadoc</a> or the
-<a href="https://github.com/junit-team/junit-lambda/tree/master/junit4-launcher-runner/src/main/java/org/junit/gen5/junit4runner/JUnit5.java">code</a>.
-== Writing Extensions</p>
+<a href="https://github.com/junit-team/junit-lambda/tree/master/junit4-launcher-runner/src/main/java/org/junit/gen5/junit4runner/JUnit5.java">code</a>.</p>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="extension-model">5. Extension Model</h2>
+<div class="sectionbody">
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -1405,15 +1430,13 @@ public class JUnit4SamplesSuite {
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-needs major overhaul
+The Extension Model chapter needs to be updated regarding the status quo.
 </td>
 </tr>
 </table>
 </div>
-</div>
-</div>
 <div class="sect2">
-<h3 id="overview">Overview</h3>
+<h3 id="overview-2">5.1. Overview</h3>
 <div class="paragraph">
 <p>In contrast to the competing <code>Runner</code>, <code>@Rule</code>, and <code>@ClassRule</code> extension points in
 JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
@@ -1422,7 +1445,7 @@ interface.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="registering-extensions">Registering Extensions</h3>
+<h3 id="registering-extensions">5.2. Registering Extensions</h3>
 <div class="paragraph">
 <p>Developers can register one or more extensions by annotating a test class or test method
 with <code>@ExtendWith(&#8230;&#8203;)</code>, supplying class references for the extensions to register. For
@@ -1469,7 +1492,7 @@ class MyTestsV2 {
 </div>
 </div>
 <div class="sect2">
-<h3 id="test-instance-post-processing">Test Instance Post-processing</h3>
+<h3 id="test-instance-post-processing">5.3. Test Instance Post-processing</h3>
 <div class="paragraph">
 <p><a href="https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension/InstancePostProcessor.java"><code>InstancePostProcessor</code></a>
 defines the API for <code>TestExtensions</code> that wish to <em>post process</em> test instances.</p>
@@ -1486,7 +1509,7 @@ and
 </div>
 </div>
 <div class="sect2">
-<h3 id="parameter-resolution">Parameter Resolution</h3>
+<h3 id="parameter-resolution">5.4. Parameter Resolution</h3>
 <div class="paragraph">
 <p><a href="https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java"><code>MethodParameterResolver</code></a>
 is a <code>TestExtension</code> strategy for dynamically resolving method parameters at runtime.</p>
@@ -1505,7 +1528,7 @@ respectively.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="test-lifecycle-callbacks">Test Lifecycle Callbacks</h3>
+<h3 id="test-lifecycle-callbacks">5.5. Test Lifecycle Callbacks</h3>
 <div class="paragraph">
 <p>The following interfaces define the APIs for extending tests at various points in the
 test execution lifecycle. Consult the Javadoc for each of these in the
@@ -1536,7 +1559,7 @@ for a concrete example.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="additional-planned-extension-points">Additional Planned Extension Points</h3>
+<h3 id="additional-planned-extension-points">5.6. Additional Planned Extension Points</h3>
 <div class="paragraph">
 <p>The JUnit Lambda team is planning several additional extension points, including but not
 limited to the following.</p>
@@ -1544,11 +1567,16 @@ limited to the following.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Dynamic test registration – for example, for computing parameterized tests at runtime
-== Migrating from JUnit 4</p>
+<p>Dynamic test registration – for example, for computing parameterized tests at runtime</p>
 </li>
 </ul>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="migrating-from-junit-4">6. Migrating from JUnit 4</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Although the JUnit 5 programming model and extension model will not support JUnit 4
 features such as <code>Rules</code> and <code>Runners</code>, it is not expected that source code maintainers
@@ -1565,9 +1593,8 @@ tests. Furthermore, since the JUnit team will continue to provide maintenance an
 releases for the JUnit 4.x baseline, developers have plenty of time to migrate to JUnit 5
 on their own schedule.</p>
 </div>
-</div>
 <div class="sect2">
-<h3 id="running-junit-4-tests-with-junit-5">Running JUnit 4 Tests with JUnit 5</h3>
+<h3 id="running-junit-4-tests-with-junit-5">6.1. Running JUnit 4 Tests with JUnit 5</h3>
 <div class="paragraph">
 <p>Just make sure that the <code>junit4-engine</code> artifact is in your test runtime path. In that
 case JUnit 4 tests will automatically be picked up by JUnit 5 test runners.</p>
@@ -1579,7 +1606,7 @@ this is done with Gradle and Maven.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="migration-tips">Migration Tips</h3>
+<h3 id="migration-tips">6.2. Migration Tips</h3>
 <div class="paragraph">
 <p>The following are things you have to watch out for when migrating existing JUnit 4 tests
 to JUnit 5.</p>
@@ -1619,10 +1646,10 @@ to JUnit 5.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="advanced-topics">Advanced Topics</h2>
+<h2 id="advanced-topics">7. Advanced Topics</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="the-junit5-launcher-api">The JUnit5 Launcher API</h3>
+<h3 id="the-junit5-launcher-api">7.1. The JUnit5 Launcher API</h3>
 <div class="paragraph">
 <p>One of the prominent goals of JUnit 5 is to make the interface between JUnit and its
 programmatic clients – build tools and IDEs – more powerful and stable. The purpose is to
@@ -1648,7 +1675,7 @@ in the
 project.</p>
 </div>
 <div class="sect3">
-<h4 id="discovering-tests">Discovering Tests</h4>
+<h4 id="discovering-tests">7.1.1. Discovering Tests</h4>
 <div class="paragraph">
 <p>Introducing <em>test discovery</em> as a dedicated feature of JUnit itself will (hopefully) free
 IDEs and build tools from most of the difficulties they had to go through to identify
@@ -1683,7 +1710,7 @@ ID</em> that can be used to invoke a particular test or group of tests.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-2">Running Tests</h4>
+<h4 id="running-tests-2">7.1.2. Running Tests</h4>
 <div class="paragraph">
 <p>There are two ways to execute tests. Clients can either use the same test specification
 object as in the discovery phase, or – to speed things up a bit – pass in the prepared
@@ -1712,7 +1739,7 @@ final results in an object of your own. For an example see the
 </div>
 </div>
 <div class="sect3">
-<h4 id="plugging-in-your-own-test-engine">Plugging in Your Own Test Engine</h4>
+<h4 id="plugging-in-your-own-test-engine">7.1.3. Plugging in Your Own Test Engine</h4>
 <div class="paragraph">
 <p>The current snapshot provides two <code>TestEngine</code> implementations out of the box:</p>
 </div>
@@ -1740,11 +1767,11 @@ registers its <code>JUnit5TestEngine</code>
 </div>
 </div>
 <div class="sect2">
-<h3 id="modules">Modules</h3>
+<h3 id="modules">7.2. Modules</h3>
 
 </div>
 <div class="sect2">
-<h3 id="engines">Engines</h3>
+<h3 id="engines">7.3. Engines</h3>
 
 </div>
 </div>
@@ -1752,7 +1779,7 @@ registers its <code>JUnit5TestEngine</code>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-07 10:39:27 -05:00
+Last updated 2016-01-07 11:17:50 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
