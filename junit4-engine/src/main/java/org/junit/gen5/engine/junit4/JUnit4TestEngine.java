@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit4;
 
-import static org.junit.gen5.engine.TestExecutionResult.*;
+import static org.junit.gen5.engine.TestExecutionResult.successful;
 
 import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.EngineDescriptor;
@@ -21,9 +21,7 @@ import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.gen5.engine.junit4.discovery.JUnit4TestPlanSpecificationResolver;
-import org.junit.gen5.engine.junit4.execution.RunListenerAdapter;
-import org.junit.gen5.engine.junit4.execution.TestRun;
-import org.junit.runner.JUnitCore;
+import org.junit.gen5.engine.junit4.execution.RunnerExecutor;
 
 public class JUnit4TestEngine implements TestEngine {
 
@@ -49,28 +47,13 @@ public class JUnit4TestEngine implements TestEngine {
 	}
 
 	private void executeAllChildren(ExecutionRequest request) {
+		RunnerExecutor runnerExecutor = new RunnerExecutor(request.getEngineExecutionListener());
 		// @formatter:off
 		request.getRootTestDescriptor()
 			.getChildren()
 			.stream()
 			.map(RunnerTestDescriptor.class::cast)
-			.forEach(runnerTestDescriptor -> executeSingleRunner(runnerTestDescriptor, request.getEngineExecutionListener()));
+			.forEach(runnerExecutor::execute);
 		// @formatter:on
-	}
-
-	private void executeSingleRunner(RunnerTestDescriptor runnerTestDescriptor,
-			EngineExecutionListener engineExecutionListener) {
-		TestRun testRun = new TestRun(runnerTestDescriptor);
-		JUnitCore core = new JUnitCore();
-		core.addListener(new RunListenerAdapter(testRun, engineExecutionListener));
-		try {
-			core.run(runnerTestDescriptor.getRunner());
-		}
-		catch (Throwable t) {
-			if (testRun.isNotStarted(runnerTestDescriptor)) {
-				engineExecutionListener.executionStarted(runnerTestDescriptor);
-			}
-			engineExecutionListener.executionFinished(runnerTestDescriptor, failed(t));
-		}
 	}
 }
