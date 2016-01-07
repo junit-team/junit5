@@ -22,7 +22,7 @@ project for an example of the plugin in action.
 To use the `JUnit5Plugin`, you first need to configure `build.gradle` as follows.
 
 [source,groovy,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 buildscript {
 	repositories {
@@ -44,7 +44,7 @@ _Caution:_ These options are very likely to change as we continue to work toward
 final release.
 
 [source,groovy,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 junit5 {
 	version '5.0.0-SNAPSHOT'
@@ -60,7 +60,7 @@ well. However, you will still need to configure a `testCompile` dependency on JU
 your project similar to the following.
 
 [source,groovy,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 dependencies {
 	testCompile('junit:junit:4.12')
@@ -147,7 +147,7 @@ demonstrates how to use it and can serve as a starting point.
 Basic usage in https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer/pom.xml[`pom.xml`]:
 
 [source,xml,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 	...
 	<build>
@@ -251,7 +251,7 @@ case the test class must be `public` because; otherwise, the IDEs won't recogniz
 test class.
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 package com.example;
 
@@ -282,7 +282,7 @@ public class AJUnit5TestCaseRunWithJUnit4 {
 If you have multiple JUnit 5 tests you can create a test suite.
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 package com.example;
 

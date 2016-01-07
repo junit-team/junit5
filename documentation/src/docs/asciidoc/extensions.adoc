@@ -20,7 +20,7 @@ example, to register a custom `MockitoExtension`, you would annotate your test c
 follows.
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 @ExtendWith(MockitoExtension.class)
 class MockTests {
@@ -31,7 +31,7 @@ class MockTests {
 Multiple extensions can be registered together like this:
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 @ExtendWith({ FooExtension.class, BarExtension.class })
 class MyTestsV1 {
@@ -42,7 +42,7 @@ class MyTestsV1 {
 As an alternative, multiple extensions can be registered separately like this:
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 @ExtendWith(FooExtension.class)
 @ExtendWith(BarExtension.class)

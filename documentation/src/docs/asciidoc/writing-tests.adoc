@@ -3,7 +3,7 @@
 
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 .A first test case
 ----
 include::{testDir}/example/FirstTestCase.java[tags=complete]
@@ -46,7 +46,7 @@ annotation_ named `@Fast` as follows. `@Fast` can then be used as a drop-in repl
 for `@Tag("fast")`.
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 import org.junit.gen5.api.*;
 
@@ -62,7 +62,7 @@ public @interface Fast {
 === Standard Test Class
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 import org.junit.gen5.api.*;
 
@@ -97,7 +97,7 @@ Test classes and test methods can declare a custom name -- with spaces, special
 characters, and even emojis -- that will be displayed by test runners and test reporting:
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 import org.junit.gen5.api.*;
 
@@ -122,7 +122,7 @@ https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/
 class.
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 import static org.junit.gen5.api.Assertions.*;
 
@@ -170,7 +170,7 @@ https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/
 class.
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.api.Assumptions.*;
@@ -213,7 +213,7 @@ class MyTest {
 Here's a disabled test case:
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 import org.junit.gen5.api.*;
 
@@ -229,7 +229,7 @@ class MyTest {
 And here's a test case with a disabled test method:
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 import org.junit.gen5.api.*;
 
@@ -253,7 +253,7 @@ Test classes and methods can be tagged. Those tags can later be used to filter
 link:Prototype-Running-Tests[test discovery and execution]:
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 import org.junit.gen5.api.*;
 
@@ -276,7 +276,7 @@ Nested tests give the test writer more capabilities to express the relationship 
 several group of tests. Here's a somewhat contrived example:
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 import org.junit.gen5.api.*;
 
@@ -334,25 +334,25 @@ There is currently one built-in resolver that need not be explicitly enabled:
   rule from JUnit 4:
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 import org.junit.gen5.api.*;
 
 class MyTest {
 
-@BeforeEach
-void init(@TestName name) {
-  assertTrue(name.equals("TEST 1") || name.equals("test2"));
-}
+    @BeforeEach
+    void init(@TestName name) {
+        assertTrue(name.equals("TEST 1") || name.equals("test2"));
+    }
 
-@Test
-@Name("TEST 1")
-void test1(@TestName name) {
-  assertEquals("TEST 1", name);
-}
+    @Test
+    @Name("TEST 1")
+    void test1(@TestName name) {
+        assertEquals("TEST 1", name);
+    }
 
-@Test
-void test2() {}
+    @Test
+    void test2() {}
 
 }
 ----
@@ -377,7 +377,7 @@ link:Prototype-Test-Extensions[test extension] via `@ExtendWith`.
 
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 import org.junit.gen5.api.*;
 
@@ -387,15 +387,15 @@ import com.example.mockito.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class MyMockitoTest {
 
-@BeforeEach
-void init(@InjectMock MyType myType) {
-  when(myType.getName()).thenReturn("hello");
-}
+    @BeforeEach
+    void init(@InjectMock MyType myType) {
+        when(myType.getName()).thenReturn("hello");
+    }
 
-@Test
-void simpleTestWithInjectedMock(@InjectMock MyType myType) {
-  assertEquals("hello", myType.getName());
-}
+    @Test
+    void simpleTestWithInjectedMock(@InjectMock MyType myType) {
+        assertEquals("hello", myType.getName());
+    }
 
 }
 ----

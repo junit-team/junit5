@@ -30,7 +30,7 @@ test classes and test methods in the past.
 Usage Example:
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
@@ -61,7 +61,7 @@ be achieved through a
 https://github.com/junit-team/junit-lambda/tree/master/junit-launcher/src/main/java/org/junit/gen5/launcher/TestPlanExecutionListener.java[TestPlanExecutionListener]:
 
 [source,java,indent=0]
-[subs="verbatim,quotes"]
+[subs="verbatim"]
 ----
 TestPlanSpecification specification = build(
     forPackage("com.mycompany.mytests"),
