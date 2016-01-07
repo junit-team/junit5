@@ -441,8 +441,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="ide-support">IDE Support</h3>
 <div class="paragraph">
-<p>At this stage there is no direct support for running JUnit 5 tests in IDEs. However, we provide two intermediate solutions so that you can go ahead and try out the current snapshot today.
-You can use the <a href="#console-runner"><code>ConsoleRunner</code></a> or execute JUnit 5 tests with a <a href="#using-junit4-to-run-junit5-tests">JUnit 4 style runner</a>.</p>
+<p>At this stage there is no direct support for running JUnit 5 tests in IDEs. However, we
+provide two intermediate solutions so that you can go ahead and try out the current
+snapshot today. You can use the <a href="#console-runner"><code>ConsoleRunner</code></a> or execute JUnit 5
+tests with a <a href="#using-junit4-to-run-junit5-tests">JUnit 4 style runner</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -450,7 +452,11 @@ You can use the <a href="#console-runner"><code>ConsoleRunner</code></a> or exec
 <div class="sect3">
 <h4 id="gradle">Gradle</h4>
 <div class="paragraph">
-<p>The JUnit team has developed a very basic <code>JUnit5Plugin</code> that lets you run JUnit 4/5 tests in Gradle builds. See <a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer/build.gradle"><code>build.gradle</code></a> in the <a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a> project for an example of the plugin in action.</p>
+<p>The JUnit team has developed a very basic <code>JUnit5Plugin</code> that lets you run JUnit 4 and
+JUnit 5 tests in Gradle builds. See
+<a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer/build.gradle"><code>build.gradle</code></a> in the
+<a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a>
+project for an example of the plugin in action.</p>
 </div>
 <div class="sect4">
 <h5 id="enabling-the-code-junit5plugin-code">Enabling the <code>JUnit5Plugin</code></h5>
@@ -478,7 +484,8 @@ apply plugin: 'org.junit.gen5.gradle'</code></pre>
 <p>Once the <code>JUnit5Plugin</code> has been applied, you can configure it as follows.</p>
 </div>
 <div class="paragraph">
-<p><em>Caution:</em> These options are very likely to change as we continue to work towards the final release.</p>
+<p><em>Caution:</em> These options are very likely to change as we continue to work towards the
+final release.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -491,9 +498,9 @@ apply plugin: 'org.junit.gen5.gradle'</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Setting <code>runJunit4</code> to <code>true</code> instructs the <code>JUnit5Plugin</code> to run JUnit 4
-based tests as well. However, you will still need to configure a <code>testCompile</code>
-dependency on JUnit 4 in your project similar to the following.</p>
+<p>Setting <code>runJunit4</code> to <code>true</code> instructs the <code>JUnit5Plugin</code> to run JUnit 4 based tests as
+well. However, you will still need to configure a <code>testCompile</code> dependency on JUnit 4 in
+your project similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -503,25 +510,25 @@ dependency on JUnit 4 in your project similar to the following.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>If you supply a <em>tag</em> to the <code>includeTag</code> configuration method, the <code>JUnit5Plugin</code>
-will only run JUnit 5 based tests that are <em>tagged</em> accordingly via the <code>@Tag</code>
-annotation.</p>
+<p>If you supply a <em>tag</em> to the <code>includeTag</code> configuration method, the <code>JUnit5Plugin</code> will
+only run JUnit 5 based tests that are <em>tagged</em> accordingly via the <code>@Tag</code> annotation.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="using-the-code-junit5plugin-code">Using the <code>JUnit5Plugin</code></h5>
 <div class="paragraph">
-<p>Once the <code>JUnit5Plugin</code> has been applied and configured, you have a new
-<code>junit5Test</code> task at your disposal.</p>
+<p>Once the <code>JUnit5Plugin</code> has been applied and configured, you have a new <code>junit5Test</code> task
+at your disposal.</p>
 </div>
 <div class="paragraph">
-<p>Invoking <code>gradlew clean junit5Test</code> (or <code>gradlew clean check</code>) from the
-command line will execute all tests within the project whose class names
-match the regular expression supplied via <code>matchClassName</code>.</p>
+<p>Invoking <code>gradlew clean junit5Test</code> (or <code>gradlew clean check</code>) from the command line will
+execute all tests within the project whose class names match the regular expression
+supplied via <code>matchClassName</code>.</p>
 </div>
 <div class="paragraph">
-<p>Executing the <code>junit5Test</code> task in the <a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a> project
-results in output similar to the following:</p>
+<p>Executing the <code>junit5Test</code> task in the
+<a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a>
+project results in output similar to the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -576,15 +583,14 @@ Execution failed for task ':junit5Test'.
 <div class="ulist">
 <ul>
 <li>
-<p>Even though the build will fail if a test fails, the results will not
-be included in the test report generated by Gradle.</p>
+<p>Even though the build will fail if a test fails, the results will not be included in
+the test report generated by Gradle.</p>
 </li>
 <li>
-<p>With <code>runJunit4</code> set to <code>true</code>, the <code>JUnit5Plugin</code> takes over the
-responsibility of running JUnit 4 tests, and the <code>check</code> Gradle task
-will no longer depend on the Gradle <code>test</code> task. Consequently, the
-results for JUnit 4 tests will not be included in the test report
-generated by Gradle.</p>
+<p>With <code>runJunit4</code> set to <code>true</code>, the <code>JUnit5Plugin</code> takes over the responsibility of
+running JUnit 4 tests, and the <code>check</code> Gradle task will no longer depend on the Gradle
+<code>test</code> task. Consequently, the results for JUnit 4 tests will not be included in the
+test report generated by Gradle.</p>
 </li>
 </ul>
 </div>
@@ -593,7 +599,10 @@ generated by Gradle.</p>
 <div class="sect3">
 <h4 id="maven">Maven</h4>
 <div class="paragraph">
-<p>We have developed a very basic provider for Maven Surefire that lets you run JUnit 4/5 tests through <code>mvn test</code>. The <a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer">junit5-maven-consumer</a> demonstrates how to use it and can serve as a starting point.</p>
+<p>The JUnit team has developed a very basic provider for Maven Surefire that lets you run
+JUnit 4/5 tests through <code>mvn test</code>. The
+<a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer">junit5-maven-consumer</a>
+demonstrates how to use it and can serve as a starting point.</p>
 </div>
 <div class="paragraph">
 <p>Basic usage in <a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer/pom.xml"><code>pom.xml</code></a>:</p>
@@ -625,7 +634,8 @@ generated by Gradle.</p>
 <div class="sect2">
 <h3 id="console-runner">Console Runner</h3>
 <div class="paragraph">
-<p>The <code>ConsoleRunner</code> is a command-line Java application that lets you run JUnit 4/5 tests and prints out test executions and results to the console.</p>
+<p>The <code>ConsoleRunner</code> is a command-line Java application that lets you run JUnit 4/5 tests
+and prints out test executions and results to the console.</p>
 </div>
 <div class="paragraph">
 <p>Here&#8217;s an example of its output:</p>
@@ -653,7 +663,8 @@ Test run finished after 29 ms
 <div class="sect3">
 <h4 id="options">Options</h4>
 <div class="paragraph">
-<p><em>Caution:</em> These options are very likely to change as we continue to work towards the final release.</p>
+<p><em>Caution:</em> These options are very likely to change as we continue to work towards the
+final release.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -682,7 +693,11 @@ Test run finished after 29 ms
 <div class="sect2">
 <h3 id="using-junit4-to-run-junit5-tests">Using JUnit4 to Run JUnit5 Tests</h3>
 <div class="paragraph">
-<p>The <code>JUnit5</code> runner lets you run JUnit 5 tests with JUnit 4. This way you can run JUnit 5 tests in IDEs and build tools that only know about JUnit 4. As soon as we add reporting features to JUnit 5 that JUnit 4 does not have, the runner will only be able to support a subset of the JUnit 5 functionality. But for the time being the <code>JUnit5</code> runner is an easy way to get started.</p>
+<p>The <code>JUnit5</code> runner lets you run JUnit 5 tests with JUnit 4. This way you can run JUnit 5
+tests in IDEs and build tools that only know about JUnit 4. As soon as we add reporting
+features to JUnit 5 that JUnit 4 does not have, the runner will only be able to support a
+subset of the JUnit 5 functionality. But for the time being the <code>JUnit5</code> runner is an
+easy way to get started.</p>
 </div>
 <div class="sect3">
 <h4 id="setup">Setup</h4>
@@ -692,12 +707,12 @@ Test run finished after 29 ms
 <div class="ulist">
 <ul>
 <li>
-<p><em>junit5-api</em> (<code>org.junit:junit5-api:5.0.0-SNAPSHOT</code>) in <em>test</em> scope:
-API for writing tests; includes <code>@Test</code> etc.</p>
+<p><em>junit5-api</em> (<code>org.junit:junit5-api:5.0.0-SNAPSHOT</code>) in <em>test</em> scope: API for writing
+tests; includes <code>@Test</code> etc.</p>
 </li>
 <li>
-<p><em>junit4-runner</em> (<code>org.junit:junit4-runner:5.0.0-SNAPSHOT</code>) in <em>test</em> scope:
-Location of the <code>JUnit5</code> runner.</p>
+<p><em>junit4-runner</em> (<code>org.junit:junit4-runner:5.0.0-SNAPSHOT</code>) in <em>test</em> scope: Location of
+the <code>JUnit5</code> runner.</p>
 </li>
 <li>
 <p><em>junit5-engine</em> (<code>org.junit:junit5-engine:5.0.0-SNAPSHOT</code>) in <em>testRuntime</em> scope:
@@ -709,7 +724,11 @@ Implementation of the Engine API for JUnit 5.</p>
 <div class="sect3">
 <h4 id="single-test-class">Single Test Class</h4>
 <div class="paragraph">
-<p>One way to use the <code>JUnit5</code> runner is to annotate a JUnit 5 test class with <code>@RunWith(JUnit5.class)</code> directly. Please note that the tests are annotated with <code>org.junit.gen5.api.Test</code> (JUnit 5), not <code>org.junit.Test</code> (JUnit 4). Moreover, in this case the test class must be <code>public</code> because; otherwise, the IDEs won&#8217;t recognize it as a test class.</p>
+<p>One way to use the <code>JUnit5</code> runner is to annotate a JUnit 5 test class with
+<code>@RunWith(JUnit5.class)</code> directly. Please note that the tests are annotated with
+<code>org.junit.gen5.api.Test</code> (JUnit 5), not <code>org.junit.Test</code> (JUnit 4). Moreover, in this
+case the test class must be <code>public</code> because; otherwise, the IDEs won&#8217;t recognize it as a
+test class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -761,7 +780,9 @@ public class JUnit4SamplesSuite {
 <p>This suite will discover and run all tests in the <code>com.example</code> package and its subpackages.</p>
 </div>
 <div class="paragraph">
-<p>There are more options to discover and filter tests besides <code>@Packages</code>. Please have a look at the <a href="https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc/org/junit/gen5/junit4runner/package-summary.html">Javadoc</a> or the <a href="https://github.com/junit-team/junit-lambda/tree/master/junit4-launcher-runner/src/main/java/org/junit/gen5/junit4runner/JUnit5.java">code</a>.</p>
+<p>There are more options to discover and filter tests besides <code>@Packages</code>. Please have a look at the
+<a href="https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc/org/junit/gen5/junit4runner/package-summary.html">Javadoc</a> or the
+<a href="https://github.com/junit-team/junit-lambda/tree/master/junit4-launcher-runner/src/main/java/org/junit/gen5/junit4runner/JUnit5.java">code</a>.</p>
 </div>
 </div>
 </div>
@@ -770,7 +791,7 @@ public class JUnit4SamplesSuite {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-07 10:17:38 -05:00
+Last updated 2016-01-07 10:39:27 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
