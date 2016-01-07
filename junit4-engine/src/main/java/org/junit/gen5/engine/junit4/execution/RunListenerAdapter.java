@@ -17,7 +17,6 @@ import org.junit.Ignore;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionResult;
-import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -28,8 +27,8 @@ public class RunListenerAdapter extends RunListener {
 	private final TestRun testRun;
 	private final EngineExecutionListener listener;
 
-	public RunListenerAdapter(RunnerTestDescriptor runnerTestDescriptor, EngineExecutionListener listener) {
-		this.testRun = new TestRun(runnerTestDescriptor);
+	public RunListenerAdapter(TestRun testRun, EngineExecutionListener listener) {
+		this.testRun = testRun;
 		this.listener = listener;
 	}
 

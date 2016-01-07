@@ -27,7 +27,7 @@ import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.runner.Description;
 
-class TestRun {
+public class TestRun {
 
 	private final RunnerTestDescriptor runnerTestDescriptor;
 	private final Set<? extends TestDescriptor> runnerDescendants;
@@ -37,7 +37,7 @@ class TestRun {
 	private final Set<TestDescriptor> startedDescriptors = new LinkedHashSet<>();
 	private final Set<TestDescriptor> finishedDescriptors = new LinkedHashSet<>();
 
-	TestRun(RunnerTestDescriptor runnerTestDescriptor) {
+	public TestRun(RunnerTestDescriptor runnerTestDescriptor) {
 		this.runnerTestDescriptor = runnerTestDescriptor;
 		runnerDescendants = runnerTestDescriptor.allDescendants();
 		// @formatter:off
@@ -100,7 +100,7 @@ class TestRun {
 		startedDescriptors.add(testDescriptor);
 	}
 
-	boolean isNotStarted(TestDescriptor testDescriptor) {
+	public boolean isNotStarted(TestDescriptor testDescriptor) {
 		return !startedDescriptors.contains(testDescriptor);
 	}
 

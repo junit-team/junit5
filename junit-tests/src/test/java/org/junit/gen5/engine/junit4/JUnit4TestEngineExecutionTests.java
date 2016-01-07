@@ -27,6 +27,7 @@ import org.junit.gen5.engine.junit4.samples.IgnoredJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteOfSuiteWithIgnoredJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithErrorInBeforeClass;
+import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithExceptionThrowingRunner;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithIgnoredJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
 import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
@@ -35,6 +36,7 @@ import org.junit.gen5.engine.junit4.samples.JUnit4SuiteWithPlainJUnit4TestCaseWi
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithAssumptionFailureInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithErrorInAfterClass;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithErrorInBeforeClass;
+import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithExceptionThrowingRunner;
 import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithOverloadedMethod;
 import org.junit.gen5.engine.junit4.samples.MalformedJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.ParameterizedTestCase;
@@ -332,6 +334,32 @@ class JUnit4TestEngineExecutionTests {
 				finishedWithFailure(allOf(isA(AssertionError.class), message("expected:<[foo]> but was:<[bar]>")))), //
 			event(container("[bar]"), finishedSuccessfully()), //
 			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesJUnit4TestCaseWithExceptionThrowingRunner() {
+		Class<?> testClass = JUnit4TestCaseWithExceptionThrowingRunner.class;
+
+		List<ExecutionEvent> executionEvents = execute(testClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(test(testClass.getName()), started()), //
+			event(test(testClass.getName()), finishedWithFailure()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesJUnit4SuiteWithExceptionThrowingRunner() {
+		Class<?> testClass = JUnit4SuiteWithExceptionThrowingRunner.class;
+
+		List<ExecutionEvent> executionEvents = execute(testClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(container(testClass), finishedWithFailure()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
