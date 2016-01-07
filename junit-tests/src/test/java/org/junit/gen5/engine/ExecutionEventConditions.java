@@ -11,7 +11,7 @@
 package org.junit.gen5.engine;
 
 import static java.util.function.Predicate.isEqual;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.data.Index.atIndex;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.engine.ExecutionEvent.*;
@@ -22,6 +22,7 @@ import static org.junit.gen5.engine.TestExecutionResultConditions.*;
 import java.util.List;
 
 import org.assertj.core.api.Condition;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.gen5.engine.ExecutionEvent.Type;
 import org.junit.gen5.engine.TestExecutionResult.Status;
 
@@ -33,10 +34,12 @@ public class ExecutionEventConditions {
 	@SafeVarargs
 	public static void assertRecordedExecutionEventsContainsExactly(List<ExecutionEvent> executionEvents,
 			Condition<? super ExecutionEvent>... conditions) {
-		assertThat(executionEvents).hasSize(conditions.length);
+		SoftAssertions softly = new SoftAssertions();
+		softly.assertThat(executionEvents).hasSize(conditions.length);
 		for (int i = 0; i < conditions.length; i++) {
-			assertThat(executionEvents).has(conditions[i], atIndex(i));
+			softly.assertThat(executionEvents).has(conditions[i], atIndex(i));
 		}
+		softly.assertAll();
 	}
 
 	@SafeVarargs
