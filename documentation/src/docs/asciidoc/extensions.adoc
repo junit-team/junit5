@@ -1,7 +1,8 @@
-== Writing Extensions
+
+== Extension Model
 
 
-WARNING: needs major overhaul
+WARNING: The Extension Model chapter needs to be updated regarding the status quo.
 
 
 === Overview

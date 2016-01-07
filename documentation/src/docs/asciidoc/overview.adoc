@@ -1,8 +1,17 @@
 
-== Supported Java Versions
+== Overview
+
+The goal of this document is to provide comprehensive reference documentation for both
+programmers writing tests and extension authors.
+
+WARNING: Work in progress!
+
+
+=== Supported Java Versions
 
 JUnit 5 only supports Java 8 and above. However, you can still test classes compiled with
 lower versions.
+
 
 == Installation
 
