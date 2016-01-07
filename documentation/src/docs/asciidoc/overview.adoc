@@ -4,8 +4,8 @@
 JUnit 5 only supports Java 8 and above. However, you can still test classes compiled with lower versions.
 
 == Installation
- 
-Snapshot artifacts are deployed to Sonatype's https://oss.sonatype.org/content/repositories/snapshots/[snapshots repository].
+
+Snapshot artifacts are deployed to Sonatype's https://oss.sonatype.org/content/repositories/snapshots[snapshots repository].
 
 === Dependency Metadata
 
@@ -21,7 +21,6 @@ Snapshot artifacts are deployed to Sonatype's https://oss.sonatype.org/content/r
 ** `junit4-runner`
 ** `junit5-api`
 ** `junit5-engine`
-** `open-test-alliance` (Version `1.0.0-SNAPSHOT`)
 ** `surefire-junit5`
 
 See also: https://oss.sonatype.org/content/repositories/snapshots/org/junit/[https://oss.sonatype.org/content/repositories/snapshots/org/junit/]
@@ -31,8 +30,5 @@ See also: https://oss.sonatype.org/content/repositories/snapshots/org/junit/[htt
 You can find a collection of sample projects based on the JUnit 5 prototype in the https://github.com/junit-team/junit5-samples[junit5-samples] repository. You'll find the respective `build.gradle`
 and `pom.xml` in the projects below:
 
-
 * For Gradle, check out the https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer[junit5-gradle-consumer] project.
 * For Maven, check out the https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer[junit5-maven-consumer] project.
-'''
-

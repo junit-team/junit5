@@ -2,12 +2,12 @@
 
 
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 .A first test case
 ----
 include::{testDir}/example/FirstTestCase.java[tags=complete]
 ----
-
 
 
 === Annotations
@@ -40,7 +40,8 @@ _composed annotation_ that will automatically _inherit_ the semantics of its met
 For example, instead of copying and pasting `@Tag(&quot;fast&quot;)` throughout your code base (see link:#tagging-and-filtering[Tagging and Filtering]), you can create a custom _composed annotation_ named `@Fast` as
 follows. `@Fast` can then be used as a drop-in replacement for `@Tag(&quot;fast&quot;)`.
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 import org.junit.gen5.api.*;
 
@@ -55,7 +56,8 @@ public @interface Fast {
 
 === Standard Test Class
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 import org.junit.gen5.api.*;
 
@@ -89,7 +91,8 @@ Notice that neither the test class nor the test method need to be `public`.
 Test classes and test methods can declare a custom name – with spaces, special characters,
 and even emojis – that will be displayed by test runners and test reporting:
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 import org.junit.gen5.api.*;
 
@@ -111,7 +114,8 @@ JUnit 5 comes with many of the assertion methods that JUnit 4 has and adds a few
 that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions
 are static methods in the https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java[`org.junit.gen5.Assertions`] class.
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 import static org.junit.gen5.api.Assertions.*;
 
@@ -156,7 +160,8 @@ JUnit 5 comes with a subset of the assumption methods that JUnit 4 provides and 
 that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assumptions
 are static methods in the https://github.com/junit-team/junit-lambda/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Assumptions.java[`org.junit.gen5.Assumptions`] class.
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.api.Assumptions.*;
@@ -196,9 +201,10 @@ class MyTest {
 
 === Disabling Tests
 
-Here´s a disabled test case:
+Here's a disabled test case:
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 import org.junit.gen5.api.*;
 
@@ -211,9 +217,10 @@ class MyTest {
 }
 ----
 
-And here´s a test case with a disabled test method:
+And here's a test case with a disabled test method:
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 import org.junit.gen5.api.*;
 
@@ -236,7 +243,8 @@ class MyTest {
 Test classes and methods can be tagged. Those tags can later be used to filter
 link:Prototype-Running-Tests[test discovery and execution]:
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 import org.junit.gen5.api.*;
 
@@ -256,9 +264,10 @@ class FastModelTests {
 === Nested Tests
 
 Nested tests give the test writer more capabilities to express the relationship
-among several group of tests. Here´s a somewhat contrived example:
+among several group of tests. Here's a somewhat contrived example:
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 import org.junit.gen5.api.*;
 
@@ -292,7 +301,7 @@ class MyObjectTest {
 ----
 
 Notice that _only non-static inner classes_ can serve as nested tests.
-Nesting can be arbitrarily deep and those inner classes can be considered as
+Nesting can be arbitrarily deep, and those inner classes can be considered as
 full members of the test class family.
 
 For a more meaningful example have a look at https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/TestingAStack.java[TestingAStack].
@@ -307,7 +316,8 @@ There is currently one built-in resolver that need not be explicitly enabled:
 
 * `@TestName`: If a method parameter is of type `String` and annotated with `@TestName`, the https://github.com/junit-team/junit-lambda/tree/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java[`TestNameParameterResolver`] will supply the _display name_ of the current test at runtime (either its canonical name or its user-provided `@Name`). This acts as a drop-in replacement for the `TestName` rule from JUnit 4:
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 import org.junit.gen5.api.*;
 
@@ -338,7 +348,8 @@ Other parameter resolvers must be explicitly enabled by registering a link:Proto
 * The https://github.com/junit-team/junit-lambda/tree/master/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java[`MockitoExtension`] is another example of a `MethodParameterResolver`. While not intended to be production-ready, it demonstrates the simplicity and expressiveness of both the extension model and the parameter resolution process. Check out the source code for https://github.com/junit-team/junit-lambda/tree/master/sample-extension/src/test/java/com/example/mockito/MockitoExtensionInBaseClassTest.java[`MockitoExtensionInBaseClassTest`] for an example of injecting Mockito mocks into `@BeforeEach` and `@Test` methods:
 
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 import org.junit.gen5.api.*;
 

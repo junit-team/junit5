@@ -12,7 +12,8 @@ In contrast to the competing `Runner`, `@Rule`, and `@ClassRule` extension point
 
 Developers can register one or more extensions by annotating a test class or test method with `@ExtendWith(...)`, supplying class references for the extensions to register. For example, to register a custom `MockitoExtension`, you would annotate your test class as follows.
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 @ExtendWith(MockitoExtension.class)
 class MockTests {
@@ -22,7 +23,8 @@ class MockTests {
 
 Multiple extensions can be registered together like this:
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 @ExtendWith({ FooExtension.class, BarExtension.class })
 class MyTestsV1 {
@@ -32,7 +34,8 @@ class MyTestsV1 {
 
 As an alternative, multiple extensions can be registered separately like this:
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 @ExtendWith(FooExtension.class)
 @ExtendWith(BarExtension.class)

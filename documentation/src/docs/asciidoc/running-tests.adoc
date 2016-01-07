@@ -1,13 +1,9 @@
 == Running Tests
 
-
-
 === IDE Support
 
 At this stage there is no direct support for running JUnit 5 tests in IDEs. However, we provide two intermediate solutions so that you can go ahead and try out the current snapshot today.
 You can use the link:#console-runner[`ConsoleRunner`] or execute JUnit 5 tests with a link:#using-junit4-to-run-junit5-tests[JUnit 4 style runner].
-
-—-
 
 === Build Support
 
@@ -19,7 +15,8 @@ The JUnit team has developed a very basic `JUnit5Plugin` that lets you run JUnit
 
 To use the `JUnit5Plugin`, you first need to configure `build.gradle` as follows.
 
-[source,groovy]
+[source,groovy,indent=0]
+[subs="verbatim,quotes"]
 ----
 buildscript {
 	repositories {
@@ -39,7 +36,8 @@ Once the `JUnit5Plugin` has been applied, you can configure it as follows.
 
 _Caution:_ These options are very likely to change as we continue to work towards the final release.
 
-[source,groovy]
+[source,groovy,indent=0]
+[subs="verbatim,quotes"]
 ----
 junit5 {
 	version '5.0.0-SNAPSHOT'
@@ -54,7 +52,8 @@ Setting `runJunit4` to `true` instructs the `JUnit5Plugin` to run JUnit 4
 based tests as well. However, you will still need to configure a `testCompile`
 dependency on JUnit 4 in your project similar to the following.
 
-[source,groovy]
+[source,groovy,indent=0]
+[subs="verbatim,quotes"]
 ----
 dependencies {
 	testCompile('junit:junit:4.12')
@@ -77,7 +76,7 @@ match the regular expression supplied via `matchClassName`.
 Executing the `junit5Test` task in the https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer[junit5-gradle-consumer] project
 results in output similar to the following:
 
-[source]
+[source,indent=0]
 ----
 :junit5Test
 
@@ -94,7 +93,7 @@ BUILD SUCCESSFUL
 
 If a test fails, the build will fail with output similar to the following:
 
-[source]
+[source,indent=0]
 ----
 :junit5Test
 
@@ -138,7 +137,8 @@ We have developed a very basic provider for Maven Surefire that lets you run JUn
 
 Basic usage in https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer/pom.xml[`pom.xml`]:
 
-[source,xml]
+[source,xml,indent=0]
+[subs="verbatim,quotes"]
 ----
 	... 
 	<build>
@@ -160,15 +160,13 @@ Basic usage in https://github.com/junit-team/junit5-samples/tree/master/junit5-m
 	...
 ----
 
-—-
-
 === Console Runner
 
 The `ConsoleRunner` is a command-line Java application that lets you run JUnit 4/5 tests and prints out test executions and results to the console.
 
 Here's an example of its output:
 
-[source]
+[source,indent=0]
 ----
 Test execution started. Number of static tests: 2
 Engine started: junit5
@@ -211,7 +209,6 @@ Option                       Description
                                option can be repeated.
 -x, --enable-exit-code       Exit process with number of failing tests as
                                exit code
-
 ----
 
 
@@ -236,6 +233,8 @@ You need the following artifacts and their dependencies on the classpath:
 
 One way to use the `JUnit5` runner is to annotate a JUnit 5 test class with `@RunWith(JUnit5.class)` directly. Please note that the tests are annotated with `org.junit.gen5.api.Test` (JUnit 5), not `org.junit.Test` (JUnit 4). Moreover, in this case the test class must be `public` because; otherwise, the IDEs won't recognize it as a test class.
 
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 package com.example;
 
@@ -265,7 +264,8 @@ public class AJUnit5TestCaseRunWithJUnit4 {
 
 If you have multiple JUnit 5 tests you can create a test suite.
 
-[source,java]
+[source,java,indent=0]
+[subs="verbatim,quotes"]
 ----
 package com.example;
 
