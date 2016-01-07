@@ -454,20 +454,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#build-support">Build Support</a></li>
 <li><a href="#console-runner">Console Runner</a></li>
 <li><a href="#using-junit4-to-run-junit5-tests">Using JUnit4 to Run JUnit5 Tests</a></li>
-</ul>
-</li>
-<li><a href="#writing-extensions">Writing Extensions</a>
-<ul class="sectlevel2">
 <li><a href="#overview">Overview</a></li>
 <li><a href="#registering-extensions">Registering Extensions</a></li>
 <li><a href="#test-instance-post-processing">Test Instance Post-processing</a></li>
 <li><a href="#parameter-resolution">Parameter Resolution</a></li>
 <li><a href="#test-lifecycle-callbacks">Test Lifecycle Callbacks</a></li>
 <li><a href="#additional-planned-extension-points">Additional Planned Extension Points</a></li>
-</ul>
-</li>
-<li><a href="#migrating-from-junit-4">Migrating from JUnit 4</a>
-<ul class="sectlevel2">
 <li><a href="#running-junit-4-tests-with-junit-5">Running JUnit 4 Tests with JUnit 5</a></li>
 <li><a href="#migration-tips">Migration Tips</a></li>
 </ul>
@@ -1345,15 +1337,9 @@ public class JUnit4SamplesSuite {
 <p>This suite will discover and run all tests in the <code>com.example</code> package and its subpackages.</p>
 </div>
 <div class="paragraph">
-<p>There are more options to discover and filter tests besides <code>@Packages</code>. Please have a look at the <a href="https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc/org/junit/gen5/junit4runner/package-summary.html">Javadoc</a> or the <a href="https://github.com/junit-team/junit-lambda/tree/master/junit4-launcher-runner/src/main/java/org/junit/gen5/junit4runner/JUnit5.java">code</a>.</p>
+<p>There are more options to discover and filter tests besides <code>@Packages</code>. Please have a look at the <a href="https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc/org/junit/gen5/junit4runner/package-summary.html">Javadoc</a> or the <a href="https://github.com/junit-team/junit-lambda/tree/master/junit4-launcher-runner/src/main/java/org/junit/gen5/junit4runner/JUnit5.java">code</a>.
+== Writing Extensions</p>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="writing-extensions">Writing Extensions</h2>
-<div class="sectionbody">
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -1365,6 +1351,8 @@ needs major overhaul
 </td>
 </tr>
 </table>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="overview">Overview</h3>
@@ -1482,16 +1470,11 @@ interfaces within a single extension. Consult the source code of the
 <div class="ulist">
 <ul>
 <li>
-<p>Dynamic test registration – for example, for computing parameterized tests at runtime</p>
+<p>Dynamic test registration – for example, for computing parameterized tests at runtime
+== Migrating from JUnit 4</p>
 </li>
 </ul>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="migrating-from-junit-4">Migrating from JUnit 4</h2>
-<div class="sectionbody">
 <div class="paragraph">
 <p>Although the JUnit 5 programming model and extension model will not support JUnit 4
 features such as <code>Rules</code> and <code>Runners</code>, it is not expected that source code maintainers
@@ -1507,6 +1490,7 @@ conflicts. It is therefore safe to maintain existing JUnit 4 tests alongside JUn
 tests. Furthermore, since the JUnit team will continue to provide maintenance and bug
 fix releases for the JUnit 4.x baseline, developers have plenty of time to migrate to
 JUnit 5 on their own schedule.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="running-junit-4-tests-with-junit-5">Running JUnit 4 Tests with JUnit 5</h3>
