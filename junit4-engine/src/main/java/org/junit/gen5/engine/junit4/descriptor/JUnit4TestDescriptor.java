@@ -10,8 +10,18 @@
 
 package org.junit.gen5.engine.junit4.descriptor;
 
+import static java.util.Arrays.stream;
+
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Optional;
+import java.util.Set;
+
+import org.junit.experimental.categories.Category;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestTag;
 import org.junit.runner.Description;
 
 /**
@@ -44,6 +54,29 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 	@Override
 	public boolean isContainer() {
 		return description.isSuite();
+	}
+
+	@Override
+	public Set<TestTag> getTags() {
+		Set<TestTag> result = new LinkedHashSet<>();
+		getParent().ifPresent(parent -> result.addAll(parent.getTags()));
+		// @formatter:off
+		getDirectCategories().ifPresent(categoryClasses ->
+			stream(categoryClasses)
+				.map(ReflectionUtils::getAllAssignmentCompatibleClasses)
+				.flatMap(Collection::stream)
+				.distinct()
+				.map(Class::getName)
+				.map(TestTag::new)
+				.forEachOrdered(result::add)
+		);
+		// @formatter:on
+		return result;
+	}
+
+	private Optional<Class<?>[]> getDirectCategories() {
+		Category annotation = description.getAnnotation(Category.class);
+		return Optional.ofNullable(annotation).map(Category::value);
 	}
 
 }

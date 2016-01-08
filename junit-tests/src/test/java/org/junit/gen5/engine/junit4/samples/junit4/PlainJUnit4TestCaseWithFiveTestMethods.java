@@ -17,8 +17,14 @@ import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.gen5.engine.junit4.samples.junit4.Categories.Failing;
+import org.junit.gen5.engine.junit4.samples.junit4.Categories.Plain;
+import org.junit.gen5.engine.junit4.samples.junit4.Categories.Skipped;
+import org.junit.gen5.engine.junit4.samples.junit4.Categories.SkippedWithReason;
 
 @FixMethodOrder(NAME_ASCENDING)
+@Category(Plain.class)
 public class PlainJUnit4TestCaseWithFiveTestMethods {
 
 	@Test
@@ -27,18 +33,21 @@ public class PlainJUnit4TestCaseWithFiveTestMethods {
 	}
 
 	@Test
+	@Category(Failing.class)
 	public void failingTest() {
 		fail("this test should fail");
 	}
 
 	@Test
 	@Ignore
+	@Category(Skipped.class)
 	public void ignoredTest1_withoutReason() {
 		fail("this should never be called");
 	}
 
 	@Test
 	@Ignore("a custom reason")
+	@Category(SkippedWithReason.class)
 	public void ignoredTest2_withReason() {
 		fail("this should never be called");
 	}

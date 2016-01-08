@@ -23,6 +23,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -408,6 +409,30 @@ public final class ReflectionUtils {
 			return getUnderlyingCause(((InvocationTargetException) t).getTargetException());
 		}
 		return t;
+	}
+
+	/**
+	 * Return all classes and interfaces that can be used as assignment types
+	 * for instances of the specified {@link Class}, including itself.
+	 *
+	 * @param clazz the {@code Class} to lookup
+	 * @see Class#isAssignableFrom
+	 */
+	public static Set<Class<?>> getAllAssignmentCompatibleClasses(Class<?> clazz) {
+		Set<Class<?>> result = new LinkedHashSet<>();
+		getAllAssignmentCompatibleClasses(clazz, result);
+		return result;
+	}
+
+	private static void getAllAssignmentCompatibleClasses(Class<?> clazz, Set<Class<?>> result) {
+		for (Class<?> current = clazz; current != null; current = current.getSuperclass()) {
+			result.add(current);
+			for (Class<?> interfaceClass : current.getInterfaces()) {
+				if (!result.contains(interfaceClass)) {
+					getAllAssignmentCompatibleClasses(interfaceClass, result);
+				}
+			}
+		}
 	}
 
 }

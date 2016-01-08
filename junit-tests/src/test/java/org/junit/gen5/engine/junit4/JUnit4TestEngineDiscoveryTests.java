@@ -11,9 +11,11 @@
 package org.junit.gen5.engine.junit4;
 
 import static java.util.Collections.singleton;
+import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.engine.ClassFilters.classNameMatches;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
@@ -25,11 +27,17 @@ import java.util.List;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit4.samples.PlainOldJavaClassWithoutAnyTest;
 import org.junit.gen5.engine.junit4.samples.junit3.JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
+import org.junit.gen5.engine.junit4.samples.junit4.Categories.Failing;
+import org.junit.gen5.engine.junit4.samples.junit4.Categories.Plain;
+import org.junit.gen5.engine.junit4.samples.junit4.Categories.Skipped;
+import org.junit.gen5.engine.junit4.samples.junit4.Categories.SkippedWithReason;
 import org.junit.gen5.engine.junit4.samples.junit4.IgnoredJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithOverloadedMethod;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.junit4.SingleFailingTheoryTestCase;
 import org.junit.gen5.engine.junit4.samples.junit4.TestCaseRunWithJUnit5;
@@ -254,6 +262,34 @@ class JUnit4TestEngineDiscoveryTests {
 			.contains(testClass.getName())
 			.doesNotContain(PlainJUnit4TestCaseWithSingleTestWhichFails.class.getName());
 		// @formatter:on
+	}
+
+	@Test
+	void resolvesCategoriesIntoTags() {
+		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
+		TestPlanSpecification specification = buildClassSpecification(testClass);
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertThat(runnerDescriptor.getTags()).containsOnly(new TestTag(Plain.class.getName()));
+
+		assertThat(runnerDescriptor.getChildren()).hasSize(5);
+
+		TestDescriptor failingTestDescriptor = runnerDescriptor.getChildren().stream().filter(
+			where(TestDescriptor::getDisplayName, isEqual("failingTest"))).findAny().get();
+		assertThat(failingTestDescriptor.getTags()).containsOnly(new TestTag(Plain.class.getName()),
+			new TestTag(Failing.class.getName()));
+
+		TestDescriptor ignoredWithoutReasonTestDescriptor = runnerDescriptor.getChildren().stream().filter(
+			where(TestDescriptor::getDisplayName, isEqual("ignoredTest1_withoutReason"))).findAny().get();
+		assertThat(ignoredWithoutReasonTestDescriptor.getTags()).containsOnly(new TestTag(Plain.class.getName()),
+			new TestTag(Skipped.class.getName()));
+
+		TestDescriptor ignoredWithReasonTestDescriptor = runnerDescriptor.getChildren().stream().filter(
+			where(TestDescriptor::getDisplayName, isEqual("ignoredTest2_withReason"))).findAny().get();
+		assertThat(ignoredWithReasonTestDescriptor.getTags()).containsOnly(new TestTag(Plain.class.getName()),
+			new TestTag(Skipped.class.getName()), new TestTag(SkippedWithReason.class.getName()));
 	}
 
 	private File getClasspathRoot(Class<?> testClass) throws Exception {
