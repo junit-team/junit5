@@ -23,6 +23,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
@@ -274,22 +275,24 @@ class JUnit4TestEngineDiscoveryTests {
 		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
 		assertThat(runnerDescriptor.getTags()).containsOnly(new TestTag(Plain.class.getName()));
 
-		assertThat(runnerDescriptor.getChildren()).hasSize(5);
-
-		TestDescriptor failingTestDescriptor = runnerDescriptor.getChildren().stream().filter(
-			where(TestDescriptor::getDisplayName, isEqual("failingTest"))).findAny().get();
+		TestDescriptor failingTestDescriptor = findChildByName(runnerDescriptor, "failingTest");
 		assertThat(failingTestDescriptor.getTags()).containsOnly(new TestTag(Plain.class.getName()),
 			new TestTag(Failing.class.getName()));
 
-		TestDescriptor ignoredWithoutReasonTestDescriptor = runnerDescriptor.getChildren().stream().filter(
-			where(TestDescriptor::getDisplayName, isEqual("ignoredTest1_withoutReason"))).findAny().get();
+		TestDescriptor ignoredWithoutReasonTestDescriptor = findChildByName(runnerDescriptor,
+			"ignoredTest1_withoutReason");
 		assertThat(ignoredWithoutReasonTestDescriptor.getTags()).containsOnly(new TestTag(Plain.class.getName()),
 			new TestTag(Skipped.class.getName()));
 
-		TestDescriptor ignoredWithReasonTestDescriptor = runnerDescriptor.getChildren().stream().filter(
-			where(TestDescriptor::getDisplayName, isEqual("ignoredTest2_withReason"))).findAny().get();
+		TestDescriptor ignoredWithReasonTestDescriptor = findChildByName(runnerDescriptor, "ignoredTest2_withReason");
 		assertThat(ignoredWithReasonTestDescriptor.getTags()).containsOnly(new TestTag(Plain.class.getName()),
 			new TestTag(Skipped.class.getName()), new TestTag(SkippedWithReason.class.getName()));
+	}
+
+	private TestDescriptor findChildByName(TestDescriptor runnerDescriptor, String name) {
+		Predicate<TestDescriptor> predicate = where(TestDescriptor::getDisplayName, isEqual(name));
+		return runnerDescriptor.getChildren().stream().filter(predicate).findAny().orElseThrow(() -> new AssertionError(
+			"No child with display name \"" + name + "\" in " + runnerDescriptor.getChildren()));
 	}
 
 	private File getClasspathRoot(Class<?> testClass) throws Exception {
