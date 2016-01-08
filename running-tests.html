@@ -463,7 +463,7 @@ project for an example of the plugin in action.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy" data-lang="groovy">buildscript {
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">buildscript {
     repositories {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
@@ -487,7 +487,7 @@ final release.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy" data-lang="groovy">junit5 {
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">junit5 {
     version '5.0.0-SNAPSHOT'
     runJunit4 true
     matchClassName '.*Test'
@@ -502,7 +502,7 @@ your project similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy" data-lang="groovy">dependencies {
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">dependencies {
     testCompile('junit:junit:4.12')
 }</code></pre>
 </div>
@@ -529,7 +529,7 @@ output similar to the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>:junit5Test
+<pre>:junit5Test
 
 Test run finished after 50 ms
 [         3 tests found     ]
@@ -539,7 +539,7 @@ Test run finished after 50 ms
 [         2 tests successful]
 [         0 tests failed    ]
 
-BUILD SUCCESSFUL</code></pre>
+BUILD SUCCESSFUL</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -547,12 +547,12 @@ BUILD SUCCESSFUL</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>:junit5Test
+<pre>:junit5Test
 
 Test failures (1):
   junit5:com.example.project.SecondTest:mySecondTest
     com.example.project.SecondTest#mySecondTest
-    =&gt; Exception: 2 is not equal to 1 ==&gt; expected:&lt;2&gt; but was:<i class="conum" data-value="1"></i><b>(1)</b>
+    => Exception: 2 is not equal to 1 ==> expected:<2> but was:<1>
 
 Test run finished after 50 ms
 [         3 tests found     ]
@@ -568,7 +568,7 @@ FAILURE: Build failed with an exception.
 
 * What went wrong:
 Execution failed for task ':junit5Test'.
-&gt; Process 'command '/Library/Java/JavaVirtualMachines/jdk1.8.0_66.jdk/Contents/Home/bin/java'' finished with non-zero exit value 1</code></pre>
+> Process 'command '/Library/Java/JavaVirtualMachines/jdk1.8.0_66.jdk/Contents/Home/bin/java'' finished with non-zero exit value 1</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -636,12 +636,12 @@ JUnit 5 tests and prints test execution results to the console.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>Test execution started. Number of static tests: 2
+<pre>Test execution started. Number of static tests: 2
 Engine started: junit5
 Test started:     My 1st JUnit 5 test! 😎 [junit5:com.example.project.FirstTest#myFirstTest(java.lang.String)]
 Test succeeded:   My 1st JUnit 5 test! 😎 [junit5:com.example.project.FirstTest#myFirstTest(java.lang.String)]
 Test skipped:     mySecondTest [junit5:com.example.project.SecondTest#mySecondTest()]
-                  =&gt; Exception:   Skipped test method [void com.example.project.SecondTest.mySecondTest()] due to failed condition
+                  => Exception:   Skipped test method [void com.example.project.SecondTest.mySecondTest()] due to failed condition
 Engine finished: junit5
 Test execution finished.
 
@@ -651,7 +651,7 @@ Test run finished after 29 ms
 [         1 tests skipped   ]
 [         0 tests aborted   ]
 [         1 tests successful]
-[         0 tests failed    ]</code></pre>
+[         0 tests failed    ]</pre>
 </div>
 </div>
 <div class="sect3">
@@ -787,7 +787,7 @@ code for the <code>{JUnit5-Runner}</code> runner for further details.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-08 12:12:00 -05:00
+Last updated 2016-01-08 12:57:17 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
