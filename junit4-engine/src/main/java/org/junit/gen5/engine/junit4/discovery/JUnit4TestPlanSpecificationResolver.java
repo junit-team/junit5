@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 import java.util.function.IntFunction;
 
 import org.junit.gen5.engine.ClassFilter;
+import org.junit.gen5.engine.ClassFilters;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
@@ -40,8 +41,7 @@ public class JUnit4TestPlanSpecificationResolver {
 	}
 
 	public void resolve(TestPlanSpecification specification) {
-		List<ClassFilter> classFilters = specification.getEngineFilters().stream().filter(
-			ClassFilter.class::isInstance).map(ClassFilter.class::cast).collect(toList());
+		ClassFilter classFilter = buildClassFilter(specification);
 		RunnerBuilder runnerBuilder = new DefensiveAllDefaultPossibilitiesBuilder();
 		specification.accept(new TestPlanSpecificationElementVisitor() {
 
@@ -49,7 +49,7 @@ public class JUnit4TestPlanSpecificationResolver {
 
 			@Override
 			public void visitClass(Class<?> testClass) {
-				if (classFilters.stream().allMatch(filter -> filter.acceptClass(testClass))) {
+				if (classFilter.acceptClass(testClass)) {
 					Runner runner = runnerBuilder.safeRunnerForClass(testClass);
 					// TODO #40 Filter Runner as well?
 					if (runner != null) {
@@ -68,6 +68,16 @@ public class JUnit4TestPlanSpecificationResolver {
 				findAllClassesInPackage(packageName, classTester).stream().forEach(this::visitClass);
 			}
 		});
+	}
+
+	private ClassFilter buildClassFilter(TestPlanSpecification specification) {
+		// @formatter:off
+		return ClassFilters.allOf(specification.getEngineFilters()
+			.stream()
+			.filter(ClassFilter.class::isInstance)
+			.map(ClassFilter.class::cast)
+			.collect(toList()));
+		// @formatter:on
 	}
 
 	private RunnerTestDescriptor createCompleteRunnerTestDescriptor(Class<?> testClass, Runner runner) {
