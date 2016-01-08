@@ -45,7 +45,7 @@ final class BlacklistedExceptions {
 	 */
 	static void rethrowIfBlacklisted(Throwable exception) {
 		if (blacklist.stream().anyMatch(exceptionType -> exceptionType.isInstance(exception))) {
-			ExceptionUtils.throwAsRuntimeException(exception);
+			ExceptionUtils.throwAsUncheckedException(exception);
 		}
 	}
 

@@ -92,13 +92,13 @@ public final class ReflectionUtils {
 	 * arguments.
 	 *
 	 * <p>The constructor will be made accessible if necessary, and any checked
-	 * exception will be {@linkplain ExceptionUtils#throwAsRuntimeException masked}
-	 * as a {@code RuntimeException}.
+	 * exception will be {@linkplain ExceptionUtils#throwAsUncheckedException masked}
+	 * as an unchecked exception.
 	 *
 	 * @param clazz the class to instantiate; never {@code null}
 	 * @param args the arguments to pass to the constructor
 	 * @return the new instance
-	 * @see ExceptionUtils#throwAsRuntimeException(Throwable)
+	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
 	public static <T> T newInstance(Class<T> clazz, Object... args) {
 		Preconditions.notNull(clazz, "class must not be null");
@@ -110,14 +110,14 @@ public final class ReflectionUtils {
 			return constructor.newInstance(args);
 		}
 		catch (Throwable t) {
-			throw ExceptionUtils.throwAsRuntimeException(getUnderlyingCause(t));
+			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
 		}
 	}
 
 	/**
 	 * Invoke the supplied method, making it accessible if necessary and
-	 * {@linkplain ExceptionUtils#throwAsRuntimeException masking} any
-	 * checked exception as a {@code RuntimeException}.
+	 * {@linkplain ExceptionUtils#throwAsUncheckedException masking} any
+	 * checked exception as an unchecked exception.
 	 *
 	 * @param method the method to invoke; never {@code null}
 	 * @param target the object on which to invoke the method; may be
@@ -125,7 +125,7 @@ public final class ReflectionUtils {
 	 * @param args the arguments to pass to the method
 	 * @return the value returned by the method invocation or {@code null}
 	 * if the return type is {@code void}
-	 * @see ExceptionUtils#throwAsRuntimeException(Throwable)
+	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
 	public static Object invokeMethod(Method method, Object target, Object... args) {
 		Preconditions.notNull(method, "method must not be null");
@@ -137,7 +137,7 @@ public final class ReflectionUtils {
 			return method.invoke(target, args);
 		}
 		catch (Throwable t) {
-			throw ExceptionUtils.throwAsRuntimeException(getUnderlyingCause(t));
+			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
 		}
 	}
 

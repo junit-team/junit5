@@ -72,23 +72,23 @@ class ThrowableCollector {
 
 	/**
 	 * Assert that this {@code ThrowableCollector} is <em>empty</em> (i.e.,
-	 * has not collected any {@link Throwable Throwables}).
+	 * has not collected any {@link #getThrowables() Throwables}).
 	 *
 	 * <p>If this collector is not empty, the first collected {@code Throwable}
 	 * will be thrown with any additional throwables
 	 * {@linkplain Throwable#addSuppressed(Throwable) suppressed} in the
 	 * first {@code Throwable}. Note, however, that the {@code Throwable}
-	 * will not be wrapped. Rather, it will be thrown as-is using a hack
-	 * based on generics and type erasure that tricks the Java compiler
-	 * into believing that the thrown exception is an unchecked exception.
+	 * will not be wrapped. Rather, it will be
+	 * {@linkplain ExceptionUtils#throwAsUncheckedException masked}
+	 * as an unchecked exception.
 	 *
-	 * @see ExceptionUtils#throwAsRuntimeException(Throwable)
+	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
 	void assertEmpty() {
 		if (!this.throwables.isEmpty()) {
 			Throwable t = this.throwables.get(0);
 			this.throwables.stream().skip(1).forEach(t::addSuppressed);
-			ExceptionUtils.throwAsRuntimeException(t);
+			ExceptionUtils.throwAsUncheckedException(t);
 		}
 	}
 

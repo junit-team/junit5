@@ -186,7 +186,7 @@ public final class Assertions {
 				multipleFailuresError.addFailure(assertionError);
 			}
 			catch (Throwable t) {
-				throw ExceptionUtils.throwAsRuntimeException(t);
+				throw ExceptionUtils.throwAsUncheckedException(t);
 			}
 		}
 		if (multipleFailuresError.hasFailures()) {
