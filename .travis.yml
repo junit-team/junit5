@@ -1,10 +1,9 @@
 language: java
 sudo: false
 dist: trusty
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
+matrix:
+  include:
+    - jdk: "oraclejdk8"
 before_install:
   - pip install --user codecov
 script:
