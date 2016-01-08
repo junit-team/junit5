@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.console.options.CommandLineOptions;
+import org.junit.gen5.engine.ClassFilter;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
@@ -92,8 +93,8 @@ public class TestPlanSpecificationCreatorTests {
 
 		TestPlanSpecification specification = convert();
 
-		assertThat(specification.getEngineFilters()).hasSize(1);
-		assertThat(specification.getEngineFilters().get(0).getDescription()).contains(".*Test");
+		assertThat(specification.getEngineFilters(ClassFilter.class)).hasSize(1);
+		assertThat(specification.getClassFilter().getDescription()).contains(".*Test");
 	}
 
 	@Test

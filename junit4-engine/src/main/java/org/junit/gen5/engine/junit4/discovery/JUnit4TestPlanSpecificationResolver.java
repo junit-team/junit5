@@ -22,7 +22,6 @@ import java.util.Map.Entry;
 import java.util.function.IntFunction;
 
 import org.junit.gen5.engine.ClassFilter;
-import org.junit.gen5.engine.ClassFilters;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
@@ -41,7 +40,7 @@ public class JUnit4TestPlanSpecificationResolver {
 	}
 
 	public void resolve(TestPlanSpecification specification) {
-		ClassFilter classFilter = buildClassFilter(specification);
+		ClassFilter classFilter = specification.getClassFilter();
 		RunnerBuilder runnerBuilder = new DefensiveAllDefaultPossibilitiesBuilder();
 		specification.accept(new TestPlanSpecificationElementVisitor() {
 
@@ -68,16 +67,6 @@ public class JUnit4TestPlanSpecificationResolver {
 				findAllClassesInPackage(packageName, classTester).stream().forEach(this::visitClass);
 			}
 		});
-	}
-
-	private ClassFilter buildClassFilter(TestPlanSpecification specification) {
-		// @formatter:off
-		return ClassFilters.allOf(specification.getEngineFilters()
-			.stream()
-			.filter(ClassFilter.class::isInstance)
-			.map(ClassFilter.class::cast)
-			.collect(toList()));
-		// @formatter:on
 	}
 
 	private RunnerTestDescriptor createCompleteRunnerTestDescriptor(Class<?> testClass, Runner runner) {

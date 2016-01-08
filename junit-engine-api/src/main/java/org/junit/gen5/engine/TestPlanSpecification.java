@@ -18,7 +18,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -165,8 +164,18 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		this.engineFilters.add(filter);
 	}
 
-	public List<EngineFilter> getEngineFilters() {
-		return Collections.unmodifiableList(engineFilters);
+	public ClassFilter getClassFilter() {
+		return ClassFilters.allOf(getEngineFilters(ClassFilter.class));
+	}
+
+	public <T extends EngineFilter> List<T> getEngineFilters(Class<T> filterClass) {
+		// @formatter:off
+		return engineFilters
+			.stream()
+			.filter(filterClass::isInstance)
+			.map(filterClass::cast)
+			.collect(toList());
+		// @formatter:on
 	}
 
 	public boolean acceptDescriptor(TestDescriptor testDescriptor) {
