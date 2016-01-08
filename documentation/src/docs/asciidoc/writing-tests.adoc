@@ -1,16 +1,12 @@
 [[writing-tests]]
 == Writing Tests
 
-:MockitoExtensionInBaseClassTest: {master-branch}/sample-extension/src/test/java/com/example/mockito/MockitoExtensionInBaseClassTest.java[MockitoExtensionInBaseClassTest]
-:SampleTestCase:                  {master-branch}/sample-project/src/test/java/com/example/SampleTestCase.java[SampleTestCase]
-
 [source,java,indent=0]
 [subs="verbatim"]
 .A first test case
 ----
 include::{testDir}/example/FirstTestCase.java[tags=complete]
 ----
-
 
 === Annotations
 
@@ -22,17 +18,17 @@ module.
 |===
 |Annotation |Description
 
-|*`@Test`* |Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit 5 operate based on their own dedicated annotations.
-|*`@Name`* |Declares a custom display name for the test class or test method
-|*`@TestName`* |Allows the display name of the current test to be supplied as a method parameter to `@Test`, `@BeforeEach`, and `@AfterEach` methods; analogous to the JUnit 4's `TestName` rule
-|*`@BeforeEach`* |Denotes that the annotated method should be executed _before_ *each* `@Test` method in the current class or class hierarchy
-|*`@AfterEach`* |Denotes that the annotated method should be executed _after_ *each* `@Test` method in the current class or class hierarchy
-|*`@BeforeAll`* |Denotes that the annotated method should be executed _before_ *all* `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@BeforeClass`. Such methods must be `static`.
-|*`@AfterAll`* |Denotes that the annotated method should be executed _after_ *all* `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@AfterClass`. Such methods must be `static`.
-|*`@Nested`* |Denotes that the annotated class is a nested test class.
-|*`@Tag`* and *`@Tags`* |Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4
-|*`@Disabled`* |Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore`
-|*`@ExtendWith`* |Used to register custom extensions for tests such as `MethodParameterResolver`. See the page on <<extension-model, test extensions>>.
+|*`@Test`*              | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit 5 operate based on their own dedicated annotations.
+|*`@Name`*              | Declares a custom display name for the test class or test method
+|*`@TestName`*          | Allows the display name of the current test to be supplied as a method parameter to `@Test`, `@BeforeEach`, and `@AfterEach` methods; analogous to the JUnit 4's `TestName` rule
+|*`@BeforeEach`*        | Denotes that the annotated method should be executed _before_ *each* `@Test` method in the current class or class hierarchy
+|*`@AfterEach`*         | Denotes that the annotated method should be executed _after_ *each* `@Test` method in the current class or class hierarchy
+|*`@BeforeAll`*         | Denotes that the annotated method should be executed _before_ *all* `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@BeforeClass`. Such methods must be `static`.
+|*`@AfterAll`*          | Denotes that the annotated method should be executed _after_ *all* `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@AfterClass`. Such methods must be `static`.
+|*`@Nested`*            | Denotes that the annotated class is a nested test class.
+|*`@Tag`* and *`@Tags`* | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4
+|*`@Disabled`*          | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore`
+|*`@ExtendWith`*        | Used to register custom <<extension-model, extensions>> to the framework.
 |===
 
 ==== Meta-Annotations and Composed Annotations
@@ -313,20 +309,25 @@ For a more meaningful example have a look at
 https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/TestingAStack.java[TestingAStack].
 
 
-
 === Method Parameters and Dependency Injection
 
-In all prior JUnit versions, `@Test`, `@BeforeEach`, and `@AfterEach` methods were not
-allowed to have parameters (at least not with the standard `Runner` implementations). As
-one of the major changes in JUnit 5, methods are now permitted to have parameters
-allowing for greater flexibility and enabling method-level _Dependency Injection_.
+In all prior JUnit versions, methods were not allowed to have parameters (at least not
+with the standard `Runner` implementations). As one of the major changes in JUnit 5,
+methods are now permitted to have parameters. This allows for greater flexibility and
+enables method-level _Dependency Injection_.
 
-There is currently one built-in resolver that need not be explicitly enabled:
+`{MethodParameterResolver}` defines the API for test extensions that wish to
+_dynamically_ resolve method parameters at runtime. If a `@Test`, `@BeforeEach`,
+`@AfterEach`, `@BeforeAll`, or `@AfterAll` method accepts a parameter, the parameter must
+be resolved at runtime by a registered `MethodParameterResolver`.
 
-* `@TestName`: If a method parameter is of type `String` and annotated with `@TestName`,
-  the `{TestNameParameterResolver}` will supply the _display name_ of the current test at
-  runtime (either its canonical name or its user-provided `@Name`). This acts as a
-  drop-in replacement for the `TestName` rule from JUnit 4:
+There is currently one built-in resolver that is registered automatically.
+
+* `{TestNameParameterResolver}`: if a method parameter is of type `String` and annotated
+  with `@TestName`, the `TestNameParameterResolver` will supply the _display name_ of the
+  current test at runtime (either its canonical name or its user-provided `@Name`). This
+  acts as a drop-in replacement for the `TestName` rule from JUnit 4. See `MyTest` for an
+  example.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -352,22 +353,19 @@ class MyTest {
 }
 ----
 
-
 Other parameter resolvers must be explicitly enabled by registering a <<extension-model,
 test extension>> via `@ExtendWith`.
 
 * Check out the `methodInjectionTest(...)` test method in
-  https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/SampleTestCase.java[`SampleTestCase`]
-  for an example that uses the built-in `TestNameParameterResolver` as well as two
-  user-provided resolvers, `{CustomTypeParameterResolver}` and
+  `{SampleTestCase}` for an example that uses the built-in
+  `{TestNameParameterResolver}` as well as two user-provided resolvers,
+  `{CustomTypeParameterResolver}` and
   `{CustomAnnotationParameterResolver}`.
 
-* The `{MockitoExtension}` is another example of a `MethodParameterResolver`. While not
+* The `{MockitoExtension}` is another example of a `{MethodParameterResolver}`. While not
   intended to be production-ready, it demonstrates the simplicity and expressiveness of
-  both the extension model and the parameter resolution process. Check out the source
-  code for `{MockitoExtensionInBaseClassTest}` for an example of injecting Mockito mocks
-  into `@BeforeEach` and `@Test` methods:
-
+  both the extension model and the parameter resolution process. `MyMockitoTest`
+  demonstrates how to inject Mockito mocks into `@BeforeEach` and `@Test` methods.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -381,13 +379,13 @@ import com.example.mockito.MockitoExtension;
 class MyMockitoTest {
 
 	@BeforeEach
-	void init(@InjectMock MyType myType) {
-		when(myType.getName()).thenReturn("hello");
+	void init(@InjectMock Person person) {
+		when(person.getName()).thenReturn("Dilbert");
 	}
 
 	@Test
-	void simpleTestWithInjectedMock(@InjectMock MyType myType) {
-		assertEquals("hello", myType.getName());
+	void simpleTestWithInjectedMock(@InjectMock Person person) {
+		assertEquals("Dilbert", person.getName());
 	}
 
 }
