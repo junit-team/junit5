@@ -12,11 +12,6 @@ junit5 {
 	// excludeTag 'slow'
 }
 
-test {
-	// Tests are solely executed by the junit5Test task, not the standard test task.
-	exclude(['**/*.class'])
-}
-
 def testedProjects = [
 	project(':junit-commons'),
 	project(':junit-console'),
@@ -45,9 +40,6 @@ dependencies {
 // been evaluated. We can therefore only configure the junit5Test task
 // once it actually exists.
 afterEvaluate {
-
-	// Ensure that 'gradle test' executes the junit5Test task as well.
-	test.dependsOn(junit5Test)
 
 	// Ensure that log4j2 is properly configured.
 	junit5Test.systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
