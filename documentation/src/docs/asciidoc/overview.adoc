@@ -15,8 +15,7 @@ lower versions.
 
 == Installation
 
-Snapshot artifacts are deployed to Sonatype's
-https://oss.sonatype.org/content/repositories/snapshots[snapshots repository].
+Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository].
 
 === Dependency Metadata
 
@@ -34,18 +33,13 @@ https://oss.sonatype.org/content/repositories/snapshots[snapshots repository].
 ** `junit5-engine`
 ** `surefire-junit5`
 
-See also:
-https://oss.sonatype.org/content/repositories/snapshots/org/junit/[https://oss.sonatype.org/content/repositories/snapshots/org/junit/]
+See also: {snapshot-repo}/org/junit/
 
 === JUnit 5 Sample Projects
 
-You can find a collection of sample projects based on the JUnit 5 prototype in the
-https://github.com/junit-team/junit5-samples[junit5-samples] repository. You'll find the
-respective `build.gradle` and `pom.xml` in the projects below:
+The {junit5-samples-repo}[`junit5-samples`] repository hosts a collection of sample
+projects based on JUnit 5. You'll find the respective `build.gradle` and `pom.xml` in
+the projects below.
 
-* For Gradle, check out the
-  https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer[junit5-gradle-consumer]
-  project.
-* For Maven, check out the
-  https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer[junit5-maven-consumer]
-  project.
+* For Gradle, check out the `{junit5-gradle-consumer}` project.
+* For Maven, check out the `{junit5-maven-consumer}` project.
