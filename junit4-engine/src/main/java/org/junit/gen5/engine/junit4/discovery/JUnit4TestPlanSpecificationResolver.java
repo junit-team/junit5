@@ -67,7 +67,7 @@ public class JUnit4TestPlanSpecificationResolver {
 
 	private void addChildrenRecursively(JUnit4TestDescriptor parent) {
 		List<Description> children = parent.getDescription().getChildren();
-		// Use LinkedHashMap to preserve order, ArrayList to allow for fast access by index
+		// Use LinkedHashMap to preserve order, ArrayList for fast access by index
 		Map<String, List<Description>> childrenByUniqueId = children.stream().collect(
 			groupingBy(UniqueIdExtractor::toUniqueId, LinkedHashMap::new, toCollection(ArrayList::new)));
 		for (Entry<String, List<Description>> entry : childrenByUniqueId.entrySet()) {
