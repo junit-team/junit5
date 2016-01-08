@@ -67,9 +67,11 @@ class JUnit5Plugin implements Plugin<Project> {
 		def testClasses = project.tasks.getByName('testClasses')
 
 		task.dependsOn testClasses
-		check.dependsOn task
+		test.dependsOn task
+		//check.depensOn task
 		if (junit5.runJunit4) {
-			check.dependsOn.remove(test)
+			//check.dependsOn.remove(test)
+			test.enabled = false
 		}
 	}
 
