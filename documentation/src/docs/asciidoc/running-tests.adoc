@@ -81,7 +81,7 @@ supplied via `matchClassName`.
 Executing the `junit5Test` task in the `{junit5-gradle-consumer}` project results in
 output similar to the following:
 
-[source,indent=0]
+[subs="none"]
 ----
 :junit5Test
 
@@ -98,7 +98,7 @@ BUILD SUCCESSFUL
 
 If a test fails, the build will fail with output similar to the following:
 
-[source,indent=0]
+[subs="none"]
 ----
 :junit5Test
 
@@ -172,7 +172,7 @@ JUnit 5 tests and prints test execution results to the console.
 
 Here's an example of its output:
 
-[source,indent=0]
+[subs="none"]
 ----
 Test execution started. Number of static tests: 2
 Engine started: junit5
@@ -197,6 +197,7 @@ Test run finished after 29 ms
 _Caution:_ These options are very likely to change as we continue to work towards the
 final release.
 
+[subs="none"]
 ----
 Option                       Description
 ------                       -----------
