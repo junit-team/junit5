@@ -20,7 +20,7 @@ project for an example of the plugin in action.
 
 To use the `JUnit5Plugin`, you first need to configure `build.gradle` as follows.
 
-[source,groovy,indent=0]
+[source,java,indent=0]
 [subs="verbatim,attributes"]
 ----
 buildscript {
@@ -42,7 +42,7 @@ Once the `JUnit5Plugin` has been applied, you can configure it as follows.
 _Caution:_ These options are very likely to change as we continue to work towards the
 final release.
 
-[source,groovy,indent=0]
+[source,java,indent=0]
 [subs="verbatim,attributes"]
 ----
 junit5 {
@@ -58,7 +58,7 @@ Setting `runJunit4` to `true` instructs the `JUnit5Plugin` to run JUnit 4 based 
 well. However, you will still need to configure a `testCompile` dependency on JUnit 4 in
 your project similar to the following.
 
-[source,groovy,indent=0]
+[source,java,indent=0]
 [subs="verbatim"]
 ----
 dependencies {
