@@ -10,21 +10,23 @@
 
 package org.junit.gen5.engine;
 
+import java.util.regex.Pattern;
+
 public class ClassNameFilter implements ClassFilter {
 
-	private final String regex;
+	private final Pattern pattern;
 
 	public ClassNameFilter(String regex) {
-		this.regex = regex;
+		this.pattern = Pattern.compile(regex);
 	}
 
 	@Override
-	public boolean acceptClass(Class<?> clazz) {
-		return clazz.getName().matches(regex);
+	public boolean acceptClass(Class<?> testClass) {
+		return pattern.matcher(testClass.getName()).matches();
 	}
 
 	@Override
 	public String getDescription() {
-		return "Filter class names with regular expression: " + regex;
+		return "Filter class names with regular expression: " + pattern;
 	}
 }
