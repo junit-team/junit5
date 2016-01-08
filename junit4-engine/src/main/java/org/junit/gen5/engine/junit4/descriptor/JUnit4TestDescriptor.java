@@ -61,7 +61,7 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 		Set<TestTag> result = new LinkedHashSet<>();
 		getParent().ifPresent(parent -> result.addAll(parent.getTags()));
 		// @formatter:off
-		getDirectCategories().ifPresent(categoryClasses ->
+		getDeclaredCategories().ifPresent(categoryClasses ->
 			stream(categoryClasses)
 				.map(ReflectionUtils::getAllAssignmentCompatibleClasses)
 				.flatMap(Collection::stream)
@@ -74,7 +74,7 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 		return result;
 	}
 
-	private Optional<Class<?>[]> getDirectCategories() {
+	private Optional<Class<?>[]> getDeclaredCategories() {
 		Category annotation = description.getAnnotation(Category.class);
 		return Optional.ofNullable(annotation).map(Category::value);
 	}
