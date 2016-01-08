@@ -1,5 +1,5 @@
 [[launcher-api]]
-=== The JUnit5 Launcher API
+=== The JUnit 5 Launcher API
 
 One of the prominent goals of JUnit 5 is to make the interface between JUnit and its
 programmatic clients – build tools and IDEs – more powerful and stable. The purpose is to

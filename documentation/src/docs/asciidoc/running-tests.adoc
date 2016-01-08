@@ -21,14 +21,14 @@ project for an example of the plugin in action.
 To use the `JUnit5Plugin`, you first need to configure `build.gradle` as follows.
 
 [source,groovy,indent=0]
-[subs="verbatim"]
+[subs="verbatim,attributes"]
 ----
 buildscript {
 	repositories {
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 	dependencies {
-		classpath 'org.junit:junit-gradle:5.0.0-SNAPSHOT'
+		classpath 'org.junit:junit-gradle:{junit-version}'
 	}
 }
 
@@ -43,10 +43,10 @@ _Caution:_ These options are very likely to change as we continue to work toward
 final release.
 
 [source,groovy,indent=0]
-[subs="verbatim"]
+[subs="verbatim,attributes"]
 ----
 junit5 {
-	version '5.0.0-SNAPSHOT'
+	version '{junit-version}'
 	runJunit4 true
 	matchClassName '.*Test'
 	includeTag 'fast'
@@ -143,7 +143,7 @@ JUnit 4 and JUnit 5 tests via `mvn test`. The `pom.xml` file in the
 point.
 
 [source,xml,indent=0]
-[subs="verbatim"]
+[subs="verbatim,attributes"]
 ----
 	...
 	<build>
@@ -156,7 +156,7 @@ point.
 					<dependency>
 						<groupId>org.junit</groupId>
 						<artifactId>surefire-junit5</artifactId>
-						<version>5.0.0-SNAPSHOT</version>
+						<version>{junit-version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -219,7 +219,7 @@ Option                       Description
 ----
 
 
-=== Using JUnit4 to Run JUnit5 Tests
+=== Using JUnit 4 to Run JUnit 5 Tests
 
 The `JUnit5` runner lets you run JUnit 5 tests with JUnit 4. This way you can run JUnit 5
 tests in IDEs and build tools that only know about JUnit 4. As soon as we add reporting
@@ -229,14 +229,13 @@ easy way to get started.
 
 ==== Setup
 
-You need the following artifacts and their dependencies on the classpath:
+You need the following artifacts and their dependencies on the classpath. See
+<<dependency-metadata>> for details regarding group IDs, artifact IDs, and
+versions.
 
-* _junit5-api_ (`org.junit:junit5-api:5.0.0-SNAPSHOT`) in _test_ scope: API for writing
-  tests; includes `@Test` etc.
-* _junit4-runner_ (`org.junit:junit4-runner:5.0.0-SNAPSHOT`) in _test_ scope: Location of
-  the `JUnit5` runner.
-* _junit5-engine_ (`org.junit:junit5-engine:5.0.0-SNAPSHOT`) in _testRuntime_ scope:
-  Implementation of the Engine API for JUnit 5.
+* `junit5-api` in _test_ scope: API for writing tests, including `@Test`, etc.
+* `junit4-runner` in _test_ scope: location of the `JUnit5` runner
+* `junit5-engine` in _test runtime_ scope: implementation of the Engine API for JUnit 5
 
 ==== Single Test Class
 

@@ -32,7 +32,9 @@ githubPages {
 publishGhPages.dependsOn asciidoctor
 
 asciidoctor {
-	attributes	'mainDir': project.sourceSets.main.java.srcDirs[0],
+	attributes	'junit-version': project.version,
+				'revnumber' : project.version,
+				'mainDir': project.sourceSets.main.java.srcDirs[0],
 				'testDir': project.sourceSets.test.java.srcDirs[0],
 				'source-highlighter': 'highlightjs',
 				'highlightjs-theme': 'github',

@@ -39,7 +39,6 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :TestNameParameterResolver:         {master-branch}/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java[TestNameParameterResolver]
 
 
-
 include::overview.adoc[]
 
 include::writing-tests.adoc[]
