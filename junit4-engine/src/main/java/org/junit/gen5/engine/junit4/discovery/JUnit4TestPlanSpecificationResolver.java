@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.junit4.discovery;
 
 import static java.util.stream.Collectors.*;
-import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -61,6 +61,11 @@ public class JUnit4TestPlanSpecificationResolver {
 			@Override
 			public void visitAllTests(File rootDirectory) {
 				findAllClassesInClasspathRoot(rootDirectory, classTester).stream().forEach(this::visitClass);
+			}
+
+			@Override
+			public void visitPackage(String packageName) {
+				findAllClassesInPackage(packageName, classTester).stream().forEach(this::visitClass);
 			}
 		});
 	}

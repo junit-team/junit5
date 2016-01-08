@@ -226,6 +226,36 @@ class JUnit4TestEngineDiscoveryTests {
 		// @formatter:on
 	}
 
+	@Test
+	void resolvesPackageSpecificationForJUnit4SamplesPackage() {
+		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
+		TestPlanSpecification specification = build(forPackage(testClass.getPackage().getName()));
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		// @formatter:off
+		assertThat(engineDescriptor.getChildren())
+			.extracting(TestDescriptor::getDisplayName)
+			.contains(testClass.getName())
+			.doesNotContain(PlainJUnit3TestCaseWithSingleTestWhichFails.class.getName());
+		// @formatter:on
+	}
+
+	@Test
+	void resolvesPackageSpecificationForJUnit3SamplesPackage() {
+		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
+		TestPlanSpecification specification = build(forPackage(testClass.getPackage().getName()));
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		// @formatter:off
+		assertThat(engineDescriptor.getChildren())
+			.extracting(TestDescriptor::getDisplayName)
+			.contains(testClass.getName())
+			.doesNotContain(PlainJUnit4TestCaseWithSingleTestWhichFails.class.getName());
+		// @formatter:on
+	}
+
 	private File getClasspathRoot(Class<?> testClass) throws Exception {
 		URL location = testClass.getProtectionDomain().getCodeSource().getLocation();
 		return new File(location.toURI());
