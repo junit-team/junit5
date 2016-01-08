@@ -12,6 +12,7 @@ package org.junit.gen5.junit4.runner;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.engine.ClassFilters.classNameMatches;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.StringUtils;
-import org.junit.gen5.engine.EngineFilter;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
@@ -140,8 +140,7 @@ public class JUnit5 extends Runner {
 	private void addClassNameMatchesFilter(TestPlanSpecification plan) {
 		String regex = getClassNameRegExPattern();
 		if (!regex.isEmpty()) {
-			EngineFilter classNameFilter = TestPlanSpecification.classNameMatches(regex);
-			plan.filterWith(classNameFilter);
+			plan.filterWith(classNameMatches(regex));
 		}
 	}
 

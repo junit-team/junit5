@@ -14,6 +14,7 @@ import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.gen5.engine.ClassFilters.classNameMatches;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.io.File;
@@ -22,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.ClassNameFilter;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit4.samples.PlainOldJavaClassWithoutAnyTest;
@@ -212,8 +212,8 @@ class JUnit4TestEngineDiscoveryTests {
 	void resolvesApplyingClassFilters() throws Exception {
 		File root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
 		TestPlanSpecification specification = build(allTests(singleton(root)));
-		specification.filterWith(new ClassNameFilter(".*JUnit4.*"));
-		specification.filterWith(new ClassNameFilter(".*Plain.*"));
+		specification.filterWith(classNameMatches(".*JUnit4.*"));
+		specification.filterWith(classNameMatches(".*Plain.*"));
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 

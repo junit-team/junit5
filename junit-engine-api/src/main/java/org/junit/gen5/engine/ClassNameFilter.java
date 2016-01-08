@@ -12,11 +12,11 @@ package org.junit.gen5.engine;
 
 import java.util.regex.Pattern;
 
-public class ClassNameFilter implements ClassFilter {
+class ClassNameFilter implements ClassFilter {
 
 	private final Pattern pattern;
 
-	public ClassNameFilter(String regex) {
+	ClassNameFilter(String regex) {
 		this.pattern = Pattern.compile(regex);
 	}
 

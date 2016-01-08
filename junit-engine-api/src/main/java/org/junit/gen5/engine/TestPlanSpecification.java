@@ -121,10 +121,6 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return descriptor -> descriptor.getUniqueId().startsWith(engineId);
 	}
 
-	public static EngineFilter classNameMatches(String regex) {
-		return new ClassNameFilter(regex);
-	}
-
 	public static TestPlanSpecification build(TestPlanSpecificationElement... elements) {
 		return build(Arrays.asList(elements));
 	}
