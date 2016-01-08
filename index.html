@@ -428,6 +428,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <span id="author3" class="author">Johannes Link</span><br>
 <span id="author4" class="author">Matthias Merdes</span><br>
 <span id="author5" class="author">Marc Philipp</span><br>
+<span id="revnumber">version 5.0.0-SNAPSHOT</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -461,7 +462,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#ide-support">4.1. IDE Support</a></li>
 <li><a href="#build-support">4.2. Build Support</a></li>
 <li><a href="#console-runner">4.3. Console Runner</a></li>
-<li><a href="#using-junit4-to-run-junit5-tests">4.4. Using JUnit4 to Run JUnit5 Tests</a></li>
+<li><a href="#using-junit-4-to-run-junit-5-tests">4.4. Using JUnit 4 to Run JUnit 5 Tests</a></li>
 </ul>
 </li>
 <li><a href="#extension-model">5. Extension Model</a>
@@ -485,7 +486,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#advanced-topics">7. Advanced Topics</a>
 <ul class="sectlevel2">
-<li><a href="#launcher-api">7.1. The JUnit5 Launcher API</a></li>
+<li><a href="#launcher-api">7.1. The JUnit 5 Launcher API</a></li>
 <li><a href="#modules">7.2. Modules</a></li>
 <li><a href="#engines">7.3. Engines</a></li>
 </ul>
@@ -1304,7 +1305,7 @@ final release.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="using-junit4-to-run-junit5-tests">4.4. Using JUnit4 to Run JUnit5 Tests</h3>
+<h3 id="using-junit-4-to-run-junit-5-tests">4.4. Using JUnit 4 to Run JUnit 5 Tests</h3>
 <div class="paragraph">
 <p>The <code>JUnit5</code> runner lets you run JUnit 5 tests with JUnit 4. This way you can run JUnit 5
 tests in IDEs and build tools that only know about JUnit 4. As soon as we add reporting
@@ -1315,21 +1316,20 @@ easy way to get started.</p>
 <div class="sect3">
 <h4 id="setup">4.4.1. Setup</h4>
 <div class="paragraph">
-<p>You need the following artifacts and their dependencies on the classpath:</p>
+<p>You need the following artifacts and their dependencies on the classpath. See
+<a href="#dependency-metadata">Dependency Metadata</a> for details regarding group IDs, artifact IDs, and
+versions.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><em>junit5-api</em> (<code>org.junit:junit5-api:5.0.0-SNAPSHOT</code>) in <em>test</em> scope: API for writing
-tests; includes <code>@Test</code> etc.</p>
+<p><code>junit5-api</code> in <em>test</em> scope: API for writing tests, including <code>@Test</code>, etc.</p>
 </li>
 <li>
-<p><em>junit4-runner</em> (<code>org.junit:junit4-runner:5.0.0-SNAPSHOT</code>) in <em>test</em> scope: Location of
-the <code>JUnit5</code> runner.</p>
+<p><code>junit4-runner</code> in <em>test</em> scope: location of the <code>JUnit5</code> runner</p>
 </li>
 <li>
-<p><em>junit5-engine</em> (<code>org.junit:junit5-engine:5.0.0-SNAPSHOT</code>) in <em>testRuntime</em> scope:
-Implementation of the Engine API for JUnit 5.</p>
+<p><code>junit5-engine</code> in <em>test runtime</em> scope: implementation of the Engine API for JUnit 5</p>
 </li>
 </ul>
 </div>
@@ -1643,7 +1643,7 @@ to JUnit 5.</p>
 <h2 id="advanced-topics">7. Advanced Topics</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="launcher-api">7.1. The JUnit5 Launcher API</h3>
+<h3 id="launcher-api">7.1. The JUnit 5 Launcher API</h3>
 <div class="paragraph">
 <p>One of the prominent goals of JUnit 5 is to make the interface between JUnit and its
 programmatic clients – build tools and IDEs – more powerful and stable. The purpose is to
@@ -1765,7 +1765,8 @@ registers its <code>JUnit5TestEngine</code>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-08 10:43:20 -05:00
+Version 5.0.0-SNAPSHOT<br>
+Last updated 2016-01-08 11:40:31 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
