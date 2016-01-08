@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.ClassNameFilter;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit4.samples.PlainOldJavaClassWithoutAnyTest;
@@ -204,6 +205,24 @@ class JUnit4TestEngineDiscoveryTests {
 			.contains(PlainJUnit4TestCaseWithSingleTestWhichFails.class.getName())
 			.contains(PlainJUnit3TestCaseWithSingleTestWhichFails.class.getName())
 			.doesNotContain(PlainOldJavaClassWithoutAnyTest.class.getName());
+		// @formatter:on
+	}
+
+	@Test
+	void resolvesApplyingClassFilters() throws Exception {
+		File root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
+		TestPlanSpecification specification = build(allTests(singleton(root)));
+		specification.filterWith(new ClassNameFilter(".*JUnit4.*"));
+		specification.filterWith(new ClassNameFilter(".*Plain.*"));
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		// @formatter:off
+		assertThat(engineDescriptor.getChildren())
+			.extracting(TestDescriptor::getDisplayName)
+			.contains(PlainJUnit4TestCaseWithSingleTestWhichFails.class.getName())
+			.doesNotContain(JUnit4TestCaseWithOverloadedMethod.class.getName())
+			.doesNotContain(PlainJUnit3TestCaseWithSingleTestWhichFails.class.getName());
 		// @formatter:on
 	}
 
