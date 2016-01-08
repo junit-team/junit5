@@ -21,7 +21,7 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
 === Dependency Metadata
 
 * *Group ID*: `org.junit`
-* *Version*: `{junit-version}` 
+* *Version*: `{junit-version}`
 * *Artifact IDs*:
 ** `junit-commons`
 ** `junit-console`
