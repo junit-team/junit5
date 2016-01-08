@@ -21,7 +21,6 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestName;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.MethodParameterResolver;
-import org.junit.gen5.engine.TrackingEngineExecutionListener;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotationParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomType;
@@ -37,54 +36,46 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsForMethodInjectionCases() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(MethodInjectionTestCase.class);
+		executeTestsForClass(MethodInjectionTestCase.class);
 
-		assertEquals(9, countResolvedTestDescriptors(), "# resolved test descriptors");
-
-		assertEquals(8, listener.testStartedCount.get(), "# tests started");
-		assertEquals(7, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
-		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
+		assertEquals(8, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(7, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
+		assertEquals(1, tracker.testFailedCount.get(), "# tests failed");
 	}
 
 	@Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterEachMethods() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class);
+		executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class);
 
-		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
-
-		assertEquals(1, listener.testStartedCount.get(), "# tests started");
-		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
-		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
+		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(1, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
+		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
 	}
 
 	@Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterAllMethods() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterAllMethodInjectionTestCase.class);
+		executeTestsForClass(BeforeAndAfterAllMethodInjectionTestCase.class);
 
-		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
-
-		assertEquals(1, listener.testStartedCount.get(), "# tests started");
-		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
-		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
+		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(1, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
+		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
 	}
 
 	@Test
 	public void executeTestsForMethodWithExtendWithAnnotation() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(ExtendWithOnMethodTestCase.class);
+		executeTestsForClass(ExtendWithOnMethodTestCase.class);
 
-		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
-
-		assertEquals(1, listener.testStartedCount.get(), "# tests started");
-		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
-		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
+		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(1, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
+		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
 	}
 
 	// -------------------------------------------------------------------

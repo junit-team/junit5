@@ -11,16 +11,20 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import org.junit.gen5.api.AfterEach;
-import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TrackingEngineExecutionListener;
 import org.opentest4j.TestAbortedException;
 
+/**
+ * Testing execution in standard test cases {@link JUnit5TestEngine}.
+ *
+ * @since 5.0
+ */
 public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@BeforeEach
@@ -31,36 +35,49 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 	}
 
 	@Test
+	public void standardTestClassIsCorrectlyDiscovered() {
+		TestPlanSpecification spec = build(forClass(MyStandardTestCase.class));
+		EngineDescriptor engineDescriptor = discoverTests(spec);
+		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+	}
+
+	@Test
+	public void moreThanOneTestClassIsCorrectlyDiscovered() {
+		TestPlanSpecification spec = TestPlanSpecification.build(
+			TestPlanSpecification.forClass(FirstOfTwoTestCases.class),
+			TestPlanSpecification.forClass(SecondOfTwoTestCases.class));
+
+		EngineDescriptor engineDescriptor = discoverTests(spec);
+		assertEquals(6 + 2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+	}
+
+	@Test
 	public void moreThanOneTestClassIsExecuted() {
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
 			TestPlanSpecification.forClass(FirstOfTwoTestCases.class),
 			TestPlanSpecification.forClass(SecondOfTwoTestCases.class));
 
-		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification);
+		executeTests(testPlanSpecification);
 
-		assertEquals(6 + 2, countResolvedTestDescriptors(), "# resolved test descriptors");
+		assertEquals(6, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(5, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(1, tracker.testFailedCount.get(), "# tests failed");
 
-		assertEquals(6, listener.testStartedCount.get(), "# tests started");
-		assertEquals(5, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
-
-		assertEquals(3, listener.containerStartedCount.get(), "# containers started");
-		assertEquals(3, listener.containerFinishedCount.get(), "# containers finished");
+		assertEquals(3, tracker.containerStartedCount.get(), "# containers started");
+		assertEquals(3, tracker.containerFinishedCount.get(), "# containers finished");
 	}
 
 	@Test
 	public void allTestsInClassAreRunWithBeforeEach() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(MyStandardTestCase.class);
+		executeTestsForClass(MyStandardTestCase.class);
 
-		assertEquals(5, countResolvedTestDescriptors(), "# resolved test descriptors");
+		assertEquals(4, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(2, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(1, tracker.testAbortedCount.get(), "# tests aborted");
+		assertEquals(1, tracker.testFailedCount.get(), "# tests failed");
 
-		assertEquals(4, listener.testStartedCount.get(), "# tests started");
-		assertEquals(2, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(1, listener.testAbortedCount.get(), "# tests aborted");
-		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
-
-		assertEquals(2, listener.containerStartedCount.get(), "# containers started");
-		assertEquals(2, listener.containerFinishedCount.get(), "# containers finished");
+		assertEquals(2, tracker.containerStartedCount.get(), "# containers started");
+		assertEquals(2, tracker.containerFinishedCount.get(), "# containers finished");
 
 		assertEquals(4, MyStandardTestCase.countBefore1, "# before1 calls");
 		assertEquals(4, MyStandardTestCase.countBefore2, "# before2 calls");
@@ -68,269 +85,158 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void allTestsInClassAreRunWithAfterEach() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(MyStandardTestCase.class);
+		executeTestsForClass(MyStandardTestCase.class);
 
-		assertEquals(5, countResolvedTestDescriptors(), "# resolved test descriptors");
-
-		assertEquals(4, listener.testStartedCount.get(), "# tests started");
+		assertEquals(4, tracker.testStartedCount.get(), "# tests started");
 		assertEquals(4, MyStandardTestCase.countAfter, "# after each calls");
 
-		assertEquals(2, listener.containerStartedCount.get(), "# containers started");
-		assertEquals(2, listener.containerFinishedCount.get(), "# containers finished");
+		assertEquals(2, tracker.containerStartedCount.get(), "# containers started");
+		assertEquals(2, tracker.containerFinishedCount.get(), "# containers finished");
 	}
 
 	@Test
 	public void testsFailWhenBeforeEachFails() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithFailingBefore.class);
+		executeTestsForClass(TestCaseWithFailingBefore.class);
 
-		assertEquals(3, countResolvedTestDescriptors(), "# resolved test descriptors");
+		assertEquals(2, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(0, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(2, tracker.testFailedCount.get(), "# tests failed");
 
-		assertEquals(2, listener.testStartedCount.get(), "# tests started");
-		assertEquals(0, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(2, listener.testFailedCount.get(), "# tests failed");
-
-		assertEquals(2, listener.containerStartedCount.get(), "# containers started");
-		assertEquals(2, listener.containerFinishedCount.get(), "# containers finished");
+		assertEquals(2, tracker.containerStartedCount.get(), "# containers started");
+		assertEquals(2, tracker.containerFinishedCount.get(), "# containers finished");
 
 		assertEquals(2, TestCaseWithFailingBefore.countBefore, "# before each calls");
 	}
 
 	@Test
 	public void testsFailWhenAfterEachFails() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithFailingAfter.class);
+		executeTestsForClass(TestCaseWithFailingAfter.class);
 
-		assertEquals(2, countResolvedTestDescriptors(), "# resolved test descriptors");
+		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(0, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(1, tracker.testFailedCount.get(), "# tests failed");
 
-		assertEquals(1, listener.testStartedCount.get(), "# tests started");
-		assertEquals(0, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
-
-		assertEquals(2, listener.containerStartedCount.get(), "# containers started");
-		assertEquals(2, listener.containerFinishedCount.get(), "# containers finished");
+		assertEquals(2, tracker.containerStartedCount.get(), "# containers started");
+		assertEquals(2, tracker.containerFinishedCount.get(), "# containers finished");
 
 		assertTrue(TestCaseWithFailingAfter.testExecuted, "test executed?");
 	}
 
-	@Test
-	public void nestedTestsAreExecuted() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithNesting.class);
+	private static class MyStandardTestCase {
 
-		assertEquals(5, countResolvedTestDescriptors(), "# resolved test descriptors");
-
-		assertEquals(3, listener.testStartedCount.get(), "# tests started");
-		assertEquals(2, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
-
-		assertEquals(3, listener.containerStartedCount.get(), "# containers started");
-		assertEquals(3, listener.containerFinishedCount.get(), "# containers finished");
-	}
-
-	@Test
-	public void doublyNestedTestsAreExecuted() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(TestCaseWithDoubleNesting.class);
-
-		assertEquals(8, countResolvedTestDescriptors(), "# resolved test descriptors");
-
-		assertEquals(5, listener.testStartedCount.get(), "# tests started");
-		assertEquals(3, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(2, listener.testFailedCount.get(), "# tests failed");
-
-		assertEquals(4, listener.containerStartedCount.get(), "# containers started");
-		assertEquals(4, listener.containerFinishedCount.get(), "# containers finished");
-
-		assertAll("before each counts", //
-			() -> assertEquals(5, TestCaseWithDoubleNesting.beforeTopCount),
-			() -> assertEquals(4, TestCaseWithDoubleNesting.beforeNestedCount),
-			() -> assertEquals(2, TestCaseWithDoubleNesting.beforeDoublyNestedCount));
-	}
-
-}
-
-class MyStandardTestCase {
-
-	static int countBefore1 = 0;
-	static int countBefore2 = 0;
-	static int countAfter = 0;
-
-	@BeforeEach
-	void before1() {
-		countBefore1++;
-	}
-
-	@BeforeEach
-	void before2() {
-		countBefore2++;
-	}
-
-	@AfterEach
-	void after() {
-		countAfter++;
-	}
-
-	@Test
-	void succeedingTest1() {
-		assertTrue(true);
-	}
-
-	@Test
-	void succeedingTest2() {
-		assertTrue(true);
-	}
-
-	@Test
-	void failingTest() {
-		fail("always fails");
-	}
-
-	@Test
-	void abortedTest() {
-		throw new TestAbortedException("aborted!");
-	}
-
-}
-
-class FirstOfTwoTestCases {
-
-	@Test
-	void succeedingTest1() {
-		assertTrue(true);
-	}
-
-	@Test
-	void succeedingTest2() {
-		assertTrue(true);
-	}
-
-	@Test
-	void failingTest() {
-		fail("always fails");
-	}
-
-}
-
-class SecondOfTwoTestCases {
-
-	@Test
-	void succeedingTest1() {
-		assertTrue(true);
-	}
-
-	@Test
-	void succeedingTest2() {
-		assertTrue(true);
-	}
-
-	@Test
-	void succeedingTest3() {
-		assertTrue(true);
-	}
-
-}
-
-class TestCaseWithFailingBefore {
-
-	static int countBefore = 0;
-
-	@BeforeEach
-	void before() {
-		countBefore++;
-		throw new RuntimeException("Problem during setup");
-	}
-
-	@Test
-	void test1() {
-	}
-
-	@Test
-	void test2() {
-	}
-
-}
-
-class TestCaseWithFailingAfter {
-
-	static boolean testExecuted = false;
-
-	@AfterEach
-	void after() {
-		throw new RuntimeException("Problem during 'after'");
-	}
-
-	@Test
-	void test1() {
-		testExecuted = true;
-	}
-
-}
-
-class TestCaseWithNesting {
-
-	@Test
-	void someTest() {
-	}
-
-	@Nested
-	class NestedTestCase {
-
-		@Test
-		void successful() {
-		}
-
-		@Test
-		void failing() {
-			Assertions.fail("Something went horribly wrong");
-		}
-	}
-}
-
-class TestCaseWithDoubleNesting {
-
-	static int beforeTopCount = 0;
-	static int beforeNestedCount = 0;
-	static int beforeDoublyNestedCount = 0;
-
-	@BeforeEach
-	void top() {
-		beforeTopCount++;
-	}
-
-	@Test
-	void someTest() {
-	}
-
-	@Nested
-	class NestedTestCase {
+		static int countBefore1 = 0;
+		static int countBefore2 = 0;
+		static int countAfter = 0;
 
 		@BeforeEach
-		void nested() {
-			beforeNestedCount++;
+		void before1() {
+			countBefore1++;
+		}
+
+		@BeforeEach
+		void before2() {
+			countBefore2++;
+		}
+
+		@AfterEach
+		void after() {
+			countAfter++;
 		}
 
 		@Test
-		void successful() {
+		void succeedingTest1() {
+			assertTrue(true);
 		}
 
 		@Test
-		void failing() {
-			Assertions.fail("Something went horribly wrong");
+		void succeedingTest2() {
+			assertTrue(true);
 		}
 
-		@Nested
-		class DoublyNestedTestCase {
-
-			@BeforeEach
-			void doublyNested() {
-				beforeDoublyNestedCount++;
-			}
-
-			@Test
-			void successful() {
-			}
-
-			@Test
-			void failing() {
-				Assertions.fail("Something went horribly wrong");
-			}
+		@Test
+		void failingTest() {
+			fail("always fails");
 		}
+
+		@Test
+		void abortedTest() {
+			throw new TestAbortedException("aborted!");
+		}
+
 	}
+
+	private static class FirstOfTwoTestCases {
+
+		@Test
+		void succeedingTest1() {
+			assertTrue(true);
+		}
+
+		@Test
+		void succeedingTest2() {
+			assertTrue(true);
+		}
+
+		@Test
+		void failingTest() {
+			fail("always fails");
+		}
+
+	}
+
+	private static class SecondOfTwoTestCases {
+
+		@Test
+		void succeedingTest1() {
+			assertTrue(true);
+		}
+
+		@Test
+		void succeedingTest2() {
+			assertTrue(true);
+		}
+
+		@Test
+		void succeedingTest3() {
+			assertTrue(true);
+		}
+
+	}
+
+	private static class TestCaseWithFailingBefore {
+
+		static int countBefore = 0;
+
+		@BeforeEach
+		void before() {
+			countBefore++;
+			throw new RuntimeException("Problem during setup");
+		}
+
+		@Test
+		void test1() {
+		}
+
+		@Test
+		void test2() {
+		}
+
+	}
+
+	private static class TestCaseWithFailingAfter {
+
+		static boolean testExecuted = false;
+
+		@AfterEach
+		void after() {
+			throw new RuntimeException("Problem during 'after'");
+		}
+
+		@Test
+		void test1() {
+			testExecuted = true;
+		}
+
+	}
+
 }

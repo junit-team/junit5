@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import static java.util.Arrays.asList;
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.util.ArrayList;
@@ -28,7 +28,6 @@ import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TrackingEngineExecutionListener;
 
 /**
  * Integration tests that verify support for {@link BeforeEach}, {@link AfterEach}, {@link BeforeEachExtensionPoint},
@@ -42,15 +41,13 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTests {
 	public void beforeEachAndAfterEachCallbacks() {
 		TestPlanSpecification spec = build(forClass(OuterTestCase.class));
 
-		TrackingEngineExecutionListener listener = executeTests(spec);
+		executeTests(spec);
 
-		assertEquals(4, countResolvedTestDescriptors(), "# resolved test descriptors");
-
-		assertEquals(2, listener.testStartedCount.get(), "# tests started");
-		assertEquals(2, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
-		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
+		assertEquals(2, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(2, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
+		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
 
 		// @formatter:off
 

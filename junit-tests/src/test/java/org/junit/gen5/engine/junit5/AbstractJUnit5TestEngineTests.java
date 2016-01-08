@@ -12,9 +12,9 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
-import java.util.List;
-
-import org.junit.gen5.engine.ExecutionEvent;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.engine.EngineDescriptor;
+import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -29,34 +29,30 @@ import org.junit.gen5.engine.TrackingEngineExecutionListener;
 abstract class AbstractJUnit5TestEngineTests {
 
 	protected final JUnit5TestEngine engine = new JUnit5TestEngine();
-	private int testDescriptorCount;
 
-	protected TrackingEngineExecutionListener executeTestsForClass(Class<?> testClass) {
-		TestPlanSpecification spec = build(forClass(testClass));
-		return executeTests(spec);
+	protected TrackingEngineExecutionListener tracker;
+	protected ExecutionEventRecordingEngineExecutionListener eventRecorder;
+
+	private EngineExecutionListener listener;
+
+	@BeforeEach
+	void initListeners() {
+		tracker = new TrackingEngineExecutionListener();
+		eventRecorder = new ExecutionEventRecordingEngineExecutionListener();
+		listener = EngineExecutionListener.combine(tracker, eventRecorder);
 	}
 
-	protected TrackingEngineExecutionListener executeTests(TestPlanSpecification spec) {
+	protected void executeTestsForClass(Class<?> testClass) {
+		executeTests(build(forClass(testClass)));
+	}
+
+	protected void executeTests(TestPlanSpecification spec) {
 		TestDescriptor testDescriptor = discoverTests(spec);
-		testDescriptorCount = testDescriptor.allDescendants().size();
-		TrackingEngineExecutionListener listener = new TrackingEngineExecutionListener();
 		engine.execute(new ExecutionRequest(testDescriptor, listener));
-		return listener;
 	}
 
-	protected List<ExecutionEvent> executeTestsAndRecordEvents(TestPlanSpecification spec) {
-		TestDescriptor testDescriptor = discoverTests(spec);
-		testDescriptorCount = testDescriptor.allDescendants().size();
-		ExecutionEventRecordingEngineExecutionListener listener = new ExecutionEventRecordingEngineExecutionListener();
-		engine.execute(new ExecutionRequest(testDescriptor, listener));
-		return listener.getExecutionEvents();
-	}
-
-	private TestDescriptor discoverTests(TestPlanSpecification spec) {
+	protected EngineDescriptor discoverTests(TestPlanSpecification spec) {
 		return engine.discoverTests(spec);
 	}
 
-	protected int countResolvedTestDescriptors() {
-		return testDescriptorCount;
-	}
 }

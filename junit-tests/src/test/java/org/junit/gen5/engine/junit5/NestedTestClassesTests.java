@@ -14,11 +14,12 @@ import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TrackingEngineExecutionListener;
 
 /**
  * Integration tests that verify support for {@linkplain Nested nested contexts}
@@ -29,66 +30,142 @@ import org.junit.gen5.engine.TrackingEngineExecutionListener;
 public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
-	public void executeTestCaseWithNestedTests() {
-		TestCaseWithNesting.countAfterInvoked = 0;
-
+	public void nestedTestsAreCorrectlyDiscovered() {
 		TestPlanSpecification spec = build(forClass(TestCaseWithNesting.class));
-		TrackingEngineExecutionListener listener = executeTests(spec);
+		EngineDescriptor engineDescriptor = discoverTests(spec);
+		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+	}
 
-		assertEquals(6, countResolvedTestDescriptors(), "# resolved test descriptors");
+	@Test
+	public void nestedTestsAreExecuted() {
+		executeTestsForClass(TestCaseWithNesting.class);
 
-		assertEquals(3, listener.testStartedCount.get(), "# tests started");
-		assertEquals(3, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
-		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
+		assertEquals(3, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(2, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(1, tracker.testFailedCount.get(), "# tests failed");
 
-		assertEquals(3, TestCaseWithNesting.countAfterInvoked, "# after calls");
+		assertEquals(3, tracker.containerStartedCount.get(), "# containers started");
+		assertEquals(3, tracker.containerFinishedCount.get(), "# containers finished");
+	}
+
+	@Test
+	public void doublyNestedTestsAreCorrectlyDiscovered() {
+		TestPlanSpecification spec = build(forClass(TestCaseWithDoubleNesting.class));
+		EngineDescriptor engineDescriptor = discoverTests(spec);
+		assertEquals(8, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+	}
+
+	@Test
+	public void doublyNestedTestsAreExecuted() {
+		executeTestsForClass(TestCaseWithDoubleNesting.class);
+
+		assertEquals(5, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(3, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(2, tracker.testFailedCount.get(), "# tests failed");
+
+		assertEquals(4, tracker.containerStartedCount.get(), "# containers started");
+		assertEquals(4, tracker.containerFinishedCount.get(), "# containers finished");
+
+		assertAll("before each counts", //
+			() -> assertEquals(5, TestCaseWithDoubleNesting.beforeTopCount),
+			() -> assertEquals(4, TestCaseWithDoubleNesting.beforeNestedCount),
+			() -> assertEquals(2, TestCaseWithDoubleNesting.beforeDoublyNestedCount));
+
+		assertAll("after each counts", //
+			() -> assertEquals(5, TestCaseWithDoubleNesting.afterTopCount),
+			() -> assertEquals(4, TestCaseWithDoubleNesting.afterNestedCount),
+			() -> assertEquals(2, TestCaseWithDoubleNesting.afterDoublyNestedCount));
+
 	}
 
 	// -------------------------------------------------------------------
 
 	private static class TestCaseWithNesting {
 
-		boolean beforeInvoked = false;
-		boolean innerBeforeInvoked = false;
-
-		static int countAfterInvoked = 0;
-
-		@BeforeEach
-		void init() {
-			beforeInvoked = true;
-		}
-
-		@AfterEach
-		void after() {
-			countAfterInvoked++;
-		}
-
 		@Test
-		void enabledTest() {
+		void someTest() {
 		}
 
 		@Nested
-		class InnerTestCase {
+		class NestedTestCase {
 
-			@BeforeEach
-			void innerInit() {
-				innerBeforeInvoked = true;
+			@Test
+			void successful() {
 			}
 
 			@Test
-			void innerTest() {
-				assertTrue(beforeInvoked, "beforeEach of parent context was not invoked");
-				assertTrue(innerBeforeInvoked, "beforeEach of nested test was not invoked");
+			void failing() {
+				Assertions.fail("Something went horribly wrong");
+			}
+		}
+	}
+
+	static private class TestCaseWithDoubleNesting {
+
+		static int beforeTopCount = 0;
+		static int beforeNestedCount = 0;
+		static int beforeDoublyNestedCount = 0;
+
+		static int afterTopCount = 0;
+		static int afterNestedCount = 0;
+		static int afterDoublyNestedCount = 0;
+
+		@BeforeEach
+		void beforeTop() {
+			beforeTopCount++;
+		}
+
+		@AfterEach
+		void afterTop() {
+			afterTopCount++;
+		}
+
+		@Test
+		void someTest() {
+		}
+
+		@Nested
+		class NestedTestCase {
+
+			@BeforeEach
+			void beforeNested() {
+				beforeNestedCount++;
+			}
+
+			@AfterEach
+			void afterNested() {
+				afterNestedCount++;
+			}
+
+			@Test
+			void successful() {
+			}
+
+			@Test
+			void failing() {
+				Assertions.fail("Something went horribly wrong");
 			}
 
 			@Nested
-			class InnerInnerTestCase {
+			class DoublyNestedTestCase {
+
+				@BeforeEach
+				void beforeDoublyNested() {
+					beforeDoublyNestedCount++;
+				}
+
+				@BeforeEach
+				void afterDoublyNested() {
+					afterDoublyNestedCount++;
+				}
 
 				@Test
-				void innerInnerTest() {
-					assertTrue(beforeInvoked, "beforeEach of parent context was not invoked");
+				void successful() {
+				}
+
+				@Test
+				void failing() {
+					Assertions.fail("Something went horribly wrong");
 				}
 			}
 		}
