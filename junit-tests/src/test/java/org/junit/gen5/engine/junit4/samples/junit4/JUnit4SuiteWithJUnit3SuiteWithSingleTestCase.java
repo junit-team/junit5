@@ -8,13 +8,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit4.samples;
+package org.junit.gen5.engine.junit4.samples.junit4;
 
+import org.junit.gen5.engine.junit4.samples.junit3.JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses(PlainJUnit4TestCaseWithSingleTestWhichIsIgnored.class)
-public class JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored {
+@SuiteClasses(JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails.class)
+public class JUnit4SuiteWithJUnit3SuiteWithSingleTestCase {
 }

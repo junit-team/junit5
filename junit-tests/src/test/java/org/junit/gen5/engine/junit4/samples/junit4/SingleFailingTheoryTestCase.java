@@ -8,29 +8,19 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit4.samples;
+package org.junit.gen5.engine.junit4.samples.junit4;
 
-import static org.junit.Assert.fail;
-
-import org.junit.experimental.theories.DataPoint;
+import org.junit.Assert;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
 @RunWith(Theories.class)
-public class JUnit4TestCaseWithOverloadedMethod {
-
-	@DataPoint
-	public static int MAGIC_NUMBER = 42;
+public class SingleFailingTheoryTestCase {
 
 	@Theory
-	public void theory(int i) {
-		fail("failing theory with single parameter");
-	}
-
-	@Theory
-	public void theory(int i, int j) {
-		fail("failing theory with two parameters");
+	public void theory() {
+		Assert.fail("this theory should fail");
 	}
 
 }

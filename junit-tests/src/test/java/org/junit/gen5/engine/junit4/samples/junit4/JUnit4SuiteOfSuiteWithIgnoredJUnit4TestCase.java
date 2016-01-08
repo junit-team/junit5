@@ -8,23 +8,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit4.samples;
+package org.junit.gen5.engine.junit4.samples.junit4;
 
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-@RunWith(Enclosed.class)
-public class EnclosedJUnit4TestCase {
-
-	public static class NestedClass {
-
-		@Test
-		public void failingTest() {
-			fail("this test should fail");
-		}
-	}
-
+@RunWith(Suite.class)
+@SuiteClasses(JUnit4SuiteWithIgnoredJUnit4TestCase.class)
+public class JUnit4SuiteOfSuiteWithIgnoredJUnit4TestCase {
 }

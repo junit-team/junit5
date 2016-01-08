@@ -8,16 +8,23 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit4.samples;
+package org.junit.gen5.engine.junit4.samples.junit4;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.fail;
 
-import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-public class PlainJUnit3TestCaseWithSingleTestWhichFails extends TestCase {
+public class JUnit4TestCaseWithErrorInBeforeClass {
 
+	@BeforeClass
+	public static void failingBeforeClass() {
+		fail("something went wrong");
+	}
+
+	@Test
 	public void test() {
-		Assert.fail("this test should fail");
+		fail("this should never be called");
 	}
 
 }

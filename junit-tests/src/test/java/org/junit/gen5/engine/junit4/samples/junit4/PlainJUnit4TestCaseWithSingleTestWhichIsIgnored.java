@@ -8,12 +8,18 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit4.samples;
+package org.junit.gen5.engine.junit4.samples.junit4;
 
-import org.junit.gen5.engine.junit4.samples.ExceptionThrowingRunner.ChildCount;
-import org.junit.runner.RunWith;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
 
-@RunWith(ExceptionThrowingRunner.class)
-@ChildCount(1)
-public class JUnit4SuiteWithExceptionThrowingRunner {
+public class PlainJUnit4TestCaseWithSingleTestWhichIsIgnored {
+
+	@Test
+	@Ignore("ignored test")
+	public void ignoredTest() {
+		Assert.fail("this should not be called");
+	}
+
 }

@@ -8,18 +8,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit4.samples;
+package org.junit.gen5.engine.junit4.samples.junit3;
+
+import junit.framework.TestCase;
 
 import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
 
-public class PlainJUnit4TestCaseWithSingleTestWhichIsIgnored {
+public class PlainJUnit3TestCaseWithSingleTestWhichFails extends TestCase {
 
-	@Test
-	@Ignore("ignored test")
-	public void ignoredTest() {
-		Assert.fail("this should not be called");
+	public void test() {
+		Assert.fail("this test should fail");
 	}
 
 }

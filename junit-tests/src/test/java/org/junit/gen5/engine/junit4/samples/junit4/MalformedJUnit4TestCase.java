@@ -8,13 +8,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit4.samples;
+package org.junit.gen5.engine.junit4.samples.junit4;
 
-import org.junit.gen5.junit4.runner.Classes;
-import org.junit.gen5.junit4.runner.JUnit5;
-import org.junit.runner.RunWith;
+import static org.junit.Assert.fail;
 
-@RunWith(JUnit5.class)
-@Classes(PlainJUnit4TestCaseWithSingleTestWhichFails.class)
-public class TestCaseRunWithJUnit5 {
+import org.junit.Test;
+
+public class MalformedJUnit4TestCase {
+
+	@Test
+	/* not public */ void nonPublicTest() {
+		fail("this should never be called");
+	}
+
 }

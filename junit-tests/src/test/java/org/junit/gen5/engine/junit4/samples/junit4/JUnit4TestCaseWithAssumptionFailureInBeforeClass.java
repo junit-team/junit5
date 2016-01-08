@@ -8,17 +8,24 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit4.samples;
+package org.junit.gen5.engine.junit4.samples.junit4;
 
 import static org.junit.Assert.fail;
 
+import org.junit.AssumptionViolatedException;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class PlainJUnit4TestCaseWithSingleTestWhichFails {
+public class JUnit4TestCaseWithAssumptionFailureInBeforeClass {
+
+	@BeforeClass
+	public static void failingBeforeClass() {
+		throw new AssumptionViolatedException("assumption violated");
+	}
 
 	@Test
-	public void failingTest() {
-		fail("this test should fail");
+	public void test() {
+		fail("this should never be called");
 	}
 
 }

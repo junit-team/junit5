@@ -24,14 +24,14 @@ import java.util.List;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.junit4.samples.IgnoredJUnit4TestCase;
-import org.junit.gen5.engine.junit4.samples.JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails;
-import org.junit.gen5.engine.junit4.samples.JUnit4TestCaseWithOverloadedMethod;
-import org.junit.gen5.engine.junit4.samples.PlainJUnit3TestCaseWithSingleTestWhichFails;
-import org.junit.gen5.engine.junit4.samples.PlainJUnit4TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.PlainOldJavaClassWithoutAnyTest;
-import org.junit.gen5.engine.junit4.samples.SingleFailingTheoryTestCase;
-import org.junit.gen5.engine.junit4.samples.TestCaseRunWithJUnit5;
+import org.junit.gen5.engine.junit4.samples.junit3.JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails;
+import org.junit.gen5.engine.junit4.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
+import org.junit.gen5.engine.junit4.samples.junit4.IgnoredJUnit4TestCase;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithOverloadedMethod;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
+import org.junit.gen5.engine.junit4.samples.junit4.SingleFailingTheoryTestCase;
+import org.junit.gen5.engine.junit4.samples.junit4.TestCaseRunWithJUnit5;
 
 class JUnit4TestEngineDiscoveryTests {
 

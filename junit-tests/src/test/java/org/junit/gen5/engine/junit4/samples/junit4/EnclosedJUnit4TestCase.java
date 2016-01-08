@@ -8,23 +8,23 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit4.samples;
+package org.junit.gen5.engine.junit4.samples.junit4;
 
 import static org.junit.Assert.fail;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
 
-public class JUnit4TestCaseWithErrorInBeforeClass {
+@RunWith(Enclosed.class)
+public class EnclosedJUnit4TestCase {
 
-	@BeforeClass
-	public static void failingBeforeClass() {
-		fail("something went wrong");
-	}
+	public static class NestedClass {
 
-	@Test
-	public void test() {
-		fail("this should never be called");
+		@Test
+		public void failingTest() {
+			fail("this test should fail");
+		}
 	}
 
 }
