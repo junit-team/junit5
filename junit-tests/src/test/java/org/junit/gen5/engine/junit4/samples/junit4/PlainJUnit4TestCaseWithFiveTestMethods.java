@@ -19,7 +19,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 @FixMethodOrder(NAME_ASCENDING)
-public class PlainJUnit4TestCaseWithFiveTests {
+public class PlainJUnit4TestCaseWithFiveTestMethods {
 
 	@Test
 	public void abortedTest() {

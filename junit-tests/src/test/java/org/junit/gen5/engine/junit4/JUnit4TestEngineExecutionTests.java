@@ -41,10 +41,10 @@ import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithExceptionTh
 import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithOverloadedMethod;
 import org.junit.gen5.engine.junit4.samples.junit4.MalformedJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.junit4.ParameterizedTestCase;
-import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTests;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
-import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTests;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods;
 
 class JUnit4TestEngineExecutionTests {
 
@@ -66,7 +66,7 @@ class JUnit4TestEngineExecutionTests {
 
 	@Test
 	void executesPlainJUnit4TestCaseWithTwoTests() {
-		Class<?> testClass = PlainJUnit4TestCaseWithTwoTests.class;
+		Class<?> testClass = PlainJUnit4TestCaseWithTwoTestMethods.class;
 
 		List<ExecutionEvent> executionEvents = execute(testClass);
 
@@ -84,7 +84,7 @@ class JUnit4TestEngineExecutionTests {
 
 	@Test
 	void executesPlainJUnit4TestCaseWithFiveTests() {
-		Class<?> testClass = PlainJUnit4TestCaseWithFiveTests.class;
+		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 
 		List<ExecutionEvent> executionEvents = execute(testClass);
 

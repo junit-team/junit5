@@ -17,7 +17,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 
 @FixMethodOrder(NAME_ASCENDING)
-public class PlainJUnit4TestCaseWithTwoTests {
+public class PlainJUnit4TestCaseWithTwoTestMethods {
 
 	@Test
 	public void failingTest() {
