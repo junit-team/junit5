@@ -11,7 +11,9 @@
 package org.junit.gen5.engine.junit4.discovery;
 
 import static java.util.stream.Collectors.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,12 +42,19 @@ public class JUnit4TestPlanSpecificationResolver {
 		RunnerBuilder runnerBuilder = new DefensiveAllDefaultPossibilitiesBuilder();
 		specification.accept(new TestPlanSpecificationElementVisitor() {
 
+			private final IsPotentialJUnit4TestClass classTester = new IsPotentialJUnit4TestClass();
+
 			@Override
 			public void visitClass(Class<?> testClass) {
 				Runner runner = runnerBuilder.safeRunnerForClass(testClass);
 				if (runner != null) {
 					engineDescriptor.addChild(createCompleteRunnerTestDescriptor(testClass, runner));
 				}
+			}
+
+			@Override
+			public void visitAllTests(File rootDirectory) {
+				findAllClassesInClasspathRoot(rootDirectory, classTester).stream().forEach(this::visitClass);
 			}
 		});
 	}

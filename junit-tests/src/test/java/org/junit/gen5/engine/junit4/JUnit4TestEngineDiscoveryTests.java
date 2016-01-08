@@ -10,11 +10,14 @@
 
 package org.junit.gen5.engine.junit4;
 
+import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.Assert.*;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -186,6 +189,27 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void doesNotResolveClassRunWithJUnit5() {
 		assertYieldsNoDescriptors(TestCaseRunWithJUnit5.class);
+	}
+
+	@Test
+	void resolvesAllTestsSpecification() throws Exception {
+		File root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
+		TestPlanSpecification specification = build(allTests(singleton(root)));
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		// @formatter:off
+		assertThat(engineDescriptor.getChildren())
+			.extracting(TestDescriptor::getDisplayName)
+			.contains(PlainJUnit4TestCaseWithSingleTestWhichFails.class.getName())
+			.contains(PlainJUnit3TestCaseWithSingleTestWhichFails.class.getName())
+			.doesNotContain(PlainOldJavaClassWithoutAnyTest.class.getName());
+		// @formatter:on
+	}
+
+	private File getClasspathRoot(Class<?> testClass) throws Exception {
+		URL location = testClass.getProtectionDomain().getCodeSource().getLocation();
+		return new File(location.toURI());
 	}
 
 	private void assertYieldsNoDescriptors(Class<?> testClass) {
