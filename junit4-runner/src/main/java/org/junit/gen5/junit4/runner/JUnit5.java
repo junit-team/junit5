@@ -14,7 +14,6 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.engine.ClassFilters.classNameMatches;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -32,15 +31,16 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
 /**
- * JUnit 4 based {@link Runner} which runs tests that use the JUnit 5
- * programming and extension models.
+ * JUnit 4 based {@link Runner} which runs tests that use the JUnit 5 programming and extension models.
  *
- * <p>Annotating a test class with {@code @RunWith(JUnit5.class)} allows
- * it to be run with IDEs and build systems that support JUnit 4 but do
- * not yet support the JUnit 5 APIs directly.
+ * <p>Annotating a class with {@code @RunWith(JUnit5.class)} allows it to be run with IDEs and build systems that
+ * support JUnit 4 but do not yet support the JUnit 5 APIs directly.
  *
- * <p>Consult the various annotations in this package for configuration
- * options.
+ * <p>Consult the various annotations in this package for configuration options.
+ *
+ * <p>If you don't use any annotations, you can simply us this runner on a JUnit 5 test class.
+ * Contrary to standard JUnit 5 test classes, the test class must be {@code public} in order
+ * to be picked up by IDEs and build tools.
  *
  * @since 5.0
  * @see Classes
@@ -52,8 +52,6 @@ import org.junit.runners.model.InitializationError;
  * @see OnlyEngine
  */
 public class JUnit5 extends Runner {
-
-	public static final String CREATE_SPECIFICATION_METHOD_NAME = "createSpecification";
 
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
@@ -92,24 +90,8 @@ public class JUnit5 extends Runner {
 		return new JUnit5TestTree(plan, testClass);
 	}
 
-	private TestPlanSpecification createSpecification() throws InitializationError {
-		try {
-			Method createSpecMethod = this.testClass.getMethod(CREATE_SPECIFICATION_METHOD_NAME);
-			return (TestPlanSpecification) createSpecMethod.invoke(null);
-		}
-		catch (NoSuchMethodException notUsed) {
-			return createSpecificationFromAnnotations();
-		}
-		catch (Exception e) {
-			throw new InitializationError(e);
-		}
-	}
-
-	private TestPlanSpecification createSpecificationFromAnnotations() {
-		List<TestPlanSpecificationElement> specElements = new ArrayList<>();
-		specElements.addAll(getClassSpecificationElements());
-		specElements.addAll(getUniqueIdSpecificationElements());
-		specElements.addAll(getPackageSpecificationElements());
+	private TestPlanSpecification createSpecification() {
+		List<TestPlanSpecificationElement> specElements = getSpecElementsFromAnnotations();
 
 		// Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
 		if (specElements.isEmpty()) {
@@ -117,12 +99,24 @@ public class JUnit5 extends Runner {
 		}
 
 		TestPlanSpecification spec = TestPlanSpecification.build(specElements);
+		addFiltersFromAnnotations(spec);
+
+		return spec;
+	}
+
+	private void addFiltersFromAnnotations(TestPlanSpecification spec) {
 		addClassNameMatchesFilter(spec);
 		addIncludeTagsFilter(spec);
 		addExcludeTagsFilter(spec);
 		addEngineIdFilter(spec);
+	}
 
-		return spec;
+	private List<TestPlanSpecificationElement> getSpecElementsFromAnnotations() {
+		List<TestPlanSpecificationElement> specElements = new ArrayList<>();
+		specElements.addAll(getClassSpecificationElements());
+		specElements.addAll(getUniqueIdSpecificationElements());
+		specElements.addAll(getPackageSpecificationElements());
+		return specElements;
 	}
 
 	private List<TestPlanSpecificationElement> getClassSpecificationElements() {

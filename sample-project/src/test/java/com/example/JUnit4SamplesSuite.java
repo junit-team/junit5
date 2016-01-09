@@ -26,10 +26,4 @@ import org.junit.runner.RunWith;
 @ExcludeTags({ "fast" })
 //@OnlyEngine("junit5")
 public class JUnit4SamplesSuite {
-
-	// When you have the following method, it overrides all annotations
-	//		public static TestPlanSpecification createSpecification() {
-	//			return TestPlanSpecification.build(
-	//				TestPlanSpecification.forNames(SucceedingTestCase.class.getName()));
-	//		}
 }
