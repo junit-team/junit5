@@ -129,7 +129,7 @@ public class TestExtensionRegistryTests {
 
 		registry.stream(MyExtensionPoint.class, TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(
 			registeredExtensionPoint -> {
-				assertEquals(MyExtension.class.getName(), registeredExtensionPoint.getExtensionName());
+				assertEquals(MyExtension.class, registeredExtensionPoint.getExtensionInstance().getClass());
 				assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
 				assertTrue(registeredExtensionPoint.getExtensionPoint() instanceof MyExtensionPoint);
 				hasRun.set(true);

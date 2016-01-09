@@ -153,40 +153,39 @@ public class TestExtensionRegistry {
 	private void registerFromExtensionRegistrar(TestExtension testExtension) {
 		if (testExtension instanceof ExtensionRegistrar) {
 			ExtensionRegistrar extensionRegistrar = (ExtensionRegistrar) testExtension;
-			String extensionName = testExtension.getClass().getName();
-			ExtensionRegistry extensionRegistry = createExtensionRegistry(extensionName);
+			ExtensionRegistry extensionRegistry = createExtensionRegistry(extensionRegistrar);
 			extensionRegistrar.registerExtensions(extensionRegistry);
 		}
 	}
 
-	private TestExtensionRegistry.LocalExtensionRegistry createExtensionRegistry(String extensionName) {
-		return new TestExtensionRegistry.LocalExtensionRegistry(extensionName);
+	private TestExtensionRegistry.LocalExtensionRegistry createExtensionRegistry(Object extensionInstance) {
+		return new TestExtensionRegistry.LocalExtensionRegistry(extensionInstance);
 	}
 
 	private void registerExtensionPointImplementors(TestExtension testExtension) {
 		if (testExtension instanceof ExtensionPoint) {
 			ExtensionPoint extension = (ExtensionPoint) testExtension;
-			registerExtension(extension, Position.DEFAULT, testExtension.getClass().getName());
+			registerExtension(extension, Position.DEFAULT, testExtension);
 		}
 	}
 
-	public <E extends ExtensionPoint> void registerExtension(E extension, Position position, String extensionName) {
+	public <E extends ExtensionPoint> void registerExtension(E extension, Position position, Object extensionInstance) {
 		RegisteredExtensionPoint<E> registeredExtensionPoint = new RegisteredExtensionPoint<>(extension, position,
-			extensionName);
+			extensionInstance);
 		registeredExtensionPoints.add(registeredExtensionPoint);
 	}
 
 	private class LocalExtensionRegistry implements ExtensionRegistry {
 
-		private String extensionName;
+		private Object extensionInstance;
 
-		private LocalExtensionRegistry(String extensionName) {
-			this.extensionName = extensionName;
+		private LocalExtensionRegistry(Object extensionInstance) {
+			this.extensionInstance = extensionInstance;
 		}
 
 		@Override
 		public <E extends ExtensionPoint> void register(E extension, Class<E> extensionPointType, Position position) {
-			registerExtension(extension, position, extensionName);
+			registerExtension(extension, position, extensionInstance);
 		}
 	}
 }

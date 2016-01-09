@@ -210,7 +210,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			.peek(method -> methodValidator.accept(extensionType, method))
 			.forEach(method ->
 				extensionRegistry.registerExtension(extensionPointSynthesizer.apply(extensionRegistry, method),
-					ExtensionPoint.Position.DEFAULT, method.getName()));
+					ExtensionPoint.Position.DEFAULT, method));
 		// @formatter:on
 	}
 
