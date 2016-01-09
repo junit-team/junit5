@@ -13,6 +13,12 @@ package org.junit.gen5.commons.util;
 /**
  * Collection of utilities for working with exceptions.
  *
+ * <h3>DISCLAIMER</h3>
+ *
+ * <p>These utilities are intended solely for usage within the JUnit framework
+ * itself. <strong>Any usage by external parties is not supported.</strong>
+ * Use at your own risk!
+ *
  * @since 5.0
  */
 public final class ExceptionUtils {

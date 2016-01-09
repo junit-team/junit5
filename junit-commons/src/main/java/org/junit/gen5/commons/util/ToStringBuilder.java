@@ -21,6 +21,12 @@ import java.util.Objects;
  * Simple builder for generating strings in custom implementations of
  * {@link Object#toString toString()}.
  *
+ * <h3>DISCLAIMER</h3>
+ *
+ * <p>These utilities are intended solely for usage within the JUnit framework
+ * itself. <strong>Any usage by external parties is not supported.</strong>
+ * Use at your own risk!
+ *
  * @since 5.0
  */
 public class ToStringBuilder {

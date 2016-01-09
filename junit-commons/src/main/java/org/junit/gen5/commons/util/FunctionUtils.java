@@ -17,6 +17,12 @@ import java.util.function.Predicate;
  * Collection of utilities for working with {@link Function Functions},
  * {@link Predicate Predicates}, etc.
  *
+ * <h3>DISCLAIMER</h3>
+ *
+ * <p>These utilities are intended solely for usage within the JUnit framework
+ * itself. <strong>Any usage by external parties is not supported.</strong>
+ * Use at your own risk!
+ *
  * @since 5.0
  */
 public final class FunctionUtils {
