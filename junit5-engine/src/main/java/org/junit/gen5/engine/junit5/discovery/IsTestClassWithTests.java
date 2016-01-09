@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.testers;
+package org.junit.gen5.engine.junit5.discovery;
 
 import static org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 
@@ -17,7 +17,7 @@ import java.util.function.Predicate;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
- * Test if a class really is a Junit5 test class with executable tests or nested tests.
+ * Test if a class is a JUnit 5 test class containing executable tests or nested tests.
  *
  * @since 5.0
  */

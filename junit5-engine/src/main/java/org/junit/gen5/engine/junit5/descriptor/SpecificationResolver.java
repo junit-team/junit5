@@ -22,9 +22,9 @@ import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
-import org.junit.gen5.engine.junit5.testers.IsNestedTestClass;
-import org.junit.gen5.engine.junit5.testers.IsTestClassWithTests;
-import org.junit.gen5.engine.junit5.testers.IsTestMethod;
+import org.junit.gen5.engine.junit5.discovery.IsNestedTestClass;
+import org.junit.gen5.engine.junit5.discovery.IsTestClassWithTests;
+import org.junit.gen5.engine.junit5.discovery.IsTestMethod;
 
 /**
  * @since 5.0

@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.testers;
+package org.junit.gen5.engine.junit5.discovery;
 
 import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
 import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
@@ -16,7 +16,8 @@ import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
 import java.util.function.Predicate;
 
 /**
- * Test if a class could be a top level JUnit5 test container. It might still contain no tests.
+ * Test if a class is a potential top-level JUnit 5 test container, even if
+ * it does not contain tests.
  *
  * @since 5.0
  */
