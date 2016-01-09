@@ -276,19 +276,21 @@ class JUnit4TestEngineDiscoveryTests {
 		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
 		assertThat(runnerDescriptor.getTags()).containsOnly(new TestTag(Plain.class.getName()));
 
-		TestDescriptor failingTestDescriptor = findChildByDisplayName(runnerDescriptor, "failingTest");
-		assertThat(failingTestDescriptor.getTags()).containsOnly(new TestTag(Plain.class.getName()),
+		TestDescriptor failingTest = findChildByDisplayName(runnerDescriptor, "failingTest");
+		assertThat(failingTest.getTags()).containsOnly(//
+			new TestTag(Plain.class.getName()), //
 			new TestTag(Failing.class.getName()));
 
-		TestDescriptor ignoredWithoutReasonTestDescriptor = findChildByDisplayName(runnerDescriptor,
-			"ignoredTest1_withoutReason");
-		assertThat(ignoredWithoutReasonTestDescriptor.getTags()).containsOnly(new TestTag(Plain.class.getName()),
+		TestDescriptor ignoredWithoutReason = findChildByDisplayName(runnerDescriptor, "ignoredTest1_withoutReason");
+		assertThat(ignoredWithoutReason.getTags()).containsOnly(//
+			new TestTag(Plain.class.getName()), //
 			new TestTag(Skipped.class.getName()));
 
-		TestDescriptor ignoredWithReasonTestDescriptor = findChildByDisplayName(runnerDescriptor,
-			"ignoredTest2_withReason");
-		assertThat(ignoredWithReasonTestDescriptor.getTags()).containsOnly(new TestTag(Plain.class.getName()),
-			new TestTag(Skipped.class.getName()), new TestTag(SkippedWithReason.class.getName()));
+		TestDescriptor ignoredWithReason = findChildByDisplayName(runnerDescriptor, "ignoredTest2_withReason");
+		assertThat(ignoredWithReason.getTags()).containsOnly(//
+			new TestTag(Plain.class.getName()), //
+			new TestTag(Skipped.class.getName()), //
+			new TestTag(SkippedWithReason.class.getName()));
 	}
 
 	private TestDescriptor findChildByDisplayName(TestDescriptor runnerDescriptor, String displayName) {
