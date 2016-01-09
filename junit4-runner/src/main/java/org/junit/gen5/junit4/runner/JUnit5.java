@@ -14,8 +14,10 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.engine.ClassFilters.classNameMatches;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.StringUtils;
@@ -163,38 +165,37 @@ public class JUnit5 extends Runner {
 	}
 
 	private Class<?>[] getTestClasses() {
-		Classes annotation = this.testClass.getAnnotation(Classes.class);
-		return (annotation != null ? annotation.value() : EMPTY_CLASS_ARRAY);
+		return getValueFromAnnotation(Classes.class, Classes::value, EMPTY_CLASS_ARRAY);
 	}
 
 	private String[] getUniqueIds() {
-		UniqueIds annotation = this.testClass.getAnnotation(UniqueIds.class);
-		return (annotation != null ? annotation.value() : EMPTY_STRING_ARRAY);
+		return getValueFromAnnotation(UniqueIds.class, UniqueIds::value, EMPTY_STRING_ARRAY);
 	}
 
 	private String[] getPackageNames() {
-		Packages annotation = this.testClass.getAnnotation(Packages.class);
-		return (annotation != null ? annotation.value() : EMPTY_STRING_ARRAY);
+		return getValueFromAnnotation(Packages.class, Packages::value, EMPTY_STRING_ARRAY);
 	}
 
 	private String[] getIncludeTags() {
-		OnlyIncludeTags annotation = this.testClass.getAnnotation(OnlyIncludeTags.class);
-		return (annotation != null ? annotation.value() : EMPTY_STRING_ARRAY);
+		return getValueFromAnnotation(OnlyIncludeTags.class, OnlyIncludeTags::value, EMPTY_STRING_ARRAY);
 	}
 
 	private String[] getExcludeTags() {
-		ExcludeTags annotation = this.testClass.getAnnotation(ExcludeTags.class);
-		return (annotation != null ? annotation.value() : EMPTY_STRING_ARRAY);
+		return getValueFromAnnotation(ExcludeTags.class, ExcludeTags::value, EMPTY_STRING_ARRAY);
 	}
 
 	private String getExplicitEngineId() {
-		OnlyEngine annotation = this.testClass.getAnnotation(OnlyEngine.class);
-		return (annotation != null ? annotation.value().trim() : EMPTY_STRING);
+		return getValueFromAnnotation(OnlyEngine.class, OnlyEngine::value, EMPTY_STRING).trim();
 	}
 
 	private String getClassNameRegExPattern() {
-		ClassNamePattern annotation = this.testClass.getAnnotation(ClassNamePattern.class);
-		return (annotation != null ? annotation.value().trim() : EMPTY_STRING);
+		return getValueFromAnnotation(ClassNamePattern.class, ClassNamePattern::value, EMPTY_STRING).trim();
+	}
+
+	private <A extends Annotation, V> V getValueFromAnnotation(Class<A> annotationClass, Function<A, V> extractor,
+			V defaultValue) {
+		A annotation = this.testClass.getAnnotation(annotationClass);
+		return (annotation != null ? extractor.apply(annotation) : defaultValue);
 	}
 
 }
