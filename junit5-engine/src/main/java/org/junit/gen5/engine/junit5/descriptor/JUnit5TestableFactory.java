@@ -155,7 +155,11 @@ class JUnit5TestableFactory {
 	}
 
 	private Class<?> loadClassByName(String className) {
-		return ReflectionUtils.loadClass(className).orElse(null);
+		return ReflectionUtils.loadClass(className).orElseThrow(() -> createCannotLoadClassException(className));
+	}
+
+	private RuntimeException createCannotLoadClassException(String className) {
+		return new IllegalArgumentException(String.format("Cannot load class '%s'", className));
 	}
 
 	private Class<?> loadRequiredClass(String className, String fullUniqueId, String uniqueIdPart) {

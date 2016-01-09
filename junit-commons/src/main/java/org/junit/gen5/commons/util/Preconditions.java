@@ -17,9 +17,6 @@ import java.util.function.Supplier;
  * Collection of utilities for asserting preconditions for method and
  * constructor arguments.
  *
- * <p>Each method in this class throws an {@link IllegalArgumentException}
- * if the precondition fails.
- *
  * @since 5.0
  */
 public final class Preconditions {
@@ -33,10 +30,12 @@ public final class Preconditions {
 	 *
 	 * @param object the object to check
 	 * @param message precondition failure message
+	 * @return the passed in object
+	 * @throws NullPointerException if the object is {@code null}
 	 * @see #notNull(Object, Supplier)
 	 */
-	public static void notNull(Object object, String message) throws IllegalArgumentException {
-		notNull(object, () -> message);
+	public static <T> T notNull(T object, String message) throws NullPointerException {
+		return notNull(object, () -> message);
 	}
 
 	/**
@@ -44,10 +43,15 @@ public final class Preconditions {
 	 *
 	 * @param object the object to check
 	 * @param messageSupplier precondition failure message supplier
+	 * @return the passed in object
+	 * @throws NullPointerException if the object is {@code null}
 	 * @see #condition(boolean, Supplier)
 	 */
-	public static void notNull(Object object, Supplier<String> messageSupplier) throws IllegalArgumentException {
-		condition(object != null, messageSupplier);
+	public static <T> T notNull(T object, Supplier<String> messageSupplier) throws NullPointerException {
+		if (object == null) {
+			throw new NullPointerException(messageSupplier.get());
+		}
+		return object;
 	}
 
 	/**
@@ -55,6 +59,7 @@ public final class Preconditions {
 	 *
 	 * @param str the string to check
 	 * @param message precondition failure message
+	 * @throws IllegalArgumentException if the string is {@code null} or empty
 	 * @see #notEmpty(String, Supplier)
 	 */
 	public static void notEmpty(String str, String message) throws IllegalArgumentException {
@@ -67,6 +72,7 @@ public final class Preconditions {
 	 * @param str the string to check
 	 * @param messageSupplier precondition failure message supplier
 	 * @see StringUtils#isNotEmpty(CharSequence)
+	 * @throws IllegalArgumentException if the string is {@code null} or empty
 	 * @see #condition(boolean, Supplier)
 	 */
 	public static void notEmpty(String str, Supplier<String> messageSupplier) throws IllegalArgumentException {
@@ -78,6 +84,7 @@ public final class Preconditions {
 	 *
 	 * @param collection the collection to check
 	 * @param message precondition failure message
+	 * @throws IllegalArgumentException if the collection is {@code null} or empty
 	 * @see #condition(boolean, Supplier)
 	 */
 	public static void notEmpty(Collection<?> collection, String message) throws IllegalArgumentException {
@@ -89,6 +96,7 @@ public final class Preconditions {
 	 *
 	 * @param str the string to check
 	 * @param message precondition failure message
+	 * @throws IllegalArgumentException if the string is {@code null} or blank
 	 * @see #notBlank(String, Supplier)
 	 */
 	public static void notBlank(String str, String message) throws IllegalArgumentException {
@@ -100,6 +108,7 @@ public final class Preconditions {
 	 *
 	 * @param str the string to check
 	 * @param messageSupplier precondition failure message supplier
+	 * @throws IllegalArgumentException if the string is {@code null} or blank
 	 * @see StringUtils#isNotBlank(String)
 	 * @see #condition(boolean, Supplier)
 	 */
@@ -112,6 +121,7 @@ public final class Preconditions {
 	 *
 	 * @param predicate the predicate to check
 	 * @param message precondition failure message
+	 * @throws IllegalArgumentException if the predicate is {@code false}
 	 * @see #condition(boolean, Supplier)
 	 */
 	public static void condition(boolean predicate, String message) throws IllegalArgumentException {

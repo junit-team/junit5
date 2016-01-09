@@ -26,14 +26,14 @@ public class ToStringBuilderTests {
 
 	@Test
 	public void withNullObject() {
-		assertThrows(IllegalArgumentException.class, () -> {
+		assertThrows(NullPointerException.class, () -> {
 			new ToStringBuilder((Object) null);
 		});
 	}
 
 	@Test
 	public void withNullClass() {
-		assertThrows(IllegalArgumentException.class, () -> {
+		assertThrows(NullPointerException.class, () -> {
 			new ToStringBuilder((Class<?>) null);
 		});
 	}

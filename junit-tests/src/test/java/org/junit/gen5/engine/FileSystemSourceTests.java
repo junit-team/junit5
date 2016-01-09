@@ -23,7 +23,7 @@ class FileSystemSourceTests {
 
 	@Test
 	void nullSourceFileOrDirectoryYieldsException() {
-		assertThrows(IllegalArgumentException.class, () -> {
+		assertThrows(NullPointerException.class, () -> {
 			new FileSystemSource(null);
 		});
 	}
