@@ -23,7 +23,7 @@ class CollectionUtilsTests {
 
 	@Test
 	void getOnlyElementWithNullCollection() {
-		IllegalArgumentException exception = expectThrows(IllegalArgumentException.class, () -> {
+		NullPointerException exception = expectThrows(NullPointerException.class, () -> {
 			CollectionUtils.getOnlyElement(null);
 		});
 		assertEquals("collection must not be null", exception.getMessage());

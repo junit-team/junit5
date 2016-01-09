@@ -21,7 +21,7 @@ class FunctionUtilsTests {
 
 	@Test
 	void whereWithNullFunction() {
-		IllegalArgumentException exception = expectThrows(IllegalArgumentException.class, () -> {
+		NullPointerException exception = expectThrows(NullPointerException.class, () -> {
 			FunctionUtils.where(null, o -> true);
 		});
 		assertEquals("function must not be null", exception.getMessage());
@@ -29,7 +29,7 @@ class FunctionUtilsTests {
 
 	@Test
 	void whereWithNullPredicate() {
-		IllegalArgumentException exception = expectThrows(IllegalArgumentException.class, () -> {
+		NullPointerException exception = expectThrows(NullPointerException.class, () -> {
 			FunctionUtils.where(o -> o, null);
 		});
 		assertEquals("predicate must not be null", exception.getMessage());

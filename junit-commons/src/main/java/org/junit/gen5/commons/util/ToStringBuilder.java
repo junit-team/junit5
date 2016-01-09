@@ -35,8 +35,7 @@ public class ToStringBuilder {
 	}
 
 	public ToStringBuilder(Class<?> type) {
-		Preconditions.notNull(type, "Class must not be null");
-		this.type = type;
+		this.type = Preconditions.notNull(type, "Class must not be null");
 	}
 
 	public ToStringBuilder append(String name, Object value) {
