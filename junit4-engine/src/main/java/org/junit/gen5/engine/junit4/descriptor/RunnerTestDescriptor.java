@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.junit4.descriptor;
 
+import java.util.Optional;
+
+import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.runner.Runner;
 
@@ -21,7 +24,7 @@ public class RunnerTestDescriptor extends JUnit4TestDescriptor {
 	private final Runner runner;
 
 	public RunnerTestDescriptor(TestDescriptor parent, Class<?> testClass, Runner runner) {
-		super(parent, ':', testClass.getName(), runner.getDescription());
+		super(parent, ':', testClass.getName(), runner.getDescription(), Optional.of(new JavaSource(testClass)));
 		this.runner = runner;
 	}
 

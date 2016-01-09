@@ -21,12 +21,14 @@ import static org.junit.gen5.engine.ClassFilters.classNameMatches;
 import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestTag;
@@ -38,9 +40,12 @@ import org.junit.gen5.engine.junit4.samples.junit4.Categories.Plain;
 import org.junit.gen5.engine.junit4.samples.junit4.Categories.Skipped;
 import org.junit.gen5.engine.junit4.samples.junit4.Categories.SkippedWithReason;
 import org.junit.gen5.engine.junit4.samples.junit4.IgnoredJUnit4TestCase;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
 import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithOverloadedMethod;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleInheritedTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
 import org.junit.gen5.engine.junit4.samples.junit4.SingleFailingTheoryTestCase;
 import org.junit.gen5.engine.junit4.samples.junit4.TestCaseRunWithJUnit5;
 
@@ -86,7 +91,7 @@ class JUnit4TestEngineDiscoveryTests {
 	}
 
 	@Test
-	void resolvesJUnit4TestClassWithCustomRunner() {
+	void resolvesJUnit4TestClassWithCustomRunner() throws Exception {
 		Class<?> testClass = SingleFailingTheoryTestCase.class;
 		TestPlanSpecification specification = buildClassSpecification(testClass);
 
@@ -97,6 +102,7 @@ class JUnit4TestEngineDiscoveryTests {
 		assertFalse(runnerDescriptor.isTest());
 		assertEquals(testClass.getName(), runnerDescriptor.getDisplayName());
 		assertEquals("junit4:" + testClass.getName(), runnerDescriptor.getUniqueId());
+		assertClassSource(testClass, runnerDescriptor);
 
 		TestDescriptor childDescriptor = getOnlyElement(runnerDescriptor.getChildren());
 		assertTrue(childDescriptor.isTest());
@@ -104,6 +110,7 @@ class JUnit4TestEngineDiscoveryTests {
 		assertEquals("theory", childDescriptor.getDisplayName());
 		assertEquals("junit4:" + testClass.getName() + "/theory(" + testClass.getName() + ")",
 			childDescriptor.getUniqueId());
+		assertMethodSource(testClass.getMethod("theory"), childDescriptor);
 		assertThat(childDescriptor.getChildren()).isEmpty();
 	}
 
@@ -130,7 +137,7 @@ class JUnit4TestEngineDiscoveryTests {
 	}
 
 	@Test
-	void resolvesJUnit3Suites() {
+	void resolvesJUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails() throws Exception {
 		Class<?> suiteClass = JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails.class;
 		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
 		TestPlanSpecification specification = buildClassSpecification(suiteClass);
@@ -142,12 +149,14 @@ class JUnit4TestEngineDiscoveryTests {
 		assertFalse(suiteDescriptor.isTest());
 		assertThat(suiteDescriptor.getDisplayName()).startsWith("TestSuite with 1 tests");
 		assertEquals("junit4:" + suiteClass.getName(), suiteDescriptor.getUniqueId());
+		assertClassSource(suiteClass, suiteDescriptor);
 
 		TestDescriptor testClassDescriptor = getOnlyElement(suiteDescriptor.getChildren());
 		assertTrue(testClassDescriptor.isContainer());
 		assertFalse(testClassDescriptor.isTest());
 		assertEquals(testClass.getName(), testClassDescriptor.getDisplayName());
 		assertEquals("junit4:" + suiteClass.getName() + "/" + testClass.getName(), testClassDescriptor.getUniqueId());
+		assertClassSource(testClass, testClassDescriptor);
 
 		TestDescriptor testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
 		assertTrue(testMethodDescriptor.isTest());
@@ -156,6 +165,40 @@ class JUnit4TestEngineDiscoveryTests {
 		assertEquals(
 			"junit4:" + suiteClass.getName() + "/" + testClass.getName() + "/test" + "(" + testClass.getName() + ")",
 			testMethodDescriptor.getUniqueId());
+		assertMethodSource(testClass.getMethod("test"), testMethodDescriptor);
+		assertThat(testMethodDescriptor.getChildren()).isEmpty();
+	}
+
+	@Test
+	void resolvesJUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored() throws Exception {
+		Class<?> suiteClass = JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored.class;
+		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichIsIgnored.class;
+		TestPlanSpecification specification = buildClassSpecification(suiteClass);
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		TestDescriptor suiteDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertTrue(suiteDescriptor.isContainer());
+		assertFalse(suiteDescriptor.isTest());
+		assertEquals(suiteClass.getName(), suiteDescriptor.getDisplayName());
+		assertEquals("junit4:" + suiteClass.getName(), suiteDescriptor.getUniqueId());
+		assertClassSource(suiteClass, suiteDescriptor);
+
+		TestDescriptor testClassDescriptor = getOnlyElement(suiteDescriptor.getChildren());
+		assertTrue(testClassDescriptor.isContainer());
+		assertFalse(testClassDescriptor.isTest());
+		assertEquals(testClass.getName(), testClassDescriptor.getDisplayName());
+		assertEquals("junit4:" + suiteClass.getName() + "/" + testClass.getName(), testClassDescriptor.getUniqueId());
+		assertClassSource(testClass, testClassDescriptor);
+
+		TestDescriptor testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
+		assertTrue(testMethodDescriptor.isTest());
+		assertFalse(testMethodDescriptor.isContainer());
+		assertEquals("ignoredTest", testMethodDescriptor.getDisplayName());
+		assertEquals("junit4:" + suiteClass.getName() + "/" + testClass.getName() + "/ignoredTest" + "("
+				+ testClass.getName() + ")",
+			testMethodDescriptor.getUniqueId());
+		assertMethodSource(testClass.getMethod("ignoredTest"), testMethodDescriptor);
 		assertThat(testMethodDescriptor.getChildren()).isEmpty();
 	}
 
@@ -171,6 +214,7 @@ class JUnit4TestEngineDiscoveryTests {
 		assertFalse(runnerDescriptor.isTest());
 		assertEquals(testClass.getName(), runnerDescriptor.getDisplayName());
 		assertEquals("junit4:" + testClass.getName(), runnerDescriptor.getUniqueId());
+		assertClassSource(testClass, runnerDescriptor);
 
 		List<TestDescriptor> testMethodDescriptors = new ArrayList<>(runnerDescriptor.getChildren());
 		assertThat(testMethodDescriptors).hasSize(2);
@@ -181,6 +225,7 @@ class JUnit4TestEngineDiscoveryTests {
 		assertEquals("theory", testMethodDescriptor.getDisplayName());
 		assertEquals("junit4:" + testClass.getName() + "/theory" + "(" + testClass.getName() + ")[0]",
 			testMethodDescriptor.getUniqueId());
+		assertClassSource(testClass, testMethodDescriptor);
 		assertThat(testMethodDescriptor.getChildren()).isEmpty();
 
 		testMethodDescriptor = testMethodDescriptors.get(1);
@@ -189,6 +234,7 @@ class JUnit4TestEngineDiscoveryTests {
 		assertEquals("theory", testMethodDescriptor.getDisplayName());
 		assertEquals("junit4:" + testClass.getName() + "/theory" + "(" + testClass.getName() + ")[1]",
 			testMethodDescriptor.getUniqueId());
+		assertClassSource(testClass, testMethodDescriptor);
 		assertThat(testMethodDescriptor.getChildren()).isEmpty();
 	}
 
@@ -267,6 +313,23 @@ class JUnit4TestEngineDiscoveryTests {
 	}
 
 	@Test
+	void resolvesClassesWithInheritedMethods() throws Exception {
+		Class<?> superclass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
+		Class<?> testClass = PlainJUnit4TestCaseWithSingleInheritedTestWhichFails.class;
+		TestPlanSpecification specification = buildClassSpecification(testClass);
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertEquals(testClass.getName(), runnerDescriptor.getDisplayName());
+		assertClassSource(testClass, runnerDescriptor);
+
+		TestDescriptor testDescriptor = getOnlyElement(runnerDescriptor.getChildren());
+		assertEquals("failingTest", testDescriptor.getDisplayName());
+		assertMethodSource(superclass.getMethod("failingTest"), testDescriptor);
+	}
+
+	@Test
 	void resolvesCategoriesIntoTags() {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		TestPlanSpecification specification = buildClassSpecification(testClass);
@@ -316,6 +379,24 @@ class JUnit4TestEngineDiscoveryTests {
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
 		assertThat(engineDescriptor.getChildren()).isEmpty();
+	}
+
+	private static void assertClassSource(Class<?> expectedClass, TestDescriptor testDescriptor) {
+		assertThat(testDescriptor.getSource()).containsInstanceOf(JavaSource.class);
+		JavaSource classSource = (JavaSource) testDescriptor.getSource().get();
+		assertThat(classSource.getJavaClass()).hasValue(expectedClass);
+		assertThat(classSource.getJavaMethodName()).isEmpty();
+		assertThat(classSource.getJavaMethodParameterTypes()).isEmpty();
+	}
+
+	private static void assertMethodSource(Method expectedMethod, TestDescriptor testDescriptor) {
+		assertThat(testDescriptor.getSource()).containsInstanceOf(JavaSource.class);
+		JavaSource methodSource = (JavaSource) testDescriptor.getSource().get();
+		assertThat(methodSource.getJavaClass()).hasValue(expectedMethod.getDeclaringClass());
+		assertThat(methodSource.getJavaMethodName()).hasValue(expectedMethod.getName());
+		assertThat(methodSource.getJavaMethodParameterTypes()).isPresent();
+		assertThat(methodSource.getJavaMethodParameterTypes().get()).containsExactly(
+			expectedMethod.getParameterTypes());
 	}
 
 	private static TestPlanSpecification buildClassSpecification(Class<?> testClass) {
