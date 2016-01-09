@@ -32,7 +32,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
 /**
- * JUnit4-based {@link Runner} which runs tests that use the JUnit5
+ * JUnit 4 based {@link Runner} which runs tests that use the JUnit 5
  * programming and extension models.
  *
  * <p>Annotating a test class with {@code @RunWith(JUnit5.class)} allows
