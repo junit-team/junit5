@@ -4,9 +4,15 @@ This repository is the home of the next generation of JUnit, codenamed  _JUnit L
 
 The project is currently in _Phase 3_, building the _Alpha 1 milestone_ which is based on feedback received for the [Prototype](https://github.com/junit-team/junit-lambda/wiki/Prototype).
 
-## User Guide
+## Documentation
+
+### User Guide
 
 The [JUnit 5 User Guide](http://junit-team.github.io/junit-lambda/) is available online.
+
+### Javadoc
+
+The [JUnit 5 Javadoc](https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc/) is available online.
 
 ## Continuous Integration Builds
 
