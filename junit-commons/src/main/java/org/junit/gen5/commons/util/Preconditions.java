@@ -56,8 +56,7 @@ public final class Preconditions {
 	 * @throws IllegalArgumentException if the supplied object is {@code null}
 	 * @see #condition(boolean, Supplier)
 	 */
-	public static <T> T notNull(T object, Supplier<String> messageSupplier)
-			throws IllegalArgumentException {
+	public static <T> T notNull(T object, Supplier<String> messageSupplier) throws IllegalArgumentException {
 		condition(object != null, messageSupplier);
 		return object;
 	}
