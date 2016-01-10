@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * test as the value for the annotated parameter.
  *
  * <p>If a method parameter is annotated with {@code @TestName}
- * but <em>not<em/> of type {@link String},
+ * but <em>not</em> of type {@link String},
  * this will be considered an error and a ParameterResolutionException
  * will be thrown.
  *
