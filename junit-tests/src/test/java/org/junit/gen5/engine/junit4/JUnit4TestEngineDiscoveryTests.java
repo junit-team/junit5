@@ -54,25 +54,17 @@ class JUnit4TestEngineDiscoveryTests {
 	JUnit4TestEngine engine = new JUnit4TestEngine();
 
 	@Test
-	void resolvesSimpleJUnit4TestClass() {
+	void resolvesSimpleJUnit4TestClass() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
 		TestPlanSpecification specification = buildClassSpecification(testClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
 		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
-		assertTrue(runnerDescriptor.isContainer());
-		assertFalse(runnerDescriptor.isTest());
-		assertEquals(testClass.getName(), runnerDescriptor.getDisplayName());
-		assertEquals("junit4:" + testClass.getName(), runnerDescriptor.getUniqueId());
+		assertRunnerTestDescriptor(runnerDescriptor, testClass);
 
 		TestDescriptor childDescriptor = getOnlyElement(runnerDescriptor.getChildren());
-		assertTrue(childDescriptor.isTest());
-		assertFalse(childDescriptor.isContainer());
-		assertEquals("failingTest", childDescriptor.getDisplayName());
-		assertEquals("junit4:" + testClass.getName() + "/failingTest(" + testClass.getName() + ")",
-			childDescriptor.getUniqueId());
-		assertThat(childDescriptor.getChildren()).isEmpty();
+		assertTestMethodDescriptor(childDescriptor, testClass, "failingTest", "junit4:" + testClass.getName() + "/");
 	}
 
 	@Test
@@ -98,42 +90,24 @@ class JUnit4TestEngineDiscoveryTests {
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
 		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
-		assertTrue(runnerDescriptor.isContainer());
-		assertFalse(runnerDescriptor.isTest());
-		assertEquals(testClass.getName(), runnerDescriptor.getDisplayName());
-		assertEquals("junit4:" + testClass.getName(), runnerDescriptor.getUniqueId());
-		assertClassSource(testClass, runnerDescriptor);
+		assertRunnerTestDescriptor(runnerDescriptor, testClass);
 
 		TestDescriptor childDescriptor = getOnlyElement(runnerDescriptor.getChildren());
-		assertTrue(childDescriptor.isTest());
-		assertFalse(childDescriptor.isContainer());
-		assertEquals("theory", childDescriptor.getDisplayName());
-		assertEquals("junit4:" + testClass.getName() + "/theory(" + testClass.getName() + ")",
-			childDescriptor.getUniqueId());
-		assertMethodSource(testClass.getMethod("theory"), childDescriptor);
-		assertThat(childDescriptor.getChildren()).isEmpty();
+		assertTestMethodDescriptor(childDescriptor, testClass, "theory", "junit4:" + testClass.getName() + "/");
 	}
 
 	@Test
-	void resolvesJUnit3TestCase() {
+	void resolvesJUnit3TestCase() throws Exception {
 		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
 		TestPlanSpecification specification = buildClassSpecification(testClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
 		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
-		assertTrue(runnerDescriptor.isContainer());
-		assertFalse(runnerDescriptor.isTest());
-		assertEquals(testClass.getName(), runnerDescriptor.getDisplayName());
-		assertEquals("junit4:" + testClass.getName(), runnerDescriptor.getUniqueId());
+		assertRunnerTestDescriptor(runnerDescriptor, testClass);
 
 		TestDescriptor childDescriptor = getOnlyElement(runnerDescriptor.getChildren());
-		assertTrue(childDescriptor.isTest());
-		assertFalse(childDescriptor.isContainer());
-		assertEquals("test", childDescriptor.getDisplayName());
-		assertEquals("junit4:" + testClass.getName() + "/test(" + testClass.getName() + ")",
-			childDescriptor.getUniqueId());
-		assertThat(childDescriptor.getChildren()).isEmpty();
+		assertTestMethodDescriptor(childDescriptor, testClass, "test", "junit4:" + testClass.getName() + "/");
 	}
 
 	@Test
@@ -152,21 +126,11 @@ class JUnit4TestEngineDiscoveryTests {
 		assertClassSource(suiteClass, suiteDescriptor);
 
 		TestDescriptor testClassDescriptor = getOnlyElement(suiteDescriptor.getChildren());
-		assertTrue(testClassDescriptor.isContainer());
-		assertFalse(testClassDescriptor.isTest());
-		assertEquals(testClass.getName(), testClassDescriptor.getDisplayName());
-		assertEquals("junit4:" + suiteClass.getName() + "/" + testClass.getName(), testClassDescriptor.getUniqueId());
-		assertClassSource(testClass, testClassDescriptor);
+		assertContainerTestDescriptor(testClassDescriptor, "junit4:" + suiteClass.getName() + "/", testClass);
 
 		TestDescriptor testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
-		assertTrue(testMethodDescriptor.isTest());
-		assertFalse(testMethodDescriptor.isContainer());
-		assertEquals("test", testMethodDescriptor.getDisplayName());
-		assertEquals(
-			"junit4:" + suiteClass.getName() + "/" + testClass.getName() + "/test" + "(" + testClass.getName() + ")",
-			testMethodDescriptor.getUniqueId());
-		assertMethodSource(testClass.getMethod("test"), testMethodDescriptor);
-		assertThat(testMethodDescriptor.getChildren()).isEmpty();
+		assertTestMethodDescriptor(testMethodDescriptor, testClass, "test",
+			"junit4:" + suiteClass.getName() + "/" + testClass.getName() + "/");
 	}
 
 	@Test
@@ -178,28 +142,14 @@ class JUnit4TestEngineDiscoveryTests {
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
 		TestDescriptor suiteDescriptor = getOnlyElement(engineDescriptor.getChildren());
-		assertTrue(suiteDescriptor.isContainer());
-		assertFalse(suiteDescriptor.isTest());
-		assertEquals(suiteClass.getName(), suiteDescriptor.getDisplayName());
-		assertEquals("junit4:" + suiteClass.getName(), suiteDescriptor.getUniqueId());
-		assertClassSource(suiteClass, suiteDescriptor);
+		assertRunnerTestDescriptor(suiteDescriptor, suiteClass);
 
 		TestDescriptor testClassDescriptor = getOnlyElement(suiteDescriptor.getChildren());
-		assertTrue(testClassDescriptor.isContainer());
-		assertFalse(testClassDescriptor.isTest());
-		assertEquals(testClass.getName(), testClassDescriptor.getDisplayName());
-		assertEquals("junit4:" + suiteClass.getName() + "/" + testClass.getName(), testClassDescriptor.getUniqueId());
-		assertClassSource(testClass, testClassDescriptor);
+		assertContainerTestDescriptor(testClassDescriptor, "junit4:" + suiteClass.getName() + "/", testClass);
 
 		TestDescriptor testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
-		assertTrue(testMethodDescriptor.isTest());
-		assertFalse(testMethodDescriptor.isContainer());
-		assertEquals("ignoredTest", testMethodDescriptor.getDisplayName());
-		assertEquals("junit4:" + suiteClass.getName() + "/" + testClass.getName() + "/ignoredTest" + "("
-				+ testClass.getName() + ")",
-			testMethodDescriptor.getUniqueId());
-		assertMethodSource(testClass.getMethod("ignoredTest"), testMethodDescriptor);
-		assertThat(testMethodDescriptor.getChildren()).isEmpty();
+		assertTestMethodDescriptor(testMethodDescriptor, testClass, "ignoredTest",
+			"junit4:" + suiteClass.getName() + "/" + testClass.getName() + "/");
 	}
 
 	@Test
@@ -210,32 +160,22 @@ class JUnit4TestEngineDiscoveryTests {
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
 		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
-		assertTrue(runnerDescriptor.isContainer());
-		assertFalse(runnerDescriptor.isTest());
-		assertEquals(testClass.getName(), runnerDescriptor.getDisplayName());
-		assertEquals("junit4:" + testClass.getName(), runnerDescriptor.getUniqueId());
-		assertClassSource(testClass, runnerDescriptor);
+		assertRunnerTestDescriptor(runnerDescriptor, testClass);
 
 		List<TestDescriptor> testMethodDescriptors = new ArrayList<>(runnerDescriptor.getChildren());
 		assertThat(testMethodDescriptors).hasSize(2);
 
 		TestDescriptor testMethodDescriptor = testMethodDescriptors.get(0);
-		assertTrue(testMethodDescriptor.isTest());
-		assertFalse(testMethodDescriptor.isContainer());
 		assertEquals("theory", testMethodDescriptor.getDisplayName());
 		assertEquals("junit4:" + testClass.getName() + "/theory" + "(" + testClass.getName() + ")[0]",
 			testMethodDescriptor.getUniqueId());
 		assertClassSource(testClass, testMethodDescriptor);
-		assertThat(testMethodDescriptor.getChildren()).isEmpty();
 
 		testMethodDescriptor = testMethodDescriptors.get(1);
-		assertTrue(testMethodDescriptor.isTest());
-		assertFalse(testMethodDescriptor.isContainer());
 		assertEquals("theory", testMethodDescriptor.getDisplayName());
 		assertEquals("junit4:" + testClass.getName() + "/theory" + "(" + testClass.getName() + ")[1]",
 			testMethodDescriptor.getUniqueId());
 		assertClassSource(testClass, testMethodDescriptor);
-		assertThat(testMethodDescriptor.getChildren()).isEmpty();
 	}
 
 	@Test
@@ -379,6 +319,29 @@ class JUnit4TestEngineDiscoveryTests {
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
 		assertThat(engineDescriptor.getChildren()).isEmpty();
+	}
+
+	private static void assertRunnerTestDescriptor(TestDescriptor runnerDescriptor, Class<?> testClass) {
+		assertContainerTestDescriptor(runnerDescriptor, "junit4:", testClass);
+	}
+
+	private static void assertTestMethodDescriptor(TestDescriptor testMethodDescriptor, Class<?> testClass,
+			String methodName, String uniqueIdPrefix) throws Exception {
+		assertTrue(testMethodDescriptor.isTest());
+		assertFalse(testMethodDescriptor.isContainer());
+		assertEquals(methodName, testMethodDescriptor.getDisplayName());
+		assertEquals(uniqueIdPrefix + methodName + "(" + testClass.getName() + ")", testMethodDescriptor.getUniqueId());
+		assertThat(testMethodDescriptor.getChildren()).isEmpty();
+		assertMethodSource(testClass.getMethod(methodName), testMethodDescriptor);
+	}
+
+	private static void assertContainerTestDescriptor(TestDescriptor containerDescriptor, String uniqueIdPrefix,
+			Class<?> testClass) {
+		assertTrue(containerDescriptor.isContainer());
+		assertFalse(containerDescriptor.isTest());
+		assertEquals(testClass.getName(), containerDescriptor.getDisplayName());
+		assertEquals(uniqueIdPrefix + testClass.getName(), containerDescriptor.getUniqueId());
+		assertClassSource(testClass, containerDescriptor);
 	}
 
 	private static void assertClassSource(Class<?> expectedClass, TestDescriptor testDescriptor) {
