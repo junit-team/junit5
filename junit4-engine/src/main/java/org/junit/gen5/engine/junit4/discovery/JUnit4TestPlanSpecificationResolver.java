@@ -17,9 +17,12 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.IntFunction;
 
 import org.junit.gen5.engine.ClassFilter;
@@ -45,6 +48,8 @@ public class JUnit4TestPlanSpecificationResolver {
 	public void resolve(TestPlanSpecification specification) {
 		ClassFilter classFilter = specification.getClassFilter();
 		RunnerBuilder runnerBuilder = new DefensiveAllDefaultPossibilitiesBuilder();
+		Set<Class<?>> unfilteredTestClasses = new LinkedHashSet<>();
+		Map<Class<?>, List<Filter>> filteredTestClasses = new LinkedHashMap<>();
 		specification.accept(new TestPlanSpecificationElementVisitor() {
 
 			private final IsPotentialJUnit4TestClass classTester = new IsPotentialJUnit4TestClass();
@@ -52,11 +57,7 @@ public class JUnit4TestPlanSpecificationResolver {
 			@Override
 			public void visitClass(Class<?> testClass) {
 				if (classFilter.acceptClass(testClass)) {
-					Runner runner = runnerBuilder.safeRunnerForClass(testClass);
-					// TODO #40 Filter Runner as well?
-					if (runner != null) {
-						engineDescriptor.addChild(createCompleteRunnerTestDescriptor(testClass, runner));
-					}
+					unfilteredTestClasses.add(testClass);
 				}
 			}
 
@@ -72,16 +73,33 @@ public class JUnit4TestPlanSpecificationResolver {
 
 			@Override
 			public void visitMethod(Class<?> testClass, Method testMethod) {
-				Runner runner = runnerBuilder.safeRunnerForClass(testClass);
+				Description methodDescription = Description.createTestDescription(testClass, testMethod.getName());
+				Filter filter = Filter.matchMethodDescription(methodDescription);
+				filteredTestClasses.computeIfAbsent(testClass, key -> new LinkedList<>()).add(filter);
+			}
+		});
+
+		// TODO #40 @marcphilipp Clean this up when uniqueIds are resolved
+		for (Class<?> testClass : unfilteredTestClasses) {
+			Runner runner = runnerBuilder.safeRunnerForClass(testClass);
+			if (runner != null) {
+				engineDescriptor.addChild(createCompleteRunnerTestDescriptor(testClass, runner));
+			}
+		}
+		for (Entry<Class<?>, List<Filter>> entry : filteredTestClasses.entrySet()) {
+			Class<?> testClass = entry.getKey();
+			List<Filter> filters = entry.getValue();
+			Runner runner = runnerBuilder.safeRunnerForClass(testClass);
+			if (runner != null) {
 				try {
-					Description methodDescription = Description.createTestDescription(testClass, testMethod.getName());
-					Filter.matchMethodDescription(methodDescription).apply(runner);
+					new OrFilter(filters).apply(runner);
 					engineDescriptor.addChild(createCompleteRunnerTestDescriptor(testClass, runner));
 				}
 				catch (NoTestsRemainException e) {
+					// ignore testClass
 				}
 			}
-		});
+		}
 	}
 
 	private RunnerTestDescriptor createCompleteRunnerTestDescriptor(Class<?> testClass, Runner runner) {
