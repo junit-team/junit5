@@ -46,6 +46,7 @@ import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTe
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleInheritedTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods;
 import org.junit.gen5.engine.junit4.samples.junit4.SingleFailingTheoryTestCase;
 import org.junit.gen5.engine.junit4.samples.junit4.TestCaseRunWithJUnit5;
 
@@ -294,6 +295,21 @@ class JUnit4TestEngineDiscoveryTests {
 			new TestTag(Plain.class.getName()), //
 			new TestTag(Skipped.class.getName()), //
 			new TestTag(SkippedWithReason.class.getName()));
+	}
+
+	@Test
+	void resolvesMethodSpecificationForSingleMethod() throws Exception {
+		Class<?> testClass = PlainJUnit4TestCaseWithTwoTestMethods.class;
+		TestPlanSpecification specification = build(
+			TestPlanSpecification.forMethod(testClass, testClass.getMethod("failingTest")));
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertRunnerTestDescriptor(runnerDescriptor, testClass);
+
+		TestDescriptor childDescriptor = getOnlyElement(runnerDescriptor.getChildren());
+		assertTestMethodDescriptor(childDescriptor, testClass, "failingTest", "junit4:" + testClass.getName() + "/");
 	}
 
 	private TestDescriptor findChildByDisplayName(TestDescriptor runnerDescriptor, String displayName) {

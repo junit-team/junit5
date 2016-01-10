@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.*;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,6 +30,8 @@ import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
+import org.junit.runner.manipulation.Filter;
+import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runners.model.RunnerBuilder;
 
 public class JUnit4TestPlanSpecificationResolver {
@@ -65,6 +68,18 @@ public class JUnit4TestPlanSpecificationResolver {
 			@Override
 			public void visitPackage(String packageName) {
 				findAllClassesInPackage(packageName, classTester).stream().forEach(this::visitClass);
+			}
+
+			@Override
+			public void visitMethod(Class<?> testClass, Method testMethod) {
+				Runner runner = runnerBuilder.safeRunnerForClass(testClass);
+				try {
+					Description methodDescription = Description.createTestDescription(testClass, testMethod.getName());
+					Filter.matchMethodDescription(methodDescription).apply(runner);
+					engineDescriptor.addChild(createCompleteRunnerTestDescriptor(testClass, runner));
+				}
+				catch (NoTestsRemainException e) {
+				}
 			}
 		});
 	}
