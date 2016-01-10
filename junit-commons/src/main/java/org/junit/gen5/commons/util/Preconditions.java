@@ -43,7 +43,7 @@ public final class Preconditions {
 	 * @throws IllegalArgumentException if the supplied object is {@code null}
 	 * @see #notNull(Object, Supplier)
 	 */
-	public static <T extends Object> T notNull(T object, String message) throws IllegalArgumentException {
+	public static <T> T notNull(T object, String message) throws IllegalArgumentException {
 		return notNull(object, () -> message);
 	}
 
@@ -56,7 +56,7 @@ public final class Preconditions {
 	 * @throws IllegalArgumentException if the supplied object is {@code null}
 	 * @see #condition(boolean, Supplier)
 	 */
-	public static <T extends Object> T notNull(T object, Supplier<String> messageSupplier)
+	public static <T> T notNull(T object, Supplier<String> messageSupplier)
 			throws IllegalArgumentException {
 		condition(object != null, messageSupplier);
 		return object;
