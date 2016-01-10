@@ -44,8 +44,7 @@ public class TestExecutionResult {
 	}
 
 	public TestExecutionResult(Status status, Throwable throwable) {
-		Preconditions.notNull(status, "status must not be null");
-		this.status = status;
+		this.status = Preconditions.notNull(status, "Status must not be null");
 		this.throwable = throwable;
 	}
 

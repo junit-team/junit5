@@ -45,7 +45,7 @@ class JUnit5TestableFactory {
 	}
 
 	JUnit5Testable fromClass(Class<?> clazz, String engineId) {
-		Preconditions.notNull(clazz, "clazz must not be null");
+		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(engineId, "Engine ID must not be null or empty");
 		if (isPotentialTestContainer.test(clazz)) {
 			String uniqueId = engineId + ":" + clazz.getName();

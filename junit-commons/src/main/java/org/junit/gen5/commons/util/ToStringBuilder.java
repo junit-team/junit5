@@ -36,13 +36,11 @@ public class ToStringBuilder {
 	private final List<String> values = new ArrayList<>();
 
 	public ToStringBuilder(Object obj) {
-		Preconditions.notNull(obj, "Object must not be null");
-		this.type = obj.getClass();
+		this.type = Preconditions.notNull(obj, "Object must not be null").getClass();
 	}
 
 	public ToStringBuilder(Class<?> type) {
-		Preconditions.notNull(type, "Class must not be null");
-		this.type = type;
+		this.type = Preconditions.notNull(type, "Class must not be null");
 	}
 
 	public ToStringBuilder append(String name, Object value) {

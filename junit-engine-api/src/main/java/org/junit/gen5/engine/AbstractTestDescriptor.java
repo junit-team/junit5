@@ -34,8 +34,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	private final Set<TestDescriptor> children = new LinkedHashSet<>();
 
 	protected AbstractTestDescriptor(String uniqueId) {
-		Preconditions.notBlank(uniqueId, "uniqueId must not be null or empty");
-		this.uniqueId = uniqueId;
+		this.uniqueId = Preconditions.notBlank(uniqueId, "uniqueId must not be null or empty");
 	}
 
 	@Override
@@ -94,8 +93,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	protected final void setSource(TestSource source) {
-		Preconditions.notNull(source, "test source must not be null");
-		this.source = source;
+		this.source = Preconditions.notNull(source, "TestSource must not be null");
 	}
 
 	@Override
