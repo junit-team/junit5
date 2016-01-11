@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  *
  * <p>If a method parameter is annotated with {@code @TestName}
  * but <em>not</em> of type {@link String},
- * this will be considered an error and a ParameterResolutionException
+ * this will be considered an error and a {@code @ParameterResolutionException}
  * will be thrown.
  *
  * <p>The display name is either the canonical name of the test or a custom
