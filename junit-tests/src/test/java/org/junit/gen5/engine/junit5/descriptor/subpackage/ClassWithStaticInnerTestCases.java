@@ -12,19 +12,24 @@ package org.junit.gen5.engine.junit5.descriptor.subpackage;
 
 import org.junit.gen5.api.Test;
 
+/**
+ * @since 5.0
+ */
 public class ClassWithStaticInnerTestCases {
 
 	static class ShouldBeDiscovered {
+
 		@Test
 		void test1() {
-
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static class ShouldNotBeDiscovered {
+
 		@Test
 		void test2() {
-
 		}
 	}
+
 }
