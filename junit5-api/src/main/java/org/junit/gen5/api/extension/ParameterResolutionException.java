@@ -10,6 +10,8 @@
 
 package org.junit.gen5.api.extension;
 
+import org.junit.gen5.commons.JUnitException;
+
 /**
  * Thrown if an error is encountered in the configuration or execution of a
  * {@link MethodParameterResolver}.
@@ -17,7 +19,7 @@ package org.junit.gen5.api.extension;
  * @since 5.0
  * @see MethodParameterResolver
  */
-public class ParameterResolutionException extends RuntimeException {
+public class ParameterResolutionException extends JUnitException {
 
 	private static final long serialVersionUID = 5137237798019406636L;
 
