@@ -23,8 +23,7 @@ class OrFilter extends Filter {
 	private final Collection<Filter> filters;
 
 	OrFilter(Collection<Filter> filters) {
-		Preconditions.notEmpty(filters, "filters must not be empty");
-		this.filters = filters;
+		this.filters = Preconditions.notEmpty(filters, "filters must not be empty");
 	}
 
 	@Override
