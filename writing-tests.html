@@ -486,7 +486,7 @@ module.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test method. Unlike JUnit 4&#8217;s <code>@Test</code> annotation, this annotation does not declare any attributes, since test extensions in JUnit 5 operate based on their own dedicated annotations.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@Name</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@DisplayName</code></strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Declares a custom display name for the test class or test method</p></td>
 </tr>
 <tr>
@@ -593,11 +593,11 @@ characters, and even emojis&#8201;&#8212;&#8201;that will be displayed by test r
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.*;
 
-@Name("A special test case")
-class CanHaveAnyNameTest {
+@DisplayName("A special test case")
+class CanHaveAnyDisplayNameTest {
 
     @Test
-    @Name("A nice name, isn't it?")
+    @DisplayName("A nice name, isn't it?")
     void testWithANiceName() {}
 
 }</code></pre>
@@ -824,9 +824,9 @@ be resolved at runtime by a registered <code>MethodParameterResolver</code>.</p>
 <li>
 <p><code>{TestNameParameterResolver}</code>: if a method parameter is of type <code>String</code> and annotated
 with <code>@TestName</code>, the <code>TestNameParameterResolver</code> will supply the <em>display name</em> of the
-current test at runtime (either its canonical name or its user-provided <code>@Name</code>). This
-acts as a drop-in replacement for the <code>TestName</code> rule from JUnit 4. See <code>MyTest</code> for an
-example.</p>
+current test at runtime (either its canonical name or its user-provided <code>@DisplayName</code>).
+This acts as a drop-in replacement for the <code>TestName</code> rule from JUnit 4. See <code>MyTest</code>
+for an example.</p>
 </li>
 </ul>
 </div>
@@ -842,7 +842,7 @@ class MyTest {
     }
 
     @Test
-    @Name("TEST 1")
+    @DisplayName("TEST 1")
     void test1(@TestName name) {
         assertEquals("TEST 1", name);
     }
@@ -903,7 +903,7 @@ class MyMockitoTest {
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-11 13:36:41 -05:00
+Last updated 2016-01-11 13:46:34 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
