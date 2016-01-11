@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.TestName;
+import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.runner.RunWith;
@@ -34,8 +34,8 @@ public class MockitoExtensionInBaseClassTest {
 	private NumberGenerator numberGenerator;
 
 	@BeforeEach
-	void initialize(@InjectMock MyType myType, @TestName String testName) {
-		when(myType.getName()).thenReturn(testName);
+	void initialize(@InjectMock MyType myType, TestInfo testInfo) {
+		when(myType.getName()).thenReturn(testInfo.getDisplayName());
 		when(numberGenerator.next()).thenReturn(42);
 	}
 

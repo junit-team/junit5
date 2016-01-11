@@ -26,7 +26,7 @@ import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.TestName;
+import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.opentest4j.TestSkippedException;
 
@@ -86,8 +86,8 @@ class SampleTestCase {
 
 	@Test
 	@DisplayName("Method Injection")
-	void methodInjectionTest(@TestName String testName, CustomType customType, @CustomAnnotation String value) {
-		assertEquals("Method Injection", testName);
+	void methodInjectionTest(TestInfo testInfo, CustomType customType, @CustomAnnotation String value) {
+		assertEquals("Method Injection", testInfo.getDisplayName());
 		assertNotNull(customType);
 		assertNotNull(value);
 	}

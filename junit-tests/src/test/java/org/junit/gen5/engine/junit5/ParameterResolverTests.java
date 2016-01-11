@@ -10,7 +10,9 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
@@ -18,7 +20,7 @@ import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.TestName;
+import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
@@ -84,14 +86,18 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 	private static class MethodInjectionTestCase {
 
 		@Test
-		void parameterInjectionOfStandardTestName(@TestName String name) {
-			assertEquals("parameterInjectionOfStandardTestName", name);
+		void parameterInjectionOfStandardTestName(TestInfo testInfo) {
+			assertTrue(
+				testInfo.getName().endsWith("parameterInjectionOfStandardTestName(org.junit.gen5.api.TestInfo)"));
+			assertEquals("parameterInjectionOfStandardTestName", testInfo.getDisplayName());
 		}
 
 		@Test
 		@DisplayName("myName")
-		void parameterInjectionOfUserProvidedTestName(@TestName String name) {
-			assertEquals("myName", name);
+		void parameterInjectionOfUserProvidedTestName(TestInfo testInfo) {
+			assertTrue(
+				testInfo.getName().endsWith("parameterInjectionOfUserProvidedTestName(org.junit.gen5.api.TestInfo)"));
+			assertEquals("myName", testInfo.getDisplayName());
 		}
 
 		@Test
@@ -131,8 +137,8 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 	private static class BeforeAndAfterMethodInjectionTestCase {
 
 		@BeforeEach
-		void before(@TestName String name) {
-			assertEquals("custom name", name);
+		void before(TestInfo testInfo) {
+			assertEquals("custom name", testInfo.getDisplayName());
 		}
 
 		@Test
@@ -141,8 +147,8 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 		}
 
 		@AfterEach
-		void after(@TestName String name) {
-			assertEquals("custom name", name);
+		void after(TestInfo testInfo) {
+			assertEquals("custom name", testInfo.getDisplayName());
 		}
 	}
 
@@ -150,8 +156,8 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 	private static class BeforeAndAfterAllMethodInjectionTestCase {
 
 		@BeforeAll
-		static void beforeAll(@TestName String name) {
-			assertEquals("custom class name", name);
+		static void beforeAll(TestInfo testInfo) {
+			assertEquals("custom class name", testInfo.getDisplayName());
 		}
 
 		@Test
@@ -159,8 +165,8 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 		}
 
 		@AfterAll
-		static void afterAll(@TestName String name) {
-			assertEquals("custom class name", name);
+		static void afterAll(TestInfo testInfo) {
+			assertEquals("custom class name", testInfo.getDisplayName());
 		}
 	}
 

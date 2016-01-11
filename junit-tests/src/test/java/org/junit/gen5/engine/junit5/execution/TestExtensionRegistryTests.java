@@ -10,7 +10,8 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,7 +28,7 @@ import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
-import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
+import org.junit.gen5.engine.junit5.extension.TestInfoParameterResolver;
 
 public class TestExtensionRegistryTests {
 
@@ -43,7 +44,7 @@ public class TestExtensionRegistryTests {
 		assertEquals(2, TestExtensionRegistry.getDefaultExtensionClasses().size());
 
 		assertDefaultExtensionType(DisabledCondition.class);
-		assertDefaultExtensionType(TestNameParameterResolver.class);
+		assertDefaultExtensionType(TestInfoParameterResolver.class);
 	}
 
 	@Test
@@ -52,7 +53,7 @@ public class TestExtensionRegistryTests {
 
 		assertEquals(TestExtensionRegistry.getDefaultExtensionClasses().size(), extensions.size());
 		assertExtensionRegistered(registry, DisabledCondition.class);
-		assertExtensionRegistered(registry, TestNameParameterResolver.class);
+		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
 
 		assertEquals(1, countExtensionPoints(MethodParameterResolver.class));
 		assertEquals(1, countExtensionPoints(ContainerExecutionCondition.class));
