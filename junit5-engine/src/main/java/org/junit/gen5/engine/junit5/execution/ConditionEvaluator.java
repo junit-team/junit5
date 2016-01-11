@@ -78,7 +78,7 @@ public class ConditionEvaluator {
 			return condition.evaluate(context);
 		}
 		catch (Exception ex) {
-			throw new IllegalStateException(
+			throw new ConditionEvaluationException(
 				String.format("Failed to evaluate condition [%s]", condition.getClass().getName()), ex);
 		}
 	}
@@ -88,7 +88,7 @@ public class ConditionEvaluator {
 			return condition.evaluate(context);
 		}
 		catch (Exception ex) {
-			throw new IllegalStateException(
+			throw new ConditionEvaluationException(
 				String.format("Failed to evaluate condition [%s]", condition.getClass().getName()), ex);
 		}
 	}
