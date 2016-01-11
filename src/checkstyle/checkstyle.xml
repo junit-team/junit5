@@ -13,7 +13,6 @@
 			<property name="allowUndeclaredRTE" value="true" />
 			<property name="validateThrows" value="true" />
 		</module>
-		<module name="JavadocParagraph" />
 		<module name="AtclauseOrder">
 			<property name="tagOrder" value="@param, @return, @throws, @exception, @author, @since, @see" />
 		</module>
