@@ -259,7 +259,7 @@ public class SpecificationResolverTests {
 			"org.junit.gen5.engine.junit5.descriptor.subpackage");
 		resolver.resolveElement(specification);
 
-		assertEquals(4, engineDescriptor.allDescendants().size());
+		assertEquals(6, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
 		assertTrue(
 			uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.subpackage.Class1WithTestCases"));
@@ -269,6 +269,8 @@ public class SpecificationResolverTests {
 			uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.subpackage.Class2WithTestCases"));
 		assertTrue(uniqueIds.contains(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.subpackage.Class2WithTestCases#test2()"));
+		assertTrue(uniqueIds.contains(
+			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.subpackage.ClassWithStaticInnerTestCases$ShouldBeDiscovered#test1()"));
 	}
 
 	@Test
