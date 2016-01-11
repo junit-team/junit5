@@ -22,6 +22,11 @@ class DummyTestDescriptor extends AbstractTestDescriptor implements Leaf<DummyEn
 	}
 
 	@Override
+	public String getName() {
+		return displayName;
+	}
+
+	@Override
 	public String getDisplayName() {
 		return displayName;
 	}

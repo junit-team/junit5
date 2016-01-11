@@ -28,6 +28,8 @@ public interface TestDescriptor {
 	 */
 	String getUniqueId();
 
+	String getName();
+
 	String getDisplayName();
 
 	Optional<TestDescriptor> getParent();

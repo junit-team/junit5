@@ -357,6 +357,11 @@ public class HierarchicalTestExecutorTests {
 		}
 
 		@Override
+		public String getName() {
+			return getUniqueId();
+		}
+
+		@Override
 		public String getDisplayName() {
 			return getUniqueId();
 		}
@@ -382,6 +387,11 @@ public class HierarchicalTestExecutorTests {
 		@Override
 		public MyEngineExecutionContext execute(MyEngineExecutionContext context) throws Exception {
 			return context;
+		}
+
+		@Override
+		public String getName() {
+			return getUniqueId();
 		}
 
 		@Override

@@ -20,7 +20,7 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 
 	private final Map<String, Object> attributes = new HashMap<>();
 
-	private ExtensionContext parent;
+	private final ExtensionContext parent;
 
 	AbstractExtensionContext(ExtensionContext parent) {
 		this.parent = parent;

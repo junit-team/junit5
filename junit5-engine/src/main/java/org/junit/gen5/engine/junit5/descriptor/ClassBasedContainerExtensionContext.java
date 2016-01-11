@@ -25,18 +25,28 @@ final class ClassBasedContainerExtensionContext extends AbstractExtensionContext
 	}
 
 	@Override
-	public Class<?> getTestClass() {
-		return testDescriptor.getTestClass();
+	public String getUniqueId() {
+		return this.testDescriptor.getUniqueId();
+	}
+
+	@Override
+	public String getName() {
+		return this.testDescriptor.getName();
 	}
 
 	@Override
 	public String getDisplayName() {
-		return testDescriptor.getDisplayName();
+		return this.testDescriptor.getDisplayName();
 	}
 
 	@Override
 	public AnnotatedElement getElement() {
 		return getTestClass();
+	}
+
+	@Override
+	public Class<?> getTestClass() {
+		return this.testDescriptor.getTestClass();
 	}
 
 }

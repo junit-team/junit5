@@ -63,6 +63,11 @@ final class RootTestDescriptor extends AbstractTestDescriptor {
 	}
 
 	@Override
+	public String getName() {
+		return getUniqueId();
+	}
+
+	@Override
 	public String getDisplayName() {
 		return "Test Plan";
 	}

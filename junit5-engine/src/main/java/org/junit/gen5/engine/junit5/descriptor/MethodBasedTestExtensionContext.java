@@ -30,26 +30,37 @@ final class MethodBasedTestExtensionContext extends AbstractExtensionContext imp
 
 	@Override
 	public Method getTestMethod() {
-		return testDescriptor.getTestMethod();
+		return this.testDescriptor.getTestMethod();
 	}
 
 	@Override
 	public Object getTestInstance() {
-		return testInstance;
+		return this.testInstance;
 	}
 
 	@Override
 	public Class<?> getTestClass() {
-		return testDescriptor.getTestClass();
+		return this.testDescriptor.getTestClass();
+	}
+
+	@Override
+	public String getUniqueId() {
+		return this.testDescriptor.getUniqueId();
+	}
+
+	@Override
+	public String getName() {
+		return this.testDescriptor.getName();
 	}
 
 	@Override
 	public String getDisplayName() {
-		return testDescriptor.getDisplayName();
+		return this.testDescriptor.getDisplayName();
 	}
 
 	@Override
 	public AnnotatedElement getElement() {
 		return getTestMethod();
 	}
+
 }
