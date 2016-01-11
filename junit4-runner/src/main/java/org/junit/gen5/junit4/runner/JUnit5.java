@@ -27,7 +27,6 @@ import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.runner.Description;
-import org.junit.runner.Result;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
@@ -77,9 +76,7 @@ public class JUnit5 extends Runner {
 
 	@Override
 	public void run(RunNotifier notifier) {
-		Result result = new Result();
-		notifier.addFirstListener(result.createListener());
-		JUnit5RunnerListener listener = new JUnit5RunnerListener(this.testTree, notifier, result);
+		JUnit5RunnerListener listener = new JUnit5RunnerListener(this.testTree, notifier);
 		this.launcher.registerTestExecutionListeners(listener);
 		this.launcher.execute(this.specification);
 	}

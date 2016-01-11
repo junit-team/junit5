@@ -10,12 +10,13 @@
 
 package org.junit.gen5.junit4.runner;
 
+import static org.junit.gen5.engine.TestExecutionResult.Status.*;
+
 import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.TestExecutionResult.Status;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
-import org.junit.gen5.launcher.TestPlan;
 import org.junit.runner.Description;
-import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
@@ -26,22 +27,10 @@ class JUnit5RunnerListener implements TestExecutionListener {
 
 	private final JUnit5TestTree testTree;
 	private final RunNotifier notifier;
-	private final Result result;
 
-	JUnit5RunnerListener(JUnit5TestTree testTree, RunNotifier notifier, Result result) {
+	JUnit5RunnerListener(JUnit5TestTree testTree, RunNotifier notifier) {
 		this.testTree = testTree;
 		this.notifier = notifier;
-		this.result = result;
-	}
-
-	@Override
-	public void testPlanExecutionStarted(TestPlan testPlan) {
-		this.notifier.fireTestRunStarted(this.testTree.getSuiteDescription());
-	}
-
-	@Override
-	public void testPlanExecutionFinished(TestPlan testPlan) {
-		this.notifier.fireTestRunFinished(this.result);
 	}
 
 	@Override
@@ -53,34 +42,28 @@ class JUnit5RunnerListener implements TestExecutionListener {
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		Description description = findJUnit4Description(testIdentifier);
 		this.notifier.fireTestIgnored(description);
-		this.notifier.fireTestFinished(description);
 	}
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		Description description = findJUnit4Description(testIdentifier);
-		this.notifier.fireTestStarted(description);
+		if (testIdentifier.isTest()) {
+			Description description = findJUnit4Description(testIdentifier);
+			this.notifier.fireTestStarted(description);
+		}
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		Description description = findJUnit4Description(testIdentifier);
-		switch (testExecutionResult.getStatus()) {
-			case ABORTED: {
-				this.notifier.fireTestAssumptionFailed(toFailure(testExecutionResult, description));
-				break;
-			}
-			case FAILED: {
-				this.notifier.fireTestFailure(toFailure(testExecutionResult, description));
-				break;
-			}
-			case SUCCESSFUL: {
-				this.notifier.fireTestFinished(description);
-				break;
-			}
-			default: {
-				throw new RuntimeException("Unsupported status: " + testExecutionResult.getStatus());
-			}
+		Status status = testExecutionResult.getStatus();
+		if (status == ABORTED) {
+			this.notifier.fireTestAssumptionFailed(toFailure(testExecutionResult, description));
+		}
+		else if (status == FAILED) {
+			this.notifier.fireTestFailure(toFailure(testExecutionResult, description));
+		}
+		if (testIdentifier.isTest()) {
+			this.notifier.fireTestFinished(description);
 		}
 	}
 
