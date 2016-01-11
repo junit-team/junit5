@@ -17,8 +17,8 @@ import java.util.function.Supplier;
  * Collection of utilities for asserting preconditions for method and
  * constructor arguments.
  *
- * <p>Each method in this class throws an {@link IllegalArgumentException}
- * if the precondition fails.
+ * <p>Each method in this class throws a {@link PreconditionViolationException}
+ * if the precondition is violated.
  *
  * <h3>DISCLAIMER</h3>
  *
@@ -40,10 +40,10 @@ public final class Preconditions {
 	 * @param object the object to check
 	 * @param message precondition violation message
 	 * @return the supplied object as a convenience
-	 * @throws IllegalArgumentException if the supplied object is {@code null}
+	 * @throws PreconditionViolationException if the supplied object is {@code null}
 	 * @see #notNull(Object, Supplier)
 	 */
-	public static <T> T notNull(T object, String message) throws IllegalArgumentException {
+	public static <T> T notNull(T object, String message) throws PreconditionViolationException {
 		return notNull(object, () -> message);
 	}
 
@@ -53,10 +53,10 @@ public final class Preconditions {
 	 * @param object the object to check
 	 * @param messageSupplier precondition violation message supplier
 	 * @return the supplied object as a convenience
-	 * @throws IllegalArgumentException if the supplied object is {@code null}
+	 * @throws PreconditionViolationException if the supplied object is {@code null}
 	 * @see #condition(boolean, Supplier)
 	 */
-	public static <T> T notNull(T object, Supplier<String> messageSupplier) throws IllegalArgumentException {
+	public static <T> T notNull(T object, Supplier<String> messageSupplier) throws PreconditionViolationException {
 		condition(object != null, messageSupplier);
 		return object;
 	}
@@ -67,10 +67,10 @@ public final class Preconditions {
 	 * @param str the string to check
 	 * @param message precondition violation message
 	 * @return the supplied string as a convenience
-	 * @throws IllegalArgumentException if the supplied string is {@code null} or empty
+	 * @throws PreconditionViolationException if the supplied string is {@code null} or empty
 	 * @see #notEmpty(String, Supplier)
 	 */
-	public static String notEmpty(String str, String message) throws IllegalArgumentException {
+	public static String notEmpty(String str, String message) throws PreconditionViolationException {
 		return notEmpty(str, () -> message);
 	}
 
@@ -80,11 +80,11 @@ public final class Preconditions {
 	 * @param str the string to check
 	 * @param messageSupplier precondition violation message supplier
 	 * @return the supplied string as a convenience
-	 * @throws IllegalArgumentException if the supplied string is {@code null} or empty
+	 * @throws PreconditionViolationException if the supplied string is {@code null} or empty
 	 * @see StringUtils#isNotEmpty(CharSequence)
 	 * @see #condition(boolean, Supplier)
 	 */
-	public static String notEmpty(String str, Supplier<String> messageSupplier) throws IllegalArgumentException {
+	public static String notEmpty(String str, Supplier<String> messageSupplier) throws PreconditionViolationException {
 		condition(StringUtils.isNotEmpty(str), messageSupplier);
 		return str;
 	}
@@ -95,10 +95,11 @@ public final class Preconditions {
 	 * @param collection the collection to check
 	 * @param message precondition violation message
 	 * @return the supplied collection as a convenience
-	 * @throws IllegalArgumentException if the supplied collection is {@code null} or empty
+	 * @throws PreconditionViolationException if the supplied collection is {@code null} or empty
 	 * @see #condition(boolean, Supplier)
 	 */
-	public static <T extends Collection<?>> T notEmpty(T collection, String message) throws IllegalArgumentException {
+	public static <T extends Collection<?>> T notEmpty(T collection, String message)
+			throws PreconditionViolationException {
 		condition(collection != null && !collection.isEmpty(), () -> message);
 		return collection;
 	}
@@ -109,10 +110,10 @@ public final class Preconditions {
 	 * @param str the string to check
 	 * @param message precondition violation message
 	 * @return the supplied string as a convenience
-	 * @throws IllegalArgumentException if the supplied string is {@code null} or blank
+	 * @throws PreconditionViolationException if the supplied string is {@code null} or blank
 	 * @see #notBlank(String, Supplier)
 	 */
-	public static String notBlank(String str, String message) throws IllegalArgumentException {
+	public static String notBlank(String str, String message) throws PreconditionViolationException {
 		return notBlank(str, () -> message);
 	}
 
@@ -122,11 +123,11 @@ public final class Preconditions {
 	 * @param str the string to check
 	 * @param messageSupplier precondition violation message supplier
 	 * @return the supplied string as a convenience
-	 * @throws IllegalArgumentException if the supplied string is {@code null} or blank
+	 * @throws PreconditionViolationException if the supplied string is {@code null} or blank
 	 * @see StringUtils#isNotBlank(String)
 	 * @see #condition(boolean, Supplier)
 	 */
-	public static String notBlank(String str, Supplier<String> messageSupplier) throws IllegalArgumentException {
+	public static String notBlank(String str, Supplier<String> messageSupplier) throws PreconditionViolationException {
 		condition(StringUtils.isNotBlank(str), messageSupplier);
 		return str;
 	}
@@ -136,10 +137,10 @@ public final class Preconditions {
 	 *
 	 * @param predicate the predicate to check
 	 * @param message precondition violation message
-	 * @throws IllegalArgumentException if the predicate is {@code false}
+	 * @throws PreconditionViolationException if the predicate is {@code false}
 	 * @see #condition(boolean, Supplier)
 	 */
-	public static void condition(boolean predicate, String message) throws IllegalArgumentException {
+	public static void condition(boolean predicate, String message) throws PreconditionViolationException {
 		condition(predicate, () -> message);
 	}
 
@@ -148,11 +149,12 @@ public final class Preconditions {
 	 *
 	 * @param predicate the predicate to check
 	 * @param messageSupplier precondition violation message supplier
-	 * @throws IllegalArgumentException if the predicate is {@code false}
+	 * @throws PreconditionViolationException if the predicate is {@code false}
 	 */
-	public static void condition(boolean predicate, Supplier<String> messageSupplier) throws IllegalArgumentException {
+	public static void condition(boolean predicate, Supplier<String> messageSupplier)
+			throws PreconditionViolationException {
 		if (!predicate) {
-			throw new IllegalArgumentException(messageSupplier.get());
+			throw new PreconditionViolationException(messageSupplier.get());
 		}
 	}
 

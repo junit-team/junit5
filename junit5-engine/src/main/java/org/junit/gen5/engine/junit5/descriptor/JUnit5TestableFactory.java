@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.StringUtils;
@@ -137,7 +138,7 @@ class JUnit5TestableFactory {
 
 	private Method findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
 		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes).orElseThrow(
-			() -> new IllegalArgumentException(String.format("No method with name '%s' and parameter types '%s'",
+			() -> new PreconditionViolationException(String.format("No method with name '%s' and parameter types '%s'",
 				methodName, StringUtils.nullSafeToString(parameterTypes))));
 	}
 
@@ -151,7 +152,7 @@ class JUnit5TestableFactory {
 
 	private Class<?> classByName(String className) {
 		return loadClass(className).orElseThrow(
-			() -> new IllegalArgumentException(String.format("Cannot resolve class name '%s'", className)));
+			() -> new PreconditionViolationException(String.format("Cannot resolve class name '%s'", className)));
 	}
 
 	private Class<?> loadClassByName(String className) {
@@ -164,16 +165,16 @@ class JUnit5TestableFactory {
 	}
 
 	private static RuntimeException createCannotResolveUniqueIdException(String fullUniqueId, String uniqueIdPart) {
-		return new IllegalArgumentException(
+		return new PreconditionViolationException(
 			String.format("Cannot resolve part '%s' of unique ID '%s'", uniqueIdPart, fullUniqueId));
 	}
 
 	private static void throwCannotResolveMethodException(Method method) {
-		throw new IllegalArgumentException(String.format("Method '%s' is not a test method.", method.getName()));
+		throw new PreconditionViolationException(String.format("Method '%s' is not a test method.", method.getName()));
 	}
 
 	private void throwCannotResolveClassException(Class<?> clazz) {
-		throw new IllegalArgumentException(
+		throw new PreconditionViolationException(
 			String.format("Cannot resolve class name '%s' because it's not a test container", clazz.getName()));
 	}
 

@@ -26,6 +26,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
@@ -63,7 +64,7 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 			return forPackage(anyName);
 		}
 
-		throw new IllegalArgumentException(
+		throw new PreconditionViolationException(
 			String.format("'%s' specifies neither a class, method, nor package.", anyName));
 	}
 

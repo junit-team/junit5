@@ -11,12 +11,19 @@
 package org.junit.gen5.engine.junit4.discovery;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.*;
-import static org.junit.gen5.api.Assertions.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singleton;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.expectThrows;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 
@@ -24,7 +31,7 @@ class OrFilterTests {
 
 	@Test
 	void exceptionWithoutAnyFilters() {
-		IllegalArgumentException actual = expectThrows(IllegalArgumentException.class, () -> {
+		PreconditionViolationException actual = expectThrows(PreconditionViolationException.class, () -> {
 			new OrFilter(emptyList());
 		});
 		assertEquals("filters must not be empty", actual.getMessage());

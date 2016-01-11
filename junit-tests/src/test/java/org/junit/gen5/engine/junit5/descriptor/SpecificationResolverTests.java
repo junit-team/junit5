@@ -10,13 +10,17 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertSame;
+import static org.junit.gen5.api.Assertions.assertThrows;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.ClassSpecification;
 import org.junit.gen5.engine.DummyTestEngine;
 import org.junit.gen5.engine.MethodSpecification;
@@ -111,7 +115,7 @@ public class SpecificationResolverTests {
 		MethodSpecification specification = new MethodSpecification(
 			MyTestClass.class.getDeclaredMethod("notATest").getDeclaringClass(),
 			MyTestClass.class.getDeclaredMethod("notATest"));
-		assertThrows(IllegalArgumentException.class, () -> resolver.resolveElement(specification));
+		assertThrows(PreconditionViolationException.class, () -> resolver.resolveElement(specification));
 	}
 
 	@Test
@@ -164,7 +168,7 @@ public class SpecificationResolverTests {
 	public void testNonResolvableUniqueId() {
 		UniqueIdSpecification specification = new UniqueIdSpecification("ENGINE_ID:poops-machine");
 
-		assertThrows(IllegalArgumentException.class, () -> resolver.resolveElement(specification));
+		assertThrows(PreconditionViolationException.class, () -> resolver.resolveElement(specification));
 	}
 
 	@Test
@@ -172,7 +176,7 @@ public class SpecificationResolverTests {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#notATest()");
 
-		assertThrows(IllegalArgumentException.class, () -> resolver.resolveElement(specification));
+		assertThrows(PreconditionViolationException.class, () -> resolver.resolveElement(specification));
 	}
 
 	@Test
@@ -224,7 +228,7 @@ public class SpecificationResolverTests {
 		UniqueIdSpecification specification = new UniqueIdSpecification(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test7(java.math.BigDecimal)");
 
-		assertThrows(IllegalArgumentException.class, () -> resolver.resolveElement(specification));
+		assertThrows(PreconditionViolationException.class, () -> resolver.resolveElement(specification));
 	}
 
 	@Test

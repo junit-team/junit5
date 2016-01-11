@@ -11,7 +11,10 @@
 package org.junit.gen5.commons.util;
 
 import static java.util.function.Predicate.isEqual;
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.expectThrows;
 
 import java.util.function.Predicate;
 
@@ -21,7 +24,7 @@ class FunctionUtilsTests {
 
 	@Test
 	void whereWithNullFunction() {
-		IllegalArgumentException exception = expectThrows(IllegalArgumentException.class, () -> {
+		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class, () -> {
 			FunctionUtils.where(null, o -> true);
 		});
 		assertEquals("function must not be null", exception.getMessage());
@@ -29,7 +32,7 @@ class FunctionUtilsTests {
 
 	@Test
 	void whereWithNullPredicate() {
-		IllegalArgumentException exception = expectThrows(IllegalArgumentException.class, () -> {
+		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class, () -> {
 			FunctionUtils.where(o -> o, null);
 		});
 		assertEquals("predicate must not be null", exception.getMessage());
