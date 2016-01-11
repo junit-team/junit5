@@ -11,8 +11,12 @@
 package org.junit.gen5.engine.junit5.execution;
 
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.engine.EngineExecutionContext;
 
+/**
+ * @since 5.0
+ */
 public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 
 	private final State state;
@@ -26,15 +30,15 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 	}
 
 	public TestInstanceProvider getTestInstanceProvider() {
-		return state.testInstanceProvider;
+		return this.state.testInstanceProvider;
 	}
 
 	public TestExtensionRegistry getTestExtensionRegistry() {
-		return state.testExtensionRegistry;
+		return this.state.testExtensionRegistry;
 	}
 
 	public ExtensionContext getExtensionContext() {
-		return state.extensionContext;
+		return this.state.extensionContext;
 	}
 
 	public Builder extend() {
@@ -61,7 +65,7 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 				return (State) super.clone();
 			}
 			catch (CloneNotSupportedException e) {
-				throw new RuntimeException("State could not be cloned", e);
+				throw new JUnitException("State could not be cloned", e);
 			}
 		}
 

@@ -18,6 +18,7 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
@@ -60,7 +61,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	protected void removeFromHierarchy() {
 		if (isRoot()) {
-			throw new UnsupportedOperationException("You cannot remove the root of a hierarchy.");
+			throw new JUnitException("You cannot remove the root of a hierarchy.");
 		}
 		this.parent.removeChild(this);
 		this.children.clear();

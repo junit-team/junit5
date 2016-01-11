@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
@@ -82,9 +83,7 @@ public class JUnit5 extends Runner {
 	}
 
 	private JUnit5TestTree generateTestTree(Class<?> testClass) {
-		if (this.specification == null) {
-			throw new IllegalStateException("TestPlanSpecification must not be null");
-		}
+		Preconditions.notNull(this.specification, "TestPlanSpecification must not be null");
 		TestPlan plan = this.launcher.discover(this.specification);
 		return new JUnit5TestTree(plan, testClass);
 	}

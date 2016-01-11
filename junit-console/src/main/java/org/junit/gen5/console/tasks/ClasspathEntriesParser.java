@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.junit.gen5.commons.JUnitException;
+
 /**
  * @since 5.0
  */
@@ -38,7 +40,7 @@ class ClasspathEntriesParser {
 			return new File(value).toURI().toURL();
 		}
 		catch (Exception ex) {
-			throw new IllegalStateException("Invalid classpath entry: " + value, ex);
+			throw new JUnitException("Invalid classpath entry: " + value, ex);
 		}
 	}
 

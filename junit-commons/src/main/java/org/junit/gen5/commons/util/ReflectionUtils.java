@@ -29,6 +29,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import org.junit.gen5.commons.JUnitException;
+
 /**
  * Collection of utilities for working with the Java reflection APIs.
  *
@@ -180,7 +182,7 @@ public final class ReflectionUtils {
 				return Optional.of((Class<T>) clazz);
 			}
 			else {
-				throw new IllegalStateException(
+				throw new JUnitException(
 					String.format("Class [%s] is not of required type [%s]", name, requiredType.getName()));
 			}
 		}
