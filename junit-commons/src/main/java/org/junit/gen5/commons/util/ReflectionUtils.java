@@ -10,8 +10,8 @@
 
 package org.junit.gen5.commons.util;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import java.io.File;
 import java.lang.reflect.AccessibleObject;
@@ -29,6 +29,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import org.junit.gen5.commons.meta.API;
+
 /**
  * Collection of utilities for working with the Java reflection APIs.
  *
@@ -40,6 +42,7 @@ import java.util.function.Predicate;
  *
  * @since 5.0
  */
+@API(Internal)
 public final class ReflectionUtils {
 
 	public enum MethodSortOrder {
