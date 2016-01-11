@@ -30,11 +30,11 @@ import java.lang.annotation.Target;
  * will be thrown.
  *
  * <p>The display name is either the canonical name of the test or a custom
- * name configured via {@link Name @Name}.
+ * name configured via {@link DisplayName @DisplayName}.
  *
  * @since 5.0
  * @see Test
- * @see Name
+ * @see DisplayName
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)

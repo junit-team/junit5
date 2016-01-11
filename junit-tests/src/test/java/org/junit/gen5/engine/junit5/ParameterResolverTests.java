@@ -16,7 +16,7 @@ import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.Name;
+import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestName;
 import org.junit.gen5.api.extension.ExtendWith;
@@ -89,7 +89,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 		}
 
 		@Test
-		@Name("myName")
+		@DisplayName("myName")
 		void parameterInjectionOfUserProvidedTestName(@TestName String name) {
 			assertEquals("myName", name);
 		}
@@ -136,7 +136,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 		}
 
 		@Test
-		@Name("custom name")
+		@DisplayName("custom name")
 		void customNamedTest() {
 		}
 
@@ -146,7 +146,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 		}
 	}
 
-	@Name("custom class name")
+	@DisplayName("custom class name")
 	private static class BeforeAndAfterAllMethodInjectionTestCase {
 
 		@BeforeAll

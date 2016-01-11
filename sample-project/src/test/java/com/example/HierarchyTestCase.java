@@ -14,7 +14,7 @@ import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.Name;
+import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.junit4.runner.JUnit5;
@@ -86,7 +86,7 @@ public class HierarchyTestCase {
 	}
 
 	@Nested
-	@Name("Second Level Context")
+	@DisplayName("Second Level Context")
 	class SecondLevelTestContext {
 
 		// TODO [#88] @BeforeAll method cannot be used in @Nested class.
@@ -128,7 +128,7 @@ public class HierarchyTestCase {
 		}
 
 		@Nested
-		@Name("Third Level Context")
+		@DisplayName("Third Level Context")
 		class ThirdLevelTestContext {
 
 			// TODO [#88] @BeforeAll method cannot be used in @Nested class.

@@ -17,8 +17,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@code @Name} is used to declare a custom display name for the annotated
- * test class or test method.
+ * {@code @DisplayName} is used to declare a custom display name for the
+ * annotated test class or test method.
  *
  * <p>Display names are typically used for test reporting in IDEs and build
  * tools and may contain spaces, special characters, and even emoji.
@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Name {
+public @interface DisplayName {
 
 	String value();
 

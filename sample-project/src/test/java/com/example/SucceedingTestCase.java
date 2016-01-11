@@ -17,14 +17,14 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Disabled;
-import org.junit.gen5.api.Name;
+import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestName;
 
 /**
  * Named *TestCase so Gradle will not try to run it.
  */
-@Name("A succeeding test case")
+@DisplayName("A succeeding test case")
 @Fast
 class SucceedingTestCase extends AbstractSuperTest implements InterfaceWithTestCases {
 
@@ -55,19 +55,19 @@ class SucceedingTestCase extends AbstractSuperTest implements InterfaceWithTestC
 	}
 
 	@Test
-	@Name("A nice name for test 1")
+	@DisplayName("A nice name for test 1")
 	void test1() {
 		System.out.println("test1");
 	}
 
 	@Test
-	@Name("A test name with umlauts äöüÄÖÜß")
+	@DisplayName("A test name with umlauts äöüÄÖÜß")
 	void test2() {
 		System.out.println("test2");
 	}
 
 	@Test
-	@Name("😱")
+	@DisplayName("😱")
 	void emoji() {
 		System.out.println("emoji?");
 	}

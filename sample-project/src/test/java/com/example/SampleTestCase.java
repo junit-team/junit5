@@ -23,7 +23,7 @@ import java.util.Map;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Disabled;
-import org.junit.gen5.api.Name;
+import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestName;
@@ -79,13 +79,13 @@ class SampleTestCase {
 	}
 
 	@Test
-	@Name("custom name")
+	@DisplayName("custom name")
 	void succeedingTest() {
 		// no-op
 	}
 
 	@Test
-	@Name("Method Injection")
+	@DisplayName("Method Injection")
 	void methodInjectionTest(@TestName String testName, CustomType customType, @CustomAnnotation String value) {
 		assertEquals("Method Injection", testName);
 		assertNotNull(customType);
@@ -93,7 +93,7 @@ class SampleTestCase {
 	}
 
 	@Test
-	@Name("with succeeding assertAll")
+	@DisplayName("with succeeding assertAll")
 	void assertAllTest() {
 		Map<String, String> person = new HashMap<String, String>();
 		person.put("firstName", "Johannes");
@@ -110,7 +110,7 @@ class SampleTestCase {
 	}
 
 	@Test
-	@Name("with failing assertAll")
+	@DisplayName("with failing assertAll")
 	void assertAllFailingTest() {
 		Map<String, String> person = new HashMap<String, String>();
 		person.put("firstName", "Johanes");
@@ -127,7 +127,7 @@ class SampleTestCase {
 	}
 
 	@Nested
-	@Name("An inner test context")
+	@DisplayName("An inner test context")
 	class ANestedTestCase {
 
 		@Test

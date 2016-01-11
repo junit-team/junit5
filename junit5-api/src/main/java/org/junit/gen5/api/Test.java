@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  * MethodParameterResolvers}.
  *
  * @since 5.0
- * @see Name
+ * @see DisplayName
  * @see BeforeEach
  * @see AfterEach
  * @see BeforeAll

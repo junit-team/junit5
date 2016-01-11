@@ -19,7 +19,7 @@ module.
 |Annotation |Description
 
 |*`@Test`*              | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit 5 operate based on their own dedicated annotations.
-|*`@Name`*              | Declares a custom display name for the test class or test method
+|*`@DisplayName`*       | Declares a custom display name for the test class or test method
 |*`@TestName`*          | Allows the display name of the current test to be supplied as a method parameter to `@Test`, `@BeforeEach`, and `@AfterEach` methods; analogous to the JUnit 4's `TestName` rule
 |*`@BeforeEach`*        | Denotes that the annotated method should be executed _before_ *each* `@Test` method in the current class or class hierarchy
 |*`@AfterEach`*         | Denotes that the annotated method should be executed _after_ *each* `@Test` method in the current class or class hierarchy
@@ -97,11 +97,11 @@ characters, and even emojis -- that will be displayed by test runners and test r
 ----
 import org.junit.gen5.api.*;
 
-@Name("A special test case")
-class CanHaveAnyNameTest {
+@DisplayName("A special test case")
+class CanHaveAnyDisplayNameTest {
 
 	@Test
-	@Name("A nice name, isn't it?")
+	@DisplayName("A nice name, isn't it?")
 	void testWithANiceName() {}
 
 }
@@ -325,9 +325,9 @@ There is currently one built-in resolver that is registered automatically.
 
 * `{TestNameParameterResolver}`: if a method parameter is of type `String` and annotated
   with `@TestName`, the `TestNameParameterResolver` will supply the _display name_ of the
-  current test at runtime (either its canonical name or its user-provided `@Name`). This
-  acts as a drop-in replacement for the `TestName` rule from JUnit 4. See `MyTest` for an
-  example.
+  current test at runtime (either its canonical name or its user-provided `@DisplayName`).
+  This acts as a drop-in replacement for the `TestName` rule from JUnit 4. See `MyTest`
+  for an example.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -342,7 +342,7 @@ class MyTest {
 	}
 
 	@Test
-	@Name("TEST 1")
+	@DisplayName("TEST 1")
 	void test1(@TestName name) {
 		assertEquals("TEST 1", name);
 	}
