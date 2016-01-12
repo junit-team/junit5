@@ -22,4 +22,8 @@ public class ClassSpecification implements TestPlanSpecificationElement {
 	public void accept(TestPlanSpecificationElementVisitor visitor) {
 		visitor.visitClass(testClass);
 	}
+
+	public Class<?> getTestClass() {
+		return testClass;
+	}
 }

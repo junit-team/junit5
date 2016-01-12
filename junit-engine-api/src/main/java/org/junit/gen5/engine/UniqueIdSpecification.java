@@ -22,4 +22,8 @@ public class UniqueIdSpecification implements TestPlanSpecificationElement {
 	public void accept(TestPlanSpecificationElementVisitor visitor) {
 		visitor.visitUniqueId(uniqueId);
 	}
+
+	public String getUniqueId() {
+		return uniqueId;
+	}
 }

@@ -184,4 +184,48 @@ public final class TestPlanSpecification implements Iterable<TestPlanSpecificati
 		return this.descriptorFilter.test(testDescriptor);
 	}
 
+	public List<String> getUniqueIds() {
+		// @formatter:off
+		return getElements().stream()
+				.filter(element -> element instanceof UniqueIdSpecification)
+				.map(element -> ((UniqueIdSpecification) element).getUniqueId())
+				.collect(toList());
+		// @formatter:on
+	}
+
+	public List<String> getPackages() {
+		// @formatter:off
+		return getElements().stream()
+				.filter(element -> element instanceof PackageSpecification)
+				.map(element -> ((PackageSpecification)element).getPackageName())
+				.collect(toList());
+		// @formatter:on
+	}
+
+	public List<Class<?>> getClasses() {
+		// @formatter:off
+		return getElements().stream()
+				.filter(element -> element instanceof ClassSpecification)
+				.map(element -> ((ClassSpecification)element).getTestClass())
+				.collect(toList());
+		// @formatter:on
+	}
+
+	public List<MethodSpecification> getMethods() {
+		// @formatter:off
+		return getElements().stream()
+				.filter(element -> element instanceof MethodSpecification)
+				.map(element -> ((MethodSpecification)element))
+				.collect(toList());
+		// @formatter:on
+	}
+
+	public List<File> getFolders() {
+		// @formatter:off
+		return getElements().stream()
+				.filter(element -> element instanceof AllTestsSpecification)
+				.map(element -> ((AllTestsSpecification)element).getClasspathRoot())
+				.collect(toList());
+		// @formatter:on
+	}
 }

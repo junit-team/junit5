@@ -22,4 +22,8 @@ public class PackageSpecification implements TestPlanSpecificationElement {
 	public void accept(TestPlanSpecificationElementVisitor visitor) {
 		visitor.visitPackage(packageName);
 	}
+
+	public String getPackageName() {
+		return packageName;
+	}
 }

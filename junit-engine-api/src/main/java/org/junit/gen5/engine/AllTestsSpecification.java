@@ -24,4 +24,8 @@ public class AllTestsSpecification implements TestPlanSpecificationElement {
 	public void accept(TestPlanSpecificationElementVisitor visitor) {
 		visitor.visitAllTests(classpathRoot);
 	}
+
+	public File getClasspathRoot() {
+		return classpathRoot;
+	}
 }
