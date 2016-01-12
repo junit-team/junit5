@@ -14,11 +14,17 @@ import static java.text.MessageFormat.format;
 import static java.util.Collections.singleton;
 import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.engine.ClassFilters.classNameMatches;
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.engine.TestPlanSpecification.allTests;
+import static org.junit.gen5.engine.TestPlanSpecification.build;
+import static org.junit.gen5.engine.TestPlanSpecification.forClass;
+import static org.junit.gen5.engine.TestPlanSpecification.forMethod;
+import static org.junit.gen5.engine.TestPlanSpecification.forPackage;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -329,6 +335,22 @@ class JUnit4TestEngineDiscoveryTests {
 
 		TestDescriptor successfulTest = testMethodDescriptors.get(1);
 		assertTestMethodDescriptor(successfulTest, testClass, "successfulTest", "junit4:" + testClass.getName() + "/");
+	}
+
+	@Test
+	void resolvesUniqueIdSpecificationForSingleMethod() throws Exception {
+		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
+		TestPlanSpecification specification = build(TestPlanSpecification.forUniqueId(
+			"junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods"
+					+ "/failingTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods)"));
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertRunnerTestDescriptor(runnerDescriptor, testClass);
+
+		TestDescriptor childDescriptor = getOnlyElement(runnerDescriptor.getChildren());
+		assertTestMethodDescriptor(childDescriptor, testClass, "failingTest", "junit4:" + testClass.getName() + "/");
 	}
 
 	private TestDescriptor findChildByDisplayName(TestDescriptor runnerDescriptor, String displayName) {

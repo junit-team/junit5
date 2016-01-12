@@ -20,9 +20,9 @@ import org.junit.runner.manipulation.Filter;
 
 class OrFilter extends Filter {
 
-	private final Collection<Filter> filters;
+	private final Collection<? extends Filter> filters;
 
-	OrFilter(Collection<Filter> filters) {
+	OrFilter(Collection<? extends Filter> filters) {
 		this.filters = Preconditions.notEmpty(filters, "filters must not be empty");
 	}
 

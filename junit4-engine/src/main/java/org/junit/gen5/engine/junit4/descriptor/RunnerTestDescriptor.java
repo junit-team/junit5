@@ -21,10 +21,12 @@ import org.junit.runner.Runner;
  */
 public class RunnerTestDescriptor extends JUnit4TestDescriptor {
 
+	public static final char SEPARATOR = ':';
+
 	private final Runner runner;
 
 	public RunnerTestDescriptor(TestDescriptor parent, Class<?> testClass, Runner runner) {
-		super(parent, ':', testClass.getName(), runner.getDescription(), Optional.of(new JavaSource(testClass)));
+		super(parent, SEPARATOR, testClass.getName(), runner.getDescription(), Optional.of(new JavaSource(testClass)));
 		this.runner = runner;
 	}
 
