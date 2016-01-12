@@ -223,14 +223,13 @@ configure(rootProject) {
 
 	spotless {
 		format 'misc', {
-			target '**/*.gradle', '**/*.md', '**/*.gitignore'
+			target '**/*.gradle', '**/*.gitignore'
 			indentWithTabs()
 			trimTrailingWhitespace()
 			endWithNewline()
 		}
-		format 'user_guide', {
-			target '**/*.adoc'
-			// indentWithTabs()
+		format 'documentation', {
+			target '**/*.adoc', '**/*.md'
 			trimTrailingWhitespace()
 			endWithNewline()
 		}
