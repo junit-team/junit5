@@ -13,7 +13,7 @@
 
 ### Formatting
 
-Code formatting is enforced using the [Spotless](https://github.com/diffplug/spotless) Gradle plugin. You can use `gradle spotlessApply` to format new code and add missing license headers to source files. Formatter settings for Eclipse are available [in the repository](src/eclipse/junit-lambda-eclipse-formatter-settings.xml). For IntelliJ IDEA there's a [plugin](https://plugins.jetbrains.com/plugin/6546) you can use.
+Code formatting is enforced using the [Spotless](https://github.com/diffplug/spotless) Gradle plugin. You can use `gradle spotlessApply` to format new code and add missing license headers to source files. Formatter settings for Eclipse are available [in the repository](src/eclipse/junit-eclipse-formatter-settings.xml). For IntelliJ IDEA there's a [plugin](https://plugins.jetbrains.com/plugin/6546) you can use.
 
 ### Tests
 
