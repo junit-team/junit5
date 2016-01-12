@@ -12,8 +12,10 @@ package org.junit.gen5.engine.junit4;
 
 import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.gen5.engine.ExecutionEventConditions.*;
-import static org.junit.gen5.engine.TestExecutionResultConditions.*;
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.engine.TestExecutionResultConditions.isA;
+import static org.junit.gen5.engine.TestExecutionResultConditions.message;
+import static org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import java.util.List;
 
@@ -23,28 +25,7 @@ import org.junit.gen5.engine.ExecutionEvent;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit4.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
-import org.junit.gen5.engine.junit4.samples.junit4.EnclosedJUnit4TestCase;
-import org.junit.gen5.engine.junit4.samples.junit4.IgnoredJUnit4TestCase;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteOfSuiteWithIgnoredJUnit4TestCase;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithErrorInBeforeClass;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithExceptionThrowingRunner;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithIgnoredJUnit4TestCase;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithJUnit4TestCaseWithErrorInBeforeClass;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithAssumptionFailureInBeforeClass;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithErrorInAfterClass;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithErrorInBeforeClass;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithExceptionThrowingRunner;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithOverloadedMethod;
-import org.junit.gen5.engine.junit4.samples.junit4.MalformedJUnit4TestCase;
-import org.junit.gen5.engine.junit4.samples.junit4.ParameterizedTestCase;
-import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
-import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
-import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
-import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods;
+import org.junit.gen5.engine.junit4.samples.junit4.*;
 
 class JUnit4TestEngineExecutionTests {
 
@@ -365,7 +346,7 @@ class JUnit4TestEngineExecutionTests {
 
 	private static List<ExecutionEvent> execute(Class<?> testClass) {
 		JUnit4TestEngine engine = new JUnit4TestEngine();
-		TestPlanSpecification testPlanSpecification = build(forClass(testClass));
+		TestPlanSpecification testPlanSpecification = testPlanSpecification().withElements(forClass(testClass)).build();
 		return ExecutionEventRecorder.execute(engine, testPlanSpecification);
 	}
 }

@@ -12,7 +12,8 @@ package org.junit.gen5.engine.junit5;
 
 import static java.util.Arrays.asList;
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.api.extension.*;
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
 import org.junit.gen5.api.extension.ExtendWith;
@@ -40,7 +42,7 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void beforeEachAndAfterEachCallbacks() {
-		TestPlanSpecification spec = build(forClass(OuterTestCase.class));
+		TestPlanSpecification spec = testPlanSpecification().withElements(forClass(OuterTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(spec);
 

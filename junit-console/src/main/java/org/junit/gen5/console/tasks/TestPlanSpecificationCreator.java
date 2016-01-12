@@ -12,7 +12,7 @@ package org.junit.gen5.console.tasks;
 
 import static java.util.stream.Collectors.toSet;
 import static org.junit.gen5.engine.ClassFilters.classNameMatches;
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import java.io.File;
 import java.util.Set;
@@ -21,6 +21,9 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.dsl.ClasspathTestPlanSpecificationElementBuilder;
+import org.junit.gen5.engine.dsl.NamedTestPlanSpecificationElementBuilder;
+import org.junit.gen5.engine.dsl.TagFilterBuilder;
 
 class TestPlanSpecificationCreator {
 
@@ -39,7 +42,8 @@ class TestPlanSpecificationCreator {
 
 	private TestPlanSpecification buildAllTestsSpecification(CommandLineOptions options) {
 		Set<File> rootDirectoriesToScan = determineClasspathRootDirectories(options);
-		return build(allTests(rootDirectoriesToScan));
+		return testPlanSpecification().withElements(
+			ClasspathTestPlanSpecificationElementBuilder.allTests(rootDirectoriesToScan)).build();
 	}
 
 	private Set<File> determineClasspathRootDirectories(CommandLineOptions options) {
@@ -51,16 +55,17 @@ class TestPlanSpecificationCreator {
 
 	private TestPlanSpecification buildNameBasedSpecification(CommandLineOptions options) {
 		Preconditions.notEmpty(options.getArguments(), "No arguments given");
-		return build(TestPlanSpecification.forNames(options.getArguments()));
+		return testPlanSpecification().withElements(
+			NamedTestPlanSpecificationElementBuilder.forNames(options.getArguments())).build();
 	}
 
 	private void applyFilters(TestPlanSpecification specification, CommandLineOptions options) {
-		options.getClassnameFilter().ifPresent(regex -> specification.filterWith(classNameMatches(regex)));
+		options.getClassnameFilter().ifPresent(regex -> specification.addEngineFilter(classNameMatches(regex)));
 		if (!options.getTagsFilter().isEmpty()) {
-			specification.filterWith(byTags(options.getTagsFilter()));
+			specification.addDescriptorFilter(TagFilterBuilder.includeTags(options.getTagsFilter()));
 		}
 		if (!options.getExcludeTags().isEmpty()) {
-			specification.filterWith(excludeTags(options.getExcludeTags()));
+			specification.addDescriptorFilter(TagFilterBuilder.excludeTags(options.getExcludeTags()));
 		}
 	}
 }

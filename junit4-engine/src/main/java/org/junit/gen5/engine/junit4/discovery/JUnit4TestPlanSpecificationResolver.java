@@ -28,10 +28,7 @@ import java.util.Set;
 import java.util.function.IntFunction;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.ClassFilter;
-import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
+import org.junit.gen5.engine.*;
 import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.runner.Description;
@@ -167,5 +164,4 @@ public class JUnit4TestPlanSpecificationResolver {
 		}
 		return index -> uniqueId + "[" + index + "]";
 	}
-
 }

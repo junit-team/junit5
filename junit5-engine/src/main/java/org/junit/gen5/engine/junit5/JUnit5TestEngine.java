@@ -10,13 +10,11 @@
 
 package org.junit.gen5.engine.junit5;
 
+import java.util.List;
+
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.engine.ClassFilter;
-import org.junit.gen5.engine.ExecutionRequest;
-import org.junit.gen5.engine.HierarchicalTestEngine;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.dsl.ClassFilterBuilder;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.JUnit5EngineDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;
@@ -42,22 +40,26 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 
 	private void resolveSpecification(TestPlanSpecification specification, JUnit5EngineDescriptor engineDescriptor) {
 		SpecificationResolver resolver = new SpecificationResolver(engineDescriptor);
-		for (TestPlanSpecificationElement element : specification) {
+		for (TestPlanSpecificationElement element : specification.getElements()) {
 			resolver.resolveElement(element);
 		}
 		applyEngineFilters(specification, engineDescriptor);
 	}
 
 	private void applyEngineFilters(TestPlanSpecification specification, JUnit5EngineDescriptor engineDescriptor) {
-		if (specification.getEngineFilters(ClassFilter.class).isEmpty()) {
+		List<ClassFilter> classFilters = specification.getEngineFiltersByType(ClassFilter.class);
+		if (classFilters.isEmpty()) {
 			return;
 		}
-		ClassFilter filter = specification.getClassFilter();
+
 		TestDescriptor.Visitor filteringVisitor = (descriptor, remove) -> {
-			if (descriptor.getClass() == ClassTestDescriptor.class) {
+			if (descriptor instanceof ClassTestDescriptor) {
 				ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptor;
-				if (!filter.acceptClass(classTestDescriptor.getTestClass()))
-					remove.run();
+				for (ClassFilter filter : classFilters) {
+					if (!filter.acceptClass(classTestDescriptor.getTestClass())) {
+						remove.run();
+					}
+				}
 			}
 		};
 		engineDescriptor.accept(filteringVisitor);

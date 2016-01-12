@@ -11,7 +11,8 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
@@ -19,6 +20,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder;
 import org.opentest4j.TestAbortedException;
 
 /**
@@ -37,26 +39,24 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void standardTestClassIsCorrectlyDiscovered() {
-		TestPlanSpecification spec = build(forClass(MyStandardTestCase.class));
+		TestPlanSpecification spec = testPlanSpecification().withElements(forClass(MyStandardTestCase.class)).build();
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsCorrectlyDiscovered() {
-		TestPlanSpecification spec = TestPlanSpecification.build(
-			TestPlanSpecification.forClass(FirstOfTwoTestCases.class),
-			TestPlanSpecification.forClass(SecondOfTwoTestCases.class));
+		TestPlanSpecification spec = testPlanSpecification().withElements(
+			ClassTestPlanSpecificationElementBuilder.forClass(SecondOfTwoTestCases.class)).build();
 
 		EngineDescriptor engineDescriptor = discoverTests(spec);
-		assertEquals(6 + 2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(2 + 2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsExecuted() {
-		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
-			TestPlanSpecification.forClass(FirstOfTwoTestCases.class),
-			TestPlanSpecification.forClass(SecondOfTwoTestCases.class));
+		TestPlanSpecification testPlanSpecification = testPlanSpecification().withElements(
+			ClassTestPlanSpecificationElementBuilder.forClass(SecondOfTwoTestCases.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(testPlanSpecification);
 

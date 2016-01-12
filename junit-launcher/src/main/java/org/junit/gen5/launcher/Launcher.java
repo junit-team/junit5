@@ -13,13 +13,7 @@ package org.junit.gen5.launcher;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.junit.gen5.engine.EngineAwareTestDescriptor;
-import org.junit.gen5.engine.EngineExecutionListener;
-import org.junit.gen5.engine.ExecutionRequest;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestExecutionResult;
-import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.*;
 
 /**
  * Facade for <em>discovering</em> and <em>executing</em> tests using

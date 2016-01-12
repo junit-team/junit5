@@ -26,4 +26,12 @@ public class MethodSpecification implements TestPlanSpecificationElement {
 	public void accept(TestPlanSpecificationElementVisitor visitor) {
 		visitor.visitMethod(testClass, testMethod);
 	}
+
+	public Class<?> getTestClass() {
+		return testClass;
+	}
+
+	public Method getTestMethod() {
+		return testMethod;
+	}
 }

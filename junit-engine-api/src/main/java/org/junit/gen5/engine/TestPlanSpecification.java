@@ -12,220 +12,84 @@ package org.junit.gen5.engine;
 
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
-import java.io.File;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * @since 5.0
  */
-public final class TestPlanSpecification implements Iterable<TestPlanSpecificationElement> {
-
-	public static TestPlanSpecificationElement forPackage(String packageName) {
-		return new PackageSpecification(packageName);
-	}
-
-	public static List<TestPlanSpecificationElement> forPackages(Collection<String> packageNames) {
-		return packageNames.stream().map(TestPlanSpecification::forPackage).collect(toList());
-	}
-
-	public static TestPlanSpecificationElement forMethod(Class<?> testClass, Method testMethod) {
-		return new MethodSpecification(testClass, testMethod);
-	}
-
-	public static TestPlanSpecificationElement forName(String anyName) {
-
-		Optional<Class<?>> testClassOptional = ReflectionUtils.loadClass(anyName);
-		if (testClassOptional.isPresent()) {
-			return forClass(testClassOptional.get());
-		}
-
-		Optional<Method> testMethodOptional = ReflectionUtils.loadMethod(anyName);
-		if (testMethodOptional.isPresent()) {
-			Method testMethod = testMethodOptional.get();
-			return forMethod(testMethod.getDeclaringClass(), testMethod);
-		}
-
-		if (ReflectionUtils.isPackage(anyName)) {
-			return forPackage(anyName);
-		}
-
-		throw new PreconditionViolationException(
-			String.format("'%s' specifies neither a class, method, nor package.", anyName));
-	}
-
-	public static List<TestPlanSpecificationElement> allTests(Set<File> rootDirectories) {
-		// @formatter:off
-		return rootDirectories.stream()
-				.filter(File::exists)
-				.map(AllTestsSpecification::new)
-				.collect(Collectors.toList());
-		// @formatter:on
-	}
-
-	public static List<TestPlanSpecificationElement> forNames(Collection<String> classNames) {
-		return forNames(classNames.stream());
-	}
-
-	private static List<TestPlanSpecificationElement> forNames(Stream<String> classNames) {
-		return classNames.map(TestPlanSpecification::forName).collect(toList());
-	}
-
-	public static TestPlanSpecificationElement forClass(Class<?> testClass) {
-		return new ClassSpecification(testClass);
-	}
-
-	public static TestPlanSpecificationElement forUniqueId(String uniqueId) {
-		return new UniqueIdSpecification(uniqueId);
-	}
-
-	public static Predicate<TestDescriptor> byTags(String... tagNames) {
-		return byTags(Arrays.asList(tagNames));
-	}
-
-	public static Predicate<TestDescriptor> byTags(List<String> includeTags) {
-		// @formatter:off
-		return descriptor -> descriptor.getTags().stream()
-				.map(TestTag::getName)
-				.anyMatch(includeTags::contains);
-		// @formatter:on
-	}
-
-	public static Predicate<TestDescriptor> excludeTags(String... tagNames) {
-		return excludeTags(Arrays.asList(tagNames));
-	}
-
-	public static Predicate<TestDescriptor> excludeTags(List<String> includeTags) {
-		// @formatter:off
-		return descriptor -> descriptor.getTags().stream()
-				.map(TestTag::getName)
-				.allMatch(tagName -> !includeTags.contains(tagName));
-		// @formatter:on
-	}
-
-	public static Predicate<TestDescriptor> byEngine(String engineId) {
-		return descriptor -> descriptor.getUniqueId().startsWith(engineId);
-	}
-
-	public static TestPlanSpecification build(TestPlanSpecificationElement... elements) {
-		return build(Arrays.asList(elements));
-	}
-
-	public static TestPlanSpecification build(List<TestPlanSpecificationElement> elements) {
-		return new TestPlanSpecification(elements);
-	}
-
-	private final List<TestPlanSpecificationElement> elements;
+public final class TestPlanSpecification {
+	private final List<TestPlanSpecificationElement> elements = new LinkedList<>();
 
 	// Descriptor Filters are evaluated by the launcher itself after engines have done their discovery.
 	// Begin predicate chain with a predicate that always evaluates to true.
-	private Predicate<TestDescriptor> descriptorFilter = descriptor -> true;
+	private final List<Predicate<TestDescriptor>> descriptorFilters = new LinkedList<>();
 
 	// Engine filters are handed through to all test engines to be applied during discovery
-	private List<EngineFilter> engineFilters = new ArrayList<>();
+	private final List<EngineFilter> engineFilters = new LinkedList<>();
 
-	public TestPlanSpecification(List<TestPlanSpecificationElement> elements) {
-		this.elements = elements;
+	public void addElement(TestPlanSpecificationElement element) {
+		this.elements.add(element);
 	}
 
-	@Override
-	public Iterator<TestPlanSpecificationElement> iterator() {
-		return getElements().iterator();
+	public void addElements(Collection<TestPlanSpecificationElement> elements) {
+		elements.forEach(this::addElement);
 	}
 
-	List<TestPlanSpecificationElement> getElements() {
+	public void addEngineFilter(EngineFilter engineFilter) {
+		this.engineFilters.add(engineFilter);
+	}
+
+	public void addEngineFilters(Collection<EngineFilter> engineFilters) {
+		this.engineFilters.addAll(engineFilters);
+	}
+
+	public void addDescriptorFilter(Predicate<TestDescriptor> desciptorFilter) {
+		this.descriptorFilters.add(desciptorFilter);
+	}
+
+	public void addDescriptorFilters(Collection<Predicate<TestDescriptor>> desciptorFilters) {
+		this.descriptorFilters.addAll(desciptorFilters);
+	}
+
+	public List<TestPlanSpecificationElement> getElements() {
 		return unmodifiableList(this.elements);
 	}
 
-	public void accept(TestPlanSpecificationElementVisitor visitor) {
-		elements.forEach(element -> element.accept(visitor));
+	public <T extends TestPlanSpecificationElement> List<T> getElementsByType(Class<T> filterType) {
+		return this.elements.stream().filter(filterType::isInstance).map(filterType::cast).collect(toList());
 	}
 
-	public void filterWith(Predicate<TestDescriptor> filter) {
-		Preconditions.notNull(filter, "filter must not be null");
-		this.descriptorFilter = this.descriptorFilter.and(filter);
+	public List<EngineFilter> getEngineFilters() {
+		return unmodifiableList(this.engineFilters);
 	}
 
-	public void filterWith(EngineFilter filter) {
-		Preconditions.notNull(filter, "filter must not be null");
-		this.engineFilters.add(filter);
+	public <T extends EngineFilter> List<T> getEngineFiltersByType(Class<T> filterType) {
+		return this.engineFilters.stream().filter(filterType::isInstance).map(filterType::cast).collect(toList());
+	}
+
+	public List<Predicate<TestDescriptor>> getDescriptorFilters() {
+		return unmodifiableList(this.descriptorFilters);
 	}
 
 	public ClassFilter getClassFilter() {
-		return ClassFilters.allOf(getEngineFilters(ClassFilter.class));
-	}
-
-	public <T extends EngineFilter> List<T> getEngineFilters(Class<T> filterClass) {
-		// @formatter:off
-		return engineFilters
-			.stream()
-			.filter(filterClass::isInstance)
-			.map(filterClass::cast)
-			.collect(toList());
-		// @formatter:on
+		return ClassFilters.allOf(getEngineFiltersByType(ClassFilter.class));
 	}
 
 	public boolean acceptDescriptor(TestDescriptor testDescriptor) {
 		Preconditions.notNull(testDescriptor, "testDescriptor must not be null");
-		return this.descriptorFilter.test(testDescriptor);
+		return this.getDescriptorFilters().stream().allMatch(filter -> filter.test(testDescriptor));
 	}
 
-	public List<String> getUniqueIds() {
-		// @formatter:off
-		return getElements().stream()
-				.filter(element -> element instanceof UniqueIdSpecification)
-				.map(element -> ((UniqueIdSpecification) element).getUniqueId())
-				.collect(toList());
-		// @formatter:on
-	}
-
-	public List<String> getPackages() {
-		// @formatter:off
-		return getElements().stream()
-				.filter(element -> element instanceof PackageSpecification)
-				.map(element -> ((PackageSpecification)element).getPackageName())
-				.collect(toList());
-		// @formatter:on
-	}
-
-	public List<Class<?>> getClasses() {
-		// @formatter:off
-		return getElements().stream()
-				.filter(element -> element instanceof ClassSpecification)
-				.map(element -> ((ClassSpecification)element).getTestClass())
-				.collect(toList());
-		// @formatter:on
-	}
-
-	public List<MethodSpecification> getMethods() {
-		// @formatter:off
-		return getElements().stream()
-				.filter(element -> element instanceof MethodSpecification)
-				.map(element -> ((MethodSpecification)element))
-				.collect(toList());
-		// @formatter:on
-	}
-
-	public List<File> getFolders() {
-		// @formatter:off
-		return getElements().stream()
-				.filter(element -> element instanceof AllTestsSpecification)
-				.map(element -> ((AllTestsSpecification)element).getClasspathRoot())
-				.collect(toList());
-		// @formatter:on
+	public void accept(TestPlanSpecificationElementVisitor visitor) {
+		this.getElements().forEach(element -> element.accept(visitor));
 	}
 }

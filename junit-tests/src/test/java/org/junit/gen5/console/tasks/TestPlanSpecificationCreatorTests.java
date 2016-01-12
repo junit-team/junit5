@@ -93,7 +93,7 @@ public class TestPlanSpecificationCreatorTests {
 
 		TestPlanSpecification specification = convert();
 
-		assertThat(specification.getEngineFilters(ClassFilter.class)).hasSize(1);
+		assertThat(specification.getEngineFiltersByType(ClassFilter.class)).hasSize(1);
 		assertThat(specification.getClassFilter().getDescription()).contains(".*Test");
 	}
 

@@ -13,6 +13,7 @@ package org.junit.gen5.junit4.runner;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.engine.ClassFilters.classNameMatches;
+import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.dsl.*;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -98,12 +100,11 @@ public class JUnit5 extends Runner implements Filterable {
 
 		// Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
 		if (specElements.isEmpty()) {
-			specElements.add(TestPlanSpecification.forClass(this.testClass));
+			specElements.add(ClassTestPlanSpecificationElementBuilder.forClass(this.testClass));
 		}
 
-		TestPlanSpecification spec = TestPlanSpecification.build(specElements);
+		TestPlanSpecification spec = testPlanSpecification().withElements(specElements).build();
 		addFiltersFromAnnotations(spec);
-
 		return spec;
 	}
 
@@ -123,45 +124,45 @@ public class JUnit5 extends Runner implements Filterable {
 	}
 
 	private List<TestPlanSpecificationElement> getClassSpecificationElements() {
-		return stream(getTestClasses()).map(TestPlanSpecification::forClass).collect(toList());
+		return stream(getTestClasses()).map(ClassTestPlanSpecificationElementBuilder::forClass).collect(toList());
 	}
 
 	private List<TestPlanSpecificationElement> getUniqueIdSpecificationElements() {
-		return stream(getUniqueIds()).map(TestPlanSpecification::forUniqueId).collect(toList());
+		return stream(getUniqueIds()).map(UniqueIdTestPlanSpecificationElementBuilder::forUniqueId).collect(toList());
 	}
 
 	private List<TestPlanSpecificationElement> getPackageSpecificationElements() {
-		return stream(getPackageNames()).map(TestPlanSpecification::forPackage).collect(toList());
+		return stream(getPackageNames()).map(PackageTestPlanSpecificationElementBuilder::forPackage).collect(toList());
 	}
 
 	private void addClassNameMatchesFilter(TestPlanSpecification plan) {
 		String regex = getClassNameRegExPattern();
 		if (!regex.isEmpty()) {
-			plan.filterWith(classNameMatches(regex));
+			plan.addEngineFilter(classNameMatches(regex));
 		}
 	}
 
 	private void addIncludeTagsFilter(TestPlanSpecification plan) {
 		String[] includeTags = getIncludeTags();
 		if (includeTags.length > 0) {
-			Predicate<TestDescriptor> tagNamesFilter = TestPlanSpecification.byTags(includeTags);
-			plan.filterWith(tagNamesFilter);
+			Predicate<TestDescriptor> tagNamesFilter = TagFilterBuilder.includeTags(includeTags);
+			plan.addDescriptorFilter(tagNamesFilter);
 		}
 	}
 
 	private void addExcludeTagsFilter(TestPlanSpecification plan) {
 		String[] excludeTags = getExcludeTags();
 		if (excludeTags.length > 0) {
-			Predicate<TestDescriptor> excludeTagsFilter = TestPlanSpecification.excludeTags(excludeTags);
-			plan.filterWith(excludeTagsFilter);
+			Predicate<TestDescriptor> excludeTagsFilter = TagFilterBuilder.excludeTags(excludeTags);
+			plan.addDescriptorFilter(excludeTagsFilter);
 		}
 	}
 
 	private void addEngineIdFilter(TestPlanSpecification plan) {
 		String engineId = getExplicitEngineId();
 		if (StringUtils.isNotBlank(engineId)) {
-			Predicate<TestDescriptor> engineFilter = TestPlanSpecification.byEngine(engineId);
-			plan.filterWith(engineFilter);
+			Predicate<TestDescriptor> engineFilter = EngineFilterBuilder.filterByEngineId(engineId);
+			plan.addDescriptorFilter(engineFilter);
 		}
 	}
 

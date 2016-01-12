@@ -12,7 +12,8 @@ package org.junit.gen5.engine.junit5;
 
 import static java.util.Arrays.asList;
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder;
 
 /**
  * Integration tests that verify support for {@link org.junit.gen5.api.extension.InstancePostProcessor}.
@@ -33,7 +35,7 @@ public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void instancePostProcessorInTopLevelClass() {
-		TestPlanSpecification spec = build(forClass(OuterTestCase.class));
+		TestPlanSpecification spec = testPlanSpecification().withElements(forClass(OuterTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(spec);
 
