@@ -127,14 +127,17 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		executeTests(testPlanSpecification);
 
-		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
-		assertEquals(1, tracker.testFailedCount.get(), "# tests failed");
-
-		Throwable failure = tracker.throwables.get(0);
-		assertEquals(RuntimeException.class, failure.getClass());
-		assertEquals("unchecked", failure.getMessage());
-		assertEquals(IOException.class, failure.getSuppressed()[0].getClass());
-		assertEquals("checked", failure.getSuppressed()[0].getMessage());
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(FailureTestCase.class), started()), //
+			event(test("testWithUncheckedException"), started()), //
+			event(test("testWithUncheckedException"),
+				finishedWithFailure(allOf( //
+					isA(RuntimeException.class), //
+					message("unchecked"), //
+					suppressed(0, allOf(isA(IOException.class), message("checked")))))), //
+			event(container(FailureTestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test

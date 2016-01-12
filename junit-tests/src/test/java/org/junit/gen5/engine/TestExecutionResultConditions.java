@@ -35,6 +35,12 @@ public class TestExecutionResultConditions {
 		return new Condition<>(expectedClass::isInstance, "instance of %s", expectedClass.getName());
 	}
 
+	public static Condition<Throwable> suppressed(int index, Condition<Throwable> checked) {
+		return new Condition<>(throwable -> checked.matches(throwable.getSuppressed()[index]),
+			"suppressed at index %d matches %s", index, checked);
+
+	}
+
 	public static Condition<TestExecutionResult> cause(Condition<? super Throwable> condition) {
 		return new Condition<TestExecutionResult>(where(TestExecutionResult::getThrowable, throwable -> {
 			return throwable.isPresent() && condition.matches(throwable.get());
