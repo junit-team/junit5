@@ -1,18 +1,18 @@
-# JUnit Lambda
+# JUnit 5
 
-This repository is the home of the next generation of JUnit, codenamed  _JUnit Lambda_ (a.k.a., _JUnit 5_).
+This repository is the home of the next generation of JUnit, _JUnit 5_.
 
-The project is currently in _Phase 3_, building the _Alpha 1 milestone_ which is based on feedback received for the [Prototype](https://github.com/junit-team/junit5/wiki/Prototype).
+The project is currently in _Phase 3_, building the _Alpha 1 milestone_ which is based on feedback received for the [Prototype].
 
 ## Documentation
 
 ### User Guide
 
-The [JUnit 5 User Guide](http://junit-team.github.io/junit5/) is available online.
+The [JUnit 5 User Guide] is available online.
 
 ### Javadoc
 
-The [JUnit 5 Javadoc](https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc/) is available online.
+The [JUnit 5 Javadoc] is available online.
 
 ## Continuous Integration Builds
 
@@ -60,15 +60,15 @@ See also: <https://oss.sonatype.org/content/repositories/snapshots/org/junit/>
 
 ## Contributing
 
-# JUnit Lambda Prototype
+At the current stage, we are not accepting pull requests for the following reasons.
 
-The JUnit Lambda team is currently collecting feedback about the prototype which [is described in the Wiki](https://github.com/junit-team/junit5/wiki/Prototype).
+- **Legal reasons**: Any contributor will have to sign a contributor's agreement along the lines of [CONTRIBUTING.md]. The exact details have not been figured out yet, but we will contact you *before accepting your first pull request*.
 
-The goal of the prototype phase is to come up with some working code that will entice people to give us feedback on the **programming model, APIs, and SPIs** as described in the sections below. At the current stage, we are **NOT COLLECTING FEEDBACK ABOUT THE IMPLEMENTATION**, simply because it's in large parts neither polished, nor thoroughly tested, nor stable.
+If you want to provide input in the interim, please use [the project's issue tracker](https://github.com/junit-team/junit5/issues) or send us comments via [Twitter].
 
-We are also not accepting any pull requests at this time, for the following reasons:
 
-- **Focus**: The goal of the prototype is to get feedback on the API and programming model. Focusing on code style, formatting, and other details will distract the community's (and our) attention. A lot of the code in the prototype will potentially be rewritten anyway.
-- **Legal reasons**: Any contributor will have to sign a contributor's agreement along the lines of [Contributing.md](https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md). The exact details have not been figured out yet, but we will contact you *before accepting your first pull request*.
-
-If you want to provide input in the interim, please use [the project's issue tracker](https://github.com/junit-team/junit5/issues) or send us comments via [Twitter](https://twitter.com/junitlambda).
+[CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
+[JUnit 5 Javadoc]: https://junit.ci.cloudbees.com/job/JUnit5/javadoc/
+[JUnit 5 User Guide]: http://junit-team.github.io/junit5/
+[Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
+[Twitter]: https://twitter.com/junitlambda
