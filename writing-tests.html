@@ -450,10 +450,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 
 import org.junit.gen5.api.Test;
 
-class FirstTestCase {
+class FirstJUnit5Tests {
 
     @Test
-    void firstTest() {
+    void myFirstTest() {
         assertEquals(2, 1 + 1);
     }
 
@@ -488,10 +488,6 @@ module.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@DisplayName</code></strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Declares a custom display name for the test class or test method</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@TestName</code></strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allows the display name of the current test to be supplied as a method parameter to <code>@Test</code>, <code>@BeforeEach</code>, and <code>@AfterEach</code> methods; analogous to the JUnit 4&#8217;s <code>TestName</code> rule</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@BeforeEach</code></strong></p></td>
@@ -822,33 +818,38 @@ be resolved at runtime by a registered <code>MethodParameterResolver</code>.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>{TestNameParameterResolver}</code>: if a method parameter is of type <code>String</code> and annotated
-with <code>@TestName</code>, the <code>TestNameParameterResolver</code> will supply the <em>display name</em> of the
-current test at runtime (either its canonical name or its user-provided <code>@DisplayName</code>).
-This acts as a drop-in replacement for the <code>TestName</code> rule from JUnit 4. See <code>MyTest</code>
-for an example.</p>
+<p><code>{TestInfoParameterResolver}</code>: if a method parameter is of type <code>{TestInfo}</code>, the
+<code>TestInfoParameterResolver</code> will supply an instance of <code>TestInfo</code> corresponding to the
+current test as the value for the parameter. The <code>TestInfo</code> can then be used to retrieve
+information about the current test such as the test&#8217;s name or display name (as
+configured via <code>@DisplayName</code>). This acts as a drop-in replacement for the <code>TestName</code>
+rule from JUnit 4. See <code>TestInfoTests</code> for an example.</p>
 </li>
 </ul>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.*;
 
-class MyTest {
+import org.junit.gen5.api.*;
+
+class TestInfoTests {
 
     @BeforeEach
-    void init(@TestName name) {
-        assertTrue(name.equals("TEST 1") || name.equals("test2"));
+    void init(TestInfo testInfo) {
+        String displayName = testInfo.getDisplayName();
+        assertTrue(displayName.equals("TEST 1") || displayName.equals("test2"));
     }
 
     @Test
     @DisplayName("TEST 1")
-    void test1(@TestName name) {
-        assertEquals("TEST 1", name);
+    void test1(TestInfo testInfo) {
+        assertEquals("TEST 1", testInfo.getDisplayName());
     }
 
     @Test
-    void test2() {}
+    void test2() {
+    }
 
 }</code></pre>
 </div>
@@ -859,10 +860,9 @@ class MyTest {
 <div class="ulist">
 <ul>
 <li>
-<p>Check out the <code>methodInjectionTest(&#8230;&#8203;)</code> test method in
-<code>{SampleTestCase}</code> for an example that uses the built-in
-<code>{TestNameParameterResolver}</code> as well as two user-provided resolvers,
-<code>{CustomTypeParameterResolver}</code> and
+<p>Check out the <code>methodInjectionTest(&#8230;&#8203;)</code> test method in <code>{SampleTestCase}</code> for an
+example that uses the built-in <code>{TestInfoParameterResolver}</code> as well as two
+user-provided resolvers, <code>{CustomTypeParameterResolver}</code> and
 <code>{CustomAnnotationParameterResolver}</code>.</p>
 </li>
 <li>
@@ -903,7 +903,7 @@ class MyMockitoTest {
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-12 07:41:29 -05:00
+Last updated 2016-01-12 13:37:54 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
