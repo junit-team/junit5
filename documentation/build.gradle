@@ -16,7 +16,7 @@ dependencies {
 }
 
 githubPages {
-	repoUri = 'https://github.com/junit-team/junit-lambda.git'
+	repoUri = 'https://github.com/junit-team/junit5.git'
 
 	credentials {
 		username = project.hasProperty('githubToken') ? project.githubToken : ''
