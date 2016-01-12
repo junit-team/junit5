@@ -15,6 +15,13 @@
 
 Code formatting is enforced using the [Spotless](https://github.com/diffplug/spotless) Gradle plugin. You can use `gradle spotlessApply` to format new code and add missing license headers to source files. Formatter settings for Eclipse are available [in the repository](src/eclipse/junit-eclipse-formatter-settings.xml). For IntelliJ IDEA there's a [plugin](https://plugins.jetbrains.com/plugin/6546) you can use.
 
+### Javadoc
+
+- Prefer putting `<p>` on same line as text with preceding blank line.
+- Blank line before at-clauses/tags.
+- Prefer to use `{@code foo}` over `<code>foo</code>` (better escaping).
+- Use `@since 5.0` instead of `@since 5.0.0`.
+
 ### Tests
 
 #### Naming
