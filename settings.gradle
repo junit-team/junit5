@@ -1,4 +1,4 @@
-rootProject.name = "junit-lambda"
+rootProject.name = "junit5"
 
 include "documentation"
 include "junit-commons"
