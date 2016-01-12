@@ -66,7 +66,7 @@ subprojects {
 		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = project.name
-		options.addStringOption('Xdoclint:none', '-quiet')
+		options.addStringOption('Xdoclint:html,syntax,reference', '-quiet')
 		exclude '**/com/example/**'
 	}
 
