@@ -189,6 +189,7 @@ configure(rootProject) {
 	description = 'JUnit 5'
 
 	apply plugin: 'com.diffplug.gradle.spotless'
+	apply plugin:'base'
 
 	task aggregateJavadocs(type: Javadoc) {
 		group = "Documentation"
