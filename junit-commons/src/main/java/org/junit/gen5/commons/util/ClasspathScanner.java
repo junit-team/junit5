@@ -90,8 +90,7 @@ class ClasspathScanner {
 			ClassLoader classLoader = classLoaderSupplier.get();
 			LOG.fine(() -> "ClassLoader: " + classLoader);
 			String path = packagePath(basePackageName);
-			Enumeration<URL> resources = null;
-			resources = classLoader.getResources(path);
+			Enumeration<URL> resources = classLoader.getResources(path);
 			List<File> dirs = new ArrayList<>();
 			while (resources.hasMoreElements()) {
 				URL resource = resources.nextElement();
