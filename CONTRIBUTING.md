@@ -31,3 +31,14 @@ Code formatting is enforced using the [Spotless](https://github.com/diffplug/spo
 #### Mocking
 
 - Use either Mockito or hand-written test doubles.
+
+### Logging
+
+- Use sparingly
+- Do not log in utility classes (junit-commons)
+- Levels
+  - `SEVERE` (Log4J: `ERROR`): extra information (in addition to an Exception) about errors that will halt execution
+  - `WARNING` (Log4J: `WARN`): potential usage errors that should not halt execution
+  - `INFO`: stuff the users might want to know but not by default (Example: `ServiceLoaderTestEngineRegistry` logs IDs of discovered engines)
+  - `FINE` (Log4J: `DEBUG`)
+  - `FINER` (Log4J: `TRACE`)
