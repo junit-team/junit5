@@ -37,12 +37,31 @@ public class ReflectionUtilsTests {
 	static class B extends A implements InterfaceC {
 	}
 
+	static class C {
+
+		public C(String a, String b) {
+
+		}
+
+	}
+
 	@Test
 	void getAllAssignmentCompatibleClasses() {
 		Set<Class<?>> superclasses = ReflectionUtils.getAllAssignmentCompatibleClasses(B.class);
 		assertThat(superclasses).containsExactly(B.class, InterfaceC.class, InterfaceA.class, InterfaceB.class, A.class,
 			InterfaceD.class, Object.class);
 		assertTrue(superclasses.stream().allMatch(clazz -> clazz.isAssignableFrom(B.class)));
+	}
+
+	@Test
+	void newInstance() {
+
+		C instance1 = ReflectionUtils.newInstance(C.class, "one", "two");
+		assertThat(instance1).isNotNull();
+
+		//todo check for proper exception
+		//		C instance2 = ReflectionUtils.newInstance(C.class, "one", null);
+
 	}
 
 }
