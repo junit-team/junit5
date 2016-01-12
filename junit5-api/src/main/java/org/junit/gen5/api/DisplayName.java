@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  *
  * @since 5.0
  * @see Test
- * @see TestName
+ * @see TestInfo
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
