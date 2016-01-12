@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -22,7 +21,6 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 /**
  * <h3>DISCLAIMER</h3>
@@ -36,8 +34,6 @@ import java.util.logging.Logger;
 class ClasspathScanner {
 
 	private static final String CLASS_FILE_SUFFIX = ".class";
-
-	private static final Logger LOG = Logger.getLogger(ClasspathScanner.class.getName());
 
 	private final Supplier<ClassLoader> classLoaderSupplier;
 
@@ -64,7 +60,6 @@ class ClasspathScanner {
 		Preconditions.notBlank(basePackageName, "basePackageName must not be blank");
 
 		List<File> dirs = allSourceDirsForPackage(basePackageName);
-		LOG.fine(() -> "Directories found: " + dirs);
 		return allClassesInSourceDirs(dirs, basePackageName, classFilter);
 	}
 
@@ -88,7 +83,6 @@ class ClasspathScanner {
 	private List<File> allSourceDirsForPackage(String basePackageName) {
 		try {
 			ClassLoader classLoader = classLoaderSupplier.get();
-			LOG.fine(() -> "ClassLoader: " + classLoader);
 			String path = packagePath(basePackageName);
 			Enumeration<URL> resources = classLoader.getResources(path);
 			List<File> dirs = new ArrayList<>();
@@ -116,12 +110,10 @@ class ClasspathScanner {
 
 	private void collectClassesRecursively(File sourceDir, String packageName, List<Class<?>> classesCollector,
 			Predicate<Class<?>> classFilter) {
-		LOG.finer(() -> "Searching for classes in package: " + packageName);
 		File[] files = sourceDir.listFiles();
 		if (files == null) {
 			return;
 		}
-		LOG.finer(() -> "Files found: " + Arrays.toString(files));
 		for (File file : files) {
 			if (isClassFile(file)) {
 				Optional<Class<?>> classForClassFile = loadClassForClassFile(file, packageName);
