@@ -12,11 +12,12 @@ package org.junit.gen5.api;
 
 /**
  * {@code TestInfo} is used to inject information about the current test
- * into to {@code @Test}, {@code @BeforeEach}, and {@code @AfterEach} methods.
+ * into to {@code @Test}, {@code @BeforeEach}, {@code @AfterEach},
+ * {@code @BeforeAll}, and {@code @AfterAll} methods.
  *
  * <p>If a method parameter is of type {@link TestInfo}, JUnit will supply
  * an instance of {@code TestInfo} corresponding to the current test as the
- * value for the annotated parameter.
+ * value for the parameter.
  *
  * @since 5.0
  * @see Test

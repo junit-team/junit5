@@ -20,7 +20,6 @@ module.
 
 |*`@Test`*              | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit 5 operate based on their own dedicated annotations.
 |*`@DisplayName`*       | Declares a custom display name for the test class or test method
-|*`@TestName`*          | Allows the display name of the current test to be supplied as a method parameter to `@Test`, `@BeforeEach`, and `@AfterEach` methods; analogous to the JUnit 4's `TestName` rule
 |*`@BeforeEach`*        | Denotes that the annotated method should be executed _before_ *each* `@Test` method in the current class or class hierarchy
 |*`@AfterEach`*         | Denotes that the annotated method should be executed _after_ *each* `@Test` method in the current class or class hierarchy
 |*`@BeforeAll`*         | Denotes that the annotated method should be executed _before_ *all* `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@BeforeClass`. Such methods must be `static`.
@@ -323,43 +322,29 @@ be resolved at runtime by a registered `MethodParameterResolver`.
 
 There is currently one built-in resolver that is registered automatically.
 
-* `{TestNameParameterResolver}`: if a method parameter is of type `String` and annotated
-  with `@TestName`, the `TestNameParameterResolver` will supply the _display name_ of the
-  current test at runtime (either its canonical name or its user-provided `@DisplayName`).
-  This acts as a drop-in replacement for the `TestName` rule from JUnit 4. See `MyTest`
-  for an example.
+* `{TestInfoParameterResolver}`: if a method parameter is of type `{TestInfo}`, the
+  `TestInfoParameterResolver` will supply an instance of `TestInfo` corresponding to the
+  current test as the value for the parameter. The `TestInfo` can then be used to retrieve
+  information about the current test such as the test's name or display name (as
+  configured via `@DisplayName`). This acts as a drop-in replacement for the `TestName`
+  rule from JUnit 4. See `TestInfoTests` for an example.
 
 [source,java,indent=0]
 [subs="verbatim"]
 ----
+import static org.junit.gen5.api.Assertions.*;
+
 import org.junit.gen5.api.*;
 
-class MyTest {
-
-	@BeforeEach
-	void init(@TestName name) {
-		assertTrue(name.equals("TEST 1") || name.equals("test2"));
-	}
-
-	@Test
-	@DisplayName("TEST 1")
-	void test1(@TestName name) {
-		assertEquals("TEST 1", name);
-	}
-
-	@Test
-	void test2() {}
-
-}
+include::{testDir}/example/TestInfoTests.java[tags=user_guide]
 ----
 
 Other parameter resolvers must be explicitly enabled by registering a <<extension-model,
 test extension>> via `@ExtendWith`.
 
-* Check out the `methodInjectionTest(...)` test method in
-  `{SampleTestCase}` for an example that uses the built-in
-  `{TestNameParameterResolver}` as well as two user-provided resolvers,
-  `{CustomTypeParameterResolver}` and
+* Check out the `methodInjectionTest(...)` test method in `{SampleTestCase}` for an
+  example that uses the built-in `{TestInfoParameterResolver}` as well as two
+  user-provided resolvers, `{CustomTypeParameterResolver}` and
   `{CustomAnnotationParameterResolver}`.
 
 * The `{MockitoExtension}` is another example of a `{MethodParameterResolver}`. While not

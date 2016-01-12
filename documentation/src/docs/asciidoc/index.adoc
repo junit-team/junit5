@@ -9,7 +9,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 
 :junit5-repo:                       {junit-team}/junit5
 :junit5-samples-repo:               {junit-team}/junit5-samples
-:master-branch:                     {junit5-repo}/blob/master
+:master-branch:                     {junit5-repo}/tree/master
 
 :junit5-gradle-consumer:            {junit5-samples-repo}/tree/master/junit5-gradle-consumer[junit5-gradle-consumer]
 :junit5-maven-consumer:             {junit5-samples-repo}/tree/master/junit5-maven-consumer[junit5-maven-consumer]
@@ -33,12 +33,12 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :MethodParameterResolver:           {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java[MethodParameterResolver]
 :MockitoExtension:                  {master-branch}/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java[MockitoExtension]
 :SampleTestCase:                    {master-branch}/sample-project/src/test/java/com/example/SampleTestCase.java[SampleTestCase]
-:SpringExtension:                   https://github.com/sbrannen/spring-test-junit5/blob/master/src/main/java/org/springframework/test/context/junit5/SpringExtension.java[SpringExtension]
+:SpringExtension:                   https://github.com/sbrannen/spring-test-junit5/tree/master/src/main/java/org/springframework/test/context/junit5/SpringExtension.java[SpringExtension]
 :SummaryGeneratingListener:         {master-branch}/junit-launcher/src/main/java/org/junit/gen5/launcher/listeners/SummaryGeneratingListener.java[SummaryGeneratingListener]
 :TestExecutionCondition:            {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/TestExecutionCondition.java[TestExecutionCondition]
 :TestExecutionListener:             {master-branch}/junit-launcher/src/main/java/org/junit/gen5/launcher/TestExecutionListener.java[TestExecutionListener]
-:TestNameParameterResolver:         {master-branch}/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestNameParameterResolver.java[TestNameParameterResolver]
-
+:TestInfoParameterResolver:         {master-branch}/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java[TestInfoParameterResolver]
+:TestInfo:                          {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/TestInfo.java[TestInfo]
 
 include::overview.adoc[]
 
