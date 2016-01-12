@@ -48,6 +48,23 @@ public final class Preconditions {
 	}
 
 	/**
+	 * Assert that none of the supplied {@link Object}s are {@code null}.
+	 *
+	 * @param objects the objects to check
+	 * @param message precondition violation message
+	 * @return the supplied objects as a convenience
+	 * @throws PreconditionViolationException if any of the supplied objects are {@code null}
+	 * @see #notNull(Object, Supplier)
+	 */
+	public static Object[] notNull(Object[] objects, String message) throws PreconditionViolationException {
+		for (Object object : objects) {
+			notNull(object, () -> message);
+		}
+
+		return objects;
+	}
+
+	/**
 	 * Assert that the supplied {@link Object} is not {@code null}.
 	 *
 	 * @param object the object to check

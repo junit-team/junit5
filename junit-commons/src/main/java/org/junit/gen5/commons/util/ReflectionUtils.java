@@ -104,12 +104,13 @@ public final class ReflectionUtils {
 	 * as an unchecked exception.
 	 *
 	 * @param clazz the class to instantiate; never {@code null}
-	 * @param args the arguments to pass to the constructor
+	 * @param args the arguments to pass to the constructor none of which may be {@code null}
 	 * @return the new instance
 	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
 	public static <T> T newInstance(Class<T> clazz, Object... args) {
 		Preconditions.notNull(clazz, "class must not be null");
+		Preconditions.notNull(args, "none of the arguments may be null");
 
 		try {
 			Class<?>[] parameterTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);

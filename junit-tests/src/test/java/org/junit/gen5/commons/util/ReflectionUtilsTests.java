@@ -15,7 +15,7 @@ import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.util.Set;
 
-import org.junit.gen5.api.Test;
+import org.junit.gen5.api.*;
 
 public class ReflectionUtilsTests {
 
@@ -39,8 +39,10 @@ public class ReflectionUtilsTests {
 
 	static class C {
 
-		public C(String a, String b) {
+		public C() {
+		}
 
+		public C(String a, String b) {
 		}
 
 	}
@@ -55,13 +57,18 @@ public class ReflectionUtilsTests {
 
 	@Test
 	void newInstance() {
+		assertThat(ReflectionUtils.newInstance(C.class, "one", "two")).isNotNull();
+		assertThat(ReflectionUtils.newInstance(C.class)).isNotNull();
+		assertThat(ReflectionUtils.newInstance(C.class, new Object[]{})).isNotNull();
 
-		C instance1 = ReflectionUtils.newInstance(C.class, "one", "two");
-		assertThat(instance1).isNotNull();
+		Assertions.assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.newInstance(C.class, "one", null));
 
-		//todo check for proper exception
-		//		C instance2 = ReflectionUtils.newInstance(C.class, "one", null);
+		Assertions.assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.newInstance(C.class, null, "two"));
 
+		Assertions.assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.newInstance(C.class, null, null));
 	}
 
 }
