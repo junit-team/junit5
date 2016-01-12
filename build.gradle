@@ -85,24 +85,22 @@ subprojects {
 		archives javadocJar
 	}
 
-	if (project.name != 'documentation') {
-		spotless {
-			java {
-				licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java')
-				importOrder(['java', 'javax', 'com', 'org'])
+	spotless {
+		java {
+			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java')
+			importOrder(['java', 'javax', 'com', 'org'])
 
-				eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
+			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
 
-				trimTrailingWhitespace()
-				// endWithNewline()
+			trimTrailingWhitespace()
+			// endWithNewline()
 
-				custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
-			}
+			custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
+		}
 
-			format 'groovy', {
-				target '**/*.groovy'
-				licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java'), "package "
-			}
+		format 'groovy', {
+			target '**/*.groovy'
+			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java'), "package "
 		}
 	}
 

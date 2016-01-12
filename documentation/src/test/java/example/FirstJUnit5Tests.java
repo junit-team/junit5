@@ -14,13 +14,6 @@ package example;
 import static org.junit.gen5.api.Assertions.assertEquals;
 
 import org.junit.gen5.api.Test;
-// end::user_guide[]
-import org.junit.gen5.junit4.runner.JUnit5;
-import org.junit.runner.RunWith;
-
-@RunWith(JUnit5.class)
-public
-// tag::user_guide[]
 
 class FirstJUnit5Tests {
 

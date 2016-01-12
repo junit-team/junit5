@@ -1,7 +1,14 @@
 apply plugin: 'org.asciidoctor.convert'
 apply plugin: "org.ajoberstar.github-pages"
+apply plugin: 'org.junit.gen5.gradle'
 
 uploadArchives.enabled = false
+
+junit5 {
+	runJunit4 false
+	matchClassName '.*Test[s]'
+	reportFile file('build/test-results/JUNIT5-Tests.xml')
+}
 
 dependencies {
 	testCompile(project(':junit-commons'))

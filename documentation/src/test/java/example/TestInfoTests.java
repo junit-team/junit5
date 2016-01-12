@@ -10,6 +10,7 @@
 
 package example;
 
+// tag::user_guide[]
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
 
@@ -17,15 +18,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
-import org.junit.gen5.junit4.runner.JUnit5;
-import org.junit.runner.RunWith;
 
-/**
- * @since 5.0
- */
-@RunWith(JUnit5.class)
-public
-//tag::user_guide[]
 class TestInfoTests {
 
 	@BeforeEach
@@ -45,4 +38,4 @@ class TestInfoTests {
 	}
 
 }
-//end::user_guide[]
+// end::user_guide[]
