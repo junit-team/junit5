@@ -3,13 +3,13 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 
 :sectnums:
 
-:javadoc-root:                      https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc
+:javadoc-root:                      https://junit.ci.cloudbees.com/job/JUnit5/javadoc
 :snapshot-repo:                     https://oss.sonatype.org/content/repositories/snapshots
 :junit-team:                        https://github.com/junit-team
 
-:junit-lambda-repo:                 {junit-team}/junit-lambda
+:junit5-repo:                       {junit-team}/junit5
 :junit5-samples-repo:               {junit-team}/junit5-samples
-:master-branch:                     {junit-lambda-repo}/blob/master
+:master-branch:                     {junit5-repo}/blob/master
 
 :junit5-gradle-consumer:            {junit5-samples-repo}/tree/master/junit5-gradle-consumer[junit5-gradle-consumer]
 :junit5-maven-consumer:             {junit5-samples-repo}/tree/master/junit5-maven-consumer[junit5-maven-consumer]

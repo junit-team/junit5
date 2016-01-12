@@ -83,8 +83,8 @@ The current snapshot provides two `TestEngine` implementations out of the box:
   launcher infrastructure.
 
 Third parties may also contribute their own `TestEngine` by implementing the interfaces in the
-https://github.com/junit-team/junit-lambda/tree/master/junit-engine-api[junit-engine-api]
+https://github.com/junit-team/junit5/tree/master/junit-engine-api[junit-engine-api]
 project and _registering_ their engine. Engine registration is currently supported via
 Java's `java.util.ServiceLoader` mechanism. For example, the `junit5-engine` project
 registers its `JUnit5TestEngine`
-https://github.com/junit-team/junit-lambda/tree/master/junit5-engine/src/main/resources/META-INF/services/org.junit.gen5.engine.TestEngine[here].
+https://github.com/junit-team/junit5/tree/master/junit5-engine/src/main/resources/META-INF/services/org.junit.gen5.engine.TestEngine[here].

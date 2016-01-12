@@ -306,7 +306,7 @@ arbitrarily deep, and those inner classes can be considered as full members of t
 class family.
 
 For a more meaningful example have a look at
-https://github.com/junit-team/junit-lambda/tree/master/sample-project/src/test/java/com/example/TestingAStack.java[TestingAStack].
+https://github.com/junit-team/junit5/tree/master/sample-project/src/test/java/com/example/TestingAStack.java[TestingAStack].
 
 
 === Method Parameters and Dependency Injection
