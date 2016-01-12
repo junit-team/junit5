@@ -10,17 +10,24 @@
 
 package example;
 
-//tag::complete[]
+// tag::user_guide[]
 import static org.junit.gen5.api.Assertions.assertEquals;
 
 import org.junit.gen5.api.Test;
+// end::user_guide[]
+import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.runner.RunWith;
 
-class FirstTestCase {
+@RunWith(JUnit5.class)
+public
+// tag::user_guide[]
+
+class FirstJUnit5Tests {
 
 	@Test
-	void firstTest() {
+	void myFirstTest() {
 		assertEquals(2, 1 + 1);
 	}
 
 }
-// end::complete[]
+// end::user_guide[]

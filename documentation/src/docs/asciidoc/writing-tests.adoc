@@ -5,8 +5,9 @@
 [subs="verbatim"]
 .A first test case
 ----
-include::{testDir}/example/FirstTestCase.java[tags=complete]
+include::{testDir}/example/FirstJUnit5Tests.java[tags=user_guide]
 ----
+
 
 === Annotations
 
