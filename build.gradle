@@ -193,7 +193,7 @@ configure(rootProject) {
 	task aggregateJavadocs(type: Javadoc) {
 		group = "Documentation"
 		description = "Generates aggregated Javadocs"
-		title = "${rootProject.description} ${version} API"
+		title = "JUnit ${version} API"
 
 		dependsOn {
 			subprojects.collect {
