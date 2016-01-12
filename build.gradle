@@ -233,7 +233,9 @@ configure(rootProject) {
 			endWithNewline()
 		}
 		format 'documentation', {
-			target '**/*.adoc', '**/*.md'
+			// Do NOT apply to '**/*.md'; otherwise, the Jenkins build fails since
+			// Spotless will apply to Markdown files in the unzipped Gradle distribution.
+			target '**/*.adoc', '*.md', 'documentation/**/*.md'
 			trimTrailingWhitespace()
 			endWithNewline()
 		}
