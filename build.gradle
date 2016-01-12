@@ -225,9 +225,7 @@ configure(rootProject) {
 
 	spotless {
 		format 'misc', {
-			// Do NOT apply to '**/*.gradle'; otherwise, the Jenkins build fails since
-			// Spotless will apply to Gradle build files in the unzipped Gradle distribution.
-			target '*.gradle', '*junit*/*.gradle', 'documentation/*.gradle', '**/*.gitignore'
+			target '**/*.gradle', '**/*.gitignore'
 			indentWithTabs()
 			trimTrailingWhitespace()
 			endWithNewline()
