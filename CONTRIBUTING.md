@@ -1,13 +1,22 @@
 # Contributing
 
-## Project License:  Eclipse Public License v1.0
+## JUnit Contributor License Agreement
+
+**Project License:**  [Eclipse Public License v1.0](LICENSE.md)
 
 - You will only Submit Contributions where You have authored 100% of the content.
 - You will only Submit Contributions to which You have the necessary rights. This means that if You are employed You have received the necessary permissions from Your employer to make the Contributions.
 - Whatever content You Contribute will be provided under the Project License(s).
 
+## Pull Requests
 
+Please add the following lines to your pull request description:
+
+```markdown
 ---
+
+I hereby agree to the terms of the JUnit Contributor License Agreement.
+```
 
 ## Coding Conventions
 

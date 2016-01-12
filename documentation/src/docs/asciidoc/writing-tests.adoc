@@ -337,13 +337,13 @@ import org.junit.gen5.api.*;
 class MyTest {
 
 	@BeforeEach
-	void init(@TestName name) {
+	void init(@TestName String name) {
 		assertTrue(name.equals("TEST 1") || name.equals("test2"));
 	}
 
 	@Test
 	@DisplayName("TEST 1")
-	void test1(@TestName name) {
+	void test1(@TestName String name) {
 		assertEquals("TEST 1", name);
 	}
 

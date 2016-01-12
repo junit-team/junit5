@@ -11,11 +11,12 @@
 package org.junit.gen5.commons.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.util.Set;
 
-import org.junit.gen5.api.*;
+import org.junit.gen5.api.Test;
 
 public class ReflectionUtilsTests {
 
@@ -59,16 +60,17 @@ public class ReflectionUtilsTests {
 	void newInstance() {
 		assertThat(ReflectionUtils.newInstance(C.class, "one", "two")).isNotNull();
 		assertThat(ReflectionUtils.newInstance(C.class)).isNotNull();
-		assertThat(ReflectionUtils.newInstance(C.class, new Object[]{})).isNotNull();
+		assertThat(ReflectionUtils.newInstance(C.class, new Object[] {})).isNotNull();
 
-		Assertions.assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.newInstance(C.class, "one", null));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.newInstance(C.class, "one", null));
 
-		Assertions.assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.newInstance(C.class, null, "two"));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.newInstance(C.class, null, "two"));
 
-		Assertions.assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.newInstance(C.class, null, null));
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.newInstance(C.class, null, null));
+
+		assertThrows(PreconditionViolationException.class, () -> {
+			ReflectionUtils.newInstance(C.class, ((Object[]) null));
+		});
 	}
 
 }
