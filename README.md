@@ -16,7 +16,7 @@ The [JUnit 5 Javadoc](https://junit.ci.cloudbees.com/job/JUnit_Lambda/javadoc/) 
 
 ## Continuous Integration Builds
 
-[![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg)](https://travis-ci.org/junit-team/junit-lambda)
+[![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg)](https://travis-ci.org/junit-team/junit5)
 
 ## Building from Source
 
