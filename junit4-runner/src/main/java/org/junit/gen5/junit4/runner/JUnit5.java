@@ -17,6 +17,7 @@ import static org.junit.gen5.engine.ClassFilters.classNameMatches;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -26,9 +27,13 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.launcher.Launcher;
+import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
+import org.junit.runner.manipulation.Filter;
+import org.junit.runner.manipulation.Filterable;
+import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
@@ -53,7 +58,7 @@ import org.junit.runners.model.InitializationError;
  * @see ExcludeTags
  * @see OnlyEngine
  */
-public class JUnit5 extends Runner {
+public class JUnit5 extends Runner implements Filterable {
 
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
@@ -61,8 +66,8 @@ public class JUnit5 extends Runner {
 
 	private final Launcher launcher = new Launcher();
 	private final Class<?> testClass;
-	private final TestPlanSpecification specification;
-	private final JUnit5TestTree testTree;
+	private TestPlanSpecification specification;
+	private JUnit5TestTree testTree;
 
 	public JUnit5(Class<?> testClass) throws InitializationError {
 		this.testClass = testClass;
@@ -192,6 +197,26 @@ public class JUnit5 extends Runner {
 			V defaultValue) {
 		A annotation = this.testClass.getAnnotation(annotationClass);
 		return (annotation != null ? extractor.apply(annotation) : defaultValue);
+	}
+
+	@Override
+	public void filter(Filter filter) throws NoTestsRemainException {
+		Set<TestIdentifier> identifiers = this.testTree.getByDescription(filter);
+		System.out.println("original identifiers: ");
+		identifiers.forEach(System.out::println);
+		if (!identifiers.isEmpty()) {
+			identifiers.removeIf(testIdentifier -> identifiers.stream().anyMatch(
+				acceptedIdentifier -> testTree.getTestPlan().getDescendants(testIdentifier).contains(
+					acceptedIdentifier)));
+			System.out.println("filtered identifiers: ");
+			identifiers.forEach(System.out::println);
+			List<TestPlanSpecificationElement> elements = identifiers.stream().map(TestIdentifier::getUniqueId).map(
+				Object::toString).map(TestPlanSpecification::forUniqueId).collect(toList());
+			this.specification = TestPlanSpecification.build(elements);
+			this.testTree = generateTestTree(testClass);
+		}
+		else
+			throw new NoTestsRemainException();
 	}
 
 }

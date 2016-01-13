@@ -10,12 +10,17 @@
 
 package org.junit.gen5.junit4.runner;
 
+import static java.util.stream.Collectors.toSet;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.runner.Description;
+import org.junit.runner.manipulation.Filter;
 
 /**
  * @since 5.0
@@ -23,10 +28,16 @@ import org.junit.runner.Description;
 class JUnit5TestTree {
 
 	private final Map<TestIdentifier, Description> descriptions = new HashMap<>();
+	private final TestPlan plan;
 	private final Description suiteDescription;
 
 	JUnit5TestTree(TestPlan plan, Class<?> testClass) {
+		this.plan = plan;
 		this.suiteDescription = generateDescription(plan, testClass);
+	}
+
+	public TestPlan getTestPlan() {
+		return plan;
 	}
 
 	Description getSuiteDescription() {
@@ -64,6 +75,11 @@ class JUnit5TestTree {
 		else {
 			return Description.createSuiteDescription(identifier.getDisplayName(), identifier.getUniqueId());
 		}
+	}
+
+	Set<TestIdentifier> getByDescription(Filter filter) {
+		return descriptions.entrySet().stream().filter(entry -> filter.shouldRun(entry.getValue())).map(
+			Entry::getKey).collect(toSet());
 	}
 
 }
