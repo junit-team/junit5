@@ -48,6 +48,7 @@ public class RegisteredExtensionPoint<E extends ExtensionPoint> {
 	public String toString() {
 		// @formatter:off
 		return new ToStringBuilder(this)
+				.append("extensionName", getExtensionName())
 				.append("position", this.position)
 				.append("extensionPoint", this.extensionPoint)
 				.toString();
