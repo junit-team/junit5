@@ -30,9 +30,6 @@ import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
 import org.junit.gen5.engine.junit5.extension.TestInfoParameterResolver;
 
-/**
- * @since 5.0
- */
 public class TestExtensionRegistryTests {
 
 	private TestExtensionRegistry registry;
@@ -44,7 +41,7 @@ public class TestExtensionRegistryTests {
 
 	@Test
 	public void checkDefaultExtensions() {
-		assertEquals(2, TestExtensionRegistry.getDefaultExtensionTypes().size());
+		assertEquals(2, TestExtensionRegistry.getDefaultExtensionClasses().size());
 
 		assertDefaultExtensionType(DisabledCondition.class);
 		assertDefaultExtensionType(TestInfoParameterResolver.class);
@@ -52,9 +49,9 @@ public class TestExtensionRegistryTests {
 
 	@Test
 	public void newRegistryWithoutParentHasDefaultExtensions() throws Exception {
-		Set<Class<? extends TestExtension>> extensions = registry.getRegisteredExtensionTypes();
+		Set<Class<? extends TestExtension>> extensions = registry.getRegisteredExtensionClasses();
 
-		assertEquals(TestExtensionRegistry.getDefaultExtensionTypes().size(), extensions.size());
+		assertEquals(TestExtensionRegistry.getDefaultExtensionClasses().size(), extensions.size());
 		assertExtensionRegistered(registry, DisabledCondition.class);
 		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
 
@@ -66,20 +63,20 @@ public class TestExtensionRegistryTests {
 	@Test
 	public void registerExtensionByImplementingClass() throws Exception {
 
-		registry.registerExtension(MyExtension.class);
+		registry.addExtension(MyExtension.class);
 
 		assertExtensionRegistered(registry, MyExtension.class);
 
-		int rememberSize = registry.getRegisteredExtensionTypes().size();
-		registry.registerExtension(MyExtension.class);
-		registry.registerExtension(MyExtension.class);
-		registry.registerExtension(MyExtension.class);
+		int rememberSize = registry.getRegisteredExtensionClasses().size();
+		registry.addExtension(MyExtension.class);
+		registry.addExtension(MyExtension.class);
+		registry.addExtension(MyExtension.class);
 
-		assertEquals(rememberSize, registry.getRegisteredExtensionTypes().size());
+		assertEquals(rememberSize, registry.getRegisteredExtensionClasses().size());
 		assertExtensionRegistered(registry, MyExtension.class);
 		assertEquals(1, countExtensionPoints(MyExtensionPoint.class));
 
-		registry.registerExtension(YourExtension.class);
+		registry.addExtension(YourExtension.class);
 		assertExtensionRegistered(registry, YourExtension.class);
 		assertEquals(2, countExtensionPoints(MyExtensionPoint.class));
 	}
@@ -87,7 +84,7 @@ public class TestExtensionRegistryTests {
 	@Test
 	public void registerTestExtensionThatImplementsMultipleExtensionPoints() throws Exception {
 
-		registry.registerExtension(MultipleExtension.class);
+		registry.addExtension(MultipleExtension.class);
 
 		assertExtensionRegistered(registry, MultipleExtension.class);
 
@@ -99,10 +96,10 @@ public class TestExtensionRegistryTests {
 	public void extensionsAreInheritedFromParent() throws Exception {
 
 		TestExtensionRegistry parent = new TestExtensionRegistry();
-		parent.registerExtension(MyExtension.class);
+		parent.addExtension(MyExtension.class);
 
 		registry = new TestExtensionRegistry(parent);
-		registry.registerExtension(YourExtension.class);
+		registry.addExtension(YourExtension.class);
 
 		assertExtensionRegistered(registry, MyExtension.class);
 		assertExtensionRegistered(registry, YourExtension.class);
@@ -117,7 +114,7 @@ public class TestExtensionRegistryTests {
 	@Test
 	public void registerExtensionPointsByExtensionRegistrar() throws Exception {
 
-		registry.registerExtension(MyExtensionRegistrar.class);
+		registry.addExtension(MyExtensionRegistrar.class);
 
 		assertExtensionRegistered(registry, MyExtensionRegistrar.class);
 		assertEquals(1, countExtensionPoints(MyExtensionPoint.class));
@@ -127,15 +124,15 @@ public class TestExtensionRegistryTests {
 	@Test
 	public void canStreamOverRegisteredExceptionPoint() throws Exception {
 
-		registry.registerExtension(MyExtension.class);
+		registry.addExtension(MyExtension.class);
 
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
 		registry.stream(MyExtensionPoint.class, TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(
 			registeredExtensionPoint -> {
-				assertTrue(registeredExtensionPoint.getExtensionPoint() instanceof MyExtensionPoint);
-				assertEquals(MyExtension.class.getName(), registeredExtensionPoint.getExtensionName());
+				assertEquals(MyExtension.class, registeredExtensionPoint.getExtensionInstance().getClass());
 				assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
+				assertTrue(registeredExtensionPoint.getExtensionPoint() instanceof MyExtensionPoint);
 				hasRun.set(true);
 			});
 
@@ -146,17 +143,16 @@ public class TestExtensionRegistryTests {
 	@Test
 	public void registerExtensionPointDirectly() throws Exception {
 
-		registry.registerExtensionPoint((MyExtensionPoint) test -> {
-		}, Position.INNERMOST);
+		registry.registerExtension((MyExtensionPoint) test -> {
+		}, Position.INNERMOST, "anonymous extension");
 
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
 		registry.stream(MyExtensionPoint.class, TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(
 			registeredExtensionPoint -> {
-				assertTrue(registeredExtensionPoint.getExtensionPoint() instanceof MyExtensionPoint);
-				assertTrue(registeredExtensionPoint.getExtensionName().startsWith(getClass().getName() + "$$Lambda$"));
-				assertTrue(registeredExtensionPoint.getExtensionName().contains("$Lambda$"));
+				assertEquals("anonymous extension", registeredExtensionPoint.getExtensionName());
 				assertEquals(Position.INNERMOST, registeredExtensionPoint.getPosition());
+				assertTrue(registeredExtensionPoint.getExtensionPoint() instanceof MyExtensionPoint);
 				hasRun.set(true);
 			});
 
@@ -173,12 +169,12 @@ public class TestExtensionRegistryTests {
 
 	private void assertExtensionRegistered(TestExtensionRegistry registry,
 			Class<? extends TestExtension> extensionClass) {
-		assertTrue(registry.getRegisteredExtensionTypes().contains(extensionClass),
+		assertTrue(registry.getRegisteredExtensionClasses().contains(extensionClass),
 			() -> extensionClass.getSimpleName() + " should be present");
 	}
 
 	private void assertDefaultExtensionType(Class<?> extensionType) {
-		assertTrue(TestExtensionRegistry.getDefaultExtensionTypes().contains(extensionType),
+		assertTrue(TestExtensionRegistry.getDefaultExtensionClasses().contains(extensionType),
 			() -> extensionType.getName() + " should be a default extension");
 	}
 
