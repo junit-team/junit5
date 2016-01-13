@@ -257,6 +257,7 @@ public final class ReflectionUtils {
 		return Arrays.stream(fullClassPath.split(separator))
 				.filter(part -> !part.endsWith(".jar"))
 				.map(File::new)
+				.filter(File::isDirectory)
 				.collect(toSet());
 		// @formatter:on
 	}
