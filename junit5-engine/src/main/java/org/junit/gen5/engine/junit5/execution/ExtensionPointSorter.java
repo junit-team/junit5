@@ -19,8 +19,13 @@ import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
 
 /**
- * Class for sorting {@linkplain RegisteredExtensionPoint points} according to their {@linkplain Position}:
- * {@code OUTERMOST -> OUTSIDE_DEFAULT -> DEFAULT -> INSIDE_DEFAULT -> INNERMOST}
+ * Utility for sorting {@linkplain RegisteredExtensionPoint extension points}
+ * according to their {@linkplain Position}:
+ * {@link Position#OUTERMOST OUTERMOST} &raquo;
+ * {@link Position#OUTSIDE_DEFAULT OUTSIDE_DEFAULT} &raquo;
+ * {@link Position#DEFAULT DEFAULT} &raquo;
+ * {@link Position#INSIDE_DEFAULT INSIDE_DEFAULT} &raquo;
+ * {@link Position#INNERMOST INNERMOST}.
  *
  * @since 5.0
  */
@@ -29,13 +34,12 @@ public class ExtensionPointSorter {
 	/**
 	 * Sort the list of extension points according to their specified {@linkplain Position}.
 	 *
-	 * <p>The list instance will be resorted.
+	 * <p>Note: the supplied list instance will be resorted.
 	 *
-	 * @param registeredExtensionPoints List of extension points in order of registration
+	 * @param registeredExtensionPoints list of extension points in order of registration
 	 * @param <T> concrete subtype of {@link ExtensionPoint}
 	 */
 	public <T extends ExtensionPoint> void sort(List<RegisteredExtensionPoint<T>> registeredExtensionPoints) {
-
 		checkPositionUnique(registeredExtensionPoints, Position.INNERMOST);
 		checkPositionUnique(registeredExtensionPoints, Position.OUTERMOST);
 		registeredExtensionPoints.sort(new DefaultComparator());

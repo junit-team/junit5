@@ -10,7 +10,9 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.expectThrows;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +34,6 @@ public class ExtensionPointSortingTests {
 
 	private ExtensionPointSorter sorter;
 	private List<RegisteredExtensionPoint<LocalExtensionPoint>> pointsToSort;
-	private int pointIndex = 0;
 
 	@BeforeEach
 	public void init() {
@@ -148,7 +149,7 @@ public class ExtensionPointSortingTests {
 
 	protected RegisteredExtensionPoint<LocalExtensionPoint> createExtensionPoint(Position position) {
 		return new RegisteredExtensionPoint<>(() -> {
-		}, position, "" + ++pointIndex);
+		}, position);
 	}
 
 	@FunctionalInterface
