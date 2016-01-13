@@ -53,6 +53,11 @@ public @interface Fast {
 }
 ----
 
+----
+include::{testDir}/example/Fast.java[tags=user_guide]
+----
+
+
 
 
 === Standard Test Class
