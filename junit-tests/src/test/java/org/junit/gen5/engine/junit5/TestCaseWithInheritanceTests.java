@@ -17,6 +17,7 @@ import static org.junit.gen5.engine.TestPlanSpecification.*;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -38,13 +39,13 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 	public void executeAllTestsInClass() {
 		LocalTestCase.countAfterInvoked = 0;
 
-		executeTestsForClass(LocalTestCase.class);
+		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(LocalTestCase.class);
 
-		assertEquals(6, tracker.testStartedCount.get(), "# tests started");
-		assertEquals(3, tracker.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
-		assertEquals(1, tracker.testAbortedCount.get(), "# tests aborted");
-		assertEquals(2, tracker.testFailedCount.get(), "# tests failed");
+		assertEquals(6L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(3L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(1L, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(2L, eventRecorder.getTestFailedCount(), "# tests failed");
 
 		assertEquals(6, LocalTestCase.countBeforeInvoked, "# before calls");
 		assertEquals(6, LocalTestCase.countAfterInvoked, "# after calls");
@@ -57,13 +58,13 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 		TestPlanSpecification spec = build(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#alwaysPasses()"));
 
-		executeTests(spec);
+		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(spec);
 
-		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
-		assertEquals(1, tracker.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
-		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
+		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
@@ -71,13 +72,13 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 		TestPlanSpecification spec = build(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#superclassTest()"));
 
-		executeTests(spec);
+		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(spec);
 
-		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
-		assertEquals(1, tracker.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
-		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
+		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
 
 		assertEquals(1, LocalTestCase.countBeforeInvoked, "# after calls");
 		assertEquals(1, LocalTestCase.countAfterInvoked, "# after calls");
@@ -91,13 +92,13 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 		TestPlanSpecification spec = build(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#throwExceptionInAfterMethod()"));
 
-		executeTests(spec);
+		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(spec);
 
-		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
-		assertEquals(0, tracker.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
-		assertEquals(1, tracker.testFailedCount.get(), "# tests failed");
+		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(0L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
 	}
 
 	// -------------------------------------------------------------------

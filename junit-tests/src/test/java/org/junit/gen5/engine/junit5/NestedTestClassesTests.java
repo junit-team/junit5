@@ -19,6 +19,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDescriptor;
+import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -38,14 +39,14 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void nestedTestsAreExecuted() {
-		executeTestsForClass(TestCaseWithNesting.class);
+		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(TestCaseWithNesting.class);
 
-		assertEquals(3, tracker.testStartedCount.get(), "# tests started");
-		assertEquals(2, tracker.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(1, tracker.testFailedCount.get(), "# tests failed");
+		assertEquals(3L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(3, tracker.containerStartedCount.get(), "# containers started");
-		assertEquals(3, tracker.containerFinishedCount.get(), "# containers finished");
+		assertEquals(3L, eventRecorder.getContainerStartedCount(), "# containers started");
+		assertEquals(3L, eventRecorder.getContainerFinishedCount(), "# containers finished");
 	}
 
 	@Test
@@ -57,14 +58,15 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void doublyNestedTestsAreExecuted() {
-		executeTestsForClass(TestCaseWithDoubleNesting.class);
+		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(
+			TestCaseWithDoubleNesting.class);
 
-		assertEquals(5, tracker.testStartedCount.get(), "# tests started");
-		assertEquals(3, tracker.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(2, tracker.testFailedCount.get(), "# tests failed");
+		assertEquals(5L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(3L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(2L, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(4, tracker.containerStartedCount.get(), "# containers started");
-		assertEquals(4, tracker.containerFinishedCount.get(), "# containers finished");
+		assertEquals(4L, eventRecorder.getContainerStartedCount(), "# containers started");
+		assertEquals(4L, eventRecorder.getContainerFinishedCount(), "# containers finished");
 
 		assertAll("before each counts", //
 			() -> assertEquals(5, TestCaseWithDoubleNesting.beforeTopCount),

@@ -29,6 +29,7 @@ import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -56,22 +57,22 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void executeTestsWithDisabledTestClass() {
 		TestPlanSpecification spec = build(forClass(DisabledTestClassTestCase.class));
-		executeTests(spec);
+		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(spec);
 
-		assertEquals(1, tracker.containerSkippedCount.get(), "# container skipped");
-		assertEquals(0, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(1L, eventRecorder.getContainerSkippedCount(), "# container skipped");
+		assertEquals(0L, eventRecorder.getTestStartedCount(), "# tests started");
 	}
 
 	@Test
 	public void executeTestsWithDisabledTestMethods() {
 		TestPlanSpecification spec = build(forClass(DisabledTestMethodsTestCase.class));
-		executeTests(spec);
+		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(spec);
 
-		assertEquals(2, tracker.testStartedCount.get(), "# tests started");
-		assertEquals(2, tracker.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(3, tracker.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
-		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
+		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(3L, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
 	}
 
 	// -------------------------------------------------------------------

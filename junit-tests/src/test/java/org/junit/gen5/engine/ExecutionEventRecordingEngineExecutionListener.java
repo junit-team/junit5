@@ -10,8 +10,19 @@
 
 package org.junit.gen5.engine;
 
+import static java.util.function.Predicate.isEqual;
+import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.commons.util.FunctionUtils.where;
+import static org.junit.gen5.engine.ExecutionEvent.*;
+import static org.junit.gen5.engine.ExecutionEvent.Type.*;
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+import org.junit.gen5.engine.ExecutionEvent.Type;
+import org.junit.gen5.engine.TestExecutionResult.Status;
 
 /**
  * {@link EngineExecutionListener} that records all events and makes them available to tests.
@@ -51,6 +62,72 @@ public class ExecutionEventRecordingEngineExecutionListener implements EngineExe
 
 	public List<ExecutionEvent> getExecutionEvents() {
 		return executionEvents;
+	}
+
+	public Stream<ExecutionEvent> eventStream() {
+		return getExecutionEvents().stream();
+	}
+
+	public long getTestSkippedCount() {
+		return testEventsByType(SKIPPED).count();
+	}
+
+	public long getTestStartedCount() {
+		return testEventsByType(STARTED).count();
+	}
+
+	public long getTestFinishedCount() {
+		return testEventsByType(FINISHED).count();
+	}
+
+	public long getTestSuccessfulCount() {
+		return getTestFinishedCount(Status.SUCCESSFUL);
+	}
+
+	public long getTestAbortedCount() {
+		return getTestFinishedCount(Status.ABORTED);
+	}
+
+	public long getTestFailedCount() {
+		return getTestFinishedCount(Status.FAILED);
+	}
+
+	public long getContainerSkippedCount() {
+		return containerEventsByType(SKIPPED).count();
+	}
+
+	public long getContainerStartedCount() {
+		return containerEventsByType(STARTED).count();
+	}
+
+	public long getContainerFinishedCount() {
+		return containerEventsByType(FINISHED).count();
+	}
+
+	public List<ExecutionEvent> getFailedTestFinishedEvents() {
+		return testFinishedEvents(Status.FAILED).collect(toList());
+	}
+
+	private long getTestFinishedCount(Status status) {
+		return testFinishedEvents(status).count();
+	}
+
+	private Stream<ExecutionEvent> testFinishedEvents(Status status) {
+		return testEventsByType(FINISHED).filter(
+			byPayload(TestExecutionResult.class, where(TestExecutionResult::getStatus, isEqual(status))));
+	}
+
+	private Stream<ExecutionEvent> testEventsByType(Type type) {
+		return eventsByTypeAndTestDescriptor(type, TestDescriptor::isTest);
+	}
+
+	private Stream<ExecutionEvent> containerEventsByType(Type type) {
+		return eventsByTypeAndTestDescriptor(type, TestDescriptor::isContainer);
+	}
+
+	private Stream<ExecutionEvent> eventsByTypeAndTestDescriptor(Type type,
+			Predicate<? super TestDescriptor> predicate) {
+		return eventStream().filter(byType(type).and(byTestDescriptor(predicate)));
 	}
 
 	private void addEvent(ExecutionEvent event) {

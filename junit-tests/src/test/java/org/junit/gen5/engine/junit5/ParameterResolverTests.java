@@ -10,9 +10,7 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertNotNull;
-import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.*;
 
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
@@ -23,6 +21,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.MethodParameterResolver;
+import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotationParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomType;
@@ -38,46 +37,50 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsForMethodInjectionCases() {
-		executeTestsForClass(MethodInjectionTestCase.class);
+		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(
+			MethodInjectionTestCase.class);
 
-		assertEquals(8, tracker.testStartedCount.get(), "# tests started");
-		assertEquals(7, tracker.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
-		assertEquals(1, tracker.testFailedCount.get(), "# tests failed");
+		assertEquals(8L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(7L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterEachMethods() {
-		executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class);
+		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(
+			BeforeAndAfterMethodInjectionTestCase.class);
 
-		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
-		assertEquals(1, tracker.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
-		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
+		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterAllMethods() {
-		executeTestsForClass(BeforeAndAfterAllMethodInjectionTestCase.class);
+		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(
+			BeforeAndAfterAllMethodInjectionTestCase.class);
 
-		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
-		assertEquals(1, tracker.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
-		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
+		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
 	public void executeTestsForMethodWithExtendWithAnnotation() {
-		executeTestsForClass(ExtendWithOnMethodTestCase.class);
+		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(
+			ExtendWithOnMethodTestCase.class);
 
-		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
-		assertEquals(1, tracker.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
-		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
+		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
 	}
 
 	// -------------------------------------------------------------------
