@@ -10,10 +10,8 @@
 
 package org.junit.gen5.engine.junit4.discovery;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toCollection;
-import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
-import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackage;
+import static java.util.stream.Collectors.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 import static org.junit.gen5.engine.junit4.discovery.RunnerTestDescriptorAwareFilter.adapter;
 
 import java.io.File;
@@ -89,8 +87,7 @@ public class JUnit4TestPlanSpecificationResolver {
 			public void visitUniqueId(String uniqueId) {
 				String enginePrefix = engineDescriptor.getEngine().getId() + RunnerTestDescriptor.SEPARATOR;
 				if (uniqueId.startsWith(enginePrefix)) {
-					int endIndex = uniqueId.indexOf(DEFAULT_SEPARATOR);
-					String testClassName = uniqueId.substring(enginePrefix.length(), endIndex);
+					String testClassName = determineTestClassName(uniqueId, enginePrefix);
 					Optional<Class<?>> testClass = ReflectionUtils.loadClass(testClassName);
 					if (testClass.isPresent()) {
 						RunnerTestDescriptorAwareFilter filter = new UniqueIdFilter(uniqueId);
@@ -100,6 +97,14 @@ public class JUnit4TestPlanSpecificationResolver {
 						// TODO Log warning
 					}
 				}
+			}
+
+			private String determineTestClassName(String uniqueId, String enginePrefix) {
+				int endIndex = uniqueId.indexOf(DEFAULT_SEPARATOR);
+				if (endIndex >= 0) {
+					return uniqueId.substring(enginePrefix.length(), endIndex);
+				}
+				return uniqueId.substring(enginePrefix.length());
 			}
 		});
 
