@@ -91,13 +91,13 @@ class JUnit5Plugin implements Plugin<Project> {
 			args.add(tag)
 		}
 
-		def classpathRoots = project.sourceSets.test.runtimeClasspath.files
+        // def classpathRoots = project.sourceSets.test.runtimeClasspath.files
 
-        println "project.sourceSets.test.output.classesDir: ${project.sourceSets.test.output.classesDir}"
+        // Restrict classpath scanning to test dir of local project due to sporadic build failures on travis
+        def classpathRoots = [project.sourceSets.test.output.classesDir]
 
 		def rootDirs = classpathRoots.findAll { it.isDirectory() && it.exists() && it.listFiles().length > 0 }
 		rootDirs.each { File root ->
-            println "ROOT DIR $root with files ${root.listFiles()}"
             args.add(root.getAbsolutePath())
         }
 
