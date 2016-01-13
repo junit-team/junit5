@@ -63,11 +63,8 @@ public class ReflectionUtilsTests {
 		assertThat(ReflectionUtils.newInstance(C.class, new Object[] {})).isNotNull();
 
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.newInstance(C.class, "one", null));
-
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.newInstance(C.class, null, "two"));
-
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.newInstance(C.class, null, null));
-
 		assertThrows(PreconditionViolationException.class, () -> {
 			ReflectionUtils.newInstance(C.class, ((Object[]) null));
 		});

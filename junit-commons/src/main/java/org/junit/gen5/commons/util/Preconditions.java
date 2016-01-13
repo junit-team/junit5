@@ -57,7 +57,7 @@ public final class Preconditions {
 	 * @see #notNull(Object, Supplier)
 	 */
 	public static Object[] notNull(Object[] objects, String message) throws PreconditionViolationException {
-		notNull(objects, () -> message);
+		notNull(objects, () -> "objects array must not be null");
 		for (Object object : objects) {
 			notNull(object, () -> message);
 		}
