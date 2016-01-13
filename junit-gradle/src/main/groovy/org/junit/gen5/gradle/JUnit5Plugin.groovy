@@ -13,95 +13,92 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class JUnit5Plugin implements Plugin<Project> {
-	void apply(Project project) {
-		def junit5 = project.extensions.create('junit5', JUnit5Extension)
+    void apply(Project project) {
+        def junit5 = project.extensions.create('junit5', JUnit5Extension)
 
-		project.afterEvaluate {
+        project.afterEvaluate {
 
-			if (junit5.version) {
-				def junit5Version = junit5.version
-				project.dependencies.add("testRuntime", "org.junit:junit-console:${junit5Version}")
-				project.dependencies.add("testCompile", "org.junit:junit5-api:${junit5Version}")
-				project.dependencies.add("testRuntime", "org.junit:junit5-engine:${junit5Version}")
+            if (junit5.version) {
+                def junit5Version = junit5.version
+                project.dependencies.add("testRuntime", "org.junit:junit-console:${junit5Version}")
+                project.dependencies.add("testCompile", "org.junit:junit5-api:${junit5Version}")
+                project.dependencies.add("testRuntime", "org.junit:junit5-engine:${junit5Version}")
 
-				if (junit5.runJunit4) {
-					project.dependencies.add("testRuntime", "org.junit:junit4-engine:${junit5Version}")
-				}
-			}
+                if (junit5.runJunit4) {
+                    project.dependencies.add("testRuntime", "org.junit:junit4-engine:${junit5Version}")
+                }
+            }
 
-			def testReport = junit5.reportFile ?: project.file("build/test-results/junit5-report.txt")
+            def testReport = junit5.reportFile ?: project.file("build/test-results/junit5-report.txt")
 
-			project.task('junit5Test', group: 'verification', type: org.gradle.api.tasks.JavaExec) { task ->
+            project.task('junit5Test', group: 'verification', type: org.gradle.api.tasks.JavaExec) { task ->
 
-				task.description = 'Runs JUnit 5 tests.'
+                task.description = 'Runs JUnit 5 tests.'
 
-				task.inputs.property('version', junit5.version)
-				task.inputs.property('runJunit4', junit5.runJunit4)
-				task.inputs.property('classNameFilter', junit5.classNameFilter)
-				task.inputs.property('includeTags', junit5.includeTags)
-				task.inputs.property('excludeTags', junit5.excludeTags)
-				task.outputs.file testReport
+                task.inputs.property('version', junit5.version)
+                task.inputs.property('runJunit4', junit5.runJunit4)
+                task.inputs.property('classNameFilter', junit5.classNameFilter)
+                task.inputs.property('includeTags', junit5.includeTags)
+                task.inputs.property('excludeTags', junit5.excludeTags)
+                task.outputs.file testReport
 
-				defineTaskDependencies(project, task, junit5)
+                defineTaskDependencies(project, task, junit5)
 
-				task.classpath = project.sourceSets.test.runtimeClasspath
-				task.main = 'org.junit.gen5.console.ConsoleRunner'
+                task.classpath = project.sourceSets.test.runtimeClasspath
+                task.main = 'org.junit.gen5.console.ConsoleRunner'
 
-				task.args buildArgs(project, junit5)
+                task.args buildArgs(project, junit5)
 
-				doLast {
+                doLast {
 
-					testReport.parentFile.mkdirs()
-					testReport.withPrintWriter { writer ->
-						writer.println "JUnit 5 tests run at " + new Date().toString()
-					}
+                    testReport.parentFile.mkdirs()
+                    testReport.withPrintWriter { writer ->
+                        writer.println "JUnit 5 tests run at " + new Date().toString()
+                    }
 
-				}
-			}
-		}
-	}
+                }
+            }
+        }
+    }
 
-	private void defineTaskDependencies(project, task, junit5) {
-		def test = project.tasks.getByName('test')
-		def testClasses = project.tasks.getByName('testClasses')
+    private void defineTaskDependencies(project, task, junit5) {
+        def test = project.tasks.getByName('test')
+        def testClasses = project.tasks.getByName('testClasses')
 
-		task.dependsOn testClasses
-		test.dependsOn task
-		if (junit5.runJunit4) {
-			test.enabled = false
-		}
-	}
+        task.dependsOn testClasses
+        test.dependsOn task
+        if (junit5.runJunit4) {
+            test.enabled = false
+        }
+    }
 
-	private ArrayList<String> buildArgs(project, junit5) {
+    private ArrayList<String> buildArgs(project, junit5) {
 
-		def args = ['--enable-exit-code', '--hide-details', '--all']
+        def args = ['--enable-exit-code', '--hide-details', '--all']
 
-		if (junit5.classNameFilter) {
-			args.add('-n')
-			args.add(junit5.classNameFilter)
-		}
+        if (junit5.classNameFilter) {
+            args.add('-n')
+            args.add(junit5.classNameFilter)
+        }
 
-		junit5.includeTags.each { String tag ->
-			args.add('-t')
-			args.add(tag)
-		}
+        junit5.includeTags.each { String tag ->
+            args.add('-t')
+            args.add(tag)
+        }
 
-		junit5.excludeTags.each { String tag ->
-			args.add('-T')
-			args.add(tag)
-		}
+        junit5.excludeTags.each { String tag ->
+            args.add('-T')
+            args.add(tag)
+        }
 
-        // def classpathRoots = project.sourceSets.test.runtimeClasspath.files
+        def classpathRoots = project.sourceSets.test.runtimeClasspath.files
 
-        // Restrict classpath scanning to test dir of local project due to sporadic build failures on travis
-        def classpathRoots = [project.sourceSets.test.output.classesDir]
-
-		def rootDirs = classpathRoots.findAll { it.isDirectory() && it.exists() && it.listFiles().length > 0 }
-		rootDirs.each { File root ->
+        def rootDirs = classpathRoots.findAll { it.isDirectory() }
+        rootDirs.each { File root ->
             args.add(root.getAbsolutePath())
         }
 
-		return args
-	}
+        return args
+    }
 }
 
