@@ -100,6 +100,9 @@ subprojects {
 
 		format 'groovy', {
 			target '**/*.groovy'
+			indentWithTabs()
+			trimTrailingWhitespace()
+			endWithNewline()
 			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java'), "package "
 		}
 	}
