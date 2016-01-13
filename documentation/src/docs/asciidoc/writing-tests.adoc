@@ -59,28 +59,11 @@ public @interface Fast {
 
 [source,java,indent=0]
 [subs="verbatim"]
+.A simple standard test case
 ----
-import org.junit.gen5.api.*;
-
-class MyTest {
-
-	@BeforeAll
-	static void initAll() {}
-
-	@BeforeEach
-	void init() {}
-
-	@Test
-	void succeedingTest() {}
-
-	@AfterEach
-	void tearDown() {}
-
-	@AfterAll
-	static void tearDownAll() {}
-
-}
+include::{testDir}/example/StandardTests.java[tags=user_guide]
 ----
+
 
 Notice that neither the test class nor the test method need to be `public`. `@BeforeAll`
 and `@AfterAll` must be static methods.
