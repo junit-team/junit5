@@ -1,0 +1,380 @@
+package example;
+
+[[writing-tests]]
+== Writing Tests
+
+[source,java,indent=0]
+[subs="verbatim"]
+.A first test case
+----
+include::{testDir}/example/FirstJUnit5Tests.java[tags=user_guide]
+----
+
+
+=== Annotations
+
+JUnit 5 supports the following annotations for configuring tests and extending the framework.
+
+All core annotations are located in the `{api-package}` package in the `junit5-api`
+module.
+
+|===
+|Annotation |Description
+
+|*`@Test`*              | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit 5 operate based on their own dedicated annotations.
+|*`@DisplayName`*       | Declares a custom display name for the test class or test method
+|*`@BeforeEach`*        | Denotes that the annotated method should be executed _before_ *each* `@Test` method in the current class or class hierarchy
+|*`@AfterEach`*         | Denotes that the annotated method should be executed _after_ *each* `@Test` method in the current class or class hierarchy
+|*`@BeforeAll`*         | Denotes that the annotated method should be executed _before_ *all* `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@BeforeClass`. Such methods must be `static`.
+|*`@AfterAll`*          | Denotes that the annotated method should be executed _after_ *all* `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@AfterClass`. Such methods must be `static`.
+|*`@Nested`*            | Denotes that the annotated class is a nested test class.
+|*`@Tag`* and *`@Tags`* | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4
+|*`@Disabled`*          | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore`
+|*`@ExtendWith`*        | Used to register custom <<extension-model, extensions>> to the framework.
+|===
+
+==== Meta-Annotations and Composed Annotations
+
+JUnit 5 annotations can be used as _meta-annotations_. That means that you can define
+your own _composed annotation_ that will automatically _inherit_ the semantics of its
+meta-annotations.
+
+For example, instead of copying and pasting `@Tag("fast")` throughout your code base (see
+<<tagging-and-filtering>>), you can create a custom _composed annotation_ named `@Fast`
+as follows. `@Fast` can then be used as a drop-in replacement for `@Tag("fast")`.
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+import org.junit.gen5.api.*;
+
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+@Tag("fast")
+public @interface Fast {
+}
+----
+
+
+
+=== Standard Test Class
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+import org.junit.gen5.api.*;
+
+class MyTest {
+
+	@BeforeAll
+	static void initAll() {}
+
+	@BeforeEach
+	void init() {}
+
+	@Test
+	void succeedingTest() {}
+
+	@AfterEach
+	void tearDown() {}
+
+	@AfterAll
+	static void tearDownAll() {}
+
+}
+----
+
+Notice that neither the test class nor the test method need to be `public`. `@BeforeAll`
+and `@AfterAll` must be static methods.
+
+
+
+=== Custom Names
+
+Test classes and test methods can declare a custom name -- with spaces, special
+characters, and even emojis -- that will be displayed by test runners and test reporting:
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+import org.junit.gen5.api.*;
+
+@DisplayName("A special test case")
+class CanHaveAnyDisplayNameTest {
+
+	@Test
+	@DisplayName("A nice name, isn't it?")
+	void testWithANiceName() {}
+
+}
+----
+
+
+
+=== Assertions
+
+JUnit 5 comes with many of the assertion methods that JUnit 4 has and adds a few that
+lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions are static
+methods in the `{Assertions}` class.
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+import static org.junit.gen5.api.Assertions.*;
+
+import org.junit.gen5.api.*;
+
+class MyTest {
+
+	@Test
+	void standardAssertions() {
+		assertEquals(2, 2);
+		assertEquals(4, 4, "The optional assertion message is now the last parameter.");
+		assertTrue(2 == 2, () -> "Assertion messages can be lazily evaluated -- " +
+								 "to avoid constructing complex messages unnecessarily.");
+	}
+
+	@Test
+	void groupedAssertions() {
+		// In a grouped assertion all assertions are executed, and any
+		// failures will be reported together.
+		assertAll("address",
+			() -> assertEquals("Johannes", address.getFirstName()),
+			() -> assertEquals("Link", address.getLastName())
+		);
+	}
+
+	@Test
+	void exceptionTesting() {
+		Throwable exception == expectThrows(IllegalArgumentException.class,
+			() -> throw new IllegalArgumentException("a message")
+		);
+		assertEquals("a message", exception.getMessage());
+	}
+
+}
+----
+
+
+
+=== Assumptions
+
+JUnit 5 comes with a subset of the assumption methods that JUnit 4 provides and adds a
+few that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assumptions
+are static methods in the `{Assumptions}` class.
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assumptions.*;
+
+import org.junit.gen5.api.*;
+
+class MyTest {
+
+	@Test
+	void testOnlyOnCiServer() {
+		assumeTrue("CI".equals(System.getenv("ENV"));
+		// remainder of test
+	}
+
+	@Test
+	void testOnlyOnDeveloperWorkstation() {
+		assumeTrue("DEV".equals(System.getenv("ENV"),
+				   () -> "Aborting test: not on developer workstation");
+		// remainder of test
+	}
+
+	@Test
+	void testInAllEnvironments() {
+		assumingThat("CI".equals(System.getenv("ENV"), () -> {
+				// perform these assertions only on the CI server
+				assertEquals(...);
+		});
+
+		// perform these assertions in all environments
+		assertEquals(...);
+	}
+
+}
+----
+
+
+
+=== Disabling Tests
+
+Here's a disabled test case:
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+import org.junit.gen5.api.*;
+
+@Disabled
+class MyTest {
+
+	@Test
+	void testWillBeSkipped() {}
+
+}
+----
+
+And here's a test case with a disabled test method:
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+import org.junit.gen5.api.*;
+
+class MyTest {
+
+	@Disabled
+	@Test
+	void testWillBeSkipped() {}
+
+	@Test
+	void testWillBeExecuted() {}
+
+}
+----
+
+
+[[tagging-and-filtering]]
+=== Tagging and Filtering
+
+Test classes and methods can be tagged. Those tags can later be used to filter
+<<running-tests,test discovery and execution>>:
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+import org.junit.gen5.api.*;
+
+@Tag("fast")
+@Tag("model")
+class FastModelTests {
+
+	@Test
+	@Tag("taxes")
+	void testingTaxCalculation() {}
+
+}
+----
+
+
+
+=== Nested Tests
+
+Nested tests give the test writer more capabilities to express the relationship among
+several group of tests. Here's a somewhat contrived example:
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+import org.junit.gen5.api.*;
+
+class MyObjectTest {
+
+	MyObject myObject;
+
+	@BeforeEach
+	void init() {
+		myObject == new MyObject();
+	}
+
+	@Test
+	void testEmptyObject() {}
+
+	@Nested
+	class WithChildren() {
+
+		@BeforeEach
+		void initWithChildren() {
+			myObject.addChild(new MyObject());
+			myObject.addChild(new MyObject());
+		}
+
+		@Test
+		void testObjectWithChildren() {}
+
+	}
+
+}
+----
+
+Notice that _only non-static inner classes_ can serve as nested tests. Nesting can be
+arbitrarily deep, and those inner classes can be considered as full members of the test
+class family.
+
+For a more meaningful example have a look at
+https://github.com/junit-team/junit5/tree/master/sample-project/src/test/java/com/example/TestingAStack.java[TestingAStack].
+
+
+=== Method Parameters and Dependency Injection
+
+In all prior JUnit versions, methods were not allowed to have parameters (at least not
+with the standard `Runner` implementations). As one of the major changes in JUnit 5,
+methods are now permitted to have parameters. This allows for greater flexibility and
+enables method-level _Dependency Injection_.
+
+`{MethodParameterResolver}` defines the API for test extensions that wish to
+_dynamically_ resolve method parameters at runtime. If a `@Test`, `@BeforeEach`,
+`@AfterEach`, `@BeforeAll`, or `@AfterAll` method accepts a parameter, the parameter must
+be resolved at runtime by a registered `MethodParameterResolver`.
+
+There is currently one built-in resolver that is registered automatically.
+
+* `{TestInfoParameterResolver}`: if a method parameter is of type `{TestInfo}`, the
+  `TestInfoParameterResolver` will supply an instance of `TestInfo` corresponding to the
+  current test as the value for the parameter. The `TestInfo` can then be used to retrieve
+  information about the current test such as the test's name or display name (as
+  configured via `@DisplayName`). This acts as a drop-in replacement for the `TestName`
+  rule from JUnit 4. See `TestInfoTests` for an example.
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+import static org.junit.gen5.api.Assertions.*;
+
+import org.junit.gen5.api.*;
+
+include::{testDir}/example/TestInfoTests.java[tags=user_guide]
+----
+
+Other parameter resolvers must be explicitly enabled by registering a <<extension-model,
+test extension>> via `@ExtendWith`.
+
+* Check out the `methodInjectionTest(...)` test method in `{SampleTestCase}` for an
+  example that uses the built-in `{TestInfoParameterResolver}` as well as two
+  user-provided resolvers, `{CustomTypeParameterResolver}` and
+  `{CustomAnnotationParameterResolver}`.
+
+* The `{MockitoExtension}` is another example of a `{MethodParameterResolver}`. While not
+  intended to be production-ready, it demonstrates the simplicity and expressiveness of
+  both the extension model and the parameter resolution process. `MyMockitoTest`
+  demonstrates how to inject Mockito mocks into `@BeforeEach` and `@Test` methods.
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+import org.junit.gen5.api.*;
+
+import static org.mockito.Mockito.when;
+import com.example.mockito.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class MyMockitoTest {
+
+	@BeforeEach
+	void init(@InjectMock Person person) {
+		when(person.getName()).thenReturn("Dilbert");
+	}
+
+	@Test
+	void simpleTestWithInjectedMock(@InjectMock Person person) {
+		assertEquals("Dilbert", person.getName());
+	}
+
+}
+----
