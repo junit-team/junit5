@@ -92,7 +92,7 @@ class JUnit5Plugin implements Plugin<Project> {
 		}
 
 		def classpathRoots = project.sourceSets.test.runtimeClasspath.files
-		def rootDirs = classpathRoots.findAll { it.isDirectory() && it.exists() }
+		def rootDirs = classpathRoots.findAll { it.isDirectory() && it.exists() && ! it.listFiles().isEmpty() }
 		rootDirs.each { File root -> args.add(root.getAbsolutePath()) }
 
 		return args
