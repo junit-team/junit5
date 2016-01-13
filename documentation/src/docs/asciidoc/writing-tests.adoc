@@ -44,19 +44,8 @@ as follows. `@Fast` can then be used as a drop-in replacement for `@Tag("fast")`
 [source,java,indent=0]
 [subs="verbatim"]
 ----
-import org.junit.gen5.api.*;
-
-@Target({ ElementType.TYPE, ElementType.METHOD })
-@Retention(RetentionPolicy.RUNTIME)
-@Tag("fast")
-public @interface Fast {
-}
-----
-
-----
 include::{testDir}/example/Fast.java[tags=user_guide]
 ----
-
 
 
 
