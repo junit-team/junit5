@@ -699,7 +699,9 @@ as follows. <code>@Fast</code> can then be used as a drop-in replacement for <co
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import java.lang.annotation.*;
+
+import org.junit.gen5.api.*;
 
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
@@ -713,25 +715,31 @@ public @interface Fast {
 <div class="sect2">
 <h3 id="standard-test-class">3.2. Standard Test Class</h3>
 <div class="listingblock">
+<div class="title">A simple standard test case</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.*;
 
-class MyTest {
+class StandardTests {
 
     @BeforeAll
-    static void initAll() {}
+    static void initAll() {
+    }
 
     @BeforeEach
-    void init() {}
+    void init() {
+    }
 
     @Test
-    void succeedingTest() {}
+    void succeedingTest() {
+    }
 
     @AfterEach
-    void tearDown() {}
+    void tearDown() {
+    }
 
     @AfterAll
-    static void tearDownAll() {}
+    static void tearDownAll() {
+    }
 
 }</code></pre>
 </div>
@@ -1780,7 +1788,7 @@ registers its <code>JUnit5TestEngine</code>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-13 07:37:46 -05:00
+Last updated 2016-01-13 08:48:32 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
