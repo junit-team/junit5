@@ -29,7 +29,7 @@ import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
-import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
+import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -57,7 +57,7 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void executeTestsWithDisabledTestClass() {
 		TestPlanSpecification spec = build(forClass(DisabledTestClassTestCase.class));
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(spec);
+		ExecutionEventRecorder eventRecorder = executeTests(spec);
 
 		assertEquals(1L, eventRecorder.getContainerSkippedCount(), "# container skipped");
 		assertEquals(0L, eventRecorder.getTestStartedCount(), "# tests started");
@@ -66,7 +66,7 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void executeTestsWithDisabledTestMethods() {
 		TestPlanSpecification spec = build(forClass(DisabledTestMethodsTestCase.class));
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(spec);
+		ExecutionEventRecorder eventRecorder = executeTests(spec);
 
 		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");

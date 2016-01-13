@@ -21,7 +21,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.MethodParameterResolver;
-import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
+import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotationParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomType;
@@ -37,8 +37,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsForMethodInjectionCases() {
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(
-			MethodInjectionTestCase.class);
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(MethodInjectionTestCase.class);
 
 		assertEquals(8L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(7L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -49,8 +48,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterEachMethods() {
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(
-			BeforeAndAfterMethodInjectionTestCase.class);
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -61,8 +59,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterAllMethods() {
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(
-			BeforeAndAfterAllMethodInjectionTestCase.class);
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(BeforeAndAfterAllMethodInjectionTestCase.class);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -73,8 +70,7 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsForMethodWithExtendWithAnnotation() {
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(
-			ExtendWithOnMethodTestCase.class);
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(ExtendWithOnMethodTestCase.class);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");

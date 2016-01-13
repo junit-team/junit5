@@ -23,7 +23,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.TestExtensionContext;
-import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
+import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -35,7 +35,7 @@ public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 	public void instancePostProcessorInTopLevelClass() {
 		TestPlanSpecification spec = build(forClass(OuterTestCase.class));
 
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(spec);
+		ExecutionEventRecorder eventRecorder = executeTests(spec);
 
 		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");

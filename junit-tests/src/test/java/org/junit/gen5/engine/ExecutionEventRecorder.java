@@ -29,11 +29,11 @@ import org.junit.gen5.engine.TestExecutionResult.Status;
  *
  * @see ExecutionEvent
  */
-public class ExecutionEventRecordingEngineExecutionListener implements EngineExecutionListener {
+public class ExecutionEventRecorder implements EngineExecutionListener {
 
 	public static List<ExecutionEvent> execute(TestEngine testEngine, TestPlanSpecification testPlanSpecification) {
 		TestDescriptor engineTestDescriptor = testEngine.discoverTests(testPlanSpecification);
-		ExecutionEventRecordingEngineExecutionListener listener = new ExecutionEventRecordingEngineExecutionListener();
+		ExecutionEventRecorder listener = new ExecutionEventRecorder();
 		testEngine.execute(new ExecutionRequest(engineTestDescriptor, listener));
 		return listener.getExecutionEvents();
 	}

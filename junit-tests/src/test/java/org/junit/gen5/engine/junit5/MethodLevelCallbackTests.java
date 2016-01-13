@@ -27,7 +27,7 @@ import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.api.extension.TestExtensionContext;
-import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
+import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -42,7 +42,7 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTests {
 	public void beforeEachAndAfterEachCallbacks() {
 		TestPlanSpecification spec = build(forClass(OuterTestCase.class));
 
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(spec);
+		ExecutionEventRecorder eventRecorder = executeTests(spec);
 
 		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");

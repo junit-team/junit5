@@ -17,7 +17,7 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
+import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.opentest4j.TestAbortedException;
 
@@ -58,7 +58,7 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 			TestPlanSpecification.forClass(FirstOfTwoTestCases.class),
 			TestPlanSpecification.forClass(SecondOfTwoTestCases.class));
 
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(testPlanSpecification);
+		ExecutionEventRecorder eventRecorder = executeTests(testPlanSpecification);
 
 		assertEquals(6L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(5L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -70,7 +70,7 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void allTestsInClassAreRunWithBeforeEach() {
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(MyStandardTestCase.class);
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(MyStandardTestCase.class);
 
 		assertEquals(4L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -86,7 +86,7 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void allTestsInClassAreRunWithAfterEach() {
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(MyStandardTestCase.class);
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(MyStandardTestCase.class);
 
 		assertEquals(4L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(4, MyStandardTestCase.countAfter, "# after each calls");
@@ -97,8 +97,7 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void testsFailWhenBeforeEachFails() {
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(
-			TestCaseWithFailingBefore.class);
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithFailingBefore.class);
 
 		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(0L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -112,8 +111,7 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void testsFailWhenAfterEachFails() {
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(
-			TestCaseWithFailingAfter.class);
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithFailingAfter.class);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(0L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");

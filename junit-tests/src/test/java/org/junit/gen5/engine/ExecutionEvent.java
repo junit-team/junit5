@@ -20,8 +20,7 @@ import java.util.function.Predicate;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
- * Represents an event collected by
- * {@link ExecutionEventRecordingEngineExecutionListener}.
+ * Represents an event collected by {@link ExecutionEventRecorder}.
  *
  * @see ExecutionEventConditions
  */

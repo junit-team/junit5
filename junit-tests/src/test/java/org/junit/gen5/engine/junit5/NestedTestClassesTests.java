@@ -19,7 +19,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
+import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -39,7 +39,7 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void nestedTestsAreExecuted() {
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(TestCaseWithNesting.class);
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithNesting.class);
 
 		assertEquals(3L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -58,8 +58,7 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void doublyNestedTestsAreExecuted() {
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(
-			TestCaseWithDoubleNesting.class);
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithDoubleNesting.class);
 
 		assertEquals(5L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(3L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");

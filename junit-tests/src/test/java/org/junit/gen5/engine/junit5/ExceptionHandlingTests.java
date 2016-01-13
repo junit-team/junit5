@@ -25,7 +25,7 @@ import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
+import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.opentest4j.AssertionFailedError;
 
@@ -40,7 +40,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
 			TestPlanSpecification.forMethod(FailureTestCase.class, method));
 
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(testPlanSpecification);
+		ExecutionEventRecorder eventRecorder = executeTests(testPlanSpecification);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
@@ -56,7 +56,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
 			TestPlanSpecification.forMethod(FailureTestCase.class, method));
 
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(testPlanSpecification);
+		ExecutionEventRecorder eventRecorder = executeTests(testPlanSpecification);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
@@ -72,7 +72,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
 			TestPlanSpecification.forMethod(FailureTestCase.class, method));
 
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(testPlanSpecification);
+		ExecutionEventRecorder eventRecorder = executeTests(testPlanSpecification);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
@@ -90,7 +90,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		FailureTestCase.exceptionToThrowInBeforeEach = Optional.of(new IOException("checked"));
 
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(testPlanSpecification);
+		ExecutionEventRecorder eventRecorder = executeTests(testPlanSpecification);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
@@ -107,7 +107,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		FailureTestCase.exceptionToThrowInAfterEach = Optional.of(new IOException("checked"));
 
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(testPlanSpecification);
+		ExecutionEventRecorder eventRecorder = executeTests(testPlanSpecification);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
@@ -124,7 +124,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		FailureTestCase.exceptionToThrowInAfterEach = Optional.of(new IOException("checked"));
 
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(testPlanSpecification);
+		ExecutionEventRecorder eventRecorder = executeTests(testPlanSpecification);
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -147,7 +147,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		FailureTestCase.exceptionToThrowInBeforeAll = Optional.of(new IOException("checked"));
 
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(testPlanSpecification);
+		ExecutionEventRecorder eventRecorder = executeTests(testPlanSpecification);
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -165,7 +165,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		FailureTestCase.exceptionToThrowInAfterAll = Optional.of(new IOException("checked"));
 
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(testPlanSpecification);
+		ExecutionEventRecorder eventRecorder = executeTests(testPlanSpecification);
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			event(engine(), started()), //

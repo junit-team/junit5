@@ -17,7 +17,7 @@ import static org.junit.gen5.engine.TestPlanSpecification.*;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
+import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
@@ -39,7 +39,7 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 	public void executeAllTestsInClass() {
 		LocalTestCase.countAfterInvoked = 0;
 
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTestsForClass(LocalTestCase.class);
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(LocalTestCase.class);
 
 		assertEquals(6L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(3L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -58,7 +58,7 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 		TestPlanSpecification spec = build(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#alwaysPasses()"));
 
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(spec);
+		ExecutionEventRecorder eventRecorder = executeTests(spec);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -72,7 +72,7 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 		TestPlanSpecification spec = build(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#superclassTest()"));
 
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(spec);
+		ExecutionEventRecorder eventRecorder = executeTests(spec);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -92,7 +92,7 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 		TestPlanSpecification spec = build(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#throwExceptionInAfterMethod()"));
 
-		ExecutionEventRecordingEngineExecutionListener eventRecorder = executeTests(spec);
+		ExecutionEventRecorder eventRecorder = executeTests(spec);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(0L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
