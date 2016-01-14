@@ -47,12 +47,18 @@ final release.
 ----
 junit5 {
 	version '{junit-version}'
+	logManager 'org.apache.logging.log4j.jul.LogManager'
 	runJunit4 true
 	matchClassName '.*Test'
 	includeTag 'fast'
 }
 
 ----
+
+Setting `logManager` instructs the `JUnit5Plugin` to set the `java.util.logging.manager`
+system property to the supplied fully qualified class name of the `java.util.logging.LogManager`
+implementation to use. The above example demonstrates how to configure log4j as the
+`LogManager`.
 
 Setting `runJunit4` to `true` instructs the `JUnit5Plugin` to run JUnit 4 based tests as
 well. However, you will still need to configure a `testCompile` dependency on JUnit 4 in
