@@ -22,6 +22,15 @@ class JUnit5Extension {
 	String version
 
 	/**
+	 * The fully qualified class name of the {@link java.util.logging.LogManager}
+	 * to use.
+	 *
+	 * <p>The {@code JUnit5Plugin} will set the {@code java.util.logging.manager}
+	 * system property to this value.
+	 */
+	String logManager
+
+	/**
 	 * The location of the test report file.
 	 *
 	 * <p>Defaults to {@code "build/test-results/junit5-report.txt"}.

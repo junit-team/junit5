@@ -42,6 +42,10 @@ class JUnit5Plugin implements Plugin<Project> {
 				task.inputs.property('excludeTags', junit5.excludeTags)
 				task.outputs.file testReport
 
+				if (junit5.logManager) {
+					systemProperty 'java.util.logging.manager', junit5.logManager
+				}
+
 				defineTaskDependencies(project, task, junit5)
 
 				task.classpath = project.sourceSets.test.runtimeClasspath
