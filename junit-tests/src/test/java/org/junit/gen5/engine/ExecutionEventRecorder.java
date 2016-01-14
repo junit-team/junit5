@@ -40,7 +40,6 @@ public class ExecutionEventRecorder implements EngineExecutionListener {
 
 	public final List<ExecutionEvent> executionEvents = new CopyOnWriteArrayList<>();
 
-
 	@Override
 	public void reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry) {
 		addEvent(ExecutionEvent.reportingEntryPublished(testDescriptor, entry));
