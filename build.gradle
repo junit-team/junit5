@@ -104,6 +104,9 @@ subprojects {
 			trimTrailingWhitespace()
 			endWithNewline()
 			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java'), "package "
+
+			customReplaceRegex 'class-level Javadoc indentation fix', /^\*/, ' *'
+			customReplaceRegex 'nested Javadoc indentation fix', /\t\*/, '\t *'
 		}
 	}
 
