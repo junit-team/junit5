@@ -489,11 +489,18 @@ final release.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">junit5 {
     version '5.0.0-SNAPSHOT'
+    logManager 'org.apache.logging.log4j.jul.LogManager'
     runJunit4 true
     matchClassName '.*Test'
     includeTag 'fast'
 }</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Setting <code>logManager</code> instructs the <code>JUnit5Plugin</code> to set the <code>java.util.logging.manager</code>
+system property to the supplied fully qualified class name of the <code>java.util.logging.LogManager</code>
+implementation to use. The above example demonstrates how to configure log4j as the
+<code>LogManager</code>.</p>
 </div>
 <div class="paragraph">
 <p>Setting <code>runJunit4</code> to <code>true</code> instructs the <code>JUnit5Plugin</code> to run JUnit 4 based tests as
@@ -787,7 +794,7 @@ code for the <code>{JUnit5-Runner}</code> runner for further details.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-14 11:50:24 -05:00
+Last updated 2016-01-14 13:02:21 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
