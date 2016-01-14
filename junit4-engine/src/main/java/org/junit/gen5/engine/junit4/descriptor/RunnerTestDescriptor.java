@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.runner.Request;
 import org.junit.runner.Runner;
 
 /**
@@ -30,8 +31,8 @@ public class RunnerTestDescriptor extends JUnit4TestDescriptor {
 		this.runner = runner;
 	}
 
-	public Runner getRunner() {
-		return runner;
+	public Request toRequest() {
+		return new RunnerRequest(runner);
 	}
 
 }

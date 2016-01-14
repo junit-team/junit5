@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit4.execution;
+package org.junit.gen5.engine.junit4.descriptor;
 
 import org.junit.runner.Request;
 import org.junit.runner.Runner;

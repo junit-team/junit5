@@ -37,7 +37,6 @@ import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
-import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runners.model.RunnerBuilder;
 
 public class JUnit4TestPlanSpecificationResolver {
@@ -120,19 +119,19 @@ public class JUnit4TestPlanSpecificationResolver {
 			List<RunnerTestDescriptorAwareFilter> filters = entry.getValue();
 			Runner runner = runnerBuilder.safeRunnerForClass(testClass);
 			if (runner != null) {
-				try {
-					RunnerTestDescriptor runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, runner);
-					filters.stream().forEach(filter -> filter.initialize(runnerTestDescriptor));
-					new OrFilter(filters).apply(runner);
-					// TODO Log warning if runner does not implement Filterable
-					// We need to re-create the RunnerTestDescriptor here to reflect filtering
-					engineDescriptor.addChild(createCompleteRunnerTestDescriptor(testClass, runner));
-				}
-				catch (NoTestsRemainException e) {
-					// ignore testClass
-				}
+				RunnerTestDescriptor originalDescriptor = createCompleteRunnerTestDescriptor(testClass, runner);
+				Filter filter = createOrFilter(filters, originalDescriptor);
+				Runner filteredRunner = originalDescriptor.toRequest().filterWith(filter).getRunner();
+				// TODO Log warning if runner does not implement Filterable
+				engineDescriptor.addChild(createCompleteRunnerTestDescriptor(testClass, filteredRunner));
 			}
 		}
+	}
+
+	private Filter createOrFilter(List<RunnerTestDescriptorAwareFilter> filters,
+			RunnerTestDescriptor runnerTestDescriptor) {
+		filters.stream().forEach(filter -> filter.initialize(runnerTestDescriptor));
+		return new OrFilter(filters);
 	}
 
 	private RunnerTestDescriptor createCompleteRunnerTestDescriptor(Class<?> testClass, Runner runner) {

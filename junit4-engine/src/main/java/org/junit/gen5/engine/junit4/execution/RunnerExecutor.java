@@ -30,7 +30,7 @@ public class RunnerExecutor {
 		JUnitCore core = new JUnitCore();
 		core.addListener(new RunListenerAdapter(testRun, engineExecutionListener));
 		try {
-			core.run(new RunnerRequest(runnerTestDescriptor.getRunner()));
+			core.run(runnerTestDescriptor.toRequest());
 		}
 		catch (Throwable t) {
 			reportUnexpectedFailure(testRun, runnerTestDescriptor, failed(t));
