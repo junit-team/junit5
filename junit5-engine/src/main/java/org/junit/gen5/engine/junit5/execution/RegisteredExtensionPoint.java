@@ -18,37 +18,30 @@ import org.junit.gen5.commons.util.ToStringBuilder;
  * Represents an {@linkplain ExtensionPoint extension} registered in a
  * {@link TestExtensionRegistry}.
  *
- * @param <T> the concrete subtype of {@link ExtensionPoint} to be registered
+ * @param <E> the type of registered {@link ExtensionPoint}
  * @since 5.0
  */
-public class RegisteredExtensionPoint<T extends ExtensionPoint> {
+public class RegisteredExtensionPoint<E extends ExtensionPoint> {
 
-	private final T extensionPoint;
+	private final E extensionPoint;
 
 	private final Position position;
 
-	private final Object extensionInstance;
-
-	public RegisteredExtensionPoint(T extensionPoint, Position position, Object extensionInstance) {
+	public RegisteredExtensionPoint(E extensionPoint, Position position) {
 		this.extensionPoint = extensionPoint;
 		this.position = position;
-		this.extensionInstance = extensionInstance;
 	}
 
-	public T getExtensionPoint() {
-		return extensionPoint;
+	public E getExtensionPoint() {
+		return this.extensionPoint;
 	}
 
 	public Position getPosition() {
-		return position;
-	}
-
-	public Object getExtensionInstance() {
-		return extensionInstance;
+		return this.position;
 	}
 
 	public String getExtensionName() {
-		return extensionInstance.toString();
+		return this.extensionPoint.getClass().getName();
 	}
 
 	@Override
@@ -56,7 +49,7 @@ public class RegisteredExtensionPoint<T extends ExtensionPoint> {
 		// @formatter:off
 		return new ToStringBuilder(this)
 				.append("position", this.position)
-				.append("extensionInstance", this.extensionInstance)
+				.append("extensionPoint", this.extensionPoint)
 				.toString();
 		// @formatter:on
 	}

@@ -22,13 +22,7 @@ The [JUnit 5 Javadoc] is available online.
 
 Code coverage for the latest build is available online at
 [codecov.io](https://codecov.io/github/junit-team/junit5) and on a per-build basis using
-Jacoco on the [Jenkins CI server](https://junit.ci.cloudbees.com/job/JUnit5/). To
-navigate to the code coverage report on the Jenkins CI server, click on the results for a
-particular build or navigate directly to the [latest successful
-build](https://junit.ci.cloudbees.com/job/JUnit5/lastStableBuild/), click on the "Build
-Artifacts" link, click on the
-`repo/junit-tests/build/reports/jacoco/junit5CodeCoverageReport/html` link, and then
-click on the `index.html` link.
+JaCoCo on the [Jenkins CI server](https://junit.ci.cloudbees.com/job/JUnit5/lastSuccessfulBuild/artifact/repo/junit-tests/build/reports/jacoco/junit5CodeCoverageReport/html/index.html).
 
 A code coverage report can also be generated locally by executing `gradlew
 junit5CodeCoverageReport`. The results will be available in

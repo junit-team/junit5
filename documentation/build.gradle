@@ -10,6 +10,15 @@ junit5 {
 	reportFile file('build/test-results/JUNIT5-Tests.xml')
 }
 
+// The JUnit5Plugin registers the junit5Test task *after* the project has
+// been evaluated. We can therefore only configure the junit5Test task
+// once it actually exists.
+afterEvaluate {
+
+	// Ensure that log4j2 is properly configured.
+	junit5Test.systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
+}
+
 dependencies {
 	testCompile(project(':junit-commons'))
 	testCompile(project(':junit-console'))

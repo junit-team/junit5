@@ -212,8 +212,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		findAnnotatedMethods(testClass, annotationType, MethodSortOrder.HierarchyDown).stream()
 			.peek(method -> methodValidator.accept(extensionType, method))
 			.forEach(method ->
-				extensionRegistry.registerExtension(extensionPointSynthesizer.apply(extensionRegistry, method),
-					ExtensionPoint.Position.DEFAULT, method));
+				extensionRegistry.registerExtensionPoint(extensionPointSynthesizer.apply(extensionRegistry, method)));
 		// @formatter:on
 	}
 

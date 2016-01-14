@@ -14,12 +14,10 @@ import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.EngineExecutionListener;
-import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
+import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TrackingEngineExecutionListener;
 
 /**
  * Abstract base class for tests involving the {@link JUnit5TestEngine}.
@@ -28,27 +26,21 @@ import org.junit.gen5.engine.TrackingEngineExecutionListener;
  */
 abstract class AbstractJUnit5TestEngineTests {
 
-	protected final JUnit5TestEngine engine = new JUnit5TestEngine();
-
-	protected TrackingEngineExecutionListener tracker;
-	protected ExecutionEventRecordingEngineExecutionListener eventRecorder;
-
-	private EngineExecutionListener listener;
+	private final JUnit5TestEngine engine = new JUnit5TestEngine();
 
 	@BeforeEach
 	void initListeners() {
-		tracker = new TrackingEngineExecutionListener();
-		eventRecorder = new ExecutionEventRecordingEngineExecutionListener();
-		listener = EngineExecutionListener.combine(tracker, eventRecorder);
 	}
 
-	protected void executeTestsForClass(Class<?> testClass) {
-		executeTests(build(forClass(testClass)));
+	protected ExecutionEventRecorder executeTestsForClass(Class<?> testClass) {
+		return executeTests(build(forClass(testClass)));
 	}
 
-	protected void executeTests(TestPlanSpecification spec) {
+	protected ExecutionEventRecorder executeTests(TestPlanSpecification spec) {
 		TestDescriptor testDescriptor = discoverTests(spec);
-		engine.execute(new ExecutionRequest(testDescriptor, listener));
+		ExecutionEventRecorder eventRecorder = new ExecutionEventRecorder();
+		engine.execute(new ExecutionRequest(testDescriptor, eventRecorder));
+		return eventRecorder;
 	}
 
 	protected EngineDescriptor discoverTests(TestPlanSpecification spec) {

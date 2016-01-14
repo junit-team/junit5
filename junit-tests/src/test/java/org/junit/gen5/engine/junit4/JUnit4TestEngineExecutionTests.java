@@ -20,7 +20,7 @@ import java.util.List;
 import org.junit.AssumptionViolatedException;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ExecutionEvent;
-import org.junit.gen5.engine.ExecutionEventRecordingEngineExecutionListener;
+import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit4.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.junit4.EnclosedJUnit4TestCase;
@@ -366,6 +366,6 @@ class JUnit4TestEngineExecutionTests {
 	private static List<ExecutionEvent> execute(Class<?> testClass) {
 		JUnit4TestEngine engine = new JUnit4TestEngine();
 		TestPlanSpecification testPlanSpecification = build(forClass(testClass));
-		return ExecutionEventRecordingEngineExecutionListener.execute(engine, testPlanSpecification);
+		return ExecutionEventRecorder.execute(engine, testPlanSpecification);
 	}
 }
