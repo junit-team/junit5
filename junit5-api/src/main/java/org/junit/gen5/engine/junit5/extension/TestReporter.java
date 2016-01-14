@@ -10,8 +10,11 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
-import java.util.*;
+import java.util.Map;
 
+/**
+ * @since 5.0
+ */
 @FunctionalInterface
 public interface TestReporter {
 

@@ -10,14 +10,14 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Parameter;
 
-import org.junit.gen5.api.*;
-import org.junit.gen5.api.extension.*;
+import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.MethodInvocationContext;
+import org.junit.gen5.api.extension.MethodParameterResolver;
 
 /**
- * {@link MethodParameterResolver} that injects a TestReporter.
+ * {@link MethodParameterResolver} that injects a {@link TestReporter}.
  *
  * @since 5.0
  */

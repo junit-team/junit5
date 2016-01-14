@@ -10,12 +10,10 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import java.util.*;
-
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.commons.JUnitException;
-import org.junit.gen5.engine.*;
 import org.junit.gen5.engine.EngineExecutionContext;
+import org.junit.gen5.engine.EngineExecutionListener;
 
 /**
  * @since 5.0
