@@ -72,7 +72,7 @@ public class JUnit5 extends Runner implements Filterable {
 	public JUnit5(Class<?> testClass) throws InitializationError {
 		this.testClass = testClass;
 		this.specification = createSpecification();
-		this.testTree = generateTestTree(testClass);
+		this.testTree = generateTestTree();
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class JUnit5 extends Runner implements Filterable {
 		this.launcher.execute(this.specification);
 	}
 
-	private JUnit5TestTree generateTestTree(Class<?> testClass) {
+	private JUnit5TestTree generateTestTree() {
 		Preconditions.notNull(this.specification, "TestPlanSpecification must not be null");
 		TestPlan plan = this.launcher.discover(this.specification);
 		return new JUnit5TestTree(plan, testClass);
@@ -206,7 +206,7 @@ public class JUnit5 extends Runner implements Filterable {
 			throw new NoTestsRemainException();
 		}
 		this.specification = createTestPlanSpecificationForUniqueIds(filteredIdentifiers);
-		this.testTree = generateTestTree(testClass);
+		this.testTree = generateTestTree();
 	}
 
 	private TestPlanSpecification createTestPlanSpecificationForUniqueIds(Set<TestIdentifier> testIdentifiers) {
