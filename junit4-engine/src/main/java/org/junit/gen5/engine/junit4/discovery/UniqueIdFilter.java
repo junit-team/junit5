@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit4.discovery;
 
+import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.Deque;
@@ -36,9 +37,7 @@ class UniqueIdFilter extends RunnerTestDescriptorAwareFilter {
 	@Override
 	void initialize(RunnerTestDescriptor runnerTestDescriptor) {
 		Optional<? extends TestDescriptor> identifiedTestDescriptor = runnerTestDescriptor.findByUniqueId(uniqueId);
-		if (identifiedTestDescriptor.isPresent()) {
-			descendants = determineDescendants(identifiedTestDescriptor);
-		}
+		descendants = determineDescendants(identifiedTestDescriptor);
 		path = determinePath(runnerTestDescriptor, identifiedTestDescriptor);
 	}
 
@@ -54,14 +53,17 @@ class UniqueIdFilter extends RunnerTestDescriptorAwareFilter {
 	}
 
 	private Set<Description> determineDescendants(Optional<? extends TestDescriptor> identifiedTestDescriptor) {
-		// @formatter:off
-		return identifiedTestDescriptor.get()
-				.allDescendants()
-				.stream()
-				.map(JUnit4TestDescriptor.class::cast)
-				.map(JUnit4TestDescriptor::getDescription)
-				.collect(toSet());
-		// @formatter:on
+		if (identifiedTestDescriptor.isPresent()) {
+			// @formatter:off
+			return identifiedTestDescriptor.get()
+					.allDescendants()
+					.stream()
+					.map(JUnit4TestDescriptor.class::cast)
+					.map(JUnit4TestDescriptor::getDescription)
+					.collect(toSet());
+			// @formatter:on
+		}
+		return emptySet();
 	}
 
 	@Override

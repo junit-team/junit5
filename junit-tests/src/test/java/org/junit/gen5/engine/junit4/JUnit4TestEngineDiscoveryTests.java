@@ -14,7 +14,7 @@ import static java.text.MessageFormat.format;
 import static java.util.Collections.singleton;
 import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.engine.ClassFilters.classNameMatches;
@@ -48,6 +48,7 @@ import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingle
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
 import org.junit.gen5.engine.junit4.samples.junit4.SingleFailingTheoryTestCase;
 import org.junit.gen5.engine.junit4.samples.junit4.TestCaseRunWithJUnit5;
+import org.junit.runner.manipulation.Filter;
 
 class JUnit4TestEngineDiscoveryTests {
 
@@ -119,11 +120,7 @@ class JUnit4TestEngineDiscoveryTests {
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
 		TestDescriptor suiteDescriptor = getOnlyElement(engineDescriptor.getChildren());
-		assertTrue(suiteDescriptor.isContainer());
-		assertFalse(suiteDescriptor.isTest());
-		assertThat(suiteDescriptor.getDisplayName()).startsWith("TestSuite with 1 tests");
-		assertEquals("junit4:" + suiteClass.getName(), suiteDescriptor.getUniqueId());
-		assertClassSource(suiteClass, suiteDescriptor);
+		assertRunnerTestDescriptor(suiteDescriptor, suiteClass);
 
 		TestDescriptor testClassDescriptor = getOnlyElement(suiteDescriptor.getChildren());
 		assertContainerTestDescriptor(testClassDescriptor, "junit4:" + suiteClass.getName() + "/", testClass);
@@ -361,6 +358,22 @@ class JUnit4TestEngineDiscoveryTests {
 		assertThat(runnerDescriptor.getChildren()).hasSize(5);
 	}
 
+	@Test
+	void doesNotResolveMissingUniqueIdSpecificationForSingleClass() throws Exception {
+		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
+		TestPlanSpecification specification = build(TestPlanSpecification.forUniqueId(
+			"junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods"
+					+ "/doesNotExist"));
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertRunnerTestDescriptor(runnerDescriptor, testClass);
+
+		TestDescriptor testDescriptor = getOnlyElement(runnerDescriptor.getChildren());
+		assertInitializationError(testDescriptor, Filter.class, "junit4:" + testClass.getName() + "/");
+	}
+
 	private TestDescriptor findChildByDisplayName(TestDescriptor runnerDescriptor, String displayName) {
 		// @formatter:off
 		Set<? extends TestDescriptor> children = runnerDescriptor.getChildren();
@@ -407,6 +420,17 @@ class JUnit4TestEngineDiscoveryTests {
 		assertEquals(testClass.getName(), containerDescriptor.getDisplayName());
 		assertEquals(uniqueIdPrefix + testClass.getName(), containerDescriptor.getUniqueId());
 		assertClassSource(testClass, containerDescriptor);
+	}
+
+	private static void assertInitializationError(TestDescriptor testDescriptor, Class<?> failingClass,
+			String uniqueIdPrefix) {
+		assertTrue(testDescriptor.isTest());
+		assertFalse(testDescriptor.isContainer());
+		assertEquals("initializationError", testDescriptor.getDisplayName());
+		assertEquals(uniqueIdPrefix + "initializationError" + "(" + failingClass.getName() + ")",
+			testDescriptor.getUniqueId());
+		assertThat(testDescriptor.getChildren()).isEmpty();
+		assertClassSource(failingClass, testDescriptor);
 	}
 
 	private static void assertClassSource(Class<?> expectedClass, TestDescriptor testDescriptor) {
