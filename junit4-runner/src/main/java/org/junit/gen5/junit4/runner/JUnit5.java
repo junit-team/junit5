@@ -201,22 +201,23 @@ public class JUnit5 extends Runner implements Filterable {
 
 	@Override
 	public void filter(Filter filter) throws NoTestsRemainException {
-		Set<TestIdentifier> identifiers = this.testTree.getByDescription(filter);
-		System.out.println("original identifiers: ");
-		identifiers.forEach(System.out::println);
-		if (!identifiers.isEmpty()) {
-			identifiers.removeIf(testIdentifier -> identifiers.stream().anyMatch(
-				acceptedIdentifier -> testTree.getTestPlan().getDescendants(testIdentifier).contains(
-					acceptedIdentifier)));
-			System.out.println("filtered identifiers: ");
-			identifiers.forEach(System.out::println);
-			List<TestPlanSpecificationElement> elements = identifiers.stream().map(TestIdentifier::getUniqueId).map(
-				Object::toString).map(TestPlanSpecification::forUniqueId).collect(toList());
-			this.specification = TestPlanSpecification.build(elements);
-			this.testTree = generateTestTree(testClass);
-		}
-		else
+		Set<TestIdentifier> filteredIdentifiers = testTree.getFilteredLeaves(filter);
+		if (filteredIdentifiers.isEmpty()) {
 			throw new NoTestsRemainException();
+		}
+		this.specification = createTestPlanSpecificationForUniqueIds(filteredIdentifiers);
+		this.testTree = generateTestTree(testClass);
+	}
+
+	private TestPlanSpecification createTestPlanSpecificationForUniqueIds(Set<TestIdentifier> testIdentifiers) {
+		// @formatter:off
+		List<TestPlanSpecificationElement> elements = testIdentifiers.stream()
+				.map(TestIdentifier::getUniqueId)
+				.map(Object::toString)
+				.map(TestPlanSpecification::forUniqueId)
+				.collect(toList());
+		// @formatter:on
+		return TestPlanSpecification.build(elements);
 	}
 
 }

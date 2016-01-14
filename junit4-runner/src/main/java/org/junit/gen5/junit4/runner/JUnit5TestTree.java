@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -34,10 +35,6 @@ class JUnit5TestTree {
 	JUnit5TestTree(TestPlan plan, Class<?> testClass) {
 		this.plan = plan;
 		this.suiteDescription = generateDescription(plan, testClass);
-	}
-
-	public TestPlan getTestPlan() {
-		return plan;
 	}
 
 	Description getSuiteDescription() {
@@ -77,9 +74,30 @@ class JUnit5TestTree {
 		}
 	}
 
-	Set<TestIdentifier> getByDescription(Filter filter) {
-		return descriptions.entrySet().stream().filter(entry -> filter.shouldRun(entry.getValue())).map(
-			Entry::getKey).collect(toSet());
+	Set<TestIdentifier> getFilteredLeaves(Filter filter) {
+		Set<TestIdentifier> identifiers = applyFilterToDescriptions(filter);
+		return removeNonLeafIdentifiers(identifiers);
+	}
+
+	private Set<TestIdentifier> removeNonLeafIdentifiers(Set<TestIdentifier> identifiers) {
+		return identifiers.stream().filter(isALeaf(identifiers)).collect(toSet());
+	}
+
+	private Predicate<? super TestIdentifier> isALeaf(Set<TestIdentifier> identifiers) {
+		return testIdentifier -> {
+			Set<TestIdentifier> descendants = plan.getDescendants(testIdentifier);
+			return identifiers.stream().noneMatch(descendants::contains);
+		};
+	}
+
+	private Set<TestIdentifier> applyFilterToDescriptions(Filter filter) {
+		// @formatter:off
+		return descriptions.entrySet()
+				.stream()
+				.filter(entry -> filter.shouldRun(entry.getValue()))
+				.map(Entry::getKey)
+				.collect(toSet());
+		// @formatter:on
 	}
 
 }
