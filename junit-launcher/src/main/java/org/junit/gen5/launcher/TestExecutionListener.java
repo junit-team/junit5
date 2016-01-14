@@ -44,14 +44,13 @@ import org.junit.gen5.engine.TestExecutionResult.Status;
 public interface TestExecutionListener {
 
 	/**
-	 * Called when a {@link TestIdentifier} is publishing addition test
-	 * reporting data. Can be called at all times.
+	 * Called when additional test reporting data has been published for
+	 * the supplied {@link TestIdentifier}. Can be called at all times.
 	 *
-	 * @param testIdentifier describes the test or container to which the entry belongs
-	 * @param entry a collection of key value pairs to be reported
+	 * @param testIdentifier describes the test or container to which the entry pertains
+	 * @param entry a collection of key-value pairs to be reported
 	 */
 	default void reportingEntryPublished(TestIdentifier testIdentifier, Map<String, String> entry) {
-
 	}
 
 	/**
