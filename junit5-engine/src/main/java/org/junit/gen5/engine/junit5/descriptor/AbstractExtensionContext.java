@@ -15,27 +15,26 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
+import org.junit.gen5.engine.*;
 
 abstract class AbstractExtensionContext implements ExtensionContext {
 
 	private final Map<String, Object> attributes = new HashMap<>();
 
 	private final ExtensionContext parent;
-	private final JUnit5EngineExecutionContext engineExecutionContext;
+	private final EngineExecutionListener engineExecutionListener;
 	private final TestDescriptor testDescriptor;
 
-	AbstractExtensionContext(ExtensionContext parent, JUnit5EngineExecutionContext engineExecutionContext,
+	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			TestDescriptor testDescriptor) {
 		this.parent = parent;
-		this.engineExecutionContext = engineExecutionContext;
+		this.engineExecutionListener = engineExecutionListener;
 		this.testDescriptor = testDescriptor;
 	}
 
 	@Override
 	public void publishReportEntry(Map<String, String> entry) {
-		engineExecutionContext.publishReportEntry(this.getTestDescriptor(), entry);
+		engineExecutionListener.reportingEntryPublished(this.testDescriptor, entry);
 	}
 
 	@Override

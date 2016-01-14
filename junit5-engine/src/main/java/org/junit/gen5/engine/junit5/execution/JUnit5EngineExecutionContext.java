@@ -24,12 +24,16 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 
 	private final State state;
 
-	public JUnit5EngineExecutionContext() {
-		this(new State());
+	public JUnit5EngineExecutionContext(EngineExecutionListener executionListener) {
+		this(new State(executionListener));
 	}
 
 	private JUnit5EngineExecutionContext(State state) {
 		this.state = state;
+	}
+
+	public EngineExecutionListener getExecutionListener() {
+		return this.state.executionListener;
 	}
 
 	public TestInstanceProvider getTestInstanceProvider() {
@@ -48,30 +52,20 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 		return builder(this);
 	}
 
-	public static Builder builder() {
-		return new Builder(null, new State());
-	}
-
 	public static Builder builder(JUnit5EngineExecutionContext context) {
 		return new Builder(context.state, null);
 	}
 
-	@Override
-	public void registerPublisher(ReportEntryPublisher handler) {
-		state.reportEntryPublisher = handler;
-	}
-
-	public void publishReportEntry(TestDescriptor descriptor, Map<String, String> entry) {
-		state.reportEntryPublisher.publishReportEntry(descriptor, entry);
-	}
-
 	private static final class State implements Cloneable {
 
+		final EngineExecutionListener executionListener;
 		TestInstanceProvider testInstanceProvider;
 		TestExtensionRegistry testExtensionRegistry;
 		ExtensionContext extensionContext;
-		ReportEntryPublisher reportEntryPublisher = (testDescriptor, entry) -> {
-		};
+
+		public State(EngineExecutionListener executionListener) {
+			this.executionListener = executionListener;
+		}
 
 		@Override
 		public State clone() {

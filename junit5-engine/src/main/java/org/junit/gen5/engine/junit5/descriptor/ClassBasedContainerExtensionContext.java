@@ -14,14 +14,13 @@ import java.lang.reflect.AnnotatedElement;
 
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
+import org.junit.gen5.engine.*;
 
 final class ClassBasedContainerExtensionContext extends AbstractExtensionContext implements ContainerExtensionContext {
 
-	public ClassBasedContainerExtensionContext(ExtensionContext parent, JUnit5EngineExecutionContext context,
+	public ClassBasedContainerExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			ClassTestDescriptor testDescriptor) {
-		super(parent, context, testDescriptor);
+		super(parent, engineExecutionListener, testDescriptor);
 	}
 
 	@Override
