@@ -27,12 +27,12 @@ public class RegisteredExtensionPoint<T extends ExtensionPoint> {
 
 	private final Position position;
 
-	private final String extensionName;
+	private final Object extensionInstance;
 
-	public RegisteredExtensionPoint(T extensionPoint, Position position, String extensionName) {
+	public RegisteredExtensionPoint(T extensionPoint, Position position, Object extensionInstance) {
 		this.extensionPoint = extensionPoint;
 		this.position = position;
-		this.extensionName = extensionName;
+		this.extensionInstance = extensionInstance;
 	}
 
 	public T getExtensionPoint() {
@@ -43,8 +43,12 @@ public class RegisteredExtensionPoint<T extends ExtensionPoint> {
 		return position;
 	}
 
+	public Object getExtensionInstance() {
+		return extensionInstance;
+	}
+
 	public String getExtensionName() {
-		return extensionName;
+		return extensionInstance.toString();
 	}
 
 	@Override
@@ -52,7 +56,7 @@ public class RegisteredExtensionPoint<T extends ExtensionPoint> {
 		// @formatter:off
 		return new ToStringBuilder(this)
 				.append("position", this.position)
-				.append("extensionName", this.extensionName)
+				.append("extensionInstance", this.extensionInstance)
 				.toString();
 		// @formatter:on
 	}

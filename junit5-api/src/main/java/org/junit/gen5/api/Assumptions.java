@@ -92,7 +92,7 @@ public final class Assumptions {
 				executable.execute();
 			}
 			catch (Throwable t) {
-				throw ExceptionUtils.throwAsRuntimeException(t);
+				throw ExceptionUtils.throwAsUncheckedException(t);
 			}
 		}
 	}

@@ -10,6 +10,8 @@
 
 package org.junit.gen5.engine.junit5;
 
+import static org.junit.gen5.api.Assertions.*;
+
 import java.util.HashMap;
 
 import org.junit.Assert;
@@ -27,13 +29,13 @@ public class ReportingTest extends AbstractJUnit5TestEngineTests {
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
 			TestPlanSpecification.forClass(MyReportingTestCase.class));
 
-		TrackingEngineExecutionListener listener = executeTests(testPlanSpecification, 2);
+		executeTests(testPlanSpecification);
 
-		Assert.assertEquals("# tests started", 1, listener.testStartedCount.get());
-		Assert.assertEquals("# tests succeeded", 1, listener.testSucceededCount.get());
-		Assert.assertEquals("# tests failed", 0, listener.testFailedCount.get());
+		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(1, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
 
-		Assert.assertEquals("# report entries published", 3, listener.reportEntriesCount.get());
+		assertEquals(3, tracker.reportEntriesCount.get(), "# report entries published");
 
 	}
 

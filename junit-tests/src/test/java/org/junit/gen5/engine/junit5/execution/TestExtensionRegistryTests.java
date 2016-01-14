@@ -10,7 +10,8 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,7 +29,7 @@ import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
-import org.junit.gen5.engine.junit5.extension.TestNameParameterResolver;
+import org.junit.gen5.engine.junit5.extension.TestInfoParameterResolver;
 import org.junit.gen5.engine.junit5.extension.TestReporterParameterResolver;
 
 public class TestExtensionRegistryTests {
@@ -45,7 +46,7 @@ public class TestExtensionRegistryTests {
 		Assertions.assertEquals(3, TestExtensionRegistry.getDefaultExtensionClasses().size());
 
 		assertDefaultExtensionType(DisabledCondition.class);
-		assertDefaultExtensionType(TestNameParameterResolver.class);
+		assertDefaultExtensionType(TestInfoParameterResolver.class);
 	}
 
 	@Test
@@ -54,12 +55,12 @@ public class TestExtensionRegistryTests {
 
 		assertEquals(TestExtensionRegistry.getDefaultExtensionClasses().size(), extensions.size());
 		assertExtensionRegistered(registry, DisabledCondition.class);
-		assertExtensionRegistered(registry, TestNameParameterResolver.class);
+		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
 		assertExtensionRegistered(registry, TestReporterParameterResolver.class);
 
-		Assertions.assertEquals(2, countExtensionPoints(MethodParameterResolver.class));
-		Assertions.assertEquals(1, countExtensionPoints(ContainerExecutionCondition.class));
-		Assertions.assertEquals(1, countExtensionPoints(TestExecutionCondition.class));
+		assertEquals(2, countExtensionPoints(MethodParameterResolver.class));
+		assertEquals(1, countExtensionPoints(ContainerExecutionCondition.class));
+		assertEquals(1, countExtensionPoints(TestExecutionCondition.class));
 	}
 
 	@Test
@@ -132,7 +133,7 @@ public class TestExtensionRegistryTests {
 
 		registry.stream(MyExtensionPoint.class, TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(
 			registeredExtensionPoint -> {
-				assertEquals(MyExtension.class.getName(), registeredExtensionPoint.getExtensionName());
+				assertEquals(MyExtension.class, registeredExtensionPoint.getExtensionInstance().getClass());
 				assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
 				assertTrue(registeredExtensionPoint.getExtensionPoint() instanceof MyExtensionPoint);
 				hasRun.set(true);

@@ -10,11 +10,8 @@
 
 package org.junit.gen5.engine.junit5;
 
-import java.util.List;
-
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.ClassFilter;
-import org.junit.gen5.engine.EngineFilter;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.HierarchicalTestEngine;
 import org.junit.gen5.engine.TestDescriptor;
@@ -48,15 +45,14 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 		for (TestPlanSpecificationElement element : specification) {
 			resolver.resolveElement(element);
 		}
-		applyEngineFilters(specification.getEngineFilters(), engineDescriptor);
+		applyEngineFilters(specification, engineDescriptor);
 	}
 
-	private void applyEngineFilters(List<EngineFilter> engineFilters, JUnit5EngineDescriptor engineDescriptor) {
-		// TODO Currently only works with a single ClassFilter
-		if (engineFilters.isEmpty()) {
+	private void applyEngineFilters(TestPlanSpecification specification, JUnit5EngineDescriptor engineDescriptor) {
+		if (specification.getEngineFilters(ClassFilter.class).isEmpty()) {
 			return;
 		}
-		ClassFilter filter = (ClassFilter) engineFilters.get(0);
+		ClassFilter filter = specification.getClassFilter();
 		TestDescriptor.Visitor filteringVisitor = (descriptor, remove) -> {
 			if (descriptor.getClass() == ClassTestDescriptor.class) {
 				ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptor;

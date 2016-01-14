@@ -12,9 +12,15 @@ package org.junit.gen5.engine;
 
 import static org.junit.gen5.api.Assertions.assertSame;
 import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.stub;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
@@ -24,7 +30,7 @@ import org.mockito.Mockito;
 import org.opentest4j.TestAbortedException;
 
 /**
- * Microtests that verify behavior of {@link HierarchicalTestExecutor}.
+ * Micro-tests that verify behavior of {@link HierarchicalTestExecutor}.
  */
 public class HierarchicalTestExecutorTests {
 
@@ -154,7 +160,7 @@ public class HierarchicalTestExecutorTests {
 	public void exceptionInShouldBeSkipped() throws Exception {
 
 		MyContainer child = spy(new MyContainer("child container"));
-		RuntimeException anException = new RuntimeException("in test");
+		RuntimeException anException = new RuntimeException("in skip");
 		stub(child.shouldBeSkipped(rootContext)).toThrow(anException);
 		root.addChild(child);
 
@@ -235,7 +241,7 @@ public class HierarchicalTestExecutorTests {
 	@Test
 	public void exceptionInLeafExecute() throws Exception {
 
-		MyLeaf child = spy(new MyLeaf("child container"));
+		MyLeaf child = spy(new MyLeaf("leaf"));
 		RuntimeException anException = new RuntimeException("in test");
 		stub(child.execute(rootContext)).toThrow(anException);
 		root.addChild(child);
@@ -263,7 +269,7 @@ public class HierarchicalTestExecutorTests {
 
 		MyContainer child = spy(new MyContainer("child container"));
 		root.addChild(child);
-		TestAbortedException anAbortedException = new TestAbortedException("in test");
+		TestAbortedException anAbortedException = new TestAbortedException("in BeforeAll");
 		stub(root.beforeAll(rootContext)).toThrow(anAbortedException);
 
 		InOrder inOrder = inOrder(listener, root, child);
@@ -288,7 +294,7 @@ public class HierarchicalTestExecutorTests {
 	@Test
 	public void abortInLeafExecute() throws Exception {
 
-		MyLeaf child = spy(new MyLeaf("child container"));
+		MyLeaf child = spy(new MyLeaf("leaf"));
 		TestAbortedException anAbortedException = new TestAbortedException("in test");
 		stub(child.execute(rootContext)).toThrow(anAbortedException);
 		root.addChild(child);
@@ -311,6 +317,36 @@ public class HierarchicalTestExecutorTests {
 		assertSame(childExecutionResult.getValue().getThrowable().get(), anAbortedException);
 	}
 
+	/**
+	 * Verifies support for blacklisted exceptions.
+	 */
+	@Test
+	public void outOfMemoryErrorInShouldBeSkipped() throws Exception {
+		MyContainer child = spy(new MyContainer("child container"));
+		OutOfMemoryError outOfMemoryError = new OutOfMemoryError("in skip");
+		stub(child.shouldBeSkipped(rootContext)).toThrow(outOfMemoryError);
+		root.addChild(child);
+
+		Throwable actualException = expectThrows(OutOfMemoryError.class, () -> executor.execute());
+		assertSame(outOfMemoryError, actualException);
+	}
+
+	/**
+	 * Verifies support for blacklisted exceptions.
+	 */
+	@Test
+	public void outOfMemoryErrorInLeafExecution() throws Exception {
+		MyLeaf child = spy(new MyLeaf("leaf"));
+		OutOfMemoryError outOfMemoryError = new OutOfMemoryError("in test");
+		stub(child.execute(rootContext)).toThrow(outOfMemoryError);
+		root.addChild(child);
+
+		Throwable actualException = expectThrows(OutOfMemoryError.class, () -> executor.execute());
+		assertSame(outOfMemoryError, actualException);
+	}
+
+	// -------------------------------------------------------------------
+
 	private static class MyEngineExecutionContext implements EngineExecutionContext {
 	}
 
@@ -318,6 +354,11 @@ public class HierarchicalTestExecutorTests {
 
 		protected MyContainer(String uniqueId) {
 			super(uniqueId);
+		}
+
+		@Override
+		public String getName() {
+			return getUniqueId();
 		}
 
 		@Override
@@ -349,6 +390,11 @@ public class HierarchicalTestExecutorTests {
 		}
 
 		@Override
+		public String getName() {
+			return getUniqueId();
+		}
+
+		@Override
 		public String getDisplayName() {
 			return getUniqueId();
 		}
@@ -370,4 +416,5 @@ public class HierarchicalTestExecutorTests {
 			super(request, rootContext);
 		}
 	}
+
 }

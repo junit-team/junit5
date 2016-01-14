@@ -1,14 +1,39 @@
-# JUnit Lambda
+# JUnit 5
 
-We are currently in _Phase 2_, building the prototype. Jump straight to the [Prototype](https://github.com/junit-team/junit-lambda/wiki/Prototype) page for full details.
+This repository is the home of the next generation of JUnit, _JUnit 5_.
 
-## Overview
+The project is currently in _Phase 3_, building the _Alpha 1 milestone_ which is based on feedback received for the [Prototype].
 
-This repository currently hosts the prototype for the next generation of JUnit, codenamed "JUnit Lambda".
+## Documentation
+
+### User Guide
+
+The [JUnit 5 User Guide] is available online.
+
+### Javadoc
+
+The [JUnit 5 Javadoc] is available online.
 
 ## Continuous Integration Builds
 
-[![Travis CI build status](https://travis-ci.org/junit-team/junit-lambda.svg)](https://travis-ci.org/junit-team/junit-lambda)
+[![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg?branch=master)](https://travis-ci.org/junit-team/junit5)
+
+## Code Coverage
+
+Code coverage for the latest build is available online at
+[codecov.io](https://codecov.io/github/junit-team/junit5) and on a per-build basis using
+Jacoco on the [Jenkins CI server](https://junit.ci.cloudbees.com/job/JUnit5/). To
+navigate to the code coverage report on the Jenkins CI server, click on the results for a
+particular build or navigate directly to the [latest successful
+build](https://junit.ci.cloudbees.com/job/JUnit5/lastStableBuild/), click on the "Build
+Artifacts" link, click on the
+`repo/junit-tests/build/reports/jacoco/junit5CodeCoverageReport/html` link, and then
+click on the `index.html` link.
+
+A code coverage report can also be generated locally by executing `gradlew
+junit5CodeCoverageReport`. The results will be available in
+`junit-tests/build/reports/jacoco/junit5CodeCoverageReport/html/index.html`.
+
 
 ## Building from Source
 
@@ -43,7 +68,7 @@ gradlew clean install
 	- `junit-gradle`
 	- `junit-launcher`
 	- `junit4-engine`
-	- `junit4-launcher-runner`
+	- `junit4-runner`
 	- `junit5-api`
 	- `junit5-engine`
 	- `surefire-junit5`
@@ -52,15 +77,15 @@ See also: <https://oss.sonatype.org/content/repositories/snapshots/org/junit/>
 
 ## Contributing
 
-# JUnit Lambda Prototype
+At the current stage, we are not accepting pull requests for the following reasons.
 
-The JUnit Lambda team is currently collecting feedback about the prototype which [is described in the Wiki](https://github.com/junit-team/junit-lambda/wiki/Prototype).
+- **Legal reasons**: Any contributor will have to sign a contributor's agreement along the lines of [CONTRIBUTING.md]. The exact details have not been figured out yet, but we will contact you *before accepting your first pull request*.
 
-The goal of the prototype phase is to come up with some working code that will entice people to give us feedback on the **programming model, APIs, and SPIs** as described in the sections below. At the current stage, we are **NOT COLLECTING FEEDBACK ABOUT THE IMPLEMENTATION**, simply because it's in large parts neither polished, nor thoroughly tested, nor stable.
+If you want to provide input in the interim, please use [the project's issue tracker](https://github.com/junit-team/junit5/issues) or send us comments via [Twitter].
 
-We are also not accepting any pull requests at this time, for the following reasons:
 
-- **Focus**: The goal of the prototype is to get feedback on the API and programming model. Focusing on code style, formatting, and other details will distract the community's (and our) attention. A lot of the code in the prototype will potentially be rewritten anyway.
-- **Legal reasons**: Any contributor will have to sign a contributor's agreement along the lines of [Contributing.md](https://github.com/junit-team/junit-lambda/blob/master/CONTRIBUTING.md). The exact details have not been figured out yet, but we will contact you *before accepting your first pull request*.
-
-If you want to provide input in the interim, please use [the project's issue tracker](https://github.com/junit-team/junit-lambda/issues) or send us comments via [Twitter](https://twitter.com/junitlambda).
+[CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
+[JUnit 5 Javadoc]: https://junit.ci.cloudbees.com/job/JUnit5/javadoc/
+[JUnit 5 User Guide]: http://junit-team.github.io/junit5/
+[Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
+[Twitter]: https://twitter.com/junitlambda

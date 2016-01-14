@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.gen5.api.Name;
+import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestTag;
@@ -96,7 +96,7 @@ public class JUnit5TestDescriptorTests {
 
 	@Tag("classTag1")
 	@Tag("classTag2")
-	@Name("custom class name")
+	@DisplayName("custom class name")
 	@SuppressWarnings("unused")
 	private static class ASampleTestCase {
 
@@ -107,7 +107,7 @@ public class JUnit5TestDescriptorTests {
 		}
 
 		@Test
-		@Name("custom test name")
+		@DisplayName("custom test name")
 		@Tag("methodTag1")
 		@Tag("methodTag2")
 		void foo() {
@@ -118,7 +118,7 @@ public class JUnit5TestDescriptorTests {
 		}
 
 		@Test
-		@Name("custom name")
+		@DisplayName("custom name")
 		@Tag("custom tag")
 		@Target(ElementType.METHOD)
 		@Retention(RetentionPolicy.RUNTIME)

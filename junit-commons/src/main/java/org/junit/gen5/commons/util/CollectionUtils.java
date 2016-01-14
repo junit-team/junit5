@@ -15,9 +15,15 @@ import java.util.Collection;
 /**
  * Collection of utilities for working with {@link Collection Collections}.
  *
+ * <h3>DISCLAIMER</h3>
+ *
+ * <p>These utilities are intended solely for usage within the JUnit framework
+ * itself. <strong>Any usage by external parties is not supported.</strong>
+ * Use at your own risk!
+ *
  * @since 5.0
  */
-public class CollectionUtils {
+public final class CollectionUtils {
 
 	private CollectionUtils() {
 		/* no-op */
@@ -28,7 +34,7 @@ public class CollectionUtils {
 	 *
 	 * @param collection the collection to get the element from
 	 * @return the only element of the collection
-	 * @throws IllegalArgumentException if the collection is {@code null}
+	 * @throws PreconditionViolationException if the collection is {@code null}
 	 * or does not contain exactly one element
 	 */
 	public static <T> T getOnlyElement(Collection<T> collection) {

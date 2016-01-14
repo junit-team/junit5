@@ -18,6 +18,7 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
@@ -34,8 +35,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	private final Set<TestDescriptor> children = new LinkedHashSet<>();
 
 	protected AbstractTestDescriptor(String uniqueId) {
-		Preconditions.notBlank(uniqueId, "uniqueId must not be null or empty");
-		this.uniqueId = uniqueId;
+		this.uniqueId = Preconditions.notBlank(uniqueId, "uniqueId must not be null or empty");
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	protected void removeFromHierarchy() {
 		if (isRoot()) {
-			throw new UnsupportedOperationException("You cannot remove the root of a hierarchy.");
+			throw new JUnitException("You cannot remove the root of a hierarchy.");
 		}
 		this.parent.removeChild(this);
 		this.children.clear();
@@ -94,8 +94,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	protected final void setSource(TestSource source) {
-		Preconditions.notNull(source, "test source must not be null");
-		this.source = source;
+		this.source = Preconditions.notNull(source, "TestSource must not be null");
 	}
 
 	@Override

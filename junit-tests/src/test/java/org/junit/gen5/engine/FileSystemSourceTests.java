@@ -11,19 +11,24 @@
 package org.junit.gen5.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertThrows;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.FileSystemSource.FilePosition;
 
 class FileSystemSourceTests {
 
 	@Test
 	void nullSourceFileOrDirectoryYieldsException() {
-		assertThrows(IllegalArgumentException.class, () -> {
+		assertThrows(PreconditionViolationException.class, () -> {
 			new FileSystemSource(null);
 		});
 	}

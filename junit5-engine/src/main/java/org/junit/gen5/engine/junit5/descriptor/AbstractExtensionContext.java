@@ -22,7 +22,7 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 
 	private final Map<String, Object> attributes = new HashMap<>();
 
-	private ExtensionContext parent;
+	private final ExtensionContext parent;
 	private final JUnit5EngineExecutionContext engineExecutionContext;
 	private final TestDescriptor testDescriptor;
 

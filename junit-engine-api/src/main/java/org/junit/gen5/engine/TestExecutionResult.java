@@ -15,6 +15,7 @@ import static org.junit.gen5.engine.TestExecutionResult.Status.*;
 import java.util.Optional;
 
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
  * @since 5.0
@@ -43,8 +44,7 @@ public class TestExecutionResult {
 	}
 
 	public TestExecutionResult(Status status, Throwable throwable) {
-		Preconditions.notNull(status, "status must not be null");
-		this.status = status;
+		this.status = Preconditions.notNull(status, "Status must not be null");
 		this.throwable = throwable;
 	}
 
@@ -58,13 +58,10 @@ public class TestExecutionResult {
 
 	@Override
 	public String toString() {
-		StringBuilder result = new StringBuilder();
-		result.append(status);
-		if (throwable != null) {
-			result.append(": ").append(throwable.getMessage()).append(" [").append(
-				throwable.getClass().getName()).append(']');
-		}
-		return result.toString();
+		ToStringBuilder builder = new ToStringBuilder(this);
+		builder.append("status", status);
+		builder.append("throwable", throwable);
+		return builder.toString();
 	}
 
 }

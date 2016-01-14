@@ -11,12 +11,14 @@
 package org.junit.gen5.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.TestName;
+import org.junit.gen5.api.TestInfo;
 
 class JavaSourceTests {
 
@@ -39,9 +41,10 @@ class JavaSourceTests {
 	}
 
 	@Test
-	void methodSource(@TestName String testName) throws Exception {
+	void methodSource(TestInfo testInfo) throws Exception {
 		Class<JavaSourceTests> testClass = JavaSourceTests.class;
-		Method testMethod = testClass.getDeclaredMethod(testName, String.class);
+		final String testName = testInfo.getDisplayName();
+		Method testMethod = testClass.getDeclaredMethod(testName, TestInfo.class);
 		JavaSource source = new JavaSource(testMethod);
 
 		assertTrue(source.isJavaMethod());
@@ -52,8 +55,9 @@ class JavaSourceTests {
 
 		assertThat(source.getJavaClass()).hasValue(testClass);
 		assertThat(source.getJavaMethodName()).hasValue(testName);
-		assertThat(source.getJavaMethodParameterTypes().get()).containsExactly(String.class);
+		assertThat(source.getJavaMethodParameterTypes().get()).containsExactly(TestInfo.class);
 
-		assertEquals(testClass.getName() + "#" + testName + "(" + String.class.getName() + ")", source.toString());
+		assertEquals(testClass.getName() + "#" + testName + "(" + TestInfo.class.getName() + ")", source.toString());
 	}
+
 }

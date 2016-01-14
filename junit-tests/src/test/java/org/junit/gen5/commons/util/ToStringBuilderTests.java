@@ -10,7 +10,8 @@
 
 package org.junit.gen5.commons.util;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertThrows;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -26,14 +27,14 @@ public class ToStringBuilderTests {
 
 	@Test
 	public void withNullObject() {
-		assertThrows(IllegalArgumentException.class, () -> {
+		assertThrows(PreconditionViolationException.class, () -> {
 			new ToStringBuilder((Object) null);
 		});
 	}
 
 	@Test
 	public void withNullClass() {
-		assertThrows(IllegalArgumentException.class, () -> {
+		assertThrows(PreconditionViolationException.class, () -> {
 			new ToStringBuilder((Class<?>) null);
 		});
 	}

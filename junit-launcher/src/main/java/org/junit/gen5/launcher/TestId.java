@@ -27,8 +27,7 @@ public final class TestId implements Serializable {
 	private final String uniqueId;
 
 	TestId(String uniqueId) {
-		Preconditions.notNull(uniqueId, "uniqueId must not be null");
-		this.uniqueId = uniqueId;
+		this.uniqueId = Preconditions.notBlank(uniqueId, "uniqueId must not be null or empty");
 	}
 
 	@Override
@@ -42,12 +41,12 @@ public final class TestId implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return uniqueId.hashCode();
+		return this.uniqueId.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return uniqueId;
+		return this.uniqueId;
 	}
 
 }

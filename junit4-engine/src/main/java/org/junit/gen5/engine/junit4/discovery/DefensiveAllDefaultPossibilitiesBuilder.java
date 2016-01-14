@@ -42,8 +42,8 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 	}
 
 	private AnnotatedBuilder createAnnotatedBuilder() {
-		// Loaded via reflection because it might not be available at runtime
-		Optional<Class<?>> junit5RunnerClass = ReflectionUtils.loadClass("org.junit.gen5.junit4runner.JUnit5");
+		// Load via reflection because it might not be available at runtime.
+		Optional<Class<?>> junit5RunnerClass = ReflectionUtils.loadClass("org.junit.gen5.junit4.runner.JUnit5");
 		if (junit5RunnerClass.isPresent()) {
 			return new DefensiveAnnotatedBuilder(this, junit5RunnerClass.get());
 		}
@@ -103,4 +103,5 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 			return !testMethods.isEmpty();
 		}
 	}
+
 }

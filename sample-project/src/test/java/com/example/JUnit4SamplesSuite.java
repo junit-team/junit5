@@ -10,9 +10,9 @@
 
 package com.example;
 
-import org.junit.gen5.junit4runner.JUnit5;
-import org.junit.gen5.junit4runner.JUnit5.Classes;
-import org.junit.gen5.junit4runner.JUnit5.ExcludeTags;
+import org.junit.gen5.junit4.runner.Classes;
+import org.junit.gen5.junit4.runner.ExcludeTags;
+import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
@@ -26,10 +26,4 @@ import org.junit.runner.RunWith;
 @ExcludeTags({ "fast" })
 //@OnlyEngine("junit5")
 public class JUnit4SamplesSuite {
-
-	// When you have the following method, it overrides all annotations
-	//		public static TestPlanSpecification createSpecification() {
-	//			return TestPlanSpecification.build(
-	//				TestPlanSpecification.forNames(SucceedingTestCase.class.getName()));
-	//		}
 }

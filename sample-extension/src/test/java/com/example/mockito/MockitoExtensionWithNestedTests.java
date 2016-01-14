@@ -19,7 +19,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.junit4runner.JUnit5;
+import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.runner.RunWith;
 
 /**
@@ -27,7 +27,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnit5.class)
 @ExtendWith(MockitoExtension.class)
-//public to be picked up by IDE JUnit4 test runner
+// Must be public to be picked up by JUnit4 test runner in IDEs.
 public class MockitoExtensionWithNestedTests {
 
 	boolean baseClassTestRun = false;

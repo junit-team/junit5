@@ -23,8 +23,13 @@ public class EngineDescriptor extends AbstractTestDescriptor implements EngineAw
 	}
 
 	@Override
+	public String getName() {
+		return this.engine.getId();
+	}
+
+	@Override
 	public String getDisplayName() {
-		return "Test engine: " + engine.getId();
+		return "Test Engine: " + engine.getId();
 	}
 
 	@Override

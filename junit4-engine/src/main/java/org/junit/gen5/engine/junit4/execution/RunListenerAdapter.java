@@ -10,50 +10,147 @@
 
 package org.junit.gen5.engine.junit4.execution;
 
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toMap;
-import static org.junit.gen5.engine.TestExecutionResult.failed;
+import java.util.Optional;
+import java.util.function.Function;
 
-import java.util.Map;
-
+import org.junit.Ignore;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionResult;
-import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
-import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.runner.Description;
+import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
-public class RunListenerAdapter extends RunListener {
+class RunListenerAdapter extends RunListener {
 
+	private final TestRun testRun;
 	private final EngineExecutionListener listener;
-	private final Map<Description, JUnit4TestDescriptor> descriptionToDescriptor;
 
-	public RunListenerAdapter(RunnerTestDescriptor runnerTestDescriptor, EngineExecutionListener listener) {
+	RunListenerAdapter(TestRun testRun, EngineExecutionListener listener) {
+		this.testRun = testRun;
 		this.listener = listener;
-		// @formatter:off
-		descriptionToDescriptor = runnerTestDescriptor.allDescendants().stream()
-			.filter(JUnit4TestDescriptor.class::isInstance)
-			.map(JUnit4TestDescriptor.class::cast)
-			.collect(toMap(JUnit4TestDescriptor::getDescription, identity()));
-		// @formatter:on
 	}
 
 	@Override
-	public void testStarted(Description description) throws Exception {
-		listener.executionStarted(lookupDescriptor(description));
+	public void testRunStarted(Description description) {
+		// If it's not a suite it might be skipped entirely later on.
+		if (description.isSuite()) {
+			fireExecutionStarted(testRun.getRunnerTestDescriptor());
+		}
 	}
 
 	@Override
-	public void testFailure(Failure failure) throws Exception {
-		TestDescriptor testDescriptor = lookupDescriptor(failure.getDescription());
-		TestExecutionResult result = failed(failure.getException());
-		listener.executionFinished(testDescriptor, result);
+	public void testIgnored(Description description) {
+		TestDescriptor testDescriptor = testRun.lookupTestDescriptor(description);
+		String reason = determineReasonForIgnoredTest(description);
+		testIgnored(testDescriptor, reason);
 	}
 
-	private TestDescriptor lookupDescriptor(Description description) {
-		return descriptionToDescriptor.get(description);
+	@Override
+	public void testStarted(Description description) {
+		testStarted(testRun.lookupTestDescriptor(description));
+	}
+
+	@Override
+	public void testAssumptionFailure(Failure failure) {
+		handleFailure(failure, TestExecutionResult::aborted);
+	}
+
+	@Override
+	public void testFailure(Failure failure) {
+		handleFailure(failure, TestExecutionResult::failed);
+	}
+
+	@Override
+	public void testFinished(Description description) {
+		testFinished(testRun.lookupTestDescriptor(description));
+	}
+
+	@Override
+	public void testRunFinished(Result result) {
+		if (testRun.isNotSkipped(testRun.getRunnerTestDescriptor())) {
+			fireExecutionFinished(testRun.getRunnerTestDescriptor());
+		}
+	}
+
+	private void handleFailure(Failure failure, Function<Throwable, TestExecutionResult> resultCreator) {
+		TestDescriptor testDescriptor = testRun.lookupTestDescriptor(failure.getDescription());
+		TestExecutionResult result = resultCreator.apply(failure.getException());
+		testRun.storeResult(testDescriptor, result);
+		if (testDescriptor.isContainer() && testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)) {
+			fireMissingContainerEvents(testDescriptor);
+		}
+	}
+
+	private void fireMissingContainerEvents(TestDescriptor testDescriptor) {
+		if (testRun.isNotStarted(testDescriptor)) {
+			testStarted(testDescriptor);
+		}
+		if (testRun.isNotFinished(testDescriptor)) {
+			testFinished(testDescriptor);
+		}
+	}
+
+	private void testIgnored(TestDescriptor testDescriptor, String reason) {
+		fireExecutionStartedIncludingUnstartedAncestors(testDescriptor.getParent());
+		fireExecutionSkipped(testDescriptor, reason);
+		fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(testDescriptor.getParent());
+	}
+
+	private String determineReasonForIgnoredTest(Description description) {
+		Ignore ignoreAnnotation = description.getAnnotation(Ignore.class);
+		return Optional.ofNullable(ignoreAnnotation).map(Ignore::value).orElse("<unknown>");
+	}
+
+	private void testStarted(TestDescriptor testDescriptor) {
+		fireExecutionStartedIncludingUnstartedAncestors(testDescriptor.getParent());
+		fireExecutionStarted(testDescriptor);
+	}
+
+	private void testFinished(TestDescriptor descriptor) {
+		fireExecutionFinished(descriptor);
+		fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(descriptor.getParent());
+	}
+
+	private void fireExecutionStartedIncludingUnstartedAncestors(Optional<TestDescriptor> parent) {
+		if (parent.isPresent() && canStart(parent.get())) {
+			fireExecutionStartedIncludingUnstartedAncestors(parent.get().getParent());
+			fireExecutionStarted(parent.get());
+		}
+	}
+
+	private void fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(Optional<TestDescriptor> parent) {
+		if (parent.isPresent() && canFinish(parent.get())) {
+			fireExecutionFinished(parent.get());
+			fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(parent.get().getParent());
+		}
+	}
+
+	private boolean canStart(TestDescriptor testDescriptor) {
+		return testRun.isNotStarted(testDescriptor) //
+				&& testRun.isDescendantOfRunnerTestDescriptor(testDescriptor);
+	}
+
+	private boolean canFinish(TestDescriptor testDescriptor) {
+		return testRun.isNotFinished(testDescriptor) //
+				&& testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)
+				&& testRun.areAllFinishedOrSkipped(testDescriptor.getChildren());
+	}
+
+	private void fireExecutionSkipped(TestDescriptor testDescriptor, String reason) {
+		testRun.markSkipped(testDescriptor);
+		listener.executionSkipped(testDescriptor, reason);
+	}
+
+	private void fireExecutionStarted(TestDescriptor testDescriptor) {
+		testRun.markStarted(testDescriptor);
+		listener.executionStarted(testDescriptor);
+	}
+
+	private void fireExecutionFinished(TestDescriptor testDescriptor) {
+		testRun.markFinished(testDescriptor);
+		listener.executionFinished(testDescriptor, testRun.getStoredResultOrSuccessful(testDescriptor));
 	}
 
 }

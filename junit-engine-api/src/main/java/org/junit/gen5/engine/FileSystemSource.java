@@ -28,8 +28,8 @@ public class FileSystemSource implements TestSource {
 	}
 
 	public FileSystemSource(File sourceFileOrDirectory, FilePosition positionInFile) {
-		Preconditions.notNull(sourceFileOrDirectory, "source file or directory must not be null");
-		this.sourceFileOrDirectory = sourceFileOrDirectory;
+		this.sourceFileOrDirectory = Preconditions.notNull(sourceFileOrDirectory,
+			"source file or directory must not be null");
 		this.positionInFile = positionInFile;
 	}
 

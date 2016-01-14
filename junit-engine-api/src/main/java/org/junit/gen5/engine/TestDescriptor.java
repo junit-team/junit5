@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -27,6 +27,8 @@ public interface TestDescriptor {
 	 * regardless of how many engines are used behind the scenes.
 	 */
 	String getUniqueId();
+
+	String getName();
 
 	String getDisplayName();
 
@@ -51,7 +53,7 @@ public interface TestDescriptor {
 	void removeChild(TestDescriptor descriptor);
 
 	default Set<? extends TestDescriptor> allDescendants() {
-		Set<TestDescriptor> all = new HashSet<>();
+		Set<TestDescriptor> all = new LinkedHashSet<>();
 		all.addAll(getChildren());
 		for (TestDescriptor child : getChildren()) {
 			all.addAll(child.allDescendants());

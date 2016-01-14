@@ -14,10 +14,10 @@ import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.Name;
+import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.junit4runner.JUnit5;
+import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.runner.RunWith;
 
 /**
@@ -50,15 +50,15 @@ public class HierarchyTestCase {
 	static boolean thirdLevelTest2Invoked;
 
 	@BeforeAll
-	void beforeAll() {
+	static void beforeAll() {
 		topLevelBeforeAllInvocationCount++;
-		System.out.println(getClass().getName() + " beforeAll called");
+		System.out.println(HierarchyTestCase.class.getName() + " beforeAll called");
 	}
 
 	@AfterAll
-	void afterAll() {
+	static void afterAll() {
 		topLevelAfterAllInvocationCount++;
-		System.out.println(getClass().getName() + " afterAll called");
+		System.out.println(HierarchyTestCase.class.getName() + " afterAll called");
 	}
 
 	@BeforeEach
@@ -86,19 +86,21 @@ public class HierarchyTestCase {
 	}
 
 	@Nested
-	@Name("Second Level Context")
+	@DisplayName("Second Level Context")
 	class SecondLevelTestContext {
 
-		@BeforeAll
+		// TODO [#88] @BeforeAll method cannot be used in @Nested class.
+		// @BeforeAll
 		void beforeAll() {
 			secondLevelBeforeAllInvocationCount++;
-			System.out.println(getClass().getName() + " beforeAll called");
+			System.out.println(SecondLevelTestContext.class.getName() + " beforeAll called");
 		}
 
-		@AfterAll
+		// TODO [#88] @AfterAll method cannot be used in @Nested class.
+		// @AfterAll
 		void afterAll() {
 			secondLevelAfterAllInvocationCount++;
-			System.out.println(getClass().getName() + " afterAll called");
+			System.out.println(SecondLevelTestContext.class.getName() + " afterAll called");
 		}
 
 		@BeforeEach
@@ -126,19 +128,21 @@ public class HierarchyTestCase {
 		}
 
 		@Nested
-		@Name("Third Level Context")
+		@DisplayName("Third Level Context")
 		class ThirdLevelTestContext {
 
-			@BeforeAll
+			// TODO [#88] @BeforeAll method cannot be used in @Nested class.
+			// @BeforeAll
 			void beforeAll() {
 				thirdLevelBeforeAllInvocationCount++;
-				System.out.println(getClass().getName() + " beforeAll called");
+				System.out.println(ThirdLevelTestContext.class.getName() + " beforeAll called");
 			}
 
-			@AfterAll
+			// TODO [#88] @AfterAll method cannot be used in @Nested class.
+			// @AfterAll
 			void afterAll() {
 				thirdLevelAfterAllInvocationCount++;
-				System.out.println(getClass().getName() + " afterAll called");
+				System.out.println(ThirdLevelTestContext.class.getName() + " afterAll called");
 			}
 
 			@BeforeEach

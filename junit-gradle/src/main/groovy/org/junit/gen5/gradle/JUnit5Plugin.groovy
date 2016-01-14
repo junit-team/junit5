@@ -25,12 +25,11 @@ class JUnit5Plugin implements Plugin<Project> {
 				project.dependencies.add("testRuntime", "org.junit:junit5-engine:${junit5Version}")
 
 				if (junit5.runJunit4) {
-					project.dependencies.add("testRuntime", "org.junit.prototype:junit4-engine:${junit5Version}")
+					project.dependencies.add("testRuntime", "org.junit:junit4-engine:${junit5Version}")
 				}
 			}
 
-			def reportsDir = new File("build/test-results")
-			def testReport = new File(reportsDir, "junit5-report.txt")
+			def testReport = junit5.reportFile ?: project.file("build/test-results/junit5-report.txt")
 
 			project.task('junit5Test', group: 'verification', type: org.gradle.api.tasks.JavaExec) { task ->
 
@@ -52,7 +51,7 @@ class JUnit5Plugin implements Plugin<Project> {
 
 				doLast {
 
-					reportsDir.mkdirs()
+					testReport.parentFile.mkdirs()
 					testReport.withPrintWriter { writer ->
 						writer.println "JUnit 5 tests run at " + new Date().toString()
 					}
@@ -63,14 +62,13 @@ class JUnit5Plugin implements Plugin<Project> {
 	}
 
 	private void defineTaskDependencies(project, task, junit5) {
-		def check = project.tasks.getByName('check')
 		def test = project.tasks.getByName('test')
 		def testClasses = project.tasks.getByName('testClasses')
 
 		task.dependsOn testClasses
-		check.dependsOn task
+		test.dependsOn task
 		if (junit5.runJunit4) {
-			check.dependsOn.remove(test)
+			test.enabled = false
 		}
 	}
 
@@ -94,10 +92,12 @@ class JUnit5Plugin implements Plugin<Project> {
 		}
 
 		def classpathRoots = project.sourceSets.test.runtimeClasspath.files
-		def rootDirs = classpathRoots.findAll { it.isDirectory() && it.exists() }
-		rootDirs.each { File root -> args.add(root.getAbsolutePath()) }
+
+		def rootDirs = classpathRoots.findAll { it.isDirectory() }
+		rootDirs.each { File root ->
+			args.add(root.getAbsolutePath())
+		}
 
 		return args
 	}
 }
-

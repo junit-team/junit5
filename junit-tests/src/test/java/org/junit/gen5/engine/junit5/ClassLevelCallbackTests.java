@@ -12,8 +12,7 @@ package org.junit.gen5.engine.junit5;
 
 import static java.util.Arrays.asList;
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.TestPlanSpecification.build;
-import static org.junit.gen5.engine.TestPlanSpecification.forClass;
+import static org.junit.gen5.engine.TestPlanSpecification.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,6 @@ import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TrackingEngineExecutionListener;
 
 /**
  * Integration tests that verify support of {@link BeforeAll}, {@link AfterAll},
@@ -42,10 +40,10 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTests {
 	public void beforeAllAndAfterAllCallbacks() {
 		TestPlanSpecification spec = build(forClass(InstancePerMethodTestCase.class));
 
-		TrackingEngineExecutionListener listener = executeTests(spec, 2);
+		executeTests(spec);
 
-		assertEquals(1, listener.testStartedCount.get(), "# tests started");
-		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(1, tracker.testSucceededCount.get(), "# tests succeeded");
 
 		// @formatter:off
 		assertEquals(asList(

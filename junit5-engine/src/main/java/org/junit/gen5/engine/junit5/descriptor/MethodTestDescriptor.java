@@ -23,6 +23,7 @@ import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.Leaf;
 import org.junit.gen5.engine.TestDescriptor;
@@ -49,11 +50,8 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	MethodTestDescriptor(String uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId);
 
-		Preconditions.notNull(testClass, "Class must not be null");
-		Preconditions.notNull(testMethod, "Method must not be null");
-
-		this.testClass = testClass;
-		this.testMethod = testMethod;
+		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
+		this.testMethod = Preconditions.notNull(testMethod, "Method must not be null");
 		this.displayName = determineDisplayName(testMethod, testMethod.getName());
 
 		setSource(new JavaSource(testMethod));
@@ -64,6 +62,20 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		Set<TestTag> methodTags = getTags(getTestMethod());
 		getParent().ifPresent(parentDescriptor -> methodTags.addAll(parentDescriptor.getTags()));
 		return methodTags;
+	}
+
+	@Override
+	public String getName() {
+		// Intentionally get the class name via getTestClass() instead of
+		// testMethod.getDeclaringClass() in order to ensure that inherited
+		// test methods in different test subclasses get different names
+		// via this method (e.g., for reporting purposes). The caller is,
+		// however, still able to determine the declaring class via
+		// reflection is necessary.
+
+		// TODO Consider extracting JUnit 5's "method representation" into a common utility.
+		return String.format("%s#%s(%s)", getTestClass().getName(), testMethod.getName(),
+			StringUtils.nullSafeToString(testMethod.getParameterTypes()));
 	}
 
 	@Override

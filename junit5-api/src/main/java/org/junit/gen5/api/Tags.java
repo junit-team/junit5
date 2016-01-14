@@ -25,7 +25,6 @@ import java.lang.annotation.Target;
  *
  * @since 5.0
  * @see Tag
- * @see TestName
  * @see java.lang.annotation.Repeatable
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })

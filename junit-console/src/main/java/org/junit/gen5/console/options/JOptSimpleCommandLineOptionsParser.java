@@ -17,6 +17,8 @@ import joptsimple.BuiltinHelpFormatter;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
+import org.junit.gen5.commons.JUnitException;
+
 public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsParser {
 
 	@Override
@@ -35,7 +37,7 @@ public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsPar
 			optionParser.printHelpOn(writer);
 		}
 		catch (IOException e) {
-			throw new RuntimeException("Error printing help", e);
+			throw new JUnitException("Error printing help", e);
 		}
 	}
 

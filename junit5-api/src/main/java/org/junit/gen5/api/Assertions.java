@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
+import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.StringUtils;
 import org.opentest4j.AssertionFailedError;
 import org.opentest4j.MultipleFailuresError;
@@ -171,11 +172,11 @@ public final class Assertions {
 		}
 	}
 
-	public static void assertAll(Executable... asserts) {
+	public static void assertAll(Executable... asserts) throws MultipleFailuresError {
 		assertAll(null, asserts);
 	}
 
-	public static void assertAll(String heading, Executable... asserts) {
+	public static void assertAll(String heading, Executable... asserts) throws MultipleFailuresError {
 		MultipleFailuresError multipleFailuresError = new MultipleFailuresError(heading);
 		for (Executable executable : asserts) {
 			try {
@@ -184,11 +185,8 @@ public final class Assertions {
 			catch (AssertionError assertionError) {
 				multipleFailuresError.addFailure(assertionError);
 			}
-			catch (Error | RuntimeException ex) {
-				throw ex;
-			}
-			catch (Throwable throwable) {
-				throw new RuntimeException(throwable);
+			catch (Throwable t) {
+				throw ExceptionUtils.throwAsUncheckedException(t);
 			}
 		}
 		if (multipleFailuresError.hasFailures()) {
@@ -211,7 +209,7 @@ public final class Assertions {
 			}
 			else {
 				String message = Assertions.format(expectedType.getName(), actualException.getClass().getName(),
-					"unexpected exception type thrown;");
+					"Unexpected exception type thrown");
 				throw new AssertionFailedError(message, actualException);
 			}
 		}

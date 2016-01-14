@@ -120,4 +120,41 @@ public interface EngineExecutionListener {
 	 */
 	void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult);
 
+	/**
+	 * Combine several {@code listeners} into a single one so that each one is receiving all events.
+	 *
+	 * @param listeners the individual listeners to combine
+	 * @return the combined listener
+	 */
+	static EngineExecutionListener combine(EngineExecutionListener... listeners) {
+		return new EngineExecutionListener() {
+
+			@Override
+			public void reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry) {
+				Arrays.stream(listeners).forEach(listener -> listener.reportingEntryPublished(testDescriptor, entry));
+			}
+
+			@Override
+			public void dynamicTestRegistered(TestDescriptor testDescriptor) {
+				Arrays.stream(listeners).forEach(listener -> listener.dynamicTestRegistered(testDescriptor));
+			}
+
+			@Override
+			public void executionSkipped(TestDescriptor testDescriptor, String reason) {
+				Arrays.stream(listeners).forEach(listener -> listener.executionSkipped(testDescriptor, reason));
+			}
+
+			@Override
+			public void executionStarted(TestDescriptor testDescriptor) {
+				Arrays.stream(listeners).forEach(listener -> listener.executionStarted(testDescriptor));
+			}
+
+			@Override
+			public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
+				Arrays.stream(listeners).forEach(
+					listener -> listener.executionFinished(testDescriptor, testExecutionResult));
+
+			}
+		};
+	}
 }

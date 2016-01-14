@@ -28,4 +28,4 @@ gradle publishGhPages
 This task requires setting the Gradle property `githubToken`, e.g. in `~/.gradle/gradle.properties`, to a GitHub [personal access token](https://github.com/settings/tokens) that includes the `public_repo` scope.
 
 When successful the uploaded files are available at:
-<http://junit-team.github.io/junit-lambda/>
+<http://junit-team.github.io/junit5/>

@@ -1,19 +1,35 @@
 # Contributing
 
-## Project License:  Eclipse Public License v1.0
+## JUnit Contributor License Agreement
+
+**Project License:**  [Eclipse Public License v1.0](LICENSE.md)
 
 - You will only Submit Contributions where You have authored 100% of the content.
 - You will only Submit Contributions to which You have the necessary rights. This means that if You are employed You have received the necessary permissions from Your employer to make the Contributions.
 - Whatever content You Contribute will be provided under the Project License(s).
 
+## Pull Requests
 
+Please add the following lines to your pull request description:
+
+```markdown
 ---
+
+I hereby agree to the terms of the JUnit Contributor License Agreement.
+```
 
 ## Coding Conventions
 
 ### Formatting
 
-Code formatting is enforced using the [Spotless](https://github.com/diffplug/spotless) Gradle plugin. You can use `gradle spotlessApply` to format new code and add missing license headers to source files. Formatter settings for Eclipse are available [in the repository](src/eclipse/junit-lambda-eclipse-formatter-settings.xml). For IntelliJ IDEA there's a [plugin](https://plugins.jetbrains.com/plugin/6546) you can use.
+Code formatting is enforced using the [Spotless](https://github.com/diffplug/spotless) Gradle plugin. You can use `gradle spotlessApply` to format new code and add missing license headers to source files. Formatter settings for Eclipse are available [in the repository](src/eclipse/junit-eclipse-formatter-settings.xml). For IntelliJ IDEA there's a [plugin](https://plugins.jetbrains.com/plugin/6546) you can use.
+
+### Javadoc
+
+- Prefer putting `<p>` on same line as text with preceding blank line.
+- Blank line before at-clauses/tags.
+- Prefer to use `{@code foo}` over `<code>foo</code>` (better escaping).
+- Use `@since 5.0` instead of `@since 5.0.0`.
 
 ### Tests
 
@@ -31,3 +47,14 @@ Code formatting is enforced using the [Spotless](https://github.com/diffplug/spo
 #### Mocking
 
 - Use either Mockito or hand-written test doubles.
+
+### Logging
+
+- Use sparingly
+- Do not log in utility classes (junit-commons)
+- Levels
+  - `SEVERE` (Log4J: `ERROR`): extra information (in addition to an Exception) about errors that will halt execution
+  - `WARNING` (Log4J: `WARN`): potential usage errors that should not halt execution
+  - `INFO`: stuff the users might want to know but not by default (Example: `ServiceLoaderTestEngineRegistry` logs IDs of discovered engines)
+  - `FINE` (Log4J: `DEBUG`)
+  - `FINER` (Log4J: `TRACE`)

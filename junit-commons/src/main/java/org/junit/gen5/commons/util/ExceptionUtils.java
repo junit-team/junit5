@@ -13,6 +13,12 @@ package org.junit.gen5.commons.util;
 /**
  * Collection of utilities for working with exceptions.
  *
+ * <h3>DISCLAIMER</h3>
+ *
+ * <p>These utilities are intended solely for usage within the JUnit framework
+ * itself. <strong>Any usage by external parties is not supported.</strong>
+ * Use at your own risk!
+ *
  * @since 5.0
  */
 public final class ExceptionUtils {
@@ -22,20 +28,27 @@ public final class ExceptionUtils {
 	}
 
 	/**
-	 * Throw the supplied {@link Throwable}, <em>masked</em> as a
-	 * {@link RuntimeException}.
+	 * Throw the supplied {@link Throwable}, <em>masked</em> as an
+	 * unchecked exception.
 	 *
 	 * <p>The supplied {@code Throwable} will not be wrapped. Rather, it
-	 * will be thrown as-is using a hack based on generics and type erasure
-	 * that tricks the Java compiler into believing that the thrown exception
-	 * is an unchecked exception.
+	 * will be thrown <em>as is</em> using an exploit of the Java language
+	 * that relies on a combination of generics and type erasure to trick
+	 * the Java compiler into believing that the thrown exception is an
+	 * unchecked exception even if it is a checked exception.
 	 *
-	 * @param t the Throwable to throw as a {@code RuntimeException}
+	 * <h3>Warning</h3>
+	 *
+	 * <p>This method should be used sparingly.
+	 *
+	 * @param t the {@code Throwable} to throw as an unchecked exception;
+	 * never {@code null}
 	 * @return this method always throws an exception and therefore never
 	 * returns anything; the return type is merely present to allow this
 	 * method to be supplied as the operand in a {@code throw} statement
 	 */
-	public static RuntimeException throwAsRuntimeException(Throwable t) {
+	public static RuntimeException throwAsUncheckedException(Throwable t) {
+		Preconditions.notNull(t, "Throwable must not be null");
 		ExceptionUtils.<RuntimeException> throwAs(t);
 
 		// Appeasing the compiler: the following line will never be executed.

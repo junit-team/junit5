@@ -22,9 +22,9 @@ import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
-import org.junit.gen5.engine.junit5.testers.IsNestedTestClass;
-import org.junit.gen5.engine.junit5.testers.IsTestClassWithTests;
-import org.junit.gen5.engine.junit5.testers.IsTestMethod;
+import org.junit.gen5.engine.junit5.discovery.IsNestedTestClass;
+import org.junit.gen5.engine.junit5.discovery.IsScannableTestClass;
+import org.junit.gen5.engine.junit5.discovery.IsTestMethod;
 
 /**
  * @since 5.0
@@ -35,7 +35,7 @@ public class SpecificationResolver {
 
 	private final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
 	private final IsTestMethod isTestMethod = new IsTestMethod();
-	private final IsTestClassWithTests isTestClassWithTests = new IsTestClassWithTests();
+	private final IsScannableTestClass isScannableTestClass = new IsScannableTestClass();
 
 	public SpecificationResolver(JUnit5EngineDescriptor engineDescriptor) {
 		this.engineDescriptor = engineDescriptor;
@@ -61,12 +61,12 @@ public class SpecificationResolver {
 
 			@Override
 			public void visitPackage(String packageName) {
-				findAllClassesInPackage(packageName, isTestClassWithTests).stream().forEach(this::visitClass);
+				findAllClassesInPackage(packageName, isScannableTestClass).stream().forEach(this::visitClass);
 			}
 
 			@Override
 			public void visitAllTests(File rootDirectory) {
-				ReflectionUtils.findAllClassesInClasspathRoot(rootDirectory, isTestClassWithTests).stream().forEach(
+				ReflectionUtils.findAllClassesInClasspathRoot(rootDirectory, isScannableTestClass).stream().forEach(
 					this::visitClass);
 			}
 		});

@@ -10,18 +10,19 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.Name;
+import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.TestName;
+import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.MethodParameterResolver;
-import org.junit.gen5.engine.TrackingEngineExecutionListener;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotationParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomType;
@@ -37,47 +38,46 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsForMethodInjectionCases() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(MethodInjectionTestCase.class, 9);
+		executeTestsForClass(MethodInjectionTestCase.class);
 
-		assertEquals(8, listener.testStartedCount.get(), "# tests started");
-		assertEquals(7, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
-		assertEquals(1, listener.testFailedCount.get(), "# tests failed");
+		assertEquals(8, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(7, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
+		assertEquals(1, tracker.testFailedCount.get(), "# tests failed");
 	}
 
 	@Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterEachMethods() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class, 2);
+		executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class);
 
-		assertEquals(1, listener.testStartedCount.get(), "# tests started");
-		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
-		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
+		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(1, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
+		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
 	}
 
 	@Test
 	public void executeTestsForMethodInjectionInBeforeAndAfterAllMethods() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(BeforeAndAfterAllMethodInjectionTestCase.class,
-			2);
+		executeTestsForClass(BeforeAndAfterAllMethodInjectionTestCase.class);
 
-		assertEquals(1, listener.testStartedCount.get(), "# tests started");
-		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
-		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
+		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(1, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
+		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
 	}
 
 	@Test
 	public void executeTestsForMethodWithExtendWithAnnotation() {
-		TrackingEngineExecutionListener listener = executeTestsForClass(ExtendWithOnMethodTestCase.class, 2);
+		executeTestsForClass(ExtendWithOnMethodTestCase.class);
 
-		assertEquals(1, listener.testStartedCount.get(), "# tests started");
-		assertEquals(1, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, listener.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
-		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
+		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(1, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(0, tracker.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
+		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
 	}
 
 	// -------------------------------------------------------------------
@@ -86,14 +86,18 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 	private static class MethodInjectionTestCase {
 
 		@Test
-		void parameterInjectionOfStandardTestName(@TestName String name) {
-			assertEquals("parameterInjectionOfStandardTestName", name);
+		void parameterInjectionOfStandardTestName(TestInfo testInfo) {
+			assertTrue(
+				testInfo.getName().endsWith("parameterInjectionOfStandardTestName(org.junit.gen5.api.TestInfo)"));
+			assertEquals("parameterInjectionOfStandardTestName", testInfo.getDisplayName());
 		}
 
 		@Test
-		@Name("myName")
-		void parameterInjectionOfUserProvidedTestName(@TestName String name) {
-			assertEquals("myName", name);
+		@DisplayName("myName")
+		void parameterInjectionOfUserProvidedTestName(TestInfo testInfo) {
+			assertTrue(
+				testInfo.getName().endsWith("parameterInjectionOfUserProvidedTestName(org.junit.gen5.api.TestInfo)"));
+			assertEquals("myName", testInfo.getDisplayName());
 		}
 
 		@Test
@@ -133,27 +137,27 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 	private static class BeforeAndAfterMethodInjectionTestCase {
 
 		@BeforeEach
-		void before(@TestName String name) {
-			assertEquals("custom name", name);
+		void before(TestInfo testInfo) {
+			assertEquals("custom name", testInfo.getDisplayName());
 		}
 
 		@Test
-		@Name("custom name")
+		@DisplayName("custom name")
 		void customNamedTest() {
 		}
 
 		@AfterEach
-		void after(@TestName String name) {
-			assertEquals("custom name", name);
+		void after(TestInfo testInfo) {
+			assertEquals("custom name", testInfo.getDisplayName());
 		}
 	}
 
-	@Name("custom class name")
+	@DisplayName("custom class name")
 	private static class BeforeAndAfterAllMethodInjectionTestCase {
 
 		@BeforeAll
-		static void beforeAll(@TestName String name) {
-			assertEquals("custom class name", name);
+		static void beforeAll(TestInfo testInfo) {
+			assertEquals("custom class name", testInfo.getDisplayName());
 		}
 
 		@Test
@@ -161,8 +165,8 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 		}
 
 		@AfterAll
-		static void afterAll(@TestName String name) {
-			assertEquals("custom class name", name);
+		static void afterAll(TestInfo testInfo) {
+			assertEquals("custom class name", testInfo.getDisplayName());
 		}
 	}
 

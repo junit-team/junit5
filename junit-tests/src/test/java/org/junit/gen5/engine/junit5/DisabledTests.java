@@ -30,7 +30,6 @@ import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TrackingEngineExecutionListener;
 
 /**
  * Integration tests that verify support for {@link Disabled @Disabled} and
@@ -57,22 +56,22 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void executeTestsWithDisabledTestClass() {
 		TestPlanSpecification spec = build(forClass(DisabledTestClassTestCase.class));
-		TrackingEngineExecutionListener listener = executeTests(spec, 2);
+		executeTests(spec);
 
-		assertEquals(1, listener.containerSkippedCount.get(), "# container skipped");
-		assertEquals(0, listener.testStartedCount.get(), "# tests started");
+		assertEquals(1, tracker.containerSkippedCount.get(), "# container skipped");
+		assertEquals(0, tracker.testStartedCount.get(), "# tests started");
 	}
 
 	@Test
 	public void executeTestsWithDisabledTestMethods() {
 		TestPlanSpecification spec = build(forClass(DisabledTestMethodsTestCase.class));
-		TrackingEngineExecutionListener listener = executeTests(spec, 6);
+		executeTests(spec);
 
-		assertEquals(2, listener.testStartedCount.get(), "# tests started");
-		assertEquals(2, listener.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(3, listener.testSkippedCount.get(), "# tests skipped");
-		assertEquals(0, listener.testAbortedCount.get(), "# tests aborted");
-		assertEquals(0, listener.testFailedCount.get(), "# tests failed");
+		assertEquals(2, tracker.testStartedCount.get(), "# tests started");
+		assertEquals(2, tracker.testSucceededCount.get(), "# tests succeeded");
+		assertEquals(3, tracker.testSkippedCount.get(), "# tests skipped");
+		assertEquals(0, tracker.testAbortedCount.get(), "# tests aborted");
+		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
 	}
 
 	// -------------------------------------------------------------------

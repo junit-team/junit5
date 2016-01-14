@@ -49,8 +49,8 @@ import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.
- *
- * <p>The pattern of the {@link #getUniqueId unique ID} takes the form of
+ * <p>
+ * The pattern of the {@link #getUniqueId unique ID} takes the form of
  * <code>{parent unique id}:{fully qualified class name}</code>.
  *
  * @since 5.0
@@ -64,9 +64,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	ClassTestDescriptor(String uniqueId, Class<?> testClass) {
 		super(uniqueId);
 
-		Preconditions.notNull(testClass, "Class must not be null");
-
-		this.testClass = testClass;
+		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
 		this.displayName = determineDisplayName(testClass, testClass.getName());
 
 		setSource(new JavaSource(testClass));
@@ -74,6 +72,11 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 	public final Class<?> getTestClass() {
 		return this.testClass;
+	}
+
+	@Override
+	public final String getName() {
+		return getTestClass().getName();
 	}
 
 	@Override
@@ -210,7 +213,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			.peek(method -> methodValidator.accept(extensionType, method))
 			.forEach(method ->
 				extensionRegistry.registerExtension(extensionPointSynthesizer.apply(extensionRegistry, method),
-					ExtensionPoint.Position.DEFAULT, method.getName()));
+					ExtensionPoint.Position.DEFAULT, method));
 		// @formatter:on
 	}
 

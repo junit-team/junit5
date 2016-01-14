@@ -1,0 +1,128 @@
+[[extension-model]]
+== Extension Model
+
+
+=== Overview
+
+In contrast to the competing `Runner`, `@Rule`, and `@ClassRule` extension points in
+JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
+`TestExtension` API. Note, however, that `TestExtension` itself is just a marker
+interface.
+
+=== Registering Extensions
+
+Developers can register one or more extensions by annotating a test class or test method
+with `@ExtendWith(...)`, supplying class references for the extensions to register. For
+example, to register a custom `MockitoExtension`, you would annotate your test class as
+follows.
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+@ExtendWith(MockitoExtension.class)
+class MockTests {
+	// ...
+}
+----
+
+Multiple extensions can be registered together like this:
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+@ExtendWith({ FooExtension.class, BarExtension.class })
+class MyTestsV1 {
+	// ...
+}
+----
+
+As an alternative, multiple extensions can be registered separately like this:
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+@ExtendWith(FooExtension.class)
+@ExtendWith(BarExtension.class)
+class MyTestsV2 {
+	// ...
+}
+----
+
+The execution of tests in both `MyTestsV1` and `MyTestsV2` will be extended by the
+`FooExtension` and `BarExtension`, in exactly that order.
+
+Registered extensions are inherited within test class hierarchies.
+
+
+=== Conditional Test Execution
+
+`{ContainerExecutionCondition}` and `{TestExecutionCondition}` define the `TestExtension`
+APIs for programmatic, _conditional test execution_.
+
+A `ContainerExecutionCondition` is _evaluated_ to determine if all tests in a given
+container (e.g., a test class) should be executed based on the supplied
+`ContainerExtensionContext`. Similarly, a `TestExecutionCondition` is _evaluated_ to
+determine if a given test method should be executed based on the supplied
+`TestExtensionContext`.
+
+See the source code of `{DisabledCondition}` and `{Disabled}` for concrete examples.
+
+
+=== Test Instance Post-processing
+
+`{InstancePostProcessor}` defines the API for `TestExtensions` that wish to _post
+process_ test instances.
+
+Common use cases include injecting dependencies into the test instance, invoking custom
+initialization methods on the test instance, etc.
+
+For concrete examples, consult the source code for the `{MockitoExtension}` and the
+`{SpringExtension}`.
+
+=== Parameter Resolution
+
+`{MethodParameterResolver}` is a `TestExtension` strategy for dynamically resolving
+method parameters at runtime.
+
+If a `@Test`, `@BeforeEach`, `@AfterEach` , `@BeforeAll` or `@AfterAll` method accepts a
+parameter, the parameter must be _resolved_ at runtime by a `MethodParameterResolver`. A
+`MethodParameterResolver` can either be built-in (see `{TestNameParameterResolver}`) or
+registered by the user via `@ExtendWith`. Generally speaking, parameters may be resolved
+by _type_ or by _annotation_. For concrete examples, consult the source code for
+`{CustomTypeParameterResolver}` and `{CustomAnnotationParameterResolver}`, respectively.
+
+=== Test Lifecycle Callbacks
+
+The following interfaces define the APIs for extending tests at various points in the
+test execution lifecycle. Consult the Javadoc for each of these in the
+`{extension-api-package}` package.
+
+* `BeforeEachExtensionPoint`
+* `AfterEachExtensionPoint`
+* `BeforeAllExtensionPoint`
+* `AfterAllExtensionPoint`
+
+Note that extension developers may choose to implement any number of these interfaces
+within a single extension. Consult the source code of the `{SpringExtension}` for a
+concrete example.
+
+
+=== Extension Point Application Order
+
+Sometimes you want to influence the order in which several extensions of the same type are applied.
+This goal can be achieved by implementing the `{ExtensionRegistrar}` interface...
+
+
+=== Keeping State in Extensions
+
+Usually, an extension is instantiated only once. So the question becomes relevant: How do you keep the state
+from one invocation of an extension point to the next? ...
+
+
+
+=== Additional Planned Extension Points
+
+Several additional extension points are planned, including but not
+limited to the following.
+
+* Dynamic test registration – for example, for computing parameterized tests at runtime

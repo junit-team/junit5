@@ -23,7 +23,7 @@ class CollectionUtilsTests {
 
 	@Test
 	void getOnlyElementWithNullCollection() {
-		IllegalArgumentException exception = expectThrows(IllegalArgumentException.class, () -> {
+		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class, () -> {
 			CollectionUtils.getOnlyElement(null);
 		});
 		assertEquals("collection must not be null", exception.getMessage());
@@ -31,7 +31,7 @@ class CollectionUtilsTests {
 
 	@Test
 	void getOnlyElementWithEmptyCollection() {
-		IllegalArgumentException exception = expectThrows(IllegalArgumentException.class, () -> {
+		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class, () -> {
 			CollectionUtils.getOnlyElement(emptySet());
 		});
 		assertEquals("collection must contain exactly one element: []", exception.getMessage());
@@ -46,7 +46,7 @@ class CollectionUtilsTests {
 
 	@Test
 	void getOnlyElementWithMultiElementCollection() {
-		IllegalArgumentException exception = expectThrows(IllegalArgumentException.class, () -> {
+		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class, () -> {
 			CollectionUtils.getOnlyElement(asList("foo", "bar"));
 		});
 		assertEquals("collection must contain exactly one element: [foo, bar]", exception.getMessage());

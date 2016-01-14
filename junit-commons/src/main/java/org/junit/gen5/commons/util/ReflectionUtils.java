@@ -23,13 +23,22 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import org.junit.gen5.commons.JUnitException;
+
 /**
  * Collection of utilities for working with the Java reflection APIs.
+ *
+ * <h3>DISCLAIMER</h3>
+ *
+ * <p>These utilities are intended solely for usage within the JUnit framework
+ * itself. <strong>Any usage by external parties is not supported.</strong>
+ * Use at your own risk!
  *
  * @since 5.0
  */
@@ -91,16 +100,17 @@ public final class ReflectionUtils {
 	 * arguments.
 	 *
 	 * <p>The constructor will be made accessible if necessary, and any checked
-	 * exception will be {@linkplain ExceptionUtils#throwAsRuntimeException masked}
-	 * as a {@code RuntimeException}.
+	 * exception will be {@linkplain ExceptionUtils#throwAsUncheckedException masked}
+	 * as an unchecked exception.
 	 *
 	 * @param clazz the class to instantiate; never {@code null}
-	 * @param args the arguments to pass to the constructor
+	 * @param args the arguments to pass to the constructor none of which may be {@code null}
 	 * @return the new instance
-	 * @see ExceptionUtils#throwAsRuntimeException(Throwable)
+	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
 	public static <T> T newInstance(Class<T> clazz, Object... args) {
 		Preconditions.notNull(clazz, "class must not be null");
+		Preconditions.notNull(args, "none of the arguments may be null");
 
 		try {
 			Class<?>[] parameterTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
@@ -109,14 +119,14 @@ public final class ReflectionUtils {
 			return constructor.newInstance(args);
 		}
 		catch (Throwable t) {
-			throw ExceptionUtils.throwAsRuntimeException(getUnderlyingCause(t));
+			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
 		}
 	}
 
 	/**
 	 * Invoke the supplied method, making it accessible if necessary and
-	 * {@linkplain ExceptionUtils#throwAsRuntimeException masking} any
-	 * checked exception as a {@code RuntimeException}.
+	 * {@linkplain ExceptionUtils#throwAsUncheckedException masking} any
+	 * checked exception as an unchecked exception.
 	 *
 	 * @param method the method to invoke; never {@code null}
 	 * @param target the object on which to invoke the method; may be
@@ -124,7 +134,7 @@ public final class ReflectionUtils {
 	 * @param args the arguments to pass to the method
 	 * @return the value returned by the method invocation or {@code null}
 	 * if the return type is {@code void}
-	 * @see ExceptionUtils#throwAsRuntimeException(Throwable)
+	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
 	public static Object invokeMethod(Method method, Object target, Object... args) {
 		Preconditions.notNull(method, "method must not be null");
@@ -136,7 +146,7 @@ public final class ReflectionUtils {
 			return method.invoke(target, args);
 		}
 		catch (Throwable t) {
-			throw ExceptionUtils.throwAsRuntimeException(getUnderlyingCause(t));
+			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
 		}
 	}
 
@@ -173,7 +183,7 @@ public final class ReflectionUtils {
 				return Optional.of((Class<T>) clazz);
 			}
 			else {
-				throw new IllegalStateException(
+				throw new JUnitException(
 					String.format("Class [%s] is not of required type [%s]", name, requiredType.getName()));
 			}
 		}
@@ -247,6 +257,7 @@ public final class ReflectionUtils {
 		return Arrays.stream(fullClassPath.split(separator))
 				.filter(part -> !part.endsWith(".jar"))
 				.map(File::new)
+				.filter(File::isDirectory)
 				.collect(toSet());
 		// @formatter:on
 	}
@@ -408,6 +419,30 @@ public final class ReflectionUtils {
 			return getUnderlyingCause(((InvocationTargetException) t).getTargetException());
 		}
 		return t;
+	}
+
+	/**
+	 * Return all classes and interfaces that can be used as assignment types
+	 * for instances of the specified {@link Class}, including itself.
+	 *
+	 * @param clazz the {@code Class} to lookup
+	 * @see Class#isAssignableFrom
+	 */
+	public static Set<Class<?>> getAllAssignmentCompatibleClasses(Class<?> clazz) {
+		Set<Class<?>> result = new LinkedHashSet<>();
+		getAllAssignmentCompatibleClasses(clazz, result);
+		return result;
+	}
+
+	private static void getAllAssignmentCompatibleClasses(Class<?> clazz, Set<Class<?>> result) {
+		for (Class<?> current = clazz; current != null; current = current.getSuperclass()) {
+			result.add(current);
+			for (Class<?> interfaceClass : current.getInterfaces()) {
+				if (!result.contains(interfaceClass)) {
+					getAllAssignmentCompatibleClasses(interfaceClass, result);
+				}
+			}
+		}
 	}
 
 }

@@ -10,13 +10,20 @@
 
 package org.junit.gen5.api.extension;
 
+import org.junit.gen5.commons.JUnitException;
+
 /**
+ * Thrown if an error is encountered regarding the configuration of an
+ * extension.
+ *
  * @since 5.0
  */
-@SuppressWarnings("serial")
-public class ExtensionConfigurationException extends RuntimeException {
+public class ExtensionConfigurationException extends JUnitException {
+
+	private static final long serialVersionUID = -2902318452924798975L;
 
 	public ExtensionConfigurationException(String message) {
 		super(message);
 	}
+
 }

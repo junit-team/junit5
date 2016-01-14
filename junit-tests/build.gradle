@@ -5,30 +5,11 @@ uploadArchives.enabled = false
 
 junit5 {
 	// version '5.0.0-SNAPSHOT' // not needed since all dependencies are declared explicitly
-	runJunit4 false // Does not work yet in master
+	runJunit4 true
 	matchClassName '.*Test[s]'
+	reportFile file('build/test-results/JUNIT5-Tests.xml')
 	// includeTag 'fast'
 	// excludeTag 'slow'
-}
-
-test {
-	description = 'Runs JUnit tests.'
-	scanForTestClasses = false
-	// Tests are solely executed by the junit5Test task, not the standard test task.
-	exclude(['**/*.class'])
-}
-
-// The JUnit5Plugin registers the junit5Test task *after* the project has
-// been evaluated. We can therefore only configure the junit5Test task
-// once it actually exists.
-project.afterEvaluate {
-
-	// Ensure that 'gradle test' executes the junit5Test task as well.
-	// Please remove the next line if 'junit5.runJunit4' is set to 'true'
-	test.dependsOn(junit5Test)
-
-	// Ensure that log4j2 is properly configured.
-	junit5Test.systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
 }
 
 def testedProjects = [
@@ -36,8 +17,8 @@ def testedProjects = [
 	project(':junit-console'),
 	project(':junit-engine-api'),
 	project(':junit-launcher'),
-	project(':junit4-launcher-runner'),
 	project(':junit4-engine'),
+	project(':junit4-runner'),
 	project(':junit5-api'),
 	project(':junit5-engine')
 ]
@@ -48,7 +29,6 @@ dependencies {
 	}
 
 	testCompile("org.assertj:assertj-core:${assertJVersion}")
-	testCompile("junit:junit:${junit4Version}")
 	testCompile("org.mockito:mockito-core:${mockitoVersion}")
 	testCompile("de.schauderhaft.degraph:degraph-check:${degraphVersion}")
 
@@ -56,7 +36,13 @@ dependencies {
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 }
 
+// The JUnit5Plugin registers the junit5Test task *after* the project has
+// been evaluated. We can therefore only configure the junit5Test task
+// once it actually exists.
 afterEvaluate {
+
+	// Ensure that log4j2 is properly configured.
+	junit5Test.systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
 
 	jacoco {
 		toolVersion = '0.7.4.201502262128'

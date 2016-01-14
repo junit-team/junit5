@@ -10,28 +10,36 @@
 
 package org.junit.gen5.engine;
 
-import static org.junit.gen5.engine.TestExecutionResult.*;
+import static org.junit.gen5.engine.BlacklistedExceptions.rethrowIfBlacklisted;
+import static org.junit.gen5.engine.TestExecutionResult.aborted;
+import static org.junit.gen5.engine.TestExecutionResult.failed;
+import static org.junit.gen5.engine.TestExecutionResult.successful;
 
 import org.opentest4j.TestAbortedException;
 
+/**
+ * @since 5.0
+ */
 class SingleTestExecutor {
 
-	interface TestExecutable {
+	interface Executable {
 
 		void execute() throws Throwable;
 
 	}
 
-	TestExecutionResult executeSafely(TestExecutable test) {
+	TestExecutionResult executeSafely(Executable executable) {
 		try {
-			test.execute();
+			executable.execute();
 			return successful();
 		}
 		catch (TestAbortedException e) {
 			return aborted(e);
 		}
 		catch (Throwable t) {
+			rethrowIfBlacklisted(t);
 			return failed(t);
 		}
 	}
+
 }

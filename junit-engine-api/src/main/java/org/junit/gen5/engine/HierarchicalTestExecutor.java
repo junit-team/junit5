@@ -10,24 +10,34 @@
 
 package org.junit.gen5.engine;
 
+import static org.junit.gen5.engine.BlacklistedExceptions.rethrowIfBlacklisted;
+
 import org.junit.gen5.engine.Node.SkipResult;
 
 /**
- * Implementation core of all TestEngine implementors that are willing to use the {@linkplain Container} and {@linkplain Leaf}
- * nodes as main principle to organize test suites.
+ * Implementation core of all {@link TestEngine TestEngines} that wish to
+ * use the {@link Container} and {@link Leaf} abstractions as the driving
+ * principles for structuring and executing test suites.
  *
- * <p>This class is instantiated by concrete implementations of {@linkplain HierarchicalTestEngine} and takes care
- * of calling containers and leafs in appropriate order and call the necessary events on {@linkplain EngineExecutionListener}</p>
+ * <p>A {@code HierarchicalTestExecutor} is instantiated by concrete
+ * implementations of {@linkplain HierarchicalTestEngine} and takes care
+ * of calling containers and leaves in the appropriate order as well as
+ * calling the necessary events on an {@linkplain EngineExecutionListener}.
  *
- * @param <C> The concrete type of {@linkplain EngineExecutionContext} used by a concrete {@linkplain TestEngine}.
+ * @param <C> the concrete type of {@linkplain EngineExecutionContext} used
+ * by a concrete {@linkplain TestEngine}
+ * @since 5.0
  */
 class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
 	private final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
+
 	private final MixinAdapter<C> adapter = new MixinAdapter<>();
 
 	private final TestDescriptor rootTestDescriptor;
+
 	private final EngineExecutionListener listener;
+
 	private final C rootContext;
 
 	HierarchicalTestExecutor(ExecutionRequest request, C rootContext) {
@@ -52,7 +62,9 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 			}
 		}
 		catch (Throwable throwable) {
-			//TODO: Is this what we want?
+			rethrowIfBlacklisted(throwable);
+
+			// TODO Is this what we want?
 			listener.executionStarted(testDescriptor);
 			listener.executionFinished(testDescriptor, TestExecutionResult.failed(throwable));
 			return;

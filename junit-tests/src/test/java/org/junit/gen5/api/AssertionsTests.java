@@ -10,13 +10,19 @@
 
 package org.junit.gen5.api;
 
+import static org.junit.gen5.api.Assertions.assertAll;
 import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.api.Assertions.fail;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.function.Supplier;
 
 import org.opentest4j.AssertionFailedError;
+import org.opentest4j.MultipleFailuresError;
 
 /**
  * Unit tests for {@link Assertions}.
@@ -26,7 +32,7 @@ import org.opentest4j.AssertionFailedError;
 public class AssertionsTests {
 
 	@Test
-	public void failWithString() {
+	void failWithString() {
 		try {
 			fail("test");
 			expectAssertionFailedError();
@@ -37,7 +43,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	public void failWithMessageSupplier() {
+	void failWithMessageSupplier() {
 		try {
 			fail(() -> "test");
 			expectAssertionFailedError();
@@ -48,7 +54,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	public void failWithNullString() {
+	void failWithNullString() {
 		try {
 			fail((String) null);
 			expectAssertionFailedError();
@@ -59,7 +65,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	public void failWithNullMessageSupplier() {
+	void failWithNullMessageSupplier() {
 		try {
 			fail((Supplier<String>) null);
 			expectAssertionFailedError();
@@ -70,22 +76,22 @@ public class AssertionsTests {
 	}
 
 	@Test
-	public void assertTrueWithBooleanTrue() {
+	void assertTrueWithBooleanTrue() {
 		assertTrue(true);
 	}
 
 	@Test
-	public void assertTrueWithBooleanSupplierTrue() {
+	void assertTrueWithBooleanSupplierTrue() {
 		assertTrue(() -> true);
 	}
 
 	@Test
-	public void assertTrueWithBooleanTrueAndString() {
+	void assertTrueWithBooleanTrueAndString() {
 		assertTrue(true, "test");
 	}
 
 	@Test
-	public void assertTrueWithBooleanFalse() {
+	void assertTrueWithBooleanFalse() {
 		try {
 			assertTrue(false);
 			expectAssertionFailedError();
@@ -96,7 +102,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	public void assertTrueWithBooleanFalseAndString() {
+	void assertTrueWithBooleanFalseAndString() {
 		try {
 			assertTrue(false, "test");
 			expectAssertionFailedError();
@@ -107,7 +113,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	public void assertTrueWithBooleanSupplierFalseAndMessageSupplier() {
+	void assertTrueWithBooleanSupplierFalseAndMessageSupplier() {
 		try {
 			assertTrue(() -> false, () -> "test");
 			expectAssertionFailedError();
@@ -118,12 +124,12 @@ public class AssertionsTests {
 	}
 
 	@Test
-	public void assertFalseWithBooleanFalse() {
+	void assertFalseWithBooleanFalse() {
 		assertFalse(false);
 	}
 
 	@Test
-	public void assertFalseWithBooleanTrueAndString() {
+	void assertFalseWithBooleanTrueAndString() {
 		try {
 			assertFalse(true, "test");
 			expectAssertionFailedError();
@@ -131,6 +137,73 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "test");
 		}
+	}
+
+	@Test
+	void assertAllWithExecutableThatThrowsAssertionError() {
+		MultipleFailuresError multipleFailuresError = expectThrows(MultipleFailuresError.class,
+			() -> assertAll(() -> assertFalse(true)));
+		assertTrue(multipleFailuresError != null);
+		List<AssertionError> failures = multipleFailuresError.getFailures();
+		assertTrue(failures.size() == 1);
+		assertTrue(failures.get(0).getClass().equals(AssertionFailedError.class));
+	}
+
+	@Test
+	void assertAllWithExecutableThatThrowsThrowable() {
+		assertThrows(EnigmaThrowable.class, () -> assertAll(() -> {
+			throw new EnigmaThrowable();
+		}));
+	}
+
+	@Test
+	void assertAllWithExecutableThatThrowsCheckedException() {
+		assertThrows(IOException.class, () -> assertAll(() -> {
+			throw new IOException();
+		}));
+	}
+
+	@Test
+	void assertAllWithExecutableThatThrowsRuntimeException() {
+		assertThrows(IllegalStateException.class, () -> assertAll(() -> {
+			throw new IllegalStateException();
+		}));
+	}
+
+	@Test
+	void assertAllWithExecutableThatThrowsError() {
+		assertThrows(StackOverflowError.class, () -> assertAll(this::recurseIndefinitely));
+	}
+
+	@Test
+	void assertThrowsThrowable() {
+		assertThrows(EnigmaThrowable.class, () -> {
+			throw new EnigmaThrowable();
+		});
+	}
+
+	@Test
+	void assertThrowsCheckedException() {
+		assertThrows(IOException.class, () -> {
+			throw new IOException();
+		});
+	}
+
+	@Test
+	void assertThrowsRuntimeException() {
+		assertThrows(IllegalStateException.class, () -> {
+			throw new IllegalStateException();
+		});
+	}
+
+	@Test
+	void assertThrowsError() {
+		assertThrows(StackOverflowError.class, this::recurseIndefinitely);
+	}
+
+	private void recurseIndefinitely() {
+		// simulate infinite recursion
+		throw new StackOverflowError();
 	}
 
 	// -------------------------------------------------------------------
@@ -152,4 +225,7 @@ public class AssertionsTests {
 		}
 	}
 
+	@SuppressWarnings("serial")
+	private static class EnigmaThrowable extends Throwable {
+	}
 }

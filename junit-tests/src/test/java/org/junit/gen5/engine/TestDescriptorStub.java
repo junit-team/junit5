@@ -17,8 +17,13 @@ final class TestDescriptorStub extends AbstractTestDescriptor {
 	}
 
 	@Override
-	public String getDisplayName() {
+	public String getName() {
 		return "name";
+	}
+
+	@Override
+	public String getDisplayName() {
+		return "display name";
 	}
 
 	@Override

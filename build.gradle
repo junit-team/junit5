@@ -66,7 +66,7 @@ subprojects {
 		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = project.name
-		options.addStringOption('Xdoclint:none', '-quiet')
+		options.addStringOption('Xdoclint:html,syntax,reference', '-quiet')
 		exclude '**/com/example/**'
 	}
 
@@ -89,7 +89,9 @@ subprojects {
 		java {
 			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java')
 			importOrder(['java', 'javax', 'com', 'org'])
-			eclipseFormatFile rootProject.file('src/eclipse/junit-lambda-eclipse-formatter-settings.xml')
+
+			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
+
 			trimTrailingWhitespace()
 			// endWithNewline()
 
@@ -98,6 +100,9 @@ subprojects {
 
 		format 'groovy', {
 			target '**/*.groovy'
+			indentWithTabs()
+			trimTrailingWhitespace()
+			endWithNewline()
 			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java'), "package "
 		}
 	}
@@ -135,13 +140,13 @@ subprojects {
 				pom.project {
 					name "${project.group}:${project.name}"
 					packaging 'jar'
-					description "Module \"${project.name}\" of the prototype for the next generation of JUnit, codenamed \"JUnit Lambda\"."
+					description "Module \"${project.name}\" of JUnit 5."
 					url 'http://junit.org/junit-lambda.html'
 
 					scm {
-						connection 'scm:git:git://github.com/junit-team/junit-lambda.git'
-						developerConnection 'scm:git:git://github.com/junit-team/junit-lambda.git'
-						url 'https://github.com/junit-team/junit-lambda'
+						connection 'scm:git:git://github.com/junit-team/junit5.git'
+						developerConnection 'scm:git:git://github.com/junit-team/junit5.git'
+						url 'https://github.com/junit-team/junit5'
 					}
 
 					licenses {
@@ -186,14 +191,15 @@ subprojects {
 }
 
 configure(rootProject) {
-	description = 'JUnit Lambda'
+	description = 'JUnit 5'
 
 	apply plugin: 'com.diffplug.gradle.spotless'
+	apply plugin: 'base'
 
 	task aggregateJavadocs(type: Javadoc) {
 		group = "Documentation"
 		description = "Generates aggregated Javadocs"
-		title = "${rootProject.description} ${version} API"
+		title = "JUnit ${version} API"
 
 		dependsOn {
 			subprojects.collect {
@@ -222,8 +228,13 @@ configure(rootProject) {
 
 	spotless {
 		format 'misc', {
-			target '**/*.gradle', '**/*.md', '**/*.gitignore'
+			target '**/*.gradle', '**/*.gitignore'
 			indentWithTabs()
+			trimTrailingWhitespace()
+			endWithNewline()
+		}
+		format 'documentation', {
+			target '**/*.adoc', '**/*.md'
 			trimTrailingWhitespace()
 			endWithNewline()
 		}

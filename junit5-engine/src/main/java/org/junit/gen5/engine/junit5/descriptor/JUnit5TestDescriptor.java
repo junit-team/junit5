@@ -21,8 +21,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Executable;
-import org.junit.gen5.api.Name;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExtension;
@@ -53,8 +53,8 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 
 	protected String determineDisplayName(AnnotatedElement element, String defaultName) {
 		// @formatter:off
-		return findAnnotation(element, Name.class)
-				.map(Name::value)
+		return findAnnotation(element, DisplayName.class)
+				.map(DisplayName::value)
 				.filter(StringUtils::isNotBlank)
 				.orElse(defaultName);
 		// @formatter:on
@@ -72,19 +72,19 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 	}
 
 	/**
-	 * Execute the supplied {@link Executable} and <em>mask</em> any
-	 * exception thrown as a {@link RuntimeException}.
+	 * Execute the supplied {@link Executable} and
+	 * {@linkplain ExceptionUtils#throwAsUncheckedException mask} any
+	 * exception thrown as an unchecked exception.
 	 *
-	 * <p>Exceptions will not be wrapped. Rather, they will be thrown as-is
-	 * via a hack that tricks the Java compiler into believing that the
-	 * thrown exception is an unchecked exception.
+	 * @param executable the {@code Executable} to execute
+	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
 	protected void executeAndMaskThrowable(Executable executable) {
 		try {
 			executable.execute();
 		}
 		catch (Throwable throwable) {
-			ExceptionUtils.throwAsRuntimeException(throwable);
+			ExceptionUtils.throwAsUncheckedException(throwable);
 		}
 	}
 

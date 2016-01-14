@@ -33,6 +33,12 @@ import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 /**
  * Collection of utilities for working with {@linkplain Annotation annotations}.
  *
+ * <h3>DISCLAIMER</h3>
+ *
+ * <p>These utilities are intended solely for usage within the JUnit framework
+ * itself. <strong>Any usage by external parties is not supported.</strong>
+ * Use at your own risk!
+ *
  * @since 5.0
  * @see Annotation
  * @see AnnotatedElement
