@@ -5,18 +5,9 @@ apply plugin: 'org.junit.gen5.gradle'
 uploadArchives.enabled = false
 
 junit5 {
-	runJunit4 false
 	matchClassName '.*Test[s]'
 	reportFile file('build/test-results/JUNIT5-Tests.xml')
-}
-
-// The JUnit5Plugin registers the junit5Test task *after* the project has
-// been evaluated. We can therefore only configure the junit5Test task
-// once it actually exists.
-afterEvaluate {
-
-	// Ensure that log4j2 is properly configured.
-	junit5Test.systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
+	logManager 'org.apache.logging.log4j.jul.LogManager'
 }
 
 dependencies {

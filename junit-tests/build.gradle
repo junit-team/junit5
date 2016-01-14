@@ -8,6 +8,7 @@ junit5 {
 	runJunit4 true
 	matchClassName '.*Test[s]'
 	reportFile file('build/test-results/JUNIT5-Tests.xml')
+	logManager 'org.apache.logging.log4j.jul.LogManager'
 	// includeTag 'fast'
 	// excludeTag 'slow'
 }
@@ -40,9 +41,6 @@ dependencies {
 // been evaluated. We can therefore only configure the junit5Test task
 // once it actually exists.
 afterEvaluate {
-
-	// Ensure that log4j2 is properly configured.
-	junit5Test.systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
 
 	jacoco {
 		toolVersion = '0.7.4.201502262128'
