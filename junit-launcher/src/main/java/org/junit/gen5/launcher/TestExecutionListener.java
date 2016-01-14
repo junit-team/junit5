@@ -10,9 +10,8 @@
 
 package org.junit.gen5.launcher;
 
-import java.util.*;
+import java.util.Map;
 
-import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestExecutionResult.Status;
 

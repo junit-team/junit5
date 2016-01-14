@@ -10,10 +10,7 @@
 
 package org.junit.gen5.launcher;
 
-import static java.util.stream.Collectors.toSet;
-import static java.util.stream.StreamSupport.stream;
-
-import java.util.*;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.junit.gen5.engine.EngineAwareTestDescriptor;
