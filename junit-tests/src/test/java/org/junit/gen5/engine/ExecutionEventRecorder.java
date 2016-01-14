@@ -16,7 +16,7 @@ import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.engine.ExecutionEvent.*;
 import static org.junit.gen5.engine.ExecutionEvent.Type.*;
 
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -39,6 +39,11 @@ public class ExecutionEventRecorder implements EngineExecutionListener {
 	}
 
 	public final List<ExecutionEvent> executionEvents = new CopyOnWriteArrayList<>();
+
+	@Override
+	public void reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry) {
+		addEvent(ExecutionEvent.reportingEntryPublished(testDescriptor, entry));
+	}
 
 	@Override
 	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
@@ -74,6 +79,10 @@ public class ExecutionEventRecorder implements EngineExecutionListener {
 
 	public long getTestStartedCount() {
 		return testEventsByType(STARTED).count();
+	}
+
+	public long getReportingEntryPublishedCount() {
+		return testEventsByType(REPORTING_ENTRY_PUBLISHED).count();
 	}
 
 	public long getTestFinishedCount() {

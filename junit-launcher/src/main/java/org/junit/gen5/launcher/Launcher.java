@@ -10,6 +10,10 @@
 
 package org.junit.gen5.launcher;
 
+import static java.util.stream.Collectors.toSet;
+import static java.util.stream.StreamSupport.stream;
+
+import java.util.*;
 import java.util.logging.Logger;
 
 import org.junit.gen5.engine.EngineAwareTestDescriptor;
@@ -134,6 +138,11 @@ public class Launcher {
 		public ExecutionListenerAdapter(TestPlan testPlan, TestExecutionListener testExecutionListener) {
 			this.testPlan = testPlan;
 			this.testExecutionListener = testExecutionListener;
+		}
+
+		@Override
+		public void reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry) {
+			testExecutionListener.reportingEntryPublished(getTestIdentifier(testDescriptor), entry);
 		}
 
 		@Override

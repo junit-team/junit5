@@ -25,6 +25,7 @@ import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.engine.junit5.extension.*;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
 import org.junit.gen5.engine.junit5.extension.TestInfoParameterResolver;
 
@@ -66,7 +67,7 @@ public class TestExtensionRegistry {
 	}
 
 	private static final List<Class<? extends TestExtension>> defaultExtensionTypes = Collections.unmodifiableList(
-		Arrays.asList(DisabledCondition.class, TestInfoParameterResolver.class));
+		Arrays.asList(DisabledCondition.class, TestInfoParameterResolver.class, TestReporterParameterResolver.class));
 
 	/**
 	 * @return the list of all extension types that are added by default to all root registries

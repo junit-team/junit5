@@ -10,6 +10,9 @@
 
 package org.junit.gen5.launcher;
 
+import java.util.*;
+
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestExecutionResult.Status;
 
@@ -40,6 +43,17 @@ import org.junit.gen5.engine.TestExecutionResult.Status;
  * @see TestIdentifier
  */
 public interface TestExecutionListener {
+
+	/**
+	 * Called when a {@link TestIdentifier} is publishing addition test
+	 * reporting data. Can be called at all times.
+	 *
+	 * @param testIdentifier describes the test or container to which the entry belongs
+	 * @param entry a collection of key value pairs to be reported
+	 */
+	default void reportingEntryPublished(TestIdentifier testIdentifier, Map<String, String> entry) {
+
+	}
 
 	/**
 	 * Called when the execution of the {@link TestPlan} has started,

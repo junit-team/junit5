@@ -112,7 +112,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		context = context.extend().withTestExtensionRegistry(newExtensionRegistry).build();
 
 		ContainerExtensionContext containerExtensionContext = new ClassBasedContainerExtensionContext(
-			context.getExtensionContext(), this);
+			context.getExtensionContext(), context.getExecutionListener(), this);
 
 		// @formatter:off
 		return context.extend()

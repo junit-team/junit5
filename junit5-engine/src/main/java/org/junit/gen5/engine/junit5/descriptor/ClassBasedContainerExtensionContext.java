@@ -14,29 +14,28 @@ import java.lang.reflect.AnnotatedElement;
 
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.engine.*;
 
 final class ClassBasedContainerExtensionContext extends AbstractExtensionContext implements ContainerExtensionContext {
 
-	private final ClassTestDescriptor testDescriptor;
-
-	public ClassBasedContainerExtensionContext(ExtensionContext parent, ClassTestDescriptor testDescriptor) {
-		super(parent);
-		this.testDescriptor = testDescriptor;
+	public ClassBasedContainerExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
+			ClassTestDescriptor testDescriptor) {
+		super(parent, engineExecutionListener, testDescriptor);
 	}
 
 	@Override
 	public String getUniqueId() {
-		return this.testDescriptor.getUniqueId();
+		return getTestDescriptor().getUniqueId();
 	}
 
 	@Override
 	public String getName() {
-		return this.testDescriptor.getName();
+		return getTestDescriptor().getName();
 	}
 
 	@Override
 	public String getDisplayName() {
-		return this.testDescriptor.getDisplayName();
+		return getTestDescriptor().getDisplayName();
 	}
 
 	@Override
@@ -46,7 +45,7 @@ final class ClassBasedContainerExtensionContext extends AbstractExtensionContext
 
 	@Override
 	public Class<?> getTestClass() {
-		return this.testDescriptor.getTestClass();
+		return ((ClassTestDescriptor) getTestDescriptor()).getTestClass();
 	}
 
 }

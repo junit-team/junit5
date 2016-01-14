@@ -14,7 +14,7 @@ import static java.util.function.Predicate.isEqual;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.engine.ExecutionEvent.Type.*;
 
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.ToStringBuilder;
@@ -27,7 +27,11 @@ import org.junit.gen5.commons.util.ToStringBuilder;
 public class ExecutionEvent {
 
 	public enum Type {
-		DYNAMIC_TEST_REGISTERED, SKIPPED, STARTED, FINISHED
+		DYNAMIC_TEST_REGISTERED, SKIPPED, STARTED, FINISHED, REPORTING_ENTRY_PUBLISHED
+	}
+
+	public static ExecutionEvent reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry) {
+		return new ExecutionEvent(REPORTING_ENTRY_PUBLISHED, testDescriptor, entry);
 	}
 
 	public static ExecutionEvent dynamicTestRegistered(TestDescriptor testDescriptor) {

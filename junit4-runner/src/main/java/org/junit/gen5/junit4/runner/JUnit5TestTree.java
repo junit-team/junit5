@@ -10,18 +10,12 @@
 
 package org.junit.gen5.junit4.runner;
 
-import static java.util.stream.Collectors.toSet;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.function.Predicate;
 
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.runner.Description;
-import org.junit.runner.manipulation.Filter;
 
 /**
  * @since 5.0
@@ -29,11 +23,9 @@ import org.junit.runner.manipulation.Filter;
 class JUnit5TestTree {
 
 	private final Map<TestIdentifier, Description> descriptions = new HashMap<>();
-	private final TestPlan plan;
 	private final Description suiteDescription;
 
 	JUnit5TestTree(TestPlan plan, Class<?> testClass) {
-		this.plan = plan;
 		this.suiteDescription = generateDescription(plan, testClass);
 	}
 
@@ -72,32 +64,6 @@ class JUnit5TestTree {
 		else {
 			return Description.createSuiteDescription(identifier.getDisplayName(), identifier.getUniqueId());
 		}
-	}
-
-	Set<TestIdentifier> getFilteredLeaves(Filter filter) {
-		Set<TestIdentifier> identifiers = applyFilterToDescriptions(filter);
-		return removeNonLeafIdentifiers(identifiers);
-	}
-
-	private Set<TestIdentifier> removeNonLeafIdentifiers(Set<TestIdentifier> identifiers) {
-		return identifiers.stream().filter(isALeaf(identifiers)).collect(toSet());
-	}
-
-	private Predicate<? super TestIdentifier> isALeaf(Set<TestIdentifier> identifiers) {
-		return testIdentifier -> {
-			Set<TestIdentifier> descendants = plan.getDescendants(testIdentifier);
-			return identifiers.stream().noneMatch(descendants::contains);
-		};
-	}
-
-	private Set<TestIdentifier> applyFilterToDescriptions(Filter filter) {
-		// @formatter:off
-		return descriptions.entrySet()
-				.stream()
-				.filter(entry -> filter.shouldRun(entry.getValue()))
-				.map(Entry::getKey)
-				.collect(toSet());
-		// @formatter:on
 	}
 
 }

@@ -10,8 +10,11 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import java.util.*;
+
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.commons.JUnitException;
+import org.junit.gen5.engine.*;
 import org.junit.gen5.engine.EngineExecutionContext;
 
 /**
@@ -21,12 +24,16 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 
 	private final State state;
 
-	public JUnit5EngineExecutionContext() {
-		this(new State());
+	public JUnit5EngineExecutionContext(EngineExecutionListener executionListener) {
+		this(new State(executionListener));
 	}
 
 	private JUnit5EngineExecutionContext(State state) {
 		this.state = state;
+	}
+
+	public EngineExecutionListener getExecutionListener() {
+		return this.state.executionListener;
 	}
 
 	public TestInstanceProvider getTestInstanceProvider() {
@@ -45,19 +52,20 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 		return builder(this);
 	}
 
-	public static Builder builder() {
-		return new Builder(null, new State());
-	}
-
 	public static Builder builder(JUnit5EngineExecutionContext context) {
 		return new Builder(context.state, null);
 	}
 
 	private static final class State implements Cloneable {
 
+		final EngineExecutionListener executionListener;
 		TestInstanceProvider testInstanceProvider;
 		TestExtensionRegistry testExtensionRegistry;
 		ExtensionContext extensionContext;
+
+		public State(EngineExecutionListener executionListener) {
+			this.executionListener = executionListener;
+		}
 
 		@Override
 		public State clone() {

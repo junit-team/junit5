@@ -17,7 +17,6 @@ import static org.junit.gen5.engine.ClassFilters.classNameMatches;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -27,13 +26,9 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.launcher.Launcher;
-import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
-import org.junit.runner.manipulation.Filter;
-import org.junit.runner.manipulation.Filterable;
-import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
@@ -58,7 +53,7 @@ import org.junit.runners.model.InitializationError;
  * @see ExcludeTags
  * @see OnlyEngine
  */
-public class JUnit5 extends Runner implements Filterable {
+public class JUnit5 extends Runner {
 
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
@@ -66,13 +61,13 @@ public class JUnit5 extends Runner implements Filterable {
 
 	private final Launcher launcher = new Launcher();
 	private final Class<?> testClass;
-	private TestPlanSpecification specification;
-	private JUnit5TestTree testTree;
+	private final TestPlanSpecification specification;
+	private final JUnit5TestTree testTree;
 
 	public JUnit5(Class<?> testClass) throws InitializationError {
 		this.testClass = testClass;
 		this.specification = createSpecification();
-		this.testTree = generateTestTree();
+		this.testTree = generateTestTree(testClass);
 	}
 
 	@Override
@@ -87,7 +82,7 @@ public class JUnit5 extends Runner implements Filterable {
 		this.launcher.execute(this.specification);
 	}
 
-	private JUnit5TestTree generateTestTree() {
+	private JUnit5TestTree generateTestTree(Class<?> testClass) {
 		Preconditions.notNull(this.specification, "TestPlanSpecification must not be null");
 		TestPlan plan = this.launcher.discover(this.specification);
 		return new JUnit5TestTree(plan, testClass);
@@ -197,27 +192,6 @@ public class JUnit5 extends Runner implements Filterable {
 			V defaultValue) {
 		A annotation = this.testClass.getAnnotation(annotationClass);
 		return (annotation != null ? extractor.apply(annotation) : defaultValue);
-	}
-
-	@Override
-	public void filter(Filter filter) throws NoTestsRemainException {
-		Set<TestIdentifier> filteredIdentifiers = testTree.getFilteredLeaves(filter);
-		if (filteredIdentifiers.isEmpty()) {
-			throw new NoTestsRemainException();
-		}
-		this.specification = createTestPlanSpecificationForUniqueIds(filteredIdentifiers);
-		this.testTree = generateTestTree();
-	}
-
-	private TestPlanSpecification createTestPlanSpecificationForUniqueIds(Set<TestIdentifier> testIdentifiers) {
-		// @formatter:off
-		List<TestPlanSpecificationElement> elements = testIdentifiers.stream()
-				.map(TestIdentifier::getUniqueId)
-				.map(Object::toString)
-				.map(TestPlanSpecification::forUniqueId)
-				.collect(toList());
-		// @formatter:on
-		return TestPlanSpecification.build(elements);
 	}
 
 }

@@ -8,8 +8,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.junit5.extension;
 
-public interface EngineExecutionContext {
+import java.util.*;
+
+@FunctionalInterface
+public interface TestReporter {
+
+	void publishEntry(Map<String, String> entry);
 
 }

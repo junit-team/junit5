@@ -15,15 +15,26 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.engine.*;
 
 abstract class AbstractExtensionContext implements ExtensionContext {
 
 	private final Map<String, Object> attributes = new HashMap<>();
 
 	private final ExtensionContext parent;
+	private final EngineExecutionListener engineExecutionListener;
+	private final TestDescriptor testDescriptor;
 
-	AbstractExtensionContext(ExtensionContext parent) {
+	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
+			TestDescriptor testDescriptor) {
 		this.parent = parent;
+		this.engineExecutionListener = engineExecutionListener;
+		this.testDescriptor = testDescriptor;
+	}
+
+	@Override
+	public void publishReportEntry(Map<String, String> entry) {
+		engineExecutionListener.reportingEntryPublished(this.testDescriptor, entry);
 	}
 
 	@Override
@@ -48,4 +59,9 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 	public Object removeAttribute(String key) {
 		return attributes.remove(key);
 	}
+
+	protected TestDescriptor getTestDescriptor() {
+		return testDescriptor;
+	}
+
 }

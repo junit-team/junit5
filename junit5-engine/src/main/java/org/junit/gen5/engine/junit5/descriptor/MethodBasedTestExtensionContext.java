@@ -15,22 +15,21 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.engine.*;
 
 final class MethodBasedTestExtensionContext extends AbstractExtensionContext implements TestExtensionContext {
 
-	private final MethodTestDescriptor testDescriptor;
 	private final Object testInstance;
 
-	public MethodBasedTestExtensionContext(ExtensionContext parent, MethodTestDescriptor testDescriptor,
-			Object testInstance) {
-		super(parent);
-		this.testDescriptor = testDescriptor;
+	public MethodBasedTestExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
+			MethodTestDescriptor testDescriptor, Object testInstance) {
+		super(parent, engineExecutionListener, testDescriptor);
 		this.testInstance = testInstance;
 	}
 
 	@Override
 	public Method getTestMethod() {
-		return this.testDescriptor.getTestMethod();
+		return ((MethodTestDescriptor) getTestDescriptor()).getTestMethod();
 	}
 
 	@Override
@@ -40,22 +39,22 @@ final class MethodBasedTestExtensionContext extends AbstractExtensionContext imp
 
 	@Override
 	public Class<?> getTestClass() {
-		return this.testDescriptor.getTestClass();
+		return ((MethodTestDescriptor) getTestDescriptor()).getTestClass();
 	}
 
 	@Override
 	public String getUniqueId() {
-		return this.testDescriptor.getUniqueId();
+		return getTestDescriptor().getUniqueId();
 	}
 
 	@Override
 	public String getName() {
-		return this.testDescriptor.getName();
+		return getTestDescriptor().getName();
 	}
 
 	@Override
 	public String getDisplayName() {
-		return this.testDescriptor.getDisplayName();
+		return getTestDescriptor().getDisplayName();
 	}
 
 	@Override

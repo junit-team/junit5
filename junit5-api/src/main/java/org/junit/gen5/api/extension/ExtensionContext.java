@@ -11,6 +11,7 @@
 package org.junit.gen5.api.extension;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -23,6 +24,8 @@ import java.util.Optional;
  * @since 5.0
  */
 public interface ExtensionContext {
+
+	void publishReportEntry(Map<String, String> entry);
 
 	Optional<ExtensionContext> getParent();
 

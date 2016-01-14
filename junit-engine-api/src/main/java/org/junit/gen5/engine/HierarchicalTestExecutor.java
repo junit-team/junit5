@@ -71,9 +71,11 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		}
 
 		listener.executionStarted(testDescriptor);
+
 		TestExecutionResult result = singleTestExecutor.executeSafely(() -> {
 			C context = adapter.asContainer(testDescriptor).beforeAll(preparedContext);
 			context = adapter.asLeaf(testDescriptor).execute(context);
+
 			for (TestDescriptor child : testDescriptor.getChildren()) {
 				executeAll(child, context);
 			}

@@ -10,6 +10,8 @@
 
 package org.junit.gen5.engine;
 
+import java.util.*;
+
 import org.junit.gen5.engine.TestExecutionResult.Status;
 
 /**
@@ -25,6 +27,21 @@ import org.junit.gen5.engine.TestExecutionResult.Status;
  * @see ExecutionRequest
  */
 public interface EngineExecutionListener {
+
+	/**
+	 * Can be called for any {@code testDescriptor} in order to publish additional information, e.g.:
+	 * <ul>
+	 *     <li>Output that would otherwise go to {@code System.out}</li>
+	 *     <li>Information about test context or test data</li>
+	 * </ul>
+	 *
+	 * <p>The current lifecycle state of {@code testDescriptor} is not relevant; that means that reporting events
+	 * can occur at all times.
+	 *
+	 * @param testDescriptor the descriptor of the test or container to which the entry belongs
+	 * @param entry a collection of key value pairs to be reported
+	 */
+	void reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry);
 
 	/**
 	 * Must be called when a new, dynamic {@link TestDescriptor} has been
