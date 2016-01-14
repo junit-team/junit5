@@ -10,15 +10,18 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNull;
 
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.EngineExecutionListener;
+import org.junit.gen5.engine.TestDescriptor;
 import org.mockito.Mockito;
 
 /**
@@ -60,7 +63,6 @@ public class ExtensionContextTests {
 			() -> assertEquals(classExtensionContext, testExtensionContext.getParent().get()), //
 			() -> assertEquals(OuterClass.class, testExtensionContext.getTestInstance().getClass()) //
 		);
-
 	}
 
 	@Test
@@ -76,7 +78,6 @@ public class ExtensionContextTests {
 
 		assertEquals("value1", parentContext.removeAttribute("attr1"));
 		assertNull(parentContext.getAttribute("attr1"));
-
 	}
 
 	@Test
@@ -98,7 +99,6 @@ public class ExtensionContextTests {
 
 		childContext.removeAttribute("attr1");
 		assertEquals("value1", childContext.getAttribute("attr1"));
-
 	}
 
 	@Test
@@ -110,12 +110,8 @@ public class ExtensionContextTests {
 		ExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, engineExecutionListener,
 			classTestDescriptor);
 
-		HashMap<String, String> reportEntry1 = new HashMap<>();
-		HashMap<String, String> reportEntry2 = new HashMap<String, String>() {
-			{
-				this.put("key", "value");
-			}
-		};
+		Map<String, String> reportEntry1 = Collections.emptyMap();
+		Map<String, String> reportEntry2 = Collections.singletonMap("key", "value");
 
 		extensionContext.publishReportEntry(reportEntry1);
 		extensionContext.publishReportEntry(reportEntry2);
@@ -124,7 +120,6 @@ public class ExtensionContextTests {
 			reportEntry1);
 		Mockito.verify(engineExecutionListener, Mockito.times(1)).reportingEntryPublished(classTestDescriptor,
 			reportEntry2);
-
 	}
 
 	private ClassTestDescriptor nestedClassDescriptor() {
