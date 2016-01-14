@@ -14,12 +14,10 @@ import static org.junit.gen5.api.Assertions.*;
 
 import java.util.HashMap;
 
-import org.junit.Assert;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TrackingEngineExecutionListener;
+import org.junit.gen5.engine.*;
 import org.junit.gen5.engine.junit5.extension.TestReporter;
 
 public class ReportingTest extends AbstractJUnit5TestEngineTests {
@@ -29,14 +27,13 @@ public class ReportingTest extends AbstractJUnit5TestEngineTests {
 		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
 			TestPlanSpecification.forClass(MyReportingTestCase.class));
 
-		executeTests(testPlanSpecification);
+		ExecutionEventRecorder eventRecorder = executeTests(testPlanSpecification);
 
-		assertEquals(1, tracker.testStartedCount.get(), "# tests started");
-		assertEquals(1, tracker.testSucceededCount.get(), "# tests succeeded");
-		assertEquals(0, tracker.testFailedCount.get(), "# tests failed");
+		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(3, tracker.reportEntriesCount.get(), "# report entries published");
-
+		assertEquals(3, eventRecorder.getReportingEntryPublishedCount(), "# report entries published");
 	}
 
 }
