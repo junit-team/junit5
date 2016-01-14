@@ -37,14 +37,31 @@ class UniqueIdFilter extends RunnerTestDescriptorAwareFilter {
 	void initialize(RunnerTestDescriptor runnerTestDescriptor) {
 		Optional<? extends TestDescriptor> identifiedTestDescriptor = runnerTestDescriptor.findByUniqueId(uniqueId);
 		if (identifiedTestDescriptor.isPresent()) {
-			descendants = identifiedTestDescriptor.get().allDescendants().stream().map(
-				JUnit4TestDescriptor.class::cast).map(JUnit4TestDescriptor::getDescription).collect(toSet());
+			descendants = determineDescendants(identifiedTestDescriptor);
 		}
-		path = new LinkedList<>();
-		while (identifiedTestDescriptor.isPresent() && !identifiedTestDescriptor.get().equals(runnerTestDescriptor)) {
-			path.addFirst(((JUnit4TestDescriptor) identifiedTestDescriptor.get()).getDescription());
-			identifiedTestDescriptor = identifiedTestDescriptor.get().getParent();
+		path = determinePath(runnerTestDescriptor, identifiedTestDescriptor);
+	}
+
+	private Deque<Description> determinePath(RunnerTestDescriptor runnerTestDescriptor,
+			Optional<? extends TestDescriptor> identifiedTestDescriptor) {
+		Deque<Description> path = new LinkedList<>();
+		Optional<? extends TestDescriptor> current = identifiedTestDescriptor;
+		while (current.isPresent() && !current.get().equals(runnerTestDescriptor)) {
+			path.addFirst(((JUnit4TestDescriptor) current.get()).getDescription());
+			current = current.get().getParent();
 		}
+		return path;
+	}
+
+	private Set<Description> determineDescendants(Optional<? extends TestDescriptor> identifiedTestDescriptor) {
+		// @formatter:off
+		return identifiedTestDescriptor.get()
+				.allDescendants()
+				.stream()
+				.map(JUnit4TestDescriptor.class::cast)
+				.map(JUnit4TestDescriptor::getDescription)
+				.collect(toSet());
+		// @formatter:on
 	}
 
 	@Override
