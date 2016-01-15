@@ -25,7 +25,7 @@ import org.junit.gen5.engine.TestPlanSpecificationElement;
  * <p>Example:
  *
  * <pre>
- *   testPlan()
+ *   testPlanSpecification()
  *     .withElements(
  *       packageName("org.junit.gen5"),
  *       packageName("com.junit.samples"),
@@ -47,11 +47,6 @@ import org.junit.gen5.engine.TestPlanSpecificationElement;
  *       classNamePattern("org.junit.sample"),
  *       tagsIncluded("Fast"),
  *       tagsExcluded("Slow")
- *     )
- *     .withOptions(
- *     	 option("key1", someValueObject1),
- *     	 option("key2", someValueObject2),
- *     	 option("key3", someValueObject3)
  *     )
  *   ).build();
  * </pre>
