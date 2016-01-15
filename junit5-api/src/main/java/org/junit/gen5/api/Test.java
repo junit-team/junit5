@@ -39,7 +39,7 @@ import java.lang.annotation.Target;
  * @see BeforeAll
  * @see AfterAll
  */
-@Target({ ElementType.TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Test {
