@@ -11,8 +11,8 @@
 package org.junit.gen5.api.extension;
 
 /**
- * {@code AfterAllExtensionPoint} defines the API for {@link TestExtension
- * TestExtensions} that wish to provide additional behavior to tests after
+ * {@code AfterAllExtensionPoint} defines the API for {@link Extension
+ * Extensions} that wish to provide additional behavior to tests after
  * all test methods have been invoked.
  *
  * <p>Concrete implementations often implement {@link BeforeAllExtensionPoint} as well.

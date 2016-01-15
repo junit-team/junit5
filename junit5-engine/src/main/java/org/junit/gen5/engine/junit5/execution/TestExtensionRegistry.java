@@ -19,11 +19,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.junit.gen5.api.extension.Extension;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.ExtensionRegistry;
-import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.extension.*;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
@@ -59,24 +59,24 @@ public class TestExtensionRegistry {
 	 * @return a new {@code TestExtensionRegistry}
 	 */
 	public static TestExtensionRegistry newRegistryFrom(TestExtensionRegistry parentRegistry,
-			List<Class<? extends TestExtension>> extensionTypes) {
+			List<Class<? extends Extension>> extensionTypes) {
 
 		TestExtensionRegistry newTestExtensionRegistry = new TestExtensionRegistry(parentRegistry);
 		extensionTypes.forEach(newTestExtensionRegistry::registerExtension);
 		return newTestExtensionRegistry;
 	}
 
-	private static final List<Class<? extends TestExtension>> defaultExtensionTypes = Collections.unmodifiableList(
+	private static final List<Class<? extends Extension>> defaultExtensionTypes = Collections.unmodifiableList(
 		Arrays.asList(DisabledCondition.class, TestInfoParameterResolver.class, TestReporterParameterResolver.class));
 
 	/**
 	 * @return the list of all extension types that are added by default to all root registries
 	 */
-	static List<Class<? extends TestExtension>> getDefaultExtensionTypes() {
+	static List<Class<? extends Extension>> getDefaultExtensionTypes() {
 		return defaultExtensionTypes;
 	}
 
-	private final Set<Class<? extends TestExtension>> registeredExtensionTypes = new LinkedHashSet<>();
+	private final Set<Class<? extends Extension>> registeredExtensionTypes = new LinkedHashSet<>();
 
 	private final List<RegisteredExtensionPoint<?>> registeredExtensionPoints = new ArrayList<>();
 
@@ -102,8 +102,8 @@ public class TestExtensionRegistry {
 	/**
 	 * @return all extension types registered in this registry or one of its ancestors
 	 */
-	Set<Class<? extends TestExtension>> getRegisteredExtensionTypes() {
-		Set<Class<? extends TestExtension>> allRegisteredExtensionTypes = new LinkedHashSet<>();
+	Set<Class<? extends Extension>> getRegisteredExtensionTypes() {
+		Set<Class<? extends Extension>> allRegisteredExtensionTypes = new LinkedHashSet<>();
 		this.parent.ifPresent(
 			parentRegistry -> allRegisteredExtensionTypes.addAll(parentRegistry.getRegisteredExtensionTypes()));
 		allRegisteredExtensionTypes.addAll(this.registeredExtensionTypes);
@@ -157,23 +157,22 @@ public class TestExtensionRegistry {
 	 *
 	 * @param extensionType the type extension to register
 	 */
-	void registerExtension(Class<? extends TestExtension> extensionType) {
+	void registerExtension(Class<? extends Extension> extensionType) {
 
 		boolean extensionAlreadyRegistered = getRegisteredExtensionTypes().stream().anyMatch(
 			registeredType -> registeredType.equals(extensionType));
 
 		if (!extensionAlreadyRegistered) {
-			TestExtension testExtension = ReflectionUtils.newInstance(extensionType);
-			registerExtensionPoint(testExtension);
-			registerExtensionPointsFromRegistrar(testExtension);
+			Extension extension = ReflectionUtils.newInstance(extensionType);
+			registerExtensionPoint(extension);
+			registerExtensionPointsFromRegistrar(extension);
 			this.registeredExtensionTypes.add(extensionType);
 		}
 	}
 
-	private void registerExtensionPoint(TestExtension testExtension) {
-		// TODO Determine why TestExtensions are not supported.
-		if (testExtension instanceof ExtensionPoint) {
-			registerExtensionPoint((ExtensionPoint) testExtension);
+	private void registerExtensionPoint(Extension extension) {
+		if (extension instanceof ExtensionPoint) {
+			registerExtensionPoint((ExtensionPoint) extension);
 		}
 	}
 
@@ -185,9 +184,9 @@ public class TestExtensionRegistry {
 		this.registeredExtensionPoints.add(new RegisteredExtensionPoint<>(extension, position));
 	}
 
-	private void registerExtensionPointsFromRegistrar(TestExtension testExtension) {
-		if (testExtension instanceof ExtensionRegistrar) {
-			ExtensionRegistrar extensionRegistrar = (ExtensionRegistrar) testExtension;
+	private void registerExtensionPointsFromRegistrar(Extension extension) {
+		if (extension instanceof ExtensionRegistrar) {
+			ExtensionRegistrar extensionRegistrar = (ExtensionRegistrar) extension;
 			extensionRegistrar.registerExtensions(this.delegatingExtensionRegistry);
 		}
 	}

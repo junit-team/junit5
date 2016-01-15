@@ -21,13 +21,13 @@ import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ContainerExecutionCondition;
+import org.junit.gen5.api.extension.Extension;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestExecutionCondition;
-import org.junit.gen5.api.extension.TestExtension;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
 import org.junit.gen5.engine.junit5.extension.TestInfoParameterResolver;
 import org.junit.gen5.engine.junit5.extension.TestReporterParameterResolver;
@@ -54,7 +54,7 @@ public class TestExtensionRegistryTests {
 
 	@Test
 	public void newRegistryWithoutParentHasDefaultExtensions() throws Exception {
-		Set<Class<? extends TestExtension>> extensions = registry.getRegisteredExtensionTypes();
+		Set<Class<? extends Extension>> extensions = registry.getRegisteredExtensionTypes();
 
 		assertEquals(TestExtensionRegistry.getDefaultExtensionTypes().size(), extensions.size());
 		assertExtensionRegistered(registry, DisabledCondition.class);
@@ -174,8 +174,7 @@ public class TestExtensionRegistryTests {
 		return counter.get();
 	}
 
-	private void assertExtensionRegistered(TestExtensionRegistry registry,
-			Class<? extends TestExtension> extensionClass) {
+	private void assertExtensionRegistered(TestExtensionRegistry registry, Class<? extends Extension> extensionClass) {
 		assertTrue(registry.getRegisteredExtensionTypes().contains(extensionClass),
 			() -> extensionClass.getSimpleName() + " should be present");
 	}

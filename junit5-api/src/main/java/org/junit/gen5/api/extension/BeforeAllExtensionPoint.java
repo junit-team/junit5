@@ -11,8 +11,8 @@
 package org.junit.gen5.api.extension;
 
 /**
- * {@code BeforeAllExtensionPoint} defines the API for {@link TestExtension
- * TestExtensions} that wish to provide additional behavior to tests before
+ * {@code BeforeAllExtensionPoint} defines the API for {@link Extension
+ * Extensions} that wish to provide additional behavior to tests before
  * all test methods have been invoked.
  *
  * <p>Concrete implementations often implement {@link AfterAllExtensionPoint} as well.
@@ -29,7 +29,8 @@ package org.junit.gen5.api.extension;
 public interface BeforeAllExtensionPoint extends ExtensionPoint {
 
 	/**
-	 * Callback that is invoked <em>before</em> all {@code @BeforeAll} methods have been invoked.
+	 * Callback that is invoked <em>before</em> all {@code @BeforeAll}
+	 * methods have been invoked.
 	 *
 	 * @param context the current container extension context
 	 */

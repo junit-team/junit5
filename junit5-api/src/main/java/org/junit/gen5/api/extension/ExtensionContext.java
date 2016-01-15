@@ -15,10 +15,10 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * {@code ExtensionContext} encapsulates the <em>context</em> in which
- * the current test or container is being executed.
+ * {@code ExtensionContext} encapsulates the <em>context</em> in which the
+ * current test or container is being executed.
  *
- * <p>{@link TestExtension TestExtensions} are provided an instance of
+ * <p>{@link Extension Extensions} are provided an instance of
  * {@code ExtensionContext} to perform their work.
  *
  * @since 5.0

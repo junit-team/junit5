@@ -6,8 +6,7 @@
 
 In contrast to the competing `Runner`, `@Rule`, and `@ClassRule` extension points in
 JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
-`TestExtension` API. Note, however, that `TestExtension` itself is just a marker
-interface.
+`Extension` API. Note, however, that `Extension` itself is just a marker interface.
 
 === Registering Extensions
 
@@ -56,7 +55,7 @@ Registered extensions are inherited within test class hierarchies.
 
 === Conditional Test Execution
 
-`{ContainerExecutionCondition}` and `{TestExecutionCondition}` define the `TestExtension`
+`{ContainerExecutionCondition}` and `{TestExecutionCondition}` define the `Extension`
 APIs for programmatic, _conditional test execution_.
 
 A `ContainerExecutionCondition` is _evaluated_ to determine if all tests in a given
@@ -70,7 +69,7 @@ See the source code of `{DisabledCondition}` and `{Disabled}` for concrete examp
 
 === Test Instance Post-processing
 
-`{InstancePostProcessor}` defines the API for `TestExtensions` that wish to _post
+`{InstancePostProcessor}` defines the API for `Extensions` that wish to _post
 process_ test instances.
 
 Common use cases include injecting dependencies into the test instance, invoking custom
@@ -81,7 +80,7 @@ For concrete examples, consult the source code for the `{MockitoExtension}` and 
 
 === Parameter Resolution
 
-`{MethodParameterResolver}` is a `TestExtension` strategy for dynamically resolving
+`{MethodParameterResolver}` is an `Extension` strategy for dynamically resolving
 method parameters at runtime.
 
 If a `@Test`, `@BeforeEach`, `@AfterEach` , `@BeforeAll` or `@AfterAll` method accepts a
@@ -120,9 +119,8 @@ from one invocation of an extension point to the next? ...
 
 
 
-=== Additional Planned Extension Points
+=== Additional Planned Extensions
 
-Several additional extension points are planned, including but not
-limited to the following.
+Several additional extensions are planned, including but not limited to the following.
 
 * Dynamic test registration – for example, for computing parameterized tests at runtime

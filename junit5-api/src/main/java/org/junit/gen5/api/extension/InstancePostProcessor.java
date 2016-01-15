@@ -11,8 +11,8 @@
 package org.junit.gen5.api.extension;
 
 /**
- * {@code InstancePostProcessor} defines the API for {@link TestExtension
- * TestExtensions} that wish to <em>post-process</em> test instances.
+ * {@code InstancePostProcessor} defines the API for {@link Extension
+ * Extensions} that wish to <em>post-process</em> test instances.
  *
  * <p>Common use cases include injecting dependencies into the test
  * instance, invoking custom initialization methods on the test instance,

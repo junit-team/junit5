@@ -20,8 +20,8 @@ import java.lang.annotation.Target;
 
 /**
  * {@code @ExtendWith} is a {@linkplain Repeatable repeatable} annotation
- * that is used to register {@linkplain TestExtension test extensions} for
- * the annotated test class or test method.
+ * that is used to register {@linkplain Extension extensions} for the
+ * annotated test class or test method.
  *
  * <h3>Supported Extension APIs</h3>
  * <ul>
@@ -36,7 +36,8 @@ import java.lang.annotation.Target;
  * </ul>
  *
  * @since 5.0
- * @see TestExtension
+ * @see Extension
+ * @see ExtensionRegistrar
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
@@ -45,6 +46,6 @@ import java.lang.annotation.Target;
 @Repeatable(Extensions.class)
 public @interface ExtendWith {
 
-	Class<? extends TestExtension>[]value();
+	Class<? extends Extension>[]value();
 
 }

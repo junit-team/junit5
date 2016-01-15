@@ -25,7 +25,7 @@ import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Executable;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.api.extension.TestExtension;
+import org.junit.gen5.api.extension.Extension;
 import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
@@ -63,12 +63,12 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 	protected TestExtensionRegistry populateNewTestExtensionRegistryFromExtendWith(AnnotatedElement annotatedElement,
 			TestExtensionRegistry existingTestExtensionRegistry) {
 		// @formatter:off
-		List<Class<? extends TestExtension>> extensionClasses = findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
+		List<Class<? extends Extension>> extensionTypes = findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
 				.map(ExtendWith::value)
 				.flatMap(Arrays::stream)
 				.collect(toList());
 		// @formatter:on
-		return TestExtensionRegistry.newRegistryFrom(existingTestExtensionRegistry, extensionClasses);
+		return TestExtensionRegistry.newRegistryFrom(existingTestExtensionRegistry, extensionTypes);
 	}
 
 	/**

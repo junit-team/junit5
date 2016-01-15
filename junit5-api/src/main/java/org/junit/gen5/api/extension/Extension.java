@@ -11,13 +11,15 @@
 package org.junit.gen5.api.extension;
 
 /**
- * Marker interface for all test extensions.
+ * Marker interface for all extensions.
  *
- * <p>{@code TestExtensions} can be registered via {@link ExtendWith @ExtendWith}.
+ * <p>An {@code Extension} can be registered declaratively via
+ * {@link ExtendWith @ExtendWith} or programmatically via an
+ * {@link ExtensionRegistrar}.
  *
  * @since 5.0
  * @see ExtensionPoint
  * @see ExtensionRegistrar
  */
-public interface TestExtension {
+public interface Extension {
 }

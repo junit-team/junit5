@@ -13,12 +13,14 @@ package org.junit.gen5.api.extension;
 import java.lang.reflect.Parameter;
 
 /**
- * {@code MethodParameterResolver} defines the API for {@link TestExtension
- * TestExtensions} that wish to dynamically resolve method parameters at runtime.
+ * {@code MethodParameterResolver} defines the API for {@link Extension
+ * Extensions} that wish to dynamically resolve method parameters at runtime.
  *
  * <p>If a {@link org.junit.gen5.api.Test @Test},
- * {@link org.junit.gen5.api.BeforeEach @BeforeEach}, or
- * {@link org.junit.gen5.api.AfterEach @AfterEach} method accepts a parameter,
+ * {@link org.junit.gen5.api.BeforeEach @BeforeEach},
+ * {@link org.junit.gen5.api.AfterEach @AfterEach},
+ * {@link org.junit.gen5.api.BeforeAll @BeforeAll}, or
+ * {@link org.junit.gen5.api.AfterAll @AfterAll} method accepts a parameter,
  * the parameter must be resolved at runtime by a {@code MethodParameterResolver}.
  *
  * <p>Implementations must provide a no-args constructor.

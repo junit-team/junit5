@@ -26,7 +26,7 @@ package org.junit.gen5.api.extension;
  * @see AfterAllExtensionPoint
  */
 
-public interface ExtensionPoint extends TestExtension {
+public interface ExtensionPoint extends Extension {
 
 	/**
 	 * Specifies the order in which a registered extension point is applied with regard to all other registered
