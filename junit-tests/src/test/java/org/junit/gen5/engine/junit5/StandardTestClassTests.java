@@ -20,7 +20,6 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder;
 import org.opentest4j.TestAbortedException;
 
 /**
@@ -46,8 +45,7 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void moreThanOneTestClassIsCorrectlyDiscovered() {
-		TestPlanSpecification spec = testPlanSpecification().withElements(
-			ClassTestPlanSpecificationElementBuilder.forClass(SecondOfTwoTestCases.class)).build();
+		TestPlanSpecification spec = testPlanSpecification().withElements(forClass(SecondOfTwoTestCases.class)).build();
 
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		assertEquals(2 + 2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
@@ -56,7 +54,7 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void moreThanOneTestClassIsExecuted() {
 		TestPlanSpecification testPlanSpecification = testPlanSpecification().withElements(
-			ClassTestPlanSpecificationElementBuilder.forClass(SecondOfTwoTestCases.class)).build();
+			forClass(FirstOfTwoTestCases.class), forClass(SecondOfTwoTestCases.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(testPlanSpecification);
 

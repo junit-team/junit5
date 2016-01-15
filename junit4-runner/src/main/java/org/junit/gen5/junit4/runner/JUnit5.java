@@ -20,12 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.DescriptorFilter;
-import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.specification.dsl.*;
@@ -216,10 +214,10 @@ public class JUnit5 extends Runner implements Filterable {
 		List<TestPlanSpecificationElement> elements = testIdentifiers.stream()
 				.map(TestIdentifier::getUniqueId)
 				.map(Object::toString)
-				.map(TestPlanSpecification::forUniqueId)
+				.map(UniqueIdTestPlanSpecificationElementBuilder::forUniqueId)
 				.collect(toList());
 		// @formatter:on
-		return TestPlanSpecification.build(elements);
+		return testPlanSpecification().withElements(elements).build();
 	}
 
 }
