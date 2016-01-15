@@ -62,9 +62,9 @@ public class LauncherTests {
 
 	@Test
 	public void discoverTestPlanForMultipleEngines() {
-		DummyTestEngine firstEngine = new DummyTestEngine("first");
-		TestDescriptor test1 = firstEngine.addTest("test1", noOp());
-		DummyTestEngine secondEngine = new DummyTestEngine("second");
+		DummyTestEngine firstEngine = new DummyTestEngine("engine1");
+		firstEngine.addTest("test1", noOp());
+		DummyTestEngine secondEngine = new DummyTestEngine("engine2");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp());
 
 		Launcher launcher = createLauncher(firstEngine, secondEngine);
@@ -74,8 +74,8 @@ public class LauncherTests {
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
 		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(2);
-		assertThat(testPlan.getChildren(new TestId("first"))).hasSize(1);
-		assertThat(testPlan.getChildren(new TestId("second"))).hasSize(1);
+		assertThat(testPlan.getChildren(new TestId("engine1"))).hasSize(1);
+		assertThat(testPlan.getChildren(new TestId("engine2"))).hasSize(1);
 	}
 
 	@Test

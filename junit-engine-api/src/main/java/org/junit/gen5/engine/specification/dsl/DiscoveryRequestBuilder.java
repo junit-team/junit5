@@ -10,7 +10,9 @@
 
 package org.junit.gen5.engine.specification.dsl;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.gen5.engine.DiscoveryRequest;
@@ -24,7 +26,7 @@ import org.junit.gen5.engine.TestDescriptor;
  *
  * <p>Example:
  *
- * <pre>
+ * <pre style="code">
  *   DiscoveryRequestBuilder.request()
  *     .select(
  *       packageName("org.junit.gen5"),
@@ -43,18 +45,18 @@ import org.junit.gen5.engine.TestDescriptor;
  *     )
  *     .filterBy(
  *       engineIds("junit5"),
- *       classNamePattern("org.junit.gen5.tests"),
- *       classNamePattern("org.junit.sample"),
- *       tagsIncluded("Fast"),
- *       tagsExcluded("Slow")
+ *       classNamePattern(".*Test[s]"),
+ *       tagsIncluded("fast"),
+ *       tagsExcluded("slow")
  *     )
  *   ).build();
  * </pre>
  */
 public final class DiscoveryRequestBuilder {
-	private List<DiscoverySelector> specElements = new LinkedList<>();
-	private List<EngineFilter> engineFilters = new LinkedList<>();
-	private List<Predicate<TestDescriptor>> descriptorFilters = new LinkedList<>();
+
+	private final List<DiscoverySelector> specElements = new LinkedList<>();
+	private final List<EngineFilter> engineFilters = new LinkedList<>();
+	private final List<Predicate<TestDescriptor>> descriptorFilters = new LinkedList<>();
 
 	public static DiscoveryRequestBuilder request() {
 		return new DiscoveryRequestBuilder();
@@ -95,4 +97,5 @@ public final class DiscoveryRequestBuilder {
 		discoveryRequest.addEngineFilters(this.engineFilters);
 		return discoveryRequest;
 	}
+
 }

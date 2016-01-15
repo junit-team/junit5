@@ -19,7 +19,11 @@ import org.junit.gen5.engine.specification.AllClassFilters;
 import org.junit.gen5.engine.specification.ClassNameFilter;
 import org.junit.gen5.engine.specification.PredicateBasedClassFilter;
 
+/**
+ * @since 5.0
+ */
 public class ClassFilters {
+
 	private ClassFilters() {
 	}
 
