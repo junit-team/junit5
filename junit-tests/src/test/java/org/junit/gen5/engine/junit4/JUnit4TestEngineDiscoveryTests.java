@@ -14,11 +14,17 @@ import static java.text.MessageFormat.format;
 import static java.util.Collections.singleton;
 import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.engine.ClassFilters.classNameMatches;
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.engine.TestPlanSpecification.allTests;
+import static org.junit.gen5.engine.TestPlanSpecification.build;
+import static org.junit.gen5.engine.TestPlanSpecification.forClass;
+import static org.junit.gen5.engine.TestPlanSpecification.forMethod;
+import static org.junit.gen5.engine.TestPlanSpecification.forPackage;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -408,6 +414,7 @@ class JUnit4TestEngineDiscoveryTests {
 		assertTrue(testMethodDescriptor.isTest());
 		assertFalse(testMethodDescriptor.isContainer());
 		assertEquals(methodName, testMethodDescriptor.getDisplayName());
+		assertEquals(methodName + "(" + testClass.getName() + ")", testMethodDescriptor.getName());
 		assertEquals(uniqueIdPrefix + methodName + "(" + testClass.getName() + ")", testMethodDescriptor.getUniqueId());
 		assertThat(testMethodDescriptor.getChildren()).isEmpty();
 		assertMethodSource(testClass.getMethod(methodName), testMethodDescriptor);
@@ -418,6 +425,7 @@ class JUnit4TestEngineDiscoveryTests {
 		assertTrue(containerDescriptor.isContainer());
 		assertFalse(containerDescriptor.isTest());
 		assertEquals(testClass.getName(), containerDescriptor.getDisplayName());
+		assertEquals(testClass.getName(), containerDescriptor.getName());
 		assertEquals(uniqueIdPrefix + testClass.getName(), containerDescriptor.getUniqueId());
 		assertClassSource(testClass, containerDescriptor);
 	}

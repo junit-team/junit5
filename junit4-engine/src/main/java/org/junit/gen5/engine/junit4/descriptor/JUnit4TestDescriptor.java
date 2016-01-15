@@ -50,7 +50,7 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 
 	@Override
 	public String getName() {
-		return getDisplayName();
+		return description.getDisplayName();
 	}
 
 	@Override

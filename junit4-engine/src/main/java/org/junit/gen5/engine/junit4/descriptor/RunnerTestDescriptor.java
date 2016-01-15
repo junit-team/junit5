@@ -34,6 +34,11 @@ public class RunnerTestDescriptor extends JUnit4TestDescriptor {
 	}
 
 	@Override
+	public String getName() {
+		return testClass.getName();
+	}
+
+	@Override
 	public String getDisplayName() {
 		return testClass.getName();
 	}
