@@ -10,10 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertSame;
-import static org.junit.gen5.api.Assertions.assertThrows;
-import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,22 +20,22 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.DummyTestEngine;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.specification.ClassSpecification;
-import org.junit.gen5.engine.specification.MethodSpecification;
-import org.junit.gen5.engine.specification.PackageSpecification;
-import org.junit.gen5.engine.specification.UniqueIdSpecification;
+import org.junit.gen5.engine.specification.ClassSelector;
+import org.junit.gen5.engine.specification.MethodSelector;
+import org.junit.gen5.engine.specification.PackageNameSelector;
+import org.junit.gen5.engine.specification.UniqueIdSelector;
 
-public class SpecificationResolverTests {
+public class DiscoverySelectorTests {
 
 	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(
 		new DummyTestEngine("ENGINE_ID"));
-	private SpecificationResolver resolver = new SpecificationResolver(engineDescriptor);
+	private DiscoverySelectorResolver resolver = new DiscoverySelectorResolver(engineDescriptor);
 
 	@Test
 	public void testSingleClassResolution() {
-		ClassSpecification specification = new ClassSpecification(MyTestClass.class);
+		ClassSelector selector = new ClassSelector(MyTestClass.class);
 
-		resolver.resolveElement(specification);
+		resolver.resolveElement(selector);
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
@@ -49,11 +46,11 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testTwoClassesResolution() {
-		ClassSpecification specification1 = new ClassSpecification(MyTestClass.class);
-		ClassSpecification specification2 = new ClassSpecification(YourTestClass.class);
+		ClassSelector selector1 = new ClassSelector(MyTestClass.class);
+		ClassSelector selector2 = new ClassSelector(YourTestClass.class);
 
-		resolver.resolveElement(specification1);
-		resolver.resolveElement(specification2);
+		resolver.resolveElement(selector1);
+		resolver.resolveElement(selector2);
 
 		assertEquals(6, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
@@ -68,9 +65,9 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testClassResolutionOfNestedClass() {
-		ClassSpecification specification = new ClassSpecification(OtherTestClass.NestedTestClass.class);
+		ClassSelector selector = new ClassSelector(OtherTestClass.NestedTestClass.class);
 
-		resolver.resolveElement(specification);
+		resolver.resolveElement(selector);
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
@@ -85,11 +82,10 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testMethodResolution() throws NoSuchMethodException {
-		MethodSpecification specification = new MethodSpecification(
-			MyTestClass.class.getDeclaredMethod("test1").getDeclaringClass(),
+		MethodSelector selector = new MethodSelector(MyTestClass.class.getDeclaredMethod("test1").getDeclaringClass(),
 			MyTestClass.class.getDeclaredMethod("test1"));
 
-		resolver.resolveElement(specification);
+		resolver.resolveElement(selector);
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
@@ -99,10 +95,9 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testMethodResolutionFromInheritedMethod() throws NoSuchMethodException {
-		MethodSpecification specification = new MethodSpecification(HerTestClass.class,
-			MyTestClass.class.getDeclaredMethod("test1"));
+		MethodSelector selector = new MethodSelector(HerTestClass.class, MyTestClass.class.getDeclaredMethod("test1"));
 
-		resolver.resolveElement(specification);
+		resolver.resolveElement(selector);
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
@@ -112,15 +107,15 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testResolutionOfNotTestMethod() throws NoSuchMethodException {
-		MethodSpecification specification = new MethodSpecification(
+		MethodSelector selector = new MethodSelector(
 			MyTestClass.class.getDeclaredMethod("notATest").getDeclaringClass(),
 			MyTestClass.class.getDeclaredMethod("notATest"));
-		assertThrows(PreconditionViolationException.class, () -> resolver.resolveElement(specification));
+		assertThrows(PreconditionViolationException.class, () -> resolver.resolveElement(selector));
 	}
 
 	@Test
 	public void testClassResolutionByUniqueId() {
-		UniqueIdSpecification specification = new UniqueIdSpecification(
+		UniqueIdSelector specification = new UniqueIdSelector(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass");
 
 		resolver.resolveElement(specification);
@@ -134,7 +129,7 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testInnerClassResolutionByUniqueId() {
-		UniqueIdSpecification specification = new UniqueIdSpecification(
+		UniqueIdSelector specification = new UniqueIdSelector(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass");
 
 		resolver.resolveElement(specification);
@@ -151,7 +146,7 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testMethodOfInnerClassByUniqueId() {
-		UniqueIdSpecification specification = new UniqueIdSpecification(
+		UniqueIdSelector specification = new UniqueIdSelector(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()");
 
 		resolver.resolveElement(specification);
@@ -166,14 +161,14 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testNonResolvableUniqueId() {
-		UniqueIdSpecification specification = new UniqueIdSpecification("ENGINE_ID:poops-machine");
+		UniqueIdSelector specification = new UniqueIdSelector("ENGINE_ID:poops-machine");
 
 		assertThrows(PreconditionViolationException.class, () -> resolver.resolveElement(specification));
 	}
 
 	@Test
 	public void testUniqueIdOfNotTestMethod() {
-		UniqueIdSpecification specification = new UniqueIdSpecification(
+		UniqueIdSelector specification = new UniqueIdSelector(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#notATest()");
 
 		assertThrows(PreconditionViolationException.class, () -> resolver.resolveElement(specification));
@@ -181,7 +176,7 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testMethodResolutionByUniqueId() {
-		UniqueIdSpecification specification = new UniqueIdSpecification(
+		UniqueIdSelector specification = new UniqueIdSelector(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()");
 
 		resolver.resolveElement(specification);
@@ -194,7 +189,7 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testMethodResolutionByUniqueIdFromInheritedClass() {
-		UniqueIdSpecification specification = new UniqueIdSpecification(
+		UniqueIdSelector specification = new UniqueIdSelector(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test1()");
 
 		resolver.resolveElement(specification);
@@ -209,7 +204,7 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testMethodResolutionByUniqueIdWithParams() {
-		UniqueIdSpecification specification = new UniqueIdSpecification(
+		UniqueIdSelector specification = new UniqueIdSelector(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test7(java.lang.String)");
 
 		resolver.resolveElement(specification);
@@ -225,7 +220,7 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testMethodResolutionByUniqueIdWithWrongParams() {
-		UniqueIdSpecification specification = new UniqueIdSpecification(
+		UniqueIdSelector specification = new UniqueIdSelector(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test7(java.math.BigDecimal)");
 
 		assertThrows(PreconditionViolationException.class, () -> resolver.resolveElement(specification));
@@ -233,9 +228,9 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testTwoMethodResolutionsByUniqueId() {
-		UniqueIdSpecification specification1 = new UniqueIdSpecification(
+		UniqueIdSelector specification1 = new UniqueIdSelector(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()");
-		UniqueIdSpecification specification2 = new UniqueIdSpecification(
+		UniqueIdSelector specification2 = new UniqueIdSelector(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()");
 
 		resolver.resolveElement(specification1);
@@ -259,7 +254,7 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testPackageResolution() {
-		PackageSpecification specification = new PackageSpecification(
+		PackageNameSelector specification = new PackageNameSelector(
 			"org.junit.gen5.engine.junit5.descriptor.subpackage");
 		resolver.resolveElement(specification);
 
@@ -279,7 +274,7 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testNestedTestResolutionFromBaseClass() {
-		ClassSpecification specification = new ClassSpecification(TestCaseWithNesting.class);
+		ClassSelector specification = new ClassSelector(TestCaseWithNesting.class);
 
 		resolver.resolveElement(specification);
 
@@ -303,7 +298,7 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testNestedTestResolutionFromNestedTestClass() {
-		ClassSpecification specification = new ClassSpecification(TestCaseWithNesting.NestedTest.class);
+		ClassSelector specification = new ClassSelector(TestCaseWithNesting.NestedTest.class);
 
 		resolver.resolveElement(specification);
 
@@ -324,7 +319,7 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testNestedTestResolutionFromUniqueId() {
-		UniqueIdSpecification specification = new UniqueIdSpecification(
+		UniqueIdSelector specification = new UniqueIdSelector(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest");
 
 		resolver.resolveElement(specification);
@@ -344,8 +339,7 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testNestedTestResolutionFromClass() {
-		ClassSpecification specification = new ClassSpecification(
-			TestCaseWithNesting.NestedTest.DoubleNestedTest.class);
+		ClassSelector specification = new ClassSelector(TestCaseWithNesting.NestedTest.DoubleNestedTest.class);
 
 		resolver.resolveElement(specification);
 
@@ -364,7 +358,7 @@ public class SpecificationResolverTests {
 
 	@Test
 	public void testNestedTestResolutionFromUniqueIdToMethod() {
-		UniqueIdSpecification specification = new UniqueIdSpecification(
+		UniqueIdSelector specification = new UniqueIdSelector(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest#testB()");
 
 		resolver.resolveElement(specification);

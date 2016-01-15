@@ -10,26 +10,30 @@
 
 package org.junit.gen5.engine.specification.dsl;
 
+import static java.util.Collections.singleton;
+
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.specification.AllTestsSpecification;
+import org.junit.gen5.engine.specification.ClasspathSelector;
 
-public class ClasspathTestPlanSpecificationElementBuilder {
-	public static List<DiscoverySelector> allTests(Set<File> rootDirectories) {
-		// @formatter:off
-		return rootDirectories.stream()
-				.filter(File::exists)
-				.map(AllTestsSpecification::new)
-				.collect(Collectors.toList());
-		// @formatter:on
+/**
+ * @since 5.0
+ */
+public class ClasspathSelectorBuilder {
+	public static List<DiscoverySelector> byPath(String path) {
+		return byPaths(singleton(new File(path)));
 	}
 
-	public static List<DiscoverySelector> path(String path) {
-		return allTests(Collections.singleton(new File(path)));
+	public static List<DiscoverySelector> byPaths(Set<File> paths) {
+		// @formatter:off
+		return paths.stream()
+				.filter(File::exists)
+				.map(ClasspathSelector::new)
+				.collect(Collectors.toList());
+		// @formatter:on
 	}
 }

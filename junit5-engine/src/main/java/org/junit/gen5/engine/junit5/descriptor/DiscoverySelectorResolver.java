@@ -29,15 +29,13 @@ import org.junit.gen5.engine.junit5.discovery.IsTestMethod;
 /**
  * @since 5.0
  */
-public class SpecificationResolver {
-
+public class DiscoverySelectorResolver {
 	private final JUnit5EngineDescriptor engineDescriptor;
-
 	private final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
 	private final IsTestMethod isTestMethod = new IsTestMethod();
 	private final IsScannableTestClass isScannableTestClass = new IsScannableTestClass();
 
-	public SpecificationResolver(JUnit5EngineDescriptor engineDescriptor) {
+	public DiscoverySelectorResolver(JUnit5EngineDescriptor engineDescriptor) {
 		this.engineDescriptor = engineDescriptor;
 	}
 

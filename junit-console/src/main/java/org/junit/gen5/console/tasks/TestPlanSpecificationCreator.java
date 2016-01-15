@@ -21,8 +21,8 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.DiscoveryRequest;
-import org.junit.gen5.engine.specification.dsl.ClasspathTestPlanSpecificationElementBuilder;
-import org.junit.gen5.engine.specification.dsl.NamedTestPlanSpecificationElementBuilder;
+import org.junit.gen5.engine.specification.dsl.ClasspathSelectorBuilder;
+import org.junit.gen5.engine.specification.dsl.NameBasedSelectorBuilder;
 import org.junit.gen5.engine.specification.dsl.TagFilterBuilder;
 
 class TestPlanSpecificationCreator {
@@ -42,7 +42,7 @@ class TestPlanSpecificationCreator {
 
 	private DiscoveryRequest buildAllTestsSpecification(CommandLineOptions options) {
 		Set<File> rootDirectoriesToScan = determineClasspathRootDirectories(options);
-		return request().select(ClasspathTestPlanSpecificationElementBuilder.allTests(rootDirectoriesToScan)).build();
+		return request().select(ClasspathSelectorBuilder.byPaths(rootDirectoriesToScan)).build();
 	}
 
 	private Set<File> determineClasspathRootDirectories(CommandLineOptions options) {
@@ -54,7 +54,7 @@ class TestPlanSpecificationCreator {
 
 	private DiscoveryRequest buildNameBasedSpecification(CommandLineOptions options) {
 		Preconditions.notEmpty(options.getArguments(), "No arguments given");
-		return request().select(NamedTestPlanSpecificationElementBuilder.forNames(options.getArguments())).build();
+		return request().select(NameBasedSelectorBuilder.byNames(options.getArguments())).build();
 	}
 
 	private void applyFilters(DiscoveryRequest specification, CommandLineOptions options) {

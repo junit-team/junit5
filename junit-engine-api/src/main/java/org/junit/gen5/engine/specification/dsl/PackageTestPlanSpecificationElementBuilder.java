@@ -16,14 +16,17 @@ import java.util.Collection;
 import java.util.List;
 
 import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.specification.PackageSpecification;
+import org.junit.gen5.engine.specification.PackageNameSelector;
 
+/**
+ * @since 5.0
+ */
 public class PackageTestPlanSpecificationElementBuilder {
-	public static DiscoverySelector forPackage(String packageName) {
-		return new PackageSpecification(packageName);
+	public static DiscoverySelector byPackageName(String packageName) {
+		return new PackageNameSelector(packageName);
 	}
 
-	public static List<DiscoverySelector> forPackages(Collection<String> packageNames) {
-		return packageNames.stream().map(PackageTestPlanSpecificationElementBuilder::forPackage).collect(toList());
+	public static List<DiscoverySelector> byPackageNames(Collection<String> packageNames) {
+		return packageNames.stream().map(PackageTestPlanSpecificationElementBuilder::byPackageName).collect(toList());
 	}
 }

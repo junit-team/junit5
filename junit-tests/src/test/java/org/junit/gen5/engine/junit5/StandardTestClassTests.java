@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
 import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.AfterEach;
@@ -38,25 +38,24 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void standardTestClassIsCorrectlyDiscovered() {
-		DiscoveryRequest spec = request().select(forClass(MyStandardTestCase.class)).build();
-		EngineDescriptor engineDescriptor = discoverTests(spec);
+		DiscoveryRequest request = request().select(forClass(MyStandardTestCase.class)).build();
+		EngineDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsCorrectlyDiscovered() {
-		DiscoveryRequest spec = request().select(forClass(SecondOfTwoTestCases.class)).build();
-
-		EngineDescriptor engineDescriptor = discoverTests(spec);
+		DiscoveryRequest request = request().select(forClass(SecondOfTwoTestCases.class)).build();
+		EngineDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2 + 2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsExecuted() {
-		DiscoveryRequest discoveryRequest = request().select(forClass(FirstOfTwoTestCases.class),
+		DiscoveryRequest request = request().select(forClass(FirstOfTwoTestCases.class),
 			forClass(SecondOfTwoTestCases.class)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(discoveryRequest);
+		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(6L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(5L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");

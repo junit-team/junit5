@@ -11,10 +11,13 @@
 package org.junit.gen5.engine.specification.dsl;
 
 import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.specification.UniqueIdSpecification;
+import org.junit.gen5.engine.specification.UniqueIdSelector;
 
-public class UniqueIdTestPlanSpecificationElementBuilder {
-	public static DiscoverySelector forUniqueId(String uniqueId) {
-		return new UniqueIdSpecification(uniqueId);
+/**
+ * @since 5.0
+ */
+public class UniqueIdSelectorBuilder {
+	public static DiscoverySelector byUniqueId(String uniqueId) {
+		return new UniqueIdSelector(uniqueId);
 	}
 }

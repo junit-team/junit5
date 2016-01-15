@@ -10,15 +10,12 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.api.Assertions.assertAll;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
 import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 
-import org.junit.gen5.api.AfterEach;
-import org.junit.gen5.api.Assertions;
-import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.Nested;
-import org.junit.gen5.api.Test;
+import org.junit.gen5.api.*;
 import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.ExecutionEventRecorder;
@@ -33,8 +30,8 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void nestedTestsAreCorrectlyDiscovered() {
-		DiscoveryRequest spec = request().select(forClass(TestCaseWithNesting.class)).build();
-		EngineDescriptor engineDescriptor = discoverTests(spec);
+		DiscoveryRequest request = request().select(forClass(TestCaseWithNesting.class)).build();
+		EngineDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
@@ -52,8 +49,8 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void doublyNestedTestsAreCorrectlyDiscovered() {
-		DiscoveryRequest spec = request().select(forClass(TestCaseWithDoubleNesting.class)).build();
-		EngineDescriptor engineDescriptor = discoverTests(spec);
+		DiscoveryRequest request = request().select(forClass(TestCaseWithDoubleNesting.class)).build();
+		EngineDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(8, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 

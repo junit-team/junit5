@@ -26,7 +26,7 @@ import org.apache.maven.surefire.suite.RunResult;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.TestsToRun;
 import org.junit.gen5.engine.DiscoveryRequest;
-import org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder;
+import org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder;
 import org.junit.gen5.launcher.Launcher;
 
 public class JUnitGen5Provider extends AbstractProvider {
@@ -85,8 +85,7 @@ public class JUnitGen5Provider extends AbstractProvider {
 		SimpleReportEntry classEntry = new SimpleReportEntry(getClass().getName(), testClass.getName());
 		runListener.testSetStarting(classEntry);
 
-		DiscoveryRequest specification = request().select(
-			ClassTestPlanSpecificationElementBuilder.forClass(testClass)).build();
+		DiscoveryRequest specification = request().select(ClassSelectorBuilder.forClass(testClass)).build();
 		launcher.execute(specification);
 
 		runListener.testSetCompleted(classEntry);

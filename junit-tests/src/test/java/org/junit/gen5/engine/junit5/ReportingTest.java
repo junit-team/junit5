@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
 import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 
 import java.util.HashMap;
@@ -27,9 +27,9 @@ public class ReportingTest extends AbstractJUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void threeReportEntriesArePublished() {
-		DiscoveryRequest discoveryRequest = request().select(forClass(MyReportingTestCase.class)).build();
+		DiscoveryRequest request = request().select(forClass(MyReportingTestCase.class)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(discoveryRequest);
+		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");

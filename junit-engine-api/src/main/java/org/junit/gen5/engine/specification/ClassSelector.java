@@ -10,24 +10,25 @@
 
 package org.junit.gen5.engine.specification;
 
-import java.io.File;
-
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.DiscoverySelectorVisitor;
 
-public class AllTestsSpecification implements DiscoverySelector {
-	private final File classpathRoot;
+/**
+ * @since 5.0
+ */
+public class ClassSelector implements DiscoverySelector {
+	private final Class<?> testClass;
 
-	public AllTestsSpecification(File classpathRoot) {
-		this.classpathRoot = classpathRoot;
+	public ClassSelector(Class<?> testClass) {
+		this.testClass = testClass;
 	}
 
 	@Override
 	public void accept(DiscoverySelectorVisitor visitor) {
-		visitor.visitAllTests(classpathRoot);
+		visitor.visitClass(testClass);
 	}
 
-	public File getClasspathRoot() {
-		return classpathRoot;
+	public Class<?> getTestClass() {
+		return testClass;
 	}
 }

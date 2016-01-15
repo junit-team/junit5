@@ -13,19 +13,19 @@ package org.junit.gen5.engine.specification;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.DiscoverySelectorVisitor;
 
-public class ClassSpecification implements DiscoverySelector {
-	private final Class<?> testClass;
+public class UniqueIdSelector implements DiscoverySelector {
+	private final String uniqueId;
 
-	public ClassSpecification(Class<?> testClass) {
-		this.testClass = testClass;
+	public UniqueIdSelector(String uniqueId) {
+		this.uniqueId = uniqueId;
 	}
 
 	@Override
 	public void accept(DiscoverySelectorVisitor visitor) {
-		visitor.visitClass(testClass);
+		visitor.visitUniqueId(uniqueId);
 	}
 
-	public Class<?> getTestClass() {
-		return testClass;
+	public String getUniqueId() {
+		return uniqueId;
 	}
 }

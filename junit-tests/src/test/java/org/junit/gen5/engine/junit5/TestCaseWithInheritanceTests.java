@@ -10,10 +10,11 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.api.Assumptions.assumeTrue;
 import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
-import static org.junit.gen5.engine.specification.dsl.UniqueIdTestPlanSpecificationElementBuilder.forUniqueId;
+import static org.junit.gen5.engine.specification.dsl.UniqueIdSelectorBuilder.byUniqueId;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
@@ -56,10 +57,10 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 	@Test
 	public void executeSingleTest() {
-		DiscoveryRequest spec = request().select(forUniqueId(
+		DiscoveryRequest request = request().select(byUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#alwaysPasses()")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(spec);
+		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -70,10 +71,10 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 	@Test
 	public void executeTestDeclaredInSuperClass() {
-		DiscoveryRequest spec = request().select(forUniqueId(
+		DiscoveryRequest request = request().select(byUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#superclassTest()")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(spec);
+		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -90,10 +91,10 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 	@Test
 	public void executeTestWithExceptionThrownInAfterMethod() {
-		DiscoveryRequest spec = request().select(forUniqueId(
+		DiscoveryRequest request = request().select(byUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#throwExceptionInAfterMethod()")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(spec);
+		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(0L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -172,7 +173,5 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 		void alwaysFails() {
 			fail("#fail");
 		}
-
 	}
-
 }

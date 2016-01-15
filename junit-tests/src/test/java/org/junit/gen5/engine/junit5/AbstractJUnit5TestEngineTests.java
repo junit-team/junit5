@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
 import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.BeforeEach;
@@ -33,15 +33,15 @@ abstract class AbstractJUnit5TestEngineTests {
 		return executeTests(request().select(forClass(testClass)).build());
 	}
 
-	protected ExecutionEventRecorder executeTests(DiscoveryRequest spec) {
-		TestDescriptor testDescriptor = discoverTests(spec);
+	protected ExecutionEventRecorder executeTests(DiscoveryRequest request) {
+		TestDescriptor testDescriptor = discoverTests(request);
 		ExecutionEventRecorder eventRecorder = new ExecutionEventRecorder();
 		engine.execute(new ExecutionRequest(testDescriptor, eventRecorder));
 		return eventRecorder;
 	}
 
-	protected EngineDescriptor discoverTests(DiscoveryRequest spec) {
-		return engine.discoverTests(spec);
+	protected EngineDescriptor discoverTests(DiscoveryRequest request) {
+		return engine.discoverTests(request);
 	}
 
 }

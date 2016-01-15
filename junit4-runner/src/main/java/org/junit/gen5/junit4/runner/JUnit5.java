@@ -99,7 +99,7 @@ public class JUnit5 extends Runner implements Filterable {
 
 		// Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
 		if (specElements.isEmpty()) {
-			specElements.add(ClassTestPlanSpecificationElementBuilder.forClass(this.testClass));
+			specElements.add(ClassSelectorBuilder.forClass(this.testClass));
 		}
 
 		DiscoveryRequest spec = request().select(specElements).build();
@@ -123,15 +123,16 @@ public class JUnit5 extends Runner implements Filterable {
 	}
 
 	private List<DiscoverySelector> getClassSpecificationElements() {
-		return stream(getTestClasses()).map(ClassTestPlanSpecificationElementBuilder::forClass).collect(toList());
+		return stream(getTestClasses()).map(ClassSelectorBuilder::forClass).collect(toList());
 	}
 
 	private List<DiscoverySelector> getUniqueIdSpecificationElements() {
-		return stream(getUniqueIds()).map(UniqueIdTestPlanSpecificationElementBuilder::forUniqueId).collect(toList());
+		return stream(getUniqueIds()).map(UniqueIdSelectorBuilder::byUniqueId).collect(toList());
 	}
 
 	private List<DiscoverySelector> getPackageSpecificationElements() {
-		return stream(getPackageNames()).map(PackageTestPlanSpecificationElementBuilder::forPackage).collect(toList());
+		return stream(getPackageNames()).map(PackageTestPlanSpecificationElementBuilder::byPackageName).collect(
+			toList());
 	}
 
 	private void addClassNameMatchesFilter(DiscoveryRequest plan) {
@@ -214,7 +215,7 @@ public class JUnit5 extends Runner implements Filterable {
 		List<DiscoverySelector> elements = testIdentifiers.stream()
 				.map(TestIdentifier::getUniqueId)
 				.map(Object::toString)
-				.map(UniqueIdTestPlanSpecificationElementBuilder::forUniqueId)
+				.map(UniqueIdSelectorBuilder::byUniqueId)
 				.collect(toList());
 		// @formatter:on
 		return request().select(elements).build();

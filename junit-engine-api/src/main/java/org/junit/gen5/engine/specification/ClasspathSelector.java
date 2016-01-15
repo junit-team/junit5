@@ -10,22 +10,27 @@
 
 package org.junit.gen5.engine.specification;
 
+import java.io.File;
+
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.DiscoverySelectorVisitor;
 
-public class UniqueIdSpecification implements DiscoverySelector {
-	private final String uniqueId;
+/**
+ * @since 5.0
+ */
+public class ClasspathSelector implements DiscoverySelector {
+	private final File classpathRoot;
 
-	public UniqueIdSpecification(String uniqueId) {
-		this.uniqueId = uniqueId;
+	public ClasspathSelector(File classpathRoot) {
+		this.classpathRoot = classpathRoot;
 	}
 
 	@Override
 	public void accept(DiscoverySelectorVisitor visitor) {
-		visitor.visitUniqueId(uniqueId);
+		visitor.visitAllTests(classpathRoot);
 	}
 
-	public String getUniqueId() {
-		return uniqueId;
+	public File getClasspathRoot() {
+		return classpathRoot;
 	}
 }

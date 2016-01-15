@@ -13,23 +13,26 @@ package org.junit.gen5.engine.specification.dsl;
 import java.lang.reflect.Method;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.specification.MethodSpecification;
+import org.junit.gen5.engine.specification.MethodSelector;
 
-public class MethodTestPlanSpecificationElementBuilder {
-	public static MethodSpecification forMethod(String testClassName, String testMethodName) {
-		return forMethod(new MethodConfig(testClassName, testMethodName));
+/**
+ * @since 5.0
+ */
+public class MethodSelectorBuilder {
+	public static MethodSelector byMethod(String testClassName, String testMethodName) {
+		return byMethod(new MethodConfig(testClassName, testMethodName));
 	}
 
-	public static MethodSpecification forMethod(Class<?> testClass, String testMethodName) {
-		return forMethod(new MethodConfig(testClass.getName(), testMethodName));
+	public static MethodSelector byMethod(Class<?> testClass, String testMethodName) {
+		return byMethod(new MethodConfig(testClass.getName(), testMethodName));
 	}
 
-	public static MethodSpecification forMethod(MethodConfig methodConfig) {
-		return forMethod(methodConfig.getTestClass(), methodConfig.getTestMethod());
+	public static MethodSelector byMethod(MethodConfig methodConfig) {
+		return byMethod(methodConfig.getTestClass(), methodConfig.getTestMethod());
 	}
 
-	public static MethodSpecification forMethod(Class<?> testClass, Method testMethod) {
-		return new MethodSpecification(testClass, testMethod);
+	public static MethodSelector byMethod(Class<?> testClass, Method testMethod) {
+		return new MethodSelector(testClass, testMethod);
 	}
 
 	public static class MethodConfig {

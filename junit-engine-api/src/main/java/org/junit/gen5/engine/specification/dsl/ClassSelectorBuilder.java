@@ -12,14 +12,17 @@ package org.junit.gen5.engine.specification.dsl;
 
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.specification.ClassSpecification;
+import org.junit.gen5.engine.specification.ClassSelector;
 
-public class ClassTestPlanSpecificationElementBuilder {
-	public static ClassSpecification forClass(Class<?> testClass) {
-		return new ClassSpecification(testClass);
+/**
+ * @since 5.0
+ */
+public class ClassSelectorBuilder {
+	public static ClassSelector forClass(Class<?> testClass) {
+		return new ClassSelector(testClass);
 	}
 
-	public static ClassSpecification forClassName(String className) {
+	public static ClassSelector forClassName(String className) {
 		return forClass(ReflectionUtils.loadClass(className).orElseThrow(
 			() -> new PreconditionViolationException("Could not resolve class with name: " + className)));
 	}

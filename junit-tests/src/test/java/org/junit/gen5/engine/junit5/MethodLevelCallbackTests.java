@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit5;
 
 import static java.util.Arrays.asList;
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
 import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
@@ -22,12 +22,7 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.AfterEachExtensionPoint;
-import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
-import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.api.extension.ExtensionRegistrar;
-import org.junit.gen5.api.extension.ExtensionRegistry;
-import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.api.extension.*;
 import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 
@@ -41,9 +36,9 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void beforeEachAndAfterEachCallbacks() {
-		DiscoveryRequest spec = request().select(forClass(OuterTestCase.class)).build();
+		DiscoveryRequest request = request().select(forClass(OuterTestCase.class)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(spec);
+		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");

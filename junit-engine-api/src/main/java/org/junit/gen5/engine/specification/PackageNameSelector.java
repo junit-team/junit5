@@ -10,30 +10,25 @@
 
 package org.junit.gen5.engine.specification;
 
-import java.lang.reflect.Method;
-
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.DiscoverySelectorVisitor;
 
-public class MethodSpecification implements DiscoverySelector {
-	private final Class<?> testClass;
-	private final Method testMethod;
+/**
+ * @since 5.0
+ */
+public class PackageNameSelector implements DiscoverySelector {
+	private final String packageName;
 
-	public MethodSpecification(Class<?> testClass, Method testMethod) {
-		this.testClass = testClass;
-		this.testMethod = testMethod;
+	public PackageNameSelector(String packageName) {
+		this.packageName = packageName;
 	}
 
 	@Override
 	public void accept(DiscoverySelectorVisitor visitor) {
-		visitor.visitMethod(testClass, testMethod);
+		visitor.visitPackage(packageName);
 	}
 
-	public Class<?> getTestClass() {
-		return testClass;
-	}
-
-	public Method getTestMethod() {
-		return testMethod;
+	public String getPackageName() {
+		return packageName;
 	}
 }

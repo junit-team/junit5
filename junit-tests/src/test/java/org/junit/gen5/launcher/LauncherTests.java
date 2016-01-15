@@ -13,13 +13,14 @@ package org.junit.gen5.launcher;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.engine.specification.dsl.EngineFilterBuilder.filterByEngineId;
+import static org.junit.gen5.engine.specification.dsl.UniqueIdSelectorBuilder.byUniqueId;
 import static org.junit.gen5.launcher.LauncherFactory.createLauncher;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.DummyTestEngine;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.specification.dsl.UniqueIdTestPlanSpecificationElementBuilder;
+import org.junit.gen5.engine.specification.dsl.UniqueIdSelectorBuilder;
 
 public class LauncherTests {
 
@@ -27,8 +28,7 @@ public class LauncherTests {
 	public void discoverEmptyTestPlanWithoutAnyEngines() {
 		Launcher launcher = createLauncher();
 
-		TestPlan testPlan = launcher.discover(
-			request().select(UniqueIdTestPlanSpecificationElementBuilder.forUniqueId("foo")).build());
+		TestPlan testPlan = launcher.discover(request().select(byUniqueId("foo")).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
@@ -39,8 +39,7 @@ public class LauncherTests {
 	public void discoverEmptyTestPlanWithEngineWithoutAnyTests() {
 		Launcher launcher = createLauncher(new DummyTestEngine());
 
-		TestPlan testPlan = launcher.discover(
-			request().select(UniqueIdTestPlanSpecificationElementBuilder.forUniqueId("foo")).build());
+		TestPlan testPlan = launcher.discover(request().select(byUniqueId("foo")).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
@@ -54,8 +53,7 @@ public class LauncherTests {
 
 		Launcher launcher = createLauncher(engine);
 
-		TestPlan testPlan = launcher.discover(request().select(
-			UniqueIdTestPlanSpecificationElementBuilder.forUniqueId(testDescriptor.getUniqueId())).build());
+		TestPlan testPlan = launcher.discover(request().select(byUniqueId(testDescriptor.getUniqueId())).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
@@ -72,8 +70,7 @@ public class LauncherTests {
 
 		Launcher launcher = createLauncher(firstEngine, secondEngine);
 
-		TestPlan testPlan = launcher.discover(
-			request().select(UniqueIdTestPlanSpecificationElementBuilder.forUniqueId(test2.getUniqueId())).build());
+		TestPlan testPlan = launcher.discover(request().select(byUniqueId(test2.getUniqueId())).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
@@ -89,8 +86,7 @@ public class LauncherTests {
 
 		Launcher launcher = createLauncher(engine);
 
-		DiscoveryRequest specification = request().select(
-			UniqueIdTestPlanSpecificationElementBuilder.forUniqueId(test.getUniqueId())).build();
+		DiscoveryRequest specification = request().select(byUniqueId(test.getUniqueId())).build();
 		specification.addDescriptorFilter(filterByEngineId("doesNotExist"));
 
 		TestPlan testPlan = launcher.discover(specification);

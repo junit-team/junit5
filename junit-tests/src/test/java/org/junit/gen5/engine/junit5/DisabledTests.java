@@ -10,9 +10,10 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
-import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
 import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 
 import java.lang.annotation.ElementType;
@@ -57,8 +58,8 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsWithDisabledTestClass() {
-		DiscoveryRequest spec = request().select(forClass(DisabledTestClassTestCase.class)).build();
-		ExecutionEventRecorder eventRecorder = executeTests(spec);
+		DiscoveryRequest request = request().select(forClass(DisabledTestClassTestCase.class)).build();
+		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(1L, eventRecorder.getContainerSkippedCount(), "# container skipped");
 		assertEquals(0L, eventRecorder.getTestStartedCount(), "# tests started");
@@ -66,8 +67,8 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsWithDisabledTestMethods() {
-		DiscoveryRequest spec = request().select(forClass(DisabledTestMethodsTestCase.class)).build();
-		ExecutionEventRecorder eventRecorder = executeTests(spec);
+		DiscoveryRequest request = request().select(forClass(DisabledTestMethodsTestCase.class)).build();
+		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");

@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit5;
 
 import static java.util.Arrays.asList;
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
 import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
@@ -34,9 +34,9 @@ public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void instancePostProcessorInTopLevelClass() {
-		DiscoveryRequest spec = request().select(forClass(OuterTestCase.class)).build();
+		DiscoveryRequest request = request().select(forClass(OuterTestCase.class)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(spec);
+		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
