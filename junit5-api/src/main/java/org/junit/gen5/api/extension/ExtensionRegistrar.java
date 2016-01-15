@@ -13,7 +13,7 @@ package org.junit.gen5.api.extension;
 /**
  * Interface to be implemented by {@linkplain Extension extensions} that
  * wish to programmatically register {@link ExtensionPoint} implementations
- * in the {@link ExtensionRegistry} &mdash; for example, if a
+ * in the {@link ExtensionPointRegistry} &mdash; for example, if a
  * {@link ExtensionPoint.Position Position} other than
  * {@link ExtensionPoint.Position#DEFAULT DEFAULT} is desired.
  *
@@ -23,6 +23,6 @@ package org.junit.gen5.api.extension;
  */
 public interface ExtensionRegistrar extends Extension {
 
-	void registerExtensions(ExtensionRegistry registry);
+	void registerExtensions(ExtensionPointRegistry registry);
 
 }

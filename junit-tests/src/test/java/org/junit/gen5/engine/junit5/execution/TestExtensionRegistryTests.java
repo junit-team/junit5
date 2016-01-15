@@ -24,8 +24,8 @@ import org.junit.gen5.api.extension.ContainerExecutionCondition;
 import org.junit.gen5.api.extension.Extension;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
-import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
@@ -228,7 +228,7 @@ class MultipleExtension implements MyExtensionPoint, AnotherExtensionPoint {
 class MyExtensionRegistrar implements ExtensionRegistrar {
 
 	@Override
-	public void registerExtensions(ExtensionRegistry registry) {
+	public void registerExtensions(ExtensionPointRegistry registry) {
 		registry.register(this::doNothing, MyExtensionPoint.class);
 		registry.register(this::doMore, AnotherExtensionPoint.class);
 	}

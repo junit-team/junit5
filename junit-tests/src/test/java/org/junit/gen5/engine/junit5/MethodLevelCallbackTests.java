@@ -26,8 +26,8 @@ import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
-import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.ExecutionEventRecorder;
@@ -137,7 +137,7 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTests {
 	private static class InnermostAndOutermost implements ExtensionRegistrar {
 
 		@Override
-		public void registerExtensions(ExtensionRegistry registry) {
+		public void registerExtensions(ExtensionPointRegistry registry) {
 			registry.register(this::innermostBefore, BeforeEachExtensionPoint.class, Position.INNERMOST);
 			registry.register(this::innermostAfter, AfterEachExtensionPoint.class, Position.INNERMOST);
 			registry.register(this::outermostBefore, BeforeEachExtensionPoint.class, Position.OUTERMOST);

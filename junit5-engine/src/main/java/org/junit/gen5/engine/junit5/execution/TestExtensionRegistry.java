@@ -22,12 +22,12 @@ import java.util.stream.Stream;
 import org.junit.gen5.api.extension.Extension;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPoint.Position;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
-import org.junit.gen5.api.extension.ExtensionRegistry;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.junit5.extension.*;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
 import org.junit.gen5.engine.junit5.extension.TestInfoParameterResolver;
+import org.junit.gen5.engine.junit5.extension.TestReporterParameterResolver;
 
 /**
  * A {@code TestExtensionRegistry} holds all registered extensions (i.e.
@@ -39,7 +39,7 @@ import org.junit.gen5.engine.junit5.extension.TestInfoParameterResolver;
  * thereby all its ancestors.
  *
  * <p>Do not confuse this engine-specific {@code TestExtensionRegistry} with
- * the {@link ExtensionRegistry} which is used by an {@link ExtensionRegistrar}.
+ * the {@link ExtensionPointRegistry} which is used by an {@link ExtensionRegistrar}.
  *
  * @since 5.0
  */
@@ -80,7 +80,7 @@ public class TestExtensionRegistry {
 
 	private final List<RegisteredExtensionPoint<?>> registeredExtensionPoints = new ArrayList<>();
 
-	private final ExtensionRegistry delegatingExtensionRegistry = new DelegatingExtensionRegistry();
+	private final ExtensionPointRegistry delegatingExtensionPointRegistry = new DelegatingExtensionPointRegistry();
 
 	private final Optional<TestExtensionRegistry> parent;
 
@@ -190,17 +190,17 @@ public class TestExtensionRegistry {
 	private void registerExtensionPointsFromRegistrar(Extension extension) {
 		if (extension instanceof ExtensionRegistrar) {
 			ExtensionRegistrar extensionRegistrar = (ExtensionRegistrar) extension;
-			extensionRegistrar.registerExtensions(this.delegatingExtensionRegistry);
+			extensionRegistrar.registerExtensions(this.delegatingExtensionPointRegistry);
 		}
 	}
 
 	/**
-	 * {@link ExtensionRegistry} which internally delegates to the enclosing
+	 * {@link ExtensionPointRegistry} which internally delegates to the enclosing
 	 * {@link TestExtensionRegistry}: used in order to allow an
 	 * {@link ExtensionRegistrar} to populate a {@link TestExtensionRegistry}
 	 * via the {@code ExtensionRegistry} API.
 	 */
-	private class DelegatingExtensionRegistry implements ExtensionRegistry {
+	private class DelegatingExtensionPointRegistry implements ExtensionPointRegistry {
 
 		@Override
 		public <E extends ExtensionPoint> void register(E extension, Class<E> extensionPointType, Position position) {
