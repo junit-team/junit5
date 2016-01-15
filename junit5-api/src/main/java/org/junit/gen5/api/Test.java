@@ -23,8 +23,6 @@ import java.lang.annotation.Target;
  * <p>{@code @Test} may also be used on an annotation in order to create a
  * custom test annotation, effectively acting as a meta-annotation.
  *
- * <p>{@code @Test} must not be used on a test class and will be ignored if present.
- *
  * <p>{@code @Test} methods must not be {@code private} or {@code static}.
  *
  * <p>{@code @Test} methods may optionally declare parameters to be
