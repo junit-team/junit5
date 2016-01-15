@@ -13,7 +13,9 @@ package org.junit.gen5.api.extension;
 /**
  * Super interface for all extension points.
  *
- * <p>An {@code ExtensionPoint} can be registered via {@link ExtendWith @ExtendWith}.
+ * <p>An {@code ExtensionPoint} can be registered declaratively via
+ * {@link ExtendWith @ExtendWith} or programmatically via an
+ * {@link ExtensionRegistrar}.
  *
  * @since 5.0
  * @see ContainerExecutionCondition
@@ -24,8 +26,8 @@ package org.junit.gen5.api.extension;
  * @see AfterEachExtensionPoint
  * @see BeforeAllExtensionPoint
  * @see AfterAllExtensionPoint
+ * @see ExtensionRegistrar
  */
-
 public interface ExtensionPoint extends Extension {
 
 	/**

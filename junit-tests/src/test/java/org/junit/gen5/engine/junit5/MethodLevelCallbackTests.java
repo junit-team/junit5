@@ -22,7 +22,13 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.*;
+import org.junit.gen5.api.extension.AfterEachExtensionPoint;
+import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.api.extension.ExtensionPoint.Position;
+import org.junit.gen5.api.extension.ExtensionRegistrar;
+import org.junit.gen5.api.extension.ExtensionRegistry;
+import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 
@@ -109,6 +115,7 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTests {
 		@Nested
 		@ExtendWith(FizzMethodLevelCallbacks.class)
 		class InnerTestCase {
+
 			@BeforeEach
 			void beforeInnerMethod() {
 				callSequence.add("beforeInnerMethod");

@@ -21,7 +21,7 @@ package org.junit.gen5.api.extension;
  *
  * @since 5.0
  */
-public interface ExtensionRegistrar extends ExtensionPoint {
+public interface ExtensionRegistrar extends Extension {
 
 	void registerExtensions(ExtensionRegistry registry);
 

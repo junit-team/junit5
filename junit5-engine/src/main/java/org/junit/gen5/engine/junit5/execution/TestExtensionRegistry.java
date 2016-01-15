@@ -131,13 +131,13 @@ public class TestExtensionRegistry {
 	 * Return a stream for iterating over all registered extension points
 	 * of the specified type.
 	 *
-	 * @param extensionType the type of {@link ExtensionPoint} to stream
+	 * @param extensionPointType the type of {@link ExtensionPoint} to stream
 	 * @param order the order in which to apply the extension points after sorting
 	 */
-	public <E extends ExtensionPoint> Stream<RegisteredExtensionPoint<E>> stream(Class<E> extensionType,
+	public <E extends ExtensionPoint> Stream<RegisteredExtensionPoint<E>> stream(Class<E> extensionPointType,
 			ApplicationOrder order) {
 
-		List<RegisteredExtensionPoint<E>> registeredExtensionPoints = getRegisteredExtensionPoints(extensionType);
+		List<RegisteredExtensionPoint<E>> registeredExtensionPoints = getRegisteredExtensionPoints(extensionPointType);
 		new ExtensionPointSorter().sort(registeredExtensionPoints);
 		if (order == ApplicationOrder.BACKWARD) {
 			Collections.reverse(registeredExtensionPoints);
@@ -147,13 +147,16 @@ public class TestExtensionRegistry {
 
 	/**
 	 * Instantiate an extension of the given type using its default constructor,
-	 * and register the extension in this registry.
+	 * and potentially register it in this registry.
 	 *
-	 * <p>If an extension of the given type already exists in this registry,
-	 * a new extension will not be registered.
+	 * <p>If the extension is an {@link ExtensionPoint}, it will be registered
+	 * in this registry, unless an extension of the given type already exists
+	 * in this registry.
 	 *
-	 * <p>The extension type can be either an {@link ExtensionPoint} or an
-	 * {@link ExtensionRegistrar}.
+	 * <p>If the extension is an {@link ExtensionRegistrar},
+	 * its {@link ExtensionRegistrar#registerExtensions registerExtensions()}
+	 * method will be invoked to register extensions from the registrar in
+	 * this registry.
 	 *
 	 * @param extensionType the type extension to register
 	 */
