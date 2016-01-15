@@ -433,7 +433,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#test-lifecycle-callbacks">Test Lifecycle Callbacks</a></li>
 <li><a href="#extension-point-application-order">Extension Point Application Order</a></li>
 <li><a href="#keeping-state-in-extensions">Keeping State in Extensions</a></li>
-<li><a href="#additional-planned-extension-points">Additional Planned Extension Points</a></li>
+<li><a href="#additional-planned-extensions">Additional Planned Extensions</a></li>
 </ul>
 </li>
 </ul>
@@ -448,8 +448,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>In contrast to the competing <code>Runner</code>, <code>@Rule</code>, and <code>@ClassRule</code> extension points in
 JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
-<code>TestExtension</code> API. Note, however, that <code>TestExtension</code> itself is just a marker
-interface.</p>
+<code>Extension</code> API. Note, however, that <code>Extension</code> itself is just a marker interface.</p>
 </div>
 </div>
 <div class="sect2">
@@ -502,7 +501,7 @@ class MyTestsV2 {
 <div class="sect2">
 <h3 id="conditional-test-execution">Conditional Test Execution</h3>
 <div class="paragraph">
-<p><code>{ContainerExecutionCondition}</code> and <code>{TestExecutionCondition}</code> define the <code>TestExtension</code>
+<p><code>{ContainerExecutionCondition}</code> and <code>{TestExecutionCondition}</code> define the <code>Extension</code>
 APIs for programmatic, <em>conditional test execution</em>.</p>
 </div>
 <div class="paragraph">
@@ -519,7 +518,7 @@ determine if a given test method should be executed based on the supplied
 <div class="sect2">
 <h3 id="test-instance-post-processing">Test Instance Post-processing</h3>
 <div class="paragraph">
-<p><code>{InstancePostProcessor}</code> defines the API for <code>TestExtensions</code> that wish to <em>post
+<p><code>{InstancePostProcessor}</code> defines the API for <code>Extensions</code> that wish to <em>post
 process</em> test instances.</p>
 </div>
 <div class="paragraph">
@@ -534,7 +533,7 @@ initialization methods on the test instance, etc.</p>
 <div class="sect2">
 <h3 id="parameter-resolution">Parameter Resolution</h3>
 <div class="paragraph">
-<p><code>{MethodParameterResolver}</code> is a <code>TestExtension</code> strategy for dynamically resolving
+<p><code>{MethodParameterResolver}</code> is an <code>Extension</code> strategy for dynamically resolving
 method parameters at runtime.</p>
 </div>
 <div class="paragraph">
@@ -590,10 +589,9 @@ from one invocation of an extension point to the next? &#8230;&#8203;</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="additional-planned-extension-points">Additional Planned Extension Points</h3>
+<h3 id="additional-planned-extensions">Additional Planned Extensions</h3>
 <div class="paragraph">
-<p>Several additional extension points are planned, including but not
-limited to the following.</p>
+<p>Several additional extensions are planned, including but not limited to the following.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -609,7 +607,7 @@ limited to the following.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-15 09:18:03 -05:00
+Last updated 2016-01-15 13:19:18 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
