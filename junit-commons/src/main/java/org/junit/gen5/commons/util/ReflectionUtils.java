@@ -29,8 +29,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import org.junit.gen5.commons.JUnitException;
-
 /**
  * Collection of utilities for working with the Java reflection APIs.
  *
@@ -160,32 +158,6 @@ public final class ReflectionUtils {
 		try {
 			// TODO Add support for primitive types and arrays.
 			return Optional.of(classLoader.loadClass(name.trim()));
-		}
-		catch (ClassNotFoundException e) {
-			return Optional.empty();
-		}
-	}
-
-	public static <T> Optional<Class<T>> loadClass(String name, Class<T> requiredType) {
-		return loadClass(name, requiredType, getDefaultClassLoader());
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <T> Optional<Class<T>> loadClass(String name, Class<T> requiredType, ClassLoader classLoader) {
-		Preconditions.notBlank(name, "class name must not be null or empty");
-		Preconditions.notNull(requiredType, "requiredType must not be null");
-		Preconditions.notNull(classLoader, "ClassLoader must not be null");
-
-		try {
-			// TODO Add support for primitive types and arrays.
-			Class<?> clazz = classLoader.loadClass(name);
-			if (requiredType.isAssignableFrom(clazz)) {
-				return Optional.of((Class<T>) clazz);
-			}
-			else {
-				throw new JUnitException(
-					String.format("Class [%s] is not of required type [%s]", name, requiredType.getName()));
-			}
 		}
 		catch (ClassNotFoundException e) {
 			return Optional.empty();
