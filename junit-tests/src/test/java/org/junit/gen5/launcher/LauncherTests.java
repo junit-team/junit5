@@ -11,16 +11,15 @@
 package org.junit.gen5.launcher;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.engine.dsl.EngineFilterBuilder.filterByEngineId;
-import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.EngineFilterBuilder.filterByEngineId;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 import static org.junit.gen5.launcher.LauncherFactory.createLauncher;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.DummyTestEngine;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.dsl.EngineFilterBuilder;
-import org.junit.gen5.engine.dsl.UniqueIdTestPlanSpecificationElementBuilder;
+import org.junit.gen5.engine.specification.dsl.UniqueIdTestPlanSpecificationElementBuilder;
 
 public class LauncherTests {
 

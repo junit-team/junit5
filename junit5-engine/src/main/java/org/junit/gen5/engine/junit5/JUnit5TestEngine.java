@@ -14,7 +14,9 @@ import java.util.List;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.*;
-import org.junit.gen5.engine.dsl.ClassFilterBuilder;
+import org.junit.gen5.engine.ClassFilter;
+import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.TestPlanSpecificationElement;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.JUnit5EngineDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;

@@ -8,15 +8,19 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.specification.dsl;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 
 import java.util.List;
 
-public class ClassFilters {
+import org.junit.gen5.engine.ClassFilter;
+import org.junit.gen5.engine.specification.AllClassFilters;
+import org.junit.gen5.engine.specification.ClassNameFilter;
+import org.junit.gen5.engine.specification.PredicateBasedClassFilter;
 
+public class ClassFilters {
 	private ClassFilters() {
 	}
 
@@ -35,13 +39,10 @@ public class ClassFilters {
 		if (filters.size() == 1) {
 			return filters.get(0);
 		}
-		return new PredicateBasedClassFilter(
-			testClass -> filters.stream().allMatch(filter -> filter.acceptClass(testClass)),
-			() -> filters.stream().map(ClassFilter::getDescription).collect(joining(") and (", "(", ")")));
+		return new AllClassFilters(filters);
 	}
 
 	public static ClassFilter anyClass() {
 		return new PredicateBasedClassFilter(c -> true, () -> "Any class");
 	}
-
 }

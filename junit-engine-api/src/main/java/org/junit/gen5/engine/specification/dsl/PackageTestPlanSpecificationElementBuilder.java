@@ -8,15 +8,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.dsl;
+package org.junit.gen5.engine.specification.dsl;
 
 import static java.util.stream.Collectors.toList;
 
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.gen5.engine.PackageSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.specification.PackageSpecification;
 
 public class PackageTestPlanSpecificationElementBuilder {
 	public static TestPlanSpecificationElement forPackage(String packageName) {

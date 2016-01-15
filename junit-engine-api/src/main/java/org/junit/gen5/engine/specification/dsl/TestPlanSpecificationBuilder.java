@@ -8,11 +8,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.dsl;
+package org.junit.gen5.engine.specification.dsl;
 
-import static org.junit.gen5.engine.ClassFilters.classNameMatches;
-
-import java.io.File;
 import java.util.*;
 import java.util.function.Predicate;
 

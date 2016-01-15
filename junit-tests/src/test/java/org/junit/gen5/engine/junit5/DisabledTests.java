@@ -12,8 +12,8 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
-import static org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
-import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -32,7 +32,6 @@ import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder;
 
 /**
  * Integration tests that verify support for {@link Disabled @Disabled} and

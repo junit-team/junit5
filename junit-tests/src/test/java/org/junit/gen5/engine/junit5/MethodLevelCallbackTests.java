@@ -12,8 +12,8 @@ package org.junit.gen5.engine.junit5;
 
 import static java.util.Arrays.asList;
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
-import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -8,21 +8,20 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.dsl;
+package org.junit.gen5.engine.specification.dsl;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
 
-import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.DescriptorFilter;
 import org.junit.gen5.engine.TestTag;
 
 public class TagFilterBuilder {
-	public static Predicate<TestDescriptor> includeTags(String... tagNames) {
+	public static DescriptorFilter includeTags(String... tagNames) {
 		return includeTags(Arrays.asList(tagNames));
 	}
 
-	public static Predicate<TestDescriptor> includeTags(List<String> includeTags) {
+	public static DescriptorFilter includeTags(List<String> includeTags) {
 		// @formatter:off
         return descriptor -> descriptor.getTags().stream()
                 .map(TestTag::getName)
@@ -30,11 +29,11 @@ public class TagFilterBuilder {
         // @formatter:on
 	}
 
-	public static Predicate<TestDescriptor> excludeTags(String... tagNames) {
+	public static DescriptorFilter excludeTags(String... tagNames) {
 		return excludeTags(Arrays.asList(tagNames));
 	}
 
-	public static Predicate<TestDescriptor> excludeTags(List<String> includeTags) {
+	public static DescriptorFilter excludeTags(List<String> includeTags) {
 		// @formatter:off
         return descriptor -> descriptor.getTags().stream()
                 .map(TestTag::getName)

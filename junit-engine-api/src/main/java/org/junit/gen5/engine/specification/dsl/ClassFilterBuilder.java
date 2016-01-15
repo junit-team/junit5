@@ -8,9 +8,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.dsl;
+package org.junit.gen5.engine.specification.dsl;
 
-import org.junit.gen5.engine.ClassNameFilter;
+import org.junit.gen5.engine.specification.ClassNameFilter;
 
 public class ClassFilterBuilder {
 	public static ClassNameFilter pattern(String pattern) {

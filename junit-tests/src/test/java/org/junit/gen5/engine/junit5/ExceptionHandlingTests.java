@@ -14,8 +14,8 @@ import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.ExecutionEventConditions.*;
 import static org.junit.gen5.engine.TestExecutionResultConditions.*;
-import static org.junit.gen5.engine.dsl.MethodTestPlanSpecificationElementBuilder.forMethod;
-import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.MethodTestPlanSpecificationElementBuilder.forMethod;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -29,7 +29,6 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.dsl.MethodTestPlanSpecificationElementBuilder;
 import org.opentest4j.AssertionFailedError;
 
 /**

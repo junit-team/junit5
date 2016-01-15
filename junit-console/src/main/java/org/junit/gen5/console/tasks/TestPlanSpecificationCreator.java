@@ -11,8 +11,8 @@
 package org.junit.gen5.console.tasks;
 
 import static java.util.stream.Collectors.toSet;
-import static org.junit.gen5.engine.ClassFilters.classNameMatches;
-import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.ClassFilters.classNameMatches;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import java.io.File;
 import java.util.Set;
@@ -21,9 +21,9 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.dsl.ClasspathTestPlanSpecificationElementBuilder;
-import org.junit.gen5.engine.dsl.NamedTestPlanSpecificationElementBuilder;
-import org.junit.gen5.engine.dsl.TagFilterBuilder;
+import org.junit.gen5.engine.specification.dsl.ClasspathTestPlanSpecificationElementBuilder;
+import org.junit.gen5.engine.specification.dsl.NamedTestPlanSpecificationElementBuilder;
+import org.junit.gen5.engine.specification.dsl.TagFilterBuilder;
 
 class TestPlanSpecificationCreator {
 

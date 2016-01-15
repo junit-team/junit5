@@ -10,7 +10,7 @@
 
 package org.junit.gen5.surefire;
 
-import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -26,7 +26,7 @@ import org.apache.maven.surefire.suite.RunResult;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.TestsToRun;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder;
+import org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder;
 import org.junit.gen5.launcher.Launcher;
 
 public class JUnitGen5Provider extends AbstractProvider {

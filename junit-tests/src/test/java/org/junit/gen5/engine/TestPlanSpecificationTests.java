@@ -13,14 +13,15 @@ package org.junit.gen5.engine;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertNotNull;
-import static org.junit.gen5.engine.dsl.NamedTestPlanSpecificationElementBuilder.forName;
-import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
-import static org.junit.gen5.engine.dsl.UniqueIdTestPlanSpecificationElementBuilder.forUniqueId;
+import static org.junit.gen5.engine.specification.dsl.NamedTestPlanSpecificationElementBuilder.forName;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.UniqueIdTestPlanSpecificationElementBuilder.forUniqueId;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.specification.*;
 
 /**
  * Unit tests for {@link TestPlanSpecification}.

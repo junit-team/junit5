@@ -12,8 +12,8 @@ package org.junit.gen5.junit4.runner;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.engine.ClassFilters.classNameMatches;
-import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.ClassFilters.classNameMatches;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -24,10 +24,11 @@ import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
+import org.junit.gen5.engine.DescriptorFilter;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.gen5.engine.dsl.*;
+import org.junit.gen5.engine.specification.dsl.*;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -145,7 +146,7 @@ public class JUnit5 extends Runner implements Filterable {
 	private void addIncludeTagsFilter(TestPlanSpecification plan) {
 		String[] includeTags = getIncludeTags();
 		if (includeTags.length > 0) {
-			Predicate<TestDescriptor> tagNamesFilter = TagFilterBuilder.includeTags(includeTags);
+			DescriptorFilter tagNamesFilter = TagFilterBuilder.includeTags(includeTags);
 			plan.addDescriptorFilter(tagNamesFilter);
 		}
 	}
@@ -153,7 +154,7 @@ public class JUnit5 extends Runner implements Filterable {
 	private void addExcludeTagsFilter(TestPlanSpecification plan) {
 		String[] excludeTags = getExcludeTags();
 		if (excludeTags.length > 0) {
-			Predicate<TestDescriptor> excludeTagsFilter = TagFilterBuilder.excludeTags(excludeTags);
+			DescriptorFilter excludeTagsFilter = TagFilterBuilder.excludeTags(excludeTags);
 			plan.addDescriptorFilter(excludeTagsFilter);
 		}
 	}
@@ -161,7 +162,7 @@ public class JUnit5 extends Runner implements Filterable {
 	private void addEngineIdFilter(TestPlanSpecification plan) {
 		String engineId = getExplicitEngineId();
 		if (StringUtils.isNotBlank(engineId)) {
-			Predicate<TestDescriptor> engineFilter = EngineFilterBuilder.filterByEngineId(engineId);
+			DescriptorFilter engineFilter = EngineFilterBuilder.filterByEngineId(engineId);
 			plan.addDescriptorFilter(engineFilter);
 		}
 	}

@@ -8,12 +8,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.specification;
 
 import java.io.File;
 
-public class AllTestsSpecification implements TestPlanSpecificationElement {
+import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
 
+public class AllTestsSpecification implements TestPlanSpecificationElement {
 	private final File classpathRoot;
 
 	public AllTestsSpecification(File classpathRoot) {

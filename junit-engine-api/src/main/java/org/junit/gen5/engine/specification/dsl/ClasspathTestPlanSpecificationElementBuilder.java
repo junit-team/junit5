@@ -8,17 +8,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.dsl;
+package org.junit.gen5.engine.specification.dsl;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.junit.gen5.engine.AllTestsSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.specification.AllTestsSpecification;
 
 public class ClasspathTestPlanSpecificationElementBuilder {
 	public static List<TestPlanSpecificationElement> allTests(Set<File> rootDirectories) {

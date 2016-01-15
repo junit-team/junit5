@@ -12,21 +12,21 @@ package org.junit.gen5.engine;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
-import static org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder.forClassName;
-import static org.junit.gen5.engine.dsl.MethodTestPlanSpecificationElementBuilder.forMethod;
-import static org.junit.gen5.engine.dsl.PackageTestPlanSpecificationElementBuilder.forPackage;
-import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
-import static org.junit.gen5.engine.dsl.UniqueIdTestPlanSpecificationElementBuilder.forUniqueId;
+import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClassName;
+import static org.junit.gen5.engine.specification.dsl.MethodTestPlanSpecificationElementBuilder.forMethod;
+import static org.junit.gen5.engine.specification.dsl.PackageTestPlanSpecificationElementBuilder.forPackage;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.UniqueIdTestPlanSpecificationElementBuilder.forUniqueId;
 
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.assertj.core.util.Files;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.dsl.*;
+import org.junit.gen5.engine.specification.*;
+import org.junit.gen5.engine.specification.dsl.*;
 
 public class TestPlanSpecificationBuilderTests {
 	@Test

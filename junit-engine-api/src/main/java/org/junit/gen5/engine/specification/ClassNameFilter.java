@@ -8,12 +8,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.specification;
 
 import java.util.regex.Pattern;
 
-public class ClassNameFilter implements ClassFilter {
+import org.junit.gen5.engine.ClassFilter;
 
+public class ClassNameFilter implements ClassFilter {
 	private final Pattern pattern;
 
 	public ClassNameFilter(String regex) {

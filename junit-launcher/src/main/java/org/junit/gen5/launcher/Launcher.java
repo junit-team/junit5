@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
  * Facade for <em>discovering</em> and <em>executing</em> tests using

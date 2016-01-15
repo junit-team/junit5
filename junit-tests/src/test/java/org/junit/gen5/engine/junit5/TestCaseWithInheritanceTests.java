@@ -12,15 +12,14 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.api.Assumptions.assumeTrue;
-import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
-import static org.junit.gen5.engine.dsl.UniqueIdTestPlanSpecificationElementBuilder.forUniqueId;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.UniqueIdTestPlanSpecificationElementBuilder.forUniqueId;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.dsl.UniqueIdTestPlanSpecificationElementBuilder;
 
 /**
  * Testing execution in test case hierarchy {@link JUnit5TestEngine}.

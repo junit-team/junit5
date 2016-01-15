@@ -19,6 +19,7 @@ import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.console.options.CommandLineOptions;
@@ -93,8 +94,9 @@ public class TestPlanSpecificationCreatorTests {
 
 		TestPlanSpecification specification = convert();
 
-		assertThat(specification.getEngineFiltersByType(ClassFilter.class)).hasSize(1);
-		assertThat(specification.getClassFilter().getDescription()).contains(".*Test");
+		List<ClassFilter> filter = specification.getEngineFiltersByType(ClassFilter.class);
+		assertThat(filter).hasSize(1);
+		assertThat(filter.get(0).getDescription()).contains(".*Test");
 	}
 
 	@Test

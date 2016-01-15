@@ -12,16 +12,14 @@ package org.junit.gen5.engine;
 
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
-import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.engine.specification.AllClassFilters;
 
 /**
  * @since 5.0
@@ -31,7 +29,7 @@ public final class TestPlanSpecification {
 
 	// Descriptor Filters are evaluated by the launcher itself after engines have done their discovery.
 	// Begin predicate chain with a predicate that always evaluates to true.
-	private final List<Predicate<TestDescriptor>> descriptorFilters = new LinkedList<>();
+	private final List<DescriptorFilter> descriptorFilters = new LinkedList<>();
 
 	// Engine filters are handed through to all test engines to be applied during discovery
 	private final List<EngineFilter> engineFilters = new LinkedList<>();
@@ -52,11 +50,11 @@ public final class TestPlanSpecification {
 		this.engineFilters.addAll(engineFilters);
 	}
 
-	public void addDescriptorFilter(Predicate<TestDescriptor> desciptorFilter) {
+	public void addDescriptorFilter(DescriptorFilter desciptorFilter) {
 		this.descriptorFilters.add(desciptorFilter);
 	}
 
-	public void addDescriptorFilters(Collection<Predicate<TestDescriptor>> desciptorFilters) {
+	public void addDescriptorFilters(Collection<DescriptorFilter> desciptorFilters) {
 		this.descriptorFilters.addAll(desciptorFilters);
 	}
 
@@ -78,10 +76,6 @@ public final class TestPlanSpecification {
 
 	public List<Predicate<TestDescriptor>> getDescriptorFilters() {
 		return unmodifiableList(this.descriptorFilters);
-	}
-
-	public ClassFilter getClassFilter() {
-		return ClassFilters.allOf(getEngineFiltersByType(ClassFilter.class));
 	}
 
 	public boolean acceptDescriptor(TestDescriptor testDescriptor) {

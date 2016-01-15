@@ -8,14 +8,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.dsl;
+package org.junit.gen5.engine;
 
 import java.util.function.Predicate;
 
-import org.junit.gen5.engine.TestDescriptor;
-
-public class EngineFilterBuilder {
-	public static Predicate<TestDescriptor> filterByEngineId(String engineId) {
-		return descriptor -> descriptor.getUniqueId().startsWith(engineId);
-	}
+public interface DescriptorFilter extends Predicate<TestDescriptor> {
 }

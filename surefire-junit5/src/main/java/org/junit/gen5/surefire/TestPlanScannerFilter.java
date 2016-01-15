@@ -10,11 +10,11 @@
 
 package org.junit.gen5.surefire;
 
-import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import org.apache.maven.surefire.util.ScannerFilter;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder;
+import org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;

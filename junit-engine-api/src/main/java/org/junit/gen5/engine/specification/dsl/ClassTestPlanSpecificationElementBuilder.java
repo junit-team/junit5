@@ -8,11 +8,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.dsl;
+package org.junit.gen5.engine.specification.dsl;
 
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.ClassSpecification;
+import org.junit.gen5.engine.specification.ClassSpecification;
 
 public class ClassTestPlanSpecificationElementBuilder {
 	public static ClassSpecification forClass(Class<?> testClass) {

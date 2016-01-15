@@ -8,12 +8,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.specification;
 
 import java.lang.reflect.Method;
 
-public class MethodSpecification implements TestPlanSpecificationElement {
+import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
 
+public class MethodSpecification implements TestPlanSpecificationElement {
 	private final Class<?> testClass;
 	private final Method testMethod;
 

@@ -8,12 +8,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.dsl;
+package org.junit.gen5.engine.specification.dsl;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
-import static org.junit.gen5.engine.dsl.MethodTestPlanSpecificationElementBuilder.forMethod;
-import static org.junit.gen5.engine.dsl.PackageTestPlanSpecificationElementBuilder.forPackage;
+import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.MethodTestPlanSpecificationElementBuilder.forMethod;
+import static org.junit.gen5.engine.specification.dsl.PackageTestPlanSpecificationElementBuilder.forPackage;
 
 import java.lang.reflect.Method;
 import java.util.*;

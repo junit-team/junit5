@@ -11,8 +11,8 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
-import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.Assertions;
@@ -22,7 +22,6 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder;
 
 /**
  * Integration tests that verify support for {@linkplain Nested nested contexts}

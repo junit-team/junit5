@@ -11,23 +11,18 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
-import static org.junit.gen5.engine.dsl.MethodTestPlanSpecificationElementBuilder.forMethod;
-import static org.junit.gen5.engine.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
-import static org.junit.gen5.engine.dsl.UniqueIdTestPlanSpecificationElementBuilder.forUniqueId;
+import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.MethodTestPlanSpecificationElementBuilder.forMethod;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.UniqueIdTestPlanSpecificationElementBuilder.forUniqueId;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.ClassSpecification;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.gen5.engine.dsl.ClassTestPlanSpecificationElementBuilder;
-import org.junit.gen5.engine.dsl.MethodTestPlanSpecificationElementBuilder;
-import org.junit.gen5.engine.dsl.UniqueIdTestPlanSpecificationElementBuilder;
 
 /**
  * Test correct test discovery in simple test classes for the {@link JUnit5TestEngine}.
