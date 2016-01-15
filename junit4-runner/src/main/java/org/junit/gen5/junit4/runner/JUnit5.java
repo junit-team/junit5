@@ -23,9 +23,9 @@ import java.util.function.Function;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
-import org.junit.gen5.engine.DescriptorFilter;
 import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.DiscoverySelector;
+import org.junit.gen5.engine.PostDiscoveryFilter;
 import org.junit.gen5.engine.specification.dsl.*;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestIdentifier;
@@ -138,31 +138,31 @@ public class JUnit5 extends Runner implements Filterable {
 	private void addClassNameMatchesFilter(DiscoveryRequest plan) {
 		String regex = getClassNameRegExPattern();
 		if (!regex.isEmpty()) {
-			plan.addEngineFilter(classNameMatches(regex));
+			plan.addFilter(classNameMatches(regex));
 		}
 	}
 
 	private void addIncludeTagsFilter(DiscoveryRequest plan) {
 		String[] includeTags = getIncludeTags();
 		if (includeTags.length > 0) {
-			DescriptorFilter tagNamesFilter = TagFilterBuilder.includeTags(includeTags);
-			plan.addDescriptorFilter(tagNamesFilter);
+			PostDiscoveryFilter tagNamesFilter = TagFilterBuilder.includeTags(includeTags);
+			plan.addPostFilter(tagNamesFilter);
 		}
 	}
 
 	private void addExcludeTagsFilter(DiscoveryRequest plan) {
 		String[] excludeTags = getExcludeTags();
 		if (excludeTags.length > 0) {
-			DescriptorFilter excludeTagsFilter = TagFilterBuilder.excludeTags(excludeTags);
-			plan.addDescriptorFilter(excludeTagsFilter);
+			PostDiscoveryFilter excludeTagsFilter = TagFilterBuilder.excludeTags(excludeTags);
+			plan.addPostFilter(excludeTagsFilter);
 		}
 	}
 
 	private void addEngineIdFilter(DiscoveryRequest plan) {
 		String engineId = getExplicitEngineId();
 		if (StringUtils.isNotBlank(engineId)) {
-			DescriptorFilter engineFilter = EngineFilterBuilder.filterByEngineId(engineId);
-			plan.addDescriptorFilter(engineFilter);
+			PostDiscoveryFilter engineFilter = EngineFilterBuilder.filterByEngineId(engineId);
+			plan.addPostFilter(engineFilter);
 		}
 	}
 

@@ -20,25 +20,24 @@ import org.junit.gen5.engine.specification.PredicateBasedClassFilter;
 import org.junit.gen5.engine.specification.dsl.ClassFilters;
 
 class ClassFiltersTests {
-
 	@Test
 	void classNameMatches() {
 		String regex = "^java\\.lang\\..*";
 
 		ClassFilter filter = ClassFilters.classNameMatches(regex);
 
-		assertEquals("Filter class names with regular expression: " + regex, filter.getDescription());
-		assertTrue(filter.acceptClass(String.class));
-		assertFalse(filter.acceptClass(Collection.class));
+		assertEquals("Filter class names with regular expression: " + regex, filter.toString());
+		assertFalse(filter.filter(String.class).isFiltered());
+		assertTrue(filter.filter(Collection.class).isFiltered());
 	}
 
 	@Test
 	void anyClass() {
 		ClassFilter filter = ClassFilters.anyClass();
 
-		assertEquals("Any class", filter.getDescription());
-		assertTrue(filter.acceptClass(String.class));
-		assertTrue(filter.acceptClass(this.getClass()));
+		assertEquals("Any class", filter.toString());
+		assertFalse(filter.filter(String.class).isFiltered());
+		assertFalse(filter.filter(this.getClass()).isFiltered());
 	}
 
 	@Test
@@ -47,9 +46,9 @@ class ClassFiltersTests {
 
 		ClassFilter filter = ClassFilters.allOf(noFilters);
 
-		assertEquals("Any class", filter.getDescription());
-		assertTrue(filter.acceptClass(String.class));
-		assertTrue(filter.acceptClass(Object.class));
+		assertEquals("Any class", filter.toString());
+		assertFalse(filter.filter(String.class).isFiltered());
+		assertFalse(filter.filter(Object.class).isFiltered());
 	}
 
 	@Test
@@ -68,8 +67,8 @@ class ClassFiltersTests {
 
 		ClassFilter filter = ClassFilters.allOf(firstFilter, secondFilter);
 
-		assertFalse(filter.acceptClass(String.class));
-		assertTrue(filter.acceptClass(StringJoiner.class));
+		assertTrue(filter.filter(String.class).isFiltered());
+		assertFalse(filter.filter(StringJoiner.class).isFiltered());
 	}
 
 	@Test
@@ -79,7 +78,6 @@ class ClassFiltersTests {
 
 		ClassFilter filter = ClassFilters.allOf(firstFilter, secondFilter);
 
-		assertEquals("(1st) and (2nd)", filter.getDescription());
+		assertEquals("(1st) and (2nd)", filter.toString());
 	}
-
 }

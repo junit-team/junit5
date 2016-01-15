@@ -42,14 +42,14 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 
 	private void resolveSpecification(DiscoveryRequest specification, JUnit5EngineDescriptor engineDescriptor) {
 		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver(engineDescriptor);
-		for (DiscoverySelector element : specification.getElements()) {
+		for (DiscoverySelector element : specification.getSelectors()) {
 			resolver.resolveElement(element);
 		}
 		applyEngineFilters(specification, engineDescriptor);
 	}
 
 	private void applyEngineFilters(DiscoveryRequest specification, JUnit5EngineDescriptor engineDescriptor) {
-		List<ClassFilter> classFilters = specification.getEngineFiltersByType(ClassFilter.class);
+		List<ClassFilter> classFilters = specification.getFilterByType(ClassFilter.class);
 		if (classFilters.isEmpty()) {
 			return;
 		}
@@ -58,7 +58,7 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 			if (descriptor instanceof ClassTestDescriptor) {
 				ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptor;
 				for (ClassFilter filter : classFilters) {
-					if (!filter.acceptClass(classTestDescriptor.getTestClass())) {
+					if (filter.filter(classTestDescriptor.getTestClass()).isFiltered()) {
 						remove.run();
 					}
 				}

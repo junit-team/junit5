@@ -10,7 +10,5 @@
 
 package org.junit.gen5.engine;
 
-import java.util.function.Predicate;
-
-public interface DescriptorFilter extends Predicate<TestDescriptor> {
+public interface PostDiscoveryFilter extends GenericFilter<TestDescriptor> {
 }

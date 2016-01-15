@@ -10,28 +10,23 @@
 
 package org.junit.gen5.engine.junit4.discovery;
 
-import static java.util.stream.Collectors.*;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toCollection;
+import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
+import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackage;
 import static org.junit.gen5.engine.junit4.discovery.RunnerTestDescriptorAwareFilter.adapter;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
 import java.util.function.IntFunction;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.*;
 import org.junit.gen5.engine.ClassFilter;
 import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.DiscoverySelectorVisitor;
+import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.gen5.engine.specification.AllClassFilters;
@@ -51,7 +46,7 @@ public class JUnit4TestPlanSpecificationResolver {
 	}
 
 	public void resolve(DiscoveryRequest specification) {
-		ClassFilter classFilter = new AllClassFilters(specification.getEngineFiltersByType(ClassFilter.class));
+		ClassFilter classFilter = new AllClassFilters(specification.getFilterByType(ClassFilter.class));
 		RunnerBuilder runnerBuilder = new DefensiveAllDefaultPossibilitiesBuilder();
 		Set<Class<?>> unfilteredTestClasses = new LinkedHashSet<>();
 		Map<Class<?>, List<RunnerTestDescriptorAwareFilter>> filteredTestClasses = new LinkedHashMap<>();
@@ -61,7 +56,7 @@ public class JUnit4TestPlanSpecificationResolver {
 
 			@Override
 			public void visitClass(Class<?> testClass) {
-				if (classFilter.acceptClass(testClass)) {
+				if (!classFilter.filter(testClass).isFiltered()) {
 					unfilteredTestClasses.add(testClass);
 				}
 			}

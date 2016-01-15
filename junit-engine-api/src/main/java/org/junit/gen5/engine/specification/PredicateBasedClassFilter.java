@@ -14,6 +14,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.junit.gen5.engine.ClassFilter;
+import org.junit.gen5.engine.FilterResult;
 
 public class PredicateBasedClassFilter implements ClassFilter {
 	private final Predicate<? super Class<?>> predicate;
@@ -25,12 +26,17 @@ public class PredicateBasedClassFilter implements ClassFilter {
 	}
 
 	@Override
-	public String getDescription() {
+	public String toString() {
 		return descriptionSupplier.get();
 	}
 
 	@Override
-	public boolean acceptClass(Class<?> testClass) {
-		return predicate.test(testClass);
+	public FilterResult filter(Class<?> testClass) {
+		if (predicate.test(testClass)) {
+			return FilterResult.active("TestClass matches predicate");
+		}
+		else {
+			return FilterResult.filtered("TestClass does not match predicate");
+		}
 	}
 }

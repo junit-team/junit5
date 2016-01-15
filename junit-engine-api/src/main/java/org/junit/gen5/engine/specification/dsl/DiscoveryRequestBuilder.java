@@ -11,12 +11,8 @@
 package org.junit.gen5.engine.specification.dsl;
 
 import java.util.*;
-import java.util.function.Predicate;
 
-import org.junit.gen5.engine.DiscoveryRequest;
-import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.EngineFilter;
-import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.*;
 
 /**
  * The {@code DiscoveryRequestBuilder} provides a light-weight DSL for
@@ -52,9 +48,9 @@ import org.junit.gen5.engine.TestDescriptor;
  * </pre>
  */
 public final class DiscoveryRequestBuilder {
-	private List<DiscoverySelector> specElements = new LinkedList<>();
-	private List<EngineFilter> engineFilters = new LinkedList<>();
-	private List<Predicate<TestDescriptor>> descriptorFilters = new LinkedList<>();
+	private List<DiscoverySelector> selectors = new LinkedList<>();
+	private List<DiscoveryFilter> filters = new LinkedList<>();
+	private List<PostDiscoveryFilter> postFilters = new LinkedList<>();
 
 	public static DiscoveryRequestBuilder request() {
 		return new DiscoveryRequestBuilder();
@@ -69,29 +65,29 @@ public final class DiscoveryRequestBuilder {
 
 	public DiscoveryRequestBuilder select(List<DiscoverySelector> elements) {
 		if (elements != null) {
-			this.specElements.addAll(elements);
+			this.selectors.addAll(elements);
 		}
 		return this;
 	}
 
-	public DiscoveryRequestBuilder filterBy(EngineFilter... filters) {
+	public DiscoveryRequestBuilder filterBy(DiscoveryFilter... filters) {
 		if (filters != null) {
-			this.engineFilters.addAll(Arrays.asList(filters));
+			this.filters.addAll(Arrays.asList(filters));
 		}
 		return this;
 	}
 
-	public DiscoveryRequestBuilder filterBy(Predicate<TestDescriptor>... filters) {
+	public DiscoveryRequestBuilder filterBy(PostDiscoveryFilter... filters) {
 		if (filters != null) {
-			this.descriptorFilters.addAll(Arrays.asList(filters));
+			this.postFilters.addAll(Arrays.asList(filters));
 		}
 		return this;
 	}
 
 	public DiscoveryRequest build() {
 		DiscoveryRequest discoveryRequest = new DiscoveryRequest();
-		discoveryRequest.addElements(this.specElements);
-		discoveryRequest.addEngineFilters(this.engineFilters);
+		discoveryRequest.addSelectors(this.selectors);
+		discoveryRequest.addFilters(this.filters);
 		return discoveryRequest;
 	}
 }

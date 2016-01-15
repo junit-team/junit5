@@ -58,12 +58,12 @@ class TestPlanSpecificationCreator {
 	}
 
 	private void applyFilters(DiscoveryRequest specification, CommandLineOptions options) {
-		options.getClassnameFilter().ifPresent(regex -> specification.addEngineFilter(classNameMatches(regex)));
+		options.getClassnameFilter().ifPresent(regex -> specification.addFilter(classNameMatches(regex)));
 		if (!options.getTagsFilter().isEmpty()) {
-			specification.addDescriptorFilter(TagFilterBuilder.includeTags(options.getTagsFilter()));
+			specification.addPostFilter(TagFilterBuilder.includeTags(options.getTagsFilter()));
 		}
 		if (!options.getExcludeTags().isEmpty()) {
-			specification.addDescriptorFilter(TagFilterBuilder.excludeTags(options.getExcludeTags()));
+			specification.addPostFilter(TagFilterBuilder.excludeTags(options.getExcludeTags()));
 		}
 	}
 }
