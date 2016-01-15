@@ -13,13 +13,16 @@ package org.junit.gen5.engine.junit4.discovery;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Stream.concat;
+import static org.junit.gen5.commons.util.FunctionUtils.where;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 class TestClassCollection {
@@ -35,18 +38,25 @@ class TestClassCollection {
 		filteredTestClasses.computeIfAbsent(testClass, key -> new LinkedList<>()).add(filter);
 	}
 
-	Set<TestClassEntry> toEntries() {
-		return concat(completeEntries(), filteredEntries()).collect(toCollection(LinkedHashSet::new));
+	Set<TestClassEntry> toEntries(Predicate<? super Class<?>> predicate) {
+		// @formatter:off
+		return concat(completeEntries(predicate), filteredEntries(predicate))
+				.collect(toCollection(LinkedHashSet::new));
+		// @formatter:on
 	}
 
-	private Stream<TestClassEntry> completeEntries() {
-		return completeTestClasses.stream().map(TestClassEntry::new);
+	private Stream<TestClassEntry> completeEntries(Predicate<? super Class<?>> predicate) {
+		return completeTestClasses.stream().filter(predicate).map(TestClassEntry::new);
 	}
 
-	private Stream<TestClassEntry> filteredEntries() {
+	private Stream<TestClassEntry> filteredEntries(Predicate<? super Class<?>> predicate) {
 		// TODO #40 Remove classes contained in completeTestClasses
-		return filteredTestClasses.entrySet().stream().map(
-			entry -> new TestClassEntry(entry.getKey(), entry.getValue()));
+		// @formatter:off
+		return filteredTestClasses.entrySet()
+				.stream()
+				.filter(where(Entry::getKey, predicate))
+				.map(entry -> new TestClassEntry(entry.getKey(), entry.getValue()));
+		// @formatter:on
 	}
 
 	static class TestClassEntry {

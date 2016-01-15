@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.IntFunction;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
@@ -95,8 +96,7 @@ public class JUnit4TestPlanSpecificationResolver {
 
 		ClassFilter classFilter = new AllClassFilters(request.getEngineFiltersByType(ClassFilter.class));
 
-		// TODO #40 Pass classFilters to toEntries() method?
-		convertToTestDescriptors(testClasses, classFilter);
+		convertToTestDescriptors(testClasses.toEntries(classFilter::acceptClass));
 	}
 
 	private String determineTestClassName(String uniqueId, String enginePrefix) {
@@ -107,15 +107,13 @@ public class JUnit4TestPlanSpecificationResolver {
 		return uniqueId.substring(enginePrefix.length());
 	}
 
-	private void convertToTestDescriptors(TestClassCollection testClasses, ClassFilter classFilter) {
+	private void convertToTestDescriptors(Set<TestClassEntry> testClassEntries) {
 		RunnerBuilder runnerBuilder = new DefensiveAllDefaultPossibilitiesBuilder();
-		for (TestClassEntry entry : testClasses.toEntries()) {
+		for (TestClassEntry entry : testClassEntries) {
 			Class<?> testClass = entry.getTestClass();
-			if (classFilter.acceptClass(testClass)) {
-				Runner runner = runnerBuilder.safeRunnerForClass(testClass);
-				if (runner != null) {
-					addRunnerTestDescriptor(testClass, runner, entry.getFilters());
-				}
+			Runner runner = runnerBuilder.safeRunnerForClass(testClass);
+			if (runner != null) {
+				addRunnerTestDescriptor(testClass, runner, entry.getFilters());
 			}
 		}
 	}
