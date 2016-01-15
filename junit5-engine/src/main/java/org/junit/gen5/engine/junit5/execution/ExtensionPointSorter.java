@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 
 import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
-import org.junit.gen5.api.extension.ExtensionPoint.Position;
+import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 
 /**
  * Utility for sorting {@linkplain RegisteredExtensionPoint extension points}
- * according to their {@linkplain Position}:
+ * according to their {@link Position}:
  * {@link Position#OUTERMOST OUTERMOST} &raquo;
  * {@link Position#OUTSIDE_DEFAULT OUTSIDE_DEFAULT} &raquo;
  * {@link Position#DEFAULT DEFAULT} &raquo;
@@ -76,7 +76,7 @@ public class ExtensionPointSorter {
 
 		@Override
 		public int compare(RegisteredExtensionPoint<?> first, RegisteredExtensionPoint<?> second) {
-			return Integer.compare(first.getPosition().sortingOrder, second.getPosition().sortingOrder);
+			return Integer.compare(first.getPosition().ordinal(), second.getPosition().ordinal());
 		}
 
 	}

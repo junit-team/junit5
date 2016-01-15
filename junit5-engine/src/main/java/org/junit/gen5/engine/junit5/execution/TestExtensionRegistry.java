@@ -21,8 +21,8 @@ import java.util.stream.Stream;
 
 import org.junit.gen5.api.extension.Extension;
 import org.junit.gen5.api.extension.ExtensionPoint;
-import org.junit.gen5.api.extension.ExtensionPoint.Position;
 import org.junit.gen5.api.extension.ExtensionPointRegistry;
+import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;

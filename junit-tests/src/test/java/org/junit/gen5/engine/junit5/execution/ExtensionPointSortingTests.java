@@ -22,7 +22,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
-import org.junit.gen5.api.extension.ExtensionPoint.Position;
+import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 
 /**
  * Unit tests for {@link ExtensionPointSorter}.

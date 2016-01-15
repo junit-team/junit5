@@ -10,11 +10,12 @@
 
 package com.example.timing;
 
+import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.INNERMOST;
+
 import java.lang.reflect.Method;
 
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
-import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.TestExtensionContext;
@@ -31,8 +32,8 @@ public class TimingExtension implements ExtensionRegistrar {
 
 	@Override
 	public void registerExtensions(ExtensionPointRegistry registry) {
-		registry.register(this::beforeEach, BeforeEachExtensionPoint.class, ExtensionPoint.Position.INNERMOST);
-		registry.register(this::afterEach, AfterEachExtensionPoint.class, ExtensionPoint.Position.INNERMOST);
+		registry.register(this::beforeEach, BeforeEachExtensionPoint.class, INNERMOST);
+		registry.register(this::afterEach, AfterEachExtensionPoint.class, INNERMOST);
 	}
 
 	private void beforeEach(TestExtensionContext context) throws Exception {

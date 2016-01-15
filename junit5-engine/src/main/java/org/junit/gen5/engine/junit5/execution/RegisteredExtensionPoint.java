@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.junit5.execution;
 
 import org.junit.gen5.api.extension.ExtensionPoint;
-import org.junit.gen5.api.extension.ExtensionPoint.Position;
+import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**

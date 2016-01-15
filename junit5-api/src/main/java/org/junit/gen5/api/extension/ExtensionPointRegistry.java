@@ -10,8 +10,6 @@
 
 package org.junit.gen5.api.extension;
 
-import org.junit.gen5.api.extension.ExtensionPoint.Position;
-
 /**
  * A registry for {@link ExtensionPoint} implementations which can be
  * populated via an {@link ExtensionRegistrar}.
@@ -21,6 +19,49 @@ import org.junit.gen5.api.extension.ExtensionPoint.Position;
  * @see ExtensionRegistrar
  */
 public interface ExtensionPointRegistry {
+
+	/**
+	 * {@code Position} specifies the position in which a registered
+	 * {@link ExtensionPoint} is applied with regard to all other registered
+	 * extension points of the same type.
+	 *
+	 * <p>The position can be specified when programmatically
+	 * {@linkplain ExtensionPointRegistry#register(ExtensionPoint, Class, Position)
+	 * registering} an extension point. Possible values include
+	 * {@link #OUTERMOST OUTERMOST}, {@link #OUTSIDE_DEFAULT OUTSIDE_DEFAULT},
+	 * {@link #DEFAULT DEFAULT}, {@link #INSIDE_DEFAULT INSIDE_DEFAULT}, and
+	 * {@link #INNERMOST INNERMOST}.
+	 */
+	enum Position {
+
+		/**
+		 * Apply first.
+		 *
+		 * <p>Only a single extension is allowed to be assigned this position;
+		 * otherwise, an {@link ExtensionConfigurationException} will be
+		 * thrown.
+		 */
+		OUTERMOST,
+
+		/**
+		 * Apply after {@link #OUTERMOST} but before {@link #DEFAULT},
+		 * {@link #INSIDE_DEFAULT}, and {@link #INNERMOST}.
+		 *
+		 * <p>Multiple extensions can be assigned this position; however,
+		 * the ordering among such extensions is undefined.
+		 */
+		OUTSIDE_DEFAULT,
+
+		// TODO Document DEFAULT position.
+		DEFAULT,
+
+		// TODO Document INSIDE_DEFAULT position.
+		INSIDE_DEFAULT,
+
+		// TODO Document INNERMOST position.
+		INNERMOST;
+
+	}
 
 	/**
 	 * Register an {@link ExtensionPoint} of the specified type using the
