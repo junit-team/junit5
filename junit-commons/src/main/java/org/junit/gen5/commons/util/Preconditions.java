@@ -10,7 +10,7 @@
 
 package org.junit.gen5.commons.util;
 
-import java.util.Collection;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -58,9 +58,7 @@ public final class Preconditions {
 	 */
 	public static Object[] notNull(Object[] objects, String message) throws PreconditionViolationException {
 		notNull(objects, () -> "objects array must not be null");
-		for (Object object : objects) {
-			notNull(object, () -> message);
-		}
+		Arrays.stream(objects).forEach(object -> notNull(object, () -> message));
 
 		return objects;
 	}
