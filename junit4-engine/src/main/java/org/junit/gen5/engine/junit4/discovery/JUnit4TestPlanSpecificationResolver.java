@@ -15,17 +15,15 @@ import static java.util.stream.Collectors.toCollection;
 import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackage;
 import static org.junit.gen5.engine.junit4.discovery.RunnerTestDescriptorAwareFilter.adapter;
+import static org.junit.runner.manipulation.Filter.matchMethodDescription;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.IntFunction;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
@@ -34,6 +32,7 @@ import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
+import org.junit.gen5.engine.junit4.discovery.TestClassCollection.TestClassEntry;
 import org.junit.gen5.engine.specification.AllClassFilters;
 import org.junit.gen5.engine.specification.ClassSelector;
 import org.junit.gen5.engine.specification.ClasspathSelector;
@@ -58,27 +57,25 @@ public class JUnit4TestPlanSpecificationResolver {
 	public void resolve(DiscoveryRequest request) {
 
 		IsPotentialJUnit4TestClass classTester = new IsPotentialJUnit4TestClass();
-		Set<Class<?>> unfilteredTestClasses = new LinkedHashSet<>();
-		Map<Class<?>, List<RunnerTestDescriptorAwareFilter>> filteredTestClasses = new LinkedHashMap<>();
+		TestClassCollection testClasses = new TestClassCollection();
 
 		request.getElementsByType(ClasspathSelector.class).forEach(selector -> {
-			findAllClassesInClasspathRoot(selector.getClasspathRoot(), classTester).forEach(unfilteredTestClasses::add);
+			findAllClassesInClasspathRoot(selector.getClasspathRoot(), classTester).forEach(testClasses::addCompletely);
 		});
 
 		request.getElementsByType(PackageNameSelector.class).forEach(selector -> {
-			findAllClassesInPackage(selector.getPackageName(), classTester).forEach(unfilteredTestClasses::add);
+			findAllClassesInPackage(selector.getPackageName(), classTester).forEach(testClasses::addCompletely);
 		});
 
 		request.getElementsByType(ClassSelector.class).forEach(selector -> {
-			unfilteredTestClasses.add(selector.getTestClass());
+			testClasses.addCompletely(selector.getTestClass());
 		});
 
 		request.getElementsByType(MethodSelector.class).forEach(selector -> {
 			Class<?> testClass = selector.getTestClass();
 			Method testMethod = selector.getTestMethod();
 			Description methodDescription = Description.createTestDescription(testClass, testMethod.getName());
-			RunnerTestDescriptorAwareFilter filter = adapter(Filter.matchMethodDescription(methodDescription));
-			filteredTestClasses.computeIfAbsent(testClass, key -> new LinkedList<>()).add(filter);
+			testClasses.addFiltered(testClass, adapter(matchMethodDescription(methodDescription)));
 		});
 
 		request.getElementsByType(UniqueIdSelector.class).forEach(selector -> {
@@ -88,46 +85,18 @@ public class JUnit4TestPlanSpecificationResolver {
 				String testClassName = determineTestClassName(uniqueId, enginePrefix);
 				Optional<Class<?>> testClass = ReflectionUtils.loadClass(testClassName);
 				if (testClass.isPresent()) {
-					RunnerTestDescriptorAwareFilter filter = new UniqueIdFilter(uniqueId);
-					filteredTestClasses.computeIfAbsent(testClass.get(), key -> new LinkedList<>()).add(filter);
+					testClasses.addFiltered(testClass.get(), new UniqueIdFilter(uniqueId));
 				}
 				else {
-					// TODO Log warning
+					// TODO #40 Log warning
 				}
 			}
 		});
 
 		ClassFilter classFilter = new AllClassFilters(request.getEngineFiltersByType(ClassFilter.class));
 
-		convertToTestDescriptors(unfilteredTestClasses, filteredTestClasses, classFilter);
-	}
-
-	private void convertToTestDescriptors(Set<Class<?>> unfilteredTestClasses,
-			Map<Class<?>, List<RunnerTestDescriptorAwareFilter>> filteredTestClasses, ClassFilter classFilter) {
-		RunnerBuilder runnerBuilder = new DefensiveAllDefaultPossibilitiesBuilder();
-
-		// TODO #40 @marcphilipp Clean this up when uniqueIds are resolved
-		for (Class<?> testClass : unfilteredTestClasses) {
-			if (classFilter.acceptClass(testClass)) {
-				Runner runner = runnerBuilder.safeRunnerForClass(testClass);
-				if (runner != null) {
-					engineDescriptor.addChild(createCompleteRunnerTestDescriptor(testClass, runner));
-				}
-			}
-		}
-		for (Entry<Class<?>, List<RunnerTestDescriptorAwareFilter>> entry : filteredTestClasses.entrySet()) {
-			Class<?> testClass = entry.getKey();
-			List<RunnerTestDescriptorAwareFilter> filters = entry.getValue();
-			// TODO check ClassFilter
-			Runner runner = runnerBuilder.safeRunnerForClass(testClass);
-			if (runner != null) {
-				RunnerTestDescriptor originalDescriptor = createCompleteRunnerTestDescriptor(testClass, runner);
-				Filter filter = createOrFilter(filters, originalDescriptor);
-				Runner filteredRunner = originalDescriptor.toRequest().filterWith(filter).getRunner();
-				// TODO Log warning if runner does not implement Filterable
-				engineDescriptor.addChild(createCompleteRunnerTestDescriptor(testClass, filteredRunner));
-			}
-		}
+		// TODO #40 Pass classFilters to toEntries() method?
+		convertToTestDescriptors(testClasses, classFilter);
 	}
 
 	private String determineTestClassName(String uniqueId, String enginePrefix) {
@@ -136,6 +105,31 @@ public class JUnit4TestPlanSpecificationResolver {
 			return uniqueId.substring(enginePrefix.length(), endIndex);
 		}
 		return uniqueId.substring(enginePrefix.length());
+	}
+
+	private void convertToTestDescriptors(TestClassCollection testClasses, ClassFilter classFilter) {
+		RunnerBuilder runnerBuilder = new DefensiveAllDefaultPossibilitiesBuilder();
+		for (TestClassEntry entry : testClasses.toEntries()) {
+			Class<?> testClass = entry.getTestClass();
+			if (classFilter.acceptClass(testClass)) {
+				Runner runner = runnerBuilder.safeRunnerForClass(testClass);
+				if (runner != null) {
+					addRunnerTestDescriptor(testClass, runner, entry.getFilters());
+				}
+			}
+		}
+	}
+
+	private void addRunnerTestDescriptor(Class<?> testClass, Runner runner,
+			List<RunnerTestDescriptorAwareFilter> filters) {
+		RunnerTestDescriptor runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, runner);
+		if (!filters.isEmpty()) {
+			Filter filter = createOrFilter(filters, runnerTestDescriptor);
+			Runner filteredRunner = runnerTestDescriptor.toRequest().filterWith(filter).getRunner();
+			// TODO #40 Log warning if runner does not implement Filterable
+			runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, filteredRunner);
+		}
+		engineDescriptor.addChild(runnerTestDescriptor);
 	}
 
 	private Filter createOrFilter(List<RunnerTestDescriptorAwareFilter> filters,
