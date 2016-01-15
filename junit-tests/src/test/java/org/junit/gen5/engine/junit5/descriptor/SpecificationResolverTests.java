@@ -21,12 +21,12 @@ import java.util.stream.Collectors;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.PreconditionViolationException;
-import org.junit.gen5.engine.ClassSpecification;
 import org.junit.gen5.engine.DummyTestEngine;
-import org.junit.gen5.engine.MethodSpecification;
-import org.junit.gen5.engine.PackageSpecification;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.UniqueIdSpecification;
+import org.junit.gen5.engine.specification.ClassSpecification;
+import org.junit.gen5.engine.specification.MethodSpecification;
+import org.junit.gen5.engine.specification.PackageSpecification;
+import org.junit.gen5.engine.specification.UniqueIdSpecification;
 
 public class SpecificationResolverTests {
 

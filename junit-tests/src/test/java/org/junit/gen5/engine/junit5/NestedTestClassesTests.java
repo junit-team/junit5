@@ -11,7 +11,8 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.Assertions;
@@ -32,7 +33,7 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void nestedTestsAreCorrectlyDiscovered() {
-		TestPlanSpecification spec = build(forClass(TestCaseWithNesting.class));
+		TestPlanSpecification spec = testPlanSpecification().withElements(forClass(TestCaseWithNesting.class)).build();
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
@@ -51,7 +52,8 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void doublyNestedTestsAreCorrectlyDiscovered() {
-		TestPlanSpecification spec = build(forClass(TestCaseWithDoubleNesting.class));
+		TestPlanSpecification spec = testPlanSpecification().withElements(
+			forClass(TestCaseWithDoubleNesting.class)).build();
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		assertEquals(8, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}

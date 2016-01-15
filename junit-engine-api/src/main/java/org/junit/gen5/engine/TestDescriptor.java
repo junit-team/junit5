@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * @since 5.0
  */
 public interface TestDescriptor {
-
 	/**
 	 * Get the unique identifier (UID) for the described test.
 	 *
@@ -93,5 +92,4 @@ public interface TestDescriptor {
 	void accept(Visitor visitor);
 
 	Optional<TestSource> getSource();
-
 }

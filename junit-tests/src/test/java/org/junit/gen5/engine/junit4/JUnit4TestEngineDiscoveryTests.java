@@ -14,17 +14,16 @@ import static java.text.MessageFormat.format;
 import static java.util.Collections.singleton;
 import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertFalse;
-import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
-import static org.junit.gen5.engine.ClassFilters.classNameMatches;
-import static org.junit.gen5.engine.TestPlanSpecification.allTests;
-import static org.junit.gen5.engine.TestPlanSpecification.build;
-import static org.junit.gen5.engine.TestPlanSpecification.forClass;
-import static org.junit.gen5.engine.TestPlanSpecification.forMethod;
-import static org.junit.gen5.engine.TestPlanSpecification.forPackage;
+import static org.junit.gen5.engine.specification.dsl.ClassFilters.classNameMatches;
+import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.ClasspathTestPlanSpecificationElementBuilder.allTests;
+import static org.junit.gen5.engine.specification.dsl.MethodTestPlanSpecificationElementBuilder.forMethod;
+import static org.junit.gen5.engine.specification.dsl.PackageTestPlanSpecificationElementBuilder.forPackage;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.UniqueIdTestPlanSpecificationElementBuilder.forUniqueId;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -41,19 +40,11 @@ import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit4.samples.PlainOldJavaClassWithoutAnyTest;
 import org.junit.gen5.engine.junit4.samples.junit3.JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
+import org.junit.gen5.engine.junit4.samples.junit4.*;
 import org.junit.gen5.engine.junit4.samples.junit4.Categories.Failing;
 import org.junit.gen5.engine.junit4.samples.junit4.Categories.Plain;
 import org.junit.gen5.engine.junit4.samples.junit4.Categories.Skipped;
 import org.junit.gen5.engine.junit4.samples.junit4.Categories.SkippedWithReason;
-import org.junit.gen5.engine.junit4.samples.junit4.IgnoredJUnit4TestCase;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
-import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithOverloadedMethod;
-import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
-import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleInheritedTestWhichFails;
-import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
-import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
-import org.junit.gen5.engine.junit4.samples.junit4.SingleFailingTheoryTestCase;
-import org.junit.gen5.engine.junit4.samples.junit4.TestCaseRunWithJUnit5;
 import org.junit.runner.manipulation.Filter;
 
 class JUnit4TestEngineDiscoveryTests {
@@ -194,8 +185,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesAllTestsSpecification() throws Exception {
 		File root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
-		TestPlanSpecification specification = build(allTests(singleton(root)));
-
+		TestPlanSpecification specification = testPlanSpecification().withElements(allTests(singleton(root))).build();
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
 		// @formatter:off
@@ -210,9 +200,10 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesApplyingClassFilters() throws Exception {
 		File root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
-		TestPlanSpecification specification = build(allTests(singleton(root)));
-		specification.filterWith(classNameMatches(".*JUnit4.*"));
-		specification.filterWith(classNameMatches(".*Plain.*"));
+
+		TestPlanSpecification specification = testPlanSpecification().withElements(
+			allTests(singleton(root))).withEngineFilters(classNameMatches(".*JUnit4.*"),
+				classNameMatches(".*Plain.*")).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
@@ -228,7 +219,9 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesPackageSpecificationForJUnit4SamplesPackage() {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
-		TestPlanSpecification specification = build(forPackage(testClass.getPackage().getName()));
+
+		TestPlanSpecification specification = testPlanSpecification().withElements(
+			forPackage(testClass.getPackage().getName())).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
@@ -243,7 +236,9 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesPackageSpecificationForJUnit3SamplesPackage() {
 		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
-		TestPlanSpecification specification = build(forPackage(testClass.getPackage().getName()));
+
+		TestPlanSpecification specification = testPlanSpecification().withElements(
+			forPackage(testClass.getPackage().getName())).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
@@ -302,7 +297,8 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesMethodSpecificationForSingleMethod() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		TestPlanSpecification specification = build(forMethod(testClass, testClass.getMethod("failingTest")));
+		TestPlanSpecification specification = testPlanSpecification().withElements(
+			forMethod(testClass, testClass.getMethod("failingTest"))).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
@@ -316,8 +312,9 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesMethodSpecificationForTwoMethodsOfSameClass() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		TestPlanSpecification specification = build(forMethod(testClass, testClass.getMethod("failingTest")),
-			forMethod(testClass, testClass.getMethod("successfulTest")));
+		TestPlanSpecification specification = testPlanSpecification().withElements(
+			forMethod(testClass, testClass.getMethod("failingTest")),
+			forMethod(testClass, testClass.getMethod("successfulTest"))).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
@@ -337,9 +334,8 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesUniqueIdSpecificationForSingleMethod() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		TestPlanSpecification specification = build(TestPlanSpecification.forUniqueId(
-			"junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods"
-					+ "/failingTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods)"));
+		TestPlanSpecification specification = testPlanSpecification().withElements(forUniqueId(
+			"junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods/failingTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods)")).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
@@ -353,8 +349,8 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesUniqueIdSpecificationForSingleClass() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		TestPlanSpecification specification = build(TestPlanSpecification.forUniqueId(
-			"junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods"));
+		TestPlanSpecification specification = testPlanSpecification().withElements(forUniqueId(
+			"junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods")).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
@@ -367,9 +363,8 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void doesNotResolveMissingUniqueIdSpecificationForSingleClass() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		TestPlanSpecification specification = build(TestPlanSpecification.forUniqueId(
-			"junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods"
-					+ "/doesNotExist"));
+		TestPlanSpecification specification = testPlanSpecification().withElements(forUniqueId(
+			"junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods/doesNotExist")).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(specification);
 
@@ -460,6 +455,6 @@ class JUnit4TestEngineDiscoveryTests {
 	}
 
 	private static TestPlanSpecification buildClassSpecification(Class<?> testClass) {
-		return build(forClass(testClass));
+		return testPlanSpecification().withElements(forClass(testClass)).build();
 	}
 }

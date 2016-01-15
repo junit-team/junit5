@@ -12,7 +12,8 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -56,7 +57,8 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsWithDisabledTestClass() {
-		TestPlanSpecification spec = build(forClass(DisabledTestClassTestCase.class));
+		TestPlanSpecification spec = testPlanSpecification().withElements(
+			forClass(DisabledTestClassTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(spec);
 
 		assertEquals(1L, eventRecorder.getContainerSkippedCount(), "# container skipped");
@@ -65,7 +67,8 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsWithDisabledTestMethods() {
-		TestPlanSpecification spec = build(forClass(DisabledTestMethodsTestCase.class));
+		TestPlanSpecification spec = testPlanSpecification().withElements(
+			forClass(DisabledTestMethodsTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(spec);
 
 		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");

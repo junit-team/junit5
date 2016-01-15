@@ -11,7 +11,5 @@
 package org.junit.gen5.engine;
 
 public interface TestPlanSpecificationElement {
-
 	void accept(TestPlanSpecificationElementVisitor visitor);
-
 }

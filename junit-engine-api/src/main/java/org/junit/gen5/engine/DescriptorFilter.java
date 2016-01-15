@@ -10,15 +10,7 @@
 
 package org.junit.gen5.engine;
 
-/**
- * @since 5.0
- */
-public interface TestEngine {
-	default String getId() {
-		return getClass().getCanonicalName();
-	}
+import java.util.function.Predicate;
 
-	EngineAwareTestDescriptor discoverTests(TestPlanSpecification specification);
-
-	void execute(ExecutionRequest request);
+public interface DescriptorFilter extends Predicate<TestDescriptor> {
 }

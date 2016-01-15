@@ -11,13 +11,17 @@
 package org.junit.gen5.engine;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.gen5.engine.specification.dsl.NamedTestPlanSpecificationElementBuilder.forName;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.UniqueIdTestPlanSpecificationElementBuilder.forUniqueId;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.specification.*;
 
 /**
  * Unit tests for {@link TestPlanSpecification}.
@@ -53,12 +57,12 @@ public class TestPlanSpecificationTests {
 	@Test
 	public void buildSpecification() throws Exception {
 		// @formatter:off
-		TestPlanSpecification spec = build(
-			forUniqueId("junit5:org.example.UserTests#fullname()"),
+		TestPlanSpecification spec = testPlanSpecification().withElements(
+		forUniqueId("junit5:org.example.UserTests#fullname()"),
 			forName(MyTestClass.class.getName()),
 			forName("org.junit.gen5"),
 			forName(fullyQualifiedMethodName())
-		);
+		).build();
 		// @formatter:on
 
 		assertNotNull(spec);

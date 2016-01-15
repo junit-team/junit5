@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
  * @since 5.0
  */
 public interface TestPlanSpecificationElementVisitor {
-
 	default void visitUniqueId(String uniqueId) {
 	}
 
@@ -32,5 +31,4 @@ public interface TestPlanSpecificationElementVisitor {
 
 	default void visitAllTests(File rootDirectory) {
 	}
-
 }

@@ -8,17 +8,18 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.specification;
 
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-class PredicateBasedClassFilter implements ClassFilter {
+import org.junit.gen5.engine.ClassFilter;
 
+public class PredicateBasedClassFilter implements ClassFilter {
 	private final Predicate<? super Class<?>> predicate;
 	private final Supplier<String> descriptionSupplier;
 
-	PredicateBasedClassFilter(Predicate<? super Class<?>> predicate, Supplier<String> descriptionSupplier) {
+	public PredicateBasedClassFilter(Predicate<? super Class<?>> predicate, Supplier<String> descriptionSupplier) {
 		this.predicate = predicate;
 		this.descriptionSupplier = descriptionSupplier;
 	}
@@ -32,5 +33,4 @@ class PredicateBasedClassFilter implements ClassFilter {
 	public boolean acceptClass(Class<?> testClass) {
 		return predicate.test(testClass);
 	}
-
 }

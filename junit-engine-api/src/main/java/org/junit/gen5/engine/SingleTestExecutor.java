@@ -21,7 +21,6 @@ import org.opentest4j.TestAbortedException;
  * @since 5.0
  */
 class SingleTestExecutor {
-
 	interface Executable {
 
 		void execute() throws Throwable;
@@ -41,5 +40,4 @@ class SingleTestExecutor {
 			return failed(t);
 		}
 	}
-
 }

@@ -28,12 +28,13 @@ import java.util.Set;
 import java.util.function.IntFunction;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.engine.*;
 import org.junit.gen5.engine.ClassFilter;
-import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
 import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
+import org.junit.gen5.engine.specification.AllClassFilters;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -50,7 +51,7 @@ public class JUnit4TestPlanSpecificationResolver {
 	}
 
 	public void resolve(TestPlanSpecification specification) {
-		ClassFilter classFilter = specification.getClassFilter();
+		ClassFilter classFilter = new AllClassFilters(specification.getEngineFiltersByType(ClassFilter.class));
 		RunnerBuilder runnerBuilder = new DefensiveAllDefaultPossibilitiesBuilder();
 		Set<Class<?>> unfilteredTestClasses = new LinkedHashSet<>();
 		Map<Class<?>, List<RunnerTestDescriptorAwareFilter>> filteredTestClasses = new LinkedHashMap<>();
@@ -167,5 +168,4 @@ public class JUnit4TestPlanSpecificationResolver {
 		}
 		return index -> uniqueId + "[" + index + "]";
 	}
-
 }

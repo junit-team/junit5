@@ -8,17 +8,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.specification.dsl;
 
-/**
- * @since 5.0
- */
-public interface TestEngine {
-	default String getId() {
-		return getClass().getCanonicalName();
+import org.junit.gen5.engine.specification.ClassNameFilter;
+
+public class ClassFilterBuilder {
+	public static ClassNameFilter pattern(String pattern) {
+		return new ClassNameFilter(pattern);
 	}
-
-	EngineAwareTestDescriptor discoverTests(TestPlanSpecification specification);
-
-	void execute(ExecutionRequest request);
 }

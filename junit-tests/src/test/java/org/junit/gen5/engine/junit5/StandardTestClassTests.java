@@ -11,7 +11,8 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
@@ -37,26 +38,23 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void standardTestClassIsCorrectlyDiscovered() {
-		TestPlanSpecification spec = build(forClass(MyStandardTestCase.class));
+		TestPlanSpecification spec = testPlanSpecification().withElements(forClass(MyStandardTestCase.class)).build();
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsCorrectlyDiscovered() {
-		TestPlanSpecification spec = TestPlanSpecification.build(
-			TestPlanSpecification.forClass(FirstOfTwoTestCases.class),
-			TestPlanSpecification.forClass(SecondOfTwoTestCases.class));
+		TestPlanSpecification spec = testPlanSpecification().withElements(forClass(SecondOfTwoTestCases.class)).build();
 
 		EngineDescriptor engineDescriptor = discoverTests(spec);
-		assertEquals(6 + 2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(2 + 2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsExecuted() {
-		TestPlanSpecification testPlanSpecification = TestPlanSpecification.build(
-			TestPlanSpecification.forClass(FirstOfTwoTestCases.class),
-			TestPlanSpecification.forClass(SecondOfTwoTestCases.class));
+		TestPlanSpecification testPlanSpecification = testPlanSpecification().withElements(
+			forClass(FirstOfTwoTestCases.class), forClass(SecondOfTwoTestCases.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(testPlanSpecification);
 

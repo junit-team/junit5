@@ -12,7 +12,8 @@ package org.junit.gen5.engine.junit5;
 
 import static java.util.Arrays.asList;
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,8 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void beforeAllAndAfterAllCallbacks() {
-		TestPlanSpecification spec = build(forClass(InstancePerMethodTestCase.class));
+		TestPlanSpecification spec = testPlanSpecification().withElements(
+			forClass(InstancePerMethodTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(spec);
 
