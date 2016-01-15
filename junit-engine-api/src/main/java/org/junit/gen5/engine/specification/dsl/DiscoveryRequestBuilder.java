@@ -81,6 +81,7 @@ public final class DiscoveryRequestBuilder {
 		return this;
 	}
 
+	@SuppressWarnings("unchecked")
 	public DiscoveryRequestBuilder filterBy(Predicate<TestDescriptor>... filters) {
 		if (filters != null) {
 			this.descriptorFilters.addAll(Arrays.asList(filters));

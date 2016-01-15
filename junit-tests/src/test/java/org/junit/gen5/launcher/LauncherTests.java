@@ -20,7 +20,6 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.DummyTestEngine;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.specification.dsl.UniqueIdSelectorBuilder;
 
 public class LauncherTests {
 

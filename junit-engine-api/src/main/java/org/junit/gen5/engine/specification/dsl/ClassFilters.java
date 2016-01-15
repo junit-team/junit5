@@ -11,7 +11,6 @@
 package org.junit.gen5.engine.specification.dsl;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.joining;
 
 import java.util.List;
 
