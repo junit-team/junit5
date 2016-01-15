@@ -16,7 +16,6 @@ import static java.util.stream.Collectors.toList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.Preconditions;
 
@@ -24,65 +23,62 @@ import org.junit.gen5.commons.util.Preconditions;
  * @since 5.0
  */
 public final class DiscoveryRequest {
-	private final List<DiscoverySelector> elements = new LinkedList<>();
+	// Selectors provided to the engines to be used for finding tests
+	private final List<DiscoverySelector> selectors = new LinkedList<>();
+
+	// Discovery filters are handed through to all test engines to be applied during discovery
+	private final List<DiscoveryFilter> discoveryFilters = new LinkedList<>();
 
 	// Descriptor Filters are evaluated by the launcher itself after engines have done their discovery.
-	// Begin predicate chain with a predicate that always evaluates to true.
-	private final List<DescriptorFilter> descriptorFilters = new LinkedList<>();
+	private final List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
 
-	// Engine filters are handed through to all test engines to be applied during discovery
-	private final List<EngineFilter> engineFilters = new LinkedList<>();
-
-	public void addElement(DiscoverySelector element) {
-		this.elements.add(element);
+	public void addSelector(DiscoverySelector selector) {
+		this.selectors.add(selector);
 	}
 
-	public void addElements(Collection<DiscoverySelector> elements) {
-		elements.forEach(this::addElement);
+	public void addSelectors(Collection<DiscoverySelector> selectors) {
+		selectors.forEach(this::addSelector);
 	}
 
-	public void addEngineFilter(EngineFilter engineFilter) {
-		this.engineFilters.add(engineFilter);
+	public void addFilter(DiscoveryFilter discoveryFilter) {
+		this.discoveryFilters.add(discoveryFilter);
 	}
 
-	public void addEngineFilters(Collection<EngineFilter> engineFilters) {
-		this.engineFilters.addAll(engineFilters);
+	public void addFilters(Collection<DiscoveryFilter> discoveryFilters) {
+		this.discoveryFilters.addAll(discoveryFilters);
 	}
 
-	public void addDescriptorFilter(DescriptorFilter desciptorFilter) {
-		this.descriptorFilters.add(desciptorFilter);
+	public void addPostFilter(PostDiscoveryFilter postDiscoveryFilter) {
+		this.postDiscoveryFilters.add(postDiscoveryFilter);
 	}
 
-	public void addDescriptorFilters(Collection<DescriptorFilter> desciptorFilters) {
-		this.descriptorFilters.addAll(desciptorFilters);
+	public void addPostFilters(Collection<PostDiscoveryFilter> postDiscoveryFilters) {
+		this.postDiscoveryFilters.addAll(postDiscoveryFilters);
 	}
 
-	public List<DiscoverySelector> getElements() {
-		return unmodifiableList(this.elements);
+	public List<DiscoverySelector> getSelectors() {
+		return unmodifiableList(this.selectors);
 	}
 
-	public <T extends DiscoverySelector> List<T> getElementsByType(Class<T> filterType) {
-		return this.elements.stream().filter(filterType::isInstance).map(filterType::cast).collect(toList());
+	public <T extends DiscoverySelector> List<T> getSelectoryByType(Class<T> selectorType) {
+		return this.selectors.stream().filter(selectorType::isInstance).map(selectorType::cast).collect(toList());
 	}
 
-	public List<EngineFilter> getEngineFilters() {
-		return unmodifiableList(this.engineFilters);
+	public <T extends DiscoveryFilter> List<T> getFilterByType(Class<T> filterType) {
+		return this.discoveryFilters.stream().filter(filterType::isInstance).map(filterType::cast).collect(toList());
 	}
 
-	public <T extends EngineFilter> List<T> getEngineFiltersByType(Class<T> filterType) {
-		return this.engineFilters.stream().filter(filterType::isInstance).map(filterType::cast).collect(toList());
-	}
-
-	public List<Predicate<TestDescriptor>> getDescriptorFilters() {
-		return unmodifiableList(this.descriptorFilters);
+	public List<PostDiscoveryFilter> getPostDiscoveryFilters() {
+		return unmodifiableList(this.postDiscoveryFilters);
 	}
 
 	public boolean acceptDescriptor(TestDescriptor testDescriptor) {
 		Preconditions.notNull(testDescriptor, "testDescriptor must not be null");
-		return this.getDescriptorFilters().stream().allMatch(filter -> filter.test(testDescriptor));
+		return !this.getPostDiscoveryFilters().stream().map(filter -> filter.filter(testDescriptor)).anyMatch(
+			FilterResult::isFiltered);
 	}
 
 	public void accept(DiscoverySelectorVisitor visitor) {
-		this.getElements().forEach(element -> element.accept(visitor));
+		this.getSelectors().forEach(element -> element.accept(visitor));
 	}
 }

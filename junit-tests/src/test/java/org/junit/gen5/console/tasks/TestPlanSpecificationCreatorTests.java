@@ -91,9 +91,9 @@ public class TestPlanSpecificationCreatorTests {
 
 		DiscoveryRequest specification = convert();
 
-		List<ClassFilter> filter = specification.getEngineFiltersByType(ClassFilter.class);
+		List<ClassFilter> filter = specification.getFilterByType(ClassFilter.class);
 		assertThat(filter).hasSize(1);
-		assertThat(filter.get(0).getDescription()).contains(".*Test");
+		assertThat(filter.get(0).toString()).contains(".*Test");
 	}
 
 	@Test

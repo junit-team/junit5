@@ -10,6 +10,15 @@
 
 package org.junit.gen5.engine;
 
-public interface EngineFilter {
-	String getDescription();
+/**
+ * {@code GenericFilter} filters particular tests during and after test discovery.
+ *
+ * @since 5.0
+ * @see DiscoveryFilter
+ * @see PostDiscoveryFilter
+ * @see EngineIdFilter
+ */
+@FunctionalInterface
+public interface GenericFilter<T> {
+	FilterResult filter(T object);
 }

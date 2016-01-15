@@ -55,15 +55,15 @@ public class JUnit4DiscoveryRequestResolver {
 
 	private <T extends DiscoverySelector> void resolveSelectorsOfSingleType(DiscoveryRequest discoveryRequest,
 			DiscoverySelectorResolver<T> selectorResolver, TestClassCollector collector) {
-		discoveryRequest.getElementsByType(selectorResolver.getSelectorClass()).forEach(
+		discoveryRequest.getSelectoryByType(selectorResolver.getSelectorClass()).forEach(
 			selector -> selectorResolver.resolve(selector, collector));
 	}
 
 	private Set<TestClassRequest> filterAndConvertToTestClassRequests(DiscoveryRequest request,
 			TestClassCollector collector) {
 		// TODO #40 Log classes that are filtered out
-		ClassFilter classFilter = new AllClassFilters(request.getEngineFiltersByType(ClassFilter.class));
-		return collector.toRequests(classFilter::acceptClass);
+		ClassFilter classFilter = new AllClassFilters(request.getFilterByType(ClassFilter.class));
+		return collector.toRequests(testClass -> !classFilter.filter(testClass).isFiltered());
 	}
 
 	private void populateEngineDescriptor(Set<TestClassRequest> requests) {

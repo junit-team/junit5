@@ -70,7 +70,7 @@ public class DiscoveryRequestTests {
 		assertNotNull(spec);
 		List<Class<? extends DiscoverySelector>> expected = Arrays.asList(UniqueIdSelector.class, ClassSelector.class,
 			PackageNameSelector.class, MethodSelector.class);
-		assertEquals(expected, spec.getElements().stream().map(Object::getClass).collect(toList()));
+		assertEquals(expected, spec.getSelectors().stream().map(Object::getClass).collect(toList()));
 	}
 
 	private String fullyQualifiedMethodName() throws Exception {

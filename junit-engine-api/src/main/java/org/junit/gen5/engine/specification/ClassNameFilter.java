@@ -10,9 +10,13 @@
 
 package org.junit.gen5.engine.specification;
 
+import static org.junit.gen5.engine.FilterResult.active;
+import static org.junit.gen5.engine.FilterResult.filtered;
+
 import java.util.regex.Pattern;
 
 import org.junit.gen5.engine.ClassFilter;
+import org.junit.gen5.engine.FilterResult;
 
 public class ClassNameFilter implements ClassFilter {
 	private final Pattern pattern;
@@ -22,12 +26,17 @@ public class ClassNameFilter implements ClassFilter {
 	}
 
 	@Override
-	public boolean acceptClass(Class<?> testClass) {
-		return pattern.matcher(testClass.getName()).matches();
+	public FilterResult filter(Class<?> testClass) {
+		if (pattern.matcher(testClass.getName()).matches()) {
+			return active("TestClass matches name pattern");
+		}
+		else {
+			return filtered("TestClass does not match name pattern");
+		}
 	}
 
 	@Override
-	public String getDescription() {
+	public String toString() {
 		return "Filter class names with regular expression: " + pattern;
 	}
 }

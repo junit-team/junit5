@@ -86,7 +86,7 @@ public class LauncherTests {
 		Launcher launcher = createLauncher(engine);
 
 		DiscoveryRequest specification = request().select(byUniqueId(test.getUniqueId())).build();
-		specification.addDescriptorFilter(filterByEngineId("doesNotExist"));
+		specification.addPostFilter(filterByEngineId("doesNotExist"));
 
 		TestPlan testPlan = launcher.discover(specification);
 
