@@ -10,10 +10,10 @@
 
 package org.junit.gen5.engine.specification;
 
-import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
+import org.junit.gen5.engine.DiscoverySelector;
+import org.junit.gen5.engine.DiscoverySelectorVisitor;
 
-public class PackageSpecification implements TestPlanSpecificationElement {
+public class PackageSpecification implements DiscoverySelector {
 	private final String packageName;
 
 	public PackageSpecification(String packageName) {
@@ -21,7 +21,7 @@ public class PackageSpecification implements TestPlanSpecificationElement {
 	}
 
 	@Override
-	public void accept(TestPlanSpecificationElementVisitor visitor) {
+	public void accept(DiscoverySelectorVisitor visitor) {
 		visitor.visitPackage(packageName);
 	}
 

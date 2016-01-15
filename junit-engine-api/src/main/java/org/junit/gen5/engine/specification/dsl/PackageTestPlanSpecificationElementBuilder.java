@@ -15,15 +15,15 @@ import static java.util.stream.Collectors.toList;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.specification.PackageSpecification;
 
 public class PackageTestPlanSpecificationElementBuilder {
-	public static TestPlanSpecificationElement forPackage(String packageName) {
+	public static DiscoverySelector forPackage(String packageName) {
 		return new PackageSpecification(packageName);
 	}
 
-	public static List<TestPlanSpecificationElement> forPackages(Collection<String> packageNames) {
+	public static List<DiscoverySelector> forPackages(Collection<String> packageNames) {
 		return packageNames.stream().map(PackageTestPlanSpecificationElementBuilder::forPackage).collect(toList());
 	}
 }

@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 /**
  * @since 5.0
  */
-public interface TestPlanSpecificationElementVisitor {
+public interface DiscoverySelectorVisitor {
 	default void visitUniqueId(String uniqueId) {
 	}
 

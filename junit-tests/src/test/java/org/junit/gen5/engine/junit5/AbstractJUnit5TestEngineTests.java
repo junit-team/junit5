@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
-import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.engine.*;
@@ -30,17 +30,17 @@ abstract class AbstractJUnit5TestEngineTests {
 	}
 
 	protected ExecutionEventRecorder executeTestsForClass(Class<?> testClass) {
-		return executeTests(testPlanSpecification().withElements(forClass(testClass)).build());
+		return executeTests(request().select(forClass(testClass)).build());
 	}
 
-	protected ExecutionEventRecorder executeTests(TestPlanSpecification spec) {
+	protected ExecutionEventRecorder executeTests(DiscoveryRequest spec) {
 		TestDescriptor testDescriptor = discoverTests(spec);
 		ExecutionEventRecorder eventRecorder = new ExecutionEventRecorder();
 		engine.execute(new ExecutionRequest(testDescriptor, eventRecorder));
 		return eventRecorder;
 	}
 
-	protected EngineDescriptor discoverTests(TestPlanSpecification spec) {
+	protected EngineDescriptor discoverTests(DiscoveryRequest spec) {
 		return engine.discoverTests(spec);
 	}
 

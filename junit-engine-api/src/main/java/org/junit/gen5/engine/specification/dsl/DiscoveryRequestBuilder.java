@@ -13,20 +13,20 @@ package org.junit.gen5.engine.specification.dsl;
 import java.util.*;
 import java.util.function.Predicate;
 
+import org.junit.gen5.engine.DiscoveryRequest;
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineFilter;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
 
 /**
- * The {@code TestPlanSpecificationBuilder} provides a light-weight DSL for
- * generating a {@link TestPlanSpecification}.
+ * The {@code DiscoveryRequestBuilder} provides a light-weight DSL for
+ * generating a {@link DiscoveryRequest}.
  *
  * <p>Example:
  *
  * <pre>
- *   testPlanSpecification()
- *     .withElements(
+ *   DiscoveryRequestBuilder.request()
+ *     .select(
  *       packageName("org.junit.gen5"),
  *       packageName("com.junit.samples"),
  *       testClass(TestDescriptorTests.class),
@@ -41,7 +41,7 @@ import org.junit.gen5.engine.TestPlanSpecificationElement;
  *       uniqueId("unique-id-1"),
  *       uniqueId("unique-id-2")
  *     )
- *     .withFilters(
+ *     .filterBy(
  *       engineIds("junit5"),
  *       classNamePattern("org.junit.gen5.tests"),
  *       classNamePattern("org.junit.sample"),
@@ -51,47 +51,47 @@ import org.junit.gen5.engine.TestPlanSpecificationElement;
  *   ).build();
  * </pre>
  */
-public final class TestPlanSpecificationBuilder {
-	private List<TestPlanSpecificationElement> specElements = new LinkedList<>();
+public final class DiscoveryRequestBuilder {
+	private List<DiscoverySelector> specElements = new LinkedList<>();
 	private List<EngineFilter> engineFilters = new LinkedList<>();
 	private List<Predicate<TestDescriptor>> descriptorFilters = new LinkedList<>();
 
-	public static TestPlanSpecificationBuilder testPlanSpecification() {
-		return new TestPlanSpecificationBuilder();
+	public static DiscoveryRequestBuilder request() {
+		return new DiscoveryRequestBuilder();
 	}
 
-	public TestPlanSpecificationBuilder withElements(TestPlanSpecificationElement... elements) {
+	public DiscoveryRequestBuilder select(DiscoverySelector... elements) {
 		if (elements != null) {
-			withElements(Arrays.asList(elements));
+			select(Arrays.asList(elements));
 		}
 		return this;
 	}
 
-	public TestPlanSpecificationBuilder withElements(List<TestPlanSpecificationElement> elements) {
+	public DiscoveryRequestBuilder select(List<DiscoverySelector> elements) {
 		if (elements != null) {
 			this.specElements.addAll(elements);
 		}
 		return this;
 	}
 
-	public TestPlanSpecificationBuilder withEngineFilters(EngineFilter... filters) {
+	public DiscoveryRequestBuilder filterBy(EngineFilter... filters) {
 		if (filters != null) {
 			this.engineFilters.addAll(Arrays.asList(filters));
 		}
 		return this;
 	}
 
-	public TestPlanSpecificationBuilder withDescriptionFilters(Predicate<TestDescriptor>... filters) {
+	public DiscoveryRequestBuilder filterBy(Predicate<TestDescriptor>... filters) {
 		if (filters != null) {
 			this.descriptorFilters.addAll(Arrays.asList(filters));
 		}
 		return this;
 	}
 
-	public TestPlanSpecification build() {
-		TestPlanSpecification testPlanSpecification = new TestPlanSpecification();
-		testPlanSpecification.addElements(this.specElements);
-		testPlanSpecification.addEngineFilters(this.engineFilters);
-		return testPlanSpecification;
+	public DiscoveryRequest build() {
+		DiscoveryRequest discoveryRequest = new DiscoveryRequest();
+		discoveryRequest.addElements(this.specElements);
+		discoveryRequest.addEngineFilters(this.engineFilters);
+		return discoveryRequest;
 	}
 }

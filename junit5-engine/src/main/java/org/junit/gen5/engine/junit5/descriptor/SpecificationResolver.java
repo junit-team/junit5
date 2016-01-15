@@ -19,9 +19,9 @@ import java.util.Optional;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.AbstractTestDescriptor;
+import org.junit.gen5.engine.DiscoverySelector;
+import org.junit.gen5.engine.DiscoverySelectorVisitor;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
 import org.junit.gen5.engine.junit5.discovery.IsNestedTestClass;
 import org.junit.gen5.engine.junit5.discovery.IsScannableTestClass;
 import org.junit.gen5.engine.junit5.discovery.IsTestMethod;
@@ -41,8 +41,8 @@ public class SpecificationResolver {
 		this.engineDescriptor = engineDescriptor;
 	}
 
-	public void resolveElement(TestPlanSpecificationElement element) {
-		element.accept(new TestPlanSpecificationElementVisitor() {
+	public void resolveElement(DiscoverySelector element) {
+		element.accept(new DiscoverySelectorVisitor() {
 
 			@Override
 			public void visitClass(Class<?> testClass) {

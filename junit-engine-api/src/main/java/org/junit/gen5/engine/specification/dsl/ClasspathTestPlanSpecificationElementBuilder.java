@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.specification.AllTestsSpecification;
 
 public class ClasspathTestPlanSpecificationElementBuilder {
-	public static List<TestPlanSpecificationElement> allTests(Set<File> rootDirectories) {
+	public static List<DiscoverySelector> allTests(Set<File> rootDirectories) {
 		// @formatter:off
 		return rootDirectories.stream()
 				.filter(File::exists)
@@ -29,7 +29,7 @@ public class ClasspathTestPlanSpecificationElementBuilder {
 		// @formatter:on
 	}
 
-	public static List<TestPlanSpecificationElement> path(String path) {
+	public static List<DiscoverySelector> path(String path) {
 		return allTests(Collections.singleton(new File(path)));
 	}
 }

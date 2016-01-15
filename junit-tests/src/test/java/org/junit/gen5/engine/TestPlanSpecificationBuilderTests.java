@@ -14,9 +14,9 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
 import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClassName;
+import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.engine.specification.dsl.MethodTestPlanSpecificationElementBuilder.forMethod;
 import static org.junit.gen5.engine.specification.dsl.PackageTestPlanSpecificationElementBuilder.forPackage;
-import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 import static org.junit.gen5.engine.specification.dsl.UniqueIdTestPlanSpecificationElementBuilder.forUniqueId;
 
 import java.io.File;
@@ -32,13 +32,13 @@ public class TestPlanSpecificationBuilderTests {
 	@Test
 	public void packagesAreStoredInSpecification() throws Exception {
 		// @formatter:off
-        TestPlanSpecification testPlanSpecification = testPlanSpecification()
-				.withElements(
+        DiscoveryRequest discoveryRequest = request()
+				.select(
 						forPackage("org.junit.gen5.engine")
 				).build();
         // @formatter:on
 
-		List<String> packageSpecifications = testPlanSpecification.getElementsByType(
+		List<String> packageSpecifications = discoveryRequest.getElementsByType(
 			PackageSpecification.class).stream().map(PackageSpecification::getPackageName).collect(toList());
 		assertThat(packageSpecifications).contains("org.junit.gen5.engine");
 	}
@@ -46,15 +46,15 @@ public class TestPlanSpecificationBuilderTests {
 	@Test
 	public void classesAreStoredInSpecification() throws Exception {
 		// @formatter:off
-        TestPlanSpecification testPlanSpecification = testPlanSpecification()
-				.withElements(
+        DiscoveryRequest discoveryRequest = request()
+				.select(
 						forClassName("org.junit.gen5.engine.TestPlanSpecificationBuilderTests"),
 						forClass(SampleTestClass.class)
 				)
             .build();
         // @formatter:on
 
-		List<Class<?>> classes = testPlanSpecification.getElementsByType(ClassSpecification.class).stream().map(
+		List<Class<?>> classes = discoveryRequest.getElementsByType(ClassSpecification.class).stream().map(
 			ClassSpecification::getTestClass).collect(toList());
 		assertThat(classes).contains(SampleTestClass.class, TestPlanSpecificationBuilderTests.class);
 	}
@@ -65,14 +65,13 @@ public class TestPlanSpecificationBuilderTests {
 		Method testMethod = testClass.getMethod("test");
 
 		// @formatter:off
-        TestPlanSpecification testPlanSpecification = testPlanSpecification()
-				.withElements(
+        DiscoveryRequest discoveryRequest = request()
+				.select(
 						forMethod("org.junit.gen5.engine.TestPlanSpecificationBuilderTests$SampleTestClass", "test")
 				).build();
         // @formatter:on
 
-		List<MethodSpecification> methodSpecifications = testPlanSpecification.getElementsByType(
-			MethodSpecification.class);
+		List<MethodSpecification> methodSpecifications = discoveryRequest.getElementsByType(MethodSpecification.class);
 		assertThat(methodSpecifications).hasSize(1);
 
 		MethodSpecification methodSpecification = methodSpecifications.get(0);
@@ -86,14 +85,13 @@ public class TestPlanSpecificationBuilderTests {
 		Method testMethod = testClass.getMethod("test");
 
 		// @formatter:off
-        TestPlanSpecification testPlanSpecification = testPlanSpecification()
-				.withElements(
+        DiscoveryRequest discoveryRequest = request()
+				.select(
 						MethodTestPlanSpecificationElementBuilder.forMethod(SampleTestClass.class, "test")
 				).build();
 		// @formatter:on
 
-		List<MethodSpecification> methodSpecifications = testPlanSpecification.getElementsByType(
-			MethodSpecification.class);
+		List<MethodSpecification> methodSpecifications = discoveryRequest.getElementsByType(MethodSpecification.class);
 		assertThat(methodSpecifications).hasSize(1);
 
 		MethodSpecification methodSpecification = methodSpecifications.get(0);
@@ -104,13 +102,13 @@ public class TestPlanSpecificationBuilderTests {
 	@Test
 	public void unavailableFoldersAreNotStoredInSpecification() throws Exception {
 		// @formatter:off
-        TestPlanSpecification testPlanSpecification = testPlanSpecification()
-				.withElements(
+        DiscoveryRequest discoveryRequest = request()
+				.select(
 						ClasspathTestPlanSpecificationElementBuilder.path("/some/local/path")
 				).build();
         // @formatter:on
 
-		List<String> folders = testPlanSpecification.getElementsByType(AllTestsSpecification.class).stream().map(
+		List<String> folders = discoveryRequest.getElementsByType(AllTestsSpecification.class).stream().map(
 			AllTestsSpecification::getClasspathRoot).map(File::getAbsolutePath).collect(toList());
 
 		assertThat(folders).isEmpty();
@@ -121,13 +119,13 @@ public class TestPlanSpecificationBuilderTests {
 		File temporaryFolder = Files.newTemporaryFolder();
 		try {
 			// @formatter:off
-			TestPlanSpecification testPlanSpecification = testPlanSpecification()
-					.withElements(
+			DiscoveryRequest discoveryRequest = request()
+					.select(
 							ClasspathTestPlanSpecificationElementBuilder.path(temporaryFolder.getAbsolutePath())
 					).build();
 			// @formatter:on
 
-			List<String> folders = testPlanSpecification.getElementsByType(AllTestsSpecification.class).stream().map(
+			List<String> folders = discoveryRequest.getElementsByType(AllTestsSpecification.class).stream().map(
 				AllTestsSpecification::getClasspathRoot).map(File::getAbsolutePath).collect(toList());
 
 			assertThat(folders).contains(temporaryFolder.getAbsolutePath());
@@ -140,14 +138,14 @@ public class TestPlanSpecificationBuilderTests {
 	@Test
 	public void uniqueIdsAreStoredInSpecification() throws Exception {
 		// @formatter:off
-        TestPlanSpecification testPlanSpecification = testPlanSpecification()
-				.withElements(
+        DiscoveryRequest discoveryRequest = request()
+				.select(
 						forUniqueId("engine:bla:foo:bar:id1"),
 						forUniqueId("engine:bla:foo:bar:id2")
 				).build();
         // @formatter:on
 
-		List<String> uniqueIds = testPlanSpecification.getElementsByType(UniqueIdSpecification.class).stream().map(
+		List<String> uniqueIds = discoveryRequest.getElementsByType(UniqueIdSpecification.class).stream().map(
 			UniqueIdSpecification::getUniqueId).collect(toList());
 
 		assertThat(uniqueIds).contains("engine:bla:foo:bar:id1", "engine:bla:foo:bar:id2");

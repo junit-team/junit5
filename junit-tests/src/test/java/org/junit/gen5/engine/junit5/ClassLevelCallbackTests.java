@@ -13,7 +13,7 @@ package org.junit.gen5.engine.junit5;
 import static java.util.Arrays.asList;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
-import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +27,8 @@ import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.ExtensionRegistry;
+import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.ExecutionEventRecorder;
-import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
  * Integration tests that verify support of {@link BeforeAll}, {@link AfterAll},
@@ -40,8 +40,7 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void beforeAllAndAfterAllCallbacks() {
-		TestPlanSpecification spec = testPlanSpecification().withElements(
-			forClass(InstancePerMethodTestCase.class)).build();
+		DiscoveryRequest spec = request().select(forClass(InstancePerMethodTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(spec);
 

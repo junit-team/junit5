@@ -20,10 +20,10 @@ import java.util.*;
 
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.DiscoverySelector;
 
 public class NamedTestPlanSpecificationElementBuilder {
-	public static TestPlanSpecificationElement forName(String anyName) {
+	public static DiscoverySelector forName(String anyName) {
 		Optional<Class<?>> testClassOptional = ReflectionUtils.loadClass(anyName);
 		if (testClassOptional.isPresent()) {
 			return forClass(testClassOptional.get());
@@ -43,7 +43,7 @@ public class NamedTestPlanSpecificationElementBuilder {
 			String.format("'%s' specifies neither a class, a method, nor a package.", anyName));
 	}
 
-	public static List<TestPlanSpecificationElement> forNames(String... classNames) {
+	public static List<DiscoverySelector> forNames(String... classNames) {
 		if (classNames != null) {
 			return forNames(Arrays.asList(classNames));
 		}
@@ -52,7 +52,7 @@ public class NamedTestPlanSpecificationElementBuilder {
 		}
 	}
 
-	public static List<TestPlanSpecificationElement> forNames(Collection<String> classNames) {
+	public static List<DiscoverySelector> forNames(Collection<String> classNames) {
 		return classNames.stream().map(NamedTestPlanSpecificationElementBuilder::forName).collect(toList());
 	}
 }

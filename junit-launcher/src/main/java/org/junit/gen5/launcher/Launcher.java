@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.junit.gen5.engine.*;
-import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.DiscoveryRequest;
 
 /**
  * Facade for <em>discovering</em> and <em>executing</em> tests using
@@ -26,7 +26,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
  * has to be added to the engine's JAR file in which the fully qualified name
  * of the implementation class of the {@link TestEngine} interface is stated.
  *
- * <p>Discovering or executing tests requires a {@link TestPlanSpecification}
+ * <p>Discovering or executing tests requires a {@link DiscoveryRequest}
  * which is passed to all registered engines. Each engine decides which tests
  * it can discover and later execute according to this specification.
  *
@@ -41,7 +41,7 @@ import org.junit.gen5.engine.TestPlanSpecification;
  * in the order in which they were registered.
  *
  * @since 5.0
- * @see TestPlanSpecification
+ * @see DiscoveryRequest
  * @see TestPlan
  * @see TestExecutionListener
  */
@@ -73,30 +73,30 @@ public class Launcher {
 
 	/**
 	 * Discover tests and build a {@link TestPlan} according to the supplied
-	 * {@link TestPlanSpecification} by querying all registered engines and
+	 * {@link DiscoveryRequest} by querying all registered engines and
 	 * collecting their results.
 	 *
 	 * @param specification the specification to be resolved
 	 * @return a {@code TestPlan} that contains all resolved
 	 * {@linkplain TestIdentifier identifiers} from all registered engines
 	 */
-	public TestPlan discover(TestPlanSpecification specification) {
+	public TestPlan discover(DiscoveryRequest specification) {
 		return TestPlan.from(discoverRootDescriptor(specification, "discovery"));
 	}
 
 	/**
 	 * Execute a {@link TestPlan} which is built according to the supplied
-	 * {@link TestPlanSpecification} by querying all registered engines and
+	 * {@link DiscoveryRequest} by querying all registered engines and
 	 * collecting their results, and notify {@linkplain #registerTestExecutionListeners
 	 * registered listeners} about the progress and results of the execution.
 	 *
 	 * @param specification the specification to be resolved
 	 */
-	public void execute(TestPlanSpecification specification) {
+	public void execute(DiscoveryRequest specification) {
 		execute(discoverRootDescriptor(specification, "execution"));
 	}
 
-	private RootTestDescriptor discoverRootDescriptor(TestPlanSpecification specification, String phase) {
+	private RootTestDescriptor discoverRootDescriptor(DiscoveryRequest specification, String phase) {
 		RootTestDescriptor root = new RootTestDescriptor();
 		for (TestEngine testEngine : testEngineRegistry.getTestEngines()) {
 			LOG.fine(() -> String.format("Discovering tests during launcher %s phase in engine '%s'.", phase,

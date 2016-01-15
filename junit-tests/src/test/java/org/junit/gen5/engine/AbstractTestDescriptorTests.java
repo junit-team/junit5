@@ -28,7 +28,7 @@ public class AbstractTestDescriptorTests {
 		engineDescriptor = new EngineDescriptor(new TestEngine() {
 
 			@Override
-			public EngineAwareTestDescriptor discoverTests(TestPlanSpecification specification) {
+			public EngineAwareTestDescriptor discoverTests(DiscoveryRequest specification) {
 				return engineDescriptor;
 			}
 

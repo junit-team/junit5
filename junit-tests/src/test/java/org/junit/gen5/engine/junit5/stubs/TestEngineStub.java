@@ -10,10 +10,10 @@
 
 package org.junit.gen5.engine.junit5.stubs;
 
+import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
  * @since 5.0
@@ -28,7 +28,7 @@ public class TestEngineStub implements TestEngine {
 	}
 
 	@Override
-	public EngineAwareTestDescriptor discoverTests(TestPlanSpecification specification) {
+	public EngineAwareTestDescriptor discoverTests(DiscoveryRequest specification) {
 		return null;
 	}
 

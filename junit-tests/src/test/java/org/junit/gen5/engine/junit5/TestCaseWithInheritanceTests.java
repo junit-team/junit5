@@ -12,14 +12,14 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.api.Assumptions.assumeTrue;
-import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.engine.specification.dsl.UniqueIdTestPlanSpecificationElementBuilder.forUniqueId;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.ExecutionEventRecorder;
-import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
  * Testing execution in test case hierarchy {@link JUnit5TestEngine}.
@@ -56,7 +56,7 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 	@Test
 	public void executeSingleTest() {
-		TestPlanSpecification spec = testPlanSpecification().withElements(forUniqueId(
+		DiscoveryRequest spec = request().select(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#alwaysPasses()")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(spec);
@@ -70,7 +70,7 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 	@Test
 	public void executeTestDeclaredInSuperClass() {
-		TestPlanSpecification spec = testPlanSpecification().withElements(forUniqueId(
+		DiscoveryRequest spec = request().select(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#superclassTest()")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(spec);
@@ -90,7 +90,7 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 	@Test
 	public void executeTestWithExceptionThrownInAfterMethod() {
-		TestPlanSpecification spec = testPlanSpecification().withElements(forUniqueId(
+		DiscoveryRequest spec = request().select(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#throwExceptionInAfterMethod()")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(spec);

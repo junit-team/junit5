@@ -13,7 +13,7 @@ package org.junit.gen5.junit4.runner;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.engine.specification.dsl.ClassFilters.classNameMatches;
-import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ import java.util.function.Function;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.DescriptorFilter;
-import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.DiscoveryRequest;
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.specification.dsl.*;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestIdentifier;
@@ -67,7 +67,7 @@ public class JUnit5 extends Runner implements Filterable {
 
 	private final Launcher launcher = new Launcher();
 	private final Class<?> testClass;
-	private TestPlanSpecification specification;
+	private DiscoveryRequest specification;
 	private JUnit5TestTree testTree;
 
 	public JUnit5(Class<?> testClass) throws InitializationError {
@@ -89,59 +89,59 @@ public class JUnit5 extends Runner implements Filterable {
 	}
 
 	private JUnit5TestTree generateTestTree() {
-		Preconditions.notNull(this.specification, "TestPlanSpecification must not be null");
+		Preconditions.notNull(this.specification, "DiscoveryRequest must not be null");
 		TestPlan plan = this.launcher.discover(this.specification);
 		return new JUnit5TestTree(plan, testClass);
 	}
 
-	private TestPlanSpecification createSpecification() {
-		List<TestPlanSpecificationElement> specElements = getSpecElementsFromAnnotations();
+	private DiscoveryRequest createSpecification() {
+		List<DiscoverySelector> specElements = getSpecElementsFromAnnotations();
 
 		// Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
 		if (specElements.isEmpty()) {
 			specElements.add(ClassTestPlanSpecificationElementBuilder.forClass(this.testClass));
 		}
 
-		TestPlanSpecification spec = testPlanSpecification().withElements(specElements).build();
+		DiscoveryRequest spec = request().select(specElements).build();
 		addFiltersFromAnnotations(spec);
 		return spec;
 	}
 
-	private void addFiltersFromAnnotations(TestPlanSpecification spec) {
+	private void addFiltersFromAnnotations(DiscoveryRequest spec) {
 		addClassNameMatchesFilter(spec);
 		addIncludeTagsFilter(spec);
 		addExcludeTagsFilter(spec);
 		addEngineIdFilter(spec);
 	}
 
-	private List<TestPlanSpecificationElement> getSpecElementsFromAnnotations() {
-		List<TestPlanSpecificationElement> specElements = new ArrayList<>();
+	private List<DiscoverySelector> getSpecElementsFromAnnotations() {
+		List<DiscoverySelector> specElements = new ArrayList<>();
 		specElements.addAll(getClassSpecificationElements());
 		specElements.addAll(getUniqueIdSpecificationElements());
 		specElements.addAll(getPackageSpecificationElements());
 		return specElements;
 	}
 
-	private List<TestPlanSpecificationElement> getClassSpecificationElements() {
+	private List<DiscoverySelector> getClassSpecificationElements() {
 		return stream(getTestClasses()).map(ClassTestPlanSpecificationElementBuilder::forClass).collect(toList());
 	}
 
-	private List<TestPlanSpecificationElement> getUniqueIdSpecificationElements() {
+	private List<DiscoverySelector> getUniqueIdSpecificationElements() {
 		return stream(getUniqueIds()).map(UniqueIdTestPlanSpecificationElementBuilder::forUniqueId).collect(toList());
 	}
 
-	private List<TestPlanSpecificationElement> getPackageSpecificationElements() {
+	private List<DiscoverySelector> getPackageSpecificationElements() {
 		return stream(getPackageNames()).map(PackageTestPlanSpecificationElementBuilder::forPackage).collect(toList());
 	}
 
-	private void addClassNameMatchesFilter(TestPlanSpecification plan) {
+	private void addClassNameMatchesFilter(DiscoveryRequest plan) {
 		String regex = getClassNameRegExPattern();
 		if (!regex.isEmpty()) {
 			plan.addEngineFilter(classNameMatches(regex));
 		}
 	}
 
-	private void addIncludeTagsFilter(TestPlanSpecification plan) {
+	private void addIncludeTagsFilter(DiscoveryRequest plan) {
 		String[] includeTags = getIncludeTags();
 		if (includeTags.length > 0) {
 			DescriptorFilter tagNamesFilter = TagFilterBuilder.includeTags(includeTags);
@@ -149,7 +149,7 @@ public class JUnit5 extends Runner implements Filterable {
 		}
 	}
 
-	private void addExcludeTagsFilter(TestPlanSpecification plan) {
+	private void addExcludeTagsFilter(DiscoveryRequest plan) {
 		String[] excludeTags = getExcludeTags();
 		if (excludeTags.length > 0) {
 			DescriptorFilter excludeTagsFilter = TagFilterBuilder.excludeTags(excludeTags);
@@ -157,7 +157,7 @@ public class JUnit5 extends Runner implements Filterable {
 		}
 	}
 
-	private void addEngineIdFilter(TestPlanSpecification plan) {
+	private void addEngineIdFilter(DiscoveryRequest plan) {
 		String engineId = getExplicitEngineId();
 		if (StringUtils.isNotBlank(engineId)) {
 			DescriptorFilter engineFilter = EngineFilterBuilder.filterByEngineId(engineId);
@@ -209,15 +209,15 @@ public class JUnit5 extends Runner implements Filterable {
 		this.testTree = generateTestTree();
 	}
 
-	private TestPlanSpecification createTestPlanSpecificationForUniqueIds(Set<TestIdentifier> testIdentifiers) {
+	private DiscoveryRequest createTestPlanSpecificationForUniqueIds(Set<TestIdentifier> testIdentifiers) {
 		// @formatter:off
-		List<TestPlanSpecificationElement> elements = testIdentifiers.stream()
+		List<DiscoverySelector> elements = testIdentifiers.stream()
 				.map(TestIdentifier::getUniqueId)
 				.map(Object::toString)
 				.map(UniqueIdTestPlanSpecificationElementBuilder::forUniqueId)
 				.collect(toList());
 		// @formatter:on
-		return testPlanSpecification().withElements(elements).build();
+		return request().select(elements).build();
 	}
 
 }

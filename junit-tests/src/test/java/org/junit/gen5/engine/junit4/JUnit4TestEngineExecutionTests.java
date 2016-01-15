@@ -15,15 +15,15 @@ import static org.junit.gen5.engine.ExecutionEventConditions.*;
 import static org.junit.gen5.engine.TestExecutionResultConditions.isA;
 import static org.junit.gen5.engine.TestExecutionResultConditions.message;
 import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
-import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 
 import java.util.List;
 
 import org.junit.AssumptionViolatedException;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.ExecutionEvent;
 import org.junit.gen5.engine.ExecutionEventRecorder;
-import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit4.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.junit4.*;
 
@@ -346,7 +346,7 @@ class JUnit4TestEngineExecutionTests {
 
 	private static List<ExecutionEvent> execute(Class<?> testClass) {
 		JUnit4TestEngine engine = new JUnit4TestEngine();
-		TestPlanSpecification testPlanSpecification = testPlanSpecification().withElements(forClass(testClass)).build();
-		return ExecutionEventRecorder.execute(engine, testPlanSpecification);
+		DiscoveryRequest discoveryRequest = request().select(forClass(testClass)).build();
+		return ExecutionEventRecorder.execute(engine, discoveryRequest);
 	}
 }

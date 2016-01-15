@@ -12,25 +12,24 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
-import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 
 import java.util.HashMap;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.ExecutionEventRecorder;
-import org.junit.gen5.engine.TestPlanSpecification;
 import org.junit.gen5.engine.junit5.extension.TestReporter;
 
 public class ReportingTest extends AbstractJUnit5TestEngineTests {
 
 	@org.junit.Test
 	public void threeReportEntriesArePublished() {
-		TestPlanSpecification testPlanSpecification = testPlanSpecification().withElements(
-			forClass(MyReportingTestCase.class)).build();
+		DiscoveryRequest discoveryRequest = request().select(forClass(MyReportingTestCase.class)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(testPlanSpecification);
+		ExecutionEventRecorder eventRecorder = executeTests(discoveryRequest);
 
 		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");

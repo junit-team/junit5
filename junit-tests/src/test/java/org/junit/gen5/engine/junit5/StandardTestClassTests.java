@@ -12,14 +12,14 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
-import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.ExecutionEventRecorder;
-import org.junit.gen5.engine.TestPlanSpecification;
 import org.opentest4j.TestAbortedException;
 
 /**
@@ -38,14 +38,14 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void standardTestClassIsCorrectlyDiscovered() {
-		TestPlanSpecification spec = testPlanSpecification().withElements(forClass(MyStandardTestCase.class)).build();
+		DiscoveryRequest spec = request().select(forClass(MyStandardTestCase.class)).build();
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsCorrectlyDiscovered() {
-		TestPlanSpecification spec = testPlanSpecification().withElements(forClass(SecondOfTwoTestCases.class)).build();
+		DiscoveryRequest spec = request().select(forClass(SecondOfTwoTestCases.class)).build();
 
 		EngineDescriptor engineDescriptor = discoverTests(spec);
 		assertEquals(2 + 2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
@@ -53,10 +53,10 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void moreThanOneTestClassIsExecuted() {
-		TestPlanSpecification testPlanSpecification = testPlanSpecification().withElements(
-			forClass(FirstOfTwoTestCases.class), forClass(SecondOfTwoTestCases.class)).build();
+		DiscoveryRequest discoveryRequest = request().select(forClass(FirstOfTwoTestCases.class),
+			forClass(SecondOfTwoTestCases.class)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(testPlanSpecification);
+		ExecutionEventRecorder eventRecorder = executeTests(discoveryRequest);
 
 		assertEquals(6L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(5L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");

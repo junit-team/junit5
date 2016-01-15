@@ -13,7 +13,7 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.gen5.engine.specification.dsl.ClassTestPlanSpecificationElementBuilder.forClass;
-import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
+import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -30,8 +30,8 @@ import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.ExecutionEventRecorder;
-import org.junit.gen5.engine.TestPlanSpecification;
 
 /**
  * Integration tests that verify support for {@link Disabled @Disabled} and
@@ -57,8 +57,7 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsWithDisabledTestClass() {
-		TestPlanSpecification spec = testPlanSpecification().withElements(
-			forClass(DisabledTestClassTestCase.class)).build();
+		DiscoveryRequest spec = request().select(forClass(DisabledTestClassTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(spec);
 
 		assertEquals(1L, eventRecorder.getContainerSkippedCount(), "# container skipped");
@@ -67,8 +66,7 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsWithDisabledTestMethods() {
-		TestPlanSpecification spec = testPlanSpecification().withElements(
-			forClass(DisabledTestMethodsTestCase.class)).build();
+		DiscoveryRequest spec = request().select(forClass(DisabledTestMethodsTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(spec);
 
 		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");

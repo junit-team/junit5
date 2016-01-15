@@ -15,11 +15,8 @@ import java.util.List;
 import java.util.Objects;
 
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.engine.AbstractTestDescriptor;
-import org.junit.gen5.engine.EngineAwareTestDescriptor;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.DiscoveryRequest;
 
 /**
  * @since 5.0
@@ -82,7 +79,7 @@ final class RootTestDescriptor extends AbstractTestDescriptor {
 		return true;
 	}
 
-	void applyFilters(TestPlanSpecification specification) {
+	void applyFilters(DiscoveryRequest specification) {
 		Visitor filteringVisitor = (descriptor, remove) -> {
 			if (!descriptor.isTest())
 				return;

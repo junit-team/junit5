@@ -10,6 +10,6 @@
 
 package org.junit.gen5.engine;
 
-public interface TestPlanSpecificationElement {
-	void accept(TestPlanSpecificationElementVisitor visitor);
+public interface DiscoverySelector {
+	void accept(DiscoverySelectorVisitor visitor);
 }

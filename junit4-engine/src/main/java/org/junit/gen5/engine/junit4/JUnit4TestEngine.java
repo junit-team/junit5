@@ -12,13 +12,8 @@ package org.junit.gen5.engine.junit4;
 
 import static org.junit.gen5.engine.TestExecutionResult.successful;
 
-import org.junit.gen5.engine.EngineAwareTestDescriptor;
-import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.EngineExecutionListener;
-import org.junit.gen5.engine.ExecutionRequest;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestPlanSpecification;
+import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.gen5.engine.junit4.discovery.JUnit4TestPlanSpecificationResolver;
 import org.junit.gen5.engine.junit4.execution.RunnerExecutor;
@@ -31,7 +26,7 @@ public class JUnit4TestEngine implements TestEngine {
 	}
 
 	@Override
-	public EngineAwareTestDescriptor discoverTests(TestPlanSpecification specification) {
+	public EngineAwareTestDescriptor discoverTests(DiscoveryRequest specification) {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(this);
 		new JUnit4TestPlanSpecificationResolver(engineDescriptor).resolve(specification);
 		return engineDescriptor;

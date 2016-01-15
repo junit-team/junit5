@@ -10,10 +10,10 @@
 
 package org.junit.gen5.engine.specification;
 
-import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
+import org.junit.gen5.engine.DiscoverySelector;
+import org.junit.gen5.engine.DiscoverySelectorVisitor;
 
-public class UniqueIdSpecification implements TestPlanSpecificationElement {
+public class UniqueIdSpecification implements DiscoverySelector {
 	private final String uniqueId;
 
 	public UniqueIdSpecification(String uniqueId) {
@@ -21,7 +21,7 @@ public class UniqueIdSpecification implements TestPlanSpecificationElement {
 	}
 
 	@Override
-	public void accept(TestPlanSpecificationElementVisitor visitor) {
+	public void accept(DiscoverySelectorVisitor visitor) {
 		visitor.visitUniqueId(uniqueId);
 	}
 

@@ -15,8 +15,8 @@ import java.util.List;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.*;
 import org.junit.gen5.engine.ClassFilter;
-import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElement;
+import org.junit.gen5.engine.DiscoveryRequest;
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.JUnit5EngineDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.SpecificationResolver;
@@ -33,22 +33,22 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 	}
 
 	@Override
-	public JUnit5EngineDescriptor discoverTests(TestPlanSpecification specification) {
+	public JUnit5EngineDescriptor discoverTests(DiscoveryRequest specification) {
 		Preconditions.notNull(specification, "specification must not be null");
 		JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(this);
 		resolveSpecification(specification, engineDescriptor);
 		return engineDescriptor;
 	}
 
-	private void resolveSpecification(TestPlanSpecification specification, JUnit5EngineDescriptor engineDescriptor) {
+	private void resolveSpecification(DiscoveryRequest specification, JUnit5EngineDescriptor engineDescriptor) {
 		SpecificationResolver resolver = new SpecificationResolver(engineDescriptor);
-		for (TestPlanSpecificationElement element : specification.getElements()) {
+		for (DiscoverySelector element : specification.getElements()) {
 			resolver.resolveElement(element);
 		}
 		applyEngineFilters(specification, engineDescriptor);
 	}
 
-	private void applyEngineFilters(TestPlanSpecification specification, JUnit5EngineDescriptor engineDescriptor) {
+	private void applyEngineFilters(DiscoveryRequest specification, JUnit5EngineDescriptor engineDescriptor) {
 		List<ClassFilter> classFilters = specification.getEngineFiltersByType(ClassFilter.class);
 		if (classFilters.isEmpty()) {
 			return;

@@ -23,16 +23,13 @@ import java.util.List;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.console.options.CommandLineOptions;
-import org.junit.gen5.engine.ClassFilter;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
-import org.junit.gen5.engine.TestTag;
+import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.DiscoveryRequest;
 
 public class TestPlanSpecificationCreatorTests {
 
 	private CommandLineOptions options = new CommandLineOptions();
-	private TestPlanSpecificationElementVisitor visitor = mock(TestPlanSpecificationElementVisitor.class);
+	private DiscoverySelectorVisitor visitor = mock(DiscoverySelectorVisitor.class);
 
 	@Test
 	public void convertsClassArgument() {
@@ -92,7 +89,7 @@ public class TestPlanSpecificationCreatorTests {
 		options.setRunAllTests(true);
 		options.setClassnameFilter(".*Test");
 
-		TestPlanSpecification specification = convert();
+		DiscoveryRequest specification = convert();
 
 		List<ClassFilter> filter = specification.getEngineFiltersByType(ClassFilter.class);
 		assertThat(filter).hasSize(1);
@@ -105,7 +102,7 @@ public class TestPlanSpecificationCreatorTests {
 		options.setTagsFilter(asList("fast", "medium", "slow"));
 		options.setExcludeTags(asList("slow"));
 
-		TestPlanSpecification specification = convert();
+		DiscoveryRequest specification = convert();
 
 		assertTrue(specification.acceptDescriptor(testDescriptorWithTag("fast")));
 		assertTrue(specification.acceptDescriptor(testDescriptorWithTag("medium")));
@@ -114,11 +111,11 @@ public class TestPlanSpecificationCreatorTests {
 	}
 
 	private void convertAndVisit() {
-		TestPlanSpecification specification = convert();
+		DiscoveryRequest specification = convert();
 		specification.accept(visitor);
 	}
 
-	private TestPlanSpecification convert() {
+	private DiscoveryRequest convert() {
 		TestPlanSpecificationCreator creator = new TestPlanSpecificationCreator();
 		return creator.toTestPlanSpecification(options);
 	}

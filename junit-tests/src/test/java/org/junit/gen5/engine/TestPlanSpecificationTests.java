@@ -13,8 +13,8 @@ package org.junit.gen5.engine;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.engine.specification.dsl.NamedTestPlanSpecificationElementBuilder.forName;
-import static org.junit.gen5.engine.specification.dsl.TestPlanSpecificationBuilder.testPlanSpecification;
 import static org.junit.gen5.engine.specification.dsl.UniqueIdTestPlanSpecificationElementBuilder.forUniqueId;
 
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.specification.*;
 
 /**
- * Unit tests for {@link TestPlanSpecification}.
+ * Unit tests for {@link DiscoveryRequest}.
  *
  * @since 5.0
  */
@@ -32,32 +32,32 @@ public class TestPlanSpecificationTests {
 
 	@Test
 	public void forUniqueIdForMethod() {
-		TestPlanSpecificationElement element = forUniqueId("junit5:org.example.UserTests#fullname()");
+		DiscoverySelector element = forUniqueId("junit5:org.example.UserTests#fullname()");
 		assertEquals(UniqueIdSpecification.class, element.getClass());
 	}
 
 	@Test
 	public void forNameWithClass() {
-		TestPlanSpecificationElement element = forName(MyTestClass.class.getName());
+		DiscoverySelector element = forName(MyTestClass.class.getName());
 		assertEquals(ClassSpecification.class, element.getClass());
 	}
 
 	@Test
 	public void forNameWithMethod() throws Exception {
-		TestPlanSpecificationElement element = forName(fullyQualifiedMethodName());
+		DiscoverySelector element = forName(fullyQualifiedMethodName());
 		assertEquals(MethodSpecification.class, element.getClass());
 	}
 
 	@Test
 	public void forNameWithPackage() {
-		TestPlanSpecificationElement element = forName("org.junit.gen5");
+		DiscoverySelector element = forName("org.junit.gen5");
 		assertEquals(PackageSpecification.class, element.getClass());
 	}
 
 	@Test
-	public void buildSpecification() throws Exception {
+	public void buildDiscoveryRequest() throws Exception {
 		// @formatter:off
-		TestPlanSpecification spec = testPlanSpecification().withElements(
+		DiscoveryRequest spec = request().select(
 		forUniqueId("junit5:org.example.UserTests#fullname()"),
 			forName(MyTestClass.class.getName()),
 			forName("org.junit.gen5"),
@@ -66,7 +66,7 @@ public class TestPlanSpecificationTests {
 		// @formatter:on
 
 		assertNotNull(spec);
-		List<Class<? extends TestPlanSpecificationElement>> expected = Arrays.asList(UniqueIdSpecification.class,
+		List<Class<? extends DiscoverySelector>> expected = Arrays.asList(UniqueIdSpecification.class,
 			ClassSpecification.class, PackageSpecification.class, MethodSpecification.class);
 		assertEquals(expected, spec.getElements().stream().map(Object::getClass).collect(toList()));
 	}

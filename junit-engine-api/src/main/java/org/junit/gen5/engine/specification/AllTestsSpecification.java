@@ -12,10 +12,10 @@ package org.junit.gen5.engine.specification;
 
 import java.io.File;
 
-import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
+import org.junit.gen5.engine.DiscoverySelector;
+import org.junit.gen5.engine.DiscoverySelectorVisitor;
 
-public class AllTestsSpecification implements TestPlanSpecificationElement {
+public class AllTestsSpecification implements DiscoverySelector {
 	private final File classpathRoot;
 
 	public AllTestsSpecification(File classpathRoot) {
@@ -23,7 +23,7 @@ public class AllTestsSpecification implements TestPlanSpecificationElement {
 	}
 
 	@Override
-	public void accept(TestPlanSpecificationElementVisitor visitor) {
+	public void accept(DiscoverySelectorVisitor visitor) {
 		visitor.visitAllTests(classpathRoot);
 	}
 

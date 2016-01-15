@@ -19,13 +19,12 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.engine.specification.AllClassFilters;
 
 /**
  * @since 5.0
  */
-public final class TestPlanSpecification {
-	private final List<TestPlanSpecificationElement> elements = new LinkedList<>();
+public final class DiscoveryRequest {
+	private final List<DiscoverySelector> elements = new LinkedList<>();
 
 	// Descriptor Filters are evaluated by the launcher itself after engines have done their discovery.
 	// Begin predicate chain with a predicate that always evaluates to true.
@@ -34,11 +33,11 @@ public final class TestPlanSpecification {
 	// Engine filters are handed through to all test engines to be applied during discovery
 	private final List<EngineFilter> engineFilters = new LinkedList<>();
 
-	public void addElement(TestPlanSpecificationElement element) {
+	public void addElement(DiscoverySelector element) {
 		this.elements.add(element);
 	}
 
-	public void addElements(Collection<TestPlanSpecificationElement> elements) {
+	public void addElements(Collection<DiscoverySelector> elements) {
 		elements.forEach(this::addElement);
 	}
 
@@ -58,11 +57,11 @@ public final class TestPlanSpecification {
 		this.descriptorFilters.addAll(desciptorFilters);
 	}
 
-	public List<TestPlanSpecificationElement> getElements() {
+	public List<DiscoverySelector> getElements() {
 		return unmodifiableList(this.elements);
 	}
 
-	public <T extends TestPlanSpecificationElement> List<T> getElementsByType(Class<T> filterType) {
+	public <T extends DiscoverySelector> List<T> getElementsByType(Class<T> filterType) {
 		return this.elements.stream().filter(filterType::isInstance).map(filterType::cast).collect(toList());
 	}
 
@@ -83,7 +82,7 @@ public final class TestPlanSpecification {
 		return this.getDescriptorFilters().stream().allMatch(filter -> filter.test(testDescriptor));
 	}
 
-	public void accept(TestPlanSpecificationElementVisitor visitor) {
+	public void accept(DiscoverySelectorVisitor visitor) {
 		this.getElements().forEach(element -> element.accept(visitor));
 	}
 }

@@ -27,7 +27,7 @@ Usage Example:
 [source,java,indent=0]
 [subs="verbatim"]
 ----
-import static org.junit.gen5.engine.TestPlanSpecification.*;
+import static org.junit.gen5.engine.DiscoveryRequest.*;
 
 TestPlanSpecification specification = build(
 	forPackage("com.mycompany.mytests"),

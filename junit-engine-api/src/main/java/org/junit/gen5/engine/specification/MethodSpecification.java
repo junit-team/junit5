@@ -12,10 +12,10 @@ package org.junit.gen5.engine.specification;
 
 import java.lang.reflect.Method;
 
-import org.junit.gen5.engine.TestPlanSpecificationElement;
-import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
+import org.junit.gen5.engine.DiscoverySelector;
+import org.junit.gen5.engine.DiscoverySelectorVisitor;
 
-public class MethodSpecification implements TestPlanSpecificationElement {
+public class MethodSpecification implements DiscoverySelector {
 	private final Class<?> testClass;
 	private final Method testMethod;
 
@@ -25,7 +25,7 @@ public class MethodSpecification implements TestPlanSpecificationElement {
 	}
 
 	@Override
-	public void accept(TestPlanSpecificationElementVisitor visitor) {
+	public void accept(DiscoverySelectorVisitor visitor) {
 		visitor.visitMethod(testClass, testMethod);
 	}
 

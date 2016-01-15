@@ -30,8 +30,8 @@ import java.util.function.IntFunction;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.*;
 import org.junit.gen5.engine.ClassFilter;
-import org.junit.gen5.engine.TestPlanSpecification;
-import org.junit.gen5.engine.TestPlanSpecificationElementVisitor;
+import org.junit.gen5.engine.DiscoveryRequest;
+import org.junit.gen5.engine.DiscoverySelectorVisitor;
 import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.gen5.engine.specification.AllClassFilters;
@@ -50,12 +50,12 @@ public class JUnit4TestPlanSpecificationResolver {
 		this.engineDescriptor = engineDescriptor;
 	}
 
-	public void resolve(TestPlanSpecification specification) {
+	public void resolve(DiscoveryRequest specification) {
 		ClassFilter classFilter = new AllClassFilters(specification.getEngineFiltersByType(ClassFilter.class));
 		RunnerBuilder runnerBuilder = new DefensiveAllDefaultPossibilitiesBuilder();
 		Set<Class<?>> unfilteredTestClasses = new LinkedHashSet<>();
 		Map<Class<?>, List<RunnerTestDescriptorAwareFilter>> filteredTestClasses = new LinkedHashMap<>();
-		specification.accept(new TestPlanSpecificationElementVisitor() {
+		specification.accept(new DiscoverySelectorVisitor() {
 
 			private final IsPotentialJUnit4TestClass classTester = new IsPotentialJUnit4TestClass();
 
