@@ -10,18 +10,18 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import static org.junit.gen5.api.Assertions.*;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
 import org.mockito.Mockito;
-
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-
-import static org.junit.gen5.api.Assertions.*;
 
 /**
  * Microtests for implementors of {@linkplain ExtensionContext}: {@linkplain ClassBasedContainerExtensionContext} and
