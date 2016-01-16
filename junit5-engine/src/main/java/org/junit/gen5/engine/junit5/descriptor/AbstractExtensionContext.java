@@ -13,13 +13,18 @@ package org.junit.gen5.engine.junit5.descriptor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.EngineExecutionListener;
+import org.junit.gen5.engine.TestDescriptor;
 
 abstract class AbstractExtensionContext implements ExtensionContext {
 
 	private final Map<String, Object> attributes = new HashMap<>();
+
+	//Will replace attributes if done
+	private final ExtensionValuesStore store = new ExtensionValuesStore();
 
 	private final ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
@@ -62,6 +67,24 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 
 	protected TestDescriptor getTestDescriptor() {
 		return testDescriptor;
+	}
+
+	//Storing methods. Not done yet.
+
+	public Object get(Object key) {
+		return store.get(key);
+	}
+
+	public void put(Object key, Object value) {
+		store.put(key, value);
+	}
+
+	public Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator) {
+		return store.getOrComputeIfAbsent(key, defaultCreator);
+	}
+
+	public void remove(Object key) {
+		store.remove(key);
 	}
 
 }

@@ -13,6 +13,7 @@ package org.junit.gen5.api.extension;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * {@code ExtensionContext} encapsulates the <em>context</em> in which the
@@ -53,6 +54,18 @@ public interface ExtensionContext {
 	Class<?> getTestClass();
 
 	AnnotatedElement getElement();
+
+	// Storing methods. Not done yet.
+
+	Object get(Object key);
+
+	void put(Object key, Object value);
+
+	Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator);
+
+	void remove(Object key);
+
+	// Attributes will be removed when storing methods are done
 
 	Object getAttribute(String key);
 

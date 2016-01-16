@@ -10,19 +10,18 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertNull;
-
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
 import org.mockito.Mockito;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.junit.gen5.api.Assertions.*;
 
 /**
  * Microtests for implementors of {@linkplain ExtensionContext}: {@linkplain ClassBasedContainerExtensionContext} and
@@ -120,6 +119,20 @@ public class ExtensionContextTests {
 			reportEntry1);
 		Mockito.verify(engineExecutionListener, Mockito.times(1)).reportingEntryPublished(classTestDescriptor,
 			reportEntry2);
+	}
+
+	@Test
+	public void storingAttributesWithDefaultNamespace() {
+		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(null);
+		ExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, null, classTestDescriptor);
+
+		extensionContext.put("a key", "a value");
+		assertEquals("a value", extensionContext.get("a key"));
+
+		assertEquals("other value", extensionContext.getOrComputeIfAbsent("other key", key -> "other value"));
+
+		extensionContext.remove("a key");
+		assertNull(extensionContext.get("a key"));
 	}
 
 	private ClassTestDescriptor nestedClassDescriptor() {
