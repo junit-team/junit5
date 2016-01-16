@@ -6,7 +6,7 @@ uploadArchives.enabled = false
 junit5 {
 	// version '5.0.0-SNAPSHOT' // not needed since all dependencies are declared explicitly
 	runJunit4 true
-	matchClassName '.*Test[s]'
+	matchClassName '.*Tests?'
 	reportFile file('build/test-results/JUNIT5-Tests.xml')
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 	// includeTag 'fast'

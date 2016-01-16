@@ -10,12 +10,6 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
-import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
-
-import java.util.HashMap;
-
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
@@ -23,9 +17,15 @@ import org.junit.gen5.api.TestReporter;
 import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 
+import java.util.HashMap;
+
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
+import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
+
 public class ReportingTest extends AbstractJUnit5TestEngineTests {
 
-	@org.junit.Test
+	@Test
 	public void threeReportEntriesArePublished() {
 		DiscoveryRequest request = request().select(forClass(MyReportingTestCase.class)).build();
 
@@ -35,7 +35,7 @@ public class ReportingTest extends AbstractJUnit5TestEngineTests {
 		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(3, eventRecorder.getReportingEntryPublishedCount(), "# report entries published");
+		assertEquals(3L, eventRecorder.getReportingEntryPublishedCount(), "# report entries published");
 	}
 
 }
