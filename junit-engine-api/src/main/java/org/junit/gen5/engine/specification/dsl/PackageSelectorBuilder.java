@@ -21,12 +21,12 @@ import org.junit.gen5.engine.specification.PackageNameSelector;
 /**
  * @since 5.0
  */
-public class PackageTestPlanSpecificationElementBuilder {
+public class PackageSelectorBuilder {
 	public static DiscoverySelector byPackageName(String packageName) {
 		return new PackageNameSelector(packageName);
 	}
 
 	public static List<DiscoverySelector> byPackageNames(Collection<String> packageNames) {
-		return packageNames.stream().map(PackageTestPlanSpecificationElementBuilder::byPackageName).collect(toList());
+		return packageNames.stream().map(PackageSelectorBuilder::byPackageName).collect(toList());
 	}
 }

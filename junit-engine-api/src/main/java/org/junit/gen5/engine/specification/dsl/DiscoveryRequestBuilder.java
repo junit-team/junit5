@@ -10,7 +10,9 @@
 
 package org.junit.gen5.engine.specification.dsl;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.gen5.engine.*;
 
@@ -23,32 +25,29 @@ import org.junit.gen5.engine.*;
  * <pre>
  *   DiscoveryRequestBuilder.request()
  *     .select(
- *       packageName("org.junit.gen5"),
- *       packageName("com.junit.samples"),
- *       testClass(TestDescriptorTests.class),
- *       testClassByName("com.junit.samples.SampleTestCase"),
- *       testMethod("com.junit.samples.SampleTestCase", "test2"),
- *       testMethod(TestDescriptorTests.class, "test1"),
- *       testMethod(TestDescriptorTests.class, "test1"),
- *       testMethod(TestDescriptorTests.class, "testWithParams", ParameterType.class),
- *       testMethod(TestDescriptorTests.class, testMethod),
- *       path("/my/local/path1"),
- *       path("/my/local/path2"),
- *       uniqueId("unique-id-1"),
- *       uniqueId("unique-id-2")
+ *       byPackageName("org.junit.gen5"),
+ *       byPackageName("com.junit.samples"),
+ *       byTestClass(TestDescriptorTests.class),
+ *       byTestClassByName("com.junit.samples.SampleTestCase"),
+ *       byTestMethod("com.junit.samples.SampleTestCase", "test2"),
+ *       byTestMethod(TestDescriptorTests.class, "test1"),
+ *       byTestMethod(TestDescriptorTests.class, "test1"),
+ *       byTestMethod(TestDescriptorTests.class, "testWithParams", ParameterType.class),
+ *       byTestMethod(TestDescriptorTests.class, testMethod),
+ *       byPath("/my/local/path1"),
+ *       byPath("/my/local/path2"),
+ *       byUniqueId("unique-id-1"),
+ *       byUniqueId("unique-id-2")
  *     )
- *     .filterBy(
- *       engineIds("junit5"),
- *       classNamePattern("org.junit.gen5.tests"),
- *       classNamePattern("org.junit.sample"),
- *       tagsIncluded("Fast"),
- *       tagsExcluded("Slow")
- *     )
+ *     .filterBy(engineIds("junit5"))
+ *     .filterBy(classNamePattern("org.junit.gen5.tests"), classNamePattern("org.junit.sample"))
+ *     .filterBy(tagsIncluded("Fast"), tagsExcluded("Slow"))
  *   ).build();
  * </pre>
  */
 public final class DiscoveryRequestBuilder {
 	private List<DiscoverySelector> selectors = new LinkedList<>();
+	private List<EngineIdFilter> engineIdFilters = new LinkedList<>();
 	private List<DiscoveryFilter> filters = new LinkedList<>();
 	private List<PostDiscoveryFilter> postFilters = new LinkedList<>();
 
@@ -70,6 +69,13 @@ public final class DiscoveryRequestBuilder {
 		return this;
 	}
 
+	public DiscoveryRequestBuilder filterBy(EngineIdFilter... filters) {
+		if (filters != null) {
+			this.engineIdFilters.addAll(Arrays.asList(filters));
+		}
+		return this;
+	}
+
 	public DiscoveryRequestBuilder filterBy(DiscoveryFilter... filters) {
 		if (filters != null) {
 			this.filters.addAll(Arrays.asList(filters));
@@ -87,7 +93,9 @@ public final class DiscoveryRequestBuilder {
 	public DiscoveryRequest build() {
 		DiscoveryRequest discoveryRequest = new DiscoveryRequest();
 		discoveryRequest.addSelectors(this.selectors);
+		discoveryRequest.addEngineIdFilters(this.engineIdFilters);
 		discoveryRequest.addFilters(this.filters);
+		discoveryRequest.addPostFilters(this.postFilters);
 		return discoveryRequest;
 	}
 }
