@@ -123,16 +123,22 @@ public class ExtensionContextTests {
 
 	@Test
 	public void storingAttributesWithDefaultNamespace() {
-		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(null);
-		ExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, null, classTestDescriptor);
+		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
+		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
+		ExtensionContext parentContext = new ClassBasedContainerExtensionContext(null, null, classTestDescriptor);
+		MethodBasedTestExtensionContext childContext = new MethodBasedTestExtensionContext(parentContext, null,
+			methodTestDescriptor, new OuterClass());
 
-		extensionContext.put("a key", "a value");
-		assertEquals("a value", extensionContext.get("a key"));
+		childContext.put("a key", "a value");
+		assertEquals("a value", childContext.get("a key"));
 
-		assertEquals("other value", extensionContext.getOrComputeIfAbsent("other key", key -> "other value"));
+		assertEquals("other value", childContext.getOrComputeIfAbsent("other key", key -> "other value"));
 
-		extensionContext.remove("a key");
-		assertNull(extensionContext.get("a key"));
+		childContext.remove("a key");
+		assertNull(childContext.get("a key"));
+
+		parentContext.put("parent key", "parent value");
+		assertEquals("parent value", childContext.get("parent key"));
 	}
 
 	private ClassTestDescriptor nestedClassDescriptor() {

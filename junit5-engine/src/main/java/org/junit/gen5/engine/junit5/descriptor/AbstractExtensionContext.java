@@ -24,7 +24,7 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 	private final Map<String, Object> attributes = new HashMap<>();
 
 	//Will replace attributes if done
-	private final ExtensionValuesStore store = new ExtensionValuesStore();
+	private final ExtensionValuesStore store;
 
 	private final ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
@@ -35,6 +35,15 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 		this.parent = parent;
 		this.engineExecutionListener = engineExecutionListener;
 		this.testDescriptor = testDescriptor;
+		this.store = createStore(parent);
+	}
+
+	private final ExtensionValuesStore createStore(ExtensionContext parent) {
+		ExtensionValuesStore parentStore = null;
+		if (parent != null) {
+			parentStore = ((AbstractExtensionContext) parent).store;
+		}
+		return new ExtensionValuesStore(parentStore);
 	}
 
 	@Override

@@ -22,23 +22,27 @@ import org.junit.gen5.api.Test;
 class ExtensionValuesStoreTests {
 
 	private ExtensionValuesStore store;
+	private ExtensionValuesStore parentStore;
+
+	private Object key = new Object();
+	private Object value = new Object();
 
 	@BeforeEach
 	void initializeStore() {
-		store = new ExtensionValuesStore();
+		parentStore = new ExtensionValuesStore();
+		store = new ExtensionValuesStore(parentStore);
 	}
 
 	@Nested
 	class UsingDefaultNamespaceTest {
 
+		@Test
 		void getWithUnknownKeyReturnsNull() {
 			assertNull(store.get("unknown key"));
 		}
 
 		@Test
 		void putAndGetWithSameKey() {
-			Object key = new Object();
-			Object value = new Object();
 
 			store.put(key, value);
 			assertEquals(value, store.get(key));
@@ -46,9 +50,6 @@ class ExtensionValuesStoreTests {
 
 		@Test
 		void valueCanBeReplaced() {
-			Object key = new Object();
-			Object value = new Object();
-
 			store.put(key, value);
 
 			Object newValue = new Object();
@@ -59,18 +60,12 @@ class ExtensionValuesStoreTests {
 
 		@Test
 		void valueIsComputedIfAbsent() {
-			Object key = new Object();
-			Object value = new Object();
-
 			assertEquals(value, store.getOrComputeIfAbsent(key, innerKey -> value));
 			assertEquals(value, store.get(key));
 		}
 
 		@Test
 		void valueIsNotComputedIfPresent() {
-			Object key = new Object();
-			Object value = new Object();
-
 			store.put(key, value);
 
 			assertEquals(value, store.getOrComputeIfAbsent(key, innerKey -> "a different value"));
@@ -79,8 +74,6 @@ class ExtensionValuesStoreTests {
 
 		@Test
 		void nullIsAValidValueToPut() {
-			Object key = new Object();
-
 			store.put(key, null);
 
 			assertEquals(null, store.getOrComputeIfAbsent(key, innerKey -> "a different value"));
@@ -89,9 +82,6 @@ class ExtensionValuesStoreTests {
 
 		@Test
 		void keysCanBeRemoved() {
-			Object key = new Object();
-			Object value = new Object();
-
 			store.put(key, value);
 			store.remove(key);
 
@@ -99,6 +89,27 @@ class ExtensionValuesStoreTests {
 			assertEquals("a different value", store.getOrComputeIfAbsent(key, innerKey -> "a different value"));
 		}
 
+	}
+
+	@Nested
+	class InheritedValuesTest {
+
+		@Test
+		void valueFromParentIsVisible() {
+			parentStore.put(key, value);
+			assertEquals(value, store.get(key));
+		}
+
+		@Test
+		void valueFromParentCanBeOverriddenInChild() {
+			parentStore.put(key, value);
+
+			Object otherValue = new Object();
+			store.put(key, otherValue);
+			assertEquals(otherValue, store.get(key));
+
+			assertEquals(value, parentStore.get(key));
+		}
 	}
 
 }

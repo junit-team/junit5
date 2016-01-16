@@ -22,12 +22,23 @@ import org.junit.gen5.commons.util.Preconditions;
  */
 class ExtensionValuesStore {
 
-	Map<Object, StoredValue> storedValues = new HashMap<>();
+	private final ExtensionValuesStore parentStore;
+	private final Map<Object, StoredValue> storedValues = new HashMap<>();
+
+	public ExtensionValuesStore() {
+		this(null);
+	}
+
+	public ExtensionValuesStore(ExtensionValuesStore parentStore) {
+		this.parentStore = parentStore;
+	}
 
 	public Object get(Object key) {
 		StoredValue storedValue = storedValues.get(key);
 		if (storedValue != null)
 			return storedValue.value;
+		else if (parentStore != null)
+			return parentStore.get(key);
 		else
 			return null;
 	}

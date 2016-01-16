@@ -57,12 +57,36 @@ public interface ExtensionContext {
 
 	// Storing methods. Not done yet.
 
+	/**
+	 * Get an object that has been stored using a {@code key}
+	 *
+	 * @param key the key
+	 * @return the value
+	 */
 	Object get(Object key);
 
+	/**
+	 * Store a {@code value} for later retrieval using a {@code key}. {@code null} is a valid value.
+	 *
+	 * @param key the key
+	 * @param value the value
+	 */
 	void put(Object key, Object value);
 
+	/**
+	 * Get an object that has been stored using a {@code key}. If no value has been store using that {@code key}
+	 * the value will be computed by the {@code defaultCreator} and be stored.
+	 *
+	 * @param key the key
+	 * @return the value
+	 */
 	Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator);
 
+	/**
+	 * Remove a value that was previously stored using {@code key} so that {@code key} can be used anew.
+	 *
+	 * @param key the key
+	 */
 	void remove(Object key);
 
 	// Attributes will be removed when storing methods are done
