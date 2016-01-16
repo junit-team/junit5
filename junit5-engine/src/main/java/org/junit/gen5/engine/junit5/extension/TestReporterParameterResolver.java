@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit5.extension;
 
 import java.lang.reflect.Parameter;
 
+import org.junit.gen5.api.TestReporter;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;

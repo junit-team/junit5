@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.extension;
+package org.junit.gen5.api;
 
 import java.util.Map;
 
