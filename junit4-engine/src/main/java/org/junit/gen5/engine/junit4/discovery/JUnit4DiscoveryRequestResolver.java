@@ -10,22 +10,14 @@
 
 package org.junit.gen5.engine.junit4.discovery;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toCollection;
 import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackage;
 import static org.junit.gen5.engine.junit4.discovery.RunnerTestDescriptorAwareFilter.adapter;
 import static org.junit.runner.manipulation.Filter.matchMethodDescription;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.IntFunction;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.ClassFilter;
@@ -40,13 +32,8 @@ import org.junit.gen5.engine.specification.MethodSelector;
 import org.junit.gen5.engine.specification.PackageNameSelector;
 import org.junit.gen5.engine.specification.UniqueIdSelector;
 import org.junit.runner.Description;
-import org.junit.runner.Runner;
-import org.junit.runner.manipulation.Filter;
-import org.junit.runners.model.RunnerBuilder;
 
 public class JUnit4DiscoveryRequestResolver {
-
-	private static final char DEFAULT_SEPARATOR = '/';
 
 	private final EngineDescriptor engineDescriptor;
 
@@ -54,31 +41,31 @@ public class JUnit4DiscoveryRequestResolver {
 		this.engineDescriptor = engineDescriptor;
 	}
 
-	public void resolve(DiscoveryRequest request) {
+	public void resolve(DiscoveryRequest discoveryRequest) {
 
 		IsPotentialJUnit4TestClass classTester = new IsPotentialJUnit4TestClass();
 		TestClassCollector collector = new TestClassCollector();
 
-		request.getElementsByType(ClasspathSelector.class).forEach(selector -> {
+		discoveryRequest.getElementsByType(ClasspathSelector.class).forEach(selector -> {
 			findAllClassesInClasspathRoot(selector.getClasspathRoot(), classTester).forEach(collector::addCompletely);
 		});
 
-		request.getElementsByType(PackageNameSelector.class).forEach(selector -> {
+		discoveryRequest.getElementsByType(PackageNameSelector.class).forEach(selector -> {
 			findAllClassesInPackage(selector.getPackageName(), classTester).forEach(collector::addCompletely);
 		});
 
-		request.getElementsByType(ClassSelector.class).forEach(selector -> {
+		discoveryRequest.getElementsByType(ClassSelector.class).forEach(selector -> {
 			collector.addCompletely(selector.getTestClass());
 		});
 
-		request.getElementsByType(MethodSelector.class).forEach(selector -> {
+		discoveryRequest.getElementsByType(MethodSelector.class).forEach(selector -> {
 			Class<?> testClass = selector.getTestClass();
 			Method testMethod = selector.getTestMethod();
 			Description methodDescription = Description.createTestDescription(testClass, testMethod.getName());
 			collector.addFiltered(testClass, adapter(matchMethodDescription(methodDescription)));
 		});
 
-		request.getElementsByType(UniqueIdSelector.class).forEach(selector -> {
+		discoveryRequest.getElementsByType(UniqueIdSelector.class).forEach(selector -> {
 			String uniqueId = selector.getUniqueId();
 			String enginePrefix = engineDescriptor.getEngine().getId() + RunnerTestDescriptor.SEPARATOR;
 			if (uniqueId.startsWith(enginePrefix)) {
@@ -93,79 +80,22 @@ public class JUnit4DiscoveryRequestResolver {
 			}
 		});
 
-		ClassFilter classFilter = new AllClassFilters(request.getEngineFiltersByType(ClassFilter.class));
+		Set<TestClassRequest> requests = convertToTestClassRequests(discoveryRequest, collector);
 
-		convertToTestDescriptors(collector.toRequests(classFilter::acceptClass));
+		new TestClassRequestResolver(engineDescriptor).populateEngineDescriptorFrom(requests);
+	}
+
+	private Set<TestClassRequest> convertToTestClassRequests(DiscoveryRequest request, TestClassCollector collector) {
+		// TODO #40 Log classes that are filtered out
+		ClassFilter classFilter = new AllClassFilters(request.getEngineFiltersByType(ClassFilter.class));
+		return collector.toRequests(classFilter::acceptClass);
 	}
 
 	private String determineTestClassName(String uniqueId, String enginePrefix) {
-		int endIndex = uniqueId.indexOf(DEFAULT_SEPARATOR);
+		int endIndex = uniqueId.indexOf(JUnit4TestDescriptor.DEFAULT_SEPARATOR);
 		if (endIndex >= 0) {
 			return uniqueId.substring(enginePrefix.length(), endIndex);
 		}
 		return uniqueId.substring(enginePrefix.length());
-	}
-
-	private void convertToTestDescriptors(Set<TestClassRequest> testClassRequests) {
-		RunnerBuilder runnerBuilder = new DefensiveAllDefaultPossibilitiesBuilder();
-		for (TestClassRequest entry : testClassRequests) {
-			Class<?> testClass = entry.getTestClass();
-			Runner runner = runnerBuilder.safeRunnerForClass(testClass);
-			if (runner != null) {
-				addRunnerTestDescriptor(testClass, runner, entry.getFilters());
-			}
-		}
-	}
-
-	private void addRunnerTestDescriptor(Class<?> testClass, Runner runner,
-			List<RunnerTestDescriptorAwareFilter> filters) {
-		RunnerTestDescriptor runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, runner);
-		if (!filters.isEmpty()) {
-			Filter filter = createOrFilter(filters, runnerTestDescriptor);
-			Runner filteredRunner = runnerTestDescriptor.toRequest().filterWith(filter).getRunner();
-			// TODO #40 Log warning if runner does not implement Filterable
-			runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, filteredRunner);
-		}
-		engineDescriptor.addChild(runnerTestDescriptor);
-	}
-
-	private Filter createOrFilter(List<RunnerTestDescriptorAwareFilter> filters,
-			RunnerTestDescriptor runnerTestDescriptor) {
-		filters.stream().forEach(filter -> filter.initialize(runnerTestDescriptor));
-		return new OrFilter(filters);
-	}
-
-	private RunnerTestDescriptor createCompleteRunnerTestDescriptor(Class<?> testClass, Runner runner) {
-		RunnerTestDescriptor runnerTestDescriptor = new RunnerTestDescriptor(engineDescriptor, testClass, runner);
-		addChildrenRecursively(runnerTestDescriptor);
-		return runnerTestDescriptor;
-	}
-
-	private void addChildrenRecursively(JUnit4TestDescriptor parent) {
-		List<Description> children = parent.getDescription().getChildren();
-		// Use LinkedHashMap to preserve order, ArrayList for fast access by index
-		Map<String, List<Description>> childrenByUniqueId = children.stream().collect(
-			groupingBy(UniqueIdExtractor::toUniqueId, LinkedHashMap::new, toCollection(ArrayList::new)));
-		for (Entry<String, List<Description>> entry : childrenByUniqueId.entrySet()) {
-			String uniqueId = entry.getKey();
-			List<Description> childrenWithSameUniqueId = entry.getValue();
-			IntFunction<String> uniqueIdGenerator = determineUniqueIdGenerator(uniqueId, childrenWithSameUniqueId);
-			for (int index = 0; index < childrenWithSameUniqueId.size(); index++) {
-				String reallyUniqueId = uniqueIdGenerator.apply(index);
-				Description description = childrenWithSameUniqueId.get(index);
-				JUnit4TestDescriptor child = new JUnit4TestDescriptor(parent, DEFAULT_SEPARATOR, reallyUniqueId,
-					description);
-				parent.addChild(child);
-				addChildrenRecursively(child);
-			}
-		}
-	}
-
-	private IntFunction<String> determineUniqueIdGenerator(String uniqueId,
-			List<Description> childrenWithSameUniqueId) {
-		if (childrenWithSameUniqueId.size() == 1) {
-			return index -> uniqueId;
-		}
-		return index -> uniqueId + "[" + index + "]";
 	}
 }

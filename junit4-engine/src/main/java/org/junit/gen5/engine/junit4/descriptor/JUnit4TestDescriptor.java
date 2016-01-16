@@ -31,6 +31,8 @@ import org.junit.runner.Description;
  */
 public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 
+	public static final char DEFAULT_SEPARATOR = '/';
+
 	private final Description description;
 
 	public JUnit4TestDescriptor(TestDescriptor parent, char separator, String uniqueIdSuffix, Description description) {
