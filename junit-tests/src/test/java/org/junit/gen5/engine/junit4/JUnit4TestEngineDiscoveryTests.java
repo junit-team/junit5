@@ -488,6 +488,25 @@ class JUnit4TestEngineDiscoveryTests {
 			"junit4:" + testClass.getName() + "/");
 	}
 
+	@Test
+	void ignoresRedundantSelector() throws Exception {
+		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
+		DiscoveryRequest specification = request().select( //
+			byMethod(testClass, testClass.getMethod("failingTest")), //
+			byUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods"
+					+ "/failingTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods)" //
+		)).build();
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertRunnerTestDescriptor(runnerDescriptor, testClass);
+
+		TestDescriptor testMethodDescriptor = getOnlyElement(runnerDescriptor.getChildren());
+		assertTestMethodDescriptor(testMethodDescriptor, testClass, "failingTest",
+			"junit4:" + testClass.getName() + "/");
+	}
+
 	private TestDescriptor findChildByDisplayName(TestDescriptor runnerDescriptor, String displayName) {
 		// @formatter:off
 		Set<? extends TestDescriptor> children = runnerDescriptor.getChildren();
