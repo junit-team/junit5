@@ -42,9 +42,14 @@ public class JUnit4DiscoveryRequestResolver {
 	}
 
 	public void resolve(DiscoveryRequest discoveryRequest) {
+		TestClassCollector collector = collectTestClasses(discoveryRequest);
+		Set<TestClassRequest> requests = filterAndConvertToTestClassRequests(discoveryRequest, collector);
+		populateEngineDescriptor(requests);
+	}
 
-		IsPotentialJUnit4TestClass classTester = new IsPotentialJUnit4TestClass();
+	private TestClassCollector collectTestClasses(DiscoveryRequest discoveryRequest) {
 		TestClassCollector collector = new TestClassCollector();
+		IsPotentialJUnit4TestClass classTester = new IsPotentialJUnit4TestClass();
 
 		discoveryRequest.getElementsByType(ClasspathSelector.class).forEach(selector -> {
 			findAllClassesInClasspathRoot(selector.getClasspathRoot(), classTester).forEach(collector::addCompletely);
@@ -79,16 +84,17 @@ public class JUnit4DiscoveryRequestResolver {
 				}
 			}
 		});
-
-		Set<TestClassRequest> requests = convertToTestClassRequests(discoveryRequest, collector);
-
-		new TestClassRequestResolver(engineDescriptor).populateEngineDescriptorFrom(requests);
+		return collector;
 	}
 
-	private Set<TestClassRequest> convertToTestClassRequests(DiscoveryRequest request, TestClassCollector collector) {
+	private Set<TestClassRequest> filterAndConvertToTestClassRequests(DiscoveryRequest request, TestClassCollector collector) {
 		// TODO #40 Log classes that are filtered out
 		ClassFilter classFilter = new AllClassFilters(request.getEngineFiltersByType(ClassFilter.class));
 		return collector.toRequests(classFilter::acceptClass);
+	}
+
+	private void populateEngineDescriptor(Set<TestClassRequest> requests) {
+		new TestClassRequestResolver(engineDescriptor).populateEngineDescriptorFrom(requests);
 	}
 
 	private String determineTestClassName(String uniqueId, String enginePrefix) {
