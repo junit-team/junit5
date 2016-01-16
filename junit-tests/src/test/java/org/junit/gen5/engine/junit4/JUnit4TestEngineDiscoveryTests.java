@@ -448,6 +448,24 @@ class JUnit4TestEngineDiscoveryTests {
 		assertInitializationError(testDescriptor, Filter.class, "junit4:" + testClass.getName() + "/");
 	}
 
+	@Test
+	void ignoresMoreFineGrainedSelectorsWhenClassIsSelectedAsWell() throws Exception {
+		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
+		DiscoveryRequest specification = request().select( //
+			byMethod(testClass, testClass.getMethod("failingTest")), //
+			byUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods"
+					+ "/abortedTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods)"),
+			forClass(testClass) //
+		).build();
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertRunnerTestDescriptor(runnerDescriptor, testClass);
+
+		assertThat(runnerDescriptor.getChildren()).hasSize(5);
+	}
+
 	private TestDescriptor findChildByDisplayName(TestDescriptor runnerDescriptor, String displayName) {
 		// @formatter:off
 		Set<? extends TestDescriptor> children = runnerDescriptor.getChildren();

@@ -49,10 +49,10 @@ class TestClassCollector {
 	}
 
 	private Stream<TestClassRequest> filteredRequests(Predicate<? super Class<?>> predicate) {
-		// TODO #40 Remove classes contained in completeTestClasses
 		// @formatter:off
 		return filteredTestClasses.entrySet()
 				.stream()
+				.filter(where(Entry::getKey, testClass -> !completeTestClasses.contains(testClass)))
 				.filter(where(Entry::getKey, predicate))
 				.map(entry -> new TestClassRequest(entry.getKey(), entry.getValue()));
 		// @formatter:on
