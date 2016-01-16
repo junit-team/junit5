@@ -33,7 +33,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnit5.class)
 @Packages("org.junit.gen5")
-@ClassNamePattern(".*Test[s]")
+@ClassNamePattern(".*Tests?")
 @ExcludeTags("slow")
 @OnlyEngine(JUnit5TestEngine.ENGINE_ID)
 public class AllFastJUnit5Tests {
