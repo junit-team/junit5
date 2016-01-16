@@ -412,6 +412,28 @@ class JUnit4TestEngineDiscoveryTests {
 	}
 
 	@Test
+	void resolvesMultipleUniqueIdSpecificationsForMethodsOfSameClass() throws Exception {
+		Class<?> testClass = PlainJUnit4TestCaseWithTwoTestMethods.class;
+		DiscoveryRequest specification = request().select(
+			byUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods"
+					+ "/successfulTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods)"),
+			byUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods"
+					+ "/failingTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods)")).build();
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertRunnerTestDescriptor(runnerDescriptor, testClass);
+
+		List<TestDescriptor> testMethodDescriptors = new ArrayList<>(runnerDescriptor.getChildren());
+		assertThat(testMethodDescriptors).hasSize(2);
+		assertTestMethodDescriptor(testMethodDescriptors.get(0), testClass, "failingTest",
+			"junit4:" + testClass.getName() + "/");
+		assertTestMethodDescriptor(testMethodDescriptors.get(1), testClass, "successfulTest",
+			"junit4:" + testClass.getName() + "/");
+	}
+
+	@Test
 	void doesNotResolveMissingUniqueIdSpecificationForSingleClass() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		DiscoveryRequest specification = request().select(byUniqueId(
