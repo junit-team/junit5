@@ -507,6 +507,19 @@ class JUnit4TestEngineDiscoveryTests {
 			"junit4:" + testClass.getName() + "/");
 	}
 
+	@Test
+	void doesNotResolveMethodOfClassNotAcceptedByClassFilter() throws Exception {
+		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
+		// @formatter:off
+		DiscoveryRequest request = request()
+				.select(byMethod(testClass, testClass.getMethod("failingTest")))
+				.filterBy(classNameMatches("Foo"))
+				.build();
+		// @formatter:on
+
+		assertYieldsNoDescriptors(request);
+	}
+
 	private TestDescriptor findChildByDisplayName(TestDescriptor runnerDescriptor, String displayName) {
 		// @formatter:off
 		Set<? extends TestDescriptor> children = runnerDescriptor.getChildren();
@@ -525,9 +538,13 @@ class JUnit4TestEngineDiscoveryTests {
 	}
 
 	private void assertYieldsNoDescriptors(Class<?> testClass) {
-		DiscoveryRequest specification = buildClassSpecification(testClass);
+		DiscoveryRequest request = buildClassSpecification(testClass);
 
-		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+		assertYieldsNoDescriptors(request);
+	}
+
+	private void assertYieldsNoDescriptors(DiscoveryRequest request) {
+		TestDescriptor engineDescriptor = engine.discoverTests(request);
 
 		assertThat(engineDescriptor.getChildren()).isEmpty();
 	}
