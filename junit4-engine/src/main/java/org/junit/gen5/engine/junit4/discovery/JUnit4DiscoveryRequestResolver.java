@@ -33,7 +33,6 @@ import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
-import org.junit.gen5.engine.junit4.discovery.TestClassCollection.TestClassEntry;
 import org.junit.gen5.engine.specification.AllClassFilters;
 import org.junit.gen5.engine.specification.ClassSelector;
 import org.junit.gen5.engine.specification.ClasspathSelector;
@@ -45,38 +44,38 @@ import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runners.model.RunnerBuilder;
 
-public class JUnit4TestPlanSpecificationResolver {
+public class JUnit4DiscoveryRequestResolver {
 
 	private static final char DEFAULT_SEPARATOR = '/';
 
 	private final EngineDescriptor engineDescriptor;
 
-	public JUnit4TestPlanSpecificationResolver(EngineDescriptor engineDescriptor) {
+	public JUnit4DiscoveryRequestResolver(EngineDescriptor engineDescriptor) {
 		this.engineDescriptor = engineDescriptor;
 	}
 
 	public void resolve(DiscoveryRequest request) {
 
 		IsPotentialJUnit4TestClass classTester = new IsPotentialJUnit4TestClass();
-		TestClassCollection testClasses = new TestClassCollection();
+		TestClassCollector collector = new TestClassCollector();
 
 		request.getElementsByType(ClasspathSelector.class).forEach(selector -> {
-			findAllClassesInClasspathRoot(selector.getClasspathRoot(), classTester).forEach(testClasses::addCompletely);
+			findAllClassesInClasspathRoot(selector.getClasspathRoot(), classTester).forEach(collector::addCompletely);
 		});
 
 		request.getElementsByType(PackageNameSelector.class).forEach(selector -> {
-			findAllClassesInPackage(selector.getPackageName(), classTester).forEach(testClasses::addCompletely);
+			findAllClassesInPackage(selector.getPackageName(), classTester).forEach(collector::addCompletely);
 		});
 
 		request.getElementsByType(ClassSelector.class).forEach(selector -> {
-			testClasses.addCompletely(selector.getTestClass());
+			collector.addCompletely(selector.getTestClass());
 		});
 
 		request.getElementsByType(MethodSelector.class).forEach(selector -> {
 			Class<?> testClass = selector.getTestClass();
 			Method testMethod = selector.getTestMethod();
 			Description methodDescription = Description.createTestDescription(testClass, testMethod.getName());
-			testClasses.addFiltered(testClass, adapter(matchMethodDescription(methodDescription)));
+			collector.addFiltered(testClass, adapter(matchMethodDescription(methodDescription)));
 		});
 
 		request.getElementsByType(UniqueIdSelector.class).forEach(selector -> {
@@ -86,7 +85,7 @@ public class JUnit4TestPlanSpecificationResolver {
 				String testClassName = determineTestClassName(uniqueId, enginePrefix);
 				Optional<Class<?>> testClass = ReflectionUtils.loadClass(testClassName);
 				if (testClass.isPresent()) {
-					testClasses.addFiltered(testClass.get(), new UniqueIdFilter(uniqueId));
+					collector.addFiltered(testClass.get(), new UniqueIdFilter(uniqueId));
 				}
 				else {
 					// TODO #40 Log warning
@@ -96,7 +95,7 @@ public class JUnit4TestPlanSpecificationResolver {
 
 		ClassFilter classFilter = new AllClassFilters(request.getEngineFiltersByType(ClassFilter.class));
 
-		convertToTestDescriptors(testClasses.toEntries(classFilter::acceptClass));
+		convertToTestDescriptors(collector.toRequests(classFilter::acceptClass));
 	}
 
 	private String determineTestClassName(String uniqueId, String enginePrefix) {
@@ -107,9 +106,9 @@ public class JUnit4TestPlanSpecificationResolver {
 		return uniqueId.substring(enginePrefix.length());
 	}
 
-	private void convertToTestDescriptors(Set<TestClassEntry> testClassEntries) {
+	private void convertToTestDescriptors(Set<TestClassRequest> testClassRequests) {
 		RunnerBuilder runnerBuilder = new DefensiveAllDefaultPossibilitiesBuilder();
-		for (TestClassEntry entry : testClassEntries) {
+		for (TestClassRequest entry : testClassRequests) {
 			Class<?> testClass = entry.getTestClass();
 			Runner runner = runnerBuilder.safeRunnerForClass(testClass);
 			if (runner != null) {
