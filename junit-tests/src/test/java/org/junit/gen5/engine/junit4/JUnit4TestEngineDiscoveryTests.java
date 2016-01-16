@@ -466,6 +466,28 @@ class JUnit4TestEngineDiscoveryTests {
 		assertThat(runnerDescriptor.getChildren()).hasSize(5);
 	}
 
+	@Test
+	void resolvesCombinationOfMethodAndUniqueIdSelector() throws Exception {
+		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
+		DiscoveryRequest specification = request().select( //
+			byMethod(testClass, testClass.getMethod("failingTest")), //
+			byUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods"
+					+ "/abortedTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods)" //
+		)).build();
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertRunnerTestDescriptor(runnerDescriptor, testClass);
+
+		List<TestDescriptor> testMethodDescriptors = new ArrayList<>(runnerDescriptor.getChildren());
+		assertThat(testMethodDescriptors).hasSize(2);
+		assertTestMethodDescriptor(testMethodDescriptors.get(0), testClass, "abortedTest",
+			"junit4:" + testClass.getName() + "/");
+		assertTestMethodDescriptor(testMethodDescriptors.get(1), testClass, "failingTest",
+			"junit4:" + testClass.getName() + "/");
+	}
+
 	private TestDescriptor findChildByDisplayName(TestDescriptor runnerDescriptor, String displayName) {
 		// @formatter:off
 		Set<? extends TestDescriptor> children = runnerDescriptor.getChildren();
