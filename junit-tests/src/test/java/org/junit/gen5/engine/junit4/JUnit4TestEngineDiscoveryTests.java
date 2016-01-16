@@ -14,7 +14,9 @@ import static java.text.MessageFormat.format;
 import static java.util.Collections.singleton;
 import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.engine.specification.dsl.ClassFilters.classNameMatches;
@@ -40,11 +42,21 @@ import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit4.samples.PlainOldJavaClassWithoutAnyTest;
 import org.junit.gen5.engine.junit4.samples.junit3.JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
-import org.junit.gen5.engine.junit4.samples.junit4.*;
 import org.junit.gen5.engine.junit4.samples.junit4.Categories.Failing;
 import org.junit.gen5.engine.junit4.samples.junit4.Categories.Plain;
 import org.junit.gen5.engine.junit4.samples.junit4.Categories.Skipped;
 import org.junit.gen5.engine.junit4.samples.junit4.Categories.SkippedWithReason;
+import org.junit.gen5.engine.junit4.samples.junit4.IgnoredJUnit4TestCase;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithTwoTestCases;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithOverloadedMethod;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleInheritedTestWhichFails;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods;
+import org.junit.gen5.engine.junit4.samples.junit4.SingleFailingTheoryTestCase;
+import org.junit.gen5.engine.junit4.samples.junit4.TestCaseRunWithJUnit5;
 import org.junit.runner.manipulation.Filter;
 
 class JUnit4TestEngineDiscoveryTests {
@@ -354,6 +366,49 @@ class JUnit4TestEngineDiscoveryTests {
 		assertRunnerTestDescriptor(runnerDescriptor, testClass);
 
 		assertThat(runnerDescriptor.getChildren()).hasSize(5);
+	}
+
+	@Test
+	void resolvesUniqueIdSpecificationOfSingleClassWithinSuite() throws Exception {
+		Class<?> suiteClass = JUnit4SuiteWithTwoTestCases.class;
+		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
+		DiscoveryRequest specification = request().select(
+			byUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithTwoTestCases"
+					+ "/org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails")).build();
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		TestDescriptor suiteDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertRunnerTestDescriptor(suiteDescriptor, suiteClass);
+
+		TestDescriptor testClassDescriptor = getOnlyElement(suiteDescriptor.getChildren());
+		assertContainerTestDescriptor(testClassDescriptor, "junit4:" + suiteClass.getName() + "/", testClass);
+
+		TestDescriptor testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
+		assertTestMethodDescriptor(testMethodDescriptor, testClass, "failingTest",
+			"junit4:" + suiteClass.getName() + "/" + testClass.getName() + "/");
+	}
+
+	@Test
+	void resolvesUniqueIdSpecificationOfSingleMethodWithinSuite() throws Exception {
+		Class<?> suiteClass = JUnit4SuiteWithTwoTestCases.class;
+		Class<?> testClass = PlainJUnit4TestCaseWithTwoTestMethods.class;
+		DiscoveryRequest specification = request().select(
+			byUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithTwoTestCases"
+					+ "/org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods"
+					+ "/successfulTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods)")).build();
+
+		TestDescriptor engineDescriptor = engine.discoverTests(specification);
+
+		TestDescriptor suiteDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertRunnerTestDescriptor(suiteDescriptor, suiteClass);
+
+		TestDescriptor testClassDescriptor = getOnlyElement(suiteDescriptor.getChildren());
+		assertContainerTestDescriptor(testClassDescriptor, "junit4:" + suiteClass.getName() + "/", testClass);
+
+		TestDescriptor testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
+		assertTestMethodDescriptor(testMethodDescriptor, testClass, "successfulTest",
+			"junit4:" + suiteClass.getName() + "/" + testClass.getName() + "/");
 	}
 
 	@Test
