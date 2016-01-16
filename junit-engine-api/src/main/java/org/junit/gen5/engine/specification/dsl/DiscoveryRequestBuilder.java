@@ -17,6 +17,7 @@ import java.util.List;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.DiscoverySelector;
+import org.junit.gen5.engine.EngineIdFilter;
 import org.junit.gen5.engine.PostDiscoveryFilter;
 
 /**
@@ -42,18 +43,16 @@ import org.junit.gen5.engine.PostDiscoveryFilter;
  *       uniqueId("unique-id-1"),
  *       uniqueId("unique-id-2")
  *     )
- *     .filterBy(
- *       engineIds("junit5"),
- *       classNamePattern(".*Test[s]"),
- *       tagsIncluded("fast"),
- *       tagsExcluded("slow")
- *     )
+ *     .filterBy(engineIds("junit5"))
+ *     .filterBy(classNamePattern("org.junit.gen5.tests"), classNamePattern("org.junit.sample"))
+ *     .filterBy(tagsIncluded("Fast"), tagsExcluded("Slow"))
  *   ).build();
  * </pre>
  */
 public final class DiscoveryRequestBuilder {
 
 	private List<DiscoverySelector> selectors = new LinkedList<>();
+	private List<EngineIdFilter> engineIdFilters = new LinkedList<>();
 	private List<DiscoveryFilter> filters = new LinkedList<>();
 	private List<PostDiscoveryFilter> postFilters = new LinkedList<>();
 
@@ -71,6 +70,13 @@ public final class DiscoveryRequestBuilder {
 	public DiscoveryRequestBuilder select(List<DiscoverySelector> elements) {
 		if (elements != null) {
 			this.selectors.addAll(elements);
+		}
+		return this;
+	}
+
+	public DiscoveryRequestBuilder filterBy(EngineIdFilter... filters) {
+		if (filters != null) {
+			this.engineIdFilters.addAll(Arrays.asList(filters));
 		}
 		return this;
 	}
@@ -93,7 +99,9 @@ public final class DiscoveryRequestBuilder {
 	public DiscoveryRequest build() {
 		DiscoveryRequest discoveryRequest = new DiscoveryRequest();
 		discoveryRequest.addSelectors(this.selectors);
+		discoveryRequest.addEngineIdFilters(this.engineIdFilters);
 		discoveryRequest.addFilters(this.filters);
+		discoveryRequest.addPostFilters(this.postFilters);
 		return discoveryRequest;
 	}
 

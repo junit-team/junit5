@@ -26,6 +26,9 @@ public final class DiscoveryRequest {
 	// Selectors provided to the engines to be used for finding tests
 	private final List<DiscoverySelector> selectors = new LinkedList<>();
 
+	// Filter based on the engine id
+	private final List<EngineIdFilter> engineIdFilters = new LinkedList<>();
+
 	// Discovery filters are handed through to all test engines to be applied during discovery
 	private final List<DiscoveryFilter> discoveryFilters = new LinkedList<>();
 
@@ -38,6 +41,14 @@ public final class DiscoveryRequest {
 
 	public void addSelectors(Collection<DiscoverySelector> selectors) {
 		selectors.forEach(this::addSelector);
+	}
+
+	public void addEngineIdFilter(EngineIdFilter engineIdFilter) {
+		this.engineIdFilters.add(engineIdFilter);
+	}
+
+	public void addEngineIdFilters(Collection<EngineIdFilter> engineIdFilters) {
+		this.engineIdFilters.addAll(engineIdFilters);
 	}
 
 	public void addFilter(DiscoveryFilter discoveryFilter) {
@@ -64,6 +75,10 @@ public final class DiscoveryRequest {
 		return this.selectors.stream().filter(selectorType::isInstance).map(selectorType::cast).collect(toList());
 	}
 
+	public List<EngineIdFilter> getEngineIdFilters() {
+		return unmodifiableList(this.engineIdFilters);
+	}
+
 	public <T extends DiscoveryFilter> List<T> getFilterByType(Class<T> filterType) {
 		return this.discoveryFilters.stream().filter(filterType::isInstance).map(filterType::cast).collect(toList());
 	}
@@ -79,6 +94,6 @@ public final class DiscoveryRequest {
 	}
 
 	public void accept(DiscoverySelectorVisitor visitor) {
-		this.getSelectors().forEach(element -> element.accept(visitor));
+		this.getSelectors().forEach(selector -> selector.accept(visitor));
 	}
 }
