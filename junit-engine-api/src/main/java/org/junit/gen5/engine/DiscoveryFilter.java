@@ -10,5 +10,10 @@
 
 package org.junit.gen5.engine;
 
-public interface ClassFilter extends DiscoveryFilter<Class<?>> {
+/**
+ * {@code DiscoveryFilter} filters particular tests during test discovery.
+ *
+ * @since 5.0
+ */
+public interface DiscoveryFilter<T> extends GenericFilter<T> {
 }

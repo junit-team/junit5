@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.junit.gen5.engine.*;
-import org.junit.gen5.engine.DiscoveryRequest;
 
 /**
  * Facade for <em>discovering</em> and <em>executing</em> tests using
@@ -99,6 +98,14 @@ public class Launcher {
 	private RootTestDescriptor discoverRootDescriptor(DiscoveryRequest specification, String phase) {
 		RootTestDescriptor root = new RootTestDescriptor();
 		for (TestEngine testEngine : testEngineRegistry.getTestEngines()) {
+			if (specification.getEngineIdFilters().stream().map(
+				engineIdFilter -> engineIdFilter.filter(testEngine.getId())).anyMatch(FilterResult::isFiltered)) {
+				LOG.fine(
+					() -> String.format("Test discovery for engine '%s' was skipped due to a filter in phase '%s'.",
+						testEngine.getId(), phase));
+				continue;
+			}
+
 			LOG.fine(() -> String.format("Discovering tests during launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 			EngineAwareTestDescriptor engineRoot = testEngine.discoverTests(specification);

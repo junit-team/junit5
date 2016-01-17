@@ -15,6 +15,7 @@ import static java.util.stream.Collectors.joining;
 import java.util.List;
 
 import org.junit.gen5.engine.ClassFilter;
+import org.junit.gen5.engine.FilterResult;
 
 public class AllClassFilters implements ClassFilter {
 	private List<ClassFilter> classFilters;
@@ -24,17 +25,18 @@ public class AllClassFilters implements ClassFilter {
 	}
 
 	@Override
-	public boolean acceptClass(Class<?> testClass) {
+	public FilterResult filter(Class<?> testClass) {
 		if (classFilters == null) {
-			return true;
+			return FilterResult.active("No filters to be applied on test class");
 		}
 		else {
-			return classFilters.stream().allMatch(filter -> filter.acceptClass(testClass));
+			return FilterResult.result(
+				!classFilters.stream().map(filter -> filter.filter(testClass)).anyMatch(FilterResult::isFiltered));
 		}
 	}
 
 	@Override
-	public String getDescription() {
-		return classFilters.stream().map(ClassFilter::getDescription).collect(joining(") and (", "(", ")"));
+	public String toString() {
+		return classFilters.stream().map(ClassFilter::toString).collect(joining(") and (", "(", ")"));
 	}
 }

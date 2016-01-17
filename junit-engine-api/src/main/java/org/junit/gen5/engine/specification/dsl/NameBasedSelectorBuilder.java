@@ -13,7 +13,7 @@ package org.junit.gen5.engine.specification.dsl;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
 import static org.junit.gen5.engine.specification.dsl.MethodSelectorBuilder.byMethod;
-import static org.junit.gen5.engine.specification.dsl.PackageTestPlanSpecificationElementBuilder.byPackageName;
+import static org.junit.gen5.engine.specification.dsl.PackageSelectorBuilder.byPackageName;
 
 import java.lang.reflect.Method;
 import java.util.*;

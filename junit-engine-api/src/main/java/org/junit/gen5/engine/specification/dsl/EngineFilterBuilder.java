@@ -10,10 +10,10 @@
 
 package org.junit.gen5.engine.specification.dsl;
 
-import org.junit.gen5.engine.DescriptorFilter;
+import org.junit.gen5.engine.EngineIdFilter;
 
 public class EngineFilterBuilder {
-	public static DescriptorFilter filterByEngineId(String engineId) {
-		return descriptor -> descriptor.getUniqueId().startsWith(engineId);
+	public static EngineIdFilter byEngineId(String engineId) {
+		return new EngineIdFilter(engineId);
 	}
 }

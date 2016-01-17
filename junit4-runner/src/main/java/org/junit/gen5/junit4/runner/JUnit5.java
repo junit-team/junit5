@@ -13,6 +13,7 @@ package org.junit.gen5.junit4.runner;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.engine.specification.dsl.ClassFilters.classNameMatches;
+import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
 import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Annotation;
@@ -22,10 +23,9 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.StringUtils;
-import org.junit.gen5.engine.DescriptorFilter;
 import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.DiscoverySelector;
+import org.junit.gen5.engine.PostDiscoveryFilter;
 import org.junit.gen5.engine.specification.dsl.*;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestIdentifier;
@@ -95,31 +95,30 @@ public class JUnit5 extends Runner implements Filterable {
 	}
 
 	private DiscoveryRequest createSpecification() {
-		List<DiscoverySelector> specElements = getSpecElementsFromAnnotations();
+		List<DiscoverySelector> selectors = getSpecElementsFromAnnotations();
 
 		// Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
-		if (specElements.isEmpty()) {
-			specElements.add(ClassSelectorBuilder.forClass(this.testClass));
+		if (selectors.isEmpty()) {
+			selectors.add(forClass(this.testClass));
 		}
 
-		DiscoveryRequest spec = request().select(specElements).build();
-		addFiltersFromAnnotations(spec);
-		return spec;
+		DiscoveryRequest request = request().select(selectors).build();
+		addFiltersFromAnnotations(request);
+		return request;
 	}
 
-	private void addFiltersFromAnnotations(DiscoveryRequest spec) {
-		addClassNameMatchesFilter(spec);
-		addIncludeTagsFilter(spec);
-		addExcludeTagsFilter(spec);
-		addEngineIdFilter(spec);
+	private void addFiltersFromAnnotations(DiscoveryRequest request) {
+		addClassNameMatchesFilter(request);
+		addIncludeTagsFilter(request);
+		addExcludeTagsFilter(request);
 	}
 
 	private List<DiscoverySelector> getSpecElementsFromAnnotations() {
-		List<DiscoverySelector> specElements = new ArrayList<>();
-		specElements.addAll(getClassSpecificationElements());
-		specElements.addAll(getUniqueIdSpecificationElements());
-		specElements.addAll(getPackageSpecificationElements());
-		return specElements;
+		List<DiscoverySelector> selectors = new ArrayList<>();
+		selectors.addAll(getClassSpecificationElements());
+		selectors.addAll(getUniqueIdSpecificationElements());
+		selectors.addAll(getPackageSpecificationElements());
+		return selectors;
 	}
 
 	private List<DiscoverySelector> getClassSpecificationElements() {
@@ -131,38 +130,29 @@ public class JUnit5 extends Runner implements Filterable {
 	}
 
 	private List<DiscoverySelector> getPackageSpecificationElements() {
-		return stream(getPackageNames()).map(PackageTestPlanSpecificationElementBuilder::byPackageName).collect(
-			toList());
+		return stream(getPackageNames()).map(PackageSelectorBuilder::byPackageName).collect(toList());
 	}
 
 	private void addClassNameMatchesFilter(DiscoveryRequest plan) {
 		String regex = getClassNameRegExPattern();
 		if (!regex.isEmpty()) {
-			plan.addEngineFilter(classNameMatches(regex));
+			plan.addFilter(classNameMatches(regex));
 		}
 	}
 
 	private void addIncludeTagsFilter(DiscoveryRequest plan) {
 		String[] includeTags = getIncludeTags();
 		if (includeTags.length > 0) {
-			DescriptorFilter tagNamesFilter = TagFilterBuilder.includeTags(includeTags);
-			plan.addDescriptorFilter(tagNamesFilter);
+			PostDiscoveryFilter tagNamesFilter = TagFilterBuilder.includeTags(includeTags);
+			plan.addPostFilter(tagNamesFilter);
 		}
 	}
 
 	private void addExcludeTagsFilter(DiscoveryRequest plan) {
 		String[] excludeTags = getExcludeTags();
 		if (excludeTags.length > 0) {
-			DescriptorFilter excludeTagsFilter = TagFilterBuilder.excludeTags(excludeTags);
-			plan.addDescriptorFilter(excludeTagsFilter);
-		}
-	}
-
-	private void addEngineIdFilter(DiscoveryRequest plan) {
-		String engineId = getExplicitEngineId();
-		if (StringUtils.isNotBlank(engineId)) {
-			DescriptorFilter engineFilter = EngineFilterBuilder.filterByEngineId(engineId);
-			plan.addDescriptorFilter(engineFilter);
+			PostDiscoveryFilter excludeTagsFilter = TagFilterBuilder.excludeTags(excludeTags);
+			plan.addPostFilter(excludeTagsFilter);
 		}
 	}
 

@@ -16,7 +16,7 @@ import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forCl
 import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClassName;
 import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.engine.specification.dsl.MethodSelectorBuilder.byMethod;
-import static org.junit.gen5.engine.specification.dsl.PackageTestPlanSpecificationElementBuilder.byPackageName;
+import static org.junit.gen5.engine.specification.dsl.PackageSelectorBuilder.byPackageName;
 import static org.junit.gen5.engine.specification.dsl.UniqueIdSelectorBuilder.byUniqueId;
 
 import java.io.File;
@@ -38,8 +38,8 @@ public class DiscoveryRequestBuilderTests {
 				).build();
         // @formatter:on
 
-		List<String> packageSpecifications = discoveryRequest.getElementsByType(PackageNameSelector.class).stream().map(
-			PackageNameSelector::getPackageName).collect(toList());
+		List<String> packageSpecifications = discoveryRequest.getSelectoryByType(
+			PackageNameSelector.class).stream().map(PackageNameSelector::getPackageName).collect(toList());
 		assertThat(packageSpecifications).contains("org.junit.gen5.engine");
 	}
 
@@ -54,7 +54,7 @@ public class DiscoveryRequestBuilderTests {
             .build();
         // @formatter:on
 
-		List<Class<?>> classes = discoveryRequest.getElementsByType(ClassSelector.class).stream().map(
+		List<Class<?>> classes = discoveryRequest.getSelectoryByType(ClassSelector.class).stream().map(
 			ClassSelector::getTestClass).collect(toList());
 		assertThat(classes).contains(SampleTestClass.class, DiscoveryRequestBuilderTests.class);
 	}
@@ -71,7 +71,7 @@ public class DiscoveryRequestBuilderTests {
 				).build();
         // @formatter:on
 
-		List<MethodSelector> methodSelectors = discoveryRequest.getElementsByType(MethodSelector.class);
+		List<MethodSelector> methodSelectors = discoveryRequest.getSelectoryByType(MethodSelector.class);
 		assertThat(methodSelectors).hasSize(1);
 
 		MethodSelector methodSelector = methodSelectors.get(0);
@@ -91,7 +91,7 @@ public class DiscoveryRequestBuilderTests {
 				).build();
 		// @formatter:on
 
-		List<MethodSelector> methodSelectors = discoveryRequest.getElementsByType(MethodSelector.class);
+		List<MethodSelector> methodSelectors = discoveryRequest.getSelectoryByType(MethodSelector.class);
 		assertThat(methodSelectors).hasSize(1);
 
 		MethodSelector methodSelector = methodSelectors.get(0);
@@ -108,7 +108,7 @@ public class DiscoveryRequestBuilderTests {
 				).build();
         // @formatter:on
 
-		List<String> folders = discoveryRequest.getElementsByType(ClasspathSelector.class).stream().map(
+		List<String> folders = discoveryRequest.getSelectoryByType(ClasspathSelector.class).stream().map(
 			ClasspathSelector::getClasspathRoot).map(File::getAbsolutePath).collect(toList());
 
 		assertThat(folders).isEmpty();
@@ -125,7 +125,7 @@ public class DiscoveryRequestBuilderTests {
 					).build();
 			// @formatter:on
 
-			List<String> folders = discoveryRequest.getElementsByType(ClasspathSelector.class).stream().map(
+			List<String> folders = discoveryRequest.getSelectoryByType(ClasspathSelector.class).stream().map(
 				ClasspathSelector::getClasspathRoot).map(File::getAbsolutePath).collect(toList());
 
 			assertThat(folders).contains(temporaryFolder.getAbsolutePath());
@@ -145,7 +145,7 @@ public class DiscoveryRequestBuilderTests {
 				).build();
         // @formatter:on
 
-		List<String> uniqueIds = discoveryRequest.getElementsByType(UniqueIdSelector.class).stream().map(
+		List<String> uniqueIds = discoveryRequest.getSelectoryByType(UniqueIdSelector.class).stream().map(
 			UniqueIdSelector::getUniqueId).collect(toList());
 
 		assertThat(uniqueIds).contains("engine:bla:foo:bar:id1", "engine:bla:foo:bar:id2");

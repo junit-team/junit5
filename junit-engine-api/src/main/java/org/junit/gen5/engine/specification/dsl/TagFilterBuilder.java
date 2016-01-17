@@ -10,34 +10,36 @@
 
 package org.junit.gen5.engine.specification.dsl;
 
+import static org.junit.gen5.engine.FilterResult.result;
+
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.gen5.engine.DescriptorFilter;
+import org.junit.gen5.engine.PostDiscoveryFilter;
 import org.junit.gen5.engine.TestTag;
 
 public class TagFilterBuilder {
-	public static DescriptorFilter includeTags(String... tagNames) {
+	public static PostDiscoveryFilter includeTags(String... tagNames) {
 		return includeTags(Arrays.asList(tagNames));
 	}
 
-	public static DescriptorFilter includeTags(List<String> includeTags) {
+	public static PostDiscoveryFilter includeTags(List<String> includeTags) {
 		// @formatter:off
-        return descriptor -> descriptor.getTags().stream()
-                .map(TestTag::getName)
-                .anyMatch(includeTags::contains);
+        return descriptor -> result(descriptor.getTags().stream()
+					.map(TestTag::getName)
+					.anyMatch(includeTags::contains));
         // @formatter:on
 	}
 
-	public static DescriptorFilter excludeTags(String... tagNames) {
+	public static PostDiscoveryFilter excludeTags(String... tagNames) {
 		return excludeTags(Arrays.asList(tagNames));
 	}
 
-	public static DescriptorFilter excludeTags(List<String> includeTags) {
+	public static PostDiscoveryFilter excludeTags(List<String> includeTags) {
 		// @formatter:off
-        return descriptor -> descriptor.getTags().stream()
+        return descriptor -> result(descriptor.getTags().stream()
                 .map(TestTag::getName)
-                .allMatch(tagName -> !includeTags.contains(tagName));
+                .allMatch(tagName -> !includeTags.contains(tagName)));
         // @formatter:on
 	}
 }

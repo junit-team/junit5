@@ -24,7 +24,7 @@ import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forCl
 import static org.junit.gen5.engine.specification.dsl.ClasspathSelectorBuilder.byPaths;
 import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.engine.specification.dsl.MethodSelectorBuilder.byMethod;
-import static org.junit.gen5.engine.specification.dsl.PackageTestPlanSpecificationElementBuilder.byPackageName;
+import static org.junit.gen5.engine.specification.dsl.PackageSelectorBuilder.byPackageName;
 import static org.junit.gen5.engine.specification.dsl.UniqueIdSelectorBuilder.byUniqueId;
 
 import java.io.File;
