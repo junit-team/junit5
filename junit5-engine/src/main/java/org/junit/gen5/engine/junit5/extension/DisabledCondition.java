@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit5.extension;
 
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
 
+import java.lang.reflect.AnnotatedElement;
 import java.util.Optional;
 
 import org.junit.gen5.api.Disabled;
@@ -41,7 +42,7 @@ public class DisabledCondition implements ContainerExecutionCondition, TestExecu
 	 */
 	@Override
 	public ConditionEvaluationResult evaluate(ContainerExtensionContext context) {
-		return evaluate(findAnnotation(context.getTestClass(), Disabled.class));
+		return evaluate(context.getElement());
 	}
 
 	/**
@@ -49,10 +50,11 @@ public class DisabledCondition implements ContainerExecutionCondition, TestExecu
 	 */
 	@Override
 	public ConditionEvaluationResult evaluate(TestExtensionContext context) {
-		return evaluate(findAnnotation(context.getTestMethod(), Disabled.class));
+		return evaluate(context.getElement());
 	}
 
-	private ConditionEvaluationResult evaluate(Optional<Disabled> disabled) {
+	private ConditionEvaluationResult evaluate(AnnotatedElement element) {
+		Optional<Disabled> disabled = findAnnotation(element, Disabled.class);
 		if (disabled.isPresent()) {
 			String reason = disabled.map(Disabled::value).filter(StringUtils::isNotBlank).orElse("Test is @Disabled");
 			return ConditionEvaluationResult.disabled(reason);
