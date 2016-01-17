@@ -49,8 +49,8 @@ import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.
- * <p>
- * The pattern of the {@link #getUniqueId unique ID} takes the form of
+ *
+ * <p>The pattern of the {@link #getUniqueId unique ID} takes the form of
  * <code>{parent unique id}:{fully qualified class name}</code>.
  *
  * @since 5.0
@@ -212,7 +212,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		findAnnotatedMethods(testClass, annotationType, MethodSortOrder.HierarchyDown).stream()
 			.peek(method -> methodValidator.accept(extensionType, method))
 			.forEach(method ->
-				extensionRegistry.registerExtensionPoint(extensionPointSynthesizer.apply(extensionRegistry, method)));
+				extensionRegistry.registerExtensionPoint(extensionPointSynthesizer.apply(extensionRegistry, method), method));
 		// @formatter:on
 	}
 

@@ -32,7 +32,7 @@ import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 public class ExtensionPointSorter {
 
 	/**
-	 * Sort the list of extension points according to their specified {@linkplain Position}.
+	 * Sort the list of extension points according to their specified {@link Position}.
 	 *
 	 * <p>Note: the supplied list instance will be resorted.
 	 *
@@ -58,18 +58,19 @@ public class ExtensionPointSorter {
 	private <T extends ExtensionPoint> long countPosition(List<RegisteredExtensionPoint<T>> registeredExtensionPoints,
 			Position positionToCount) {
 
-		return registeredExtensionPoints.stream() //
-		.filter(point -> point.getPosition() == positionToCount) //
-		.count();
+		return registeredExtensionPoints.stream().filter(point -> point.getPosition() == positionToCount).count();
 	}
 
 	private <T extends ExtensionPoint> List<String> conflictingExtensions(
 			List<RegisteredExtensionPoint<T>> registeredExtensionPoints, Position positionToFind) {
 
-		return registeredExtensionPoints.stream() //
-		.filter(point -> point.getPosition() == positionToFind) //
-		.map(RegisteredExtensionPoint::getExtensionName) //
-		.collect(Collectors.toList());
+		// @formatter:off
+		return registeredExtensionPoints.stream()
+				.filter(point -> point.getPosition() == positionToFind)
+				.map(RegisteredExtensionPoint::getSource)
+				.map(Object::toString)
+				.collect(Collectors.toList());
+		// @formatter:on
 	}
 
 	private static class DefaultComparator implements Comparator<RegisteredExtensionPoint<?>> {

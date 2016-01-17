@@ -137,7 +137,7 @@ public class TestExtensionRegistryTests {
 		registry.stream(MyExtensionPoint.class, TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(
 			registeredExtensionPoint -> {
 				assertTrue(registeredExtensionPoint.getExtensionPoint() instanceof MyExtensionPoint);
-				assertEquals(MyExtension.class.getName(), registeredExtensionPoint.getExtensionName());
+				assertEquals(MyExtension.class.getName(), registeredExtensionPoint.getSource().getClass().getName());
 				assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
 				hasRun.set(true);
 			});
@@ -147,24 +147,40 @@ public class TestExtensionRegistryTests {
 	}
 
 	@Test
-	public void registerExtensionPointDirectly() throws Exception {
-
+	public void registerExtensionPointFromLambdaExpression() throws Exception {
 		registry.registerExtensionPoint((MyExtensionPoint) test -> {
-		}, Position.INNERMOST);
+		}, this);
 
+		assertBehaviorForExtensionPointRegisteredFromLambdaExpressionOrMethodReference();
+	}
+
+	@Test
+	public void registerExtensionPointFromMethodReference() throws Exception {
+		registry.registerExtensionPoint((MyExtensionPoint) this::consumeString, this);
+		assertBehaviorForExtensionPointRegisteredFromLambdaExpressionOrMethodReference();
+	}
+
+	/**
+	 * "Implements" MyExtensionPoint.
+	 */
+	private void consumeString(String test) {
+		/* no-op */
+	}
+
+	private void assertBehaviorForExtensionPointRegisteredFromLambdaExpressionOrMethodReference() throws Exception {
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
 		registry.stream(MyExtensionPoint.class, TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(
 			registeredExtensionPoint -> {
 				assertTrue(registeredExtensionPoint.getExtensionPoint() instanceof MyExtensionPoint);
-				assertTrue(registeredExtensionPoint.getExtensionName().startsWith(getClass().getName() + "$$Lambda$"));
-				assertTrue(registeredExtensionPoint.getExtensionName().contains("$Lambda$"));
-				assertEquals(Position.INNERMOST, registeredExtensionPoint.getPosition());
+				Class<? extends MyExtensionPoint> lambdaType = registeredExtensionPoint.getExtensionPoint().getClass();
+				assertTrue(lambdaType.getName().contains("$Lambda$"));
+				assertEquals(getClass().getName(), registeredExtensionPoint.getSource().getClass().getName());
+				assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
 				hasRun.set(true);
 			});
 
 		assertTrue(hasRun.get());
-
 	}
 
 	private int countExtensionPoints(Class<? extends ExtensionPoint> extensionPointType) throws Exception {

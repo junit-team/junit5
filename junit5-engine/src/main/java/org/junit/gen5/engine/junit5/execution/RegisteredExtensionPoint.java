@@ -12,11 +12,11 @@ package org.junit.gen5.engine.junit5.execution;
 
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
- * Represents an {@linkplain ExtensionPoint extension} registered in a
- * {@link TestExtensionRegistry}.
+ * Represents an {@link ExtensionPoint} registered in a {@link TestExtensionRegistry}.
  *
  * @param <E> the type of registered {@link ExtensionPoint}
  * @since 5.0
@@ -25,31 +25,74 @@ public class RegisteredExtensionPoint<E extends ExtensionPoint> {
 
 	private final E extensionPoint;
 
+	private final Object source;
+
 	private final Position position;
 
-	public RegisteredExtensionPoint(E extensionPoint, Position position) {
-		this.extensionPoint = extensionPoint;
-		this.position = position;
+	/**
+	 * Construct a new {@code RegisteredExtensionPoint} from the supplied
+	 * extension point, source, and position.
+	 *
+	 * <p>See {@link #getSource()} for an explanation of the semantics for
+	 * the {@code source}.
+	 *
+	 * @param extensionPoint the physical {@code ExtensionPoint} which is registered;
+	 * never {@code null}
+	 * @param source the <em>source</em> of the extension point; used solely for
+	 * error reporting and logging; never {@code null}
+	 * @param position the position in which the extension point is registered;
+	 * never {@code null}
+	 */
+	public RegisteredExtensionPoint(E extensionPoint, Object source, Position position) {
+		this.extensionPoint = Preconditions.notNull(extensionPoint, "ExtensionPoint must not be null");
+		this.source = Preconditions.notNull(source, "source must not be null");
+		this.position = Preconditions.notNull(position, "Position must not be null");
 	}
 
+	/**
+	 * Get the physical implementation of the registered {@link ExtensionPoint}.
+	 */
 	public E getExtensionPoint() {
 		return this.extensionPoint;
 	}
 
-	public Position getPosition() {
-		return this.position;
+	/**
+	 * Get the <em>source</em> of the registered {@link #getExtensionPoint ExtensionPoint}.
+	 *
+	 * <p>The source is used solely for error reporting and logging.
+	 *
+	 * <h4>Semantics for Source</h4>
+	 * <p>If an extension point is registered declaratively via
+	 * {@link org.junit.gen5.api.extension.ExtendWith @ExtendWith},
+	 * {@link #getExtensionPoint()} and this method will return the same
+	 * object. However, if an extension point is registered programmatically
+	 * &mdash; for example, as a lambda expression or method reference by
+	 * an {@link org.junit.gen5.api.extension.ExtensionRegistrar ExtensionRegistrar}
+	 * or by the framework via the {@link TestExtensionRegistry} &mdash;
+	 * the {@code source} object may be the {@code ExtensionRegistrar} that
+	 * registered the extension point, the underlying
+	 * {@link java.lang.reflect.Method} that implements the extension point
+	 * API, or similar.
+	 */
+	public Object getSource() {
+		return this.source;
 	}
 
-	public String getExtensionName() {
-		return this.extensionPoint.getClass().getName();
+	/**
+	 * Get the position in which the {@link #getExtensionPoint ExtensionPoint}
+	 * is registered.
+	 */
+	public Position getPosition() {
+		return this.position;
 	}
 
 	@Override
 	public String toString() {
 		// @formatter:off
 		return new ToStringBuilder(this)
-				.append("position", this.position)
 				.append("extensionPoint", this.extensionPoint)
+				.append("source", this.source)
+				.append("position", this.position)
 				.toString();
 		// @formatter:on
 	}

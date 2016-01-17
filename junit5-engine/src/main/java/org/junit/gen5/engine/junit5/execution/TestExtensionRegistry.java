@@ -17,11 +17,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.junit.gen5.api.extension.Extension;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPointRegistry;
+import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.extension.DisabledCondition;
@@ -41,7 +43,7 @@ import org.junit.gen5.engine.junit5.extension.TestReporterParameterResolver;
  * @see ExtensionPointRegistry
  * @see ExtensionRegistrar
  */
-public class TestExtensionRegistry implements ExtensionPointRegistry {
+public class TestExtensionRegistry {
 
 	public enum ApplicationOrder {
 		FORWARD, BACKWARD
@@ -63,6 +65,8 @@ public class TestExtensionRegistry implements ExtensionPointRegistry {
 		extensionTypes.forEach(newTestExtensionRegistry::registerExtension);
 		return newTestExtensionRegistry;
 	}
+
+	private static final Logger LOG = Logger.getLogger(TestExtensionRegistry.class.getName());
 
 	private static final List<Class<? extends Extension>> defaultExtensionTypes = Collections.unmodifiableList(
 		Arrays.asList(DisabledCondition.class, TestInfoParameterResolver.class, TestReporterParameterResolver.class));
@@ -171,29 +175,55 @@ public class TestExtensionRegistry implements ExtensionPointRegistry {
 
 	private void registerExtensionPoint(Extension extension) {
 		if (extension instanceof ExtensionPoint) {
-			registerExtensionPoint((ExtensionPoint) extension);
+			registerExtensionPoint((ExtensionPoint) extension, extension);
 		}
 	}
 
-	public void registerExtensionPoint(ExtensionPoint extension) {
-		registerExtensionPoint(extension, Position.DEFAULT);
+	public void registerExtensionPoint(ExtensionPoint extension, Object source) {
+		registerExtensionPoint(extension, source, Position.DEFAULT);
 	}
 
-	void registerExtensionPoint(ExtensionPoint extension, Position position) {
-		this.registeredExtensionPoints.add(new RegisteredExtensionPoint<>(extension, position));
+	private void registerExtensionPoint(ExtensionPoint extension, Object source, Position position) {
+		LOG.finer(() -> String.format("Registering extension point [%s] from source [%s] with position [%s].",
+			extension, source, position));
+		this.registeredExtensionPoints.add(new RegisteredExtensionPoint<>(extension, source, position));
 	}
 
 	private void registerExtensionPointsFromRegistrar(Extension extension) {
 		if (extension instanceof ExtensionRegistrar) {
 			ExtensionRegistrar extensionRegistrar = (ExtensionRegistrar) extension;
-			extensionRegistrar.registerExtensions(this);
+			extensionRegistrar.registerExtensions(new DelegatingExtensionPointRegistry(extensionRegistrar));
 		}
 	}
 
-	@Override
-	public <E extends ExtensionPoint> void register(E extension, Class<E> extensionPointType, Position position) {
-		// TODO Document why extensionPointType is not used or unnecessary.
-		registerExtensionPoint(extension, position);
+	/**
+	 * A {@code DelegatingExtensionPointRegistry} enables an
+	 * {@link ExtensionRegistrar} to populate a {@link TestExtensionRegistry}
+	 * via the simpler {@link ExtensionPointRegistry} API.
+	 *
+	 * <p>Furthermore, a {@code DelegatingExtensionPointRegistry} internally
+	 * delegates to the enclosing {@code TestExtensionRegistry} to {@linkplain
+	 * TestExtensionRegistry#registerExtensionPoint(ExtensionPoint, Object, Position)
+	 * register} extension points with the {@link RegisteredExtensionPoint#getSource() source}
+	 * set to the {@code ExtensionRegistrar} supplied to this registry's
+	 * constructor.
+	 */
+	private class DelegatingExtensionPointRegistry implements ExtensionPointRegistry {
+
+		private final ExtensionRegistrar extensionRegistrar;
+
+		DelegatingExtensionPointRegistry(ExtensionRegistrar extensionRegistrar) {
+			this.extensionRegistrar = extensionRegistrar;
+		}
+
+		@Override
+		public <E extends ExtensionPoint> void register(E extensionPoint, Class<E> extensionPointType,
+				Position position) {
+
+			// TODO Document why extensionPointType is not used.
+			registerExtensionPoint(extensionPoint, this.extensionRegistrar, position);
+		}
+
 	}
 
 }

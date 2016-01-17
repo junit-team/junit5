@@ -14,6 +14,7 @@ import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.expectThrows;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
+import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * Unit tests for {@link ExtensionPointSorter}.
@@ -122,7 +124,11 @@ public class ExtensionPointSortingTests {
 		pointsToSort.add(point1);
 		pointsToSort.add(point2);
 
-		expectThrows(ExtensionConfigurationException.class, () -> sorter.sort(pointsToSort));
+		ExtensionConfigurationException ex = expectThrows(ExtensionConfigurationException.class,
+			() -> sorter.sort(pointsToSort));
+
+		assertTrue(ex.getMessage().startsWith("Conflicting extensions:"));
+		assertTrue(ex.getMessage().contains(fooMethod.toString()));
 	}
 
 	@Test
@@ -133,7 +139,11 @@ public class ExtensionPointSortingTests {
 		pointsToSort.add(point1);
 		pointsToSort.add(point2);
 
-		expectThrows(ExtensionConfigurationException.class, () -> sorter.sort(pointsToSort));
+		ExtensionConfigurationException ex = expectThrows(ExtensionConfigurationException.class,
+			() -> sorter.sort(pointsToSort));
+
+		assertTrue(ex.getMessage().startsWith("Conflicting extensions:"));
+		assertTrue(ex.getMessage().contains(fooMethod.toString()));
 	}
 
 	private void assertSorting(RegisteredExtensionPoint... points) {
@@ -147,10 +157,18 @@ public class ExtensionPointSortingTests {
 		}
 	}
 
-	protected RegisteredExtensionPoint<LocalExtensionPoint> createExtensionPoint(Position position) {
-		return new RegisteredExtensionPoint<>(() -> {
-		}, position);
+	private RegisteredExtensionPoint<LocalExtensionPoint> createExtensionPoint(Position position) {
+		return new RegisteredExtensionPoint<>(this::foo, fooMethod, position);
 	}
+
+	/**
+	 * "Implements" LocalExtensionPoint.
+	 */
+	void foo() {
+		/* no-op */
+	}
+
+	final Method fooMethod = ReflectionUtils.findMethod(getClass(), "foo").get();
 
 	@FunctionalInterface
 	interface LocalExtensionPoint extends ExtensionPoint {
