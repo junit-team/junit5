@@ -28,7 +28,7 @@ import org.junit.gen5.api.extension.TestExtensionContext;
  */
 public class TimingExtension implements ExtensionRegistrar {
 
-	private static final String TIMING_KEY_PREFIX = "TIMING:";
+	private final String namespace = getClass().getName();
 
 	@Override
 	public void registerExtensions(ExtensionPointRegistry registry) {
@@ -37,22 +37,15 @@ public class TimingExtension implements ExtensionRegistrar {
 	}
 
 	private void beforeEach(TestExtensionContext context) throws Exception {
-		Method testMethod = context.getTestMethod();
-		context.putAttribute(createKey(testMethod), System.currentTimeMillis());
+		context.put(context.getTestMethod(), System.currentTimeMillis(), namespace);
 	}
 
 	private void afterEach(TestExtensionContext context) throws Exception {
 		Method testMethod = context.getTestMethod();
-		String key = createKey(testMethod);
-		long start = (long) context.getAttribute(key);
-		long end = System.currentTimeMillis();
+		long start = (long) context.remove(testMethod, namespace);
+		long duration = System.currentTimeMillis() - start;
 
-		System.out.println(String.format("Method [%s] took %s ms", testMethod.getName(), (end - start)));
-		context.removeAttribute(key);
-	}
-
-	private String createKey(Method testMethod) {
-		return TIMING_KEY_PREFIX + testMethod;
+		System.out.println(String.format("Method [%s] took %s ms.", testMethod, duration));
 	}
 
 }
