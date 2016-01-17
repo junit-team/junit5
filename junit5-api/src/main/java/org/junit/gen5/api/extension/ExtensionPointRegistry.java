@@ -64,11 +64,52 @@ public interface ExtensionPointRegistry {
 	}
 
 	/**
+	 * Register the supplied {@link ExtensionPoint} using the
+	 * {@linkplain Position#DEFAULT default position}.
+	 *
+	 * <p>This variant of {@code register()} is typically used to register
+	 * an instance of a class that implements one or more {@code ExtensionPoint}
+	 * APIs.
+	 *
+	 * @param extensionPoint the extension point to register
+	 * @see #register(ExtensionPoint, Position)
+	 * @see #register(ExtensionPoint, Class)
+	 * @see #register(ExtensionPoint, Class, Position)
+	 */
+	default void register(ExtensionPoint extensionPoint) {
+		register(extensionPoint, Position.DEFAULT);
+	}
+
+	/**
+	 * Register the supplied {@link ExtensionPoint} using the supplied
+	 * {@link Position}.
+	 *
+	 * <p>This variant of {@code register()} is typically used to register
+	 * an instance of a class that implements one or more {@code ExtensionPoint}
+	 * APIs.
+	 *
+	 * @param extensionPoint the extension point to register
+	 * @param position the position in which the extension point
+	 * should be registered
+	 * @see #register(ExtensionPoint)
+	 * @see #register(ExtensionPoint, Class)
+	 * @see #register(ExtensionPoint, Class, Position)
+	 */
+	default void register(ExtensionPoint extensionPoint, Position position) {
+		register(extensionPoint, null, position);
+	}
+
+	/**
 	 * Register an {@link ExtensionPoint} of the specified type using the
 	 * {@linkplain Position#DEFAULT default position}.
 	 *
+	 * <p>This variant of {@code register()} is typically used to register
+	 * an implementation of a single {@code ExtensionPoint} API backed by
+	 * a lambda expression or method reference.
+	 *
 	 * @param extensionPoint the extension point to register
 	 * @param extensionPointType the type of extension point to register
+	 * @see #register(ExtensionPoint, Position)
 	 * @see #register(ExtensionPoint, Class, Position)
 	 */
 	default <E extends ExtensionPoint> void register(E extensionPoint, Class<E> extensionPointType) {
@@ -78,6 +119,10 @@ public interface ExtensionPointRegistry {
 	/**
 	 * Register an {@link ExtensionPoint} of the specified type using the
 	 * supplied {@link Position}.
+	 *
+	 * <p>This variant of {@code register()} is typically used to register
+	 * an implementation of a single {@code ExtensionPoint} API backed by
+	 * a lambda expression or method reference.
 	 *
 	 * @param extensionPoint the extension point to register
 	 * @param extensionPointType the type of extension point to register

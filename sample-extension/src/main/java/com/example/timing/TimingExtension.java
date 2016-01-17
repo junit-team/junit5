@@ -28,24 +28,29 @@ import org.junit.gen5.api.extension.TestExtensionContext;
  */
 public class TimingExtension implements ExtensionRegistrar {
 
-	private final String namespace = getClass().getName();
-
 	@Override
 	public void registerExtensions(ExtensionPointRegistry registry) {
-		registry.register(this::beforeEach, BeforeEachExtensionPoint.class, INNERMOST);
-		registry.register(this::afterEach, AfterEachExtensionPoint.class, INNERMOST);
+		registry.register(new TestMethodInvocationWrapper(), INNERMOST);
 	}
 
-	private void beforeEach(TestExtensionContext context) throws Exception {
-		context.put(context.getTestMethod(), System.currentTimeMillis(), namespace);
-	}
+	private static class TestMethodInvocationWrapper implements BeforeEachExtensionPoint, AfterEachExtensionPoint {
 
-	private void afterEach(TestExtensionContext context) throws Exception {
-		Method testMethod = context.getTestMethod();
-		long start = (long) context.remove(testMethod, namespace);
-		long duration = System.currentTimeMillis() - start;
+		private final String namespace = getClass().getName();
 
-		System.out.println(String.format("Method [%s] took %s ms.", testMethod, duration));
+		@Override
+		public void beforeEach(TestExtensionContext context) throws Exception {
+			context.put(context.getTestMethod(), System.currentTimeMillis(), namespace);
+		}
+
+		@Override
+		public void afterEach(TestExtensionContext context) throws Exception {
+			Method testMethod = context.getTestMethod();
+			long start = (long) context.remove(testMethod, namespace);
+			long duration = System.currentTimeMillis() - start;
+
+			System.out.println(String.format("Method [%s] took %s ms.", testMethod, duration));
+		}
+
 	}
 
 }
