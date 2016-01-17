@@ -74,7 +74,7 @@ public class FilterResult {
 		return accepted;
 	}
 
-	public boolean isFiltered() {
+	public boolean isDeclined() {
 		return !isAccepted();
 	}
 
