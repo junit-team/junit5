@@ -53,7 +53,7 @@ public final class DiscoveryRequestBuilder {
 
 	private List<DiscoverySelector> selectors = new LinkedList<>();
 	private List<EngineIdFilter> engineIdFilters = new LinkedList<>();
-	private List<DiscoveryFilter> filters = new LinkedList<>();
+	private List<DiscoveryFilter<?>> filters = new LinkedList<>();
 	private List<PostDiscoveryFilter> postFilters = new LinkedList<>();
 
 	public static DiscoveryRequestBuilder request() {
@@ -81,7 +81,7 @@ public final class DiscoveryRequestBuilder {
 		return this;
 	}
 
-	public DiscoveryRequestBuilder filterBy(DiscoveryFilter... filters) {
+	public DiscoveryRequestBuilder filterBy(DiscoveryFilter<?>... filters) {
 		if (filters != null) {
 			this.filters.addAll(Arrays.asList(filters));
 		}

@@ -30,7 +30,7 @@ public final class DiscoveryRequest {
 	private final List<EngineIdFilter> engineIdFilters = new LinkedList<>();
 
 	// Discovery filters are handed through to all test engines to be applied during discovery
-	private final List<DiscoveryFilter> discoveryFilters = new LinkedList<>();
+	private final List<DiscoveryFilter<?>> discoveryFilters = new LinkedList<>();
 
 	// Descriptor Filters are evaluated by the launcher itself after engines have done their discovery.
 	private final List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
@@ -51,11 +51,11 @@ public final class DiscoveryRequest {
 		this.engineIdFilters.addAll(engineIdFilters);
 	}
 
-	public void addFilter(DiscoveryFilter discoveryFilter) {
+	public void addFilter(DiscoveryFilter<?> discoveryFilter) {
 		this.discoveryFilters.add(discoveryFilter);
 	}
 
-	public void addFilters(Collection<DiscoveryFilter> discoveryFilters) {
+	public void addFilters(Collection<DiscoveryFilter<?>> discoveryFilters) {
 		this.discoveryFilters.addAll(discoveryFilters);
 	}
 
@@ -79,7 +79,7 @@ public final class DiscoveryRequest {
 		return unmodifiableList(this.engineIdFilters);
 	}
 
-	public <T extends DiscoveryFilter> List<T> getFilterByType(Class<T> filterType) {
+	public <T extends DiscoveryFilter<?>> List<T> getFilterByType(Class<T> filterType) {
 		return this.discoveryFilters.stream().filter(filterType::isInstance).map(filterType::cast).collect(toList());
 	}
 
@@ -89,8 +89,12 @@ public final class DiscoveryRequest {
 
 	public boolean acceptDescriptor(TestDescriptor testDescriptor) {
 		Preconditions.notNull(testDescriptor, "testDescriptor must not be null");
-		return !this.getPostDiscoveryFilters().stream().map(filter -> filter.filter(testDescriptor)).anyMatch(
-			FilterResult::isFiltered);
+
+		// @formatter:off
+		return this.getPostDiscoveryFilters().stream()
+				.map(filter -> filter.filter(testDescriptor))
+				.allMatch(FilterResult::isAccepted);
+		// @formatter:on
 	}
 
 	public void accept(DiscoverySelectorVisitor visitor) {

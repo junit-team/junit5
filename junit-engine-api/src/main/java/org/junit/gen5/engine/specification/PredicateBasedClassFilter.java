@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.specification;
 
+import static org.junit.gen5.engine.FilterResult.accepted;
+import static org.junit.gen5.engine.FilterResult.filtered;
+
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -33,10 +36,10 @@ public class PredicateBasedClassFilter implements ClassFilter {
 	@Override
 	public FilterResult filter(Class<?> testClass) {
 		if (predicate.test(testClass)) {
-			return FilterResult.active("TestClass matches predicate");
+			return accepted("TestClass matches predicate");
 		}
 		else {
-			return FilterResult.filtered("TestClass does not match predicate");
+			return filtered("TestClass does not match predicate");
 		}
 	}
 }

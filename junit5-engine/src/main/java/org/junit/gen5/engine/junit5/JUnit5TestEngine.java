@@ -14,9 +14,6 @@ import java.util.List;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.*;
-import org.junit.gen5.engine.ClassFilter;
-import org.junit.gen5.engine.DiscoveryRequest;
-import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.DiscoverySelectorResolver;
 import org.junit.gen5.engine.junit5.descriptor.JUnit5EngineDescriptor;
@@ -56,12 +53,15 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 
 		TestDescriptor.Visitor filteringVisitor = (descriptor, remove) -> {
 			if (descriptor instanceof ClassTestDescriptor) {
-				ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptor;
-				for (ClassFilter filter : classFilters) {
-					if (filter.filter(classTestDescriptor.getTestClass()).isFiltered()) {
-						remove.run();
-					}
+				Class<?> testClass = ((ClassTestDescriptor) descriptor).getTestClass();
+
+				// @formatter:off
+				if (classFilters.stream()
+						.map(filter -> filter.filter(testClass))
+						.anyMatch(FilterResult::isFiltered)) {
+					remove.run();
 				}
+				// @formatter:on
 			}
 		};
 		engineDescriptor.accept(filteringVisitor);

@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.specification;
 
-import static org.junit.gen5.engine.FilterResult.active;
+import static org.junit.gen5.engine.FilterResult.accepted;
 import static org.junit.gen5.engine.FilterResult.filtered;
 
 import java.util.regex.Pattern;
@@ -28,7 +28,7 @@ public class ClassNameFilter implements ClassFilter {
 	@Override
 	public FilterResult filter(Class<?> testClass) {
 		if (pattern.matcher(testClass.getName()).matches()) {
-			return active("TestClass matches name pattern");
+			return accepted("TestClass matches name pattern");
 		}
 		else {
 			return filtered("TestClass does not match name pattern");

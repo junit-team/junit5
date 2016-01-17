@@ -22,37 +22,60 @@ import org.junit.gen5.commons.util.ToStringBuilder;
 public class FilterResult {
 	/**
 	 * Factory for creating <em>filtered</em> results.
+	 *
+	 * @param reason the reason why the result was filtered
+	 * @return a filtered {@code FilterResult} with the given reason
 	 */
 	public static FilterResult filtered(String reason) {
-		return new FilterResult(true, reason);
+		return new FilterResult(false, reason);
 	}
 
 	/**
 	 * Factory for creating <em>active</em> results.
+	 *
+	 * @param reason the reason why the result was filtered
+	 * @return an accepted {@code FilterResult} with the given reason
 	 */
-	public static FilterResult active(String reason) {
-		return new FilterResult(false, reason);
+	public static FilterResult accepted(String reason) {
+		return new FilterResult(true, reason);
 	}
 
-	public static FilterResult result(boolean result) {
-		return result(result, "Condition evaluates to " + Boolean.toString(result));
+	/**
+	 * Factory for creating filter results based on the condition given.
+	 *
+	 * @param isAccepted whether or not the returned {@code FilterResult} should be accepted
+	 * @return a valid {@code FilterResult} for the given condition
+	 */
+	public static FilterResult acceptedIf(boolean isAccepted) {
+		return acceptedIf(isAccepted, null);
 	}
 
-	public static FilterResult result(boolean result, String reason) {
-		return result ? active(reason) : filtered(reason);
+	/**
+	 * Factory for creating filter results based on the condition given.
+	 *
+	 * @param isAccepted whether or not the returned {@code FilterResult} should be accepted
+	 * @param reason     the reason why the result was filtered
+	 * @return a valid {@code FilterResult} for the given condition
+	 */
+	public static FilterResult acceptedIf(boolean isAccepted, String reason) {
+		return isAccepted ? accepted(reason) : filtered(reason);
 	}
 
-	private final boolean filtered;
+	private final boolean accepted;
 
 	private final Optional<String> reason;
 
-	private FilterResult(boolean filtered, String reason) {
-		this.filtered = filtered;
+	private FilterResult(boolean isAccepted, String reason) {
+		this.accepted = isAccepted;
 		this.reason = Optional.ofNullable(reason);
 	}
 
+	public boolean isAccepted() {
+		return accepted;
+	}
+
 	public boolean isFiltered() {
-		return filtered;
+		return !isAccepted();
 	}
 
 	public Optional<String> getReason() {
@@ -63,7 +86,7 @@ public class FilterResult {
 	public String toString() {
 		// @formatter:off
         return new ToStringBuilder(this)
-                .append("filtered", this.filtered)
+                .append("accepted", this.accepted)
                 .append("reason", this.reason)
                 .toString();
         // @formatter:on
