@@ -55,7 +55,7 @@ public interface ExtensionContext {
 
 	AnnotatedElement getElement();
 
-	// Storing methods. Not done yet.
+	// Storing methods.
 
 	/**
 	 * Get an object that has been stored using a {@code key}
@@ -78,6 +78,7 @@ public interface ExtensionContext {
 	 * the value will be computed by the {@code defaultCreator} and be stored.
 	 *
 	 * @param key the key
+	 * @param defaultCreator the function called to create the value
 	 * @return the value
 	 */
 	Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator);
@@ -88,6 +89,43 @@ public interface ExtensionContext {
 	 * @param key the key
 	 */
 	void remove(Object key);
+
+	/**
+	 * Get an object that has been stored using a {@code key}
+	 *
+	 * @param key the key
+	 * @param namespace the namespace
+	 * @return the value
+	 */
+	Object get(Object key, String namespace);
+
+	/**
+	 * Store a {@code value} for later retrieval using a {@code key}. {@code null} is a valid value.
+	 *
+	 * @param key the key
+	 * @param value the value
+	 * @param namespace the namespace
+	 */
+	void put(Object key, Object value, String namespace);
+
+	/**
+	 * Get an object that has been stored using a {@code key}. If no value has been store using that {@code key}
+	 * the value will be computed by the {@code defaultCreator} and be stored.
+	 *
+	 * @param key the key
+	 * @param defaultCreator the function called to create the value
+	 * @param namespace the namespace
+	 * @return the value
+	 */
+	Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator, String namespace);
+
+	/**
+	 * Remove a value that was previously stored using {@code key} so that {@code key} can be used anew.
+	 *
+	 * @param key the key
+	 * @param namespace the namespace
+	 */
+	void remove(Object key, String namespace);
 
 	// Attributes will be removed when storing methods are done
 

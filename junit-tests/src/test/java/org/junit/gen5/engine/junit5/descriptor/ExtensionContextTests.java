@@ -141,6 +141,28 @@ public class ExtensionContextTests {
 		assertEquals("parent value", childContext.get("parent key"));
 	}
 
+	@Test
+	public void storingAttributesWithNamespace() {
+		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
+		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
+		ExtensionContext parentContext = new ClassBasedContainerExtensionContext(null, null, classTestDescriptor);
+		MethodBasedTestExtensionContext childContext = new MethodBasedTestExtensionContext(parentContext, null,
+			methodTestDescriptor, new OuterClass());
+
+		String namespace = "a namespace";
+
+		childContext.put("a key", "a value", namespace);
+		assertEquals("a value", childContext.get("a key", namespace));
+
+		assertEquals("other value", childContext.getOrComputeIfAbsent("other key", key -> "other value"), namespace);
+
+		childContext.remove("a key", namespace);
+		assertNull(childContext.get("a key", namespace));
+
+		parentContext.put("parent key", "parent value", namespace);
+		assertEquals("parent value", childContext.get("parent key", namespace));
+	}
+
 	private ClassTestDescriptor nestedClassDescriptor() {
 		return new ClassTestDescriptor("NestedClass", OuterClass.NestedClass.class);
 	}

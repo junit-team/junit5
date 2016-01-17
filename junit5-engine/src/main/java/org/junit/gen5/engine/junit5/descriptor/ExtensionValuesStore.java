@@ -34,31 +34,85 @@ class ExtensionValuesStore {
 	}
 
 	public Object get(Object key) {
-		StoredValue storedValue = storedValues.get(key);
+		return get(key, Namespace.DEFAULT);
+	}
+
+	public Object get(Object key, Namespace namespace) {
+		StoredValue storedValue = getStoredValue(key, namespace);
 		if (storedValue != null)
 			return storedValue.value;
 		else if (parentStore != null)
-			return parentStore.get(key);
+			return parentStore.get(key, namespace);
 		else
 			return null;
 	}
 
+	private StoredValue getStoredValue(Object key, Namespace namespace) {
+		ComposedKey composedKey = new ComposedKey(key, namespace);
+		return storedValues.get(composedKey);
+	}
+
 	public void put(Object key, Object value) {
+		put(key, value, Namespace.DEFAULT);
+	}
+
+	public void put(Object key, Object value, Namespace namespace) {
 		Preconditions.notNull(key, "A key must not be null");
-		storedValues.put(key, new StoredValue(value));
+		Preconditions.notNull(namespace, "A namespace must not be null");
+
+		putStoredValue(key, namespace, new StoredValue(value));
+	}
+
+	private void putStoredValue(Object key, Namespace namespace, StoredValue storedValue) {
+		ComposedKey composedKey = new ComposedKey(key, namespace);
+		storedValues.put(composedKey, storedValue);
 	}
 
 	public Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator) {
-		StoredValue storedValue = storedValues.get(key);
+		return getOrComputeIfAbsent(key, defaultCreator, Namespace.DEFAULT);
+	}
+
+	public Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator, Namespace namespace) {
+		StoredValue storedValue = getStoredValue(key, namespace);
 		if (storedValue == null) {
 			storedValue = new StoredValue(defaultCreator.apply(key));
-			storedValues.put(key, storedValue);
+			putStoredValue(key, namespace, storedValue);
 		}
 		return storedValue.value;
 	}
 
 	public void remove(Object key) {
-		storedValues.remove(key);
+		remove(key, Namespace.DEFAULT);
+	}
+
+	public void remove(Object key, Namespace namespace) {
+		ComposedKey composedKey = new ComposedKey(key, namespace);
+		storedValues.remove(composedKey);
+	}
+
+	private static class ComposedKey {
+		private final Object key;
+		private final Namespace namespace;
+
+		private ComposedKey(Object key, Namespace namespace) {
+			this.key = key;
+			this.namespace = namespace;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			ComposedKey composedKey = (ComposedKey) o;
+			return namespace.equals(composedKey.namespace) && key.equals(composedKey.key);
+		}
+
+		@Override
+		public int hashCode() {
+			return 31 * key.hashCode() + namespace.hashCode();
+		}
 	}
 
 	private static class StoredValue {
@@ -66,6 +120,38 @@ class ExtensionValuesStore {
 
 		private StoredValue(Object value) {
 			this.value = value;
+		}
+	}
+
+	public static class Namespace {
+
+		public static Namespace DEFAULT = Namespace.sharedWith(new Object());
+
+		public static Namespace sharedWith(Object local) {
+			Preconditions.notNull(local, "A local must not be null");
+
+			return new Namespace(local);
+		}
+
+		private final Object local;
+
+		private Namespace(Object local) {
+			this.local = local;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			Namespace namespace = (Namespace) o;
+			return local != null ? local.equals(namespace.local) : namespace.local == null;
+		}
+
+		@Override
+		public int hashCode() {
+			return local != null ? local.hashCode() : 0;
 		}
 	}
 }

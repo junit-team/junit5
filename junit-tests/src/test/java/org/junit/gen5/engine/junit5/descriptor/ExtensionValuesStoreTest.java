@@ -15,6 +15,7 @@ import static org.junit.gen5.api.Assertions.*;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.junit5.descriptor.ExtensionValuesStore.Namespace;
 
 /**
  * Microtests for {@link ExtensionValuesStore}
@@ -24,8 +25,9 @@ class ExtensionValuesStoreTests {
 	private ExtensionValuesStore store;
 	private ExtensionValuesStore parentStore;
 
-	private Object key = new Object();
-	private Object value = new Object();
+	private Object key = createObject("key");
+
+	private Object value = createObject("value");
 
 	@BeforeEach
 	void initializeStore() {
@@ -34,7 +36,7 @@ class ExtensionValuesStoreTests {
 	}
 
 	@Nested
-	class UsingDefaultNamespaceTest {
+	class UsingDefaultNamespaceTests {
 
 		@Test
 		void getWithUnknownKeyReturnsNull() {
@@ -92,7 +94,7 @@ class ExtensionValuesStoreTests {
 	}
 
 	@Nested
-	class InheritedValuesTest {
+	class InheritedValuesTests {
 
 		@Test
 		void valueFromParentIsVisible() {
@@ -110,6 +112,57 @@ class ExtensionValuesStoreTests {
 
 			assertEquals(value, parentStore.get(key));
 		}
+	}
+
+	@Nested
+	class UsingExplicitNamespaceTests {
+
+		@Test
+		void sameKeyWithDifferentNamespaces() {
+			Object value1 = createObject("value1");
+			Namespace namespace1 = Namespace.sharedWith("ns1");
+
+			Object value2 = createObject("value2");
+			Namespace namespace2 = Namespace.sharedWith("ns2");
+
+			store.put(key, value1, namespace1);
+			store.put(key, value2, namespace2);
+
+			assertEquals(value1, store.get(key, namespace1));
+			assertEquals(value2, store.get(key, namespace2));
+		}
+
+		@Test
+		void valueIsComputedIfAbsentInDifferentNamespace() {
+			Namespace namespace = Namespace.sharedWith("ns");
+			assertEquals(value, store.getOrComputeIfAbsent(key, innerKey -> value, namespace));
+			assertEquals(value, store.get(key, namespace));
+
+			assertNull(store.get(key));
+		}
+
+		@Test
+		void keyIsOnlyRemovedInGivenNamespace() {
+			Namespace namespace = Namespace.sharedWith("ns");
+			Object valueInNamespace = createObject("valueInNamespace");
+
+			store.put(key, value);
+			store.put(key, valueInNamespace, namespace);
+			store.remove(key, namespace);
+
+			assertNull(store.get(key, namespace));
+			assertEquals(value, store.get(key));
+		}
+
+	}
+
+	private Object createObject(final String display) {
+		return new Object() {
+			@Override
+			public String toString() {
+				return display;
+			}
+		};
 	}
 
 }

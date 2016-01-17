@@ -18,6 +18,7 @@ import java.util.function.Function;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.ExtensionValuesStore.Namespace;
 
 abstract class AbstractExtensionContext implements ExtensionContext {
 
@@ -78,22 +79,48 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 		return testDescriptor;
 	}
 
-	//Storing methods. Not done yet.
+	//Storing methods. All delegate to the store.
+	//TODO: Remove duplication between these methods and ExtensionValuesStore
+	//      as soon as we have a decision if methods should be exposed on store object instead of via delegation
 
+	@Override
 	public Object get(Object key) {
 		return store.get(key);
 	}
 
+	@Override
 	public void put(Object key, Object value) {
 		store.put(key, value);
 	}
 
+	@Override
 	public Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator) {
 		return store.getOrComputeIfAbsent(key, defaultCreator);
 	}
 
+	@Override
 	public void remove(Object key) {
 		store.remove(key);
+	}
+
+	@Override
+	public Object get(Object key, String namespace) {
+		return store.get(key, Namespace.sharedWith(namespace));
+	}
+
+	@Override
+	public void put(Object key, Object value, String namespace) {
+		store.put(key, value, Namespace.sharedWith(namespace));
+	}
+
+	@Override
+	public Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator, String namespace) {
+		return store.getOrComputeIfAbsent(key, defaultCreator, Namespace.sharedWith(namespace));
+	}
+
+	@Override
+	public void remove(Object key, String namespace) {
+		store.remove(key, Namespace.sharedWith(namespace));
 	}
 
 }
