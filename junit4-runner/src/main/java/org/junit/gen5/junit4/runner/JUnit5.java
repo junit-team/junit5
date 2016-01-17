@@ -28,11 +28,7 @@ import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineIdFilter;
 import org.junit.gen5.engine.PostDiscoveryFilter;
-import org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder;
-import org.junit.gen5.engine.specification.dsl.EngineFilterBuilder;
-import org.junit.gen5.engine.specification.dsl.PackageSelectorBuilder;
-import org.junit.gen5.engine.specification.dsl.TagFilterBuilder;
-import org.junit.gen5.engine.specification.dsl.UniqueIdSelectorBuilder;
+import org.junit.gen5.engine.specification.dsl.*;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -66,19 +62,18 @@ import org.junit.runners.model.InitializationError;
  * @see OnlyEngine
  */
 public class JUnit5 extends Runner implements Filterable {
-
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
 	private static final String EMPTY_STRING = "";
 
 	private final Launcher launcher = new Launcher();
 	private final Class<?> testClass;
-	private DiscoveryRequest specification;
+	private DiscoveryRequest discoveryRequest;
 	private JUnit5TestTree testTree;
 
 	public JUnit5(Class<?> testClass) throws InitializationError {
 		this.testClass = testClass;
-		this.specification = createSpecification();
+		this.discoveryRequest = createDiscoveryRequest();
 		this.testTree = generateTestTree();
 	}
 
@@ -91,16 +86,16 @@ public class JUnit5 extends Runner implements Filterable {
 	public void run(RunNotifier notifier) {
 		JUnit5RunnerListener listener = new JUnit5RunnerListener(this.testTree, notifier);
 		this.launcher.registerTestExecutionListeners(listener);
-		this.launcher.execute(this.specification);
+		this.launcher.execute(this.discoveryRequest);
 	}
 
 	private JUnit5TestTree generateTestTree() {
-		Preconditions.notNull(this.specification, "DiscoveryRequest must not be null");
-		TestPlan plan = this.launcher.discover(this.specification);
+		Preconditions.notNull(this.discoveryRequest, "DiscoveryRequest must not be null");
+		TestPlan plan = this.launcher.discover(this.discoveryRequest);
 		return new JUnit5TestTree(plan, testClass);
 	}
 
-	private DiscoveryRequest createSpecification() {
+	private DiscoveryRequest createDiscoveryRequest() {
 		List<DiscoverySelector> selectors = getSpecElementsFromAnnotations();
 
 		// Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
@@ -140,34 +135,34 @@ public class JUnit5 extends Runner implements Filterable {
 		return stream(getPackageNames()).map(PackageSelectorBuilder::byPackageName).collect(toList());
 	}
 
-	private void addClassNameMatchesFilter(DiscoveryRequest plan) {
+	private void addClassNameMatchesFilter(DiscoveryRequest request) {
 		String regex = getClassNameRegExPattern();
 		if (!regex.isEmpty()) {
-			plan.addFilter(classNameMatches(regex));
+			request.addFilter(classNameMatches(regex));
 		}
 	}
 
-	private void addIncludeTagsFilter(DiscoveryRequest plan) {
+	private void addIncludeTagsFilter(DiscoveryRequest request) {
 		String[] includeTags = getIncludeTags();
 		if (includeTags.length > 0) {
 			PostDiscoveryFilter tagNamesFilter = TagFilterBuilder.includeTags(includeTags);
-			plan.addPostFilter(tagNamesFilter);
+			request.addPostFilter(tagNamesFilter);
 		}
 	}
 
-	private void addExcludeTagsFilter(DiscoveryRequest plan) {
+	private void addExcludeTagsFilter(DiscoveryRequest request) {
 		String[] excludeTags = getExcludeTags();
 		if (excludeTags.length > 0) {
 			PostDiscoveryFilter excludeTagsFilter = TagFilterBuilder.excludeTags(excludeTags);
-			plan.addPostFilter(excludeTagsFilter);
+			request.addPostFilter(excludeTagsFilter);
 		}
 	}
 
-	private void addEngineIdFilter(DiscoveryRequest plan) {
+	private void addEngineIdFilter(DiscoveryRequest request) {
 		String engineId = getExplicitEngineId();
 		if (StringUtils.isNotBlank(engineId)) {
 			EngineIdFilter engineFilter = EngineFilterBuilder.byEngineId(engineId);
-			plan.addEngineIdFilter(engineFilter);
+			request.addEngineIdFilter(engineFilter);
 		}
 	}
 
@@ -211,19 +206,18 @@ public class JUnit5 extends Runner implements Filterable {
 		if (filteredIdentifiers.isEmpty()) {
 			throw new NoTestsRemainException();
 		}
-		this.specification = createTestPlanSpecificationForUniqueIds(filteredIdentifiers);
+		this.discoveryRequest = createDiscoveryRequestForUniqueIds(filteredIdentifiers);
 		this.testTree = generateTestTree();
 	}
 
-	private DiscoveryRequest createTestPlanSpecificationForUniqueIds(Set<TestIdentifier> testIdentifiers) {
+	private DiscoveryRequest createDiscoveryRequestForUniqueIds(Set<TestIdentifier> testIdentifiers) {
 		// @formatter:off
-		List<DiscoverySelector> elements = testIdentifiers.stream()
+		List<DiscoverySelector> selectors = testIdentifiers.stream()
 				.map(TestIdentifier::getUniqueId)
 				.map(Object::toString)
 				.map(UniqueIdSelectorBuilder::byUniqueId)
 				.collect(toList());
 		// @formatter:on
-		return request().select(elements).build();
+		return request().select(selectors).build();
 	}
-
 }
