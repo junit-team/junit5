@@ -36,13 +36,13 @@ public class ExtensionPointSortingTests {
 	private List<RegisteredExtensionPoint<LocalExtensionPoint>> pointsToSort;
 
 	@BeforeEach
-	public void init() {
+	void init() {
 		sorter = new ExtensionPointSorter();
 		pointsToSort = new ArrayList<>();
 	}
 
 	@Test
-	public void positionDEFAULT_RemainInOrder() {
+	void positionDEFAULT_RemainInOrder() {
 		RegisteredExtensionPoint point1 = createExtensionPoint(Position.DEFAULT);
 		RegisteredExtensionPoint point2 = createExtensionPoint(Position.DEFAULT);
 		RegisteredExtensionPoint point3 = createExtensionPoint(Position.DEFAULT);
@@ -55,7 +55,7 @@ public class ExtensionPointSortingTests {
 	}
 
 	@Test
-	public void positionOUTERMOST_AreSortedFirst() {
+	void positionOUTERMOST_AreSortedFirst() {
 		RegisteredExtensionPoint point1 = createExtensionPoint(Position.DEFAULT);
 		RegisteredExtensionPoint point2 = createExtensionPoint(Position.DEFAULT);
 		RegisteredExtensionPoint point3 = createExtensionPoint(Position.OUTERMOST);
@@ -68,7 +68,7 @@ public class ExtensionPointSortingTests {
 	}
 
 	@Test
-	public void positionINNERMOST_AreSortedLast() {
+	void positionINNERMOST_AreSortedLast() {
 		RegisteredExtensionPoint point1 = createExtensionPoint(Position.INNERMOST);
 		RegisteredExtensionPoint point2 = createExtensionPoint(Position.DEFAULT);
 		RegisteredExtensionPoint point3 = createExtensionPoint(Position.DEFAULT);
@@ -81,7 +81,7 @@ public class ExtensionPointSortingTests {
 	}
 
 	@Test
-	public void positionOUTSIDEDEFAULT_AreSortedBetweenOutermostAndDefault() {
+	void positionOUTSIDEDEFAULT_AreSortedBetweenOutermostAndDefault() {
 		RegisteredExtensionPoint point1 = createExtensionPoint(Position.DEFAULT);
 		RegisteredExtensionPoint point2 = createExtensionPoint(Position.DEFAULT);
 		RegisteredExtensionPoint point3 = createExtensionPoint(Position.OUTSIDE_DEFAULT);
@@ -98,7 +98,7 @@ public class ExtensionPointSortingTests {
 	}
 
 	@Test
-	public void positionINSIDEDEFAULT_AreSortedBetweenDefaultAndInnermost() {
+	void positionINSIDEDEFAULT_AreSortedBetweenDefaultAndInnermost() {
 		RegisteredExtensionPoint point1 = createExtensionPoint(Position.DEFAULT);
 		RegisteredExtensionPoint point2 = createExtensionPoint(Position.INNERMOST);
 		RegisteredExtensionPoint point3 = createExtensionPoint(Position.INSIDE_DEFAULT);
@@ -115,7 +115,7 @@ public class ExtensionPointSortingTests {
 	}
 
 	@Test
-	public void twoExtensions_withPositionINNERMOST_throwException() {
+	void twoExtensions_withPositionINNERMOST_throwException() {
 		RegisteredExtensionPoint point1 = createExtensionPoint(Position.INNERMOST);
 		RegisteredExtensionPoint point2 = createExtensionPoint(Position.INNERMOST);
 
@@ -126,7 +126,7 @@ public class ExtensionPointSortingTests {
 	}
 
 	@Test
-	public void twoExtensions_withPositionOUTERMOST_throwException() {
+	void twoExtensions_withPositionOUTERMOST_throwException() {
 		RegisteredExtensionPoint point1 = createExtensionPoint(Position.OUTERMOST);
 		RegisteredExtensionPoint point2 = createExtensionPoint(Position.OUTERMOST);
 
@@ -136,7 +136,7 @@ public class ExtensionPointSortingTests {
 		expectThrows(ExtensionConfigurationException.class, () -> sorter.sort(pointsToSort));
 	}
 
-	protected void assertSorting(RegisteredExtensionPoint... points) {
+	private void assertSorting(RegisteredExtensionPoint... points) {
 		sorter.sort(pointsToSort);
 
 		String failureMessage = String.format("Expected %s but was %s", Arrays.asList(points), pointsToSort);
