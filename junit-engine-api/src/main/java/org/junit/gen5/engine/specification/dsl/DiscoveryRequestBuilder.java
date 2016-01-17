@@ -88,7 +88,6 @@ public final class DiscoveryRequestBuilder {
 		return this;
 	}
 
-	@SuppressWarnings("unchecked")
 	public DiscoveryRequestBuilder filterBy(PostDiscoveryFilter... filters) {
 		if (filters != null) {
 			this.postFilters.addAll(Arrays.asList(filters));
