@@ -23,10 +23,16 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.DiscoverySelector;
+import org.junit.gen5.engine.EngineIdFilter;
 import org.junit.gen5.engine.PostDiscoveryFilter;
-import org.junit.gen5.engine.specification.dsl.*;
+import org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder;
+import org.junit.gen5.engine.specification.dsl.EngineFilterBuilder;
+import org.junit.gen5.engine.specification.dsl.PackageSelectorBuilder;
+import org.junit.gen5.engine.specification.dsl.TagFilterBuilder;
+import org.junit.gen5.engine.specification.dsl.UniqueIdSelectorBuilder;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -111,6 +117,7 @@ public class JUnit5 extends Runner implements Filterable {
 		addClassNameMatchesFilter(request);
 		addIncludeTagsFilter(request);
 		addExcludeTagsFilter(request);
+		addEngineIdFilter(request);
 	}
 
 	private List<DiscoverySelector> getSpecElementsFromAnnotations() {
@@ -153,6 +160,14 @@ public class JUnit5 extends Runner implements Filterable {
 		if (excludeTags.length > 0) {
 			PostDiscoveryFilter excludeTagsFilter = TagFilterBuilder.excludeTags(excludeTags);
 			plan.addPostFilter(excludeTagsFilter);
+		}
+	}
+
+	private void addEngineIdFilter(DiscoveryRequest plan) {
+		String engineId = getExplicitEngineId();
+		if (StringUtils.isNotBlank(engineId)) {
+			EngineIdFilter engineFilter = EngineFilterBuilder.byEngineId(engineId);
+			plan.addEngineIdFilter(engineFilter);
 		}
 	}
 
