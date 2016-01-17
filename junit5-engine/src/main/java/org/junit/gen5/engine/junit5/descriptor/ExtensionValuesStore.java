@@ -18,7 +18,7 @@ import org.junit.gen5.commons.util.Preconditions;
 
 /**
  * An {@code ExtensionValuesStore} is used inside {@link AbstractExtensionContext} to store and retrieve
- * attributes with {@code get}, {@code put} and {@code getOrCreateIfAbsent}
+ * attributes with {@code get}, {@code put} and {@code getOrCreateIfAbsent}.
  */
 class ExtensionValuesStore {
 
@@ -81,16 +81,18 @@ class ExtensionValuesStore {
 		return storedValue.value;
 	}
 
-	public void remove(Object key) {
-		remove(key, Namespace.DEFAULT);
+	public Object remove(Object key) {
+		return remove(key, Namespace.DEFAULT);
 	}
 
-	public void remove(Object key, Namespace namespace) {
+	public Object remove(Object key, Namespace namespace) {
 		ComposedKey composedKey = new ComposedKey(key, namespace);
-		storedValues.remove(composedKey);
+		StoredValue previous = storedValues.remove(composedKey);
+		return (previous != null ? previous.value : null);
 	}
 
 	private static class ComposedKey {
+
 		private final Object key;
 		private final Namespace namespace;
 
@@ -116,6 +118,7 @@ class ExtensionValuesStore {
 	}
 
 	private static class StoredValue {
+
 		private final Object value;
 
 		private StoredValue(Object value) {
@@ -154,4 +157,5 @@ class ExtensionValuesStore {
 			return local != null ? local.hashCode() : 0;
 		}
 	}
+
 }

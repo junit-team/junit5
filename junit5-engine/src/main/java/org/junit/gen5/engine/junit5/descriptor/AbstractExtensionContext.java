@@ -99,8 +99,8 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 	}
 
 	@Override
-	public void remove(Object key) {
-		store.remove(key);
+	public Object remove(Object key) {
+		return store.remove(key);
 	}
 
 	@Override
@@ -119,8 +119,8 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 	}
 
 	@Override
-	public void remove(Object key, String namespace) {
-		store.remove(key, Namespace.sharedWith(namespace));
+	public Object remove(Object key, String namespace) {
+		return store.remove(key, Namespace.sharedWith(namespace));
 	}
 
 }

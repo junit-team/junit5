@@ -87,8 +87,10 @@ public interface ExtensionContext {
 	 * Remove a value that was previously stored using {@code key} so that {@code key} can be used anew.
 	 *
 	 * @param key the key
+	 * @return the previous value or {@code null} if no value was present
+	 * for the specified key
 	 */
-	void remove(Object key);
+	Object remove(Object key);
 
 	/**
 	 * Get an object that has been stored using a {@code key}
@@ -124,8 +126,10 @@ public interface ExtensionContext {
 	 *
 	 * @param key the key
 	 * @param namespace the namespace
+	 * @return the previous value or {@code null} if no value was present
+	 * for the specified key and namespace
 	 */
-	void remove(Object key, String namespace);
+	Object remove(Object key, String namespace);
 
 	// Attributes will be removed when storing methods are done
 
