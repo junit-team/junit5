@@ -10,7 +10,8 @@
 
 package org.junit.gen5.engine.junit4.discovery;
 
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.gen5.commons.util.ReflectionUtils.isPublic;
 
 import java.util.function.Predicate;
 
@@ -25,8 +26,6 @@ class IsPotentialJUnit4TestClass implements Predicate<Class<?>> {
 		if (isAbstract(candidate))
 			return false;
 		if (!isPublic(candidate))
-			return false;
-		if (candidate.isLocalClass())
 			return false;
 		return !candidate.isMemberClass();
 	}
