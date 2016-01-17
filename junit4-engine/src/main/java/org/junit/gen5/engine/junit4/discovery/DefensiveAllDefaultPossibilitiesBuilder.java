@@ -12,7 +12,6 @@ package org.junit.gen5.engine.junit4.discovery;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
@@ -37,17 +36,8 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 
 	DefensiveAllDefaultPossibilitiesBuilder() {
 		super(true);
-		annotatedBuilder = createAnnotatedBuilder();
+		annotatedBuilder = new DefensiveAnnotatedBuilder(this);
 		defensiveJUnit4Builder = new DefensiveJUnit4Builder();
-	}
-
-	private AnnotatedBuilder createAnnotatedBuilder() {
-		// Load via reflection because it might not be available at runtime.
-		Optional<Class<?>> junit5RunnerClass = ReflectionUtils.loadClass("org.junit.gen5.junit4.runner.JUnit5");
-		if (junit5RunnerClass.isPresent()) {
-			return new DefensiveAnnotatedBuilder(this, junit5RunnerClass.get());
-		}
-		return new AnnotatedBuilder(this);
 	}
 
 	@Override
@@ -66,16 +56,14 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 	 */
 	private static class DefensiveAnnotatedBuilder extends AnnotatedBuilder {
 
-		private final Class<?> junit5RunnerClass;
-
-		public DefensiveAnnotatedBuilder(RunnerBuilder suiteBuilder, Class<?> junit5RunnerClass) {
+		public DefensiveAnnotatedBuilder(RunnerBuilder suiteBuilder) {
 			super(suiteBuilder);
-			this.junit5RunnerClass = junit5RunnerClass;
 		}
 
 		@Override
 		public Runner buildRunner(Class<? extends Runner> runnerClass, Class<?> testClass) throws Exception {
-			if (junit5RunnerClass.isAssignableFrom(runnerClass)) {
+			// Referenced by name because it might not be available at runtime.
+			if ("org.junit.gen5.junit4.runner.JUnit5".equals(runnerClass.getName())) {
 				return null;
 			}
 			return super.buildRunner(runnerClass, testClass);
