@@ -83,7 +83,7 @@ class TestClassRequestResolver {
 		List<Description> children = parent.getDescription().getChildren();
 		// Use LinkedHashMap to preserve order, ArrayList for fast access by index
 		Map<String, List<Description>> childrenByUniqueId = children.stream().collect(
-			groupingBy(UniqueIdExtractor::toUniqueId, LinkedHashMap::new, toCollection(ArrayList::new)));
+			groupingBy(TestClassRequestResolver::toUniqueId, LinkedHashMap::new, toCollection(ArrayList::new)));
 		for (Entry<String, List<Description>> entry : childrenByUniqueId.entrySet()) {
 			String uniqueId = entry.getKey();
 			List<Description> childrenWithSameUniqueId = entry.getValue();
@@ -105,5 +105,10 @@ class TestClassRequestResolver {
 			return index -> uniqueId;
 		}
 		return index -> uniqueId + "[" + index + "]";
+	}
+
+	static String toUniqueId(Description description) {
+		// TODO Consider fUniqueId?
+		return description.getDisplayName();
 	}
 }
