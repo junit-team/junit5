@@ -11,7 +11,6 @@
 package org.junit.gen5.engine.discovery;
 
 import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.DiscoverySelectorVisitor;
 
 public class UniqueIdSelector implements DiscoverySelector {
 	public static UniqueIdSelector forUniqueId(String uniqueId) {
@@ -22,11 +21,6 @@ public class UniqueIdSelector implements DiscoverySelector {
 
 	private UniqueIdSelector(String uniqueId) {
 		this.uniqueId = uniqueId;
-	}
-
-	@Override
-	public void accept(DiscoverySelectorVisitor visitor) {
-		visitor.visitUniqueId(uniqueId);
 	}
 
 	public String getUniqueId() {

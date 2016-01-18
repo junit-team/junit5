@@ -20,7 +20,6 @@ import java.util.List;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.DiscoverySelectorVisitor;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
@@ -133,8 +132,4 @@ public final class DiscoveryRequest implements EngineDiscoveryRequest {
 		// @formatter:on
 	}
 
-	@Override
-	public void accept(DiscoverySelectorVisitor visitor) {
-		this.getSelectors().forEach(selector -> selector.accept(visitor));
-	}
 }

@@ -11,7 +11,6 @@
 package org.junit.gen5.engine.discovery;
 
 import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.DiscoverySelectorVisitor;
 
 /**
  * @since 5.0
@@ -25,11 +24,6 @@ public class PackageSelector implements DiscoverySelector {
 
 	private PackageSelector(String packageName) {
 		this.packageName = packageName;
-	}
-
-	@Override
-	public void accept(DiscoverySelectorVisitor visitor) {
-		visitor.visitPackage(packageName);
 	}
 
 	public String getPackageName() {

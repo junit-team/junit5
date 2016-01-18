@@ -17,5 +17,4 @@ package org.junit.gen5.engine;
  * @see EngineDiscoveryRequest
  */
 public interface DiscoverySelector {
-	void accept(DiscoverySelectorVisitor visitor);
 }

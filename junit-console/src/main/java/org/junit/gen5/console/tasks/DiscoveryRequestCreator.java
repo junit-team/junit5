@@ -10,12 +10,13 @@
 
 package org.junit.gen5.console.tasks;
 
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toCollection;
 import static org.junit.gen5.engine.discovery.ClasspathSelector.forPaths;
 import static org.junit.gen5.engine.discovery.NameBasedSelector.forNames;
 import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import java.io.File;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.junit.gen5.commons.util.Preconditions;
@@ -48,7 +49,7 @@ class DiscoveryRequestCreator {
 		if (options.getArguments().isEmpty()) {
 			return ReflectionUtils.getAllClasspathRootDirectories();
 		}
-		return options.getArguments().stream().map(File::new).collect(toSet());
+		return options.getArguments().stream().map(File::new).collect(toCollection(LinkedHashSet::new));
 	}
 
 	private DiscoveryRequest buildNameBasedDiscoveryRequest(CommandLineOptions options) {

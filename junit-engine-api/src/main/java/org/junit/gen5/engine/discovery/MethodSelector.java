@@ -14,7 +14,6 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.DiscoverySelectorVisitor;
 
 /**
  * @since 5.0
@@ -41,11 +40,6 @@ public class MethodSelector implements DiscoverySelector {
 	private MethodSelector(Class<?> testClass, Method testMethod) {
 		this.testClass = testClass;
 		this.testMethod = testMethod;
-	}
-
-	@Override
-	public void accept(DiscoverySelectorVisitor visitor) {
-		visitor.visitMethod(testClass, testMethod);
 	}
 
 	public Class<?> getTestClass() {

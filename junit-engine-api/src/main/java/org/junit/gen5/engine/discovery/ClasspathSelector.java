@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.DiscoverySelectorVisitor;
 
 /**
  * @since 5.0
@@ -41,11 +40,6 @@ public class ClasspathSelector implements DiscoverySelector {
 
 	private ClasspathSelector(File classpathRoot) {
 		this.classpathRoot = classpathRoot;
-	}
-
-	@Override
-	public void accept(DiscoverySelectorVisitor visitor) {
-		visitor.visitAllTests(classpathRoot);
 	}
 
 	public File getClasspathRoot() {

@@ -13,7 +13,6 @@ package org.junit.gen5.engine.discovery;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.DiscoverySelectorVisitor;
 
 /**
  * @since 5.0
@@ -32,11 +31,6 @@ public class ClassSelector implements DiscoverySelector {
 
 	private ClassSelector(Class<?> testClass) {
 		this.testClass = testClass;
-	}
-
-	@Override
-	public void accept(DiscoverySelectorVisitor visitor) {
-		visitor.visitClass(testClass);
 	}
 
 	public Class<?> getTestClass() {

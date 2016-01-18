@@ -14,10 +14,12 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertFalse;
 import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.mockito.Matchers.notNull;
-import static org.mockito.Mockito.*;
+import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -25,34 +27,42 @@ import java.util.List;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.console.options.CommandLineOptions;
-import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.discovery.ClassFilter;
+import org.junit.gen5.engine.discovery.ClassSelector;
+import org.junit.gen5.engine.discovery.ClasspathSelector;
+import org.junit.gen5.engine.discovery.MethodSelector;
+import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.launcher.DiscoveryRequest;
 
 public class DiscoveryRequestCreatorTests {
 	private CommandLineOptions options = new CommandLineOptions();
-	private DiscoverySelectorVisitor visitor = mock(DiscoverySelectorVisitor.class);
 
 	@Test
 	public void convertsClassArgument() {
 		Class<?> testClass = getClass();
 		options.setArguments(singletonList(testClass.getName()));
 
-		convertAndVisit();
+		DiscoveryRequest request = convert();
 
-		verify(visitor).visitClass(testClass);
+		List<ClassSelector> classSelectors = request.getSelectorsByType(ClassSelector.class);
+		assertThat(classSelectors).hasSize(1);
+		assertEquals(testClass, getOnlyElement(classSelectors).getTestClass());
 	}
 
 	@Test
 	public void convertsMethodArgument() throws Exception {
 		Class<?> testClass = getClass();
-		// TODO #39 Use @TestName
 		Method testMethod = testClass.getDeclaredMethod("convertsMethodArgument");
 		options.setArguments(singletonList(testClass.getName() + "#" + testMethod.getName()));
 
-		convertAndVisit();
+		DiscoveryRequest request = convert();
 
-		verify(visitor).visitMethod(testClass, testMethod);
+		List<MethodSelector> methodSelectors = request.getSelectorsByType(MethodSelector.class);
+		assertThat(methodSelectors).hasSize(1);
+		assertEquals(testClass, getOnlyElement(methodSelectors).getTestClass());
+		assertEquals(testMethod, getOnlyElement(methodSelectors).getTestMethod());
 	}
 
 	@Test
@@ -60,18 +70,24 @@ public class DiscoveryRequestCreatorTests {
 		String packageName = getClass().getPackage().getName();
 		options.setArguments(singletonList(packageName));
 
-		convertAndVisit();
+		DiscoveryRequest request = convert();
 
-		verify(visitor).visitPackage(packageName);
+		List<PackageSelector> packageSelectors = request.getSelectorsByType(PackageSelector.class);
+		assertThat(packageSelectors).extracting(PackageSelector::getPackageName).containsExactly(packageName);
 	}
 
 	@Test
 	public void convertsAllOptionWithoutExplicitRootDirectories() {
 		options.setRunAllTests(true);
 
-		convertAndVisit();
+		DiscoveryRequest request = convert();
 
-		verify(visitor, atLeastOnce()).visitAllTests(notNull(File.class));
+		List<ClasspathSelector> classpathSelectors = request.getSelectorsByType(ClasspathSelector.class);
+		// @formatter:off
+		assertThat(classpathSelectors).extracting(ClasspathSelector::getClasspathRoot)
+			.hasAtLeastOneElementOfType(File.class)
+			.doesNotContainNull();
+		// @formatter:on
 	}
 
 	@Test
@@ -79,11 +95,13 @@ public class DiscoveryRequestCreatorTests {
 		options.setRunAllTests(true);
 		options.setArguments(asList(".", ".."));
 
-		convertAndVisit();
+		DiscoveryRequest request = convert();
 
-		verify(visitor, times(1)).visitAllTests(new File("."));
-		verify(visitor, times(1)).visitAllTests(new File(".."));
-		verifyNoMoreInteractions(visitor);
+		List<ClasspathSelector> classpathSelectors = request.getSelectorsByType(ClasspathSelector.class);
+		// @formatter:off
+		assertThat(classpathSelectors).extracting(ClasspathSelector::getClasspathRoot)
+			.containsExactly(new File("."), new File(".."));
+		// @formatter:on
 	}
 
 	@Test
@@ -91,9 +109,9 @@ public class DiscoveryRequestCreatorTests {
 		options.setRunAllTests(true);
 		options.setClassnameFilter(".*Test");
 
-		DiscoveryRequest discoveryRequest = convert();
+		DiscoveryRequest request = convert();
 
-		List<ClassFilter> filter = discoveryRequest.getDiscoveryFiltersByType(ClassFilter.class);
+		List<ClassFilter> filter = request.getDiscoveryFiltersByType(ClassFilter.class);
 		assertThat(filter).hasSize(1);
 		assertThat(filter.get(0).toString()).contains(".*Test");
 	}
@@ -104,16 +122,12 @@ public class DiscoveryRequestCreatorTests {
 		options.setTagsFilter(asList("fast", "medium", "slow"));
 		options.setExcludeTags(asList("slow"));
 
-		DiscoveryRequest discoveryRequest = convert();
+		DiscoveryRequest request = convert();
 
-		assertTrue(discoveryRequest.acceptDescriptor(testDescriptorWithTag("fast")));
-		assertTrue(discoveryRequest.acceptDescriptor(testDescriptorWithTag("medium")));
-		assertFalse(discoveryRequest.acceptDescriptor(testDescriptorWithTag("slow")));
-		assertFalse(discoveryRequest.acceptDescriptor(testDescriptorWithTag("very slow")));
-	}
-
-	private void convertAndVisit() {
-		convert().accept(visitor);
+		assertTrue(request.acceptDescriptor(testDescriptorWithTag("fast")));
+		assertTrue(request.acceptDescriptor(testDescriptorWithTag("medium")));
+		assertFalse(request.acceptDescriptor(testDescriptorWithTag("slow")));
+		assertFalse(request.acceptDescriptor(testDescriptorWithTag("very slow")));
 	}
 
 	private DiscoveryRequest convert() {

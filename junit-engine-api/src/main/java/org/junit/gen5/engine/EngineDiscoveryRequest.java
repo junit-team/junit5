@@ -22,6 +22,4 @@ public interface EngineDiscoveryRequest {
 
 	<T extends DiscoveryFilter<?>> List<T> getDiscoveryFiltersByType(Class<T> filterType);
 
-	void accept(DiscoverySelectorVisitor visitor);
-
 }
