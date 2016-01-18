@@ -11,9 +11,13 @@
 package org.junit.gen5.engine;
 
 /**
- * {@code DiscoveryFilter} filters particular tests during test discovery.
+ * A {@code DiscoveryFilter} filters particular tests during test discovery.
+ * These filters need to be applied by the {@link TestEngine} during test
+ * discovery.
  *
  * @since 5.0
+ * @see DiscoveryRequest
+ * @see TestEngine
  */
 public interface DiscoveryFilter<T> extends GenericFilter<T> {
 }

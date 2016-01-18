@@ -10,5 +10,14 @@
 
 package org.junit.gen5.engine;
 
+/**
+ * A {@code PostDiscoveryFilter} filters particular tests after test discovery.
+ * These filters must not be applied by the {@link TestEngine} during test
+ * discovery.
+ *
+ * @since 5.0
+ * @see DiscoveryRequest
+ * @see TestEngine
+ */
 public interface PostDiscoveryFilter extends GenericFilter<TestDescriptor> {
 }

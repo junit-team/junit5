@@ -20,7 +20,28 @@ import java.util.List;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
+ * The {@code DiscoveryRequest} represents the configuration for the test
+ * discovery and execution. It is passed to every active {@link TestEngine}
+ * and should be used to lookup tests for the given configuration.
+ *
+ * <p>A {@code DiscoveryRequest} contains different configuration options.
+ *
+ * <ul>
+ * <li>{@link DiscoverySelector}: A selector defines location(s) a
+ * {@link TestEngine} should lookup tests at</li>
+ * <li>{@link EngineIdFilter}: A special filter that is applied before an
+ * {@link TestEngine} is executed</li>
+ * <li>{@link DiscoveryFilter}: A filter that should be applied by the
+ * {@link TestEngine} during test discovery.</li>
+ * <li>{@link PostDiscoveryFilter}: A filter that will be applied after
+ * test discovery.</li>
+ * </ul>
+ *
  * @since 5.0
+ * @see DiscoverySelector
+ * @see EngineIdFilter
+ * @see DiscoveryFilter
+ * @see PostDiscoveryFilter
  */
 public final class DiscoveryRequest {
 	// Selectors provided to the engines to be used for finding tests

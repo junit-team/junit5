@@ -10,6 +10,12 @@
 
 package org.junit.gen5.engine;
 
+/**
+ * A selector defines location(s) a {@link TestEngine} should lookup tests at.
+ *
+ * @since 5.0
+ * @see DiscoveryRequest
+ */
 public interface DiscoverySelector {
 	void accept(DiscoverySelectorVisitor visitor);
 }
