@@ -13,7 +13,13 @@ package org.junit.gen5.launcher;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.EngineAwareTestDescriptor;
+import org.junit.gen5.engine.EngineExecutionListener;
+import org.junit.gen5.engine.ExecutionRequest;
+import org.junit.gen5.engine.FilterResult;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.TestExecutionResult;
 
 /**
  * Facade for <em>discovering</em> and <em>executing</em> tests using
@@ -80,7 +86,7 @@ public class Launcher {
 	 *         {@linkplain TestIdentifier identifiers} from all registered engines
 	 */
 	public TestPlan discover(DiscoveryRequest discoveryRequest) {
-		return TestPlan.from(discoverRootDescriptor(discoveryRequest, "discovery"));
+		return TestPlan.from(discoverRoot(discoveryRequest, "discovery"));
 	}
 
 	/**
@@ -92,11 +98,11 @@ public class Launcher {
 	 * @param discoveryRequest the discovery request to be executed
 	 */
 	public void execute(DiscoveryRequest discoveryRequest) {
-		execute(discoverRootDescriptor(discoveryRequest, "execution"));
+		execute(discoverRoot(discoveryRequest, "execution"));
 	}
 
-	private RootTestDescriptor discoverRootDescriptor(DiscoveryRequest discoveryRequest, String phase) {
-		RootTestDescriptor root = new RootTestDescriptor();
+	private Root discoverRoot(DiscoveryRequest discoveryRequest, String phase) {
+		Root root = new Root();
 		for (TestEngine testEngine : testEngineRegistry.getTestEngines()) {
 			if (discoveryRequest.getEngineIdFilters().stream().map(
 				engineIdFilter -> engineIdFilter.filter(testEngine.getId())).anyMatch(FilterResult::excluded)) {
@@ -109,14 +115,14 @@ public class Launcher {
 			LOG.fine(() -> String.format("Discovering tests during launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 			EngineAwareTestDescriptor engineRoot = testEngine.discoverTests(discoveryRequest);
-			root.addChild(engineRoot);
+			root.add(testEngine, engineRoot);
 		}
 		root.applyFilters(discoveryRequest);
 		root.prune();
 		return root;
 	}
 
-	private void execute(RootTestDescriptor root) {
+	private void execute(Root root) {
 		TestPlan testPlan = TestPlan.from(root);
 		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
 		testExecutionListener.testPlanExecutionStarted(testPlan);
@@ -130,6 +136,7 @@ public class Launcher {
 	}
 
 	static class ExecutionListenerAdapter implements EngineExecutionListener {
+
 		private final TestPlan testPlan;
 		private final TestExecutionListener testExecutionListener;
 

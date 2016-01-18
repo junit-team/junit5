@@ -28,9 +28,7 @@ public class LauncherTests {
 
 		TestPlan testPlan = launcher.discover(request().select(forUniqueId("foo")).build());
 
-		assertThat(testPlan.getRoots()).hasSize(1);
-		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
-		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).isEmpty();
+		assertThat(testPlan.getRoots()).isEmpty();
 	}
 
 	@Test
@@ -39,9 +37,7 @@ public class LauncherTests {
 
 		TestPlan testPlan = launcher.discover(request().select(forUniqueId("foo")).build());
 
-		assertThat(testPlan.getRoots()).hasSize(1);
-		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
-		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).isEmpty();
+		assertThat(testPlan.getRoots()).isEmpty();
 	}
 
 	@Test
@@ -71,9 +67,7 @@ public class LauncherTests {
 		TestPlan testPlan = launcher.discover(
 			request().select(forUniqueId(test1.getUniqueId()), forUniqueId(test2.getUniqueId())).build());
 
-		assertThat(testPlan.getRoots()).hasSize(1);
-		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
-		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(2);
+		assertThat(testPlan.getRoots()).hasSize(2);
 		assertThat(testPlan.getChildren(new TestId("engine1"))).hasSize(1);
 		assertThat(testPlan.getChildren(new TestId("engine2"))).hasSize(1);
 	}

@@ -10,7 +10,8 @@
 
 package org.junit.gen5.launcher;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.unmodifiableSet;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -50,7 +51,7 @@ public final class TestPlan {
 	private final Map<TestId, LinkedHashSet<TestIdentifier>> children = new LinkedHashMap<>();
 	private final Map<TestId, TestIdentifier> allIdentifiers = new LinkedHashMap<>();
 
-	static TestPlan from(TestDescriptor root) {
+	static TestPlan from(Root root) {
 		TestPlan testPlan = new TestPlan();
 		root.accept(new Visitor() {
 
