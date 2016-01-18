@@ -58,7 +58,7 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 				// @formatter:off
 				if (classFilters.stream()
 						.map(filter -> filter.filter(testClass))
-						.anyMatch(FilterResult::isDeclined)) {
+						.anyMatch(FilterResult::excluded)) {
 					remove.run();
 				}
 				// @formatter:on

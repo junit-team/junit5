@@ -10,8 +10,8 @@
 
 package org.junit.gen5.engine;
 
-import static org.junit.gen5.engine.FilterResult.accepted;
-import static org.junit.gen5.engine.FilterResult.filtered;
+import static org.junit.gen5.engine.FilterResult.excluded;
+import static org.junit.gen5.engine.FilterResult.included;
 
 public class EngineIdFilter implements GenericFilter<String> {
 	private final String engineId;
@@ -23,10 +23,10 @@ public class EngineIdFilter implements GenericFilter<String> {
 	@Override
 	public FilterResult filter(String engineId) {
 		if (this.engineId.equals(engineId)) {
-			return accepted("EngineId matches");
+			return included("EngineId matches");
 		}
 		else {
-			return filtered("EngineId matches");
+			return excluded("EngineId matches");
 		}
 	}
 }

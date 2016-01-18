@@ -63,7 +63,7 @@ public class JUnit4DiscoveryRequestResolver {
 			TestClassCollector collector) {
 		// TODO #40 Log classes that are filtered out
 		ClassFilter classFilter = new AllClassFilters(request.getFilterByType(ClassFilter.class));
-		return collector.toRequests(testClass -> classFilter.filter(testClass).isAccepted());
+		return collector.toRequests(testClass -> classFilter.filter(testClass).included());
 	}
 
 	private void populateEngineDescriptor(Set<TestClassRequest> requests) {

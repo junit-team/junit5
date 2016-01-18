@@ -11,10 +11,10 @@
 package org.junit.gen5.engine.specification.dsl;
 
 import static java.util.Arrays.asList;
-import static org.junit.gen5.engine.FilterResult.acceptedIf;
 
 import java.util.List;
 
+import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.PostDiscoveryFilter;
 import org.junit.gen5.engine.TestTag;
 
@@ -25,7 +25,7 @@ public class TagFilterBuilder {
 
 	public static PostDiscoveryFilter includeTags(List<String> includeTags) {
 		// @formatter:off
-        return descriptor -> acceptedIf(
+        return descriptor -> FilterResult.includedIf(
 				descriptor.getTags().stream()
 					.map(TestTag::getName)
 					.anyMatch(includeTags::contains));
@@ -38,7 +38,7 @@ public class TagFilterBuilder {
 
 	public static PostDiscoveryFilter excludeTags(List<String> excludeTags) {
 		// @formatter:off
-        return descriptor -> acceptedIf(
+        return descriptor -> FilterResult.includedIf(
 				descriptor.getTags().stream()
                 	.map(TestTag::getName)
 					.noneMatch(excludeTags::contains));

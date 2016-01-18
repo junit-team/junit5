@@ -99,7 +99,7 @@ public class Launcher {
 		RootTestDescriptor root = new RootTestDescriptor();
 		for (TestEngine testEngine : testEngineRegistry.getTestEngines()) {
 			if (specification.getEngineIdFilters().stream().map(
-				engineIdFilter -> engineIdFilter.filter(testEngine.getId())).anyMatch(FilterResult::isDeclined)) {
+				engineIdFilter -> engineIdFilter.filter(testEngine.getId())).anyMatch(FilterResult::excluded)) {
 				LOG.fine(
 					() -> String.format("Test discovery for engine '%s' was skipped due to a filter in phase '%s'.",
 						testEngine.getId(), phase));

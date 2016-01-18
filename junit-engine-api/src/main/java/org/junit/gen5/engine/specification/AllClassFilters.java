@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.specification;
 
 import static java.util.stream.Collectors.joining;
-import static org.junit.gen5.engine.FilterResult.accepted;
+import static org.junit.gen5.engine.FilterResult.included;
 
 import java.util.List;
 
@@ -28,14 +28,14 @@ public class AllClassFilters implements ClassFilter {
 	@Override
 	public FilterResult filter(Class<?> testClass) {
 		if (classFilters == null) {
-			return accepted("No filters to be applied on test class");
+			return included("No filters to be applied on test class");
 		}
 		else {
 			// @formatter:off
-			return FilterResult.acceptedIf(
+			return FilterResult.includedIf(
 				classFilters.stream()
 						.map(filter -> filter.filter(testClass))
-						.allMatch(FilterResult::isAccepted));
+						.allMatch(FilterResult::included));
 			// @formatter:on
 		}
 	}

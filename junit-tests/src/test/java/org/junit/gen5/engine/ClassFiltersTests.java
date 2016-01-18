@@ -27,8 +27,8 @@ class ClassFiltersTests {
 		ClassFilter filter = ClassFilters.classNameMatches(regex);
 
 		assertEquals("Filter class names with regular expression: " + regex, filter.toString());
-		assertTrue(filter.filter(String.class).isAccepted());
-		assertFalse(filter.filter(Collection.class).isAccepted());
+		assertTrue(filter.filter(String.class).included());
+		assertFalse(filter.filter(Collection.class).included());
 	}
 
 	@Test
@@ -36,8 +36,8 @@ class ClassFiltersTests {
 		ClassFilter filter = ClassFilters.anyClass();
 
 		assertEquals("Any class", filter.toString());
-		assertTrue(filter.filter(String.class).isAccepted());
-		assertTrue(filter.filter(this.getClass()).isAccepted());
+		assertTrue(filter.filter(String.class).included());
+		assertTrue(filter.filter(this.getClass()).included());
 	}
 
 	@Test
@@ -47,8 +47,8 @@ class ClassFiltersTests {
 		ClassFilter filter = ClassFilters.allOf(noFilters);
 
 		assertEquals("Any class", filter.toString());
-		assertTrue(filter.filter(String.class).isAccepted());
-		assertTrue(filter.filter(Object.class).isAccepted());
+		assertTrue(filter.filter(String.class).included());
+		assertTrue(filter.filter(Object.class).included());
 	}
 
 	@Test
@@ -67,8 +67,8 @@ class ClassFiltersTests {
 
 		ClassFilter filter = ClassFilters.allOf(firstFilter, secondFilter);
 
-		assertFalse(filter.filter(String.class).isAccepted());
-		assertTrue(filter.filter(StringJoiner.class).isAccepted());
+		assertFalse(filter.filter(String.class).included());
+		assertTrue(filter.filter(StringJoiner.class).included());
 	}
 
 	@Test

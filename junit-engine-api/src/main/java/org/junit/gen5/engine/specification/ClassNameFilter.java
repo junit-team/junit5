@@ -10,8 +10,8 @@
 
 package org.junit.gen5.engine.specification;
 
-import static org.junit.gen5.engine.FilterResult.accepted;
-import static org.junit.gen5.engine.FilterResult.filtered;
+import static org.junit.gen5.engine.FilterResult.excluded;
+import static org.junit.gen5.engine.FilterResult.included;
 
 import java.util.regex.Pattern;
 
@@ -28,10 +28,10 @@ public class ClassNameFilter implements ClassFilter {
 	@Override
 	public FilterResult filter(Class<?> testClass) {
 		if (pattern.matcher(testClass.getName()).matches()) {
-			return accepted("TestClass matches name pattern");
+			return included("TestClass matches name pattern");
 		}
 		else {
-			return filtered("TestClass does not match name pattern");
+			return excluded("TestClass does not match name pattern");
 		}
 	}
 

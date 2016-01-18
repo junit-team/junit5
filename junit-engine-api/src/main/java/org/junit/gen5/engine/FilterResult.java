@@ -21,61 +21,67 @@ import org.junit.gen5.commons.util.ToStringBuilder;
  */
 public class FilterResult {
 	/**
-	 * Factory for creating <em>filtered</em> results.
+	 * Factory for creating <em>included</em> results.
 	 *
-	 * @param reason the reason why the result was filtered
-	 * @return a filtered {@code FilterResult} with the given reason
+	 * @param reason the reason why the result was included
+	 * @return an included {@code FilterResult} with the given reason
 	 */
-	public static FilterResult filtered(String reason) {
-		return new FilterResult(false, reason);
-	}
-
-	/**
-	 * Factory for creating <em>active</em> results.
-	 *
-	 * @param reason the reason why the result was filtered
-	 * @return an accepted {@code FilterResult} with the given reason
-	 */
-	public static FilterResult accepted(String reason) {
+	public static FilterResult included(String reason) {
 		return new FilterResult(true, reason);
 	}
 
 	/**
-	 * Factory for creating filter results based on the condition given.
+	 * Factory for creating <em>excluded</em> results.
 	 *
-	 * @param isAccepted whether or not the returned {@code FilterResult} should be accepted
-	 * @return a valid {@code FilterResult} for the given condition
+	 * @param reason the reason why the result was excluded
+	 * @return a excluded {@code FilterResult} with the given reason
 	 */
-	public static FilterResult acceptedIf(boolean isAccepted) {
-		return acceptedIf(isAccepted, null);
+	public static FilterResult excluded(String reason) {
+		return new FilterResult(false, reason);
 	}
 
 	/**
 	 * Factory for creating filter results based on the condition given.
 	 *
-	 * @param isAccepted whether or not the returned {@code FilterResult} should be accepted
-	 * @param reason     the reason why the result was filtered
+	 * @param included whether or not the returned {@code FilterResult} should be included
 	 * @return a valid {@code FilterResult} for the given condition
 	 */
-	public static FilterResult acceptedIf(boolean isAccepted, String reason) {
-		return isAccepted ? accepted(reason) : filtered(reason);
+	public static FilterResult includedIf(boolean included) {
+		return includedIf(included, null);
 	}
 
-	private final boolean accepted;
+	/**
+	 * Factory for creating filter results based on the condition given.
+	 *
+	 * @param included whether or not the returned {@code FilterResult} should be included
+	 * @param reason the reason for the result
+	 * @return a valid {@code FilterResult} for the given condition
+	 */
+	public static FilterResult includedIf(boolean included, String reason) {
+		return included ? included(reason) : excluded(reason);
+	}
+
+	private final boolean included;
 
 	private final Optional<String> reason;
 
-	private FilterResult(boolean isAccepted, String reason) {
-		this.accepted = isAccepted;
+	private FilterResult(boolean included, String reason) {
+		this.included = included;
 		this.reason = Optional.ofNullable(reason);
 	}
 
-	public boolean isAccepted() {
-		return accepted;
+	/**
+	 * @return {@code true} if the filtered object should be included in the test plan
+	 */
+	public boolean included() {
+		return included;
 	}
 
-	public boolean isDeclined() {
-		return !isAccepted();
+	/**
+	 * @return {@code true} if the filtered object should be excluded from the test plan
+	 */
+	public boolean excluded() {
+		return !included();
 	}
 
 	public Optional<String> getReason() {
@@ -86,7 +92,7 @@ public class FilterResult {
 	public String toString() {
 		// @formatter:off
         return new ToStringBuilder(this)
-                .append("accepted", this.accepted)
+                .append("included", this.included)
                 .append("reason", this.reason)
                 .toString();
         // @formatter:on

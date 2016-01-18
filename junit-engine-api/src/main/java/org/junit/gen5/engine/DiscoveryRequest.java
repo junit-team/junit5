@@ -93,7 +93,7 @@ public final class DiscoveryRequest {
 		// @formatter:off
 		return this.getPostDiscoveryFilters().stream()
 				.map(filter -> filter.filter(testDescriptor))
-				.allMatch(FilterResult::isAccepted);
+				.allMatch(FilterResult::included);
 		// @formatter:on
 	}
 
