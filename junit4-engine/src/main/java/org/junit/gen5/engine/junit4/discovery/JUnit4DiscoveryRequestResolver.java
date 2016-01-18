@@ -15,10 +15,10 @@ import static java.util.Arrays.asList;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.gen5.engine.ClassFilter;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.FilterResult;
+import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.support.discovery.EngineDescriptor;
 
 public class JUnit4DiscoveryRequestResolver {

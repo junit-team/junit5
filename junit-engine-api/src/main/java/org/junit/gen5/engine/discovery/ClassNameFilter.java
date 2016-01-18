@@ -8,15 +8,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.discovery;
 
 import static org.junit.gen5.engine.FilterResult.excluded;
 import static org.junit.gen5.engine.FilterResult.included;
 
 import java.util.regex.Pattern;
 
-import org.junit.gen5.engine.ClassFilter;
 import org.junit.gen5.engine.FilterResult;
+import org.junit.gen5.engine.discovery.ClassFilter;
 
 /**
  * @since 5.0

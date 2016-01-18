@@ -8,19 +8,25 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.launcher;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertNotNull;
-import static org.junit.gen5.engine.NameBasedSelector.forName;
-import static org.junit.gen5.engine.UniqueIdSelector.forUniqueId;
+import static org.junit.gen5.engine.discovery.NameBasedSelector.forName;
+import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.DiscoverySelector;
+import org.junit.gen5.engine.EngineDiscoveryRequest;
+import org.junit.gen5.engine.discovery.ClassSelector;
+import org.junit.gen5.engine.discovery.MethodSelector;
+import org.junit.gen5.engine.discovery.PackageSelector;
+import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.launcher.DiscoveryRequest;
 
 /**

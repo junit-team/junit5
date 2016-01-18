@@ -11,8 +11,8 @@
 package org.junit.gen5.console.tasks;
 
 import static java.util.stream.Collectors.toSet;
-import static org.junit.gen5.engine.ClasspathSelector.forPaths;
-import static org.junit.gen5.engine.NameBasedSelector.forNames;
+import static org.junit.gen5.engine.discovery.ClasspathSelector.forPaths;
+import static org.junit.gen5.engine.discovery.NameBasedSelector.forNames;
 import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import java.io.File;
@@ -21,7 +21,7 @@ import java.util.Set;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
-import org.junit.gen5.engine.ClassFilter;
+import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.launcher.DiscoveryRequest;
 import org.junit.gen5.launcher.TagFilter;
 

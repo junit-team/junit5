@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit4.discovery;
 
 import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackage;
 
-import org.junit.gen5.engine.PackageSelector;
+import org.junit.gen5.engine.discovery.PackageSelector;
 
 class PackageNameSelectorResolver extends DiscoverySelectorResolver<PackageSelector> {
 

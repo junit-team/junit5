@@ -8,13 +8,17 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.discovery;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Collection;
+
+import org.junit.gen5.engine.DiscoveryFilter;
+import org.junit.gen5.engine.EngineDiscoveryRequest;
+import org.junit.gen5.engine.FilterResult;
 
 /**
  * A collection of common builders for {@link EngineDiscoveryRequest} elements.

@@ -8,14 +8,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.launcher;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.engine.ClassSelector.forClass;
-import static org.junit.gen5.engine.ClassSelector.forClassName;
-import static org.junit.gen5.engine.PackageSelector.forPackageName;
-import static org.junit.gen5.engine.UniqueIdSelector.forUniqueId;
+import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.ClassSelector.forClassName;
+import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
+import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
+import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import java.io.File;
@@ -24,9 +25,14 @@ import java.util.List;
 
 import org.assertj.core.util.Files;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.engine.discovery.ClassSelector;
+import org.junit.gen5.engine.discovery.ClasspathSelector;
+import org.junit.gen5.engine.discovery.MethodSelector;
+import org.junit.gen5.engine.discovery.PackageSelector;
+import org.junit.gen5.engine.discovery.UniqueIdSelector;
 
 public class DiscoveryRequestBuilderTests {
+
 	@Test
 	public void packagesAreStoredInDiscoveryRequest() throws Exception {
 		// @formatter:off
@@ -46,7 +52,7 @@ public class DiscoveryRequestBuilderTests {
 		// @formatter:off
         DiscoveryRequest discoveryRequest = request()
 				.select(
-						forClassName("org.junit.gen5.engine.DiscoveryRequestBuilderTests"),
+						forClassName(DiscoveryRequestBuilderTests.class.getName()),
 						forClass(SampleTestClass.class)
 				)
             .build();
@@ -64,9 +70,8 @@ public class DiscoveryRequestBuilderTests {
 
 		// @formatter:off
         DiscoveryRequest discoveryRequest = request()
-				.select(
-						MethodSelector.forMethod("org.junit.gen5.engine.DiscoveryRequestBuilderTests$SampleTestClass", "test")
-				).build();
+				.select(forMethod(SampleTestClass.class.getName(), "test"))
+				.build();
         // @formatter:on
 
 		List<MethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
@@ -150,6 +155,7 @@ public class DiscoveryRequestBuilderTests {
 	}
 
 	private static class SampleTestClass {
+
 		@Test
 		public void test() {
 		}

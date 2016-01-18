@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit4.discovery;
 
 import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 
-import org.junit.gen5.engine.ClasspathSelector;
+import org.junit.gen5.engine.discovery.ClasspathSelector;
 
 class ClasspathSelectorResolver extends DiscoverySelectorResolver<ClasspathSelector> {
 

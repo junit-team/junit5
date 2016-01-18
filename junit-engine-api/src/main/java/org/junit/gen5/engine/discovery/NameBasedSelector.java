@@ -8,18 +8,19 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.discovery;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.engine.ClassSelector.forClass;
-import static org.junit.gen5.engine.MethodSelector.forMethod;
-import static org.junit.gen5.engine.PackageSelector.forPackageName;
+import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
+import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 
 import java.lang.reflect.Method;
 import java.util.*;
 
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.engine.DiscoverySelector;
 
 /**
  * @since 5.0

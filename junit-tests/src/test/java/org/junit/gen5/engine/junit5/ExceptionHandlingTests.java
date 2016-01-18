@@ -13,8 +13,8 @@ package org.junit.gen5.engine.junit5;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.ExecutionEventConditions.*;
-import static org.junit.gen5.engine.MethodSelector.forMethod;
 import static org.junit.gen5.engine.TestExecutionResultConditions.*;
+import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ import java.util.Optional;
 
 import org.junit.gen5.api.*;
 import org.junit.gen5.engine.ExecutionEventRecorder;
-import org.junit.gen5.engine.MethodSelector;
+import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.launcher.DiscoveryRequest;
 import org.opentest4j.AssertionFailedError;
 

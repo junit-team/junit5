@@ -8,7 +8,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.discovery;
+
+import org.junit.gen5.engine.DiscoveryFilter;
 
 public interface ClassFilter extends DiscoveryFilter<Class<?>> {
 	static ClassFilter byNamePattern(String pattern) {

@@ -19,6 +19,10 @@ import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.discovery.ClassSelector;
+import org.junit.gen5.engine.discovery.MethodSelector;
+import org.junit.gen5.engine.discovery.PackageSelector;
+import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 
 public class DiscoverySelectorTests {

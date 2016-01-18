@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.discovery;
 
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.ReflectionUtils;
