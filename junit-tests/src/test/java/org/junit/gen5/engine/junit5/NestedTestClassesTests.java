@@ -17,7 +17,7 @@ import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.*;
 import org.junit.gen5.engine.ExecutionEventRecorder;
-import org.junit.gen5.engine.support.discovery.EngineDescriptor;
+import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.launcher.DiscoveryRequest;
 
 /**

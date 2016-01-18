@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
+import org.junit.gen5.engine.support.descriptor.JavaSource;
 
 class JavaSourceTests {
 

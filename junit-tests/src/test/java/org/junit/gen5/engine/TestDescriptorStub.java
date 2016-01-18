@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine;
 
-import org.junit.gen5.engine.support.discovery.AbstractTestDescriptor;
+import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 
 final class TestDescriptorStub extends AbstractTestDescriptor {
 

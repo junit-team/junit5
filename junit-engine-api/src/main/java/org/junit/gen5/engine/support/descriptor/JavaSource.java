@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.support.discovery;
+package org.junit.gen5.engine.support.descriptor;
 
 import static org.junit.gen5.commons.util.StringUtils.nullSafeToString;
 

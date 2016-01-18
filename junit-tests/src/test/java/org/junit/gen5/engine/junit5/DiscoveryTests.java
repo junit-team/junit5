@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.discovery.MethodSelector;
-import org.junit.gen5.engine.support.discovery.EngineDescriptor;
+import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.launcher.DiscoveryRequest;
 
 /**

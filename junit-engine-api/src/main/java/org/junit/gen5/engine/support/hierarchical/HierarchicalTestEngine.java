@@ -10,7 +10,6 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
-import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestEngine;
 

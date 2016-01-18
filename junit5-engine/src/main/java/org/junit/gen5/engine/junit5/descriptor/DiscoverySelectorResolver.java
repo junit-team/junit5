@@ -24,7 +24,7 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.discovery.IsNestedTestClass;
 import org.junit.gen5.engine.junit5.discovery.IsScannableTestClass;
 import org.junit.gen5.engine.junit5.discovery.IsTestMethod;
-import org.junit.gen5.engine.support.discovery.AbstractTestDescriptor;
+import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 
 /**
  * @since 5.0

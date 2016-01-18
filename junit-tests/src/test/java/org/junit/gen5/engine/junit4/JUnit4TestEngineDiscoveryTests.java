@@ -55,7 +55,7 @@ import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingle
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods;
 import org.junit.gen5.engine.junit4.samples.junit4.SingleFailingTheoryTestCase;
 import org.junit.gen5.engine.junit4.samples.junit4.TestCaseRunWithJUnit5;
-import org.junit.gen5.engine.support.discovery.JavaSource;
+import org.junit.gen5.engine.support.descriptor.JavaSource;
 import org.junit.gen5.launcher.DiscoveryRequest;
 import org.junit.runner.manipulation.Filter;
 

@@ -24,11 +24,10 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestExecutionResult;
-import org.junit.gen5.engine.support.discovery.AbstractTestDescriptor;
+import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mockito;

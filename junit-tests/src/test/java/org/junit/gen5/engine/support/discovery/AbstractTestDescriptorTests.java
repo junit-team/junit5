@@ -25,6 +25,8 @@ import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
+import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
 public class AbstractTestDescriptorTests {
 

@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
-import org.junit.gen5.engine.support.discovery.AbstractTestDescriptor;
+import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.gen5.engine.support.hierarchical.Leaf;
 
 class DummyTestDescriptor extends AbstractTestDescriptor implements Leaf<DummyEngineExecutionContext> {

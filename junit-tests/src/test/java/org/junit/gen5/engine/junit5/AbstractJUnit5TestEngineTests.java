@@ -15,7 +15,7 @@ import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.engine.*;
-import org.junit.gen5.engine.support.discovery.EngineDescriptor;
+import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.launcher.DiscoveryRequest;
 
 /**

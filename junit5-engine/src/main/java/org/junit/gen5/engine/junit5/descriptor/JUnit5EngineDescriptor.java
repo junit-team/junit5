@@ -13,7 +13,7 @@ package org.junit.gen5.engine.junit5.descriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
-import org.junit.gen5.engine.support.discovery.EngineDescriptor;
+import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.engine.support.hierarchical.Container;
 
 public class JUnit5EngineDescriptor extends EngineDescriptor implements Container<JUnit5EngineExecutionContext> {

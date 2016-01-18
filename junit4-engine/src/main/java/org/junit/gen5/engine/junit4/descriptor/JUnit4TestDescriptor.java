@@ -23,7 +23,7 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.TestTag;
-import org.junit.gen5.engine.support.discovery.AbstractTestDescriptor;
+import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.runner.Description;
 
 /**

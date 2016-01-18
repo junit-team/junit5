@@ -12,7 +12,6 @@ package org.junit.gen5.engine.support.hierarchical;
 
 import static org.junit.gen5.engine.support.hierarchical.BlacklistedExceptions.rethrowIfBlacklisted;
 
-import org.junit.gen5.engine.EngineExecutionContext;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;

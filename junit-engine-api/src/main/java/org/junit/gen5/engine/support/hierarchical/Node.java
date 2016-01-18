@@ -12,8 +12,6 @@ package org.junit.gen5.engine.support.hierarchical;
 
 import java.util.Optional;
 
-import org.junit.gen5.engine.EngineExecutionContext;
-
 public interface Node<C extends EngineExecutionContext> {
 
 	default C prepare(C context) throws Exception {

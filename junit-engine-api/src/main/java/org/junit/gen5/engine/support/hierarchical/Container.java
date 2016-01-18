@@ -10,8 +10,6 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
-import org.junit.gen5.engine.EngineExecutionContext;
-
 public interface Container<C extends EngineExecutionContext> extends Node<C> {
 
 	default C beforeAll(C context) throws Exception {

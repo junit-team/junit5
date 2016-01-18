@@ -22,7 +22,8 @@ import java.io.File;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.PreconditionViolationException;
-import org.junit.gen5.engine.support.discovery.FileSystemSource.FilePosition;
+import org.junit.gen5.engine.support.descriptor.FileSystemSource;
+import org.junit.gen5.engine.support.descriptor.FileSystemSource.FilePosition;
 
 class FileSystemSourceTests {
 

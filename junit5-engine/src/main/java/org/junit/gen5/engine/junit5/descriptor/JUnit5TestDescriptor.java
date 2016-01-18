@@ -30,7 +30,7 @@ import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
-import org.junit.gen5.engine.support.discovery.AbstractTestDescriptor;
+import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 
 /**
  * @since 5.0
