@@ -25,7 +25,7 @@ import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
  */
 public class NestedClassTestDescriptor extends ClassTestDescriptor {
 
-	NestedClassTestDescriptor(String uniqueId, Class<?> testClass) {
+	public NestedClassTestDescriptor(String uniqueId, Class<?> testClass) {
 		super(uniqueId, testClass);
 	}
 

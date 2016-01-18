@@ -10,15 +10,10 @@
 
 package org.junit.gen5.engine.junit5;
 
-import java.util.List;
-
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
-import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.discovery.ClassFilter;
-import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.DiscoverySelectorResolver;
 import org.junit.gen5.engine.junit5.descriptor.JUnit5EngineDescriptor;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
@@ -51,25 +46,7 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 
 	private void applyDiscoveryFilters(EngineDiscoveryRequest discoveryRequest,
 			JUnit5EngineDescriptor engineDescriptor) {
-		List<ClassFilter> classFilters = discoveryRequest.getDiscoveryFiltersByType(ClassFilter.class);
-		if (classFilters.isEmpty()) {
-			return;
-		}
-
-		TestDescriptor.Visitor filteringVisitor = (descriptor, remove) -> {
-			if (descriptor instanceof ClassTestDescriptor) {
-				Class<?> testClass = ((ClassTestDescriptor) descriptor).getTestClass();
-
-				// @formatter:off
-				if (classFilters.stream()
-						.map(filter -> filter.filter(testClass))
-						.anyMatch(FilterResult::excluded)) {
-					remove.run();
-				}
-				// @formatter:on
-			}
-		};
-		engineDescriptor.accept(filteringVisitor);
+		new DiscoveryFilterApplier().apply(discoveryRequest, engineDescriptor);
 	}
 
 	@Override
