@@ -20,9 +20,9 @@ import java.util.function.Supplier;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.launcher.DiscoveryRequest;
-import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.listeners.SummaryGeneratingListener;
 import org.junit.gen5.launcher.listeners.TestExecutionSummary;
+import org.junit.gen5.launcher.main.Launcher;
 
 /**
  * @since 5.0

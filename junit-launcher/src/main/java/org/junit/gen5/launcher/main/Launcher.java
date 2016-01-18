@@ -8,12 +8,18 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.launcher;
+package org.junit.gen5.launcher.main;
 
-import java.util.Map;
 import java.util.logging.Logger;
 
-import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.ExecutionRequest;
+import org.junit.gen5.engine.FilterResult;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.launcher.TestExecutionListener;
+import org.junit.gen5.launcher.TestIdentifier;
+import org.junit.gen5.launcher.TestPlan;
 
 /**
  * Facade for <em>discovering</em> and <em>executing</em> tests using
@@ -84,7 +90,7 @@ public class Launcher {
 	 *         {@linkplain TestIdentifier identifiers} from all registered engines
 	 */
 	public TestPlan discover(DiscoveryRequest discoveryRequest) {
-		return TestPlan.from(discoverRoot(discoveryRequest, "discovery"));
+		return TestPlan.from(discoverRoot(discoveryRequest, "discovery").getEngineDescriptors());
 	}
 
 	/**
@@ -121,7 +127,7 @@ public class Launcher {
 	}
 
 	private void execute(Root root) {
-		TestPlan testPlan = TestPlan.from(root);
+		TestPlan testPlan = TestPlan.from(root.getEngineDescriptors());
 		TestExecutionListener testExecutionListener = testExecutionListenerRegistry.getCompositeTestExecutionListener();
 		testExecutionListener.testPlanExecutionStarted(testPlan);
 		ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(testPlan,
@@ -131,47 +137,5 @@ public class Launcher {
 			testEngine.execute(new ExecutionRequest(testDescriptor, engineExecutionListener));
 		}
 		testExecutionListener.testPlanExecutionFinished(testPlan);
-	}
-
-	static class ExecutionListenerAdapter implements EngineExecutionListener {
-
-		private final TestPlan testPlan;
-		private final TestExecutionListener testExecutionListener;
-
-		public ExecutionListenerAdapter(TestPlan testPlan, TestExecutionListener testExecutionListener) {
-			this.testPlan = testPlan;
-			this.testExecutionListener = testExecutionListener;
-		}
-
-		@Override
-		public void reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry) {
-			testExecutionListener.reportingEntryPublished(getTestIdentifier(testDescriptor), entry);
-		}
-
-		@Override
-		public void dynamicTestRegistered(TestDescriptor testDescriptor) {
-			TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
-			testPlan.add(testIdentifier);
-			testExecutionListener.dynamicTestRegistered(testIdentifier);
-		}
-
-		@Override
-		public void executionStarted(TestDescriptor testDescriptor) {
-			testExecutionListener.executionStarted(getTestIdentifier(testDescriptor));
-		}
-
-		@Override
-		public void executionSkipped(TestDescriptor testDescriptor, String reason) {
-			testExecutionListener.executionSkipped(getTestIdentifier(testDescriptor), reason);
-		}
-
-		@Override
-		public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
-			testExecutionListener.executionFinished(getTestIdentifier(testDescriptor), testExecutionResult);
-		}
-
-		private TestIdentifier getTestIdentifier(TestDescriptor testDescriptor) {
-			return testPlan.getTestIdentifier(new TestId(testDescriptor.getUniqueId()));
-		}
 	}
 }

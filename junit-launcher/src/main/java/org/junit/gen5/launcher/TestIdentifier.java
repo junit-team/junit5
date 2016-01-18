@@ -40,7 +40,7 @@ public final class TestIdentifier implements Serializable {
 	private final boolean container;
 	private final TestId parentId;
 
-	static TestIdentifier from(TestDescriptor testDescriptor) {
+	public static TestIdentifier from(TestDescriptor testDescriptor) {
 		// TODO Use Flyweight Pattern for TestId?
 		TestId uniqueId = new TestId(testDescriptor.getUniqueId());
 		String displayName = testDescriptor.getDisplayName();

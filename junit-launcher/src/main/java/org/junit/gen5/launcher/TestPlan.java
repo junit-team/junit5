@@ -13,16 +13,12 @@ package org.junit.gen5.launcher;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestDescriptor.Visitor;
+import org.junit.gen5.launcher.main.Launcher;
 
 /**
  * Describes the tree of tests and containers as discovered by a
@@ -50,19 +46,16 @@ public final class TestPlan {
 	private final Map<TestId, LinkedHashSet<TestIdentifier>> children = new LinkedHashMap<>();
 	private final Map<TestId, TestIdentifier> allIdentifiers = new LinkedHashMap<>();
 
-	static TestPlan from(Root root) {
+	public static TestPlan from(Collection<TestDescriptor> engineDescriptors) {
 		TestPlan testPlan = new TestPlan();
-		root.accept(new Visitor() {
-
-			@Override
-			public void visit(TestDescriptor descriptor, Runnable remove) {
-				testPlan.add(TestIdentifier.from(descriptor));
-			}
-		});
+		// @formatter:off
+		engineDescriptors.stream().forEach(testEngine -> testEngine.accept(
+				(descriptor, remove) -> testPlan.add(TestIdentifier.from(descriptor))));
+		// @formatter:on
 		return testPlan;
 	}
 
-	void add(TestIdentifier testIdentifier) {
+	public void add(TestIdentifier testIdentifier) {
 		allIdentifiers.put(testIdentifier.getUniqueId(), testIdentifier);
 		if (testIdentifier.getParentId().isPresent()) {
 			TestId parentId = testIdentifier.getParentId().get();

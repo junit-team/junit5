@@ -25,7 +25,7 @@ public final class TestId implements Serializable {
 
 	private final String uniqueId;
 
-	TestId(String uniqueId) {
+	public TestId(String uniqueId) {
 		this.uniqueId = Preconditions.notBlank(uniqueId, "uniqueId must not be null or empty");
 	}
 

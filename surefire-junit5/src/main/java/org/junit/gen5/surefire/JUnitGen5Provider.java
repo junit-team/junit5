@@ -27,7 +27,7 @@ import org.apache.maven.surefire.suite.RunResult;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.TestsToRun;
 import org.junit.gen5.launcher.DiscoveryRequest;
-import org.junit.gen5.launcher.Launcher;
+import org.junit.gen5.launcher.main.Launcher;
 
 public class JUnitGen5Provider extends AbstractProvider {
 

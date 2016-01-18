@@ -15,9 +15,9 @@ import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import org.apache.maven.surefire.util.ScannerFilter;
 import org.junit.gen5.launcher.DiscoveryRequest;
-import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
+import org.junit.gen5.launcher.main.Launcher;
 
 final class TestPlanScannerFilter implements ScannerFilter {
 

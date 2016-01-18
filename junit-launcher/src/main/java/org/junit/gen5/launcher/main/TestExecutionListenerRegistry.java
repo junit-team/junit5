@@ -8,13 +8,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.launcher;
+package org.junit.gen5.launcher.main;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
 import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.launcher.TestExecutionListener;
+import org.junit.gen5.launcher.TestIdentifier;
+import org.junit.gen5.launcher.TestPlan;
 
 /**
  * @since 5.0

@@ -13,7 +13,7 @@ package org.junit.gen5.console.tasks;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.launcher.LauncherFactory.createLauncher;
+import static org.junit.gen5.launcher.main.LauncherFactory.createLauncher;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
