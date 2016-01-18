@@ -19,6 +19,7 @@ import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 
 public class DiscoverySelectorTests {
 	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(

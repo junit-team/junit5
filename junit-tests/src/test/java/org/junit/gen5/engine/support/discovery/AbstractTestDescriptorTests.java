@@ -8,9 +8,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.support.discovery;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.DiscoveryRequest;
+import org.junit.gen5.engine.EngineAwareTestDescriptor;
+import org.junit.gen5.engine.ExecutionRequest;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 
 public class AbstractTestDescriptorTests {
 

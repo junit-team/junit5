@@ -8,7 +8,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.support.hierarchical;
+
+import org.junit.gen5.engine.EngineExecutionContext;
+import org.junit.gen5.engine.ExecutionRequest;
+import org.junit.gen5.engine.TestEngine;
 
 /**
  * Abstract superclass of all TestEngine implementations that are willing to use the {@linkplain Container} and

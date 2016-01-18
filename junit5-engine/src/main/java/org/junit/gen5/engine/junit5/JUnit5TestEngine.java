@@ -18,6 +18,7 @@ import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.DiscoverySelectorResolver;
 import org.junit.gen5.engine.junit5.descriptor.JUnit5EngineDescriptor;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
+import org.junit.gen5.engine.support.hierarchical.HierarchicalTestEngine;
 
 public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecutionContext> {
 

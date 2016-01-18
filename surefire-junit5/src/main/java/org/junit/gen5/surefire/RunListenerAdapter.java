@@ -19,8 +19,8 @@ import org.apache.maven.surefire.report.PojoStackTraceWriter;
 import org.apache.maven.surefire.report.RunListener;
 import org.apache.maven.surefire.report.SimpleReportEntry;
 import org.apache.maven.surefire.report.StackTraceWriter;
-import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.support.discovery.JavaSource;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 

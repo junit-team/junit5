@@ -25,6 +25,7 @@ import org.assertj.core.api.Condition;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.gen5.engine.ExecutionEvent.Type;
 import org.junit.gen5.engine.TestExecutionResult.Status;
+import org.junit.gen5.engine.support.discovery.EngineDescriptor;
 
 /**
  * Collection of AssertJ conditions for {@link ExecutionEvent}.

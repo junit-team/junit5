@@ -8,7 +8,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.support.discovery;
+
+import org.junit.gen5.engine.EngineAwareTestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 
 /**
  * @since 5.0

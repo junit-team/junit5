@@ -22,8 +22,8 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.DiscoveryRequest;
-import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.MethodSelector;
+import org.junit.gen5.engine.support.discovery.EngineDescriptor;
 
 /**
  * Test correct test discovery in simple test classes for the {@link JUnit5TestEngine}.

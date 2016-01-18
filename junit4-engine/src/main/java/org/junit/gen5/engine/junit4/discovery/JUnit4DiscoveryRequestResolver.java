@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.support.discovery.EngineDescriptor;
 
 public class JUnit4DiscoveryRequestResolver {
 

@@ -8,8 +8,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.support.hierarchical;
 
-public interface Leaf<C extends EngineExecutionContext> extends Node<C> {
-	C execute(C context) throws Exception;
+import org.junit.gen5.engine.EngineExecutionContext;
+
+class DummyEngineExecutionContext implements EngineExecutionContext {
 }

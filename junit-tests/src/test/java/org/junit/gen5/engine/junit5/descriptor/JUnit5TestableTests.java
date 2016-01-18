@@ -16,8 +16,8 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.DummyTestEngine;
-import org.junit.gen5.engine.EngineDescriptor;
+import org.junit.gen5.engine.support.discovery.EngineDescriptor;
+import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 
 public class JUnit5TestableTests {
 

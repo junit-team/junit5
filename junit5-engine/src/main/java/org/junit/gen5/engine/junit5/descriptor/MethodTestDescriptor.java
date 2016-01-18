@@ -24,8 +24,6 @@ import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
-import org.junit.gen5.engine.JavaSource;
-import org.junit.gen5.engine.Leaf;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.execution.ConditionEvaluator;
@@ -33,6 +31,8 @@ import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.RegisteredExtensionPoint;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
+import org.junit.gen5.engine.support.discovery.JavaSource;
+import org.junit.gen5.engine.support.hierarchical.Leaf;
 
 /**
  * {@link TestDescriptor} for tests based on Java methods.

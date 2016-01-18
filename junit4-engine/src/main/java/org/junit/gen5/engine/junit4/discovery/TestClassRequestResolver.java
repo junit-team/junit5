@@ -22,9 +22,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.IntFunction;
 
-import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
+import org.junit.gen5.engine.support.discovery.EngineDescriptor;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;

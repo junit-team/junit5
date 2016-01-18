@@ -33,7 +33,7 @@ import org.junit.gen5.engine.junit5.extension.TestReporterParameterResolver;
 /**
  * A {@code TestExtensionRegistry} holds all registered extensions (i.e.
  * instances of {@link ExtensionPoint}) for a given
- * {@link org.junit.gen5.engine.Container} or {@link org.junit.gen5.engine.Leaf}.
+ * {@link org.junit.gen5.engine.support.hierarchical.Container} or {@link org.junit.gen5.engine.support.hierarchical.Leaf}.
  *
  * <p>A registry has a reference to its parent registry, and all lookups are
  * performed first in the current registry itself and then in its parent and

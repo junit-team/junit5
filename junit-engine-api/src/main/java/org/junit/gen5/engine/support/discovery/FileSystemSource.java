@@ -8,13 +8,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.support.discovery;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.Optional;
 
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.engine.TestSource;
 
 public class FileSystemSource implements TestSource {
 

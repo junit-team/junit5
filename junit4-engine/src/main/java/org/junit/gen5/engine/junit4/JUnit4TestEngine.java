@@ -17,6 +17,7 @@ import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.gen5.engine.junit4.discovery.JUnit4DiscoveryRequestResolver;
 import org.junit.gen5.engine.junit4.execution.RunnerExecutor;
+import org.junit.gen5.engine.support.discovery.EngineDescriptor;
 
 public class JUnit4TestEngine implements TestEngine {
 

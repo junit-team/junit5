@@ -12,8 +12,8 @@ package org.junit.gen5.engine.junit4.descriptor;
 
 import java.util.Optional;
 
-import org.junit.gen5.engine.JavaSource;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.support.discovery.JavaSource;
 import org.junit.runner.Request;
 import org.junit.runner.Runner;
 

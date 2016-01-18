@@ -28,9 +28,9 @@ import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.Extension;
 import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.StringUtils;
-import org.junit.gen5.engine.AbstractTestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
+import org.junit.gen5.engine.support.discovery.AbstractTestDescriptor;
 
 /**
  * @since 5.0

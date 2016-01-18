@@ -17,8 +17,8 @@ import static org.junit.gen5.engine.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.LauncherFactory.createLauncher;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.DummyTestEngine;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 
 public class LauncherTests {
 

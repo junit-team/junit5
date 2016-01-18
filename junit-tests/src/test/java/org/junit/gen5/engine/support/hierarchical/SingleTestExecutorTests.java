@@ -8,14 +8,18 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.support.hierarchical;
 
-import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.engine.TestExecutionResult.Status.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertSame;
+import static org.junit.gen5.engine.TestExecutionResult.Status.ABORTED;
+import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
+import static org.junit.gen5.engine.TestExecutionResult.Status.SUCCESSFUL;
 
 import java.util.Optional;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.TestExecutionResult;
 import org.opentest4j.TestAbortedException;
 
 public class SingleTestExecutorTests {

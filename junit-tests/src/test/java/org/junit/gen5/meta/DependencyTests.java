@@ -10,7 +10,8 @@
 
 package org.junit.gen5.meta;
 
-import static de.schauderhaft.degraph.check.JCheck.*;
+import static de.schauderhaft.degraph.check.JCheck.classpath;
+import static de.schauderhaft.degraph.check.JCheck.violationFree;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -18,6 +19,8 @@ import de.schauderhaft.degraph.configuration.NamedPattern;
 
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.runner.RunWith;
 
 /**
  * Checks against dependency cycles on package and module level.
@@ -26,6 +29,7 @@ import org.junit.gen5.api.Test;
  * so "org.junit.gen5.console.ConsoleRunner" belongs to the module "console".
  */
 @Tag("slow")
+@RunWith(JUnit5.class)
 public class DependencyTests {
 
 	@Test
@@ -37,7 +41,13 @@ public class DependencyTests {
 			classpath()
 				.printTo("dependencies.graphml")
 				.including("org.junit.gen5.**")
+
+				// TODO Move DependencyTests to separate module and remove the following exclusions
 				.excluding("**Tests")
+				.excluding("**Stub")
+				.excluding("**Dummy**")
+				.excluding("**ExecutionEventConditions")
+
 				.withSlicing("module",
 					new NamedPattern("org.junit.gen5.engine.junit4.**", "junit4-engine"),
 					new NamedPattern("org.junit.gen5.engine.junit5.**", "junit5-engine"),

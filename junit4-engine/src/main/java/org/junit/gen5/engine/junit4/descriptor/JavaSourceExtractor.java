@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.gen5.engine.JavaSource;
+import org.junit.gen5.engine.support.discovery.JavaSource;
 import org.junit.runner.Description;
 
 class JavaSourceExtractor {

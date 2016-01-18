@@ -8,13 +8,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.support.hierarchical;
 
-import static org.junit.gen5.engine.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.gen5.engine.TestExecutionResult.aborted;
 import static org.junit.gen5.engine.TestExecutionResult.failed;
 import static org.junit.gen5.engine.TestExecutionResult.successful;
+import static org.junit.gen5.engine.support.hierarchical.BlacklistedExceptions.rethrowIfBlacklisted;
 
+import org.junit.gen5.engine.TestExecutionResult;
 import org.opentest4j.TestAbortedException;
 
 /**

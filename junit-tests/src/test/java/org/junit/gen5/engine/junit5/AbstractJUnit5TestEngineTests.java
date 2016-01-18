@@ -15,6 +15,7 @@ import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.support.discovery.EngineDescriptor;
 
 /**
  * Abstract base class for tests involving the {@link JUnit5TestEngine}.

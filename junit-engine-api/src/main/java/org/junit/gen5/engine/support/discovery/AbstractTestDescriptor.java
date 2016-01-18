@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.support.discovery;
 
 import static java.util.Collections.emptySet;
 
@@ -20,6 +20,9 @@ import java.util.Set;
 
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestSource;
+import org.junit.gen5.engine.TestTag;
 
 /**
  * @since 5.0

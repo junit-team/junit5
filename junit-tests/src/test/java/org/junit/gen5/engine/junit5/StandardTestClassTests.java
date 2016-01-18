@@ -18,8 +18,8 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.DiscoveryRequest;
-import org.junit.gen5.engine.EngineDescriptor;
 import org.junit.gen5.engine.ExecutionEventRecorder;
+import org.junit.gen5.engine.support.discovery.EngineDescriptor;
 import org.opentest4j.TestAbortedException;
 
 /**

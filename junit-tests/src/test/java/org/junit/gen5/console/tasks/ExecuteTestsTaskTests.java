@@ -21,7 +21,7 @@ import java.io.StringWriter;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
-import org.junit.gen5.engine.DummyTestEngine;
+import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 
 public class ExecuteTestsTaskTests {
 
