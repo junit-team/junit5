@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
@@ -33,10 +34,6 @@ class ExtensionValuesStore {
 		this.parentStore = parentStore;
 	}
 
-	public Object get(Object key) {
-		return get(key, Namespace.DEFAULT);
-	}
-
 	public Object get(Object key, Namespace namespace) {
 		StoredValue storedValue = getStoredValue(key, namespace);
 		if (storedValue != null)
@@ -52,10 +49,6 @@ class ExtensionValuesStore {
 		return storedValues.get(composedKey);
 	}
 
-	public void put(Object key, Object value) {
-		put(key, value, Namespace.DEFAULT);
-	}
-
 	public void put(Object key, Object value, Namespace namespace) {
 		Preconditions.notNull(key, "A key must not be null");
 		Preconditions.notNull(namespace, "A namespace must not be null");
@@ -68,10 +61,6 @@ class ExtensionValuesStore {
 		storedValues.put(composedKey, storedValue);
 	}
 
-	public Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator) {
-		return getOrComputeIfAbsent(key, defaultCreator, Namespace.DEFAULT);
-	}
-
 	public Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator, Namespace namespace) {
 		StoredValue storedValue = getStoredValue(key, namespace);
 		if (storedValue == null) {
@@ -79,10 +68,6 @@ class ExtensionValuesStore {
 			putStoredValue(key, namespace, storedValue);
 		}
 		return storedValue.value;
-	}
-
-	public Object remove(Object key) {
-		return remove(key, Namespace.DEFAULT);
 	}
 
 	public Object remove(Object key, Namespace namespace) {
@@ -123,38 +108,6 @@ class ExtensionValuesStore {
 
 		private StoredValue(Object value) {
 			this.value = value;
-		}
-	}
-
-	public static class Namespace {
-
-		public static Namespace DEFAULT = Namespace.sharedWith(new Object());
-
-		public static Namespace sharedWith(Object local) {
-			Preconditions.notNull(local, "A local must not be null");
-
-			return new Namespace(local);
-		}
-
-		private final Object local;
-
-		private Namespace(Object local) {
-			this.local = local;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o)
-				return true;
-			if (o == null || getClass() != o.getClass())
-				return false;
-			Namespace namespace = (Namespace) o;
-			return local != null ? local.equals(namespace.local) : namespace.local == null;
-		}
-
-		@Override
-		public int hashCode() {
-			return local != null ? local.hashCode() : 0;
 		}
 	}
 

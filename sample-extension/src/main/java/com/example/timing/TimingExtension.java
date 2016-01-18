@@ -16,6 +16,8 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.TestExtensionContext;
@@ -35,17 +37,19 @@ public class TimingExtension implements ExtensionRegistrar {
 
 	private static class TestMethodInvocationWrapper implements BeforeEachExtensionPoint, AfterEachExtensionPoint {
 
-		private final String namespace = getClass().getName();
+		private final Namespace namespace = Namespace.of(getClass());
 
 		@Override
 		public void beforeEach(TestExtensionContext context) throws Exception {
-			context.put(context.getTestMethod(), System.currentTimeMillis(), namespace);
+			ExtensionContext.Store times = context.getStore(namespace);
+			times.put(context.getTestMethod(), System.currentTimeMillis());
 		}
 
 		@Override
 		public void afterEach(TestExtensionContext context) throws Exception {
+			ExtensionContext.Store times = context.getStore(namespace);
 			Method testMethod = context.getTestMethod();
-			long start = (long) context.remove(testMethod, namespace);
+			long start = (long) times.remove(testMethod);
 			long duration = System.currentTimeMillis() - start;
 
 			System.out.println(String.format("Method [%s] took %s ms.", testMethod, duration));

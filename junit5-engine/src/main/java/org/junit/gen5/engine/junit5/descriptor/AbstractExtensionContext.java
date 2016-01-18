@@ -13,19 +13,17 @@ package org.junit.gen5.engine.junit5.descriptor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.ExtensionValuesStore.Namespace;
 
 abstract class AbstractExtensionContext implements ExtensionContext {
 
 	private final Map<String, Object> attributes = new HashMap<>();
 
 	//Will replace attributes if done
-	private final ExtensionValuesStore store;
+	private final ExtensionValuesStore valuesStore;
 
 	private final ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
@@ -36,13 +34,13 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 		this.parent = parent;
 		this.engineExecutionListener = engineExecutionListener;
 		this.testDescriptor = testDescriptor;
-		this.store = createStore(parent);
+		this.valuesStore = createStore(parent);
 	}
 
 	private final ExtensionValuesStore createStore(ExtensionContext parent) {
 		ExtensionValuesStore parentStore = null;
 		if (parent != null) {
-			parentStore = ((AbstractExtensionContext) parent).store;
+			parentStore = ((AbstractExtensionContext) parent).valuesStore;
 		}
 		return new ExtensionValuesStore(parentStore);
 	}
@@ -79,48 +77,8 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 		return testDescriptor;
 	}
 
-	//Storing methods. All delegate to the store.
-	//TODO: Remove duplication between these methods and ExtensionValuesStore
-	//      as soon as we have a decision if methods should be exposed on store object instead of via delegation
-
 	@Override
-	public Object get(Object key) {
-		return store.get(key);
+	public Store getStore(Namespace namespace) {
+		return new NamespacedStore(valuesStore, namespace);
 	}
-
-	@Override
-	public void put(Object key, Object value) {
-		store.put(key, value);
-	}
-
-	@Override
-	public Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator) {
-		return store.getOrComputeIfAbsent(key, defaultCreator);
-	}
-
-	@Override
-	public Object remove(Object key) {
-		return store.remove(key);
-	}
-
-	@Override
-	public Object get(Object key, String namespace) {
-		return store.get(key, Namespace.sharedWith(namespace));
-	}
-
-	@Override
-	public void put(Object key, Object value, String namespace) {
-		store.put(key, value, Namespace.sharedWith(namespace));
-	}
-
-	@Override
-	public Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator, String namespace) {
-		return store.getOrComputeIfAbsent(key, defaultCreator, Namespace.sharedWith(namespace));
-	}
-
-	@Override
-	public Object remove(Object key, String namespace) {
-		return store.remove(key, Namespace.sharedWith(namespace));
-	}
-
 }
