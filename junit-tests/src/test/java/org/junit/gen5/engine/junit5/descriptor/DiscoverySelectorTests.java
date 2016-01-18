@@ -10,7 +10,11 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertSame;
+import static org.junit.gen5.api.Assertions.assertThrows;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +22,8 @@ import java.util.stream.Collectors;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.PreconditionViolationException;
-import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.EngineDiscoveryRequest;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
@@ -26,6 +31,7 @@ import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 
 public class DiscoverySelectorTests {
+
 	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(
 		new DummyTestEngine("ENGINE_ID"));
 	private DiscoverySelectorResolver resolver = new DiscoverySelectorResolver(engineDescriptor);
@@ -34,7 +40,7 @@ public class DiscoverySelectorTests {
 	public void testSingleClassResolution() {
 		ClassSelector selector = ClassSelector.forClass(MyTestClass.class);
 
-		resolver.resolveElement(selector);
+		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
@@ -48,8 +54,7 @@ public class DiscoverySelectorTests {
 		ClassSelector selector1 = ClassSelector.forClass(MyTestClass.class);
 		ClassSelector selector2 = ClassSelector.forClass(YourTestClass.class);
 
-		resolver.resolveElement(selector1);
-		resolver.resolveElement(selector2);
+		resolver.resolveSelectors(request().select(selector1, selector2).build());
 
 		assertEquals(6, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
@@ -66,7 +71,7 @@ public class DiscoverySelectorTests {
 	public void testClassResolutionOfNestedClass() {
 		ClassSelector selector = ClassSelector.forClass(OtherTestClass.NestedTestClass.class);
 
-		resolver.resolveElement(selector);
+		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
@@ -85,7 +90,7 @@ public class DiscoverySelectorTests {
 			MyTestClass.class.getDeclaredMethod("test1").getDeclaringClass(),
 			MyTestClass.class.getDeclaredMethod("test1"));
 
-		resolver.resolveElement(selector);
+		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
@@ -98,7 +103,7 @@ public class DiscoverySelectorTests {
 		MethodSelector selector = MethodSelector.forMethod(HerTestClass.class,
 			MyTestClass.class.getDeclaredMethod("test1"));
 
-		resolver.resolveElement(selector);
+		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
@@ -111,7 +116,8 @@ public class DiscoverySelectorTests {
 		MethodSelector selector = MethodSelector.forMethod(
 			MyTestClass.class.getDeclaredMethod("notATest").getDeclaringClass(),
 			MyTestClass.class.getDeclaredMethod("notATest"));
-		assertThrows(PreconditionViolationException.class, () -> resolver.resolveElement(selector));
+		EngineDiscoveryRequest request = request().select(selector).build();
+		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
 	}
 
 	@Test
@@ -119,7 +125,7 @@ public class DiscoverySelectorTests {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass");
 
-		resolver.resolveElement(selector);
+		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
@@ -133,7 +139,7 @@ public class DiscoverySelectorTests {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass");
 
-		resolver.resolveElement(selector);
+		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
@@ -150,7 +156,7 @@ public class DiscoverySelectorTests {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.OtherTestClass$NestedTestClass#test5()");
 
-		resolver.resolveElement(selector);
+		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
@@ -163,16 +169,18 @@ public class DiscoverySelectorTests {
 	@Test
 	public void testNonResolvableUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId("ENGINE_ID:poops-machine");
+		EngineDiscoveryRequest request = request().select(selector).build();
 
-		assertThrows(PreconditionViolationException.class, () -> resolver.resolveElement(selector));
+		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
 	}
 
 	@Test
 	public void testUniqueIdOfNotTestMethod() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#notATest()");
+		EngineDiscoveryRequest request = request().select(selector).build();
 
-		assertThrows(PreconditionViolationException.class, () -> resolver.resolveElement(selector));
+		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
 	}
 
 	@Test
@@ -180,7 +188,7 @@ public class DiscoverySelectorTests {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test1()");
 
-		resolver.resolveElement(selector);
+		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
@@ -193,7 +201,7 @@ public class DiscoverySelectorTests {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test1()");
 
-		resolver.resolveElement(selector);
+		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
@@ -208,7 +216,7 @@ public class DiscoverySelectorTests {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test7(java.lang.String)");
 
-		resolver.resolveElement(selector);
+		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
@@ -223,8 +231,9 @@ public class DiscoverySelectorTests {
 	public void testMethodResolutionByUniqueIdWithWrongParams() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.HerTestClass#test7(java.math.BigDecimal)");
+		EngineDiscoveryRequest request = request().select(selector).build();
 
-		assertThrows(PreconditionViolationException.class, () -> resolver.resolveElement(selector));
+		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
 	}
 
 	@Test
@@ -234,9 +243,8 @@ public class DiscoverySelectorTests {
 		UniqueIdSelector selector2 = UniqueIdSelector.forUniqueId(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.MyTestClass#test2()");
 
-		resolver.resolveElement(selector1);
-		resolver.resolveElement(selector2);
-		resolver.resolveElement(selector2); // should have no effect
+		// adding same selector twice should have no effect
+		resolver.resolveSelectors(request().select(selector1, selector2, selector2).build());
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
@@ -256,7 +264,8 @@ public class DiscoverySelectorTests {
 	@Test
 	public void testPackageResolution() {
 		PackageSelector selector = PackageSelector.forPackageName("org.junit.gen5.engine.junit5.descriptor.subpackage");
-		resolver.resolveElement(selector);
+
+		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(6, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
@@ -276,7 +285,7 @@ public class DiscoverySelectorTests {
 	public void testNestedTestResolutionFromBaseClass() {
 		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.class);
 
-		resolver.resolveElement(selector);
+		resolver.resolveSelectors(request().select(selector).build());
 
 		// engineDescriptor.allDescendants().stream().forEach(d -> System.out.println(d));
 
@@ -300,7 +309,7 @@ public class DiscoverySelectorTests {
 	public void testNestedTestResolutionFromNestedTestClass() {
 		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.NestedTest.class);
 
-		resolver.resolveElement(selector);
+		resolver.resolveSelectors(request().select(selector).build());
 
 		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
 			Collectors.toList());
@@ -322,7 +331,7 @@ public class DiscoverySelectorTests {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest@DoubleNestedTest");
 
-		resolver.resolveElement(selector);
+		resolver.resolveSelectors(request().select(selector).build());
 
 		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
 			Collectors.toList());
@@ -341,7 +350,7 @@ public class DiscoverySelectorTests {
 	public void testNestedTestResolutionFromClass() {
 		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class);
 
-		resolver.resolveElement(selector);
+		resolver.resolveSelectors(request().select(selector).build());
 
 		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
 			Collectors.toList());
@@ -361,7 +370,7 @@ public class DiscoverySelectorTests {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.descriptor.TestCaseWithNesting@NestedTest#testB()");
 
-		resolver.resolveElement(selector);
+		resolver.resolveSelectors(request().select(selector).build());
 
 		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
 			Collectors.toList());

@@ -10,7 +10,10 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
+import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackage;
+import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
+import static org.junit.gen5.commons.util.ReflectionUtils.findNestedClasses;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -18,9 +21,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.DiscoverySelectorVisitor;
+import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.discovery.ClassSelector;
+import org.junit.gen5.engine.discovery.ClasspathSelector;
+import org.junit.gen5.engine.discovery.MethodSelector;
+import org.junit.gen5.engine.discovery.PackageSelector;
+import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.engine.junit5.discovery.IsNestedTestClass;
 import org.junit.gen5.engine.junit5.discovery.IsScannableTestClass;
 import org.junit.gen5.engine.junit5.discovery.IsTestMethod;
@@ -39,32 +46,23 @@ public class DiscoverySelectorResolver {
 		this.engineDescriptor = engineDescriptor;
 	}
 
-	public void resolveElement(DiscoverySelector element) {
-		element.accept(new DiscoverySelectorVisitor() {
-			@Override
-			public void visitClass(Class<?> testClass) {
-				resolveTestClass(testClass);
-			}
-
-			@Override
-			public void visitMethod(Class<?> testClass, Method testMethod) {
-				resolveTestMethod(testClass, testMethod);
-			}
-
-			@Override
-			public void visitUniqueId(String uniqueId) {
-				resolveUniqueId(uniqueId);
-			}
-
-			@Override
-			public void visitPackage(String packageName) {
-				findAllClassesInPackage(packageName, isScannableTestClass).stream().forEach(this::visitClass);
-			}
-
-			@Override
-			public void visitAllTests(File rootDirectory) {
-				findAllClassesInClasspathRoot(rootDirectory, isScannableTestClass).stream().forEach(this::visitClass);
-			}
+	public void resolveSelectors(EngineDiscoveryRequest request) {
+		request.getSelectorsByType(ClasspathSelector.class).forEach(selector -> {
+			File rootDirectory = selector.getClasspathRoot();
+			findAllClassesInClasspathRoot(rootDirectory, isScannableTestClass).stream().forEach(this::resolveTestClass);
+		});
+		request.getSelectorsByType(PackageSelector.class).forEach(selector -> {
+			String packageName = selector.getPackageName();
+			findAllClassesInPackage(packageName, isScannableTestClass).stream().forEach(this::resolveTestClass);
+		});
+		request.getSelectorsByType(ClassSelector.class).forEach(selector -> {
+			resolveTestClass(selector.getTestClass());
+		});
+		request.getSelectorsByType(MethodSelector.class).forEach(selector -> {
+			resolveTestMethod(selector.getTestClass(), selector.getTestMethod());
+		});
+		request.getSelectorsByType(UniqueIdSelector.class).forEach(selector -> {
+			resolveUniqueId(selector.getUniqueId());
 		});
 	}
 

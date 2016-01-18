@@ -13,7 +13,6 @@ package org.junit.gen5.engine.junit5;
 import java.util.List;
 
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.FilterResult;
@@ -46,9 +45,7 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 	private void resolveDiscoveryRequest(EngineDiscoveryRequest discoveryRequest,
 			JUnit5EngineDescriptor engineDescriptor) {
 		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver(engineDescriptor);
-		for (DiscoverySelector element : discoveryRequest.getSelectors()) {
-			resolver.resolveElement(element);
-		}
+		resolver.resolveSelectors(discoveryRequest);
 		applyDiscoveryFilters(discoveryRequest, engineDescriptor);
 	}
 
