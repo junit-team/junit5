@@ -10,6 +10,10 @@
 
 package com.example.mockito;
 
+import static org.mockito.Mockito.mock;
+
+import java.lang.reflect.Parameter;
+
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodInvocationContext;
@@ -18,10 +22,6 @@ import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.lang.reflect.Parameter;
-
-import static org.mockito.Mockito.mock;
 
 /**
  * {@code MockitoExtension} showcases the {@link InstancePostProcessor}
