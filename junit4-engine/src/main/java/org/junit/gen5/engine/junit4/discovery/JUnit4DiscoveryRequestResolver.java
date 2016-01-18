@@ -15,11 +15,7 @@ import static java.util.Arrays.asList;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.gen5.engine.ClassFilter;
-import org.junit.gen5.engine.DiscoveryRequest;
-import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.discoveryrequest.AllClassFilters;
+import org.junit.gen5.engine.*;
 
 public class JUnit4DiscoveryRequestResolver {
 
@@ -62,8 +58,14 @@ public class JUnit4DiscoveryRequestResolver {
 	private Set<TestClassRequest> filterAndConvertToTestClassRequests(DiscoveryRequest request,
 			TestClassCollector collector) {
 		// TODO #40 Log classes that are filtered out
-		ClassFilter classFilter = new AllClassFilters(request.getDiscoveryFiltersByType(ClassFilter.class));
-		return collector.toRequests(testClass -> classFilter.filter(testClass).included());
+
+		// @formatter:off
+		List<ClassFilter> classFilters = request.getDiscoveryFiltersByType(ClassFilter.class);
+		return collector.toRequests(
+			testClass -> classFilters.stream()
+					.map(classFilter -> classFilter.filter(testClass))
+					.allMatch(FilterResult::included));
+		// @formatter:on
 	}
 
 	private void populateEngineDescriptor(Set<TestClassRequest> requests) {

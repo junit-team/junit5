@@ -19,7 +19,6 @@ import static org.junit.gen5.api.Assertions.assertFalse;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
-import static org.junit.gen5.engine.discoveryrequest.dsl.ClassFilters.classNameMatches;
 import static org.junit.gen5.engine.discoveryrequest.dsl.ClassSelectorBuilder.forClass;
 import static org.junit.gen5.engine.discoveryrequest.dsl.ClasspathSelectorBuilder.byPaths;
 import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
@@ -35,10 +34,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.DiscoveryRequest;
-import org.junit.gen5.engine.JavaSource;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestTag;
+import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.discoveryrequest.dsl.ClassFilterBuilder;
 import org.junit.gen5.engine.junit4.samples.PlainOldJavaClassWithoutAnyTest;
 import org.junit.gen5.engine.junit4.samples.junit3.JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
@@ -214,7 +211,7 @@ class JUnit4TestEngineDiscoveryTests {
 		File root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
 
 		DiscoveryRequest discoveryRequest = request().select(byPaths(singleton(root))).filterBy(
-			classNameMatches(".*JUnit4.*"), classNameMatches(".*Plain.*")).build();
+			ClassFilterBuilder.pattern(".*JUnit4.*"), ClassFilterBuilder.pattern(".*Plain.*")).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
 
@@ -513,7 +510,7 @@ class JUnit4TestEngineDiscoveryTests {
 		// @formatter:off
 		DiscoveryRequest request = request()
 				.select(byMethod(testClass, testClass.getMethod("failingTest")))
-				.filterBy(classNameMatches("Foo"))
+				.filterBy(ClassFilterBuilder.pattern("Foo"))
 				.build();
 		// @formatter:on
 

@@ -10,9 +10,15 @@
 
 package org.junit.gen5.engine.discoveryrequest.dsl;
 
+import org.junit.gen5.engine.ClassFilter;
+import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.discoveryrequest.ClassNameFilter;
 
 public class ClassFilterBuilder {
+	public static ClassFilter anyClass() {
+		return testClass -> FilterResult.included("Any class");
+	}
+
 	public static ClassNameFilter pattern(String pattern) {
 		return new ClassNameFilter(pattern);
 	}

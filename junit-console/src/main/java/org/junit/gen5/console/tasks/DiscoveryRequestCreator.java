@@ -11,7 +11,6 @@
 package org.junit.gen5.console.tasks;
 
 import static java.util.stream.Collectors.toSet;
-import static org.junit.gen5.engine.discoveryrequest.dsl.ClassFilters.classNameMatches;
 import static org.junit.gen5.engine.discoveryrequest.dsl.ClasspathSelectorBuilder.byPaths;
 import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.engine.discoveryrequest.dsl.NameBasedSelectorBuilder.byNames;
@@ -23,6 +22,7 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.DiscoveryRequest;
+import org.junit.gen5.engine.discoveryrequest.dsl.ClassFilterBuilder;
 import org.junit.gen5.engine.discoveryrequest.dsl.TagFilterBuilder;
 
 class DiscoveryRequestCreator {
@@ -57,7 +57,7 @@ class DiscoveryRequestCreator {
 	}
 
 	private void applyFilters(DiscoveryRequest discoveryRequest, CommandLineOptions options) {
-		options.getClassnameFilter().ifPresent(regex -> discoveryRequest.addFilter(classNameMatches(regex)));
+		options.getClassnameFilter().ifPresent(regex -> discoveryRequest.addFilter(ClassFilterBuilder.pattern(regex)));
 		if (!options.getTagsFilter().isEmpty()) {
 			discoveryRequest.addPostFilter(TagFilterBuilder.includeTags(options.getTagsFilter()));
 		}

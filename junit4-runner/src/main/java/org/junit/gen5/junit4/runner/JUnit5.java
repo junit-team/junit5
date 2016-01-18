@@ -12,8 +12,6 @@ package org.junit.gen5.junit4.runner;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.engine.discoveryrequest.dsl.ClassFilters.classNameMatches;
-import static org.junit.gen5.engine.discoveryrequest.dsl.ClassSelectorBuilder.forClass;
 import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Annotation;
@@ -24,10 +22,7 @@ import java.util.function.Function;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
-import org.junit.gen5.engine.DiscoveryRequest;
-import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.EngineIdFilter;
-import org.junit.gen5.engine.PostDiscoveryFilter;
+import org.junit.gen5.engine.*;
 import org.junit.gen5.engine.discoveryrequest.dsl.*;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestIdentifier;
@@ -100,7 +95,7 @@ public class JUnit5 extends Runner implements Filterable {
 
 		// Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
 		if (selectors.isEmpty()) {
-			selectors.add(forClass(this.testClass));
+			selectors.add(ClassSelectorBuilder.forClass(this.testClass));
 		}
 
 		DiscoveryRequest request = request().select(selectors).build();
@@ -132,7 +127,7 @@ public class JUnit5 extends Runner implements Filterable {
 	private void addClassNameMatchesFilter(DiscoveryRequest discoveryRequest) {
 		String regex = getClassNameRegExPattern();
 		if (!regex.isEmpty()) {
-			discoveryRequest.addFilter(classNameMatches(regex));
+			discoveryRequest.addFilter(ClassFilterBuilder.pattern(regex));
 		}
 	}
 
