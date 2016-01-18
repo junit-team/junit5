@@ -8,13 +8,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.discoveryrequest.dsl;
 
 import static org.junit.gen5.api.Assertions.*;
 
 import java.util.Collection;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.ClassFilter;
 import org.junit.gen5.engine.discoveryrequest.dsl.ClassFilterBuilder;
 
 class ClassFilterBuilderTests {

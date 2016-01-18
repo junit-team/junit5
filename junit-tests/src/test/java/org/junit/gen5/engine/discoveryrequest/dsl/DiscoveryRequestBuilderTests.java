@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.discoveryrequest.dsl;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,8 +25,8 @@ import java.util.List;
 
 import org.assertj.core.util.Files;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.discoveryrequest.*;
-import org.junit.gen5.engine.discoveryrequest.dsl.ClasspathSelectorBuilder;
 
 public class DiscoveryRequestBuilderTests {
 	@Test
@@ -48,7 +48,7 @@ public class DiscoveryRequestBuilderTests {
 		// @formatter:off
         DiscoveryRequest discoveryRequest = request()
 				.select(
-						forClassName("org.junit.gen5.engine.DiscoveryRequestBuilderTests"),
+						forClassName("org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilderTests"),
 						forClass(SampleTestClass.class)
 				)
             .build();
@@ -67,7 +67,7 @@ public class DiscoveryRequestBuilderTests {
 		// @formatter:off
         DiscoveryRequest discoveryRequest = request()
 				.select(
-						byMethod("org.junit.gen5.engine.DiscoveryRequestBuilderTests$SampleTestClass", "test")
+						byMethod("org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilderTests$SampleTestClass", "test")
 				).build();
         // @formatter:on
 

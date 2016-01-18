@@ -8,10 +8,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.discoveryrequest.dsl;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import org.junit.gen5.engine.DiscoveryFilter;
+import org.junit.gen5.engine.FilterResult;
 
 public class DiscoveryFilterMock implements DiscoveryFilter<Object> {
 	private final Function<Object, FilterResult> function;
