@@ -16,7 +16,6 @@ import java.util.Objects;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.*;
-import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.support.discovery.AbstractTestDescriptor;
 
 /**

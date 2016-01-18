@@ -8,7 +8,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.launcher;
+
+import org.junit.gen5.engine.GenericFilter;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 
 /**
  * A {@code PostDiscoveryFilter} filters particular tests after test discovery.

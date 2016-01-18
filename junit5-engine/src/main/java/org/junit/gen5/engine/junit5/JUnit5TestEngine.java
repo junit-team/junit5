@@ -13,7 +13,12 @@ package org.junit.gen5.engine.junit5;
 import java.util.List;
 
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.ClassFilter;
+import org.junit.gen5.engine.DiscoverySelector;
+import org.junit.gen5.engine.EngineDiscoveryRequest;
+import org.junit.gen5.engine.ExecutionRequest;
+import org.junit.gen5.engine.FilterResult;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.DiscoverySelectorResolver;
 import org.junit.gen5.engine.junit5.descriptor.JUnit5EngineDescriptor;
@@ -31,22 +36,24 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 	}
 
 	@Override
-	public JUnit5EngineDescriptor discoverTests(DiscoveryRequest discoveryRequest) {
+	public JUnit5EngineDescriptor discoverTests(EngineDiscoveryRequest discoveryRequest) {
 		Preconditions.notNull(discoveryRequest, "discovery request must not be null");
 		JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(this);
 		resolveDiscoveryRequest(discoveryRequest, engineDescriptor);
 		return engineDescriptor;
 	}
 
-	private void resolveDiscoveryRequest(DiscoveryRequest discoveryRequest, JUnit5EngineDescriptor engineDescriptor) {
+	private void resolveDiscoveryRequest(EngineDiscoveryRequest discoveryRequest,
+			JUnit5EngineDescriptor engineDescriptor) {
 		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver(engineDescriptor);
 		for (DiscoverySelector element : discoveryRequest.getSelectors()) {
 			resolver.resolveElement(element);
 		}
-		applyEngineFilters(discoveryRequest, engineDescriptor);
+		applyDiscoveryFilters(discoveryRequest, engineDescriptor);
 	}
 
-	private void applyEngineFilters(DiscoveryRequest discoveryRequest, JUnit5EngineDescriptor engineDescriptor) {
+	private void applyDiscoveryFilters(EngineDiscoveryRequest discoveryRequest,
+			JUnit5EngineDescriptor engineDescriptor) {
 		List<ClassFilter> classFilters = discoveryRequest.getDiscoveryFiltersByType(ClassFilter.class);
 		if (classFilters.isEmpty()) {
 			return;

@@ -11,7 +11,7 @@
 package org.junit.gen5.surefire;
 
 import static org.junit.gen5.engine.ClassSelector.forClass;
-import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -26,7 +26,7 @@ import org.apache.maven.surefire.report.SimpleReportEntry;
 import org.apache.maven.surefire.suite.RunResult;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.TestsToRun;
-import org.junit.gen5.engine.DiscoveryRequest;
+import org.junit.gen5.launcher.DiscoveryRequest;
 import org.junit.gen5.launcher.Launcher;
 
 public class JUnitGen5Provider extends AbstractProvider {

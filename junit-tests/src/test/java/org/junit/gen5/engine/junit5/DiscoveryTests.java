@@ -12,18 +12,18 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.ClassSelector.forClass;
-import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.engine.MethodSelector.forMethod;
 import static org.junit.gen5.engine.UniqueIdSelector.forUniqueId;
+import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.MethodSelector;
 import org.junit.gen5.engine.support.discovery.EngineDescriptor;
+import org.junit.gen5.launcher.DiscoveryRequest;
 
 /**
  * Test correct test discovery in simple test classes for the {@link JUnit5TestEngine}.

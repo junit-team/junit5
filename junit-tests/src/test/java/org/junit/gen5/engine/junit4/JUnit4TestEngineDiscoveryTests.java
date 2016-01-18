@@ -21,10 +21,10 @@ import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.engine.ClassSelector.forClass;
 import static org.junit.gen5.engine.ClasspathSelector.forPaths;
-import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.engine.MethodSelector.forMethod;
 import static org.junit.gen5.engine.PackageSelector.forPackageName;
 import static org.junit.gen5.engine.UniqueIdSelector.forUniqueId;
+import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -54,6 +54,7 @@ import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTes
 import org.junit.gen5.engine.junit4.samples.junit4.SingleFailingTheoryTestCase;
 import org.junit.gen5.engine.junit4.samples.junit4.TestCaseRunWithJUnit5;
 import org.junit.gen5.engine.support.discovery.JavaSource;
+import org.junit.gen5.launcher.DiscoveryRequest;
 import org.junit.runner.manipulation.Filter;
 
 class JUnit4TestEngineDiscoveryTests {

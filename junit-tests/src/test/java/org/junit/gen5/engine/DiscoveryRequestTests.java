@@ -13,14 +13,15 @@ package org.junit.gen5.engine;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertNotNull;
-import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.engine.NameBasedSelector.forName;
 import static org.junit.gen5.engine.UniqueIdSelector.forUniqueId;
+import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.launcher.DiscoveryRequest;
 
 /**
  * Unit tests for {@link DiscoveryRequest}.
@@ -55,7 +56,7 @@ public class DiscoveryRequestTests {
 	@Test
 	public void buildDiscoveryRequest() throws Exception {
 		// @formatter:off
-		DiscoveryRequest spec = request().select(
+		EngineDiscoveryRequest spec = request().select(
 		forUniqueId("junit5:org.example.UserTests#fullname()"),
 			forName(MyTestClass.class.getName()),
 			forName("org.junit.gen5"),

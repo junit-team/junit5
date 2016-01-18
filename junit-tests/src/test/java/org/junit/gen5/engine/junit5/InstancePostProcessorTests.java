@@ -13,7 +13,7 @@ package org.junit.gen5.engine.junit5;
 import static java.util.Arrays.asList;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.ClassSelector.forClass;
-import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,8 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.TestExtensionContext;
-import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.ExecutionEventRecorder;
+import org.junit.gen5.launcher.DiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@link org.junit.gen5.api.extension.InstancePostProcessor}.

@@ -10,8 +10,8 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
-import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.EngineAwareTestDescriptor;
+import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.support.discovery.EngineDescriptor;
@@ -43,7 +43,7 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 	}
 
 	@Override
-	public EngineAwareTestDescriptor discoverTests(DiscoveryRequest discoveryRequest) {
+	public EngineAwareTestDescriptor discoverTests(EngineDiscoveryRequest discoveryRequest) {
 		return root;
 	}
 

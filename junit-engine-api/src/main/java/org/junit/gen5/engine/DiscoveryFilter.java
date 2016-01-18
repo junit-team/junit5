@@ -16,7 +16,7 @@ package org.junit.gen5.engine;
  * discovery.
  *
  * @since 5.0
- * @see DiscoveryRequest
+ * @see EngineDiscoveryRequest
  * @see TestEngine
  */
 public interface DiscoveryFilter<T> extends GenericFilter<T> {

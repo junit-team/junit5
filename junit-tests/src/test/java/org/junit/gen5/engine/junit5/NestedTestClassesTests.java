@@ -13,12 +13,12 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.api.Assertions.assertAll;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.ClassSelector.forClass;
-import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.*;
-import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.support.discovery.EngineDescriptor;
+import org.junit.gen5.launcher.DiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@linkplain Nested nested contexts}

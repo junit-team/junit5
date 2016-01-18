@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.launcher;
 
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
@@ -18,6 +18,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.engine.DiscoveryFilter;
+import org.junit.gen5.engine.DiscoverySelector;
+import org.junit.gen5.engine.DiscoverySelectorVisitor;
+import org.junit.gen5.engine.EngineDiscoveryRequest;
+import org.junit.gen5.engine.FilterResult;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
 
 /**
  * The {@code DiscoveryRequest} represents the configuration for the test
@@ -43,7 +50,7 @@ import org.junit.gen5.commons.util.Preconditions;
  * @see DiscoveryFilter
  * @see PostDiscoveryFilter
  */
-public final class DiscoveryRequest {
+public final class DiscoveryRequest implements EngineDiscoveryRequest {
 	// Selectors provided to the engines to be used for finding tests
 	private final List<DiscoverySelector> selectors = new LinkedList<>();
 
@@ -88,10 +95,12 @@ public final class DiscoveryRequest {
 		this.postDiscoveryFilters.addAll(postDiscoveryFilters);
 	}
 
+	@Override
 	public List<DiscoverySelector> getSelectors() {
 		return unmodifiableList(this.selectors);
 	}
 
+	@Override
 	public <T extends DiscoverySelector> List<T> getSelectorsByType(Class<T> selectorType) {
 		return this.selectors.stream().filter(selectorType::isInstance).map(selectorType::cast).collect(toList());
 	}
@@ -100,10 +109,12 @@ public final class DiscoveryRequest {
 		return unmodifiableList(this.engineIdFilters);
 	}
 
+	@Override
 	public List<DiscoveryFilter<?>> getDiscoveryFilters() {
 		return unmodifiableList(this.discoveryFilters);
 	}
 
+	@Override
 	public <T extends DiscoveryFilter<?>> List<T> getDiscoveryFiltersByType(Class<T> filterType) {
 		return this.discoveryFilters.stream().filter(filterType::isInstance).map(filterType::cast).collect(toList());
 	}
@@ -122,6 +133,7 @@ public final class DiscoveryRequest {
 		// @formatter:on
 	}
 
+	@Override
 	public void accept(DiscoverySelectorVisitor visitor) {
 		this.getSelectors().forEach(selector -> selector.accept(visitor));
 	}

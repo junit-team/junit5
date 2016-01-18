@@ -14,9 +14,9 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.ClassSelector.forClass;
 import static org.junit.gen5.engine.ClassSelector.forClassName;
-import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.engine.PackageSelector.forPackageName;
 import static org.junit.gen5.engine.UniqueIdSelector.forUniqueId;
+import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.assertj.core.util.Files;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.launcher.DiscoveryRequest;
 
 public class DiscoveryRequestBuilderTests {
 	@Test

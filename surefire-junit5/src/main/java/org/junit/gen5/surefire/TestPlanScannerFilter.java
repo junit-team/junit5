@@ -11,10 +11,10 @@
 package org.junit.gen5.surefire;
 
 import static org.junit.gen5.engine.ClassSelector.forClass;
-import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import org.apache.maven.surefire.util.ScannerFilter;
-import org.junit.gen5.engine.DiscoveryRequest;
+import org.junit.gen5.launcher.DiscoveryRequest;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;

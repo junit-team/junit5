@@ -12,7 +12,7 @@ package org.junit.gen5.junit4.runner;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -23,7 +23,11 @@ import java.util.function.Function;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.*;
+import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.launcher.EngineIdFilter;
 import org.junit.gen5.launcher.Launcher;
+import org.junit.gen5.launcher.PostDiscoveryFilter;
+import org.junit.gen5.launcher.TagFilter;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.runner.Description;

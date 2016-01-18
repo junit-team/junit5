@@ -13,14 +13,14 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.api.Assumptions.assumeTrue;
-import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.engine.UniqueIdSelector.forUniqueId;
+import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.ExecutionEventRecorder;
+import org.junit.gen5.launcher.DiscoveryRequest;
 
 /**
  * Testing execution in test case hierarchy {@link JUnit5TestEngine}.

@@ -17,11 +17,12 @@ import static java.util.stream.Collectors.joining;
 import java.util.Collection;
 
 /**
- * A collection of common builders for {@link DiscoveryRequest} elements.
+ * A collection of common builders for {@link EngineDiscoveryRequest} elements.
  *
  * @since 5.0
  */
 class CommonFilter {
+
 	@SafeVarargs
 	public static <T> DiscoveryFilter<T> combine(DiscoveryFilter<T>... filters) {
 		if (filters == null) {
@@ -49,6 +50,7 @@ class CommonFilter {
 	}
 
 	private static class AndAllDiscoveryFilter<T> implements DiscoveryFilter<T> {
+
 		private final Collection<DiscoveryFilter<T>> filters;
 
 		public AndAllDiscoveryFilter(Collection<DiscoveryFilter<T>> filters) {

@@ -13,10 +13,16 @@ package org.junit.gen5.engine;
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
-import static org.junit.gen5.engine.ExecutionEvent.*;
-import static org.junit.gen5.engine.ExecutionEvent.Type.*;
+import static org.junit.gen5.engine.ExecutionEvent.Type.FINISHED;
+import static org.junit.gen5.engine.ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED;
+import static org.junit.gen5.engine.ExecutionEvent.Type.SKIPPED;
+import static org.junit.gen5.engine.ExecutionEvent.Type.STARTED;
+import static org.junit.gen5.engine.ExecutionEvent.byPayload;
+import static org.junit.gen5.engine.ExecutionEvent.byTestDescriptor;
+import static org.junit.gen5.engine.ExecutionEvent.byType;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -31,7 +37,7 @@ import org.junit.gen5.engine.TestExecutionResult.Status;
  */
 public class ExecutionEventRecorder implements EngineExecutionListener {
 
-	public static List<ExecutionEvent> execute(TestEngine testEngine, DiscoveryRequest discoveryRequest) {
+	public static List<ExecutionEvent> execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest) {
 		TestDescriptor engineTestDescriptor = testEngine.discoverTests(discoveryRequest);
 		ExecutionEventRecorder listener = new ExecutionEventRecorder();
 		testEngine.execute(new ExecutionRequest(engineTestDescriptor, listener));

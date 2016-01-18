@@ -14,7 +14,7 @@ import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.gen5.engine.ClassSelector.forClass;
-import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -31,8 +31,8 @@ import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
-import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.ExecutionEventRecorder;
+import org.junit.gen5.launcher.DiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@link Disabled @Disabled} and

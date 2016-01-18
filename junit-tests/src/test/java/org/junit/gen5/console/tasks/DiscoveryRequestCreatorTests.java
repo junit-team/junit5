@@ -26,6 +26,7 @@ import java.util.List;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.*;
+import org.junit.gen5.launcher.DiscoveryRequest;
 
 public class DiscoveryRequestCreatorTests {
 	private CommandLineOptions options = new CommandLineOptions();
