@@ -8,44 +8,31 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.discoveryrequest.dsl;
+package org.junit.gen5.engine;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Collection;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
-
-import org.junit.gen5.engine.DiscoveryFilter;
-import org.junit.gen5.engine.DiscoveryRequest;
-import org.junit.gen5.engine.FilterResult;
 
 /**
  * A collection of common builders for {@link DiscoveryRequest} elements.
  *
  * @since 5.0
  */
-public class CommonBuilder {
-	public static <T> DiscoveryFilter<T> alwaysIncluded() {
-		return (any) -> FilterResult.included("Always included");
-	}
-
-	public static <T> DiscoveryFilter<T> alwaysExcluded() {
-		return (any) -> FilterResult.excluded("Always excluded");
-	}
-
-	public static <T> DiscoveryFilter<T> allOf(DiscoveryFilter<T>... filters) {
+class CommonFilter {
+	@SafeVarargs
+	public static <T> DiscoveryFilter<T> combine(DiscoveryFilter<T>... filters) {
 		if (filters == null) {
 			return alwaysIncluded();
 		}
 		else {
-			return allOf(asList(filters));
+			return combine(asList(filters));
 		}
 	}
 
-	public static <T> DiscoveryFilter<T> allOf(Collection<DiscoveryFilter<T>> filters) {
+	public static <T> DiscoveryFilter<T> combine(Collection<DiscoveryFilter<T>> filters) {
 		if (filters == null || filters.isEmpty()) {
 			return alwaysIncluded();
 		}
@@ -53,8 +40,12 @@ public class CommonBuilder {
 			return filters.iterator().next();
 		}
 		else {
-			return new AndAllDiscoveryFilter(filters);
+			return new AndAllDiscoveryFilter<>(filters);
 		}
+	}
+
+	private static <T> DiscoveryFilter<T> alwaysIncluded() {
+		return (any) -> FilterResult.included("Always included");
 	}
 
 	private static class AndAllDiscoveryFilter<T> implements DiscoveryFilter<T> {

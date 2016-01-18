@@ -8,9 +8,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.discoveryrequest;
+package org.junit.gen5.engine;
+
+import static java.util.Collections.singleton;
 
 import java.io.File;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.DiscoverySelectorVisitor;
@@ -19,9 +24,22 @@ import org.junit.gen5.engine.DiscoverySelectorVisitor;
  * @since 5.0
  */
 public class ClasspathSelector implements DiscoverySelector {
+	public static List<DiscoverySelector> forPath(String path) {
+		return forPaths(singleton(new File(path)));
+	}
+
+	public static List<DiscoverySelector> forPaths(Set<File> paths) {
+		// @formatter:off
+		return paths.stream()
+				.filter(File::exists)
+				.map(ClasspathSelector::new)
+				.collect(Collectors.toList());
+		// @formatter:on
+	}
+
 	private final File classpathRoot;
 
-	public ClasspathSelector(File classpathRoot) {
+	private ClasspathSelector(File classpathRoot) {
 		this.classpathRoot = classpathRoot;
 	}
 

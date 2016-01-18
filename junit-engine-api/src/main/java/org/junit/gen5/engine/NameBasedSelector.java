@@ -8,25 +8,24 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.discoveryrequest.dsl;
+package org.junit.gen5.engine;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.engine.discoveryrequest.dsl.ClassSelectorBuilder.forClass;
-import static org.junit.gen5.engine.discoveryrequest.dsl.MethodSelectorBuilder.byMethod;
-import static org.junit.gen5.engine.discoveryrequest.dsl.PackageSelectorBuilder.byPackageName;
+import static org.junit.gen5.engine.ClassSelector.forClass;
+import static org.junit.gen5.engine.MethodSelector.forMethod;
+import static org.junit.gen5.engine.PackageSelector.forPackageName;
 
 import java.lang.reflect.Method;
 import java.util.*;
 
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.DiscoverySelector;
 
 /**
  * @since 5.0
  */
-public class NameBasedSelectorBuilder {
-	public static DiscoverySelector byName(String anyName) {
+public class NameBasedSelector {
+	public static DiscoverySelector forName(String anyName) {
 		Optional<Class<?>> testClassOptional = ReflectionUtils.loadClass(anyName);
 		if (testClassOptional.isPresent()) {
 			return forClass(testClassOptional.get());
@@ -35,27 +34,27 @@ public class NameBasedSelectorBuilder {
 		Optional<Method> testMethodOptional = ReflectionUtils.loadMethod(anyName);
 		if (testMethodOptional.isPresent()) {
 			Method testMethod = testMethodOptional.get();
-			return byMethod(testMethod.getDeclaringClass(), testMethod);
+			return MethodSelector.forMethod(testMethod.getDeclaringClass(), testMethod);
 		}
 
 		if (ReflectionUtils.isPackage(anyName)) {
-			return byPackageName(anyName);
+			return forPackageName(anyName);
 		}
 
 		throw new PreconditionViolationException(
 			String.format("'%s' specifies neither a class, a method, nor a package.", anyName));
 	}
 
-	public static List<DiscoverySelector> byNames(String... classNames) {
+	public static List<DiscoverySelector> forNames(String... classNames) {
 		if (classNames != null) {
-			return byNames(Arrays.asList(classNames));
+			return forNames(Arrays.asList(classNames));
 		}
 		else {
 			return Collections.emptyList();
 		}
 	}
 
-	public static List<DiscoverySelector> byNames(Collection<String> classNames) {
-		return classNames.stream().map(NameBasedSelectorBuilder::byName).collect(toList());
+	public static List<DiscoverySelector> forNames(Collection<String> classNames) {
+		return classNames.stream().map(NameBasedSelector::forName).collect(toList());
 	}
 }

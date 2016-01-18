@@ -15,7 +15,7 @@ import static org.junit.runner.manipulation.Filter.matchMethodDescription;
 
 import java.lang.reflect.Method;
 
-import org.junit.gen5.engine.discoveryrequest.MethodSelector;
+import org.junit.gen5.engine.MethodSelector;
 import org.junit.runner.Description;
 
 class MethodSelectorResolver extends DiscoverySelectorResolver<MethodSelector> {

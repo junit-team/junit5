@@ -12,10 +12,10 @@ package org.junit.gen5.engine.junit5;
 
 import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.engine.ExecutionEventConditions.*;
+import static org.junit.gen5.engine.MethodSelector.forMethod;
 import static org.junit.gen5.engine.TestExecutionResultConditions.*;
-import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
-import static org.junit.gen5.engine.discoveryrequest.dsl.MethodSelectorBuilder.byMethod;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -24,6 +24,7 @@ import java.util.Optional;
 import org.junit.gen5.api.*;
 import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.ExecutionEventRecorder;
+import org.junit.gen5.engine.MethodSelector;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -34,7 +35,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void failureInTestMethodIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("failingTest");
-		DiscoveryRequest request = request().select(byMethod(FailureTestCase.class, method)).build();
+		DiscoveryRequest request = request().select(MethodSelector.forMethod(FailureTestCase.class, method)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -49,7 +50,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void uncheckedExceptionInTestMethodIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("testWithUncheckedException");
-		DiscoveryRequest request = request().select(byMethod(FailureTestCase.class, method)).build();
+		DiscoveryRequest request = request().select(MethodSelector.forMethod(FailureTestCase.class, method)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -64,7 +65,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void checkedExceptionInTestMethodIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("testWithCheckedException");
-		DiscoveryRequest request = request().select(byMethod(FailureTestCase.class, method)).build();
+		DiscoveryRequest request = request().select(MethodSelector.forMethod(FailureTestCase.class, method)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -79,7 +80,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void checkedExceptionInBeforeEachIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
-		DiscoveryRequest request = request().select(byMethod(FailureTestCase.class, method)).build();
+		DiscoveryRequest request = request().select(MethodSelector.forMethod(FailureTestCase.class, method)).build();
 
 		FailureTestCase.exceptionToThrowInBeforeEach = Optional.of(new IOException("checked"));
 
@@ -95,7 +96,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void checkedExceptionInAfterEachIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
-		DiscoveryRequest request = request().select(byMethod(FailureTestCase.class, method)).build();
+		DiscoveryRequest request = request().select(MethodSelector.forMethod(FailureTestCase.class, method)).build();
 
 		FailureTestCase.exceptionToThrowInAfterEach = Optional.of(new IOException("checked"));
 
@@ -111,7 +112,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void checkedExceptionInAfterEachIsSuppressedByExceptionInTest() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("testWithUncheckedException");
-		DiscoveryRequest request = request().select(byMethod(FailureTestCase.class, method)).build();
+		DiscoveryRequest request = request().select(MethodSelector.forMethod(FailureTestCase.class, method)).build();
 
 		FailureTestCase.exceptionToThrowInAfterEach = Optional.of(new IOException("checked"));
 
@@ -133,7 +134,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void checkedExceptionInBeforeAllIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
-		DiscoveryRequest request = request().select(byMethod(FailureTestCase.class, method)).build();
+		DiscoveryRequest request = request().select(MethodSelector.forMethod(FailureTestCase.class, method)).build();
 
 		FailureTestCase.exceptionToThrowInBeforeAll = Optional.of(new IOException("checked"));
 
@@ -150,7 +151,7 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void checkedExceptionInAfterAllIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
-		DiscoveryRequest request = request().select(byMethod(FailureTestCase.class, method)).build();
+		DiscoveryRequest request = request().select(MethodSelector.forMethod(FailureTestCase.class, method)).build();
 
 		FailureTestCase.exceptionToThrowInAfterAll = Optional.of(new IOException("checked"));
 

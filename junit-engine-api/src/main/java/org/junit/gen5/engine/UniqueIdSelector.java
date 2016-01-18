@@ -8,15 +8,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.discoveryrequest;
-
-import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.DiscoverySelectorVisitor;
+package org.junit.gen5.engine;
 
 public class UniqueIdSelector implements DiscoverySelector {
+	public static UniqueIdSelector forUniqueId(String uniqueId) {
+		return new UniqueIdSelector(uniqueId);
+	}
+
 	private final String uniqueId;
 
-	public UniqueIdSelector(String uniqueId) {
+	private UniqueIdSelector(String uniqueId) {
 		this.uniqueId = uniqueId;
 	}
 

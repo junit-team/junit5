@@ -11,9 +11,9 @@
 package org.junit.gen5.console.tasks;
 
 import static java.util.stream.Collectors.toSet;
-import static org.junit.gen5.engine.discoveryrequest.dsl.ClasspathSelectorBuilder.byPaths;
-import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
-import static org.junit.gen5.engine.discoveryrequest.dsl.NameBasedSelectorBuilder.byNames;
+import static org.junit.gen5.engine.ClasspathSelector.forPaths;
+import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.engine.NameBasedSelector.forNames;
 
 import java.io.File;
 import java.util.Set;
@@ -21,9 +21,9 @@ import java.util.Set;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
+import org.junit.gen5.engine.ClassFilter;
 import org.junit.gen5.engine.DiscoveryRequest;
-import org.junit.gen5.engine.discoveryrequest.dsl.ClassFilterBuilder;
-import org.junit.gen5.engine.discoveryrequest.dsl.TagFilterBuilder;
+import org.junit.gen5.engine.TagFilter;
 
 class DiscoveryRequestCreator {
 	DiscoveryRequest toDiscoveryRequest(CommandLineOptions options) {
@@ -41,7 +41,7 @@ class DiscoveryRequestCreator {
 
 	private DiscoveryRequest buildDiscoveryRequestForAllTests(CommandLineOptions options) {
 		Set<File> rootDirectoriesToScan = determineClasspathRootDirectories(options);
-		return request().select(byPaths(rootDirectoriesToScan)).build();
+		return request().select(forPaths(rootDirectoriesToScan)).build();
 	}
 
 	private Set<File> determineClasspathRootDirectories(CommandLineOptions options) {
@@ -53,16 +53,16 @@ class DiscoveryRequestCreator {
 
 	private DiscoveryRequest buildNameBasedDiscoveryRequest(CommandLineOptions options) {
 		Preconditions.notEmpty(options.getArguments(), "No arguments given");
-		return request().select(byNames(options.getArguments())).build();
+		return request().select(forNames(options.getArguments())).build();
 	}
 
 	private void applyFilters(DiscoveryRequest discoveryRequest, CommandLineOptions options) {
-		options.getClassnameFilter().ifPresent(regex -> discoveryRequest.addFilter(ClassFilterBuilder.pattern(regex)));
+		options.getClassnameFilter().ifPresent(regex -> discoveryRequest.addFilter(ClassFilter.byNamePattern(regex)));
 		if (!options.getTagsFilter().isEmpty()) {
-			discoveryRequest.addPostFilter(TagFilterBuilder.includeTags(options.getTagsFilter()));
+			discoveryRequest.addPostFilter(TagFilter.includeTags(options.getTagsFilter()));
 		}
 		if (!options.getExcludeTags().isEmpty()) {
-			discoveryRequest.addPostFilter(TagFilterBuilder.excludeTags(options.getExcludeTags()));
+			discoveryRequest.addPostFilter(TagFilter.excludeTags(options.getExcludeTags()));
 		}
 	}
 }

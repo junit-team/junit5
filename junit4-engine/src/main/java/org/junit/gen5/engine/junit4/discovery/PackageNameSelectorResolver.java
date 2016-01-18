@@ -12,16 +12,16 @@ package org.junit.gen5.engine.junit4.discovery;
 
 import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackage;
 
-import org.junit.gen5.engine.discoveryrequest.PackageNameSelector;
+import org.junit.gen5.engine.PackageSelector;
 
-class PackageNameSelectorResolver extends DiscoverySelectorResolver<PackageNameSelector> {
+class PackageNameSelectorResolver extends DiscoverySelectorResolver<PackageSelector> {
 
 	PackageNameSelectorResolver() {
-		super(PackageNameSelector.class);
+		super(PackageSelector.class);
 	}
 
 	@Override
-	void resolve(PackageNameSelector selector, TestClassCollector collector) {
+	void resolve(PackageSelector selector, TestClassCollector collector) {
 		findAllClassesInPackage(selector.getPackageName(), classTester).forEach(collector::addCompletely);
 	}
 

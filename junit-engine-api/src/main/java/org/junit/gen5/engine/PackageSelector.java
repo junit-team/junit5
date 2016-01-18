@@ -8,27 +8,28 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.discoveryrequest;
-
-import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.DiscoverySelectorVisitor;
+package org.junit.gen5.engine;
 
 /**
  * @since 5.0
  */
-public class ClassSelector implements DiscoverySelector {
-	private final Class<?> testClass;
+public class PackageSelector implements DiscoverySelector {
+	public static PackageSelector forPackageName(String packageName) {
+		return new PackageSelector(packageName);
+	}
 
-	public ClassSelector(Class<?> testClass) {
-		this.testClass = testClass;
+	private final String packageName;
+
+	private PackageSelector(String packageName) {
+		this.packageName = packageName;
 	}
 
 	@Override
 	public void accept(DiscoverySelectorVisitor visitor) {
-		visitor.visitClass(testClass);
+		visitor.visitPackage(packageName);
 	}
 
-	public Class<?> getTestClass() {
-		return testClass;
+	public String getPackageName() {
+		return packageName;
 	}
 }

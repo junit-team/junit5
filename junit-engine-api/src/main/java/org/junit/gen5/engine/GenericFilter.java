@@ -10,6 +10,10 @@
 
 package org.junit.gen5.engine;
 
+import static java.util.Arrays.asList;
+
+import java.util.Collection;
+
 /**
  * {@code GenericFilter} filters particular tests during and after test discovery.
  *

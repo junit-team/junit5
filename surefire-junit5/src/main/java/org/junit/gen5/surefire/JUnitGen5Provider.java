@@ -10,8 +10,8 @@
 
 package org.junit.gen5.surefire;
 
-import static org.junit.gen5.engine.discoveryrequest.dsl.ClassSelectorBuilder.forClass;
-import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.engine.ClassSelector.forClass;
+import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;

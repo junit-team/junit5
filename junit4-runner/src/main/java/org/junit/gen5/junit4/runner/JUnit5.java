@@ -12,7 +12,7 @@ package org.junit.gen5.junit4.runner;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -23,7 +23,6 @@ import java.util.function.Function;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.*;
-import org.junit.gen5.engine.discoveryrequest.dsl.*;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -95,7 +94,7 @@ public class JUnit5 extends Runner implements Filterable {
 
 		// Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
 		if (selectors.isEmpty()) {
-			selectors.add(ClassSelectorBuilder.forClass(this.testClass));
+			selectors.add(ClassSelector.forClass(this.testClass));
 		}
 
 		DiscoveryRequest request = request().select(selectors).build();
@@ -113,9 +112,9 @@ public class JUnit5 extends Runner implements Filterable {
 	private List<DiscoverySelector> getSpecElementsFromAnnotations() {
 		List<DiscoverySelector> selectors = new ArrayList<>();
 
-		selectors.addAll(transform(getTestClasses(), ClassSelectorBuilder::forClass));
-		selectors.addAll(transform(getUniqueIds(), UniqueIdSelectorBuilder::byUniqueId));
-		selectors.addAll(transform(getPackageNames(), PackageSelectorBuilder::byPackageName));
+		selectors.addAll(transform(getTestClasses(), ClassSelector::forClass));
+		selectors.addAll(transform(getUniqueIds(), UniqueIdSelector::forUniqueId));
+		selectors.addAll(transform(getPackageNames(), PackageSelector::forPackageName));
 
 		return selectors;
 	}
@@ -127,14 +126,14 @@ public class JUnit5 extends Runner implements Filterable {
 	private void addClassNameMatchesFilter(DiscoveryRequest discoveryRequest) {
 		String regex = getClassNameRegExPattern();
 		if (!regex.isEmpty()) {
-			discoveryRequest.addFilter(ClassFilterBuilder.pattern(regex));
+			discoveryRequest.addFilter(ClassFilter.byNamePattern(regex));
 		}
 	}
 
 	private void addIncludeTagsFilter(DiscoveryRequest discoveryRequest) {
 		String[] includeTags = getIncludeTags();
 		if (includeTags.length > 0) {
-			PostDiscoveryFilter tagNamesFilter = TagFilterBuilder.includeTags(includeTags);
+			PostDiscoveryFilter tagNamesFilter = TagFilter.includeTags(includeTags);
 			discoveryRequest.addPostFilter(tagNamesFilter);
 		}
 	}
@@ -142,7 +141,7 @@ public class JUnit5 extends Runner implements Filterable {
 	private void addExcludeTagsFilter(DiscoveryRequest discoveryRequest) {
 		String[] excludeTags = getExcludeTags();
 		if (excludeTags.length > 0) {
-			PostDiscoveryFilter excludeTagsFilter = TagFilterBuilder.excludeTags(excludeTags);
+			PostDiscoveryFilter excludeTagsFilter = TagFilter.excludeTags(excludeTags);
 			discoveryRequest.addPostFilter(excludeTagsFilter);
 		}
 	}
@@ -150,7 +149,7 @@ public class JUnit5 extends Runner implements Filterable {
 	private void addEngineIdFilter(DiscoveryRequest discoveryRequest) {
 		String engineId = getExplicitEngineId();
 		if (StringUtils.isNotBlank(engineId)) {
-			EngineIdFilter engineFilter = EngineFilterBuilder.byEngineId(engineId);
+			EngineIdFilter engineFilter = EngineIdFilter.byEngineId(engineId);
 			discoveryRequest.addEngineIdFilter(engineFilter);
 		}
 	}
@@ -204,7 +203,7 @@ public class JUnit5 extends Runner implements Filterable {
 		List<DiscoverySelector> selectors = testIdentifiers.stream()
 				.map(TestIdentifier::getUniqueId)
 				.map(Object::toString)
-				.map(UniqueIdSelectorBuilder::byUniqueId)
+				.map(UniqueIdSelector::forUniqueId)
 				.collect(toList());
 		// @formatter:on
 		return request().select(selectors).build();

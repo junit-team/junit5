@@ -13,8 +13,8 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.api.Assumptions.assumeTrue;
-import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
-import static org.junit.gen5.engine.discoveryrequest.dsl.UniqueIdSelectorBuilder.byUniqueId;
+import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.engine.UniqueIdSelector.forUniqueId;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
@@ -57,7 +57,7 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 	@Test
 	public void executeSingleTest() {
-		DiscoveryRequest request = request().select(byUniqueId(
+		DiscoveryRequest request = request().select(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#alwaysPasses()")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -71,7 +71,7 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 	@Test
 	public void executeTestDeclaredInSuperClass() {
-		DiscoveryRequest request = request().select(byUniqueId(
+		DiscoveryRequest request = request().select(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#superclassTest()")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -91,7 +91,7 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 	@Test
 	public void executeTestWithExceptionThrownInAfterMethod() {
-		DiscoveryRequest request = request().select(byUniqueId(
+		DiscoveryRequest request = request().select(forUniqueId(
 			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#throwExceptionInAfterMethod()")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);

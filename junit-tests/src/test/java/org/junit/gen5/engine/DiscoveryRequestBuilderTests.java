@@ -8,16 +8,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.discoveryrequest.dsl;
+package org.junit.gen5.engine;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.engine.discoveryrequest.dsl.ClassSelectorBuilder.forClass;
-import static org.junit.gen5.engine.discoveryrequest.dsl.ClassSelectorBuilder.forClassName;
-import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
-import static org.junit.gen5.engine.discoveryrequest.dsl.MethodSelectorBuilder.byMethod;
-import static org.junit.gen5.engine.discoveryrequest.dsl.PackageSelectorBuilder.byPackageName;
-import static org.junit.gen5.engine.discoveryrequest.dsl.UniqueIdSelectorBuilder.byUniqueId;
+import static org.junit.gen5.engine.ClassSelector.forClass;
+import static org.junit.gen5.engine.ClassSelector.forClassName;
+import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.engine.PackageSelector.forPackageName;
+import static org.junit.gen5.engine.UniqueIdSelector.forUniqueId;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -25,8 +24,6 @@ import java.util.List;
 
 import org.assertj.core.util.Files;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.DiscoveryRequest;
-import org.junit.gen5.engine.discoveryrequest.*;
 
 public class DiscoveryRequestBuilderTests {
 	@Test
@@ -34,12 +31,12 @@ public class DiscoveryRequestBuilderTests {
 		// @formatter:off
         DiscoveryRequest discoveryRequest = request()
 				.select(
-						byPackageName("org.junit.gen5.engine")
+						forPackageName("org.junit.gen5.engine")
 				).build();
         // @formatter:on
 
-		List<String> packageSelectors = discoveryRequest.getSelectorsByType(PackageNameSelector.class).stream().map(
-			PackageNameSelector::getPackageName).collect(toList());
+		List<String> packageSelectors = discoveryRequest.getSelectorsByType(PackageSelector.class).stream().map(
+			PackageSelector::getPackageName).collect(toList());
 		assertThat(packageSelectors).contains("org.junit.gen5.engine");
 	}
 
@@ -48,7 +45,7 @@ public class DiscoveryRequestBuilderTests {
 		// @formatter:off
         DiscoveryRequest discoveryRequest = request()
 				.select(
-						forClassName("org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilderTests"),
+						forClassName("org.junit.gen5.engine.DiscoveryRequestBuilderTests"),
 						forClass(SampleTestClass.class)
 				)
             .build();
@@ -67,7 +64,7 @@ public class DiscoveryRequestBuilderTests {
 		// @formatter:off
         DiscoveryRequest discoveryRequest = request()
 				.select(
-						byMethod("org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilderTests$SampleTestClass", "test")
+						MethodSelector.forMethod("org.junit.gen5.engine.DiscoveryRequestBuilderTests$SampleTestClass", "test")
 				).build();
         // @formatter:on
 
@@ -87,7 +84,7 @@ public class DiscoveryRequestBuilderTests {
 		// @formatter:off
         DiscoveryRequest discoveryRequest = request()
 				.select(
-						byMethod(SampleTestClass.class, "test")
+						MethodSelector.forMethod(SampleTestClass.class, "test")
 				).build();
 		// @formatter:on
 
@@ -104,7 +101,7 @@ public class DiscoveryRequestBuilderTests {
 		// @formatter:off
         DiscoveryRequest discoveryRequest = request()
 				.select(
-						ClasspathSelectorBuilder.byPath("/some/local/path")
+						ClasspathSelector.forPath("/some/local/path")
 				).build();
         // @formatter:on
 
@@ -121,7 +118,7 @@ public class DiscoveryRequestBuilderTests {
 			// @formatter:off
 			DiscoveryRequest discoveryRequest = request()
 					.select(
-							ClasspathSelectorBuilder.byPath(temporaryFolder.getAbsolutePath())
+							ClasspathSelector.forPath(temporaryFolder.getAbsolutePath())
 					).build();
 			// @formatter:on
 
@@ -140,8 +137,8 @@ public class DiscoveryRequestBuilderTests {
 		// @formatter:off
         DiscoveryRequest discoveryRequest = request()
 				.select(
-						byUniqueId("engine:bla:foo:bar:id1"),
-						byUniqueId("engine:bla:foo:bar:id2")
+						forUniqueId("engine:bla:foo:bar:id1"),
+						forUniqueId("engine:bla:foo:bar:id2")
 				).build();
         // @formatter:on
 

@@ -8,17 +8,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.discoveryrequest.dsl;
+package org.junit.gen5.engine;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.junit.gen5.engine.DiscoveryFilter;
-import org.junit.gen5.engine.DiscoveryRequest;
-import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.EngineIdFilter;
-import org.junit.gen5.engine.PostDiscoveryFilter;
 
 /**
  * The {@code DiscoveryRequestBuilder} provides a light-weight DSL for
@@ -50,7 +44,6 @@ import org.junit.gen5.engine.PostDiscoveryFilter;
  * </pre>
  */
 public final class DiscoveryRequestBuilder {
-
 	private List<DiscoverySelector> selectors = new LinkedList<>();
 	private List<EngineIdFilter> engineIdFilters = new LinkedList<>();
 	private List<DiscoveryFilter<?>> filters = new LinkedList<>();

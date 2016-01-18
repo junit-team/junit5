@@ -11,10 +11,10 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.discoveryrequest.dsl.ClassSelectorBuilder.forClass;
-import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
-import static org.junit.gen5.engine.discoveryrequest.dsl.MethodSelectorBuilder.byMethod;
-import static org.junit.gen5.engine.discoveryrequest.dsl.UniqueIdSelectorBuilder.byUniqueId;
+import static org.junit.gen5.engine.ClassSelector.forClass;
+import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.engine.MethodSelector.forMethod;
+import static org.junit.gen5.engine.UniqueIdSelector.forUniqueId;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.EngineDescriptor;
+import org.junit.gen5.engine.MethodSelector;
 
 /**
  * Test correct test discovery in simple test classes for the {@link JUnit5TestEngine}.
@@ -41,7 +42,7 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void discoverByUniqueId() {
 		DiscoveryRequest request = request().select(
-			byUniqueId("junit5:org.junit.gen5.engine.junit5.DiscoveryTests$LocalTestCase#test1()")).build();
+			forUniqueId("junit5:org.junit.gen5.engine.junit5.DiscoveryTests$LocalTestCase#test1()")).build();
 		EngineDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
@@ -50,7 +51,7 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 	public void discoverByMethod() throws NoSuchMethodException {
 		Method testMethod = LocalTestCase.class.getDeclaredMethod("test3", new Class[0]);
 
-		DiscoveryRequest request = request().select(byMethod(LocalTestCase.class, testMethod)).build();
+		DiscoveryRequest request = request().select(MethodSelector.forMethod(LocalTestCase.class, testMethod)).build();
 		EngineDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
@@ -58,7 +59,7 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void discoverCompositeSpec() {
 		DiscoveryRequest spec = request().select(
-			byUniqueId("junit5:org.junit.gen5.engine.junit5.DiscoveryTests$LocalTestCase#test2()"),
+			forUniqueId("junit5:org.junit.gen5.engine.junit5.DiscoveryTests$LocalTestCase#test2()"),
 			forClass(LocalTestCase.class)).build();
 
 		EngineDescriptor engineDescriptor = discoverTests(spec);

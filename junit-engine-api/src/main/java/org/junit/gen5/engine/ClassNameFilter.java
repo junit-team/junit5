@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.discoveryrequest;
+package org.junit.gen5.engine;
 
 import static org.junit.gen5.engine.FilterResult.excluded;
 import static org.junit.gen5.engine.FilterResult.included;
@@ -18,11 +18,14 @@ import java.util.regex.Pattern;
 import org.junit.gen5.engine.ClassFilter;
 import org.junit.gen5.engine.FilterResult;
 
-public class ClassNameFilter implements ClassFilter {
+/**
+ * @since 5.0
+ */
+class ClassNameFilter implements ClassFilter {
 	private final Pattern pattern;
 
-	public ClassNameFilter(String regex) {
-		this.pattern = Pattern.compile(regex);
+	ClassNameFilter(String pattern) {
+		this.pattern = Pattern.compile(pattern);
 	}
 
 	@Override

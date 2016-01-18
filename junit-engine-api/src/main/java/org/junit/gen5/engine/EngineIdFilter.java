@@ -22,9 +22,13 @@ import static org.junit.gen5.engine.FilterResult.included;
  * @see DiscoveryRequest
  */
 public class EngineIdFilter implements GenericFilter<String> {
+	public static EngineIdFilter byEngineId(String engineId) {
+		return new EngineIdFilter(engineId);
+	}
+
 	private final String engineId;
 
-	public EngineIdFilter(String engineId) {
+	private EngineIdFilter(String engineId) {
 		this.engineId = engineId;
 	}
 

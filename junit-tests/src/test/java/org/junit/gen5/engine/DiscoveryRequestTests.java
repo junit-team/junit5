@@ -13,18 +13,14 @@ package org.junit.gen5.engine;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertNotNull;
-import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
-import static org.junit.gen5.engine.discoveryrequest.dsl.NameBasedSelectorBuilder.byName;
-import static org.junit.gen5.engine.discoveryrequest.dsl.UniqueIdSelectorBuilder.byUniqueId;
+import static org.junit.gen5.engine.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.engine.NameBasedSelector.forName;
+import static org.junit.gen5.engine.UniqueIdSelector.forUniqueId;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.discoveryrequest.ClassSelector;
-import org.junit.gen5.engine.discoveryrequest.MethodSelector;
-import org.junit.gen5.engine.discoveryrequest.PackageNameSelector;
-import org.junit.gen5.engine.discoveryrequest.UniqueIdSelector;
 
 /**
  * Unit tests for {@link DiscoveryRequest}.
@@ -34,42 +30,42 @@ import org.junit.gen5.engine.discoveryrequest.UniqueIdSelector;
 public class DiscoveryRequestTests {
 	@Test
 	public void forUniqueIdForMethod() {
-		DiscoverySelector element = byUniqueId("junit5:org.example.UserTests#fullname()");
+		DiscoverySelector element = forUniqueId("junit5:org.example.UserTests#fullname()");
 		assertEquals(UniqueIdSelector.class, element.getClass());
 	}
 
 	@Test
 	public void forNameWithClass() {
-		DiscoverySelector element = byName(MyTestClass.class.getName());
+		DiscoverySelector element = forName(MyTestClass.class.getName());
 		assertEquals(ClassSelector.class, element.getClass());
 	}
 
 	@Test
 	public void forNameWithMethod() throws Exception {
-		DiscoverySelector element = byName(fullyQualifiedMethodName());
+		DiscoverySelector element = forName(fullyQualifiedMethodName());
 		assertEquals(MethodSelector.class, element.getClass());
 	}
 
 	@Test
 	public void forNameWithPackage() {
-		DiscoverySelector element = byName("org.junit.gen5");
-		assertEquals(PackageNameSelector.class, element.getClass());
+		DiscoverySelector element = forName("org.junit.gen5");
+		assertEquals(PackageSelector.class, element.getClass());
 	}
 
 	@Test
 	public void buildDiscoveryRequest() throws Exception {
 		// @formatter:off
 		DiscoveryRequest spec = request().select(
-		byUniqueId("junit5:org.example.UserTests#fullname()"),
-			byName(MyTestClass.class.getName()),
-			byName("org.junit.gen5"),
-			byName(fullyQualifiedMethodName())
+		forUniqueId("junit5:org.example.UserTests#fullname()"),
+			forName(MyTestClass.class.getName()),
+			forName("org.junit.gen5"),
+			forName(fullyQualifiedMethodName())
 		).build();
 		// @formatter:on
 
 		assertNotNull(spec);
 		List<Class<? extends DiscoverySelector>> expected = Arrays.asList(UniqueIdSelector.class, ClassSelector.class,
-			PackageNameSelector.class, MethodSelector.class);
+			PackageSelector.class, MethodSelector.class);
 		assertEquals(expected, spec.getSelectors().stream().map(Object::getClass).collect(toList()));
 	}
 

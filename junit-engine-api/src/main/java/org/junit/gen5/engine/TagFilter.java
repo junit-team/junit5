@@ -8,17 +8,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.discoveryrequest.dsl;
+package org.junit.gen5.engine;
 
 import static java.util.Arrays.asList;
 
 import java.util.List;
 
-import org.junit.gen5.engine.FilterResult;
-import org.junit.gen5.engine.PostDiscoveryFilter;
-import org.junit.gen5.engine.TestTag;
-
-public class TagFilterBuilder {
+public class TagFilter {
 	public static PostDiscoveryFilter includeTags(String... tagNames) {
 		return includeTags(asList(tagNames));
 	}
