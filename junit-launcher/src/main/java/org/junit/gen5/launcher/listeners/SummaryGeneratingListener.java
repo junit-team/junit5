@@ -30,9 +30,7 @@ import org.junit.gen5.launcher.TestPlan;
  * @see #getSummary()
  */
 public class SummaryGeneratingListener implements TestExecutionListener {
-
 	private TestPlan testPlan;
-
 	private TestExecutionSummary summary;
 
 	/**
@@ -92,5 +90,4 @@ public class SummaryGeneratingListener implements TestExecutionListener {
 		}
 		testExecutionResult.getThrowable().ifPresent(throwable -> summary.addFailure(testIdentifier, throwable));
 	}
-
 }

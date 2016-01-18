@@ -42,7 +42,6 @@ import org.junit.gen5.engine.TestExecutionResult.Status;
  * @see TestIdentifier
  */
 public interface TestExecutionListener {
-
 	/**
 	 * Called when additional test reporting data has been published for
 	 * the supplied {@link TestIdentifier}. Can be called at all times.
@@ -146,5 +145,4 @@ public interface TestExecutionListener {
 	 */
 	default void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 	}
-
 }

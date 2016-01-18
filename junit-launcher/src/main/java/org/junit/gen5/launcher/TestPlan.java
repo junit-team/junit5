@@ -46,7 +46,6 @@ import org.junit.gen5.engine.TestDescriptor.Visitor;
  * @see TestExecutionListener
  */
 public final class TestPlan {
-
 	private final Set<TestIdentifier> roots = new LinkedHashSet<>();
 	private final Map<TestId, LinkedHashSet<TestIdentifier>> children = new LinkedHashMap<>();
 	private final Map<TestId, TestIdentifier> allIdentifiers = new LinkedHashMap<>();

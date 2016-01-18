@@ -30,17 +30,14 @@ import org.junit.gen5.engine.TestTag;
  * @see TestPlan
  */
 public final class TestIdentifier implements Serializable {
-
 	private static final long serialVersionUID = 1L;
 
 	private final TestId uniqueId;
 	private final String displayName;
 	private final TestSource source;
 	private final Set<TestTag> tags;
-
 	private final boolean test;
 	private final boolean container;
-
 	private final TestId parentId;
 
 	static TestIdentifier from(TestDescriptor testDescriptor) {
@@ -149,5 +146,4 @@ public final class TestIdentifier implements Serializable {
 	public String toString() {
 		return getDisplayName() + " [" + uniqueId + "]";
 	}
-
 }

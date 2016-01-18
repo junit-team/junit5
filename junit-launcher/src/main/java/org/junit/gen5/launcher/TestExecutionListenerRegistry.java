@@ -20,7 +20,6 @@ import org.junit.gen5.engine.TestExecutionResult;
  * @since 5.0
  */
 class TestExecutionListenerRegistry {
-
 	private final List<TestExecutionListener> testExecutionListeners = new LinkedList<>();
 
 	void registerListener(TestExecutionListener... listeners) {

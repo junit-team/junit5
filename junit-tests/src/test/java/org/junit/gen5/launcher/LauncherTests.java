@@ -82,7 +82,7 @@ public class LauncherTests {
 		Launcher launcher = createLauncher(firstEngine, secondEngine);
 
 		TestPlan testPlan = launcher.discover(
-			request().select(forUniqueId(test1.getUniqueId()), forUniqueId(test2.getUniqueId())).filterBy(
+			request().select(forUniqueId(test1.getUniqueId()), forUniqueId(test2.getUniqueId())).filter(
 				byEngineId("first")).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);

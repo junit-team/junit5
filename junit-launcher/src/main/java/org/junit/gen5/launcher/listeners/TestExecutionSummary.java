@@ -25,9 +25,6 @@ import org.junit.gen5.launcher.TestPlan;
  */
 // TODO Design a real interface for TestExecutionSummary and make it threadsafe.
 public class TestExecutionSummary {
-
-	private final TestPlan testPlan;
-
 	final AtomicLong testsStarted = new AtomicLong();
 	final AtomicLong testsFound = new AtomicLong();
 	final AtomicLong testsSkipped = new AtomicLong();
@@ -38,6 +35,7 @@ public class TestExecutionSummary {
 	long timeStarted;
 	long timeFinished;
 
+	private final TestPlan testPlan;
 	private String message;
 	private List<Failure> failures = new ArrayList<>();
 
@@ -108,7 +106,6 @@ public class TestExecutionSummary {
 	}
 
 	static class Failure {
-
 		private final TestIdentifier testIdentifier;
 		private final Throwable exception;
 
@@ -124,7 +121,5 @@ public class TestExecutionSummary {
 		public Throwable getException() {
 			return exception;
 		}
-
 	}
-
 }

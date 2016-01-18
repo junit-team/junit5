@@ -22,15 +22,18 @@ import org.junit.gen5.engine.TestEngine;
  * @since 5.0
  */
 final class Root {
-
 	private final Map<TestEngine, TestDescriptor> testEngines = new LinkedHashMap<>();
-
-	Iterable<TestEngine> getTestEngines() {
-		return testEngines.keySet();
-	}
 
 	public void add(TestEngine engine, TestDescriptor testDescriptor) {
 		testEngines.put(engine, testDescriptor);
+	}
+
+	public Collection<TestDescriptor> getAllTestDescriptors() {
+		return testEngines.values();
+	}
+
+	Iterable<TestEngine> getTestEngines() {
+		return testEngines.keySet();
 	}
 
 	TestDescriptor getTestDescriptorFor(TestEngine testEngine) {
@@ -47,6 +50,10 @@ final class Root {
 		accept(filteringVisitor);
 	}
 
+	void accept(Visitor visitor) {
+		testEngines.values().stream().forEach(testEngine -> testEngine.accept(visitor));
+	}
+
 	void prune() {
 		Visitor pruningVisitor = (descriptor, remove) -> {
 			if (descriptor.isRoot() || descriptor.hasTests())
@@ -55,13 +62,5 @@ final class Root {
 		};
 		accept(pruningVisitor);
 		testEngines.values().removeIf(testEngine -> testEngine.getChildren().isEmpty());
-	}
-
-	void accept(Visitor visitor) {
-		testEngines.values().stream().forEach(testEngine -> testEngine.accept(visitor));
-	}
-
-	public Collection<TestDescriptor> getAllTestDescriptors() {
-		return testEngines.values();
 	}
 }

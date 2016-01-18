@@ -31,7 +31,6 @@ import org.junit.gen5.launcher.TestPlan;
  * @see LoggingListener#LoggingListener(BiConsumer)
  */
 public class LoggingListener implements TestExecutionListener {
-
 	/**
 	 * Create a {@code LoggingListener} which delegates to a
 	 * {@link java.util.logging.Logger} using a log level of
@@ -107,5 +106,4 @@ public class LoggingListener implements TestExecutionListener {
 	private void logWithThrowable(String message, Throwable t, Object... args) {
 		logger.accept(t, () -> String.format(message, args));
 	}
-
 }

@@ -21,7 +21,6 @@ import org.junit.gen5.commons.util.Preconditions;
  * @since 5.0
  */
 public final class TestId implements Serializable {
-
 	private static final long serialVersionUID = 1L;
 
 	private final String uniqueId;
@@ -48,5 +47,4 @@ public final class TestId implements Serializable {
 	public String toString() {
 		return this.uniqueId;
 	}
-
 }

@@ -13,12 +13,7 @@ package org.junit.gen5.launcher;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.junit.gen5.engine.EngineExecutionListener;
-import org.junit.gen5.engine.ExecutionRequest;
-import org.junit.gen5.engine.FilterResult;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.*;
 
 /**
  * Facade for <em>discovering</em> and <em>executing</em> tests using
@@ -50,20 +45,24 @@ import org.junit.gen5.engine.TestExecutionResult;
  * @see TestExecutionListener
  */
 public class Launcher {
-
 	private static final Logger LOG = Logger.getLogger(Launcher.class.getName());
 
-	private final TestExecutionListenerRegistry listenerRegistry = new TestExecutionListenerRegistry();
-
 	private final TestEngineRegistry testEngineRegistry;
+	private final TestExecutionListenerRegistry testExecutionListenerRegistry;
 
 	public Launcher() {
-		this(new ServiceLoaderTestEngineRegistry());
+		this(new ServiceLoaderTestEngineRegistry(), new TestExecutionListenerRegistry());
 	}
 
-	// for tests only
+	// For tests only
 	Launcher(TestEngineRegistry testEngineRegistry) {
+		this(testEngineRegistry, new TestExecutionListenerRegistry());
+	}
+
+	// For tests only
+	Launcher(TestEngineRegistry testEngineRegistry, TestExecutionListenerRegistry testExecutionListenerRegistry) {
 		this.testEngineRegistry = testEngineRegistry;
+		this.testExecutionListenerRegistry = testExecutionListenerRegistry;
 	}
 
 	/**
@@ -72,7 +71,7 @@ public class Launcher {
 	 * @param listeners the listeners to be notified of test execution events
 	 */
 	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
-		listenerRegistry.registerListener(listeners);
+		testExecutionListenerRegistry.registerListener(listeners);
 	}
 
 	/**
@@ -123,7 +122,7 @@ public class Launcher {
 
 	private void execute(Root root) {
 		TestPlan testPlan = TestPlan.from(root);
-		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
+		TestExecutionListener testExecutionListener = testExecutionListenerRegistry.getCompositeTestExecutionListener();
 		testExecutionListener.testPlanExecutionStarted(testPlan);
 		ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(testPlan,
 			testExecutionListener);

@@ -15,7 +15,6 @@ import static java.util.Arrays.asList;
 import org.junit.gen5.engine.TestEngine;
 
 public class LauncherFactory {
-
 	public static Launcher createLauncher(TestEngine... engines) {
 		return createLauncher(asList(engines));
 	}
@@ -23,5 +22,4 @@ public class LauncherFactory {
 	public static Launcher createLauncher(Iterable<TestEngine> engines) {
 		return new Launcher(() -> engines);
 	}
-
 }
