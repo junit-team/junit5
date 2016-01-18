@@ -17,6 +17,7 @@ import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.JUnit5EngineDescriptor;
@@ -29,17 +30,17 @@ import org.junit.gen5.launcher.DiscoveryRequestBuilder;
 class DiscoveryFilterApplierTests {
 
 	@Test
-	void applyClassFilter() {
+	void applyClassFilters() {
 		DiscoveryFilterApplier applier = new DiscoveryFilterApplier();
 
 		EngineDiscoveryRequest request = new DiscoveryRequestBuilder().filter(
 			ClassFilter.byNamePattern(".*\\$MatchingClass")).build();
 		JUnit5EngineDescriptor engineDescriptor = createEngineDescriptor();
 
-		applier.apply(request, engineDescriptor);
+		applier.applyAllFilters(request, engineDescriptor);
 
 		List<String> includedDescriptors = engineDescriptor.allDescendants().stream().map(
-			descriptor -> descriptor.getUniqueId()).collect(Collectors.toList());
+			TestDescriptor::getUniqueId).collect(Collectors.toList());
 		Assertions.assertEquals(2, includedDescriptors.size());
 		Assertions.assertTrue(includedDescriptors.contains("matching"));
 		Assertions.assertTrue(includedDescriptors.contains("nested"));

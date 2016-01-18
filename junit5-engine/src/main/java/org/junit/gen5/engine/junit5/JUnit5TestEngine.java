@@ -46,7 +46,7 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 
 	private void applyDiscoveryFilters(EngineDiscoveryRequest discoveryRequest,
 			JUnit5EngineDescriptor engineDescriptor) {
-		new DiscoveryFilterApplier().apply(discoveryRequest, engineDescriptor);
+		new DiscoveryFilterApplier().applyAllFilters(discoveryRequest, engineDescriptor);
 	}
 
 	@Override

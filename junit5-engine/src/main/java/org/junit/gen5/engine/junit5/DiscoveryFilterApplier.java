@@ -25,32 +25,38 @@ import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
 class DiscoveryFilterApplier {
 
 	/**
-	 * Apply filters. Currently only {@link ClassFilter} is considered.
+	 * Apply all filters. Currently only {@link ClassFilter} is considered.
 	 */
-	void apply(EngineDiscoveryRequest discoveryRequest, TestDescriptor engineDescriptor) {
+	void applyAllFilters(EngineDiscoveryRequest discoveryRequest, TestDescriptor engineDescriptor) {
+		applyClassFilters(discoveryRequest.getDiscoveryFiltersByType(ClassFilter.class), engineDescriptor);
+	}
 
-		List<ClassFilter> classFilters = discoveryRequest.getDiscoveryFiltersByType(ClassFilter.class);
+	private void applyClassFilters(List<ClassFilter> classFilters, TestDescriptor engineDescriptor) {
 		if (classFilters.isEmpty()) {
 			return;
 		}
-
 		TestDescriptor.Visitor filteringVisitor = (descriptor, remove) -> {
 			if (descriptor instanceof ClassTestDescriptor) {
-				if (descriptor instanceof NestedClassTestDescriptor)
-					return;
-
-				Class<?> testClass = ((ClassTestDescriptor) descriptor).getTestClass();
-
-				// @formatter:off
-                if (classFilters.stream()
-                        .map(filter -> filter.filter(testClass))
-                        .anyMatch(FilterResult::excluded)) {
-                    remove.run();
-                }
-                // @formatter:on
+				if (!includeClass((ClassTestDescriptor) descriptor, classFilters))
+					remove.run();
 			}
 		};
 		engineDescriptor.accept(filteringVisitor);
+	}
+
+	private boolean includeClass(ClassTestDescriptor classTestDescriptor, List<ClassFilter> classFilters) {
+
+		// Nested Tests are never filtered out
+		if (classTestDescriptor instanceof NestedClassTestDescriptor)
+			return true;
+
+		Class<?> testClass = classTestDescriptor.getTestClass();
+
+		// @formatter:off
+        return (classFilters.stream()
+                .map(filter -> filter.filter(testClass))
+                .noneMatch(FilterResult::excluded));
+        // @formatter:on
 	}
 
 }
