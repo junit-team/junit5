@@ -8,11 +8,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.specification.dsl;
+package org.junit.gen5.engine.discoveryrequest.dsl;
 
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.specification.ClassSelector;
+import org.junit.gen5.engine.discoveryrequest.ClassSelector;
 
 /**
  * @since 5.0

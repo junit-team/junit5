@@ -12,9 +12,9 @@ package org.junit.gen5.junit4.runner;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.engine.specification.dsl.ClassFilters.classNameMatches;
-import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
-import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.engine.discoveryrequest.dsl.ClassFilters.classNameMatches;
+import static org.junit.gen5.engine.discoveryrequest.dsl.ClassSelectorBuilder.forClass;
+import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineIdFilter;
 import org.junit.gen5.engine.PostDiscoveryFilter;
-import org.junit.gen5.engine.specification.dsl.*;
+import org.junit.gen5.engine.discoveryrequest.dsl.*;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -117,52 +117,46 @@ public class JUnit5 extends Runner implements Filterable {
 
 	private List<DiscoverySelector> getSpecElementsFromAnnotations() {
 		List<DiscoverySelector> selectors = new ArrayList<>();
-		selectors.addAll(getClassSpecificationElements());
-		selectors.addAll(getUniqueIdSpecificationElements());
-		selectors.addAll(getPackageSpecificationElements());
+
+		selectors.addAll(transform(getTestClasses(), ClassSelectorBuilder::forClass));
+		selectors.addAll(transform(getUniqueIds(), UniqueIdSelectorBuilder::byUniqueId));
+		selectors.addAll(transform(getPackageNames(), PackageSelectorBuilder::byPackageName));
+
 		return selectors;
 	}
 
-	private List<DiscoverySelector> getClassSpecificationElements() {
-		return stream(getTestClasses()).map(ClassSelectorBuilder::forClass).collect(toList());
+	private <T> List<DiscoverySelector> transform(T[] sourceElements, Function<T, DiscoverySelector> transformer) {
+		return stream(sourceElements).map(transformer).collect(toList());
 	}
 
-	private List<DiscoverySelector> getUniqueIdSpecificationElements() {
-		return stream(getUniqueIds()).map(UniqueIdSelectorBuilder::byUniqueId).collect(toList());
-	}
-
-	private List<DiscoverySelector> getPackageSpecificationElements() {
-		return stream(getPackageNames()).map(PackageSelectorBuilder::byPackageName).collect(toList());
-	}
-
-	private void addClassNameMatchesFilter(DiscoveryRequest request) {
+	private void addClassNameMatchesFilter(DiscoveryRequest discoveryRequest) {
 		String regex = getClassNameRegExPattern();
 		if (!regex.isEmpty()) {
-			request.addFilter(classNameMatches(regex));
+			discoveryRequest.addFilter(classNameMatches(regex));
 		}
 	}
 
-	private void addIncludeTagsFilter(DiscoveryRequest request) {
+	private void addIncludeTagsFilter(DiscoveryRequest discoveryRequest) {
 		String[] includeTags = getIncludeTags();
 		if (includeTags.length > 0) {
 			PostDiscoveryFilter tagNamesFilter = TagFilterBuilder.includeTags(includeTags);
-			request.addPostFilter(tagNamesFilter);
+			discoveryRequest.addPostFilter(tagNamesFilter);
 		}
 	}
 
-	private void addExcludeTagsFilter(DiscoveryRequest request) {
+	private void addExcludeTagsFilter(DiscoveryRequest discoveryRequest) {
 		String[] excludeTags = getExcludeTags();
 		if (excludeTags.length > 0) {
 			PostDiscoveryFilter excludeTagsFilter = TagFilterBuilder.excludeTags(excludeTags);
-			request.addPostFilter(excludeTagsFilter);
+			discoveryRequest.addPostFilter(excludeTagsFilter);
 		}
 	}
 
-	private void addEngineIdFilter(DiscoveryRequest request) {
+	private void addEngineIdFilter(DiscoveryRequest discoveryRequest) {
 		String engineId = getExplicitEngineId();
 		if (StringUtils.isNotBlank(engineId)) {
 			EngineIdFilter engineFilter = EngineFilterBuilder.byEngineId(engineId);
-			request.addEngineIdFilter(engineFilter);
+			discoveryRequest.addEngineIdFilter(engineFilter);
 		}
 	}
 

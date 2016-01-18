@@ -53,8 +53,8 @@ public class ExecuteTestsTask implements ConsoleTask {
 
 		SummaryGeneratingListener summaryListener = registerListeners(out, launcher);
 
-		DiscoveryRequest specification = new TestPlanSpecificationCreator().toTestPlanSpecification(options);
-		launcher.execute(specification);
+		DiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(options);
+		launcher.execute(discoveryRequest);
 
 		TestExecutionSummary summary = summaryListener.getSummary();
 		printSummary(summary, out);

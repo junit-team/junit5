@@ -8,12 +8,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.specification.dsl;
+package org.junit.gen5.engine.discoveryrequest.dsl;
 
 import java.lang.reflect.Method;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.specification.MethodSelector;
+import org.junit.gen5.engine.discoveryrequest.MethodSelector;
 
 /**
  * @since 5.0

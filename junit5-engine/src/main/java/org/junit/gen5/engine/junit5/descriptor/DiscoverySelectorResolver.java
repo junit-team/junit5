@@ -41,20 +41,19 @@ public class DiscoverySelectorResolver {
 
 	public void resolveElement(DiscoverySelector element) {
 		element.accept(new DiscoverySelectorVisitor() {
-
 			@Override
 			public void visitClass(Class<?> testClass) {
-				resolveClassSpecification(testClass);
+				resolveTestClass(testClass);
 			}
 
 			@Override
 			public void visitMethod(Class<?> testClass, Method testMethod) {
-				resolveMethodSpecification(testClass, testMethod);
+				resolveTestMethod(testClass, testMethod);
 			}
 
 			@Override
 			public void visitUniqueId(String uniqueId) {
-				resolveUniqueIdSpecification(uniqueId);
+				resolveUniqueId(uniqueId);
 			}
 
 			@Override
@@ -64,30 +63,28 @@ public class DiscoverySelectorResolver {
 
 			@Override
 			public void visitAllTests(File rootDirectory) {
-				ReflectionUtils.findAllClassesInClasspathRoot(rootDirectory, isScannableTestClass).stream().forEach(
-					this::visitClass);
+				findAllClassesInClasspathRoot(rootDirectory, isScannableTestClass).stream().forEach(this::visitClass);
 			}
 		});
 	}
 
-	private void resolveClassSpecification(Class<?> testClass) {
+	private void resolveTestClass(Class<?> testClass) {
 		JUnit5Testable testable = JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueId());
 		resolveTestable(testable);
 	}
 
-	private void resolveMethodSpecification(Class<?> testClass, Method testMethod) {
+	private void resolveTestMethod(Class<?> testClass, Method testMethod) {
 		JUnit5Testable testable = JUnit5Testable.fromMethod(testMethod, testClass, engineDescriptor.getUniqueId());
 		resolveTestable(testable);
 	}
 
-	private void resolveUniqueIdSpecification(String uniqueId) {
+	private void resolveUniqueId(String uniqueId) {
 		JUnit5Testable testable = JUnit5Testable.fromUniqueId(uniqueId, engineDescriptor.getUniqueId());
 		resolveTestable(testable);
 	}
 
 	private void resolveTestable(JUnit5Testable testable, boolean withChildren) {
 		testable.accept(new JUnit5Testable.Visitor() {
-
 			@Override
 			public void visitClass(String uniqueId, Class<?> testClass) {
 				resolveClassTestable(testClass, uniqueId, engineDescriptor, withChildren);

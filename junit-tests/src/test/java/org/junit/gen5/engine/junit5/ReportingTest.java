@@ -11,8 +11,8 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
-import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.engine.discoveryrequest.dsl.ClassSelectorBuilder.forClass;
+import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
 
 import java.util.HashMap;
 

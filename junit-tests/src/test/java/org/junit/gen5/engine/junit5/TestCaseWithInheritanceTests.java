@@ -13,8 +13,8 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.api.Assumptions.assumeTrue;
-import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
-import static org.junit.gen5.engine.specification.dsl.UniqueIdSelectorBuilder.byUniqueId;
+import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.engine.discoveryrequest.dsl.UniqueIdSelectorBuilder.byUniqueId;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;

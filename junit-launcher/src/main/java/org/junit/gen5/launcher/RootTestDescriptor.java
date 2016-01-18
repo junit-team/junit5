@@ -22,7 +22,6 @@ import org.junit.gen5.engine.DiscoveryRequest;
  * @since 5.0
  */
 final class RootTestDescriptor extends AbstractTestDescriptor {
-
 	private final List<TestEngine> testEngines = new LinkedList<>();
 
 	RootTestDescriptor() {
@@ -79,11 +78,11 @@ final class RootTestDescriptor extends AbstractTestDescriptor {
 		return true;
 	}
 
-	void applyFilters(DiscoveryRequest specification) {
+	void applyFilters(DiscoveryRequest discoveryRequest) {
 		Visitor filteringVisitor = (descriptor, remove) -> {
 			if (!descriptor.isTest())
 				return;
-			if (!specification.acceptDescriptor(descriptor))
+			if (!discoveryRequest.acceptDescriptor(descriptor))
 				remove.run();
 		};
 		accept(filteringVisitor);
@@ -102,5 +101,4 @@ final class RootTestDescriptor extends AbstractTestDescriptor {
 	public String toString() {
 		return getChildren().toString();
 	}
-
 }

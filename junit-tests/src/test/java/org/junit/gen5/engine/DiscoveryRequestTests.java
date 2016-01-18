@@ -13,18 +13,18 @@ package org.junit.gen5.engine;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertNotNull;
-import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
-import static org.junit.gen5.engine.specification.dsl.NameBasedSelectorBuilder.byName;
-import static org.junit.gen5.engine.specification.dsl.UniqueIdSelectorBuilder.byUniqueId;
+import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.engine.discoveryrequest.dsl.NameBasedSelectorBuilder.byName;
+import static org.junit.gen5.engine.discoveryrequest.dsl.UniqueIdSelectorBuilder.byUniqueId;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.specification.ClassSelector;
-import org.junit.gen5.engine.specification.MethodSelector;
-import org.junit.gen5.engine.specification.PackageNameSelector;
-import org.junit.gen5.engine.specification.UniqueIdSelector;
+import org.junit.gen5.engine.discoveryrequest.ClassSelector;
+import org.junit.gen5.engine.discoveryrequest.MethodSelector;
+import org.junit.gen5.engine.discoveryrequest.PackageNameSelector;
+import org.junit.gen5.engine.discoveryrequest.UniqueIdSelector;
 
 /**
  * Unit tests for {@link DiscoveryRequest}.

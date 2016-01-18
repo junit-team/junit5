@@ -30,23 +30,23 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 	}
 
 	@Override
-	public JUnit5EngineDescriptor discoverTests(DiscoveryRequest specification) {
-		Preconditions.notNull(specification, "specification must not be null");
+	public JUnit5EngineDescriptor discoverTests(DiscoveryRequest discoveryRequest) {
+		Preconditions.notNull(discoveryRequest, "discovery request must not be null");
 		JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(this);
-		resolveSpecification(specification, engineDescriptor);
+		resolveDiscoveryRequest(discoveryRequest, engineDescriptor);
 		return engineDescriptor;
 	}
 
-	private void resolveSpecification(DiscoveryRequest specification, JUnit5EngineDescriptor engineDescriptor) {
+	private void resolveDiscoveryRequest(DiscoveryRequest discoveryRequest, JUnit5EngineDescriptor engineDescriptor) {
 		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver(engineDescriptor);
-		for (DiscoverySelector element : specification.getSelectors()) {
+		for (DiscoverySelector element : discoveryRequest.getSelectors()) {
 			resolver.resolveElement(element);
 		}
-		applyEngineFilters(specification, engineDescriptor);
+		applyEngineFilters(discoveryRequest, engineDescriptor);
 	}
 
-	private void applyEngineFilters(DiscoveryRequest specification, JUnit5EngineDescriptor engineDescriptor) {
-		List<ClassFilter> classFilters = specification.getFilterByType(ClassFilter.class);
+	private void applyEngineFilters(DiscoveryRequest discoveryRequest, JUnit5EngineDescriptor engineDescriptor) {
+		List<ClassFilter> classFilters = discoveryRequest.getDiscoveryFiltersByType(ClassFilter.class);
 		if (classFilters.isEmpty()) {
 			return;
 		}

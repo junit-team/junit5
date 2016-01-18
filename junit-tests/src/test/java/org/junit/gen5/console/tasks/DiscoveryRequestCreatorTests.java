@@ -11,9 +11,11 @@
 package org.junit.gen5.console.tasks;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.*;
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.*;
 
@@ -24,10 +26,8 @@ import java.util.List;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.*;
-import org.junit.gen5.engine.DiscoveryRequest;
 
-public class TestPlanSpecificationCreatorTests {
-
+public class DiscoveryRequestCreatorTests {
 	private CommandLineOptions options = new CommandLineOptions();
 	private DiscoverySelectorVisitor visitor = mock(DiscoverySelectorVisitor.class);
 
@@ -89,9 +89,9 @@ public class TestPlanSpecificationCreatorTests {
 		options.setRunAllTests(true);
 		options.setClassnameFilter(".*Test");
 
-		DiscoveryRequest specification = convert();
+		DiscoveryRequest discoveryRequest = convert();
 
-		List<ClassFilter> filter = specification.getFilterByType(ClassFilter.class);
+		List<ClassFilter> filter = discoveryRequest.getDiscoveryFiltersByType(ClassFilter.class);
 		assertThat(filter).hasSize(1);
 		assertThat(filter.get(0).toString()).contains(".*Test");
 	}
@@ -102,22 +102,21 @@ public class TestPlanSpecificationCreatorTests {
 		options.setTagsFilter(asList("fast", "medium", "slow"));
 		options.setExcludeTags(asList("slow"));
 
-		DiscoveryRequest specification = convert();
+		DiscoveryRequest discoveryRequest = convert();
 
-		assertTrue(specification.acceptDescriptor(testDescriptorWithTag("fast")));
-		assertTrue(specification.acceptDescriptor(testDescriptorWithTag("medium")));
-		assertFalse(specification.acceptDescriptor(testDescriptorWithTag("slow")));
-		assertFalse(specification.acceptDescriptor(testDescriptorWithTag("very slow")));
+		assertTrue(discoveryRequest.acceptDescriptor(testDescriptorWithTag("fast")));
+		assertTrue(discoveryRequest.acceptDescriptor(testDescriptorWithTag("medium")));
+		assertFalse(discoveryRequest.acceptDescriptor(testDescriptorWithTag("slow")));
+		assertFalse(discoveryRequest.acceptDescriptor(testDescriptorWithTag("very slow")));
 	}
 
 	private void convertAndVisit() {
-		DiscoveryRequest specification = convert();
-		specification.accept(visitor);
+		convert().accept(visitor);
 	}
 
 	private DiscoveryRequest convert() {
-		TestPlanSpecificationCreator creator = new TestPlanSpecificationCreator();
-		return creator.toTestPlanSpecification(options);
+		DiscoveryRequestCreator creator = new DiscoveryRequestCreator();
+		return creator.toDiscoveryRequest(options);
 	}
 
 	private TestDescriptor testDescriptorWithTag(String tag) {

@@ -27,7 +27,7 @@ import org.junit.gen5.engine.*;
  *
  * <p>Discovering or executing tests requires a {@link DiscoveryRequest}
  * which is passed to all registered engines. Each engine decides which tests
- * it can discover and later execute according to this specification.
+ * it can discover and later execute according to this {@link DiscoveryRequest}.
  *
  * <p>Users of this class may optionally call {@link #discover} prior to
  * {@link #execute} in order to inspect the {@link TestPlan} before executing
@@ -75,12 +75,12 @@ public class Launcher {
 	 * {@link DiscoveryRequest} by querying all registered engines and
 	 * collecting their results.
 	 *
-	 * @param specification the specification to be resolved
+	 * @param discoveryRequest the discovery request
 	 * @return a {@code TestPlan} that contains all resolved
-	 * {@linkplain TestIdentifier identifiers} from all registered engines
+	 *         {@linkplain TestIdentifier identifiers} from all registered engines
 	 */
-	public TestPlan discover(DiscoveryRequest specification) {
-		return TestPlan.from(discoverRootDescriptor(specification, "discovery"));
+	public TestPlan discover(DiscoveryRequest discoveryRequest) {
+		return TestPlan.from(discoverRootDescriptor(discoveryRequest, "discovery"));
 	}
 
 	/**
@@ -89,16 +89,16 @@ public class Launcher {
 	 * collecting their results, and notify {@linkplain #registerTestExecutionListeners
 	 * registered listeners} about the progress and results of the execution.
 	 *
-	 * @param specification the specification to be resolved
+	 * @param discoveryRequest the discovery request to be executed
 	 */
-	public void execute(DiscoveryRequest specification) {
-		execute(discoverRootDescriptor(specification, "execution"));
+	public void execute(DiscoveryRequest discoveryRequest) {
+		execute(discoverRootDescriptor(discoveryRequest, "execution"));
 	}
 
-	private RootTestDescriptor discoverRootDescriptor(DiscoveryRequest specification, String phase) {
+	private RootTestDescriptor discoverRootDescriptor(DiscoveryRequest discoveryRequest, String phase) {
 		RootTestDescriptor root = new RootTestDescriptor();
 		for (TestEngine testEngine : testEngineRegistry.getTestEngines()) {
-			if (specification.getEngineIdFilters().stream().map(
+			if (discoveryRequest.getEngineIdFilters().stream().map(
 				engineIdFilter -> engineIdFilter.filter(testEngine.getId())).anyMatch(FilterResult::excluded)) {
 				LOG.fine(
 					() -> String.format("Test discovery for engine '%s' was skipped due to a filter in phase '%s'.",
@@ -108,10 +108,10 @@ public class Launcher {
 
 			LOG.fine(() -> String.format("Discovering tests during launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
-			EngineAwareTestDescriptor engineRoot = testEngine.discoverTests(specification);
+			EngineAwareTestDescriptor engineRoot = testEngine.discoverTests(discoveryRequest);
 			root.addChild(engineRoot);
 		}
-		root.applyFilters(specification);
+		root.applyFilters(discoveryRequest);
 		root.prune();
 		return root;
 	}
@@ -130,7 +130,6 @@ public class Launcher {
 	}
 
 	static class ExecutionListenerAdapter implements EngineExecutionListener {
-
 		private final TestPlan testPlan;
 		private final TestExecutionListener testExecutionListener;
 
@@ -170,5 +169,4 @@ public class Launcher {
 			return testPlan.getTestIdentifier(new TestId(testDescriptor.getUniqueId()));
 		}
 	}
-
 }

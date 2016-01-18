@@ -71,7 +71,7 @@ public final class DiscoveryRequest {
 		return unmodifiableList(this.selectors);
 	}
 
-	public <T extends DiscoverySelector> List<T> getSelectoryByType(Class<T> selectorType) {
+	public <T extends DiscoverySelector> List<T> getSelectorsByType(Class<T> selectorType) {
 		return this.selectors.stream().filter(selectorType::isInstance).map(selectorType::cast).collect(toList());
 	}
 
@@ -79,7 +79,11 @@ public final class DiscoveryRequest {
 		return unmodifiableList(this.engineIdFilters);
 	}
 
-	public <T extends DiscoveryFilter<?>> List<T> getFilterByType(Class<T> filterType) {
+	public List<DiscoveryFilter<?>> getDiscoveryFilters() {
+		return unmodifiableList(this.discoveryFilters);
+	}
+
+	public <T extends DiscoveryFilter<?>> List<T> getDiscoveryFiltersByType(Class<T> filterType) {
 		return this.discoveryFilters.stream().filter(filterType::isInstance).map(filterType::cast).collect(toList());
 	}
 

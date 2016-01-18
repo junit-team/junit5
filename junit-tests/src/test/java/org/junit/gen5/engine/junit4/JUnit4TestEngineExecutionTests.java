@@ -14,8 +14,8 @@ import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.gen5.engine.ExecutionEventConditions.*;
 import static org.junit.gen5.engine.TestExecutionResultConditions.isA;
 import static org.junit.gen5.engine.TestExecutionResultConditions.message;
-import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
-import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.engine.discoveryrequest.dsl.ClassSelectorBuilder.forClass;
+import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
 
 import java.util.List;
 

@@ -8,12 +8,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.specification.dsl;
+package org.junit.gen5.engine.discoveryrequest.dsl;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
-import static org.junit.gen5.engine.specification.dsl.MethodSelectorBuilder.byMethod;
-import static org.junit.gen5.engine.specification.dsl.PackageSelectorBuilder.byPackageName;
+import static org.junit.gen5.engine.discoveryrequest.dsl.ClassSelectorBuilder.forClass;
+import static org.junit.gen5.engine.discoveryrequest.dsl.MethodSelectorBuilder.byMethod;
+import static org.junit.gen5.engine.discoveryrequest.dsl.PackageSelectorBuilder.byPackageName;
 
 import java.lang.reflect.Method;
 import java.util.*;

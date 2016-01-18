@@ -8,16 +8,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.specification.dsl;
+package org.junit.gen5.engine.discoveryrequest.dsl;
 
 import static java.util.Arrays.asList;
 
 import java.util.List;
 
 import org.junit.gen5.engine.ClassFilter;
-import org.junit.gen5.engine.specification.AllClassFilters;
-import org.junit.gen5.engine.specification.ClassNameFilter;
-import org.junit.gen5.engine.specification.PredicateBasedClassFilter;
+import org.junit.gen5.engine.discoveryrequest.AllClassFilters;
+import org.junit.gen5.engine.discoveryrequest.ClassNameFilter;
+import org.junit.gen5.engine.discoveryrequest.PredicateBasedClassFilter;
 
 /**
  * @since 5.0

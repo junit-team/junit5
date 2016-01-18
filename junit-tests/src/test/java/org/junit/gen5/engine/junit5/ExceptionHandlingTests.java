@@ -14,8 +14,8 @@ import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.ExecutionEventConditions.*;
 import static org.junit.gen5.engine.TestExecutionResultConditions.*;
-import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
-import static org.junit.gen5.engine.specification.dsl.MethodSelectorBuilder.byMethod;
+import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.engine.discoveryrequest.dsl.MethodSelectorBuilder.byMethod;
 
 import java.io.IOException;
 import java.lang.reflect.Method;

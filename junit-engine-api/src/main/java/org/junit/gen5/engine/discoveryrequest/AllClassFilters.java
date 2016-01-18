@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.specification;
+package org.junit.gen5.engine.discoveryrequest;
 
 import static java.util.stream.Collectors.joining;
 import static org.junit.gen5.engine.FilterResult.included;

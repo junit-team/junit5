@@ -26,9 +26,9 @@ public class JUnit4TestEngine implements TestEngine {
 	}
 
 	@Override
-	public EngineAwareTestDescriptor discoverTests(DiscoveryRequest specification) {
+	public EngineAwareTestDescriptor discoverTests(DiscoveryRequest discoveryRequest) {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(this);
-		new JUnit4DiscoveryRequestResolver(engineDescriptor).resolve(specification);
+		new JUnit4DiscoveryRequestResolver(engineDescriptor).resolve(discoveryRequest);
 		return engineDescriptor;
 	}
 

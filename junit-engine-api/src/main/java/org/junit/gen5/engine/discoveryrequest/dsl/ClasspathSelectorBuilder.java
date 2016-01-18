@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.specification.dsl;
+package org.junit.gen5.engine.discoveryrequest.dsl;
 
 import static java.util.Collections.singleton;
 
@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.specification.ClasspathSelector;
+import org.junit.gen5.engine.discoveryrequest.ClasspathSelector;
 
 /**
  * @since 5.0

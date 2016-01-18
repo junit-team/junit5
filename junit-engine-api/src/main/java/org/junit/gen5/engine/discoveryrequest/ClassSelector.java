@@ -8,9 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.specification;
-
-import java.lang.reflect.Method;
+package org.junit.gen5.engine.discoveryrequest;
 
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.DiscoverySelectorVisitor;
@@ -18,25 +16,19 @@ import org.junit.gen5.engine.DiscoverySelectorVisitor;
 /**
  * @since 5.0
  */
-public class MethodSelector implements DiscoverySelector {
+public class ClassSelector implements DiscoverySelector {
 	private final Class<?> testClass;
-	private final Method testMethod;
 
-	public MethodSelector(Class<?> testClass, Method testMethod) {
+	public ClassSelector(Class<?> testClass) {
 		this.testClass = testClass;
-		this.testMethod = testMethod;
 	}
 
 	@Override
 	public void accept(DiscoverySelectorVisitor visitor) {
-		visitor.visitMethod(testClass, testMethod);
+		visitor.visitClass(testClass);
 	}
 
 	public Class<?> getTestClass() {
 		return testClass;
-	}
-
-	public Method getTestMethod() {
-		return testMethod;
 	}
 }

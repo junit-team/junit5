@@ -18,7 +18,7 @@ public interface TestEngine {
 		return getClass().getCanonicalName();
 	}
 
-	EngineAwareTestDescriptor discoverTests(DiscoveryRequest specification);
+	EngineAwareTestDescriptor discoverTests(DiscoveryRequest discoveryRequest);
 
 	void execute(ExecutionRequest request);
 }

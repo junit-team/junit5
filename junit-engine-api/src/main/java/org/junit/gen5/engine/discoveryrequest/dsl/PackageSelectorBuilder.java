@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.specification.dsl;
+package org.junit.gen5.engine.discoveryrequest.dsl;
 
 import static java.util.stream.Collectors.toList;
 
@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.specification.PackageNameSelector;
+import org.junit.gen5.engine.discoveryrequest.PackageNameSelector;
 
 /**
  * @since 5.0

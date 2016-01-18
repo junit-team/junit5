@@ -12,12 +12,12 @@ package org.junit.gen5.engine;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClass;
-import static org.junit.gen5.engine.specification.dsl.ClassSelectorBuilder.forClassName;
-import static org.junit.gen5.engine.specification.dsl.DiscoveryRequestBuilder.request;
-import static org.junit.gen5.engine.specification.dsl.MethodSelectorBuilder.byMethod;
-import static org.junit.gen5.engine.specification.dsl.PackageSelectorBuilder.byPackageName;
-import static org.junit.gen5.engine.specification.dsl.UniqueIdSelectorBuilder.byUniqueId;
+import static org.junit.gen5.engine.discoveryrequest.dsl.ClassSelectorBuilder.forClass;
+import static org.junit.gen5.engine.discoveryrequest.dsl.ClassSelectorBuilder.forClassName;
+import static org.junit.gen5.engine.discoveryrequest.dsl.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.engine.discoveryrequest.dsl.MethodSelectorBuilder.byMethod;
+import static org.junit.gen5.engine.discoveryrequest.dsl.PackageSelectorBuilder.byPackageName;
+import static org.junit.gen5.engine.discoveryrequest.dsl.UniqueIdSelectorBuilder.byUniqueId;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -25,12 +25,12 @@ import java.util.List;
 
 import org.assertj.core.util.Files;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.specification.*;
-import org.junit.gen5.engine.specification.dsl.ClasspathSelectorBuilder;
+import org.junit.gen5.engine.discoveryrequest.*;
+import org.junit.gen5.engine.discoveryrequest.dsl.ClasspathSelectorBuilder;
 
 public class DiscoveryRequestBuilderTests {
 	@Test
-	public void packagesAreStoredInSpecification() throws Exception {
+	public void packagesAreStoredInDiscoveryRequest() throws Exception {
 		// @formatter:off
         DiscoveryRequest discoveryRequest = request()
 				.select(
@@ -38,13 +38,13 @@ public class DiscoveryRequestBuilderTests {
 				).build();
         // @formatter:on
 
-		List<String> packageSpecifications = discoveryRequest.getSelectoryByType(
-			PackageNameSelector.class).stream().map(PackageNameSelector::getPackageName).collect(toList());
-		assertThat(packageSpecifications).contains("org.junit.gen5.engine");
+		List<String> packageSelectors = discoveryRequest.getSelectorsByType(PackageNameSelector.class).stream().map(
+			PackageNameSelector::getPackageName).collect(toList());
+		assertThat(packageSelectors).contains("org.junit.gen5.engine");
 	}
 
 	@Test
-	public void classesAreStoredInRequest() throws Exception {
+	public void classesAreStoredInDiscoveryRequest() throws Exception {
 		// @formatter:off
         DiscoveryRequest discoveryRequest = request()
 				.select(
@@ -54,13 +54,13 @@ public class DiscoveryRequestBuilderTests {
             .build();
         // @formatter:on
 
-		List<Class<?>> classes = discoveryRequest.getSelectoryByType(ClassSelector.class).stream().map(
+		List<Class<?>> classes = discoveryRequest.getSelectorsByType(ClassSelector.class).stream().map(
 			ClassSelector::getTestClass).collect(toList());
 		assertThat(classes).contains(SampleTestClass.class, DiscoveryRequestBuilderTests.class);
 	}
 
 	@Test
-	public void methodsByNameAreStoredInRequest() throws Exception {
+	public void methodsByNameAreStoredInDiscoveryRequest() throws Exception {
 		Class<?> testClass = SampleTestClass.class;
 		Method testMethod = testClass.getMethod("test");
 
@@ -71,7 +71,7 @@ public class DiscoveryRequestBuilderTests {
 				).build();
         // @formatter:on
 
-		List<MethodSelector> methodSelectors = discoveryRequest.getSelectoryByType(MethodSelector.class);
+		List<MethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
 		assertThat(methodSelectors).hasSize(1);
 
 		MethodSelector methodSelector = methodSelectors.get(0);
@@ -80,7 +80,7 @@ public class DiscoveryRequestBuilderTests {
 	}
 
 	@Test
-	public void methodsByClassAreStoredInRequest() throws Exception {
+	public void methodsByClassAreStoredInDiscoveryRequest() throws Exception {
 		Class<?> testClass = SampleTestClass.class;
 		Method testMethod = testClass.getMethod("test");
 
@@ -91,7 +91,7 @@ public class DiscoveryRequestBuilderTests {
 				).build();
 		// @formatter:on
 
-		List<MethodSelector> methodSelectors = discoveryRequest.getSelectoryByType(MethodSelector.class);
+		List<MethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
 		assertThat(methodSelectors).hasSize(1);
 
 		MethodSelector methodSelector = methodSelectors.get(0);
@@ -100,7 +100,7 @@ public class DiscoveryRequestBuilderTests {
 	}
 
 	@Test
-	public void unavailableFoldersAreNotStoredInRequest() throws Exception {
+	public void unavailableFoldersAreNotStoredInDiscoveryRequest() throws Exception {
 		// @formatter:off
         DiscoveryRequest discoveryRequest = request()
 				.select(
@@ -108,14 +108,14 @@ public class DiscoveryRequestBuilderTests {
 				).build();
         // @formatter:on
 
-		List<String> folders = discoveryRequest.getSelectoryByType(ClasspathSelector.class).stream().map(
+		List<String> folders = discoveryRequest.getSelectorsByType(ClasspathSelector.class).stream().map(
 			ClasspathSelector::getClasspathRoot).map(File::getAbsolutePath).collect(toList());
 
 		assertThat(folders).isEmpty();
 	}
 
 	@Test
-	public void availableFoldersAreStoredInRequest() throws Exception {
+	public void availableFoldersAreStoredInDiscoveryRequest() throws Exception {
 		File temporaryFolder = Files.newTemporaryFolder();
 		try {
 			// @formatter:off
@@ -125,7 +125,7 @@ public class DiscoveryRequestBuilderTests {
 					).build();
 			// @formatter:on
 
-			List<String> folders = discoveryRequest.getSelectoryByType(ClasspathSelector.class).stream().map(
+			List<String> folders = discoveryRequest.getSelectorsByType(ClasspathSelector.class).stream().map(
 				ClasspathSelector::getClasspathRoot).map(File::getAbsolutePath).collect(toList());
 
 			assertThat(folders).contains(temporaryFolder.getAbsolutePath());
@@ -136,7 +136,7 @@ public class DiscoveryRequestBuilderTests {
 	}
 
 	@Test
-	public void uniqueIdsAreStoredInRequest() throws Exception {
+	public void uniqueIdsAreStoredInDiscoveryRequest() throws Exception {
 		// @formatter:off
         DiscoveryRequest discoveryRequest = request()
 				.select(
@@ -145,7 +145,7 @@ public class DiscoveryRequestBuilderTests {
 				).build();
         // @formatter:on
 
-		List<String> uniqueIds = discoveryRequest.getSelectoryByType(UniqueIdSelector.class).stream().map(
+		List<String> uniqueIds = discoveryRequest.getSelectorsByType(UniqueIdSelector.class).stream().map(
 			UniqueIdSelector::getUniqueId).collect(toList());
 
 		assertThat(uniqueIds).contains("engine:bla:foo:bar:id1", "engine:bla:foo:bar:id2");

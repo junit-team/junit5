@@ -19,7 +19,7 @@ import org.junit.gen5.engine.ClassFilter;
 import org.junit.gen5.engine.DiscoveryRequest;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDescriptor;
-import org.junit.gen5.engine.specification.AllClassFilters;
+import org.junit.gen5.engine.discoveryrequest.AllClassFilters;
 
 public class JUnit4DiscoveryRequestResolver {
 
@@ -55,14 +55,14 @@ public class JUnit4DiscoveryRequestResolver {
 
 	private <T extends DiscoverySelector> void resolveSelectorsOfSingleType(DiscoveryRequest discoveryRequest,
 			DiscoverySelectorResolver<T> selectorResolver, TestClassCollector collector) {
-		discoveryRequest.getSelectoryByType(selectorResolver.getSelectorClass()).forEach(
+		discoveryRequest.getSelectorsByType(selectorResolver.getSelectorClass()).forEach(
 			selector -> selectorResolver.resolve(selector, collector));
 	}
 
 	private Set<TestClassRequest> filterAndConvertToTestClassRequests(DiscoveryRequest request,
 			TestClassCollector collector) {
 		// TODO #40 Log classes that are filtered out
-		ClassFilter classFilter = new AllClassFilters(request.getFilterByType(ClassFilter.class));
+		ClassFilter classFilter = new AllClassFilters(request.getDiscoveryFiltersByType(ClassFilter.class));
 		return collector.toRequests(testClass -> classFilter.filter(testClass).included());
 	}
 

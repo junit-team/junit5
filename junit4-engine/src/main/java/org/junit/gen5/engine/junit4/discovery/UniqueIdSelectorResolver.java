@@ -15,8 +15,8 @@ import static org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor.DEFAU
 import java.util.Optional;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.engine.discoveryrequest.UniqueIdSelector;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
-import org.junit.gen5.engine.specification.UniqueIdSelector;
 
 class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelector> {
 

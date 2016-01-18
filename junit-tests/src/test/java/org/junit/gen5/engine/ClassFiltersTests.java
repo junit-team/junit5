@@ -16,8 +16,8 @@ import java.util.Collection;
 import java.util.StringJoiner;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.specification.PredicateBasedClassFilter;
-import org.junit.gen5.engine.specification.dsl.ClassFilters;
+import org.junit.gen5.engine.discoveryrequest.PredicateBasedClassFilter;
+import org.junit.gen5.engine.discoveryrequest.dsl.ClassFilters;
 
 class ClassFiltersTests {
 	@Test
