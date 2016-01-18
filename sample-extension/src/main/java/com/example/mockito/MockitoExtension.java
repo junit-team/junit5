@@ -10,12 +10,6 @@
 
 package com.example.mockito;
 
-import static org.mockito.Mockito.mock;
-
-import java.lang.reflect.Parameter;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodInvocationContext;
@@ -24,6 +18,10 @@ import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.lang.reflect.Parameter;
+
+import static org.mockito.Mockito.mock;
 
 /**
  * {@code MockitoExtension} showcases the {@link InstancePostProcessor}
@@ -35,8 +33,6 @@ import org.mockito.MockitoAnnotations;
  * @since 5.0
  */
 public class MockitoExtension implements InstancePostProcessor, MethodParameterResolver {
-
-	private final Map<Class<?>, Object> mocks = new ConcurrentHashMap<>();
 
 	@Override
 	public void postProcessTestInstance(TestExtensionContext context) {
@@ -53,12 +49,12 @@ public class MockitoExtension implements InstancePostProcessor, MethodParameterR
 	@Override
 	public Object resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
 			ExtensionContext extensionContext) throws ParameterResolutionException {
-
-		return getMock(parameter.getType());
+		return getMock(parameter.getType(), extensionContext);
 	}
 
-	private Object getMock(Class<?> mockType) {
-		return this.mocks.computeIfAbsent(mockType, type -> mock(type));
+	private Object getMock(Class<?> mockType, ExtensionContext extensionContext) {
+		return extensionContext.getOrComputeIfAbsent(mockType, type -> mock(mockType),
+			MockitoExtension.class.getName());
 	}
 
 }
