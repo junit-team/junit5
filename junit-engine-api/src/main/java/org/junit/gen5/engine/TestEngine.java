@@ -14,11 +14,12 @@ package org.junit.gen5.engine;
  * @since 5.0
  */
 public interface TestEngine {
+
 	default String getId() {
 		return getClass().getCanonicalName();
 	}
 
-	EngineAwareTestDescriptor discoverTests(EngineDiscoveryRequest discoveryRequest);
+	TestDescriptor discoverTests(EngineDiscoveryRequest discoveryRequest);
 
 	void execute(ExecutionRequest request);
 }

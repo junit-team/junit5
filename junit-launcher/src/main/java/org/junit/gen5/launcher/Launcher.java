@@ -13,7 +13,6 @@ package org.junit.gen5.launcher;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.FilterResult;
@@ -114,7 +113,7 @@ public class Launcher {
 
 			LOG.fine(() -> String.format("Discovering tests during launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
-			EngineAwareTestDescriptor engineRoot = testEngine.discoverTests(discoveryRequest);
+			TestDescriptor engineRoot = testEngine.discoverTests(discoveryRequest);
 			root.add(testEngine, engineRoot);
 		}
 		root.applyFilters(discoveryRequest);

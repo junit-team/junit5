@@ -14,8 +14,9 @@ import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.engine.*;
-import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
+import org.junit.gen5.engine.ExecutionEventRecorder;
+import org.junit.gen5.engine.ExecutionRequest;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.launcher.DiscoveryRequest;
 
 /**
@@ -42,7 +43,7 @@ abstract class AbstractJUnit5TestEngineTests {
 		return eventRecorder;
 	}
 
-	protected EngineDescriptor discoverTests(DiscoveryRequest request) {
+	protected TestDescriptor discoverTests(DiscoveryRequest request) {
 		return engine.discoverTests(request);
 	}
 

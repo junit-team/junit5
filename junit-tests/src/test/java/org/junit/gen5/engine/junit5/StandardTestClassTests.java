@@ -10,7 +10,9 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
@@ -18,7 +20,7 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ExecutionEventRecorder;
-import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.launcher.DiscoveryRequest;
 import org.opentest4j.TestAbortedException;
 
@@ -39,14 +41,14 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void standardTestClassIsCorrectlyDiscovered() {
 		DiscoveryRequest request = request().select(forClass(MyStandardTestCase.class)).build();
-		EngineDescriptor engineDescriptor = discoverTests(request);
+		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsCorrectlyDiscovered() {
 		DiscoveryRequest request = request().select(forClass(SecondOfTwoTestCases.class)).build();
-		EngineDescriptor engineDescriptor = discoverTests(request);
+		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2 + 2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 

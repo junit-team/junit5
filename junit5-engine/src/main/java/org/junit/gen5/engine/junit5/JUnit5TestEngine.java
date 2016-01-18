@@ -36,7 +36,7 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 	}
 
 	@Override
-	public JUnit5EngineDescriptor discoverTests(EngineDiscoveryRequest discoveryRequest) {
+	public TestDescriptor discoverTests(EngineDiscoveryRequest discoveryRequest) {
 		Preconditions.notNull(discoveryRequest, "discovery request must not be null");
 		JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(this);
 		resolveDiscoveryRequest(discoveryRequest, engineDescriptor);

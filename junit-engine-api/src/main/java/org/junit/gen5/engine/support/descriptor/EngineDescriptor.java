@@ -10,13 +10,12 @@
 
 package org.junit.gen5.engine.support.descriptor;
 
-import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 
 /**
  * @since 5.0
  */
-public class EngineDescriptor extends AbstractTestDescriptor implements EngineAwareTestDescriptor {
+public class EngineDescriptor extends AbstractTestDescriptor {
 
 	private final TestEngine engine;
 
@@ -45,7 +44,6 @@ public class EngineDescriptor extends AbstractTestDescriptor implements EngineAw
 		return true;
 	}
 
-	@Override
 	public TestEngine getEngine() {
 		return engine;
 	}

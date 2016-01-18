@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.EngineAwareTestDescriptor;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -37,7 +36,7 @@ public class AbstractTestDescriptorTests {
 		engineDescriptor = new EngineDescriptor(new TestEngine() {
 
 			@Override
-			public EngineAwareTestDescriptor discoverTests(EngineDiscoveryRequest discoveryRequest) {
+			public TestDescriptor discoverTests(EngineDiscoveryRequest discoveryRequest) {
 				return engineDescriptor;
 			}
 

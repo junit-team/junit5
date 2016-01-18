@@ -12,7 +12,6 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
-import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
@@ -21,8 +20,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.discovery.MethodSelector;
-import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.launcher.DiscoveryRequest;
 
 /**
@@ -35,7 +34,7 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void discoverTestClass() {
 		DiscoveryRequest request = request().select(forClass(LocalTestCase.class)).build();
-		EngineDescriptor engineDescriptor = discoverTests(request);
+		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
@@ -43,7 +42,7 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 	public void discoverByUniqueId() {
 		DiscoveryRequest request = request().select(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.DiscoveryTests$LocalTestCase#test1()")).build();
-		EngineDescriptor engineDescriptor = discoverTests(request);
+		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
@@ -52,7 +51,7 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 		Method testMethod = LocalTestCase.class.getDeclaredMethod("test3", new Class[0]);
 
 		DiscoveryRequest request = request().select(MethodSelector.forMethod(LocalTestCase.class, testMethod)).build();
-		EngineDescriptor engineDescriptor = discoverTests(request);
+		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
@@ -62,7 +61,7 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.DiscoveryTests$LocalTestCase#test2()"),
 			forClass(LocalTestCase.class)).build();
 
-		EngineDescriptor engineDescriptor = discoverTests(spec);
+		TestDescriptor engineDescriptor = discoverTests(spec);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
