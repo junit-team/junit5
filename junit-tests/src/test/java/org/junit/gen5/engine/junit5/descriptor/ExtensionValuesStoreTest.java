@@ -42,56 +42,56 @@ class ExtensionValuesStoreTests {
 
 		@Test
 		void getWithUnknownKeyReturnsNull() {
-			assertNull(store.get("unknown key", namespace));
+			assertNull(store.get(namespace, "unknown key"));
 		}
 
 		@Test
 		void putAndGetWithSameKey() {
 
-			store.put(key, value, namespace);
-			assertEquals(value, store.get(key, namespace));
+			store.put(namespace, key, value);
+			assertEquals(value, store.get(namespace, key));
 		}
 
 		@Test
 		void valueCanBeReplaced() {
-			store.put(key, value, namespace);
+			store.put(namespace, key, value);
 
 			Object newValue = new Object();
-			store.put(key, newValue, namespace);
+			store.put(namespace, key, newValue);
 
-			assertEquals(newValue, store.get(key, namespace));
+			assertEquals(newValue, store.get(namespace, key));
 		}
 
 		@Test
 		void valueIsComputedIfAbsent() {
-			assertEquals(value, store.getOrComputeIfAbsent(key, innerKey -> value, namespace));
-			assertEquals(value, store.get(key, namespace));
+			assertEquals(value, store.getOrComputeIfAbsent(namespace, key, innerKey -> value));
+			assertEquals(value, store.get(namespace, key));
 		}
 
 		@Test
 		void valueIsNotComputedIfPresent() {
-			store.put(key, value, namespace);
+			store.put(namespace, key, value);
 
-			assertEquals(value, store.getOrComputeIfAbsent(key, innerKey -> "a different value", namespace));
-			assertEquals(value, store.get(key, namespace));
+			assertEquals(value, store.getOrComputeIfAbsent(namespace, key, innerKey -> "a different value"));
+			assertEquals(value, store.get(namespace, key));
 		}
 
 		@Test
 		void nullIsAValidValueToPut() {
-			store.put(key, null, namespace);
+			store.put(namespace, key, null);
 
-			assertEquals(null, store.getOrComputeIfAbsent(key, innerKey -> "a different value", namespace));
-			assertEquals(null, store.get(key, namespace));
+			assertEquals(null, store.getOrComputeIfAbsent(namespace, key, innerKey -> "a different value"));
+			assertEquals(null, store.get(namespace, key));
 		}
 
 		@Test
 		void keysCanBeRemoved() {
-			store.put(key, value, namespace);
-			assertEquals(value, store.remove(key, namespace));
+			store.put(namespace, key, value);
+			assertEquals(value, store.remove(namespace, key));
 
-			assertNull(store.get(key, namespace));
+			assertNull(store.get(namespace, key));
 			assertEquals("a different value",
-				store.getOrComputeIfAbsent(key, innerKey -> "a different value", namespace));
+				store.getOrComputeIfAbsent(namespace, key, innerKey -> "a different value"));
 		}
 
 		@Test
@@ -102,11 +102,11 @@ class ExtensionValuesStoreTests {
 			Object value2 = createObject("value2");
 			Namespace namespace2 = Namespace.of("ns2");
 
-			store.put(key, value1, namespace1);
-			store.put(key, value2, namespace2);
+			store.put(namespace1, key, value1);
+			store.put(namespace2, key, value2);
 
-			assertEquals(value1, store.get(key, namespace1));
-			assertEquals(value2, store.get(key, namespace2));
+			assertEquals(value1, store.get(namespace1, key));
+			assertEquals(value2, store.get(namespace2, key));
 		}
 
 		@Test
@@ -114,10 +114,10 @@ class ExtensionValuesStoreTests {
 			Namespace namespace1 = Namespace.of("ns1");
 			Namespace namespace2 = Namespace.of("ns2");
 
-			assertEquals(value, store.getOrComputeIfAbsent(key, innerKey -> value, namespace1));
-			assertEquals(value, store.get(key, namespace1));
+			assertEquals(value, store.getOrComputeIfAbsent(namespace1, key, innerKey -> value));
+			assertEquals(value, store.get(namespace1, key));
 
-			assertNull(store.get(key, namespace2));
+			assertNull(store.get(namespace2, key));
 		}
 
 		@Test
@@ -128,12 +128,12 @@ class ExtensionValuesStoreTests {
 			Object value1 = createObject("value1");
 			Object value2 = createObject("value2");
 
-			store.put(key, value1, namespace1);
-			store.put(key, value2, namespace2);
-			store.remove(key, namespace1);
+			store.put(namespace1, key, value1);
+			store.put(namespace2, key, value2);
+			store.remove(namespace1, key);
 
-			assertNull(store.get(key, namespace1));
-			assertEquals(value2, store.get(key, namespace2));
+			assertNull(store.get(namespace1, key));
+			assertEquals(value2, store.get(namespace2, key));
 		}
 
 	}
@@ -143,19 +143,19 @@ class ExtensionValuesStoreTests {
 
 		@Test
 		void valueFromParentIsVisible() {
-			parentStore.put(key, value, namespace);
-			assertEquals(value, store.get(key, namespace));
+			parentStore.put(namespace, key, value);
+			assertEquals(value, store.get(namespace, key));
 		}
 
 		@Test
 		void valueFromParentCanBeOverriddenInChild() {
-			parentStore.put(key, value, namespace);
+			parentStore.put(namespace, key, value);
 
 			Object otherValue = new Object();
-			store.put(key, otherValue, namespace);
-			assertEquals(otherValue, store.get(key, namespace));
+			store.put(namespace, key, otherValue);
+			assertEquals(otherValue, store.get(namespace, key));
 
-			assertEquals(value, parentStore.get(key, namespace));
+			assertEquals(value, parentStore.get(namespace, key));
 		}
 	}
 
@@ -171,12 +171,12 @@ class ExtensionValuesStoreTests {
 
 			Object value2 = createObject("value2");
 
-			parentStore.put(key, value, ns1);
-			parentStore.put(key, value2, ns2);
+			parentStore.put(ns1, key, value);
+			parentStore.put(ns2, key, value2);
 
-			assertEquals(value, store.get(key, ns1));
-			assertEquals(value, store.get(key, ns3));
-			assertEquals(value2, store.get(key, ns2));
+			assertEquals(value, store.get(ns1, key));
+			assertEquals(value, store.get(ns3, key));
+			assertEquals(value2, store.get(ns2, key));
 		}
 
 		@Test
@@ -185,10 +185,10 @@ class ExtensionValuesStoreTests {
 			Namespace ns1 = Namespace.of("part1", "part2");
 			Namespace ns2 = Namespace.of("part2", "part1");
 
-			parentStore.put(key, value, ns1);
+			parentStore.put(ns1, key, value);
 
-			assertEquals(value, store.get(key, ns1));
-			assertEquals(value, store.get(key, ns2));
+			assertEquals(value, store.get(ns1, key));
+			assertEquals(value, store.get(ns2, key));
 		}
 
 	}

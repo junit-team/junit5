@@ -26,21 +26,21 @@ public class NamespacedStore implements Store {
 
 	@Override
 	public Object get(Object key) {
-		return valuesStore.get(key, namespace);
+		return valuesStore.get(namespace, key);
 	}
 
 	@Override
 	public void put(Object key, Object value) {
-		valuesStore.put(key, value, namespace);
+		valuesStore.put(namespace, key, value);
 	}
 
 	@Override
 	public Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator) {
-		return valuesStore.getOrComputeIfAbsent(key, defaultCreator, namespace);
+		return valuesStore.getOrComputeIfAbsent(namespace, key, defaultCreator);
 	}
 
 	@Override
 	public Object remove(Object key) {
-		return valuesStore.remove(key, namespace);
+		return valuesStore.remove(namespace, key);
 	}
 }
