@@ -10,8 +10,8 @@ JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
 
 === Registering Extensions
 
-Extensions can be registered either declaratively via `@ExtendWith` or programmatically
-via an `ExtensionRegistrar`.
+Extensions can be registered either declaratively via `{ExtendWith}` or programmatically
+via an `{ExtensionRegistrar}`.
 
 Note that registered extensions are inherited within test class hierarchies.
 
