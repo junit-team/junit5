@@ -135,9 +135,4 @@ public class DiscoveryRequestCreatorTests {
 		return creator.toDiscoveryRequest(options);
 	}
 
-	private TestDescriptor testDescriptorWithTag(String tag) {
-		TestDescriptor testDescriptor = mock(TestDescriptor.class);
-		when(testDescriptor.getTags()).thenReturn(singleton(new TestTag(tag)));
-		return testDescriptor;
-	}
 }

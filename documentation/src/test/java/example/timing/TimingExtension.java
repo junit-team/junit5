@@ -37,8 +37,6 @@ public class TimingExtension implements ExtensionRegistrar {
 
 	private static class TestMethodInvocationWrapper implements BeforeEachExtensionPoint, AfterEachExtensionPoint {
 
-		private final Namespace namespace = Namespace.of(getClass());
-
 		@Override
 		public void beforeEach(TestExtensionContext context) throws Exception {
 			ExtensionContext.Store times = context.getStore(getNamespace(context));
