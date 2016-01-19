@@ -217,10 +217,7 @@ public class TestExtensionRegistry {
 		}
 
 		@Override
-		public <E extends ExtensionPoint> void register(E extensionPoint, Class<E> extensionPointType,
-				Position position) {
-
-			// TODO Document why extensionPointType is not used.
+		public void register(ExtensionPoint extensionPoint, Position position) {
 			registerExtensionPoint(extensionPoint, this.extensionRegistrar, position);
 		}
 

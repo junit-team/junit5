@@ -245,8 +245,8 @@ class MyExtensionRegistrar implements ExtensionRegistrar {
 
 	@Override
 	public void registerExtensions(ExtensionPointRegistry registry) {
-		registry.register(this::doNothing, MyExtensionPoint.class);
-		registry.register(this::doMore, AnotherExtensionPoint.class);
+		registry.register((MyExtensionPoint) this::doNothing);
+		registry.register((AnotherExtensionPoint) this::doMore);
 	}
 
 	private void doMore() {

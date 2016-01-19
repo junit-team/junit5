@@ -138,18 +138,15 @@ public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTests {
 
 		@Override
 		public void registerExtensions(ExtensionPointRegistry registry) {
-			registry.register(this::innermostBefore, BeforeEachExtensionPoint.class, Position.INNERMOST);
-			registry.register(this::innermostAfter, AfterEachExtensionPoint.class, Position.INNERMOST);
-			registry.register(this::outermostBefore, BeforeEachExtensionPoint.class, Position.OUTERMOST);
-			registry.register(this::outermostAfter, AfterEachExtensionPoint.class, Position.OUTERMOST);
+			registry.register((BeforeEachExtensionPoint) ctx -> callSequence.add("innermostBefore"),
+				Position.INNERMOST);
+			registry.register((AfterEachExtensionPoint) this::innermostAfter, Position.INNERMOST);
+			registry.register((BeforeEachExtensionPoint) this::outermostBefore, Position.OUTERMOST);
+			registry.register((AfterEachExtensionPoint) this::outermostAfter, Position.OUTERMOST);
 		}
 
 		private void outermostBefore(TestExtensionContext context) {
 			callSequence.add("outermostBefore");
-		}
-
-		private void innermostBefore(TestExtensionContext context) {
-			callSequence.add("innermostBefore");
 		}
 
 		private void outermostAfter(TestExtensionContext context) {
