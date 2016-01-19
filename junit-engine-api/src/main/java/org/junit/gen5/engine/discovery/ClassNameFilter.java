@@ -32,10 +32,10 @@ class ClassNameFilter implements ClassFilter {
 	@Override
 	public FilterResult filter(Class<?> testClass) {
 		if (pattern.matcher(testClass.getName()).matches()) {
-			return included("TestClass matches name pattern");
+			return included("Test class matches name pattern");
 		}
 		else {
-			return excluded("TestClass does not match name pattern");
+			return excluded("Test class does not match name pattern");
 		}
 	}
 

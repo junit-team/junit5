@@ -22,11 +22,10 @@ import org.junit.gen5.engine.TestDescriptor;
  */
 abstract class AbstractExtensionContext implements ExtensionContext {
 
-	private final ExtensionValuesStore valuesStore;
-
 	private final ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
 	private final TestDescriptor testDescriptor;
+	private final ExtensionValuesStore valuesStore;
 
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			TestDescriptor testDescriptor) {

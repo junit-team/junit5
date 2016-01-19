@@ -30,6 +30,6 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnit5.class)
 @Packages("example")
-@ClassNamePattern(".*Test[s]")
+@ClassNamePattern(".*Test[s]?")
 public class DocumentationTestSuite {
 }
