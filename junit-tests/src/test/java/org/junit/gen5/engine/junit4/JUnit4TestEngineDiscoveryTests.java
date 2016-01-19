@@ -231,7 +231,8 @@ class JUnit4TestEngineDiscoveryTests {
 	void resolvesPackageSelectorForJUnit4SamplesPackage() {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
 
-		TestDiscoveryRequest discoveryRequest = request().select(forPackageName(testClass.getPackage().getName())).build();
+		TestDiscoveryRequest discoveryRequest = request().select(
+			forPackageName(testClass.getPackage().getName())).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
 
@@ -247,7 +248,8 @@ class JUnit4TestEngineDiscoveryTests {
 	void resolvesPackageSelectorForJUnit3SamplesPackage() {
 		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
 
-		TestDiscoveryRequest discoveryRequest = request().select(forPackageName(testClass.getPackage().getName())).build();
+		TestDiscoveryRequest discoveryRequest = request().select(
+			forPackageName(testClass.getPackage().getName())).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
 

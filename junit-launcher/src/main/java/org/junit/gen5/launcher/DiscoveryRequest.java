@@ -61,35 +61,43 @@ public final class DiscoveryRequest implements TestDiscoveryRequest {
 	// Descriptor Filters are evaluated by the launcher itself after engines have done their discovery.
 	private final List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
 
-	@Override public void addSelector(DiscoverySelector selector) {
+	@Override
+	public void addSelector(DiscoverySelector selector) {
 		this.selectors.add(selector);
 	}
 
-	@Override public void addSelectors(Collection<DiscoverySelector> selectors) {
+	@Override
+	public void addSelectors(Collection<DiscoverySelector> selectors) {
 		selectors.forEach(this::addSelector);
 	}
 
-	@Override public void addEngineIdFilter(EngineIdFilter engineIdFilter) {
+	@Override
+	public void addEngineIdFilter(EngineIdFilter engineIdFilter) {
 		this.engineIdFilters.add(engineIdFilter);
 	}
 
-	@Override public void addEngineIdFilters(Collection<EngineIdFilter> engineIdFilters) {
+	@Override
+	public void addEngineIdFilters(Collection<EngineIdFilter> engineIdFilters) {
 		this.engineIdFilters.addAll(engineIdFilters);
 	}
 
-	@Override public void addFilter(DiscoveryFilter<?> discoveryFilter) {
+	@Override
+	public void addFilter(DiscoveryFilter<?> discoveryFilter) {
 		this.discoveryFilters.add(discoveryFilter);
 	}
 
-	@Override public void addFilters(Collection<DiscoveryFilter<?>> discoveryFilters) {
+	@Override
+	public void addFilters(Collection<DiscoveryFilter<?>> discoveryFilters) {
 		this.discoveryFilters.addAll(discoveryFilters);
 	}
 
-	@Override public void addPostFilter(PostDiscoveryFilter postDiscoveryFilter) {
+	@Override
+	public void addPostFilter(PostDiscoveryFilter postDiscoveryFilter) {
 		this.postDiscoveryFilters.add(postDiscoveryFilter);
 	}
 
-	@Override public void addPostFilters(Collection<PostDiscoveryFilter> postDiscoveryFilters) {
+	@Override
+	public void addPostFilters(Collection<PostDiscoveryFilter> postDiscoveryFilters) {
 		this.postDiscoveryFilters.addAll(postDiscoveryFilters);
 	}
 
@@ -103,7 +111,8 @@ public final class DiscoveryRequest implements TestDiscoveryRequest {
 		return this.selectors.stream().filter(selectorType::isInstance).map(selectorType::cast).collect(toList());
 	}
 
-	@Override public List<EngineIdFilter> getEngineIdFilters() {
+	@Override
+	public List<EngineIdFilter> getEngineIdFilters() {
 		return unmodifiableList(this.engineIdFilters);
 	}
 
@@ -117,11 +126,13 @@ public final class DiscoveryRequest implements TestDiscoveryRequest {
 		return this.discoveryFilters.stream().filter(filterType::isInstance).map(filterType::cast).collect(toList());
 	}
 
-	@Override public List<PostDiscoveryFilter> getPostDiscoveryFilters() {
+	@Override
+	public List<PostDiscoveryFilter> getPostDiscoveryFilters() {
 		return unmodifiableList(this.postDiscoveryFilters);
 	}
 
-	@Override public boolean acceptDescriptor(TestDescriptor testDescriptor) {
+	@Override
+	public boolean acceptDescriptor(TestDescriptor testDescriptor) {
 		Preconditions.notNull(testDescriptor, "testDescriptor must not be null");
 
 		// @formatter:off

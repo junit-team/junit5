@@ -50,7 +50,8 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 	public void discoverByMethod() throws NoSuchMethodException {
 		Method testMethod = LocalTestCase.class.getDeclaredMethod("test3", new Class[0]);
 
-		TestDiscoveryRequest request = request().select(MethodSelector.forMethod(LocalTestCase.class, testMethod)).build();
+		TestDiscoveryRequest request = request().select(
+			MethodSelector.forMethod(LocalTestCase.class, testMethod)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
