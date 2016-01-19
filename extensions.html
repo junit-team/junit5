@@ -453,8 +453,8 @@ JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
 <div class="sect2">
 <h3 id="registering-extensions">Registering Extensions</h3>
 <div class="paragraph">
-<p>Extensions can be registered either declaratively via <code>@ExtendWith</code> or programmatically
-via an <code>ExtensionRegistrar</code>.</p>
+<p>Extensions can be registered either declaratively via <code>{ExtendWith}</code> or programmatically
+via an <code>{ExtensionRegistrar}</code>.</p>
 </div>
 <div class="paragraph">
 <p>Note that registered extensions are inherited within test class hierarchies.</p>
@@ -463,10 +463,10 @@ via an <code>ExtensionRegistrar</code>.</p>
 <h4 id="declarative-extension-registration">Declarative Extension Registration</h4>
 <div class="paragraph">
 <p>Developers can register one or more extensions <em>declaratively</em> by annotating a test
-class, test method, or custom <em>composed annotation</em> with <code>@ExtendWith(&#8230;&#8203;)</code> and supplying
-class references for the extensions to register. For example, to register a custom
-<code>MockitoExtension</code> for all tests in a particular class and its subclasses, you would
-annotate the test class as follows.</p>
+class, test method, or custom <em><a href="#meta-annotations">composed annotation</a></em> with
+<code>@ExtendWith(&#8230;&#8203;)</code> and supplying class references for the extensions to register. For
+example, to register a custom <code>MockitoExtension</code> for all tests in a particular class and
+its subclasses, you would annotate the test class as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -508,7 +508,7 @@ class MyTestsV2 {
 <h4 id="programmatic-extension-registration">Programmatic Extension Registration</h4>
 <div class="paragraph">
 <p>Developers can register one or more extensions <em>programmatically</em> by implementing the
-<code>ExtensionRegistrar</code> API and registering the custom <code>ExtensionRegistrar</code> implementation
+<code>{ExtensionRegistrar}</code> API and registering the custom <code>ExtensionRegistrar</code> implementation
 via <code>@ExtendWith</code> as mentioned above. The following examples demonstrate the various
 options in implementations of the <code>ExtensionRegistrar.registerExtensions()</code> method.</p>
 </div>
@@ -555,8 +555,8 @@ ordering among such extensions is undefined.</p>
 </div>
 <div class="paragraph">
 <p>The following listing demonstrates how to configure an explicit position for an instance
-of an extension; however, a <code>Position</code> can also be supplied for lambda expressions and
-method references.</p>
+of an extension. Note, however, that a <code>Position</code> can also be supplied for lambda
+expressions and method references.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -643,10 +643,11 @@ method parameters at runtime.</p>
 <div class="paragraph">
 <p>If a <code>@Test</code>, <code>@BeforeEach</code>, <code>@AfterEach</code> , <code>@BeforeAll</code> or <code>@AfterAll</code> method accepts a
 parameter, the parameter must be <em>resolved</em> at runtime by a <code>MethodParameterResolver</code>. A
-<code>MethodParameterResolver</code> can either be built-in (see <code>{TestNameParameterResolver}</code>) or
+<code>MethodParameterResolver</code> can either be built-in (see <code>{TestInfoParameterResolver}</code>) or
 registered by the user via <code>@ExtendWith</code>. Generally speaking, parameters may be resolved
-by <em>type</em> or by <em>annotation</em>. For concrete examples, consult the source code for
-<code>{CustomTypeParameterResolver}</code> and <code>{CustomAnnotationParameterResolver}</code>, respectively.</p>
+by <em>name</em>, <em>type</em>, <em>annotation</em>, or any combination thereof. For concrete examples,
+consult the source code for <code>{CustomTypeParameterResolver}</code> and
+<code>{CustomAnnotationParameterResolver}</code>, respectively.</p>
 </div>
 </div>
 <div class="sect2">
@@ -704,7 +705,7 @@ from one invocation of an extension point to the next? &#8230;&#8203;</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-19 14:39:16 -05:00
+Last updated 2016-01-19 15:46:53 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

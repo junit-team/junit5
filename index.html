@@ -591,10 +591,10 @@ the projects below.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>For Gradle, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project.</p>
+<p>For Gradle, check out the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project.</p>
 </li>
 <li>
-<p>For Maven, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer">junit5-maven-consumer</a></code> project.</p>
+<p>For Maven, check out the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-maven-consumer">junit5-maven-consumer</a></code> project.</p>
 </li>
 </ul>
 </div>
@@ -627,7 +627,7 @@ class FirstJUnit5Tests {
 <p>JUnit 5 supports the following annotations for configuring tests and extending the framework.</p>
 </div>
 <div class="paragraph">
-<p>All core annotations are located in the <code><a href="https://github.com/junit-team/junit5/tree/master/junit5-api/src/main/java/org/junit/gen5/api">org.junit.gen5.api</a></code> package in the <code>junit5-api</code>
+<p>All core annotations are located in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api">org.junit.gen5.api</a></code> package in the <code>junit5-api</code>
 module.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
@@ -685,7 +685,7 @@ module.</p>
 </tbody>
 </table>
 <div class="sect3">
-<h4 id="meta-annotations-and-composed-annotations">3.1.1. Meta-Annotations and Composed Annotations</h4>
+<h4 id="meta-annotations">3.1.1. Meta-Annotations and Composed Annotations</h4>
 <div class="paragraph">
 <p>JUnit 5 annotations can be used as <em>meta-annotations</em>. That means that you can define
 your own <em>composed annotation</em> that will automatically <em>inherit</em> the semantics of its
@@ -774,7 +774,7 @@ class CanHaveAnyDisplayNameTest {
 <div class="paragraph">
 <p>JUnit 5 comes with many of the assertion methods that JUnit 4 has and adds a few that
 lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions are static
-methods in the <code><a href="https://github.com/junit-team/junit5/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java">org.junit.gen5.Assertions</a></code> class.</p>
+methods in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java">org.junit.gen5.Assertions</a></code> class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -819,7 +819,7 @@ class MyTest {
 <div class="paragraph">
 <p>JUnit 5 comes with a subset of the assumption methods that JUnit 4 provides and adds a
 few that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assumptions
-are static methods in the <code><a href="https://github.com/junit-team/junit5/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Assumptions.java">org.junit.gen5.Assumptions</a></code> class.</p>
+are static methods in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Assumptions.java">org.junit.gen5.Assumptions</a></code> class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -976,7 +976,7 @@ methods are now permitted to have parameters. This allows for greater flexibilit
 enables method-level <em>Dependency Injection</em>.</p>
 </div>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java">MethodParameterResolver</a></code> defines the API for test extensions that wish to
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java">MethodParameterResolver</a></code> defines the API for test extensions that wish to
 <em>dynamically</em> resolve method parameters at runtime. If a <code>@Test</code>, <code>@BeforeEach</code>,
 <code>@AfterEach</code>, <code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts a parameter, the parameter must
 be resolved at runtime by a registered <code>MethodParameterResolver</code>.</p>
@@ -987,7 +987,7 @@ be resolved at runtime by a registered <code>MethodParameterResolver</code>.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a method parameter is of type <code><a href="https://github.com/junit-team/junit5/tree/master/junit5-api/src/main/java/org/junit/gen5/api/TestInfo.java">TestInfo</a></code>, the
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a method parameter is of type <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/TestInfo.java">TestInfo</a></code>, the
 <code>TestInfoParameterResolver</code> will supply an instance of <code>TestInfo</code> corresponding to the
 current test as the value for the parameter. The <code>TestInfo</code> can then be used to retrieve
 information about the current test such as the test&#8217;s name or display name (as
@@ -1037,13 +1037,13 @@ class TestInfoTests {
 <div class="ulist">
 <ul>
 <li>
-<p>Check out the <code>methodInjectionTest(&#8230;&#8203;)</code> test method in <code><a href="https://github.com/junit-team/junit5/tree/master/sample-project/src/test/java/com/example/SampleTestCase.java">SampleTestCase</a></code> for an
-example that uses the built-in <code><a href="https://github.com/junit-team/junit5/tree/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code> as well as two
-user-provided resolvers, <code><a href="https://github.com/junit-team/junit5/tree/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and
-<code><a href="https://github.com/junit-team/junit5/tree/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
+<p>Check out the <code>methodInjectionTest(&#8230;&#8203;)</code> test method in <code><a href="https://github.com/junit-team/junit5/blob/master/sample-project/src/test/java/com/example/SampleTestCase.java">SampleTestCase</a></code> for an
+example that uses the built-in <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code> as well as two
+user-provided resolvers, <code><a href="https://github.com/junit-team/junit5/blob/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and
+<code><a href="https://github.com/junit-team/junit5/blob/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
 </li>
 <li>
-<p>The <code><a href="https://github.com/junit-team/junit5/tree/master/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> is another example of a <code><a href="https://github.com/junit-team/junit5/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java">MethodParameterResolver</a></code>. While not
+<p>The <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> is another example of a <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java">MethodParameterResolver</a></code>. While not
 intended to be production-ready, it demonstrates the simplicity and expressiveness of
 both the extension model and the parameter resolution process. <code>MyMockitoTest</code>
 demonstrates how to inject Mockito mocks into <code>@BeforeEach</code> and <code>@Test</code> methods.</p>
@@ -1094,7 +1094,7 @@ tests with a <a href="#using-junit4-to-run-junit5-tests">JUnit 4 style runner</a
 <h4 id="gradle">4.2.1. Gradle</h4>
 <div class="paragraph">
 <p>The JUnit team has developed a very basic <code>JUnit5Plugin</code> that lets you run JUnit 4 and
-JUnit 5 tests in Gradle builds. See <code>build.gradle</code> in the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code>
+JUnit 5 tests in Gradle builds. See <code>build.gradle</code> in the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code>
 project for an example of the plugin in action.</p>
 </div>
 <div class="sect4">
@@ -1172,7 +1172,7 @@ execute all tests within the project whose class names match the regular express
 supplied via <code>matchClassName</code>.</p>
 </div>
 <div class="paragraph">
-<p>Executing the <code>junit5Test</code> task in the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project results in
+<p>Executing the <code>junit5Test</code> task in the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project results in
 output similar to the following:</p>
 </div>
 <div class="listingblock">
@@ -1246,7 +1246,7 @@ test report generated by Gradle.</p>
 <div class="paragraph">
 <p>The JUnit team has developed a very basic provider for Maven Surefire that lets you run
 JUnit 4 and JUnit 5 tests via <code>mvn test</code>. The <code>pom.xml</code> file in the
-<code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer">junit5-maven-consumer</a></code> project demonstrates how to use it and can serve as a starting
+<code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-maven-consumer">junit5-maven-consumer</a></code> project demonstrates how to use it and can serve as a starting
 point.</p>
 </div>
 <div class="listingblock">
@@ -1276,7 +1276,7 @@ point.</p>
 <div class="sect2">
 <h3 id="console-runner">4.3. Console Runner</h3>
 <div class="paragraph">
-<p>The <code><a href="https://github.com/junit-team/junit5/tree/master/junit-console/src/main/java/org/junit/gen5/console/ConsoleRunner.java">ConsoleRunner</a></code> is a command-line Java application that lets you run JUnit 4 and
+<p>The <code><a href="https://github.com/junit-team/junit5/blob/master/junit-console/src/main/java/org/junit/gen5/console/ConsoleRunner.java">ConsoleRunner</a></code> is a command-line Java application that lets you run JUnit 4 and
 JUnit 5 tests and prints test execution results to the console.</p>
 </div>
 <div class="paragraph">
@@ -1425,7 +1425,7 @@ and its subpackages.</p>
 <p>There are more configuration options for discovering and filtering tests than just
 <code>@Packages</code>. Please consult the
 <a href="https://junit.ci.cloudbees.com/job/JUnit5/javadoc/org/junit/gen5/junit4/runner/package-summary.html">Javadoc</a> or the source
-code for the <code><a href="https://github.com/junit-team/junit5/tree/master/junit4-runner/src/main/java/org/junit/gen5/junit4/runner/JUnit5.java">JUnit5</a></code> runner for further details.</p>
+code for the <code><a href="https://github.com/junit-team/junit5/blob/master/junit4-runner/src/main/java/org/junit/gen5/junit4/runner/JUnit5.java">JUnit5</a></code> runner for further details.</p>
 </div>
 </div>
 </div>
@@ -1445,8 +1445,8 @@ JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
 <div class="sect2">
 <h3 id="registering-extensions">5.2. Registering Extensions</h3>
 <div class="paragraph">
-<p>Extensions can be registered either declaratively via <code>@ExtendWith</code> or programmatically
-via an <code>ExtensionRegistrar</code>.</p>
+<p>Extensions can be registered either declaratively via <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtendWith.java">@ExtendWith</a></code> or programmatically
+via an <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtensionRegistrar.java">ExtensionRegistrar</a></code>.</p>
 </div>
 <div class="paragraph">
 <p>Note that registered extensions are inherited within test class hierarchies.</p>
@@ -1455,10 +1455,10 @@ via an <code>ExtensionRegistrar</code>.</p>
 <h4 id="declarative-extension-registration">5.2.1. Declarative Extension Registration</h4>
 <div class="paragraph">
 <p>Developers can register one or more extensions <em>declaratively</em> by annotating a test
-class, test method, or custom <em>composed annotation</em> with <code>@ExtendWith(&#8230;&#8203;)</code> and supplying
-class references for the extensions to register. For example, to register a custom
-<code>MockitoExtension</code> for all tests in a particular class and its subclasses, you would
-annotate the test class as follows.</p>
+class, test method, or custom <em><a href="#meta-annotations">composed annotation</a></em> with
+<code>@ExtendWith(&#8230;&#8203;)</code> and supplying class references for the extensions to register. For
+example, to register a custom <code>MockitoExtension</code> for all tests in a particular class and
+its subclasses, you would annotate the test class as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1500,7 +1500,7 @@ class MyTestsV2 {
 <h4 id="programmatic-extension-registration">5.2.2. Programmatic Extension Registration</h4>
 <div class="paragraph">
 <p>Developers can register one or more extensions <em>programmatically</em> by implementing the
-<code>ExtensionRegistrar</code> API and registering the custom <code>ExtensionRegistrar</code> implementation
+<code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtensionRegistrar.java">ExtensionRegistrar</a></code> API and registering the custom <code>ExtensionRegistrar</code> implementation
 via <code>@ExtendWith</code> as mentioned above. The following examples demonstrate the various
 options in implementations of the <code>ExtensionRegistrar.registerExtensions()</code> method.</p>
 </div>
@@ -1547,8 +1547,8 @@ ordering among such extensions is undefined.</p>
 </div>
 <div class="paragraph">
 <p>The following listing demonstrates how to configure an explicit position for an instance
-of an extension; however, a <code>Position</code> can also be supplied for lambda expressions and
-method references.</p>
+of an extension. Note, however, that a <code>Position</code> can also be supplied for lambda
+expressions and method references.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1597,7 +1597,7 @@ void beforeEach(TestExtensionContext context) {
 <div class="sect2">
 <h3 id="conditional-test-execution">5.3. Conditional Test Execution</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ContainerExecutionCondition.java">ContainerExecutionCondition</a></code> and <code><a href="https://github.com/junit-team/junit5/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension/TestExecutionCondition.java">TestExecutionCondition</a></code> define the <code>Extension</code>
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ContainerExecutionCondition.java">ContainerExecutionCondition</a></code> and <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/TestExecutionCondition.java">TestExecutionCondition</a></code> define the <code>Extension</code>
 APIs for programmatic, <em>conditional test execution</em>.</p>
 </div>
 <div class="paragraph">
@@ -1608,13 +1608,13 @@ determine if a given test method should be executed based on the supplied
 <code>TestExtensionContext</code>.</p>
 </div>
 <div class="paragraph">
-<p>See the source code of <code><a href="https://github.com/junit-team/junit5/tree/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="https://github.com/junit-team/junit5/tree/master/junit5-api/src/main/java/org/junit/gen5/api/Disabled.java">@Disabled</a></code> for concrete examples.</p>
+<p>See the source code of <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Disabled.java">@Disabled</a></code> for concrete examples.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="test-instance-post-processing">5.4. Test Instance Post-processing</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension/InstancePostProcessor.java">InstancePostProcessor</a></code> defines the API for <code>Extensions</code> that wish to <em>post
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/InstancePostProcessor.java">InstancePostProcessor</a></code> defines the API for <code>Extensions</code> that wish to <em>post
 process</em> test instances.</p>
 </div>
 <div class="paragraph">
@@ -1622,23 +1622,24 @@ process</em> test instances.</p>
 initialization methods on the test instance, etc.</p>
 </div>
 <div class="paragraph">
-<p>For concrete examples, consult the source code for the <code><a href="https://github.com/junit-team/junit5/tree/master/sample-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> and the
-<code><a href="https://github.com/sbrannen/spring-test-junit5/tree/master/src/main/java/org/springframework/test/context/junit5/SpringExtension.java">SpringExtension</a></code>.</p>
+<p>For concrete examples, consult the source code for the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> and the
+<code><a href="https://github.com/sbrannen/spring-test-junit5/blob/master/src/main/java/org/springframework/test/context/junit5/SpringExtension.java">SpringExtension</a></code>.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="parameter-resolution">5.5. Parameter Resolution</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java">MethodParameterResolver</a></code> is an <code>Extension</code> strategy for dynamically resolving
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java">MethodParameterResolver</a></code> is an <code>Extension</code> strategy for dynamically resolving
 method parameters at runtime.</p>
 </div>
 <div class="paragraph">
 <p>If a <code>@Test</code>, <code>@BeforeEach</code>, <code>@AfterEach</code> , <code>@BeforeAll</code> or <code>@AfterAll</code> method accepts a
 parameter, the parameter must be <em>resolved</em> at runtime by a <code>MethodParameterResolver</code>. A
-<code>MethodParameterResolver</code> can either be built-in (see <code>{TestNameParameterResolver}</code>) or
+<code>MethodParameterResolver</code> can either be built-in (see <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or
 registered by the user via <code>@ExtendWith</code>. Generally speaking, parameters may be resolved
-by <em>type</em> or by <em>annotation</em>. For concrete examples, consult the source code for
-<code><a href="https://github.com/junit-team/junit5/tree/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and <code><a href="https://github.com/junit-team/junit5/tree/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>, respectively.</p>
+by <em>name</em>, <em>type</em>, <em>annotation</em>, or any combination thereof. For concrete examples,
+consult the source code for <code><a href="https://github.com/junit-team/junit5/blob/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and
+<code><a href="https://github.com/junit-team/junit5/blob/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>, respectively.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1646,7 +1647,7 @@ by <em>type</em> or by <em>annotation</em>. For concrete examples, consult the s
 <div class="paragraph">
 <p>The following interfaces define the APIs for extending tests at various points in the
 test execution lifecycle. Consult the Javadoc for each of these in the
-<code><a href="https://github.com/junit-team/junit5/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension">org.junit.gen5.api.extension</a></code> package.</p>
+<code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension">org.junit.gen5.api.extension</a></code> package.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1666,7 +1667,7 @@ test execution lifecycle. Consult the Javadoc for each of these in the
 </div>
 <div class="paragraph">
 <p>Note that extension developers may choose to implement any number of these interfaces
-within a single extension. Consult the source code of the <code><a href="https://github.com/sbrannen/spring-test-junit5/tree/master/src/main/java/org/springframework/test/context/junit5/SpringExtension.java">SpringExtension</a></code> for a
+within a single extension. Consult the source code of the <code><a href="https://github.com/sbrannen/spring-test-junit5/blob/master/src/main/java/org/springframework/test/context/junit5/SpringExtension.java">SpringExtension</a></code> for a
 concrete example.</p>
 </div>
 </div>
@@ -1781,11 +1782,11 @@ libraries – like Spock, Cucumber, and FitNesse – to plug into JUnit 5&#8217;
 infrastructure.</p>
 </div>
 <div class="paragraph">
-<p>The launching API is in the <code><a href="https://github.com/junit-team/junit5/tree/master/junit-launcher">junit-launcher</a></code> module.</p>
+<p>The launching API is in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-launcher">junit-launcher</a></code> module.</p>
 </div>
 <div class="paragraph">
-<p>An example consumer of the launching API is the <code><a href="https://github.com/junit-team/junit5/tree/master/junit-console/src/main/java/org/junit/gen5/console/ConsoleRunner.java">ConsoleRunner</a></code> in the
-<code><a href="https://github.com/junit-team/junit5/tree/master/junit-console">junit-console</a></code> project.</p>
+<p>An example consumer of the launching API is the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-console/src/main/java/org/junit/gen5/console/ConsoleRunner.java">ConsoleRunner</a></code> in the
+<code><a href="https://github.com/junit-team/junit5/blob/master/junit-console">junit-console</a></code> project.</p>
 </div>
 <div class="sect3">
 <h4 id="discovering-tests">7.1.1. Discovering Tests</h4>
@@ -1828,7 +1829,7 @@ ID</em> that can be used to invoke a particular test or group of tests.</p>
 <p>There are two ways to execute tests. Clients can either use the same test specification
 object as in the discovery phase, or – to speed things up a bit – pass in the prepared
 <code>TestPlan</code> object from a previous discovery step. Test progress and result reporting can
-be achieved through a <code><a href="https://github.com/junit-team/junit5/tree/master/junit-launcher/src/main/java/org/junit/gen5/launcher/TestExecutionListener.java">TestExecutionListener</a></code>:</p>
+be achieved through a <code><a href="https://github.com/junit-team/junit5/blob/master/junit-launcher/src/main/java/org/junit/gen5/launcher/TestExecutionListener.java">TestExecutionListener</a></code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1847,7 +1848,7 @@ launcher.execute(specification);</code></pre>
 <div class="paragraph">
 <p>There&#8217;s currently no result object, but you can easily use a listener to aggregate the
 final results in an object of your own. For an example see the
-<code><a href="https://github.com/junit-team/junit5/tree/master/junit-launcher/src/main/java/org/junit/gen5/launcher/listeners/SummaryGeneratingListener.java">SummaryGeneratingListener</a></code>.</p>
+<code><a href="https://github.com/junit-team/junit5/blob/master/junit-launcher/src/main/java/org/junit/gen5/launcher/listeners/SummaryGeneratingListener.java">SummaryGeneratingListener</a></code>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1858,10 +1859,10 @@ final results in an object of your own. For an example see the
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit5-engine">junit5-engine</a></code>: The core of JUnit 5.</p>
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine">junit5-engine</a></code>: The core of JUnit 5.</p>
 </li>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit4-engine">junit4-engine</a></code>: A thin layer on top of JUnit 4 to allow running "old" tests with the
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit4-engine">junit4-engine</a></code>: A thin layer on top of JUnit 4 to allow running "old" tests with the
 launcher infrastructure.</p>
 </li>
 </ul>
@@ -1890,7 +1891,7 @@ registers its <code>JUnit5TestEngine</code>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-19 14:39:16 -05:00
+Last updated 2016-01-19 15:46:53 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
