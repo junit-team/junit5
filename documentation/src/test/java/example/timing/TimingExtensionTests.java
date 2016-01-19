@@ -8,12 +8,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package timing;
+package example.timing;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.junit4.runner.JUnit5;
-import org.junit.runner.RunWith;
 
 /**
  * Tests that demonstrate the example {@link TimingExtension}.
