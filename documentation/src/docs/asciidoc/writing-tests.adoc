@@ -31,6 +31,7 @@ module.
 |*`@ExtendWith`*        | Used to register custom <<extension-model, extensions>> to the framework.
 |===
 
+[[meta-annotations]]
 ==== Meta-Annotations and Composed Annotations
 
 JUnit 5 annotations can be used as _meta-annotations_. That means that you can define
