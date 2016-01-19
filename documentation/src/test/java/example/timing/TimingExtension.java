@@ -13,6 +13,7 @@ package example.timing;
 import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.INNERMOST;
 
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
 
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
@@ -24,11 +25,13 @@ import org.junit.gen5.api.extension.TestExtensionContext;
 
 /**
  * Simple extension that <em>times</em> the execution of test methods and
- * prints the results to {@link System#out}.
+ * logs the results at {@code INFO} level.
  *
  * @since 5.0
  */
 public class TimingExtension implements ExtensionRegistrar {
+
+	private static final Logger LOG = Logger.getLogger(TimingExtension.class.getName());
 
 	@Override
 	public void registerExtensions(ExtensionPointRegistry registry) {
@@ -54,7 +57,7 @@ public class TimingExtension implements ExtensionRegistrar {
 			long start = (long) times.remove(testMethod);
 			long duration = System.currentTimeMillis() - start;
 
-			System.out.println(String.format("Method [%s] took %s ms.", testMethod, duration));
+			LOG.info(() -> String.format("Method [%s] took %s ms.", testMethod, duration));
 		}
 
 	}
