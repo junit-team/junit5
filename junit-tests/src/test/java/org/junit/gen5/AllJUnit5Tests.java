@@ -12,7 +12,6 @@ package org.junit.gen5;
 
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.junit4.runner.ClassNamePattern;
-import org.junit.gen5.junit4.runner.ExcludeTags;
 import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.gen5.junit4.runner.OnlyEngine;
 import org.junit.gen5.junit4.runner.Packages;
@@ -34,7 +33,6 @@ import org.junit.runner.RunWith;
 @RunWith(JUnit5.class)
 @Packages("org.junit.gen5")
 @ClassNamePattern(".*Tests?")
-@ExcludeTags("slow")
 @OnlyEngine(JUnit5TestEngine.ENGINE_ID)
-public class AllFastJUnit5Tests {
+public class AllJUnit5Tests {
 }

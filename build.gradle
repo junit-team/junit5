@@ -12,13 +12,11 @@ buildscript {
 	}
 }
 
-subprojects {
+allprojects {
 
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
-	apply plugin: 'maven'
-	apply plugin: 'signing'
 	apply plugin: 'com.diffplug.gradle.spotless'
 	apply plugin: 'checkstyle'
 
@@ -50,42 +48,6 @@ subprojects {
 		}
 	}
 
-	test {
-		description = 'Runs JUnit tests.'
-		useJUnit()
-
-		systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
-		systemProperty 'org.apache.logging.log4j.level', 'ERROR'
-		systemProperty 'org.apache.logging.log4j.simplelog.StatusLogger.level', 'OFF'
-
-		scanForTestClasses = true //Necessary to filter out JUnit5 test classes
-		include(['**/*Tests.class', '**/*Test.class'])
-		exclude(['**/*$*', '**/AllFastJUnit5Tests.class'])
-	}
-
-	javadoc {
-		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
-		options.author = true
-		options.header = project.name
-		options.addStringOption('Xdoclint:html,syntax,reference', '-quiet')
-		exclude '**/com/example/**'
-	}
-
-	task sourcesJar(type: Jar, dependsOn: classes) {
-		classifier = 'sources'
-		from sourceSets.main.allSource
-	}
-
-	task javadocJar(type: Jar) {
-		classifier = 'javadoc'
-		from javadoc
-	}
-
-	artifacts {
-		archives sourcesJar
-		archives javadocJar
-	}
-
 	spotless {
 		java {
 			licenseHeaderFile rootProject.file('src/spotless/eclipse-public-license-1.0.java')
@@ -109,6 +71,35 @@ subprojects {
 			customReplaceRegex 'class-level Javadoc indentation fix', /^\*/, ' *'
 			customReplaceRegex 'nested Javadoc indentation fix', /\t\*/, '\t *'
 		}
+	}
+}
+
+subprojects {
+
+	apply plugin: 'maven'
+	apply plugin: 'signing'
+
+	javadoc {
+		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+		options.author = true
+		options.header = project.name
+		options.addStringOption('Xdoclint:html,syntax,reference', '-quiet')
+		exclude '**/com/example/**'
+	}
+
+	task sourcesJar(type: Jar, dependsOn: classes) {
+		classifier = 'sources'
+		from sourceSets.main.allSource
+	}
+
+	task javadocJar(type: Jar) {
+		classifier = 'javadoc'
+		from javadoc
+	}
+
+	artifacts {
+		archives sourcesJar
+		archives javadocJar
 	}
 
 	def signArtifacts = !project.version.contains('SNAPSHOT')
@@ -197,8 +188,25 @@ subprojects {
 configure(rootProject) {
 	description = 'JUnit 5'
 
-	apply plugin: 'com.diffplug.gradle.spotless'
-	apply plugin: 'base'
+	apply plugin: 'org.junit.gen5.gradle'
+
+	junit5 {
+		matchClassName '.*Tests?'
+		reportFile file('build/test-results/JUNIT5-Tests.xml')
+		logManager 'org.apache.logging.log4j.jul.LogManager'
+	}
+
+	dependencies {
+		rootProject.subprojects.each { project ->
+			testCompile(project)
+		}
+
+		testCompile("junit:junit:${junit4Version}")
+		testCompile("de.schauderhaft.degraph:degraph-check:${degraphVersion}")
+
+		testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
+		testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
+	}
 
 	task aggregateJavadocs(type: Javadoc) {
 		group = "Documentation"

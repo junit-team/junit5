@@ -17,7 +17,6 @@ import static org.hamcrest.Matchers.is;
 
 import de.schauderhaft.degraph.configuration.NamedPattern;
 
-import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.runner.RunWith;
@@ -28,12 +27,11 @@ import org.junit.runner.RunWith;
  * <p>Modules in that sense are defined by the package name element after org.junit.gen5,
  * so "org.junit.gen5.console.ConsoleRunner" belongs to the module "console".
  */
-@Tag("slow")
 @RunWith(JUnit5.class)
 public class DependencyTests {
 
 	@Test
-	public void noCycles() {
+	void noCycles() {
 		// we can't use noJar(), because with gradle the dependencies of other modules are
 		// included as jar files in the path.
 		//@formatter:off
@@ -41,14 +39,6 @@ public class DependencyTests {
 			classpath()
 				.printTo("dependencies.graphml")
 				.including("org.junit.gen5.**")
-
-				// TODO Move DependencyTests to separate module and remove the following exclusions
-				.excluding("**Tests")
-				.excluding("**Stub")
-				.excluding("**DescriptorBuilder")
-				.excluding("**Dummy**")
-				.excluding("**ExecutionEventConditions")
-
 				.withSlicing("module",
 					new NamedPattern("org.junit.gen5.engine.junit4.**", "junit4-engine"),
 					new NamedPattern("org.junit.gen5.engine.junit5.**", "junit5-engine"),
