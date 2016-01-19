@@ -151,9 +151,9 @@ public interface ExtensionContext {
 	class Namespace {
 
 		/**
-		 * Get default namespace which allows access to stored data from all extensions.
+		 * The default namespace which allows access to stored data from all extensions.
 		 */
-		public static Namespace DEFAULT = Namespace.of(new Object());
+		public static final Namespace DEFAULT = Namespace.of(new Object());
 
 		/**
 		 * Create a namespace which restricts access to data to all users which use the same
