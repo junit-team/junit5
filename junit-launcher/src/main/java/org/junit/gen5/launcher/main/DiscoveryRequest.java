@@ -118,11 +118,6 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 	}
 
 	@Override
-	public List<DiscoveryFilter<?>> getDiscoveryFilters() {
-		return unmodifiableList(this.discoveryFilters);
-	}
-
-	@Override
 	public <T extends DiscoveryFilter<?>> List<T> getDiscoveryFiltersByType(Class<T> filterType) {
 		return this.discoveryFilters.stream().filter(filterType::isInstance).map(filterType::cast).collect(toList());
 	}

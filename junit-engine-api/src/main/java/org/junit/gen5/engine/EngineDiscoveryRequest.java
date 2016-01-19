@@ -12,13 +12,17 @@ package org.junit.gen5.engine;
 
 import java.util.List;
 
+/**
+ * An {@code EngineDiscoveryRequest} gives {@link TestEngine}s
+ * access to the information necessary to discover {@link TestDescriptor}s.
+ *
+ * @since 5.0
+ */
 public interface EngineDiscoveryRequest {
 
 	List<DiscoverySelector> getSelectors();
 
 	<T extends DiscoverySelector> List<T> getSelectorsByType(Class<T> selectorType);
-
-	List<DiscoveryFilter<?>> getDiscoveryFilters();
 
 	<T extends DiscoveryFilter<?>> List<T> getDiscoveryFiltersByType(Class<T> filterType);
 
