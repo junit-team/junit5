@@ -32,10 +32,10 @@ import org.junit.gen5.commons.util.Preconditions;
 public interface ExtensionContext {
 
 	/**
-	 * Publish an {@code entry} which is then being reported
-	 * via {@code org.junit.gen5.engine.EngineExecutionListener}
+	 * Publish a report {@code entry} to be consumed by an
+	 * {@code org.junit.gen5.engine.EngineExecutionListener}.
 	 *
-	 * @param entry The entry to be published.
+	 * @param entry the entry to be published
 	 */
 	void publishReportEntry(Map<String, String> entry);
 
@@ -74,7 +74,19 @@ public interface ExtensionContext {
 	Class<?> getTestClass();
 
 	/**
-	 * Get the {@link AnnotatedElement} on which the extension was registered.
+	 * Get the {@link AnnotatedElement} corresponding to the current extension
+	 * context.
+	 *
+	 * <p>For example, if the current extension context encapsulates a test
+	 * class or test method, the annotated element will be the corresponding
+	 * {@link #getClass() Class} or {@link java.lang.reflect.Method Method}
+	 * reference.
+	 *
+	 * <p>Favor this method over more specific methods whenever the
+	 * {@link AnnotatedElement} API suits the task at hand (e.g., when
+	 * looking up annotations regardless of concrete element type).
+	 *
+	 * @see #getTestClass()
 	 */
 	AnnotatedElement getElement();
 
@@ -96,9 +108,10 @@ public interface ExtensionContext {
 	Store getStore(Namespace namespace);
 
 	/**
-	 * The {@code Store} provides methods for extensions to save and retrieve data.
+	 * {@code Store} provides methods for extensions to save and retrieve data.
 	 */
 	interface Store {
+
 		/**
 		 * Get an object that has been stored using a {@code key}.
 		 *
@@ -158,7 +171,8 @@ public interface ExtensionContext {
 		/**
 		 * Create a namespace which restricts access to data to all users which use the same
 		 * {@code parts} for creating a namespace. The order of the  {@code parts} is not significant.
-		 * Internally the {@code parts} are compared using {@code Object.equals(Object)}.
+		 *
+		 * <p>Internally the {@code parts} are compared using {@code Object.equals(Object)}.
 		 */
 		public static Namespace of(Object... parts) {
 			Preconditions.notNull(parts, "There must be at least one reference object to create a namespace");
