@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.example.timing;
+package timing;
 
 import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.INNERMOST;
 

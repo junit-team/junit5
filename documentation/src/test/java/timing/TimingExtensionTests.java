@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.example.timing;
+package timing;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtendWith;
@@ -20,10 +20,8 @@ import org.junit.runner.RunWith;
  *
  * @since 5.0
  */
-@RunWith(JUnit5.class)
 @ExtendWith(TimingExtension.class)
-// Must be public to be picked up by JUnit4 test runner in IDEs.
-public class TimingExtensionTests {
+class TimingExtensionTests {
 
 	@Test
 	void sleep20ms() throws Exception {
