@@ -39,10 +39,10 @@ public class EngineIdFilter implements GenericFilter<String> {
 	@Override
 	public FilterResult filter(String engineId) {
 		if (this.engineId.equals(engineId)) {
-			return included("EngineId matches");
+			return included("Engine ID matches");
 		}
 		else {
-			return excluded("EngineId matches");
+			return excluded("Engine ID does not match");
 		}
 	}
 }
