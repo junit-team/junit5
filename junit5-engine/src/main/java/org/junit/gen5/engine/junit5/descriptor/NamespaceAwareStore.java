@@ -15,11 +15,15 @@ import java.util.function.Function;
 import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 import org.junit.gen5.api.extension.ExtensionContext.Store;
 
-public class NamespacedStore implements Store {
+/**
+ * @since 5.0
+ */
+class NamespaceAwareStore implements Store {
+
 	private final ExtensionValuesStore valuesStore;
 	private final Namespace namespace;
 
-	public NamespacedStore(ExtensionValuesStore valuesStore, Namespace namespace) {
+	NamespaceAwareStore(ExtensionValuesStore valuesStore, Namespace namespace) {
 		this.valuesStore = valuesStore;
 		this.namespace = namespace;
 	}
@@ -43,4 +47,5 @@ public class NamespacedStore implements Store {
 	public Object remove(Object key) {
 		return valuesStore.remove(namespace, key);
 	}
+
 }

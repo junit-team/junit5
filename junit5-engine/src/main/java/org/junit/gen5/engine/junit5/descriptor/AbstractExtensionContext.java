@@ -59,7 +59,7 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 
 	@Override
 	public Store getStore(Namespace namespace) {
-		return new NamespacedStore(valuesStore, namespace);
+		return new NamespaceAwareStore(valuesStore, namespace);
 	}
 
 }
