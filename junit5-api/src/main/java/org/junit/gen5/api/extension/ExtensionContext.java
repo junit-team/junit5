@@ -31,10 +31,22 @@ import org.junit.gen5.commons.util.Preconditions;
  */
 public interface ExtensionContext {
 
+	/**
+	 * Publish an {@code entry} which is then being reported
+	 * via {@code org.junit.gen5.engine.EngineExecutionListener}
+	 *
+	 * @param entry The entry to be published.
+	 */
 	void publishReportEntry(Map<String, String> entry);
 
+	/**
+	 * Get the parent extension context if there is one.
+	 */
 	Optional<ExtensionContext> getParent();
 
+	/**
+	 * Get the unique id of the current test or container.
+	 */
 	String getUniqueId();
 
 	/**
@@ -56,19 +68,42 @@ public interface ExtensionContext {
 	 */
 	String getDisplayName();
 
+	/**
+	 * Get the {@link Class} associated with the current test or container.
+	 */
 	Class<?> getTestClass();
 
+	/**
+	 * Get the {@link AnnotatedElement} on which the extension was registered.
+	 */
 	AnnotatedElement getElement();
 
+	/**
+	 * Get a {@link Store} with the default {@link Namespace}.
+	 *
+	 * @see #getStore(Namespace)
+	 */
 	default Store getStore() {
 		return getStore(Namespace.DEFAULT);
 	}
 
+	/**
+	 * Get a {@link Store} for a self constructed {@link Namespace}.
+	 *
+	 * @return The store in which to put and get objects for other invocations
+	 * of the same extension or different ones.
+	 */
 	Store getStore(Namespace namespace);
 
+	/**
+	 * The {@code Store} provides methods for extensions to save and retrieve data.
+	 */
 	interface Store {
 		/**
-		 * Get an object that has been stored using a {@code key}
+		 * Get an object that has been stored using a {@code key}.
+		 *
+		 * <p>If no value has been saved in the current {@link ExtensionContext} for this {@code key},
+		 * the ancestors are asked for a value with the same {@code key} in the store's {@code Namespace}.
 		 *
 		 * @param key the key
 		 * @return the value
@@ -77,6 +112,9 @@ public interface ExtensionContext {
 
 		/**
 		 * Store a {@code value} for later retrieval using a {@code key}. {@code null} is a valid value.
+		 *
+		 * <p>A stored {@code value} is visible in offspring {@link ExtensionContext}s
+		 * for the store's {@code Namespace} unless they overwrite it.
 		 *
 		 * @param key the key
 		 * @param value the value
@@ -96,6 +134,8 @@ public interface ExtensionContext {
 		/**
 		 * Remove a value that was previously stored using {@code key} so that {@code key} can be used anew.
 		 *
+		 * <p>The key will only be removed in the current {@link ExtensionContext} not in ancestors.
+		 *
 		 * @param key the key
 		 * @return the previous value or {@code null} if no value was present
 		 * for the specified key
@@ -103,13 +143,25 @@ public interface ExtensionContext {
 		Object remove(Object key);
 	}
 
-	public static class Namespace {
+	/**
+	 * Instances of this class are used to give saved data in extensions a scope, so that
+	 * extensions won't accidentally mix up data across each other or across different invocations
+	 * within their lifecycle.
+	 */
+	class Namespace {
 
+		/**
+		 * Get default namespace which allows access to stored data from all extensions.
+		 */
 		public static Namespace DEFAULT = Namespace.of(new Object());
 
+		/**
+		 * Create a namespace which restricts access to data to all users which use the same
+		 * {@code parts} for creating a namespace. The order of the  {@code parts} is not significant.
+		 * Internally the {@code parts} are compared using {@code Object.equals(Object)}.
+		 */
 		public static Namespace of(Object... parts) {
-			Preconditions.notEmpty(Arrays.asList(parts),
-				"There must be at least one reference object to create a namespace");
+			Preconditions.notNull(parts, "There must be at least one reference object to create a namespace");
 
 			return new Namespace(parts);
 		}
