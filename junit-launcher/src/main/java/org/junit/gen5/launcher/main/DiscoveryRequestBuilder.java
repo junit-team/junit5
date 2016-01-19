@@ -23,7 +23,7 @@ import org.junit.gen5.launcher.*;
  * The {@code DiscoveryRequestBuilder} provides a light-weight DSL for
  * generating a {@link DiscoveryRequest}.
  *
- * <p>Example:
+ * <h4>Example</h4>
  *
  * <pre style="code">
  *   DiscoveryRequestBuilder.request()
@@ -43,8 +43,8 @@ import org.junit.gen5.launcher.*;
  *       forUniqueId("unique-id-2")
  *     )
  *     .filter(byEngineIds("junit5"))
- *     .filter(byNamePattern("org.junit.gen5.tests"), byNamePattern("org.junit.sample"))
- *     .filter(includeTags("Fast"), excludeTags("Slow"))
+ *     .filter(byNamePattern("org\.junit\.gen5\.tests.*"), byNamePattern(".*Test[s]?"))
+ *     .filter(includeTags("fast"), excludeTags("flow"))
  *   ).build();
  * </pre>
  */
