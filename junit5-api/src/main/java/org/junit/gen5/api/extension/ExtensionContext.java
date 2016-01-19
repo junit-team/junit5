@@ -79,7 +79,7 @@ public interface ExtensionContext {
 	 *
 	 * <p>For example, if the current extension context encapsulates a test
 	 * class or test method, the annotated element will be the corresponding
-	 * {@link #getClass() Class} or {@link java.lang.reflect.Method Method}
+	 * {@link #getTestClass() Class} or {@link java.lang.reflect.Method Method}
 	 * reference.
 	 *
 	 * <p>Favor this method over more specific methods whenever the

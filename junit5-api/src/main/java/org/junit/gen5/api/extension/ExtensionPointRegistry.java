@@ -49,7 +49,7 @@ package org.junit.gen5.api.extension;
  *
  * <pre style="code">
  * public void registerExtensions(ExtensionPointRegistry registry) {
- *     registry.register((BeforeEachExtensionPoint) context -> { &#47;* ... *&#47; });
+ *     registry.register((BeforeEachExtensionPoint) context -&gt; { &#47;* ... *&#47; });
  * }
  * </pre>
  *
@@ -82,7 +82,7 @@ public interface ExtensionPointRegistry {
 	 * extension points of the same type.
 	 *
 	 * <p>The position can be specified when programmatically
-	 * {@linkplain ExtensionPointRegistry#register(ExtensionPoint, Class, Position)
+	 * {@linkplain ExtensionPointRegistry#register(ExtensionPoint, Position)
 	 * registering} an extension point. Possible values include
 	 * {@link #OUTERMOST OUTERMOST}, {@link #OUTSIDE_DEFAULT OUTSIDE_DEFAULT},
 	 * {@link #DEFAULT DEFAULT}, {@link #INSIDE_DEFAULT INSIDE_DEFAULT}, and
