@@ -188,14 +188,6 @@ subprojects {
 configure(rootProject) {
 	description = 'JUnit 5'
 
-	apply plugin: 'org.junit.gen5.gradle'
-
-	junit5 {
-		matchClassName '.*Tests?'
-		reportFile file('build/test-results/JUNIT5-Tests.xml')
-		logManager 'org.apache.logging.log4j.jul.LogManager'
-	}
-
 	dependencies {
 		rootProject.subprojects.each { project ->
 			testCompile(project)
