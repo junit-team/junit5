@@ -159,6 +159,40 @@ class ExtensionValuesStoreTests {
 		}
 	}
 
+	@Nested
+	class CompositNamespaceTests {
+
+		@Test
+		void additionNamespacePartMakesADifferenc() {
+
+			Namespace ns1 = Namespace.of("part1", "part2");
+			Namespace ns2 = Namespace.of("part1");
+			Namespace ns3 = Namespace.of("part1", "part2");
+
+			Object value2 = createObject("value2");
+
+			parentStore.put(key, value, ns1);
+			parentStore.put(key, value2, ns2);
+
+			assertEquals(value, store.get(key, ns1));
+			assertEquals(value, store.get(key, ns3));
+			assertEquals(value2, store.get(key, ns2));
+		}
+
+		@Test
+		void orderOfNamespacePartsDoesNotMatter() {
+
+			Namespace ns1 = Namespace.of("part1", "part2");
+			Namespace ns2 = Namespace.of("part2", "part1");
+
+			parentStore.put(key, value, ns1);
+
+			assertEquals(value, store.get(key, ns1));
+			assertEquals(value, store.get(key, ns2));
+		}
+
+	}
+
 	private Object createObject(final String display) {
 		return new Object() {
 			@Override

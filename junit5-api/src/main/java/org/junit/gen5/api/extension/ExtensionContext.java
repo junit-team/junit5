@@ -11,8 +11,11 @@
 package org.junit.gen5.api.extension;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.junit.gen5.commons.util.Preconditions;
@@ -112,16 +115,17 @@ public interface ExtensionContext {
 
 		public static Namespace DEFAULT = Namespace.of(new Object());
 
-		public static Namespace of(Object ref) {
-			Preconditions.notNull(ref, "A local must not be null");
+		public static Namespace of(Object... parts) {
+			Preconditions.notEmpty(Arrays.asList(parts),
+				"There must be at least one reference object to create a namespace");
 
-			return new Namespace(ref);
+			return new Namespace(parts);
 		}
 
-		private final Object local;
+		private final Set<?> parts;
 
-		private Namespace(Object local) {
-			this.local = local;
+		private Namespace(Object... parts) {
+			this.parts = new HashSet<>(Arrays.asList(parts));
 		}
 
 		@Override
@@ -131,12 +135,12 @@ public interface ExtensionContext {
 			if (o == null || getClass() != o.getClass())
 				return false;
 			Namespace namespace = (Namespace) o;
-			return local != null ? local.equals(namespace.local) : namespace.local == null;
+			return parts.equals(namespace.parts);
 		}
 
 		@Override
 		public int hashCode() {
-			return local != null ? local.hashCode() : 0;
+			return parts.hashCode();
 		}
 	}
 

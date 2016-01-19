@@ -41,13 +41,17 @@ public class TimingExtension implements ExtensionRegistrar {
 
 		@Override
 		public void beforeEach(TestExtensionContext context) throws Exception {
-			ExtensionContext.Store times = context.getStore(namespace);
+			ExtensionContext.Store times = context.getStore(getNamespace(context));
 			times.put(context.getTestMethod(), System.currentTimeMillis());
+		}
+
+		private Namespace getNamespace(TestExtensionContext context) {
+			return Namespace.of(getClass(), context);
 		}
 
 		@Override
 		public void afterEach(TestExtensionContext context) throws Exception {
-			ExtensionContext.Store times = context.getStore(namespace);
+			ExtensionContext.Store times = context.getStore(getNamespace(context));
 			Method testMethod = context.getTestMethod();
 			long start = (long) times.remove(testMethod);
 			long duration = System.currentTimeMillis() - start;
