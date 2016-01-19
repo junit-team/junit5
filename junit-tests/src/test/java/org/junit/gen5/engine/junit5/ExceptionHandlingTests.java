@@ -15,7 +15,7 @@ import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.ExecutionEventConditions.*;
 import static org.junit.gen5.engine.TestExecutionResultConditions.*;
 import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
-import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 
 import java.io.IOException;
 import java.lang.reflect.Method;

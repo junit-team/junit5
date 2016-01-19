@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.launcher;
+package org.junit.gen5.launcher.main;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -17,6 +17,7 @@ import java.util.List;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.GenericFilter;
+import org.junit.gen5.launcher.*;
 
 /**
  * The {@code DiscoveryRequestBuilder} provides a light-weight DSL for

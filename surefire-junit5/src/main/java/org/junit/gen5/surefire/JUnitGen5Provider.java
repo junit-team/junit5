@@ -11,7 +11,7 @@
 package org.junit.gen5.surefire;
 
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
-import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;

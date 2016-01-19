@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.launcher;
+package org.junit.gen5.launcher.main;
 
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
@@ -23,6 +23,7 @@ import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.launcher.*;
 
 /**
  * The {@code DiscoveryRequest} represents the configuration for the test

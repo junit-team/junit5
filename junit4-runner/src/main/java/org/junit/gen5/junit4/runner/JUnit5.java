@@ -12,7 +12,7 @@ package org.junit.gen5.junit4.runner;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;

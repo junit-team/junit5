@@ -14,7 +14,7 @@ import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
-import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;

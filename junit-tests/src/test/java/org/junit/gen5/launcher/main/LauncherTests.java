@@ -11,8 +11,8 @@
 package org.junit.gen5.launcher.main;
 
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
-import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.launcher.EngineIdFilter.byEngineId;
+import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.launcher.main.LauncherFactory.createLauncher;
 
 import org.assertj.core.api.Assertions;

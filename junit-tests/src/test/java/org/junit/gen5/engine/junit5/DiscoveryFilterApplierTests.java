@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.engine.junit5.descriptor.TestDescriptorBuilder.*;
-import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 
 import java.util.List;
 import java.util.stream.Collectors;

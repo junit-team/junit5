@@ -24,7 +24,7 @@ import static org.junit.gen5.engine.discovery.ClasspathSelector.forPaths;
 import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
-import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.lang.reflect.Method;
