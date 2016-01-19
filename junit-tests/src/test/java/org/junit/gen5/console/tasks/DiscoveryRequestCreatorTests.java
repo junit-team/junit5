@@ -36,6 +36,9 @@ import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.launcher.*;
 
+/**
+ * @since 5.0
+ */
 public class DiscoveryRequestCreatorTests {
 	private CommandLineOptions options = new CommandLineOptions();
 

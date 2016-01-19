@@ -18,6 +18,9 @@ import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
 
+/**
+ * @since 5.0
+ */
 abstract class AbstractExtensionContext implements ExtensionContext {
 
 	private final ExtensionValuesStore valuesStore;

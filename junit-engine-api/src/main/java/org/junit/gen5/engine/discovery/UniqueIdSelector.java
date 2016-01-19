@@ -12,6 +12,9 @@ package org.junit.gen5.engine.discovery;
 
 import org.junit.gen5.engine.DiscoverySelector;
 
+/**
+ * @since 5.0
+ */
 public class UniqueIdSelector implements DiscoverySelector {
 
 	public static UniqueIdSelector forUniqueId(String uniqueId) {
