@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
@@ -33,60 +34,44 @@ class ExtensionValuesStore {
 		this.parentStore = parentStore;
 	}
 
-	public Object get(Object key) {
-		return get(key, Namespace.DEFAULT);
-	}
-
-	public Object get(Object key, Namespace namespace) {
-		StoredValue storedValue = getStoredValue(key, namespace);
+	public Object get(Namespace namespace, Object key) {
+		StoredValue storedValue = getStoredValue(namespace, key);
 		if (storedValue != null)
 			return storedValue.value;
 		else if (parentStore != null)
-			return parentStore.get(key, namespace);
+			return parentStore.get(namespace, key);
 		else
 			return null;
 	}
 
-	private StoredValue getStoredValue(Object key, Namespace namespace) {
-		ComposedKey composedKey = new ComposedKey(key, namespace);
+	private StoredValue getStoredValue(Namespace namespace, Object key) {
+		ComposedKey composedKey = new ComposedKey(namespace, key);
 		return storedValues.get(composedKey);
 	}
 
-	public void put(Object key, Object value) {
-		put(key, value, Namespace.DEFAULT);
-	}
-
-	public void put(Object key, Object value, Namespace namespace) {
+	public void put(Namespace namespace, Object key, Object value) {
 		Preconditions.notNull(key, "A key must not be null");
 		Preconditions.notNull(namespace, "A namespace must not be null");
 
-		putStoredValue(key, namespace, new StoredValue(value));
+		putStoredValue(namespace, key, new StoredValue(value));
 	}
 
-	private void putStoredValue(Object key, Namespace namespace, StoredValue storedValue) {
-		ComposedKey composedKey = new ComposedKey(key, namespace);
+	private void putStoredValue(Namespace namespace, Object key, StoredValue storedValue) {
+		ComposedKey composedKey = new ComposedKey(namespace, key);
 		storedValues.put(composedKey, storedValue);
 	}
 
-	public Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator) {
-		return getOrComputeIfAbsent(key, defaultCreator, Namespace.DEFAULT);
-	}
-
-	public Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator, Namespace namespace) {
-		StoredValue storedValue = getStoredValue(key, namespace);
+	public Object getOrComputeIfAbsent(Namespace namespace, Object key, Function<Object, Object> defaultCreator) {
+		StoredValue storedValue = getStoredValue(namespace, key);
 		if (storedValue == null) {
 			storedValue = new StoredValue(defaultCreator.apply(key));
-			putStoredValue(key, namespace, storedValue);
+			putStoredValue(namespace, key, storedValue);
 		}
 		return storedValue.value;
 	}
 
-	public Object remove(Object key) {
-		return remove(key, Namespace.DEFAULT);
-	}
-
-	public Object remove(Object key, Namespace namespace) {
-		ComposedKey composedKey = new ComposedKey(key, namespace);
+	public Object remove(Namespace namespace, Object key) {
+		ComposedKey composedKey = new ComposedKey(namespace, key);
 		StoredValue previous = storedValues.remove(composedKey);
 		return (previous != null ? previous.value : null);
 	}
@@ -96,7 +81,7 @@ class ExtensionValuesStore {
 		private final Object key;
 		private final Namespace namespace;
 
-		private ComposedKey(Object key, Namespace namespace) {
+		private ComposedKey(Namespace namespace, Object key) {
 			this.key = key;
 			this.namespace = namespace;
 		}
@@ -123,38 +108,6 @@ class ExtensionValuesStore {
 
 		private StoredValue(Object value) {
 			this.value = value;
-		}
-	}
-
-	public static class Namespace {
-
-		public static Namespace DEFAULT = Namespace.sharedWith(new Object());
-
-		public static Namespace sharedWith(Object local) {
-			Preconditions.notNull(local, "A local must not be null");
-
-			return new Namespace(local);
-		}
-
-		private final Object local;
-
-		private Namespace(Object local) {
-			this.local = local;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o)
-				return true;
-			if (o == null || getClass() != o.getClass())
-				return false;
-			Namespace namespace = (Namespace) o;
-			return local != null ? local.equals(namespace.local) : namespace.local == null;
-		}
-
-		@Override
-		public int hashCode() {
-			return local != null ? local.hashCode() : 0;
 		}
 	}
 

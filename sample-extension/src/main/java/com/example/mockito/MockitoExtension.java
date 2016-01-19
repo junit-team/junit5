@@ -49,12 +49,12 @@ public class MockitoExtension implements InstancePostProcessor, MethodParameterR
 	@Override
 	public Object resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
 			ExtensionContext extensionContext) throws ParameterResolutionException {
-		return getMock(parameter.getType(), extensionContext);
+		ExtensionContext.Store mocks = extensionContext.getStore(ExtensionContext.Namespace.of(getClass()));
+		return getMock(parameter.getType(), mocks);
 	}
 
-	private Object getMock(Class<?> mockType, ExtensionContext extensionContext) {
-		return extensionContext.getOrComputeIfAbsent(mockType, type -> mock(mockType),
-			MockitoExtension.class.getName());
+	private Object getMock(Class<?> mockType, ExtensionContext.Store mocks) {
+		return mocks.getOrComputeIfAbsent(mockType, type -> mock(mockType));
 	}
 
 }

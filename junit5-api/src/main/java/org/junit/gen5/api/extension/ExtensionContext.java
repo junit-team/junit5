@@ -11,9 +11,14 @@
 package org.junit.gen5.api.extension;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
+
+import org.junit.gen5.commons.util.Preconditions;
 
 /**
  * {@code ExtensionContext} encapsulates the <em>context</em> in which the
@@ -55,82 +60,6 @@ public interface ExtensionContext {
 
 	AnnotatedElement getElement();
 
-	// Storing methods.
-
-	/**
-	 * Get an object that has been stored using a {@code key}
-	 *
-	 * @param key the key
-	 * @return the value
-	 */
-	Object get(Object key);
-
-	/**
-	 * Store a {@code value} for later retrieval using a {@code key}. {@code null} is a valid value.
-	 *
-	 * @param key the key
-	 * @param value the value
-	 */
-	void put(Object key, Object value);
-
-	/**
-	 * Get an object that has been stored using a {@code key}. If no value has been store using that {@code key}
-	 * the value will be computed by the {@code defaultCreator} and be stored.
-	 *
-	 * @param key the key
-	 * @param defaultCreator the function called to create the value
-	 * @return the value
-	 */
-	Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator);
-
-	/**
-	 * Remove a value that was previously stored using {@code key} so that {@code key} can be used anew.
-	 *
-	 * @param key the key
-	 * @return the previous value or {@code null} if no value was present
-	 * for the specified key
-	 */
-	Object remove(Object key);
-
-	/**
-	 * Get an object that has been stored using a {@code key}
-	 *
-	 * @param key the key
-	 * @param namespace the namespace
-	 * @return the value
-	 */
-	Object get(Object key, String namespace);
-
-	/**
-	 * Store a {@code value} for later retrieval using a {@code key}. {@code null} is a valid value.
-	 *
-	 * @param key the key
-	 * @param value the value
-	 * @param namespace the namespace
-	 */
-	void put(Object key, Object value, String namespace);
-
-	/**
-	 * Get an object that has been stored using a {@code key}. If no value has been store using that {@code key}
-	 * the value will be computed by the {@code defaultCreator} and be stored.
-	 *
-	 * @param key the key
-	 * @param defaultCreator the function called to create the value
-	 * @param namespace the namespace
-	 * @return the value
-	 */
-	Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator, String namespace);
-
-	/**
-	 * Remove a value that was previously stored using {@code key} so that {@code key} can be used anew.
-	 *
-	 * @param key the key
-	 * @param namespace the namespace
-	 * @return the previous value or {@code null} if no value was present
-	 * for the specified key and namespace
-	 */
-	Object remove(Object key, String namespace);
-
 	// Attributes will be removed when storing methods are done
 
 	Object getAttribute(String key);
@@ -138,5 +67,81 @@ public interface ExtensionContext {
 	void putAttribute(String key, Object value);
 
 	Object removeAttribute(String key);
+
+	default Store getStore() {
+		return getStore(Namespace.DEFAULT);
+	}
+
+	Store getStore(Namespace namespace);
+
+	interface Store {
+		/**
+		 * Get an object that has been stored using a {@code key}
+		 *
+		 * @param key the key
+		 * @return the value
+		 */
+		Object get(Object key);
+
+		/**
+		 * Store a {@code value} for later retrieval using a {@code key}. {@code null} is a valid value.
+		 *
+		 * @param key the key
+		 * @param value the value
+		 */
+		void put(Object key, Object value);
+
+		/**
+		 * Get an object that has been stored using a {@code key}. If no value has been store using that {@code key}
+		 * the value will be computed by the {@code defaultCreator} and be stored.
+		 *
+		 * @param key the key
+		 * @param defaultCreator the function called to create the value
+		 * @return the value
+		 */
+		Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator);
+
+		/**
+		 * Remove a value that was previously stored using {@code key} so that {@code key} can be used anew.
+		 *
+		 * @param key the key
+		 * @return the previous value or {@code null} if no value was present
+		 * for the specified key
+		 */
+		Object remove(Object key);
+	}
+
+	public static class Namespace {
+
+		public static Namespace DEFAULT = Namespace.of(new Object());
+
+		public static Namespace of(Object... parts) {
+			Preconditions.notEmpty(Arrays.asList(parts),
+				"There must be at least one reference object to create a namespace");
+
+			return new Namespace(parts);
+		}
+
+		private final Set<?> parts;
+
+		private Namespace(Object... parts) {
+			this.parts = new HashSet<>(Arrays.asList(parts));
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			Namespace namespace = (Namespace) o;
+			return parts.equals(namespace.parts);
+		}
+
+		@Override
+		public int hashCode() {
+			return parts.hashCode();
+		}
+	}
 
 }

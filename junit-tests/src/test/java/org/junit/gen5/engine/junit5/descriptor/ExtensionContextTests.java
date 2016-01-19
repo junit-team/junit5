@@ -122,45 +122,25 @@ public class ExtensionContextTests {
 	}
 
 	@Test
-	public void storingAttributesWithDefaultNamespace() {
+	public void usingStore() {
 		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
 		ExtensionContext parentContext = new ClassBasedContainerExtensionContext(null, null, classTestDescriptor);
 		MethodBasedTestExtensionContext childContext = new MethodBasedTestExtensionContext(parentContext, null,
 			methodTestDescriptor, new OuterClass());
 
-		childContext.put("a key", "a value");
-		assertEquals("a value", childContext.get("a key"));
+		ExtensionContext.Store store = childContext.getStore();
 
-		assertEquals("other value", childContext.getOrComputeIfAbsent("other key", key -> "other value"));
+		store.put("a key", "a value");
+		assertEquals("a value", store.get("a key"));
 
-		childContext.remove("a key");
-		assertNull(childContext.get("a key"));
+		assertEquals("other value", store.getOrComputeIfAbsent("other key", key -> "other value"));
 
-		parentContext.put("parent key", "parent value");
-		assertEquals("parent value", childContext.get("parent key"));
-	}
+		assertEquals("a value", store.remove("a key"));
+		assertNull(store.get("a key"));
 
-	@Test
-	public void storingAttributesWithNamespace() {
-		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
-		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
-		ExtensionContext parentContext = new ClassBasedContainerExtensionContext(null, null, classTestDescriptor);
-		MethodBasedTestExtensionContext childContext = new MethodBasedTestExtensionContext(parentContext, null,
-			methodTestDescriptor, new OuterClass());
-
-		String namespace = "a namespace";
-
-		childContext.put("a key", "a value", namespace);
-		assertEquals("a value", childContext.get("a key", namespace));
-
-		assertEquals("other value", childContext.getOrComputeIfAbsent("other key", key -> "other value"), namespace);
-
-		childContext.remove("a key", namespace);
-		assertNull(childContext.get("a key", namespace));
-
-		parentContext.put("parent key", "parent value", namespace);
-		assertEquals("parent value", childContext.get("parent key", namespace));
+		store.put("parent key", "parent value");
+		assertEquals("parent value", store.get("parent key"));
 	}
 
 	private ClassTestDescriptor nestedClassDescriptor() {
