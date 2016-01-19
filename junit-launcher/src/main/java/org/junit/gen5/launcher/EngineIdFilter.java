@@ -23,7 +23,7 @@ import org.junit.gen5.engine.TestEngine;
  * execution.
  *
  * @since 5.0
- * @see DiscoveryRequest
+ * @see TestDiscoveryRequest
  */
 public class EngineIdFilter implements GenericFilter<String> {
 	public static EngineIdFilter byEngineId(String engineId) {

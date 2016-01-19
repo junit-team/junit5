@@ -25,7 +25,7 @@ import org.junit.gen5.engine.ExecutionEvent;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.junit4.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.junit4.*;
-import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.launcher.*;
 
 class JUnit4TestEngineExecutionTests {
 
@@ -346,7 +346,7 @@ class JUnit4TestEngineExecutionTests {
 
 	private static List<ExecutionEvent> execute(Class<?> testClass) {
 		JUnit4TestEngine engine = new JUnit4TestEngine();
-		DiscoveryRequest discoveryRequest = request().select(forClass(testClass)).build();
+		TestDiscoveryRequest discoveryRequest = request().select(forClass(testClass)).build();
 		return ExecutionEventRecorder.execute(engine, discoveryRequest);
 	}
 }

@@ -16,7 +16,7 @@ import java.util.Map;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.launcher.*;
 
 class Root {
 	private final Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
@@ -37,7 +37,7 @@ class Root {
 		return testEngineDescriptors.get(testEngine);
 	}
 
-	void applyFilters(DiscoveryRequest discoveryRequest) {
+	void applyFilters(TestDiscoveryRequest discoveryRequest) {
 		TestDescriptor.Visitor filteringVisitor = (descriptor, remove) -> {
 			if (!descriptor.isTest())
 				return;

@@ -36,7 +36,7 @@ public class DiscoveryRequestBuilderTests {
 	@Test
 	public void packagesAreStoredInDiscoveryRequest() throws Exception {
 		// @formatter:off
-        DiscoveryRequest discoveryRequest = request()
+        TestDiscoveryRequest discoveryRequest = request()
 				.select(
 						forPackageName("org.junit.gen5.engine")
 				).build();
@@ -50,7 +50,7 @@ public class DiscoveryRequestBuilderTests {
 	@Test
 	public void classesAreStoredInDiscoveryRequest() throws Exception {
 		// @formatter:off
-        DiscoveryRequest discoveryRequest = request()
+        TestDiscoveryRequest discoveryRequest = request()
 				.select(
 						forClassName(DiscoveryRequestBuilderTests.class.getName()),
 						forClass(SampleTestClass.class)
@@ -69,7 +69,7 @@ public class DiscoveryRequestBuilderTests {
 		Method testMethod = testClass.getMethod("test");
 
 		// @formatter:off
-        DiscoveryRequest discoveryRequest = request()
+        TestDiscoveryRequest discoveryRequest = request()
 				.select(forMethod(SampleTestClass.class.getName(), "test"))
 				.build();
         // @formatter:on
@@ -88,7 +88,7 @@ public class DiscoveryRequestBuilderTests {
 		Method testMethod = testClass.getMethod("test");
 
 		// @formatter:off
-        DiscoveryRequest discoveryRequest = request()
+        DiscoveryRequest discoveryRequest = (DiscoveryRequest) request()
 				.select(
 						MethodSelector.forMethod(SampleTestClass.class, "test")
 				).build();
@@ -105,7 +105,7 @@ public class DiscoveryRequestBuilderTests {
 	@Test
 	public void unavailableFoldersAreNotStoredInDiscoveryRequest() throws Exception {
 		// @formatter:off
-        DiscoveryRequest discoveryRequest = request()
+        TestDiscoveryRequest discoveryRequest = request()
 				.select(
 						ClasspathSelector.forPath("/some/local/path")
 				).build();
@@ -122,7 +122,7 @@ public class DiscoveryRequestBuilderTests {
 		File temporaryFolder = Files.newTemporaryFolder();
 		try {
 			// @formatter:off
-			DiscoveryRequest discoveryRequest = request()
+			TestDiscoveryRequest discoveryRequest = request()
 					.select(
 							ClasspathSelector.forPath(temporaryFolder.getAbsolutePath())
 					).build();
@@ -141,7 +141,7 @@ public class DiscoveryRequestBuilderTests {
 	@Test
 	public void uniqueIdsAreStoredInDiscoveryRequest() throws Exception {
 		// @formatter:off
-        DiscoveryRequest discoveryRequest = request()
+        TestDiscoveryRequest discoveryRequest = request()
 				.select(
 						forUniqueId("engine:bla:foo:bar:id1"),
 						forUniqueId("engine:bla:foo:bar:id2")

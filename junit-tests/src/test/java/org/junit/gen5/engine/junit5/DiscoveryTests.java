@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.discovery.MethodSelector;
-import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
  * Test correct test discovery in simple test classes for the {@link JUnit5TestEngine}.
@@ -33,14 +33,14 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void discoverTestClass() {
-		DiscoveryRequest request = request().select(forClass(LocalTestCase.class)).build();
+		TestDiscoveryRequest request = request().select(forClass(LocalTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void discoverByUniqueId() {
-		DiscoveryRequest request = request().select(
+		TestDiscoveryRequest request = request().select(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.DiscoveryTests$LocalTestCase#test1()")).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
@@ -50,14 +50,14 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 	public void discoverByMethod() throws NoSuchMethodException {
 		Method testMethod = LocalTestCase.class.getDeclaredMethod("test3", new Class[0]);
 
-		DiscoveryRequest request = request().select(MethodSelector.forMethod(LocalTestCase.class, testMethod)).build();
+		TestDiscoveryRequest request = request().select(MethodSelector.forMethod(LocalTestCase.class, testMethod)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void discoverCompositeSpec() {
-		DiscoveryRequest spec = request().select(
+		TestDiscoveryRequest spec = request().select(
 			forUniqueId("junit5:org.junit.gen5.engine.junit5.DiscoveryTests$LocalTestCase#test2()"),
 			forClass(LocalTestCase.class)).build();
 

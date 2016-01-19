@@ -16,10 +16,7 @@ import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.launcher.DiscoveryRequest;
-import org.junit.gen5.launcher.TestExecutionListener;
-import org.junit.gen5.launcher.TestIdentifier;
-import org.junit.gen5.launcher.TestPlan;
+import org.junit.gen5.launcher.*;
 
 /**
  * Facade for <em>discovering</em> and <em>executing</em> tests using
@@ -89,7 +86,7 @@ public class Launcher {
 	 * @return a {@code TestPlan} that contains all resolved
 	 *         {@linkplain TestIdentifier identifiers} from all registered engines
 	 */
-	public TestPlan discover(DiscoveryRequest discoveryRequest) {
+	public TestPlan discover(TestDiscoveryRequest discoveryRequest) {
 		return TestPlan.from(discoverRoot(discoveryRequest, "discovery").getEngineDescriptors());
 	}
 
@@ -101,11 +98,11 @@ public class Launcher {
 	 *
 	 * @param discoveryRequest the discovery request to be executed
 	 */
-	public void execute(DiscoveryRequest discoveryRequest) {
+	public void execute(TestDiscoveryRequest discoveryRequest) {
 		execute(discoverRoot(discoveryRequest, "execution"));
 	}
 
-	private Root discoverRoot(DiscoveryRequest discoveryRequest, String phase) {
+	private Root discoverRoot(TestDiscoveryRequest discoveryRequest, String phase) {
 		Root root = new Root();
 		for (TestEngine testEngine : testEngineRegistry.getTestEngines()) {
 			if (discoveryRequest.getEngineIdFilters().stream().map(

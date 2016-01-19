@@ -21,7 +21,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.opentest4j.TestAbortedException;
 
 /**
@@ -40,21 +40,21 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void standardTestClassIsCorrectlyDiscovered() {
-		DiscoveryRequest request = request().select(forClass(MyStandardTestCase.class)).build();
+		TestDiscoveryRequest request = request().select(forClass(MyStandardTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsCorrectlyDiscovered() {
-		DiscoveryRequest request = request().select(forClass(SecondOfTwoTestCases.class)).build();
+		TestDiscoveryRequest request = request().select(forClass(SecondOfTwoTestCases.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2 + 2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsExecuted() {
-		DiscoveryRequest request = request().select(forClass(FirstOfTwoTestCases.class),
+		TestDiscoveryRequest request = request().select(forClass(FirstOfTwoTestCases.class),
 			forClass(SecondOfTwoTestCases.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);

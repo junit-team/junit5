@@ -14,9 +14,7 @@ import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
 
 import org.apache.maven.surefire.util.ScannerFilter;
-import org.junit.gen5.launcher.DiscoveryRequest;
-import org.junit.gen5.launcher.TestIdentifier;
-import org.junit.gen5.launcher.TestPlan;
+import org.junit.gen5.launcher.*;
 import org.junit.gen5.launcher.main.Launcher;
 
 final class TestPlanScannerFilter implements ScannerFilter {
@@ -30,7 +28,7 @@ final class TestPlanScannerFilter implements ScannerFilter {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean accept(Class testClass) {
-		DiscoveryRequest discoveryRequest = request().select(forClass(testClass)).build();
+		TestDiscoveryRequest discoveryRequest = request().select(forClass(testClass)).build();
 		TestPlan testPlan = launcher.discover(discoveryRequest);
 		return testPlan.countTestIdentifiers(TestIdentifier::isTest) > 0;
 	}

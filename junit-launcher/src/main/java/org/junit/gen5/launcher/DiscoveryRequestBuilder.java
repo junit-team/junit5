@@ -90,7 +90,7 @@ public final class DiscoveryRequestBuilder {
 		}
 	}
 
-	public DiscoveryRequest build() {
+	public TestDiscoveryRequest build() {
 		DiscoveryRequest discoveryRequest = new DiscoveryRequest();
 		discoveryRequest.addSelectors(this.selectors);
 		discoveryRequest.addEngineIdFilters(this.engineIdFilters);

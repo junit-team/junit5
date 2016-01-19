@@ -20,7 +20,7 @@ import org.junit.gen5.engine.TestEngine;
  * discovery.
  *
  * @since 5.0
- * @see DiscoveryRequest
+ * @see TestDiscoveryRequest
  * @see TestEngine
  */
 public interface PostDiscoveryFilter extends GenericFilter<TestDescriptor> {

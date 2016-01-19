@@ -25,7 +25,7 @@ import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.ExecutionEventRecorder;
-import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@link org.junit.gen5.api.extension.InstancePostProcessor}.
@@ -34,7 +34,7 @@ public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void instancePostProcessorInTopLevelClass() {
-		DiscoveryRequest request = request().select(forClass(OuterTestCase.class)).build();
+		TestDiscoveryRequest request = request().select(forClass(OuterTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

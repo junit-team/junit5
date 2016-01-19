@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
-import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.launcher.*;
 import org.junit.gen5.launcher.listeners.SummaryGeneratingListener;
 import org.junit.gen5.launcher.listeners.TestExecutionSummary;
 import org.junit.gen5.launcher.main.Launcher;
@@ -53,7 +53,7 @@ public class ExecuteTestsTask implements ConsoleTask {
 
 		SummaryGeneratingListener summaryListener = registerListeners(out, launcher);
 
-		DiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(options);
+		TestDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(options);
 		launcher.execute(discoveryRequest);
 
 		TestExecutionSummary summary = summaryListener.getSummary();

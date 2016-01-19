@@ -29,7 +29,7 @@ import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.engine.ExecutionEventRecorder;
-import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests that verify support of {@link BeforeAll}, {@link AfterAll},
@@ -41,7 +41,7 @@ public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void beforeAllAndAfterAllCallbacks() {
-		DiscoveryRequest request = request().select(forClass(InstancePerMethodTestCase.class)).build();
+		TestDiscoveryRequest request = request().select(forClass(InstancePerMethodTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

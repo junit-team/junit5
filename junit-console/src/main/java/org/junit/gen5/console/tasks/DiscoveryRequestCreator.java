@@ -23,24 +23,23 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.discovery.ClassFilter;
-import org.junit.gen5.launcher.DiscoveryRequest;
-import org.junit.gen5.launcher.TagFilter;
+import org.junit.gen5.launcher.*;
 
 class DiscoveryRequestCreator {
-	DiscoveryRequest toDiscoveryRequest(CommandLineOptions options) {
-		DiscoveryRequest discoveryRequest = buildDiscoveryRequest(options);
+	TestDiscoveryRequest toDiscoveryRequest(CommandLineOptions options) {
+		TestDiscoveryRequest discoveryRequest = buildDiscoveryRequest(options);
 		applyFilters(discoveryRequest, options);
 		return discoveryRequest;
 	}
 
-	private DiscoveryRequest buildDiscoveryRequest(CommandLineOptions options) {
+	private TestDiscoveryRequest buildDiscoveryRequest(CommandLineOptions options) {
 		if (options.isRunAllTests()) {
 			return buildDiscoveryRequestForAllTests(options);
 		}
 		return buildNameBasedDiscoveryRequest(options);
 	}
 
-	private DiscoveryRequest buildDiscoveryRequestForAllTests(CommandLineOptions options) {
+	private TestDiscoveryRequest buildDiscoveryRequestForAllTests(CommandLineOptions options) {
 		Set<File> rootDirectoriesToScan = determineClasspathRootDirectories(options);
 		return request().select(forPaths(rootDirectoriesToScan)).build();
 	}
@@ -52,12 +51,12 @@ class DiscoveryRequestCreator {
 		return options.getArguments().stream().map(File::new).collect(toCollection(LinkedHashSet::new));
 	}
 
-	private DiscoveryRequest buildNameBasedDiscoveryRequest(CommandLineOptions options) {
+	private TestDiscoveryRequest buildNameBasedDiscoveryRequest(CommandLineOptions options) {
 		Preconditions.notEmpty(options.getArguments(), "No arguments given");
 		return request().select(forNames(options.getArguments())).build();
 	}
 
-	private void applyFilters(DiscoveryRequest discoveryRequest, CommandLineOptions options) {
+	private void applyFilters(TestDiscoveryRequest discoveryRequest, CommandLineOptions options) {
 		options.getClassnameFilter().ifPresent(regex -> discoveryRequest.addFilter(ClassFilter.byNamePattern(regex)));
 		if (!options.getTagsFilter().isEmpty()) {
 			discoveryRequest.addPostFilter(TagFilter.includeTags(options.getTagsFilter()));

@@ -27,12 +27,7 @@ import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
-import org.junit.gen5.launcher.DiscoveryRequest;
-import org.junit.gen5.launcher.EngineIdFilter;
-import org.junit.gen5.launcher.PostDiscoveryFilter;
-import org.junit.gen5.launcher.TagFilter;
-import org.junit.gen5.launcher.TestIdentifier;
-import org.junit.gen5.launcher.TestPlan;
+import org.junit.gen5.launcher.*;
 import org.junit.gen5.launcher.main.Launcher;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -70,7 +65,7 @@ public class JUnit5 extends Runner implements Filterable {
 
 	private final Launcher launcher = new Launcher();
 	private final Class<?> testClass;
-	private DiscoveryRequest discoveryRequest;
+	private TestDiscoveryRequest discoveryRequest;
 	private JUnit5TestTree testTree;
 
 	public JUnit5(Class<?> testClass) throws InitializationError {
@@ -97,7 +92,7 @@ public class JUnit5 extends Runner implements Filterable {
 		return new JUnit5TestTree(plan, testClass);
 	}
 
-	private DiscoveryRequest createDiscoveryRequest() {
+	private TestDiscoveryRequest createDiscoveryRequest() {
 		List<DiscoverySelector> selectors = getSpecElementsFromAnnotations();
 
 		// Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
@@ -105,12 +100,12 @@ public class JUnit5 extends Runner implements Filterable {
 			selectors.add(ClassSelector.forClass(this.testClass));
 		}
 
-		DiscoveryRequest request = request().select(selectors).build();
+		TestDiscoveryRequest request = request().select(selectors).build();
 		addFiltersFromAnnotations(request);
 		return request;
 	}
 
-	private void addFiltersFromAnnotations(DiscoveryRequest request) {
+	private void addFiltersFromAnnotations(TestDiscoveryRequest request) {
 		addClassNameMatchesFilter(request);
 		addIncludeTagsFilter(request);
 		addExcludeTagsFilter(request);
@@ -131,14 +126,14 @@ public class JUnit5 extends Runner implements Filterable {
 		return stream(sourceElements).map(transformer).collect(toList());
 	}
 
-	private void addClassNameMatchesFilter(DiscoveryRequest discoveryRequest) {
+	private void addClassNameMatchesFilter(TestDiscoveryRequest discoveryRequest) {
 		String regex = getClassNameRegExPattern();
 		if (!regex.isEmpty()) {
 			discoveryRequest.addFilter(ClassFilter.byNamePattern(regex));
 		}
 	}
 
-	private void addIncludeTagsFilter(DiscoveryRequest discoveryRequest) {
+	private void addIncludeTagsFilter(TestDiscoveryRequest discoveryRequest) {
 		String[] includeTags = getIncludeTags();
 		if (includeTags.length > 0) {
 			PostDiscoveryFilter tagNamesFilter = TagFilter.includeTags(includeTags);
@@ -146,7 +141,7 @@ public class JUnit5 extends Runner implements Filterable {
 		}
 	}
 
-	private void addExcludeTagsFilter(DiscoveryRequest discoveryRequest) {
+	private void addExcludeTagsFilter(TestDiscoveryRequest discoveryRequest) {
 		String[] excludeTags = getExcludeTags();
 		if (excludeTags.length > 0) {
 			PostDiscoveryFilter excludeTagsFilter = TagFilter.excludeTags(excludeTags);
@@ -154,7 +149,7 @@ public class JUnit5 extends Runner implements Filterable {
 		}
 	}
 
-	private void addEngineIdFilter(DiscoveryRequest discoveryRequest) {
+	private void addEngineIdFilter(TestDiscoveryRequest discoveryRequest) {
 		String engineId = getExplicitEngineId();
 		if (StringUtils.isNotBlank(engineId)) {
 			EngineIdFilter engineFilter = EngineIdFilter.byEngineId(engineId);
@@ -206,7 +201,7 @@ public class JUnit5 extends Runner implements Filterable {
 		this.testTree = generateTestTree();
 	}
 
-	private DiscoveryRequest createDiscoveryRequestForUniqueIds(Set<TestIdentifier> testIdentifiers) {
+	private TestDiscoveryRequest createDiscoveryRequestForUniqueIds(Set<TestIdentifier> testIdentifiers) {
 		// @formatter:off
 		List<DiscoverySelector> selectors = testIdentifiers.stream()
 				.map(TestIdentifier::getUniqueId)

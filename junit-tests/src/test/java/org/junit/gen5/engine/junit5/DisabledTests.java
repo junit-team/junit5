@@ -32,7 +32,7 @@ import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.ExecutionEventRecorder;
-import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@link Disabled @Disabled} and
@@ -58,7 +58,7 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsWithDisabledTestClass() {
-		DiscoveryRequest request = request().select(forClass(DisabledTestClassTestCase.class)).build();
+		TestDiscoveryRequest request = request().select(forClass(DisabledTestClassTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(1L, eventRecorder.getContainerSkippedCount(), "# container skipped");
@@ -67,7 +67,7 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsWithDisabledTestMethods() {
-		DiscoveryRequest request = request().select(forClass(DisabledTestMethodsTestCase.class)).build();
+		TestDiscoveryRequest request = request().select(forClass(DisabledTestMethodsTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");

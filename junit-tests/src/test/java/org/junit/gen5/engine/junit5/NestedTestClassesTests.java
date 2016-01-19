@@ -22,7 +22,7 @@ import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@linkplain Nested nested contexts}
@@ -34,7 +34,7 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void nestedTestsAreCorrectlyDiscovered() {
-		DiscoveryRequest request = request().select(forClass(TestCaseWithNesting.class)).build();
+		TestDiscoveryRequest request = request().select(forClass(TestCaseWithNesting.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
@@ -53,7 +53,7 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void doublyNestedTestsAreCorrectlyDiscovered() {
-		DiscoveryRequest request = request().select(forClass(TestCaseWithDoubleNesting.class)).build();
+		TestDiscoveryRequest request = request().select(forClass(TestCaseWithDoubleNesting.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(8, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}

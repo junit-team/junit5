@@ -21,13 +21,13 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestReporter;
 import org.junit.gen5.engine.ExecutionEventRecorder;
-import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 public class ReportingTest extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void threeReportEntriesArePublished() {
-		DiscoveryRequest request = request().select(forClass(MyReportingTestCase.class)).build();
+		TestDiscoveryRequest request = request().select(forClass(MyReportingTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

@@ -56,7 +56,7 @@ import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTes
 import org.junit.gen5.engine.junit4.samples.junit4.SingleFailingTheoryTestCase;
 import org.junit.gen5.engine.junit4.samples.junit4.TestCaseRunWithJUnit5;
 import org.junit.gen5.engine.support.descriptor.JavaSource;
-import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.runner.manipulation.Filter;
 
 class JUnit4TestEngineDiscoveryTests {
@@ -66,7 +66,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesSimpleJUnit4TestClass() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
-		DiscoveryRequest discoveryRequest = discoveryRequestForClass(testClass);
+		TestDiscoveryRequest discoveryRequest = discoveryRequestForClass(testClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
 
@@ -80,7 +80,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesIgnoredJUnit4TestClass() {
 		Class<?> testClass = IgnoredJUnit4TestCase.class;
-		DiscoveryRequest discoveryRequest = discoveryRequestForClass(testClass);
+		TestDiscoveryRequest discoveryRequest = discoveryRequestForClass(testClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
 
@@ -95,7 +95,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesJUnit4TestClassWithCustomRunner() throws Exception {
 		Class<?> testClass = SingleFailingTheoryTestCase.class;
-		DiscoveryRequest discoveryRequest = discoveryRequestForClass(testClass);
+		TestDiscoveryRequest discoveryRequest = discoveryRequestForClass(testClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
 
@@ -109,7 +109,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesJUnit3TestCase() throws Exception {
 		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
-		DiscoveryRequest discoveryRequest = discoveryRequestForClass(testClass);
+		TestDiscoveryRequest discoveryRequest = discoveryRequestForClass(testClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
 
@@ -124,7 +124,7 @@ class JUnit4TestEngineDiscoveryTests {
 	void resolvesJUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails() throws Exception {
 		Class<?> suiteClass = JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails.class;
 		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
-		DiscoveryRequest discoveryRequest = discoveryRequestForClass(suiteClass);
+		TestDiscoveryRequest discoveryRequest = discoveryRequestForClass(suiteClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
 
@@ -143,7 +143,7 @@ class JUnit4TestEngineDiscoveryTests {
 	void resolvesJUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored() throws Exception {
 		Class<?> suiteClass = JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored.class;
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichIsIgnored.class;
-		DiscoveryRequest discoveryRequest = discoveryRequestForClass(suiteClass);
+		TestDiscoveryRequest discoveryRequest = discoveryRequestForClass(suiteClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
 
@@ -161,7 +161,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesJUnit4TestCaseWithOverloadedMethod() {
 		Class<?> testClass = JUnit4TestCaseWithOverloadedMethod.class;
-		DiscoveryRequest discoveryRequest = discoveryRequestForClass(testClass);
+		TestDiscoveryRequest discoveryRequest = discoveryRequestForClass(testClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
 
@@ -197,7 +197,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesClasspathSelector() throws Exception {
 		File root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
-		DiscoveryRequest discoveryRequest = request().select(forPaths(singleton(root))).build();
+		TestDiscoveryRequest discoveryRequest = request().select(forPaths(singleton(root))).build();
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
 
 		// @formatter:off
@@ -213,7 +213,7 @@ class JUnit4TestEngineDiscoveryTests {
 	void resolvesApplyingClassFilters() throws Exception {
 		File root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
 
-		DiscoveryRequest discoveryRequest = request().select(forPaths(singleton(root))).filter(
+		TestDiscoveryRequest discoveryRequest = request().select(forPaths(singleton(root))).filter(
 			ClassFilter.byNamePattern(".*JUnit4.*"), ClassFilter.byNamePattern(".*Plain.*")).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
@@ -231,7 +231,7 @@ class JUnit4TestEngineDiscoveryTests {
 	void resolvesPackageSelectorForJUnit4SamplesPackage() {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
 
-		DiscoveryRequest discoveryRequest = request().select(forPackageName(testClass.getPackage().getName())).build();
+		TestDiscoveryRequest discoveryRequest = request().select(forPackageName(testClass.getPackage().getName())).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
 
@@ -247,7 +247,7 @@ class JUnit4TestEngineDiscoveryTests {
 	void resolvesPackageSelectorForJUnit3SamplesPackage() {
 		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
 
-		DiscoveryRequest discoveryRequest = request().select(forPackageName(testClass.getPackage().getName())).build();
+		TestDiscoveryRequest discoveryRequest = request().select(forPackageName(testClass.getPackage().getName())).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
 
@@ -263,7 +263,7 @@ class JUnit4TestEngineDiscoveryTests {
 	void resolvesClassesWithInheritedMethods() throws Exception {
 		Class<?> superclass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleInheritedTestWhichFails.class;
-		DiscoveryRequest discoveryRequest = discoveryRequestForClass(testClass);
+		TestDiscoveryRequest discoveryRequest = discoveryRequestForClass(testClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
 
@@ -279,7 +279,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesCategoriesIntoTags() {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		DiscoveryRequest discoveryRequest = discoveryRequestForClass(testClass);
+		TestDiscoveryRequest discoveryRequest = discoveryRequestForClass(testClass);
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
 
@@ -306,7 +306,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesMethodSelectorForSingleMethod() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		DiscoveryRequest discoveryRequest = request().select(
+		TestDiscoveryRequest discoveryRequest = request().select(
 			MethodSelector.forMethod(testClass, testClass.getMethod("failingTest"))).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
@@ -321,7 +321,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesMethodSelectorForTwoMethodsOfSameClass() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		DiscoveryRequest discoveryRequest = request().select(
+		TestDiscoveryRequest discoveryRequest = request().select(
 			MethodSelector.forMethod(testClass, testClass.getMethod("failingTest")),
 			MethodSelector.forMethod(testClass, testClass.getMethod("successfulTest"))).build();
 
@@ -343,7 +343,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesUniqueIdSelectorForSingleMethod() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		DiscoveryRequest discoveryRequest = request().select(forUniqueId(
+		TestDiscoveryRequest discoveryRequest = request().select(forUniqueId(
 			"junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods/failingTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods)")).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
@@ -358,7 +358,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesUniqueIdSelectorForSingleClass() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		DiscoveryRequest discoveryRequest = request().select(forUniqueId(
+		TestDiscoveryRequest discoveryRequest = request().select(forUniqueId(
 			"junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods")).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
@@ -373,7 +373,7 @@ class JUnit4TestEngineDiscoveryTests {
 	void resolvesUniqueIdSelectorOfSingleClassWithinSuite() throws Exception {
 		Class<?> suiteClass = JUnit4SuiteWithTwoTestCases.class;
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
-		DiscoveryRequest discoveryRequest = request().select(
+		TestDiscoveryRequest discoveryRequest = request().select(
 			forUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithTwoTestCases"
 					+ "/org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails")).build();
 
@@ -394,7 +394,7 @@ class JUnit4TestEngineDiscoveryTests {
 	void resolvesUniqueIdSelectorOfSingleMethodWithinSuite() throws Exception {
 		Class<?> suiteClass = JUnit4SuiteWithTwoTestCases.class;
 		Class<?> testClass = PlainJUnit4TestCaseWithTwoTestMethods.class;
-		DiscoveryRequest discoveryRequest = request().select(
+		TestDiscoveryRequest discoveryRequest = request().select(
 			forUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithTwoTestCases"
 					+ "/org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods"
 					+ "/successfulTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods)")).build();
@@ -415,7 +415,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesMultipleUniqueIdSelectorsForMethodsOfSameClass() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithTwoTestMethods.class;
-		DiscoveryRequest discoveryRequest = request().select(
+		TestDiscoveryRequest discoveryRequest = request().select(
 			forUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods"
 					+ "/successfulTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods)"),
 			forUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods"
@@ -437,7 +437,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void doesNotResolveMissingUniqueIdSelectorForSingleClass() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		DiscoveryRequest discoveryRequest = request().select(forUniqueId(
+		TestDiscoveryRequest discoveryRequest = request().select(forUniqueId(
 			"junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods/doesNotExist")).build();
 
 		TestDescriptor engineDescriptor = engine.discoverTests(discoveryRequest);
@@ -452,7 +452,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void ignoresMoreFineGrainedSelectorsWhenClassIsSelectedAsWell() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		DiscoveryRequest discoveryRequest = request().select( //
+		TestDiscoveryRequest discoveryRequest = request().select( //
 			MethodSelector.forMethod(testClass, testClass.getMethod("failingTest")), //
 			forUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods"
 					+ "/abortedTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods)"),
@@ -470,7 +470,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void resolvesCombinationOfMethodAndUniqueIdSelector() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		DiscoveryRequest discoveryRequest = request().select( //
+		TestDiscoveryRequest discoveryRequest = request().select( //
 			MethodSelector.forMethod(testClass, testClass.getMethod("failingTest")), //
 			forUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods"
 					+ "/abortedTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods)" //
@@ -492,7 +492,7 @@ class JUnit4TestEngineDiscoveryTests {
 	@Test
 	void ignoresRedundantSelector() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		DiscoveryRequest discoveryRequest = request().select( //
+		TestDiscoveryRequest discoveryRequest = request().select( //
 			MethodSelector.forMethod(testClass, testClass.getMethod("failingTest")), //
 			forUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods"
 					+ "/failingTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods)" //
@@ -512,7 +512,7 @@ class JUnit4TestEngineDiscoveryTests {
 	void doesNotResolveMethodOfClassNotAcceptedByClassFilter() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		// @formatter:off
-		DiscoveryRequest request = request()
+		TestDiscoveryRequest request = request()
 				.select(MethodSelector.forMethod(testClass, testClass.getMethod("failingTest")))
 				.filter(ClassFilter.byNamePattern("Foo"))
 				.build();
@@ -539,12 +539,12 @@ class JUnit4TestEngineDiscoveryTests {
 	}
 
 	private void assertYieldsNoDescriptors(Class<?> testClass) {
-		DiscoveryRequest request = discoveryRequestForClass(testClass);
+		TestDiscoveryRequest request = discoveryRequestForClass(testClass);
 
 		assertYieldsNoDescriptors(request);
 	}
 
-	private void assertYieldsNoDescriptors(DiscoveryRequest request) {
+	private void assertYieldsNoDescriptors(TestDiscoveryRequest request) {
 		TestDescriptor engineDescriptor = engine.discoverTests(request);
 
 		assertThat(engineDescriptor.getChildren()).isEmpty();
@@ -604,7 +604,7 @@ class JUnit4TestEngineDiscoveryTests {
 			expectedMethod.getParameterTypes());
 	}
 
-	private static DiscoveryRequest discoveryRequestForClass(Class<?> testClass) {
+	private static TestDiscoveryRequest discoveryRequestForClass(Class<?> testClass) {
 		return request().select(forClass(testClass)).build();
 	}
 }

@@ -34,7 +34,7 @@ import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
-import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.launcher.*;
 
 public class DiscoveryRequestCreatorTests {
 	private CommandLineOptions options = new CommandLineOptions();
@@ -44,7 +44,7 @@ public class DiscoveryRequestCreatorTests {
 		Class<?> testClass = getClass();
 		options.setArguments(singletonList(testClass.getName()));
 
-		DiscoveryRequest request = convert();
+		TestDiscoveryRequest request = convert();
 
 		List<ClassSelector> classSelectors = request.getSelectorsByType(ClassSelector.class);
 		assertThat(classSelectors).hasSize(1);
@@ -57,7 +57,7 @@ public class DiscoveryRequestCreatorTests {
 		Method testMethod = testClass.getDeclaredMethod("convertsMethodArgument");
 		options.setArguments(singletonList(testClass.getName() + "#" + testMethod.getName()));
 
-		DiscoveryRequest request = convert();
+		TestDiscoveryRequest request = convert();
 
 		List<MethodSelector> methodSelectors = request.getSelectorsByType(MethodSelector.class);
 		assertThat(methodSelectors).hasSize(1);
@@ -70,7 +70,7 @@ public class DiscoveryRequestCreatorTests {
 		String packageName = getClass().getPackage().getName();
 		options.setArguments(singletonList(packageName));
 
-		DiscoveryRequest request = convert();
+		TestDiscoveryRequest request = convert();
 
 		List<PackageSelector> packageSelectors = request.getSelectorsByType(PackageSelector.class);
 		assertThat(packageSelectors).extracting(PackageSelector::getPackageName).containsExactly(packageName);
@@ -80,7 +80,7 @@ public class DiscoveryRequestCreatorTests {
 	public void convertsAllOptionWithoutExplicitRootDirectories() {
 		options.setRunAllTests(true);
 
-		DiscoveryRequest request = convert();
+		TestDiscoveryRequest request = convert();
 
 		List<ClasspathSelector> classpathSelectors = request.getSelectorsByType(ClasspathSelector.class);
 		// @formatter:off
@@ -95,7 +95,7 @@ public class DiscoveryRequestCreatorTests {
 		options.setRunAllTests(true);
 		options.setArguments(asList(".", ".."));
 
-		DiscoveryRequest request = convert();
+		TestDiscoveryRequest request = convert();
 
 		List<ClasspathSelector> classpathSelectors = request.getSelectorsByType(ClasspathSelector.class);
 		// @formatter:off
@@ -109,7 +109,7 @@ public class DiscoveryRequestCreatorTests {
 		options.setRunAllTests(true);
 		options.setClassnameFilter(".*Test");
 
-		DiscoveryRequest request = convert();
+		TestDiscoveryRequest request = convert();
 
 		List<ClassFilter> filter = request.getDiscoveryFiltersByType(ClassFilter.class);
 		assertThat(filter).hasSize(1);
@@ -122,7 +122,7 @@ public class DiscoveryRequestCreatorTests {
 		options.setTagsFilter(asList("fast", "medium", "slow"));
 		options.setExcludeTags(asList("slow"));
 
-		DiscoveryRequest request = convert();
+		TestDiscoveryRequest request = convert();
 
 		assertTrue(request.acceptDescriptor(testDescriptorWithTag("fast")));
 		assertTrue(request.acceptDescriptor(testDescriptorWithTag("medium")));
@@ -130,7 +130,7 @@ public class DiscoveryRequestCreatorTests {
 		assertFalse(request.acceptDescriptor(testDescriptorWithTag("very slow")));
 	}
 
-	private DiscoveryRequest convert() {
+	private TestDiscoveryRequest convert() {
 		DiscoveryRequestCreator creator = new DiscoveryRequestCreator();
 		return creator.toDiscoveryRequest(options);
 	}

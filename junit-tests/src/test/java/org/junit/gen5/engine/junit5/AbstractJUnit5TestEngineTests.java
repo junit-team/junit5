@@ -17,7 +17,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.launcher.DiscoveryRequest;
+import org.junit.gen5.launcher.*;
 
 /**
  * Abstract base class for tests involving the {@link JUnit5TestEngine}.
@@ -36,14 +36,14 @@ abstract class AbstractJUnit5TestEngineTests {
 		return executeTests(request().select(forClass(testClass)).build());
 	}
 
-	protected ExecutionEventRecorder executeTests(DiscoveryRequest request) {
+	protected ExecutionEventRecorder executeTests(TestDiscoveryRequest request) {
 		TestDescriptor testDescriptor = discoverTests(request);
 		ExecutionEventRecorder eventRecorder = new ExecutionEventRecorder();
 		engine.execute(new ExecutionRequest(testDescriptor, eventRecorder));
 		return eventRecorder;
 	}
 
-	protected TestDescriptor discoverTests(DiscoveryRequest request) {
+	protected TestDescriptor discoverTests(TestDiscoveryRequest request) {
 		return engine.discoverTests(request);
 	}
 
