@@ -473,9 +473,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#test-instance-post-processing">5.4. Test Instance Post-processing</a></li>
 <li><a href="#parameter-resolution">5.5. Parameter Resolution</a></li>
 <li><a href="#test-lifecycle-callbacks">5.6. Test Lifecycle Callbacks</a></li>
-<li><a href="#extension-point-application-order">5.7. Extension Point Application Order</a></li>
-<li><a href="#keeping-state-in-extensions">5.8. Keeping State in Extensions</a></li>
-<li><a href="#additional-planned-extensions">5.9. Additional Planned Extensions</a></li>
+<li><a href="#keeping-state-in-extensions">5.7. Keeping State in Extensions</a></li>
+<li><a href="#additional-planned-extensions">5.8. Additional Planned Extensions</a></li>
 </ul>
 </li>
 <li><a href="#migrating-from-junit4">6. Migrating from JUnit 4</a>
@@ -1446,10 +1445,20 @@ JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
 <div class="sect2">
 <h3 id="registering-extensions">5.2. Registering Extensions</h3>
 <div class="paragraph">
-<p>Developers can register one or more extensions by annotating a test class or test method
-with <code>@ExtendWith(&#8230;&#8203;)</code>, supplying class references for the extensions to register. For
-example, to register a custom <code>MockitoExtension</code>, you would annotate your test class as
-follows.</p>
+<p>Extensions can be registered either declaratively via <code>@ExtendWith</code> or programmatically
+via an <code>ExtensionRegistrar</code>.</p>
+</div>
+<div class="paragraph">
+<p>Note that registered extensions are inherited within test class hierarchies.</p>
+</div>
+<div class="sect3">
+<h4 id="declarative-extension-registration">5.2.1. Declarative Extension Registration</h4>
+<div class="paragraph">
+<p>Developers can register one or more extensions <em>declaratively</em> by annotating a test
+class, test method, or custom <em>composed annotation</em> with <code>@ExtendWith(&#8230;&#8203;)</code> and supplying
+class references for the extensions to register. For example, to register a custom
+<code>MockitoExtension</code> for all tests in a particular class and its subclasses, you would
+annotate the test class as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1486,8 +1495,103 @@ class MyTestsV2 {
 <p>The execution of tests in both <code>MyTestsV1</code> and <code>MyTestsV2</code> will be extended by the
 <code>FooExtension</code> and <code>BarExtension</code>, in exactly that order.</p>
 </div>
+</div>
+<div class="sect3">
+<h4 id="programmatic-extension-registration">5.2.2. Programmatic Extension Registration</h4>
 <div class="paragraph">
-<p>Registered extensions are inherited within test class hierarchies.</p>
+<p>Developers can register one or more extensions <em>programmatically</em> by implementing the
+<code>ExtensionRegistrar</code> API and registering the custom <code>ExtensionRegistrar</code> implementation
+via <code>@ExtendWith</code> as mentioned above. The following examples demonstrate the various
+options in implementations of the <code>ExtensionRegistrar.registerExtensions()</code> method.</p>
+</div>
+<div class="sect4">
+<h5 id="registering-an-extensionpoint-instance">Registering an ExtensionPoint Instance</h5>
+<div class="paragraph">
+<p>If you have an instance of an extension that implements one or more <code>ExtensionPoint</code>
+APIs, you can register it as follows using the <em>default</em> <code>Position</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public void registerExtensions(ExtensionPointRegistry registry) {
+    CustomExtension customExtension = // instantiate extension
+    registry.register(customExtension);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you would like to influence the order in which multiple implementations of the same
+<code>ExtensionPoint</code> API are applied, you can do so by registering the extensions
+programmatically and supplying the <code>Position</code>. The following values are permitted.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>OUTERMOST</code>: Applied first. Only a single extension is allowed to be assigned this
+position; otherwise, an <code>ExtensionConfigurationException</code> will be thrown.</p>
+</li>
+<li>
+<p><code>OUTSIDE_DEFAULT</code>: Applied after <code>OUTERMOST</code> but before <code>DEFAULT</code>, <code>INSIDE_DEFAULT</code>,
+and <code>INNERMOST</code>. Multiple extensions can be assigned this position; however, the
+ordering among such extensions is undefined.</p>
+</li>
+<li>
+<p><code>DEFAULT</code>: (?)</p>
+</li>
+<li>
+<p><code>INSIDE_DEFAULT</code>: (?)</p>
+</li>
+<li>
+<p><code>INNERMOST</code>: (?)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following listing demonstrates how to configure an explicit position for an instance
+of an extension; however, a <code>Position</code> can also be supplied for lambda expressions and
+method references.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public void registerExtensions(ExtensionPointRegistry registry) {
+    registry.register(new TimingExtension(), Position.INNERMOST);
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="registering-a-lambda-expression-as-an-extensionpoint">Registering a Lambda Expression as an ExtensionPoint</h5>
+<div class="paragraph">
+<p>If you would like to implement a single <code>ExtensionPoint</code> API as a <em>lambda expression</em>,
+you can register it as follows. Note, however, that the API must be a <em>functional
+interface</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public void registerExtensions(ExtensionPointRegistry registry) {
+    registry.register((BeforeEachExtensionPoint) context -&gt; { /* ... */ });
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="registering-a-method-reference-as-an-extensionpoint">Registering a Method Reference as an ExtensionPoint</h5>
+<div class="paragraph">
+<p>If you would like to implement a single <code>ExtensionPoint</code> API via a <em>method reference</em>,
+you can register it as follows. Note, however, that the API must be a <em>functional
+interface</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public void registerExtensions(ExtensionPointRegistry registry) {
+    registry.register((BeforeEachExtensionPoint) this::beforeEach);
+}
+
+void beforeEach(TestExtensionContext context) {
+    /* ... */
+}</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -1567,21 +1671,14 @@ concrete example.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extension-point-application-order">5.7. Extension Point Application Order</h3>
-<div class="paragraph">
-<p>Sometimes you want to influence the order in which several extensions of the same type are applied.
-This goal can be achieved by implementing the <code><a href="https://github.com/junit-team/junit5/tree/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtensionRegistrar.java">ExtensionRegistrar</a></code> interface&#8230;&#8203;</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="keeping-state-in-extensions">5.8. Keeping State in Extensions</h3>
+<h3 id="keeping-state-in-extensions">5.7. Keeping State in Extensions</h3>
 <div class="paragraph">
 <p>Usually, an extension is instantiated only once. So the question becomes relevant: How do you keep the state
 from one invocation of an extension point to the next? &#8230;&#8203;</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="additional-planned-extensions">5.9. Additional Planned Extensions</h3>
+<h3 id="additional-planned-extensions">5.8. Additional Planned Extensions</h3>
 <div class="paragraph">
 <p>Several additional extensions are planned, including but not limited to the following.</p>
 </div>
@@ -1793,7 +1890,7 @@ registers its <code>JUnit5TestEngine</code>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-19 12:09:28 -05:00
+Last updated 2016-01-19 14:39:16 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
