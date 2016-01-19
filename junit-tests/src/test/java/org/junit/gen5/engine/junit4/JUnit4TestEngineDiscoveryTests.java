@@ -21,7 +21,6 @@ import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.engine.discovery.ClasspathSelector.forPaths;
-import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
@@ -34,7 +33,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.junit4.samples.PlainOldJavaClassWithoutAnyTest;

@@ -17,13 +17,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.FilterResult;
-import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.launcher.*;
+import org.junit.gen5.launcher.EngineIdFilter;
+import org.junit.gen5.launcher.PostDiscoveryFilter;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
  * The {@code DiscoveryRequest} represents the configuration for the test

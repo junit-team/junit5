@@ -12,11 +12,14 @@ package org.junit.gen5.engine.discovery;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
-import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.ReflectionUtils;
@@ -26,24 +29,25 @@ import org.junit.gen5.engine.DiscoverySelector;
  * @since 5.0
  */
 public class NameBasedSelector {
-	public static DiscoverySelector forName(String anyName) {
-		Optional<Class<?>> testClassOptional = ReflectionUtils.loadClass(anyName);
+
+	public static DiscoverySelector forName(String name) {
+		Optional<Class<?>> testClassOptional = ReflectionUtils.loadClass(name);
 		if (testClassOptional.isPresent()) {
 			return forClass(testClassOptional.get());
 		}
 
-		Optional<Method> testMethodOptional = ReflectionUtils.loadMethod(anyName);
+		Optional<Method> testMethodOptional = ReflectionUtils.loadMethod(name);
 		if (testMethodOptional.isPresent()) {
 			Method testMethod = testMethodOptional.get();
 			return MethodSelector.forMethod(testMethod.getDeclaringClass(), testMethod);
 		}
 
-		if (ReflectionUtils.isPackage(anyName)) {
-			return forPackageName(anyName);
+		if (ReflectionUtils.isPackage(name)) {
+			return forPackageName(name);
 		}
 
 		throw new PreconditionViolationException(
-			String.format("'%s' specifies neither a class, a method, nor a package.", anyName));
+			String.format("'%s' specifies neither a class, a method, nor a package.", name));
 	}
 
 	public static List<DiscoverySelector> forNames(String... classNames) {

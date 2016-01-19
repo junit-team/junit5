@@ -10,7 +10,6 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 

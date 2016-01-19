@@ -12,16 +12,29 @@ package org.junit.gen5.engine.junit5;
 
 import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.ExecutionEventConditions.*;
-import static org.junit.gen5.engine.TestExecutionResultConditions.*;
-import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
+import static org.junit.gen5.engine.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.gen5.engine.ExecutionEventConditions.container;
+import static org.junit.gen5.engine.ExecutionEventConditions.engine;
+import static org.junit.gen5.engine.ExecutionEventConditions.event;
+import static org.junit.gen5.engine.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.gen5.engine.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.gen5.engine.ExecutionEventConditions.started;
+import static org.junit.gen5.engine.ExecutionEventConditions.test;
+import static org.junit.gen5.engine.TestExecutionResultConditions.isA;
+import static org.junit.gen5.engine.TestExecutionResultConditions.message;
+import static org.junit.gen5.engine.TestExecutionResultConditions.suppressed;
 import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import org.junit.gen5.api.*;
+import org.junit.gen5.api.AfterAll;
+import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.Assertions;
+import org.junit.gen5.api.BeforeAll;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
