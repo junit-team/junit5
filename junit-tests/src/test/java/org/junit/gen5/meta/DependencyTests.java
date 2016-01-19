@@ -45,6 +45,7 @@ public class DependencyTests {
 				// TODO Move DependencyTests to separate module and remove the following exclusions
 				.excluding("**Tests")
 				.excluding("**Stub")
+				.excluding("**DescriptorBuilder")
 				.excluding("**Dummy**")
 				.excluding("**ExecutionEventConditions")
 

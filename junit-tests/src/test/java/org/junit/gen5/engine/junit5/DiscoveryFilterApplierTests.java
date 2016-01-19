@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.junit5;
 
+import static org.junit.gen5.engine.junit5.descriptor.TestDescriptorBuilder.*;
+import static org.junit.gen5.launcher.DiscoveryRequestBuilder.request;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,23 +22,48 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.discovery.ClassFilter;
-import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.JUnit5EngineDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
-import org.junit.gen5.launcher.DiscoveryRequestBuilder;
 
 /**
  * Microtests for {@link DiscoveryFilterApplier}
  */
 class DiscoveryFilterApplierTests {
 
-	@Test
-	void applyClassFilters() {
-		DiscoveryFilterApplier applier = new DiscoveryFilterApplier();
+	DiscoveryFilterApplier applier = new DiscoveryFilterApplier();
 
-		EngineDiscoveryRequest request = new DiscoveryRequestBuilder().filter(
-			ClassFilter.byNamePattern(".*\\$MatchingClass")).build();
-		JUnit5EngineDescriptor engineDescriptor = createEngineDescriptor();
+	@Test
+	void nonMatchingClassesAreExcluded() {
+
+		EngineDiscoveryRequest request = request().filter(ClassFilter.byNamePattern(".*\\$MatchingClass")).build();
+
+		// @formatter:off
+		TestDescriptor engineDescriptor = engineDescriptor()
+			.with(
+				classTestDescriptor("matching", MatchingClass.class),
+				classTestDescriptor("other", OtherClass.class)
+			)
+			.build();
+		// @formatter:on
+
+		applier.applyAllFilters(request, engineDescriptor);
+
+		List<String> includedDescriptors = engineDescriptor.allDescendants().stream().map(
+			TestDescriptor::getUniqueId).collect(Collectors.toList());
+		Assertions.assertEquals(1, includedDescriptors.size());
+		Assertions.assertTrue(includedDescriptors.contains("matching"));
+	}
+
+	@Test
+	void nestedTestClassesAreAlwaysIncludedWhenTheirParentIs() {
+		EngineDiscoveryRequest request = request().filter(ClassFilter.byNamePattern(".*\\$MatchingClass")).build();
+
+		// @formatter:off
+		TestDescriptor engineDescriptor = engineDescriptor()
+			.with(
+				classTestDescriptor("matching", MatchingClass.class)
+					.with(nestedClassTestDescriptor("nested", MatchingClass.NestedClass.class))
+			)
+			.build();
+		// @formatter:on
 
 		applier.applyAllFilters(request, engineDescriptor);
 
@@ -44,18 +72,6 @@ class DiscoveryFilterApplierTests {
 		Assertions.assertEquals(2, includedDescriptors.size());
 		Assertions.assertTrue(includedDescriptors.contains("matching"));
 		Assertions.assertTrue(includedDescriptors.contains("nested"));
-	}
-
-	private JUnit5EngineDescriptor createEngineDescriptor() {
-		JUnit5EngineDescriptor descriptor = new JUnit5EngineDescriptor(new JUnit5TestEngine());
-		ClassTestDescriptor matchingClass = new ClassTestDescriptor("matching", MatchingClass.class);
-		descriptor.addChild(matchingClass);
-		NestedClassTestDescriptor nestedClass = new NestedClassTestDescriptor("nested",
-			MatchingClass.NestedClass.class);
-		matchingClass.addChild(nestedClass);
-		ClassTestDescriptor otherClass = new ClassTestDescriptor("other", OtherClass.class);
-		descriptor.addChild(otherClass);
-		return descriptor;
 	}
 
 	private static class MatchingClass {
