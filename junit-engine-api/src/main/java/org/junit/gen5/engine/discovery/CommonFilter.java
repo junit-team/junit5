@@ -27,6 +27,10 @@ import org.junit.gen5.engine.FilterResult;
  */
 class CommonFilter {
 
+	@SuppressWarnings("rawtypes")
+	private static final DiscoveryFilter ALWAYS_INCLUDED_DISCOVERY_FILTER = (obj) -> FilterResult.included(
+		"Always included");
+
 	@SafeVarargs
 	public static <T> DiscoveryFilter<T> combine(DiscoveryFilter<T>... filters) {
 		if (filters == null) {
@@ -49,8 +53,9 @@ class CommonFilter {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static <T> DiscoveryFilter<T> alwaysIncluded() {
-		return (any) -> FilterResult.included("Always included");
+		return (DiscoveryFilter<T>) ALWAYS_INCLUDED_DISCOVERY_FILTER;
 	}
 
 	private static class AndAllDiscoveryFilter<T> implements DiscoveryFilter<T> {
