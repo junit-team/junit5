@@ -49,7 +49,7 @@ import org.junit.gen5.launcher.*;
  * @see DiscoveryFilter
  * @see PostDiscoveryFilter
  */
-public final class DiscoveryRequest implements TestDiscoveryRequest {
+final class DiscoveryRequest implements TestDiscoveryRequest {
 	// Selectors provided to the engines to be used for finding tests
 	private final List<DiscoverySelector> selectors = new LinkedList<>();
 
@@ -130,17 +130,6 @@ public final class DiscoveryRequest implements TestDiscoveryRequest {
 	@Override
 	public List<PostDiscoveryFilter> getPostDiscoveryFilters() {
 		return unmodifiableList(this.postDiscoveryFilters);
-	}
-
-	@Override
-	public boolean acceptDescriptor(TestDescriptor testDescriptor) {
-		Preconditions.notNull(testDescriptor, "testDescriptor must not be null");
-
-		// @formatter:off
-		return this.getPostDiscoveryFilters().stream()
-				.map(filter -> filter.filter(testDescriptor))
-				.allMatch(FilterResult::included);
-		// @formatter:on
 	}
 
 }

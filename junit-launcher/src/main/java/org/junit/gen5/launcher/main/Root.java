@@ -14,8 +14,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.*;
 import org.junit.gen5.launcher.*;
 
 class Root {
@@ -37,14 +36,24 @@ class Root {
 		return testEngineDescriptors.get(testEngine);
 	}
 
-	void applyFilters(TestDiscoveryRequest discoveryRequest) {
+	void applyPostDiscoveryFilters(TestDiscoveryRequest discoveryRequest) {
 		TestDescriptor.Visitor filteringVisitor = (descriptor, remove) -> {
 			if (!descriptor.isTest())
 				return;
-			if (!discoveryRequest.acceptDescriptor(descriptor))
+
+			if (isExcluded(discoveryRequest, descriptor)) {
 				remove.run();
+			}
 		};
 		accept(filteringVisitor);
+	}
+
+	private boolean isExcluded(TestDiscoveryRequest discoveryRequest, TestDescriptor descriptor) {
+		// @formatter:off
+		return discoveryRequest.getPostDiscoveryFilters().stream()
+				.map(filter -> filter.filter(descriptor))
+				.anyMatch(FilterResult::excluded);
+		// @formatter:on
 	}
 
 	void accept(TestDescriptor.Visitor visitor) {

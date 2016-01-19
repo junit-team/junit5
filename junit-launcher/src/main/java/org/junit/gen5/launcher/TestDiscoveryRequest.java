@@ -15,7 +15,9 @@ import java.util.*;
 import org.junit.gen5.engine.*;
 
 /**
- *
+ * This class extends the {@link EngineDiscoveryRequest}
+ * by providing access to filters which are applied by the
+ * {@link org.junit.gen5.launcher.main.Launcher} itself
  *
  * @since 5.0
  */
@@ -41,5 +43,4 @@ public interface TestDiscoveryRequest extends EngineDiscoveryRequest {
 
 	List<PostDiscoveryFilter> getPostDiscoveryFilters();
 
-	boolean acceptDescriptor(TestDescriptor testDescriptor);
 }

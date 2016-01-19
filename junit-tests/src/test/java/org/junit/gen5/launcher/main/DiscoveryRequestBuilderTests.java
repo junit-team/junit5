@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.launcher;
+package org.junit.gen5.launcher.main;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +30,7 @@ import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
-import org.junit.gen5.launcher.main.*;
+import org.junit.gen5.launcher.*;
 
 public class DiscoveryRequestBuilderTests {
 

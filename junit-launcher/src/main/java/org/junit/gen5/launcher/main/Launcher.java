@@ -118,7 +118,7 @@ public class Launcher {
 			TestDescriptor engineRoot = testEngine.discoverTests(discoveryRequest);
 			root.add(testEngine, engineRoot);
 		}
-		root.applyFilters(discoveryRequest);
+		root.applyPostDiscoveryFilters(discoveryRequest);
 		root.prune();
 		return root;
 	}

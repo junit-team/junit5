@@ -123,11 +123,11 @@ public class DiscoveryRequestCreatorTests {
 		options.setExcludeTags(asList("slow"));
 
 		TestDiscoveryRequest request = convert();
+		List<PostDiscoveryFilter> postDiscoveryFilters = request.getPostDiscoveryFilters();
 
-		assertTrue(request.acceptDescriptor(testDescriptorWithTag("fast")));
-		assertTrue(request.acceptDescriptor(testDescriptorWithTag("medium")));
-		assertFalse(request.acceptDescriptor(testDescriptorWithTag("slow")));
-		assertFalse(request.acceptDescriptor(testDescriptorWithTag("very slow")));
+		assertThat(postDiscoveryFilters).hasSize(2);
+		assertThat(postDiscoveryFilters.get(0).toString()).contains("TagFilter");
+		assertThat(postDiscoveryFilters.get(1).toString()).contains("TagFilter");
 	}
 
 	private TestDiscoveryRequest convert() {
