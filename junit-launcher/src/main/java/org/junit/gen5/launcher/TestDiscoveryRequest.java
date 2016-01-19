@@ -15,7 +15,9 @@ import java.util.*;
 import org.junit.gen5.engine.*;
 
 /**
- * Created by mmerdes on 19.01.16.
+ *
+ *
+ * @since 5.0
  */
 public interface TestDiscoveryRequest extends EngineDiscoveryRequest {
 
