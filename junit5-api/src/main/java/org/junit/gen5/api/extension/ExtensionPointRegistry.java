@@ -14,6 +14,62 @@ package org.junit.gen5.api.extension;
  * A registry for {@link ExtensionPoint} implementations which can be
  * populated via an {@link ExtensionRegistrar}.
  *
+ * <h3>Example Usage</h3>
+ * <p>All examples below are implementations of
+ * {@link ExtensionRegistrar#registerExtensions}.
+ *
+ * <h5>Registering an {@code ExtensionPoint} Instance</h5>
+ *
+ * <p>If you have an instance of an extension that implements one or more
+ * {@code ExtensionPoint} APIs, you can register it as follows.
+ *
+ * <pre style="code">
+ * public void registerExtensions(ExtensionPointRegistry registry) {
+ *     CustomExtension customExtension = // instantiate extension
+ *     registry.register(customExtension);
+ * }
+ * </pre>
+ *
+ * <p>Similarly, an instance of an extension can be registered with an
+ * explicit {@link Position} as follows.
+ *
+ * <pre style="code">
+ * public void registerExtensions(ExtensionPointRegistry registry) {
+ *     CustomExtension customExtension = // instantiate extension
+ *     registry.register(customExtension, Position.INNERMOST);
+ * }
+ * </pre>
+ *
+ * <h5>Registering a Lambda Expression as an {@code ExtensionPoint}</h5>
+ *
+ * <p>If you would like to implement a single {@code ExtensionPoint} API
+ * as a lambda expression, you can register it as follows. Note, however,
+ * that the API must be a {@linkplain FunctionalInterface functional
+ * interface}.
+ *
+ * <pre style="code">
+ * public void registerExtensions(ExtensionPointRegistry registry) {
+ *     registry.register((BeforeEachExtensionPoint) context -> { &#47;* ... *&#47; });
+ * }
+ * </pre>
+ *
+ * <h5>Registering a Method Reference as an {@code ExtensionPoint}</h5>
+ *
+ * <p>If you would like to implement a single {@code ExtensionPoint} API
+ * via a method reference, you can register it as follows. Note, however,
+ * that the API must be a {@linkplain FunctionalInterface functional
+ * interface}.
+ *
+ * <pre style="code">
+ * public void registerExtensions(ExtensionPointRegistry registry) {
+ *     registry.register((BeforeEachExtensionPoint) this::beforeEach);
+ * }
+ *
+ * void beforeEach(TestExtensionContext context) {
+ *     &#47;* ... *&#47;
+ * }
+ * </pre>
+ *
  * @since 5.0
  * @see ExtensionPoint
  * @see ExtensionRegistrar
