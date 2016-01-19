@@ -102,8 +102,8 @@ public interface ExtensionContext {
 	/**
 	 * Get a {@link Store} for a self constructed {@link Namespace}.
 	 *
-	 * @return The store in which to put and get objects for other invocations
-	 * of the same extension or different ones.
+	 * @return the store in which to put and get objects for other invocations
+	 * of the same extension or different ones
 	 */
 	Store getStore(Namespace namespace);
 
@@ -135,11 +135,14 @@ public interface ExtensionContext {
 		void put(Object key, Object value);
 
 		/**
-		 * Get an object that has been stored using a {@code key}. If no value has been store using that {@code key}
-		 * the value will be computed by the {@code defaultCreator} and be stored.
+		 * Get the object that is stored under the supplied {@code key}.
+		 *
+		 * <p>If no value is currently stored under the supplied {@code key},
+		 * a new value will be computed by the {@code defaultCreator}, stored,
+		 * and returned.
 		 *
 		 * @param key the key
-		 * @param defaultCreator the function called to create the value
+		 * @param defaultCreator the function called to create new values
 		 * @return the value
 		 */
 		Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator);

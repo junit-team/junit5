@@ -18,23 +18,24 @@ import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
- * An {@code ExtensionValuesStore} is used inside {@link AbstractExtensionContext} to store and retrieve
- * attributes with {@code get}, {@code put} and {@code getOrCreateIfAbsent}.
+ * {@code ExtensionValuesStore} is used inside {@link AbstractExtensionContext}
+ * to store and retrieve attributes with {@link #get}, {@link #put}, or
+ * {@link #getOrComputeIfAbsent}.
  */
 class ExtensionValuesStore {
 
 	private final ExtensionValuesStore parentStore;
 	private final Map<Object, StoredValue> storedValues = new HashMap<>();
 
-	public ExtensionValuesStore() {
+	ExtensionValuesStore() {
 		this(null);
 	}
 
-	public ExtensionValuesStore(ExtensionValuesStore parentStore) {
+	ExtensionValuesStore(ExtensionValuesStore parentStore) {
 		this.parentStore = parentStore;
 	}
 
-	public Object get(Namespace namespace, Object key) {
+	Object get(Namespace namespace, Object key) {
 		StoredValue storedValue = getStoredValue(namespace, key);
 		if (storedValue != null)
 			return storedValue.value;
@@ -49,9 +50,9 @@ class ExtensionValuesStore {
 		return storedValues.get(composedKey);
 	}
 
-	public void put(Namespace namespace, Object key, Object value) {
-		Preconditions.notNull(key, "A key must not be null");
-		Preconditions.notNull(namespace, "A namespace must not be null");
+	void put(Namespace namespace, Object key, Object value) {
+		Preconditions.notNull(namespace, "Namespace must not be null");
+		Preconditions.notNull(key, "key must not be null");
 
 		putStoredValue(namespace, key, new StoredValue(value));
 	}
@@ -61,7 +62,7 @@ class ExtensionValuesStore {
 		storedValues.put(composedKey, storedValue);
 	}
 
-	public Object getOrComputeIfAbsent(Namespace namespace, Object key, Function<Object, Object> defaultCreator) {
+	Object getOrComputeIfAbsent(Namespace namespace, Object key, Function<Object, Object> defaultCreator) {
 		StoredValue storedValue = getStoredValue(namespace, key);
 		if (storedValue == null) {
 			storedValue = new StoredValue(defaultCreator.apply(key));
@@ -70,7 +71,7 @@ class ExtensionValuesStore {
 		return storedValue.value;
 	}
 
-	public Object remove(Namespace namespace, Object key) {
+	Object remove(Namespace namespace, Object key) {
 		ComposedKey composedKey = new ComposedKey(namespace, key);
 		StoredValue previous = storedValues.remove(composedKey);
 		return (previous != null ? previous.value : null);
