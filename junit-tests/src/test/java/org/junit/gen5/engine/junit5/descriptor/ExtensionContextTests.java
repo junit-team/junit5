@@ -65,42 +65,6 @@ public class ExtensionContextTests {
 	}
 
 	@Test
-	public void flatAttributeAccess() {
-		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(null);
-
-		ExtensionContext parentContext = new ClassBasedContainerExtensionContext(null, null, classTestDescriptor);
-
-		assertNull(parentContext.getAttribute("not set"));
-
-		parentContext.putAttribute("attr1", "value1");
-		assertEquals("value1", parentContext.getAttribute("attr1"));
-
-		assertEquals("value1", parentContext.removeAttribute("attr1"));
-		assertNull(parentContext.getAttribute("attr1"));
-	}
-
-	@Test
-	public void nestedAttributeAccess() {
-		MethodTestDescriptor methodTestDescriptor = methodDescriptor();
-		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
-
-		ExtensionContext parentContext = new ClassBasedContainerExtensionContext(null, null, classTestDescriptor);
-
-		MethodBasedTestExtensionContext childContext = new MethodBasedTestExtensionContext(parentContext, null,
-			methodTestDescriptor, new OuterClass());
-
-		parentContext.putAttribute("attr1", "value1");
-		assertEquals("value1", childContext.getAttribute("attr1"));
-
-		childContext.putAttribute("attr1", "value1 changed");
-		assertEquals("value1 changed", childContext.getAttribute("attr1"));
-		assertEquals("value1", parentContext.getAttribute("attr1"));
-
-		childContext.removeAttribute("attr1");
-		assertEquals("value1", childContext.getAttribute("attr1"));
-	}
-
-	@Test
 	public void reportEntriesArePublishedToExecutionContext() {
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(null);
 

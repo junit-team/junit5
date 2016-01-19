@@ -20,9 +20,6 @@ import org.junit.gen5.engine.TestDescriptor;
 
 abstract class AbstractExtensionContext implements ExtensionContext {
 
-	private final Map<String, Object> attributes = new HashMap<>();
-
-	//Will replace attributes if done
 	private final ExtensionValuesStore valuesStore;
 
 	private final ExtensionContext parent;
@@ -37,7 +34,7 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 		this.valuesStore = createStore(parent);
 	}
 
-	private final ExtensionValuesStore createStore(ExtensionContext parent) {
+	private ExtensionValuesStore createStore(ExtensionContext parent) {
 		ExtensionValuesStore parentStore = null;
 		if (parent != null) {
 			parentStore = ((AbstractExtensionContext) parent).valuesStore;
@@ -53,24 +50,6 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 	@Override
 	public Optional<ExtensionContext> getParent() {
 		return Optional.ofNullable(parent);
-	}
-
-	@Override
-	public Object getAttribute(String key) {
-		Object value = attributes.get(key);
-		if (value == null && parent != null)
-			return parent.getAttribute(key);
-		return value;
-	}
-
-	@Override
-	public void putAttribute(String key, Object value) {
-		attributes.put(key, value);
-	}
-
-	@Override
-	public Object removeAttribute(String key) {
-		return attributes.remove(key);
 	}
 
 	protected TestDescriptor getTestDescriptor() {

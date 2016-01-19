@@ -15,6 +15,8 @@ import static org.mockito.Mockito.mock;
 import java.lang.reflect.Parameter;
 
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ExtensionContext.Namespace;
+import org.junit.gen5.api.extension.ExtensionContext.Store;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
@@ -34,6 +36,8 @@ import org.mockito.MockitoAnnotations;
  */
 public class MockitoExtension implements InstancePostProcessor, MethodParameterResolver {
 
+	private static final Namespace namespace = Namespace.of(MockitoExtension.class);
+
 	@Override
 	public void postProcessTestInstance(TestExtensionContext context) {
 		MockitoAnnotations.initMocks(context.getTestInstance());
@@ -49,11 +53,11 @@ public class MockitoExtension implements InstancePostProcessor, MethodParameterR
 	@Override
 	public Object resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
 			ExtensionContext extensionContext) throws ParameterResolutionException {
-		ExtensionContext.Store mocks = extensionContext.getStore(ExtensionContext.Namespace.of(getClass()));
+		Store mocks = extensionContext.getStore(namespace);
 		return getMock(parameter.getType(), mocks);
 	}
 
-	private Object getMock(Class<?> mockType, ExtensionContext.Store mocks) {
+	private Object getMock(Class<?> mockType, Store mocks) {
 		return mocks.getOrComputeIfAbsent(mockType, type -> mock(mockType));
 	}
 

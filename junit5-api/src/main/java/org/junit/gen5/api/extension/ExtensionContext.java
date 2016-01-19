@@ -60,14 +60,6 @@ public interface ExtensionContext {
 
 	AnnotatedElement getElement();
 
-	// Attributes will be removed when storing methods are done
-
-	Object getAttribute(String key);
-
-	void putAttribute(String key, Object value);
-
-	Object removeAttribute(String key);
-
 	default Store getStore() {
 		return getStore(Namespace.DEFAULT);
 	}
