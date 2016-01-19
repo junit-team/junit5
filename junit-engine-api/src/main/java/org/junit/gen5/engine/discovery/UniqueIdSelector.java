@@ -13,6 +13,7 @@ package org.junit.gen5.engine.discovery;
 import org.junit.gen5.engine.DiscoverySelector;
 
 public class UniqueIdSelector implements DiscoverySelector {
+
 	public static UniqueIdSelector forUniqueId(String uniqueId) {
 		return new UniqueIdSelector(uniqueId);
 	}
@@ -26,4 +27,5 @@ public class UniqueIdSelector implements DiscoverySelector {
 	public String getUniqueId() {
 		return uniqueId;
 	}
+
 }

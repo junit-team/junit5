@@ -21,6 +21,7 @@ import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 
 class ExecutionListenerAdapter implements EngineExecutionListener {
+
 	private final TestPlan testPlan;
 	private final TestExecutionListener testExecutionListener;
 
@@ -59,4 +60,5 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 	private TestIdentifier getTestIdentifier(TestDescriptor testDescriptor) {
 		return testPlan.getTestIdentifier(new TestId(testDescriptor.getUniqueId()));
 	}
+
 }

@@ -23,6 +23,7 @@ import org.junit.gen5.engine.DiscoverySelector;
  * @since 5.0
  */
 public class ClasspathSelector implements DiscoverySelector {
+
 	public static List<DiscoverySelector> forPath(String path) {
 		return forPaths(singleton(new File(path)));
 	}
@@ -45,4 +46,5 @@ public class ClasspathSelector implements DiscoverySelector {
 	public File getClasspathRoot() {
 		return classpathRoot;
 	}
+
 }

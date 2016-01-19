@@ -19,6 +19,7 @@ import org.junit.gen5.engine.DiscoverySelector;
  * @since 5.0
  */
 public class MethodSelector implements DiscoverySelector {
+
 	public static MethodSelector forMethod(String testClassName, String testMethodName) {
 		Class<?> testClass = getTestClass(testClassName);
 		Method testMethod = getTestMethod(testClass, testMethodName);
@@ -57,4 +58,5 @@ public class MethodSelector implements DiscoverySelector {
 	private static Method getTestMethod(Class<?> testClass, String testMethodName) {
 		return ReflectionUtils.findMethod(testClass, testMethodName).get();
 	}
+
 }

@@ -58,4 +58,5 @@ public class NameBasedSelector {
 	public static List<DiscoverySelector> forNames(Collection<String> classNames) {
 		return classNames.stream().map(NameBasedSelector::forName).collect(toList());
 	}
+
 }

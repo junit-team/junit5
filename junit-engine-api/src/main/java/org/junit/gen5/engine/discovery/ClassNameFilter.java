@@ -22,6 +22,7 @@ import org.junit.gen5.engine.discovery.ClassFilter;
  * @since 5.0
  */
 class ClassNameFilter implements ClassFilter {
+
 	private final Pattern pattern;
 
 	ClassNameFilter(String pattern) {
@@ -42,4 +43,5 @@ class ClassNameFilter implements ClassFilter {
 	public String toString() {
 		return "Filter class names with regular expression: " + pattern;
 	}
+
 }

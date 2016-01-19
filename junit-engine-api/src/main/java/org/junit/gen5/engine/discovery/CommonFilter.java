@@ -77,4 +77,5 @@ class CommonFilter {
 			return this.filters.stream().map(Object::toString).map(s -> format("(%s)", s)).collect(joining(" and "));
 		}
 	}
+
 }

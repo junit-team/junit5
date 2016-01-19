@@ -84,4 +84,5 @@ class Root {
 	private void pruneEmptyTestEngines() {
 		testEngineDescriptors.values().removeIf(testEngine -> testEngine.getChildren().isEmpty());
 	}
+
 }

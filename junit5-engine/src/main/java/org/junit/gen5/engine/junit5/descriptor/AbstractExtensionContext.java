@@ -60,4 +60,5 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 	public Store getStore(Namespace namespace) {
 		return new NamespacedStore(valuesStore, namespace);
 	}
+
 }

@@ -48,6 +48,7 @@ import org.junit.gen5.launcher.*;
  * @see TestExecutionListener
  */
 public class Launcher {
+
 	private static final Logger LOG = Logger.getLogger(Launcher.class.getName());
 
 	private final TestEngineRegistry testEngineRegistry;
@@ -135,4 +136,5 @@ public class Launcher {
 		}
 		testExecutionListener.testPlanExecutionFinished(testPlan);
 	}
+
 }

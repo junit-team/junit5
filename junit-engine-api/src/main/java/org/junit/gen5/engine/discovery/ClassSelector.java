@@ -18,6 +18,7 @@ import org.junit.gen5.engine.DiscoverySelector;
  * @since 5.0
  */
 public class ClassSelector implements DiscoverySelector {
+
 	public static ClassSelector forClass(Class<?> testClass) {
 		return new ClassSelector(testClass);
 	}
@@ -36,4 +37,5 @@ public class ClassSelector implements DiscoverySelector {
 	public Class<?> getTestClass() {
 		return testClass;
 	}
+
 }

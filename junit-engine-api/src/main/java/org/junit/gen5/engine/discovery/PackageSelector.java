@@ -16,6 +16,7 @@ import org.junit.gen5.engine.DiscoverySelector;
  * @since 5.0
  */
 public class PackageSelector implements DiscoverySelector {
+
 	public static PackageSelector forPackageName(String packageName) {
 		return new PackageSelector(packageName);
 	}
@@ -29,4 +30,5 @@ public class PackageSelector implements DiscoverySelector {
 	public String getPackageName() {
 		return packageName;
 	}
+
 }

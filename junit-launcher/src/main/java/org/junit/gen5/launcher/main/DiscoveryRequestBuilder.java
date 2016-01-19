@@ -49,6 +49,7 @@ import org.junit.gen5.launcher.*;
  * </pre>
  */
 public final class DiscoveryRequestBuilder {
+
 	private List<DiscoverySelector> selectors = new LinkedList<>();
 	private List<EngineIdFilter> engineIdFilters = new LinkedList<>();
 	private List<DiscoveryFilter<?>> discoveryFilters = new LinkedList<>();
@@ -99,4 +100,5 @@ public final class DiscoveryRequestBuilder {
 		discoveryRequest.addPostFilters(this.postDiscoveryFilters);
 		return discoveryRequest;
 	}
+
 }

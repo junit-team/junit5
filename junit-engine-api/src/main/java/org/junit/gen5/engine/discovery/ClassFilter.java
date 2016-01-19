@@ -13,7 +13,9 @@ package org.junit.gen5.engine.discovery;
 import org.junit.gen5.engine.DiscoveryFilter;
 
 public interface ClassFilter extends DiscoveryFilter<Class<?>> {
+
 	static ClassFilter byNamePattern(String pattern) {
 		return new ClassNameFilter(pattern);
 	}
+
 }

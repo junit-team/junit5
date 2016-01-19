@@ -50,6 +50,7 @@ import org.junit.gen5.launcher.*;
  * @see PostDiscoveryFilter
  */
 final class DiscoveryRequest implements TestDiscoveryRequest {
+
 	// Selectors provided to the engines to be used for finding tests
 	private final List<DiscoverySelector> selectors = new LinkedList<>();
 

@@ -20,4 +20,5 @@ package org.junit.gen5.engine;
 public interface GenericFilter<T> {
 
 	FilterResult filter(T object);
+
 }
