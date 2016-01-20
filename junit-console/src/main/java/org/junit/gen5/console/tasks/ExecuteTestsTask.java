@@ -22,7 +22,7 @@ import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.launcher.*;
 import org.junit.gen5.launcher.listeners.SummaryGeneratingListener;
 import org.junit.gen5.launcher.listeners.TestExecutionSummary;
-import org.junit.gen5.launcher.main.Launcher;
+import org.junit.gen5.launcher.main.JUnit5Launcher;
 
 /**
  * @since 5.0
@@ -33,7 +33,7 @@ public class ExecuteTestsTask implements ConsoleTask {
 	private final Supplier<Launcher> launcherSupplier;
 
 	public ExecuteTestsTask(CommandLineOptions options) {
-		this(options, Launcher::new);
+		this(options, JUnit5Launcher::get);
 	}
 
 	// for tests only

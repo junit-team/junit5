@@ -13,7 +13,7 @@ package org.junit.gen5.launcher;
 import org.junit.gen5.commons.reporting.ReportingEntry;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestExecutionResult.Status;
-import org.junit.gen5.launcher.main.Launcher;
+import org.junit.gen5.launcher.Launcher;
 
 /**
  * Register an instance of this class with a {@link Launcher} to be notified of

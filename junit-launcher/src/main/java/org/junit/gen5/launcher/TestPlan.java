@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.launcher.main.Launcher;
+import org.junit.gen5.launcher.Launcher;
 
 /**
  * {@code TestPlan} describes the tree of tests and containers as discovered
