@@ -37,9 +37,16 @@ class UniqueIdTests {
 			UniqueId classId = engineId.append("class", "org.junit.MyClass");
 
 			Assertions.assertEquals("[engine:junit5]/[class:org.junit.MyClass]", classId.getUniqueString());
-
 			Assertions.assertEquals(2, classId.getSegments().size());
 			assertSegment(classId.getSegments().get(1), "class", "org.junit.MyClass");
+		}
+
+		@Test
+		void appendingSegmentLeavesOriginialUnchanged() {
+			UniqueId uniqueId = new UniqueId(ENGINE_ID);
+			uniqueId.append("class", "org.junit.MyClass");
+
+			Assertions.assertEquals("[engine:junit5]", uniqueId.getUniqueString());
 		}
 
 		@Test
@@ -81,6 +88,57 @@ class UniqueIdTests {
 			Throwable throwable = Assertions.expectThrows(JUnitException.class,
 				() -> UniqueId.parse("[not-engine:anything]"));
 			Assertions.assertTrue(throwable.getMessage().contains("not-engine"));
+		}
+	}
+
+	@Nested
+	class EqualsContract {
+
+		@Test
+		void sameEnginesAreEqual() {
+			UniqueId id1 = new UniqueId("junit5");
+			UniqueId id2 = new UniqueId("junit5");
+
+			Assertions.assertTrue(id1.equals(id2));
+			Assertions.assertTrue(id2.equals(id1));
+			Assertions.assertEquals(id1.hashCode(), id2.hashCode());
+		}
+
+		@Test
+		void differentEnginesAreNotEqual() {
+			UniqueId id1 = new UniqueId("junit4");
+			UniqueId id2 = new UniqueId("junit5");
+
+			Assertions.assertFalse(id1.equals(id2));
+			Assertions.assertFalse(id2.equals(id1));
+		}
+
+		@Test
+		void uniqueIdWithSameSegmentsAreEqual() {
+			UniqueId id1 = new UniqueId("junit5").append("t1", "v1").append("t2", "v2");
+			UniqueId id2 = new UniqueId("junit5").append("t1", "v1").append("t2", "v2");
+
+			Assertions.assertTrue(id1.equals(id2));
+			Assertions.assertTrue(id2.equals(id1));
+			Assertions.assertEquals(id1.hashCode(), id2.hashCode());
+		}
+
+		@Test
+		void differentOrderOfSegmentsAreNotEqual() {
+			UniqueId id1 = new UniqueId("junit5").append("t2", "v2").append("t1", "v1");
+			UniqueId id2 = new UniqueId("junit5").append("t1", "v1").append("t2", "v2");
+
+			Assertions.assertFalse(id1.equals(id2));
+			Assertions.assertFalse(id2.equals(id1));
+		}
+
+		@Test
+		void additionalSegmentMakesItNotEqual() {
+			UniqueId id1 = new UniqueId("junit5").append("t1", "v1");
+			UniqueId id2 = id1.append("t2", "v2");
+
+			Assertions.assertFalse(id1.equals(id2));
+			Assertions.assertFalse(id2.equals(id1));
 		}
 	}
 

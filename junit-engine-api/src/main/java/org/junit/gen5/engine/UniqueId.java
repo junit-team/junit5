@@ -53,20 +53,31 @@ public class UniqueId implements Cloneable {
 	}
 
 	public UniqueId append(String type, String value) {
-		try {
-			UniqueId clone = (UniqueId) this.clone();
-			clone.segments.add(new Segment(type, value));
-			return clone;
-		}
-		catch (CloneNotSupportedException shouldNeverHappen) {
-			shouldNeverHappen.printStackTrace();
-			return null;
-		}
+		UniqueId clone = new UniqueId(segments);
+		clone.segments.add(new Segment(type, value));
+		return clone;
 	}
 
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		return super.clone();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		UniqueId uniqueId = (UniqueId) o;
+		return segments.equals(uniqueId.segments);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return segments.hashCode();
 	}
 
 	public static class Segment {
@@ -98,6 +109,23 @@ public class UniqueId implements Cloneable {
 
 		public String getValue() {
 			return value;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+
+			Segment segment = (Segment) o;
+			return type.equals(segment.type) && value.equals(segment.value);
+
+		}
+
+		@Override
+		public int hashCode() {
+			return 31 * type.hashCode() + value.hashCode();
 		}
 	}
 }
