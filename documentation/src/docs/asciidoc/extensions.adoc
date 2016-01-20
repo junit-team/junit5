@@ -8,6 +8,7 @@ In contrast to the competing `Runner`, `@Rule`, and `@ClassRule` extension point
 JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
 `Extension` API. Note, however, that `Extension` itself is just a marker interface.
 
+[[extension-registration]]
 === Registering Extensions
 
 Extensions can be registered either declaratively via `{ExtendWith}` or programmatically
@@ -15,6 +16,7 @@ via an `{ExtensionRegistrar}`.
 
 Note that registered extensions are inherited within test class hierarchies.
 
+[[extension-registration-declarative]]
 ==== Declarative Extension Registration
 
 Developers can register one or more extensions _declaratively_ by annotating a test
@@ -58,6 +60,7 @@ class MyTestsV2 {
 The execution of tests in both `MyTestsV1` and `MyTestsV2` will be extended by the
 `FooExtension` and `BarExtension`, in exactly that order.
 
+[[extension-registration-programmatic]]
 ==== Programmatic Extension Registration
 
 Developers can register one or more extensions _programmatically_ by implementing the
@@ -170,10 +173,10 @@ method parameters at runtime.
 If a `@Test`, `@BeforeEach`, `@AfterEach` , `@BeforeAll` or `@AfterAll` method accepts a
 parameter, the parameter must be _resolved_ at runtime by a `MethodParameterResolver`. A
 `MethodParameterResolver` can either be built-in (see `{TestInfoParameterResolver}`) or
-registered by the user via `@ExtendWith`. Generally speaking, parameters may be resolved
-by _name_, _type_, _annotation_, or any combination thereof. For concrete examples,
+<<extension-registration,registered by the user>>. Generally speaking, parameters may be
+resolved by _name_, _type_, _annotation_, or any combination thereof. For concrete examples,
 consult the source code for `{CustomTypeParameterResolver}` and
-`{CustomAnnotationParameterResolver}`, respectively.
+`{CustomAnnotationParameterResolver}`.
 
 === Test Lifecycle Callbacks
 
