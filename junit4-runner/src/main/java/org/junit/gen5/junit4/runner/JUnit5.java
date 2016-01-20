@@ -22,13 +22,19 @@ import java.util.function.Function;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
-import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
-import org.junit.gen5.launcher.*;
-import org.junit.gen5.launcher.main.JUnit5Launcher;
+import org.junit.gen5.launcher.EngineIdFilter;
+import org.junit.gen5.launcher.Launcher;
+import org.junit.gen5.launcher.PostDiscoveryFilter;
+import org.junit.gen5.launcher.TagFilter;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
+import org.junit.gen5.launcher.TestIdentifier;
+import org.junit.gen5.launcher.TestPlan;
+import org.junit.gen5.launcher.main.DefaultLauncher;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -63,7 +69,7 @@ public class JUnit5 extends Runner implements Filterable {
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
 	private static final String EMPTY_STRING = "";
 
-	private final Launcher launcher = JUnit5Launcher.get();
+	private final Launcher launcher = DefaultLauncher.get();
 	private final Class<?> testClass;
 	private TestDiscoveryRequest discoveryRequest;
 	private JUnit5TestTree testTree;

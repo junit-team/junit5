@@ -15,11 +15,13 @@ import static java.util.Arrays.asList;
 import org.junit.gen5.engine.TestEngine;
 
 public class LauncherFactory {
-	public static JUnit5Launcher createLauncher(TestEngine... engines) {
+
+	public static DefaultLauncher createLauncher(TestEngine... engines) {
 		return createLauncher(asList(engines));
 	}
 
-	public static JUnit5Launcher createLauncher(Iterable<TestEngine> engines) {
-		return new JUnit5Launcher(() -> engines);
+	public static DefaultLauncher createLauncher(Iterable<TestEngine> engines) {
+		return new DefaultLauncher(() -> engines);
 	}
+
 }

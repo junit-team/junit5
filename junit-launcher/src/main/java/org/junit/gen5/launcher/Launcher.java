@@ -14,11 +14,6 @@ package org.junit.gen5.launcher;
  * Main entry point for client code that wants to <em>discover</em>
  * and <em>execute</em> tests using dynamically registered test engines.
  *
- * <p>You get hold of an instance of this interface by using
- * <pre>
- *     JUnit5Launcher.get()
- * </pre>
- *
  * <p>Test engines are registered at runtime using the
  * {@link java.util.ServiceLoader ServiceLoader} facility. For that purpose, a
  * text file named {@code META-INF/services/org.junit.gen5.engine.TestEngine}
@@ -43,7 +38,7 @@ package org.junit.gen5.launcher;
  * @see TestDiscoveryRequest
  * @see TestPlan
  * @see TestExecutionListener
- * @see org.junit.gen5.launcher.main.JUnit5Launcher
+ * @see org.junit.gen5.launcher.main.DefaultLauncher
  */
 public interface Launcher {
 
