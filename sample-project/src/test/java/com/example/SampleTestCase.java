@@ -12,7 +12,6 @@ package com.example;
 
 import static org.junit.gen5.api.Assertions.assertAll;
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.api.Assumptions.assumeTrue;
@@ -26,14 +25,11 @@ import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.TestInfo;
-import org.junit.gen5.api.extension.ExtendWith;
 import org.opentest4j.TestSkippedException;
 
 /**
  * Named *TestCase so Gradle will not try to run it.
  */
-@ExtendWith({ CustomTypeParameterResolver.class, CustomAnnotationParameterResolver.class })
 class SampleTestCase {
 
 	boolean beforeInvoked = false;
@@ -82,14 +78,6 @@ class SampleTestCase {
 	@DisplayName("custom name")
 	void succeedingTest() {
 		// no-op
-	}
-
-	@Test
-	@DisplayName("Method Injection")
-	void methodInjectionTest(TestInfo testInfo, CustomType customType, @CustomAnnotation String value) {
-		assertEquals("Method Injection", testInfo.getDisplayName());
-		assertNotNull(customType);
-		assertNotNull(value);
 	}
 
 	@Test
