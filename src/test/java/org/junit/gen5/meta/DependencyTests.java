@@ -18,17 +18,17 @@ import static org.hamcrest.Matchers.is;
 import de.schauderhaft.degraph.configuration.NamedPattern;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.junit4.runner.JUnit5;
-import org.junit.runner.RunWith;
 
 /**
- * Checks against dependency cycles on package and module level.
+ * {@code DependencyTests} check against dependency cycles at the package
+ * and module levels.
  *
- * <p>Modules in that sense are defined by the package name element after org.junit.gen5,
- * so "org.junit.gen5.console.ConsoleRunner" belongs to the module "console".
+ * <p><em>Modules</em> are defined by the package name element immediately
+ * following the {@code org.junit.gen5} base package. For example,
+ * {@code org.junit.gen5.console.ConsoleRunner} belongs to the {@code console}
+ * module.
  */
-@RunWith(JUnit5.class)
-public class DependencyTests {
+class DependencyTests {
 
 	@Test
 	void noCycles() {
@@ -47,4 +47,5 @@ public class DependencyTests {
 			is(violationFree()));
 		//@formatter:on
 	}
+
 }
