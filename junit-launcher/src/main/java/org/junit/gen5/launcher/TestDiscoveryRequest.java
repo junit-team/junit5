@@ -13,15 +13,17 @@ package org.junit.gen5.launcher;
 import java.util.*;
 
 import org.junit.gen5.engine.*;
+import org.junit.gen5.launcher.main.JUnit5Launcher;
+import org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder;
 
 /**
  * This class extends the {@link EngineDiscoveryRequest}
  * by providing access to filters which are applied by the
- * {@link org.junit.gen5.launcher.main.Launcher} itself
+ * {@link JUnit5Launcher} itself
  *
  * <p>Moreover, the add*-methods can be used by external clients
  * that do not want to use the
- * {@link org.junit.gen5.launcher.main.DiscoveryRequestBuilder}.
+ * {@link TestDiscoveryRequestBuilder}.
  *
  * @since 5.0
  */

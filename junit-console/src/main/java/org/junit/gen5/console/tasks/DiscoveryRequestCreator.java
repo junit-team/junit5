@@ -13,7 +13,7 @@ package org.junit.gen5.console.tasks;
 import static java.util.stream.Collectors.toCollection;
 import static org.junit.gen5.engine.discovery.ClasspathSelector.forPaths;
 import static org.junit.gen5.engine.discovery.NameBasedSelector.forNames;
-import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.util.LinkedHashSet;

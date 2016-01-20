@@ -19,52 +19,38 @@ import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.launcher.*;
 
 /**
- * Facade for <em>discovering</em> and <em>executing</em> tests using
- * dynamically registered test engines.
+ * The currently only implementation of {@link Launcher}.
  *
- * <p>Test engines are registered at runtime using the
- * {@link java.util.ServiceLoader ServiceLoader} facility. For that purpose, a
- * text file named {@code META-INF/services/org.junit.gen5.engine.TestEngine}
- * has to be added to the engine's JAR file in which the fully qualified name
- * of the implementation class of the {@link TestEngine} interface is stated.
- *
- * <p>Discovering or executing tests requires a {@link DiscoveryRequest}
- * which is passed to all registered engines. Each engine decides which tests
- * it can discover and later execute according to this {@link DiscoveryRequest}.
- *
- * <p>Users of this class may optionally call {@link #discover} prior to
- * {@link #execute} in order to inspect the {@link TestPlan} before executing
- * it.
- *
- * <p>Prior to executing tests, users of this class should
- * {@linkplain #registerTestExecutionListeners register} one or more
- * {@link TestExecutionListener} instances in order to get feedback about the
- * progress and results of test execution. Listeners are notified of events
- * in the order in which they were registered.
+ * <p>External clients get hold of an instance by calling {@link #get}</p>
  *
  * @since 5.0
+ * @see Launcher
  * @see DiscoveryRequest
  * @see TestPlan
  * @see TestExecutionListener
  */
-public class Launcher {
+public class JUnit5Launcher implements Launcher {
 
-	private static final Logger LOG = Logger.getLogger(Launcher.class.getName());
+	public static Launcher get() {
+		return new JUnit5Launcher();
+	}
+
+	private static final Logger LOG = Logger.getLogger(JUnit5Launcher.class.getName());
 
 	private final TestEngineRegistry testEngineRegistry;
 	private final TestExecutionListenerRegistry testExecutionListenerRegistry;
 
-	public Launcher() {
+	JUnit5Launcher() {
 		this(new ServiceLoaderTestEngineRegistry(), new TestExecutionListenerRegistry());
 	}
 
 	// For tests only
-	Launcher(TestEngineRegistry testEngineRegistry) {
+	JUnit5Launcher(TestEngineRegistry testEngineRegistry) {
 		this(testEngineRegistry, new TestExecutionListenerRegistry());
 	}
 
 	// For tests only
-	Launcher(TestEngineRegistry testEngineRegistry, TestExecutionListenerRegistry testExecutionListenerRegistry) {
+	JUnit5Launcher(TestEngineRegistry testEngineRegistry, TestExecutionListenerRegistry testExecutionListenerRegistry) {
 		this.testEngineRegistry = testEngineRegistry;
 		this.testExecutionListenerRegistry = testExecutionListenerRegistry;
 	}

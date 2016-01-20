@@ -11,7 +11,7 @@
 package org.junit.gen5.surefire;
 
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
-import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -27,7 +27,7 @@ import org.apache.maven.surefire.suite.RunResult;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.TestsToRun;
 import org.junit.gen5.launcher.*;
-import org.junit.gen5.launcher.main.Launcher;
+import org.junit.gen5.launcher.main.JUnit5Launcher;
 
 public class JUnitGen5Provider extends AbstractProvider {
 
@@ -52,7 +52,7 @@ public class JUnitGen5Provider extends AbstractProvider {
 			throw new UnsupportedOperationException("Forking is not yet supported.");
 		}
 
-		Launcher launcher = new Launcher();
+		Launcher launcher = JUnit5Launcher.get();
 		TestsToRun testsToRun = scanClasspath(launcher);
 		return invokeAllTests(testsToRun, launcher);
 	}

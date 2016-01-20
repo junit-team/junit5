@@ -48,32 +48,32 @@ import org.junit.gen5.launcher.*;
  *   ).build();
  * </pre>
  */
-public final class DiscoveryRequestBuilder {
+public final class TestDiscoveryRequestBuilder {
 
 	private List<DiscoverySelector> selectors = new LinkedList<>();
 	private List<EngineIdFilter> engineIdFilters = new LinkedList<>();
 	private List<DiscoveryFilter<?>> discoveryFilters = new LinkedList<>();
 	private List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
 
-	public static DiscoveryRequestBuilder request() {
-		return new DiscoveryRequestBuilder();
+	public static TestDiscoveryRequestBuilder request() {
+		return new TestDiscoveryRequestBuilder();
 	}
 
-	public DiscoveryRequestBuilder select(DiscoverySelector... elements) {
+	public TestDiscoveryRequestBuilder select(DiscoverySelector... elements) {
 		if (elements != null) {
 			select(Arrays.asList(elements));
 		}
 		return this;
 	}
 
-	public DiscoveryRequestBuilder select(List<DiscoverySelector> elements) {
+	public TestDiscoveryRequestBuilder select(List<DiscoverySelector> elements) {
 		if (elements != null) {
 			this.selectors.addAll(elements);
 		}
 		return this;
 	}
 
-	public DiscoveryRequestBuilder filter(GenericFilter<?>... filters) {
+	public TestDiscoveryRequestBuilder filter(GenericFilter<?>... filters) {
 		if (filters != null) {
 			Arrays.stream(filters).forEach(this::storeFilter);
 		}
