@@ -16,6 +16,7 @@ import static java.util.Collections.unmodifiableSet;
 import java.util.*;
 import java.util.function.Predicate;
 
+import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.launcher.main.Launcher;
@@ -117,8 +118,8 @@ public final class TestPlan {
 	 *
 	 * @param testId the unique ID to look up the identifier for
 	 * @return the identifier with the specified unique ID
-	 * @throws IllegalArgumentException if no {@link TestIdentifier} with the
-	 * specified unique ID has been added to this test plan
+	 * @throws PreconditionViolationException if no {@code TestIdentifier}
+	 * with the specified unique ID is present in this test plan
 	 */
 	public TestIdentifier getTestIdentifier(TestId testId) {
 		Preconditions.condition(allIdentifiers.containsKey(testId),
