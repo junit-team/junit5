@@ -132,7 +132,7 @@ public final class TestPlan {
 	 * @throws PreconditionViolationException if no {@code TestIdentifier}
 	 * with the specified unique ID is present in this test plan
 	 */
-	public TestIdentifier getTestIdentifier(TestId testId) {
+	public TestIdentifier getTestIdentifier(TestId testId) throws PreconditionViolationException {
 		Preconditions.condition(allIdentifiers.containsKey(testId),
 			() -> "No TestIdentifier with this TestId has been added to this TestPlan: " + testId);
 		return allIdentifiers.get(testId);
