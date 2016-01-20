@@ -24,5 +24,5 @@ import org.junit.gen5.engine.TestEngine;
 public interface TestResolver {
 	void initialize(TestEngine testEngine, TestResolverRegistry testResolverRegistry);
 
-	void resolveFor(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest);
+	void resolveAllFrom(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest);
 }

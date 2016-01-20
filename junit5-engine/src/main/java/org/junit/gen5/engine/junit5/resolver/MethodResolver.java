@@ -31,7 +31,7 @@ public class MethodResolver extends JUnit5TestResolver {
 	}
 
 	@Override
-	public void resolveFor(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
+	public void resolveAllFrom(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
 		/*
 				Preconditions.notNull(parent, "parent must not be null!");
 				Preconditions.notNull(discoveryRequest, "discoveryRequest must not be null!");

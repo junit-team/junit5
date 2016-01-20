@@ -34,7 +34,7 @@ public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
 	@Override
 	public void notifyResolvers(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
 		for (TestResolver testResolver : testResolvers.values()) {
-			testResolver.resolveFor(parent, discoveryRequest);
+			testResolver.resolveAllFrom(parent, discoveryRequest);
 		}
 	}
 

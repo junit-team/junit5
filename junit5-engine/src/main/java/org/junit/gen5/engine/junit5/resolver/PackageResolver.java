@@ -15,6 +15,6 @@ import org.junit.gen5.engine.TestDescriptor;
 
 public class PackageResolver extends JUnit5TestResolver {
 	@Override
-	public void resolveFor(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
+	public void resolveAllFrom(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
 	}
 }
