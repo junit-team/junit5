@@ -14,7 +14,7 @@ import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertSame;
 import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.List;
 import java.util.stream.Collectors;

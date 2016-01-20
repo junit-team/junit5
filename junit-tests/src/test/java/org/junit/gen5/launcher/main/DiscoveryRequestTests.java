@@ -15,7 +15,7 @@ import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.engine.discovery.NameBasedSelector.forName;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
-import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.Arrays;
 import java.util.List;

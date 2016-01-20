@@ -23,7 +23,7 @@ import static org.junit.gen5.engine.ExecutionEventConditions.test;
 import static org.junit.gen5.engine.TestExecutionResultConditions.isA;
 import static org.junit.gen5.engine.TestExecutionResultConditions.message;
 import static org.junit.gen5.engine.TestExecutionResultConditions.suppressed;
-import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.IOException;
 import java.lang.reflect.Method;

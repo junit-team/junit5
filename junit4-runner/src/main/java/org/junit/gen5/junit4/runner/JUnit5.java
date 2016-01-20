@@ -12,7 +12,7 @@ package org.junit.gen5.junit4.runner;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.launcher.*;
-import org.junit.gen5.launcher.main.Launcher;
+import org.junit.gen5.launcher.main.JUnit5Launcher;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -63,7 +63,7 @@ public class JUnit5 extends Runner implements Filterable {
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
 	private static final String EMPTY_STRING = "";
 
-	private final Launcher launcher = new Launcher();
+	private final Launcher launcher = JUnit5Launcher.get();
 	private final Class<?> testClass;
 	private TestDiscoveryRequest discoveryRequest;
 	private JUnit5TestTree testTree;
