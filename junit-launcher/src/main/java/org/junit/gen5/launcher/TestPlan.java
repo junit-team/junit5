@@ -13,7 +13,13 @@ package org.junit.gen5.launcher;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.PreconditionViolationException;
@@ -22,8 +28,8 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.launcher.main.Launcher;
 
 /**
- * Describes the tree of tests and containers as discovered by a
- * {@link Launcher}.
+ * {@code TestPlan} describes the tree of tests and containers as discovered
+ * by a {@link Launcher}.
  *
  * <p>Tests and containers are represented by {@link TestIdentifier} instances.
  * The complete set of identifiers comprises a tree-like structure. However,
@@ -34,15 +40,16 @@ import org.junit.gen5.launcher.main.Launcher;
  * {@linkplain #getDescendants(TestIdentifier) descendants} of an identifier.
  *
  * <p>While the contained instances of {@link TestIdentifier} are immutable,
- * instances of this class contain mutable state. E.g. when a dynamic test is
- * registered at runtime, it is added to the original test plan as reported to
- * {@link TestExecutionListener} implementations.
+ * instances of this class contain mutable state. For example, when a dynamic
+ * test is registered at runtime, it is added to the original test plan and
+ * reported to {@link TestExecutionListener} implementations.
  *
  * @since 5.0
  * @see Launcher
  * @see TestExecutionListener
  */
 public final class TestPlan {
+
 	private final Set<TestIdentifier> roots = new LinkedHashSet<>();
 	private final Map<TestId, LinkedHashSet<TestIdentifier>> children = new LinkedHashMap<>();
 	private final Map<TestId, TestIdentifier> allIdentifiers = new LinkedHashMap<>();
@@ -56,6 +63,11 @@ public final class TestPlan {
 		return testPlan;
 	}
 
+	/**
+	 * Add the supplied {@link TestIdentifier} to this test plan.
+	 *
+	 * @param testIdentifier the identifier to add
+	 */
 	public void add(TestIdentifier testIdentifier) {
 		allIdentifiers.put(testIdentifier.getUniqueId(), testIdentifier);
 		if (testIdentifier.getParentId().isPresent()) {
@@ -69,7 +81,7 @@ public final class TestPlan {
 	}
 
 	/**
-	 * Returns the roots of this test plan.
+	 * Get the root identifiers of this test plan.
 	 *
 	 * @return the unmodifiable set of root identifiers
 	 */
@@ -78,10 +90,10 @@ public final class TestPlan {
 	}
 
 	/**
-	 * Returns the parent of an identifier, if present.
+	 * Get the parent of supplied {@link TestIdentifier}.
 	 *
 	 * @param child the identifier to look up the parent for
-	 * @return an {@link Optional} containing the parent, if present; otherwise empty.
+	 * @return an {@code Optional} containing the parent, if present
 	 */
 	public Optional<TestIdentifier> getParent(TestIdentifier child) {
 		Optional<TestId> optionalParentId = child.getParentId();
@@ -92,29 +104,29 @@ public final class TestPlan {
 	}
 
 	/**
-	 * Returns the children of an identifier, possibly an empty set.
+	 * Get the children of supplied {@link TestIdentifier}.
 	 *
 	 * @param parent the identifier to look up the children for
-	 * @return the unmodifiable set of the {@code parent}'s children, if any;
-	 * otherwise empty.
+	 * @return an unmodifiable set of the parent's children, potentially empty
+	 * @see #getChildren(TestId)
 	 */
 	public Set<TestIdentifier> getChildren(TestIdentifier parent) {
 		return getChildren(parent.getUniqueId());
 	}
 
 	/**
-	 * Returns the children of a parent {@link TestId}.
+	 * Get the children of the supplied {@link TestId}.
 	 *
-	 * @param parentId the parent ID to look up the children for
-	 * @return the unmodifiable set of the {@code parentId}'s children, if any;
-	 * otherwise empty.
+	 * @param parentId the ID to look up the children for
+	 * @return an unmodifiable set of the parent's children, potentially empty
+	 * @see #getChildren(TestIdentifier)
 	 */
 	public Set<TestIdentifier> getChildren(TestId parentId) {
 		return children.containsKey(parentId) ? unmodifiableSet(children.get(parentId)) : emptySet();
 	}
 
 	/**
-	 * Returns the {@link TestIdentifier} for a {@link TestId}.
+	 * Get the {@link TestIdentifier} with the specified {@link TestId}.
 	 *
 	 * @param testId the unique ID to look up the identifier for
 	 * @return the identifier with the specified unique ID
@@ -128,25 +140,23 @@ public final class TestPlan {
 	}
 
 	/**
-	 * Counts all {@linkplain TestIdentifier identifiers} that satisfy a given
-	 * {@linkplain Predicate predicate}.
+	 * Count all {@linkplain TestIdentifier identifiers} that satisfy the
+	 * given {@linkplain Predicate predicate}.
 	 *
 	 * @param predicate a predicate which returns {@code true} for identifiers
 	 * to be counted
-	 * @return the number of identifiers that satisfy the specified
-	 * {@code predicate}.
+	 * @return the number of identifiers that satisfy the specified predicate
 	 */
 	public long countTestIdentifiers(Predicate<? super TestIdentifier> predicate) {
 		return allIdentifiers.values().stream().filter(predicate).count();
 	}
 
 	/**
-	 * Returns all descendants of an identifier, i.e all of its children and
-	 * their children, recursively.
+	 * Get all descendants of the supplied {@link TestIdentifier} (i.e.,
+	 * all of its children and their children, recursively).
 	 *
 	 * @param parent the identifier to look up the descendants for
-	 * @return the unmodifiable set of the {@code parent}'s descendants, if
-	 * any; otherwise empty.
+	 * @return an unmodifiable set of the parent's descendants, potentially empty
 	 */
 	public Set<TestIdentifier> getDescendants(TestIdentifier parent) {
 		Set<TestIdentifier> result = new LinkedHashSet<>();
@@ -155,6 +165,7 @@ public final class TestPlan {
 		for (TestIdentifier child : children) {
 			result.addAll(getDescendants(child));
 		}
-		return result;
+		return Collections.unmodifiableSet(result);
 	}
+
 }
