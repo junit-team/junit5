@@ -14,7 +14,6 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -83,7 +82,7 @@ public final class TestPlan {
 	/**
 	 * Get the root identifiers of this test plan.
 	 *
-	 * @return the unmodifiable set of root identifiers
+	 * @return an unmodifiable set of the root identifiers
 	 */
 	public Set<TestIdentifier> getRoots() {
 		return unmodifiableSet(roots);
@@ -165,7 +164,7 @@ public final class TestPlan {
 		for (TestIdentifier child : children) {
 			result.addAll(getDescendants(child));
 		}
-		return Collections.unmodifiableSet(result);
+		return unmodifiableSet(result);
 	}
 
 }
