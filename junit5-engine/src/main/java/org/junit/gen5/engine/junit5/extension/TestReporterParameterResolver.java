@@ -33,7 +33,7 @@ public class TestReporterParameterResolver implements MethodParameterResolver {
 	@Override
 	public TestReporter resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
 			ExtensionContext extensionContext) {
-		return entry -> extensionContext.publishReportEntry(entry);
+		return extensionContext::publishReportEntry;
 	}
 
 }
