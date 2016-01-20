@@ -191,6 +191,7 @@ configure(rootProject) {
 	apply plugin: 'org.junit.gen5.gradle'
 
 	jar.enabled = false
+	uploadArchives.enabled = false
 
 	dependencies {
 
