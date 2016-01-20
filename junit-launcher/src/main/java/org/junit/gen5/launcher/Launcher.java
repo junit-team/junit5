@@ -11,16 +11,19 @@
 package org.junit.gen5.launcher;
 
 /**
- * Main entry point for client code that wants to <em>discover</em>
- * and <em>execute</em> tests using one or multiple
+ * The {@code Launcher} API is the main entry point for client code that
+ * wishes to <em>discover</em> and <em>execute</em> tests using one or more
  * {@linkplain org.junit.gen5.engine.TestEngine test engines}.
  *
- * <p>Implementations of this interface must provide means for engines to
- * register themselves at runtime.
+ * <p>Implementations of this interface are responsible for determining
+ * the set of test engines to delegate to at runtime. For example, the
+ * {@link org.junit.gen5.launcher.main.DefaultLauncher DefaultLauncher}
+ * dynamically registers test engines via Java's
+ * {@link java.util.ServiceLoader ServiceLoader} mechanism.
  *
- * <p>Discovering or executing tests requires a {@link TestDiscoveryRequest}
+ * <p>Discovery and execution of tests require a {@link TestDiscoveryRequest}
  * which is passed to all registered engines. Each engine decides which tests
- * it can discover and later execute according to this {@link TestDiscoveryRequest}.
+ * it can discover and later execute according to the {@link TestDiscoveryRequest}.
  *
  * <p>Clients of this interface may optionally call {@link #discover} prior to
  * {@link #execute} in order to inspect the {@link TestPlan} before executing
@@ -29,7 +32,7 @@ package org.junit.gen5.launcher;
  * <p>Prior to executing tests, clients of this interface should
  * {@linkplain #registerTestExecutionListeners register} one or more
  * {@link TestExecutionListener} instances in order to get feedback about the
- * progress and results of test execution. Listeners are notified of events
+ * progress and results of test execution. Listeners will be notified of events
  * in the order in which they were registered.
  *
  * @since 5.0
@@ -53,11 +56,11 @@ public interface Launcher {
 	 * {@link TestDiscoveryRequest} by querying all registered engines and
 	 * collecting their results.
 	 *
-	 * @param discoveryRequest the discovery request
-	 * @return a {@code TestPlan} that contains all resolved
-	 *         {@linkplain TestIdentifier identifiers} from all registered engines
+	 * @param testDiscoveryRequest the test discovery request
+	 * @return a {@code TestPlan} that contains all resolved {@linkplain
+	 * TestIdentifier identifiers} from all registered engines
 	 */
-	TestPlan discover(TestDiscoveryRequest discoveryRequest);
+	TestPlan discover(TestDiscoveryRequest testDiscoveryRequest);
 
 	/**
 	 * Execute a {@link TestPlan} which is built according to the supplied
@@ -65,8 +68,8 @@ public interface Launcher {
 	 * collecting their results, and notify {@linkplain #registerTestExecutionListeners
 	 * registered listeners} about the progress and results of the execution.
 	 *
-	 * @param discoveryRequest the discovery request to be executed
+	 * @param testDiscoveryRequest the test discovery request
 	 */
-	void execute(TestDiscoveryRequest discoveryRequest);
+	void execute(TestDiscoveryRequest testDiscoveryRequest);
 
 }
