@@ -668,7 +668,7 @@ module.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@Nested</code></strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated class is a nested test class.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated class is a nested, non-static test class. Due to restrictions of the Java language, <code>@BeforeAll</code> and <code>@AfterAll</code> methods cannot be used in a <code>@Nested</code> test class.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@Tag</code></strong> and <strong><code>@Tags</code></strong></p></td>
@@ -744,8 +744,7 @@ class StandardTests {
 </div>
 </div>
 <div class="paragraph">
-<p>Notice that neither the test class nor the test method need to be <code>public</code>. <code>@BeforeAll</code>
-and <code>@AfterAll</code> must be static methods.</p>
+<p>Notice that neither the test class nor the test method need to be <code>public</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1885,7 +1884,7 @@ registers its <code>JUnit5TestEngine</code>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-20 12:28:00 -05:00
+Last updated 2016-01-20 13:42:50 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
