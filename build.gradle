@@ -188,6 +188,8 @@ subprojects {
 configure(rootProject) {
 	description = 'JUnit 5'
 
+	apply plugin: 'org.junit.gen5.gradle'
+
 	dependencies {
 		rootProject.subprojects.each { project ->
 			testCompile(project)
@@ -198,6 +200,17 @@ configure(rootProject) {
 
 		testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
 		testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
+	}
+
+	test {
+		description = 'Disabled.'
+		useJUnit()
+		scanForTestClasses = false
+		exclude('**/*') // exclude everything
+	}
+
+	junit5 {
+		logManager 'org.apache.logging.log4j.jul.LogManager'
 	}
 
 	task aggregateJavadocs(type: Javadoc) {
