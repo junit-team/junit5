@@ -1,5 +1,9 @@
 apply plugin: 'java'
 
+jar.enabled = false
+javadoc.enabled = false
+javadocJar.enabled = false
+sourcesJar.enabled = false
 uploadArchives.enabled = false
 test.enabled = false
 

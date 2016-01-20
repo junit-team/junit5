@@ -190,8 +190,12 @@ configure(rootProject) {
 
 	apply plugin: 'org.junit.gen5.gradle'
 
+	jar.enabled = false
+
 	dependencies {
-		rootProject.subprojects.each { project ->
+
+		// No need to detect cycles for: junit-tests, sample-project, documentation, surefire-junit5
+		rootProject.subprojects.findAll {it.name.startsWith('junit') && it.name != 'junit-tests'}.each { project ->
 			testCompile(project)
 		}
 

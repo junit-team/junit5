@@ -1,6 +1,10 @@
 apply plugin: 'jacoco'
 apply plugin: 'org.junit.gen5.gradle'
 
+jar.enabled = false
+javadoc.enabled = false
+javadocJar.enabled = false
+sourcesJar.enabled = false
 uploadArchives.enabled = false
 
 junit5 {
