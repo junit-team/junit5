@@ -42,7 +42,10 @@ import org.junit.gen5.launcher.TestPlan;
  */
 public class DefaultLauncher implements Launcher {
 
-	public static Launcher get() {
+	/**
+	 * Factory method for creating a new instance of {@link DefaultLauncher}.
+	 */
+	public static Launcher create() {
 		return new DefaultLauncher();
 	}
 

@@ -52,7 +52,7 @@ public class JUnitGen5Provider extends AbstractProvider {
 			throw new UnsupportedOperationException("Forking is not yet supported.");
 		}
 
-		Launcher launcher = DefaultLauncher.get();
+		Launcher launcher = DefaultLauncher.create();
 		TestsToRun testsToRun = scanClasspath(launcher);
 		return invokeAllTests(testsToRun, launcher);
 	}
