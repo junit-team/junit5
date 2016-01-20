@@ -20,8 +20,9 @@ import java.lang.annotation.Target;
  * {@code @Test} is used to signal that the annotated method is a
  * <em>test</em> method.
  *
- * <p>{@code @Test} may also be used on an annotation in order to create a
- * custom test annotation, effectively acting as a meta-annotation.
+ * <p>{@code @Test} may also be used as a meta-annotation in order to
+ * create a custom <em>composed annotation</em> that inherits the semantics
+ * of {@code @Test}.
  *
  * <p>{@code @Test} methods must not be {@code private} or {@code static}.
  *

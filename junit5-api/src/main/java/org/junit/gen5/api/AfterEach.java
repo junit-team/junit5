@@ -21,6 +21,10 @@ import java.lang.annotation.Target;
  * executed <em>after</em> <strong>each</strong> {@code @Test} method in
  * the current test class or test class hierarchy.
  *
+ * <p>{@code @AfterEach} may also be used as a meta-annotation in order to
+ * create a custom <em>composed annotation</em> that inherits the semantics
+ * of {@code @AfterEach}.
+ *
  * <p>{@code @AfterEach} methods must not be {@code private} or {@code static}.
  *
  * <p>{@code @AfterEach} methods may optionally declare parameters to be
@@ -33,7 +37,7 @@ import java.lang.annotation.Target;
  * @see AfterAll
  * @see Test
  */
-@Target(ElementType.METHOD)
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface AfterEach {

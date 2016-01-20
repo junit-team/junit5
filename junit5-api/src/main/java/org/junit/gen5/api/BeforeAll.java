@@ -21,6 +21,10 @@ import java.lang.annotation.Target;
  * executed <em>before</em> <strong>all</strong> tests in the current test
  * class or test class hierarchy.
  *
+ * <p>{@code @BeforeAll} may also be used as a meta-annotation in order to
+ * create a custom <em>composed annotation</em> that inherits the semantics
+ * of {@code @BeforeAll}.
+ *
  * <p>In contrast to {@link BeforeEach @BeforeEach} methods, {@code @BeforeAll}
  * methods are only executed once for a given test class.
  *
@@ -34,7 +38,7 @@ import java.lang.annotation.Target;
  * @see AfterEach
  * @see Test
  */
-@Target(ElementType.METHOD)
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface BeforeAll {
