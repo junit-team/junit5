@@ -11,19 +11,10 @@
 package com.example;
 
 import org.junit.gen5.junit4.runner.Classes;
-import org.junit.gen5.junit4.runner.ExcludeTags;
 import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
 @Classes({ SampleTestCase.class, SucceedingTestCase.class, JUnit4TestCase.class })
-//@UniqueIds({ "junit5:com.example.SampleTestCase#assertAllTest()",
-//		"junit5:com.example.SampleTestCase#assertAllFailingTest()",
-//		"junit5:com.example.SampleTestCase@AnInnerTestContext" })
-//@Packages("com.example.subpackage")
-//@ClassNameMatches(".*TestCase.")
-//@OnlyIncludeTags({ "fast" })
-@ExcludeTags({ "fast" })
-//@OnlyEngine("junit5")
 public class JUnit4SamplesSuite {
 }

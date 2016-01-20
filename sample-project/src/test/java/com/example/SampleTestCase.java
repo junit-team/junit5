@@ -25,7 +25,6 @@ import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
-import org.opentest4j.TestSkippedException;
 
 /**
  * Named *TestCase so Gradle will not try to run it.
@@ -39,9 +38,6 @@ class SampleTestCase {
 	@BeforeEach
 	void before() {
 		this.beforeInvoked = true;
-		// Reset state, since the test instance is retained across all test methods;
-		// otherwise, after() always throws an exception.
-		this.throwExceptionInAfterMethod = false;
 	}
 
 	@AfterEach
@@ -60,7 +56,7 @@ class SampleTestCase {
 	@Test
 	@Disabled
 	void skippedTest() {
-		throw new TestSkippedException("This test will be skipped");
+		fail("This test should have been skipped");
 	}
 
 	@Test
@@ -69,7 +65,6 @@ class SampleTestCase {
 	}
 
 	@Test
-	@Fast
 	void failingTest() {
 		fail("This test will always fail");
 	}
