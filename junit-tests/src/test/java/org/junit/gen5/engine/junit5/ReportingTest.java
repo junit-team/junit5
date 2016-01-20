@@ -20,6 +20,7 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestReporter;
+import org.junit.gen5.commons.reporting.ReportingEntry;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
@@ -44,17 +45,17 @@ class MyReportingTestCase {
 
 	@BeforeEach
 	void before(TestReporter reporter) {
-		reporter.publishEntry(new HashMap<>());
+		reporter.publishEntry(new ReportingEntry(new HashMap<>()));
 	}
 
 	@AfterEach
 	void after(TestReporter reporter) {
-		reporter.publishEntry(new HashMap<>());
+		reporter.publishEntry(new ReportingEntry(new HashMap<>()));
 	}
 
 	@Test
 	void succeedingTest(TestReporter reporter) {
-		reporter.publishEntry(new HashMap<>());
+		reporter.publishEntry(new ReportingEntry(new HashMap<>()));
 	}
 
 }

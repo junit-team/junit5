@@ -10,12 +10,9 @@
 
 package org.junit.gen5.launcher;
 
-import java.util.Map;
-
+import org.junit.gen5.commons.reporting.ReportingEntry;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestExecutionResult.Status;
-import org.junit.gen5.launcher.TestIdentifier;
-import org.junit.gen5.launcher.TestPlan;
 import org.junit.gen5.launcher.main.Launcher;
 
 /**
@@ -50,9 +47,9 @@ public interface TestExecutionListener {
 	 * the supplied {@link TestIdentifier}. Can be called at all times.
 	 *
 	 * @param testIdentifier describes the test or container to which the entry pertains
-	 * @param entry a collection of key-value pairs to be reported
+	 * @param entry a {@code ReportingEntry} instance to be published
 	 */
-	default void reportingEntryPublished(TestIdentifier testIdentifier, Map<String, String> entry) {
+	default void reportingEntryPublished(TestIdentifier testIdentifier, ReportingEntry entry) {
 	}
 
 	/**

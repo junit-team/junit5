@@ -13,12 +13,12 @@ package org.junit.gen5.engine.junit5.descriptor;
 import static org.junit.gen5.api.Assertions.*;
 
 import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
 
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.commons.reporting.ReportingEntry;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
 import org.mockito.Mockito;
@@ -73,16 +73,14 @@ public class ExtensionContextTests {
 		ExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, engineExecutionListener,
 			classTestDescriptor);
 
-		Map<String, String> reportEntry1 = Collections.emptyMap();
-		Map<String, String> reportEntry2 = Collections.singletonMap("key", "value");
+		ReportingEntry entry1 = new ReportingEntry(Collections.emptyMap());
+		ReportingEntry entry2 = new ReportingEntry(Collections.singletonMap("key", "value"));
 
-		extensionContext.publishReportEntry(reportEntry1);
-		extensionContext.publishReportEntry(reportEntry2);
+		extensionContext.publishReportEntry(entry1);
+		extensionContext.publishReportEntry(entry2);
 
-		Mockito.verify(engineExecutionListener, Mockito.times(1)).reportingEntryPublished(classTestDescriptor,
-			reportEntry1);
-		Mockito.verify(engineExecutionListener, Mockito.times(1)).reportingEntryPublished(classTestDescriptor,
-			reportEntry2);
+		Mockito.verify(engineExecutionListener, Mockito.times(1)).reportingEntryPublished(classTestDescriptor, entry1);
+		Mockito.verify(engineExecutionListener, Mockito.times(1)).reportingEntryPublished(classTestDescriptor, entry2);
 	}
 
 	@Test

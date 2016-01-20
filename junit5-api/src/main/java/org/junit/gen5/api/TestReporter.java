@@ -10,14 +10,21 @@
 
 package org.junit.gen5.api;
 
-import java.util.Map;
+import org.junit.gen5.commons.reporting.ReportingEntry;
 
 /**
+ * Variables of type {@code TestReporter} can be injected into
+ * methods of test classes annotated with {@link BeforeEach},
+ * {@link AfterEach}, and {@link Test} annotations, respectively.
+ *
+ * <p>Within these methods these references can then be used
+ * to publish {@link ReportingEntry} instances.
+ *
  * @since 5.0
  */
 @FunctionalInterface
 public interface TestReporter {
 
-	void publishEntry(Map<String, String> entry);
+	void publishEntry(ReportingEntry entry);
 
 }

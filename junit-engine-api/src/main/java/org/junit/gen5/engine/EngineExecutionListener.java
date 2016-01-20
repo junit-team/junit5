@@ -10,8 +10,7 @@
 
 package org.junit.gen5.engine;
 
-import java.util.*;
-
+import org.junit.gen5.commons.reporting.ReportingEntry;
 import org.junit.gen5.engine.TestExecutionResult.Status;
 
 /**
@@ -35,13 +34,12 @@ public interface EngineExecutionListener {
 	 *     <li>Information about test context or test data</li>
 	 * </ul>
 	 *
-	 * <p>The current lifecycle state of {@code testDescriptor} is not relevant; that means that reporting events
-	 * can occur at all times.
-	 *
+	 * <p>The current lifecycle state of {@code testDescriptor} is not relevant;
+	 * that means that reporting events can occur at all times.
 	 * @param testDescriptor the descriptor of the test or container to which the entry belongs
-	 * @param entry a collection of key value pairs to be reported
+	 * @param entry a {@code ReportingEntry} instance to be published
 	 */
-	void reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry);
+	void reportingEntryPublished(TestDescriptor testDescriptor, ReportingEntry entry);
 
 	/**
 	 * Must be called when a new, dynamic {@link TestDescriptor} has been

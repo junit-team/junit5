@@ -17,6 +17,7 @@ import static org.junit.gen5.engine.ExecutionEvent.Type.*;
 import java.util.*;
 import java.util.function.Predicate;
 
+import org.junit.gen5.commons.reporting.ReportingEntry;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
@@ -30,7 +31,7 @@ public class ExecutionEvent {
 		DYNAMIC_TEST_REGISTERED, SKIPPED, STARTED, FINISHED, REPORTING_ENTRY_PUBLISHED
 	}
 
-	public static ExecutionEvent reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry) {
+	public static ExecutionEvent reportingEntryPublished(TestDescriptor testDescriptor, ReportingEntry entry) {
 		return new ExecutionEvent(REPORTING_ENTRY_PUBLISHED, testDescriptor, entry);
 	}
 

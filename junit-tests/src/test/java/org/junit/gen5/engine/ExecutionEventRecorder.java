@@ -22,11 +22,11 @@ import static org.junit.gen5.engine.ExecutionEvent.byTestDescriptor;
 import static org.junit.gen5.engine.ExecutionEvent.byType;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.junit.gen5.commons.reporting.ReportingEntry;
 import org.junit.gen5.engine.ExecutionEvent.Type;
 import org.junit.gen5.engine.TestExecutionResult.Status;
 
@@ -47,7 +47,7 @@ public class ExecutionEventRecorder implements EngineExecutionListener {
 	public final List<ExecutionEvent> executionEvents = new CopyOnWriteArrayList<>();
 
 	@Override
-	public void reportingEntryPublished(TestDescriptor testDescriptor, Map<String, String> entry) {
+	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportingEntry entry) {
 		addEvent(ExecutionEvent.reportingEntryPublished(testDescriptor, entry));
 	}
 
