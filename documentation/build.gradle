@@ -9,7 +9,7 @@ sourcesJar.enabled = false
 uploadArchives.enabled = false
 
 junit5 {
-	matchClassName '.*Test[s]'
+	matchClassName '.*Tests?'
 	reportFile file('build/test-results/JUNIT5-Tests.xml')
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 }
