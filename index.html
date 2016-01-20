@@ -468,7 +468,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#extension-model">5. Extension Model</a>
 <ul class="sectlevel2">
 <li><a href="#overview-2">5.1. Overview</a></li>
-<li><a href="#registering-extensions">5.2. Registering Extensions</a></li>
+<li><a href="#extension-registration">5.2. Registering Extensions</a></li>
 <li><a href="#conditional-test-execution">5.3. Conditional Test Execution</a></li>
 <li><a href="#test-instance-post-processing">5.4. Test Instance Post-processing</a></li>
 <li><a href="#parameter-resolution">5.5. Parameter Resolution</a></li>
@@ -1037,13 +1037,7 @@ class TestInfoTests {
 <div class="ulist">
 <ul>
 <li>
-<p>Check out the <code>methodInjectionTest(&#8230;&#8203;)</code> test method in <code><a href="https://github.com/junit-team/junit5/blob/master/sample-project/src/test/java/com/example/SampleTestCase.java">SampleTestCase</a></code> for an
-example that uses the built-in <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code> as well as two
-user-provided resolvers, <code><a href="https://github.com/junit-team/junit5/blob/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and
-<code><a href="https://github.com/junit-team/junit5/blob/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
-</li>
-<li>
-<p>The <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> is another example of a <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java">MethodParameterResolver</a></code>. While not
+<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> for an example of a <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java">MethodParameterResolver</a></code>. While not
 intended to be production-ready, it demonstrates the simplicity and expressiveness of
 both the extension model and the parameter resolution process. <code>MyMockitoTest</code>
 demonstrates how to inject Mockito mocks into <code>@BeforeEach</code> and <code>@Test</code> methods.</p>
@@ -1443,7 +1437,7 @@ JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
 </div>
 </div>
 <div class="sect2">
-<h3 id="registering-extensions">5.2. Registering Extensions</h3>
+<h3 id="extension-registration">5.2. Registering Extensions</h3>
 <div class="paragraph">
 <p>Extensions can be registered either declaratively via <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtendWith.java">@ExtendWith</a></code> or programmatically
 via an <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtensionRegistrar.java">ExtensionRegistrar</a></code>.</p>
@@ -1452,7 +1446,7 @@ via an <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-ap
 <p>Note that registered extensions are inherited within test class hierarchies.</p>
 </div>
 <div class="sect3">
-<h4 id="declarative-extension-registration">5.2.1. Declarative Extension Registration</h4>
+<h4 id="extension-registration-declarative">5.2.1. Declarative Extension Registration</h4>
 <div class="paragraph">
 <p>Developers can register one or more extensions <em>declaratively</em> by annotating a test
 class, test method, or custom <em><a href="#meta-annotations">composed annotation</a></em> with
@@ -1497,7 +1491,7 @@ class MyTestsV2 {
 </div>
 </div>
 <div class="sect3">
-<h4 id="programmatic-extension-registration">5.2.2. Programmatic Extension Registration</h4>
+<h4 id="extension-registration-programmatic">5.2.2. Programmatic Extension Registration</h4>
 <div class="paragraph">
 <p>Developers can register one or more extensions <em>programmatically</em> by implementing the
 <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtensionRegistrar.java">ExtensionRegistrar</a></code> API and registering the custom <code>ExtensionRegistrar</code> implementation
@@ -1636,10 +1630,10 @@ method parameters at runtime.</p>
 <p>If a <code>@Test</code>, <code>@BeforeEach</code>, <code>@AfterEach</code> , <code>@BeforeAll</code> or <code>@AfterAll</code> method accepts a
 parameter, the parameter must be <em>resolved</em> at runtime by a <code>MethodParameterResolver</code>. A
 <code>MethodParameterResolver</code> can either be built-in (see <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or
-registered by the user via <code>@ExtendWith</code>. Generally speaking, parameters may be resolved
-by <em>name</em>, <em>type</em>, <em>annotation</em>, or any combination thereof. For concrete examples,
-consult the source code for <code><a href="https://github.com/junit-team/junit5/blob/master/sample-project/src/test/java/com/example/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and
-<code><a href="https://github.com/junit-team/junit5/blob/master/sample-project/src/test/java/com/example/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>, respectively.</p>
+<a href="#extension-registration">registered by the user</a>. Generally speaking, parameters may be
+resolved by <em>name</em>, <em>type</em>, <em>annotation</em>, or any combination thereof. For concrete examples,
+consult the source code for <code><a href="https://github.com/junit-team/junit5/blob/master/junit-tests/src/test/java/org/junit/gen5/engine/junit5/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and
+<code><a href="https://github.com/junit-team/junit5/blob/master/junit-tests/src/test/java/org/junit/gen5/engine/junit5/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1891,7 +1885,7 @@ registers its <code>JUnit5TestEngine</code>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-20 09:34:47 -05:00
+Last updated 2016-01-20 11:33:17 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
