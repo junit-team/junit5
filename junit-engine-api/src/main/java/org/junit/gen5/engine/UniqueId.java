@@ -1,3 +1,13 @@
+/*
+ * Copyright 2015-2016 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
+
 package org.junit.gen5.engine;
 
 import java.util.ArrayList;
@@ -7,7 +17,7 @@ import java.util.stream.Stream;
 
 import org.junit.gen5.commons.util.StringUtils;
 
-public class UniqueId {
+public class UniqueId implements Cloneable {
 
 	public static final String TYPE_ENGINE = "engine";
 
@@ -30,6 +40,23 @@ public class UniqueId {
 
 	public List<Segment> getSegments() {
 		return Collections.unmodifiableList(segments);
+	}
+
+	public UniqueId append(String type, String value) {
+		try {
+			UniqueId clone = (UniqueId) this.clone();
+			clone.segments.add(new Segment(type, value));
+			return clone;
+		}
+		catch (CloneNotSupportedException shouldNeverHappen) {
+			shouldNeverHappen.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 
 	public static class Segment {
