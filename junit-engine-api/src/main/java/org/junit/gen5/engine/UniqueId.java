@@ -15,18 +15,28 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
 
 public class UniqueId implements Cloneable {
 
+	public static UniqueId parse(String uniqueIdString) {
+		return new UniqueIdParser(uniqueIdString, SEGMENT_DELIMITER, TYPE_VALUE_SEPARATOR).parse();
+	}
+
 	public static final String TYPE_ENGINE = "engine";
 
 	private static final String SEGMENT_DELIMITER = "/";
+	private static final String TYPE_VALUE_SEPARATOR = ":";
 
 	private final List<Segment> segments = new ArrayList<>();
 
 	public UniqueId(String engineId) {
 		segments.add(new Segment(TYPE_ENGINE, engineId));
+	}
+
+	UniqueId(List<Segment> segments) {
+		this.segments.addAll(segments);
 	}
 
 	public String getUniqueString() {
@@ -35,7 +45,7 @@ public class UniqueId implements Cloneable {
 	}
 
 	private String describe(Segment segment) {
-		return String.format("[%s:%s]", segment.getType(), segment.getValue());
+		return String.format("[%s%s%s]", segment.getType(), TYPE_VALUE_SEPARATOR, segment.getValue());
 	}
 
 	public List<Segment> getSegments() {
@@ -64,9 +74,22 @@ public class UniqueId implements Cloneable {
 		private final String type;
 		private final String value;
 
-		private Segment(String type, String value) {
+		Segment(String type, String value) {
+			checkPrecondition(type);
+			checkPrecondition(value);
+
 			this.type = type;
 			this.value = value;
+		}
+
+		private void checkPrecondition(String type) {
+			Preconditions.notEmpty(type, "type or value must not be empty");
+			Preconditions.condition(!type.contains(SEGMENT_DELIMITER),
+				String.format("type or value must not contain '%s'", SEGMENT_DELIMITER));
+			Preconditions.condition(!type.contains(TYPE_VALUE_SEPARATOR),
+				String.format("type or value must not contain '%s'", TYPE_VALUE_SEPARATOR));
+			Preconditions.condition(!type.contains("["), "type or value must not contain '['");
+			Preconditions.condition(!type.contains("]"), "type or value must not contain ']'");
 		}
 
 		public String getType() {
