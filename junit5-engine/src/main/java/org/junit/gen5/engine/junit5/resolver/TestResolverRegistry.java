@@ -10,7 +10,6 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
-import java.util.Collection;
 import java.util.Optional;
 
 import org.junit.gen5.engine.EngineDiscoveryRequest;
@@ -19,10 +18,8 @@ import org.junit.gen5.engine.TestDescriptor;
 /**
  * @since 5.0
  */
-interface TestResolverRegistry {
+public interface TestResolverRegistry {
 	void notifyResolvers(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest);
-
-	void notifyResolvers(Collection<TestDescriptor> parents, EngineDiscoveryRequest discoveryRequest);
 
 	void register(TestResolver testResolver);
 

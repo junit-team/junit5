@@ -10,7 +10,6 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -35,13 +34,6 @@ public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
 	public void notifyResolvers(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
 		for (TestResolver testResolver : testResolvers.values()) {
 			testResolver.resolveAllFrom(parent, discoveryRequest);
-		}
-	}
-
-	@Override
-	public void notifyResolvers(Collection<TestDescriptor> parents, EngineDiscoveryRequest discoveryRequest) {
-		for (TestDescriptor parent : parents) {
-			notifyResolvers(parent, discoveryRequest);
 		}
 	}
 
