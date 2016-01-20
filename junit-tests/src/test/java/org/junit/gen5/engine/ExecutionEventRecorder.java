@@ -47,11 +47,6 @@ public class ExecutionEventRecorder implements EngineExecutionListener {
 	public final List<ExecutionEvent> executionEvents = new CopyOnWriteArrayList<>();
 
 	@Override
-	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportingEntry entry) {
-		addEvent(ExecutionEvent.reportingEntryPublished(testDescriptor, entry));
-	}
-
-	@Override
 	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
 		addEvent(ExecutionEvent.dynamicTestRegistered(testDescriptor));
 	}
@@ -69,6 +64,11 @@ public class ExecutionEventRecorder implements EngineExecutionListener {
 	@Override
 	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult result) {
 		addEvent(ExecutionEvent.executionFinished(testDescriptor, result));
+	}
+
+	@Override
+	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportingEntry entry) {
+		addEvent(ExecutionEvent.reportingEntryPublished(testDescriptor, entry));
 	}
 
 	public List<ExecutionEvent> getExecutionEvents() {

@@ -30,11 +30,6 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 	}
 
 	@Override
-	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportingEntry entry) {
-		testExecutionListener.reportingEntryPublished(getTestIdentifier(testDescriptor), entry);
-	}
-
-	@Override
 	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
 		TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
 		testPlan.add(testIdentifier);
@@ -54,6 +49,11 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 	@Override
 	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
 		testExecutionListener.executionFinished(getTestIdentifier(testDescriptor), testExecutionResult);
+	}
+
+	@Override
+	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportingEntry entry) {
+		testExecutionListener.reportingEntryPublished(getTestIdentifier(testDescriptor), entry);
 	}
 
 	private TestIdentifier getTestIdentifier(TestDescriptor testDescriptor) {

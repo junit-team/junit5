@@ -42,15 +42,6 @@ import org.junit.gen5.launcher.main.Launcher;
  * @see TestIdentifier
  */
 public interface TestExecutionListener {
-	/**
-	 * Called when additional test reporting data has been published for
-	 * the supplied {@link TestIdentifier}. Can be called at all times.
-	 *
-	 * @param testIdentifier describes the test or container to which the entry pertains
-	 * @param entry a {@code ReportingEntry} instance to be published
-	 */
-	default void reportingEntryPublished(TestIdentifier testIdentifier, ReportingEntry entry) {
-	}
 
 	/**
 	 * Called when the execution of the {@link TestPlan} has started,
@@ -145,4 +136,15 @@ public interface TestExecutionListener {
 	 */
 	default void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 	}
+
+	/**
+	 * Called when additional test reporting data has been published for
+	 * the supplied {@link TestIdentifier}. Can be called at all times.
+	 *
+	 * @param testIdentifier describes the test or container to which the entry pertains
+	 * @param entry a {@code ReportingEntry} instance to be published
+	 */
+	default void reportingEntryPublished(TestIdentifier testIdentifier, ReportingEntry entry) {
+	}
+
 }

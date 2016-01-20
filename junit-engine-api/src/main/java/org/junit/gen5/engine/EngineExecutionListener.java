@@ -28,20 +28,6 @@ import org.junit.gen5.engine.TestExecutionResult.Status;
 public interface EngineExecutionListener {
 
 	/**
-	 * Can be called for any {@code testDescriptor} in order to publish additional information, e.g.:
-	 * <ul>
-	 *     <li>Output that would otherwise go to {@code System.out}</li>
-	 *     <li>Information about test context or test data</li>
-	 * </ul>
-	 *
-	 * <p>The current lifecycle state of {@code testDescriptor} is not relevant;
-	 * that means that reporting events can occur at all times.
-	 * @param testDescriptor the descriptor of the test or container to which the entry belongs
-	 * @param entry a {@code ReportingEntry} instance to be published
-	 */
-	void reportingEntryPublished(TestDescriptor testDescriptor, ReportingEntry entry);
-
-	/**
 	 * Must be called when a new, dynamic {@link TestDescriptor} has been
 	 * registered.
 	 *
@@ -117,5 +103,19 @@ public interface EngineExecutionListener {
 	 * @see TestExecutionResult
 	 */
 	void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult);
+
+	/**
+	 * Can be called for any {@code testDescriptor} in order to publish additional information, e.g.:
+	 * <ul>
+	 *     <li>Output that would otherwise go to {@code System.out}</li>
+	 *     <li>Information about test context or test data</li>
+	 * </ul>
+	 *
+	 * <p>The current lifecycle state of {@code testDescriptor} is not relevant;
+	 * that means that reporting events can occur at all times.
+	 * @param testDescriptor the descriptor of the test or container to which the entry belongs
+	 * @param entry a {@code ReportingEntry} instance to be published
+	 */
+	void reportingEntryPublished(TestDescriptor testDescriptor, ReportingEntry entry);
 
 }
