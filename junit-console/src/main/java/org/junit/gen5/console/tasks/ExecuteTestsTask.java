@@ -34,7 +34,7 @@ public class ExecuteTestsTask implements ConsoleTask {
 	private final Supplier<Launcher> launcherSupplier;
 
 	public ExecuteTestsTask(CommandLineOptions options) {
-		this(options, DefaultLauncher::get);
+		this(options, DefaultLauncher::create);
 	}
 
 	// for tests only

@@ -69,7 +69,7 @@ public class JUnit5 extends Runner implements Filterable {
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
 	private static final String EMPTY_STRING = "";
 
-	private final Launcher launcher = DefaultLauncher.get();
+	private final Launcher launcher = DefaultLauncher.create();
 	private final Class<?> testClass;
 	private TestDiscoveryRequest discoveryRequest;
 	private JUnit5TestTree testTree;
