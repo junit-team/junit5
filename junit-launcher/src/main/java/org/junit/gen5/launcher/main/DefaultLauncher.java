@@ -10,8 +10,11 @@
 
 package org.junit.gen5.launcher.main;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
+import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
@@ -87,17 +90,27 @@ public class DefaultLauncher implements Launcher {
 
 	private Root discoverRoot(TestDiscoveryRequest discoveryRequest, String phase) {
 		Root root = new Root();
+
+		Set<String> uniqueEngineIds = new HashSet<>();
+
 		for (TestEngine testEngine : testEngineRegistry.getTestEngines()) {
+			final String engineId = testEngine.getId();
+
 			if (discoveryRequest.getEngineIdFilters().stream().map(
-				engineIdFilter -> engineIdFilter.filter(testEngine.getId())).anyMatch(FilterResult::excluded)) {
-				LOG.fine(
-					() -> String.format("Test discovery for engine '%s' was skipped due to a filter in phase '%s'.",
-						testEngine.getId(), phase));
+				engineIdFilter -> engineIdFilter.filter(engineId)).anyMatch(FilterResult::excluded)) {
+				LOG.fine(() -> String.format(
+					"Test discovery for engine '%s' was skipped due to a filter in phase '%s'.", engineId, phase));
 				continue;
 			}
 
-			LOG.fine(() -> String.format("Discovering tests during launcher %s phase in engine '%s'.", phase,
-				testEngine.getId()));
+			if (!uniqueEngineIds.add(engineId)) {
+				throw new JUnitException(String.format(
+					"Failure in launcher: TestEngineRegistry [%s] returned multiple engines with the same ID [%s].",
+					testEngineRegistry.getClass().getName(), engineId));
+			}
+
+			LOG.fine(
+				() -> String.format("Discovering tests during launcher %s phase in engine '%s'.", phase, engineId));
 			TestDescriptor engineRoot = testEngine.discoverTests(discoveryRequest);
 			root.add(testEngine, engineRoot);
 		}

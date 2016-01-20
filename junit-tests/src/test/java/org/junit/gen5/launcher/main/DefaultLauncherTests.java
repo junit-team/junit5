@@ -10,6 +10,7 @@
 
 package org.junit.gen5.launcher.main;
 
+import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.EngineIdFilter.byEngineId;
 import static org.junit.gen5.launcher.main.LauncherFactory.createLauncher;
@@ -17,6 +18,7 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import org.assertj.core.api.Assertions;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 import org.junit.gen5.launcher.TestId;
@@ -38,6 +40,16 @@ class DefaultLauncherTests {
 	}
 
 	@Test
+	void constructLauncherWithMultipleTestEnginesWithDuplicateIds() {
+		DefaultLauncher launcher = createLauncher(new DummyTestEngine(), new DummyTestEngine());
+
+		JUnitException exception = expectThrows(JUnitException.class,
+			() -> launcher.discover(request().select(forUniqueId("foo")).build()));
+
+		Assertions.assertThat(exception).hasMessageContaining("multiple engines with the same ID");
+	}
+
+	@Test
 	void discoverEmptyTestPlanWithEngineWithoutAnyTests() {
 		DefaultLauncher launcher = createLauncher(new DummyTestEngine());
 
@@ -47,7 +59,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void discoverTestPlanForSingleEngineWithASingleTests() {
+	void discoverTestPlanForSingleEngineWithASingleTest() {
 		DummyTestEngine engine = new DummyTestEngine("myEngine");
 		TestDescriptor testDescriptor = engine.addTest("test", noOp());
 
@@ -79,7 +91,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void launcherWillNotCallEnginesThatAreFilterByAnEngineIdFilter() {
+	void launcherWillNotCallEnginesThatAreFilteredByAnEngineIdFilter() {
 		DummyTestEngine firstEngine = new DummyTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp());
 		DummyTestEngine secondEngine = new DummyTestEngine("second");
