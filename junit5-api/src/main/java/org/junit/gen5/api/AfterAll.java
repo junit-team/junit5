@@ -21,11 +21,12 @@ import java.lang.annotation.Target;
  * executed <em>after</em> <strong>all</strong> tests in the current test
  * class or test class hierarchy.
  *
- * <p>In contrast to {@code @AfterEach} methods, {@code @AfterAll} methods
- * are only executed once for a given test class.
+ * <p>In contrast to {@link AfterEach @AfterEach} methods, {@code @AfterAll}
+ * methods are only executed once for a given test class.
  *
  * <p>{@code @AfterAll} methods must not be {@code private} and must be
- * {@code static}.
+ * {@code static}. Consequently, {@code @AfterAll} methods are not
+ * supported in {@link Nested @Nested} test classes.
  *
  * @since 5.0
  * @see BeforeAll

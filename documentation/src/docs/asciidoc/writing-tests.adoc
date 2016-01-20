@@ -25,7 +25,7 @@ module.
 |*`@AfterEach`*         | Denotes that the annotated method should be executed _after_ *each* `@Test` method in the current class or class hierarchy
 |*`@BeforeAll`*         | Denotes that the annotated method should be executed _before_ *all* `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@BeforeClass`. Such methods must be `static`.
 |*`@AfterAll`*          | Denotes that the annotated method should be executed _after_ *all* `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@AfterClass`. Such methods must be `static`.
-|*`@Nested`*            | Denotes that the annotated class is a nested test class.
+|*`@Nested`*            | Denotes that the annotated class is a nested, non-static test class. Due to restrictions of the Java language, `@BeforeAll` and `@AfterAll` methods cannot be used in a `@Nested` test class.
 |*`@Tag`* and *`@Tags`* | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4
 |*`@Disabled`*          | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore`
 |*`@ExtendWith`*        | Used to register custom <<extension-model, extensions>> to the framework.
@@ -49,7 +49,6 @@ include::{testDir}/example/Fast.java[tags=user_guide]
 ----
 
 
-
 === Standard Test Class
 
 [source,java,indent=0]
@@ -59,10 +58,7 @@ include::{testDir}/example/Fast.java[tags=user_guide]
 include::{testDir}/example/StandardTests.java[tags=user_guide]
 ----
 
-
-Notice that neither the test class nor the test method need to be `public`. `@BeforeAll`
-and `@AfterAll` must be static methods.
-
+Notice that neither the test class nor the test method need to be `public`.
 
 
 === Custom Names

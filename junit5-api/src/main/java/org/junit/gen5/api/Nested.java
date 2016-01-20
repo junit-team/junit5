@@ -17,8 +17,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@code @Nested} is used to signal that the annotated class is a nested
- * test class.
+ * {@code @Nested} is used to signal that the annotated class is a nested,
+ * non-static test class.
  *
  * @since 5.0
  */
