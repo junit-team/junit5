@@ -13,14 +13,12 @@ package org.junit.gen5.commons.util;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * <h3>DISCLAIMER</h3>
@@ -54,6 +52,37 @@ class ClasspathScanner {
 		catch (IOException e) {
 			return false;
 		}
+	}
+
+	List<Package> scanForPackagesInPackage(String basePackageName) {
+		Preconditions.notBlank(basePackageName, "basePackageName must not be blank");
+
+		List<File> dirs = allSourceDirsForPackage(basePackageName);
+		return allSubPackagesInSourceDirs(dirs, basePackageName);
+	}
+
+	private List<Package> allSubPackagesInSourceDirs(List<File> dirs, String basePackageName) {
+		// @formatter:off
+		return dirs.stream()
+				.flatMap(dir -> findPackagesInSourceDir(dir, basePackageName))
+				.distinct()
+				.map(Package::getPackage)
+				.collect(Collectors.toList());
+		// @formatter:on
+	}
+
+	private Stream<String> findPackagesInSourceDir(File dir, String basePackageName) {
+		File[] files = dir.listFiles();
+		if (files == null) {
+			return Stream.empty();
+		}
+
+		// @formatter:off
+		return Arrays.stream(files)
+				.filter(File::isDirectory)
+				.map(File::getName)
+				.map(name -> appendPackageName(basePackageName, name));
+		// @formatter:on
 	}
 
 	List<Class<?>> scanForClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter) {
@@ -143,5 +172,4 @@ class ClasspathScanner {
 	private static boolean isClassFile(File file) {
 		return file.isFile() && file.getName().endsWith(CLASS_FILE_SUFFIX);
 	}
-
 }

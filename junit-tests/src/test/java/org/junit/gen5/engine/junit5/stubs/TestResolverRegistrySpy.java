@@ -20,25 +20,25 @@ import org.junit.gen5.engine.junit5.resolver.TestResolver;
 import org.junit.gen5.engine.junit5.resolver.TestResolverRegistry;
 
 public class TestResolverRegistrySpy implements TestResolverRegistry {
-    public EngineDiscoveryRequest discoveryRequest;
-    public List<TestDescriptor> testDescriptors = new LinkedList<>();
+	public EngineDiscoveryRequest discoveryRequest;
+	public List<TestDescriptor> testDescriptors = new LinkedList<>();
 
-    @Override
-    public void notifyResolvers(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
-        this.discoveryRequest = discoveryRequest;
-        this.testDescriptors.add(parent);
-    }
+	@Override
+	public void notifyResolvers(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
+		this.discoveryRequest = discoveryRequest;
+		this.testDescriptors.add(parent);
+	}
 
-    @Override
-    public void register(TestResolver testResolver) {
-    }
+	@Override
+	public void register(TestResolver testResolver) {
+	}
 
-    @Override
-    public void initialize() {
-    }
+	@Override
+	public void initialize() {
+	}
 
-    @Override
-    public <R extends TestResolver> Optional<R> lookupTestResolver(Class<R> resolverType) {
-        return Optional.empty();
-    }
+	@Override
+	public <R extends TestResolver> Optional<R> lookupTestResolver(Class<R> resolverType) {
+		return Optional.empty();
+	}
 }
