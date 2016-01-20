@@ -10,10 +10,19 @@
 
 package org.junit.gen5.commons.reporting;
 
+import java.util.Date;
 import java.util.Map;
 
+/**
+ * This class represents a {@code ReportingEntry} -
+ * that is a map of {@code String}-based key-value pairs
+ * to be published to the reporting infrastructure
+ *
+ * @since 5.0
+ */
 public class ReportingEntry {
 
+	private final Date creationDate = new Date();
 	private final Map<String, String> values;
 
 	/**
@@ -23,7 +32,23 @@ public class ReportingEntry {
 		this.values = values;
 	}
 
+	/**
+	 * Get the values to be published
+	 *
+	 * @return the map of values to be published
+	 */
 	public Map<String, String> getValues() {
 		return values;
 	}
+
+	/**
+	 * Get the creation date of this {@code ReportingEntry}.
+	 * Could be used for e.g., ordering entries.
+	 *
+	 * @return the date at which this entry was created
+	 */
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
 }
