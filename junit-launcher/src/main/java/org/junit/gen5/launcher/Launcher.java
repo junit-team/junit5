@@ -12,23 +12,21 @@ package org.junit.gen5.launcher;
 
 /**
  * Main entry point for client code that wants to <em>discover</em>
- * and <em>execute</em> tests using dynamically registered test engines.
+ * and <em>execute</em> tests using one or multiple
+ * {@linkplain org.junit.gen5.engine.TestEngine test engines}.
  *
- * <p>Test engines are registered at runtime using the
- * {@link java.util.ServiceLoader ServiceLoader} facility. For that purpose, a
- * text file named {@code META-INF/services/org.junit.gen5.engine.TestEngine}
- * has to be added to the engine's JAR file in which the fully qualified name
- * of the implementation class of the {@link org.junit.gen5.engine.TestEngine} interface is stated.
+ * <p>Implementations of this interface must provide means for engines to
+ * register themselves at runtime.
  *
  * <p>Discovering or executing tests requires a {@link TestDiscoveryRequest}
  * which is passed to all registered engines. Each engine decides which tests
  * it can discover and later execute according to this {@link TestDiscoveryRequest}.
  *
- * <p>Users of this class may optionally call {@link #discover} prior to
+ * <p>Clients of this interface may optionally call {@link #discover} prior to
  * {@link #execute} in order to inspect the {@link TestPlan} before executing
  * it.
  *
- * <p>Prior to executing tests, users of this class should
+ * <p>Prior to executing tests, clients of this interface should
  * {@linkplain #registerTestExecutionListeners register} one or more
  * {@link TestExecutionListener} instances in order to get feedback about the
  * progress and results of test execution. Listeners are notified of events
@@ -39,6 +37,7 @@ package org.junit.gen5.launcher;
  * @see TestPlan
  * @see TestExecutionListener
  * @see org.junit.gen5.launcher.main.DefaultLauncher
+ * @see org.junit.gen5.engine.TestEngine
  */
 public interface Launcher {
 

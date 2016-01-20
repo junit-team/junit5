@@ -16,12 +16,23 @@ import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.launcher.*;
+import org.junit.gen5.launcher.Launcher;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
+import org.junit.gen5.launcher.TestExecutionListener;
+import org.junit.gen5.launcher.TestPlan;
 
 /**
- * Default implementation of the {@link Launcher} API.
+ * Default implementation of the {@link Launcher} API using dynamically
+ * registered test engines.
  *
  * <p>External clients can obtain an instance by invoking {@link #get}.
+ *
+ * <p>Test engines are registered at runtime using the
+ * {@link java.util.ServiceLoader ServiceLoader} facility. For that purpose, a
+ * text file named {@code META-INF/services/org.junit.gen5.engine.TestEngine}
+ * has to be added to the engine's JAR file in which the fully qualified name
+ * of the implementation class of the {@link org.junit.gen5.engine.TestEngine}
+ * interface is stated.
  *
  * @since 5.0
  * @see Launcher
