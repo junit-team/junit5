@@ -19,86 +19,54 @@ import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.launcher.*;
 
 /**
- * Facade for <em>discovering</em> and <em>executing</em> tests using
- * dynamically registered test engines.
+ * Default implementation of the {@link Launcher} API.
  *
- * <p>Test engines are registered at runtime using the
- * {@link java.util.ServiceLoader ServiceLoader} facility. For that purpose, a
- * text file named {@code META-INF/services/org.junit.gen5.engine.TestEngine}
- * has to be added to the engine's JAR file in which the fully qualified name
- * of the implementation class of the {@link TestEngine} interface is stated.
- *
- * <p>Discovering or executing tests requires a {@link DiscoveryRequest}
- * which is passed to all registered engines. Each engine decides which tests
- * it can discover and later execute according to this {@link DiscoveryRequest}.
- *
- * <p>Users of this class may optionally call {@link #discover} prior to
- * {@link #execute} in order to inspect the {@link TestPlan} before executing
- * it.
- *
- * <p>Prior to executing tests, users of this class should
- * {@linkplain #registerTestExecutionListeners register} one or more
- * {@link TestExecutionListener} instances in order to get feedback about the
- * progress and results of test execution. Listeners are notified of events
- * in the order in which they were registered.
+ * <p>External clients can obtain an instance by invoking {@link #get}.
  *
  * @since 5.0
+ * @see Launcher
  * @see DiscoveryRequest
  * @see TestPlan
  * @see TestExecutionListener
  */
-public class Launcher {
+public class DefaultLauncher implements Launcher {
 
-	private static final Logger LOG = Logger.getLogger(Launcher.class.getName());
+	public static Launcher get() {
+		return new DefaultLauncher();
+	}
+
+	private static final Logger LOG = Logger.getLogger(DefaultLauncher.class.getName());
 
 	private final TestEngineRegistry testEngineRegistry;
 	private final TestExecutionListenerRegistry testExecutionListenerRegistry;
 
-	public Launcher() {
+	private DefaultLauncher() {
 		this(new ServiceLoaderTestEngineRegistry(), new TestExecutionListenerRegistry());
 	}
 
 	// For tests only
-	Launcher(TestEngineRegistry testEngineRegistry) {
+	DefaultLauncher(TestEngineRegistry testEngineRegistry) {
 		this(testEngineRegistry, new TestExecutionListenerRegistry());
 	}
 
 	// For tests only
-	Launcher(TestEngineRegistry testEngineRegistry, TestExecutionListenerRegistry testExecutionListenerRegistry) {
+	DefaultLauncher(TestEngineRegistry testEngineRegistry,
+			TestExecutionListenerRegistry testExecutionListenerRegistry) {
 		this.testEngineRegistry = testEngineRegistry;
 		this.testExecutionListenerRegistry = testExecutionListenerRegistry;
 	}
 
-	/**
-	 * Register one or more listeners for test execution.
-	 *
-	 * @param listeners the listeners to be notified of test execution events
-	 */
+	@Override
 	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
 		testExecutionListenerRegistry.registerListener(listeners);
 	}
 
-	/**
-	 * Discover tests and build a {@link TestPlan} according to the supplied
-	 * {@link DiscoveryRequest} by querying all registered engines and
-	 * collecting their results.
-	 *
-	 * @param discoveryRequest the discovery request
-	 * @return a {@code TestPlan} that contains all resolved
-	 *         {@linkplain TestIdentifier identifiers} from all registered engines
-	 */
+	@Override
 	public TestPlan discover(TestDiscoveryRequest discoveryRequest) {
 		return TestPlan.from(discoverRoot(discoveryRequest, "discovery").getEngineDescriptors());
 	}
 
-	/**
-	 * Execute a {@link TestPlan} which is built according to the supplied
-	 * {@link DiscoveryRequest} by querying all registered engines and
-	 * collecting their results, and notify {@linkplain #registerTestExecutionListeners
-	 * registered listeners} about the progress and results of the execution.
-	 *
-	 * @param discoveryRequest the discovery request to be executed
-	 */
+	@Override
 	public void execute(TestDiscoveryRequest discoveryRequest) {
 		execute(discoverRoot(discoveryRequest, "execution"));
 	}

@@ -11,11 +11,13 @@
 package org.junit.gen5.surefire;
 
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
-import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import org.apache.maven.surefire.util.ScannerFilter;
-import org.junit.gen5.launcher.*;
-import org.junit.gen5.launcher.main.Launcher;
+import org.junit.gen5.launcher.Launcher;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
+import org.junit.gen5.launcher.TestIdentifier;
+import org.junit.gen5.launcher.TestPlan;
 
 final class TestPlanScannerFilter implements ScannerFilter {
 

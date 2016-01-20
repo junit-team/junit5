@@ -13,14 +13,15 @@ package org.junit.gen5.launcher.main;
 import static java.util.Arrays.asList;
 
 import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.launcher.main.Launcher;
 
 public class LauncherFactory {
-	public static Launcher createLauncher(TestEngine... engines) {
+
+	public static DefaultLauncher createLauncher(TestEngine... engines) {
 		return createLauncher(asList(engines));
 	}
 
-	public static Launcher createLauncher(Iterable<TestEngine> engines) {
-		return new Launcher(() -> engines);
+	public static DefaultLauncher createLauncher(Iterable<TestEngine> engines) {
+		return new DefaultLauncher(() -> engines);
 	}
+
 }

@@ -12,8 +12,8 @@ package org.junit.gen5.launcher.main;
 
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.EngineIdFilter.byEngineId;
-import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 import static org.junit.gen5.launcher.main.LauncherFactory.createLauncher;
+import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import org.assertj.core.api.Assertions;
 import org.junit.gen5.api.Test;
@@ -23,11 +23,14 @@ import org.junit.gen5.launcher.TestId;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 
-public class LauncherTests {
+/**
+ * @since 5.0
+ */
+class DefaultLauncherTests {
 
 	@Test
-	public void discoverEmptyTestPlanWithoutAnyEngines() {
-		Launcher launcher = createLauncher();
+	void discoverEmptyTestPlanWithoutAnyEngines() {
+		DefaultLauncher launcher = createLauncher();
 
 		TestPlan testPlan = launcher.discover(request().select(forUniqueId("foo")).build());
 
@@ -35,8 +38,8 @@ public class LauncherTests {
 	}
 
 	@Test
-	public void discoverEmptyTestPlanWithEngineWithoutAnyTests() {
-		Launcher launcher = createLauncher(new DummyTestEngine());
+	void discoverEmptyTestPlanWithEngineWithoutAnyTests() {
+		DefaultLauncher launcher = createLauncher(new DummyTestEngine());
 
 		TestPlan testPlan = launcher.discover(request().select(forUniqueId("foo")).build());
 
@@ -44,11 +47,11 @@ public class LauncherTests {
 	}
 
 	@Test
-	public void discoverTestPlanForSingleEngineWithASingleTests() {
+	void discoverTestPlanForSingleEngineWithASingleTests() {
 		DummyTestEngine engine = new DummyTestEngine("myEngine");
 		TestDescriptor testDescriptor = engine.addTest("test", noOp());
 
-		Launcher launcher = createLauncher(engine);
+		DefaultLauncher launcher = createLauncher(engine);
 
 		TestPlan testPlan = launcher.discover(request().select(forUniqueId(testDescriptor.getUniqueId())).build());
 
@@ -59,13 +62,13 @@ public class LauncherTests {
 	}
 
 	@Test
-	public void discoverTestPlanForMultipleEngines() {
+	void discoverTestPlanForMultipleEngines() {
 		DummyTestEngine firstEngine = new DummyTestEngine("engine1");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp());
 		DummyTestEngine secondEngine = new DummyTestEngine("engine2");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp());
 
-		Launcher launcher = createLauncher(firstEngine, secondEngine);
+		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
 
 		TestPlan testPlan = launcher.discover(
 			request().select(forUniqueId(test1.getUniqueId()), forUniqueId(test2.getUniqueId())).build());
@@ -76,13 +79,13 @@ public class LauncherTests {
 	}
 
 	@Test
-	public void launcherWillNotCallEnginesThatAreFilterByAnEngineIdFilter() {
+	void launcherWillNotCallEnginesThatAreFilterByAnEngineIdFilter() {
 		DummyTestEngine firstEngine = new DummyTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp());
 		DummyTestEngine secondEngine = new DummyTestEngine("second");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp());
 
-		Launcher launcher = createLauncher(firstEngine, secondEngine);
+		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
 
 		TestPlan testPlan = launcher.discover(
 			request().select(forUniqueId(test1.getUniqueId()), forUniqueId(test2.getUniqueId())).filter(

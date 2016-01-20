@@ -17,11 +17,11 @@ import org.junit.gen5.engine.*;
 /**
  * This class extends the {@link EngineDiscoveryRequest}
  * by providing access to filters which are applied by the
- * {@link org.junit.gen5.launcher.main.Launcher} itself
+ * {@link Launcher} itself
  *
  * <p>Moreover, the add*-methods can be used by external clients
  * that do not want to use the
- * {@link org.junit.gen5.launcher.main.DiscoveryRequestBuilder}.
+ * {@link org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder}.
  *
  * @since 5.0
  */
