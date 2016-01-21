@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5;
+package org.junit.gen5.engine.junit5.extension;
 
 import static java.util.Arrays.asList;
 import static org.junit.gen5.api.Assertions.assertEquals;
@@ -30,6 +30,8 @@ import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.ExecutionEventRecorder;
+import org.junit.gen5.engine.junit5.AbstractJUnit5TestEngineTests;
+import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
@@ -38,7 +40,7 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  *
  * @since 5.0
  */
-public class MethodLevelCallbackTests extends AbstractJUnit5TestEngineTests {
+public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void beforeEachAndAfterEachCallbacks() {

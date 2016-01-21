@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5;
+package org.junit.gen5.engine.junit5.extension;
 
 import static org.junit.gen5.api.Assertions.*;
 
@@ -22,6 +22,8 @@ import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.engine.ExecutionEventRecorder;
+import org.junit.gen5.engine.junit5.AbstractJUnit5TestEngineTests;
+import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotationParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomType;

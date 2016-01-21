@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5;
+package org.junit.gen5.engine.junit5.extension;
 
 import static java.util.Arrays.asList;
 import static org.junit.gen5.api.Assertions.assertEquals;
@@ -29,15 +29,17 @@ import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.engine.ExecutionEventRecorder;
+import org.junit.gen5.engine.junit5.AbstractJUnit5TestEngineTests;
+import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests that verify support of {@link BeforeAll}, {@link AfterAll},
- * and {@link BeforeAllExtensionPoint} in the {@link JUnit5TestEngine}.
+ * {@link BeforeAllExtensionPoint}, and {@link AfterAllExtensionPoint} in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
-public class ClassLevelCallbackTests extends AbstractJUnit5TestEngineTests {
+public class BeforeAndAfterAllTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void beforeAllAndAfterAllCallbacks() {

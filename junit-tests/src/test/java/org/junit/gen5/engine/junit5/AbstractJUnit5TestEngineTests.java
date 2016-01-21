@@ -13,24 +13,19 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
-import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.launcher.*;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
  * Abstract base class for tests involving the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
-abstract class AbstractJUnit5TestEngineTests {
+public abstract class AbstractJUnit5TestEngineTests {
 
 	private final JUnit5TestEngine engine = new JUnit5TestEngine();
-
-	@BeforeEach
-	void initListeners() {
-	}
 
 	protected ExecutionEventRecorder executeTestsForClass(Class<?> testClass) {
 		return executeTests(request().select(forClass(testClass)).build());
