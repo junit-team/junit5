@@ -18,7 +18,10 @@ import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
 import org.junit.gen5.api.extension.ExtendWith;
@@ -32,6 +35,17 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  * Integration tests that verify support for {@link InstancePostProcessor}.
  */
 class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests {
+
+	static List<String> handlerCalls = new ArrayList<>();
+
+	@BeforeEach
+	void resetStatics() {
+		handlerCalls.clear();
+		RethrowException.handleExceptionCalled = false;
+		ConvertException.handleExceptionCalled = false;
+		SwallowException.handleExceptionCalled = false;
+		ShouldNotBeCalled.handleExceptionCalled = false;
+	}
 
 	@Test
 	void exceptionHandlerRethrowsException() {
@@ -84,6 +98,26 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 			event(engine(), finishedSuccessfully()));
 	}
 
+	@Test
+	void severalHandlersAreCalledInOrder() {
+		TestDiscoveryRequest request = request().select(forMethod(ATestCase.class, "testSeveral")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertTrue(ConvertException.handleExceptionCalled, "ConvertException should have been called");
+		assertTrue(RethrowException.handleExceptionCalled, "RethrowException should have been called");
+		assertTrue(SwallowException.handleExceptionCalled, "SwallowException should have been called");
+		assertFalse(ShouldNotBeCalled.handleExceptionCalled, "ShouldNotBeCalled should not have been called");
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(ATestCase.class), started()), //
+			event(test("testSeveral"), started()), //
+			event(test("testSeveral"), finishedSuccessfully()), //
+			event(container(ATestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
 	// -------------------------------------------------------------------
 
 	private static class ATestCase {
@@ -106,6 +140,14 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 			throw new RuntimeException("unchecked");
 		}
 
+		@Test
+		@ExtendWith(ConvertException.class)
+		@ExtendWith(RethrowException.class)
+		@ExtendWith(SwallowException.class)
+		@ExtendWith(ShouldNotBeCalled.class)
+		void testSeveral() {
+			throw new RuntimeException("unchecked");
+		}
 	}
 
 	private static class RethrowException implements ExceptionHandlerExtensionPoint {
@@ -142,6 +184,16 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 			assertTrue(throwable instanceof RuntimeException);
 			handleExceptionCalled = true;
 			throw new IOException("checked");
+		}
+
+	}
+	private static class ShouldNotBeCalled implements ExceptionHandlerExtensionPoint {
+
+		static boolean handleExceptionCalled = false;
+
+		@Override
+		public void handleException(TestExtensionContext context, Throwable throwable) throws Throwable {
+			handleExceptionCalled = true;
 		}
 	}
 }
