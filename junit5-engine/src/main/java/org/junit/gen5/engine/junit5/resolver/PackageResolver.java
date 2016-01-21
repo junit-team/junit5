@@ -10,10 +10,12 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
+import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
@@ -24,8 +26,10 @@ import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.junit5.descriptor.NewPackageTestDescriptor;
 
 public class PackageResolver extends JUnit5TestResolver {
-	public static NewPackageTestDescriptor descriptorForParentAndName(TestDescriptor parent, String name) {
-		return new NewPackageTestDescriptor(String.format("%s/[package:%s]", parent.getUniqueId(), name), name);
+	public static NewPackageTestDescriptor descriptorForParentAndName(TestDescriptor parent, String packageName) {
+		int index = packageName.lastIndexOf('.');
+		String name = index == -1 ? packageName : packageName.substring(index + 1);
+		return new NewPackageTestDescriptor(String.format("%s/[package:%s]", parent.getUniqueId(), name), packageName);
 	}
 
 	@Override
@@ -33,7 +37,7 @@ public class PackageResolver extends JUnit5TestResolver {
 		Preconditions.notNull(parent, "parent must not be null!");
 		Preconditions.notNull(discoveryRequest, "discoveryRequest must not be null!");
 
-		List<NewPackageTestDescriptor> packageDescriptors = new LinkedList<>();
+		List<TestDescriptor> packageDescriptors = new LinkedList<>();
 		if (parent.isRoot()) {
 			packageDescriptors.addAll(resolvePackagesFromSelectors(parent, discoveryRequest));
 		}
@@ -42,51 +46,53 @@ public class PackageResolver extends JUnit5TestResolver {
 			packageDescriptors.addAll(resolveSubpackages(parent, packageName));
 		}
 
-		addChildrenAndNotify(parent, packageDescriptors, discoveryRequest);
+		for (TestDescriptor child : packageDescriptors) {
+			getTestResolverRegistry().notifyResolvers(child, discoveryRequest);
+		}
 	}
 
-    private List<NewPackageTestDescriptor> resolvePackagesFromSelectors(TestDescriptor parent,
+	private List<TestDescriptor> resolvePackagesFromSelectors(TestDescriptor root,
 			EngineDiscoveryRequest discoveryRequest) {
 		// @formatter:off
-		return discoveryRequest.getSelectorsByType(PackageSelector.class).stream()
-				.map(PackageSelector::getPackageName)
-				.distinct()
-				.map(name -> descriptorForParentAndName(parent, name))
-				.collect(Collectors.toList());
-		// @formatter:on
+        return discoveryRequest.getSelectorsByType(PackageSelector.class).stream()
+                .distinct()
+                .map(packageSelector -> fetchBySelector(packageSelector, root))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(toList());
+        // @formatter:on
 	}
 
 	private List<NewPackageTestDescriptor> resolveSubpackages(TestDescriptor parent, String packageName) {
 		// @formatter:off
 		return ReflectionUtils.findAllPackagesInClasspathRoot(packageName).stream()
 				.map(Package::getName)
-                .map(name -> name.substring(packageName.length() + 1))
                 .map(name -> descriptorForParentAndName(parent, name))
-				.collect(Collectors.toList());
+                .peek(parent::addChild)
+				.collect(toList());
 		// @formatter:on
 	}
 
-    @Override
-    public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
-        if (selector instanceof PackageSelector) {
-            String packageName = ((PackageSelector) selector).getPackageName();
-            int splitterIndex = packageName.lastIndexOf('.');
-            if (splitterIndex == -1) {
-                return getTestDescriptor(root, packageName);
-            } else {
-                String parentPackageName = packageName.substring(0, splitterIndex);
-                String currentPackageName = packageName.substring(splitterIndex + 1);
+	@Override
+	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
+		if (selector instanceof PackageSelector) {
+			String packageName = ((PackageSelector) selector).getPackageName();
+			int splitterIndex = packageName.lastIndexOf('.');
+			if (splitterIndex == -1) {
+				return getTestDescriptor(root, packageName);
+			}
+			else {
+				String parentPackageName = packageName.substring(0, splitterIndex);
+				TestDescriptor parent = fetchBySelector(forPackageName(parentPackageName), root).orElse(root);
+				return getTestDescriptor(parent, packageName);
+			}
+		}
+		return Optional.empty();
+	}
 
-                TestDescriptor parent = fetchBySelector(PackageSelector.forPackageName(parentPackageName), root).orElse(root);
-                return getTestDescriptor(parent, currentPackageName);
-            }
-        }
-        return Optional.empty();
-    }
-
-    private Optional<TestDescriptor> getTestDescriptor(TestDescriptor parent, String packageName) {
-        Optional<TestDescriptor> child = Optional.of(descriptorForParentAndName(parent, packageName));
-        child.ifPresent(parent::addChild);
-        return child;
-    }
+	private Optional<TestDescriptor> getTestDescriptor(TestDescriptor parent, String packageName) {
+		Optional<TestDescriptor> child = Optional.of(descriptorForParentAndName(parent, packageName));
+		child.ifPresent(parent::addChild);
+		return child;
+	}
 }

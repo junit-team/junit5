@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.discovery;
 
+import java.util.Objects;
+
+import org.junit.gen5.commons.util.ToStringBuilder;
 import org.junit.gen5.engine.DiscoverySelector;
 
 /**
@@ -31,4 +34,23 @@ public class PackageSelector implements DiscoverySelector {
 		return packageName;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		PackageSelector that = (PackageSelector) o;
+		return Objects.equals(packageName, that.packageName);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(packageName);
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("packageName", packageName).toString();
+	}
 }

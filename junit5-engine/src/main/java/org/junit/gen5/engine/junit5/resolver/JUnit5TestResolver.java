@@ -34,16 +34,4 @@ public abstract class JUnit5TestResolver implements TestResolver {
 		this.testResolverRegistry = testResolverRegistry;
 	}
 
-	protected <T extends TestDescriptor> void addChildrenAndNotify(TestDescriptor parent, List<T> children,
-			EngineDiscoveryRequest discoveryRequest) {
-		for (T child : children) {
-			addChildAndNotify(parent, child, discoveryRequest);
-		}
-	}
-
-	protected <T extends TestDescriptor> void addChildAndNotify(TestDescriptor parent, T child,
-			EngineDiscoveryRequest discoveryRequest) {
-		parent.addChild(child);
-		getTestResolverRegistry().notifyResolvers(child, discoveryRequest);
-	}
 }

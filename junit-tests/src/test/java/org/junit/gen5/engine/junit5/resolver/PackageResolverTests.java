@@ -10,13 +10,11 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForParentAndName;
 import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,13 +22,24 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.discovery.PackageSelector;
-import org.junit.gen5.engine.junit5.descriptor.NewPackageTestDescriptor;
 import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
 import org.junit.gen5.engine.junit5.stubs.TestResolverRegistryMock;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
 public class PackageResolverTests {
 	private EngineDescriptor engineDescriptor;
+	private TestDescriptor packageLevel1;
+	private TestDescriptor packageLevel2;
+	private TestDescriptor packageLevel3;
+	private TestDescriptor packageLevel4;
+	private TestDescriptor packageLevel5;
+	private TestDescriptor packageLevel6;
+	private TestDescriptor packageLevel7;
+	private TestDescriptor packageLevel8a;
+	private TestDescriptor packageLevel8b;
+
+	private String testPackageName = "org.junit.gen5.engine.junit5.resolver.testpackage";
+
 	private TestResolverRegistryMock testResolverRegistryMock;
 	private PackageResolver resolver;
 
@@ -40,6 +49,15 @@ public class PackageResolverTests {
 
 		TestEngineStub testEngine = new TestEngineStub();
 		engineDescriptor = new EngineDescriptor(testEngine);
+		packageLevel1 = descriptorForParentAndName(engineDescriptor, "org");
+		packageLevel2 = descriptorForParentAndName(packageLevel1, "org.junit");
+		packageLevel3 = descriptorForParentAndName(packageLevel2, "org.junit.gen5");
+		packageLevel4 = descriptorForParentAndName(packageLevel3, "org.junit.gen5.engine");
+		packageLevel5 = descriptorForParentAndName(packageLevel4, "org.junit.gen5.engine.junit5");
+		packageLevel6 = descriptorForParentAndName(packageLevel5, "org.junit.gen5.engine.junit5.resolver");
+		packageLevel7 = descriptorForParentAndName(packageLevel6, testPackageName);
+		packageLevel8a = descriptorForParentAndName(packageLevel7, testPackageName + ".subpackage1");
+		packageLevel8b = descriptorForParentAndName(packageLevel7, testPackageName + ".subpackage2");
 
 		resolver = new PackageResolver();
 		resolver.initialize(testEngine, testResolverRegistryMock);
@@ -53,69 +71,36 @@ public class PackageResolverTests {
 
 	@Test
 	void givenAPackageSelector_resolvesThePackage() throws Exception {
-		PackageSelector selector = forPackageName("org.junit.gen5.engine.junit5.resolver.testpackage");
-
+		PackageSelector selector = forPackageName(testPackageName);
 		resolver.resolveAllFrom(engineDescriptor, request().select(selector).build());
-
-		assertThat(testResolverRegistryMock.testDescriptors).containsOnly(
-			descriptorForParentAndName(engineDescriptor, "org.junit.gen5.engine.junit5.resolver.testpackage"));
-		verifyDescriptor(testResolverRegistryMock.testDescriptors.get(0),
-			"org.junit.gen5.engine.junit5.resolver.testpackage", engineDescriptor);
+		assertThat(testResolverRegistryMock.testDescriptors).containsOnly(packageLevel7);
 	}
 
 	@Test
 	void givenDuplicatedPackageSelector_resolvesThePackageOnlyOnce() throws Exception {
-		PackageSelector selector = forPackageName("org.junit.gen5.engine.junit5.resolver.testpackage");
-
+		PackageSelector selector = forPackageName(testPackageName);
 		resolver.resolveAllFrom(engineDescriptor, request().select(selector, selector).build());
-
-		assertThat(testResolverRegistryMock.testDescriptors).containsOnlyOnce(
-			descriptorForParentAndName(engineDescriptor, "org.junit.gen5.engine.junit5.resolver.testpackage"));
-		verifyDescriptor(testResolverRegistryMock.testDescriptors.get(0),
-			"org.junit.gen5.engine.junit5.resolver.testpackage", engineDescriptor);
+		assertThat(testResolverRegistryMock.testDescriptors).containsOnlyOnce(packageLevel7);
 	}
 
 	@Test
 	void givenAPackageSelector_resolvesPackagesRecursively() throws Exception {
-		PackageSelector selector = forPackageName("org.junit.gen5.engine.junit5.resolver.testpackage");
-		NewPackageTestDescriptor firstLevelPackage = descriptorForParentAndName(engineDescriptor,
-			"org.junit.gen5.engine.junit5.resolver.testpackage");
-		engineDescriptor.addChild(firstLevelPackage);
-
-		resolver.resolveAllFrom(firstLevelPackage, request().select(selector).build());
-
-		assertThat(testResolverRegistryMock.testDescriptors).containsOnly(
-			descriptorForParentAndName(firstLevelPackage, "subpackage1"),
-			descriptorForParentAndName(firstLevelPackage, "subpackage2"));
-
-		verifyDescriptor(testResolverRegistryMock.testDescriptors.get(0), "subpackage1", firstLevelPackage);
-		verifyDescriptor(testResolverRegistryMock.testDescriptors.get(1), "subpackage2", firstLevelPackage);
-	}
-
-	private void verifyDescriptor(TestDescriptor testDescriptor, String packageName, TestDescriptor parent) {
-		assertThat(testDescriptor.getUniqueId()).isEqualTo(parent.getUniqueId() + "/[package:" + packageName + "]");
-		assertThat(testDescriptor.getName()).isEqualTo(packageName);
-		assertThat(testDescriptor.getDisplayName()).isEqualTo(packageName);
-		assertThat(testDescriptor.isRoot()).isFalse();
-		assertThat(testDescriptor.isContainer()).isTrue();
-		assertThat(testDescriptor.isTest()).isFalse();
-		assertThat(testDescriptor.getParent().isPresent()).isTrue();
-		assertThat(testDescriptor.getParent().get()).isEqualTo(parent);
+		PackageSelector selector = forPackageName(testPackageName);
+		packageLevel6.addChild(packageLevel7);
+		resolver.resolveAllFrom(packageLevel7, request().select(selector).build());
+		assertThat(testResolverRegistryMock.testDescriptors).containsOnly(packageLevel8a, packageLevel8b);
 	}
 
 	@Test
 	void givenAPackageSelector_fetchesTheTreeUpToTheRoot() {
-		String packageName = "org.junit.gen5.engine.junit5.resolver.testpackage";
-		String[] packageParts = packageName.split("\\.");
-
-		PackageSelector selector = forPackageName(packageName);
+		PackageSelector selector = forPackageName(testPackageName);
 		Optional<TestDescriptor> testDescriptor = resolver.fetchBySelector(selector, engineDescriptor);
 
 		assertThat(testDescriptor.isPresent()).isTrue();
 		assertThat(this.engineDescriptor.getChildren()).hasSize(1);
 
 		Set<? extends TestDescriptor> packageDescriptors = this.engineDescriptor.allDescendants();
-		List<String> descriptorNames = packageDescriptors.stream().map(TestDescriptor::getName).collect(toList());
-		assertThat(descriptorNames).containsOnly(packageParts).doesNotHaveDuplicates();
+		assertThat(packageDescriptors).containsOnly(packageLevel1, packageLevel2, packageLevel3, packageLevel4,
+			packageLevel5, packageLevel6, packageLevel7).doesNotHaveDuplicates();
 	}
 }

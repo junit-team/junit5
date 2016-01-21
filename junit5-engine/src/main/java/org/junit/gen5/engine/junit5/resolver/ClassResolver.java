@@ -68,7 +68,8 @@ public class ClassResolver extends JUnit5TestResolver {
 			PackageSelector packageSelector = forPackageName(testClass.getPackage().getName());
 			TestDescriptor parent = getTestResolverRegistry().fetchParent(packageSelector, root);
 			ClassTestDescriptor child = descriptorForParentAndClass(parent, testClass);
-			addChildAndNotify(parent, child, discoveryRequest);
+			parent.addChild(child);
+			getTestResolverRegistry().notifyResolvers(child, discoveryRequest);
 		}
 	}
 
@@ -81,7 +82,10 @@ public class ClassResolver extends JUnit5TestResolver {
                 .collect(toList());
         // @formatter:on
 
-		addChildrenAndNotify(parent, testClasses, discoveryRequest);
+		for (ClassTestDescriptor child : testClasses) {
+			parent.addChild(child);
+			getTestResolverRegistry().notifyResolvers(child, discoveryRequest);
+		}
 	}
 
 	private boolean isTopLevelTestClass(Class<?> candidate) {
