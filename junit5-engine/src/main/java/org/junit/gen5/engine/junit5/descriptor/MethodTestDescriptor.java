@@ -13,10 +13,10 @@ package org.junit.gen5.engine.junit5.descriptor;
 import static org.junit.gen5.engine.junit5.descriptor.MethodInvocationContextFactory.methodInvocationContext;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
@@ -223,11 +223,8 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	private List<ExceptionHandlerExtensionPoint> collectExceptionHandlerExtensionPoints(
 			ExtensionRegistry extensionRegistry) {
-		List<ExceptionHandlerExtensionPoint> exceptionHandlers = new ArrayList<>();
-
-		extensionRegistry.stream(ExceptionHandlerExtensionPoint.class, ApplicationOrder.FORWARD).forEach(
-			registeredExtensionPoint -> exceptionHandlers.add(registeredExtensionPoint.getExtensionPoint()));
-		return exceptionHandlers;
+		return extensionRegistry.stream(ExceptionHandlerExtensionPoint.class, ApplicationOrder.FORWARD).map(
+			RegisteredExtensionPoint::getExtensionPoint).collect(Collectors.toList());
 	}
 
 	private void invokeAfterEachExtensionPoints(ExtensionRegistry extensionRegistry,
