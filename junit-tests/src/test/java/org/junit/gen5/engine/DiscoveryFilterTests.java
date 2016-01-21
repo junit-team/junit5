@@ -20,7 +20,6 @@ import static org.junit.gen5.engine.FilterResult.included;
 import java.util.StringJoiner;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.launcher.DiscoveryFilterMock;
 
@@ -28,7 +27,7 @@ class DiscoveryFilterTests {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	void allOfWithoutFilter() {
+	void combineWithoutFilter() {
 		DiscoveryFilter<Object>[] noFilters = new DiscoveryFilter[0];
 		DiscoveryFilter<Object> combinedFilter = DiscoveryFilter.combine(noFilters);
 
@@ -37,14 +36,14 @@ class DiscoveryFilterTests {
 	}
 
 	@Test
-	void allOfWithSingleFilter() {
+	void combineWithSingleFilter() {
 		DiscoveryFilter<Class<?>> singleFilter = ClassFilter.byNamePattern(".*ring.*");
 		DiscoveryFilter<Class<?>> combined = DiscoveryFilter.combine(singleFilter);
 		assertSame(singleFilter, combined);
 	}
 
 	@Test
-	void allOfWithMultipleFiltersIsConjunction() {
+	void combineWithMultipleFiltersIsConjunction() {
 		DiscoveryFilter<Class<?>> firstFilter = ClassFilter.byNamePattern(".*ring.*");
 		DiscoveryFilter<Class<?>> secondFilter = ClassFilter.byNamePattern(".*Join.*");
 
@@ -55,7 +54,7 @@ class DiscoveryFilterTests {
 	}
 
 	@Test
-	void allOfWithMultipleFiltersHasReadableDescription() {
+	void combineWithMultipleFiltersHasReadableDescription() {
 		DiscoveryFilter<Object> firstFilter = new DiscoveryFilterMock(o -> excluded("wrong"), () -> "1st");
 		DiscoveryFilter<Object> secondFilter = new DiscoveryFilterMock(o -> included("right"), () -> "2nd");
 
