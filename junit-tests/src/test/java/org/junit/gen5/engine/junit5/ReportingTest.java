@@ -39,23 +39,23 @@ public class ReportingTest extends AbstractJUnit5TestEngineTests {
 		assertEquals(3L, eventRecorder.getReportingEntryPublishedCount(), "# report entries published");
 	}
 
-}
+	static class MyReportingTestCase {
 
-class MyReportingTestCase {
+		@BeforeEach
+		void before(TestReporter reporter) {
+			reporter.publishEntry(new ReportingEntry(new HashMap<>()));
+		}
 
-	@BeforeEach
-	void before(TestReporter reporter) {
-		reporter.publishEntry(new ReportingEntry(new HashMap<>()));
-	}
+		@AfterEach
+		void after(TestReporter reporter) {
+			reporter.publishEntry(new ReportingEntry(new HashMap<>()));
+		}
 
-	@AfterEach
-	void after(TestReporter reporter) {
-		reporter.publishEntry(new ReportingEntry(new HashMap<>()));
-	}
+		@Test
+		void succeedingTest(TestReporter reporter) {
+			reporter.publishEntry(new ReportingEntry(new HashMap<>()));
+		}
 
-	@Test
-	void succeedingTest(TestReporter reporter) {
-		reporter.publishEntry(new ReportingEntry(new HashMap<>()));
 	}
 
 }
