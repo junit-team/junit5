@@ -26,12 +26,14 @@ import org.junit.gen5.engine.junit5.stubs.TestResolverRegistryMock;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
 public class ClassResolverTests {
+	private String testPackageName;
 	private EngineDescriptor engineDescriptor;
 	private TestResolverRegistryMock testResolverRegistryMock;
 	private ClassResolver resolver;
 
 	@BeforeEach
 	void setUp() {
+		testPackageName = SingleTestClass.class.getPackage().getName();
 		testResolverRegistryMock = new TestResolverRegistryMock();
 
 		TestEngineStub testEngine = new TestEngineStub();
@@ -49,8 +51,7 @@ public class ClassResolverTests {
 
 	@Test
 	void givenAClassSelector_resolvesTheClass() {
-		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor,
-			"org.junit.gen5.engine.junit5.resolver.testpackage");
+		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor, testPackageName);
 		engineDescriptor.addChild(testPackage);
 
 		testResolverRegistryMock.fetchParentFunction = selector -> testPackage;
@@ -68,8 +69,7 @@ public class ClassResolverTests {
 
 	@Test
 	void givenAPackageAndAClassSelector_resolvesTheClass_AndAttachesItToTheExistingTree() {
-		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor,
-			"org.junit.gen5.engine.junit5.resolver.testpackage");
+		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor, testPackageName);
 		engineDescriptor.addChild(testPackage);
 		testResolverRegistryMock.fetchParentFunction = selector -> testPackage;
 
@@ -82,8 +82,7 @@ public class ClassResolverTests {
 
 	@Test
 	void whenNotifiedWithAPackageTestDescriptor_resolvesAllTopLevelClassesInThePackage() throws Exception {
-		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor,
-			"org.junit.gen5.engine.junit5.resolver.testpackage");
+		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor, testPackageName);
 		engineDescriptor.addChild(testPackage);
 
 		resolver.resolveAllFrom(testPackage, request().build());
