@@ -41,6 +41,7 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 	private TestDescriptor packageLevel7;
 	private TestDescriptor packageLevel8a;
 	private TestDescriptor packageLevel8b;
+	private TestDescriptor packageLevel8c;
 
 	private String testPackageName = "org.junit.gen5.engine.junit5.resolver.testpackage";
 	private TestEngine testEngine;
@@ -61,6 +62,7 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 		packageLevel7 = descriptorForParentAndName(packageLevel6, testPackageName);
 		packageLevel8a = descriptorForParentAndName(packageLevel7, testPackageName + ".subpackage1");
 		packageLevel8b = descriptorForParentAndName(packageLevel7, testPackageName + ".subpackage2");
+		packageLevel8c = descriptorForParentAndName(packageLevel7, testPackageName + ".notatestclass");
 	}
 
 	@Test
@@ -71,7 +73,8 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 		List<TestDescriptor> packageDescriptors = this.engineDescriptor.allDescendants().stream().filter(
 			PackageTestDescriptor.class::isInstance).collect(toList());
 		assertThat(packageDescriptors).containsOnly(packageLevel1, packageLevel2, packageLevel3, packageLevel4,
-			packageLevel5, packageLevel6, packageLevel7, packageLevel8a, packageLevel8b).doesNotHaveDuplicates();
+			packageLevel5, packageLevel6, packageLevel7, packageLevel8a, packageLevel8b,
+			packageLevel8c).doesNotHaveDuplicates();
 
 		assertThat(engineDescriptor.isRoot()).isTrue();
 		assertThat(engineDescriptor.isContainer()).isTrue();
@@ -90,7 +93,7 @@ public class PreconfigureTestResolverRegistryRegressionTests {
                         assertThat(testDescriptor.getChildren()).hasSize(1);
                     }
                     else {
-                        assertThat(testDescriptor.getChildren()).hasSize(5);
+                        assertThat(testDescriptor.getChildren()).hasSize(6);
                     }
                 });
         // @formatter:on

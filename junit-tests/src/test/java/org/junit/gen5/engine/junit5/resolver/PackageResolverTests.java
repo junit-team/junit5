@@ -37,6 +37,7 @@ public class PackageResolverTests {
 	private TestDescriptor packageLevel7;
 	private TestDescriptor packageLevel8a;
 	private TestDescriptor packageLevel8b;
+	private TestDescriptor packageLevel8c;
 
 	private String testPackageName = "org.junit.gen5.engine.junit5.resolver.testpackage";
 
@@ -58,6 +59,7 @@ public class PackageResolverTests {
 		packageLevel7 = descriptorForParentAndName(packageLevel6, testPackageName);
 		packageLevel8a = descriptorForParentAndName(packageLevel7, testPackageName + ".subpackage1");
 		packageLevel8b = descriptorForParentAndName(packageLevel7, testPackageName + ".subpackage2");
+		packageLevel8c = descriptorForParentAndName(packageLevel7, testPackageName + ".notatestclass");
 
 		resolver = new PackageResolver();
 		resolver.initialize(testEngine, testResolverRegistryMock);
@@ -88,7 +90,8 @@ public class PackageResolverTests {
 		PackageSelector selector = forPackageName(testPackageName);
 		packageLevel6.addChild(packageLevel7);
 		resolver.resolveAllFrom(packageLevel7, request().select(selector).build());
-		assertThat(testResolverRegistryMock.testDescriptors).containsOnly(packageLevel8a, packageLevel8b);
+		assertThat(testResolverRegistryMock.testDescriptors).containsOnly(packageLevel8a, packageLevel8b,
+			packageLevel8c);
 	}
 
 	@Test
