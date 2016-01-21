@@ -58,11 +58,11 @@ public class ReportingTest extends AbstractJUnit5TestEngineTests {
 			reporter.publishEntry(new ReportEntry(new HashMap<>()));
 		}
 
-        @Test
-        @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
-        void testWithNullReportData(TestReporter reporter) {
-            expectThrows(PreconditionViolationException.class, () -> reporter.publishEntry(new ReportEntry(null)));
-        }
+		@Test
+		@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+		void testWithNullReportData(TestReporter reporter) {
+			expectThrows(PreconditionViolationException.class, () -> reporter.publishEntry(new ReportEntry(null)));
+		}
 
 	}
 
