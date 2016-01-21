@@ -11,6 +11,7 @@
 package org.junit.gen5.commons.reporting;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Map;
 
 import org.junit.gen5.commons.util.Preconditions;
@@ -33,7 +34,16 @@ public class ReportEntry {
 	 * @param values the values to be published
 	 */
 	public ReportEntry(Map<String, String> values) {
-		this.values = Preconditions.notNull(values, "values to be reported must not be null");
+		Preconditions.notNull(values, "values to be reported must not be null");
+		this.values = values;
+	}
+
+	/**
+	 * @param key the key of the value to be published
+	 * @param value the value to be published
+	 */
+	public ReportEntry(String key, String value) {
+		this(Collections.singletonMap(key, value));
 	}
 
 	/**

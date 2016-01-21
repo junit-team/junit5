@@ -38,7 +38,7 @@ public class ReportingTest extends AbstractJUnit5TestEngineTests {
 		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(5L, eventRecorder.getReportingEntryPublishedCount(), "# report entries published");
+		assertEquals(6L, eventRecorder.getReportingEntryPublishedCount(), "# report entries published");
 	}
 
 	static class MyReportingTestCase {
@@ -56,6 +56,7 @@ public class ReportingTest extends AbstractJUnit5TestEngineTests {
 		@Test
 		void succeedingTest(TestReporter reporter) {
 			reporter.publishEntry(new ReportEntry(new HashMap<>()));
+			reporter.publishEntry("userName", "dk38");
 		}
 
 		@Test
