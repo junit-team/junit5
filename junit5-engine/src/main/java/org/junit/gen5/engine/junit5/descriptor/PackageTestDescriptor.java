@@ -13,10 +13,10 @@ package org.junit.gen5.engine.junit5.descriptor;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.support.hierarchical.Container;
 
-public class NewPackageTestDescriptor extends JUnit5TestDescriptor implements Container<JUnit5EngineExecutionContext> {
+public class PackageTestDescriptor extends JUnit5TestDescriptor implements Container<JUnit5EngineExecutionContext> {
 	private final String packageName;
 
-	public NewPackageTestDescriptor(String uniqueId, String packageName) {
+	public PackageTestDescriptor(String uniqueId, String packageName) {
 		super(uniqueId);
 		this.packageName = packageName;
 		// TODO add valid TestSource

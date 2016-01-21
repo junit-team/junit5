@@ -27,7 +27,7 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.NewPackageTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 
 public class ClassResolver extends JUnit5TestResolver {
 	public static ClassTestDescriptor descriptorForParentAndClass(TestDescriptor parent, Class<?> testClass) {
@@ -44,8 +44,8 @@ public class ClassResolver extends JUnit5TestResolver {
 		if (parent.isRoot()) {
 			resolveClassesFromSelectors(parent, discoveryRequest);
 		}
-		else if (parent instanceof NewPackageTestDescriptor) {
-			String packageName = ((NewPackageTestDescriptor) parent).getPackageName();
+		else if (parent instanceof PackageTestDescriptor) {
+			String packageName = ((PackageTestDescriptor) parent).getPackageName();
 			resolveTopLevelClassesInPackage(packageName, parent, discoveryRequest);
 		}
 

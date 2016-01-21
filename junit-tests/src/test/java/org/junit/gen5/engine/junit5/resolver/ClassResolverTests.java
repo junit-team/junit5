@@ -18,7 +18,7 @@ import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.junit5.descriptor.NewPackageTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 import org.junit.gen5.engine.junit5.resolver.testpackage.NestingTestClass;
 import org.junit.gen5.engine.junit5.resolver.testpackage.SingleTestClass;
 import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
@@ -49,7 +49,7 @@ public class ClassResolverTests {
 
 	@Test
 	void givenAClassSelector_resolvesTheClass() {
-		NewPackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor,
+		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor,
 			"org.junit.gen5.engine.junit5.resolver.testpackage");
 		engineDescriptor.addChild(testPackage);
 
@@ -68,7 +68,7 @@ public class ClassResolverTests {
 
 	@Test
 	void givenAPackageAndAClassSelector_resolvesTheClass_AndAttachesItToTheExistingTree() {
-		NewPackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor,
+		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor,
 			"org.junit.gen5.engine.junit5.resolver.testpackage");
 		engineDescriptor.addChild(testPackage);
 		testResolverRegistryMock.fetchParentFunction = selector -> testPackage;
@@ -82,7 +82,7 @@ public class ClassResolverTests {
 
 	@Test
 	void whenNotifiedWithAPackageTestDescriptor_resolvesAllTopLevelClassesInThePackage() throws Exception {
-		NewPackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor,
+		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor,
 			"org.junit.gen5.engine.junit5.resolver.testpackage");
 		engineDescriptor.addChild(testPackage);
 

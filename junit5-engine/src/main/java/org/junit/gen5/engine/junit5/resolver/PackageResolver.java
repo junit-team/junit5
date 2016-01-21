@@ -23,13 +23,13 @@ import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.discovery.PackageSelector;
-import org.junit.gen5.engine.junit5.descriptor.NewPackageTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 
 public class PackageResolver extends JUnit5TestResolver {
-	public static NewPackageTestDescriptor descriptorForParentAndName(TestDescriptor parent, String packageName) {
+	public static PackageTestDescriptor descriptorForParentAndName(TestDescriptor parent, String packageName) {
 		int index = packageName.lastIndexOf('.');
 		String name = index == -1 ? packageName : packageName.substring(index + 1);
-		return new NewPackageTestDescriptor(String.format("%s/[package:%s]", parent.getUniqueId(), name), packageName);
+		return new PackageTestDescriptor(String.format("%s/[package:%s]", parent.getUniqueId(), name), packageName);
 	}
 
 	@Override
@@ -41,8 +41,8 @@ public class PackageResolver extends JUnit5TestResolver {
 		if (parent.isRoot()) {
 			packageDescriptors.addAll(resolvePackagesFromSelectors(parent, discoveryRequest));
 		}
-		else if (parent instanceof NewPackageTestDescriptor) {
-			String packageName = ((NewPackageTestDescriptor) parent).getPackageName();
+		else if (parent instanceof PackageTestDescriptor) {
+			String packageName = ((PackageTestDescriptor) parent).getPackageName();
 			packageDescriptors.addAll(resolveSubpackages(parent, packageName));
 		}
 
@@ -63,7 +63,7 @@ public class PackageResolver extends JUnit5TestResolver {
         // @formatter:on
 	}
 
-	private List<NewPackageTestDescriptor> resolveSubpackages(TestDescriptor parent, String packageName) {
+	private List<PackageTestDescriptor> resolveSubpackages(TestDescriptor parent, String packageName) {
 		// @formatter:off
 		return ReflectionUtils.findAllPackagesInClasspathRoot(packageName).stream()
 				.map(Package::getName)

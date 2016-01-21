@@ -24,7 +24,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.NewPackageTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 import org.junit.gen5.engine.junit5.resolver.testpackage.SingleTestClass;
 import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
@@ -69,7 +69,7 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 		registry.notifyResolvers(engineDescriptor, discoveryRequest);
 
 		List<TestDescriptor> packageDescriptors = this.engineDescriptor.allDescendants().stream().filter(
-			NewPackageTestDescriptor.class::isInstance).collect(toList());
+			PackageTestDescriptor.class::isInstance).collect(toList());
 		assertThat(packageDescriptors).containsOnly(packageLevel1, packageLevel2, packageLevel3, packageLevel4,
 			packageLevel5, packageLevel6, packageLevel7, packageLevel8a, packageLevel8b).doesNotHaveDuplicates();
 
@@ -80,7 +80,7 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 
 		// @formatter:off
         this.engineDescriptor.allDescendants().stream()
-                .filter(NewPackageTestDescriptor.class::isInstance)
+                .filter(PackageTestDescriptor.class::isInstance)
                 .forEach(testDescriptor -> {
                     assertThat(testDescriptor.isRoot()).isFalse();
                     assertThat(testDescriptor.isContainer()).isTrue();
@@ -114,7 +114,7 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 		registry.notifyResolvers(engineDescriptor, discoveryRequest);
 
 		List<TestDescriptor> packageDescriptors = this.engineDescriptor.allDescendants().stream().filter(
-			NewPackageTestDescriptor.class::isInstance).collect(toList());
+			PackageTestDescriptor.class::isInstance).collect(toList());
 		assertThat(packageDescriptors).containsOnly(packageLevel1, packageLevel2, packageLevel3, packageLevel4,
 			packageLevel5, packageLevel6, packageLevel7).doesNotHaveDuplicates();
 
@@ -125,7 +125,7 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 
 		// @formatter:off
         this.engineDescriptor.allDescendants().stream()
-                .filter(NewPackageTestDescriptor.class::isInstance)
+                .filter(PackageTestDescriptor.class::isInstance)
                 .forEach(testDescriptor -> {
                     assertThat(testDescriptor.isRoot()).isFalse();
                     assertThat(testDescriptor.isContainer()).isTrue();
