@@ -76,4 +76,10 @@ public class ReportEntry {
 		return creationTimestamp;
 	}
 
+	@Override
+	public String toString() {
+		//migrate to org.junit.gen5.commons.util.ToStringBuilder?
+		return this.values.toString() + " @ " + this.creationTimestamp;
+	}
+
 }

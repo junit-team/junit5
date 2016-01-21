@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
@@ -71,6 +72,12 @@ class TestExecutionListenerRegistry {
 		public void testPlanExecutionFinished(TestPlan testPlan) {
 			notifyTestExecutionListeners(listener -> listener.testPlanExecutionFinished(testPlan));
 		}
+
+		@Override
+		public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
+			notifyTestExecutionListeners(listener -> listener.reportingEntryPublished(testIdentifier, entry));
+		}
+
 	}
 
 }

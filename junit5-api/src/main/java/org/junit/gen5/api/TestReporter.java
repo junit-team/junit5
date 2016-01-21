@@ -10,6 +10,8 @@
 
 package org.junit.gen5.api;
 
+import java.util.Map;
+
 import org.junit.gen5.commons.reporting.ReportEntry;
 
 /**
@@ -35,6 +37,10 @@ public interface TestReporter {
 
 	default void publishEntry(String key, String value) {
 		this.publishEntry(ReportEntry.from(key, value));
+	}
+
+	default void publishEntry(Map<String, String> values) {
+		this.publishEntry(ReportEntry.from(values));
 	}
 
 }

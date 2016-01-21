@@ -22,7 +22,8 @@ task runSampleTestCases(type: JavaExec) {
 	// args '-h'
 	// args 'com.example'
 	// args '--all', '-n', '.*TestCase', '-t', 'fast'
-	args '--all', '--hide-details'
+//	args '--all', '--hide-details'
+	args '--all'
 }
 
 test {

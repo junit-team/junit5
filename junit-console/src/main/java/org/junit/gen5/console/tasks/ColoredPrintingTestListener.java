@@ -14,6 +14,7 @@ import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.*;
 
 import java.io.PrintWriter;
 
+import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestExecutionResult.Status;
 import org.junit.gen5.launcher.TestExecutionListener;
@@ -65,6 +66,12 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 		Color color = determineColor(testExecutionResult.getStatus());
 		printlnTestDescriptor(color, "Finished:", testIdentifier);
 		testExecutionResult.getThrowable().ifPresent(t -> printlnException(color, t));
+	}
+
+	@Override
+	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
+		printlnTestDescriptor(PURPLE, "Reported:", testIdentifier);
+		printlnMessage(PURPLE, "Reported values", entry.toString());
 	}
 
 	private Color determineColor(Status status) {
