@@ -18,27 +18,44 @@ import java.util.stream.Stream;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
 
+/**
+ * {@code UniqueId} is a class to encapsulate the creation, parsing and display of unique IDs for {@link TestDescriptor}.
+ *
+ * <p>Instances of this class have value semantics and are immutable.</p>
+ */
 public class UniqueId implements Cloneable {
 
+	/**
+	 * Create a {@code UniqueId} by parsing its string representation {@code uniqueIdString}.
+	 *
+	 * <p>Throws {@link org.junit.gen5.commons.JUnitException} if the string cannot be parsed.
+	 *
+	 * @return a properly constructed {@code UniqueId}
+	 */
 	public static UniqueId parse(String uniqueIdString) {
 		return new UniqueIdParser(uniqueIdString, SEGMENT_DELIMITER, TYPE_VALUE_SEPARATOR).parse();
 	}
-
-	public static final String TYPE_ENGINE = "engine";
 
 	private static final String SEGMENT_DELIMITER = "/";
 	private static final String TYPE_VALUE_SEPARATOR = ":";
 
 	private final List<Segment> segments = new ArrayList<>();
 
-	public UniqueId(String engineId) {
-		segments.add(new Segment(TYPE_ENGINE, engineId));
+	/**
+	 * Create an engine's unique ID by providing the node type {@code segmentType} and {@code engineId}
+	 */
+	public static UniqueId forEngine(String segmentType, String engineId) {
+		List<Segment> segments = Collections.singletonList(new Segment(segmentType, engineId));
+		return new UniqueId(segments);
 	}
 
 	UniqueId(List<Segment> segments) {
 		this.segments.addAll(segments);
 	}
 
+	/**
+	 * Create and deliver the string representation of the {@code UniqueId}
+	 */
 	public String getUniqueString() {
 		Stream<String> segmentStream = segments.stream().map(this::describe);
 		return StringUtils.join(segmentStream, SEGMENT_DELIMITER);
@@ -52,9 +69,18 @@ public class UniqueId implements Cloneable {
 		return Collections.unmodifiableList(segments);
 	}
 
-	public UniqueId append(String type, String value) {
+	/**
+	 * Construct a new  {@code UniqueId} by appending a {@link Segment} to the end of the current instance
+	 * with {@code segmentType} and {@code value}.
+	 *
+	 * <p>The current instance is left unchanged.</p>
+	 *
+	 * <p>Both {@code segmentType} and {@code segmentType} must not contain any of the special characters used
+	 * fot constructing the string representation. This allows more robust parsing.</p>
+	 */
+	public UniqueId append(String segmentType, String value) {
 		UniqueId clone = new UniqueId(segments);
-		clone.segments.add(new Segment(type, value));
+		clone.segments.add(new Segment(segmentType, value));
 		return clone;
 	}
 

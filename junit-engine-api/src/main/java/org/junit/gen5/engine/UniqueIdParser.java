@@ -22,27 +22,18 @@ import org.junit.gen5.engine.UniqueId.Segment;
 class UniqueIdParser {
 	private final String uniqueIdString;
 	private final String segmentDelimiter;
-	private final String typeValueSeparator;
 	private final Pattern segmentPattern;
 
 	public UniqueIdParser(String uniqueIdString, String segmentDelimiter, String typeValueSeparator) {
 		this.uniqueIdString = uniqueIdString;
 		this.segmentDelimiter = segmentDelimiter;
-		this.typeValueSeparator = typeValueSeparator;
 		this.segmentPattern = Pattern.compile("\\[(.+)\\" + typeValueSeparator + "(.+)\\]");
 	}
 
 	UniqueId parse() {
 		String[] parts = uniqueIdString.split(segmentDelimiter);
-		List<Segment> segments = Arrays.stream(parts).map(part -> createSegment(part)).collect(Collectors.toList());
-		checkFirstSegmentIsEngine(segments);
+		List<Segment> segments = Arrays.stream(parts).map(this::createSegment).collect(Collectors.toList());
 		return new UniqueId(segments);
-	}
-
-	private void checkFirstSegmentIsEngine(List<Segment> segments) {
-		if (!segments.get(0).getType().equals(UniqueId.TYPE_ENGINE))
-			throw new JUnitException(String.format("UniqueId must start with engine segment but starts with type '%s'",
-				segments.get(0).getType()));
 	}
 
 	private Segment createSegment(String segmentString) {

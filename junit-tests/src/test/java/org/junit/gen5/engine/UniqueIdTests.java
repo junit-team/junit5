@@ -25,7 +25,7 @@ class UniqueIdTests {
 
 		@Test
 		void uniqueIdMustBeCreatedWithEngineId() {
-			UniqueId uniqueId = new UniqueId(ENGINE_ID);
+			UniqueId uniqueId = UniqueId.forEngine("engine", ENGINE_ID);
 
 			Assertions.assertEquals("[engine:junit5]", uniqueId.getUniqueString());
 			assertEngine(uniqueId, "junit5");
@@ -33,7 +33,7 @@ class UniqueIdTests {
 
 		@Test
 		void appendingOneSegment() {
-			UniqueId engineId = new UniqueId(ENGINE_ID);
+			UniqueId engineId = UniqueId.forEngine("engine", ENGINE_ID);
 			UniqueId classId = engineId.append("class", "org.junit.MyClass");
 
 			Assertions.assertEquals("[engine:junit5]/[class:org.junit.MyClass]", classId.getUniqueString());
@@ -43,7 +43,7 @@ class UniqueIdTests {
 
 		@Test
 		void appendingSegmentLeavesOriginialUnchanged() {
-			UniqueId uniqueId = new UniqueId(ENGINE_ID);
+			UniqueId uniqueId = UniqueId.forEngine("engine", ENGINE_ID);
 			uniqueId.append("class", "org.junit.MyClass");
 
 			Assertions.assertEquals("[engine:junit5]", uniqueId.getUniqueString());
@@ -51,7 +51,7 @@ class UniqueIdTests {
 
 		@Test
 		void appendingSeveralSegments() {
-			UniqueId engineId = new UniqueId(ENGINE_ID);
+			UniqueId engineId = UniqueId.forEngine("engine", ENGINE_ID);
 			UniqueId uniqueId = engineId.append("t1", "v1").append("t2", "v2").append("t3", "v3");
 
 			Assertions.assertEquals("[engine:junit5]/[t1:v1]/[t2:v2]/[t3:v3]", uniqueId.getUniqueString());
@@ -63,6 +63,7 @@ class UniqueIdTests {
 	@Nested
 	class Parsing {
 
+		@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
 		@Test
 		void parseError() {
 			Throwable throwable = Assertions.expectThrows(JUnitException.class, () -> UniqueId.parse("malformed uid"));
@@ -83,12 +84,6 @@ class UniqueIdTests {
 			assertSegment(parsedId.getSegments().get(2), "method", "myMethod");
 		}
 
-		@Test
-		void parseUniqueIdThatDoesNotStartWithEngine() {
-			Throwable throwable = Assertions.expectThrows(JUnitException.class,
-				() -> UniqueId.parse("[not-engine:anything]"));
-			Assertions.assertTrue(throwable.getMessage().contains("not-engine"));
-		}
 	}
 
 	@Nested
@@ -96,8 +91,8 @@ class UniqueIdTests {
 
 		@Test
 		void sameEnginesAreEqual() {
-			UniqueId id1 = new UniqueId("junit5");
-			UniqueId id2 = new UniqueId("junit5");
+			UniqueId id1 = UniqueId.forEngine("engine", "junit5");
+			UniqueId id2 = UniqueId.forEngine("engine", "junit5");
 
 			Assertions.assertTrue(id1.equals(id2));
 			Assertions.assertTrue(id2.equals(id1));
@@ -106,8 +101,8 @@ class UniqueIdTests {
 
 		@Test
 		void differentEnginesAreNotEqual() {
-			UniqueId id1 = new UniqueId("junit4");
-			UniqueId id2 = new UniqueId("junit5");
+			UniqueId id1 = UniqueId.forEngine("engine", "junit4");
+			UniqueId id2 = UniqueId.forEngine("engine", "junit5");
 
 			Assertions.assertFalse(id1.equals(id2));
 			Assertions.assertFalse(id2.equals(id1));
@@ -115,8 +110,8 @@ class UniqueIdTests {
 
 		@Test
 		void uniqueIdWithSameSegmentsAreEqual() {
-			UniqueId id1 = new UniqueId("junit5").append("t1", "v1").append("t2", "v2");
-			UniqueId id2 = new UniqueId("junit5").append("t1", "v1").append("t2", "v2");
+			UniqueId id1 = UniqueId.forEngine("engine", "junit5").append("t1", "v1").append("t2", "v2");
+			UniqueId id2 = UniqueId.forEngine("engine", "junit5").append("t1", "v1").append("t2", "v2");
 
 			Assertions.assertTrue(id1.equals(id2));
 			Assertions.assertTrue(id2.equals(id1));
@@ -125,8 +120,8 @@ class UniqueIdTests {
 
 		@Test
 		void differentOrderOfSegmentsAreNotEqual() {
-			UniqueId id1 = new UniqueId("junit5").append("t2", "v2").append("t1", "v1");
-			UniqueId id2 = new UniqueId("junit5").append("t1", "v1").append("t2", "v2");
+			UniqueId id1 = UniqueId.forEngine("engine", "junit5").append("t2", "v2").append("t1", "v1");
+			UniqueId id2 = UniqueId.forEngine("engine", "junit5").append("t1", "v1").append("t2", "v2");
 
 			Assertions.assertFalse(id1.equals(id2));
 			Assertions.assertFalse(id2.equals(id1));
@@ -134,7 +129,7 @@ class UniqueIdTests {
 
 		@Test
 		void additionalSegmentMakesItNotEqual() {
-			UniqueId id1 = new UniqueId("junit5").append("t1", "v1");
+			UniqueId id1 = UniqueId.forEngine("engine", "junit5").append("t1", "v1");
 			UniqueId id2 = id1.append("t2", "v2");
 
 			Assertions.assertFalse(id1.equals(id2));
@@ -143,7 +138,7 @@ class UniqueIdTests {
 	}
 
 	private void assertEngine(UniqueId uniqueId, String expectedEngineId) {
-		assertSegment(uniqueId.getSegments().get(0), UniqueId.TYPE_ENGINE, expectedEngineId);
+		assertSegment(uniqueId.getSegments().get(0), "engine", expectedEngineId);
 	}
 
 	private void assertSegment(Segment segment, String expectedType, String expectedValue) {
