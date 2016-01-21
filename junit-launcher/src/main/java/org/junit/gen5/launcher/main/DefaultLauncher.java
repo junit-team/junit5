@@ -28,7 +28,7 @@ import org.junit.gen5.launcher.TestPlan;
  * Default implementation of the {@link Launcher} API using dynamically
  * registered test engines.
  *
- * <p>External clients can obtain an instance by invoking {@link #get}.
+ * <p>External clients can obtain an instance by invoking {@link #create()}.
  *
  * <p>Test engines are registered at runtime using the
  * {@link java.util.ServiceLoader ServiceLoader} facility. For that purpose, a
