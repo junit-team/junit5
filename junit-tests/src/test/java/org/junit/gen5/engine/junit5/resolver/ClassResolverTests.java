@@ -11,14 +11,14 @@
 package org.junit.gen5.engine.junit5.resolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
+import static org.junit.gen5.engine.junit5.resolver.ClassResolver.descriptorForParentAndClass;
+import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForParentAndName;
 import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.junit5.descriptor.NewPackageTestDescriptor;
+import org.junit.gen5.engine.junit5.resolver.testpackage.SingleTestClass;
 import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
 import org.junit.gen5.engine.junit5.stubs.TestResolverRegistrySpy;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
@@ -43,5 +43,17 @@ public class ClassResolverTests {
 	void withAnEmptyDiscoveryRequest_doesNotResolveAnything() throws Exception {
 		resolver.resolveAllFrom(engineDescriptor, request().build());
 		assertThat(testResolverRegistrySpy.testDescriptors).isEmpty();
+	}
+
+	@Test
+	void whenNotifiedWithAPackageTestDescriptor_resolvesAllClassesInThePackage() throws Exception {
+		NewPackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor,
+			"org.junit.gen5.engine.junit5.resolver.testpackage");
+		engineDescriptor.addChild(testPackage);
+
+		resolver.resolveAllFrom(testPackage, request().build());
+
+		assertThat(testResolverRegistrySpy.testDescriptors).containsOnly(
+			descriptorForParentAndClass(testPackage, SingleTestClass.class));
 	}
 }
