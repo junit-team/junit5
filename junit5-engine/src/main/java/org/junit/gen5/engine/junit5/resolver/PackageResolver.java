@@ -91,8 +91,8 @@ public class PackageResolver extends JUnit5TestResolver {
 		// @formatter:off
         return ReflectionUtils.findAllPackagesInClasspathRoot(packageName).stream()
                 .map(Package::getName)
-                .map(name -> descriptorForParentAndName(parent, name))
-                .peek(parent::addChild)
+                .map(name -> getTestDescriptor(parent, name))
+                .map(Optional::get)
                 .collect(toList());
         // @formatter:on
 	}
