@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit5.resolver.testpackage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.Test;
 
 public class SingleTestClass {
@@ -23,5 +24,9 @@ public class SingleTestClass {
 	@Test
 	void test2() {
 		assertThat(1 * 1).isEqualTo(1);
+	}
+
+	void notest() {
+		Assertions.fail("This must not be executed!");
 	}
 }

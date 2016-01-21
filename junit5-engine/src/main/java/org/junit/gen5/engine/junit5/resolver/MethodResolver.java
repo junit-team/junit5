@@ -11,18 +11,17 @@
 package org.junit.gen5.engine.junit5.resolver;
 
 import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 import static org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
-import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackageOnly;
-import static org.junit.gen5.commons.util.ReflectionUtils.findAllMethodsInHierarchy;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -30,7 +29,6 @@ import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 
 public class MethodResolver extends JUnit5TestResolver {
 	public static MethodTestDescriptor descriptorForParentAndMethod(TestDescriptor parent, Class<?> testClass,
@@ -81,7 +79,7 @@ public class MethodResolver extends JUnit5TestResolver {
 			EngineDiscoveryRequest discoveryRequest) {
 		// @formatter:off
         List<MethodTestDescriptor> testMethods = findAllMethodsInHierarchy(testClass, HierarchyDown).stream()
-                .filter(method -> true)
+                .filter(this::isTestMethod)
                 .map(testMethod -> descriptorForParentAndMethod(parent, testClass, testMethod))
                 .collect(toList());
         // @formatter:on
@@ -95,5 +93,16 @@ public class MethodResolver extends JUnit5TestResolver {
 	@Override
 	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
 		return Optional.empty();
+	}
+
+	private boolean isTestMethod(Method candidate) {
+		//please do not collapse into single return
+		if (isStatic(candidate))
+			return false;
+		if (isPrivate(candidate))
+			return false;
+		if (isAbstract(candidate))
+			return false;
+		return isAnnotated(candidate, Test.class);
 	}
 }
