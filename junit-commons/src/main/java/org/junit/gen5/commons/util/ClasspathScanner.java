@@ -67,6 +67,7 @@ class ClasspathScanner {
 				.flatMap(dir -> findPackagesInSourceDir(dir, basePackageName))
 				.distinct()
 				.map(Package::getPackage)
+                .filter(aPackage -> aPackage != null)
 				.collect(Collectors.toList());
 		// @formatter:on
 	}
