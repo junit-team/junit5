@@ -10,7 +10,10 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
@@ -30,7 +33,6 @@ public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
 
 		register(new PackageResolver());
 		register(new ClassResolver());
-		register(new NestedStaticClassResolver());
 		register(new NestedMemberClassResolver());
 		register(new MethodResolver());
 	}

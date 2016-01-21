@@ -90,7 +90,7 @@ public class PreconfigureTestResolverRegistryRegressionTests {
                         assertThat(testDescriptor.getChildren()).hasSize(1);
                     }
                     else {
-                        assertThat(testDescriptor.getChildren()).hasSize(4);
+                        assertThat(testDescriptor.getChildren()).hasSize(5);
                     }
                 });
         // @formatter:on

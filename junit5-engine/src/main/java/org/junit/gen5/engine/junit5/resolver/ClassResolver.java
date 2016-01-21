@@ -11,13 +11,11 @@
 package org.junit.gen5.engine.junit5.resolver;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackageOnly;
-import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.util.Preconditions;
@@ -31,7 +29,10 @@ import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 
 public class ClassResolver extends JUnit5TestResolver {
 	public static ClassTestDescriptor descriptorForParentAndClass(TestDescriptor parent, Class<?> testClass) {
-		String uniqueId = parent.getUniqueId() + "/[class:" + testClass.getSimpleName() + "]";
+		String packageName = testClass.getPackage().getName();
+		String fullQualifiedClassName = testClass.getCanonicalName();
+		String className = fullQualifiedClassName.substring(packageName.length() + 1);
+		String uniqueId = parent.getUniqueId() + "/[class:" + className + "]";
 
 		if (parent.findByUniqueId(uniqueId).isPresent()) {
 			return (ClassTestDescriptor) parent.findByUniqueId(uniqueId).get();
@@ -101,6 +102,6 @@ public class ClassResolver extends JUnit5TestResolver {
 			return false;
 		if (candidate.isAnonymousClass())
 			return false;
-		return !candidate.isMemberClass();
+		return !candidate.isMemberClass() || isStatic(candidate);
 	}
 }
