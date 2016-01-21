@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
@@ -21,6 +22,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestReporter;
 import org.junit.gen5.commons.reporting.ReportingEntry;
+import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
@@ -32,11 +34,11 @@ public class ReportingTest extends AbstractJUnit5TestEngineTests {
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(3L, eventRecorder.getReportingEntryPublishedCount(), "# report entries published");
+		assertEquals(5L, eventRecorder.getReportingEntryPublishedCount(), "# report entries published");
 	}
 
 	static class MyReportingTestCase {
@@ -55,6 +57,12 @@ public class ReportingTest extends AbstractJUnit5TestEngineTests {
 		void succeedingTest(TestReporter reporter) {
 			reporter.publishEntry(new ReportingEntry(new HashMap<>()));
 		}
+
+        @Test
+        @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+        void testWithNullReportData(TestReporter reporter) {
+            expectThrows(PreconditionViolationException.class, () -> reporter.publishEntry(new ReportingEntry(null)));
+        }
 
 	}
 
