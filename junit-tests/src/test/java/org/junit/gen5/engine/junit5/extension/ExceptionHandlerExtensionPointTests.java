@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
@@ -116,7 +117,7 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 			event(container(ATestCase.class), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 
-        assertEquals(Arrays.asList("convert", "rethrow", "swallow"), handlerCalls);
+		assertEquals(Arrays.asList("convert", "rethrow", "swallow"), handlerCalls);
 	}
 
 	// -------------------------------------------------------------------
@@ -159,7 +160,7 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 		public void handleException(TestExtensionContext context, Throwable throwable) throws Throwable {
 			assertTrue(throwable instanceof IOException);
 			handleExceptionCalled = true;
-            handlerCalls.add("rethrow");
+			handlerCalls.add("rethrow");
 
 			throw throwable;
 		}
@@ -173,7 +174,7 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 		public void handleException(TestExtensionContext context, Throwable throwable) throws Throwable {
 			assertTrue(throwable instanceof IOException);
 			handleExceptionCalled = true;
-            handlerCalls.add("swallow");
+			handlerCalls.add("swallow");
 			//swallow exception by not rethrowing it
 		}
 	}
@@ -186,7 +187,7 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 		public void handleException(TestExtensionContext context, Throwable throwable) throws Throwable {
 			assertTrue(throwable instanceof RuntimeException);
 			handleExceptionCalled = true;
-            handlerCalls.add("convert");
+			handlerCalls.add("convert");
 			throw new IOException("checked");
 		}
 
