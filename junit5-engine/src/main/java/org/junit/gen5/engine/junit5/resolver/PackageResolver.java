@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -27,6 +28,9 @@ public class PackageResolver extends JUnit5TestResolver {
 
 	@Override
 	public void resolveAllFrom(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
+		Preconditions.notNull(parent, "parent must not be null!");
+		Preconditions.notNull(discoveryRequest, "discoveryRequest must not be null!");
+
 		List<NewPackageTestDescriptor> packageDescriptors = new LinkedList<>();
 		if (parent.isRoot()) {
 			packageDescriptors.addAll(resolvePackagesFromSelectors(parent, discoveryRequest));
@@ -36,10 +40,7 @@ public class PackageResolver extends JUnit5TestResolver {
 			packageDescriptors.addAll(resolveSubpackages(parent, packageName));
 		}
 
-		for (NewPackageTestDescriptor packageDescriptor : packageDescriptors) {
-			parent.addChild(packageDescriptor);
-			getTestResolverRegistry().notifyResolvers(packageDescriptor, discoveryRequest);
-		}
+		addChildrenAndNotify(parent, packageDescriptors, discoveryRequest);
 	}
 
 	private List<NewPackageTestDescriptor> resolvePackagesFromSelectors(TestDescriptor parent,

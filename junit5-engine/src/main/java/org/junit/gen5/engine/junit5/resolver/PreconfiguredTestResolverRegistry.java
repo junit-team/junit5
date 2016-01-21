@@ -12,8 +12,8 @@ package org.junit.gen5.engine.junit5.resolver;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
@@ -37,7 +37,7 @@ public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
 	}
 
 	@Override
-	public TestDescriptor fetchParent(EngineDiscoveryRequest discoveryRequest) {
+	public TestDescriptor fetchParent(DiscoverySelector selector, TestDescriptor root) {
 		return null;
 	}
 

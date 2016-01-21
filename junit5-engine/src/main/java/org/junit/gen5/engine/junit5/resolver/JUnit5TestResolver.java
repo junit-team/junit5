@@ -10,6 +10,10 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
+import java.util.List;
+
+import org.junit.gen5.engine.EngineDiscoveryRequest;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 
 public abstract class JUnit5TestResolver implements TestResolver {
@@ -28,5 +32,13 @@ public abstract class JUnit5TestResolver implements TestResolver {
 	public void initialize(TestEngine testEngine, TestResolverRegistry testResolverRegistry) {
 		this.testEngine = testEngine;
 		this.testResolverRegistry = testResolverRegistry;
+	}
+
+	protected <T extends TestDescriptor> void addChildrenAndNotify(TestDescriptor parent, List<T> children,
+			EngineDiscoveryRequest discoveryRequest) {
+		for (T child : children) {
+			parent.addChild(child);
+			getTestResolverRegistry().notifyResolvers(child, discoveryRequest);
+		}
 	}
 }

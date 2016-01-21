@@ -11,7 +11,6 @@
 package org.junit.gen5.engine.junit5.resolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.engine.junit5.resolver.ClassResolver.descriptorForParentAndClass;
 import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForParentAndName;
 import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;

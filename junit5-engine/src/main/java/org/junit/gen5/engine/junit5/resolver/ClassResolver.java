@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5.resolver;
 
 import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackageOnly;
 import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
 
 import java.util.LinkedList;
@@ -18,7 +19,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
@@ -39,20 +39,19 @@ public class ClassResolver extends JUnit5TestResolver {
 		List<ClassTestDescriptor> classDescriptors = new LinkedList<>();
 		if (parent instanceof NewPackageTestDescriptor) {
 			String packageName = ((NewPackageTestDescriptor) parent).getPackageName();
-
-			// @formatter:off
-            classDescriptors.addAll(ReflectionUtils.findAllClassesInPackageOnly(packageName, aClass -> true).stream()
-                    .filter(this::isTopLevelTestClass)
-                    .map(testClass -> ClassResolver.descriptorForParentAndClass(parent, testClass))
-                    .collect(toList()));
-            // @formatter:on
-
+			classDescriptors.addAll(resolveTopLevelClassesInPackage(parent, packageName));
 		}
 
-		for (ClassTestDescriptor classDescriptor : classDescriptors) {
-			parent.addChild(classDescriptor);
-			getTestResolverRegistry().notifyResolvers(classDescriptor, discoveryRequest);
-		}
+		addChildrenAndNotify(parent, classDescriptors, discoveryRequest);
+	}
+
+	private List<ClassTestDescriptor> resolveTopLevelClassesInPackage(TestDescriptor parent, String packageName) {
+		// @formatter:off
+        return findAllClassesInPackageOnly(packageName, aClass -> true).stream()
+                .filter(this::isTopLevelTestClass)
+                .map(testClass -> descriptorForParentAndClass(parent, testClass))
+                .collect(toList());
+        // @formatter:on
 	}
 
 	private boolean isTopLevelTestClass(Class<?> candidate) {

@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 
@@ -17,7 +18,7 @@ import org.junit.gen5.engine.TestDescriptor;
  * @since 5.0
  */
 public interface TestResolverRegistry {
-	TestDescriptor fetchParent(EngineDiscoveryRequest discoveryRequest);
+	TestDescriptor fetchParent(DiscoverySelector selector, TestDescriptor root);
 
 	void notifyResolvers(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest);
 

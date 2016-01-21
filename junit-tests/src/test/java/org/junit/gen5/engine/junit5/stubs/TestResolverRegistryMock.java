@@ -14,20 +14,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.resolver.TestResolver;
 import org.junit.gen5.engine.junit5.resolver.TestResolverRegistry;
 
 public class TestResolverRegistryMock implements TestResolverRegistry {
-	public Function<EngineDiscoveryRequest, TestDescriptor> fetchParentFunction;
+	public Function<DiscoverySelector, TestDescriptor> fetchParentFunction;
 
 	public EngineDiscoveryRequest discoveryRequest;
 	public List<TestDescriptor> testDescriptors = new LinkedList<>();
 
 	@Override
-	public TestDescriptor fetchParent(EngineDiscoveryRequest discoveryRequest) {
-		return fetchParentFunction.apply(discoveryRequest);
+	public TestDescriptor fetchParent(DiscoverySelector selector, TestDescriptor root) {
+		return fetchParentFunction.apply(selector);
 	}
 
 	@Override
