@@ -246,6 +246,11 @@ public final class ReflectionUtils {
 			ReflectionUtils::loadClass).scanForClassesInClasspathRoot(root, classTester);
 	}
 
+	public static List<Class<?>> findAllClassesInPackageOnly(String basePackageName, Predicate<Class<?>> classTester) {
+		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
+			ReflectionUtils::loadClass).scanForClassesInPackageOnly(basePackageName, classTester);
+	}
+
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester) {
 		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
 			ReflectionUtils::loadClass).scanForClassesInPackage(basePackageName, classTester);

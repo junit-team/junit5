@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5.resolver;
 
 import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +26,7 @@ import org.junit.gen5.engine.junit5.descriptor.NewPackageTestDescriptor;
 
 public class ClassResolver extends JUnit5TestResolver {
 	public static ClassTestDescriptor descriptorForParentAndClass(TestDescriptor parent, Class<?> testClass) {
-		return new ClassTestDescriptor(parent.getUniqueId() + "/[class:SingleTestClass]", testClass);
+		return new ClassTestDescriptor(parent.getUniqueId() + "/[class:" + testClass.getSimpleName() + "]", testClass);
 	}
 
 	private static final Logger LOG = Logger.getLogger(ClassResolver.class.getName());
@@ -40,7 +41,8 @@ public class ClassResolver extends JUnit5TestResolver {
 			String packageName = ((NewPackageTestDescriptor) parent).getPackageName();
 
 			// @formatter:off
-            classDescriptors.addAll(ReflectionUtils.findAllClassesInPackage(packageName, aClass -> true).stream()
+            classDescriptors.addAll(ReflectionUtils.findAllClassesInPackageOnly(packageName, aClass -> true).stream()
+                    .filter(this::isTopLevelTestClass)
                     .map(testClass -> ClassResolver.descriptorForParentAndClass(parent, testClass))
                     .collect(toList()));
             // @formatter:on
@@ -51,5 +53,16 @@ public class ClassResolver extends JUnit5TestResolver {
 			parent.addChild(classDescriptor);
 			getTestResolverRegistry().notifyResolvers(classDescriptor, discoveryRequest);
 		}
+	}
+
+	private boolean isTopLevelTestClass(Class<?> candidate) {
+		//please do not collapse into single return
+		if (isAbstract(candidate))
+			return false;
+		if (candidate.isLocalClass())
+			return false;
+		if (candidate.isAnonymousClass())
+			return false;
+		return !candidate.isMemberClass();
 	}
 }

@@ -18,6 +18,7 @@ import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.junit5.descriptor.NewPackageTestDescriptor;
+import org.junit.gen5.engine.junit5.resolver.testpackage.NestingTestClass;
 import org.junit.gen5.engine.junit5.resolver.testpackage.SingleTestClass;
 import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
 import org.junit.gen5.engine.junit5.stubs.TestResolverRegistrySpy;
@@ -46,14 +47,21 @@ public class ClassResolverTests {
 	}
 
 	@Test
-	void whenNotifiedWithAPackageTestDescriptor_resolvesAllClassesInThePackage() throws Exception {
+	void whenNotifiedWithAPackageTestDescriptor_resolvesAllTopLevelClassesInThePackage() throws Exception {
 		NewPackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor,
 			"org.junit.gen5.engine.junit5.resolver.testpackage");
 		engineDescriptor.addChild(testPackage);
 
 		resolver.resolveAllFrom(testPackage, request().build());
 
-		assertThat(testResolverRegistrySpy.testDescriptors).containsOnly(
-			descriptorForParentAndClass(testPackage, SingleTestClass.class));
+		// @formatter:off
+		assertThat(testResolverRegistrySpy.testDescriptors)
+                .containsOnly(
+                        descriptorForParentAndClass(testPackage, SingleTestClass.class),
+                        descriptorForParentAndClass(testPackage, NestingTestClass.class)
+                )
+                .doesNotHaveDuplicates();
+        // @formatter:on
 	}
+
 }

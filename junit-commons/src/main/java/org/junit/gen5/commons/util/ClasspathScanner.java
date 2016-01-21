@@ -85,6 +85,22 @@ class ClasspathScanner {
 		// @formatter:on
 	}
 
+	List<Class<?>> scanForClassesInPackageOnly(String basePackageName, Predicate<Class<?>> classFilter) {
+		Preconditions.notBlank(basePackageName, "basePackageName must not be blank");
+
+		List<File> dirs = allSourceDirsForPackage(basePackageName);
+		return allClassesInSourceDirsOnly(dirs, basePackageName, classFilter);
+	}
+
+	private List<Class<?>> allClassesInSourceDirsOnly(List<File> sourceDirs, String basePackageName,
+			Predicate<Class<?>> classFilter) {
+		List<Class<?>> classes = new ArrayList<>();
+		for (File aSourceDir : sourceDirs) {
+			classes.addAll(findClassesInSourceDirOnly(aSourceDir, basePackageName, classFilter));
+		}
+		return classes;
+	}
+
 	List<Class<?>> scanForClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter) {
 		Preconditions.notBlank(basePackageName, "basePackageName must not be blank");
 
@@ -129,6 +145,27 @@ class ClasspathScanner {
 
 	private String packagePath(String basePackageName) {
 		return basePackageName.replace('.', '/');
+	}
+
+	private List<Class<?>> findClassesInSourceDirOnly(File sourceDir, String packageName,
+			Predicate<Class<?>> classFilter) {
+		List<Class<?>> classesCollector = new ArrayList<>();
+		collectClassesOnly(sourceDir, packageName, classesCollector, classFilter);
+		return classesCollector;
+	}
+
+	private void collectClassesOnly(File sourceDir, String packageName, List<Class<?>> classesCollector,
+			Predicate<Class<?>> classFilter) {
+		File[] files = sourceDir.listFiles();
+		if (files == null) {
+			return;
+		}
+		for (File file : files) {
+			if (isClassFile(file)) {
+				Optional<Class<?>> classForClassFile = loadClassForClassFile(file, packageName);
+				classForClassFile.filter(classFilter).ifPresent(clazz -> classesCollector.add(clazz));
+			}
+		}
 	}
 
 	private List<Class<?>> findClassesInSourceDirRecursively(File sourceDir, String packageName,
