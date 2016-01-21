@@ -38,8 +38,8 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 		return this.state.testInstanceProvider;
 	}
 
-	public TestExtensionRegistry getTestExtensionRegistry() {
-		return this.state.testExtensionRegistry;
+	public ExtensionRegistry getExtensionRegistry() {
+		return this.state.extensionRegistry;
 	}
 
 	public ExtensionContext getExtensionContext() {
@@ -58,7 +58,7 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 
 		final EngineExecutionListener executionListener;
 		TestInstanceProvider testInstanceProvider;
-		TestExtensionRegistry testExtensionRegistry;
+		ExtensionRegistry extensionRegistry;
 		ExtensionContext extensionContext;
 
 		public State(EngineExecutionListener executionListener) {
@@ -92,8 +92,8 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 			return this;
 		}
 
-		public Builder withTestExtensionRegistry(TestExtensionRegistry testExtensionRegistry) {
-			newState().testExtensionRegistry = testExtensionRegistry;
+		public Builder withExtensionRegistry(ExtensionRegistry extensionRegistry) {
+			newState().extensionRegistry = extensionRegistry;
 			return this;
 		}
 

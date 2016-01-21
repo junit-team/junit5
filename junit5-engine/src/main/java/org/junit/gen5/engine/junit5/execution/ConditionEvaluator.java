@@ -38,10 +38,10 @@ public class ConditionEvaluator {
 	 * or a default <em>enabled</em> {@code ConditionEvaluationResult} if no
 	 * disabled conditions are encountered
 	 */
-	public ConditionEvaluationResult evaluateForContainer(TestExtensionRegistry extensionRegistry,
+	public ConditionEvaluationResult evaluateForContainer(ExtensionRegistry extensionRegistry,
 			ContainerExtensionContext context) {
 		// @formatter:off
-		return extensionRegistry.stream(ContainerExecutionCondition.class, TestExtensionRegistry.ApplicationOrder.FORWARD)
+		return extensionRegistry.stream(ContainerExecutionCondition.class, ExtensionRegistry.ApplicationOrder.FORWARD)
 				.map(extensionPoint -> extensionPoint.getExtensionPoint())
 				.map(condition -> evaluate(condition, context))
 				.filter(ConditionEvaluationResult::isDisabled)
@@ -59,10 +59,10 @@ public class ConditionEvaluator {
 	 * or a default <em>enabled</em> {@code ConditionEvaluationResult} if no
 	 * disabled conditions are encountered
 	 */
-	public ConditionEvaluationResult evaluateForTest(TestExtensionRegistry extensionRegistry,
+	public ConditionEvaluationResult evaluateForTest(ExtensionRegistry extensionRegistry,
 			TestExtensionContext context) {
 		// @formatter:off
-		return extensionRegistry.stream(TestExecutionCondition.class, TestExtensionRegistry.ApplicationOrder.FORWARD)
+		return extensionRegistry.stream(TestExecutionCondition.class, ExtensionRegistry.ApplicationOrder.FORWARD)
 				.map(extensionPoint -> extensionPoint.getExtensionPoint())
 				.map(condition -> evaluate(condition, context))
 				.filter(ConditionEvaluationResult::isDisabled)

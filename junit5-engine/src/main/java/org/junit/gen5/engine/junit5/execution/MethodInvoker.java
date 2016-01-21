@@ -22,7 +22,7 @@ import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry.ApplicationOrder;
+import org.junit.gen5.engine.junit5.execution.ExtensionRegistry.ApplicationOrder;
 
 /**
  * {@code MethodInvoker} encapsulates the invocation of a method, including
@@ -35,9 +35,9 @@ public class MethodInvoker {
 
 	private final ExtensionContext extensionContext;
 
-	private final TestExtensionRegistry extensionRegistry;
+	private final ExtensionRegistry extensionRegistry;
 
-	public MethodInvoker(ExtensionContext extensionContext, TestExtensionRegistry extensionRegistry) {
+	public MethodInvoker(ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
 		this.extensionContext = extensionContext;
 		this.extensionRegistry = extensionRegistry;
 	}

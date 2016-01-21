@@ -11,11 +11,14 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.junit5.execution.ExtensionRegistry;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
-import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.engine.support.hierarchical.Container;
 
+/**
+ * @since 5.0
+ */
 public class JUnit5EngineDescriptor extends EngineDescriptor implements Container<JUnit5EngineExecutionContext> {
 
 	public JUnit5EngineDescriptor(TestEngine engine) {
@@ -24,7 +27,7 @@ public class JUnit5EngineDescriptor extends EngineDescriptor implements Containe
 
 	@Override
 	public JUnit5EngineExecutionContext beforeAll(JUnit5EngineExecutionContext context) {
-		return context.extend().withTestExtensionRegistry(new TestExtensionRegistry()).build();
+		return context.extend().withExtensionRegistry(new ExtensionRegistry()).build();
 	}
 
 }

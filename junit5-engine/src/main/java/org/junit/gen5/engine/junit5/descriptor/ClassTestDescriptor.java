@@ -39,10 +39,10 @@ import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.execution.ConditionEvaluator;
+import org.junit.gen5.engine.junit5.execution.ExtensionRegistry;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.RegisteredExtensionPoint;
-import org.junit.gen5.engine.junit5.execution.TestExtensionRegistry;
 import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
 import org.junit.gen5.engine.support.descriptor.JavaSource;
 import org.junit.gen5.engine.support.hierarchical.Container;
@@ -101,15 +101,15 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 	@Override
 	public JUnit5EngineExecutionContext prepare(JUnit5EngineExecutionContext context) {
-		TestExtensionRegistry newExtensionRegistry = populateNewTestExtensionRegistryFromExtendWith(testClass,
-			context.getTestExtensionRegistry());
+		ExtensionRegistry newExtensionRegistry = populateNewExtensionRegistryFromExtendWith(testClass,
+			context.getExtensionRegistry());
 
 		registerBeforeAllMethods(newExtensionRegistry);
 		registerAfterAllMethods(newExtensionRegistry);
 		registerBeforeEachMethods(newExtensionRegistry);
 		registerAfterEachMethods(newExtensionRegistry);
 
-		context = context.extend().withTestExtensionRegistry(newExtensionRegistry).build();
+		context = context.extend().withExtensionRegistry(newExtensionRegistry).build();
 
 		ContainerExtensionContext containerExtensionContext = new ClassBasedContainerExtensionContext(
 			context.getExtensionContext(), context.getExecutionListener(), this);
@@ -125,7 +125,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	@Override
 	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Exception {
 		ConditionEvaluationResult evaluationResult = new ConditionEvaluator().evaluateForContainer(
-			context.getTestExtensionRegistry(), (ContainerExtensionContext) context.getExtensionContext());
+			context.getExtensionRegistry(), (ContainerExtensionContext) context.getExtensionContext());
 		if (evaluationResult.isDisabled()) {
 			return SkipResult.skip(evaluationResult.getReason().orElse(""));
 		}
@@ -134,7 +134,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 	@Override
 	public JUnit5EngineExecutionContext beforeAll(JUnit5EngineExecutionContext context) throws Exception {
-		TestExtensionRegistry extensionRegistry = context.getTestExtensionRegistry();
+		ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
 		ContainerExtensionContext containerExtensionContext = (ContainerExtensionContext) context.getExtensionContext();
 
 		invokeBeforeAllExtensionPoints(extensionRegistry, containerExtensionContext);
@@ -146,7 +146,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	public JUnit5EngineExecutionContext afterAll(JUnit5EngineExecutionContext context) throws Exception {
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 
-		throwableCollector.execute(() -> invokeAfterAllExtensionPoints(context.getTestExtensionRegistry(),
+		throwableCollector.execute(() -> invokeAfterAllExtensionPoints(context.getExtensionRegistry(),
 			(ContainerExtensionContext) context.getExtensionContext(), throwableCollector));
 
 		throwableCollector.assertEmpty();
@@ -158,7 +158,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		return () -> ReflectionUtils.newInstance(testClass);
 	}
 
-	private void invokeBeforeAllExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+	private void invokeBeforeAllExtensionPoints(ExtensionRegistry newExtensionRegistry,
 			ContainerExtensionContext containerExtensionContext) throws Exception {
 
 		Consumer<RegisteredExtensionPoint<BeforeAllExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
@@ -166,11 +166,11 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 				() -> registeredExtensionPoint.getExtensionPoint().beforeAll(containerExtensionContext));
 		};
 
-		newTestExtensionRegistry.stream(BeforeAllExtensionPoint.class,
-			TestExtensionRegistry.ApplicationOrder.FORWARD).forEach(applyBeforeEach);
+		newExtensionRegistry.stream(BeforeAllExtensionPoint.class, ExtensionRegistry.ApplicationOrder.FORWARD).forEach(
+			applyBeforeEach);
 	}
 
-	private void invokeAfterAllExtensionPoints(TestExtensionRegistry newTestExtensionRegistry,
+	private void invokeAfterAllExtensionPoints(ExtensionRegistry newExtensionRegistry,
 			ContainerExtensionContext containerExtensionContext, ThrowableCollector throwableCollector)
 					throws Exception {
 
@@ -179,34 +179,34 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 				() -> registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext));
 		};
 
-		newTestExtensionRegistry.stream(AfterAllExtensionPoint.class,
-			TestExtensionRegistry.ApplicationOrder.BACKWARD).forEach(applyAfterAll);
+		newExtensionRegistry.stream(AfterAllExtensionPoint.class, ExtensionRegistry.ApplicationOrder.BACKWARD).forEach(
+			applyAfterAll);
 	}
 
-	private void registerBeforeAllMethods(TestExtensionRegistry extensionRegistry) {
+	private void registerBeforeAllMethods(ExtensionRegistry extensionRegistry) {
 		registerAnnotatedMethodsAsExtensions(extensionRegistry, BeforeAll.class, BeforeAllExtensionPoint.class,
 			this::assertStatic, this::synthesizeBeforeAllExtensionPoint);
 	}
 
-	private void registerAfterAllMethods(TestExtensionRegistry extensionRegistry) {
+	private void registerAfterAllMethods(ExtensionRegistry extensionRegistry) {
 		registerAnnotatedMethodsAsExtensions(extensionRegistry, AfterAll.class, AfterAllExtensionPoint.class,
 			this::assertStatic, this::synthesizeAfterAllExtensionPoint);
 	}
 
-	private void registerBeforeEachMethods(TestExtensionRegistry extensionRegistry) {
+	private void registerBeforeEachMethods(ExtensionRegistry extensionRegistry) {
 		registerAnnotatedMethodsAsExtensions(extensionRegistry, BeforeEach.class, BeforeEachExtensionPoint.class,
 			this::assertNonStatic, this::synthesizeBeforeEachExtensionPoint);
 	}
 
-	private void registerAfterEachMethods(TestExtensionRegistry extensionRegistry) {
+	private void registerAfterEachMethods(ExtensionRegistry extensionRegistry) {
 		registerAnnotatedMethodsAsExtensions(extensionRegistry, AfterEach.class, AfterEachExtensionPoint.class,
 			this::assertNonStatic, this::synthesizeAfterEachExtensionPoint);
 	}
 
-	private void registerAnnotatedMethodsAsExtensions(TestExtensionRegistry extensionRegistry,
+	private void registerAnnotatedMethodsAsExtensions(ExtensionRegistry extensionRegistry,
 			Class<? extends Annotation> annotationType, Class<?> extensionType,
 			BiConsumer<Class<?>, Method> methodValidator,
-			BiFunction<TestExtensionRegistry, Method, ExtensionPoint> extensionPointSynthesizer) {
+			BiFunction<ExtensionRegistry, Method, ExtensionPoint> extensionPointSynthesizer) {
 
 		// @formatter:off
 		findAnnotatedMethods(testClass, annotationType, MethodSortOrder.HierarchyDown).stream()
@@ -216,32 +216,32 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		// @formatter:on
 	}
 
-	private BeforeAllExtensionPoint synthesizeBeforeAllExtensionPoint(TestExtensionRegistry registry, Method method) {
+	private BeforeAllExtensionPoint synthesizeBeforeAllExtensionPoint(ExtensionRegistry registry, Method method) {
 		return (BeforeAllExtensionPoint) extensionContext -> {
 			new MethodInvoker(extensionContext, registry).invoke(methodInvocationContext(null, method));
 		};
 	}
 
-	private AfterAllExtensionPoint synthesizeAfterAllExtensionPoint(TestExtensionRegistry registry, Method method) {
+	private AfterAllExtensionPoint synthesizeAfterAllExtensionPoint(ExtensionRegistry registry, Method method) {
 		return (AfterAllExtensionPoint) extensionContext -> {
 			new MethodInvoker(extensionContext, registry).invoke(methodInvocationContext(null, method));
 		};
 	}
 
-	private BeforeEachExtensionPoint synthesizeBeforeEachExtensionPoint(TestExtensionRegistry registry, Method method) {
+	private BeforeEachExtensionPoint synthesizeBeforeEachExtensionPoint(ExtensionRegistry registry, Method method) {
 		return (BeforeEachExtensionPoint) extensionContext -> {
 			runMethodInTestExtensionContext(method, extensionContext, registry);
 		};
 	}
 
-	private AfterEachExtensionPoint synthesizeAfterEachExtensionPoint(TestExtensionRegistry registry, Method method) {
+	private AfterEachExtensionPoint synthesizeAfterEachExtensionPoint(ExtensionRegistry registry, Method method) {
 		return (AfterEachExtensionPoint) extensionContext -> {
 			runMethodInTestExtensionContext(method, extensionContext, registry);
 		};
 	}
 
 	private void runMethodInTestExtensionContext(Method method, TestExtensionContext context,
-			TestExtensionRegistry registry) {
+			ExtensionRegistry registry) {
 
 		// @formatter:off
 		ReflectionUtils.getOuterInstance(context.getTestInstance(), method.getDeclaringClass())

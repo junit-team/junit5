@@ -16,7 +16,7 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
- * Represents an {@link ExtensionPoint} registered in a {@link TestExtensionRegistry}.
+ * Represents an {@link ExtensionPoint} registered in an {@link ExtensionRegistry}.
  *
  * @param <E> the type of registered {@link ExtensionPoint}
  * @since 5.0
@@ -68,7 +68,7 @@ public class RegisteredExtensionPoint<E extends ExtensionPoint> {
 	 * object. However, if an extension point is registered programmatically
 	 * &mdash; for example, as a lambda expression or method reference by
 	 * an {@link org.junit.gen5.api.extension.ExtensionRegistrar ExtensionRegistrar}
-	 * or by the framework via the {@link TestExtensionRegistry} &mdash;
+	 * or by the framework via the {@link ExtensionRegistry} &mdash;
 	 * the {@code source} object may be the {@code ExtensionRegistrar} that
 	 * registered the extension point, the underlying
 	 * {@link java.lang.reflect.Method} that implements the extension point

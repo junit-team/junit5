@@ -31,9 +31,10 @@ import org.junit.gen5.engine.junit5.extension.TestInfoParameterResolver;
 import org.junit.gen5.engine.junit5.extension.TestReporterParameterResolver;
 
 /**
- * A {@code TestExtensionRegistry} holds all registered extensions (i.e.
+ * An {@code ExtensionRegistry} holds all registered extensions (i.e.
  * instances of {@link ExtensionPoint}) for a given
- * {@link org.junit.gen5.engine.support.hierarchical.Container} or {@link org.junit.gen5.engine.support.hierarchical.Leaf}.
+ * {@link org.junit.gen5.engine.support.hierarchical.Container} or
+ * {@link org.junit.gen5.engine.support.hierarchical.Leaf}.
  *
  * <p>A registry has a reference to its parent registry, and all lookups are
  * performed first in the current registry itself and then in its parent and
@@ -43,7 +44,7 @@ import org.junit.gen5.engine.junit5.extension.TestReporterParameterResolver;
  * @see ExtensionPointRegistry
  * @see ExtensionRegistrar
  */
-public class TestExtensionRegistry {
+public class ExtensionRegistry {
 
 	public enum ApplicationOrder {
 		FORWARD, BACKWARD
@@ -56,17 +57,17 @@ public class TestExtensionRegistry {
 	 * @param parentRegistry the parent registry to be used
 	 * @param extensionTypes the types of extensions to be registered in
 	 * the new registry
-	 * @return a new {@code TestExtensionRegistry}
+	 * @return a new {@code ExtensionRegistry}
 	 */
-	public static TestExtensionRegistry newRegistryFrom(TestExtensionRegistry parentRegistry,
+	public static ExtensionRegistry newRegistryFrom(ExtensionRegistry parentRegistry,
 			List<Class<? extends Extension>> extensionTypes) {
 
-		TestExtensionRegistry newTestExtensionRegistry = new TestExtensionRegistry(parentRegistry);
-		extensionTypes.forEach(newTestExtensionRegistry::registerExtension);
-		return newTestExtensionRegistry;
+		ExtensionRegistry newExtensionRegistry = new ExtensionRegistry(parentRegistry);
+		extensionTypes.forEach(newExtensionRegistry::registerExtension);
+		return newExtensionRegistry;
 	}
 
-	private static final Logger LOG = Logger.getLogger(TestExtensionRegistry.class.getName());
+	private static final Logger LOG = Logger.getLogger(ExtensionRegistry.class.getName());
 
 	private static final List<Class<? extends Extension>> defaultExtensionTypes = Collections.unmodifiableList(
 		Arrays.asList(DisabledCondition.class, TestInfoParameterResolver.class, TestReporterParameterResolver.class));
@@ -82,13 +83,13 @@ public class TestExtensionRegistry {
 
 	private final List<RegisteredExtensionPoint<?>> registeredExtensionPoints = new ArrayList<>();
 
-	private final Optional<TestExtensionRegistry> parent;
+	private final Optional<ExtensionRegistry> parent;
 
-	public TestExtensionRegistry() {
+	public ExtensionRegistry() {
 		this(null);
 	}
 
-	TestExtensionRegistry(TestExtensionRegistry parent) {
+	ExtensionRegistry(ExtensionRegistry parent) {
 		this.parent = Optional.ofNullable(parent);
 		if (!this.parent.isPresent()) {
 			addDefaultExtensions();
@@ -198,12 +199,12 @@ public class TestExtensionRegistry {
 
 	/**
 	 * A {@code DelegatingExtensionPointRegistry} enables an
-	 * {@link ExtensionRegistrar} to populate a {@link TestExtensionRegistry}
+	 * {@link ExtensionRegistrar} to populate an {@link ExtensionRegistry}
 	 * via the simpler {@link ExtensionPointRegistry} API.
 	 *
 	 * <p>Furthermore, a {@code DelegatingExtensionPointRegistry} internally
-	 * delegates to the enclosing {@code TestExtensionRegistry} to {@linkplain
-	 * TestExtensionRegistry#registerExtensionPoint(ExtensionPoint, Object, Position)
+	 * delegates to the enclosing {@code ExtensionRegistry} to {@linkplain
+	 * ExtensionRegistry#registerExtensionPoint(ExtensionPoint, Object, Position)
 	 * register} extension points with the {@link RegisteredExtensionPoint#getSource() source}
 	 * set to the {@code ExtensionRegistrar} supplied to this registry's
 	 * constructor.
