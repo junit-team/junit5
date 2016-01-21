@@ -14,9 +14,9 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.DiscoverySelector;
@@ -47,51 +47,53 @@ public class ClassResolver extends JUnit5TestResolver {
 		Preconditions.notNull(parent, "parent must not be null!");
 		Preconditions.notNull(discoveryRequest, "discoveryRequest must not be null!");
 
+		List<TestDescriptor> classDescriptors = new LinkedList<>();
 		if (parent.isRoot()) {
-			resolveClassesFromSelectors(parent, discoveryRequest);
+			classDescriptors.addAll(resolveClassesFromSelectors(parent, discoveryRequest));
 		}
 		else if (parent instanceof PackageTestDescriptor) {
 			String packageName = ((PackageTestDescriptor) parent).getPackageName();
-			resolveTopLevelClassesInPackage(packageName, parent, discoveryRequest);
+			classDescriptors.addAll(resolveTopLevelClassesInPackage(packageName, parent, discoveryRequest));
 		}
 
+		for (TestDescriptor child : classDescriptors) {
+			getTestResolverRegistry().notifyResolvers(child, discoveryRequest);
+		}
+	}
+
+	private List<TestDescriptor> resolveClassesFromSelectors(TestDescriptor root,
+			EngineDiscoveryRequest discoveryRequest) {
+		// @formatter:off
+        return discoveryRequest.getSelectorsByType(ClassSelector.class).stream()
+                .map(classSelector -> fetchBySelector(classSelector, root))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(toList());
+        // @formatter:on
 	}
 
 	@Override
 	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
+		if (selector instanceof ClassSelector) {
+			Class<?> testClass = ((ClassSelector) selector).getTestClass();
+			if (isTopLevelTestClass(testClass)) {
+				PackageSelector packageSelector = forPackageName(testClass.getPackage().getName());
+				TestDescriptor parent = getTestResolverRegistry().fetchParent(packageSelector, root);
+				return getTestDescriptor(parent, testClass);
+			}
+		}
 		return Optional.empty();
 	}
 
-	private void resolveClassesFromSelectors(TestDescriptor root, EngineDiscoveryRequest discoveryRequest) {
-		// @formatter:off
-        List<Class<?>> testClasses = discoveryRequest.getSelectorsByType(ClassSelector.class).stream()
-                .map(ClassSelector::getTestClass)
-                .filter(this::isTopLevelTestClass)
-                .collect(Collectors.toList());
-        // @formatter:on
-
-		for (Class<?> testClass : testClasses) {
-			PackageSelector packageSelector = forPackageName(testClass.getPackage().getName());
-			TestDescriptor parent = getTestResolverRegistry().fetchParent(packageSelector, root);
-			ClassTestDescriptor child = descriptorForParentAndClass(parent, testClass);
-			parent.addChild(child);
-			getTestResolverRegistry().notifyResolvers(child, discoveryRequest);
-		}
-	}
-
-	private void resolveTopLevelClassesInPackage(String packageName, TestDescriptor parent,
+	private List<TestDescriptor> resolveTopLevelClassesInPackage(String packageName, TestDescriptor parent,
 			EngineDiscoveryRequest discoveryRequest) {
 		// @formatter:off
-        List<ClassTestDescriptor> testClasses = findAllClassesInPackageOnly(packageName, aClass -> true).stream()
+        return findAllClassesInPackageOnly(packageName, aClass -> true).stream()
                 .filter(this::isTopLevelTestClass)
                 .map(testClass -> descriptorForParentAndClass(parent, testClass))
+                .peek(parent::addChild)
                 .collect(toList());
         // @formatter:on
-
-		for (ClassTestDescriptor child : testClasses) {
-			parent.addChild(child);
-			getTestResolverRegistry().notifyResolvers(child, discoveryRequest);
-		}
 	}
 
 	private boolean isTopLevelTestClass(Class<?> candidate) {
@@ -103,5 +105,11 @@ public class ClassResolver extends JUnit5TestResolver {
 		if (candidate.isAnonymousClass())
 			return false;
 		return !candidate.isMemberClass() || isStatic(candidate);
+	}
+
+	private Optional<TestDescriptor> getTestDescriptor(TestDescriptor parent, Class<?> testClass) {
+		TestDescriptor child = descriptorForParentAndClass(parent, testClass);
+		parent.addChild(child);
+		return Optional.of(child);
 	}
 }

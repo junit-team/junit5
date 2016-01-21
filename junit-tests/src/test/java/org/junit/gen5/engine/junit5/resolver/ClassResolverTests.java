@@ -16,8 +16,12 @@ import static org.junit.gen5.engine.junit5.resolver.ClassResolver.descriptorForP
 import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForParentAndName;
 import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 
+import java.util.Optional;
+
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 import org.junit.gen5.engine.junit5.resolver.testpackage.NestingTestClass;
 import org.junit.gen5.engine.junit5.resolver.testpackage.SingleTestClass;
@@ -111,10 +115,24 @@ public class ClassResolverTests {
 
 		// @formatter:off
         assertThat(testResolverRegistryMock.testDescriptors)
-                .containsOnly(
-                        descriptorForParentAndClass(testPackage, NestingTestClass.NestedStaticClass.class)
-                )
+                .containsOnly(descriptorForParentAndClass(testPackage, NestingTestClass.NestedStaticClass.class))
                 .doesNotHaveDuplicates();
         // @formatter:on
+	}
+
+	@Test
+	void givenAPackageSelector_fetchesTheTreeUpToTheRoot() {
+		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor, testPackageName);
+		engineDescriptor.addChild(testPackage);
+
+		testResolverRegistryMock.fetchParentFunction = selector -> testPackage;
+
+		ClassSelector selector = forClass(SingleTestClass.class);
+		Optional<TestDescriptor> testDescriptor = resolver.fetchBySelector(selector, engineDescriptor);
+
+		assertThat(testResolverRegistryMock.testDescriptors).isEmpty();
+		assertThat(testDescriptor.isPresent()).isTrue();
+		assertThat(testDescriptor.get().getParent().isPresent()).isTrue();
+		assertThat(testDescriptor.get().getParent().get()).isEqualTo(testPackage);
 	}
 }

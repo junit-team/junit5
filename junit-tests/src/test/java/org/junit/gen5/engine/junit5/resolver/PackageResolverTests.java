@@ -99,6 +99,7 @@ public class PackageResolverTests {
 		PackageSelector selector = forPackageName(testPackageName);
 		Optional<TestDescriptor> testDescriptor = resolver.fetchBySelector(selector, engineDescriptor);
 
+		assertThat(testResolverRegistryMock.testDescriptors).isEmpty();
 		assertThat(testDescriptor.isPresent()).isTrue();
 		assertThat(this.engineDescriptor.getChildren()).hasSize(1);
 

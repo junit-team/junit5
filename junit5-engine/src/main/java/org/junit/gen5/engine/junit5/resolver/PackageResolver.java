@@ -70,16 +70,6 @@ public class PackageResolver extends JUnit5TestResolver {
         // @formatter:on
 	}
 
-	private List<PackageTestDescriptor> resolveSubpackages(TestDescriptor parent, String packageName) {
-		// @formatter:off
-		return ReflectionUtils.findAllPackagesInClasspathRoot(packageName).stream()
-				.map(Package::getName)
-                .map(name -> descriptorForParentAndName(parent, name))
-                .peek(parent::addChild)
-				.collect(toList());
-		// @formatter:on
-	}
-
 	@Override
 	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
 		if (selector instanceof PackageSelector) {
@@ -97,9 +87,19 @@ public class PackageResolver extends JUnit5TestResolver {
 		return Optional.empty();
 	}
 
+	private List<TestDescriptor> resolveSubpackages(TestDescriptor parent, String packageName) {
+		// @formatter:off
+        return ReflectionUtils.findAllPackagesInClasspathRoot(packageName).stream()
+                .map(Package::getName)
+                .map(name -> descriptorForParentAndName(parent, name))
+                .peek(parent::addChild)
+                .collect(toList());
+        // @formatter:on
+	}
+
 	private Optional<TestDescriptor> getTestDescriptor(TestDescriptor parent, String packageName) {
-		Optional<TestDescriptor> child = Optional.of(descriptorForParentAndName(parent, packageName));
-		child.ifPresent(parent::addChild);
-		return child;
+		TestDescriptor child = descriptorForParentAndName(parent, packageName);
+		parent.addChild(child);
+		return Optional.of(child);
 	}
 }

@@ -130,7 +130,14 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 	void givenAClassSelector_resolvesOnlyTheTestClassWithItsPackageHierarchy() throws Exception {
 		TestDiscoveryRequest discoveryRequest = request().select(forClass(SingleTestClass.class)).build();
 		registry.notifyResolvers(engineDescriptor, discoveryRequest);
-        verifyOccurrencesOf_Packages_Classes_And_Methods(7, 1, 2);
+		verifyOccurrencesOf_Packages_Classes_And_Methods(7, 1, 2);
+	}
+
+	@Test
+	void givenAMethodSelector_resolvesOnlyTheTestMethodWithItsClassAndPackageHierarchy() throws Exception {
+		TestDiscoveryRequest discoveryRequest = request().select(forMethod(SingleTestClass.class, "test1")).build();
+		registry.notifyResolvers(engineDescriptor, discoveryRequest);
+		verifyOccurrencesOf_Packages_Classes_And_Methods(7, 1, 1);
 	}
 
 	// @formatter:off
