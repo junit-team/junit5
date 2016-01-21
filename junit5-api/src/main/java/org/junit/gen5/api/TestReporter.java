@@ -13,18 +13,24 @@ package org.junit.gen5.api;
 import org.junit.gen5.commons.reporting.ReportEntry;
 
 /**
- * Variables of type {@code TestReporter} can be injected into
- * methods of test classes annotated with {@link BeforeEach},
- * {@link AfterEach}, and {@link Test} annotations, respectively.
+ * Parameters of type {@code TestReporter} can be injected into methods of
+ * test classes annotated with {@link BeforeEach @BeforeEach},
+ * {@link AfterEach @AfterEach}, and {@link Test @Test}.
  *
- * <p>Within these methods these references can then be used
- * to publish {@link ReportEntry} instances.
+ * <p>Within such methods a {@code TestReporter} can be used to publish
+ * {@link ReportEntry} instances.
  *
  * @since 5.0
+ * @see ReportEntry
  */
 @FunctionalInterface
 public interface TestReporter {
 
+	/**
+	 * Publish the supplied {@code ReportEntry}.
+	 *
+	 * @param entry the entry to publish
+	 */
 	void publishEntry(ReportEntry entry);
 
 }

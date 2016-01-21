@@ -18,7 +18,7 @@ import org.junit.gen5.commons.util.Preconditions;
 /**
  * This class represents a {@code ReportEntry} &mdash;
  * that is a map of {@code String}-based key-value pairs
- * to be published to the reporting infrastructure
+ * to be published to the reporting infrastructure.
  *
  * @since 5.0
  */
@@ -28,15 +28,16 @@ public class ReportEntry {
 	private final Map<String, String> values;
 
 	/**
+	 * Construct a new {@code ReportEntry} with the supplied values.
+	 *
 	 * @param values the values to be published
 	 */
 	public ReportEntry(Map<String, String> values) {
-		Preconditions.notNull(values, "values to be reported must not be null");
-		this.values = values;
+		this.values = Preconditions.notNull(values, "values to be reported must not be null");
 	}
 
 	/**
-	 * Get the values to be published
+	 * Get the values to be published.
 	 *
 	 * @return the map of values to be published
 	 */
@@ -46,7 +47,8 @@ public class ReportEntry {
 
 	/**
 	 * Get the creation date of this {@code ReportEntry}.
-	 * Could be used for e.g., ordering entries.
+	 *
+	 * <p>Can be used, for example, to order entries.
 	 *
 	 * @return the date at which this entry was created
 	 */
