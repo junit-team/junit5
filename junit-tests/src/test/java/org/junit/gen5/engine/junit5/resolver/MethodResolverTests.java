@@ -17,7 +17,7 @@ import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.engine.junit5.resolver.ClassResolver.descriptorForParentAndClass;
 import static org.junit.gen5.engine.junit5.resolver.MethodResolver.descriptorForParentAndMethod;
 import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForParentAndName;
-import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.Method;
 
