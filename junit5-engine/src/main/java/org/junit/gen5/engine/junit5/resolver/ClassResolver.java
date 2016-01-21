@@ -88,8 +88,7 @@ public class ClassResolver extends JUnit5TestResolver {
 	private List<TestDescriptor> resolveTopLevelClassesInPackage(String packageName, TestDescriptor parent,
 			EngineDiscoveryRequest discoveryRequest) {
 		// @formatter:off
-        return findAllClassesInPackageOnly(packageName, aClass -> true).stream()
-                .filter(this::isTopLevelTestClass)
+        return findAllClassesInPackageOnly(packageName, this::isTopLevelTestClass).stream()
                 .map(testClass -> descriptorForParentAndClass(parent, testClass))
                 .peek(parent::addChild)
                 .collect(toList());
