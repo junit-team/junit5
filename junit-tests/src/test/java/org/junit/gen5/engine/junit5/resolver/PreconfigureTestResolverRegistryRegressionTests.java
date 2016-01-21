@@ -53,7 +53,7 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 	@BeforeEach
 	void setUp() {
 		testEngine = new TestEngineStub();
-		registry = new PreconfiguredTestResolverRegistry(testEngine);
+		registry = new PreconfiguredTestResolverRegistry();
 
 		engineDescriptor = new EngineDescriptor(testEngine);
 		packageLevel1 = descriptorForParentAndName(engineDescriptor, "org");

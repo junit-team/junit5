@@ -18,17 +18,14 @@ import java.util.Map;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
 
 /**
  * @since 5.0
  */
 public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
-	private TestEngine testEngine;
 	private Map<Class<? extends TestResolver>, TestResolver> testResolvers;
 
-	public PreconfiguredTestResolverRegistry(TestEngine testEngine) {
-		this.testEngine = testEngine;
+	public PreconfiguredTestResolverRegistry() {
 		this.testResolvers = new LinkedHashMap<>();
 
 		register(new PackageResolver());
