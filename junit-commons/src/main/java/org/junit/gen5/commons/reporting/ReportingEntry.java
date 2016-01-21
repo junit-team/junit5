@@ -13,6 +13,8 @@ package org.junit.gen5.commons.reporting;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+import org.junit.gen5.commons.util.Preconditions;
+
 /**
  * This class represents a {@code ReportingEntry} &mdash;
  * that is a map of {@code String}-based key-value pairs
@@ -29,6 +31,7 @@ public class ReportingEntry {
 	 * @param values the values to be published
 	 */
 	public ReportingEntry(Map<String, String> values) {
+		Preconditions.notNull(values, "values to be reported must not be null");
 		this.values = values;
 	}
 
