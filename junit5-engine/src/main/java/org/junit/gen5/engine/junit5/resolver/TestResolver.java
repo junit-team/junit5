@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
+import java.util.Optional;
+
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
@@ -25,4 +28,6 @@ public interface TestResolver {
 	void initialize(TestEngine testEngine, TestResolverRegistry testResolverRegistry);
 
 	void resolveAllFrom(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest);
+
+	Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root);
 }

@@ -10,9 +10,11 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 
@@ -99,5 +101,10 @@ public class NestedStaticClassResolver extends JUnit5TestResolver {
 					return testDescriptor;
 				}
 		*/
+	}
+
+	@Override
+	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
+		return Optional.empty();
 	}
 }

@@ -12,10 +12,12 @@ package org.junit.gen5.engine.junit5.resolver;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.discovery.PackageSelector;
@@ -41,6 +43,11 @@ public class PackageResolver extends JUnit5TestResolver {
 		}
 
 		addChildrenAndNotify(parent, packageDescriptors, discoveryRequest);
+	}
+
+	@Override
+	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
+		return Optional.empty();
 	}
 
 	private List<NewPackageTestDescriptor> resolvePackagesFromSelectors(TestDescriptor parent,

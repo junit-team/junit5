@@ -10,9 +10,11 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
@@ -132,5 +134,10 @@ public class MethodResolver extends JUnit5TestResolver {
 				}
 				return parameterTypes;
 		*/
+	}
+
+	@Override
+	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
+		return Optional.empty();
 	}
 }

@@ -10,8 +10,7 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
@@ -38,7 +37,18 @@ public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
 
 	@Override
 	public TestDescriptor fetchParent(DiscoverySelector selector, TestDescriptor root) {
-		return null;
+		List<TestDescriptor> parents = new LinkedList<>();
+		for (TestResolver testResolver : testResolvers.values()) {
+			testResolver.fetchBySelector(selector, root).ifPresent(parents::add);
+		}
+
+		if (parents.isEmpty()) {
+			return root;
+		}
+		else {
+			// TODO LOG warning, if (parents.size() > 1)!
+			return parents.get(0);
+		}
 	}
 
 	@Override

@@ -13,14 +13,19 @@ package org.junit.gen5.engine.junit5.resolver;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackageOnly;
 import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.discovery.ClassSelector;
+import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.NewPackageTestDescriptor;
 
@@ -36,22 +41,47 @@ public class ClassResolver extends JUnit5TestResolver {
 		Preconditions.notNull(parent, "parent must not be null!");
 		Preconditions.notNull(discoveryRequest, "discoveryRequest must not be null!");
 
-		List<ClassTestDescriptor> classDescriptors = new LinkedList<>();
-		if (parent instanceof NewPackageTestDescriptor) {
+		if (parent.isRoot()) {
+			resolveClassesFromSelectors(parent, discoveryRequest);
+		}
+		else if (parent instanceof NewPackageTestDescriptor) {
 			String packageName = ((NewPackageTestDescriptor) parent).getPackageName();
-			classDescriptors.addAll(resolveTopLevelClassesInPackage(parent, packageName));
+			resolveTopLevelClassesInPackage(packageName, parent, discoveryRequest);
 		}
 
-		addChildrenAndNotify(parent, classDescriptors, discoveryRequest);
 	}
 
-	private List<ClassTestDescriptor> resolveTopLevelClassesInPackage(TestDescriptor parent, String packageName) {
+	@Override
+	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
+		return Optional.empty();
+	}
+
+	private void resolveClassesFromSelectors(TestDescriptor root, EngineDiscoveryRequest discoveryRequest) {
 		// @formatter:off
-        return findAllClassesInPackageOnly(packageName, aClass -> true).stream()
+        List<Class<?>> testClasses = discoveryRequest.getSelectorsByType(ClassSelector.class).stream()
+                .map(ClassSelector::getTestClass)
+                .filter(this::isTopLevelTestClass)
+                .collect(Collectors.toList());
+        // @formatter:on
+
+		for (Class<?> testClass : testClasses) {
+			PackageSelector packageSelector = forPackageName(testClass.getPackage().getName());
+			TestDescriptor parent = getTestResolverRegistry().fetchParent(packageSelector, root);
+			ClassTestDescriptor child = descriptorForParentAndClass(parent, testClass);
+			addChildAndNotify(parent, child, discoveryRequest);
+		}
+	}
+
+	private void resolveTopLevelClassesInPackage(String packageName, TestDescriptor parent,
+			EngineDiscoveryRequest discoveryRequest) {
+		// @formatter:off
+        List<ClassTestDescriptor> testClasses = findAllClassesInPackageOnly(packageName, aClass -> true).stream()
                 .filter(this::isTopLevelTestClass)
                 .map(testClass -> descriptorForParentAndClass(parent, testClass))
                 .collect(toList());
         // @formatter:on
+
+		addChildrenAndNotify(parent, testClasses, discoveryRequest);
 	}
 
 	private boolean isTopLevelTestClass(Class<?> candidate) {

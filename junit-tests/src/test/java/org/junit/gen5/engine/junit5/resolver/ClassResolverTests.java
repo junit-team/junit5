@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5.resolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.engine.junit5.resolver.ClassResolver.descriptorForParentAndClass;
 import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForParentAndName;
 import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
@@ -44,6 +45,39 @@ public class ClassResolverTests {
 	void withAnEmptyDiscoveryRequest_doesNotResolveAnything() throws Exception {
 		resolver.resolveAllFrom(engineDescriptor, request().build());
 		assertThat(testResolverRegistryMock.testDescriptors).isEmpty();
+	}
+
+	@Test
+	void givenAClassSelector_resolvesTheClass() {
+		NewPackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor,
+			"org.junit.gen5.engine.junit5.resolver.testpackage");
+		engineDescriptor.addChild(testPackage);
+
+		testResolverRegistryMock.fetchParentFunction = selector -> testPackage;
+
+		resolver.resolveAllFrom(engineDescriptor, request().select(forClass(SingleTestClass.class)).build());
+
+		// @formatter:off
+        assertThat(testResolverRegistryMock.testDescriptors)
+                .containsOnly(
+                        descriptorForParentAndClass(testPackage, SingleTestClass.class)
+                )
+                .doesNotHaveDuplicates();
+        // @formatter:on
+	}
+
+	@Test
+	void givenAPackageAndAClassSelector_resolvesTheClass_AndAttachesItToTheExistingTree() {
+		NewPackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor,
+			"org.junit.gen5.engine.junit5.resolver.testpackage");
+		engineDescriptor.addChild(testPackage);
+		testResolverRegistryMock.fetchParentFunction = selector -> testPackage;
+
+		resolver.resolveAllFrom(engineDescriptor, request().select(forClass(SingleTestClass.class)).build());
+
+		assertThat(engineDescriptor.getChildren()).containsOnly(testPackage);
+		assertThat(testPackage.getChildren()).containsOnly(
+			descriptorForParentAndClass(testPackage, SingleTestClass.class));
 	}
 
 	@Test
