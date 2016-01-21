@@ -11,7 +11,10 @@
 package org.junit.gen5.engine;
 
 /**
- * {@code GenericFilter} filters particular tests during and after test discovery.
+ * Filters particular tests during/after test discovery.
+ *
+ * <p>Clients should not implement this interface directly but rather one of
+ * its subinterfaces.
  *
  * @since 5.0
  * @see DiscoveryFilter
