@@ -45,12 +45,7 @@ public class PackageResolver extends JUnit5TestResolver {
 		addChildrenAndNotify(parent, packageDescriptors, discoveryRequest);
 	}
 
-	@Override
-	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
-		return Optional.empty();
-	}
-
-	private List<NewPackageTestDescriptor> resolvePackagesFromSelectors(TestDescriptor parent,
+    private List<NewPackageTestDescriptor> resolvePackagesFromSelectors(TestDescriptor parent,
 			EngineDiscoveryRequest discoveryRequest) {
 		// @formatter:off
 		return discoveryRequest.getSelectorsByType(PackageSelector.class).stream()
@@ -70,4 +65,28 @@ public class PackageResolver extends JUnit5TestResolver {
 				.collect(Collectors.toList());
 		// @formatter:on
 	}
+
+    @Override
+    public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
+        if (selector instanceof PackageSelector) {
+            String packageName = ((PackageSelector) selector).getPackageName();
+            int splitterIndex = packageName.lastIndexOf('.');
+            if (splitterIndex == -1) {
+                return getTestDescriptor(root, packageName);
+            } else {
+                String parentPackageName = packageName.substring(0, splitterIndex);
+                String currentPackageName = packageName.substring(splitterIndex + 1);
+
+                TestDescriptor parent = fetchBySelector(PackageSelector.forPackageName(parentPackageName), root).orElse(root);
+                return getTestDescriptor(parent, currentPackageName);
+            }
+        }
+        return Optional.empty();
+    }
+
+    private Optional<TestDescriptor> getTestDescriptor(TestDescriptor parent, String packageName) {
+        Optional<TestDescriptor> child = Optional.of(descriptorForParentAndName(parent, packageName));
+        child.ifPresent(parent::addChild);
+        return child;
+    }
 }

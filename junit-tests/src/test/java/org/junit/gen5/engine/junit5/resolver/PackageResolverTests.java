@@ -10,10 +10,15 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForParentAndName;
 import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
@@ -96,5 +101,21 @@ public class PackageResolverTests {
 		assertThat(testDescriptor.isTest()).isFalse();
 		assertThat(testDescriptor.getParent().isPresent()).isTrue();
 		assertThat(testDescriptor.getParent().get()).isEqualTo(parent);
+	}
+
+	@Test
+	void givenAPackageSelector_fetchesTheTreeUpToTheRoot() {
+		String packageName = "org.junit.gen5.engine.junit5.resolver.testpackage";
+		String[] packageParts = packageName.split("\\.");
+
+		PackageSelector selector = forPackageName(packageName);
+		Optional<TestDescriptor> testDescriptor = resolver.fetchBySelector(selector, engineDescriptor);
+
+		assertThat(testDescriptor.isPresent()).isTrue();
+		assertThat(this.engineDescriptor.getChildren()).hasSize(1);
+
+		Set<? extends TestDescriptor> packageDescriptors = this.engineDescriptor.allDescendants();
+		List<String> descriptorNames = packageDescriptors.stream().map(TestDescriptor::getName).collect(toList());
+		assertThat(descriptorNames).containsOnly(packageParts).doesNotHaveDuplicates();
 	}
 }
