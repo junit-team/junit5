@@ -73,8 +73,8 @@ public class ExtensionContextTests {
 		ExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, engineExecutionListener,
 			classTestDescriptor);
 
-		ReportEntry entry1 = new ReportEntry(Collections.emptyMap());
-		ReportEntry entry2 = new ReportEntry(Collections.singletonMap("key", "value"));
+		ReportEntry entry1 = ReportEntry.from(Collections.emptyMap());
+		ReportEntry entry2 = ReportEntry.from(Collections.singletonMap("key", "value"));
 
 		extensionContext.publishReportEntry(entry1);
 		extensionContext.publishReportEntry(entry2);

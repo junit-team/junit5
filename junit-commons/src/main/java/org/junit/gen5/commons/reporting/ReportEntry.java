@@ -28,21 +28,31 @@ public class ReportEntry {
 	private final LocalDateTime creationTimestamp = LocalDateTime.now();
 	private final Map<String, String> values;
 
-	/**
-	 * Construct a new {@code ReportEntry} with the supplied values.
-	 *
-	 * @param values the values to be published
-	 */
-	public ReportEntry(Map<String, String> values) {
+    /**
+     * Provide a new {@code ReportEntry} with the supplied values.
+     *
+     * @param values the values to be published
+     */
+    public static ReportEntry from(Map<String, String> values) {
+        return new ReportEntry(values);
+    }
+
+    /**
+     * Provide a new {@code ReportEntry} with the supplied values.
+     *
+     * @param key the key of the value to be published
+     * @param value the value to be published
+     */
+    public static ReportEntry from(String key, String value) {
+        return new ReportEntry(key, value);
+    }
+
+	private ReportEntry(Map<String, String> values) {
 		Preconditions.notNull(values, "values to be reported must not be null");
 		this.values = values;
 	}
 
-	/**
-	 * @param key the key of the value to be published
-	 * @param value the value to be published
-	 */
-	public ReportEntry(String key, String value) {
+    private ReportEntry(String key, String value) {
 		this(Collections.singletonMap(key, value));
 	}
 

@@ -34,7 +34,7 @@ public interface TestReporter {
 	void publishEntry(ReportEntry entry);
 
 	default void publishEntry(String key, String value) {
-		this.publishEntry(new ReportEntry(key, value));
+		this.publishEntry(ReportEntry.from(key, value));
 	}
 
 }

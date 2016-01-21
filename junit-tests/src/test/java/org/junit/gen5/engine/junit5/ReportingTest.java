@@ -45,24 +45,24 @@ public class ReportingTest extends AbstractJUnit5TestEngineTests {
 
 		@BeforeEach
 		void before(TestReporter reporter) {
-			reporter.publishEntry(new ReportEntry(new HashMap<>()));
+			reporter.publishEntry(ReportEntry.from(new HashMap<>()));
 		}
 
 		@AfterEach
 		void after(TestReporter reporter) {
-			reporter.publishEntry(new ReportEntry(new HashMap<>()));
+			reporter.publishEntry(ReportEntry.from(new HashMap<>()));
 		}
 
 		@Test
 		void succeedingTest(TestReporter reporter) {
-			reporter.publishEntry(new ReportEntry(new HashMap<>()));
+			reporter.publishEntry(ReportEntry.from(new HashMap<>()));
 			reporter.publishEntry("userName", "dk38");
 		}
 
 		@Test
 		@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
 		void testWithNullReportData(TestReporter reporter) {
-			expectThrows(PreconditionViolationException.class, () -> reporter.publishEntry(new ReportEntry(null)));
+			expectThrows(PreconditionViolationException.class, () -> reporter.publishEntry(ReportEntry.from(null)));
 		}
 
 	}
