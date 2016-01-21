@@ -15,7 +15,7 @@ package org.junit.gen5.api.extension;
  * that wish to <em>react to thrown exceptions</em> in tests.
  *
  * <p>Common use cases include swallowing an exception if it's anticipated
- * or rollback a transaction in certain error scenarios.
+ * or rolling back a transaction in certain error scenarios.
  *
  * <p>Implementations must provide a no-args constructor.
  *
@@ -31,7 +31,7 @@ public interface ExceptionHandlerExtensionPoint extends ExtensionPoint {
 	 * <ul>
 	 *     <li>Rethrow the incoming {@code throwable}</li>
 	 *     <li>Throw a newly constructed {@link Exception} or {@link Throwable}</li>
-	 *     <li>Swallowing the incoming {@link Throwable throwable}</li>
+	 *     <li>Swallow the incoming {@link Throwable throwable}</li>
 	 * </ul>
 	 *
 	 * <p>If the incoming {@code throwable} is swallowed, other registered
