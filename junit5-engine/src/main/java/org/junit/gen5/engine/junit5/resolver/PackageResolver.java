@@ -21,19 +21,19 @@ import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.junit5.descriptor.NewPackageTestDescriptor;
 
 public class PackageResolver extends JUnit5TestResolver {
-	public static NewPackageTestDescriptor descriptorForName(String name) {
-		return new NewPackageTestDescriptor(String.format("[package:%s]", name), name);
+	public static NewPackageTestDescriptor descriptorForParentAndName(TestDescriptor parent, String name) {
+		return new NewPackageTestDescriptor(String.format("%s/[package:%s]", parent.getUniqueId(), name), name);
 	}
 
 	@Override
 	public void resolveAllFrom(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
 		List<NewPackageTestDescriptor> packageDescriptors = new LinkedList<>();
 		if (parent.isRoot()) {
-			packageDescriptors.addAll(resolvePackagesFromSelectors(discoveryRequest));
+			packageDescriptors.addAll(resolvePackagesFromSelectors(parent, discoveryRequest));
 		}
 		else if (parent instanceof NewPackageTestDescriptor) {
 			String packageName = ((NewPackageTestDescriptor) parent).getPackageName();
-			packageDescriptors.addAll(resolveSubpackages(packageName));
+			packageDescriptors.addAll(resolveSubpackages(parent, packageName));
 		}
 
 		for (NewPackageTestDescriptor packageDescriptor : packageDescriptors) {
@@ -42,21 +42,23 @@ public class PackageResolver extends JUnit5TestResolver {
 		}
 	}
 
-	private List<NewPackageTestDescriptor> resolvePackagesFromSelectors(EngineDiscoveryRequest discoveryRequest) {
+	private List<NewPackageTestDescriptor> resolvePackagesFromSelectors(TestDescriptor parent,
+			EngineDiscoveryRequest discoveryRequest) {
 		// @formatter:off
 		return discoveryRequest.getSelectorsByType(PackageSelector.class).stream()
 				.map(PackageSelector::getPackageName)
 				.distinct()
-				.map(PackageResolver::descriptorForName)
+				.map(name -> descriptorForParentAndName(parent, name))
 				.collect(Collectors.toList());
 		// @formatter:on
 	}
 
-	private List<NewPackageTestDescriptor> resolveSubpackages(String packageName) {
+	private List<NewPackageTestDescriptor> resolveSubpackages(TestDescriptor parent, String packageName) {
 		// @formatter:off
 		return ReflectionUtils.findAllPackagesInClasspathRoot(packageName).stream()
 				.map(Package::getName)
-				.map(PackageResolver::descriptorForName)
+                .map(name -> name.substring(packageName.length() + 1))
+                .map(name -> descriptorForParentAndName(parent, name))
 				.collect(Collectors.toList());
 		// @formatter:on
 	}

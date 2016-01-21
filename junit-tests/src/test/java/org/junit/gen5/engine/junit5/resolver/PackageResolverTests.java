@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit5.resolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
-import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForName;
+import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForParentAndName;
 import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.BeforeEach;
@@ -53,7 +53,7 @@ public class PackageResolverTests {
 		resolver.resolveAllFrom(engineDescriptor, request().select(selector).build());
 
 		assertThat(testResolverRegistrySpy.testDescriptors).containsOnly(
-			descriptorForName("org.junit.gen5.engine.junit5.resolver.testpackage"));
+			descriptorForParentAndName(engineDescriptor, "org.junit.gen5.engine.junit5.resolver.testpackage"));
 		verifyDescriptor(testResolverRegistrySpy.testDescriptors.get(0),
 			"org.junit.gen5.engine.junit5.resolver.testpackage", engineDescriptor);
 	}
@@ -65,38 +65,36 @@ public class PackageResolverTests {
 		resolver.resolveAllFrom(engineDescriptor, request().select(selector, selector).build());
 
 		assertThat(testResolverRegistrySpy.testDescriptors).containsOnlyOnce(
-			descriptorForName("org.junit.gen5.engine.junit5.resolver.testpackage"));
-        verifyDescriptor(testResolverRegistrySpy.testDescriptors.get(0),
-                "org.junit.gen5.engine.junit5.resolver.testpackage", engineDescriptor);
+			descriptorForParentAndName(engineDescriptor, "org.junit.gen5.engine.junit5.resolver.testpackage"));
+		verifyDescriptor(testResolverRegistrySpy.testDescriptors.get(0),
+			"org.junit.gen5.engine.junit5.resolver.testpackage", engineDescriptor);
 	}
 
 	@Test
 	void givenAPackageSelector_resolvesPackagesRecursively() throws Exception {
 		PackageSelector selector = forPackageName("org.junit.gen5.engine.junit5.resolver.testpackage");
-		NewPackageTestDescriptor firstLevelPackage = descriptorForName(
+		NewPackageTestDescriptor firstLevelPackage = descriptorForParentAndName(engineDescriptor,
 			"org.junit.gen5.engine.junit5.resolver.testpackage");
 		engineDescriptor.addChild(firstLevelPackage);
 
 		resolver.resolveAllFrom(firstLevelPackage, request().select(selector).build());
 
 		assertThat(testResolverRegistrySpy.testDescriptors).containsOnly(
-			descriptorForName("org.junit.gen5.engine.junit5.resolver.testpackage.subpackage1"),
-			descriptorForName("org.junit.gen5.engine.junit5.resolver.testpackage.subpackage2"));
+			descriptorForParentAndName(firstLevelPackage, "subpackage1"),
+			descriptorForParentAndName(firstLevelPackage, "subpackage2"));
 
-        verifyDescriptor(testResolverRegistrySpy.testDescriptors.get(0),
-                "org.junit.gen5.engine.junit5.resolver.testpackage.subpackage1", firstLevelPackage);
-        verifyDescriptor(testResolverRegistrySpy.testDescriptors.get(1),
-                "org.junit.gen5.engine.junit5.resolver.testpackage.subpackage2", firstLevelPackage);
+		verifyDescriptor(testResolverRegistrySpy.testDescriptors.get(0), "subpackage1", firstLevelPackage);
+		verifyDescriptor(testResolverRegistrySpy.testDescriptors.get(1), "subpackage2", firstLevelPackage);
 	}
 
-    private void verifyDescriptor(TestDescriptor testDescriptor, String packageName, TestDescriptor parent) {
-        assertThat(testDescriptor.getUniqueId()).isEqualTo("[package:" + packageName + "]");
-        assertThat(testDescriptor.getName()).isEqualTo(packageName);
-        assertThat(testDescriptor.getDisplayName()).isEqualTo(packageName);
-        assertThat(testDescriptor.isRoot()).isFalse();
-        assertThat(testDescriptor.isContainer()).isTrue();
-        assertThat(testDescriptor.isTest()).isFalse();
-        assertThat(testDescriptor.getParent().isPresent()).isTrue();
-        assertThat(testDescriptor.getParent().get()).isEqualTo(parent);
-    }
+	private void verifyDescriptor(TestDescriptor testDescriptor, String packageName, TestDescriptor parent) {
+		assertThat(testDescriptor.getUniqueId()).isEqualTo(parent.getUniqueId() + "/[package:" + packageName + "]");
+		assertThat(testDescriptor.getName()).isEqualTo(packageName);
+		assertThat(testDescriptor.getDisplayName()).isEqualTo(packageName);
+		assertThat(testDescriptor.isRoot()).isFalse();
+		assertThat(testDescriptor.isContainer()).isTrue();
+		assertThat(testDescriptor.isTest()).isFalse();
+		assertThat(testDescriptor.getParent().isPresent()).isTrue();
+		assertThat(testDescriptor.getParent().get()).isEqualTo(parent);
+	}
 }
