@@ -194,7 +194,8 @@ public final class Assertions {
 		}
 	}
 
-	public static void assertThrows(Class<? extends Throwable> expected, Executable executable) {
+	@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+    public static void assertThrows(Class<? extends Throwable> expected, Executable executable) {
 		expectThrows(expected, executable);
 	}
 

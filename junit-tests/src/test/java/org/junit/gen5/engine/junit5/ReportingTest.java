@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
@@ -60,9 +61,8 @@ public class ReportingTest extends AbstractJUnit5TestEngineTests {
 		}
 
 		@Test
-		@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
 		void testWithNullReportData(TestReporter reporter) {
-			expectThrows(PreconditionViolationException.class, () -> reporter.publishEntry(ReportEntry.from(null)));
+			assertThrows(PreconditionViolationException.class, () -> reporter.publishEntry(ReportEntry.from(null)));
 		}
 
 	}
