@@ -21,21 +21,29 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.IntFunction;
+import java.util.logging.Logger;
 
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
-import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
+import org.junit.runner.manipulation.Filterable;
 import org.junit.runners.model.RunnerBuilder;
 
 class TestClassRequestResolver {
 
-	private final EngineDescriptor engineDescriptor;
+	private final TestDescriptor engineDescriptor;
+	private final Logger logger;
 
-	TestClassRequestResolver(EngineDescriptor engineDescriptor) {
+	TestClassRequestResolver(TestDescriptor engineDescriptor) {
+		this(engineDescriptor, Logger.getLogger(TestClassRequestResolver.class.getName()));
+	}
+
+	TestClassRequestResolver(TestDescriptor engineDescriptor, Logger logger) {
 		this.engineDescriptor = engineDescriptor;
+		this.logger = logger;
 	}
 
 	void populateEngineDescriptorFrom(Set<TestClassRequest> requests) {
@@ -59,10 +67,16 @@ class TestClassRequestResolver {
 			List<RunnerTestDescriptorAwareFilter> filters) {
 		RunnerTestDescriptor runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, runner);
 		if (!filters.isEmpty()) {
-			Filter filter = createOrFilter(filters, runnerTestDescriptor);
-			Runner filteredRunner = runnerTestDescriptor.toRequest().filterWith(filter).getRunner();
-			// TODO #40 Log warning if runner does not implement Filterable
-			runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, filteredRunner);
+			if (runner instanceof Filterable) {
+				Filter filter = createOrFilter(filters, runnerTestDescriptor);
+				Runner filteredRunner = runnerTestDescriptor.toRequest().filterWith(filter).getRunner();
+				runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, filteredRunner);
+			}
+			else {
+				logger.warning(() -> "Runner " + runner.getClass().getName() //
+						+ " (used on " + testClass.getName() + ") does not support filtering" //
+						+ " and will therefore be run completely.");
+			}
 		}
 		return runnerTestDescriptor;
 	}

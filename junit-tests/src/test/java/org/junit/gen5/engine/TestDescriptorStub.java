@@ -12,9 +12,9 @@ package org.junit.gen5.engine;
 
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 
-final class TestDescriptorStub extends AbstractTestDescriptor {
+public final class TestDescriptorStub extends AbstractTestDescriptor {
 
-	TestDescriptorStub(String uniqueId) {
+	public TestDescriptorStub(String uniqueId) {
 		super(uniqueId);
 	}
 
