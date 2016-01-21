@@ -21,6 +21,7 @@ package org.junit.gen5.api.extension;
  * @see ContainerExecutionCondition
  * @see TestExecutionCondition
  * @see InstancePostProcessor
+ * @see ExceptionHandlerExtensionPoint
  * @see MethodParameterResolver
  * @see BeforeEachExtensionPoint
  * @see AfterEachExtensionPoint
