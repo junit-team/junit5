@@ -10,101 +10,105 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
-import java.util.Optional;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
+import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.gen5.api.Nested;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.discovery.ClassSelector;
+import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
 
 public class NestedMemberClassResolver extends JUnit5TestResolver {
-	private static final Logger LOG = Logger.getLogger(NestedMemberClassResolver.class.getName());
+	public static NestedClassTestDescriptor descriptorForParentAndNestedClass(TestDescriptor parent,
+			Class<?> testClass) {
+		String className = testClass.getSimpleName();
+		String uniqueId = parent.getUniqueId() + "/[class:" + className + "]";
 
-	private Pattern uniqueIdRegExPattern = Pattern.compile("^(.+?):([^$]+\\$[^#]+)$");
+		if (parent.findByUniqueId(uniqueId).isPresent()) {
+			return (NestedClassTestDescriptor) parent.findByUniqueId(uniqueId).get();
+		}
+		else {
+			return new NestedClassTestDescriptor(uniqueId, testClass);
+		}
+	}
 
 	@Override
 	public void resolveAllFrom(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
-		/*
-				Preconditions.notNull(parent, "parent must not be null!");
-				Preconditions.notNull(discoveryRequest, "discoveryRequest must not be null!");
+		Preconditions.notNull(parent, "parent must not be null!");
+		Preconditions.notNull(discoveryRequest, "discoveryRequest must not be null!");
 
-				if (parent.isRoot()) {
-					List<TestDescriptor> classBasedTestClasses = resolveAllClassesFromSpecification(parent, discoveryRequest);
-					getTestResolverRegistry().notifyResolvers(classBasedTestClasses, discoveryRequest);
+		List<TestDescriptor> classDescriptors = new LinkedList<>();
+		if (parent.isRoot()) {
+			classDescriptors.addAll(resolveClassesFromSelectors(parent, discoveryRequest));
+		}
+		else if (parent instanceof ClassTestDescriptor) {
+			Class<?> parentTestClass = ((ClassTestDescriptor) parent).getTestClass();
+			classDescriptors.addAll(resolveNestedClassesInClass(parentTestClass, parent, discoveryRequest));
+		}
 
-					List<TestDescriptor> uniqueIdBasedTestClasses = resolveUniqueIdsFromSpecification(parent, discoveryRequest);
-					getTestResolverRegistry().notifyResolvers(uniqueIdBasedTestClasses, discoveryRequest);
-				}
-				else if (parent instanceof ClassTestDescriptor) {
-					Class<?> parentClass = ((ClassTestDescriptor) parent).getTestClass();
-					List<Class<?>> nestedClasses = ReflectionUtils.findNestedClasses(parentClass,
-						nestedClass -> AnnotationUtils.isAnnotated(nestedClass, Nested.class));
-					getTestResolverRegistry().notifyResolvers(getTestDescriptorsForTestClasses(parent, nestedClasses),
-						discoveryRequest);
-				}
-			}
+		for (TestDescriptor child : classDescriptors) {
+			getTestResolverRegistry().notifyResolvers(child, discoveryRequest);
+		}
+	}
 
-			private List<TestDescriptor> resolveAllClassesFromSpecification(TestDescriptor parent,
-					EngineDiscoveryRequest discoveryRequest) {
-				List<Class<?>> testClasses = discoveryRequest.getClasses();
-				return getTestDescriptorsForTestClasses(parent, testClasses);
-			}
-
-			private List<TestDescriptor> resolveUniqueIdsFromSpecification(TestDescriptor parent,
-					EngineDiscoveryRequest discoveryRequest) {
-				List<String> uniqueIds = discoveryRequest.getUniqueIds();
-				List<Class<?>> foundClasses = new LinkedList<>();
-
-				for (String uniqueId : uniqueIds) {
-					Matcher matcher = uniqueIdRegExPattern.matcher(uniqueId);
-					if (matcher.matches()) {
-						try {
-							String className = matcher.group(2);
-							foundClasses.add(Class.forName(className));
-						}
-						catch (ClassNotFoundException e) {
-							LOG.fine(() -> "Skipping uniqueId " + uniqueId
-									+ ": UniqueId does not seem to represent a valid test class.");
-						}
-					}
-				}
-
-				return getTestDescriptorsForTestClasses(parent, foundClasses);
-			}
-
-			private List<TestDescriptor> getTestDescriptorsForTestClasses(TestDescriptor parent, List<Class<?>> testClasses) {
-				List<TestDescriptor> result = new LinkedList<>();
-				for (Class<?> testClass : testClasses) {
-					if (ReflectionUtils.isNestedClass(testClass)) {
-						result.add(getTestDescriptorForTestClass(parent, testClass));
-					}
-				}
-				return result;
-			}
-
-			ClassTestDescriptor getTestDescriptorForTestClass(TestDescriptor parentTestDescriptor, Class<?> testClass) {
-				ClassTestDescriptor testDescriptor;
-				testDescriptor = new ClassTestDescriptor(getTestEngine(), testClass);
-				testDescriptor = mergeIntoTree(parentTestDescriptor, testDescriptor);
-				return testDescriptor;
-			}
-
-			private ClassTestDescriptor mergeIntoTree(TestDescriptor parentTestDescriptor, ClassTestDescriptor testDescriptor) {
-				Optional<? extends TestDescriptor> uniqueTestDescriptor = parentTestDescriptor.getRoot().findByUniqueId(
-					testDescriptor.getUniqueId());
-				if (uniqueTestDescriptor.isPresent()) {
-					return (ClassTestDescriptor) uniqueTestDescriptor.get();
-				}
-				else {
-					parentTestDescriptor.addChild(testDescriptor);
-					return testDescriptor;
-				}
-		*/
+	private List<TestDescriptor> resolveClassesFromSelectors(TestDescriptor root,
+			EngineDiscoveryRequest discoveryRequest) {
+		// @formatter:off
+        return discoveryRequest.getSelectorsByType(ClassSelector.class).stream()
+                .map(classSelector -> fetchBySelector(classSelector, root))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(toList());
+        // @formatter:on
 	}
 
 	@Override
 	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
+		if (selector instanceof ClassSelector) {
+			Class<?> testClass = ((ClassSelector) selector).getTestClass();
+			if (isNestedTestClass(testClass)) {
+				ClassSelector classSelector = forClass(testClass.getEnclosingClass());
+				TestDescriptor parent = getTestResolverRegistry().fetchParent(classSelector, root);
+				return getTestDescriptor(parent, testClass);
+			}
+		}
 		return Optional.empty();
+	}
+
+	private List<TestDescriptor> resolveNestedClassesInClass(Class<?> parentClass, TestDescriptor parent,
+			EngineDiscoveryRequest discoveryRequest) {
+		// @formatter:off
+        return findNestedClasses(parentClass, this::isNestedTestClass).stream()
+                .map(testClass -> descriptorForParentAndNestedClass(parent, testClass))
+                .peek(parent::addChild)
+                .collect(toList());
+        // @formatter:on
+	}
+
+	private boolean isNestedTestClass(Class<?> candidate) {
+		//please do not collapse into single return
+		if (isStatic(candidate))
+			return false;
+		if (isPrivate(candidate))
+			return false;
+		if (!candidate.isMemberClass())
+			return false;
+		return isAnnotated(candidate, Nested.class);
+	}
+
+	private Optional<TestDescriptor> getTestDescriptor(TestDescriptor parent, Class<?> testClass) {
+		TestDescriptor child = descriptorForParentAndNestedClass(parent, testClass);
+		parent.addChild(child);
+		return Optional.of(child);
 	}
 }

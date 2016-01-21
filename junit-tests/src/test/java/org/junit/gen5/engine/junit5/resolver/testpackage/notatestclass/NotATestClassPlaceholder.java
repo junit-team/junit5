@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.junit5.resolver.testpackage.notatestclass;
 
+import org.junit.gen5.api.Assertions;
+import org.junit.gen5.api.Test;
+
 /**
  * This class is intended for testing purposes only. Please do not remove!
  *
@@ -17,4 +20,17 @@ package org.junit.gen5.engine.junit5.resolver.testpackage.notatestclass;
  * not be available in the compiled classes folder.
  */
 public class NotATestClassPlaceholder {
+	private class NotANestedTestClassBecauseOfLimitedVisibility {
+		@Test
+		void test() {
+			Assertions.fail("This must not be executed!");
+		}
+	}
+
+	class NotANestedInnerTestClassBecauseOfMissingAnnotation {
+		@Test
+		void notATestBecauseTheClassIsNotATestClass() {
+			Assertions.fail("This must not be executed!");
+		}
+	}
 }

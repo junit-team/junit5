@@ -10,13 +10,12 @@
 
 package org.junit.gen5.engine.junit5.resolver.testpackage.notatestclass;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.Test;
 
 public abstract class NotATestClassBecauseOfAbstractModifier {
 	@Test
 	void test() {
-		assertThat(1 + 1).isEqualTo(2);
+		Assertions.fail("This must not be executed!");
 	}
 }

@@ -23,17 +23,19 @@ public class SingleTestClass {
 
 	@Test
 	void test2() {
-		assertThat(1 * 1).isEqualTo(1);
+		assertThat(1 + 1).isEqualTo(2);
 	}
 
 	void noTestBecauseOfMissingTestAnnotation() {
 		Assertions.fail("This must not be executed!");
 	}
 
+	@Test
 	private void noTestBecauseOfLimitedVisibility() {
 		Assertions.fail("This must not be executed!");
 	}
 
+	@Test
 	static void noTestBecauseOfStaticModifier() {
 		Assertions.fail("This must not be executed!");
 	}

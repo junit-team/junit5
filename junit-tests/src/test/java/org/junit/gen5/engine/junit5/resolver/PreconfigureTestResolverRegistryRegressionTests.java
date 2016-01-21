@@ -75,7 +75,7 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 
 		assertThat(engineDescriptor.getChildren()).hasSize(1);
 
-		verifyOccurrencesOf_Packages_Classes_And_Methods(10, 6, 2);
+		verifyOccurrencesOf_Packages_Classes_And_Methods(10, 8, 5);
 	}
 
 	@Test

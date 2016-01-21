@@ -12,16 +12,30 @@ package org.junit.gen5.engine.junit5.resolver.testpackage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.gen5.api.Nested;
+import org.junit.gen5.api.Test;
+
 public class NestingTestClass {
 	public static class NestedStaticClass {
+		@Test
 		void nestedStaticClassTest() {
 			assertThat(1 + 1).isEqualTo(2);
 		}
 	}
 
+	@Nested
 	public class NestedInnerClass {
+		@Test
 		void nestedInnerClassTest() {
 			assertThat(1 + 1).isEqualTo(2);
+		}
+
+		@Nested
+		public class DoubleNestedInnerClass {
+			@Test
+			void nestedInnerClassTest() {
+				assertThat(1 + 1).isEqualTo(2);
+			}
 		}
 	}
 }
