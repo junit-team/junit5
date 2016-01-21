@@ -136,7 +136,6 @@ public class ExtensionRegistryTests {
 
 		registry.stream(MyExtensionPoint.class, ExtensionRegistry.ApplicationOrder.FORWARD).forEach(
 			registeredExtensionPoint -> {
-				assertTrue(registeredExtensionPoint.getExtensionPoint() instanceof MyExtensionPoint);
 				assertEquals(MyExtension.class.getName(), registeredExtensionPoint.getSource().getClass().getName());
 				assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
 				hasRun.set(true);
@@ -172,7 +171,6 @@ public class ExtensionRegistryTests {
 
 		registry.stream(MyExtensionPoint.class, ExtensionRegistry.ApplicationOrder.FORWARD).forEach(
 			registeredExtensionPoint -> {
-				assertTrue(registeredExtensionPoint.getExtensionPoint() instanceof MyExtensionPoint);
 				Class<? extends MyExtensionPoint> lambdaType = registeredExtensionPoint.getExtensionPoint().getClass();
 				assertTrue(lambdaType.getName().contains("$Lambda$"));
 				assertEquals(getClass().getName(), registeredExtensionPoint.getSource().getClass().getName());

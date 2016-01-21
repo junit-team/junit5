@@ -55,7 +55,7 @@ class CommonFilter {
 
 	@SuppressWarnings("unchecked")
 	private static <T> DiscoveryFilter<T> alwaysIncluded() {
-		return (DiscoveryFilter<T>) ALWAYS_INCLUDED_DISCOVERY_FILTER;
+		return ALWAYS_INCLUDED_DISCOVERY_FILTER;
 	}
 
 	private static class AndAllDiscoveryFilter<T> implements DiscoveryFilter<T> {

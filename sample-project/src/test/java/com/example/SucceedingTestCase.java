@@ -62,6 +62,7 @@ class SucceedingTestCase extends AbstractSuperTest implements InterfaceWithTestC
 
 	@Test
 	@DisplayName("A test name with umlauts äöüÄÖÜß")
+	@Override
 	void test2() {
 		System.out.println("test2");
 	}
@@ -116,6 +117,7 @@ interface InterfaceWithTestCases extends SuperInterface {
 	}
 
 	@Test
+	@Override
 	default void testFromInterface() {
 		System.out.println("test from interface");
 	}
