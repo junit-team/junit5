@@ -16,13 +16,13 @@ import java.util.Map;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
- * This class represents a {@code ReportingEntry} &mdash;
+ * This class represents a {@code ReportEntry} &mdash;
  * that is a map of {@code String}-based key-value pairs
  * to be published to the reporting infrastructure
  *
  * @since 5.0
  */
-public class ReportingEntry {
+public class ReportEntry {
 
 	private final LocalDateTime creationTimestamp = LocalDateTime.now();
 	private final Map<String, String> values;
@@ -30,7 +30,7 @@ public class ReportingEntry {
 	/**
 	 * @param values the values to be published
 	 */
-	public ReportingEntry(Map<String, String> values) {
+	public ReportEntry(Map<String, String> values) {
 		Preconditions.notNull(values, "values to be reported must not be null");
 		this.values = values;
 	}
@@ -45,7 +45,7 @@ public class ReportingEntry {
 	}
 
 	/**
-	 * Get the creation date of this {@code ReportingEntry}.
+	 * Get the creation date of this {@code ReportEntry}.
 	 * Could be used for e.g., ordering entries.
 	 *
 	 * @return the date at which this entry was created

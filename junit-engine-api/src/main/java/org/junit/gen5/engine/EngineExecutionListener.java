@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine;
 
-import org.junit.gen5.commons.reporting.ReportingEntry;
+import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.engine.TestExecutionResult.Status;
 
 /**
@@ -114,8 +114,8 @@ public interface EngineExecutionListener {
 	 * <p>The current lifecycle state of {@code testDescriptor} is not relevant;
 	 * that means that reporting events can occur at all times.
 	 * @param testDescriptor the descriptor of the test or container to which the entry belongs
-	 * @param entry a {@code ReportingEntry} instance to be published
+	 * @param entry a {@code ReportEntry} instance to be published
 	 */
-	void reportingEntryPublished(TestDescriptor testDescriptor, ReportingEntry entry);
+	void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry);
 
 }

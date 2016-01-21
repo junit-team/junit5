@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
-import org.junit.gen5.commons.reporting.ReportingEntry;
+import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
@@ -32,12 +32,12 @@ import org.junit.gen5.commons.util.Preconditions;
 public interface ExtensionContext {
 
 	/**
-	 * Publish a  {@code ReportingEntry} to be consumed by an
+	 * Publish a  {@code ReportEntry} to be consumed by an
 	 * {@code org.junit.gen5.engine.EngineExecutionListener}.
 	 *
 	 * @param entry the entry to be reported
 	 */
-	void publishReportEntry(ReportingEntry entry);
+	void publishReportEntry(ReportEntry entry);
 
 	/**
 	 * Get the parent extension context if there is one.

@@ -21,7 +21,7 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestReporter;
-import org.junit.gen5.commons.reporting.ReportingEntry;
+import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
@@ -45,23 +45,23 @@ public class ReportingTest extends AbstractJUnit5TestEngineTests {
 
 		@BeforeEach
 		void before(TestReporter reporter) {
-			reporter.publishEntry(new ReportingEntry(new HashMap<>()));
+			reporter.publishEntry(new ReportEntry(new HashMap<>()));
 		}
 
 		@AfterEach
 		void after(TestReporter reporter) {
-			reporter.publishEntry(new ReportingEntry(new HashMap<>()));
+			reporter.publishEntry(new ReportEntry(new HashMap<>()));
 		}
 
 		@Test
 		void succeedingTest(TestReporter reporter) {
-			reporter.publishEntry(new ReportingEntry(new HashMap<>()));
+			reporter.publishEntry(new ReportEntry(new HashMap<>()));
 		}
 
         @Test
         @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
         void testWithNullReportData(TestReporter reporter) {
-            expectThrows(PreconditionViolationException.class, () -> reporter.publishEntry(new ReportingEntry(null)));
+            expectThrows(PreconditionViolationException.class, () -> reporter.publishEntry(new ReportEntry(null)));
         }
 
 	}

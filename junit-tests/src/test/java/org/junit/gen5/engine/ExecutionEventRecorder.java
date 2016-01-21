@@ -26,7 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import org.junit.gen5.commons.reporting.ReportingEntry;
+import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.engine.ExecutionEvent.Type;
 import org.junit.gen5.engine.TestExecutionResult.Status;
 
@@ -67,7 +67,7 @@ public class ExecutionEventRecorder implements EngineExecutionListener {
 	}
 
 	@Override
-	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportingEntry entry) {
+	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
 		addEvent(ExecutionEvent.reportingEntryPublished(testDescriptor, entry));
 	}
 

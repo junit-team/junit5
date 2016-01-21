@@ -10,10 +10,9 @@
 
 package org.junit.gen5.launcher;
 
-import org.junit.gen5.commons.reporting.ReportingEntry;
+import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestExecutionResult.Status;
-import org.junit.gen5.launcher.Launcher;
 
 /**
  * Register an instance of this class with a {@link Launcher} to be notified of
@@ -142,9 +141,9 @@ public interface TestExecutionListener {
 	 * the supplied {@link TestIdentifier}. Can be called at all times.
 	 *
 	 * @param testIdentifier describes the test or container to which the entry pertains
-	 * @param entry a {@code ReportingEntry} instance to be published
+	 * @param entry a {@code ReportEntry} instance to be published
 	 */
-	default void reportingEntryPublished(TestIdentifier testIdentifier, ReportingEntry entry) {
+	default void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
 	}
 
 }

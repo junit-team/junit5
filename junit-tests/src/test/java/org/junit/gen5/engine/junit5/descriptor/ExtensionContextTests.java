@@ -18,7 +18,7 @@ import java.util.Optional;
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.commons.reporting.ReportingEntry;
+import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
 import org.mockito.Mockito;
@@ -73,8 +73,8 @@ public class ExtensionContextTests {
 		ExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, engineExecutionListener,
 			classTestDescriptor);
 
-		ReportingEntry entry1 = new ReportingEntry(Collections.emptyMap());
-		ReportingEntry entry2 = new ReportingEntry(Collections.singletonMap("key", "value"));
+		ReportEntry entry1 = new ReportEntry(Collections.emptyMap());
+		ReportEntry entry2 = new ReportEntry(Collections.singletonMap("key", "value"));
 
 		extensionContext.publishReportEntry(entry1);
 		extensionContext.publishReportEntry(entry2);

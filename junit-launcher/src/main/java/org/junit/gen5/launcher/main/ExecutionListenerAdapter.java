@@ -10,7 +10,7 @@
 
 package org.junit.gen5.launcher.main;
 
-import org.junit.gen5.commons.reporting.ReportingEntry;
+import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionResult;
@@ -52,7 +52,7 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 	}
 
 	@Override
-	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportingEntry entry) {
+	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
 		testExecutionListener.reportingEntryPublished(getTestIdentifier(testDescriptor), entry);
 	}
 

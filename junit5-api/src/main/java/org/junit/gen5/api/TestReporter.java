@@ -10,7 +10,7 @@
 
 package org.junit.gen5.api;
 
-import org.junit.gen5.commons.reporting.ReportingEntry;
+import org.junit.gen5.commons.reporting.ReportEntry;
 
 /**
  * Variables of type {@code TestReporter} can be injected into
@@ -18,13 +18,13 @@ import org.junit.gen5.commons.reporting.ReportingEntry;
  * {@link AfterEach}, and {@link Test} annotations, respectively.
  *
  * <p>Within these methods these references can then be used
- * to publish {@link ReportingEntry} instances.
+ * to publish {@link ReportEntry} instances.
  *
  * @since 5.0
  */
 @FunctionalInterface
 public interface TestReporter {
 
-	void publishEntry(ReportingEntry entry);
+	void publishEntry(ReportEntry entry);
 
 }
