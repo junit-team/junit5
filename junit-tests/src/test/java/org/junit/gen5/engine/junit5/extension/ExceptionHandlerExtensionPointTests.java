@@ -19,20 +19,19 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
 import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.junit5.AbstractJUnit5TestEngineTests;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
- * Integration tests that verify support for {@link InstancePostProcessor}.
+ * Integration tests that verify support for {@link ExceptionHandlerExtensionPoint}.
  */
 class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests {
 
@@ -116,6 +115,8 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 			event(test("testSeveral"), finishedSuccessfully()), //
 			event(container(ATestCase.class), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
+
+        assertEquals(Arrays.asList("convert", "rethrow", "swallow"), handlerCalls);
 	}
 
 	// -------------------------------------------------------------------
@@ -158,6 +159,7 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 		public void handleException(TestExtensionContext context, Throwable throwable) throws Throwable {
 			assertTrue(throwable instanceof IOException);
 			handleExceptionCalled = true;
+            handlerCalls.add("rethrow");
 
 			throw throwable;
 		}
@@ -171,6 +173,7 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 		public void handleException(TestExtensionContext context, Throwable throwable) throws Throwable {
 			assertTrue(throwable instanceof IOException);
 			handleExceptionCalled = true;
+            handlerCalls.add("swallow");
 			//swallow exception by not rethrowing it
 		}
 	}
@@ -183,6 +186,7 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 		public void handleException(TestExtensionContext context, Throwable throwable) throws Throwable {
 			assertTrue(throwable instanceof RuntimeException);
 			handleExceptionCalled = true;
+            handlerCalls.add("convert");
 			throw new IOException("checked");
 		}
 
