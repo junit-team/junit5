@@ -13,17 +13,20 @@ package org.junit.gen5.engine.junit5.resolver;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForParentAndName;
 import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
 
 import java.util.List;
 
+import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 import org.junit.gen5.engine.junit5.resolver.testpackage.SingleTestClass;
 import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
@@ -66,7 +69,53 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 	}
 
 	@Test
-	void givenAPackageSelector_resolvesAllClassesInThePackageHierarchy() throws Exception {
+	void givenAPackageSelector_resolvesAllTestsInThePackageHierarchy() throws Exception {
+		TestDiscoveryRequest discoveryRequest = request().select(forPackageName(testPackageName)).build();
+		registry.notifyResolvers(engineDescriptor, discoveryRequest);
+
+		assertThat(engineDescriptor.getChildren()).hasSize(1);
+
+		verifyOccurrencesOf_Packages_Classes_And_Methods(10, 6, 2);
+	}
+
+	@Test
+	void givenAPackageSelector_allNodesAreMarkedCorrectly() throws Exception {
+		TestDiscoveryRequest discoveryRequest = request().select(forPackageName(testPackageName)).build();
+		registry.notifyResolvers(engineDescriptor, discoveryRequest);
+
+		assertThat(engineDescriptor.isRoot()).isTrue();
+		assertThat(engineDescriptor.isContainer()).isTrue();
+		assertThat(engineDescriptor.isTest()).isFalse();
+
+		// @formatter:off
+        this.engineDescriptor.allDescendants().stream()
+                .filter(PackageTestDescriptor.class::isInstance)
+                .forEach(testDescriptor -> {
+                    assertThat(testDescriptor.isRoot()).isFalse();
+                    assertThat(testDescriptor.isContainer()).isTrue();
+                    assertThat(testDescriptor.isTest()).isFalse();
+                });
+
+        this.engineDescriptor.allDescendants().stream()
+                .filter(ClassTestDescriptor.class::isInstance)
+                .forEach(testDescriptor -> {
+                    assertThat(testDescriptor.isRoot()).isFalse();
+                    assertThat(testDescriptor.isContainer()).isTrue();
+                    assertThat(testDescriptor.isTest()).isFalse();
+                });
+
+        this.engineDescriptor.allDescendants().stream()
+                .filter(MethodTestDescriptor.class::isInstance)
+                .forEach(testDescriptor -> {
+                    assertThat(testDescriptor.isRoot()).isFalse();
+                    assertThat(testDescriptor.isContainer()).isFalse();
+                    assertThat(testDescriptor.isTest()).isTrue();
+                });
+        // @formatter:on
+	}
+
+	@Test
+	void givenAPackageSelector_allPackagesAreFound() throws Exception {
 		TestDiscoveryRequest discoveryRequest = request().select(forPackageName(testPackageName)).build();
 		registry.notifyResolvers(engineDescriptor, discoveryRequest);
 
@@ -75,75 +124,31 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 		assertThat(packageDescriptors).containsOnly(packageLevel1, packageLevel2, packageLevel3, packageLevel4,
 			packageLevel5, packageLevel6, packageLevel7, packageLevel8a, packageLevel8b,
 			packageLevel8c).doesNotHaveDuplicates();
-
-		assertThat(engineDescriptor.isRoot()).isTrue();
-		assertThat(engineDescriptor.isContainer()).isTrue();
-		assertThat(engineDescriptor.isTest()).isFalse();
-		assertThat(engineDescriptor.getChildren()).hasSize(1);
-
-		// @formatter:off
-        this.engineDescriptor.allDescendants().stream()
-                .filter(PackageTestDescriptor.class::isInstance)
-                .forEach(testDescriptor -> {
-                    assertThat(testDescriptor.isRoot()).isFalse();
-                    assertThat(testDescriptor.isContainer()).isTrue();
-                    assertThat(testDescriptor.isTest()).isFalse();
-
-                    if (!testDescriptor.getName().equals(testPackageName)) {
-                        assertThat(testDescriptor.getChildren()).hasSize(1);
-                    }
-                    else {
-                        assertThat(testDescriptor.getChildren()).hasSize(6);
-                    }
-                });
-        // @formatter:on
-
-		// @formatter:off
-        this.engineDescriptor.allDescendants().stream()
-                .filter(ClassTestDescriptor.class::isInstance)
-                .forEach(testDescriptor -> {
-                    assertThat(testDescriptor.isRoot()).isFalse();
-                    assertThat(testDescriptor.isContainer()).isTrue();
-                    assertThat(testDescriptor.isTest()).isFalse();
-                });
-        // @formatter:on
-
 	}
 
 	@Test
 	void givenAClassSelector_resolvesOnlyTheTestClassWithItsPackageHierarchy() throws Exception {
 		TestDiscoveryRequest discoveryRequest = request().select(forClass(SingleTestClass.class)).build();
 		registry.notifyResolvers(engineDescriptor, discoveryRequest);
-
-		List<TestDescriptor> packageDescriptors = this.engineDescriptor.allDescendants().stream().filter(
-			PackageTestDescriptor.class::isInstance).collect(toList());
-		assertThat(packageDescriptors).containsOnly(packageLevel1, packageLevel2, packageLevel3, packageLevel4,
-			packageLevel5, packageLevel6, packageLevel7).doesNotHaveDuplicates();
-
-		assertThat(engineDescriptor.isRoot()).isTrue();
-		assertThat(engineDescriptor.isContainer()).isTrue();
-		assertThat(engineDescriptor.isTest()).isFalse();
-		assertThat(engineDescriptor.getChildren()).hasSize(1);
-
-		// @formatter:off
-        this.engineDescriptor.allDescendants().stream()
-                .filter(PackageTestDescriptor.class::isInstance)
-                .forEach(testDescriptor -> {
-                    assertThat(testDescriptor.isRoot()).isFalse();
-                    assertThat(testDescriptor.isContainer()).isTrue();
-                    assertThat(testDescriptor.isTest()).isFalse();
-                    assertThat(testDescriptor.getChildren()).hasSize(1);
-                });
-        // @formatter:on
-
-		// @formatter:off
-        this.engineDescriptor.allDescendants().stream()
-                .filter(ClassTestDescriptor.class::isInstance)
-                .forEach(testDescriptor -> {
-                    assertThat(testDescriptor.isRoot()).isFalse();
-                    assertThat(testDescriptor.isContainer()).isTrue();
-                    assertThat(testDescriptor.isTest()).isFalse();
-                });
-        // @formatter:on
+        verifyOccurrencesOf_Packages_Classes_And_Methods(7, 1, 2);
 	}
+
+	// @formatter:off
+	private void verifyOccurrencesOf_Packages_Classes_And_Methods(
+            int numberOfPackages, int numberOfClasses, int numberOfMethods) {
+        Assertions.assertAll(
+            () -> assertThat(this.engineDescriptor.allDescendants().stream()
+                .filter(PackageTestDescriptor.class::isInstance)
+                .count()).isEqualTo(numberOfPackages),
+
+            () -> assertThat(this.engineDescriptor.allDescendants().stream()
+                .filter(ClassTestDescriptor.class::isInstance)
+                .count()).isEqualTo(numberOfClasses),
+
+            () -> assertThat(this.engineDescriptor.allDescendants().stream()
+                .filter(MethodTestDescriptor.class::isInstance)
+                .count()).isEqualTo(numberOfMethods)
+        );
+	}
+    // @formatter:on
 }

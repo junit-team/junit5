@@ -79,22 +79,22 @@ public class MethodResolverTests {
         // @formatter:on
 	}
 
-	@Test
-	void whenNotifiedWithAClassTestDescriptor_resolvesTestMesthodsInTheClass() throws Exception {
-		Class<SingleTestClass> testClass = SingleTestClass.class;
-		Method testMethod1 = findMethod(testClass, "test1").get();
-		Method testMethod2 = findMethod(testClass, "test2").get();
+    @Test
+    void whenNotifiedWithAClassTestDescriptor_resolvesTestMesthodsInTheClass() throws Exception {
+        Class<SingleTestClass> testClass = SingleTestClass.class;
+        Method testMethod1 = findMethod(testClass, "test1").get();
+        Method testMethod2 = findMethod(testClass, "test2").get();
 
-		PackageTestDescriptor packageDescriptor = descriptorForParentAndName(engineDescriptor, testPackageName);
-		engineDescriptor.addChild(packageDescriptor);
-		ClassTestDescriptor testClassDescriptor = descriptorForParentAndClass(engineDescriptor, testClass);
-		packageDescriptor.addChild(testClassDescriptor);
+        PackageTestDescriptor packageDescriptor = descriptorForParentAndName(engineDescriptor, testPackageName);
+        engineDescriptor.addChild(packageDescriptor);
+        ClassTestDescriptor testClassDescriptor = descriptorForParentAndClass(engineDescriptor, testClass);
+        packageDescriptor.addChild(testClassDescriptor);
 
-		testResolverRegistryMock.fetchParentFunction = selector -> testClassDescriptor;
+        testResolverRegistryMock.fetchParentFunction = selector -> testClassDescriptor;
 
-		resolver.resolveAllFrom(testClassDescriptor, request().select(forClass(testClass)).build());
+        resolver.resolveAllFrom(testClassDescriptor, request().select(forClass(testClass)).build());
 
-		// @formatter:off
+        // @formatter:off
         assertThat(testResolverRegistryMock.testDescriptors)
                 .containsOnly(
                         descriptorForParentAndMethod(testClassDescriptor, testClass, testMethod1),
@@ -102,5 +102,5 @@ public class MethodResolverTests {
                 )
                 .doesNotHaveDuplicates();
         // @formatter:on
-	}
+    }
 }
