@@ -14,8 +14,6 @@ import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
-import org.junit.gen5.api.AfterEach;
-import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ExecutionEventRecorder;
@@ -27,20 +25,6 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  * @since 5.0
  */
 public class DisabledTests extends AbstractJUnit5TestEngineTests {
-
-	private static final String FOO = "DisabledTests.foo";
-	private static final String BAR = "DisabledTests.bar";
-	private static final String BOGUS = "DisabledTests.bogus";
-
-	@BeforeEach
-	public void setUp() {
-		System.setProperty(FOO, BAR);
-	}
-
-	@AfterEach
-	public void tearDown() {
-		System.clearProperty(FOO);
-	}
 
 	@Test
 	public void executeTestsWithDisabledTestClass() {
