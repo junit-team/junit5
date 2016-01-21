@@ -10,8 +10,7 @@
 
 package org.junit.gen5.launcher;
 
-import static org.junit.gen5.engine.FilterResult.excluded;
-import static org.junit.gen5.engine.FilterResult.included;
+import static org.junit.gen5.engine.FilterResult.includedIf;
 
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.GenericFilter;
@@ -26,6 +25,7 @@ import org.junit.gen5.engine.TestEngine;
  * @see TestDiscoveryRequest
  */
 public class EngineIdFilter implements GenericFilter<String> {
+
 	public static EngineIdFilter byEngineId(String engineId) {
 		return new EngineIdFilter(engineId);
 	}
@@ -38,11 +38,8 @@ public class EngineIdFilter implements GenericFilter<String> {
 
 	@Override
 	public FilterResult filter(String engineId) {
-		if (this.engineId.equals(engineId)) {
-			return included("Engine ID matches");
-		}
-		else {
-			return excluded("Engine ID does not match");
-		}
+		return includedIf(this.engineId.equals(engineId), //
+			() -> "Engine ID matches", //
+			() -> "Engine ID does not match");
 	}
 }

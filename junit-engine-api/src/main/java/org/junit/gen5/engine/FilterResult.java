@@ -11,6 +11,7 @@
 package org.junit.gen5.engine;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import org.junit.gen5.commons.util.ToStringBuilder;
 
@@ -20,6 +21,7 @@ import org.junit.gen5.commons.util.ToStringBuilder;
  * @since 5.0
  */
 public class FilterResult {
+
 	/**
 	 * Factory for creating <em>included</em> results.
 	 *
@@ -47,18 +49,20 @@ public class FilterResult {
 	 * @return a valid {@code FilterResult} for the given condition
 	 */
 	public static FilterResult includedIf(boolean included) {
-		return includedIf(included, null);
+		return includedIf(included, () -> null, () -> null);
 	}
 
 	/**
 	 * Factory for creating filter results based on the condition given.
 	 *
 	 * @param included whether or not the returned {@code FilterResult} should be included
-	 * @param reason the reason for the result
+	 * @param inclusionReasonSupplier supplier for the reason in case of inclusion
+	 * @param exclusionReasonSupplier supplier for the reason in case of exclusion
 	 * @return a valid {@code FilterResult} for the given condition
 	 */
-	public static FilterResult includedIf(boolean included, String reason) {
-		return included ? included(reason) : excluded(reason);
+	public static FilterResult includedIf(boolean included, Supplier<String> inclusionReasonSupplier,
+			Supplier<String> exclusionReasonSupplier) {
+		return included ? included(inclusionReasonSupplier.get()) : excluded(exclusionReasonSupplier.get());
 	}
 
 	private final boolean included;

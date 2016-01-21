@@ -10,13 +10,11 @@
 
 package org.junit.gen5.engine.discovery;
 
-import static org.junit.gen5.engine.FilterResult.excluded;
-import static org.junit.gen5.engine.FilterResult.included;
+import static org.junit.gen5.engine.FilterResult.includedIf;
 
 import java.util.regex.Pattern;
 
 import org.junit.gen5.engine.FilterResult;
-import org.junit.gen5.engine.discovery.ClassFilter;
 
 /**
  * @since 5.0
@@ -31,12 +29,9 @@ class ClassNameFilter implements ClassFilter {
 
 	@Override
 	public FilterResult filter(Class<?> testClass) {
-		if (pattern.matcher(testClass.getName()).matches()) {
-			return included("Test class matches name pattern");
-		}
-		else {
-			return excluded("Test class does not match name pattern");
-		}
+		return includedIf(pattern.matcher(testClass.getName()).matches(), //
+			() -> "Test class matches name pattern: " + pattern, //
+			() -> "Test class does not match name pattern: " + pattern);
 	}
 
 	@Override
