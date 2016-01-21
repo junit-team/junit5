@@ -15,7 +15,6 @@ import java.util.Optional;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
 
 /**
  * A {@link TestResolver} is responsible for resolving different kind of test representatives. Each resolver can
@@ -25,7 +24,7 @@ import org.junit.gen5.engine.TestEngine;
  * @since 5.0
  */
 public interface TestResolver {
-	void initialize(TestEngine testEngine, TestResolverRegistry testResolverRegistry);
+	void bindTestResolveryRegistry(TestResolverRegistry testResolverRegistry);
 
 	void resolveAllFrom(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest);
 

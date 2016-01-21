@@ -25,7 +25,6 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
@@ -44,8 +43,8 @@ public class MethodResolver extends JUnit5TestResolver {
 	}
 
 	@Override
-	public void initialize(TestEngine testEngine, TestResolverRegistry testResolverRegistry) {
-		super.initialize(testEngine, testResolverRegistry);
+	public void bindTestResolveryRegistry(TestResolverRegistry testResolverRegistry) {
+		super.bindTestResolveryRegistry(testResolverRegistry);
 	}
 
 	@Override

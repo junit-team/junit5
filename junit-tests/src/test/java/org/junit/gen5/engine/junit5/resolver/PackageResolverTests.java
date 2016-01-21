@@ -62,7 +62,7 @@ public class PackageResolverTests {
 		packageLevel8c = descriptorForParentAndName(packageLevel7, testPackageName + ".notatestclass");
 
 		resolver = new PackageResolver();
-		resolver.initialize(testEngine, testResolverRegistryMock);
+		resolver.bindTestResolveryRegistry(testResolverRegistryMock);
 	}
 
 	@Test

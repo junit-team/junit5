@@ -45,7 +45,7 @@ public class MethodResolverTests {
 		engineDescriptor = new EngineDescriptor(testEngine);
 
 		resolver = new MethodResolver();
-		resolver.initialize(testEngine, testResolverRegistryMock);
+		resolver.bindTestResolveryRegistry(testResolverRegistryMock);
 	}
 
 	@Test

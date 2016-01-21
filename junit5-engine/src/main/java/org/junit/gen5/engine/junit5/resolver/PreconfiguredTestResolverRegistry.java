@@ -64,6 +64,6 @@ public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
 	public void register(TestResolver testResolver) {
 		// TODO Logging information (e.g. override existing, adding new one, etc.)
 		testResolvers.put(testResolver.getClass(), testResolver);
-		testResolver.initialize(testEngine, this);
+		testResolver.bindTestResolveryRegistry(this);
 	}
 }
