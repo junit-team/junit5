@@ -16,7 +16,12 @@ import org.junit.gen5.api.Test;
 
 public class SingleTestClass {
 	@Test
-	void test() {
+	void test1() {
 		assertThat(1 + 1).isEqualTo(2);
+	}
+
+	@Test
+	void test2() {
+		assertThat(1 * 1).isEqualTo(1);
 	}
 }

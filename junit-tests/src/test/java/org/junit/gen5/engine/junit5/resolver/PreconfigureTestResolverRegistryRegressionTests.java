@@ -102,7 +102,6 @@ public class PreconfigureTestResolverRegistryRegressionTests {
                     assertThat(testDescriptor.isRoot()).isFalse();
                     assertThat(testDescriptor.isContainer()).isTrue();
                     assertThat(testDescriptor.isTest()).isFalse();
-                    assertThat(testDescriptor.getChildren()).isEmpty();
                 });
         // @formatter:on
 
@@ -141,7 +140,6 @@ public class PreconfigureTestResolverRegistryRegressionTests {
                     assertThat(testDescriptor.isRoot()).isFalse();
                     assertThat(testDescriptor.isContainer()).isTrue();
                     assertThat(testDescriptor.isTest()).isFalse();
-                    assertThat(testDescriptor.getChildren()).isEmpty();
                 });
         // @formatter:on
 	}
