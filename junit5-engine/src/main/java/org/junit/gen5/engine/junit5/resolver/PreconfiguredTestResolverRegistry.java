@@ -28,6 +28,17 @@ public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
 	public PreconfiguredTestResolverRegistry(TestEngine testEngine) {
 		this.testEngine = testEngine;
 		this.testResolvers = new LinkedHashMap<>();
+
+		register(new PackageResolver());
+		register(new ClassResolver());
+		register(new NestedStaticClassResolver());
+		register(new NestedMemberClassResolver());
+		register(new MethodResolver());
+	}
+
+	@Override
+	public TestDescriptor fetchParent(EngineDiscoveryRequest discoveryRequest) {
+		return null;
 	}
 
 	@Override
@@ -41,24 +52,6 @@ public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
 	public void register(TestResolver testResolver) {
 		// TODO Logging information (e.g. override existing, adding new one, etc.)
 		testResolvers.put(testResolver.getClass(), testResolver);
-	}
-
-	@Override
-	public void initialize() {
-		register(new PackageResolver());
-		register(new ClassResolver());
-		register(new NestedStaticClassResolver());
-		register(new NestedMemberClassResolver());
-		register(new MethodResolver());
-
-		for (TestResolver testResolver : testResolvers.values()) {
-			testResolver.initialize(testEngine, this);
-		}
-	}
-
-	@Override
-	public <R extends TestResolver> Optional<R> lookupTestResolver(Class<R> resolverType) {
-		TestResolver testResolver = testResolvers.get(resolverType);
-		return Optional.ofNullable((R) testResolver);
+		testResolver.initialize(testEngine, this);
 	}
 }

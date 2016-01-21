@@ -26,8 +26,8 @@ public class MethodResolver extends JUnit5TestResolver {
 	@Override
 	public void initialize(TestEngine testEngine, TestResolverRegistry testResolverRegistry) {
 		super.initialize(testEngine, testResolverRegistry);
-		this.classResolver = testResolverRegistry.lookupTestResolver(ClassResolver.class).orElseThrow(
-			() -> new IllegalStateException("Could not find ClassResolver in registry!"));
+		/*this.classResolver = testResolverRegistry.lookupTestResolver(ClassResolver.class).orElseThrow(
+			() -> new IllegalStateException("Could not find ClassResolver in registry!"));*/
 	}
 
 	@Override

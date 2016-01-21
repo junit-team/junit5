@@ -10,8 +10,6 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
-import java.util.Optional;
-
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 
@@ -19,11 +17,9 @@ import org.junit.gen5.engine.TestDescriptor;
  * @since 5.0
  */
 public interface TestResolverRegistry {
+	TestDescriptor fetchParent(EngineDiscoveryRequest discoveryRequest);
+
 	void notifyResolvers(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest);
 
 	void register(TestResolver testResolver);
-
-	void initialize();
-
-	<R extends TestResolver> Optional<R> lookupTestResolver(Class<R> resolverType);
 }

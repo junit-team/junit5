@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5.resolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.engine.junit5.resolver.ClassResolver.descriptorForParentAndClass;
 import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForParentAndName;
 import static org.junit.gen5.launcher.main.DiscoveryRequestBuilder.request;
@@ -21,29 +22,29 @@ import org.junit.gen5.engine.junit5.descriptor.NewPackageTestDescriptor;
 import org.junit.gen5.engine.junit5.resolver.testpackage.NestingTestClass;
 import org.junit.gen5.engine.junit5.resolver.testpackage.SingleTestClass;
 import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
-import org.junit.gen5.engine.junit5.stubs.TestResolverRegistrySpy;
+import org.junit.gen5.engine.junit5.stubs.TestResolverRegistryMock;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
 public class ClassResolverTests {
 	private EngineDescriptor engineDescriptor;
-	private TestResolverRegistrySpy testResolverRegistrySpy;
+	private TestResolverRegistryMock testResolverRegistryMock;
 	private ClassResolver resolver;
 
 	@BeforeEach
 	void setUp() {
-		testResolverRegistrySpy = new TestResolverRegistrySpy();
+		testResolverRegistryMock = new TestResolverRegistryMock();
 
 		TestEngineStub testEngine = new TestEngineStub();
 		engineDescriptor = new EngineDescriptor(testEngine);
 
 		resolver = new ClassResolver();
-		resolver.initialize(testEngine, testResolverRegistrySpy);
+		resolver.initialize(testEngine, testResolverRegistryMock);
 	}
 
 	@Test
 	void withAnEmptyDiscoveryRequest_doesNotResolveAnything() throws Exception {
 		resolver.resolveAllFrom(engineDescriptor, request().build());
-		assertThat(testResolverRegistrySpy.testDescriptors).isEmpty();
+		assertThat(testResolverRegistryMock.testDescriptors).isEmpty();
 	}
 
 	@Test
@@ -55,7 +56,7 @@ public class ClassResolverTests {
 		resolver.resolveAllFrom(testPackage, request().build());
 
 		// @formatter:off
-		assertThat(testResolverRegistrySpy.testDescriptors)
+		assertThat(testResolverRegistryMock.testDescriptors)
                 .containsOnly(
                         descriptorForParentAndClass(testPackage, SingleTestClass.class),
                         descriptorForParentAndClass(testPackage, NestingTestClass.class)
@@ -63,5 +64,4 @@ public class ClassResolverTests {
                 .doesNotHaveDuplicates();
         // @formatter:on
 	}
-
 }

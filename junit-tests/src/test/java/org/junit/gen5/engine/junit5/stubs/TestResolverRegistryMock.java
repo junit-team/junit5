@@ -12,16 +12,23 @@ package org.junit.gen5.engine.junit5.stubs;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Function;
 
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.resolver.TestResolver;
 import org.junit.gen5.engine.junit5.resolver.TestResolverRegistry;
 
-public class TestResolverRegistrySpy implements TestResolverRegistry {
+public class TestResolverRegistryMock implements TestResolverRegistry {
+	public Function<EngineDiscoveryRequest, TestDescriptor> fetchParentFunction;
+
 	public EngineDiscoveryRequest discoveryRequest;
 	public List<TestDescriptor> testDescriptors = new LinkedList<>();
+
+	@Override
+	public TestDescriptor fetchParent(EngineDiscoveryRequest discoveryRequest) {
+		return fetchParentFunction.apply(discoveryRequest);
+	}
 
 	@Override
 	public void notifyResolvers(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
@@ -31,14 +38,5 @@ public class TestResolverRegistrySpy implements TestResolverRegistry {
 
 	@Override
 	public void register(TestResolver testResolver) {
-	}
-
-	@Override
-	public void initialize() {
-	}
-
-	@Override
-	public <R extends TestResolver> Optional<R> lookupTestResolver(Class<R> resolverType) {
-		return Optional.empty();
 	}
 }

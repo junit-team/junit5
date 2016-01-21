@@ -21,29 +21,29 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.junit5.descriptor.NewPackageTestDescriptor;
 import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
-import org.junit.gen5.engine.junit5.stubs.TestResolverRegistrySpy;
+import org.junit.gen5.engine.junit5.stubs.TestResolverRegistryMock;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
 public class PackageResolverTests {
 	private EngineDescriptor engineDescriptor;
-	private TestResolverRegistrySpy testResolverRegistrySpy;
+	private TestResolverRegistryMock testResolverRegistryMock;
 	private PackageResolver resolver;
 
 	@BeforeEach
 	void setUp() {
-		testResolverRegistrySpy = new TestResolverRegistrySpy();
+		testResolverRegistryMock = new TestResolverRegistryMock();
 
 		TestEngineStub testEngine = new TestEngineStub();
 		engineDescriptor = new EngineDescriptor(testEngine);
 
 		resolver = new PackageResolver();
-		resolver.initialize(testEngine, testResolverRegistrySpy);
+		resolver.initialize(testEngine, testResolverRegistryMock);
 	}
 
 	@Test
 	void withAnEmptyDiscoveryRequest_doesNotResolveAnything() throws Exception {
 		resolver.resolveAllFrom(engineDescriptor, request().build());
-		assertThat(testResolverRegistrySpy.testDescriptors).isEmpty();
+		assertThat(testResolverRegistryMock.testDescriptors).isEmpty();
 	}
 
 	@Test
@@ -52,9 +52,9 @@ public class PackageResolverTests {
 
 		resolver.resolveAllFrom(engineDescriptor, request().select(selector).build());
 
-		assertThat(testResolverRegistrySpy.testDescriptors).containsOnly(
+		assertThat(testResolverRegistryMock.testDescriptors).containsOnly(
 			descriptorForParentAndName(engineDescriptor, "org.junit.gen5.engine.junit5.resolver.testpackage"));
-		verifyDescriptor(testResolverRegistrySpy.testDescriptors.get(0),
+		verifyDescriptor(testResolverRegistryMock.testDescriptors.get(0),
 			"org.junit.gen5.engine.junit5.resolver.testpackage", engineDescriptor);
 	}
 
@@ -64,9 +64,9 @@ public class PackageResolverTests {
 
 		resolver.resolveAllFrom(engineDescriptor, request().select(selector, selector).build());
 
-		assertThat(testResolverRegistrySpy.testDescriptors).containsOnlyOnce(
+		assertThat(testResolverRegistryMock.testDescriptors).containsOnlyOnce(
 			descriptorForParentAndName(engineDescriptor, "org.junit.gen5.engine.junit5.resolver.testpackage"));
-		verifyDescriptor(testResolverRegistrySpy.testDescriptors.get(0),
+		verifyDescriptor(testResolverRegistryMock.testDescriptors.get(0),
 			"org.junit.gen5.engine.junit5.resolver.testpackage", engineDescriptor);
 	}
 
@@ -79,12 +79,12 @@ public class PackageResolverTests {
 
 		resolver.resolveAllFrom(firstLevelPackage, request().select(selector).build());
 
-		assertThat(testResolverRegistrySpy.testDescriptors).containsOnly(
+		assertThat(testResolverRegistryMock.testDescriptors).containsOnly(
 			descriptorForParentAndName(firstLevelPackage, "subpackage1"),
 			descriptorForParentAndName(firstLevelPackage, "subpackage2"));
 
-		verifyDescriptor(testResolverRegistrySpy.testDescriptors.get(0), "subpackage1", firstLevelPackage);
-		verifyDescriptor(testResolverRegistrySpy.testDescriptors.get(1), "subpackage2", firstLevelPackage);
+		verifyDescriptor(testResolverRegistryMock.testDescriptors.get(0), "subpackage1", firstLevelPackage);
+		verifyDescriptor(testResolverRegistryMock.testDescriptors.get(1), "subpackage2", firstLevelPackage);
 	}
 
 	private void verifyDescriptor(TestDescriptor testDescriptor, String packageName, TestDescriptor parent) {
