@@ -10,11 +10,11 @@
 
 package org.junit.gen5.commons.reporting;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
- * This class represents a {@code ReportingEntry} -
+ * This class represents a {@code ReportingEntry} &mdash;
  * that is a map of {@code String}-based key-value pairs
  * to be published to the reporting infrastructure
  *
@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class ReportingEntry {
 
-	private final Date creationDate = new Date();
+	private final LocalDateTime creationTimestamp = LocalDateTime.now();
 	private final Map<String, String> values;
 
 	/**
@@ -47,8 +47,8 @@ public class ReportingEntry {
 	 *
 	 * @return the date at which this entry was created
 	 */
-	public Date getCreationDate() {
-		return creationDate;
+	public LocalDateTime getCreationTimestamp() {
+		return creationTimestamp;
 	}
 
 }
