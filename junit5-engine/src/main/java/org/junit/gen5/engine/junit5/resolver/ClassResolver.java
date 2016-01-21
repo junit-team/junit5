@@ -31,10 +31,15 @@ import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 
 public class ClassResolver extends JUnit5TestResolver {
 	public static ClassTestDescriptor descriptorForParentAndClass(TestDescriptor parent, Class<?> testClass) {
-		return new ClassTestDescriptor(parent.getUniqueId() + "/[class:" + testClass.getSimpleName() + "]", testClass);
-	}
+		String uniqueId = parent.getUniqueId() + "/[class:" + testClass.getSimpleName() + "]";
 
-	private static final Logger LOG = Logger.getLogger(ClassResolver.class.getName());
+		if (parent.findByUniqueId(uniqueId).isPresent()) {
+			return (ClassTestDescriptor) parent.findByUniqueId(uniqueId).get();
+		}
+		else {
+			return new ClassTestDescriptor(uniqueId, testClass);
+		}
+	}
 
 	@Override
 	public void resolveAllFrom(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {

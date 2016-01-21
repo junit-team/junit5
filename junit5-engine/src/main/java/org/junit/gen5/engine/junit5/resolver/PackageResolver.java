@@ -29,7 +29,14 @@ public class PackageResolver extends JUnit5TestResolver {
 	public static PackageTestDescriptor descriptorForParentAndName(TestDescriptor parent, String packageName) {
 		int index = packageName.lastIndexOf('.');
 		String name = index == -1 ? packageName : packageName.substring(index + 1);
-		return new PackageTestDescriptor(String.format("%s/[package:%s]", parent.getUniqueId(), name), packageName);
+		String uniqueId = String.format("%s/[package:%s]", parent.getUniqueId(), name);
+
+		if (parent.findByUniqueId(uniqueId).isPresent()) {
+			return (PackageTestDescriptor) parent.findByUniqueId(uniqueId).get();
+		}
+		else {
+			return new PackageTestDescriptor(uniqueId, packageName);
+		}
 	}
 
 	@Override

@@ -103,4 +103,19 @@ public class PackageResolverTests {
 		assertThat(packageDescriptors).containsOnly(packageLevel1, packageLevel2, packageLevel3, packageLevel4,
 			packageLevel5, packageLevel6, packageLevel7).doesNotHaveDuplicates();
 	}
+
+	@Test
+	void givenAPackageSelector_itPicksUpAlreadyCreatedDescriptorsAndReturnsThem() {
+		engineDescriptor.addChild(packageLevel1);
+
+		PackageSelector selector = forPackageName(testPackageName);
+		Optional<TestDescriptor> testDescriptor = resolver.fetchBySelector(selector, engineDescriptor);
+
+		assertThat(testDescriptor.isPresent()).isTrue();
+		assertThat(this.engineDescriptor.getChildren()).hasSize(1);
+
+		Set<? extends TestDescriptor> packageDescriptors = this.engineDescriptor.allDescendants();
+		assertThat(packageDescriptors).containsOnly(packageLevel1, packageLevel2, packageLevel3, packageLevel4,
+			packageLevel5, packageLevel6, packageLevel7).doesNotHaveDuplicates();
+	}
 }
