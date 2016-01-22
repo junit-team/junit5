@@ -28,14 +28,7 @@ import org.junit.gen5.launcher.TestPlan;
  * Default implementation of the {@link Launcher} API using dynamically
  * registered test engines.
  *
- * <p>External clients can obtain an instance by invoking {@link #create()}.
- *
- * <p>Test engines are registered at runtime using the
- * {@link java.util.ServiceLoader ServiceLoader} facility. For that purpose, a
- * text file named {@code META-INF/services/org.junit.gen5.engine.TestEngine}
- * has to be added to the engine's JAR file in which the fully qualified name
- * of the implementation class of the {@link org.junit.gen5.engine.TestEngine}
- * interface is stated.
+ * <p>External clients can obtain an instance by invoking {@link LauncherFactory#create()}.
  *
  * @since 5.0
  * @see Launcher
