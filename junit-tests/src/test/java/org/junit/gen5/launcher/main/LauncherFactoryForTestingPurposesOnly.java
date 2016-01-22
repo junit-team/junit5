@@ -24,7 +24,7 @@ public class LauncherFactoryForTestingPurposesOnly {
 	}
 
 	public static DefaultLauncher createLauncher(Iterable<TestEngine> engines) {
-		return new DefaultLauncher(() -> engines);
+		return new DefaultLauncher(engines);
 	}
 
 }

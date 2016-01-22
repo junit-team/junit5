@@ -22,19 +22,15 @@ import org.junit.gen5.engine.TestEngine;
 /**
  * @since 5.0
  */
-class ServiceLoaderTestEngineRegistry implements TestEngineRegistry {
+class ServiceLoaderTestEngineRegistry {
 
 	private static final Logger LOG = Logger.getLogger(ServiceLoaderTestEngineRegistry.class.getName());
 
-	private static Iterable<TestEngine> testEngines;
-
-	@Override
-	public synchronized Iterable<TestEngine> getTestEngines() {
-		if (testEngines == null) {
-			testEngines = ServiceLoader.load(TestEngine.class, ReflectionUtils.getDefaultClassLoader());
-			LOG.info(() -> "Discovered TestEngines with IDs "
-					+ stream(testEngines.spliterator(), false).map(TestEngine::getId).collect(toList()));
-		}
+	public Iterable<TestEngine> loadTestEngines() {
+		Iterable<TestEngine> testEngines = ServiceLoader.load(TestEngine.class,
+			ReflectionUtils.getDefaultClassLoader());
+		LOG.info(() -> "Discovered TestEngines with IDs "
+				+ stream(testEngines.spliterator(), false).map(TestEngine::getId).collect(toList()));
 		return testEngines;
 	}
 

@@ -38,28 +38,16 @@ class DefaultLauncher implements Launcher {
 
 	private static final Logger LOG = Logger.getLogger(DefaultLauncher.class.getName());
 
-	private final TestEngineRegistry testEngineRegistry;
-	private final TestExecutionListenerRegistry testExecutionListenerRegistry;
+	private final TestExecutionListenerRegistry listenerRegistry = new TestExecutionListenerRegistry();
+	private final Iterable<TestEngine> testEngines;
 
-	DefaultLauncher() {
-		this(new ServiceLoaderTestEngineRegistry(), new TestExecutionListenerRegistry());
-	}
-
-	// For tests only
-	DefaultLauncher(TestEngineRegistry testEngineRegistry) {
-		this(testEngineRegistry, new TestExecutionListenerRegistry());
-	}
-
-	// For tests only
-	DefaultLauncher(TestEngineRegistry testEngineRegistry,
-			TestExecutionListenerRegistry testExecutionListenerRegistry) {
-		this.testEngineRegistry = testEngineRegistry;
-		this.testExecutionListenerRegistry = testExecutionListenerRegistry;
+	DefaultLauncher(Iterable<TestEngine> testEngines) {
+		this.testEngines = testEngines;
 	}
 
 	@Override
 	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
-		testExecutionListenerRegistry.registerListener(listeners);
+		listenerRegistry.registerListener(listeners);
 	}
 
 	@Override
@@ -77,7 +65,7 @@ class DefaultLauncher implements Launcher {
 
 		Set<String> uniqueEngineIds = new HashSet<>();
 
-		for (TestEngine testEngine : testEngineRegistry.getTestEngines()) {
+		for (TestEngine testEngine : testEngines) {
 			final String engineId = testEngine.getId();
 
 			if (discoveryRequest.getEngineIdFilters().stream().map(
@@ -88,9 +76,8 @@ class DefaultLauncher implements Launcher {
 			}
 
 			if (!uniqueEngineIds.add(engineId)) {
-				throw new JUnitException(String.format(
-					"Failure in launcher: TestEngineRegistry [%s] returned multiple engines with the same ID [%s].",
-					testEngineRegistry.getClass().getName(), engineId));
+				throw new JUnitException(
+					String.format("Failure in launcher: multiple engines with the same ID [%s].", engineId));
 			}
 
 			LOG.fine(
@@ -105,7 +92,7 @@ class DefaultLauncher implements Launcher {
 
 	private void execute(Root root) {
 		TestPlan testPlan = TestPlan.from(root.getEngineDescriptors());
-		TestExecutionListener testExecutionListener = testExecutionListenerRegistry.getCompositeTestExecutionListener();
+		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
 		testExecutionListener.testPlanExecutionStarted(testPlan);
 		ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(testPlan,
 			testExecutionListener);

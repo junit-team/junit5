@@ -10,7 +10,7 @@
 
 package org.junit.gen5.launcher.main;
 
-import org.junit.gen5.launcher.*;
+import org.junit.gen5.launcher.Launcher;
 
 /**
  * Factory for creating {@link Launcher} instances by invoking {@link #create()}.
@@ -28,10 +28,11 @@ import org.junit.gen5.launcher.*;
 public class LauncherFactory {
 
 	/**
-	 * Factory method for creating a new instance of {@link Launcher}.
+	 * Factory method for creating a new instance of {@link Launcher} using dynamically
+	 * registered test engines.
 	 */
 	public static Launcher create() {
-		return new DefaultLauncher();
+		return new DefaultLauncher(new ServiceLoaderTestEngineRegistry().loadTestEngines());
 	}
 
 }
