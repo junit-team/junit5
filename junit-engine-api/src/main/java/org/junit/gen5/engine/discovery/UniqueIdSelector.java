@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.discovery;
 
+import java.util.Objects;
+
+import org.junit.gen5.commons.util.ToStringBuilder;
 import org.junit.gen5.engine.DiscoverySelector;
 
 /**
@@ -31,4 +34,23 @@ public class UniqueIdSelector implements DiscoverySelector {
 		return uniqueId;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		UniqueIdSelector that = (UniqueIdSelector) o;
+		return Objects.equals(uniqueId, that.uniqueId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(uniqueId);
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("uniqueId", uniqueId).toString();
+	}
 }
