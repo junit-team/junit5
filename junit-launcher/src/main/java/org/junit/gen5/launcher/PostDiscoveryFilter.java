@@ -10,6 +10,9 @@
 
 package org.junit.gen5.launcher;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.Filter;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
@@ -23,5 +26,6 @@ import org.junit.gen5.engine.TestEngine;
  * @see TestDiscoveryRequest
  * @see TestEngine
  */
+@API(Experimental)
 public interface PostDiscoveryFilter extends Filter<TestDescriptor> {
 }

@@ -10,8 +10,10 @@
 
 package org.junit.gen5.launcher;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import static org.junit.gen5.engine.FilterResult.includedIf;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.Filter;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestEngine;
@@ -24,6 +26,7 @@ import org.junit.gen5.engine.TestEngine;
  * @since 5.0
  * @see TestDiscoveryRequest
  */
+@API(Experimental)
 public class EngineIdFilter implements Filter<String> {
 
 	public static EngineIdFilter byEngineId(String engineId) {

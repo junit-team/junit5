@@ -10,6 +10,9 @@
 
 package org.junit.gen5.launcher.main;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.launcher.Launcher;
 
 /**
@@ -25,6 +28,7 @@ import org.junit.gen5.launcher.Launcher;
  * @since 5.0
  * @see Launcher
  */
+@API(Experimental)
 public class LauncherFactory {
 
 	/**

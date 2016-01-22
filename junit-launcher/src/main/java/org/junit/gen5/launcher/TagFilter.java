@@ -11,9 +11,11 @@
 package org.junit.gen5.launcher;
 
 import static java.util.Arrays.asList;
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.util.List;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestTag;
 
@@ -23,6 +25,7 @@ import org.junit.gen5.engine.TestTag;
  *
  * @since 5.0
  */
+@API(Experimental)
 public final class TagFilter {
 
 	private TagFilter() {

@@ -12,6 +12,7 @@ package org.junit.gen5.launcher;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -21,10 +22,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.launcher.Launcher;
 
 /**
  * {@code TestPlan} describes the tree of tests and containers as discovered
@@ -47,6 +48,7 @@ import org.junit.gen5.launcher.Launcher;
  * @see Launcher
  * @see TestExecutionListener
  */
+@API(Experimental)
 public final class TestPlan {
 
 	private final Set<TestIdentifier> roots = new LinkedHashSet<>();

@@ -10,6 +10,10 @@
 
 package org.junit.gen5.launcher;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * The {@code Launcher} API is the main entry point for client code that
  * wishes to <em>discover</em> and <em>execute</em> tests using one or more
@@ -43,6 +47,7 @@ package org.junit.gen5.launcher;
  * @see org.junit.gen5.launcher.main.LauncherFactory
  * @see org.junit.gen5.engine.TestEngine
  */
+@API(Experimental)
 public interface Launcher {
 
 	/**

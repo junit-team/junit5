@@ -10,11 +10,14 @@
 
 package org.junit.gen5.launcher.listeners;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
@@ -30,7 +33,9 @@ import org.junit.gen5.launcher.TestPlan;
  * @see #forJavaUtilLogging(Level)
  * @see LoggingListener#LoggingListener(BiConsumer)
  */
+@API(Experimental)
 public class LoggingListener implements TestExecutionListener {
+
 	/**
 	 * Create a {@code LoggingListener} which delegates to a
 	 * {@link java.util.logging.Logger} using a log level of

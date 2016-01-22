@@ -11,12 +11,14 @@
 package org.junit.gen5.launcher.listeners;
 
 import static java.util.stream.Stream.concat;
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import static org.junit.gen5.engine.TestExecutionResult.Status.ABORTED;
 import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.gen5.engine.TestExecutionResult.Status.SUCCESSFUL;
 
 import java.util.stream.Stream;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
@@ -29,7 +31,9 @@ import org.junit.gen5.launcher.TestPlan;
  * @since 5.0
  * @see #getSummary()
  */
+@API(Experimental)
 public class SummaryGeneratingListener implements TestExecutionListener {
+
 	private TestPlan testPlan;
 	private TestExecutionSummary summary;
 

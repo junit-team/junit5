@@ -10,10 +10,13 @@
 
 package org.junit.gen5.launcher.main;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.Filter;
@@ -50,6 +53,7 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  *   ).build();
  * </pre>
  */
+@API(Experimental)
 public final class TestDiscoveryRequestBuilder {
 
 	private List<DiscoverySelector> selectors = new LinkedList<>();

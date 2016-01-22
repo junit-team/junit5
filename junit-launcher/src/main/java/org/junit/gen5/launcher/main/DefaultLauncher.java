@@ -33,7 +33,6 @@ import org.junit.gen5.launcher.TestPlan;
  * @see Launcher
  * @see LauncherFactory
  */
-
 class DefaultLauncher implements Launcher {
 
 	private static final Logger LOG = Logger.getLogger(DefaultLauncher.class.getName());

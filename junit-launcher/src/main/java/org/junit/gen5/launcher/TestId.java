@@ -10,9 +10,12 @@
 
 package org.junit.gen5.launcher;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
@@ -20,7 +23,9 @@ import org.junit.gen5.commons.util.Preconditions;
  *
  * @since 5.0
  */
+@API(Experimental)
 public final class TestId implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	private final String uniqueId;

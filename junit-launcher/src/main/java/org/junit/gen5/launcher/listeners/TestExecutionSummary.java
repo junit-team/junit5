@@ -10,6 +10,8 @@
 
 package org.junit.gen5.launcher.listeners;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 
@@ -24,7 +27,9 @@ import org.junit.gen5.launcher.TestPlan;
  * @since 5.0
  */
 // TODO Design a real interface for TestExecutionSummary and make it threadsafe.
+@API(Experimental)
 public class TestExecutionSummary {
+
 	final AtomicLong testsStarted = new AtomicLong();
 	final AtomicLong testsFound = new AtomicLong();
 	final AtomicLong testsSkipped = new AtomicLong();
@@ -106,6 +111,7 @@ public class TestExecutionSummary {
 	}
 
 	static class Failure {
+
 		private final TestIdentifier testIdentifier;
 		private final Throwable exception;
 

@@ -10,9 +10,15 @@
 
 package org.junit.gen5.launcher;
 
-import java.util.*;
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
-import org.junit.gen5.engine.*;
+import java.util.Collection;
+import java.util.List;
+
+import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.engine.DiscoveryFilter;
+import org.junit.gen5.engine.DiscoverySelector;
+import org.junit.gen5.engine.EngineDiscoveryRequest;
 
 /**
  * This class extends the {@link EngineDiscoveryRequest}
@@ -25,6 +31,7 @@ import org.junit.gen5.engine.*;
  *
  * @since 5.0
  */
+@API(Experimental)
 public interface TestDiscoveryRequest extends EngineDiscoveryRequest {
 
 	void addSelector(DiscoverySelector selector);
