@@ -168,7 +168,7 @@ public final class Assertions {
 
 	public static void assertNotSame(Object unexpected, Object actual, Supplier<String> messageSupplier) {
 		if (unexpected == actual) {
-			failSame(nullSafeGet(messageSupplier));
+			failSame(actual, nullSafeGet(messageSupplier));
 		}
 	}
 
@@ -218,7 +218,7 @@ public final class Assertions {
 	}
 
 	private static void failEqual(Object actual, String message) {
-		fail(buildPrefix(message) + "Values should not be equal. Actual: " + actual);
+		fail(buildPrefix(message) + "expected: not equal but was: <" + actual + ">");
 	}
 
 	private static void failNull(String message) {
@@ -229,8 +229,8 @@ public final class Assertions {
 		fail(buildPrefix(message) + "expected: <null> but was: <" + actual + ">");
 	}
 
-	private static void failSame(String message) {
-		fail(buildPrefix(message) + "expected: not same");
+	private static void failSame(Object actual, String message) {
+		fail(buildPrefix(message) + "expected: not equal but was: <" + actual + ">");
 	}
 
 	private static void failNotSame(Object expected, Object actual, String message) {
