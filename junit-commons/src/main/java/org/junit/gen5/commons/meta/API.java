@@ -18,8 +18,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotates public types within JUnit 5 to indicate their level of stability
+ * and how they are intended to be used.
+ *
+ * <p>If the annotation is present on a type, it is considered to hold for
+ * all public members of this type as well. A member is allowed to declare a
+ * different {@link Usage} of lower stability.
+ */
 @Target({ ElementType.TYPE, ElementType.METHOD })
-// TODO Check if SOURCE is sufficient
 @Retention(RetentionPolicy.CLASS)
 @Documented
 @API(Internal)
@@ -27,16 +34,43 @@ public @interface API {
 
 	Usage value();
 
+	/**
+	 * Indicates the level of stability of an API element.
+	 */
 	enum Usage {
 
-		Deprecated,
-
+		/**
+		 * Must not be used by any code other than JUnit itself. Might be
+		 * removed without prior notice.
+		 */
 		Internal,
 
+		/**
+		 * Should no longer be used, might disappear in the next minor release.
+		 */
+		Deprecated,
+
+		/**
+		 * Intended for new, experimental features where we are looking for feedback.
+		 *
+		 * <p>Use with caution, might be promoted to {@code Maintained} or
+		 * {@code Stable} in the future, but might also be removed without
+		 * prior notice.
+		 */
 		Experimental,
 
+		/**
+		 * Intended for features that will not be changed in a backwards-
+		 * incompatible way for at least the next minor release of the current
+		 * major version. If scheduled for removal, it will be demoted to
+		 * {@code Deprecated} first.
+		 */
 		Maintained,
 
+		/**
+		 * Intended for features that will not be changed in a backwards-
+		 * incompatible way in the current major version.
+		 */
 		Stable
 
 	}
