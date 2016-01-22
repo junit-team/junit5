@@ -12,6 +12,7 @@ package org.junit.gen5.api;
 
 import static org.junit.gen5.api.Assertions.assertAll;
 import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.api.Assertions.assertNull;
 import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
@@ -173,6 +174,36 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "test");
 			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
+		}
+	}
+
+	// --- assertNotNull -------------------------------------------------
+
+	@Test
+	void assertNotNullWithNonNullObject() {
+		assertNotNull("foo");
+	}
+
+	@Test
+	void assertNotNullWithNull() {
+		try {
+			assertNotNull(null);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "expected: not <null>");
+		}
+	}
+
+	@Test
+	void assertNotNullWithNullAndMessageSupplier() {
+		try {
+			assertNotNull(null, () -> "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "test");
+			assertMessageEndsWith(ex, "expected: not <null>");
 		}
 	}
 
