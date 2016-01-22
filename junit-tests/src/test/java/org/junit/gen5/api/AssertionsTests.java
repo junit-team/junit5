@@ -11,6 +11,7 @@
 package org.junit.gen5.api;
 
 import static org.junit.gen5.api.Assertions.assertAll;
+import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertFalse;
 import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.api.Assertions.assertNull;
@@ -204,6 +205,70 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "test");
 			assertMessageEndsWith(ex, "expected: not <null>");
+		}
+	}
+
+	// --- assertEquals -------------------------------------------------
+
+	@Test
+	void assertEqualsWithTwoNulls() {
+		assertEquals(null, null);
+	}
+
+	@Test
+	void assertEqualsWithSameObject() {
+		Object foo = new Object();
+		assertEquals(foo, foo);
+	}
+
+	@Test
+	void assertEqualsWithEquivalentStrings() {
+		assertEquals(new String("foo"), new String("foo"));
+	}
+
+	@Test
+	void assertEqualsWithNullVsObject() {
+		try {
+			assertEquals(null, "foo");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "expected: <null> but was: <foo>");
+		}
+	}
+
+	@Test
+	void assertEqualsWithObjectVsNull() {
+		try {
+			assertEquals("foo", null);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "expected: <foo> but was: <null>");
+		}
+	}
+
+	@Test
+	void assertEqualsWithNullVsObjectAndMessageSupplier() {
+		try {
+			assertEquals(null, "foo", () -> "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "test");
+			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
+		}
+	}
+
+	@Test
+	void assertEqualsWithObjectVsNullAndMessageSupplier() {
+		try {
+			assertEquals("foo", null, () -> "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "test");
+			assertMessageEndsWith(ex, "expected: <foo> but was: <null>");
 		}
 	}
 
