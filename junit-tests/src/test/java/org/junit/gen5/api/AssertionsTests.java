@@ -13,6 +13,7 @@ package org.junit.gen5.api;
 import static org.junit.gen5.api.Assertions.assertAll;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertNotEquals;
 import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.api.Assertions.assertNull;
 import static org.junit.gen5.api.Assertions.assertThrows;
@@ -269,6 +270,35 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "test");
 			assertMessageEndsWith(ex, "expected: <foo> but was: <null>");
+		}
+	}
+
+	// --- assertNotEquals -------------------------------------------------
+
+	@Test
+	void assertNotEqualsWithNullVsObject() {
+		assertNotEquals(null, "foo");
+	}
+
+	@Test
+	void assertNotEqualsWithObjectVsNull() {
+		assertNotEquals("foo", null);
+	}
+
+	@Test
+	void assertNotEqualsWithDifferentObjects() {
+		assertNotEquals(new Object(), new Object());
+	}
+
+	@Test
+	void assertNotEqualsWithEquivalentStringsAndMessageSupplier() {
+		try {
+			assertNotEquals(new String("foo"), new String("foo"), () -> "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "test");
+			assertMessageEndsWith(ex, "expected: not equal but was: <foo>");
 		}
 	}
 
