@@ -89,29 +89,27 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		listener.executionFinished(testDescriptor, result);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static class MixinAdapter<C extends EngineExecutionContext> {
 
-		private final Leaf<C> nullLeaf = c -> c;
-
-		private final Container<C> nullContainer = new Container<C>() {
+		private static final Container nullContainer = new Container() {
 		};
 
-		private final Node<C> nullNode = new Node<C>() {
+		private static final Leaf nullLeaf = context -> context;
+
+		private static final Node nullNode = new Node() {
 		};
 
-		@SuppressWarnings("unchecked")
 		Container<C> asContainer(TestDescriptor testDescriptor) {
-			return testDescriptor instanceof Container ? (Container<C>) testDescriptor : nullContainer;
+			return (Container<C>) (testDescriptor instanceof Container ? testDescriptor : nullContainer);
 		}
 
-		@SuppressWarnings("unchecked")
 		Leaf<C> asLeaf(TestDescriptor testDescriptor) {
-			return testDescriptor instanceof Leaf ? (Leaf<C>) testDescriptor : nullLeaf;
+			return (Leaf<C>) (testDescriptor instanceof Leaf ? testDescriptor : nullLeaf);
 		}
 
-		@SuppressWarnings("unchecked")
 		Node<C> asNode(TestDescriptor testDescriptor) {
-			return testDescriptor instanceof Node ? (Node<C>) testDescriptor : nullNode;
+			return (Node<C>) (testDescriptor instanceof Node ? testDescriptor : nullNode);
 		}
 	}
 
