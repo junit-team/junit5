@@ -10,14 +10,15 @@
 
 package org.junit.gen5.engine.discovery;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +40,7 @@ public class NameBasedSelector {
 		Optional<Method> testMethodOptional = ReflectionUtils.loadMethod(name);
 		if (testMethodOptional.isPresent()) {
 			Method testMethod = testMethodOptional.get();
-			return MethodSelector.forMethod(testMethod.getDeclaringClass(), testMethod);
+			return forMethod(testMethod.getDeclaringClass(), testMethod);
 		}
 
 		if (ReflectionUtils.isPackage(name)) {
@@ -54,9 +55,7 @@ public class NameBasedSelector {
 		if (classNames != null) {
 			return forNames(Arrays.asList(classNames));
 		}
-		else {
-			return Collections.emptyList();
-		}
+		return emptyList();
 	}
 
 	public static List<DiscoverySelector> forNames(Collection<String> classNames) {
