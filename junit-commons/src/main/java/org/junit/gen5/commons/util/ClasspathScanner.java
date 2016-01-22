@@ -127,6 +127,17 @@ class ClasspathScanner {
 		return findClassesInSourceDirRecursively(root, "", classFilter);
 	}
 
+	List<Class<?>> scanForClassesInClasspathRoots(List<File> roots, Predicate<Class<?>> classTester) {
+		Preconditions.notNull(roots, "roots must not be null");
+		Preconditions.notEmpty(roots, "roots must not be empty");
+
+		// @formatter:off
+        return roots.stream()
+                .flatMap(root -> scanForClassesInClasspathRoot(root, classTester).stream())
+                .collect(Collectors.toList());
+        // @formatter:on
+	}
+
 	private List<File> allSourceDirsForPackage(String basePackageName) {
 		try {
 			ClassLoader classLoader = classLoaderSupplier.get();
