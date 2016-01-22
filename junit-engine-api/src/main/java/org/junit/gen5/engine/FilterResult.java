@@ -95,10 +95,11 @@ public class FilterResult {
 	@Override
 	public String toString() {
 		// @formatter:off
-        return new ToStringBuilder(this)
-                .append("included", this.included)
-                .append("reason", this.reason)
-                .toString();
-        // @formatter:on
+		return new ToStringBuilder(this)
+			.append("included", this.included)
+			.append("reason", this.reason.orElse("<unknown>"))
+			.toString();
+		// @formatter:on
 	}
+
 }

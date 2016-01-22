@@ -61,7 +61,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 			preparedContext = adapter.asNode(testDescriptor).prepare(parentContext);
 			SkipResult skipResult = adapter.asNode(testDescriptor).shouldBeSkipped(preparedContext);
 			if (skipResult.isSkipped()) {
-				listener.executionSkipped(testDescriptor, skipResult.getReason().orElse(""));
+				listener.executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
 				return;
 			}
 		}
