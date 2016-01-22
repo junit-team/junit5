@@ -25,17 +25,15 @@ import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestPlan;
 
 /**
- * Default implementation of the {@link Launcher} API using dynamically
- * registered test engines.
+ * Default implementation of the {@link Launcher} API.
  *
  * <p>External clients can obtain an instance by invoking {@link LauncherFactory#create()}.
  *
  * @since 5.0
  * @see Launcher
- * @see DiscoveryRequest
- * @see TestPlan
- * @see TestExecutionListener
+ * @see LauncherFactory
  */
+
 class DefaultLauncher implements Launcher {
 
 	private static final Logger LOG = Logger.getLogger(DefaultLauncher.class.getName());
