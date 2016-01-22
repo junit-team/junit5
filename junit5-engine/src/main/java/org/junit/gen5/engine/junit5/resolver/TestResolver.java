@@ -51,7 +51,7 @@ public interface TestResolver {
 
 	void resolveAllFrom(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest);
 
-	void resolveUniqueId(TestDescriptor parent, String remainingUniqueId, EngineDiscoveryRequest discoveryRequest);
+	void resolveUniqueId(TestDescriptor parent, UniqueId remainingUniqueId, EngineDiscoveryRequest discoveryRequest);
 
 	Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root);
 }

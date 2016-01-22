@@ -10,12 +10,8 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
-import static java.util.stream.Collectors.joining;
-
 import java.util.Optional;
-import java.util.stream.Stream;
 
-import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -45,7 +41,7 @@ public class EngineResolver extends JUnit5TestResolver {
 	}
 
 	@Override
-	public void resolveUniqueId(TestDescriptor parent, String remainingUniqueId,
+	public void resolveUniqueId(TestDescriptor parent, UniqueId remainingUniqueId,
 			EngineDiscoveryRequest discoveryRequest) {
 	}
 

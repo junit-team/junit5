@@ -80,7 +80,7 @@ public class ClassResolver extends JUnit5TestResolver {
 	}
 
 	@Override
-	public void resolveUniqueId(TestDescriptor parent, String remainingUniqueId,
+	public void resolveUniqueId(TestDescriptor parent, UniqueId remainingUniqueId,
 			EngineDiscoveryRequest discoveryRequest) {
 	}
 

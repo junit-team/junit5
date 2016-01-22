@@ -67,14 +67,14 @@ public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
 	}
 
 	@Override
-	public void resolveUniqueId(TestDescriptor parent, String remainingUniqueId,
+	public void resolveUniqueId(TestDescriptor parent, UniqueId remainingUniqueId,
 			EngineDiscoveryRequest discoveryRequest) {
 		Preconditions.notNull(parent, "parent must not be null!");
 		Preconditions.notNull(remainingUniqueId, "remainingUniqueId must not be null!");
 		Preconditions.notNull(discoveryRequest, "discoveryRequest must not be null!");
 
 		// The terminal operation of unique id resolution is controlled by the registry
-		if (StringUtils.isBlank(remainingUniqueId)) {
+		if (remainingUniqueId.isEmpty()) {
 			notifyResolvers(parent, discoveryRequest);
 			return;
 		}

@@ -19,6 +19,7 @@ import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.resolver.TestResolver;
 import org.junit.gen5.engine.junit5.resolver.TestResolverRegistry;
+import org.junit.gen5.engine.junit5.resolver.UniqueId;
 
 public class TestResolverRegistryMock implements TestResolverRegistry {
 	public BiFunction<DiscoverySelector, TestDescriptor, TestDescriptor> fetchParentFunction = (selector, root) -> root;
@@ -38,7 +39,7 @@ public class TestResolverRegistryMock implements TestResolverRegistry {
 	}
 
 	@Override
-	public void resolveUniqueId(TestDescriptor parent, String remainingUniqueId,
+	public void resolveUniqueId(TestDescriptor parent, UniqueId remainingUniqueId,
 			EngineDiscoveryRequest discoveryRequest) {
 	}
 
