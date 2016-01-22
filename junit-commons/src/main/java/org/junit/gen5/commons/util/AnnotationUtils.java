@@ -53,18 +53,6 @@ public final class AnnotationUtils {
 
 	/**
 	 * Determine if an annotation of {@code annotationType} is either <em>present</em> or <em>meta-present</em> on the
-	 * supplied optional {@code element}.
-	 *
-	 * @see #findAnnotation(Optional, Class)
-	 */
-	public static boolean isAnnotated(Optional<? extends AnnotatedElement> element,
-			Class<? extends Annotation> annotationType) {
-
-		return findAnnotation(element, annotationType).isPresent();
-	}
-
-	/**
-	 * Determine if an annotation of {@code annotationType} is either <em>present</em> or <em>meta-present</em> on the
 	 * supplied {@code element}.
 	 *
 	 * @see #findAnnotation(AnnotatedElement, Class)
@@ -75,25 +63,7 @@ public final class AnnotationUtils {
 
 	/**
 	 * Find the first annotation of {@code annotationType} that is either <em>present</em> or <em>meta-present</em> on
-	 * the supplied optional {@code element}.
-	 *
-	 * @see #findAnnotation(AnnotatedElement, Class)
-	 */
-	public static <A extends Annotation> Optional<A> findAnnotation(Optional<? extends AnnotatedElement> element,
-			Class<A> annotationType) {
-
-		if (element == null || !element.isPresent()) {
-			return Optional.empty();
-		}
-
-		return findAnnotation(element.get(), annotationType, new HashSet<Annotation>());
-	}
-
-	/**
-	 * Find the first annotation of {@code annotationType} that is either <em>present</em> or <em>meta-present</em> on
 	 * the supplied {@code element}.
-	 *
-	 * @see #findAnnotation(Optional, Class)
 	 */
 	public static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType) {
 		return findAnnotation(element, annotationType, new HashSet<Annotation>());
@@ -187,7 +157,8 @@ public final class AnnotationUtils {
 		// Use set because there can be duplicates in loop below.
 		Set<A> collectedAnnotations = new LinkedHashSet<>();
 
-		// Collect directly present annotations and meta-present on directly present annotations.
+		// Collect directly present annotations and meta-present on directly present
+		// annotations.
 		// Keep order of annotations.
 		for (Annotation candidateAnnotation : element.getDeclaredAnnotations()) {
 			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
@@ -238,7 +209,7 @@ public final class AnnotationUtils {
 		return ReflectionUtils.findMethods(clazz, method -> isAnnotated(method, annotationType), sortOrder);
 	}
 
-	public static boolean isInJavaLangAnnotationPackage(Annotation annotation) {
+	private static boolean isInJavaLangAnnotationPackage(Annotation annotation) {
 		return (annotation != null && annotation.annotationType().getName().startsWith("java.lang.annotation"));
 	}
 
