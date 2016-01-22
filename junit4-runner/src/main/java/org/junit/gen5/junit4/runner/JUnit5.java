@@ -34,7 +34,7 @@ import org.junit.gen5.launcher.TagFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
-import org.junit.gen5.launcher.main.*;
+import org.junit.gen5.launcher.main.LauncherFactory;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -65,16 +65,24 @@ import org.junit.runners.model.InitializationError;
  * @see OnlyEngine
  */
 public class JUnit5 extends Runner implements Filterable {
+
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
 	private static final String EMPTY_STRING = "";
 
-	private final Launcher launcher = LauncherFactory.create();
 	private final Class<?> testClass;
+	private final Launcher launcher;
+
 	private TestDiscoveryRequest discoveryRequest;
 	private JUnit5TestTree testTree;
 
 	public JUnit5(Class<?> testClass) throws InitializationError {
+		this(testClass, LauncherFactory.create());
+	}
+
+	// For testing only
+	JUnit5(Class<?> testClass, Launcher launcher) throws InitializationError {
+		this.launcher = launcher;
 		this.testClass = testClass;
 		this.discoveryRequest = createDiscoveryRequest();
 		this.testTree = generateTestTree();
