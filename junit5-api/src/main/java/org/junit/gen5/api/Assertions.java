@@ -254,7 +254,7 @@ public final class Assertions {
 	}
 
 	private static void failSame(Object actual, String message) {
-		fail(buildPrefix(message) + "expected: not equal but was: <" + actual + ">");
+		fail(buildPrefix(message) + "expected: not same but was: <" + actual + ">");
 	}
 
 	private static void failNotSame(Object expected, Object actual, String message) {

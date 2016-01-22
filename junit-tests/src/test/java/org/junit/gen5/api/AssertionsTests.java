@@ -15,6 +15,7 @@ import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertFalse;
 import static org.junit.gen5.api.Assertions.assertNotEquals;
 import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.gen5.api.Assertions.assertNotSame;
 import static org.junit.gen5.api.Assertions.assertNull;
 import static org.junit.gen5.api.Assertions.assertSame;
 import static org.junit.gen5.api.Assertions.assertThrows;
@@ -362,6 +363,47 @@ public class AssertionsTests {
 			assertMessageStartsWith(ex, "test");
 			assertMessageContains(ex, "expected: java.lang.String@");
 			assertMessageContains(ex, "but was: java.lang.String@");
+		}
+	}
+
+	// --- assertNotSame -------------------------------------------------
+
+	@Test
+	void assertNotSameWithDifferentObjects() {
+		assertNotSame(new Object(), new Object());
+	}
+
+	@Test
+	void assertNotSameWithObjectVsNull() {
+		assertNotSame(new Object(), null);
+	}
+
+	@Test
+	void assertNotSameWithNullVsObject() {
+		assertNotSame(null, new Object());
+	}
+
+	@Test
+	void assertNotSameWithTwoNulls() {
+		try {
+			assertNotSame(null, null);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "expected: not same but was: <null>");
+		}
+	}
+
+	@Test
+	void assertNotSameWithSameObjectAndMessageSupplier() {
+		try {
+			Object foo = new Object();
+			assertNotSame(foo, foo, () -> "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "test");
+			assertMessageContains(ex, "expected: not same but was: <java.lang.Object@");
 		}
 	}
 
