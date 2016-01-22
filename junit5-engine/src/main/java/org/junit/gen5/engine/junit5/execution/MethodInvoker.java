@@ -22,7 +22,8 @@ import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.junit5.execution.ExtensionRegistry.ApplicationOrder;
+import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
+import org.junit.gen5.engine.junit5.extension.ExtensionRegistry.ApplicationOrder;
 
 /**
  * {@code MethodInvoker} encapsulates the invocation of a method, including

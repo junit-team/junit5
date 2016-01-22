@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.execution;
+package org.junit.gen5.engine.junit5.extension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,9 +26,6 @@ import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.junit5.extension.DisabledCondition;
-import org.junit.gen5.engine.junit5.extension.TestInfoParameterResolver;
-import org.junit.gen5.engine.junit5.extension.TestReporterParameterResolver;
 
 /**
  * An {@code ExtensionRegistry} holds all registered extensions (i.e.

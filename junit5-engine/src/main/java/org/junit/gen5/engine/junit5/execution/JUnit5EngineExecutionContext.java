@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit5.execution;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.engine.EngineExecutionListener;
+import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 import org.junit.gen5.engine.support.hierarchical.EngineExecutionContext;
 
 /**

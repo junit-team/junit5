@@ -29,7 +29,7 @@ import org.junit.gen5.api.extension.Extension;
 import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestTag;
-import org.junit.gen5.engine.junit5.execution.ExtensionRegistry;
+import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 
 /**

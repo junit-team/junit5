@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.execution;
+package org.junit.gen5.engine.junit5.extension;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
@@ -25,6 +25,8 @@ import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.engine.junit5.extension.ExtensionPointSorter;
+import org.junit.gen5.engine.junit5.extension.RegisteredExtensionPoint;
 
 /**
  * Unit tests for {@link ExtensionPointSorter}.

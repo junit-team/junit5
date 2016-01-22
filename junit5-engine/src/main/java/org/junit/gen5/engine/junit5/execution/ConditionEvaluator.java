@@ -15,6 +15,7 @@ import org.junit.gen5.api.extension.ContainerExecutionCondition;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 
 /**
  * {@code ConditionEvaluator} evaluates {@link ContainerExecutionCondition}

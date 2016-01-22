@@ -10,8 +10,8 @@
 
 package org.junit.gen5.engine.junit5.discovery;
 
-import org.junit.gen5.engine.junit5.execution.ExtensionRegistry;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
+import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.engine.support.hierarchical.Container;
 

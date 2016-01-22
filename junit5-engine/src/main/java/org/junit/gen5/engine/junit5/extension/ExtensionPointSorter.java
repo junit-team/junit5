@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.execution;
+package org.junit.gen5.engine.junit5.extension;
 
 import java.util.Comparator;
 import java.util.List;
