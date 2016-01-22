@@ -12,6 +12,20 @@ package org.junit.gen5.launcher.main;
 
 import org.junit.gen5.launcher.*;
 
+/**
+ * Factory for creating {@link Launcher} instances by invoking {@link #create()}.
+ *
+ * <p>Test engines are registered at runtime using the
+ * {@link java.util.ServiceLoader ServiceLoader} facility. For that purpose, a
+ * text file named {@code META-INF/services/org.junit.gen5.engine.TestEngine}
+ * has to be added to the engine's JAR file in which the fully qualified name
+ * of the implementation class of the {@link org.junit.gen5.engine.TestEngine}
+ * interface is stated.
+ *
+ * @since 5.0
+ * @see Launcher
+ */
+
 public class LauncherFactory {
 
 	/**
