@@ -12,6 +12,7 @@ package org.junit.gen5.api;
 
 import static org.junit.gen5.api.Assertions.assertAll;
 import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertNull;
 import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.expectThrows;
@@ -25,11 +26,13 @@ import org.opentest4j.AssertionFailedError;
 import org.opentest4j.MultipleFailuresError;
 
 /**
- * Unit tests for {@link Assertions}.
+ * Unit tests for JUnit 5 {@link Assertions}.
  *
  * @since 5.0
  */
 public class AssertionsTests {
+
+	// --- fail ----------------------------------------------------------
 
 	@Test
 	void failWithString() {
@@ -74,6 +77,8 @@ public class AssertionsTests {
 			assertMessageIsNull(ex);
 		}
 	}
+
+	// --- assertTrue ----------------------------------------------------
 
 	@Test
 	void assertTrueWithBooleanTrue() {
@@ -123,6 +128,8 @@ public class AssertionsTests {
 		}
 	}
 
+	// --- assertFalse ---------------------------------------------------
+
 	@Test
 	void assertFalseWithBooleanFalse() {
 		assertFalse(false);
@@ -138,6 +145,38 @@ public class AssertionsTests {
 			assertMessageEquals(ex, "test");
 		}
 	}
+
+	// --- assertNull ----------------------------------------------------
+
+	@Test
+	void assertNullWithNull() {
+		assertNull(null);
+	}
+
+	@Test
+	void assertNullWithNonNullObject() {
+		try {
+			assertNull("foo");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
+		}
+	}
+
+	@Test
+	void assertNullWithNonNullObjectAndMessageSupplier() {
+		try {
+			assertNull("foo", () -> "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "test");
+			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
+		}
+	}
+
+	// --- assertAll -----------------------------------------------------
 
 	@Test
 	void assertAllWithExecutableThatThrowsAssertionError() {
@@ -175,6 +214,8 @@ public class AssertionsTests {
 		assertThrows(StackOverflowError.class, () -> assertAll(this::recurseIndefinitely));
 	}
 
+	// --- assertThrows --------------------------------------------------
+
 	@Test
 	void assertThrowsThrowable() {
 		assertThrows(EnigmaThrowable.class, () -> {
@@ -201,12 +242,12 @@ public class AssertionsTests {
 		assertThrows(StackOverflowError.class, this::recurseIndefinitely);
 	}
 
+	// -------------------------------------------------------------------
+
 	private void recurseIndefinitely() {
 		// simulate infinite recursion
 		throw new StackOverflowError();
 	}
-
-	// -------------------------------------------------------------------
 
 	private static void expectAssertionFailedError() {
 		throw new AssertionError("Should have thrown an " + AssertionFailedError.class.getName());
@@ -221,11 +262,26 @@ public class AssertionsTests {
 	private static void assertMessageEquals(AssertionFailedError ex, String msg) throws AssertionError {
 		if (!msg.equals(ex.getMessage())) {
 			throw new AssertionError(
-				"Message in AssertionFailedError should be '" + msg + "', but was '" + ex.getMessage() + "'.");
+				"Message in AssertionFailedError should be [" + msg + "], but was [" + ex.getMessage() + "].");
+		}
+	}
+
+	private static void assertMessageEndsWith(AssertionFailedError ex, String msg) throws AssertionError {
+		if (!ex.getMessage().endsWith(msg)) {
+			throw new AssertionError(
+				"Message in AssertionFailedError should end with [" + msg + "], but was [" + ex.getMessage() + "].");
+		}
+	}
+
+	private static void assertMessageStartsWith(AssertionFailedError ex, String msg) throws AssertionError {
+		if (!ex.getMessage().startsWith(msg)) {
+			throw new AssertionError(
+				"Message in AssertionFailedError should start with [" + msg + "], but was [" + ex.getMessage() + "].");
 		}
 	}
 
 	@SuppressWarnings("serial")
 	private static class EnigmaThrowable extends Throwable {
 	}
+
 }
