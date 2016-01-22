@@ -16,6 +16,7 @@ import static org.junit.gen5.api.Assertions.assertFalse;
 import static org.junit.gen5.api.Assertions.assertNotEquals;
 import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.api.Assertions.assertNull;
+import static org.junit.gen5.api.Assertions.assertSame;
 import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.expectThrows;
@@ -302,6 +303,68 @@ public class AssertionsTests {
 		}
 	}
 
+	// --- assertSame ----------------------------------------------------
+
+	@Test
+	void assertSameWithTwoNulls() {
+		assertSame(null, null);
+	}
+
+	@Test
+	void assertSameWithSameObject() {
+		Object foo = new Object();
+		assertSame(foo, foo);
+	}
+
+	@Test
+	void assertSameWithObjectVsNull() {
+		try {
+			assertSame(new Object(), null);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageContains(ex, "expected: <java.lang.Object@");
+			assertMessageContains(ex, "but was: <null>");
+		}
+	}
+
+	@Test
+	void assertSameWithNullVsObject() {
+		try {
+			assertSame(null, new Object());
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageContains(ex, "expected: <null>");
+			assertMessageContains(ex, "but was: <java.lang.Object@");
+		}
+	}
+
+	@Test
+	void assertSameWithDifferentObjects() {
+		try {
+			assertSame(new Object(), new Object());
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageContains(ex, "expected: <java.lang.Object@");
+			assertMessageContains(ex, "but was: <java.lang.Object@");
+		}
+	}
+
+	@Test
+	void assertSameWithEquivalentStringsAndMessageSupplier() {
+		try {
+			assertSame(new String("foo"), new String("foo"), () -> "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "test");
+			assertMessageContains(ex, "expected: java.lang.String@");
+			assertMessageContains(ex, "but was: java.lang.String@");
+		}
+	}
+
 	// --- assertAll -----------------------------------------------------
 
 	@Test
@@ -403,6 +466,13 @@ public class AssertionsTests {
 		if (!ex.getMessage().startsWith(msg)) {
 			throw new AssertionError(
 				"Message in AssertionFailedError should start with [" + msg + "], but was [" + ex.getMessage() + "].");
+		}
+	}
+
+	private static void assertMessageContains(AssertionFailedError ex, String msg) throws AssertionError {
+		if (!ex.getMessage().contains(msg)) {
+			throw new AssertionError(
+				"Message in AssertionFailedError should contain [" + msg + "], but was [" + ex.getMessage() + "].");
 		}
 	}
 

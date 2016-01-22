@@ -28,6 +28,8 @@ public final class Assertions {
 		/* no-op */
 	}
 
+	// --- fail ----------------------------------------------------------
+
 	public static void fail(String message) {
 		throw new AssertionFailedError(message);
 	}
@@ -35,6 +37,8 @@ public final class Assertions {
 	public static void fail(Supplier<String> messageSupplier) {
 		fail(nullSafeGet(messageSupplier));
 	}
+
+	// --- assertTrue ----------------------------------------------------
 
 	public static void assertTrue(boolean condition) {
 		assertTrue(() -> condition, () -> null);
@@ -62,6 +66,8 @@ public final class Assertions {
 		}
 	}
 
+	// --- assertFalse ---------------------------------------------------
+
 	public static void assertFalse(boolean condition) {
 		assertFalse(() -> condition, () -> null);
 	}
@@ -88,6 +94,8 @@ public final class Assertions {
 		}
 	}
 
+	// --- assertNull ----------------------------------------------------
+
 	public static void assertNull(Object actual) {
 		assertNull(actual, () -> null);
 	}
@@ -101,6 +109,8 @@ public final class Assertions {
 			failNotNull(actual, nullSafeGet(messageSupplier));
 		}
 	}
+
+	// --- assertNotNull -------------------------------------------------
 
 	public static void assertNotNull(Object actual) {
 		assertNotNull(actual, () -> null);
@@ -116,6 +126,8 @@ public final class Assertions {
 		}
 	}
 
+	// --- assertEquals -------------------------------------------------
+
 	public static void assertEquals(Object expected, Object actual) {
 		assertEquals(expected, actual, () -> null);
 	}
@@ -129,6 +141,8 @@ public final class Assertions {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
+
+	// --- assertNotEquals -------------------------------------------------
 
 	public static void assertNotEquals(Object unexpected, Object actual) {
 		assertNotEquals(unexpected, actual, () -> null);
@@ -144,6 +158,8 @@ public final class Assertions {
 		}
 	}
 
+	// --- assertSame ----------------------------------------------------
+
 	public static void assertSame(Object expected, Object actual) {
 		assertSame(expected, actual, () -> null);
 	}
@@ -158,6 +174,8 @@ public final class Assertions {
 		}
 	}
 
+	// --- assertNotSame -------------------------------------------------
+
 	public static void assertNotSame(Object unexpected, Object actual) {
 		assertNotSame(unexpected, actual, () -> null);
 	}
@@ -171,6 +189,8 @@ public final class Assertions {
 			failSame(actual, nullSafeGet(messageSupplier));
 		}
 	}
+
+	// --- assertAll -----------------------------------------------------
 
 	public static void assertAll(Executable... asserts) throws MultipleFailuresError {
 		assertAll(null, asserts);
@@ -193,6 +213,8 @@ public final class Assertions {
 			throw multipleFailuresError;
 		}
 	}
+
+	// --- assert exceptions ---------------------------------------------
 
 	public static void assertThrows(Class<? extends Throwable> expected, Executable executable) {
 		expectThrows(expected, executable);
@@ -217,6 +239,8 @@ public final class Assertions {
 			String.format("Expected %s to be thrown, but nothing was thrown.", expectedType.getName()));
 	}
 
+	// -------------------------------------------------------------------
+
 	private static void failEqual(Object actual, String message) {
 		fail(buildPrefix(message) + "expected: not equal but was: <" + actual + ">");
 	}
@@ -234,7 +258,7 @@ public final class Assertions {
 	}
 
 	private static void failNotSame(Object expected, Object actual, String message) {
-		fail(buildPrefix(message) + "expected: same <" + expected + "> but was: <" + actual + ">");
+		fail(format(expected, actual, message));
 	}
 
 	private static void failNotEqual(Object expected, Object actual, String message) {
@@ -256,7 +280,8 @@ public final class Assertions {
 
 	private static String formatClassAndValue(Object value, String valueString) {
 		String className = (value == null ? "null" : value.getClass().getName());
-		return className + "<" + valueString + ">";
+		String hash = (value == null ? "" : "@" + Integer.toHexString(System.identityHashCode(value)));
+		return className + hash + "<" + valueString + ">";
 	}
 
 	private static String buildPrefix(String message) {
