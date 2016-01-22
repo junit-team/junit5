@@ -19,13 +19,14 @@ import org.junit.gen5.engine.TestDescriptor;
  * {@link TestResolver}s. It operates as a registry and as a communication
  * bus between the different resolvers.
  *
- * <p>Each resolver must
  * @since 5.0
  */
 public interface TestResolverRegistry {
-	TestDescriptor fetchParent(DiscoverySelector selector, TestDescriptor root);
+	void register(TestResolver testResolver);
 
 	void notifyResolvers(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest);
 
-	void register(TestResolver testResolver);
+	void resolveUniqueId(TestDescriptor parent, String remainingUniqueId, EngineDiscoveryRequest discoveryRequest);
+
+	TestDescriptor fetchParent(DiscoverySelector selector, TestDescriptor root);
 }

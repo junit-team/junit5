@@ -10,14 +10,18 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
+import static java.util.stream.Collectors.joining;
+
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
-
-import java.util.Optional;
 
 /**
  * The {@code EngineResolver} is a special resolver. In contradiction to any
@@ -34,12 +38,19 @@ import java.util.Optional;
  * @since 5.0
  */
 public class EngineResolver extends JUnit5TestResolver {
-    @Override
-    public void resolveAllFrom(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
-    }
+	private static final String RESOLVER_ID = "engine";
 
-    @Override
-    public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
-        return Optional.empty();
-    }
+	@Override
+	public void resolveAllFrom(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
+	}
+
+	@Override
+	public void resolveUniqueId(TestDescriptor parent, String remainingUniqueId,
+			EngineDiscoveryRequest discoveryRequest) {
+	}
+
+	@Override
+	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
+		return Optional.empty();
+	}
 }

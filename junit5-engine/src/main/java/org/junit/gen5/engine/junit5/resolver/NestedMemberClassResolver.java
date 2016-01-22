@@ -76,6 +76,11 @@ public class NestedMemberClassResolver extends JUnit5TestResolver {
 	}
 
 	@Override
+	public void resolveUniqueId(TestDescriptor parent, String remainingUniqueId,
+			EngineDiscoveryRequest discoveryRequest) {
+	}
+
+	@Override
 	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
 		if (selector instanceof ClassSelector) {
 			Class<?> testClass = ((ClassSelector) selector).getTestClass();

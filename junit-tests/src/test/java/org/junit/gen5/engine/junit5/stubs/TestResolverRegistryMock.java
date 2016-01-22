@@ -38,6 +38,11 @@ public class TestResolverRegistryMock implements TestResolverRegistry {
 	}
 
 	@Override
+	public void resolveUniqueId(TestDescriptor parent, String remainingUniqueId,
+			EngineDiscoveryRequest discoveryRequest) {
+	}
+
+	@Override
 	public void register(TestResolver testResolver) {
 	}
 }

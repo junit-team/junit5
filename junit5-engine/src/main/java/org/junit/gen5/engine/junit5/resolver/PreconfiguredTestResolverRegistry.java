@@ -15,6 +15,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -37,6 +39,9 @@ public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
 
 	@Override
 	public TestDescriptor fetchParent(DiscoverySelector selector, TestDescriptor root) {
+		Preconditions.notNull(selector, "selector must not be null!");
+		Preconditions.notNull(root, "root must not be null!");
+
 		List<TestDescriptor> parents = new LinkedList<>();
 		for (TestResolver testResolver : testResolvers.values()) {
 			testResolver.fetchBySelector(selector, root).ifPresent(parents::add);
@@ -53,13 +58,36 @@ public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
 
 	@Override
 	public void notifyResolvers(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
+		Preconditions.notNull(parent, "parent must not be null!");
+		Preconditions.notNull(discoveryRequest, "discoveryRequest must not be null!");
+
 		for (TestResolver testResolver : testResolvers.values()) {
 			testResolver.resolveAllFrom(parent, discoveryRequest);
 		}
 	}
 
 	@Override
+	public void resolveUniqueId(TestDescriptor parent, String remainingUniqueId,
+			EngineDiscoveryRequest discoveryRequest) {
+		Preconditions.notNull(parent, "parent must not be null!");
+		Preconditions.notNull(remainingUniqueId, "remainingUniqueId must not be null!");
+		Preconditions.notNull(discoveryRequest, "discoveryRequest must not be null!");
+
+		// The terminal operation of unique id resolution is controlled by the registry
+		if (StringUtils.isBlank(remainingUniqueId)) {
+			notifyResolvers(parent, discoveryRequest);
+			return;
+		}
+
+		for (TestResolver testResolver : testResolvers.values()) {
+			testResolver.resolveUniqueId(parent, remainingUniqueId, discoveryRequest);
+		}
+	}
+
+	@Override
 	public void register(TestResolver testResolver) {
+		Preconditions.notNull(testResolver, "testResolver must not be null!");
+
 		// TODO Logging information (e.g. override existing, adding new one, etc.)
 		testResolvers.put(testResolver.getClass(), testResolver);
 		testResolver.bindTestResolveryRegistry(this);

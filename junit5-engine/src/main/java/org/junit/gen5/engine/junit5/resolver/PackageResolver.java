@@ -74,6 +74,11 @@ public class PackageResolver extends JUnit5TestResolver {
 	}
 
 	@Override
+	public void resolveUniqueId(TestDescriptor parent, String remainingUniqueId,
+			EngineDiscoveryRequest discoveryRequest) {
+	}
+
+	@Override
 	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
 		if (selector instanceof PackageSelector) {
 			String packageName = ((PackageSelector) selector).getPackageName();

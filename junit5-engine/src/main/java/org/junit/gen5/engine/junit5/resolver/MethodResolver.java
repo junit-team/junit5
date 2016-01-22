@@ -93,6 +93,11 @@ public class MethodResolver extends JUnit5TestResolver {
 	}
 
 	@Override
+	public void resolveUniqueId(TestDescriptor parent, String remainingUniqueId,
+			EngineDiscoveryRequest discoveryRequest) {
+	}
+
+	@Override
 	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
 		return Optional.empty();
 	}
