@@ -25,7 +25,6 @@ import org.junit.gen5.launcher.*;
  * @since 5.0
  * @see Launcher
  */
-
 public class LauncherFactory {
 
 	/**
