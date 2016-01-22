@@ -58,7 +58,7 @@ public class ConditionEvaluationResult {
 		// @formatter:off
 		return new ToStringBuilder(this)
 			.append("enabled", this.enabled)
-			.append("reason", this.reason)
+			.append("reason", this.reason.orElse("<unknown>"))
 			.toString();
 		// @formatter:on
 	}

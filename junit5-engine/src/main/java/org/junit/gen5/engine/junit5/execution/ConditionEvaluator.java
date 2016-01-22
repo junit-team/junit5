@@ -10,6 +10,8 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import java.util.logging.Logger;
+
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ContainerExecutionCondition;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
@@ -26,6 +28,8 @@ import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
  * @see TestExecutionCondition
  */
 public class ConditionEvaluator {
+
+	private static final Logger LOG = Logger.getLogger(ConditionEvaluator.class.getName());
 
 	private static final ConditionEvaluationResult ENABLED = ConditionEvaluationResult.enabled(
 		"No 'disabled' conditions encountered");
@@ -76,7 +80,9 @@ public class ConditionEvaluator {
 			ContainerExtensionContext context) {
 
 		try {
-			return condition.evaluate(context);
+			ConditionEvaluationResult result = condition.evaluate(context);
+			logResult(condition.getClass(), result);
+			return result;
 		}
 		catch (Exception ex) {
 			throw new ConditionEvaluationException(
@@ -86,12 +92,18 @@ public class ConditionEvaluator {
 
 	private ConditionEvaluationResult evaluate(TestExecutionCondition condition, TestExtensionContext context) {
 		try {
-			return condition.evaluate(context);
+			ConditionEvaluationResult result = condition.evaluate(context);
+			logResult(condition.getClass(), result);
+			return result;
 		}
 		catch (Exception ex) {
 			throw new ConditionEvaluationException(
 				String.format("Failed to evaluate condition [%s]", condition.getClass().getName()), ex);
 		}
+	}
+
+	private void logResult(Class<?> conditionType, ConditionEvaluationResult result) {
+		LOG.finer(() -> String.format("Evaluation of condition [%s] resulted in: %s", conditionType.getName(), result));
 	}
 
 }
