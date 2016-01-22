@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit5.resolver;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.ClasspathSelector.forPath;
 import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForParentAndName;
@@ -23,13 +24,18 @@ import java.util.List;
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
+import org.junit.gen5.engine.junit5.resolver.testpackage.NestingTestClass;
 import org.junit.gen5.engine.junit5.resolver.testpackage.SingleTestClass;
-import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
+import org.junit.gen5.engine.junit5.resolver.testpackage.notatestclass.NotATestClassPlaceholder;
+import org.junit.gen5.engine.junit5.resolver.testpackage.subpackage1.Subpackage1Placeholder;
+import org.junit.gen5.engine.junit5.resolver.testpackage.subpackage2.Subpackage2Placeholder;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
@@ -52,7 +58,7 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 
 	@BeforeEach
 	void setUp() {
-		testEngine = new TestEngineStub();
+		testEngine = new JUnit5TestEngine();
 		registry = new PreconfiguredTestResolverRegistry();
 
 		engineDescriptor = new EngineDescriptor(testEngine);
@@ -138,6 +144,41 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 		TestDiscoveryRequest discoveryRequest = request().select(forMethod(SingleTestClass.class, "test1")).build();
 		registry.notifyResolvers(engineDescriptor, discoveryRequest);
 		verifyOccurrencesOf_Packages_Classes_And_Methods(7, 1, 1);
+	}
+
+	@Test
+	void givenAClasspathSelector_resolvesTheWholeTestSuiteWithinTheClasspath() throws Exception {
+		List<DiscoverySelector> selector = forPath(SingleTestClass.class.getResource("/").getFile());
+		registry.notifyResolvers(engineDescriptor, request().select(selector).build());
+
+		// TODO Move testpackage to another classpath root and test for this
+		// TODO This would make this test more reliable and robust.
+		// TODO The assertions below could be replaced with the next line:
+		//      verifyOccurrencesOf_Packages_Classes_And_Methods(10, 7, 5);
+
+		// @formatter:off
+		List<TestDescriptor> packageDescriptors = this.engineDescriptor.allDescendants().stream()
+                .filter(PackageTestDescriptor.class::isInstance)
+                .collect(toList());
+		assertThat(packageDescriptors)
+                .contains(
+                        packageLevel1, packageLevel2, packageLevel3, packageLevel4, packageLevel5,
+                        packageLevel6, packageLevel7, packageLevel8a, packageLevel8b, packageLevel8c)
+                .doesNotHaveDuplicates();
+
+		List<TestDescriptor> testDescriptors = this.engineDescriptor.allDescendants().stream()
+                .filter(ClassTestDescriptor.class::isInstance)
+                .collect(toList());
+		assertThat(testDescriptors)
+                .contains(
+			            ClassResolver.descriptorForParentAndClass(packageLevel7, SingleTestClass.class),
+			            ClassResolver.descriptorForParentAndClass(packageLevel7, NestingTestClass.class),
+			            ClassResolver.descriptorForParentAndClass(packageLevel7, NestingTestClass.NestedStaticClass.class),
+                        ClassResolver.descriptorForParentAndClass(packageLevel8a, Subpackage1Placeholder.class),
+                        ClassResolver.descriptorForParentAndClass(packageLevel8b, Subpackage2Placeholder.class),
+                        ClassResolver.descriptorForParentAndClass(packageLevel8c, NotATestClassPlaceholder.class))
+                .doesNotHaveDuplicates();
+        // @formatter:on
 	}
 
 	// @formatter:off

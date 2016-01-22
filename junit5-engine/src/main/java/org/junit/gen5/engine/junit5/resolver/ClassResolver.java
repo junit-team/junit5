@@ -10,10 +10,13 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 
+import java.io.File;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +26,7 @@ import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.discovery.ClassSelector;
+import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
@@ -50,6 +54,7 @@ public class ClassResolver extends JUnit5TestResolver {
 		List<TestDescriptor> classDescriptors = new LinkedList<>();
 		if (parent.isRoot()) {
 			classDescriptors.addAll(resolveClassesFromSelectors(parent, discoveryRequest));
+			classDescriptors.addAll(resolveClassesFromClasspath(parent, discoveryRequest));
 		}
 		else if (parent instanceof PackageTestDescriptor) {
 			String packageName = ((PackageTestDescriptor) parent).getPackageName();
@@ -83,6 +88,28 @@ public class ClassResolver extends JUnit5TestResolver {
 			}
 		}
 		return Optional.empty();
+	}
+
+	private List<TestDescriptor> resolveClassesFromClasspath(TestDescriptor root,
+			EngineDiscoveryRequest discoveryRequest) {
+		// @formatter:off
+        List<File> classPathRoots = discoveryRequest.getSelectorsByType(ClasspathSelector.class).stream()
+                .map(ClasspathSelector::getClasspathRoot)
+                .filter(File::exists)
+                .collect(toList());
+        // @formatter:on
+
+		if (classPathRoots.isEmpty()) {
+			return emptyList();
+		}
+
+		List<TestDescriptor> classTestDescriptors = new LinkedList<>();
+		for (Class<?> testClass : findAllClassesInClasspathRoots(classPathRoots, this::isTopLevelTestClass)) {
+			PackageSelector packageSelector = forPackageName(testClass.getPackage().getName());
+			TestDescriptor parent = getTestResolverRegistry().fetchParent(packageSelector, root);
+			getTestDescriptor(parent, testClass).ifPresent(classTestDescriptors::add);
+		}
+		return classTestDescriptors;
 	}
 
 	private List<TestDescriptor> resolveTopLevelClassesInPackage(String packageName, TestDescriptor parent,
