@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor;
+package org.junit.gen5.engine.junit5.execution;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +24,7 @@ import org.junit.gen5.commons.util.Preconditions;
  *
  * @since 5.0
  */
-class ThrowableCollector {
+public class ThrowableCollector {
 
 	private final List<Throwable> throwables = new ArrayList<>();
 
@@ -37,7 +37,7 @@ class ThrowableCollector {
 	 * @see #getThrowables()
 	 * @see #assertEmpty()
 	 */
-	void execute(Executable executable) {
+	public void execute(Executable executable) {
 		try {
 			executable.execute();
 		}
@@ -84,7 +84,7 @@ class ThrowableCollector {
 	 *
 	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
-	void assertEmpty() {
+	public void assertEmpty() {
 		if (!this.throwables.isEmpty()) {
 			Throwable t = this.throwables.get(0);
 			this.throwables.stream().skip(1).forEach(t::addSuppressed);

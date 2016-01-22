@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor;
+package org.junit.gen5.engine.junit5.execution;
 
 import static org.junit.gen5.api.Assertions.*;
 
@@ -21,6 +21,10 @@ import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.ClassBasedContainerExtensionContext;
+import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.MethodBasedTestExtensionContext;
+import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 import org.mockito.Mockito;
 
 /**

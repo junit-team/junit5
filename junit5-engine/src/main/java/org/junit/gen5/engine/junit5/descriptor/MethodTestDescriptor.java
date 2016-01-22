@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.engine.junit5.descriptor.MethodInvocationContextFactory.methodInvocationContext;
+import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -33,6 +33,7 @@ import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.execution.ConditionEvaluator;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
+import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry.ApplicationOrder;
 import org.junit.gen5.engine.junit5.extension.RegisteredExtensionPoint;

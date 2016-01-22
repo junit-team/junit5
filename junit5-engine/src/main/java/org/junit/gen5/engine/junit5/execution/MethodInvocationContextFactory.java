@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor;
+package org.junit.gen5.engine.junit5.execution;
 
 import java.lang.reflect.Method;
 
@@ -19,13 +19,13 @@ import org.junit.gen5.api.extension.MethodInvocationContext;
  *
  * @since 5.0
  */
-class MethodInvocationContextFactory {
+public class MethodInvocationContextFactory {
 
 	/**
 	 * Create a new {@link MethodInvocationContext} based on the supplied
 	 * {@code instance} and {@code method}.
 	 */
-	static MethodInvocationContext methodInvocationContext(Object instance, Method method) {
+	public static MethodInvocationContext methodInvocationContext(Object instance, Method method) {
 		return new DefaultMethodInvocationContext(instance, method);
 	}
 

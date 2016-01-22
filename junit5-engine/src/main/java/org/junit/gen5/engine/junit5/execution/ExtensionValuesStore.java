@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor;
+package org.junit.gen5.engine.junit5.execution;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,11 +18,12 @@ import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
- * {@code ExtensionValuesStore} is used inside {@link AbstractExtensionContext}
+ * {@code ExtensionValuesStore} is used inside implementations of
+ * {@link org.junit.gen5.api.extension.ExtensionContext}
  * to store and retrieve attributes with {@link #get}, {@link #put}, or
  * {@link #getOrComputeIfAbsent}.
  */
-class ExtensionValuesStore {
+public class ExtensionValuesStore {
 
 	private final ExtensionValuesStore parentStore;
 	private final Map<Object, StoredValue> storedValues = new HashMap<>();
@@ -31,7 +32,7 @@ class ExtensionValuesStore {
 		this(null);
 	}
 
-	ExtensionValuesStore(ExtensionValuesStore parentStore) {
+	public ExtensionValuesStore(ExtensionValuesStore parentStore) {
 		this.parentStore = parentStore;
 	}
 

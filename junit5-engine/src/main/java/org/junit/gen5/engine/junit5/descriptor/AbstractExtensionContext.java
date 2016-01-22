@@ -16,6 +16,8 @@ import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.junit5.execution.ExtensionValuesStore;
+import org.junit.gen5.engine.junit5.execution.NamespaceAwareStore;
 
 /**
  * @since 5.0

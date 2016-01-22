@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor;
+package org.junit.gen5.engine.junit5.execution;
 
 import java.util.function.Function;
 
@@ -18,12 +18,12 @@ import org.junit.gen5.api.extension.ExtensionContext.Store;
 /**
  * @since 5.0
  */
-class NamespaceAwareStore implements Store {
+public class NamespaceAwareStore implements Store {
 
 	private final ExtensionValuesStore valuesStore;
 	private final Namespace namespace;
 
-	NamespaceAwareStore(ExtensionValuesStore valuesStore, Namespace namespace) {
+	public NamespaceAwareStore(ExtensionValuesStore valuesStore, Namespace namespace) {
 		this.valuesStore = valuesStore;
 		this.namespace = namespace;
 	}

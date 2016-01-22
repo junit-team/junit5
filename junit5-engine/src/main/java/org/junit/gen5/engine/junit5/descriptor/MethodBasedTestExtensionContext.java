@@ -17,7 +17,7 @@ import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.*;
 
-final class MethodBasedTestExtensionContext extends AbstractExtensionContext implements TestExtensionContext {
+final public class MethodBasedTestExtensionContext extends AbstractExtensionContext implements TestExtensionContext {
 
 	private final Object testInstance;
 
