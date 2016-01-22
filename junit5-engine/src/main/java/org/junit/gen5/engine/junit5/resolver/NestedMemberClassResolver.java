@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -32,10 +33,12 @@ import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
  * @since 5.0
  */
 public class NestedMemberClassResolver extends JUnit5TestResolver {
+	private static final String RESOLVER_ID = "nestedclass";
+
 	public static NestedClassTestDescriptor descriptorForParentAndNestedClass(TestDescriptor parent,
 			Class<?> testClass) {
 		String className = testClass.getSimpleName();
-		String uniqueId = parent.getUniqueId() + "/[class:" + className + "]";
+		String uniqueId = parent.getUniqueId() + "/[nestedclass:" + className + "]";
 
 		if (parent.findByUniqueId(uniqueId).isPresent()) {
 			return (NestedClassTestDescriptor) parent.findByUniqueId(uniqueId).get();
@@ -77,6 +80,17 @@ public class NestedMemberClassResolver extends JUnit5TestResolver {
 
 	@Override
 	public void resolveUniqueId(TestDescriptor parent, UniqueId uniqueId, EngineDiscoveryRequest discoveryRequest) {
+		if (uniqueId.currentKey().equals(RESOLVER_ID) && parent instanceof ClassTestDescriptor) {
+			String enclosingClassName = ((ClassTestDescriptor) parent).getTestClass().getCanonicalName();
+			String className = uniqueId.currentValue();
+			Optional<Class<?>> testClass = ReflectionUtils.loadClass(
+				String.format("%s.%s", enclosingClassName, className));
+
+			if (testClass.isPresent()) {
+				TestDescriptor next = descriptorForParentAndNestedClass(parent, testClass.get());
+				getTestResolverRegistry().resolveUniqueId(next, uniqueId.getRemainder(), discoveryRequest);
+			}
+		}
 	}
 
 	@Override

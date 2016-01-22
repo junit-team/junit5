@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -33,6 +34,8 @@ import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
  * @since 5.0
  */
 public class MethodResolver extends JUnit5TestResolver {
+	private static final String RESOLVER_ID = "method";
+
 	public static MethodTestDescriptor descriptorForParentAndMethod(TestDescriptor parent, Class<?> testClass,
 			Method testMethod) {
 		String uniqueId = parent.getUniqueId() + "/[method:" + testMethod.getName() + "]";
@@ -94,6 +97,16 @@ public class MethodResolver extends JUnit5TestResolver {
 
 	@Override
 	public void resolveUniqueId(TestDescriptor parent, UniqueId uniqueId, EngineDiscoveryRequest discoveryRequest) {
+		if (uniqueId.currentKey().equals(RESOLVER_ID) && parent instanceof ClassTestDescriptor) {
+			Class<?> testClass = ((ClassTestDescriptor) parent).getTestClass();
+
+			Optional<Method> method = ReflectionUtils.loadMethod(
+				String.format("%s#%s", testClass.getCanonicalName(), uniqueId.currentValue()));
+			if (method.isPresent()) {
+				TestDescriptor next = descriptorForParentAndMethod(parent, testClass, method.get());
+				getTestResolverRegistry().resolveUniqueId(next, uniqueId.getRemainder(), discoveryRequest);
+			}
+		}
 	}
 
 	@Override

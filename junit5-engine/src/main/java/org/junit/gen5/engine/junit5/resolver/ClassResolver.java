@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -34,6 +35,8 @@ import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
  * @since 5.0
  */
 public class ClassResolver extends JUnit5TestResolver {
+	private static final String RESOLVER_ID = "class";
+
 	public static ClassTestDescriptor descriptorForParentAndClass(TestDescriptor parent, Class<?> testClass) {
 		String packageName = testClass.getPackage().getName();
 		String fullQualifiedClassName = testClass.getCanonicalName();
@@ -81,6 +84,16 @@ public class ClassResolver extends JUnit5TestResolver {
 
 	@Override
 	public void resolveUniqueId(TestDescriptor parent, UniqueId uniqueId, EngineDiscoveryRequest discoveryRequest) {
+		if (uniqueId.currentKey().equals(RESOLVER_ID) && parent instanceof PackageTestDescriptor) {
+			String packageName = ((PackageTestDescriptor) parent).getPackageName();
+			String className = uniqueId.currentValue();
+			Optional<Class<?>> testClass = ReflectionUtils.loadClass(String.format("%s.%s", packageName, className));
+
+			if (testClass.isPresent()) {
+				TestDescriptor next = descriptorForParentAndClass(parent, testClass.get());
+				getTestResolverRegistry().resolveUniqueId(next, uniqueId.getRemainder(), discoveryRequest);
+			}
+		}
 	}
 
 	@Override

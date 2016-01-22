@@ -29,6 +29,8 @@ import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
  * @since 5.0
  */
 public class PackageResolver extends JUnit5TestResolver {
+	private static final String RESOLVER_ID = "package";
+
 	public static PackageTestDescriptor descriptorForParentAndName(TestDescriptor parent, String packageName) {
 		int index = packageName.lastIndexOf('.');
 		String name = index == -1 ? packageName : packageName.substring(index + 1);
@@ -75,6 +77,16 @@ public class PackageResolver extends JUnit5TestResolver {
 
 	@Override
 	public void resolveUniqueId(TestDescriptor parent, UniqueId uniqueId, EngineDiscoveryRequest discoveryRequest) {
+		if (uniqueId.currentKey().equals(RESOLVER_ID)) {
+			String packageName = uniqueId.currentValue();
+			if (parent instanceof PackageTestDescriptor) {
+				PackageTestDescriptor packageTestDescriptor = (PackageTestDescriptor) parent;
+				packageName = String.format("%s.%s", packageTestDescriptor.getPackageName(), packageName);
+			}
+
+			TestDescriptor next = descriptorForParentAndName(parent, packageName);
+			getTestResolverRegistry().resolveUniqueId(next, uniqueId.getRemainder(), discoveryRequest);
+		}
 	}
 
 	@Override
