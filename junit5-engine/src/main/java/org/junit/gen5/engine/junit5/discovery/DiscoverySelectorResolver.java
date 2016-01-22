@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor;
+package org.junit.gen5.engine.junit5.discovery;
 
 import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackage;
@@ -28,9 +28,10 @@ import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
-import org.junit.gen5.engine.junit5.discovery.IsNestedTestClass;
-import org.junit.gen5.engine.junit5.discovery.IsScannableTestClass;
-import org.junit.gen5.engine.junit5.discovery.IsTestMethod;
+import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.JUnit5TestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 
 /**

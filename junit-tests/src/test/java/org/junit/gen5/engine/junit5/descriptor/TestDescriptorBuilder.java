@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.junit5.discovery.JUnit5EngineDescriptor;
 
 public abstract class TestDescriptorBuilder {
 

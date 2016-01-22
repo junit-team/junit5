@@ -52,7 +52,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	private final Method testMethod;
 
-	MethodTestDescriptor(String uniqueId, Class<?> testClass, Method testMethod) {
+	public MethodTestDescriptor(String uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId);
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");

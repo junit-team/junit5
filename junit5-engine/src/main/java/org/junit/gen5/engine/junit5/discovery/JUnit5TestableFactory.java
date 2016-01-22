@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.descriptor;
+package org.junit.gen5.engine.junit5.discovery;
 
 import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
 
@@ -22,9 +22,6 @@ import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.StringUtils;
-import org.junit.gen5.engine.junit5.discovery.IsNestedTestClass;
-import org.junit.gen5.engine.junit5.discovery.IsPotentialTestContainer;
-import org.junit.gen5.engine.junit5.discovery.IsTestMethod;
 
 /**
  * @since 5.0
