@@ -93,8 +93,7 @@ public class MethodResolver extends JUnit5TestResolver {
 	}
 
 	@Override
-	public void resolveUniqueId(TestDescriptor parent, UniqueId remainingUniqueId,
-			EngineDiscoveryRequest discoveryRequest) {
+	public void resolveUniqueId(TestDescriptor parent, UniqueId uniqueId, EngineDiscoveryRequest discoveryRequest) {
 	}
 
 	@Override

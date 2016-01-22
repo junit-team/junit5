@@ -26,7 +26,7 @@ public interface TestResolverRegistry {
 
 	void notifyResolvers(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest);
 
-	void resolveUniqueId(TestDescriptor parent, UniqueId remainingUniqueId, EngineDiscoveryRequest discoveryRequest);
+	void resolveUniqueId(TestDescriptor parent, UniqueId uniqueId, EngineDiscoveryRequest discoveryRequest);
 
 	TestDescriptor fetchParent(DiscoverySelector selector, TestDescriptor root);
 }

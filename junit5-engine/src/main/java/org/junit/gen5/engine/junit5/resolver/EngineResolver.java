@@ -17,6 +17,7 @@ import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
+import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
 /**
@@ -38,11 +39,31 @@ public class EngineResolver extends JUnit5TestResolver {
 
 	@Override
 	public void resolveAllFrom(TestDescriptor parent, EngineDiscoveryRequest discoveryRequest) {
+		if (parent.isRoot()) {
+			// @formatter:off
+            discoveryRequest.getSelectorsByType(UniqueIdSelector.class).stream()
+                    .map(UniqueIdSelector::getUniqueId)
+                    .map(UniqueId::from)
+                    .filter(uid -> !uid.isEmpty())
+                    .distinct()
+                    .sorted()
+                    .forEach(uniqueId -> resolveUniqueId(parent, uniqueId, discoveryRequest));
+            // @formatter:on
+		}
 	}
 
 	@Override
-	public void resolveUniqueId(TestDescriptor parent, UniqueId remainingUniqueId,
-			EngineDiscoveryRequest discoveryRequest) {
+	public void resolveUniqueId(TestDescriptor parent, UniqueId uniqueId, EngineDiscoveryRequest discoveryRequest) {
+		if (uniqueId.currentKey().equals(RESOLVER_ID) && uniqueId.currentValue().equals(JUnit5TestEngine.ENGINE_ID)) {
+			// TODO Clarify if it is sufficient to check on the unique id
+			//      and if it is always guaranteed that this will only match
+			//      if the parent is the engine descriptor.
+			//      We could also guarantee that the parent is always the root
+			//      (engine descriptor) by iterating over the parents like that:
+			//      TestDescriptor root = parent;
+			//      for (; !root.isRoot(); root = root.getParent().get());
+			getTestResolverRegistry().resolveUniqueId(parent, uniqueId.getRemainder(), discoveryRequest);
+		}
 	}
 
 	@Override
