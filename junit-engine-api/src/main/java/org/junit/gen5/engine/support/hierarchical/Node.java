@@ -12,6 +12,15 @@ package org.junit.gen5.engine.support.hierarchical;
 
 import java.util.Optional;
 
+/**
+ * A <em>node</em> within the execution hierarchy.
+ *
+ * @param <C> the type of {@code EngineExecutionContext} used by the {@code HierarchicalTestEngine}
+ * @since 5.0
+ * @see HierarchicalTestEngine
+ * @see Container
+ * @see Leaf
+ */
 public interface Node<C extends EngineExecutionContext> {
 
 	default C prepare(C context) throws Exception {
@@ -23,6 +32,7 @@ public interface Node<C extends EngineExecutionContext> {
 	}
 
 	class SkipResult {
+
 		private final boolean skipped;
 		private final String reason;
 
@@ -47,4 +57,5 @@ public interface Node<C extends EngineExecutionContext> {
 			return Optional.ofNullable(reason);
 		}
 	}
+
 }

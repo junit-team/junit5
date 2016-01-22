@@ -10,6 +10,15 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
+/**
+ * A <em>container</em> within the execution hierarchy.
+ *
+ * @param <C> the type of {@code EngineExecutionContext} used by the {@code HierarchicalTestEngine}
+ * @since 5.0
+ * @see HierarchicalTestEngine
+ * @see Node
+ * @see Leaf
+ */
 public interface Container<C extends EngineExecutionContext> extends Node<C> {
 
 	default C beforeAll(C context) throws Exception {

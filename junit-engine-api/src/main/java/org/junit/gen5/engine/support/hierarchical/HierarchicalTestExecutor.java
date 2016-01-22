@@ -21,16 +21,15 @@ import org.junit.gen5.engine.support.hierarchical.Node.SkipResult;
 
 /**
  * Implementation core of all {@link TestEngine TestEngines} that wish to
- * use the {@link Container} and {@link Leaf} abstractions as the driving
- * principles for structuring and executing test suites.
+ * use the {@link Node}, {@link Container}, and {@link Leaf} abstractions
+ * as the driving principles for structuring and executing test suites.
  *
- * <p>A {@code HierarchicalTestExecutor} is instantiated by concrete
- * implementations of {@linkplain HierarchicalTestEngine} and takes care
- * of calling containers and leaves in the appropriate order as well as
- * calling the necessary events on an {@linkplain EngineExecutionListener}.
+ * <p>A {@code HierarchicalTestExecutor} is instantiated by a concrete
+ * implementation of {@link HierarchicalTestEngine} and takes care of
+ * calling containers and leaves in the appropriate order as well as
+ * firing the necessary events in the {@link EngineExecutionListener}.
  *
- * @param <C> the concrete type of {@linkplain EngineExecutionContext} used
- * by a concrete {@linkplain TestEngine}
+ * @param <C> the type of {@code EngineExecutionContext} used by the {@code HierarchicalTestEngine}
  * @since 5.0
  */
 class HierarchicalTestExecutor<C extends EngineExecutionContext> {
@@ -69,7 +68,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		catch (Throwable throwable) {
 			rethrowIfBlacklisted(throwable);
 
-			// TODO Is this what we want?
+			// TODO Decide if exceptions thrown during preparation should result in the node being marked as "started".
 			listener.executionStarted(testDescriptor);
 			listener.executionFinished(testDescriptor, TestExecutionResult.failed(throwable));
 			return;

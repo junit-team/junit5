@@ -14,10 +14,15 @@ import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestEngine;
 
 /**
- * Abstract superclass of all TestEngine implementations that are willing to use the {@linkplain Container} and
- * {@linkplain Leaf} nodes as main principle to organize test suites.
+ * Abstract base class for all {@link TestEngine} implementations that wish
+ * to organize test suites hierarchically based on the {@link Node},
+ * {@link Container}, and {@link Leaf} abstractions.
  *
- * @param <C> The concrete type of {@linkplain EngineExecutionContext} used by a concrete subclass.
+ * @param <C> the type of {@code EngineExecutionContext} used by this engine
+ * @since 5.0
+ * @see Node
+ * @see Container
+ * @see Leaf
  */
 public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> implements TestEngine {
 

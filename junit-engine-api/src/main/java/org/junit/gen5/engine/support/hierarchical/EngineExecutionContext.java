@@ -10,6 +10,12 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
+/**
+ * Marker interface for an execution context used by a concrete implementation
+ * of {@link HierarchicalTestEngine} and its collaborators.
+ *
+ * @since 5.0
+ * @see HierarchicalTestEngine
+ */
 public interface EngineExecutionContext {
-
 }

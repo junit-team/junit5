@@ -10,6 +10,17 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
+/**
+ * A <em>leaf</em> within the execution hierarchy.
+ *
+ * @param <C> the type of {@code EngineExecutionContext} used by the {@code HierarchicalTestEngine}
+ * @since 5.0
+ * @see HierarchicalTestEngine
+ * @see Node
+ * @see Container
+ */
 public interface Leaf<C extends EngineExecutionContext> extends Node<C> {
+
 	C execute(C context) throws Exception;
+
 }
