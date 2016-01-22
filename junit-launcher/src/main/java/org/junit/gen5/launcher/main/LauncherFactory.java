@@ -10,21 +10,15 @@
 
 package org.junit.gen5.launcher.main;
 
-import static java.util.Arrays.asList;
+import org.junit.gen5.launcher.*;
 
-import org.junit.gen5.engine.TestEngine;
-
-/**
- * @since 5.0
- */
 public class LauncherFactory {
 
-	public static DefaultLauncher createLauncher(TestEngine... engines) {
-		return createLauncher(asList(engines));
-	}
-
-	public static DefaultLauncher createLauncher(Iterable<TestEngine> engines) {
-		return new DefaultLauncher(() -> engines);
+	/**
+	 * Factory method for creating a new instance of {@link Launcher}.
+	 */
+	public static Launcher create() {
+		return new DefaultLauncher();
 	}
 
 }

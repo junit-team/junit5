@@ -13,7 +13,7 @@ package org.junit.gen5.launcher.main;
 import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.EngineIdFilter.byEngineId;
-import static org.junit.gen5.launcher.main.LauncherFactory.createLauncher;
+import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import org.assertj.core.api.Assertions;

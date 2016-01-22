@@ -34,7 +34,7 @@ import org.junit.gen5.launcher.TagFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
-import org.junit.gen5.launcher.main.DefaultLauncher;
+import org.junit.gen5.launcher.main.*;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -69,7 +69,7 @@ public class JUnit5 extends Runner implements Filterable {
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
 	private static final String EMPTY_STRING = "";
 
-	private final Launcher launcher = DefaultLauncher.create();
+	private final Launcher launcher = LauncherFactory.create();
 	private final Class<?> testClass;
 	private TestDiscoveryRequest discoveryRequest;
 	private JUnit5TestTree testTree;

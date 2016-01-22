@@ -17,7 +17,8 @@ package org.junit.gen5.launcher;
  *
  * <p>Implementations of this interface are responsible for determining
  * the set of test engines to delegate to at runtime. For example, the
- * {@link org.junit.gen5.launcher.main.DefaultLauncher DefaultLauncher}
+ * default implementation as returned by
+ * {@link org.junit.gen5.launcher.main.LauncherFactory#create LauncherFactory.create()}
  * dynamically registers test engines via Java's
  * {@link java.util.ServiceLoader ServiceLoader} mechanism.
  *
@@ -39,7 +40,7 @@ package org.junit.gen5.launcher;
  * @see TestDiscoveryRequest
  * @see TestPlan
  * @see TestExecutionListener
- * @see org.junit.gen5.launcher.main.DefaultLauncher
+ * @see org.junit.gen5.launcher.main.LauncherFactory
  * @see org.junit.gen5.engine.TestEngine
  */
 public interface Launcher {

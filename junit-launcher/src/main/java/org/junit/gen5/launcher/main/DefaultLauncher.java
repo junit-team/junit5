@@ -43,21 +43,14 @@ import org.junit.gen5.launcher.TestPlan;
  * @see TestPlan
  * @see TestExecutionListener
  */
-public class DefaultLauncher implements Launcher {
-
-	/**
-	 * Factory method for creating a new instance of {@link DefaultLauncher}.
-	 */
-	public static Launcher create() {
-		return new DefaultLauncher();
-	}
+class DefaultLauncher implements Launcher {
 
 	private static final Logger LOG = Logger.getLogger(DefaultLauncher.class.getName());
 
 	private final TestEngineRegistry testEngineRegistry;
 	private final TestExecutionListenerRegistry testExecutionListenerRegistry;
 
-	private DefaultLauncher() {
+	DefaultLauncher() {
 		this(new ServiceLoaderTestEngineRegistry(), new TestExecutionListenerRegistry());
 	}
 
