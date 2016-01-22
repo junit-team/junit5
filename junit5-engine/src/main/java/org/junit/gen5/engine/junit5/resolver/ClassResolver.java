@@ -39,7 +39,7 @@ public class ClassResolver extends JUnit5TestResolver {
 
 	public static ClassTestDescriptor descriptorForParentAndClass(TestDescriptor parent, Class<?> testClass) {
 		String packageName = testClass.getPackage().getName();
-		String fullQualifiedClassName = testClass.getCanonicalName();
+		String fullQualifiedClassName = testClass.getName();
 		String className = fullQualifiedClassName.substring(packageName.length() + 1);
 		String uniqueId = parent.getUniqueId() + "/[class:" + className + "]";
 
@@ -91,6 +91,7 @@ public class ClassResolver extends JUnit5TestResolver {
 
 			if (testClass.isPresent()) {
 				TestDescriptor next = descriptorForParentAndClass(parent, testClass.get());
+				parent.addChild(next);
 				getTestResolverRegistry().resolveUniqueId(next, uniqueId.getRemainder(), discoveryRequest);
 			}
 		}

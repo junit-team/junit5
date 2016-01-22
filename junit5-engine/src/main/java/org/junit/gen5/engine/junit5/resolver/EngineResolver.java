@@ -54,7 +54,8 @@ public class EngineResolver extends JUnit5TestResolver {
 
 	@Override
 	public void resolveUniqueId(TestDescriptor parent, UniqueId uniqueId, EngineDiscoveryRequest discoveryRequest) {
-		if (uniqueId.currentKey().equals(RESOLVER_ID) && uniqueId.currentValue().equals(JUnit5TestEngine.ENGINE_ID)) {
+		// TODO needs to be replaces by the engine id after EngineDescriptors follows the same rules for IDs
+		if (uniqueId.currentKey().equals(RESOLVER_ID) && uniqueId.toString().startsWith(parent.getUniqueId())) {
 			// TODO Clarify if it is sufficient to check on the unique id
 			//      and if it is always guaranteed that this will only match
 			//      if the parent is the engine descriptor.

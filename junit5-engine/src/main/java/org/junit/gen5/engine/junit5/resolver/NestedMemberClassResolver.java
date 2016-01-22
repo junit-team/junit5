@@ -88,6 +88,7 @@ public class NestedMemberClassResolver extends JUnit5TestResolver {
 
 			if (testClass.isPresent()) {
 				TestDescriptor next = descriptorForParentAndNestedClass(parent, testClass.get());
+				parent.addChild(next);
 				getTestResolverRegistry().resolveUniqueId(next, uniqueId.getRemainder(), discoveryRequest);
 			}
 		}

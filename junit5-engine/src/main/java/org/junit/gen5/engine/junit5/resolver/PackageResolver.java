@@ -85,6 +85,7 @@ public class PackageResolver extends JUnit5TestResolver {
 			}
 
 			TestDescriptor next = descriptorForParentAndName(parent, packageName);
+			parent.addChild(next);
 			getTestResolverRegistry().resolveUniqueId(next, uniqueId.getRemainder(), discoveryRequest);
 		}
 	}
