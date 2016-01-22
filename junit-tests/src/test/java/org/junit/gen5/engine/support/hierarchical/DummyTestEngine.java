@@ -41,7 +41,7 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 	}
 
 	@Override
-	public TestDescriptor discoverTests(EngineDiscoveryRequest discoveryRequest) {
+	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest) {
 		return root;
 	}
 

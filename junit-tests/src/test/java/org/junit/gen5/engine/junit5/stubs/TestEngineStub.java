@@ -28,7 +28,7 @@ public class TestEngineStub implements TestEngine {
 	}
 
 	@Override
-	public TestDescriptor discoverTests(EngineDiscoveryRequest discoveryRequest) {
+	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest) {
 		return null;
 	}
 

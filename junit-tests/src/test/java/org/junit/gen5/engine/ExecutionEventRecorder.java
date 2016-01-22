@@ -38,7 +38,7 @@ import org.junit.gen5.engine.TestExecutionResult.Status;
 public class ExecutionEventRecorder implements EngineExecutionListener {
 
 	public static List<ExecutionEvent> execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest) {
-		TestDescriptor engineTestDescriptor = testEngine.discoverTests(discoveryRequest);
+		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest);
 		ExecutionEventRecorder listener = new ExecutionEventRecorder();
 		testEngine.execute(new ExecutionRequest(engineTestDescriptor, listener));
 		return listener.getExecutionEvents();

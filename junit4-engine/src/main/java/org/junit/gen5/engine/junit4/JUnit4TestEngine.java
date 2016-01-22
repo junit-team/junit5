@@ -30,7 +30,7 @@ public class JUnit4TestEngine implements TestEngine {
 	}
 
 	@Override
-	public TestDescriptor discoverTests(EngineDiscoveryRequest discoveryRequest) {
+	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest) {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(this);
 		new JUnit4DiscoveryRequestResolver(engineDescriptor).resolve(discoveryRequest);
 		return engineDescriptor;

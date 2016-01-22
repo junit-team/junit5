@@ -39,7 +39,7 @@ public abstract class AbstractJUnit5TestEngineTests {
 	}
 
 	protected TestDescriptor discoverTests(TestDiscoveryRequest request) {
-		return engine.discoverTests(request);
+		return engine.discover(request);
 	}
 
 }

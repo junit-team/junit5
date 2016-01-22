@@ -19,7 +19,7 @@ public interface TestEngine {
 		return getClass().getCanonicalName();
 	}
 
-	TestDescriptor discoverTests(EngineDiscoveryRequest discoveryRequest);
+	TestDescriptor discover(EngineDiscoveryRequest discoveryRequest);
 
 	void execute(ExecutionRequest request);
 }

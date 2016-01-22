@@ -82,7 +82,7 @@ class DefaultLauncher implements Launcher {
 
 			LOG.fine(
 				() -> String.format("Discovering tests during launcher %s phase in engine '%s'.", phase, engineId));
-			TestDescriptor engineRoot = testEngine.discoverTests(discoveryRequest);
+			TestDescriptor engineRoot = testEngine.discover(discoveryRequest);
 			root.add(testEngine, engineRoot);
 		}
 		root.applyPostDiscoveryFilters(discoveryRequest);
