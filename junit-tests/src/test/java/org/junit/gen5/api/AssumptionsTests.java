@@ -11,6 +11,7 @@
 package org.junit.gen5.api;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assumptions.assumeFalse;
 import static org.junit.gen5.api.Assumptions.assumeTrue;
@@ -32,22 +33,50 @@ public class AssumptionsTests {
 
 	@Test
 	void assumeTrueWithBooleanTrue() {
-		assumeTrue(true);
+		String foo = null;
+		try {
+			assumeTrue(true);
+			foo = "foo";
+		}
+		finally {
+			assertNotNull(foo);
+		}
 	}
 
 	@Test
 	void assumeTrueWithBooleanSupplierTrue() {
-		assumeTrue(() -> true);
+		String foo = null;
+		try {
+			assumeTrue(() -> true);
+			foo = "foo";
+		}
+		finally {
+			assertNotNull(foo);
+		}
 	}
 
 	@Test
 	void assumeTrueWithBooleanTrueAndStringMessage() {
-		assumeTrue(true, "true");
+		String foo = null;
+		try {
+			assumeTrue(true, "true");
+			foo = "foo";
+		}
+		finally {
+			assertNotNull(foo);
+		}
 	}
 
 	@Test
 	void assumeTrueWithBooleanSupplierTrueAndMessageSupplier() {
-		assumeTrue(() -> true, () -> "true");
+		String foo = null;
+		try {
+			assumeTrue(() -> true, () -> "true");
+			foo = "foo";
+		}
+		finally {
+			assertNotNull(foo);
+		}
 	}
 
 	@Test
@@ -74,22 +103,50 @@ public class AssumptionsTests {
 
 	@Test
 	void assumeFalseWithBooleanFalse() {
-		assumeFalse(false);
+		String foo = null;
+		try {
+			assumeFalse(false);
+			foo = "foo";
+		}
+		finally {
+			assertNotNull(foo);
+		}
 	}
 
 	@Test
 	void assumeFalseWithBooleanSupplierFalse() {
-		assumeFalse(() -> false);
+		String foo = null;
+		try {
+			assumeFalse(() -> false);
+			foo = "foo";
+		}
+		finally {
+			assertNotNull(foo);
+		}
 	}
 
 	@Test
 	void assumeFalseWithBooleanFalseAndStringMessage() {
-		assumeFalse(false, "false");
+		String foo = null;
+		try {
+			assumeFalse(false, "false");
+			foo = "foo";
+		}
+		finally {
+			assertNotNull(foo);
+		}
 	}
 
 	@Test
 	void assumeFalseWithBooleanSupplierFalseAndMessageSupplier() {
-		assumeFalse(() -> false, () -> "false");
+		String foo = null;
+		try {
+			assumeFalse(() -> false, () -> "false");
+			foo = "foo";
+		}
+		finally {
+			assertNotNull(foo);
+		}
 	}
 
 	@Test
