@@ -33,6 +33,15 @@ import org.junit.gen5.engine.TestDescriptor;
  * If it does, it must guarantee, that these filters are applied during test
  * discovery.
  *
+ * <p>A child that has been created by the {@code TestResolver} must be
+ * reported to the bound {@link TestResolverRegistry} if and only if it
+ * was created on demand of resolving the test tree top-down, i.e. if it
+ * was attached to the given parent {@link TestDescriptor} within a call to
+ * {@link #resolveAllFrom(TestDescriptor, EngineDiscoveryRequest)}. Calls to
+ * {@link #fetchBySelector(DiscoverySelector, TestDescriptor)} should never
+ * report an actual creation of a {@link TestDescriptor}. These are required
+ * for bottom-up resolution and should not lead to further notifications.
+ *
  * @since 5.0
  * @see TestDescriptor
  * @see DiscoveryFilter

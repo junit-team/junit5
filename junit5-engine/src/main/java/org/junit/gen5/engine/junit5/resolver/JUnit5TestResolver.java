@@ -10,7 +10,10 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
-public abstract class JUnit5TestResolver implements TestResolver {
+/**
+ * @since 5.0
+ */
+abstract class JUnit5TestResolver implements TestResolver {
 	private TestResolverRegistry testResolverRegistry;
 
 	public TestResolverRegistry getTestResolverRegistry() {

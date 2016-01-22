@@ -15,6 +15,11 @@ import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 
 /**
+ * The {@code TestResolverRegistry} is the central registration for all
+ * {@link TestResolver}s. It operates as a registry and as a communication
+ * bus between the different resolvers.
+ *
+ * <p>Each resolver must
  * @since 5.0
  */
 public interface TestResolverRegistry {

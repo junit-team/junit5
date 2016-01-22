@@ -16,7 +16,6 @@ import static org.junit.gen5.commons.util.ReflectionUtils.*;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +30,9 @@ import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 
+/**
+ * @since 5.0
+ */
 public class ClassResolver extends JUnit5TestResolver {
 	public static ClassTestDescriptor descriptorForParentAndClass(TestDescriptor parent, Class<?> testClass) {
 		String packageName = testClass.getPackage().getName();

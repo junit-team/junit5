@@ -28,6 +28,7 @@ public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
 	public PreconfiguredTestResolverRegistry() {
 		this.testResolvers = new LinkedHashMap<>();
 
+		register(new EngineResolver());
 		register(new PackageResolver());
 		register(new ClassResolver());
 		register(new NestedMemberClassResolver());

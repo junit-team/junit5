@@ -25,6 +25,9 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 
+/**
+ * @since 5.0
+ */
 public class PackageResolver extends JUnit5TestResolver {
 	public static PackageTestDescriptor descriptorForParentAndName(TestDescriptor parent, String packageName) {
 		int index = packageName.lastIndexOf('.');

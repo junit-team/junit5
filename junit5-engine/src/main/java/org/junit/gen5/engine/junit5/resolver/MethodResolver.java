@@ -29,6 +29,9 @@ import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 
+/**
+ * @since 5.0
+ */
 public class MethodResolver extends JUnit5TestResolver {
 	public static MethodTestDescriptor descriptorForParentAndMethod(TestDescriptor parent, Class<?> testClass,
 			Method testMethod) {

@@ -28,6 +28,9 @@ import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
 
+/**
+ * @since 5.0
+ */
 public class NestedMemberClassResolver extends JUnit5TestResolver {
 	public static NestedClassTestDescriptor descriptorForParentAndNestedClass(TestDescriptor parent,
 			Class<?> testClass) {
