@@ -26,7 +26,7 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 
 	public DummyTestEngine(String engineId) {
 		this.engineId = engineId;
-		this.root = new EngineDescriptor(engineId, "Dummy Engine: " + engineId);
+		this.root = new EngineDescriptor(engineId, engineId);
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 		return engineId;
 	}
 
-	public TestDescriptor addTest(String uniqueName, Runnable runnable) {
+	public DummyTestDescriptor addTest(String uniqueName, Runnable runnable) {
 		DummyTestDescriptor child = new DummyTestDescriptor(engineId + ":" + uniqueName, uniqueName, runnable);
 		root.addChild(child);
 		return child;

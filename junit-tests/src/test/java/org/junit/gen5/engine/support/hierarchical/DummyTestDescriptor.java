@@ -10,13 +10,18 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
-import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
-import org.junit.gen5.engine.support.hierarchical.Leaf;
+import static org.junit.gen5.engine.support.hierarchical.Node.SkipResult.dontSkip;
+import static org.junit.gen5.engine.support.hierarchical.Node.SkipResult.skip;
 
-class DummyTestDescriptor extends AbstractTestDescriptor implements Leaf<DummyEngineExecutionContext> {
+import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
+
+public class DummyTestDescriptor extends AbstractTestDescriptor
+		implements Leaf<DummyEngineExecutionContext>, Node<DummyEngineExecutionContext> {
 
 	private final String displayName;
 	private final Runnable runnable;
+	private String skippedReason;
+	private boolean skipped;
 
 	DummyTestDescriptor(String uniqueId, String displayName, Runnable runnable) {
 		super(uniqueId);
@@ -42,6 +47,16 @@ class DummyTestDescriptor extends AbstractTestDescriptor implements Leaf<DummyEn
 	@Override
 	public boolean isContainer() {
 		return false;
+	}
+
+	public void markSkipped(String reason) {
+		this.skipped = true;
+		this.skippedReason = reason;
+	}
+
+	@Override
+	public SkipResult shouldBeSkipped(DummyEngineExecutionContext context) throws Exception {
+		return skipped ? skip(skippedReason) : dontSkip();
 	}
 
 	@Override
