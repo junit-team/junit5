@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
- * The result of evaluating a {@link GenericFilter}.
+ * The result of evaluating a {@link Filter}.
  *
  * @since 5.0
  */

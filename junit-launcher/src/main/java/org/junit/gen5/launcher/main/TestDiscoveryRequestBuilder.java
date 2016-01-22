@@ -16,8 +16,10 @@ import java.util.List;
 
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.GenericFilter;
-import org.junit.gen5.launcher.*;
+import org.junit.gen5.engine.Filter;
+import org.junit.gen5.launcher.EngineIdFilter;
+import org.junit.gen5.launcher.PostDiscoveryFilter;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
  * The {@code DiscoveryRequestBuilder} provides a light-weight DSL for
@@ -73,14 +75,14 @@ public final class TestDiscoveryRequestBuilder {
 		return this;
 	}
 
-	public TestDiscoveryRequestBuilder filter(GenericFilter<?>... filters) {
+	public TestDiscoveryRequestBuilder filter(Filter<?>... filters) {
 		if (filters != null) {
 			Arrays.stream(filters).forEach(this::storeFilter);
 		}
 		return this;
 	}
 
-	private void storeFilter(GenericFilter<?> filter) {
+	private void storeFilter(Filter<?> filter) {
 		if (filter instanceof EngineIdFilter) {
 			this.engineIdFilters.add((EngineIdFilter) filter);
 		}

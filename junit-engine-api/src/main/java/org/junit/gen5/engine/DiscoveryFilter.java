@@ -26,7 +26,7 @@ import java.util.Collection;
  * @see EngineDiscoveryRequest
  * @see TestEngine
  */
-public interface DiscoveryFilter<T> extends GenericFilter<T> {
+public interface DiscoveryFilter<T> extends Filter<T> {
 
 	/**
 	 * Combines an array of {@code DiscoveryFilters} into a new filter that will

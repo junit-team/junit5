@@ -20,7 +20,7 @@ package org.junit.gen5.engine;
  * @see DiscoveryFilter
  */
 @FunctionalInterface
-public interface GenericFilter<T> {
+public interface Filter<T> {
 
 	FilterResult filter(T object);
 

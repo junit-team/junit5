@@ -10,7 +10,7 @@
 
 package org.junit.gen5.launcher;
 
-import org.junit.gen5.engine.GenericFilter;
+import org.junit.gen5.engine.Filter;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 
@@ -23,5 +23,5 @@ import org.junit.gen5.engine.TestEngine;
  * @see TestDiscoveryRequest
  * @see TestEngine
  */
-public interface PostDiscoveryFilter extends GenericFilter<TestDescriptor> {
+public interface PostDiscoveryFilter extends Filter<TestDescriptor> {
 }

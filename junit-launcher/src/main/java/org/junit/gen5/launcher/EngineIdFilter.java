@@ -12,8 +12,8 @@ package org.junit.gen5.launcher;
 
 import static org.junit.gen5.engine.FilterResult.includedIf;
 
+import org.junit.gen5.engine.Filter;
 import org.junit.gen5.engine.FilterResult;
-import org.junit.gen5.engine.GenericFilter;
 import org.junit.gen5.engine.TestEngine;
 
 /**
@@ -24,7 +24,7 @@ import org.junit.gen5.engine.TestEngine;
  * @since 5.0
  * @see TestDiscoveryRequest
  */
-public class EngineIdFilter implements GenericFilter<String> {
+public class EngineIdFilter implements Filter<String> {
 
 	public static EngineIdFilter byEngineId(String engineId) {
 		return new EngineIdFilter(engineId);
