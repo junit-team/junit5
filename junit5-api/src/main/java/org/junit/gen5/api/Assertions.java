@@ -21,6 +21,8 @@ import org.opentest4j.MultipleFailuresError;
 
 /**
  * @since 5.0
+ * @see AssertionFailedError
+ * @see Assumptions
  */
 public final class Assertions {
 

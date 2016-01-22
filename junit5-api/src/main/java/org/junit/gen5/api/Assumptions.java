@@ -18,11 +18,21 @@ import org.junit.gen5.commons.util.StringUtils;
 import org.opentest4j.TestAbortedException;
 
 /**
- * Collection of utility methods for conditional test execution based on
- * <em>assumptions</em>.
+ * {@code Assumptions} is a collection of utility methods that support
+ * conditional test execution based on <em>assumptions</em>.
+ *
+ * <p>In direct contrast to failed {@linkplain Assertions assertions},
+ * failed assumptions do not result in a test <em>failure</em>; rather,
+ * a failed assumption results in a test being <em>aborted</em>.
+ *
+ * <p>Assumptions are typically used whenever it does not make sense to
+ * continue execution of a given test method &mdash; for example, if the
+ * test depends on something that does not exist in the current runtime
+ * environment.
  *
  * @since 5.0
  * @see TestAbortedException
+ * @see Assertions
  */
 public final class Assumptions {
 
@@ -32,66 +42,186 @@ public final class Assumptions {
 
 	// --- assumeTrue ----------------------------------------------------
 
-	public static void assumeTrue(boolean assumption) {
+	/**
+	 * Validate the given assumption.
+	 *
+	 * @param assumption the assumption to validate
+	 * @throws TestAbortedException if the assumption is not {@code true}
+	 */
+	public static void assumeTrue(boolean assumption) throws TestAbortedException {
 		assumeTrue(() -> assumption);
 	}
 
-	public static void assumeTrue(BooleanSupplier booleanSupplier) {
-		assumeTrue(booleanSupplier, () -> "assumption is not true");
+	/**
+	 * Validate the given assumption.
+	 *
+	 * @param assumptionSupplier the supplier of the assumption to validate
+	 * @throws TestAbortedException if the assumption is not {@code true}
+	 */
+	public static void assumeTrue(BooleanSupplier assumptionSupplier) throws TestAbortedException {
+		assumeTrue(assumptionSupplier, () -> "assumption is not true");
 	}
 
-	public static void assumeTrue(BooleanSupplier booleanSupplier, String message) {
-		assumeTrue(booleanSupplier, () -> message);
+	/**
+	 * Validate the given assumption.
+	 *
+	 * @param assumptionSupplier the supplier of the assumption to validate
+	 * @param message the message to be included in the {@code TestAbortedException}
+	 * if the assumption is invalid
+	 * @throws TestAbortedException if the assumption is not {@code true}
+	 */
+	public static void assumeTrue(BooleanSupplier assumptionSupplier, String message) throws TestAbortedException {
+		assumeTrue(assumptionSupplier, () -> message);
 	}
 
-	public static void assumeTrue(boolean assumption, Supplier<String> messageSupplier) {
+	/**
+	 * Validate the given assumption.
+	 *
+	 * @param assumption the assumption to validate
+	 * @param messageSupplier the supplier of the message to be included in
+	 * the {@code TestAbortedException} if the assumption is invalid
+	 * @throws TestAbortedException if the assumption is not {@code true}
+	 */
+	public static void assumeTrue(boolean assumption, Supplier<String> messageSupplier) throws TestAbortedException {
 		assumeTrue(() -> assumption, messageSupplier);
 	}
 
-	public static void assumeTrue(boolean assumption, String message) {
+	/**
+	 * Validate the given assumption.
+	 *
+	 * @param assumption the assumption to validate
+	 * @param message the message to be included in the {@code TestAbortedException}
+	 * if the assumption is invalid
+	 * @throws TestAbortedException if the assumption is not {@code true}
+	 */
+	public static void assumeTrue(boolean assumption, String message) throws TestAbortedException {
 		assumeTrue(() -> assumption, () -> message);
 	}
 
-	public static void assumeTrue(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
-		if (!booleanSupplier.getAsBoolean()) {
+	/**
+	 * Validate the given assumption.
+	 *
+	 * @param assumptionSupplier the supplier of the assumption to validate
+	 * @param messageSupplier the supplier of the message to be included in
+	 * the {@code TestAbortedException} if the assumption is invalid
+	 * @throws TestAbortedException if the assumption is not {@code true}
+	 */
+	public static void assumeTrue(BooleanSupplier assumptionSupplier, Supplier<String> messageSupplier)
+			throws TestAbortedException {
+
+		if (!assumptionSupplier.getAsBoolean()) {
 			throwTestAbortedException(messageSupplier.get());
 		}
 	}
 
 	// --- assumeFalse ----------------------------------------------------
 
-	public static void assumeFalse(boolean assumption) {
+	/**
+	 * Validate the given assumption.
+	 *
+	 * @param assumption the assumption to validate
+	 * @throws TestAbortedException if the assumption is not {@code false}
+	 */
+	public static void assumeFalse(boolean assumption) throws TestAbortedException {
 		assumeFalse(() -> assumption);
 	}
 
-	public static void assumeFalse(BooleanSupplier booleanSupplier) {
-		assumeFalse(booleanSupplier, () -> "assumption is not false");
+	/**
+	 * Validate the given assumption.
+	 *
+	 * @param assumptionSupplier the supplier of the assumption to validate
+	 * @throws TestAbortedException if the assumption is not {@code false}
+	 */
+	public static void assumeFalse(BooleanSupplier assumptionSupplier) throws TestAbortedException {
+		assumeFalse(assumptionSupplier, () -> "assumption is not false");
 	}
 
-	public static void assumeFalse(BooleanSupplier booleanSupplier, String message) {
-		assumeFalse(booleanSupplier, () -> message);
+	/**
+	 * Validate the given assumption.
+	 *
+	 * @param assumptionSupplier the supplier of the assumption to validate
+	 * @param message the message to be included in the {@code TestAbortedException}
+	 * if the assumption is invalid
+	 * @throws TestAbortedException if the assumption is not {@code false}
+	 */
+	public static void assumeFalse(BooleanSupplier assumptionSupplier, String message) throws TestAbortedException {
+		assumeFalse(assumptionSupplier, () -> message);
 	}
 
-	public static void assumeFalse(boolean assumption, Supplier<String> messageSupplier) {
+	/**
+	 * Validate the given assumption.
+	 *
+	 * @param assumption the assumption to validate
+	 * @param messageSupplier the supplier of the message to be included in
+	 * the {@code TestAbortedException} if the assumption is invalid
+	 * @throws TestAbortedException if the assumption is not {@code false}
+	 */
+	public static void assumeFalse(boolean assumption, Supplier<String> messageSupplier) throws TestAbortedException {
 		assumeFalse(() -> assumption, messageSupplier);
 	}
 
-	public static void assumeFalse(boolean assumption, String message) {
+	/**
+	 * Validate the given assumption.
+	 *
+	 * @param assumption the assumption to validate
+	 * @param message the message to be included in the {@code TestAbortedException}
+	 * if the assumption is invalid
+	 * @throws TestAbortedException if the assumption is not {@code false}
+	 */
+	public static void assumeFalse(boolean assumption, String message) throws TestAbortedException {
 		assumeFalse(() -> assumption, () -> message);
 	}
 
-	public static void assumeFalse(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
-		if (booleanSupplier.getAsBoolean()) {
+	/**
+	 * Validate the given assumption.
+	 *
+	 * @param assumptionSupplier the supplier of the assumption to validate
+	 * @param messageSupplier the supplier of the message to be included in
+	 * the {@code TestAbortedException} if the assumption is invalid
+	 * @throws TestAbortedException if the assumption is not {@code false}
+	 */
+	public static void assumeFalse(BooleanSupplier assumptionSupplier, Supplier<String> messageSupplier)
+			throws TestAbortedException {
+
+		if (assumptionSupplier.getAsBoolean()) {
 			throwTestAbortedException(messageSupplier.get());
 		}
 	}
 
 	// --- assumingThat --------------------------------------------------
 
-	public static void assumingThat(BooleanSupplier booleanSupplier, Executable executable) {
-		assumingThat(booleanSupplier.getAsBoolean(), executable);
+	/**
+	 * Execute the supplied {@link Executable}, but only if the supplied
+	 * assumption is valid.
+	 *
+	 * <p>If the assumption is invalid, this method does nothing.
+	 *
+	 * <p>If the {@code executable} throws an exception, it will be rethrown
+	 * <em>as is</em> but  {@link ExceptionUtils#throwAsUncheckedException masked}
+	 * as an unchecked exception.
+	 *
+	 * @param assumptionSupplier the supplier of the assumption to validate
+	 * @param executable the block of code to execute if the assumption is valid
+	 * @see #assumingThat(boolean, Executable)
+	 */
+	public static void assumingThat(BooleanSupplier assumptionSupplier, Executable executable) {
+		assumingThat(assumptionSupplier.getAsBoolean(), executable);
 	}
 
+	/**
+	 * Execute the supplied {@link Executable}, but only if the supplied
+	 * assumption is valid.
+	 *
+	 * <p>If the assumption is invalid, this method does nothing.
+	 *
+	 * <p>If the {@code executable} throws an exception, it will be rethrown
+	 * <em>as is</em> but  {@link ExceptionUtils#throwAsUncheckedException masked}
+	 * as an unchecked exception.
+	 *
+	 * @param assumption the assumption to validate
+	 * @param executable the block of code to execute if the assumption is valid
+	 * @see #assumingThat(BooleanSupplier, Executable)
+	 */
 	public static void assumingThat(boolean assumption, Executable executable) {
 		if (assumption) {
 			try {
