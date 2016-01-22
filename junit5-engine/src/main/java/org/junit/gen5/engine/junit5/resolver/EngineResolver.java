@@ -18,6 +18,7 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
+import org.junit.gen5.engine.junit5.descriptor.JUnit5EngineDescriptor;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
 /**
@@ -35,6 +36,11 @@ import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
  * @since 5.0
  */
 public class EngineResolver extends JUnit5TestResolver {
+	public static EngineDescriptor descriptorForEngine(TestEngine testEngine) {
+		String uniqueId = UniqueId.from(RESOLVER_ID, testEngine.getId()).toString();
+		return new JUnit5EngineDescriptor(uniqueId);
+	}
+
 	private static final String RESOLVER_ID = "engine";
 
 	@Override

@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit5.resolver;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.engine.junit5.resolver.ClassResolver.descriptorForParentAndClass;
+import static org.junit.gen5.engine.junit5.resolver.EngineResolver.descriptorForEngine;
 import static org.junit.gen5.engine.junit5.resolver.NestedMemberClassResolver.descriptorForParentAndNestedClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
@@ -35,7 +36,7 @@ public class NestedMemberClassResolverTests {
 		testResolverRegistryMock = new TestResolverRegistryMock();
 
 		TestEngineStub testEngine = new TestEngineStub();
-		engineDescriptor = new EngineDescriptor(testEngine);
+		engineDescriptor = descriptorForEngine(testEngine);
 
 		resolver = new NestedMemberClassResolver();
 		resolver.bindTestResolveryRegistry(testResolverRegistryMock);
