@@ -410,6 +410,17 @@ public class AssertionsTests {
 	// --- assertAll -----------------------------------------------------
 
 	@Test
+	void assertAllWithExecutablesThatDoNotThrowExceptions() {
+		// @formatter:off
+		assertAll(
+			() -> assertTrue(true),
+			() -> assertFalse(false),
+			() -> assertTrue(true)
+		);
+		// @formatter:on
+	}
+
+	@Test
 	void assertAllWithExecutableThatThrowsAssertionError() {
 		MultipleFailuresError multipleFailuresError = expectThrows(MultipleFailuresError.class,
 			() -> assertAll(() -> assertFalse(true)));
@@ -471,6 +482,65 @@ public class AssertionsTests {
 	@Test
 	void assertThrowsError() {
 		assertThrows(StackOverflowError.class, this::recurseIndefinitely);
+	}
+
+	// --- expectThrows --------------------------------------------------
+
+	@Test
+	void expectThrowsThrowable() {
+		EnigmaThrowable enigmaThrowable = expectThrows(EnigmaThrowable.class, () -> {
+			throw new EnigmaThrowable();
+		});
+		assertNotNull(enigmaThrowable);
+	}
+
+	@Test
+	void expectThrowsCheckedException() {
+		IOException exception = expectThrows(IOException.class, () -> {
+			throw new IOException();
+		});
+		assertNotNull(exception);
+	}
+
+	@Test
+	void expectThrowsRuntimeException() {
+		IllegalStateException illegalStateException = expectThrows(IllegalStateException.class, () -> {
+			throw new IllegalStateException();
+		});
+		assertNotNull(illegalStateException);
+	}
+
+	@Test
+	void expectThrowsError() {
+		StackOverflowError stackOverflowError = expectThrows(StackOverflowError.class, this::recurseIndefinitely);
+		assertNotNull(stackOverflowError);
+	}
+
+	@Test
+	void expectThrowsWithExecutableThatDoesNotThrowAnException() {
+		try {
+			expectThrows(IllegalStateException.class, () -> {
+			});
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageContains(ex, "Expected java.lang.IllegalStateException to be thrown");
+		}
+	}
+
+	@Test
+	void expectThrowsWithExecutableThatThrowsAnUnexpectedException() {
+		try {
+			expectThrows(IllegalStateException.class, () -> {
+				throw new NumberFormatException();
+			});
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageContains(ex, "Unexpected exception type thrown");
+			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
+			assertMessageContains(ex, "but was: <java.lang.NumberFormatException>");
+		}
 	}
 
 	// -------------------------------------------------------------------
