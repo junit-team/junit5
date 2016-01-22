@@ -49,7 +49,7 @@ public class JUnit4DiscoveryRequestResolver {
 			new PackageNameSelectorResolver(), //
 			new ClassSelectorResolver(), //
 			new MethodSelectorResolver(), //
-			new UniqueIdSelectorResolver(engineDescriptor.getEngine().getId())//
+			new UniqueIdSelectorResolver()//
 		);
 	}
 

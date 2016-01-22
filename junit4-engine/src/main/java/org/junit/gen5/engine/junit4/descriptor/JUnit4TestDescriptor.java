@@ -31,6 +31,7 @@ import org.junit.runner.Description;
  */
 public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 
+	public static final String ENGINE_ID = "junit4";
 	public static final char DEFAULT_SEPARATOR = '/';
 
 	private final Description description;

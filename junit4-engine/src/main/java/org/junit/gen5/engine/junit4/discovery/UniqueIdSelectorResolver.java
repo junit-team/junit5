@@ -16,21 +16,19 @@ import java.util.Optional;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
+import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 
 class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelector> {
 
-	private final String engineId;
-
-	UniqueIdSelectorResolver(String engineId) {
+	UniqueIdSelectorResolver() {
 		super(UniqueIdSelector.class);
-		this.engineId = engineId;
 	}
 
 	@Override
 	void resolve(UniqueIdSelector selector, TestClassCollector collector) {
 		String uniqueId = selector.getUniqueId();
-		String enginePrefix = engineId + RunnerTestDescriptor.SEPARATOR;
+		String enginePrefix = JUnit4TestDescriptor.ENGINE_ID + RunnerTestDescriptor.SEPARATOR;
 		if (uniqueId.startsWith(enginePrefix)) {
 			String testClassName = determineTestClassName(uniqueId, enginePrefix);
 			Optional<Class<?>> testClass = ReflectionUtils.loadClass(testClassName);
