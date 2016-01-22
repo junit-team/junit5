@@ -10,28 +10,26 @@
 
 package org.junit.gen5.engine.support.descriptor;
 
-import org.junit.gen5.engine.TestEngine;
-
 /**
  * @since 5.0
  */
 public class EngineDescriptor extends AbstractTestDescriptor {
 
-	private final TestEngine engine;
+	private final String displayName;
 
-	public EngineDescriptor(TestEngine engine) {
-		super(engine.getId());
-		this.engine = engine;
+	public EngineDescriptor(String uniqueId, String displayName) {
+		super(uniqueId);
+		this.displayName = displayName;
 	}
 
 	@Override
 	public String getName() {
-		return this.engine.getId();
+		return displayName;
 	}
 
 	@Override
 	public String getDisplayName() {
-		return "Test Engine: " + engine.getId();
+		return displayName;
 	}
 
 	@Override

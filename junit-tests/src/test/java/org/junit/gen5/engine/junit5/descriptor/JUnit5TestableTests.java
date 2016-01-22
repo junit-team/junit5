@@ -10,18 +10,18 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertSame;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
-import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 
 public class JUnit5TestableTests {
 
-	private final EngineDescriptor engineDescriptor = new EngineDescriptor(new DummyTestEngine("ENGINE_ID"));;
+	private final EngineDescriptor engineDescriptor = new EngineDescriptor("ENGINE_ID", "My Engine");
 
 	@Test
 	public void fromUniqueIdForTopLevelClass() {

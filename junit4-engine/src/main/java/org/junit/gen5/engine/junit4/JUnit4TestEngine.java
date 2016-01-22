@@ -11,13 +11,13 @@
 package org.junit.gen5.engine.junit4;
 
 import static org.junit.gen5.engine.TestExecutionResult.successful;
+import static org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor.ENGINE_ID;
 
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.gen5.engine.junit4.discovery.JUnit4DiscoveryRequestResolver;
 import org.junit.gen5.engine.junit4.execution.RunnerExecutor;
@@ -27,12 +27,12 @@ public class JUnit4TestEngine implements TestEngine {
 
 	@Override
 	public String getId() {
-		return JUnit4TestDescriptor.ENGINE_ID;
+		return ENGINE_ID;
 	}
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest) {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(this);
+		EngineDescriptor engineDescriptor = new EngineDescriptor(ENGINE_ID, "JUnit 4");
 		new JUnit4DiscoveryRequestResolver(engineDescriptor).resolve(discoveryRequest);
 		return engineDescriptor;
 	}

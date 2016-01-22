@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 
 public abstract class TestDescriptorBuilder {
 
@@ -50,7 +49,7 @@ public abstract class TestDescriptorBuilder {
 
 		@Override
 		TestDescriptor buildDescriptor() {
-			return new JUnit5EngineDescriptor(new JUnit5TestEngine());
+			return new JUnit5EngineDescriptor("junit5");
 		}
 	}
 

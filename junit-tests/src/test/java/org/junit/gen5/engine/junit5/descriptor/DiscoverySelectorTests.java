@@ -28,12 +28,10 @@ import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
-import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 
 public class DiscoverySelectorTests {
 
-	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(
-		new DummyTestEngine("ENGINE_ID"));
+	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor("ENGINE_ID");
 	private DiscoverySelectorResolver resolver = new DiscoverySelectorResolver(engineDescriptor);
 
 	@Test
