@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit5.stubs;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
@@ -21,14 +21,14 @@ import org.junit.gen5.engine.junit5.resolver.TestResolver;
 import org.junit.gen5.engine.junit5.resolver.TestResolverRegistry;
 
 public class TestResolverRegistryMock implements TestResolverRegistry {
-	public Function<DiscoverySelector, TestDescriptor> fetchParentFunction;
+	public BiFunction<DiscoverySelector, TestDescriptor, TestDescriptor> fetchParentFunction = (selector, root) -> root;
 
 	public EngineDiscoveryRequest discoveryRequest;
 	public List<TestDescriptor> testDescriptors = new LinkedList<>();
 
 	@Override
 	public TestDescriptor fetchParent(DiscoverySelector selector, TestDescriptor root) {
-		return fetchParentFunction.apply(selector);
+		return fetchParentFunction.apply(selector, root);
 	}
 
 	@Override

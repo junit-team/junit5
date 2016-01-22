@@ -58,7 +58,7 @@ public class ClassResolverTests {
 		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor, testPackageName);
 		engineDescriptor.addChild(testPackage);
 
-		testResolverRegistryMock.fetchParentFunction = selector -> testPackage;
+		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testPackage;
 
 		resolver.resolveAllFrom(engineDescriptor, request().select(forClass(SingleTestClass.class)).build());
 
@@ -75,7 +75,7 @@ public class ClassResolverTests {
 	void givenAPackageAndAClassSelector_resolvesTheClass_AndAttachesItToTheExistingTree() {
 		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor, testPackageName);
 		engineDescriptor.addChild(testPackage);
-		testResolverRegistryMock.fetchParentFunction = selector -> testPackage;
+		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testPackage;
 
 		resolver.resolveAllFrom(engineDescriptor, request().select(forClass(SingleTestClass.class)).build());
 
@@ -108,7 +108,7 @@ public class ClassResolverTests {
 		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor, testPackageName);
 		engineDescriptor.addChild(testPackage);
 
-		testResolverRegistryMock.fetchParentFunction = selector -> testPackage;
+		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testPackage;
 
 		resolver.resolveAllFrom(engineDescriptor,
 			request().select(forClass(NestingTestClass.NestedStaticClass.class)).build());
@@ -125,7 +125,7 @@ public class ClassResolverTests {
 		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor, testPackageName);
 		engineDescriptor.addChild(testPackage);
 
-		testResolverRegistryMock.fetchParentFunction = selector -> testPackage;
+		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testPackage;
 
 		ClassSelector selector = forClass(SingleTestClass.class);
 		Optional<TestDescriptor> testDescriptor = resolver.fetchBySelector(selector, engineDescriptor);

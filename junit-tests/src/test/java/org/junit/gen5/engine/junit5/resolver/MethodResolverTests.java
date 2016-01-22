@@ -64,7 +64,7 @@ public class MethodResolverTests {
 		ClassTestDescriptor testClassDescriptor = descriptorForParentAndClass(engineDescriptor, testClass);
 		packageDescriptor.addChild(testClassDescriptor);
 
-		testResolverRegistryMock.fetchParentFunction = selector -> testClassDescriptor;
+		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testClassDescriptor;
 
 		resolver.resolveAllFrom(engineDescriptor, request().select(forMethod(testClass, testMethod)).build());
 
@@ -88,7 +88,7 @@ public class MethodResolverTests {
 		ClassTestDescriptor testClassDescriptor = descriptorForParentAndClass(engineDescriptor, testClass);
 		packageDescriptor.addChild(testClassDescriptor);
 
-		testResolverRegistryMock.fetchParentFunction = selector -> testClassDescriptor;
+		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testClassDescriptor;
 
 		resolver.resolveAllFrom(testClassDescriptor, request().select(forClass(testClass)).build());
 

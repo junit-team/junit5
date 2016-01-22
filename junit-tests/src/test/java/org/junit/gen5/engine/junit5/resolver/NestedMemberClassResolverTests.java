@@ -51,7 +51,7 @@ public class NestedMemberClassResolverTests {
 	void givenAClassSelector_resolvesTheClass() {
 		ClassTestDescriptor testClassDescriptor = descriptorForParentAndClass(engineDescriptor, NestingTestClass.class);
 		engineDescriptor.addChild(testClassDescriptor);
-		testResolverRegistryMock.fetchParentFunction = selector -> testClassDescriptor;
+		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testClassDescriptor;
 
 		resolver.resolveAllFrom(engineDescriptor,
 			request().select(forClass(NestingTestClass.NestedInnerClass.class)).build());
@@ -68,7 +68,7 @@ public class NestedMemberClassResolverTests {
 	void givenAPackageAndAClassSelector_resolvesTheClass_AndAttachesItToTheExistingTree() {
 		ClassTestDescriptor testClassDescriptor = descriptorForParentAndClass(engineDescriptor, NestingTestClass.class);
 		engineDescriptor.addChild(testClassDescriptor);
-		testResolverRegistryMock.fetchParentFunction = selector -> testClassDescriptor;
+		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testClassDescriptor;
 
 		resolver.resolveAllFrom(engineDescriptor,
 			request().select(forClass(NestingTestClass.NestedInnerClass.class)).build());
@@ -85,7 +85,7 @@ public class NestedMemberClassResolverTests {
 	void whenNotifiedWithAClassTestDescriptor_resolvesAllNestedClassesInTheClass() throws Exception {
 		ClassTestDescriptor testClassDescriptor = descriptorForParentAndClass(engineDescriptor, NestingTestClass.class);
 		engineDescriptor.addChild(testClassDescriptor);
-		testResolverRegistryMock.fetchParentFunction = selector -> testClassDescriptor;
+		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testClassDescriptor;
 
 		resolver.resolveAllFrom(testClassDescriptor, request().build());
 
@@ -102,7 +102,7 @@ public class NestedMemberClassResolverTests {
 		NestedClassTestDescriptor nestedTestClassDescriptor = descriptorForParentAndNestedClass(engineDescriptor,
 			NestingTestClass.NestedInnerClass.class);
 		engineDescriptor.addChild(nestedTestClassDescriptor);
-		testResolverRegistryMock.fetchParentFunction = selector -> nestedTestClassDescriptor;
+		testResolverRegistryMock.fetchParentFunction = (selector, root) -> nestedTestClassDescriptor;
 
 		resolver.resolveAllFrom(nestedTestClassDescriptor, request().build());
 
