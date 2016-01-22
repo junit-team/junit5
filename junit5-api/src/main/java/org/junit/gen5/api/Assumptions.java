@@ -30,6 +30,8 @@ public final class Assumptions {
 		/* no-op */
 	}
 
+	// --- assumeTrue ----------------------------------------------------
+
 	public static void assumeTrue(boolean assumption) {
 		assumeTrue(() -> assumption);
 	}
@@ -56,6 +58,8 @@ public final class Assumptions {
 		}
 	}
 
+	// --- assumeFalse ----------------------------------------------------
+
 	public static void assumeFalse(boolean assumption) {
 		assumeFalse(() -> assumption);
 	}
@@ -81,6 +85,8 @@ public final class Assumptions {
 			throwTestAbortedException(messageSupplier.get());
 		}
 	}
+
+	// --- assumingThat --------------------------------------------------
 
 	public static void assumingThat(BooleanSupplier booleanSupplier, Executable executable) {
 		assumingThat(booleanSupplier.getAsBoolean(), executable);
