@@ -26,6 +26,7 @@ import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestDescriptor.Visitor;
 
 /**
  * {@code TestPlan} describes the tree of tests and containers as discovered
@@ -57,11 +58,12 @@ public final class TestPlan {
 
 	public static TestPlan from(Collection<TestDescriptor> engineDescriptors) {
 		TestPlan testPlan = new TestPlan();
-		// @formatter:off
-		engineDescriptors.stream().forEach(testEngine -> testEngine.accept(
-				(descriptor, remove) -> testPlan.add(TestIdentifier.from(descriptor))));
-		// @formatter:on
+		Visitor visitor = (descriptor, remove) -> testPlan.add(TestIdentifier.from(descriptor));
+		engineDescriptors.stream().forEach(engineDescriptor -> engineDescriptor.accept(visitor));
 		return testPlan;
+	}
+
+	private TestPlan() {
 	}
 
 	/**

@@ -10,6 +10,7 @@
 
 package org.junit.gen5.junit4.runner;
 
+import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
@@ -171,7 +172,7 @@ class JUnit5AnnotationsToTestDiscoveryRequestTests {
 			throws InitializationError {
 		Launcher launcher = mock(Launcher.class);
 		ArgumentCaptor<TestDiscoveryRequest> captor = ArgumentCaptor.forClass(TestDiscoveryRequest.class);
-		when(launcher.discover(captor.capture())).thenReturn(new TestPlan());
+		when(launcher.discover(captor.capture())).thenReturn(TestPlan.from(emptySet()));
 
 		new JUnit5(testClass, launcher);
 

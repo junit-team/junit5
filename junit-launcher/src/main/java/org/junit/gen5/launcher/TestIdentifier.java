@@ -56,8 +56,8 @@ public final class TestIdentifier implements Serializable {
 		return new TestIdentifier(uniqueId, displayName, source, tags, test, container, parentId);
 	}
 
-	TestIdentifier(TestId uniqueId, String displayName, Optional<TestSource> source, Set<TestTag> tags, boolean test,
-			boolean container, Optional<TestId> parentId) {
+	private TestIdentifier(TestId uniqueId, String displayName, Optional<TestSource> source, Set<TestTag> tags,
+			boolean test, boolean container, Optional<TestId> parentId) {
 		this.uniqueId = uniqueId;
 		this.displayName = displayName;
 		this.source = source.orElse(null);
