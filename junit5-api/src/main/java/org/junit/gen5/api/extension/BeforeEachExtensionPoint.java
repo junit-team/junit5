@@ -10,6 +10,8 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.*;
+
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import org.junit.gen5.commons.meta.API;
@@ -32,6 +34,9 @@ import org.junit.gen5.commons.meta.API;
 @FunctionalInterface
 @API(Experimental)
 public interface BeforeEachExtensionPoint extends ExtensionPoint {
+
+	ExtensionPointRegistry.Position[] ALLOWED_POSITIONS = { OUTERMOST, OUTSIDE_DEFAULT, DEFAULT, INSIDE_DEFAULT,
+			INNERMOST };
 
 	/**
 	 * Callback that is invoked <em>before</em> each test method has been invoked.

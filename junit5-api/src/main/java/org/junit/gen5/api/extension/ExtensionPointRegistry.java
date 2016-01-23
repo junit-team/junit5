@@ -115,7 +115,7 @@ public interface ExtensionPointRegistry {
 		 * otherwise, an {@link ExtensionConfigurationException} will be
 		 * thrown.
 		 */
-		public static Position OUTERMOST = new Position(1);
+		public static Position OUTERMOST = new Position(1, true);
 
 		public static Position FIRST = OUTERMOST;
 
@@ -139,18 +139,29 @@ public interface ExtensionPointRegistry {
 		public static Position INSIDE_DEFAULT = new Position(4);
 
 		// TODO Document INNERMOST position.
-		public static Position INNERMOST = new Position(5);
+		public static Position INNERMOST = new Position(5, true);
 
 		public static Position LAST = INNERMOST;
 
 		private final int ordinalValue;
 
+		private final boolean unique;
+
 		Position(int ordinalValue) {
+			this(ordinalValue, false);
+		}
+
+		Position(int ordinalValue, boolean unique) {
 			this.ordinalValue = ordinalValue;
+			this.unique = unique;
 		}
 
 		public int ordinal() {
 			return ordinalValue;
+		}
+
+		public boolean shouldBeUnique() {
+			return unique;
 		}
 	}
 

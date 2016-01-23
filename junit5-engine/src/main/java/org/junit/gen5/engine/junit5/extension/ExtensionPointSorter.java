@@ -10,13 +10,17 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
+import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * Utility for sorting {@linkplain RegisteredExtensionPoint extension points}
@@ -36,13 +40,27 @@ class ExtensionPointSorter {
 	 *
 	 * <p>Note: the supplied list instance will be resorted.
 	 *
+	 * @param extensionPointType type of extension point to sort
 	 * @param registeredExtensionPoints list of extension points in order of registration
 	 * @param <T> concrete subtype of {@link ExtensionPoint}
 	 */
-	public <T extends ExtensionPoint> void sort(List<RegisteredExtensionPoint<T>> registeredExtensionPoints) {
-		checkPositionUnique(registeredExtensionPoints, Position.INNERMOST);
-		checkPositionUnique(registeredExtensionPoints, Position.OUTERMOST);
+	public <T extends ExtensionPoint> void sort(Class<T> extensionPointType,
+			List<RegisteredExtensionPoint<T>> registeredExtensionPoints) {
+		List<Position> uniquePositions = getUniquePositions(extensionPointType);
+		uniquePositions.stream().forEach(position -> checkPositionUnique(registeredExtensionPoints, position));
 		registeredExtensionPoints.sort(new DefaultComparator());
+	}
+
+	private <T extends ExtensionPoint> List<Position> getUniquePositions(Class<T> extensionPointType) {
+		Optional<Field> allowedPositionsField = ReflectionUtils.findField(extensionPointType, "ALLOWED_POSITIONS");
+
+		if (allowedPositionsField.isPresent()) {
+			//TODO: Check for correct type of field etc.
+			Position[] positions = (Position[]) ReflectionUtils.getFieldValue(allowedPositionsField.get(), null);
+			return Arrays.stream(positions).filter(position -> position.shouldBeUnique()).collect(Collectors.toList());
+		}
+
+		return Arrays.asList();
 	}
 
 	private <T extends ExtensionPoint> void checkPositionUnique(

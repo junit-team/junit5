@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit5.extension;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.expectThrows;
+import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.extension.ExtensionPointSorter;
@@ -127,7 +129,7 @@ public class ExtensionPointSortingTests {
 		pointsToSort.add(point2);
 
 		ExtensionConfigurationException ex = expectThrows(ExtensionConfigurationException.class,
-			() -> sorter.sort(pointsToSort));
+			() -> sorter.sort(LocalExtensionPoint.class, pointsToSort));
 
 		assertTrue(ex.getMessage().startsWith("Conflicting extensions:"));
 		assertTrue(ex.getMessage().contains(fooMethod.toString()));
@@ -142,14 +144,14 @@ public class ExtensionPointSortingTests {
 		pointsToSort.add(point2);
 
 		ExtensionConfigurationException ex = expectThrows(ExtensionConfigurationException.class,
-			() -> sorter.sort(pointsToSort));
+			() -> sorter.sort(LocalExtensionPoint.class, pointsToSort));
 
 		assertTrue(ex.getMessage().startsWith("Conflicting extensions:"));
 		assertTrue(ex.getMessage().contains(fooMethod.toString()));
 	}
 
 	private void assertSorting(RegisteredExtensionPoint... points) {
-		sorter.sort(pointsToSort);
+		sorter.sort(LocalExtensionPoint.class, pointsToSort);
 
 		String failureMessage = String.format("Expected %s but was %s", Arrays.asList(points), pointsToSort);
 
@@ -174,6 +176,9 @@ public class ExtensionPointSortingTests {
 
 	@FunctionalInterface
 	interface LocalExtensionPoint extends ExtensionPoint {
+
+		ExtensionPointRegistry.Position[] ALLOWED_POSITIONS = { OUTERMOST, OUTSIDE_DEFAULT, DEFAULT, INSIDE_DEFAULT,
+				INNERMOST };
 
 		void doSomething();
 	}

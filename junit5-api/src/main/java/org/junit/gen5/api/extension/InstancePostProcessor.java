@@ -10,6 +10,8 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.*;
+
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import org.junit.gen5.commons.meta.API;
@@ -28,6 +30,8 @@ import org.junit.gen5.commons.meta.API;
  */
 @API(Experimental)
 public interface InstancePostProcessor extends ExtensionPoint {
+
+	ExtensionPointRegistry.Position[] ALLOWED_POSITIONS = { FIRST, DEFAULT, LAST };
 
 	/**
 	 * Callback for post-processing the test instance in the supplied
