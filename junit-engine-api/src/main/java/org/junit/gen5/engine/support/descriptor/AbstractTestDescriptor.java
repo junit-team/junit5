@@ -13,7 +13,6 @@ package org.junit.gen5.engine.support.descriptor;
 import static java.util.Collections.emptySet;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -104,7 +103,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	public void accept(Visitor visitor) {
 		Runnable remove = this::removeFromHierarchy;
 		visitor.visit(this, remove);
-		new HashSet<>(getChildren()).forEach(child -> child.accept(visitor));
+		new LinkedHashSet<>(getChildren()).forEach(child -> child.accept(visitor));
 	}
 
 	@Override
