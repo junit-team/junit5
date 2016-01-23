@@ -136,7 +136,11 @@ public class ExtensionRegistry {
 			ExtensionPointRegistry.ApplicationOrder order) {
 
 		List<RegisteredExtensionPoint<E>> registeredExtensionPoints = getRegisteredExtensionPoints(extensionPointType);
-		new ExtensionPointSorter().sort(extensionPointType, registeredExtensionPoints);
+
+		//TODO: ExtensionPoint subtype should register their allowed positions somewhere
+		Position[] allowedPositions = Position.getAllowedPositionsFor(extensionPointType);
+
+		new ExtensionPointSorter().sort(registeredExtensionPoints, allowedPositions);
 		if (order == ExtensionPointRegistry.ApplicationOrder.BACKWARD) {
 			Collections.reverse(registeredExtensionPoints);
 		}
