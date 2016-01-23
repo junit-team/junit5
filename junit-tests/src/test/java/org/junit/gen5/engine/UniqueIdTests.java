@@ -10,10 +10,11 @@
 
 package org.junit.gen5.engine;
 
+import static org.junit.gen5.api.Assertions.assertEquals;
+
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.engine.UniqueId.Segment;
 
 class UniqueIdTests {
@@ -27,8 +28,8 @@ class UniqueIdTests {
 		void uniqueIdMustBeCreatedWithEngineId() {
 			UniqueId uniqueId = UniqueId.forEngine("engine", ENGINE_ID);
 
-			Assertions.assertEquals("[engine:junit5]", uniqueId.getUniqueString());
-			assertEngine(uniqueId, "junit5");
+			assertEquals("[engine:junit5]", uniqueId.getUniqueString());
+			assertSegment(uniqueId.getSegments().get(0), "engine", "junit5");
 		}
 
 		@Test
@@ -36,8 +37,8 @@ class UniqueIdTests {
 			UniqueId engineId = UniqueId.forEngine("engine", ENGINE_ID);
 			UniqueId classId = engineId.append("class", "org.junit.MyClass");
 
-			Assertions.assertEquals("[engine:junit5]/[class:org.junit.MyClass]", classId.getUniqueString());
-			Assertions.assertEquals(2, classId.getSegments().size());
+			assertEquals(2, classId.getSegments().size());
+			assertSegment(classId.getSegments().get(0), "engine", ENGINE_ID);
 			assertSegment(classId.getSegments().get(1), "class", "org.junit.MyClass");
 		}
 
@@ -46,7 +47,8 @@ class UniqueIdTests {
 			UniqueId uniqueId = UniqueId.forEngine("engine", ENGINE_ID);
 			uniqueId.append("class", "org.junit.MyClass");
 
-			Assertions.assertEquals("[engine:junit5]", uniqueId.getUniqueString());
+			assertEquals(1, uniqueId.getSegments().size());
+			assertSegment(uniqueId.getSegments().get(0), "engine", ENGINE_ID);
 		}
 
 		@Test
@@ -54,36 +56,32 @@ class UniqueIdTests {
 			UniqueId engineId = UniqueId.forEngine("engine", ENGINE_ID);
 			UniqueId uniqueId = engineId.append("t1", "v1").append("t2", "v2").append("t3", "v3");
 
-			Assertions.assertEquals("[engine:junit5]/[t1:v1]/[t2:v2]/[t3:v3]", uniqueId.getUniqueString());
-			Assertions.assertEquals(4, uniqueId.getSegments().size());
+			assertEquals(4, uniqueId.getSegments().size());
+			assertSegment(uniqueId.getSegments().get(0), "engine", ENGINE_ID);
+			assertSegment(uniqueId.getSegments().get(1), "t1", "v1");
+			assertSegment(uniqueId.getSegments().get(2), "t2", "v2");
+			assertSegment(uniqueId.getSegments().get(3), "t3", "v3");
 		}
 
 	}
 
 	@Nested
-	class Parsing {
+	class ParsingAndFormatting {
 
-		@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+		private final String uniqueIdString = "[engine:junit5]/[class:MyClass]/[method:myMethod]";
+
 		@Test
-		void parseError() {
-			Throwable throwable = Assertions.expectThrows(JUnitException.class, () -> UniqueId.parse("malformed uid"));
-			Assertions.assertTrue(throwable.getMessage().contains("malformed uid"));
+		void ensureDefaultUniqueIdFormatIsUsedForParsing() {
+			UniqueId parsedDirectly = UniqueId.parse(uniqueIdString);
+			UniqueId parsedViaFormat = UniqueIdFormat.getDefault().parse(uniqueIdString);
+			assertEquals(parsedViaFormat, parsedDirectly);
 		}
 
 		@Test
-		void parseEngineIdOnly() {
-			UniqueId parsedId = UniqueId.parse("[engine:junit5]");
-			assertEngine(parsedId, "junit5");
+		void ensureDefaultUniqueIdFormatIsUsedForFormatting() {
+			UniqueId parsedDirectly = UniqueId.parse("[engine:junit5]/[class:MyClass]/[method:myMethod]");
+			assertEquals("[engine:junit5]/[class:MyClass]/[method:myMethod]", parsedDirectly.getUniqueString());
 		}
-
-		@Test
-		void parseLongerId() {
-			UniqueId parsedId = UniqueId.parse("[engine:junit5]/[class:MyClass]/[method:myMethod]");
-			assertEngine(parsedId, "junit5");
-			assertSegment(parsedId.getSegments().get(1), "class", "MyClass");
-			assertSegment(parsedId.getSegments().get(2), "method", "myMethod");
-		}
-
 	}
 
 	@Nested
@@ -96,7 +94,7 @@ class UniqueIdTests {
 
 			Assertions.assertTrue(id1.equals(id2));
 			Assertions.assertTrue(id2.equals(id1));
-			Assertions.assertEquals(id1.hashCode(), id2.hashCode());
+			assertEquals(id1.hashCode(), id2.hashCode());
 		}
 
 		@Test
@@ -115,7 +113,7 @@ class UniqueIdTests {
 
 			Assertions.assertTrue(id1.equals(id2));
 			Assertions.assertTrue(id2.equals(id1));
-			Assertions.assertEquals(id1.hashCode(), id2.hashCode());
+			assertEquals(id1.hashCode(), id2.hashCode());
 		}
 
 		@Test
@@ -137,13 +135,9 @@ class UniqueIdTests {
 		}
 	}
 
-	private void assertEngine(UniqueId uniqueId, String expectedEngineId) {
-		assertSegment(uniqueId.getSegments().get(0), "engine", expectedEngineId);
-	}
-
 	private void assertSegment(Segment segment, String expectedType, String expectedValue) {
-		Assertions.assertEquals(expectedType, segment.getType(), "segment type");
-		Assertions.assertEquals(expectedValue, segment.getValue(), "segment value");
+		assertEquals(expectedType, segment.getType(), "segment type");
+		assertEquals(expectedValue, segment.getValue(), "segment value");
 	}
 
 }

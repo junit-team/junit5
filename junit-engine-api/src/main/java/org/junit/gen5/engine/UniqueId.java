@@ -33,11 +33,10 @@ public class UniqueId implements Cloneable {
 	 * @return a properly constructed {@code UniqueId}
 	 */
 	public static UniqueId parse(String uniqueIdString) {
-		return new UniqueIdParser(uniqueIdString, SEGMENT_DELIMITER, TYPE_VALUE_SEPARATOR).parse();
+		return uniqueIdFormat.parse(uniqueIdString);
 	}
 
-	private static final String SEGMENT_DELIMITER = "/";
-	private static final String TYPE_VALUE_SEPARATOR = ":";
+	private static final UniqueIdFormat uniqueIdFormat = UniqueIdFormat.getDefault();
 
 	private final List<Segment> segments = new ArrayList<>();
 
@@ -57,12 +56,7 @@ public class UniqueId implements Cloneable {
 	 * Create and deliver the string representation of the {@code UniqueId}
 	 */
 	public String getUniqueString() {
-		Stream<String> segmentStream = segments.stream().map(this::describe);
-		return StringUtils.join(segmentStream, SEGMENT_DELIMITER);
-	}
-
-	private String describe(Segment segment) {
-		return String.format("[%s%s%s]", segment.getType(), TYPE_VALUE_SEPARATOR, segment.getValue());
+		return uniqueIdFormat.format(this);
 	}
 
 	public List<Segment> getSegments() {
@@ -112,21 +106,8 @@ public class UniqueId implements Cloneable {
 		private final String value;
 
 		Segment(String type, String value) {
-			checkPrecondition(type);
-			checkPrecondition(value);
-
 			this.type = type;
 			this.value = value;
-		}
-
-		private void checkPrecondition(String type) {
-			Preconditions.notEmpty(type, "type or value must not be empty");
-			Preconditions.condition(!type.contains(SEGMENT_DELIMITER),
-				String.format("type or value must not contain '%s'", SEGMENT_DELIMITER));
-			Preconditions.condition(!type.contains(TYPE_VALUE_SEPARATOR),
-				String.format("type or value must not contain '%s'", TYPE_VALUE_SEPARATOR));
-			Preconditions.condition(!type.contains("["), "type or value must not contain '['");
-			Preconditions.condition(!type.contains("]"), "type or value must not contain ']'");
 		}
 
 		public String getType() {
