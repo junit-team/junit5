@@ -47,10 +47,6 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 @API(Internal)
 public class ExtensionRegistry {
 
-	public enum ApplicationOrder {
-		FORWARD, BACKWARD
-	}
-
 	/**
 	 * Factory for creating and populating a new registry from a list of
 	 * extension types and a parent registry.
@@ -137,11 +133,11 @@ public class ExtensionRegistry {
 	 * @param order the order in which to apply the extension points after sorting
 	 */
 	public <E extends ExtensionPoint> Stream<RegisteredExtensionPoint<E>> stream(Class<E> extensionPointType,
-			ApplicationOrder order) {
+			ExtensionPointRegistry.ApplicationOrder order) {
 
 		List<RegisteredExtensionPoint<E>> registeredExtensionPoints = getRegisteredExtensionPoints(extensionPointType);
 		new ExtensionPointSorter().sort(registeredExtensionPoints);
-		if (order == ApplicationOrder.BACKWARD) {
+		if (order == ExtensionPointRegistry.ApplicationOrder.BACKWARD) {
 			Collections.reverse(registeredExtensionPoints);
 		}
 		return registeredExtensionPoints.stream();

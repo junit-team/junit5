@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ContainerExecutionCondition;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.meta.API;
@@ -50,7 +51,7 @@ public class ConditionEvaluator {
 	public ConditionEvaluationResult evaluateForContainer(ExtensionRegistry extensionRegistry,
 			ContainerExtensionContext context) {
 		// @formatter:off
-		return extensionRegistry.stream(ContainerExecutionCondition.class, ExtensionRegistry.ApplicationOrder.FORWARD)
+		return extensionRegistry.stream(ContainerExecutionCondition.class, ExtensionPointRegistry.ApplicationOrder.FORWARD)
 				.map(extensionPoint -> extensionPoint.getExtensionPoint())
 				.map(condition -> evaluate(condition, context))
 				.filter(ConditionEvaluationResult::isDisabled)
@@ -71,7 +72,7 @@ public class ConditionEvaluator {
 	public ConditionEvaluationResult evaluateForTest(ExtensionRegistry extensionRegistry,
 			TestExtensionContext context) {
 		// @formatter:off
-		return extensionRegistry.stream(TestExecutionCondition.class, ExtensionRegistry.ApplicationOrder.FORWARD)
+		return extensionRegistry.stream(TestExecutionCondition.class, ExtensionPointRegistry.ApplicationOrder.FORWARD)
 				.map(extensionPoint -> extensionPoint.getExtensionPoint())
 				.map(condition -> evaluate(condition, context))
 				.filter(ConditionEvaluationResult::isDisabled)

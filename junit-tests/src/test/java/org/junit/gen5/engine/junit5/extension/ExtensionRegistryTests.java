@@ -131,7 +131,7 @@ public class ExtensionRegistryTests {
 
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
-		registry.stream(MyExtensionPoint.class, ExtensionRegistry.ApplicationOrder.FORWARD).forEach(
+		registry.stream(MyExtensionPoint.class, ExtensionPointRegistry.ApplicationOrder.FORWARD).forEach(
 			registeredExtensionPoint -> {
 				assertEquals(MyExtension.class.getName(), registeredExtensionPoint.getSource().getClass().getName());
 				assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
@@ -166,7 +166,7 @@ public class ExtensionRegistryTests {
 	private void assertBehaviorForExtensionPointRegisteredFromLambdaExpressionOrMethodReference() throws Exception {
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
-		registry.stream(MyExtensionPoint.class, ExtensionRegistry.ApplicationOrder.FORWARD).forEach(
+		registry.stream(MyExtensionPoint.class, ExtensionPointRegistry.ApplicationOrder.FORWARD).forEach(
 			registeredExtensionPoint -> {
 				Class<? extends MyExtensionPoint> lambdaType = registeredExtensionPoint.getExtensionPoint().getClass();
 				assertTrue(lambdaType.getName().contains("$Lambda$"));
@@ -180,7 +180,7 @@ public class ExtensionRegistryTests {
 
 	private int countExtensionPoints(Class<? extends ExtensionPoint> extensionPointType) throws Exception {
 		AtomicInteger counter = new AtomicInteger();
-		registry.stream(extensionPointType, ExtensionRegistry.ApplicationOrder.FORWARD).forEach(
+		registry.stream(extensionPointType, ExtensionPointRegistry.ApplicationOrder.FORWARD).forEach(
 			registeredExtensionPoint -> counter.incrementAndGet());
 		return counter.get();
 	}

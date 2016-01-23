@@ -19,13 +19,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
-import org.junit.gen5.engine.junit5.extension.ExtensionRegistry.ApplicationOrder;
 
 /**
  * {@code MethodInvoker} encapsulates the invocation of a method, including
@@ -71,8 +71,8 @@ public class MethodInvoker {
 
 		try {
 			final List<MethodParameterResolver> matchingResolvers = new ArrayList<>();
-			extensionRegistry.stream(MethodParameterResolver.class, ApplicationOrder.FORWARD).forEach(
-				registeredExtensionPoint -> {
+			extensionRegistry.stream(MethodParameterResolver.class,
+				ExtensionPointRegistry.ApplicationOrder.FORWARD).forEach(registeredExtensionPoint -> {
 					if (registeredExtensionPoint.getExtensionPoint().supports(parameter, methodInvocationContext,
 						extensionContext))
 						matchingResolvers.add(registeredExtensionPoint.getExtensionPoint());

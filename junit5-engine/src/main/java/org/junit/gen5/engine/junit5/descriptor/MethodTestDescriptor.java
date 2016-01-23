@@ -23,6 +23,7 @@ import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
@@ -37,7 +38,6 @@ import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
-import org.junit.gen5.engine.junit5.extension.ExtensionRegistry.ApplicationOrder;
 import org.junit.gen5.engine.junit5.extension.RegisteredExtensionPoint;
 import org.junit.gen5.engine.support.descriptor.JavaSource;
 import org.junit.gen5.engine.support.hierarchical.Leaf;
@@ -159,7 +159,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				() -> registeredExtensionPoint.getExtensionPoint().postProcessTestInstance(testExtensionContext));
 		};
 
-		extensionRegistry.stream(InstancePostProcessor.class, ApplicationOrder.FORWARD).forEach(
+		extensionRegistry.stream(InstancePostProcessor.class, ExtensionPointRegistry.ApplicationOrder.FORWARD).forEach(
 			applyInstancePostProcessor);
 	}
 
@@ -171,7 +171,8 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				() -> registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext));
 		};
 
-		extensionRegistry.stream(BeforeEachExtensionPoint.class, ApplicationOrder.FORWARD).forEach(applyBeforeEach);
+		extensionRegistry.stream(BeforeEachExtensionPoint.class,
+			ExtensionPointRegistry.ApplicationOrder.FORWARD).forEach(applyBeforeEach);
 	}
 
 	private void invokeTestMethod(ExtensionRegistry ExtensionRegistry, TestExtensionContext testExtensionContext,
@@ -227,15 +228,16 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	private List<ExceptionHandlerExtensionPoint> collectExceptionHandlerExtensionPoints(
 			ExtensionRegistry extensionRegistry) {
-		return extensionRegistry.stream(ExceptionHandlerExtensionPoint.class, ApplicationOrder.FORWARD).map(
-			RegisteredExtensionPoint::getExtensionPoint).collect(Collectors.toList());
+		return extensionRegistry.stream(ExceptionHandlerExtensionPoint.class,
+			ExtensionPointRegistry.ApplicationOrder.FORWARD).map(RegisteredExtensionPoint::getExtensionPoint).collect(
+				Collectors.toList());
 	}
 
 	private void invokeAfterEachExtensionPoints(ExtensionRegistry extensionRegistry,
 			TestExtensionContext testExtensionContext, ThrowableCollector throwableCollector) throws Exception {
 
-		extensionRegistry.stream(AfterEachExtensionPoint.class, ApplicationOrder.BACKWARD).forEach(
-			registeredExtensionPoint -> {
+		extensionRegistry.stream(AfterEachExtensionPoint.class,
+			ExtensionPointRegistry.ApplicationOrder.BACKWARD).forEach(registeredExtensionPoint -> {
 				throwableCollector.execute(
 					() -> registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext));
 			});

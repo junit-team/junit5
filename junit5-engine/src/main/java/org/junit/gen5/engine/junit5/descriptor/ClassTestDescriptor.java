@@ -33,6 +33,7 @@ import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
@@ -170,8 +171,8 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 				() -> registeredExtensionPoint.getExtensionPoint().beforeAll(containerExtensionContext));
 		};
 
-		newExtensionRegistry.stream(BeforeAllExtensionPoint.class, ExtensionRegistry.ApplicationOrder.FORWARD).forEach(
-			applyBeforeEach);
+		newExtensionRegistry.stream(BeforeAllExtensionPoint.class,
+			ExtensionPointRegistry.ApplicationOrder.FORWARD).forEach(applyBeforeEach);
 	}
 
 	private void invokeAfterAllExtensionPoints(ExtensionRegistry newExtensionRegistry,
@@ -183,8 +184,8 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 				() -> registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext));
 		};
 
-		newExtensionRegistry.stream(AfterAllExtensionPoint.class, ExtensionRegistry.ApplicationOrder.BACKWARD).forEach(
-			applyAfterAll);
+		newExtensionRegistry.stream(AfterAllExtensionPoint.class,
+			ExtensionPointRegistry.ApplicationOrder.BACKWARD).forEach(applyAfterAll);
 	}
 
 	private void registerBeforeAllMethods(ExtensionRegistry extensionRegistry) {
