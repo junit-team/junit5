@@ -184,6 +184,9 @@ public class ExtensionRegistry {
 	private void registerExtensionPoint(ExtensionPoint extension, Object source, Position position) {
 		LOG.finer(() -> String.format("Registering extension point [%s] from source [%s] with position [%s].",
 			extension, source, position));
+
+		//TODO: Check if position is allowed for the current ExtensionPoint
+
 		this.registeredExtensionPoints.add(new RegisteredExtensionPoint<>(extension, source, position));
 	}
 

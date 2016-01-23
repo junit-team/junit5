@@ -10,17 +10,14 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
-import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * Utility for sorting {@linkplain RegisteredExtensionPoint extension points}
@@ -52,15 +49,9 @@ class ExtensionPointSorter {
 	}
 
 	private <T extends ExtensionPoint> List<Position> getUniquePositions(Class<T> extensionPointType) {
-		Optional<Field> allowedPositionsField = ReflectionUtils.findField(extensionPointType, "ALLOWED_POSITIONS");
+		Position[] positions = Position.getAllowedPositionsFor(extensionPointType);
 
-		if (allowedPositionsField.isPresent()) {
-			//TODO: Check for correct type of field etc.
-			Position[] positions = (Position[]) ReflectionUtils.getFieldValue(allowedPositionsField.get(), null);
-			return Arrays.stream(positions).filter(position -> position.shouldBeUnique()).collect(Collectors.toList());
-		}
-
-		return Arrays.asList();
+		return Arrays.stream(positions).filter(Position::shouldBeUnique).collect(Collectors.toList());
 	}
 
 	private <T extends ExtensionPoint> void checkPositionUnique(
