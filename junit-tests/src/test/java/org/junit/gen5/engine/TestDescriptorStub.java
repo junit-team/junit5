@@ -20,12 +20,12 @@ public final class TestDescriptorStub extends AbstractTestDescriptor {
 
 	@Override
 	public String getName() {
-		return "name";
+		return getUniqueId();
 	}
 
 	@Override
 	public String getDisplayName() {
-		return "display name";
+		return getUniqueId();
 	}
 
 	@Override
