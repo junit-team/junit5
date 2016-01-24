@@ -13,7 +13,8 @@ package org.junit.gen5.engine.junit5.extension;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.engine.ExecutionEventConditions.*;
-import static org.junit.gen5.engine.TestExecutionResultConditions.*;
+import static org.junit.gen5.engine.TestExecutionResultConditions.isA;
+import static org.junit.gen5.engine.TestExecutionResultConditions.message;
 import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
@@ -57,10 +58,22 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			event(engine(), started()), //
+			event(container("[package:org]"), started()), //
+			event(container("[package:junit]"), started()), //
+			event(container("[package:gen5]"), started()), //
+			event(container("[package:engine]"), started()), //
+			event(container("[package:junit5]"), started()), //
+			event(container("[package:extension]"), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testRethrow"), started()), //
 			event(test("testRethrow"), finishedWithFailure(allOf(isA(IOException.class), message("checked")))), //
 			event(container(ATestCase.class), finishedSuccessfully()), //
+			event(container("[package:extension]"), finishedSuccessfully()), //
+			event(container("[package:junit5]"), finishedSuccessfully()), //
+			event(container("[package:engine]"), finishedSuccessfully()), //
+			event(container("[package:gen5]"), finishedSuccessfully()), //
+			event(container("[package:junit]"), finishedSuccessfully()), //
+			event(container("[package:org]"), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -74,10 +87,22 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			event(engine(), started()), //
+			event(container("[package:org]"), started()), //
+			event(container("[package:junit]"), started()), //
+			event(container("[package:gen5]"), started()), //
+			event(container("[package:engine]"), started()), //
+			event(container("[package:junit5]"), started()), //
+			event(container("[package:extension]"), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testSwallow"), started()), //
 			event(test("testSwallow"), finishedSuccessfully()), //
 			event(container(ATestCase.class), finishedSuccessfully()), //
+			event(container("[package:extension]"), finishedSuccessfully()), //
+			event(container("[package:junit5]"), finishedSuccessfully()), //
+			event(container("[package:engine]"), finishedSuccessfully()), //
+			event(container("[package:gen5]"), finishedSuccessfully()), //
+			event(container("[package:junit]"), finishedSuccessfully()), //
+			event(container("[package:org]"), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -91,10 +116,22 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			event(engine(), started()), //
+			event(container("[package:org]"), started()), //
+			event(container("[package:junit]"), started()), //
+			event(container("[package:gen5]"), started()), //
+			event(container("[package:engine]"), started()), //
+			event(container("[package:junit5]"), started()), //
+			event(container("[package:extension]"), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testConvert"), started()), //
 			event(test("testConvert"), finishedWithFailure(allOf(isA(IOException.class), message("checked")))), //
 			event(container(ATestCase.class), finishedSuccessfully()), //
+			event(container("[package:extension]"), finishedSuccessfully()), //
+			event(container("[package:junit5]"), finishedSuccessfully()), //
+			event(container("[package:engine]"), finishedSuccessfully()), //
+			event(container("[package:gen5]"), finishedSuccessfully()), //
+			event(container("[package:junit]"), finishedSuccessfully()), //
+			event(container("[package:org]"), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -111,10 +148,22 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			event(engine(), started()), //
+			event(container("[package:org]"), started()), //
+			event(container("[package:junit]"), started()), //
+			event(container("[package:gen5]"), started()), //
+			event(container("[package:engine]"), started()), //
+			event(container("[package:junit5]"), started()), //
+			event(container("[package:extension]"), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testSeveral"), started()), //
 			event(test("testSeveral"), finishedSuccessfully()), //
 			event(container(ATestCase.class), finishedSuccessfully()), //
+			event(container("[package:extension]"), finishedSuccessfully()), //
+			event(container("[package:junit5]"), finishedSuccessfully()), //
+			event(container("[package:engine]"), finishedSuccessfully()), //
+			event(container("[package:gen5]"), finishedSuccessfully()), //
+			event(container("[package:junit]"), finishedSuccessfully()), //
+			event(container("[package:org]"), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 
 		assertEquals(Arrays.asList("convert", "rethrow", "swallow"), handlerCalls);

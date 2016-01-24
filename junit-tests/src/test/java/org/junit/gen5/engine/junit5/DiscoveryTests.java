@@ -35,15 +35,15 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 	public void discoverTestClass() {
 		TestDiscoveryRequest request = request().select(forClass(LocalTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(10, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void discoverByUniqueId() {
-		TestDiscoveryRequest request = request().select(
-			forUniqueId("junit5:org.junit.gen5.engine.junit5.DiscoveryTests$LocalTestCase#test1()")).build();
+		String uniqueId = "[engine:junit5]/[package:org]/[package:junit]/[package:gen5]/[package:engine]/[package:junit5]/[class:DiscoveryTests$LocalTestCase]/[method:test1()]";
+		TestDiscoveryRequest request = request().select(forUniqueId(uniqueId)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(7, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
@@ -53,17 +53,16 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 		TestDiscoveryRequest request = request().select(
 			MethodSelector.forMethod(LocalTestCase.class, testMethod)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(7, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void discoverCompositeSpec() {
-		TestDiscoveryRequest spec = request().select(
-			forUniqueId("junit5:org.junit.gen5.engine.junit5.DiscoveryTests$LocalTestCase#test2()"),
-			forClass(LocalTestCase.class)).build();
+		String uniqueId = "[engine:junit5]/[package:org]/[package:junit]/[package:gen5]/[package:engine]/[package:junit5]/[class:DiscoveryTests$LocalTestCase]/[method:test2()]";
+		TestDiscoveryRequest spec = request().select(forUniqueId(uniqueId), forClass(LocalTestCase.class)).build();
 
 		TestDescriptor engineDescriptor = discoverTests(spec);
-		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(10, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	// -------------------------------------------------------------------

@@ -57,8 +57,8 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 	@Test
 	public void executeSingleTest() {
-		TestDiscoveryRequest request = request().select(forUniqueId(
-			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#alwaysPasses()")).build();
+		String uniqueId = "[engine:junit5]/[package:org]/[package:junit]/[package:gen5]/[package:engine]/[package:junit5]/[class:TestCaseWithInheritanceTests$LocalTestCase]/[method:alwaysPasses()]";
+		TestDiscoveryRequest request = request().select(forUniqueId(uniqueId)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -71,8 +71,8 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 	@Test
 	public void executeTestDeclaredInSuperClass() {
-		TestDiscoveryRequest request = request().select(forUniqueId(
-			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#superclassTest()")).build();
+		String uniqueId = "[engine:junit5]/[package:org]/[package:junit]/[package:gen5]/[package:engine]/[package:junit5]/[class:TestCaseWithInheritanceTests$LocalTestCase]/[method:superclassTest()]";
+		TestDiscoveryRequest request = request().select(forUniqueId(uniqueId)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -91,8 +91,8 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 	@Test
 	public void executeTestWithExceptionThrownInAfterMethod() {
-		TestDiscoveryRequest request = request().select(forUniqueId(
-			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#throwExceptionInAfterMethod()")).build();
+		String uniqueId = "[engine:junit5]/[package:org]/[package:junit]/[package:gen5]/[package:engine]/[package:junit5]/[class:TestCaseWithInheritanceTests$LocalTestCase]/[method:throwExceptionInAfterMethod()]";
+		TestDiscoveryRequest request = request().select(forUniqueId(uniqueId)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

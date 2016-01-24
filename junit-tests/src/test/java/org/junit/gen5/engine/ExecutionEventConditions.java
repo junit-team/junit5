@@ -61,7 +61,9 @@ public class ExecutionEventConditions {
 	}
 
 	public static Condition<ExecutionEvent> container(Class<?> clazz) {
-		return container(clazz.getName());
+		String packageName = clazz.getPackage().getName();
+		String className = clazz.getName().substring(packageName.length() + 1);
+		return container(className);
 	}
 
 	public static Condition<ExecutionEvent> container(String uniqueIdSubstring) {
