@@ -26,6 +26,7 @@ import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 import org.junit.gen5.engine.junit5.resolver.testpackage.NestingTestClass;
 import org.junit.gen5.engine.junit5.resolver.testpackage.SingleTestClass;
+import org.junit.gen5.engine.junit5.resolver.testpackage.TestsWithParametersTestClass;
 import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
 import org.junit.gen5.engine.junit5.stubs.TestResolverRegistryMock;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
@@ -96,6 +97,7 @@ public class ClassResolverTests {
 		assertThat(testResolverRegistryMock.testDescriptors)
                 .containsOnly(
                         resolveClass(testPackage, SingleTestClass.class),
+                        resolveClass(testPackage, TestsWithParametersTestClass.class),
                         resolveClass(testPackage, NestingTestClass.class),
                         resolveClass(testPackage, NestingTestClass.NestedStaticClass.class)
                 )

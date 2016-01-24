@@ -74,10 +74,10 @@ public class NestedMemberClassResolver extends JUnit5TestResolver {
 	@Override
 	public void resolveUniqueId(TestDescriptor parent, UniqueId uniqueId, EngineDiscoveryRequest discoveryRequest) {
 		if (uniqueId.currentKey().equals(RESOLVER_ID) && parent instanceof ClassTestDescriptor) {
-			String enclosingClassName = ((ClassTestDescriptor) parent).getTestClass().getCanonicalName();
+			String enclosingClassName = ((ClassTestDescriptor) parent).getTestClass().getName();
 			String className = uniqueId.currentValue();
 			Optional<Class<?>> testClass = ReflectionUtils.loadClass(
-				String.format("%s.%s", enclosingClassName, className));
+				String.format("%s$%s", enclosingClassName, className));
 
 			if (testClass.isPresent()) {
 				TestDescriptor next = resolveNestedClass(parent, testClass.get());

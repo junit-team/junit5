@@ -12,28 +12,38 @@ package org.junit.gen5.engine.junit5.resolver;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.commons.util.ReflectionUtils.findMethod;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.engine.discovery.ClasspathSelector.forPath;
 import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
+import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
+import static org.junit.gen5.engine.junit5.resolver.ClassResolver.resolveClass;
 import static org.junit.gen5.engine.junit5.resolver.EngineResolver.resolveEngine;
+import static org.junit.gen5.engine.junit5.resolver.MethodResolver.resolveMethod;
+import static org.junit.gen5.engine.junit5.resolver.NestedMemberClassResolver.resolveNestedClass;
 import static org.junit.gen5.engine.junit5.resolver.PackageResolver.resolvePackage;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 import org.junit.gen5.engine.junit5.resolver.testpackage.NestingTestClass;
 import org.junit.gen5.engine.junit5.resolver.testpackage.SingleTestClass;
+import org.junit.gen5.engine.junit5.resolver.testpackage.TestsWithParametersTestClass;
 import org.junit.gen5.engine.junit5.resolver.testpackage.notatestclass.NotATestClassPlaceholder;
 import org.junit.gen5.engine.junit5.resolver.testpackage.subpackage1.Subpackage1Placeholder;
 import org.junit.gen5.engine.junit5.resolver.testpackage.subpackage2.Subpackage2Placeholder;
@@ -82,7 +92,7 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 
 		assertThat(engineDescriptor.getChildren()).hasSize(1);
 
-		verifyOccurrencesOf_Packages_Classes_And_Methods(10, 8, 5);
+		verifyOccurrencesOf_Packages_Classes_And_Methods(10, 9, 7);
 	}
 
 	@Test
@@ -148,6 +158,49 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 	}
 
 	@Test
+	void givenAnUniqueIdSelectorForAMethod_resolvesOnlyTheTestMethodWithItsHierarchy() throws Exception {
+		Class<SingleTestClass> testClass = SingleTestClass.class;
+		Method testMethod = findMethod(testClass, "test1").get();
+		ClassTestDescriptor classTestDescriptor = resolveClass(packageLevel7, testClass);
+		MethodTestDescriptor methodTestDescriptor = resolveMethod(classTestDescriptor, testClass, testMethod);
+
+		UniqueIdSelector uniqueIdSelector = forUniqueId(methodTestDescriptor.getUniqueId());
+		TestDiscoveryRequest discoveryRequest = request().select(uniqueIdSelector).build();
+		registry.notifyResolvers(engineDescriptor, discoveryRequest);
+		verifyOccurrencesOf_Packages_Classes_And_Methods(7, 1, 1);
+	}
+
+	@Test
+	void givenAnUniqueIdSelectorForAMethodWithParameters_resolvesOnlyTheTestMethodWithItsHierarchy() throws Exception {
+		Class<TestsWithParametersTestClass> testClass = TestsWithParametersTestClass.class;
+		Method testMethod = findMethod(testClass, "test1", TestInfo.class).get();
+		ClassTestDescriptor classTestDescriptor = resolveClass(packageLevel7, testClass);
+		MethodTestDescriptor methodTestDescriptor = resolveMethod(classTestDescriptor, testClass, testMethod);
+
+		UniqueIdSelector uniqueIdSelector = forUniqueId(methodTestDescriptor.getUniqueId());
+		TestDiscoveryRequest discoveryRequest = request().select(uniqueIdSelector).build();
+		registry.notifyResolvers(engineDescriptor, discoveryRequest);
+		verifyOccurrencesOf_Packages_Classes_And_Methods(7, 1, 1);
+	}
+
+	@Test
+	void givenAnUniqueIdSelectorForANestedClassTestMethod_resolvesOnlyTheTestMethodWithItsHierarchy() throws Exception {
+		Class<?> testClass = NestingTestClass.NestedInnerClass.DoubleNestedInnerClass.class;
+		Method testMethod = findMethod(testClass, "nestedInnerClassTest").get();
+
+		ClassTestDescriptor classLevel1 = resolveClass(packageLevel7, NestingTestClass.class);
+		NestedClassTestDescriptor classLevel2 = resolveNestedClass(classLevel1,
+			NestingTestClass.NestedInnerClass.class);
+		NestedClassTestDescriptor classLevel3 = resolveNestedClass(classLevel2, testClass);
+		MethodTestDescriptor methodTestDescriptor = resolveMethod(classLevel3, testClass, testMethod);
+
+		UniqueIdSelector uniqueIdSelector = forUniqueId(methodTestDescriptor.getUniqueId());
+		TestDiscoveryRequest discoveryRequest = request().select(uniqueIdSelector).build();
+		registry.notifyResolvers(engineDescriptor, discoveryRequest);
+		verifyOccurrencesOf_Packages_Classes_And_Methods(7, 3, 1);
+	}
+
+	@Test
 	void givenAClasspathSelector_resolvesTheWholeTestSuiteWithinTheClasspath() throws Exception {
 		List<DiscoverySelector> selector = forPath(SingleTestClass.class.getResource("/").getFile());
 		registry.notifyResolvers(engineDescriptor, request().select(selector).build());
@@ -172,12 +225,12 @@ public class PreconfigureTestResolverRegistryRegressionTests {
                 .collect(toList());
 		assertThat(testDescriptors)
                 .contains(
-			            ClassResolver.resolveClass(packageLevel7, SingleTestClass.class),
-			            ClassResolver.resolveClass(packageLevel7, NestingTestClass.class),
-			            ClassResolver.resolveClass(packageLevel7, NestingTestClass.NestedStaticClass.class),
-                        ClassResolver.resolveClass(packageLevel8a, Subpackage1Placeholder.class),
-                        ClassResolver.resolveClass(packageLevel8b, Subpackage2Placeholder.class),
-                        ClassResolver.resolveClass(packageLevel8c, NotATestClassPlaceholder.class))
+			            resolveClass(packageLevel7, SingleTestClass.class),
+			            resolveClass(packageLevel7, NestingTestClass.class),
+			            resolveClass(packageLevel7, NestingTestClass.NestedStaticClass.class),
+                        resolveClass(packageLevel8a, Subpackage1Placeholder.class),
+                        resolveClass(packageLevel8b, Subpackage2Placeholder.class),
+                        resolveClass(packageLevel8c, NotATestClassPlaceholder.class))
                 .doesNotHaveDuplicates();
         // @formatter:on
 	}

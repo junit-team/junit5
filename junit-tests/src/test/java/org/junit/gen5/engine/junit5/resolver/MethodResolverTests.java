@@ -24,9 +24,11 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 import org.junit.gen5.engine.junit5.resolver.testpackage.SingleTestClass;
+import org.junit.gen5.engine.junit5.resolver.testpackage.TestsWithParametersTestClass;
 import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
 import org.junit.gen5.engine.junit5.stubs.TestResolverRegistryMock;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
@@ -83,6 +85,31 @@ public class MethodResolverTests {
 		Class<SingleTestClass> testClass = SingleTestClass.class;
 		Method testMethod1 = findMethod(testClass, "test1").get();
 		Method testMethod2 = findMethod(testClass, "test2").get();
+
+		PackageTestDescriptor packageDescriptor = resolvePackage(engineDescriptor, testPackageName);
+		engineDescriptor.addChild(packageDescriptor);
+		ClassTestDescriptor testClassDescriptor = resolveClass(engineDescriptor, testClass);
+		packageDescriptor.addChild(testClassDescriptor);
+
+		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testClassDescriptor;
+
+		resolver.resolveAllFrom(testClassDescriptor, request().select(forClass(testClass)).build());
+
+		// @formatter:off
+        assertThat(testResolverRegistryMock.testDescriptors)
+                .containsOnly(
+                        resolveMethod(testClassDescriptor, testClass, testMethod1),
+                        resolveMethod(testClassDescriptor, testClass, testMethod2)
+                )
+                .doesNotHaveDuplicates();
+        // @formatter:on
+	}
+
+	@Test
+	void whenTestClassContainsTestMethodsWithParameters_resolvesTestMethodsWithParameters() throws Exception {
+		Class<TestsWithParametersTestClass> testClass = TestsWithParametersTestClass.class;
+		Method testMethod1 = findMethod(testClass, "test1", TestInfo.class).get();
+		Method testMethod2 = findMethod(testClass, "test2", TestInfo.class).get();
 
 		PackageTestDescriptor packageDescriptor = resolvePackage(engineDescriptor, testPackageName);
 		engineDescriptor.addChild(packageDescriptor);
