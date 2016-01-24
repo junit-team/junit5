@@ -10,6 +10,8 @@
 
 package org.junit.gen5.engine;
 
+import java.util.function.Predicate;
+
 /**
  * Filters particular tests during/after test discovery.
  *
@@ -23,5 +25,9 @@ package org.junit.gen5.engine;
 public interface Filter<T> {
 
 	FilterResult filter(T object);
+
+	default Predicate<T> toPredicate() {
+		return object -> filter(object).included();
+	}
 
 }

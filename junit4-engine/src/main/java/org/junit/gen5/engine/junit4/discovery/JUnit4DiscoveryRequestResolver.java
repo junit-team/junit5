@@ -11,22 +11,31 @@
 package org.junit.gen5.engine.junit4.discovery;
 
 import static java.util.Arrays.asList;
+import static org.junit.gen5.engine.DiscoveryFilter.combine;
 
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
-import org.junit.gen5.engine.FilterResult;
+import org.junit.gen5.engine.Filter;
 import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
+import org.junit.gen5.engine.support.filter.ExclusionReasonConsumingFilter;
 
 public class JUnit4DiscoveryRequestResolver {
 
 	private final EngineDescriptor engineDescriptor;
+	private final Logger logger;
 
 	public JUnit4DiscoveryRequestResolver(EngineDescriptor engineDescriptor) {
+		this(engineDescriptor, Logger.getLogger(JUnit4DiscoveryRequestResolver.class.getName()));
+	}
+
+	JUnit4DiscoveryRequestResolver(EngineDescriptor engineDescriptor, Logger logger) {
 		this.engineDescriptor = engineDescriptor;
+		this.logger = logger;
 	}
 
 	public void resolve(EngineDiscoveryRequest discoveryRequest) {
@@ -61,15 +70,13 @@ public class JUnit4DiscoveryRequestResolver {
 
 	private Set<TestClassRequest> filterAndConvertToTestClassRequests(EngineDiscoveryRequest discoveryRequest,
 			TestClassCollector collector) {
-		// TODO #40 Log classes that are filtered out
-
-		// @formatter:off
-		List<ClassFilter> classFilters = discoveryRequest.getDiscoveryFiltersByType(ClassFilter.class);
-		return collector.toRequests(
-			testClass -> classFilters.stream()
-					.map(classFilter -> classFilter.filter(testClass))
-					.allMatch(FilterResult::included));
-		// @formatter:on
+		List<ClassFilter> allClassFilters = discoveryRequest.getDiscoveryFiltersByType(ClassFilter.class);
+		Filter<Class<?>> classFilter = new ExclusionReasonConsumingFilter<>(combine(allClassFilters),
+			(testClass, reason) -> {
+				logger.warning(String.format("Class %s was excluded by a class filter: %s", testClass.getName(),
+					reason.orElse("<unknown reason>")));
+			});
+		return collector.toRequests(classFilter.toPredicate());
 	}
 
 	private void populateEngineDescriptor(Set<TestClassRequest> requests) {
