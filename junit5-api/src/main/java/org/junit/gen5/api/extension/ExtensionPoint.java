@@ -40,12 +40,4 @@ import org.junit.gen5.commons.meta.API;
 @API(Experimental)
 public interface ExtensionPoint extends Extension {
 
-	/**
-	 * The set of allowed values for the {@link Position} when registering an {@code ExtensionPoint}
-	 * using {@link ExtensionPointRegistry#register(ExtensionPoint, Position)}.
-	 *
-	 * <p>Field is used through reflection!</p>
-	 */
-	Position[] ALLOWED_POSITIONS = { DEFAULT };
-
 }

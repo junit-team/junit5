@@ -31,7 +31,12 @@ import org.junit.gen5.commons.meta.API;
 @API(Experimental)
 public interface InstancePostProcessor extends ExtensionPoint {
 
-	ExtensionPointRegistry.Position[] ALLOWED_POSITIONS = { FIRST, DEFAULT, LAST };
+	/**
+	 * Configuration for {@code ExceptionHandlerExtensionPoint}
+	 */
+	ExtensionPointConfiguration CONFIG = new ExtensionPointConfiguration(
+		new ExtensionPointRegistry.Position[] { FIRST, DEFAULT, LAST },
+		ExtensionPointRegistry.ApplicationOrder.FORWARD);
 
 	/**
 	 * Callback for post-processing the test instance in the supplied

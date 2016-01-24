@@ -111,18 +111,7 @@ public interface ExtensionPointRegistry {
 	 * {@link #DEFAULT DEFAULT}, {@link #INSIDE_DEFAULT INSIDE_DEFAULT}, and
 	 * {@link #INNERMOST INNERMOST}.
 	 */
-	static class Position {
-
-		public static <T extends ExtensionPoint> Position[] getAllowedPositionsFor(Class<T> extensionPointType) {
-			Optional<Field> allowedPositionsField = ReflectionUtils.findField(extensionPointType, "ALLOWED_POSITIONS");
-
-			Position[] positions = new Position[] { Position.DEFAULT };
-			if (allowedPositionsField.isPresent()) {
-				//TODO: Check for correct type of field etc.
-				positions = (Position[]) ReflectionUtils.getFieldValue(allowedPositionsField.get(), null);
-			}
-			return positions;
-		}
+	class Position {
 
 		/**
 		 * Apply first.

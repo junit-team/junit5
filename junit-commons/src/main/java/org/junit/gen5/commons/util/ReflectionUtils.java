@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
-
 import org.junit.gen5.commons.meta.API;
 
 /**
@@ -251,31 +250,6 @@ public final class ReflectionUtils {
 		Preconditions.notNull(predicate, "predicate must not be null");
 
 		return Arrays.stream(clazz.getDeclaredClasses()).filter(predicate).collect(toList());
-	}
-
-	//TODO: Search in hierarchy
-	public static Optional<Field> findField(Class<?> clazz, String fieldName) {
-		try {
-			return Optional.of(clazz.getDeclaredField(fieldName));
-		}
-		catch (NoSuchFieldException e) {
-			return Optional.empty();
-		}
-	}
-
-	public static Object getFieldValue(Field field, Object target) {
-		Preconditions.notNull(field, "field must not be null");
-		Preconditions.condition((target != null || isStatic(field)),
-			() -> String.format("Cannot get value from non-static field [%s] on a null target.",
-				field.toGenericString()));
-
-		try {
-			makeAccessible(field);
-			return field.get(target);
-		}
-		catch (Throwable t) {
-			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
-		}
 	}
 
 	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {

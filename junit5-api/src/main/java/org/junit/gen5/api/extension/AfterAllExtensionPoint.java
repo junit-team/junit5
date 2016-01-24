@@ -35,8 +35,12 @@ import org.junit.gen5.commons.meta.API;
 @API(Experimental)
 public interface AfterAllExtensionPoint extends ExtensionPoint {
 
-	ExtensionPointRegistry.Position[] ALLOWED_POSITIONS = { OUTERMOST, OUTSIDE_DEFAULT, DEFAULT, INSIDE_DEFAULT,
-			INNERMOST };
+	/**
+	 * Configuration for {@code AfterAllExtensionPoint}
+	 */
+	ExtensionPointConfiguration CONFIG = new ExtensionPointConfiguration(
+		new ExtensionPointRegistry.Position[] { OUTERMOST, OUTSIDE_DEFAULT, DEFAULT, INSIDE_DEFAULT, INNERMOST },
+		ExtensionPointRegistry.ApplicationOrder.BACKWARD);
 
 	/**
 	 * Callback that is invoked <em>after</em> all test methods have been invoked.

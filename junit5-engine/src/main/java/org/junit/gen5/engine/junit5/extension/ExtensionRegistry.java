@@ -22,11 +22,18 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import org.junit.gen5.api.extension.AfterAllExtensionPoint;
+import org.junit.gen5.api.extension.AfterEachExtensionPoint;
+import org.junit.gen5.api.extension.BeforeAllExtensionPoint;
+import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
 import org.junit.gen5.api.extension.Extension;
 import org.junit.gen5.api.extension.ExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionPointConfiguration;
 import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
+import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
@@ -46,6 +53,20 @@ import org.junit.gen5.commons.util.ReflectionUtils;
  */
 @API(Internal)
 public class ExtensionRegistry {
+
+	/**
+	 * Register all subtypes of {@link ExtensionPoint} that have a different configuration
+	 * than {@link ExtensionPointConfiguration#DEFAULT}
+	 */
+	static {
+		ExtensionPointConfiguration.register(BeforeEachExtensionPoint.class, BeforeEachExtensionPoint.CONFIG);
+		ExtensionPointConfiguration.register(BeforeAllExtensionPoint.class, BeforeAllExtensionPoint.CONFIG);
+		ExtensionPointConfiguration.register(AfterEachExtensionPoint.class, AfterEachExtensionPoint.CONFIG);
+		ExtensionPointConfiguration.register(AfterAllExtensionPoint.class, AfterAllExtensionPoint.CONFIG);
+		ExtensionPointConfiguration.register(InstancePostProcessor.class, InstancePostProcessor.CONFIG);
+		ExtensionPointConfiguration.register(ExceptionHandlerExtensionPoint.class,
+			ExceptionHandlerExtensionPoint.CONFIG);
+	}
 
 	/**
 	 * Factory for creating and populating a new registry from a list of
@@ -137,8 +158,7 @@ public class ExtensionRegistry {
 
 		List<RegisteredExtensionPoint<E>> registeredExtensionPoints = getRegisteredExtensionPoints(extensionPointType);
 
-		//TODO: ExtensionPoint subtype should register their allowed positions somewhere
-		Position[] allowedPositions = Position.getAllowedPositionsFor(extensionPointType);
+		Position[] allowedPositions = ExtensionPointConfiguration.getFor(extensionPointType).getAllowedPositions();
 
 		new ExtensionPointSorter().sort(registeredExtensionPoints, allowedPositions);
 		if (order == ExtensionPointRegistry.ApplicationOrder.BACKWARD) {

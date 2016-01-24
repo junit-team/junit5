@@ -31,7 +31,12 @@ import org.junit.gen5.commons.meta.API;
 @API(Experimental)
 public interface ExceptionHandlerExtensionPoint extends ExtensionPoint {
 
-	ExtensionPointRegistry.Position[] ALLOWED_POSITIONS = { FIRST, DEFAULT, LAST };
+	/**
+	 * Configuration for {@code ExceptionHandlerExtensionPoint}
+	 */
+	ExtensionPointConfiguration CONFIG = new ExtensionPointConfiguration(
+		new ExtensionPointRegistry.Position[] { FIRST, DEFAULT, LAST },
+		ExtensionPointRegistry.ApplicationOrder.FORWARD);
 
 	/**
 	 * React to a {@link Throwable throwable} which has been thrown by a test method.
