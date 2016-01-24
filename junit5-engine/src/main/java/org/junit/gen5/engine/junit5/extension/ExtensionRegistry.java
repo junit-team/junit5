@@ -60,7 +60,7 @@ public class ExtensionRegistry {
 	 * than {@link ExtensionPointConfiguration#DEFAULT}
 	 */
 	static {
-        //TODO: Replace static block by something equivalent to registration of default extensions
+		//TODO: Replace static block by something equivalent to registration of default extensions
 		ExtensionPointConfiguration.register(BeforeEachExtensionPoint.class, BeforeEachExtensionPoint.CONFIG);
 		ExtensionPointConfiguration.register(BeforeAllExtensionPoint.class, BeforeAllExtensionPoint.CONFIG);
 		ExtensionPointConfiguration.register(AfterEachExtensionPoint.class, AfterEachExtensionPoint.CONFIG);
