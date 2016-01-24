@@ -12,7 +12,8 @@ package org.junit.gen5.engine.junit5.resolver;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClasspathRoots;
+import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackageOnly;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 
 import java.io.File;
@@ -30,12 +31,15 @@ import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
+import org.junit.gen5.engine.junit5.discovery.IsPotentialTestContainer;
 
 /**
  * @since 5.0
  */
 public class ClassResolver extends JUnit5TestResolver {
 	private static final String RESOLVER_ID = "class";
+
+	private final IsPotentialTestContainer isTopLevelTestClass = new IsPotentialTestContainer();
 
 	public static ClassTestDescriptor resolveClass(TestDescriptor parent, Class<?> testClass) {
 		String packageName = testClass.getPackage().getName();
@@ -95,7 +99,7 @@ public class ClassResolver extends JUnit5TestResolver {
 	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
 		if (selector instanceof ClassSelector) {
 			Class<?> testClass = ((ClassSelector) selector).getTestClass();
-			if (isTopLevelTestClass(testClass)) {
+			if (isTopLevelTestClass.test(testClass)) {
 				PackageSelector packageSelector = forPackageName(testClass.getPackage().getName());
 				TestDescriptor parent = getTestResolverRegistry().fetchParent(packageSelector, root);
 				return getTestDescriptor(parent, testClass);
@@ -118,7 +122,7 @@ public class ClassResolver extends JUnit5TestResolver {
 		}
 
 		List<TestDescriptor> classTestDescriptors = new LinkedList<>();
-		for (Class<?> testClass : findAllClassesInClasspathRoots(classPathRoots, this::isTopLevelTestClass)) {
+		for (Class<?> testClass : findAllClassesInClasspathRoots(classPathRoots, isTopLevelTestClass::test)) {
 			PackageSelector packageSelector = forPackageName(testClass.getPackage().getName());
 			TestDescriptor parent = getTestResolverRegistry().fetchParent(packageSelector, root);
 			getTestDescriptor(parent, testClass).ifPresent(classTestDescriptors::add);
@@ -129,22 +133,11 @@ public class ClassResolver extends JUnit5TestResolver {
 	private List<TestDescriptor> resolveTopLevelClassesInPackage(String packageName, TestDescriptor parent,
 			EngineDiscoveryRequest discoveryRequest) {
 		// @formatter:off
-        return findAllClassesInPackageOnly(packageName, this::isTopLevelTestClass).stream()
+        return findAllClassesInPackageOnly(packageName, isTopLevelTestClass::test).stream()
                 .map(testClass -> resolveClass(parent, testClass))
                 .peek(parent::addChild)
                 .collect(toList());
         // @formatter:on
-	}
-
-	private boolean isTopLevelTestClass(Class<?> candidate) {
-		//please do not collapse into single return
-		if (isAbstract(candidate))
-			return false;
-		if (candidate.isLocalClass())
-			return false;
-		if (candidate.isAnonymousClass())
-			return false;
-		return !candidate.isMemberClass() || isStatic(candidate);
 	}
 
 	private Optional<TestDescriptor> getTestDescriptor(TestDescriptor parent, Class<?> testClass) {

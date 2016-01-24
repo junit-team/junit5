@@ -11,15 +11,13 @@
 package org.junit.gen5.engine.junit5.resolver;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.findNestedClasses;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.gen5.api.Nested;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.DiscoverySelector;
@@ -28,12 +26,15 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
+import org.junit.gen5.engine.junit5.discovery.IsNestedTestClass;
 
 /**
  * @since 5.0
  */
 public class NestedMemberClassResolver extends JUnit5TestResolver {
 	private static final String RESOLVER_ID = "nestedclass";
+
+	private final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
 
 	public static NestedClassTestDescriptor resolveNestedClass(TestDescriptor parent, Class<?> testClass) {
 		return fetchFromTreeOrCreateNew(parent, UniqueId.from(RESOLVER_ID, testClass.getSimpleName()),
@@ -90,7 +91,7 @@ public class NestedMemberClassResolver extends JUnit5TestResolver {
 	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
 		if (selector instanceof ClassSelector) {
 			Class<?> testClass = ((ClassSelector) selector).getTestClass();
-			if (isNestedTestClass(testClass)) {
+			if (isNestedTestClass.test(testClass)) {
 				ClassSelector classSelector = forClass(testClass.getEnclosingClass());
 				TestDescriptor parent = getTestResolverRegistry().fetchParent(classSelector, root);
 				return getTestDescriptor(parent, testClass);
@@ -102,22 +103,11 @@ public class NestedMemberClassResolver extends JUnit5TestResolver {
 	private List<TestDescriptor> resolveNestedClassesInClass(Class<?> parentClass, TestDescriptor parent,
 			EngineDiscoveryRequest discoveryRequest) {
 		// @formatter:off
-        return findNestedClasses(parentClass, this::isNestedTestClass).stream()
+        return findNestedClasses(parentClass, isNestedTestClass::test).stream()
                 .map(testClass -> resolveNestedClass(parent, testClass))
                 .peek(parent::addChild)
                 .collect(toList());
         // @formatter:on
-	}
-
-	private boolean isNestedTestClass(Class<?> candidate) {
-		//please do not collapse into single return
-		if (isStatic(candidate))
-			return false;
-		if (isPrivate(candidate))
-			return false;
-		if (!candidate.isMemberClass())
-			return false;
-		return isAnnotated(candidate, Nested.class);
 	}
 
 	private Optional<TestDescriptor> getTestDescriptor(TestDescriptor parent, Class<?> testClass) {
