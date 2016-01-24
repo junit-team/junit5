@@ -110,7 +110,6 @@ public class PackageResolver extends JUnit5TestResolver {
 	private List<TestDescriptor> resolveSubpackages(TestDescriptor parent, String packageName) {
 		// @formatter:off
         return ReflectionUtils.findAllPackagesInClasspathRoot(packageName).stream()
-                .map(Package::getName)
                 .map(name -> getTestDescriptor(parent, name))
                 .map(Optional::get)
                 .collect(toList());

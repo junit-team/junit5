@@ -236,7 +236,7 @@ public final class ReflectionUtils {
 		// @formatter:on
 	}
 
-	public static List<Package> findAllPackagesInClasspathRoot(String basePackageName) {
+	public static List<String> findAllPackagesInClasspathRoot(String basePackageName) {
 		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
 			ReflectionUtils::loadClass).scanForPackagesInPackage(basePackageName);
 	}

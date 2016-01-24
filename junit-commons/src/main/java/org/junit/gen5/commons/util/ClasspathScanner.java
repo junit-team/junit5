@@ -13,6 +13,7 @@ package org.junit.gen5.commons.util;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
@@ -54,20 +55,19 @@ class ClasspathScanner {
 		}
 	}
 
-	List<Package> scanForPackagesInPackage(String basePackageName) {
+	List<String> scanForPackagesInPackage(String basePackageName) {
 		Preconditions.notBlank(basePackageName, "basePackageName must not be blank");
 
 		List<File> dirs = allSourceDirsForPackage(basePackageName);
 		return allSubPackagesInSourceDirs(dirs, basePackageName);
 	}
 
-	private List<Package> allSubPackagesInSourceDirs(List<File> dirs, String basePackageName) {
+	private List<String> allSubPackagesInSourceDirs(List<File> dirs, String basePackageName) {
 		// @formatter:off
 		return dirs.stream()
 				.flatMap(dir -> findPackagesInSourceDir(dir, basePackageName))
 				.distinct()
-				.map(Package::getPackage)
-                .filter(aPackage -> aPackage != null)
+                .filter(this::isPackage)
 				.collect(Collectors.toList());
 		// @formatter:on
 	}
