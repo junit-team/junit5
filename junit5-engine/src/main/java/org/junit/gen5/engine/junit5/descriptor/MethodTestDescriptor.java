@@ -23,7 +23,6 @@ import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
-import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
@@ -159,8 +158,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				() -> registeredExtensionPoint.getExtensionPoint().postProcessTestInstance(testExtensionContext));
 		};
 
-		extensionRegistry.stream(InstancePostProcessor.class, ExtensionPointRegistry.ApplicationOrder.FORWARD).forEach(
-			applyInstancePostProcessor);
+		extensionRegistry.stream(InstancePostProcessor.class).forEach(applyInstancePostProcessor);
 	}
 
 	private void invokeBeforeEachExtensionPoints(ExtensionRegistry extensionRegistry,
@@ -171,8 +169,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				() -> registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext));
 		};
 
-		extensionRegistry.stream(BeforeEachExtensionPoint.class,
-			ExtensionPointRegistry.ApplicationOrder.FORWARD).forEach(applyBeforeEach);
+		extensionRegistry.stream(BeforeEachExtensionPoint.class).forEach(applyBeforeEach);
 	}
 
 	private void invokeTestMethod(ExtensionRegistry ExtensionRegistry, TestExtensionContext testExtensionContext,
@@ -228,19 +225,17 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	private List<ExceptionHandlerExtensionPoint> collectExceptionHandlerExtensionPoints(
 			ExtensionRegistry extensionRegistry) {
-		return extensionRegistry.stream(ExceptionHandlerExtensionPoint.class,
-			ExtensionPointRegistry.ApplicationOrder.FORWARD).map(RegisteredExtensionPoint::getExtensionPoint).collect(
-				Collectors.toList());
+		return extensionRegistry.stream(ExceptionHandlerExtensionPoint.class).map(
+			RegisteredExtensionPoint::getExtensionPoint).collect(Collectors.toList());
 	}
 
 	private void invokeAfterEachExtensionPoints(ExtensionRegistry extensionRegistry,
 			TestExtensionContext testExtensionContext, ThrowableCollector throwableCollector) throws Exception {
 
-		extensionRegistry.stream(AfterEachExtensionPoint.class,
-			ExtensionPointRegistry.ApplicationOrder.BACKWARD).forEach(registeredExtensionPoint -> {
-				throwableCollector.execute(
-					() -> registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext));
-			});
+		extensionRegistry.stream(AfterEachExtensionPoint.class).forEach(registeredExtensionPoint -> {
+			throwableCollector.execute(
+				() -> registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext));
+		});
 	}
 
 }

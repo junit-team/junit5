@@ -31,6 +31,7 @@ import org.junit.gen5.api.extension.Extension;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPointConfiguration;
 import org.junit.gen5.api.extension.ExtensionPointRegistry;
+import org.junit.gen5.api.extension.ExtensionPointRegistry.ApplicationOrder;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.InstancePostProcessor;
@@ -59,6 +60,7 @@ public class ExtensionRegistry {
 	 * than {@link ExtensionPointConfiguration#DEFAULT}
 	 */
 	static {
+        //TODO: Replace static block by something equivalent to registration of default extensions
 		ExtensionPointConfiguration.register(BeforeEachExtensionPoint.class, BeforeEachExtensionPoint.CONFIG);
 		ExtensionPointConfiguration.register(BeforeAllExtensionPoint.class, BeforeAllExtensionPoint.CONFIG);
 		ExtensionPointConfiguration.register(AfterEachExtensionPoint.class, AfterEachExtensionPoint.CONFIG);
@@ -151,17 +153,16 @@ public class ExtensionRegistry {
 	 * of the specified type.
 	 *
 	 * @param extensionPointType the type of {@link ExtensionPoint} to stream
-	 * @param order the order in which to apply the extension points after sorting
 	 */
-	public <E extends ExtensionPoint> Stream<RegisteredExtensionPoint<E>> stream(Class<E> extensionPointType,
-			ExtensionPointRegistry.ApplicationOrder order) {
+	public <E extends ExtensionPoint> Stream<RegisteredExtensionPoint<E>> stream(Class<E> extensionPointType) {
 
 		List<RegisteredExtensionPoint<E>> registeredExtensionPoints = getRegisteredExtensionPoints(extensionPointType);
 
 		Position[] allowedPositions = ExtensionPointConfiguration.getFor(extensionPointType).getAllowedPositions();
+		ApplicationOrder order = ExtensionPointConfiguration.getFor(extensionPointType).getApplicationOrder();
 
 		new ExtensionPointSorter().sort(registeredExtensionPoints, allowedPositions);
-		if (order == ExtensionPointRegistry.ApplicationOrder.BACKWARD) {
+		if (order == ApplicationOrder.BACKWARD) {
 			Collections.reverse(registeredExtensionPoints);
 		}
 		return registeredExtensionPoints.stream();

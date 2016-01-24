@@ -131,12 +131,11 @@ public class ExtensionRegistryTests {
 
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
-		registry.stream(MyExtensionPoint.class, ExtensionPointRegistry.ApplicationOrder.FORWARD).forEach(
-			registeredExtensionPoint -> {
-				assertEquals(MyExtension.class.getName(), registeredExtensionPoint.getSource().getClass().getName());
-				assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
-				hasRun.set(true);
-			});
+		registry.stream(MyExtensionPoint.class).forEach(registeredExtensionPoint -> {
+			assertEquals(MyExtension.class.getName(), registeredExtensionPoint.getSource().getClass().getName());
+			assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
+			hasRun.set(true);
+		});
 
 		assertTrue(hasRun.get());
 
@@ -166,22 +165,20 @@ public class ExtensionRegistryTests {
 	private void assertBehaviorForExtensionPointRegisteredFromLambdaExpressionOrMethodReference() throws Exception {
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
-		registry.stream(MyExtensionPoint.class, ExtensionPointRegistry.ApplicationOrder.FORWARD).forEach(
-			registeredExtensionPoint -> {
-				Class<? extends MyExtensionPoint> lambdaType = registeredExtensionPoint.getExtensionPoint().getClass();
-				assertTrue(lambdaType.getName().contains("$Lambda$"));
-				assertEquals(getClass().getName(), registeredExtensionPoint.getSource().getClass().getName());
-				assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
-				hasRun.set(true);
-			});
+		registry.stream(MyExtensionPoint.class).forEach(registeredExtensionPoint -> {
+			Class<? extends MyExtensionPoint> lambdaType = registeredExtensionPoint.getExtensionPoint().getClass();
+			assertTrue(lambdaType.getName().contains("$Lambda$"));
+			assertEquals(getClass().getName(), registeredExtensionPoint.getSource().getClass().getName());
+			assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
+			hasRun.set(true);
+		});
 
 		assertTrue(hasRun.get());
 	}
 
 	private int countExtensionPoints(Class<? extends ExtensionPoint> extensionPointType) throws Exception {
 		AtomicInteger counter = new AtomicInteger();
-		registry.stream(extensionPointType, ExtensionPointRegistry.ApplicationOrder.FORWARD).forEach(
-			registeredExtensionPoint -> counter.incrementAndGet());
+		registry.stream(extensionPointType).forEach(registeredExtensionPoint -> counter.incrementAndGet());
 		return counter.get();
 	}
 
