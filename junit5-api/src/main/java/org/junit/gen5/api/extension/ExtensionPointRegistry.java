@@ -131,9 +131,9 @@ public interface ExtensionPointRegistry {
 		 * otherwise, an {@link ExtensionConfigurationException} will be
 		 * thrown.
 		 */
-		public static Position OUTERMOST = new Position(1, true);
+		public static Position OUTERMOST = new Position("OUTERMOST", 1, true);
 
-		public static Position FIRST = new Position(1, true);
+		public static Position FIRST = new Position("FIRST", 1, true);
 
 		/**
 		 * Apply after {@link #OUTERMOST} but before {@link #DEFAULT},
@@ -142,32 +142,33 @@ public interface ExtensionPointRegistry {
 		 * <p>Multiple extensions can be assigned this position; however,
 		 * the ordering among such extensions is undefined.
 		 */
-		public static Position OUTSIDE_DEFAULT = new Position(2);
+		public static Position OUTSIDE_DEFAULT = new Position("OUTSIDE_DEFAULT", 2);
 
 		/**
 		 * Use the position derived from the order of registration using {@link ExtendWith}
 		 * in the source code. That means than an {@link ExtensionPoint} registered above or in
 		 * a superclass comes before one that is registered below.
 		 */
-		public static Position DEFAULT = new Position(3);
+		public static Position DEFAULT = new Position("DEFAULT", 3);
 
 		// TODO Document INSIDE_DEFAULT position.
-		public static Position INSIDE_DEFAULT = new Position(4);
+		public static Position INSIDE_DEFAULT = new Position("INSIDE_DEFAULT", 4);
 
 		// TODO Document INNERMOST position.
-		public static Position INNERMOST = new Position(5, true);
+		public static Position INNERMOST = new Position("INNERMOST", 5, true);
 
-		public static Position LAST = new Position(5, true);
+		public static Position LAST = new Position("LAST", 5, true);
 
+		private final String displayName;
 		private final int ordinalValue;
-
 		private final boolean unique;
 
-		Position(int ordinalValue) {
-			this(ordinalValue, false);
+		Position(String displayName, int ordinalValue) {
+			this(displayName, ordinalValue, false);
 		}
 
-		Position(int ordinalValue, boolean unique) {
+		Position(String displayName, int ordinalValue, boolean unique) {
+			this.displayName = displayName;
 			this.ordinalValue = ordinalValue;
 			this.unique = unique;
 		}
@@ -178,6 +179,11 @@ public interface ExtensionPointRegistry {
 
 		public boolean shouldBeUnique() {
 			return unique;
+		}
+
+		@Override
+		public String toString() {
+			return "Position." + displayName;
 		}
 	}
 

@@ -148,6 +148,19 @@ public class ExtensionPointSortingTests {
 		assertTrue(ex.getMessage().contains(fooMethod.toString()));
 	}
 
+	@Test
+	void extension_withNotAllowedPosition_throwException() {
+		RegisteredExtensionPoint point1 = createExtensionPoint(Position.FIRST);
+
+		pointsToSort.add(point1);
+
+		ExtensionConfigurationException ex = expectThrows(ExtensionConfigurationException.class,
+			() -> sorter.sort(pointsToSort, LocalExtensionPoint.ALLOWED_POSITIONS));
+
+		assertTrue(ex.getMessage().startsWith("'Position.FIRST' not allowed:"));
+		assertTrue(ex.getMessage().contains(fooMethod.toString()));
+	}
+
 	private void assertSorting(RegisteredExtensionPoint... points) {
 		sorter.sort(pointsToSort, LocalExtensionPoint.ALLOWED_POSITIONS);
 

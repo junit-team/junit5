@@ -37,15 +37,40 @@ class ExtensionPointSorter {
 	 *
 	 * <p>Note: the supplied list instance will be resorted.
 	 *
-	 * @param <T> concrete subtype of {@link ExtensionPoint}
+	 * @param <T>                       concrete subtype of {@link ExtensionPoint}
 	 * @param registeredExtensionPoints list of extension points in order of registration
-	 * @param allowedPositions set of all {@link Position positions} that are allowed for the {@code registeredExtensionPoints}
+	 * @param allowedPositions          all {@link Position positions} that are allowed for the {@code registeredExtensionPoints} of type T
 	 */
 	public <T extends ExtensionPoint> void sort(List<RegisteredExtensionPoint<T>> registeredExtensionPoints,
 			Position[] allowedPositions) {
+		checkOnlyAllowedPositions(registeredExtensionPoints, allowedPositions);
+		checkNoUniquePositionConflict(registeredExtensionPoints, allowedPositions);
+		registeredExtensionPoints.sort(new DefaultComparator());
+	}
+
+	private <T extends ExtensionPoint> void checkOnlyAllowedPositions(
+			List<RegisteredExtensionPoint<T>> registeredExtensionPoints, Position[] allowedPositions) {
+
+		// @formatter:off
+        registeredExtensionPoints
+                .stream()
+                .filter(rep -> notIn(rep.getPosition(), allowedPositions))
+                .forEach(r -> {
+                    String exceptionMessage = String.format("'%s' not allowed: %s", r.getPosition(), r.getSource());
+                    throw new ExtensionConfigurationException(exceptionMessage);
+                });
+        // @formatter:on
+
+	}
+
+	private boolean notIn(Position position, Position[] allowedPositions) {
+		return !Arrays.asList(allowedPositions).contains(position);
+	}
+
+	private <T extends ExtensionPoint> void checkNoUniquePositionConflict(
+			List<RegisteredExtensionPoint<T>> registeredExtensionPoints, Position[] allowedPositions) {
 		List<Position> uniquePositions = getUniquePositions(allowedPositions);
 		uniquePositions.stream().forEach(position -> checkPositionUnique(registeredExtensionPoints, position));
-		registeredExtensionPoints.sort(new DefaultComparator());
 	}
 
 	private <T extends ExtensionPoint> List<Position> getUniquePositions(Position[] allowedPositions) {
@@ -72,12 +97,12 @@ class ExtensionPointSorter {
 			List<RegisteredExtensionPoint<T>> registeredExtensionPoints, Position positionToFind) {
 
 		// @formatter:off
-		return registeredExtensionPoints.stream()
-				.filter(point -> point.getPosition() == positionToFind)
-				.map(RegisteredExtensionPoint::getSource)
-				.map(Object::toString)
-				.collect(Collectors.toList());
-		// @formatter:on
+        return registeredExtensionPoints.stream()
+                .filter(point -> point.getPosition() == positionToFind)
+                .map(RegisteredExtensionPoint::getSource)
+                .map(Object::toString)
+                .collect(Collectors.toList());
+        // @formatter:on
 	}
 
 	private static class DefaultComparator implements Comparator<RegisteredExtensionPoint<?>> {
