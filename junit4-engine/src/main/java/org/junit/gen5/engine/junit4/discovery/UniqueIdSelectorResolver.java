@@ -10,9 +10,11 @@
 
 package org.junit.gen5.engine.junit4.discovery;
 
+import static java.lang.String.format;
 import static org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor.DEFAULT_SEPARATOR;
 
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
@@ -21,8 +23,15 @@ import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 
 class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelector> {
 
+	private final Logger logger;
+
 	UniqueIdSelectorResolver() {
+		this(Logger.getLogger(UniqueIdSelectorResolver.class.getName()));
+	}
+
+	UniqueIdSelectorResolver(Logger logger) {
 		super(UniqueIdSelector.class);
+		this.logger = logger;
 	}
 
 	@Override
@@ -36,7 +45,7 @@ class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelecto
 				collector.addFiltered(testClass.get(), new UniqueIdFilter(uniqueId));
 			}
 			else {
-				// TODO #40 Log warning
+				logger.warning(() -> format("Unresolvable Unique ID (%s): Unknown class %s", uniqueId, testClassName));
 			}
 		}
 	}
