@@ -10,12 +10,14 @@
 
 package org.junit.gen5.engine.junit5.resolver;
 
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +40,8 @@ public class MethodResolver extends JUnit5TestResolver {
 	private final IsTestMethod isTestMethod = new IsTestMethod();
 
 	public static MethodTestDescriptor resolveMethod(TestDescriptor parent, Class<?> testClass, Method testMethod) {
-		return fetchFromTreeOrCreateNew(parent, UniqueId.from(RESOLVER_ID, testMethod.getName()),
+
+		return fetchFromTreeOrCreateNew(parent, UniqueId.from(RESOLVER_ID, getSignatureFromMethod(testMethod)),
 			(uniqueId) -> new MethodTestDescriptor(uniqueId.toString(), testClass, testMethod));
 	}
 
@@ -92,8 +95,7 @@ public class MethodResolver extends JUnit5TestResolver {
 	public void resolveUniqueId(TestDescriptor parent, UniqueId uniqueId, EngineDiscoveryRequest discoveryRequest) {
 		if (uniqueId.currentKey().equals(RESOLVER_ID) && parent instanceof ClassTestDescriptor) {
 			Class<?> testClass = ((ClassTestDescriptor) parent).getTestClass();
-
-			Optional<Method> method = ReflectionUtils.findMethod(testClass, uniqueId.currentValue());
+			Optional<Method> method = getMethodFromSignature(testClass, uniqueId.currentValue());
 			if (method.isPresent()) {
 				TestDescriptor next = resolveMethod(parent, testClass, method.get());
 				parent.addChild(next);
@@ -105,5 +107,34 @@ public class MethodResolver extends JUnit5TestResolver {
 	@Override
 	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
 		return Optional.empty();
+	}
+
+	private static String getSignatureFromMethod(Method testMethod) {
+		// @formatter:off
+        String parameterTypeList = Arrays.stream(testMethod.getParameterTypes())
+                .map(Class::getName)
+                .collect(joining(","));
+        // @formatter:on
+		return String.format("%s(%s)", testMethod.getName(), parameterTypeList);
+	}
+
+	private static Optional<Method> getMethodFromSignature(Class<?> testClass, String methodSignature) {
+		int index = methodSignature.indexOf('(');
+		String methodName = methodSignature.substring(0, index);
+		boolean methodHasNoParameters = (methodName.length() == methodSignature.length() - 2);
+		if (methodHasNoParameters) {
+			return ReflectionUtils.findMethod(testClass, methodName);
+		}
+		else {
+			String[] parameterTypeNames = methodSignature.substring(index + 1, methodSignature.length() - 1).split(",");
+			// @formatter:off
+            Class[] parameterTypes = Arrays.stream(parameterTypeNames)
+                    .map(ReflectionUtils::loadClass)
+                    .map(Optional::get)
+                    .collect(toList())
+                    .toArray(new Class[parameterTypeNames.length]);
+            // @formatter:on
+			return ReflectionUtils.findMethod(testClass, methodName, parameterTypes);
+		}
 	}
 }
