@@ -47,4 +47,5 @@ public interface ExtensionPoint extends Extension {
 	 * <p>Field is used through reflection!</p>
 	 */
 	Position[] ALLOWED_POSITIONS = { DEFAULT };
+
 }
