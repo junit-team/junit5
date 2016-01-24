@@ -48,7 +48,7 @@ class JUnit4DiscoveryRequestResolverTests {
 
 		assertThat(logger.getLogRecords()).hasSize(1);
 		LogRecord logRecord = getOnlyElement(logger.getLogRecords());
-		assertEquals(Level.WARNING, logRecord.getLevel());
+		assertEquals(Level.INFO, logRecord.getLevel());
 		assertEquals("Class " + Bar.class.getName() + " was excluded by a class filter: no match",
 			logRecord.getMessage());
 	}
