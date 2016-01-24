@@ -31,9 +31,9 @@ class CombinedDiscoveryFilter<T> implements DiscoveryFilter<T> {
 		return ALWAYS_INCLUDED_DISCOVERY_FILTER;
 	}
 
-	private final Collection<DiscoveryFilter<T>> filters;
+	private final Collection<? extends DiscoveryFilter<T>> filters;
 
-	public CombinedDiscoveryFilter(Collection<DiscoveryFilter<T>> filters) {
+	public CombinedDiscoveryFilter(Collection<? extends DiscoveryFilter<T>> filters) {
 		this.filters = filters;
 	}
 

@@ -58,7 +58,7 @@ public interface DiscoveryFilter<T> extends Filter<T> {
 	 * <p>If the size of the collection is 1, this method will return the filter
 	 * contained in the collection.
 	 */
-	public static <T> DiscoveryFilter<T> combine(Collection<DiscoveryFilter<T>> filters) {
+	public static <T> DiscoveryFilter<T> combine(Collection<? extends DiscoveryFilter<T>> filters) {
 		if (filters == null || filters.isEmpty()) {
 			return alwaysIncluded();
 		}
