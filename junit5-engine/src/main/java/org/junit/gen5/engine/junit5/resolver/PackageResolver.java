@@ -31,17 +31,11 @@ import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 public class PackageResolver extends JUnit5TestResolver {
 	private static final String RESOLVER_ID = "package";
 
-	public static PackageTestDescriptor descriptorForParentAndName(TestDescriptor parent, String packageName) {
+	public static PackageTestDescriptor resolvePackage(TestDescriptor parent, String packageName) {
 		int index = packageName.lastIndexOf('.');
 		String name = index == -1 ? packageName : packageName.substring(index + 1);
-		String uniqueId = String.format("%s/[package:%s]", parent.getUniqueId(), name);
-
-		if (parent.findByUniqueId(uniqueId).isPresent()) {
-			return (PackageTestDescriptor) parent.findByUniqueId(uniqueId).get();
-		}
-		else {
-			return new PackageTestDescriptor(uniqueId, packageName);
-		}
+		return fetchFromTreeOrCreateNew(parent, UniqueId.from(RESOLVER_ID, name),
+			(uniqueId -> new PackageTestDescriptor(uniqueId.toString(), packageName)));
 	}
 
 	@Override
@@ -84,7 +78,7 @@ public class PackageResolver extends JUnit5TestResolver {
 				packageName = String.format("%s.%s", packageTestDescriptor.getPackageName(), packageName);
 			}
 
-			TestDescriptor next = descriptorForParentAndName(parent, packageName);
+			TestDescriptor next = resolvePackage(parent, packageName);
 			parent.addChild(next);
 			getTestResolverRegistry().resolveUniqueId(next, uniqueId.getRemainder(), discoveryRequest);
 		}
@@ -117,7 +111,7 @@ public class PackageResolver extends JUnit5TestResolver {
 	}
 
 	private Optional<TestDescriptor> getTestDescriptor(TestDescriptor parent, String packageName) {
-		TestDescriptor child = descriptorForParentAndName(parent, packageName);
+		TestDescriptor child = resolvePackage(parent, packageName);
 		parent.addChild(child);
 		return Optional.of(child);
 	}

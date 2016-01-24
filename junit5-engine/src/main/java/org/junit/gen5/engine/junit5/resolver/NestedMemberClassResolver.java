@@ -35,17 +35,9 @@ import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
 public class NestedMemberClassResolver extends JUnit5TestResolver {
 	private static final String RESOLVER_ID = "nestedclass";
 
-	public static NestedClassTestDescriptor descriptorForParentAndNestedClass(TestDescriptor parent,
-			Class<?> testClass) {
-		String className = testClass.getSimpleName();
-		String uniqueId = parent.getUniqueId() + "/[nestedclass:" + className + "]";
-
-		if (parent.findByUniqueId(uniqueId).isPresent()) {
-			return (NestedClassTestDescriptor) parent.findByUniqueId(uniqueId).get();
-		}
-		else {
-			return new NestedClassTestDescriptor(uniqueId, testClass);
-		}
+	public static NestedClassTestDescriptor resolveNestedClass(TestDescriptor parent, Class<?> testClass) {
+		return fetchFromTreeOrCreateNew(parent, UniqueId.from(RESOLVER_ID, testClass.getSimpleName()),
+			(uniqueId) -> new NestedClassTestDescriptor(uniqueId.toString(), testClass));
 	}
 
 	@Override
@@ -87,7 +79,7 @@ public class NestedMemberClassResolver extends JUnit5TestResolver {
 				String.format("%s.%s", enclosingClassName, className));
 
 			if (testClass.isPresent()) {
-				TestDescriptor next = descriptorForParentAndNestedClass(parent, testClass.get());
+				TestDescriptor next = resolveNestedClass(parent, testClass.get());
 				parent.addChild(next);
 				getTestResolverRegistry().resolveUniqueId(next, uniqueId.getRemainder(), discoveryRequest);
 			}
@@ -111,7 +103,7 @@ public class NestedMemberClassResolver extends JUnit5TestResolver {
 			EngineDiscoveryRequest discoveryRequest) {
 		// @formatter:off
         return findNestedClasses(parentClass, this::isNestedTestClass).stream()
-                .map(testClass -> descriptorForParentAndNestedClass(parent, testClass))
+                .map(testClass -> resolveNestedClass(parent, testClass))
                 .peek(parent::addChild)
                 .collect(toList());
         // @formatter:on
@@ -129,7 +121,7 @@ public class NestedMemberClassResolver extends JUnit5TestResolver {
 	}
 
 	private Optional<TestDescriptor> getTestDescriptor(TestDescriptor parent, Class<?> testClass) {
-		TestDescriptor child = descriptorForParentAndNestedClass(parent, testClass);
+		TestDescriptor child = resolveNestedClass(parent, testClass);
 		parent.addChild(child);
 		return Optional.of(child);
 	}

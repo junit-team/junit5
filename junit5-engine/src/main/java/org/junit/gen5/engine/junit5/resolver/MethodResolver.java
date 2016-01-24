@@ -36,16 +36,9 @@ import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 public class MethodResolver extends JUnit5TestResolver {
 	private static final String RESOLVER_ID = "method";
 
-	public static MethodTestDescriptor descriptorForParentAndMethod(TestDescriptor parent, Class<?> testClass,
-			Method testMethod) {
-		String uniqueId = parent.getUniqueId() + "/[method:" + testMethod.getName() + "]";
-
-		if (parent.findByUniqueId(uniqueId).isPresent()) {
-			return (MethodTestDescriptor) parent.findByUniqueId(uniqueId).get();
-		}
-		else {
-			return new MethodTestDescriptor(uniqueId, testClass, testMethod);
-		}
+	public static MethodTestDescriptor resolveMethod(TestDescriptor parent, Class<?> testClass, Method testMethod) {
+		return fetchFromTreeOrCreateNew(parent, UniqueId.from(RESOLVER_ID, testMethod.getName()),
+			(uniqueId) -> new MethodTestDescriptor(uniqueId.toString(), testClass, testMethod));
 	}
 
 	@Override
@@ -73,7 +66,7 @@ public class MethodResolver extends JUnit5TestResolver {
 		for (MethodSelector methodSelector : methodSelectors) {
 			DiscoverySelector selector = forClass(methodSelector.getTestClass());
 			TestDescriptor parent = getTestResolverRegistry().fetchParent(selector, root);
-			MethodTestDescriptor child = descriptorForParentAndMethod(parent, methodSelector.getTestClass(),
+			MethodTestDescriptor child = resolveMethod(parent, methodSelector.getTestClass(),
 				methodSelector.getTestMethod());
 			parent.addChild(child);
 			getTestResolverRegistry().notifyResolvers(child, discoveryRequest);
@@ -84,7 +77,7 @@ public class MethodResolver extends JUnit5TestResolver {
 			EngineDiscoveryRequest discoveryRequest) {
 		// @formatter:off
         List<MethodTestDescriptor> testMethods = findMethods(testClass, this::isTestMethod, HierarchyDown).stream()
-                .map(testMethod -> descriptorForParentAndMethod(parent, testClass, testMethod))
+                .map(testMethod -> resolveMethod(parent, testClass, testMethod))
                 .collect(toList());
         // @formatter:on
 
@@ -101,7 +94,7 @@ public class MethodResolver extends JUnit5TestResolver {
 
 			Optional<Method> method = ReflectionUtils.findMethod(testClass, uniqueId.currentValue());
 			if (method.isPresent()) {
-				TestDescriptor next = descriptorForParentAndMethod(parent, testClass, method.get());
+				TestDescriptor next = resolveMethod(parent, testClass, method.get());
 				parent.addChild(next);
 				getTestResolverRegistry().resolveUniqueId(next, uniqueId.getRemainder(), discoveryRequest);
 			}

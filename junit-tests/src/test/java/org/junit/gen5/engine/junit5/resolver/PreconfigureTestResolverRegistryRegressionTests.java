@@ -16,8 +16,8 @@ import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.engine.discovery.ClasspathSelector.forPath;
 import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
-import static org.junit.gen5.engine.junit5.resolver.EngineResolver.descriptorForEngine;
-import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForParentAndName;
+import static org.junit.gen5.engine.junit5.resolver.EngineResolver.resolveEngine;
+import static org.junit.gen5.engine.junit5.resolver.PackageResolver.resolvePackage;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.List;
@@ -62,17 +62,17 @@ public class PreconfigureTestResolverRegistryRegressionTests {
 		testEngine = new JUnit5TestEngine();
 		registry = new PreconfiguredTestResolverRegistry();
 
-		engineDescriptor = descriptorForEngine(testEngine);
-		packageLevel1 = descriptorForParentAndName(engineDescriptor, "org");
-		packageLevel2 = descriptorForParentAndName(packageLevel1, "org.junit");
-		packageLevel3 = descriptorForParentAndName(packageLevel2, "org.junit.gen5");
-		packageLevel4 = descriptorForParentAndName(packageLevel3, "org.junit.gen5.engine");
-		packageLevel5 = descriptorForParentAndName(packageLevel4, "org.junit.gen5.engine.junit5");
-		packageLevel6 = descriptorForParentAndName(packageLevel5, "org.junit.gen5.engine.junit5.resolver");
-		packageLevel7 = descriptorForParentAndName(packageLevel6, testPackageName);
-		packageLevel8a = descriptorForParentAndName(packageLevel7, testPackageName + ".subpackage1");
-		packageLevel8b = descriptorForParentAndName(packageLevel7, testPackageName + ".subpackage2");
-		packageLevel8c = descriptorForParentAndName(packageLevel7, testPackageName + ".notatestclass");
+		engineDescriptor = resolveEngine(testEngine);
+		packageLevel1 = resolvePackage(engineDescriptor, "org");
+		packageLevel2 = resolvePackage(packageLevel1, "org.junit");
+		packageLevel3 = resolvePackage(packageLevel2, "org.junit.gen5");
+		packageLevel4 = resolvePackage(packageLevel3, "org.junit.gen5.engine");
+		packageLevel5 = resolvePackage(packageLevel4, "org.junit.gen5.engine.junit5");
+		packageLevel6 = resolvePackage(packageLevel5, "org.junit.gen5.engine.junit5.resolver");
+		packageLevel7 = resolvePackage(packageLevel6, testPackageName);
+		packageLevel8a = resolvePackage(packageLevel7, testPackageName + ".subpackage1");
+		packageLevel8b = resolvePackage(packageLevel7, testPackageName + ".subpackage2");
+		packageLevel8c = resolvePackage(packageLevel7, testPackageName + ".notatestclass");
 	}
 
 	@Test
@@ -172,12 +172,12 @@ public class PreconfigureTestResolverRegistryRegressionTests {
                 .collect(toList());
 		assertThat(testDescriptors)
                 .contains(
-			            ClassResolver.descriptorForParentAndClass(packageLevel7, SingleTestClass.class),
-			            ClassResolver.descriptorForParentAndClass(packageLevel7, NestingTestClass.class),
-			            ClassResolver.descriptorForParentAndClass(packageLevel7, NestingTestClass.NestedStaticClass.class),
-                        ClassResolver.descriptorForParentAndClass(packageLevel8a, Subpackage1Placeholder.class),
-                        ClassResolver.descriptorForParentAndClass(packageLevel8b, Subpackage2Placeholder.class),
-                        ClassResolver.descriptorForParentAndClass(packageLevel8c, NotATestClassPlaceholder.class))
+			            ClassResolver.resolveClass(packageLevel7, SingleTestClass.class),
+			            ClassResolver.resolveClass(packageLevel7, NestingTestClass.class),
+			            ClassResolver.resolveClass(packageLevel7, NestingTestClass.NestedStaticClass.class),
+                        ClassResolver.resolveClass(packageLevel8a, Subpackage1Placeholder.class),
+                        ClassResolver.resolveClass(packageLevel8b, Subpackage2Placeholder.class),
+                        ClassResolver.resolveClass(packageLevel8c, NotATestClassPlaceholder.class))
                 .doesNotHaveDuplicates();
         // @formatter:on
 	}

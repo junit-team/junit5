@@ -12,9 +12,9 @@ package org.junit.gen5.engine.junit5.resolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
-import static org.junit.gen5.engine.junit5.resolver.ClassResolver.descriptorForParentAndClass;
-import static org.junit.gen5.engine.junit5.resolver.EngineResolver.descriptorForEngine;
-import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForParentAndName;
+import static org.junit.gen5.engine.junit5.resolver.ClassResolver.resolveClass;
+import static org.junit.gen5.engine.junit5.resolver.EngineResolver.resolveEngine;
+import static org.junit.gen5.engine.junit5.resolver.PackageResolver.resolvePackage;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.Optional;
@@ -42,7 +42,7 @@ public class ClassResolverTests {
 		testResolverRegistryMock = new TestResolverRegistryMock();
 
 		TestEngineStub testEngine = new TestEngineStub();
-		engineDescriptor = descriptorForEngine(testEngine);
+		engineDescriptor = resolveEngine(testEngine);
 
 		resolver = new ClassResolver();
 		resolver.bindTestResolveryRegistry(testResolverRegistryMock);
@@ -56,7 +56,7 @@ public class ClassResolverTests {
 
 	@Test
 	void givenAClassSelector_resolvesTheClass() {
-		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor, testPackageName);
+		PackageTestDescriptor testPackage = resolvePackage(engineDescriptor, testPackageName);
 		engineDescriptor.addChild(testPackage);
 
 		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testPackage;
@@ -66,7 +66,7 @@ public class ClassResolverTests {
 		// @formatter:off
         assertThat(testResolverRegistryMock.testDescriptors)
                 .containsOnly(
-                        descriptorForParentAndClass(testPackage, SingleTestClass.class)
+                        resolveClass(testPackage, SingleTestClass.class)
                 )
                 .doesNotHaveDuplicates();
         // @formatter:on
@@ -74,21 +74,20 @@ public class ClassResolverTests {
 
 	@Test
 	void givenAPackageAndAClassSelector_resolvesTheClass_AndAttachesItToTheExistingTree() {
-		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor, testPackageName);
+		PackageTestDescriptor testPackage = resolvePackage(engineDescriptor, testPackageName);
 		engineDescriptor.addChild(testPackage);
 		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testPackage;
 
 		resolver.resolveAllFrom(engineDescriptor, request().select(forClass(SingleTestClass.class)).build());
 
 		assertThat(engineDescriptor.getChildren()).containsOnly(testPackage);
-		assertThat(testPackage.getChildren()).containsOnly(
-			descriptorForParentAndClass(testPackage, SingleTestClass.class));
+		assertThat(testPackage.getChildren()).containsOnly(resolveClass(testPackage, SingleTestClass.class));
 	}
 
 	@Test
 	void whenNotifiedWithAPackageTestDescriptor_resolvesAllTopLevelAndNestedStaticClassesInThePackage()
 			throws Exception {
-		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor, testPackageName);
+		PackageTestDescriptor testPackage = resolvePackage(engineDescriptor, testPackageName);
 		engineDescriptor.addChild(testPackage);
 
 		resolver.resolveAllFrom(testPackage, request().build());
@@ -96,9 +95,9 @@ public class ClassResolverTests {
 		// @formatter:off
 		assertThat(testResolverRegistryMock.testDescriptors)
                 .containsOnly(
-                        descriptorForParentAndClass(testPackage, SingleTestClass.class),
-                        descriptorForParentAndClass(testPackage, NestingTestClass.class),
-                        descriptorForParentAndClass(testPackage, NestingTestClass.NestedStaticClass.class)
+                        resolveClass(testPackage, SingleTestClass.class),
+                        resolveClass(testPackage, NestingTestClass.class),
+                        resolveClass(testPackage, NestingTestClass.NestedStaticClass.class)
                 )
                 .doesNotHaveDuplicates();
         // @formatter:on
@@ -106,7 +105,7 @@ public class ClassResolverTests {
 
 	@Test
 	void givenAClassSelectorToANestedStaticClass_resolvesTheClassLikeATopLevelClass() {
-		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor, testPackageName);
+		PackageTestDescriptor testPackage = resolvePackage(engineDescriptor, testPackageName);
 		engineDescriptor.addChild(testPackage);
 
 		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testPackage;
@@ -116,14 +115,14 @@ public class ClassResolverTests {
 
 		// @formatter:off
         assertThat(testResolverRegistryMock.testDescriptors)
-                .containsOnly(descriptorForParentAndClass(testPackage, NestingTestClass.NestedStaticClass.class))
+                .containsOnly(resolveClass(testPackage, NestingTestClass.NestedStaticClass.class))
                 .doesNotHaveDuplicates();
         // @formatter:on
 	}
 
 	@Test
 	void givenAPackageSelector_fetchesTheTreeUpToTheRoot() {
-		PackageTestDescriptor testPackage = descriptorForParentAndName(engineDescriptor, testPackageName);
+		PackageTestDescriptor testPackage = resolvePackage(engineDescriptor, testPackageName);
 		engineDescriptor.addChild(testPackage);
 
 		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testPackage;

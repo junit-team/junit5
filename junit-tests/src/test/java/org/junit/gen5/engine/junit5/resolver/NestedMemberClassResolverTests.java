@@ -12,9 +12,9 @@ package org.junit.gen5.engine.junit5.resolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
-import static org.junit.gen5.engine.junit5.resolver.ClassResolver.descriptorForParentAndClass;
-import static org.junit.gen5.engine.junit5.resolver.EngineResolver.descriptorForEngine;
-import static org.junit.gen5.engine.junit5.resolver.NestedMemberClassResolver.descriptorForParentAndNestedClass;
+import static org.junit.gen5.engine.junit5.resolver.ClassResolver.resolveClass;
+import static org.junit.gen5.engine.junit5.resolver.EngineResolver.resolveEngine;
+import static org.junit.gen5.engine.junit5.resolver.NestedMemberClassResolver.resolveNestedClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.BeforeEach;
@@ -36,7 +36,7 @@ public class NestedMemberClassResolverTests {
 		testResolverRegistryMock = new TestResolverRegistryMock();
 
 		TestEngineStub testEngine = new TestEngineStub();
-		engineDescriptor = descriptorForEngine(testEngine);
+		engineDescriptor = resolveEngine(testEngine);
 
 		resolver = new NestedMemberClassResolver();
 		resolver.bindTestResolveryRegistry(testResolverRegistryMock);
@@ -50,7 +50,7 @@ public class NestedMemberClassResolverTests {
 
 	@Test
 	void givenAClassSelector_resolvesTheClass() {
-		ClassTestDescriptor testClassDescriptor = descriptorForParentAndClass(engineDescriptor, NestingTestClass.class);
+		ClassTestDescriptor testClassDescriptor = resolveClass(engineDescriptor, NestingTestClass.class);
 		engineDescriptor.addChild(testClassDescriptor);
 		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testClassDescriptor;
 
@@ -59,7 +59,7 @@ public class NestedMemberClassResolverTests {
 
 		// @formatter:off
 		assertThat(testResolverRegistryMock.testDescriptors)
-                .containsOnly(descriptorForParentAndNestedClass(
+                .containsOnly(resolveNestedClass(
                         testClassDescriptor, NestingTestClass.NestedInnerClass.class))
                 .doesNotHaveDuplicates();
         // @formatter:on
@@ -67,7 +67,7 @@ public class NestedMemberClassResolverTests {
 
 	@Test
 	void givenAPackageAndAClassSelector_resolvesTheClass_AndAttachesItToTheExistingTree() {
-		ClassTestDescriptor testClassDescriptor = descriptorForParentAndClass(engineDescriptor, NestingTestClass.class);
+		ClassTestDescriptor testClassDescriptor = resolveClass(engineDescriptor, NestingTestClass.class);
 		engineDescriptor.addChild(testClassDescriptor);
 		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testClassDescriptor;
 
@@ -77,14 +77,14 @@ public class NestedMemberClassResolverTests {
 		// @formatter:off
 		assertThat(engineDescriptor.getChildren()).containsOnly(testClassDescriptor);
 		assertThat(testClassDescriptor.getChildren())
-                .containsOnly(descriptorForParentAndNestedClass(
+                .containsOnly(resolveNestedClass(
                         testClassDescriptor, NestingTestClass.NestedInnerClass.class));
         // @formatter:on
 	}
 
 	@Test
 	void whenNotifiedWithAClassTestDescriptor_resolvesAllNestedClassesInTheClass() throws Exception {
-		ClassTestDescriptor testClassDescriptor = descriptorForParentAndClass(engineDescriptor, NestingTestClass.class);
+		ClassTestDescriptor testClassDescriptor = resolveClass(engineDescriptor, NestingTestClass.class);
 		engineDescriptor.addChild(testClassDescriptor);
 		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testClassDescriptor;
 
@@ -92,7 +92,7 @@ public class NestedMemberClassResolverTests {
 
 		// @formatter:off
 		assertThat(testResolverRegistryMock.testDescriptors)
-                .containsOnly(descriptorForParentAndNestedClass(
+                .containsOnly(resolveNestedClass(
                         testClassDescriptor, NestingTestClass.NestedInnerClass.class))
                 .doesNotHaveDuplicates();
         // @formatter:on
@@ -100,7 +100,7 @@ public class NestedMemberClassResolverTests {
 
 	@Test
 	void whenNotifiedWithANestedClassTestDescriptor_resolvesAllNestedClassesInTheClass() throws Exception {
-		NestedClassTestDescriptor nestedTestClassDescriptor = descriptorForParentAndNestedClass(engineDescriptor,
+		NestedClassTestDescriptor nestedTestClassDescriptor = resolveNestedClass(engineDescriptor,
 			NestingTestClass.NestedInnerClass.class);
 		engineDescriptor.addChild(nestedTestClassDescriptor);
 		testResolverRegistryMock.fetchParentFunction = (selector, root) -> nestedTestClassDescriptor;
@@ -109,7 +109,7 @@ public class NestedMemberClassResolverTests {
 
 		// @formatter:off
 		assertThat(testResolverRegistryMock.testDescriptors)
-                .containsOnly(descriptorForParentAndNestedClass(
+                .containsOnly(resolveNestedClass(
                         nestedTestClassDescriptor, NestingTestClass.NestedInnerClass.DoubleNestedInnerClass.class))
                 .doesNotHaveDuplicates();
         // @formatter:on

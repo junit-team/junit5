@@ -12,8 +12,8 @@ package org.junit.gen5.engine.junit5.resolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
-import static org.junit.gen5.engine.junit5.resolver.EngineResolver.descriptorForEngine;
-import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForParentAndName;
+import static org.junit.gen5.engine.junit5.resolver.EngineResolver.resolveEngine;
+import static org.junit.gen5.engine.junit5.resolver.PackageResolver.resolvePackage;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.Optional;
@@ -50,17 +50,17 @@ public class PackageResolverTests {
 		testResolverRegistryMock = new TestResolverRegistryMock();
 
 		TestEngineStub testEngine = new TestEngineStub();
-		engineDescriptor = descriptorForEngine(testEngine);
-		packageLevel1 = descriptorForParentAndName(engineDescriptor, "org");
-		packageLevel2 = descriptorForParentAndName(packageLevel1, "org.junit");
-		packageLevel3 = descriptorForParentAndName(packageLevel2, "org.junit.gen5");
-		packageLevel4 = descriptorForParentAndName(packageLevel3, "org.junit.gen5.engine");
-		packageLevel5 = descriptorForParentAndName(packageLevel4, "org.junit.gen5.engine.junit5");
-		packageLevel6 = descriptorForParentAndName(packageLevel5, "org.junit.gen5.engine.junit5.resolver");
-		packageLevel7 = descriptorForParentAndName(packageLevel6, testPackageName);
-		packageLevel8a = descriptorForParentAndName(packageLevel7, testPackageName + ".subpackage1");
-		packageLevel8b = descriptorForParentAndName(packageLevel7, testPackageName + ".subpackage2");
-		packageLevel8c = descriptorForParentAndName(packageLevel7, testPackageName + ".notatestclass");
+		engineDescriptor = resolveEngine(testEngine);
+		packageLevel1 = resolvePackage(engineDescriptor, "org");
+		packageLevel2 = resolvePackage(packageLevel1, "org.junit");
+		packageLevel3 = resolvePackage(packageLevel2, "org.junit.gen5");
+		packageLevel4 = resolvePackage(packageLevel3, "org.junit.gen5.engine");
+		packageLevel5 = resolvePackage(packageLevel4, "org.junit.gen5.engine.junit5");
+		packageLevel6 = resolvePackage(packageLevel5, "org.junit.gen5.engine.junit5.resolver");
+		packageLevel7 = resolvePackage(packageLevel6, testPackageName);
+		packageLevel8a = resolvePackage(packageLevel7, testPackageName + ".subpackage1");
+		packageLevel8b = resolvePackage(packageLevel7, testPackageName + ".subpackage2");
+		packageLevel8c = resolvePackage(packageLevel7, testPackageName + ".notatestclass");
 
 		resolver = new PackageResolver();
 		resolver.bindTestResolveryRegistry(testResolverRegistryMock);

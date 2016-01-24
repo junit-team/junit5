@@ -37,18 +37,12 @@ import org.junit.gen5.engine.junit5.descriptor.PackageTestDescriptor;
 public class ClassResolver extends JUnit5TestResolver {
 	private static final String RESOLVER_ID = "class";
 
-	public static ClassTestDescriptor descriptorForParentAndClass(TestDescriptor parent, Class<?> testClass) {
+	public static ClassTestDescriptor resolveClass(TestDescriptor parent, Class<?> testClass) {
 		String packageName = testClass.getPackage().getName();
 		String fullQualifiedClassName = testClass.getName();
 		String className = fullQualifiedClassName.substring(packageName.length() + 1);
-		String uniqueId = parent.getUniqueId() + "/[class:" + className + "]";
-
-		if (parent.findByUniqueId(uniqueId).isPresent()) {
-			return (ClassTestDescriptor) parent.findByUniqueId(uniqueId).get();
-		}
-		else {
-			return new ClassTestDescriptor(uniqueId, testClass);
-		}
+		return fetchFromTreeOrCreateNew(parent, UniqueId.from(RESOLVER_ID, className),
+			(uniqueId -> new ClassTestDescriptor(uniqueId.toString(), testClass)));
 	}
 
 	@Override
@@ -90,7 +84,7 @@ public class ClassResolver extends JUnit5TestResolver {
 			Optional<Class<?>> testClass = ReflectionUtils.loadClass(String.format("%s.%s", packageName, className));
 
 			if (testClass.isPresent()) {
-				TestDescriptor next = descriptorForParentAndClass(parent, testClass.get());
+				TestDescriptor next = resolveClass(parent, testClass.get());
 				parent.addChild(next);
 				getTestResolverRegistry().resolveUniqueId(next, uniqueId.getRemainder(), discoveryRequest);
 			}
@@ -136,7 +130,7 @@ public class ClassResolver extends JUnit5TestResolver {
 			EngineDiscoveryRequest discoveryRequest) {
 		// @formatter:off
         return findAllClassesInPackageOnly(packageName, this::isTopLevelTestClass).stream()
-                .map(testClass -> descriptorForParentAndClass(parent, testClass))
+                .map(testClass -> resolveClass(parent, testClass))
                 .peek(parent::addChild)
                 .collect(toList());
         // @formatter:on
@@ -154,7 +148,7 @@ public class ClassResolver extends JUnit5TestResolver {
 	}
 
 	private Optional<TestDescriptor> getTestDescriptor(TestDescriptor parent, Class<?> testClass) {
-		TestDescriptor child = descriptorForParentAndClass(parent, testClass);
+		TestDescriptor child = resolveClass(parent, testClass);
 		parent.addChild(child);
 		return Optional.of(child);
 	}

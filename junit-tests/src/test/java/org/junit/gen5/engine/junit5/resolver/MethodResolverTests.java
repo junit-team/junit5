@@ -14,10 +14,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.commons.util.ReflectionUtils.findMethod;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
-import static org.junit.gen5.engine.junit5.resolver.ClassResolver.descriptorForParentAndClass;
-import static org.junit.gen5.engine.junit5.resolver.EngineResolver.descriptorForEngine;
-import static org.junit.gen5.engine.junit5.resolver.MethodResolver.descriptorForParentAndMethod;
-import static org.junit.gen5.engine.junit5.resolver.PackageResolver.descriptorForParentAndName;
+import static org.junit.gen5.engine.junit5.resolver.ClassResolver.resolveClass;
+import static org.junit.gen5.engine.junit5.resolver.EngineResolver.resolveEngine;
+import static org.junit.gen5.engine.junit5.resolver.MethodResolver.resolveMethod;
+import static org.junit.gen5.engine.junit5.resolver.PackageResolver.resolvePackage;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.Method;
@@ -43,7 +43,7 @@ public class MethodResolverTests {
 		testResolverRegistryMock = new TestResolverRegistryMock();
 
 		TestEngineStub testEngine = new TestEngineStub();
-		engineDescriptor = descriptorForEngine(testEngine);
+		engineDescriptor = resolveEngine(testEngine);
 
 		resolver = new MethodResolver();
 		resolver.bindTestResolveryRegistry(testResolverRegistryMock);
@@ -60,9 +60,9 @@ public class MethodResolverTests {
 		Class<SingleTestClass> testClass = SingleTestClass.class;
 		Method testMethod = findMethod(testClass, "test1").get();
 
-		PackageTestDescriptor packageDescriptor = descriptorForParentAndName(engineDescriptor, testPackageName);
+		PackageTestDescriptor packageDescriptor = resolvePackage(engineDescriptor, testPackageName);
 		engineDescriptor.addChild(packageDescriptor);
-		ClassTestDescriptor testClassDescriptor = descriptorForParentAndClass(engineDescriptor, testClass);
+		ClassTestDescriptor testClassDescriptor = resolveClass(engineDescriptor, testClass);
 		packageDescriptor.addChild(testClassDescriptor);
 
 		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testClassDescriptor;
@@ -72,7 +72,7 @@ public class MethodResolverTests {
 		// @formatter:off
         assertThat(testResolverRegistryMock.testDescriptors)
                 .containsOnly(
-                        descriptorForParentAndMethod(testClassDescriptor, testClass, testMethod)
+                        resolveMethod(testClassDescriptor, testClass, testMethod)
                 )
                 .doesNotHaveDuplicates();
         // @formatter:on
@@ -84,9 +84,9 @@ public class MethodResolverTests {
 		Method testMethod1 = findMethod(testClass, "test1").get();
 		Method testMethod2 = findMethod(testClass, "test2").get();
 
-		PackageTestDescriptor packageDescriptor = descriptorForParentAndName(engineDescriptor, testPackageName);
+		PackageTestDescriptor packageDescriptor = resolvePackage(engineDescriptor, testPackageName);
 		engineDescriptor.addChild(packageDescriptor);
-		ClassTestDescriptor testClassDescriptor = descriptorForParentAndClass(engineDescriptor, testClass);
+		ClassTestDescriptor testClassDescriptor = resolveClass(engineDescriptor, testClass);
 		packageDescriptor.addChild(testClassDescriptor);
 
 		testResolverRegistryMock.fetchParentFunction = (selector, root) -> testClassDescriptor;
@@ -96,8 +96,8 @@ public class MethodResolverTests {
 		// @formatter:off
         assertThat(testResolverRegistryMock.testDescriptors)
                 .containsOnly(
-                        descriptorForParentAndMethod(testClassDescriptor, testClass, testMethod1),
-                        descriptorForParentAndMethod(testClassDescriptor, testClass, testMethod2)
+                        resolveMethod(testClassDescriptor, testClass, testMethod1),
+                        resolveMethod(testClassDescriptor, testClass, testMethod2)
                 )
                 .doesNotHaveDuplicates();
         // @formatter:on
