@@ -59,4 +59,18 @@ class UniqueIdSelectorResolverTests {
 		assertEquals("Unresolvable Unique ID (junit4): Cannot resolve the engine's unique ID", logRecord.getMessage());
 	}
 
+	@Test
+	void ignoresUniqueIdsOfOtherEngines() {
+		String uniqueId = "someEngine:foo";
+		RecordCollectingLogger logger = new RecordCollectingLogger();
+		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueId);
+		TestClassCollector collector = new TestClassCollector();
+
+		new UniqueIdSelectorResolver(logger).resolve(selector, collector);
+
+		Set<TestClassRequest> requests = collector.toRequests(c -> true);
+		assertThat(requests).isEmpty();
+		assertThat(logger.getLogRecords()).isEmpty();
+	}
+
 }
