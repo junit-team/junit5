@@ -12,6 +12,7 @@ package org.junit.gen5.engine.discovery;
 
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.commons.util.ToStringBuilder;
 import org.junit.gen5.engine.DiscoverySelector;
 
 /**
@@ -36,6 +37,27 @@ public class ClassSelector implements DiscoverySelector {
 
 	public Class<?> getTestClass() {
 		return testClass;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		ClassSelector that = (ClassSelector) o;
+		return testClass.equals(that.testClass);
+	}
+
+	@Override
+	public int hashCode() {
+		return testClass.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("testClass", testClass).toString();
 	}
 
 }
