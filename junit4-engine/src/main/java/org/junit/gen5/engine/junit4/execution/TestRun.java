@@ -12,12 +12,14 @@ package org.junit.gen5.engine.junit4.execution;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Stream.concat;
+import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.engine.TestExecutionResult.successful;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -67,20 +69,18 @@ class TestRun {
 	 *
 	 * @param description the {@code Description} to look up
 	 */
-	TestDescriptor lookupTestDescriptor(Description description) {
+	Optional<? extends TestDescriptor> lookupTestDescriptor(Description description) {
 		List<JUnit4TestDescriptor> descriptors = descriptionToDescriptors.get(description);
 		if (descriptors == null) {
-			// TODO #40 Handle unknown description
-			return null;
+			return Optional.empty();
 		}
 		if (descriptors.size() == 1) {
-			return descriptors.get(0);
+			return Optional.of(getOnlyElement(descriptors));
 		}
 		// @formatter:off
 		return descriptors.stream()
 				.filter(testDescriptor -> description == testDescriptor.getDescription())
-				.findFirst()
-				.orElseGet(() -> descriptors.get(0));
+				.findFirst();
 		// @formatter:on
 	}
 

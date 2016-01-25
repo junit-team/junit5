@@ -11,11 +11,23 @@
 package org.junit.gen5.engine.junit4;
 
 import static org.assertj.core.api.Assertions.allOf;
-import static org.junit.gen5.engine.ExecutionEventConditions.*;
+import static org.junit.gen5.engine.ExecutionEventConditions.abortedWithReason;
+import static org.junit.gen5.engine.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.gen5.engine.ExecutionEventConditions.container;
+import static org.junit.gen5.engine.ExecutionEventConditions.engine;
+import static org.junit.gen5.engine.ExecutionEventConditions.event;
+import static org.junit.gen5.engine.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.gen5.engine.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.gen5.engine.ExecutionEventConditions.skippedWithReason;
+import static org.junit.gen5.engine.ExecutionEventConditions.started;
+import static org.junit.gen5.engine.ExecutionEventConditions.test;
+import static org.junit.gen5.engine.ExecutionEventConditions.uniqueIdSubstring;
 import static org.junit.gen5.engine.TestExecutionResultConditions.isA;
 import static org.junit.gen5.engine.TestExecutionResultConditions.message;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
+import static org.junit.runner.Description.createSuiteDescription;
+import static org.junit.runner.Description.createTestDescription;
 
 import java.util.List;
 
@@ -24,8 +36,33 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ExecutionEvent;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.junit4.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
-import org.junit.gen5.engine.junit4.samples.junit4.*;
-import org.junit.gen5.launcher.*;
+import org.junit.gen5.engine.junit4.samples.junit4.EnclosedJUnit4TestCase;
+import org.junit.gen5.engine.junit4.samples.junit4.IgnoredJUnit4TestCase;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteOfSuiteWithIgnoredJUnit4TestCase;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithErrorInBeforeClass;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithExceptionThrowingRunner;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithIgnoredJUnit4TestCase;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithJUnit4TestCaseWithErrorInBeforeClass;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithAssumptionFailureInBeforeClass;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithErrorInAfterClass;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithErrorInBeforeClass;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithExceptionThrowingRunner;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithOverloadedMethod;
+import org.junit.gen5.engine.junit4.samples.junit4.MalformedJUnit4TestCase;
+import org.junit.gen5.engine.junit4.samples.junit4.ParameterizedTestCase;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
+import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
+import org.junit.runner.Description;
+import org.junit.runner.RunWith;
+import org.junit.runner.Runner;
+import org.junit.runner.notification.RunNotifier;
 
 class JUnit4TestEngineExecutionTests {
 
@@ -341,6 +378,82 @@ class JUnit4TestEngineExecutionTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass), finishedWithFailure()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	public static class MisbehavingSuiteRunner extends Runner {
+
+		private final Class<?> testClass;
+
+		public MisbehavingSuiteRunner(Class<?> testClass) {
+			this.testClass = testClass;
+		}
+
+		@Override
+		public Description getDescription() {
+			Description suiteDescription = createSuiteDescription(testClass);
+			suiteDescription.addChild(createTestDescription(testClass, "someTest"));
+			return suiteDescription;
+		}
+
+		@Override
+		public void run(RunNotifier notifier) {
+			notifier.fireTestStarted(createTestDescription(testClass, "doesNotExist"));
+		}
+
+	}
+
+	@Test
+	void ignoreEventsForUnknownDescriptionsByMisbehavingSuiteRunner() {
+		@RunWith(MisbehavingSuiteRunner.class)
+		class TestClass {
+
+		}
+		Class<?> testClass = TestClass.class;
+
+		List<ExecutionEvent> executionEvents = execute(testClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	public static class MisbehavingChildlessRunner extends Runner {
+
+		private final Class<?> testClass;
+
+		public MisbehavingChildlessRunner(Class<?> testClass) {
+			this.testClass = testClass;
+		}
+
+		@Override
+		public Description getDescription() {
+			return createSuiteDescription(testClass);
+		}
+
+		@Override
+		public void run(RunNotifier notifier) {
+			notifier.fireTestStarted(createTestDescription(testClass, "doesNotExist"));
+		}
+
+	}
+
+	@Test
+	void ignoreEventsForUnknownDescriptionsByMisbehavingChildlessRunner() {
+		@RunWith(MisbehavingChildlessRunner.class)
+		class TestClass {
+
+		}
+		Class<?> testClass = TestClass.class;
+
+		List<ExecutionEvent> executionEvents = execute(testClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(uniqueIdSubstring(testClass.getName()), started()), //
+			event(uniqueIdSubstring(testClass.getName()), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 

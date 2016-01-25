@@ -17,6 +17,7 @@ import org.junit.Ignore;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -42,14 +43,13 @@ class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testIgnored(Description description) {
-		TestDescriptor testDescriptor = testRun.lookupTestDescriptor(description);
-		String reason = determineReasonForIgnoredTest(description);
-		testIgnored(testDescriptor, reason);
+		testRun.lookupTestDescriptor(description).ifPresent(
+			testDescriptor -> testIgnored(testDescriptor, determineReasonForIgnoredTest(description)));
 	}
 
 	@Override
 	public void testStarted(Description description) {
-		testStarted(testRun.lookupTestDescriptor(description));
+		testRun.lookupTestDescriptor(description).ifPresent(this::testStarted);
 	}
 
 	@Override
@@ -64,18 +64,27 @@ class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testFinished(Description description) {
-		testFinished(testRun.lookupTestDescriptor(description));
+		testRun.lookupTestDescriptor(description).ifPresent(this::testFinished);
 	}
 
 	@Override
 	public void testRunFinished(Result result) {
-		if (testRun.isNotSkipped(testRun.getRunnerTestDescriptor())) {
-			fireExecutionFinished(testRun.getRunnerTestDescriptor());
+		RunnerTestDescriptor runnerTestDescriptor = testRun.getRunnerTestDescriptor();
+		if (testRun.isNotSkipped(runnerTestDescriptor)) {
+			if (testRun.isNotStarted(runnerTestDescriptor)) {
+				fireExecutionStarted(runnerTestDescriptor);
+			}
+			fireExecutionFinished(runnerTestDescriptor);
 		}
 	}
 
 	private void handleFailure(Failure failure, Function<Throwable, TestExecutionResult> resultCreator) {
-		TestDescriptor testDescriptor = testRun.lookupTestDescriptor(failure.getDescription());
+		testRun.lookupTestDescriptor(failure.getDescription()).ifPresent(
+			testDescriptor -> handleFailure(failure, resultCreator, testDescriptor));
+	}
+
+	private void handleFailure(Failure failure, Function<Throwable, TestExecutionResult> resultCreator,
+			TestDescriptor testDescriptor) {
 		TestExecutionResult result = resultCreator.apply(failure.getException());
 		testRun.storeResult(testDescriptor, result);
 		if (testDescriptor.isContainer() && testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)) {
