@@ -29,11 +29,7 @@ public class JUnit4DiscoveryRequestResolver {
 	private final EngineDescriptor engineDescriptor;
 	private final Logger logger;
 
-	public JUnit4DiscoveryRequestResolver(EngineDescriptor engineDescriptor) {
-		this(engineDescriptor, Logger.getLogger(JUnit4DiscoveryRequestResolver.class.getName()));
-	}
-
-	JUnit4DiscoveryRequestResolver(EngineDescriptor engineDescriptor, Logger logger) {
+	public JUnit4DiscoveryRequestResolver(EngineDescriptor engineDescriptor, Logger logger) {
 		this.engineDescriptor = engineDescriptor;
 		this.logger = logger;
 	}
@@ -58,7 +54,7 @@ public class JUnit4DiscoveryRequestResolver {
 			new PackageNameSelectorResolver(), //
 			new ClassSelectorResolver(), //
 			new MethodSelectorResolver(), //
-			new UniqueIdSelectorResolver()//
+			new UniqueIdSelectorResolver(logger)//
 		);
 	}
 
@@ -80,6 +76,6 @@ public class JUnit4DiscoveryRequestResolver {
 	}
 
 	private void populateEngineDescriptor(Set<TestClassRequest> requests) {
-		new TestClassRequestResolver(engineDescriptor).populateEngineDescriptorFrom(requests);
+		new TestClassRequestResolver(engineDescriptor, logger).populateEngineDescriptorFrom(requests);
 	}
 }

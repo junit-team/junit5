@@ -25,10 +25,6 @@ class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelecto
 
 	private final Logger logger;
 
-	UniqueIdSelectorResolver() {
-		this(Logger.getLogger(UniqueIdSelectorResolver.class.getName()));
-	}
-
 	UniqueIdSelectorResolver(Logger logger) {
 		super(UniqueIdSelector.class);
 		this.logger = logger;

@@ -37,10 +37,6 @@ class TestClassRequestResolver {
 	private final TestDescriptor engineDescriptor;
 	private final Logger logger;
 
-	TestClassRequestResolver(TestDescriptor engineDescriptor) {
-		this(engineDescriptor, Logger.getLogger(TestClassRequestResolver.class.getName()));
-	}
-
 	TestClassRequestResolver(TestDescriptor engineDescriptor, Logger logger) {
 		this.engineDescriptor = engineDescriptor;
 		this.logger = logger;

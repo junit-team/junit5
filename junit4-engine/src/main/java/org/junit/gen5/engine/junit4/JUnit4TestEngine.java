@@ -13,6 +13,8 @@ package org.junit.gen5.engine.junit4;
 import static org.junit.gen5.engine.TestExecutionResult.successful;
 import static org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor.ENGINE_ID;
 
+import java.util.logging.Logger;
+
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
@@ -25,6 +27,8 @@ import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
 public class JUnit4TestEngine implements TestEngine {
 
+	private static final Logger LOG = Logger.getLogger(JUnit4TestEngine.class.getName());
+
 	@Override
 	public String getId() {
 		return ENGINE_ID;
@@ -33,7 +37,7 @@ public class JUnit4TestEngine implements TestEngine {
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest) {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(ENGINE_ID, "JUnit 4");
-		new JUnit4DiscoveryRequestResolver(engineDescriptor).resolve(discoveryRequest);
+		new JUnit4DiscoveryRequestResolver(engineDescriptor, LOG).resolve(discoveryRequest);
 		return engineDescriptor;
 	}
 
