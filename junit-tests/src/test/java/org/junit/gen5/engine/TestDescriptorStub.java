@@ -30,11 +30,11 @@ public final class TestDescriptorStub extends AbstractTestDescriptor {
 
 	@Override
 	public boolean isTest() {
-		return false;
+		return getChildren().isEmpty();
 	}
 
 	@Override
 	public boolean isContainer() {
-		return false;
+		return !isTest();
 	}
 }

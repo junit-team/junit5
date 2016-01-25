@@ -10,7 +10,8 @@
 
 package org.junit.gen5.junit4.runner;
 
-import static org.junit.gen5.engine.TestExecutionResult.Status.*;
+import static org.junit.gen5.engine.TestExecutionResult.Status.ABORTED;
+import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
 
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestExecutionResult.Status;
@@ -40,6 +41,15 @@ class JUnit5RunnerListener implements TestExecutionListener {
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
+		if (testIdentifier.isTest()) {
+			fireTestIgnored(testIdentifier);
+		}
+		else {
+			testTree.getTestsInSubtree(testIdentifier).forEach(this::fireTestIgnored);
+		}
+	}
+
+	private void fireTestIgnored(TestIdentifier testIdentifier) {
 		Description description = findJUnit4Description(testIdentifier);
 		this.notifier.fireTestIgnored(description);
 	}

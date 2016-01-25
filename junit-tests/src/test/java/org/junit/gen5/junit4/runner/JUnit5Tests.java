@@ -20,21 +20,28 @@ import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assumptions.assumeFalse;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.gen5.engine.TestExecutionResult.successful;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.runner.Description.createSuiteDescription;
 import static org.junit.runner.Description.createTestDescription;
 import static org.junit.runner.manipulation.Filter.matchMethodDescription;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.EngineExecutionListener;
+import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestDescriptorStub;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.discovery.ClassSelector;
@@ -302,6 +309,34 @@ class JUnit5Tests {
 			inOrder.verify(runListener).testIgnored(testDescription("dummy:ignoredTest"));
 
 			inOrder.verifyNoMoreInteractions();
+		}
+
+		@Test
+		void reportsIgnoredEventsForLeafsWhenContainerIsSkipped() throws Exception {
+			TestDescriptor engineDescriptor = new TestDescriptorStub("engine");
+			TestDescriptor container = new TestDescriptorStub("container");
+			container.addChild(new TestDescriptorStub("leaf"));
+			engineDescriptor.addChild(container);
+
+			TestEngine engine = mock(TestEngine.class);
+			when(engine.discover(any())).thenReturn(engineDescriptor);
+			doAnswer(invocation -> {
+				ExecutionRequest request = invocation.getArgumentAt(0, ExecutionRequest.class);
+				EngineExecutionListener listener = request.getEngineExecutionListener();
+				listener.executionStarted(engineDescriptor);
+				listener.executionSkipped(container, "deliberately skipped container");
+				listener.executionFinished(engineDescriptor, successful());
+				return null;
+			}).when(engine).execute(any());
+
+			RunListener runListener = mock(RunListener.class);
+
+			RunNotifier notifier = new RunNotifier();
+			notifier.addListener(runListener);
+			new JUnit5(TestClass.class, createLauncher(engine)).run(notifier);
+
+			verify(runListener).testIgnored(testDescription("leaf"));
+			verifyNoMoreInteractions(runListener);
 		}
 
 	}

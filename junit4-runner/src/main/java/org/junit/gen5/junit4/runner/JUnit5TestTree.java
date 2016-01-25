@@ -10,9 +10,11 @@
 
 package org.junit.gen5.junit4.runner;
 
+import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -66,12 +68,20 @@ class JUnit5TestTree {
 
 	private Description createJUnit4Description(TestIdentifier identifier, TestPlan testPlan) {
 		if (identifier.isTest()) {
-			return Description.createTestDescription(testPlan.getParent(identifier).get().getDisplayName(),
+			return Description.createTestDescription(testPlan.getParent(identifier).orElse(identifier).getDisplayName(),
 				identifier.getDisplayName(), identifier.getUniqueId());
 		}
 		else {
 			return Description.createSuiteDescription(identifier.getDisplayName(), identifier.getUniqueId());
 		}
+	}
+
+	Set<TestIdentifier> getTestsInSubtree(TestIdentifier ancestor) {
+		// @formatter:off
+		return plan.getDescendants(ancestor).stream()
+				.filter(TestIdentifier::isTest)
+				.collect(toCollection(LinkedHashSet::new));
+		// @formatter:on
 	}
 
 	Set<TestIdentifier> getFilteredLeaves(Filter filter) {
