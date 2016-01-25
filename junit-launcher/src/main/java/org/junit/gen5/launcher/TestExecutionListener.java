@@ -80,7 +80,9 @@ public interface TestExecutionListener {
 	 * Called when the execution of a leaf or subtree of the {@link TestPlan}
 	 * has been skipped.
 	 *
-	 * <p>The {@link TestIdentifier} may represent a test or a container.
+	 * <p>The {@link TestIdentifier} may represent a test or a container. In
+	 * the case of a container, no listener methods will be called for any of
+	 * its descendants.
 	 *
 	 * <p>A skipped test or subtree of tests will never be reported as
 	 * {@linkplain #executionStarted started} or
