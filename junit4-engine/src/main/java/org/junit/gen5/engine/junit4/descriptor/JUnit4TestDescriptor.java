@@ -11,10 +11,15 @@
 package org.junit.gen5.engine.junit4.descriptor;
 
 import static java.util.Arrays.stream;
-import static org.junit.gen5.engine.junit4.descriptor.JavaSourceExtractor.toJavaSource;
+import static java.util.function.Predicate.isEqual;
+import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.gen5.commons.util.FunctionUtils.where;
+import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,6 +29,7 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
+import org.junit.gen5.engine.support.descriptor.JavaSource;
 import org.junit.runner.Description;
 
 /**
@@ -93,6 +99,26 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 	private Optional<Class<?>[]> getDeclaredCategories() {
 		Category annotation = description.getAnnotation(Category.class);
 		return Optional.ofNullable(annotation).map(Category::value);
+	}
+
+	private static Optional<JavaSource> toJavaSource(Description description) {
+		Class<?> testClass = description.getTestClass();
+		if (testClass != null) {
+			String methodName = description.getMethodName();
+			if (methodName != null) {
+				return Optional.of(toJavaMethodSource(testClass, methodName));
+			}
+			return Optional.of(new JavaSource(testClass));
+		}
+		return Optional.empty();
+	}
+
+	private static JavaSource toJavaMethodSource(Class<?> testClass, String methodName) {
+		List<Method> methods = findMethods(testClass, where(Method::getName, isEqual(methodName)));
+		if (methods.size() == 1) {
+			return new JavaSource(getOnlyElement(methods));
+		}
+		return new JavaSource(testClass);
 	}
 
 }
