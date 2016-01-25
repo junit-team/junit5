@@ -46,7 +46,7 @@ public class JUnit4TestEngine implements TestEngine {
 		EngineExecutionListener engineExecutionListener = request.getEngineExecutionListener();
 		TestDescriptor engineTestDescriptor = request.getRootTestDescriptor();
 		engineExecutionListener.executionStarted(engineTestDescriptor);
-		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
+		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener, LOG);
 		executeAllChildren(runnerExecutor, engineTestDescriptor);
 		engineExecutionListener.executionFinished(engineTestDescriptor, successful());
 	}

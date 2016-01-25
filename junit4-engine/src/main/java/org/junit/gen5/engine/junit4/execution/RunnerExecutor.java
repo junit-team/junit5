@@ -12,6 +12,8 @@ package org.junit.gen5.engine.junit4.execution;
 
 import static org.junit.gen5.engine.TestExecutionResult.failed;
 
+import java.util.logging.Logger;
+
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
@@ -20,13 +22,15 @@ import org.junit.runner.JUnitCore;
 public class RunnerExecutor {
 
 	private final EngineExecutionListener engineExecutionListener;
+	private final Logger logger;
 
-	public RunnerExecutor(EngineExecutionListener engineExecutionListener) {
+	public RunnerExecutor(EngineExecutionListener engineExecutionListener, Logger logger) {
 		this.engineExecutionListener = engineExecutionListener;
+		this.logger = logger;
 	}
 
 	public void execute(RunnerTestDescriptor runnerTestDescriptor) {
-		TestRun testRun = new TestRun(runnerTestDescriptor);
+		TestRun testRun = new TestRun(runnerTestDescriptor, logger);
 		JUnitCore core = new JUnitCore();
 		core.addListener(new RunListenerAdapter(testRun, engineExecutionListener));
 		try {

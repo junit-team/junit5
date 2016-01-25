@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit4.execution;
 
+import static java.lang.String.format;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Stream.concat;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.junit.gen5.engine.TestDescriptor;
@@ -32,6 +34,7 @@ import org.junit.runner.Description;
 class TestRun {
 
 	private final RunnerTestDescriptor runnerTestDescriptor;
+	private final Logger logger;
 	private final Set<? extends TestDescriptor> runnerDescendants;
 	private final Map<Description, List<JUnit4TestDescriptor>> descriptionToDescriptors;
 	private final Map<TestDescriptor, TestExecutionResult> executionResults = new LinkedHashMap<>();
@@ -39,8 +42,9 @@ class TestRun {
 	private final Set<TestDescriptor> startedDescriptors = new LinkedHashSet<>();
 	private final Set<TestDescriptor> finishedDescriptors = new LinkedHashSet<>();
 
-	TestRun(RunnerTestDescriptor runnerTestDescriptor) {
+	TestRun(RunnerTestDescriptor runnerTestDescriptor, Logger logger) {
 		this.runnerTestDescriptor = runnerTestDescriptor;
+		this.logger = logger;
 		runnerDescendants = runnerTestDescriptor.allDescendants();
 		// @formatter:off
 		descriptionToDescriptors = concat(Stream.of(runnerTestDescriptor), runnerDescendants.stream())
@@ -70,6 +74,18 @@ class TestRun {
 	 * @param description the {@code Description} to look up
 	 */
 	Optional<? extends TestDescriptor> lookupTestDescriptor(Description description) {
+		Optional<? extends TestDescriptor> testDescriptor = lookupInternal(description);
+		if (!testDescriptor.isPresent()) {
+			logger.warning(
+				() -> format("Runner %s on class %s reported event for unknown Description: %s. It will be ignored.",
+					runnerTestDescriptor.getRunner().getClass().getName(), //
+					runnerTestDescriptor.getTestClass().getName(), //
+					description));
+		}
+		return testDescriptor;
+	}
+
+	private Optional<? extends TestDescriptor> lookupInternal(Description description) {
 		List<JUnit4TestDescriptor> descriptors = descriptionToDescriptors.get(description);
 		if (descriptors == null) {
 			return Optional.empty();
