@@ -523,6 +523,23 @@ class JUnit4TestEngineDiscoveryTests {
 		assertYieldsNoDescriptors(request);
 	}
 
+	@Test
+	void resolvesClassForMethodSelectorForClassWithNonFilterableRunner() throws Exception {
+		Class<?> testClass = IgnoredJUnit4TestCase.class;
+		// @formatter:off
+		TestDiscoveryRequest request = request()
+				.select(MethodSelector.forMethod(testClass, testClass.getMethod("test")))
+				.build();
+		// @formatter:on
+
+		TestDescriptor engineDescriptor = engine.discover(request);
+
+		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertEquals(testClass.getName(), runnerDescriptor.getDisplayName());
+		assertEquals("junit4:" + testClass.getName(), runnerDescriptor.getUniqueId());
+		assertThat(runnerDescriptor.getChildren()).isEmpty();
+	}
+
 	private TestDescriptor findChildByDisplayName(TestDescriptor runnerDescriptor, String displayName) {
 		// @formatter:off
 		Set<? extends TestDescriptor> children = runnerDescriptor.getChildren();
