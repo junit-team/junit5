@@ -18,6 +18,7 @@ import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,14 +41,8 @@ public class MethodResolver extends JUnit5TestResolver {
 	private final IsTestMethod isTestMethod = new IsTestMethod();
 
 	public static MethodTestDescriptor resolveMethod(TestDescriptor parent, Class<?> testClass, Method testMethod) {
-
 		return fetchFromTreeOrCreateNew(parent, UniqueId.from(RESOLVER_ID, getSignatureFromMethod(testMethod)),
 			(uniqueId) -> new MethodTestDescriptor(uniqueId.toString(), testClass, testMethod));
-	}
-
-	@Override
-	public void bindTestResolveryRegistry(TestResolverRegistry testResolverRegistry) {
-		super.bindTestResolveryRegistry(testResolverRegistry);
 	}
 
 	@Override
@@ -55,40 +50,36 @@ public class MethodResolver extends JUnit5TestResolver {
 		Preconditions.notNull(parent, "parent must not be null!");
 		Preconditions.notNull(discoveryRequest, "discoveryRequest must not be null!");
 
+		List<TestDescriptor> testDescriptors = new LinkedList<>();
 		if (parent.isRoot()) {
-			resolveMethodsFromSelectors(parent, discoveryRequest);
+			testDescriptors.addAll(resolveMethodsFromSelectors(parent, discoveryRequest));
 		}
 		else if (parent instanceof ClassTestDescriptor) {
 			Class<?> testClass = ((ClassTestDescriptor) parent).getTestClass();
-			resolveTestMethodsInClasses(testClass, parent, discoveryRequest);
+			testDescriptors.addAll(resolveTestMethodsInClasses(testClass, parent, discoveryRequest));
 		}
+		notifyForAll(testDescriptors, discoveryRequest);
 	}
 
-	private void resolveMethodsFromSelectors(TestDescriptor root, EngineDiscoveryRequest discoveryRequest) {
-		List<MethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
-
-		for (MethodSelector methodSelector : methodSelectors) {
-			DiscoverySelector selector = forClass(methodSelector.getTestClass());
-			TestDescriptor parent = getTestResolverRegistry().fetchParent(selector, root);
-			MethodTestDescriptor child = resolveMethod(parent, methodSelector.getTestClass(),
-				methodSelector.getTestMethod());
-			parent.addChild(child);
-			getTestResolverRegistry().notifyResolvers(child, discoveryRequest);
-		}
-	}
-
-	private void resolveTestMethodsInClasses(Class<?> testClass, TestDescriptor parent,
+	private List<TestDescriptor> resolveMethodsFromSelectors(TestDescriptor root,
 			EngineDiscoveryRequest discoveryRequest) {
 		// @formatter:off
-        List<MethodTestDescriptor> testMethods = findMethods(testClass, isTestMethod::test, HierarchyDown).stream()
+		return discoveryRequest.getSelectorsByType(MethodSelector.class).stream()
+				.map(methodSelector -> this.fetchBySelector(methodSelector, root))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.collect(toList());
+		// @formatter:on
+	}
+
+	private List<MethodTestDescriptor> resolveTestMethodsInClasses(Class<?> testClass, TestDescriptor parent,
+			EngineDiscoveryRequest discoveryRequest) {
+		// @formatter:off
+        return findMethods(testClass, isTestMethod::test, HierarchyDown).stream()
                 .map(testMethod -> resolveMethod(parent, testClass, testMethod))
+				.peek(parent::addChild)
                 .collect(toList());
         // @formatter:on
-
-		for (MethodTestDescriptor child : testMethods) {
-			parent.addChild(child);
-			getTestResolverRegistry().notifyResolvers(child, discoveryRequest);
-		}
 	}
 
 	@Override
@@ -97,8 +88,7 @@ public class MethodResolver extends JUnit5TestResolver {
 			Class<?> testClass = ((ClassTestDescriptor) parent).getTestClass();
 			Optional<Method> method = getMethodFromSignature(testClass, uniqueId.currentValue());
 			if (method.isPresent()) {
-				TestDescriptor next = resolveMethod(parent, testClass, method.get());
-				parent.addChild(next);
+				TestDescriptor next = getTestDescriptor(parent, testClass, method.get()).get();
 				getTestResolverRegistry().resolveUniqueId(next, uniqueId.getRemainder(), discoveryRequest);
 			}
 		}
@@ -106,7 +96,19 @@ public class MethodResolver extends JUnit5TestResolver {
 
 	@Override
 	public Optional<TestDescriptor> fetchBySelector(DiscoverySelector selector, TestDescriptor root) {
+		if (selector instanceof MethodSelector) {
+			MethodSelector methodSelector = (MethodSelector) selector;
+			DiscoverySelector classSelector = forClass(methodSelector.getTestClass());
+			TestDescriptor parent = getTestResolverRegistry().fetchParent(classSelector, root);
+			return getTestDescriptor(parent, methodSelector.getTestClass(), methodSelector.getTestMethod());
+		}
 		return Optional.empty();
+	}
+
+	private Optional<TestDescriptor> getTestDescriptor(TestDescriptor parent, Class<?> testClass, Method testMethod) {
+		MethodTestDescriptor child = resolveMethod(parent, testClass, testMethod);
+		parent.addChild(child);
+		return Optional.of(child);
 	}
 
 	private static String getSignatureFromMethod(Method testMethod) {

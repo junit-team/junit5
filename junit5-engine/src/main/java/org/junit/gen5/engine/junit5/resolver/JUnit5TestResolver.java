@@ -12,9 +12,11 @@ package org.junit.gen5.engine.junit5.resolver;
 
 import static org.junit.gen5.engine.junit5.resolver.UniqueId.from;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 
 /**
@@ -42,5 +44,11 @@ abstract class JUnit5TestResolver implements TestResolver {
 	@Override
 	public void bindTestResolveryRegistry(TestResolverRegistry testResolverRegistry) {
 		this.testResolverRegistry = testResolverRegistry;
+	}
+
+	protected void notifyForAll(List<TestDescriptor> testDescriptors, EngineDiscoveryRequest discoveryRequest) {
+		for (TestDescriptor testDescriptor : testDescriptors) {
+			getTestResolverRegistry().notifyResolvers(testDescriptor, discoveryRequest);
+		}
 	}
 }

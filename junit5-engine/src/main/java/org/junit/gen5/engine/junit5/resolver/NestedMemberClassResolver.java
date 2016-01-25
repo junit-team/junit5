@@ -54,10 +54,7 @@ public class NestedMemberClassResolver extends JUnit5TestResolver {
 			Class<?> parentTestClass = ((ClassTestDescriptor) parent).getTestClass();
 			classDescriptors.addAll(resolveNestedClassesInClass(parentTestClass, parent, discoveryRequest));
 		}
-
-		for (TestDescriptor child : classDescriptors) {
-			getTestResolverRegistry().notifyResolvers(child, discoveryRequest);
-		}
+		notifyForAll(classDescriptors, discoveryRequest);
 	}
 
 	private List<TestDescriptor> resolveClassesFromSelectors(TestDescriptor root,

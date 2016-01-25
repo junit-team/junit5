@@ -63,10 +63,7 @@ public class ClassResolver extends JUnit5TestResolver {
 			String packageName = ((PackageTestDescriptor) parent).getPackageName();
 			classDescriptors.addAll(resolveTopLevelClassesInPackage(packageName, parent, discoveryRequest));
 		}
-
-		for (TestDescriptor child : classDescriptors) {
-			getTestResolverRegistry().notifyResolvers(child, discoveryRequest);
-		}
+		notifyForAll(classDescriptors, discoveryRequest);
 	}
 
 	private List<TestDescriptor> resolveClassesFromSelectors(TestDescriptor root,
@@ -88,8 +85,7 @@ public class ClassResolver extends JUnit5TestResolver {
 			Optional<Class<?>> testClass = ReflectionUtils.loadClass(String.format("%s.%s", packageName, className));
 
 			if (testClass.isPresent()) {
-				TestDescriptor next = resolveClass(parent, testClass.get());
-				parent.addChild(next);
+				TestDescriptor next = getTestDescriptor(parent, testClass.get()).get();
 				getTestResolverRegistry().resolveUniqueId(next, uniqueId.getRemainder(), discoveryRequest);
 			}
 		}

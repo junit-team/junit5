@@ -51,10 +51,7 @@ public class PackageResolver extends JUnit5TestResolver {
 			String packageName = ((PackageTestDescriptor) parent).getPackageName();
 			packageDescriptors.addAll(resolveSubpackages(parent, packageName));
 		}
-
-		for (TestDescriptor child : packageDescriptors) {
-			getTestResolverRegistry().notifyResolvers(child, discoveryRequest);
-		}
+		notifyForAll(packageDescriptors, discoveryRequest);
 	}
 
 	private List<TestDescriptor> resolvePackagesFromSelectors(TestDescriptor root,
