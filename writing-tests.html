@@ -760,49 +760,90 @@ class FastModelTests {
 <h3 id="nested-tests">Nested Tests</h3>
 <div class="paragraph">
 <p>Nested tests give the test writer more capabilities to express the relationship among
-several group of tests. Here&#8217;s a somewhat contrived example:</p>
+several group of tests. Here&#8217;s an elaborate example:</p>
 </div>
 <div class="listingblock">
+<div class="title">Nested test suite for testing a stack</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">@DisplayName("A stack")
+class TestingAStack {
 
-class MyObjectTest {
-
-    MyObject myObject;
-
-    @BeforeEach
-    void init() {
-        myObject == new MyObject();
-    }
+    Stack&lt;Object&gt; stack;
+    boolean isRun = false;
 
     @Test
-    void testEmptyObject() {}
+    @DisplayName("is instantiated with new Stack()")
+    void isInstantiatedWithNew() {
+        new Stack&lt;Object&gt;();
+    }
 
     @Nested
-    class WithChildren {
+    @DisplayName("when new")
+    class WhenNew {
 
         @BeforeEach
-        void initWithChildren() {
-            myObject.addChild(new MyObject());
-            myObject.addChild(new MyObject());
+        void init() {
+            stack = new Stack&lt;Object&gt;();
         }
 
         @Test
-        void testObjectWithChildren() {}
+        @DisplayName("is empty")
+        void isEmpty() {
+            Assertions.assertTrue(stack.isEmpty());
+        }
 
+        @Test
+        @DisplayName("throws EmptyStackException when popped")
+        void throwsExceptionWhenPopped() {
+            Assertions.expectThrows(EmptyStackException.class, () -&gt; stack.pop());
+        }
+
+        @Test
+        @DisplayName("throws EmptyStackException when peeked")
+        void throwsExceptionWhenPeeked() {
+            Assertions.expectThrows(EmptyStackException.class, () -&gt; stack.peek());
+        }
+
+        @Nested
+        @DisplayName("after pushing an element")
+        class AfterPushing {
+
+            String anElement = "an element";
+
+            @BeforeEach
+            void init() {
+                stack.push(anElement);
+            }
+
+            @Test
+            @DisplayName("it is no longer empty")
+            void isEmpty() {
+                Assertions.assertFalse(stack.isEmpty());
+            }
+
+            @Test
+            @DisplayName("returns the element when popped and is empty")
+            void returnElementWhenPopped() {
+                Assertions.assertEquals(anElement, stack.pop());
+                Assertions.assertTrue(stack.isEmpty());
+            }
+
+            @Test
+            @DisplayName("returns the element when peeked but remains not empty")
+            void returnElementWhenPeeked() {
+                Assertions.assertEquals(anElement, stack.peek());
+                Assertions.assertFalse(stack.isEmpty());
+            }
+        }
     }
-
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Notice that <em>only non-static inner classes</em> can serve as nested tests. Nesting can be
 arbitrarily deep, and those inner classes can be considered as full members of the test
-class family.</p>
-</div>
-<div class="paragraph">
-<p>For a more meaningful example have a look at
-<a href="https://github.com/junit-team/junit5/tree/master/sample-project/src/test/java/com/example/TestingAStack.java">TestingAStack</a>.</p>
+class family with one exception: <code>@BeforeAll</code> and <code>@AfterAll</code> do not work, because Java
+does not allow static members in non-static inner classes.</p>
 </div>
 </div>
 <div class="sect2">
@@ -912,7 +953,7 @@ class MyMockitoTest {
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-25 04:36:01 -05:00
+Last updated 2016-01-26 02:56:09 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
