@@ -10,31 +10,39 @@
 
 package org.junit.gen5.engine.junit4.discovery;
 
+import static java.lang.String.format;
 import static org.junit.gen5.commons.util.ReflectionUtils.readFieldValue;
 
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 import org.junit.runner.Description;
 
 class UniqueIdReader implements Function<Description, Serializable> {
 
+	private final Logger logger;
 	private final String fieldName;
 
-	UniqueIdReader() {
-		this("fUniqueId");
+	UniqueIdReader(Logger logger) {
+		this(logger, "fUniqueId");
 	}
 
 	// For tests only
-	UniqueIdReader(String fieldName) {
+	UniqueIdReader(Logger logger, String fieldName) {
+		this.logger = logger;
 		this.fieldName = fieldName;
 	}
 
 	@Override
 	public Serializable apply(Description description) {
 		Optional<Object> result = readFieldValue(Description.class, fieldName, description);
-		return result.map(Serializable.class::cast).orElseGet(() -> description.getDisplayName());
+		return result.map(Serializable.class::cast).orElseGet(() -> {
+			logger.warning(() -> format("Could not read unique id for Description, using display name instead: %s",
+				description.toString()));
+			return description.getDisplayName();
+		});
 	}
 
 }

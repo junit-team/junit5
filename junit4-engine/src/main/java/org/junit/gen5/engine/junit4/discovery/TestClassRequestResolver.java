@@ -34,15 +34,16 @@ import org.junit.runners.model.RunnerBuilder;
 
 class TestClassRequestResolver {
 
-	private final UniqueIdReader uniqueIdReader = new UniqueIdReader();
-	private final UniqueIdStringifier uniqueIdStringifier = new UniqueIdStringifier();
-
 	private final TestDescriptor engineDescriptor;
 	private final Logger logger;
+
+	private final UniqueIdReader uniqueIdReader;
+	private final UniqueIdStringifier uniqueIdStringifier = new UniqueIdStringifier();
 
 	TestClassRequestResolver(TestDescriptor engineDescriptor, Logger logger) {
 		this.engineDescriptor = engineDescriptor;
 		this.logger = logger;
+		this.uniqueIdReader = new UniqueIdReader(logger);
 	}
 
 	void populateEngineDescriptorFrom(Set<TestClassRequest> requests) {

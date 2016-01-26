@@ -10,32 +10,47 @@
 
 package org.junit.gen5.engine.junit4.discovery;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.runner.Description.createSuiteDescription;
+import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.runner.Description.createTestDescription;
 
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.logging.RecordCollectingLogger;
 import org.junit.runner.Description;
 
 class UniqueIdReaderTests {
 
 	@Test
 	void readsUniqueId() {
-		Description description = createSuiteDescription("displayName", "uniqueId");
+		RecordCollectingLogger logger = new RecordCollectingLogger();
+		Description description = createTestDescription("ClassName", "methodName", "uniqueId");
 
-		Serializable uniqueId = new UniqueIdReader().apply(description);
+		Serializable uniqueId = new UniqueIdReader(logger).apply(description);
 
 		assertEquals("uniqueId", uniqueId);
+		assertThat(logger.getLogRecords()).isEmpty();
 	}
 
 	@Test
 	void returnsDisplayNameWhenUniqueIdCannotBeRead() {
-		Description description = createSuiteDescription("displayName", "uniqueId");
+		RecordCollectingLogger logger = new RecordCollectingLogger();
+		Description description = createTestDescription("ClassName", "methodName", "uniqueId");
+		assertEquals("methodName(ClassName)", description.getDisplayName());
 
-		Serializable uniqueId = new UniqueIdReader("wrongFieldName").apply(description);
+		Serializable uniqueId = new UniqueIdReader(logger, "wrongFieldName").apply(description);
 
-		assertEquals("displayName", uniqueId);
+		assertEquals(description.getDisplayName(), uniqueId);
+		assertThat(logger.getLogRecords()).hasSize(1);
+		LogRecord logRecord = getOnlyElement(logger.getLogRecords());
+		assertEquals(Level.WARNING, logRecord.getLevel());
+		assertEquals(
+			"Could not read unique id for Description, using display name instead: " + description.getDisplayName(),
+			logRecord.getMessage());
 	}
 
 }
