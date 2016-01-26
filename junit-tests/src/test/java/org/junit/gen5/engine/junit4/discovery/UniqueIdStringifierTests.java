@@ -55,12 +55,12 @@ class UniqueIdStringifierTests {
 		assertEquals("value from toString()", deserializedString);
 	}
 
-	private byte[] decodeBase64(String serialized) {
-		return Base64.getDecoder().decode(serialized.getBytes(UniqueIdStringifier.CHARSET));
+	private byte[] decodeBase64(String value) {
+		return Base64.getDecoder().decode(value.getBytes(UniqueIdStringifier.CHARSET));
 	}
 
-	private Object deserialize(byte[] base64Decoded) throws Exception {
-		try (ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(base64Decoded))) {
+	private Object deserialize(byte[] bytes) throws Exception {
+		try (ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
 			return inputStream.readObject();
 		}
 	}
