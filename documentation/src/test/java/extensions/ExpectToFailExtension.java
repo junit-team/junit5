@@ -17,17 +17,12 @@ import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 import org.junit.gen5.api.extension.ExtensionContext.Store;
 import org.junit.gen5.api.extension.TestExtensionContext;
-import org.opentest4j.AssertionFailedError;
 
 public class ExpectToFailExtension implements ExceptionHandlerExtensionPoint, AfterEachExtensionPoint {
 
 	@Override
 	public void handleException(TestExtensionContext context, Throwable throwable) throws Throwable {
-		if (throwable instanceof AssertionFailedError) {
-			getExceptionStore(context).put("exception", throwable);
-			return;
-		}
-		throw throwable;
+		getExceptionStore(context).put("exception", throwable);
 	}
 
 	@Override

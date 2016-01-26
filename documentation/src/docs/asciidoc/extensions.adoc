@@ -193,6 +193,23 @@ Note that extension developers may choose to implement any number of these inter
 within a single extension. Consult the source code of the `{SpringExtension}` for a
 concrete example.
 
+=== Exception Handling
+
+`{ExceptionHandlerExtensionPoint}` defines the API for `Extensions` that wish to _react to
+exceptions_ thrown in a test.
+
+The following example shows an extension which will swallow all instances of `IOException`
+but rethrow any other type of exception:
+
+[source,java,indent=0]
+[subs="verbatim"]
+.An exception handling extension
+----
+include::{testDir}/example/exception/IgnoreIOExceptionExtension.java[tags=user_guide]
+----
+
+
+
 === Keeping State in Extensions
 
 Usually, an extension is instantiated only once. So the question becomes relevant: How do you keep the state
@@ -202,6 +219,6 @@ from one invocation of an extension point to the next? ...
 
 === Additional Planned Extensions
 
-Several additional extensions are planned, including but not limited to the following.
+Several additional extensions are planned, including but not limited to the following:git
 
 * Dynamic test registration – for example, for computing parameterized tests at runtime

@@ -1,0 +1,33 @@
+/*
+ * Copyright 2015-2016 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
+
+package example.exception;
+
+import java.io.IOException;
+
+import extensions.ExpectToFail;
+
+import org.junit.gen5.api.Test;
+import org.junit.gen5.api.extension.ExtendWith;
+
+@ExtendWith(IgnoreIOExceptionExtension.class)
+class IgnoreIOExceptionTests {
+
+	@Test
+	void shouldSucceed() throws IOException {
+		throw new IOException("any");
+	}
+
+	@Test
+	@ExpectToFail
+	void shouldFail() {
+		throw new RuntimeException("any");
+	}
+}
