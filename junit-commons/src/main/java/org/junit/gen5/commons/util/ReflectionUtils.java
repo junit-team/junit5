@@ -10,12 +10,14 @@
 
 package org.junit.gen5.commons.util;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import java.io.File;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -313,6 +315,30 @@ public final class ReflectionUtils {
 			methods.addAll(superclassMethods);
 		}
 		return methods;
+	}
+
+	/**
+	 * Reads the value of a potentially inaccessible field.
+	 *
+	 * <p>If the field does not exist, an exception occurs while reading it, or
+	 * the value of the field is {@code null}, an empty {@link Optional} is
+	 * returned.
+	 *
+	 * @param clazz the class where the field is declared.
+	 * @param fieldName the name of the field
+	 * @param instance the instance from where the value is to be read
+	 */
+	public static <T> Optional<Object> readFieldValue(Class<T> clazz, String fieldName, T instance) {
+		try {
+			Field field = clazz.getDeclaredField(fieldName);
+			if (!field.isAccessible()) {
+				field.setAccessible(true);
+			}
+			return Optional.ofNullable(field.get(instance));
+		}
+		catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			return Optional.empty();
+		}
 	}
 
 	private static List<Method> getInterfaceMethods(Class<?> clazz, MethodSortOrder sortOrder) {

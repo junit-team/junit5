@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.api.Test;
@@ -68,6 +69,27 @@ public class ReflectionUtilsTests {
 		assertThrows(PreconditionViolationException.class, () -> {
 			ReflectionUtils.newInstance(C.class, ((Object[]) null));
 		});
+	}
+
+	static class MyClass {
+
+		final int value;
+
+		MyClass(int value) {
+			this.value = value;
+		}
+	}
+
+	@Test
+	void readFieldValueOfExistingField() {
+		Optional<Object> value = ReflectionUtils.readFieldValue(MyClass.class, "value", new MyClass(42));
+		assertThat(value).contains(42);
+	}
+
+	@Test
+	void readFieldValueOfMissingField() {
+		Optional<Object> value = ReflectionUtils.readFieldValue(MyClass.class, "doesNotExist", new MyClass(42));
+		assertThat(value).isEmpty();
 	}
 
 }
