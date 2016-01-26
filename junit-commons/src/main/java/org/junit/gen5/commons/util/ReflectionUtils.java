@@ -117,8 +117,7 @@ public final class ReflectionUtils {
 
 		try {
 			Class<?>[] parameterTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
-			Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes);
-			makeAccessible(constructor);
+			Constructor<T> constructor = makeAccessible(clazz.getDeclaredConstructor(parameterTypes));
 			return constructor.newInstance(args);
 		}
 		catch (Throwable t) {
@@ -145,8 +144,7 @@ public final class ReflectionUtils {
 			() -> String.format("Cannot invoke non-static method [%s] on a null target.", method.toGenericString()));
 
 		try {
-			makeAccessible(method);
-			return method.invoke(target, args);
+			return makeAccessible(method).invoke(target, args);
 		}
 		catch (Throwable t) {
 			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
@@ -201,9 +199,8 @@ public final class ReflectionUtils {
 
 		return Arrays.stream(inner.getClass().getDeclaredFields()).filter(
 			f -> f.getName().startsWith("this$")).findFirst().map(f -> {
-				makeAccessible(f);
 				try {
-					return f.get(inner);
+					return makeAccessible(f).get(inner);
 				}
 				catch (IllegalAccessException e) {
 					return Optional.empty();
@@ -330,10 +327,7 @@ public final class ReflectionUtils {
 	 */
 	public static <T> Optional<Object> readFieldValue(Class<T> clazz, String fieldName, T instance) {
 		try {
-			Field field = clazz.getDeclaredField(fieldName);
-			if (!field.isAccessible()) {
-				field.setAccessible(true);
-			}
+			Field field = makeAccessible(clazz.getDeclaredField(fieldName));
 			return Optional.ofNullable(field.get(instance));
 		}
 		catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
@@ -399,10 +393,11 @@ public final class ReflectionUtils {
 		return true;
 	}
 
-	private static void makeAccessible(AccessibleObject object) {
+	private static <T extends AccessibleObject> T makeAccessible(T object) {
 		if (!object.isAccessible()) {
 			object.setAccessible(true);
 		}
+		return object;
 	}
 
 	/**
