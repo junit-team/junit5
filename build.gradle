@@ -188,7 +188,7 @@ subprojects {
 configure(rootProject) {
 	description = 'JUnit 5'
 
-//	apply plugin: 'org.junit.gen5.gradle'
+	apply plugin: 'org.junit.gen5.gradle'
 
 	jar.enabled = false
 	uploadArchives.enabled = false
@@ -213,9 +213,9 @@ configure(rootProject) {
 		exclude('**/*') // exclude everything
 	}
 
-//	junit5 {
-//		logManager 'org.apache.logging.log4j.jul.LogManager'
-//	}
+	junit5 {
+		logManager 'org.apache.logging.log4j.jul.LogManager'
+	}
 
 	task aggregateJavadocs(type: Javadoc) {
 		group = "Documentation"
