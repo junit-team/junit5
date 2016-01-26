@@ -431,6 +431,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#test-instance-post-processing">Test Instance Post-processing</a></li>
 <li><a href="#parameter-resolution">Parameter Resolution</a></li>
 <li><a href="#test-lifecycle-callbacks">Test Lifecycle Callbacks</a></li>
+<li><a href="#exception-handling">Exception Handling</a></li>
 <li><a href="#keeping-state-in-extensions">Keeping State in Extensions</a></li>
 <li><a href="#additional-planned-extensions">Additional Planned Extensions</a></li>
 </ul>
@@ -680,6 +681,32 @@ concrete example.</p>
 </div>
 </div>
 <div class="sect2">
+<h3 id="exception-handling">Exception Handling</h3>
+<div class="paragraph">
+<p><code>{ExceptionHandlerExtensionPoint}</code> defines the API for <code>Extensions</code> that wish to <em>react to
+exceptions</em> thrown in a test.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows an extension which will swallow all instances of <code>IOException</code>
+but rethrow any other type of exception:</p>
+</div>
+<div class="listingblock">
+<div class="title">An exception handling extension</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public class IgnoreIOExceptionExtension implements ExceptionHandlerExtensionPoint {
+
+    @Override
+    public void handleException(TestExtensionContext context, Throwable throwable) throws Throwable {
+        if (throwable instanceof IOException) {
+            return;
+        }
+        throw throwable;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="keeping-state-in-extensions">Keeping State in Extensions</h3>
 <div class="paragraph">
 <p>Usually, an extension is instantiated only once. So the question becomes relevant: How do you keep the state
@@ -689,7 +716,7 @@ from one invocation of an extension point to the next? &#8230;&#8203;</p>
 <div class="sect2">
 <h3 id="additional-planned-extensions">Additional Planned Extensions</h3>
 <div class="paragraph">
-<p>Several additional extensions are planned, including but not limited to the following.</p>
+<p>Several additional extensions are planned, including but not limited to the following:git</p>
 </div>
 <div class="ulist">
 <ul>
@@ -705,7 +732,7 @@ from one invocation of an extension point to the next? &#8230;&#8203;</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-26 06:24:49 -05:00
+Last updated 2016-01-26 09:05:34 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
