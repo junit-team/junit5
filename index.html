@@ -714,11 +714,9 @@ public @interface Fast {
 <div class="sect2">
 <h3 id="standard-test-class">3.2. Standard Test Class</h3>
 <div class="listingblock">
-<div class="title">A simple standard test case</div>
+<div class="title">A standard test case</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.*;
-
-class StandardTests {
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">class StandardTests {
 
     @BeforeAll
     static void initAll() {
@@ -730,6 +728,11 @@ class StandardTests {
 
     @Test
     void succeedingTest() {
+    }
+
+    @Test
+    void failingTest() {
+        Assertions.fail("a failing test");
     }
 
     @AfterEach
@@ -1925,7 +1928,7 @@ registers its <code>JUnit5TestEngine</code>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-26 02:56:09 -05:00
+Last updated 2016-01-26 04:19:59 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
