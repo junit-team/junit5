@@ -10,9 +10,15 @@
 
 package example;
 
-// tag::user_guide[]
-import org.junit.gen5.api.*;
+import org.junit.gen5.api.AfterAll;
+import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.Assertions;
+import org.junit.gen5.api.BeforeAll;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Test;
+import extensions.ExpectToFail;
 
+// tag::user_guide[]
 class StandardTests {
 
 	@BeforeAll
@@ -25,6 +31,14 @@ class StandardTests {
 
 	@Test
 	void succeedingTest() {
+	}
+
+	// end::user_guide[]
+	@ExpectToFail
+	// tag::user_guide[]
+	@Test
+	void failingTest() {
+		Assertions.fail("a failing test");
 	}
 
 	@AfterEach

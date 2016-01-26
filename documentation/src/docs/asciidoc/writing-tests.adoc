@@ -53,7 +53,7 @@ include::{testDir}/example/Fast.java[tags=user_guide]
 
 [source,java,indent=0]
 [subs="verbatim"]
-.A simple standard test case
+.A standard test case
 ----
 include::{testDir}/example/StandardTests.java[tags=user_guide]
 ----
