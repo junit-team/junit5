@@ -10,8 +10,7 @@
 
 package org.junit.gen5.commons.util;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import java.io.File;
