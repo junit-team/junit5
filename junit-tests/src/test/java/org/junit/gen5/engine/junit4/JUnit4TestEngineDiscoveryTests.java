@@ -16,6 +16,7 @@ import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
@@ -28,7 +29,9 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 
@@ -48,6 +51,7 @@ import org.junit.gen5.engine.junit4.samples.junit4.IgnoredJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
 import org.junit.gen5.engine.junit4.samples.junit4.JUnit4SuiteWithTwoTestCases;
 import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithOverloadedMethod;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithRunnerWithCustomUniqueIds;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleInheritedTestWhichFails;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
@@ -538,6 +542,24 @@ class JUnit4TestEngineDiscoveryTests {
 		assertEquals(testClass.getName(), runnerDescriptor.getDisplayName());
 		assertEquals("junit4:" + testClass.getName(), runnerDescriptor.getUniqueId());
 		assertThat(runnerDescriptor.getChildren()).isEmpty();
+	}
+
+	@Test
+	void usesCustomUniqueIdsWhenPresent() throws Exception {
+		Class<?> testClass = JUnit4TestCaseWithRunnerWithCustomUniqueIds.class;
+		TestDiscoveryRequest request = request().select(forClass(testClass)).build();
+
+		TestDescriptor engineDescriptor = engine.discover(request);
+
+		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertRunnerTestDescriptor(runnerDescriptor, testClass);
+
+		TestDescriptor childDescriptor = getOnlyElement(runnerDescriptor.getChildren());
+		String prefix = "junit4:" + testClass.getName() + "/";
+		assertThat(childDescriptor.getUniqueId()).startsWith(prefix);
+		String suffix = childDescriptor.getUniqueId().substring(prefix.length());
+		assertNotNull(Base64.getDecoder().decode(suffix.getBytes(StandardCharsets.UTF_8)),
+			"is a valid Base64 encoding scheme");
 	}
 
 	private TestDescriptor findChildByDisplayName(TestDescriptor runnerDescriptor, String displayName) {
