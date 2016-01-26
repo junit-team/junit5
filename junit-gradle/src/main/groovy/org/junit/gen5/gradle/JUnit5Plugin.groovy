@@ -67,7 +67,7 @@ class JUnit5Plugin implements Plugin<Project> {
 		}
 	}
 
-	private ArrayList<String> buildArgs(project, junit5) {
+	private ArrayList<String> buildArgs(project, junit5, reportsDir) {
 
 		def args = ['--enable-exit-code', '--hide-details', '--all']
 
