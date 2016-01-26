@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.example;
+package example;
 
 import java.util.EmptyStackException;
 import java.util.Stack;
@@ -18,12 +18,10 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.junit4.runner.JUnit5;
-import org.junit.runner.RunWith;
 
-@RunWith(JUnit5.class)
+// tag::user_guide[]
 @DisplayName("A stack")
-public class TestingAStack {
+class TestingAStack {
 
 	Stack<Object> stack;
 	boolean isRun = false;
@@ -91,9 +89,7 @@ public class TestingAStack {
 				Assertions.assertEquals(anElement, stack.peek());
 				Assertions.assertFalse(stack.isEmpty());
 			}
-
 		}
-
 	}
-
 }
+// end::user_guide[]

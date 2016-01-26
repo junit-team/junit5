@@ -239,49 +239,19 @@ class FastModelTests {
 === Nested Tests
 
 Nested tests give the test writer more capabilities to express the relationship among
-several group of tests. Here's a somewhat contrived example:
+several group of tests. Here's an elaborate example:
 
 [source,java,indent=0]
 [subs="verbatim"]
+.Nested test suite for testing a stack
 ----
-import org.junit.gen5.api.*;
-
-class MyObjectTest {
-
-	MyObject myObject;
-
-	@BeforeEach
-	void init() {
-		myObject == new MyObject();
-	}
-
-	@Test
-	void testEmptyObject() {}
-
-	@Nested
-	class WithChildren {
-
-		@BeforeEach
-		void initWithChildren() {
-			myObject.addChild(new MyObject());
-			myObject.addChild(new MyObject());
-		}
-
-		@Test
-		void testObjectWithChildren() {}
-
-	}
-
-}
+include::{testDir}/example/TestingAStack.java[tags=user_guide]
 ----
 
 Notice that _only non-static inner classes_ can serve as nested tests. Nesting can be
 arbitrarily deep, and those inner classes can be considered as full members of the test
-class family.
-
-For a more meaningful example have a look at
-https://github.com/junit-team/junit5/tree/master/sample-project/src/test/java/com/example/TestingAStack.java[TestingAStack].
-
+class family with one exception: `@BeforeAll` and `@AfterAll` do not work, because Java
+does not allow static members in non-static inner classes.
 
 === Method Parameters and Dependency Injection
 
