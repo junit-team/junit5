@@ -29,6 +29,7 @@ class AvailableOptions {
 	private final OptionSpec<String> tagFilter;
 	private final OptionSpec<String> excludeTags;
 	private final OptionSpec<String> additionalClasspathEntries;
+	private final OptionSpec<String> xmlReportsDir;
 	private final OptionSpec<String> arguments;
 
 	AvailableOptions() {
@@ -54,6 +55,9 @@ class AvailableOptions {
 		additionalClasspathEntries = parser.acceptsAll(asList("p", "classpath"), //
 			"Additional classpath entries, e.g. for adding engines and their dependencies") //
 			.withRequiredArg();
+		xmlReportsDir = parser.acceptsAll(asList("r", "xml-reports-dir"), //
+			"Enable XML report output into a specified local directory (will be created if it does not exist)") //
+			.withRequiredArg();
 		arguments = parser.nonOptions("Test classes, methods or packages to execute. If --all|-a has been chosen, "
 				+ "arguments can list all classpath roots that should be considered for test scanning, "
 				+ "or none if the full classpath shall be scanned.");
@@ -74,6 +78,7 @@ class AvailableOptions {
 		result.setTagsFilter(detectedOptions.valuesOf(tagFilter));
 		result.setExcludeTags(detectedOptions.valuesOf(excludeTags));
 		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(additionalClasspathEntries));
+		result.setXmlReportsDir(detectedOptions.valueOf(xmlReportsDir));
 		result.setArguments(detectedOptions.valuesOf(arguments));
 		return result;
 	}

@@ -10,7 +10,6 @@ uploadArchives.enabled = false
 
 junit5 {
 	runJunit4 true
-	reportFile file('build/test-results/JUNIT5-Tests.xml')
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 }
 

@@ -81,6 +81,10 @@ public class ExecuteTestsTask implements ConsoleTask {
 			launcher.registerTestExecutionListeners(
 				new ColoredPrintingTestListener(out, options.isAnsiColorOutputDisabled()));
 		}
+		if (options.getXmlReportsDir().isPresent()) {
+			launcher.registerTestExecutionListeners(
+				new XmlReportsWritingListener(options.getXmlReportsDir().get(), out));
+		}
 		return summaryListener;
 	}
 

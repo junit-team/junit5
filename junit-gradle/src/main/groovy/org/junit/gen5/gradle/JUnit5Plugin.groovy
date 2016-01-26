@@ -29,8 +29,6 @@ class JUnit5Plugin implements Plugin<Project> {
 				}
 			}
 
-			def testReport = junit5.reportFile ?: project.file("build/test-results/junit5-report.txt")
-
 			project.task('junit5Test', group: 'verification', type: org.gradle.api.tasks.JavaExec) { task ->
 
 				task.description = 'Runs JUnit 5 tests.'
@@ -40,7 +38,6 @@ class JUnit5Plugin implements Plugin<Project> {
 				task.inputs.property('classNameFilter', junit5.classNameFilter)
 				task.inputs.property('includeTags', junit5.includeTags)
 				task.inputs.property('excludeTags', junit5.excludeTags)
-				task.outputs.file testReport
 
 				if (junit5.logManager) {
 					systemProperty 'java.util.logging.manager', junit5.logManager
@@ -52,15 +49,6 @@ class JUnit5Plugin implements Plugin<Project> {
 				task.main = 'org.junit.gen5.console.ConsoleRunner'
 
 				task.args buildArgs(project, junit5)
-
-				doLast {
-
-					testReport.parentFile.mkdirs()
-					testReport.withPrintWriter { writer ->
-						writer.println "JUnit 5 tests run at " + new Date().toString()
-					}
-
-				}
 			}
 		}
 	}
@@ -94,6 +82,10 @@ class JUnit5Plugin implements Plugin<Project> {
 			args.add('-T')
 			args.add(tag)
 		}
+
+		def reportsDir = junit5.reportsDir ?: project.file("build/test-results/junit5")
+		args.add('-r')
+		args.add(reportsDir.getAbsolutePath())
 
 		def classpathRoots = project.sourceSets.test.runtimeClasspath.files
 

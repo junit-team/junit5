@@ -27,6 +27,7 @@ public class CommandLineOptions {
 	private List<String> additionalClasspathEntries = emptyList();
 	private List<String> arguments = emptyList();
 	private List<String> excludeTags = emptyList();
+	private String xmlReportsDir;
 
 	public boolean isDisplayHelp() {
 		return displayHelp;
@@ -98,6 +99,14 @@ public class CommandLineOptions {
 
 	public void setAdditionalClasspathEntries(List<String> additionalClasspathEntries) {
 		this.additionalClasspathEntries = additionalClasspathEntries;
+	}
+
+	public Optional<String> getXmlReportsDir() {
+		return Optional.ofNullable(xmlReportsDir);
+	}
+
+	public void setXmlReportsDir(String xmlReportsDir) {
+		this.xmlReportsDir = xmlReportsDir;
 	}
 
 	public List<String> getArguments() {

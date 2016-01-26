@@ -10,10 +10,16 @@
 
 package org.junit.gen5.console.options;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertAll;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertThrows;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.expectThrows;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +47,7 @@ public class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertEquals(Optional.empty(), options.getClassnameFilter()),
 			() -> assertEquals(emptyList(), options.getTagsFilter()),
 			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
+			() -> assertEquals(Optional.empty(), options.getXmlReportsDir()),
 			() -> assertEquals(emptyList(), options.getArguments())
 		);
 		// @formatter:on
@@ -108,6 +115,22 @@ public class JOptSimpleCommandLineOptionsParserTests {
 	@Test
 	public void parseInvalidAdditionalClasspathEntries() {
 		assertOptionWithRequiredArgumentThrowsExceptionWithoutArgument("-p", "--classpath");
+	}
+
+	@Test
+	public void parseValidXmlReportsDirs() {
+		// @formatter:off
+		assertAll(
+			() -> assertEquals(Optional.of("build/test-results"), parseArgLine("-r build/test-results").getXmlReportsDir()),
+			() -> assertEquals(Optional.of("build/test-results"), parseArgLine("--xml-reports-dir build/test-results").getXmlReportsDir()),
+			() -> assertEquals(Optional.of("build/test-results"), parseArgLine("--xml-reports-dir=build/test-results").getXmlReportsDir())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidXmlReportsDirs() throws Exception {
+		assertOptionWithRequiredArgumentThrowsExceptionWithoutArgument("-r", "--xml-reports-dir");
 	}
 
 	@Test

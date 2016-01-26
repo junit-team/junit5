@@ -31,11 +31,11 @@ class JUnit5Extension {
 	String logManager
 
 	/**
-	 * The location of the test report file.
+	 * The directory for the XML test report files.
 	 *
-	 * <p>Defaults to {@code "build/test-results/junit5-report.txt"}.
+	 * <p>Defaults to {@code "build/test-results/junit5"}.
 	 */
-	File reportFile
+	File reportsDir
 
 	/**
 	 * Whether or not to execute JUnit 4 tests alongside JUnit 5 tests.
