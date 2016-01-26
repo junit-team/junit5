@@ -39,6 +39,9 @@ class JUnit5Plugin implements Plugin<Project> {
 				task.inputs.property('includeTags', junit5.includeTags)
 				task.inputs.property('excludeTags', junit5.excludeTags)
 
+				def reportsDir = junit5.reportsDir ?: project.file("build/test-results/junit5")
+				task.outputs.dir reportsDir
+
 				if (junit5.logManager) {
 					systemProperty 'java.util.logging.manager', junit5.logManager
 				}
@@ -48,7 +51,7 @@ class JUnit5Plugin implements Plugin<Project> {
 				task.classpath = project.sourceSets.test.runtimeClasspath
 				task.main = 'org.junit.gen5.console.ConsoleRunner'
 
-				task.args buildArgs(project, junit5)
+				task.args buildArgs(project, junit5, reportsDir)
 			}
 		}
 	}
@@ -83,7 +86,6 @@ class JUnit5Plugin implements Plugin<Project> {
 			args.add(tag)
 		}
 
-		def reportsDir = junit5.reportsDir ?: project.file("build/test-results/junit5")
 		args.add('-r')
 		args.add(reportsDir.getAbsolutePath())
 
