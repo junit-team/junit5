@@ -10,7 +10,8 @@
 
 package extensions;
 
-import org.junit.gen5.api.Assertions;
+import static org.junit.gen5.api.Assertions.assertNotNull;
+
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionContext.Namespace;
@@ -29,13 +30,12 @@ public class ExpectToFailExtension implements ExceptionHandlerExtensionPoint, Af
 		throw throwable;
 	}
 
-	private Store getExceptionStore(TestExtensionContext context) {
-		return context.getStore(Namespace.of(context));
-	}
-
 	@Override
 	public void afterEach(TestExtensionContext context) throws Exception {
-		if (getExceptionStore(context).get("exception") == null)
-			Assertions.fail("Test should have failed");
+		assertNotNull(getExceptionStore(context).get("exception"), "Test should have failed");
+	}
+
+	private Store getExceptionStore(TestExtensionContext context) {
+		return context.getStore(Namespace.of(context));
 	}
 }
