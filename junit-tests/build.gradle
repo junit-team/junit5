@@ -1,5 +1,5 @@
 apply plugin: 'jacoco'
-apply plugin: 'org.junit.gen5.gradle'
+//apply plugin: 'org.junit.gen5.gradle'
 
 jar.enabled = false
 javadoc.enabled = false
@@ -7,14 +7,14 @@ javadocJar.enabled = false
 sourcesJar.enabled = false
 uploadArchives.enabled = false
 
-junit5 {
+//junit5 {
 	// version '5.0.0-SNAPSHOT' // not needed since all dependencies are declared explicitly
-	runJunit4 true
-	matchClassName '.*Tests?'
-	logManager 'org.apache.logging.log4j.jul.LogManager'
+//	runJunit4 true
+//	matchClassName '.*Tests?'
+//	logManager 'org.apache.logging.log4j.jul.LogManager'
 	// includeTag 'fast'
 	// excludeTag 'slow'
-}
+//}
 
 def testedProjects = [
 	project(':junit-commons'),
@@ -46,22 +46,22 @@ afterEvaluate {
 
 	jacoco {
 		toolVersion = '0.7.4.201502262128'
-		applyTo junit5Test
+//		applyTo junit5Test
 	}
 
-	task junit5CodeCoverageReport(type:JacocoReport){
-		executionData junit5Test
-		sourceSets sourceSets.main
-		sourceDirectories = files()
-		classDirectories = files()
-		testedProjects.each { project ->
-			sourceDirectories = files(sourceDirectories, project.sourceSets.main.allSource.srcDirs)
-			classDirectories = files(classDirectories, project.sourceSets.main.output)
-		}
-		reports {
-			xml.enabled = true
-			html.enabled = true
-		}
-	}
+//	task junit5CodeCoverageReport(type:JacocoReport){
+//		executionData junit5Test
+//		sourceSets sourceSets.main
+//		sourceDirectories = files()
+//		classDirectories = files()
+//		testedProjects.each { project ->
+//			sourceDirectories = files(sourceDirectories, project.sourceSets.main.allSource.srcDirs)
+//			classDirectories = files(classDirectories, project.sourceSets.main.output)
+//		}
+//		reports {
+//			xml.enabled = true
+//			html.enabled = true
+//		}
+//	}
 
 }

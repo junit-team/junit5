@@ -1,6 +1,6 @@
 apply plugin: 'org.asciidoctor.convert'
 apply plugin: "org.ajoberstar.github-pages"
-apply plugin: 'org.junit.gen5.gradle'
+//apply plugin: 'org.junit.gen5.gradle'
 
 jar.enabled = false
 javadoc.enabled = false
@@ -8,10 +8,10 @@ javadocJar.enabled = false
 sourcesJar.enabled = false
 uploadArchives.enabled = false
 
-junit5 {
-	runJunit4 true
-	logManager 'org.apache.logging.log4j.jul.LogManager'
-}
+//junit5 {
+//	runJunit4 true
+//	logManager 'org.apache.logging.log4j.jul.LogManager'
+//}
 
 dependencies {
 	testCompile(project(':junit-commons'))
