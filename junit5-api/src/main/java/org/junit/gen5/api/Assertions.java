@@ -314,10 +314,20 @@ public final class Assertions {
 
 	// --- assertAll -----------------------------------------------------
 
+	/**
+	 * Assert that all assertions contained in {@code asserts} are checked and report a failure of at least one
+	 * in a {@link MultipleFailuresError}.
+	 */
 	public static void assertAll(Executable... asserts) throws MultipleFailuresError {
 		assertAll(null, asserts);
 	}
 
+	/**
+	 * Assert that all assertions contained in {@code asserts} are checked and report a failure of at least one
+	 * in a {@link MultipleFailuresError}.
+	 *
+	 * <p>Include {@code heading} in the exception's message string.</p>
+	 */
 	public static void assertAll(String heading, Executable... asserts) throws MultipleFailuresError {
 		MultipleFailuresError multipleFailuresError = new MultipleFailuresError(heading);
 		for (Executable executable : asserts) {
