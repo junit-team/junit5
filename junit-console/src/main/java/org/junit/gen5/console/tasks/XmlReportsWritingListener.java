@@ -13,6 +13,7 @@ package org.junit.gen5.console.tasks;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.StringUtils.isNotBlank;
+import static org.junit.gen5.engine.TestExecutionResult.Status.ABORTED;
 import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
 
 import java.io.BufferedWriter;
@@ -67,7 +68,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		// TODO #86 write file for roots
-		skippedTests.put(testIdentifier, reason);
+		skippedTests.put(testIdentifier, reason == null ? "" : reason);
 	}
 
 	@Override
@@ -76,9 +77,15 @@ class XmlReportsWritingListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult result) {
 		// TODO #86 stop timer
-		finishedTests.put(testIdentifier, testExecutionResult);
+		if (result.getStatus() == ABORTED) {
+			String reason = result.getThrowable().map(this::readStackTrace).orElse("");
+			skippedTests.put(testIdentifier, reason);
+		}
+		else {
+			finishedTests.put(testIdentifier, result);
+		}
 		if (isARoot(testIdentifier)) {
 			// TODO #86 consider skipped/failed/aborted containers
 			// @formatter:off

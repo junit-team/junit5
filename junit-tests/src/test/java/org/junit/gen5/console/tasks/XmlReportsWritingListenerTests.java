@@ -14,6 +14,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.fail;
+import static org.junit.gen5.api.Assumptions.assumeFalse;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
@@ -129,6 +130,31 @@ class XmlReportsWritingListenerTests {
 				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"1\" failures=\"0\" errors=\"0\"",
 				"<testcase name=\"skippedTest\"",
 				"<skipped>should be skipped</skipped>",
+				"</testcase>",
+				"</testsuite>")
+			.doesNotContain("<failure")
+			.doesNotContain("<error");
+		//@formatter:off
+	}
+
+	@Test
+	void writesFileForSingleAbortedTest() throws Exception {
+		DummyTestEngine engine = new DummyTestEngine("dummy");
+		engine.addTest("abortedTest", () -> assumeFalse(true, "deliberately aborted"));
+
+		executeTests(engine);
+
+		String content = readFile("TEST-dummy.xml");
+		//@formatter:off
+		assertThat(content)
+			.containsSequence(
+				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"1\" failures=\"0\" errors=\"0\"",
+				"<testcase name=\"abortedTest\"",
+				"<skipped>",
+				"TestAbortedException: ",
+				"deliberately aborted",
+				"at ",
+				"</skipped>",
 				"</testcase>",
 				"</testsuite>")
 			.doesNotContain("<failure")
