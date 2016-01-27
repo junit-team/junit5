@@ -119,6 +119,8 @@ class XmlReportsWritingListener implements TestExecutionListener {
 		// TODO #86 measure time
 		writer.writeAttribute("time", "0.0");
 
+		writer.writeComment("Unique ID: " + testIdentifier.getUniqueId().toString());
+
 		for (TestIdentifier test : tests) {
 			writeTestcase(test, writer);
 		}
@@ -127,9 +129,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 	}
 
 	private void writeTestcase(TestIdentifier test, XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeEmptyElement("testcase");
-		// writer.writeStartElement("testcase");
-		// TODO #86 use getDisplayName() up to grouping level
+		writer.writeStartElement("testcase");
 		writer.writeAttribute("name", test.getDisplayName());
 		Optional<TestIdentifier> parent = testPlan.getParent(test);
 		if (parent.isPresent()) {
@@ -138,7 +138,8 @@ class XmlReportsWritingListener implements TestExecutionListener {
 		// TODO #86 measure time
 		writer.writeAttribute("time", "0.0");
 		// TODO #86 write skipped/error/failure elements
-		// writer.writeEndElement();
+		writer.writeComment("Unique ID: " + test.getUniqueId().toString());
+		writer.writeEndElement();
 	}
 
 }

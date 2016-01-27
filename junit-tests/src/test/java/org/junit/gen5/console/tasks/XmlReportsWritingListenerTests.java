@@ -67,15 +67,20 @@ class XmlReportsWritingListenerTests {
 	void writesFileForSingleSucceedingTest() throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
 		engine.addTest("succeedingTest", () -> {
-		});
+		}).setDisplayName("display<>Name");
 
 		executeTests(engine);
 
 		String content = readFile("TEST-dummy.xml");
 		//@formatter:off
 		assertThat(content)
-			.contains("<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"0\" errors=\"0\"")
-			.contains("<testcase name=\"succeedingTest\" classname=\"dummy\"")
+			.containsSequence(
+				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"0\" errors=\"0\"",
+				"<!--Unique ID: dummy-->",
+				"<testcase name=\"display&lt;&gt;Name\" classname=\"dummy\"",
+				"<!--Unique ID: dummy:succeedingTest-->",
+				"</testcase>",
+				"</testsuite>")
 			.doesNotContain("<skipped")
 			.doesNotContain("<failure")
 			.doesNotContain("<error");
