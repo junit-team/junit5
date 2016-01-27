@@ -14,9 +14,9 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -25,6 +25,8 @@ import org.junit.gen5.engine.TestDescriptor;
  * @since 5.0
  */
 public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
+	private static final Logger LOG = Logger.getLogger(PreconfiguredTestResolverRegistry.class.getName());
+
 	private Map<Class<? extends TestResolver>, TestResolver> testResolvers;
 
 	public PreconfiguredTestResolverRegistry() {
@@ -51,7 +53,9 @@ public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
 			return root;
 		}
 		else {
-			// TODO LOG warning, if (parents.size() > 1)!
+			if (parents.size() > 1) {
+				logAmbiguousFetchResult(selector, root, parents);
+			}
 			return parents.get(0);
 		}
 	}
@@ -87,8 +91,39 @@ public class PreconfiguredTestResolverRegistry implements TestResolverRegistry {
 	public void register(TestResolver testResolver) {
 		Preconditions.notNull(testResolver, "testResolver must not be null!");
 
-		// TODO Logging information (e.g. override existing, adding new one, etc.)
+		logDebugInformationOnRegister(testResolver);
+
 		testResolvers.put(testResolver.getClass(), testResolver);
 		testResolver.bindTestResolveryRegistry(this);
+	}
+
+	private void logAmbiguousFetchResult(DiscoverySelector selector, TestDescriptor root,
+			List<TestDescriptor> parents) {
+		LOG.warning(() -> {
+			StringBuilder parentsListing = new StringBuilder();
+			int index = 1;
+			for (TestDescriptor parent : parents) {
+				parentsListing.append(String.format("\n\t[%d] %s", index++, parent.getUniqueId()));
+			}
+
+			// @formatter:off
+			return String.format("Ambiguous fetch result: More than one parent found, using first! "
+						+ "\n\tSelector: %s"
+						+ "\n\tRoot: %s"
+						+ "\n\tParents found: %s",
+				selector.toString(), root.getUniqueId(), parentsListing.toString());
+			// @formatter:on
+		});
+	}
+
+	private void logDebugInformationOnRegister(TestResolver testResolver) {
+		if (testResolvers.containsKey(testResolver.getClass())) {
+			LOG.finer(() -> String.format( //
+				"Adding test resolver %s to registry. This replaces the previous resolver %s", testResolver,
+				testResolvers.get(testResolver.getClass())));
+		}
+		else {
+			LOG.finer(() -> String.format("Adding test resolver %s to registry.", testResolver));
+		}
 	}
 }
