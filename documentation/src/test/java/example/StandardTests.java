@@ -17,6 +17,7 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
 
 // tag::user_guide[]
@@ -40,6 +41,12 @@ class StandardTests {
 	@Test
 	void failingTest() {
 		Assertions.fail("a failing test");
+	}
+
+	@Test
+	@Disabled("for demonstration purposes")
+	void skippedTest() {
+		// not executed
 	}
 
 	@AfterEach
