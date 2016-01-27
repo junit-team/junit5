@@ -14,18 +14,27 @@ import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 
 public final class TestDescriptorStub extends AbstractTestDescriptor {
 
+	private final String name;
+	private final String displayName;
+
 	public TestDescriptorStub(String uniqueId) {
+		this(uniqueId, uniqueId, uniqueId);
+	}
+
+	public TestDescriptorStub(String uniqueId, String name, String displayName) {
 		super(uniqueId);
+		this.name = name;
+		this.displayName = displayName;
 	}
 
 	@Override
 	public String getName() {
-		return getUniqueId();
+		return name;
 	}
 
 	@Override
 	public String getDisplayName() {
-		return getUniqueId();
+		return displayName;
 	}
 
 	@Override

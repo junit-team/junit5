@@ -37,6 +37,7 @@ public final class TestIdentifier implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final TestId uniqueId;
+	private final String name;
 	private final String displayName;
 	private final TestSource source;
 	private final Set<TestTag> tags;
@@ -47,18 +48,20 @@ public final class TestIdentifier implements Serializable {
 	public static TestIdentifier from(TestDescriptor testDescriptor) {
 		// TODO Use Flyweight Pattern for TestId?
 		TestId uniqueId = new TestId(testDescriptor.getUniqueId());
+		String name = testDescriptor.getName();
 		String displayName = testDescriptor.getDisplayName();
 		Optional<TestSource> source = testDescriptor.getSource();
 		Set<TestTag> tags = testDescriptor.getTags();
 		boolean test = testDescriptor.isTest();
 		boolean container = !test || !testDescriptor.getChildren().isEmpty();
 		Optional<TestId> parentId = testDescriptor.getParent().map(TestDescriptor::getUniqueId).map(TestId::new);
-		return new TestIdentifier(uniqueId, displayName, source, tags, test, container, parentId);
+		return new TestIdentifier(uniqueId, name, displayName, source, tags, test, container, parentId);
 	}
 
-	private TestIdentifier(TestId uniqueId, String displayName, Optional<TestSource> source, Set<TestTag> tags,
-			boolean test, boolean container, Optional<TestId> parentId) {
+	private TestIdentifier(TestId uniqueId, String name, String displayName, Optional<TestSource> source,
+			Set<TestTag> tags, boolean test, boolean container, Optional<TestId> parentId) {
 		this.uniqueId = uniqueId;
+		this.name = name;
 		this.displayName = displayName;
 		this.source = source.orElse(null);
 		this.tags = unmodifiableSet(new LinkedHashSet<>(tags));
@@ -76,6 +79,16 @@ public final class TestIdentifier implements Serializable {
 	 */
 	public TestId getUniqueId() {
 		return uniqueId;
+	}
+
+	/**
+	 * Get the name for the represented test or container.
+	 *
+	 * <p>The <em>name</em> is a technical name for a test or container. It
+	 * must not be parsed or processed besides being displayed to end-users.
+	 */
+	public String getName() {
+		return name;
 	}
 
 	/**
