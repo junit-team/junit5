@@ -152,14 +152,25 @@ public final class Assertions {
 
 	// --- assertNull ----------------------------------------------------
 
+	/**
+	 * <em>Asserts</em> that {@code actual} is {@code null}.
+	 */
 	public static void assertNull(Object actual) {
 		assertNull(actual, () -> null);
 	}
 
+	/**
+	 * <em>Asserts</em> that {@code actual} is {@code null}.
+	 * Fail with message {@code message}.
+	 */
 	public static void assertNull(Object actual, String message) {
 		assertNull(actual, () -> message);
 	}
 
+	/**
+	 * <em>Asserts</em> that {@code actual} is {@code null}.
+	 * Retrieve failure message from {@code messageSupplier}.
+	 */
 	public static void assertNull(Object actual, Supplier<String> messageSupplier) {
 		if (actual != null) {
 			failNotNull(actual, nullSafeGet(messageSupplier));
@@ -168,14 +179,25 @@ public final class Assertions {
 
 	// --- assertNotNull -------------------------------------------------
 
+	/**
+	 * <em>Asserts</em> that {@code actual} is not {@code null}.
+	 */
 	public static void assertNotNull(Object actual) {
 		assertNotNull(actual, () -> null);
 	}
 
+	/**
+	 * <em>Asserts</em> that {@code actual} is not {@code null}.
+	 * Fail with message {@code message}.
+	 */
 	public static void assertNotNull(Object actual, String message) {
 		assertNotNull(actual, () -> message);
 	}
 
+	/**
+	 * <em>Asserts</em> that {@code actual} is not {@code null}.
+	 * Retrieve failure message from {@code messageSupplier}.
+	 */
 	public static void assertNotNull(Object actual, Supplier<String> messageSupplier) {
 		if (actual == null) {
 			failNull(nullSafeGet(messageSupplier));
