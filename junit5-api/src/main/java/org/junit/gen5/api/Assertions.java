@@ -21,8 +21,8 @@ import org.opentest4j.MultipleFailuresError;
 
 /**
  * {@code Assertions} is a collection of utility methods that support
- * checking conditions in tests. A <em>failed</em> assertion will
- * always throw {@link AssertionFailedError} or a subclass.
+ * asserting conditions in tests. A <em>failed</em> assertion will
+ * always throw {@link AssertionFailedError} or a subclass if specified.
  *
  * @since 5.0
  * @see AssertionFailedError
@@ -315,16 +315,16 @@ public final class Assertions {
 	// --- assertAll -----------------------------------------------------
 
 	/**
-	 * Assert that all assertions contained in {@code asserts} are checked and report a failure of at least one
-	 * in a {@link MultipleFailuresError}.
+	 * Asserts that <em>all</em> assertions contained in {@code asserts} do not fail.
+	 * Report a failure of at least one in a {@link MultipleFailuresError}.
 	 */
 	public static void assertAll(Executable... asserts) throws MultipleFailuresError {
 		assertAll(null, asserts);
 	}
 
 	/**
-	 * Assert that all assertions contained in {@code asserts} are checked and report a failure of at least one
-	 * in a {@link MultipleFailuresError}.
+	 * Asserts that <em>all</em> assertions contained in {@code asserts} do not fail.
+	 * Report a failure of at least one in a {@link MultipleFailuresError}.
 	 *
 	 * <p>Include {@code heading} in the exception's message string.</p>
 	 */
@@ -348,10 +348,26 @@ public final class Assertions {
 
 	// --- assert exceptions ---------------------------------------------
 
+	/**
+	 * Asserts that executing {@code executable} will throw an exception of type {@code expected}.
+	 * If no exception is thrown or if an exception of a different type is thrown, the method will fail.
+	 *
+	 * <p>Use {@code assertThrows} if you do not want to perform additional checks on the exception instance.
+	 * Otherwise use {@link #expectThrows(Class, Executable)}.</p>
+	 */
 	public static void assertThrows(Class<? extends Throwable> expected, Executable executable) {
 		expectThrows(expected, executable);
 	}
 
+	/**
+	 * Asserts that executing {@code executable} will throw an exception of type {@code expected}.
+	 * If no exception is thrown or if an exception of a different type is thrown, the method will fail.
+	 *
+	 * <p>The thrown exception instance is returned.</p>
+	 *
+	 * <p>Use {@code expectThrows} if you want to perform additional checks on the exception instance.
+	 * Otherwise use {@link #assertThrows(Class, Executable)}.</p>
+	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Throwable> T expectThrows(Class<T> expectedType, Executable executable) {
 		try {
