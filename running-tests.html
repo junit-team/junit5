@@ -763,21 +763,20 @@ public class AJUnit5TestCaseRunWithJUnit4 {
 <p>If you have multiple JUnit 5 tests you can create a test suite.</p>
 </div>
 <div class="listingblock">
+<div class="title">A JUnit 5 suite run through JUnit 4</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">package com.example;
-
-import org.junit.gen5.junit4runner.JUnit5;
-import org.junit.gen5.junit4runner.JUnit5.Packages;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.gen5.junit4.runner.Packages;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
-@Packages("com.example")
-public class JUnit4SamplesSuite {
+@Packages({ "example" })
+public class JUnit4SampleSuite {
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>JUnit4SamplesSuite</code> will discover and run all tests in the <code>com.example</code> package
+<p>The <code>JUnit4SamplesSuite</code> will discover and run all tests in the <code>example</code> package
 and its subpackages.</p>
 </div>
 <div class="paragraph">
@@ -794,7 +793,7 @@ code for the <code>{JUnit5-Runner}</code> runner for further details.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-27 08:01:51 -05:00
+Last updated 2016-01-27 08:10:26 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
