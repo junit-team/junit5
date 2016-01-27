@@ -29,6 +29,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -40,6 +44,7 @@ import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 import org.junit.gen5.launcher.Launcher;
@@ -179,9 +184,57 @@ class XmlReportsWritingListenerTests {
 		//@formatter:on
 	}
 
-	private void executeTests(DummyTestEngine engine) {
+	@Test
+	void measuresTimesInSeconds() throws Exception {
+		DummyTestEngine engine = new DummyTestEngine("dummy");
+		engine.addTest("firstTest", () -> {
+		});
+		engine.addTest("secondTest", () -> {
+		});
+
+		executeTests(engine, new IncrementingClock(0, Duration.ofMillis(333)));
+
+		String content = readValidXmlFile("TEST-dummy.xml");
+
+		//@formatter:off
+		//               start        end
+		// ----------- ---------- -----------
+		// engine          0 (1)    1,665 (6)
+		// firstTest     333 (2)      666 (3)
+		// secondTest    999 (4)    1,332 (5)
+		assertThat(content)
+			.containsSequence(
+				"<testsuite", "time=\"1.665\"",
+				"<testcase name=\"firstTest\" classname=\"dummy\" time=\"0.333\"",
+				"<testcase name=\"secondTest\" classname=\"dummy\" time=\"0.333\"");
+		//@formatter:on
+	}
+
+	@Test
+	void testWithImmeasurableTimeIsOutputCorrectly() throws Exception {
+		DummyTestEngine engine = new DummyTestEngine("dummy");
+		engine.addTest("test", () -> {
+		});
+
+		executeTests(engine, Clock.fixed(Instant.EPOCH, ZoneId.systemDefault()));
+
+		String content = readValidXmlFile("TEST-dummy.xml");
+
+		//@formatter:off
+		assertThat(content)
+			.containsSequence(
+				"<testsuite",
+				"<testcase name=\"test\" classname=\"dummy\" time=\"0\"");
+		//@formatter:on
+	}
+
+	private void executeTests(TestEngine engine) {
+		executeTests(engine, Clock.systemDefaultZone());
+	}
+
+	private void executeTests(TestEngine engine, Clock clock) {
 		PrintWriter out = new PrintWriter(new StringWriter());
-		XmlReportsWritingListener reportListener = new XmlReportsWritingListener(tempDirectory.toString(), out);
+		XmlReportsWritingListener reportListener = new XmlReportsWritingListener(tempDirectory.toString(), out, clock);
 		Launcher launcher = createLauncher(engine);
 		launcher.registerTestExecutionListeners(reportListener);
 		launcher.execute(request().select(forUniqueId(engine.getId())).build());

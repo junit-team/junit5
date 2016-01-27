@@ -25,7 +25,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.text.NumberFormat;
+import java.time.Clock;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,16 +44,27 @@ import org.junit.gen5.launcher.TestPlan;
 
 class XmlReportsWritingListener implements TestExecutionListener {
 
+	private static final int MILLIS_PER_SECOND = 1000;
+
 	private final File reportsDir;
 	private final PrintWriter out;
+	private final Clock clock;
 
 	private TestPlan testPlan;
 	private Map<TestIdentifier, TestExecutionResult> finishedTests = new ConcurrentHashMap<>();
 	private Map<TestIdentifier, String> skippedTests = new ConcurrentHashMap<>();
+	private Map<TestIdentifier, Long> startTimes = new ConcurrentHashMap<>();
+	private Map<TestIdentifier, Long> endTimes = new ConcurrentHashMap<>();
 
 	public XmlReportsWritingListener(String reportsDir, PrintWriter out) {
+		this(reportsDir, out, Clock.systemDefaultZone());
+	}
+
+	// For tests only
+	XmlReportsWritingListener(String reportsDir, PrintWriter out, Clock clock) {
 		this.reportsDir = new File(reportsDir);
 		this.out = out;
+		this.clock = clock;
 	}
 
 	@Override
@@ -73,12 +87,12 @@ class XmlReportsWritingListener implements TestExecutionListener {
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		// TODO #86 start timer
+		startTimes.put(testIdentifier, clock.millis());
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult result) {
-		// TODO #86 stop timer
+		endTimes.put(testIdentifier, clock.millis());
 		if (result.getStatus() == ABORTED) {
 			String reason = result.getThrowable().map(this::readStackTrace).orElse("");
 			skippedTests.put(testIdentifier, reason);
@@ -140,32 +154,43 @@ class XmlReportsWritingListener implements TestExecutionListener {
 
 		writer.writeAttribute("name", testIdentifier.getDisplayName());
 		writer.writeAttribute("tests", String.valueOf(tests.size()));
-		// TODO #86 compute skipped/failure/error counts
+		// TODO #86 compute error count
 		writer.writeAttribute("skipped", String.valueOf(skipped));
 		writer.writeAttribute("failures", String.valueOf(failures));
 		writer.writeAttribute("errors", "0");
-		// TODO #86 measure time
-		writer.writeAttribute("time", "0.0");
+
+		NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+		writer.writeAttribute("time", numberFormat.format(calculateDurationInSeconds(testIdentifier)));
 
 		writer.writeComment("Unique ID: " + testIdentifier.getUniqueId().toString());
 
 		for (TestIdentifier test : tests) {
-			writeTestcase(test, writer);
+			writeTestcase(test, numberFormat, writer);
 		}
 
 		writer.writeEndElement();
 	}
 
-	private void writeTestcase(TestIdentifier test, XMLStreamWriter writer) throws XMLStreamException {
+	private double calculateDurationInSeconds(TestIdentifier testIdentifier) {
+		return calculateDurationInMillis(testIdentifier) / (double) MILLIS_PER_SECOND;
+	}
+
+	private long calculateDurationInMillis(TestIdentifier testIdentifier) {
+		long start = startTimes.getOrDefault(testIdentifier, 0L);
+		long end = endTimes.getOrDefault(testIdentifier, start);
+		return end - start;
+	}
+
+	private void writeTestcase(TestIdentifier test, NumberFormat numberFormat, XMLStreamWriter writer)
+			throws XMLStreamException {
 		writer.writeStartElement("testcase");
 		writer.writeAttribute("name", test.getDisplayName());
 		Optional<TestIdentifier> parent = testPlan.getParent(test);
 		if (parent.isPresent()) {
 			writer.writeAttribute("classname", parent.get().getName());
 		}
-		// TODO #86 measure time
-		writer.writeAttribute("time", "0.0");
-		// TODO #86 write skipped/error/failure elements
+		writer.writeAttribute("time", numberFormat.format(calculateDurationInSeconds(test)));
+		// TODO #86 write error elements
 		writer.writeComment("Unique ID: " + test.getUniqueId().toString());
 		if (skippedTests.containsKey(test)) {
 			writeSkipped(skippedTests.get(test), writer);
