@@ -15,6 +15,8 @@ import static org.junit.gen5.engine.TestExecutionResult.Status.ABORTED;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,8 +30,8 @@ class XmlReportData {
 
 	private final Map<TestIdentifier, TestExecutionResult> finishedTests = new ConcurrentHashMap<>();
 	private final Map<TestIdentifier, String> skippedTests = new ConcurrentHashMap<>();
-	private final Map<TestIdentifier, Long> startTimes = new ConcurrentHashMap<>();
-	private final Map<TestIdentifier, Long> endTimes = new ConcurrentHashMap<>();
+	private final Map<TestIdentifier, Instant> startInstants = new ConcurrentHashMap<>();
+	private final Map<TestIdentifier, Instant> endInstants = new ConcurrentHashMap<>();
 
 	private final TestPlan testPlan;
 	private final Clock clock;
@@ -48,11 +50,11 @@ class XmlReportData {
 	}
 
 	void markStarted(TestIdentifier testIdentifier) {
-		startTimes.put(testIdentifier, clock.millis());
+		startInstants.put(testIdentifier, clock.instant());
 	}
 
 	void markFinished(TestIdentifier testIdentifier, TestExecutionResult result) {
-		endTimes.put(testIdentifier, clock.millis());
+		endInstants.put(testIdentifier, clock.instant());
 		if (result.getStatus() == ABORTED) {
 			String reason = result.getThrowable().map(XmlReportData::readStackTrace).orElse("");
 			skippedTests.put(testIdentifier, reason);
@@ -71,9 +73,9 @@ class XmlReportData {
 	}
 
 	double getDurationInSeconds(TestIdentifier testIdentifier) {
-		long startMillis = startTimes.getOrDefault(testIdentifier, 0L);
-		long endMillis = endTimes.getOrDefault(testIdentifier, startMillis);
-		return (endMillis - startMillis) / (double) MILLIS_PER_SECOND;
+		Instant startInstant = startInstants.getOrDefault(testIdentifier, Instant.EPOCH);
+		Instant endInstant = endInstants.getOrDefault(testIdentifier, startInstant);
+		return Duration.between(startInstant, endInstant).toMillis() / (double) MILLIS_PER_SECOND;
 	}
 
 	String getSkipReason(TestIdentifier test) {
