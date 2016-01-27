@@ -49,9 +49,13 @@ class XmlReportsWritingListener implements TestExecutionListener {
 			Files.createDirectories(reportsDir.toPath());
 		}
 		catch (IOException e) {
-			String message = "Could not create report directory: " + reportsDir;
-			handleException(e, message);
+			printException("Could not create report directory: " + reportsDir, e);
 		}
+	}
+
+	@Override
+	public void testPlanExecutionFinished(TestPlan testPlan) {
+		this.reportData = null;
 	}
 
 	@Override
@@ -79,8 +83,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 			new XmlReportWriter(reportData).writeXmlReport(testIdentifier, xmlFile);
 		}
 		catch (XMLStreamException | IOException e) {
-			String message = "Could not write file: " + xmlFile;
-			handleException(e, message);
+			printException("Could not write file: " + xmlFile, e);
 		}
 	}
 
@@ -88,7 +91,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 		return !testIdentifier.getParentId().isPresent();
 	}
 
-	private void handleException(Exception exception, String message) {
+	private void printException(String message, Exception exception) {
 		out.println(message);
 		exception.printStackTrace(out);
 	}
