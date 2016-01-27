@@ -736,6 +736,12 @@ public @interface Fast {
         Assertions.fail("a failing test");
     }
 
+    @Test
+    @Disabled("for demonstration purposes")
+    void skippedTest() {
+        // not executed
+    }
+
     @AfterEach
     void tearDown() {
     }
