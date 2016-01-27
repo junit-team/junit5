@@ -12,6 +12,7 @@ package org.junit.gen5.console.tasks;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.commons.util.StringUtils.isNotBlank;
 import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
 
 import java.io.BufferedWriter;
@@ -43,7 +44,8 @@ class XmlReportsWritingListener implements TestExecutionListener {
 	private final PrintWriter out;
 
 	private TestPlan testPlan;
-	private Map<TestIdentifier, TestExecutionResult> results = new ConcurrentHashMap<>();
+	private Map<TestIdentifier, TestExecutionResult> finishedTests = new ConcurrentHashMap<>();
+	private Map<TestIdentifier, String> skippedTests = new ConcurrentHashMap<>();
 
 	public XmlReportsWritingListener(String reportsDir, PrintWriter out) {
 		this.reportsDir = new File(reportsDir);
@@ -64,7 +66,8 @@ class XmlReportsWritingListener implements TestExecutionListener {
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		// TODO #86 store information for tests, write file for roots
+		// TODO #86 write file for roots
+		skippedTests.put(testIdentifier, reason);
 	}
 
 	@Override
@@ -75,7 +78,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		// TODO #86 stop timer
-		results.put(testIdentifier, testExecutionResult);
+		finishedTests.put(testIdentifier, testExecutionResult);
 		if (isARoot(testIdentifier)) {
 			// TODO #86 consider skipped/failed/aborted containers
 			// @formatter:off
@@ -114,18 +117,24 @@ class XmlReportsWritingListener implements TestExecutionListener {
 			throws XMLStreamException {
 		writer.writeStartElement("testsuite");
 
+		long skipped = 0;
 		long failures = 0;
 		for (TestIdentifier test : tests) {
-			TestExecutionResult result = results.get(test);
-			if (result.getStatus() == FAILED) {
-				failures++;
+			if (skippedTests.containsKey(test)) {
+				skipped++;
+			}
+			else if (finishedTests.containsKey(test)) {
+				TestExecutionResult result = finishedTests.get(test);
+				if (result.getStatus() == FAILED) {
+					failures++;
+				}
 			}
 		}
 
 		writer.writeAttribute("name", testIdentifier.getDisplayName());
 		writer.writeAttribute("tests", String.valueOf(tests.size()));
 		// TODO #86 compute skipped/failure/error counts
-		writer.writeAttribute("skipped", "0");
+		writer.writeAttribute("skipped", String.valueOf(skipped));
 		writer.writeAttribute("failures", String.valueOf(failures));
 		writer.writeAttribute("errors", "0");
 		// TODO #86 measure time
@@ -151,11 +160,27 @@ class XmlReportsWritingListener implements TestExecutionListener {
 		writer.writeAttribute("time", "0.0");
 		// TODO #86 write skipped/error/failure elements
 		writer.writeComment("Unique ID: " + test.getUniqueId().toString());
-		TestExecutionResult result = results.get(test);
-		if (result.getStatus() == FAILED) {
-			writeFailure(result.getThrowable(), writer);
+		if (skippedTests.containsKey(test)) {
+			writeSkipped(skippedTests.get(test), writer);
+		}
+		else if (finishedTests.containsKey(test)) {
+			TestExecutionResult result = finishedTests.get(test);
+			if (result.getStatus() == FAILED) {
+				writeFailure(result.getThrowable(), writer);
+			}
 		}
 		writer.writeEndElement();
+	}
+
+	private void writeSkipped(String reason, XMLStreamWriter writer) throws XMLStreamException {
+		if (isNotBlank(reason)) {
+			writer.writeStartElement("skipped");
+			writer.writeCharacters(reason);
+			writer.writeEndElement();
+		}
+		else {
+			writer.writeEmptyElement("skipped");
+		}
 	}
 
 	private void writeFailure(Optional<Throwable> throwable, XMLStreamWriter writer) throws XMLStreamException {

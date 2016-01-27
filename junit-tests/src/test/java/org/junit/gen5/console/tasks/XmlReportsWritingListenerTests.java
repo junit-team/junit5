@@ -31,6 +31,7 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
+import org.junit.gen5.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 import org.junit.gen5.launcher.Launcher;
 import org.opentest4j.AssertionFailedError;
@@ -86,7 +87,7 @@ class XmlReportsWritingListenerTests {
 			.doesNotContain("<skipped")
 			.doesNotContain("<failure")
 			.doesNotContain("<error");
-		//@formatter:off
+		//@formatter:on
 	}
 
 	@Test
@@ -109,6 +110,28 @@ class XmlReportsWritingListenerTests {
 				"</testcase>",
 				"</testsuite>")
 			.doesNotContain("<skipped")
+			.doesNotContain("<error");
+		//@formatter:on
+	}
+
+	@Test
+	void writesFileForSingleSkippedTest() throws Exception {
+		DummyTestEngine engine = new DummyTestEngine("dummy");
+		DummyTestDescriptor testDescriptor = engine.addTest("skippedTest", () -> fail("never called"));
+		testDescriptor.markSkipped("should be skipped");
+
+		executeTests(engine);
+
+		String content = readFile("TEST-dummy.xml");
+		//@formatter:off
+		assertThat(content)
+			.containsSequence(
+				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"1\" failures=\"0\" errors=\"0\"",
+				"<testcase name=\"skippedTest\"",
+				"<skipped>should be skipped</skipped>",
+				"</testcase>",
+				"</testsuite>")
+			.doesNotContain("<failure")
 			.doesNotContain("<error");
 		//@formatter:off
 	}
