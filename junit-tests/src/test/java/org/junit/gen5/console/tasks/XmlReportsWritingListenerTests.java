@@ -21,14 +21,22 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URL;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
 import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
@@ -36,10 +44,19 @@ import org.junit.gen5.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 import org.junit.gen5.launcher.Launcher;
 import org.opentest4j.AssertionFailedError;
+import org.xml.sax.SAXException;
 
 class XmlReportsWritingListenerTests {
 
+	private static Validator schemaValidator;
 	private Path tempDirectory;
+
+	@BeforeAll
+	static void initializeSchemaValidator() throws Exception {
+		URL schemaFile = XmlReportsWritingListener.class.getResource("/jenkins-junit.xsd");
+		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		schemaValidator = schemaFactory.newSchema(schemaFile).newValidator();
+	}
 
 	@BeforeEach
 	void createTempDirectory(TestInfo testInfo) throws Exception {
@@ -75,7 +92,7 @@ class XmlReportsWritingListenerTests {
 
 		executeTests(engine);
 
-		String content = readFile("TEST-dummy.xml");
+		String content = readValidXmlFile("TEST-dummy.xml");
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
@@ -98,7 +115,7 @@ class XmlReportsWritingListenerTests {
 
 		executeTests(engine);
 
-		String content = readFile("TEST-dummy.xml");
+		String content = readValidXmlFile("TEST-dummy.xml");
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
@@ -123,7 +140,7 @@ class XmlReportsWritingListenerTests {
 
 		executeTests(engine);
 
-		String content = readFile("TEST-dummy.xml");
+		String content = readValidXmlFile("TEST-dummy.xml");
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
@@ -144,7 +161,7 @@ class XmlReportsWritingListenerTests {
 
 		executeTests(engine);
 
-		String content = readFile("TEST-dummy.xml");
+		String content = readValidXmlFile("TEST-dummy.xml");
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
@@ -170,9 +187,20 @@ class XmlReportsWritingListenerTests {
 		launcher.execute(request().select(forUniqueId(engine.getId())).build());
 	}
 
-	private String readFile(String filename) throws IOException {
+	private String readValidXmlFile(String filename) throws Exception {
 		Path xmlFile = tempDirectory.resolve(filename);
 		assertTrue(Files.exists(xmlFile), () -> "File does not exist: " + xmlFile);
-		return new String(Files.readAllBytes(xmlFile), UTF_8);
+		String content = new String(Files.readAllBytes(xmlFile), UTF_8);
+		assertValidAccordingToJenkinsSchema(content);
+		return content;
+	}
+
+	private static void assertValidAccordingToJenkinsSchema(String content) throws Exception {
+		try {
+			schemaValidator.validate(new StreamSource(new StringReader(content)));
+		}
+		catch (SAXException e) {
+			throw new AssertionFailedError("Invalid XML document: " + content, e);
+		}
 	}
 }
