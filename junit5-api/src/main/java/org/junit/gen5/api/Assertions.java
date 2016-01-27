@@ -206,14 +206,25 @@ public final class Assertions {
 
 	// --- assertEquals -------------------------------------------------
 
+	/**
+	 * Asserts that {@code expected} and {@code actuals} are equal. If both are null, they are considered equal.
+	 */
 	public static void assertEquals(Object expected, Object actual) {
 		assertEquals(expected, actual, () -> null);
 	}
 
+	/**
+	 * Asserts that {@code expected} and {@code actuals} are equal. If both are null, they are considered equal.
+	 * Fail with message {@code message}.
+	 */
 	public static void assertEquals(Object expected, Object actual, String message) {
 		assertEquals(expected, actual, () -> message);
 	}
 
+	/**
+	 * Asserts that {@code expected} and {@code actuals} are equal. If both are null, they are considered equal.
+	 * Retrieve failure message from {@code messageSupplier}.
+	 */
 	public static void assertEquals(Object expected, Object actual, Supplier<String> messageSupplier) {
 		if (!Objects.equals(expected, actual)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
@@ -222,14 +233,25 @@ public final class Assertions {
 
 	// --- assertNotEquals -------------------------------------------------
 
+	/**
+	 * Asserts that {@code expected} and {@code actuals} are not equal. Fail if both are null.
+	 */
 	public static void assertNotEquals(Object unexpected, Object actual) {
 		assertNotEquals(unexpected, actual, () -> null);
 	}
 
+	/**
+	 * Asserts that {@code expected} and {@code actuals} are not equal. Fail if both are null.
+	 * Fail with message {@code message}.
+	 */
 	public static void assertNotEquals(Object unexpected, Object actual, String message) {
 		assertNotEquals(unexpected, actual, () -> message);
 	}
 
+	/**
+	 * Asserts that {@code expected} and {@code actuals} are not equal. Fail if both are null.
+	 * Retrieve failure message from {@code messageSupplier}.
+	 */
 	public static void assertNotEquals(Object unexpected, Object actual, Supplier<String> messageSupplier) {
 		if (Objects.equals(unexpected, actual)) {
 			failEqual(actual, nullSafeGet(messageSupplier));
