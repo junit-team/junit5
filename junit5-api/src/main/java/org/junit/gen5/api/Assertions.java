@@ -20,6 +20,10 @@ import org.opentest4j.AssertionFailedError;
 import org.opentest4j.MultipleFailuresError;
 
 /**
+ * {@code Assertions} is a collection of utility methods that support
+ * checking conditions in tests. A <em>failed</em> assertion will
+ * always throw {@link AssertionFailedError} or a subclass.
+ *
  * @since 5.0
  * @see AssertionFailedError
  * @see Assumptions
@@ -32,36 +36,63 @@ public final class Assertions {
 
 	// --- fail ----------------------------------------------------------
 
+	/**
+	 * <em>Fail</em> with a given {@code message}.
+	 */
 	public static void fail(String message) {
 		throw new AssertionFailedError(message);
 	}
 
+	/**
+	 * <em>Fail</em> and retrieve the failure message from {@code messageSupplier}.
+	 */
 	public static void fail(Supplier<String> messageSupplier) {
 		fail(nullSafeGet(messageSupplier));
 	}
 
 	// --- assertTrue ----------------------------------------------------
 
+	/**
+	 * <em>Fail</em> if {@code condition} does <em>not</em> hold.
+	 */
 	public static void assertTrue(boolean condition) {
 		assertTrue(() -> condition, () -> null);
 	}
 
+	/**
+	 * <em>Fail</em> if {@code condition} does <em>not</em> hold and retrieve
+	 * the failure message from {@code messageSupplier}.
+	 */
 	public static void assertTrue(boolean condition, Supplier<String> messageSupplier) {
 		assertTrue(() -> condition, messageSupplier);
 	}
 
+	/**
+	 * <em>Fail</em> if the condition supplied by {@code booleanSupplier} does <em>not</em> hold.
+	 */
 	public static void assertTrue(BooleanSupplier booleanSupplier) {
 		assertTrue(booleanSupplier, () -> null);
 	}
 
+	/**
+	 * <em>Fail</em> if the condition supplied by {@code booleanSupplier} does <em>not</em> hold
+	 * with message {@code message}.
+	 */
 	public static void assertTrue(BooleanSupplier booleanSupplier, String message) {
 		assertTrue(booleanSupplier, () -> message);
 	}
 
+	/**
+	 * <em>Fail</em> if {@code condition} does <em>not</em> hold with message {@code message}.
+	 */
 	public static void assertTrue(boolean condition, String message) {
 		assertTrue(() -> condition, () -> message);
 	}
 
+	/**
+	 * <em>Fail</em> if the condition supplied by {@code booleanSupplier} does <em>not</em> hold
+	 * and retrieve the failure message from {@code messageSupplier}.
+	 */
 	public static void assertTrue(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
 		if (!booleanSupplier.getAsBoolean()) {
 			fail(messageSupplier);
@@ -70,26 +101,47 @@ public final class Assertions {
 
 	// --- assertFalse ---------------------------------------------------
 
+	/**
+	 * <em>Fail</em> if {@code condition} does hold.
+	 */
 	public static void assertFalse(boolean condition) {
 		assertFalse(() -> condition, () -> null);
 	}
 
+	/**
+	 * <em>Fail</em> if {@code condition} does hold with message {@code message}.
+	 */
 	public static void assertFalse(boolean condition, String message) {
 		assertFalse(() -> condition, () -> message);
 	}
 
+	/**
+	 * <em>Fail</em> if {@code condition} does hold and retrieve
+	 * the failure message from {@code messageSupplier}.
+	 */
 	public static void assertFalse(boolean condition, Supplier<String> messageSupplier) {
 		assertFalse(() -> condition, messageSupplier);
 	}
 
+	/**
+	 * <em>Fail</em> if the condition supplied by {@code booleanSupplier} does hold.
+	 */
 	public static void assertFalse(BooleanSupplier booleanSupplier) {
 		assertFalse(booleanSupplier, () -> null);
 	}
 
+	/**
+	 * <em>Fail</em> if the condition supplied by {@code booleanSupplier} does hold
+	 * with message {@code message}.
+	 */
 	public static void assertFalse(BooleanSupplier booleanSupplier, String message) {
 		assertFalse(booleanSupplier, () -> message);
 	}
 
+	/**
+	 * <em>Fail</em> if the condition supplied by {@code booleanSupplier} does hold
+	 * and retrieve the failure message from {@code messageSupplier}.
+	 */
 	public static void assertFalse(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
 		if (booleanSupplier.getAsBoolean()) {
 			fail(messageSupplier);
