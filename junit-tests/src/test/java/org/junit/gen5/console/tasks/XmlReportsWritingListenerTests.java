@@ -13,6 +13,7 @@ package org.junit.gen5.console.tasks;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
@@ -32,6 +33,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 import org.junit.gen5.launcher.Launcher;
+import org.opentest4j.AssertionFailedError;
 
 class XmlReportsWritingListenerTests {
 
@@ -83,6 +85,30 @@ class XmlReportsWritingListenerTests {
 				"</testsuite>")
 			.doesNotContain("<skipped")
 			.doesNotContain("<failure")
+			.doesNotContain("<error");
+		//@formatter:off
+	}
+
+	@Test
+	void writesFileForSingleFailingTest() throws Exception {
+		DummyTestEngine engine = new DummyTestEngine("dummy");
+		engine.addTest("failingTest", () -> fail("expected to <b>fail</b>"));
+
+		executeTests(engine);
+
+		String content = readFile("TEST-dummy.xml");
+		//@formatter:off
+		assertThat(content)
+			.containsSequence(
+				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"1\" errors=\"0\"",
+				"<testcase name=\"failingTest\"",
+				"<failure message=\"expected to &lt;b&gt;fail&lt;/b&gt;\" type=\"" + AssertionFailedError.class.getName() + "\">",
+				"AssertionFailedError: expected to &lt;b&gt;fail&lt;/b&gt;",
+				"\tat",
+				"</failure>",
+				"</testcase>",
+				"</testsuite>")
+			.doesNotContain("<skipped")
 			.doesNotContain("<error");
 		//@formatter:off
 	}
