@@ -8,13 +8,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.example;
+package example;
 
-import org.junit.gen5.junit4.runner.Classes;
+// tag::user_guide[]
 import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.gen5.junit4.runner.Packages;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
-@Classes({ SampleTestCase.class, SucceedingTestCase.class, JUnit4TestCase.class })
-public class JUnit4SamplesSuite {
+@Packages({ "example" })
+public class JUnit4SampleSuite {
 }
+// end::user_guide[]

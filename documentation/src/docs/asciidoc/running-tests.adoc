@@ -285,20 +285,12 @@ If you have multiple JUnit 5 tests you can create a test suite.
 
 [source,java,indent=0]
 [subs="verbatim"]
+.A JUnit 5 suite run through JUnit 4
 ----
-package com.example;
-
-import org.junit.gen5.junit4runner.JUnit5;
-import org.junit.gen5.junit4runner.JUnit5.Packages;
-import org.junit.runner.RunWith;
-
-@RunWith(JUnit5.class)
-@Packages("com.example")
-public class JUnit4SamplesSuite {
-}
+include::{testDir}/example/JUnit4SampleSuite.java[tags=user_guide]
 ----
 
-The `JUnit4SamplesSuite` will discover and run all tests in the `com.example` package
+The `JUnit4SamplesSuite` will discover and run all tests in the `example` package
 and its subpackages.
 
 There are more configuration options for discovering and filtering tests than just

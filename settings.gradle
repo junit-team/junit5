@@ -12,6 +12,4 @@ include "junit4-runner"
 include "junit5-api"
 include "junit5-engine"
 
-include "sample-project"
-
 include "surefire-junit5"

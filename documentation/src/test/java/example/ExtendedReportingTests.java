@@ -8,24 +8,27 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package com.example;
+package example;
 
 import java.util.HashMap;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestReporter;
 
-public class ReportingTestCase {
+public class ExtendedReportingTests {
 
 	@Test
-	void testWithReporting(TestReporter testReporter) {
+	void reportSingleValue(TestReporter testReporter) {
+		testReporter.publishEntry("a key", "a value");
+	}
 
+	@Test
+	void reportSeveralValues(TestReporter testReporter) {
 		HashMap<String, String> values = new HashMap<>();
 		values.put("user name", "dk38");
 		values.put("award year", "1974");
 
 		testReporter.publishEntry(values);
-
 	}
 
 }
