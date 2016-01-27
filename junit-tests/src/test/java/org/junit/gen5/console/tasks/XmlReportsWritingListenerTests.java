@@ -75,7 +75,7 @@ class XmlReportsWritingListenerTests {
 		//@formatter:off
 		assertThat(content)
 			.contains("<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"0\" errors=\"0\"")
-			.contains("<testcase name=\"succeedingTest\"")
+			.contains("<testcase name=\"succeedingTest\" classname=\"dummy\"")
 			.doesNotContain("<skipped")
 			.doesNotContain("<failure")
 			.doesNotContain("<error");

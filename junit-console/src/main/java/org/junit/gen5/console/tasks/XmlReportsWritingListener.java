@@ -133,8 +133,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 		writer.writeAttribute("name", test.getDisplayName());
 		Optional<TestIdentifier> parent = testPlan.getParent(test);
 		if (parent.isPresent()) {
-			// TODO #86 use getName()
-			writer.writeAttribute("classname", parent.get().getUniqueId().toString());
+			writer.writeAttribute("classname", parent.get().getName());
 		}
 		// TODO #86 measure time
 		writer.writeAttribute("time", "0.0");
