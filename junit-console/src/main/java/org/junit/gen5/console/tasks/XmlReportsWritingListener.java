@@ -67,8 +67,8 @@ class XmlReportsWritingListener implements TestExecutionListener {
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		// TODO #86 write file for roots
 		skippedTests.put(testIdentifier, reason == null ? "" : reason);
+		// TODO #86 write file for roots
 	}
 
 	@Override
@@ -207,6 +207,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 		writer.writeCharacters(readStackTrace(throwable));
 	}
 
+	// TODO #86 Move to ExceptionUtils
 	private String readStackTrace(Throwable throwable) {
 		StringWriter stringWriter = new StringWriter();
 		try (PrintWriter printWriter = new PrintWriter(stringWriter)) {
