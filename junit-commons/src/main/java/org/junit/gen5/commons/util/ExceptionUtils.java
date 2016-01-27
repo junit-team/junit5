@@ -10,6 +10,9 @@
 
 package org.junit.gen5.commons.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * Collection of utilities for working with exceptions.
  *
@@ -58,6 +61,18 @@ public final class ExceptionUtils {
 	@SuppressWarnings("unchecked")
 	private static <T extends Throwable> void throwAs(Throwable t) throws T {
 		throw (T) t;
+	}
+
+	/**
+	 * Reads the stacktrace of the supplied {@link Throwable} into a String.
+	 */
+	public static String readStackTrace(Throwable throwable) {
+		Preconditions.notNull(throwable, "Throwable must not be null");
+		StringWriter stringWriter = new StringWriter();
+		try (PrintWriter printWriter = new PrintWriter(stringWriter)) {
+			throwable.printStackTrace(printWriter);
+		}
+		return stringWriter.toString();
 	}
 
 }

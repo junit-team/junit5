@@ -12,6 +12,7 @@ package org.junit.gen5.console.tasks;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.commons.util.ExceptionUtils.readStackTrace;
 import static org.junit.gen5.commons.util.StringUtils.isNotBlank;
 import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
 
@@ -20,8 +21,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.text.NumberFormat;
 import java.util.List;
@@ -155,15 +154,6 @@ class XmlReportWriter {
 		}
 		writer.writeAttribute("type", throwable.getClass().getName());
 		writer.writeCharacters(readStackTrace(throwable));
-	}
-
-	// TODO #86 Move to ExceptionUtils
-	private String readStackTrace(Throwable throwable) {
-		StringWriter stringWriter = new StringWriter();
-		try (PrintWriter printWriter = new PrintWriter(stringWriter)) {
-			throwable.printStackTrace(printWriter);
-		}
-		return stringWriter.toString();
 	}
 
 }

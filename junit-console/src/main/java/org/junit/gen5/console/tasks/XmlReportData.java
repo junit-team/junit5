@@ -12,14 +12,13 @@ package org.junit.gen5.console.tasks;
 
 import static org.junit.gen5.engine.TestExecutionResult.Status.ABORTED;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -56,7 +55,7 @@ class XmlReportData {
 	void markFinished(TestIdentifier testIdentifier, TestExecutionResult result) {
 		endInstants.put(testIdentifier, clock.instant());
 		if (result.getStatus() == ABORTED) {
-			String reason = result.getThrowable().map(XmlReportData::readStackTrace).orElse("");
+			String reason = result.getThrowable().map(ExceptionUtils::readStackTrace).orElse("");
 			skippedTests.put(testIdentifier, reason);
 		}
 		else {
@@ -84,15 +83,6 @@ class XmlReportData {
 
 	TestExecutionResult getResult(TestIdentifier testIdentifier) {
 		return finishedTests.get(testIdentifier);
-	}
-
-	// TODO #86 Move to ExceptionUtils
-	static String readStackTrace(Throwable throwable) {
-		StringWriter stringWriter = new StringWriter();
-		try (PrintWriter printWriter = new PrintWriter(stringWriter)) {
-			throwable.printStackTrace(printWriter);
-		}
-		return stringWriter.toString();
 	}
 
 }
