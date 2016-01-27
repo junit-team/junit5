@@ -207,14 +207,14 @@ public final class Assertions {
 	// --- assertEquals -------------------------------------------------
 
 	/**
-	 * Asserts that {@code expected} and {@code actuals} are equal. If both are null, they are considered equal.
+	 * Asserts that {@code expected} and {@code actual} are equal. If both are null, they are considered equal.
 	 */
 	public static void assertEquals(Object expected, Object actual) {
 		assertEquals(expected, actual, () -> null);
 	}
 
 	/**
-	 * Asserts that {@code expected} and {@code actuals} are equal. If both are null, they are considered equal.
+	 * Asserts that {@code expected} and {@code actual} are equal. If both are null, they are considered equal.
 	 * Fail with message {@code message}.
 	 */
 	public static void assertEquals(Object expected, Object actual, String message) {
@@ -222,7 +222,7 @@ public final class Assertions {
 	}
 
 	/**
-	 * Asserts that {@code expected} and {@code actuals} are equal. If both are null, they are considered equal.
+	 * Asserts that {@code expected} and {@code actual} are equal. If both are null, they are considered equal.
 	 * Retrieve failure message from {@code messageSupplier}.
 	 */
 	public static void assertEquals(Object expected, Object actual, Supplier<String> messageSupplier) {
@@ -234,14 +234,14 @@ public final class Assertions {
 	// --- assertNotEquals -------------------------------------------------
 
 	/**
-	 * Asserts that {@code expected} and {@code actuals} are not equal. Fail if both are null.
+	 * Asserts that {@code expected} and {@code actual} are not equal. Fail if both are null.
 	 */
 	public static void assertNotEquals(Object unexpected, Object actual) {
 		assertNotEquals(unexpected, actual, () -> null);
 	}
 
 	/**
-	 * Asserts that {@code expected} and {@code actuals} are not equal. Fail if both are null.
+	 * Asserts that {@code expected} and {@code actual} are not equal. Fail if both are null.
 	 * Fail with message {@code message}.
 	 */
 	public static void assertNotEquals(Object unexpected, Object actual, String message) {
@@ -249,7 +249,7 @@ public final class Assertions {
 	}
 
 	/**
-	 * Asserts that {@code expected} and {@code actuals} are not equal. Fail if both are null.
+	 * Asserts that {@code expected} and {@code actual} are not equal. Fail if both are null.
 	 * Retrieve failure message from {@code messageSupplier}.
 	 */
 	public static void assertNotEquals(Object unexpected, Object actual, Supplier<String> messageSupplier) {
@@ -260,14 +260,25 @@ public final class Assertions {
 
 	// --- assertSame ----------------------------------------------------
 
+	/**
+	 * Asserts that {@code expected} and {@code actual} refer to the same object.
+	 */
 	public static void assertSame(Object expected, Object actual) {
 		assertSame(expected, actual, () -> null);
 	}
 
+	/**
+	 * Asserts that {@code expected} and {@code actual} refer to the same object.
+	 * Fail with message {@code message}.
+	 */
 	public static void assertSame(Object expected, Object actual, String message) {
 		assertSame(expected, actual, () -> message);
 	}
 
+	/**
+	 * Asserts that {@code expected} and {@code actual} refer to the same object.
+	 * Retrieve failure message from {@code messageSupplier}.
+	 */
 	public static void assertSame(Object expected, Object actual, Supplier<String> messageSupplier) {
 		if (expected != actual) {
 			failNotSame(expected, actual, nullSafeGet(messageSupplier));
@@ -276,14 +287,25 @@ public final class Assertions {
 
 	// --- assertNotSame -------------------------------------------------
 
+	/**
+	 * Asserts that {@code expected} and {@code actual} do not refer to the same object.
+	 */
 	public static void assertNotSame(Object unexpected, Object actual) {
 		assertNotSame(unexpected, actual, () -> null);
 	}
 
+	/**
+	 * Asserts that {@code expected} and {@code actual} do not refer to the same object.
+	 * Fail with message {@code message}.
+	 */
 	public static void assertNotSame(Object unexpected, Object actual, String message) {
 		assertNotSame(unexpected, actual, () -> message);
 	}
 
+	/**
+	 * Asserts that {@code expected} and {@code actual} do not refer to the same object.
+	 * Retrieve failure message from {@code messageSupplier}.
+	 */
 	public static void assertNotSame(Object unexpected, Object actual, Supplier<String> messageSupplier) {
 		if (unexpected == actual) {
 			failSame(actual, nullSafeGet(messageSupplier));
