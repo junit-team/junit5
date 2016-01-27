@@ -13,7 +13,6 @@ package org.junit.gen5.console.tasks;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.StringUtils.isNotBlank;
-import static org.junit.gen5.engine.TestExecutionResult.Status.ABORTED;
 import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
 
 import java.io.BufferedWriter;
@@ -29,9 +28,7 @@ import java.text.NumberFormat;
 import java.time.Clock;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -44,17 +41,11 @@ import org.junit.gen5.launcher.TestPlan;
 
 class XmlReportsWritingListener implements TestExecutionListener {
 
-	private static final int MILLIS_PER_SECOND = 1000;
-
 	private final File reportsDir;
 	private final PrintWriter out;
 	private final Clock clock;
 
-	private TestPlan testPlan;
-	private Map<TestIdentifier, TestExecutionResult> finishedTests = new ConcurrentHashMap<>();
-	private Map<TestIdentifier, String> skippedTests = new ConcurrentHashMap<>();
-	private Map<TestIdentifier, Long> startTimes = new ConcurrentHashMap<>();
-	private Map<TestIdentifier, Long> endTimes = new ConcurrentHashMap<>();
+	private XmlReportData reportData;
 
 	public XmlReportsWritingListener(String reportsDir, PrintWriter out) {
 		this(reportsDir, out, Clock.systemDefaultZone());
@@ -69,7 +60,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
-		this.testPlan = testPlan;
+		this.reportData = new XmlReportData(testPlan, clock);
 		try {
 			Files.createDirectories(reportsDir.toPath());
 		}
@@ -81,41 +72,38 @@ class XmlReportsWritingListener implements TestExecutionListener {
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		skippedTests.put(testIdentifier, reason == null ? "" : reason);
+		reportData.markSkipped(testIdentifier, reason);
 		// TODO #86 write file for roots
 	}
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		startTimes.put(testIdentifier, clock.millis());
+		reportData.markStarted(testIdentifier);
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult result) {
-		endTimes.put(testIdentifier, clock.millis());
-		if (result.getStatus() == ABORTED) {
-			String reason = result.getThrowable().map(this::readStackTrace).orElse("");
-			skippedTests.put(testIdentifier, reason);
-		}
-		else {
-			finishedTests.put(testIdentifier, result);
-		}
+		reportData.markFinished(testIdentifier, result);
 		if (isARoot(testIdentifier)) {
 			// TODO #86 consider skipped/failed/aborted containers
 			// @formatter:off
-			List<TestIdentifier> tests = testPlan.getDescendants(testIdentifier).stream()
-					.filter(TestIdentifier::isTest)
-					.collect(toList());
-			// @formatter:on
-			if (!tests.isEmpty()) {
-				File xmlFile = new File(reportsDir, "TEST-" + testIdentifier.getUniqueId() + ".xml");
-				writeXmlReport(testIdentifier, tests, xmlFile);
-			}
+			File xmlFile = new File(reportsDir, "TEST-" + testIdentifier.getUniqueId() + ".xml");
+			writeXmlReport(testIdentifier, xmlFile);
 		}
 	}
 
 	private boolean isARoot(TestIdentifier testIdentifier) {
 		return !testIdentifier.getParentId().isPresent();
+	}
+
+	private void writeXmlReport(TestIdentifier testIdentifier, File xmlFile) {
+		List<TestIdentifier> tests = reportData.getTestPlan().getDescendants(testIdentifier).stream()
+				.filter(TestIdentifier::isTest)
+				.collect(toList());
+		// @formatter:on
+		if (!tests.isEmpty()) {
+			writeXmlReport(testIdentifier, tests, xmlFile);
+		}
 	}
 
 	private void writeXmlReport(TestIdentifier testIdentifier, List<TestIdentifier> tests, File xmlFile) {
@@ -141,11 +129,11 @@ class XmlReportsWritingListener implements TestExecutionListener {
 		long skipped = 0;
 		long failures = 0;
 		for (TestIdentifier test : tests) {
-			if (skippedTests.containsKey(test)) {
+			if (reportData.wasSkipped(test)) {
 				skipped++;
 			}
-			else if (finishedTests.containsKey(test)) {
-				TestExecutionResult result = finishedTests.get(test);
+			else if (reportData.wasFinished(test)) {
+				TestExecutionResult result = reportData.getResult(test);
 				if (result.getStatus() == FAILED) {
 					failures++;
 				}
@@ -160,7 +148,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 		writer.writeAttribute("errors", "0");
 
 		NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-		writer.writeAttribute("time", numberFormat.format(calculateDurationInSeconds(testIdentifier)));
+		writer.writeAttribute("time", numberFormat.format(reportData.getDurationInSeconds(testIdentifier)));
 
 		writer.writeComment("Unique ID: " + testIdentifier.getUniqueId().toString());
 
@@ -171,32 +159,22 @@ class XmlReportsWritingListener implements TestExecutionListener {
 		writer.writeEndElement();
 	}
 
-	private double calculateDurationInSeconds(TestIdentifier testIdentifier) {
-		return calculateDurationInMillis(testIdentifier) / (double) MILLIS_PER_SECOND;
-	}
-
-	private long calculateDurationInMillis(TestIdentifier testIdentifier) {
-		long start = startTimes.getOrDefault(testIdentifier, 0L);
-		long end = endTimes.getOrDefault(testIdentifier, start);
-		return end - start;
-	}
-
 	private void writeTestcase(TestIdentifier test, NumberFormat numberFormat, XMLStreamWriter writer)
 			throws XMLStreamException {
 		writer.writeStartElement("testcase");
 		writer.writeAttribute("name", test.getDisplayName());
-		Optional<TestIdentifier> parent = testPlan.getParent(test);
+		Optional<TestIdentifier> parent = reportData.getTestPlan().getParent(test);
 		if (parent.isPresent()) {
 			writer.writeAttribute("classname", parent.get().getName());
 		}
-		writer.writeAttribute("time", numberFormat.format(calculateDurationInSeconds(test)));
+		writer.writeAttribute("time", numberFormat.format(reportData.getDurationInSeconds(test)));
 		// TODO #86 write error elements
 		writer.writeComment("Unique ID: " + test.getUniqueId().toString());
-		if (skippedTests.containsKey(test)) {
-			writeSkipped(skippedTests.get(test), writer);
+		if (reportData.wasSkipped(test)) {
+			writeSkipped(reportData.getSkipReason(test), writer);
 		}
-		else if (finishedTests.containsKey(test)) {
-			TestExecutionResult result = finishedTests.get(test);
+		else if (reportData.wasFinished(test)) {
+			TestExecutionResult result = reportData.getResult(test);
 			if (result.getStatus() == FAILED) {
 				writeFailure(result.getThrowable(), writer);
 			}
