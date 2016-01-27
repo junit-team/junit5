@@ -151,7 +151,7 @@ class XmlReportsWritingListenerTests {
 				"</testsuite>")
 			.doesNotContain("<failure")
 			.doesNotContain("<error");
-		//@formatter:off
+		//@formatter:on
 	}
 
 	@Test
@@ -176,7 +176,7 @@ class XmlReportsWritingListenerTests {
 				"</testsuite>")
 			.doesNotContain("<failure")
 			.doesNotContain("<error");
-		//@formatter:off
+		//@formatter:on
 	}
 
 	private void executeTests(DummyTestEngine engine) {
