@@ -11,13 +11,9 @@
 package org.junit.gen5.api.extension;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
-import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
@@ -32,12 +28,12 @@ import org.junit.gen5.commons.util.Preconditions;
 public interface ExtensionContext {
 
 	/**
-	 * Publish a  {@code ReportEntry} to be consumed by an
+	 * Publish a map of values to be consumed by an
 	 * {@code org.junit.gen5.engine.EngineExecutionListener}.
 	 *
-	 * @param entry the entry to be reported
+	 * @param values the map of values to be reported for this entry
 	 */
-	void publishReportEntry(ReportEntry entry);
+	void publishReportEntry(Map<String, String> values);
 
 	/**
 	 * Get the parent extension context if there is one.

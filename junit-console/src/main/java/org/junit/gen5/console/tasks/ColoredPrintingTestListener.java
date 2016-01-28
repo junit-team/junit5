@@ -14,9 +14,9 @@ import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.*;
 
 import java.io.PrintWriter;
 
-import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestExecutionResult.Status;
+import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;

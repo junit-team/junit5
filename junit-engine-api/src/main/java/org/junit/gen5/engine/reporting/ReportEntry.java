@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.commons.reporting;
+package org.junit.gen5.engine.reporting;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -18,7 +18,7 @@ import org.junit.gen5.commons.util.Preconditions;
 
 /**
  * This class represents a {@code ReportEntry} &mdash;
- * that is a map of {@code String}-based key-value pairs
+ * that is a time-stamped map of {@code String}-based key-value pairs
  * to be published to the reporting infrastructure.
  *
  * @since 5.0

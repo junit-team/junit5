@@ -26,9 +26,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.engine.ExecutionEvent.Type;
 import org.junit.gen5.engine.TestExecutionResult.Status;
+import org.junit.gen5.engine.reporting.ReportEntry;
 
 /**
  * {@link EngineExecutionListener} that records all events and makes them available to tests.

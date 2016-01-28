@@ -14,8 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;

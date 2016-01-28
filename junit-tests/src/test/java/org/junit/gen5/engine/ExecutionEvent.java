@@ -17,8 +17,8 @@ import static org.junit.gen5.engine.ExecutionEvent.Type.*;
 import java.util.*;
 import java.util.function.Predicate;
 
-import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.commons.util.ToStringBuilder;
+import org.junit.gen5.engine.reporting.ReportEntry;
 
 /**
  * Represents an event collected by {@link ExecutionEventRecorder}.

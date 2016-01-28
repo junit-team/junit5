@@ -13,9 +13,9 @@ package org.junit.gen5.launcher;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestExecutionResult.Status;
+import org.junit.gen5.engine.reporting.ReportEntry;
 
 /**
  * Register an instance of this class with a {@link Launcher} to be notified of

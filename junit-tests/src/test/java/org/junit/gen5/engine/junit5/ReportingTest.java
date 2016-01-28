@@ -21,7 +21,6 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestReporter;
-import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
@@ -45,23 +44,23 @@ public class ReportingTest extends AbstractJUnit5TestEngineTests {
 
 		@BeforeEach
 		void before(TestReporter reporter) {
-			reporter.publishEntry(ReportEntry.from(new HashMap<>()));
+			reporter.publishEntry(new HashMap<>());
 		}
 
 		@AfterEach
 		void after(TestReporter reporter) {
-			reporter.publishEntry(ReportEntry.from(new HashMap<>()));
+			reporter.publishEntry(new HashMap<>());
 		}
 
 		@Test
 		void succeedingTest(TestReporter reporter) {
-			reporter.publishEntry(ReportEntry.from(new HashMap<>()));
+			reporter.publishEntry(new HashMap<>());
 			reporter.publishEntry("userName", "dk38");
 		}
 
 		@Test
 		void testWithNullReportData(TestReporter reporter) {
-			assertThrows(PreconditionViolationException.class, () -> reporter.publishEntry(ReportEntry.from(null)));
+			assertThrows(PreconditionViolationException.class, () -> reporter.publishEntry(null));
 		}
 
 	}

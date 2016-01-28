@@ -10,37 +10,30 @@
 
 package org.junit.gen5.api;
 
-import java.util.Map;
-
-import org.junit.gen5.commons.reporting.ReportEntry;
+import java.util.*;
 
 /**
  * Parameters of type {@code TestReporter} can be injected into methods of
  * test classes annotated with {@link BeforeEach @BeforeEach},
  * {@link AfterEach @AfterEach}, and {@link Test @Test}.
  *
- * <p>Within such methods a {@code TestReporter} can be used to publish
- * {@link ReportEntry} instances.
+ * <p>Within such methods this instance of type {@code TestReporter} can be
+ * used to publish report entries.
  *
  * @since 5.0
- * @see ReportEntry
  */
 @FunctionalInterface
 public interface TestReporter {
 
 	/**
-	 * Publish the supplied {@code ReportEntry}.
+	 * Publish the supplied values as a report entry.
 	 *
-	 * @param entry the entry to publish
+	 * @param  values the map to be published for this entry
 	 */
-	void publishEntry(ReportEntry entry);
+	void publishEntry(Map<String, String> values);
 
 	default void publishEntry(String key, String value) {
-		this.publishEntry(ReportEntry.from(key, value));
-	}
-
-	default void publishEntry(Map<String, String> values) {
-		this.publishEntry(ReportEntry.from(values));
+		this.publishEntry(Collections.singletonMap(key, value));
 	}
 
 }

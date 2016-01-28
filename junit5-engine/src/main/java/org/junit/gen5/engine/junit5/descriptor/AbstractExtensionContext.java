@@ -10,14 +10,14 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import java.util.Optional;
+import java.util.*;
 
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.execution.ExtensionValuesStore;
 import org.junit.gen5.engine.junit5.execution.NamespaceAwareStore;
+import org.junit.gen5.engine.reporting.ReportEntry;
 
 /**
  * @since 5.0
@@ -46,8 +46,8 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 	}
 
 	@Override
-	public void publishReportEntry(ReportEntry entry) {
-		engineExecutionListener.reportingEntryPublished(this.testDescriptor, entry);
+	public void publishReportEntry(Map<String, String> values) {
+		engineExecutionListener.reportingEntryPublished(this.testDescriptor, ReportEntry.from(values));
 	}
 
 	@Override

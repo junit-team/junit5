@@ -10,8 +10,8 @@
 
 package org.junit.gen5.engine;
 
-import org.junit.gen5.commons.reporting.ReportEntry;
 import org.junit.gen5.engine.TestExecutionResult.Status;
+import org.junit.gen5.engine.reporting.ReportEntry;
 
 /**
  * Listener to be notified of test execution events by
