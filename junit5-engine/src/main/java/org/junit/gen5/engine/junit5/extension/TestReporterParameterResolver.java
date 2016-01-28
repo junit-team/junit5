@@ -16,6 +16,7 @@ import org.junit.gen5.api.TestReporter;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
+import org.junit.gen5.commons.util.*;
 
 /**
  * {@link MethodParameterResolver} that injects a {@link TestReporter}.
@@ -27,6 +28,8 @@ public class TestReporterParameterResolver implements MethodParameterResolver {
 	@Override
 	public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,
 			ExtensionContext extensionContext) {
+		Preconditions.notNull(parameter, "supplied parameter must not be null");
+
 		return (parameter.getType() == TestReporter.class);
 	}
 

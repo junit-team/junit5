@@ -33,9 +33,13 @@ class TestReporterParameterResolverTests {
 			"methodWithoutTestReporterParameter", new Class[] { String.class }).get();
 		Parameter parameter2 = methodWithoutTestReporterParameter.getParameters()[0];
 		assertFalse(resolver.supports(parameter2, null, null));
+	}
 
-		//	assertTrue(resolver.supports(null, null, null));
-
+	@Test
+	void testSupports_NullSafe() {
+		assertThrows(PreconditionViolationException.class, () -> {
+			resolver.supports(null, null, null);
+		});
 	}
 
 	@Test
