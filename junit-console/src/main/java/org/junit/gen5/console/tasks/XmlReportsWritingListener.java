@@ -61,7 +61,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 		reportData.markSkipped(testIdentifier, reason);
-		// TODO #86 write file for roots
+		writeXmlReportInCaseOfRoot(testIdentifier);
 	}
 
 	@Override
@@ -72,6 +72,10 @@ class XmlReportsWritingListener implements TestExecutionListener {
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult result) {
 		reportData.markFinished(testIdentifier, result);
+		writeXmlReportInCaseOfRoot(testIdentifier);
+	}
+
+	private void writeXmlReportInCaseOfRoot(TestIdentifier testIdentifier) {
 		if (isARoot(testIdentifier)) {
 			writeXmlReportSafely(testIdentifier);
 		}

@@ -13,12 +13,11 @@ package org.junit.gen5.engine.support.hierarchical;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
 public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExecutionContext> {
 
 	private final String engineId;
-	private final EngineDescriptor root;
+	private final DummyEngineDescriptor engineDescriptor;
 
 	public DummyTestEngine() {
 		this("dummy");
@@ -26,7 +25,7 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 
 	public DummyTestEngine(String engineId) {
 		this.engineId = engineId;
-		this.root = new EngineDescriptor(engineId, engineId);
+		this.engineDescriptor = new DummyEngineDescriptor(engineId);
 	}
 
 	@Override
@@ -34,15 +33,19 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 		return engineId;
 	}
 
+	public DummyEngineDescriptor getEngineDescriptor() {
+		return engineDescriptor;
+	}
+
 	public DummyTestDescriptor addTest(String uniqueName, Runnable runnable) {
 		DummyTestDescriptor child = new DummyTestDescriptor(engineId + ":" + uniqueName, uniqueName, runnable);
-		root.addChild(child);
+		engineDescriptor.addChild(child);
 		return child;
 	}
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest) {
-		return root;
+		return engineDescriptor;
 	}
 
 	@Override

@@ -228,6 +228,28 @@ class XmlReportsWritingListenerTests {
 		//@formatter:on
 	}
 
+	@Test
+	void writesFileForSkippedContainer() throws Exception {
+		DummyTestEngine engine = new DummyTestEngine("dummy");
+		engine.addTest("skippedTest", () -> fail("never called"));
+		engine.getEngineDescriptor().markSkipped("should be skipped");
+
+		executeTests(engine);
+
+		String content = readValidXmlFile("TEST-dummy.xml");
+		//@formatter:off
+		assertThat(content)
+			.containsSequence(
+				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"1\" failures=\"0\" errors=\"0\"",
+				"<testcase name=\"skippedTest\"",
+				"<skipped>parent was skipped: should be skipped</skipped>",
+				"</testcase>",
+				"</testsuite>")
+			.doesNotContain("<failure")
+			.doesNotContain("<error");
+		//@formatter:on
+	}
+
 	private void executeTests(TestEngine engine) {
 		executeTests(engine, Clock.systemDefaultZone());
 	}

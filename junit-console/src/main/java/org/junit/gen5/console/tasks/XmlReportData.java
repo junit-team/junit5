@@ -16,7 +16,9 @@ import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.engine.TestExecutionResult;
@@ -64,7 +66,7 @@ class XmlReportData {
 	}
 
 	boolean wasSkipped(TestIdentifier testIdentifier) {
-		return skippedTests.containsKey(testIdentifier);
+		return findSkippedAncestor(testIdentifier).isPresent();
 	}
 
 	boolean wasFinished(TestIdentifier testIdentifier) {
@@ -77,12 +79,33 @@ class XmlReportData {
 		return Duration.between(startInstant, endInstant).toMillis() / (double) MILLIS_PER_SECOND;
 	}
 
-	String getSkipReason(TestIdentifier test) {
-		return skippedTests.get(test);
+	String getSkipReason(TestIdentifier testIdentifier) {
+		return findSkippedAncestor(testIdentifier).map(skippedTestIdentifier -> {
+			String reason = skippedTests.get(skippedTestIdentifier);
+			if (!testIdentifier.equals(skippedTestIdentifier)) {
+				reason = "parent was skipped: " + reason;
+			}
+			return reason;
+		}).orElse(null);
 	}
 
 	TestExecutionResult getResult(TestIdentifier testIdentifier) {
 		return finishedTests.get(testIdentifier);
+	}
+
+	private Optional<TestIdentifier> findSkippedAncestor(TestIdentifier testIdentifier) {
+		return findAncestor(testIdentifier, skippedTests::containsKey);
+	}
+
+	private Optional<TestIdentifier> findAncestor(TestIdentifier testIdentifier, Predicate<TestIdentifier> predicate) {
+		Optional<TestIdentifier> current = Optional.of(testIdentifier);
+		while (current.isPresent()) {
+			if (predicate.test(current.get())) {
+				return current;
+			}
+			current = testPlan.getParent(current.get());
+		}
+		return Optional.empty();
 	}
 
 }
