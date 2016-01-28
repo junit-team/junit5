@@ -640,8 +640,8 @@ module.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
+<col style="width: 20%;">
+<col style="width: 80%;">
 </colgroup>
 <thead>
 <tr>
@@ -651,43 +651,43 @@ module.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@Test</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Test</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test method. Unlike JUnit 4&#8217;s <code>@Test</code> annotation, this annotation does not declare any attributes, since test extensions in JUnit 5 operate based on their own dedicated annotations.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@DisplayName</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@DisplayName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Declares a custom display name for the test class or test method</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@BeforeEach</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@BeforeEach</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>each</strong> <code>@Test</code> method in the current class or class hierarchy</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@AfterEach</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AfterEach</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>each</strong> <code>@Test</code> method in the current class or class hierarchy</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@BeforeAll</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@BeforeAll</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>all</strong> <code>@Test</code> methods in the current class or class hierarchy; analogous to JUnit 4&#8217;s <code>@BeforeClass</code>. Such methods must be <code>static</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@AfterAll</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AfterAll</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>all</strong> <code>@Test</code> methods in the current class or class hierarchy; analogous to JUnit 4&#8217;s <code>@AfterClass</code>. Such methods must be <code>static</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@Nested</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Nested</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated class is a nested, non-static test class. Due to restrictions of the Java language, <code>@BeforeAll</code> and <code>@AfterAll</code> methods cannot be used in a <code>@Nested</code> test class.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@Tag</code></strong> and <strong><code>@Tags</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Tag</code> and <code>@Tags</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Used to declare <em>tags</em> for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@Disabled</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Disabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Used to <em>disable</em> a test class or test method; analogous to JUnit 4&#8217;s <code>@Ignore</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>@ExtendWith</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ExtendWith</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Used to register custom <a href="#extension-model">extensions</a> to the framework.</p></td>
 </tr>
 </tbody>
@@ -1136,7 +1136,7 @@ class MyMockitoTest {
 <p>At this stage there is no direct support for running JUnit 5 tests in IDEs. However, we
 provide two intermediate solutions so that you can go ahead and try out the current
 snapshot today. You can use the <a href="#console-runner"><code>ConsoleRunner</code></a> or execute JUnit 5
-tests with a <a href="#using-junit4-to-run-junit5-tests">JUnit 4 style runner</a>.</p>
+tests with a <a href="#using-junit-4-to-run-junit-5-tests">JUnit 4 style runner</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1983,8 +1983,8 @@ The annotation&#8217;s <code>Usage</code> value can have one of five values:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
+<col style="width: 20%;">
+<col style="width: 80%;">
 </colgroup>
 <thead>
 <tr>
@@ -1994,29 +1994,29 @@ The annotation&#8217;s <code>Usage</code> value can have one of five values:</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>Internal</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Internal</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Must not be used by any code other than JUnit itself. Might be removed without prior notice.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>Deprecated</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Deprecated</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Should no longer be used, might disappear in the next minor release.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>Experimental</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Experimental</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Intended for new, experimental features where we are looking for feedback.<br>
-                      Use this element with caution; it might be promoted to <code>Maintained</code> or
-                      <code>Stable</code> in the future, but might also be removed without prior notice, even in a patch.</p></td>
+                     Use this element with caution; it might be promoted to <code>Maintained</code> or
+                     <code>Stable</code> in the future, but might also be removed without prior notice, even in a patch.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>Maintained</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Maintained</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Intended for features that will not be changed in a backwards-
-                      incompatible way for <strong>at least</strong> the next minor release of the current
-                      major version. If scheduled for removal, it will be demoted to <code>Deprecated</code> first.</p></td>
+                     incompatible way for <strong>at least</strong> the next minor release of the current
+                     major version. If scheduled for removal, it will be demoted to <code>Deprecated</code> first.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>Stable</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Stable</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Intended for features that will not be changed in a backwards-
-                      incompatible way in the current major version (<code>5.*</code>).</p></td>
+                     incompatible way in the current major version (<code>5.*</code>).</p></td>
 </tr>
 </tbody>
 </table>
@@ -2045,7 +2045,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-28 03:40:04 -05:00
+Last updated 2016-01-28 05:01:31 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
