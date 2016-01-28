@@ -219,6 +219,6 @@ from one invocation of an extension point to the next? ...
 
 === Additional Planned Extensions
 
-Several additional extensions are planned, including but not limited to the following:git
+Several additional extensions are planned, including but not limited to the following:
 
 * Dynamic test registration – for example, for computing parameterized tests at runtime
