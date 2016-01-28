@@ -696,7 +696,9 @@ but rethrow any other type of exception:</p>
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">public class IgnoreIOExceptionExtension implements ExceptionHandlerExtensionPoint {
 
     @Override
-    public void handleException(TestExtensionContext context, Throwable throwable) throws Throwable {
+    public void handleException(TestExtensionContext context, Throwable throwable)
+            throws Throwable {
+
         if (throwable instanceof IOException) {
             return;
         }

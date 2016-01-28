@@ -477,13 +477,13 @@ import org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder;</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request() //
-.select( //
-    forPackageName("com.mycompany.mytests"), //
-    forClass(MyTestClass.class) //
-) //
-.filter(byNamePattern(".*Test")) //
-.build();
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request()
+    .select(
+        forPackageName("com.mycompany.mytests"),
+        forClass(MyTestClass.class)
+    )
+    .filter(byNamePattern(".*Test"))
+    .build();
 
 TestPlan plan = LauncherFactory.create().discover(specification);</code></pre>
 </div>
@@ -511,13 +511,13 @@ be achieved through a <code>{TestExecutionListener}</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request() //
-.select( //
-    forPackageName("com.mycompany.mytests"), //
-    forClass(MyTestClass.class) //
-) //
-.filter(byNamePattern(".*Test")) //
-.build();
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request()
+    .select(
+        forPackageName("com.mycompany.mytests"),
+        forClass(MyTestClass.class)
+    )
+    .filter(byNamePattern(".*Test"))
+    .build();
 
 Launcher launcher = LauncherFactory.create();
 
