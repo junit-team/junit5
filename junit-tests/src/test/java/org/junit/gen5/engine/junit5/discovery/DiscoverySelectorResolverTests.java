@@ -14,6 +14,7 @@ import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertSame;
 import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.List;
@@ -169,7 +170,10 @@ public class DiscoverySelectorResolverTests {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId("ENGINE_ID:poops-machine");
 		EngineDiscoveryRequest request = request().select(selector).build();
 
-		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
+		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class, () -> {
+			resolver.resolveSelectors(request);
+		});
+		assertEquals("Cannot load class 'poops-machine'", exception.getMessage());
 	}
 
 	@Test
