@@ -34,8 +34,6 @@ class LauncherFactoryTests {
 		// @formatter:off
 		List<String> ids = roots.stream()
 				.map(TestIdentifier::getUniqueId)
-				.collect(toList())
-				.stream()
 				.map(TestId::toString)
 				.collect(toList());
 		// @formatter:on
