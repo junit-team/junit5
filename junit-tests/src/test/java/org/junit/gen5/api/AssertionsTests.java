@@ -123,6 +123,17 @@ public class AssertionsTests {
 	}
 
 	@Test
+	void assertTrueWithBooleanSupplierFalseAndString() {
+		try {
+			assertTrue(() -> false, "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "test");
+		}
+	}
+
+	@Test
 	void assertTrueWithBooleanSupplierFalseAndMessageSupplier() {
 		try {
 			assertTrue(() -> false, () -> "test");
@@ -141,9 +152,47 @@ public class AssertionsTests {
 	}
 
 	@Test
+	void assertFalseWithBooleanSupplierFalse() {
+		assertFalse(() -> false);
+	}
+
+	@Test
 	void assertFalseWithBooleanTrueAndString() {
 		try {
 			assertFalse(true, "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "test");
+		}
+	}
+
+	@Test
+	void assertFalseWithBooleanTrueAndMessageSupplier() {
+		try {
+			assertFalse(true, () -> "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "test");
+		}
+	}
+
+	@Test
+	void assertFalseWithBooleanSupplierTrueAndString() {
+		try {
+			assertFalse(() -> true, "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "test");
+		}
+	}
+
+	@Test
+	void assertFalseWithBooleanSupplierTrueAndMessageSupplier() {
+		try {
+			assertFalse(() -> true, () -> "test");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
@@ -165,6 +214,18 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
+			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
+		}
+	}
+
+	@Test
+	void assertNullWithNonNullObjectAndMessage() {
+		try {
+			assertNull("foo", "a message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "a message");
 			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
 		}
 	}
@@ -293,6 +354,18 @@ public class AssertionsTests {
 	}
 
 	@Test
+	void assertNotEqualsWithEquivalentStringsAndMessage() {
+		try {
+			assertNotEquals(new String("foo"), new String("foo"), "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "test");
+			assertMessageEndsWith(ex, "expected: not equal but was: <foo>");
+		}
+	}
+
+	@Test
 	void assertNotEqualsWithEquivalentStringsAndMessageSupplier() {
 		try {
 			assertNotEquals(new String("foo"), new String("foo"), () -> "test");
@@ -391,6 +464,19 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "expected: not same but was: <null>");
+		}
+	}
+
+	@Test
+	void assertNotSameWithSameObjectAndMessage() {
+		try {
+			Object foo = new Object();
+			assertNotSame(foo, foo, "test");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "test");
+			assertMessageContains(ex, "expected: not same but was: <java.lang.Object@");
 		}
 	}
 
