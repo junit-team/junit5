@@ -27,6 +27,8 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Properties;
+import java.util.TreeSet;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -87,10 +89,23 @@ class XmlReportWriter {
 
 		writer.writeComment("Unique ID: " + testIdentifier.getUniqueId().toString());
 
+		writeSystemProperties(writer);
+
 		for (TestIdentifier test : tests) {
 			writeTestcase(test, numberFormat, writer);
 		}
 
+		writer.writeEndElement();
+	}
+
+	private void writeSystemProperties(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeStartElement("properties");
+		Properties systemProperties = System.getProperties();
+		for (String propertyName : new TreeSet<>(systemProperties.stringPropertyNames())) {
+			writer.writeEmptyElement("property");
+			writer.writeAttribute("name", propertyName);
+			writer.writeAttribute("value", systemProperties.getProperty(propertyName));
+		}
 		writer.writeEndElement();
 	}
 

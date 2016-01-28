@@ -19,6 +19,7 @@ import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -293,6 +294,28 @@ class XmlReportsWritingListenerTests {
 				"\tat",
 				"</failure>",
 				"</testcase>",
+				"</testsuite>");
+		//@formatter:on
+	}
+
+	@Test
+	void writesSystemProperties() throws Exception {
+		DummyTestEngine engine = new DummyTestEngine("dummy");
+		engine.addTest("test", () -> {
+		});
+
+		executeTests(engine);
+
+		String content = readValidXmlFile("TEST-dummy.xml");
+		//@formatter:off
+		assertThat(content)
+			.containsSequence(
+				"<testsuite",
+				"<properties>",
+				"<property name=\"file.separator\" value=\"" + File.separator + "\"/>",
+				"<property name=\"path.separator\" value=\"" + File.pathSeparator + "\"/>",
+				"</properties>",
+				"<testcase",
 				"</testsuite>");
 		//@formatter:on
 	}
