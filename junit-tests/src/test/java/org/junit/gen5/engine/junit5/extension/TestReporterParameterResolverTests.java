@@ -56,14 +56,14 @@ class TestReporterParameterResolverTests {
 		return method.getParameters()[0];
 	}
 
-}
+	static class Sample {
 
-class Sample {
+		public void methodWithTestReporterParameter(TestReporter reporter) {
+		}
 
-	public void methodWithTestReporterParameter(TestReporter reporter) {
-	}
+		public void methodWithoutTestReporterParameter(String nothing) {
+		}
 
-	public void methodWithoutTestReporterParameter(String nothing) {
 	}
 
 }
