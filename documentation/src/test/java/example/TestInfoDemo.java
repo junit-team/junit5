@@ -19,7 +19,7 @@ import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
 
-class TestInfoTests {
+class TestInfoDemo {
 
 	@BeforeEach
 	void init(TestInfo testInfo) {

@@ -70,18 +70,8 @@ characters, and even emojis -- that will be displayed by test runners and test r
 [source,java,indent=0]
 [subs="verbatim"]
 ----
-import org.junit.gen5.api.*;
-
-@DisplayName("A special test case")
-class CanHaveAnyDisplayNameTest {
-
-	@Test
-	@DisplayName("A nice name, isn't it?")
-	void testWithANiceName() {}
-
-}
+include::{testDir}/example/DisplayNameDemo.java[tags=user_guide]
 ----
-
 
 
 === Assertions
@@ -93,41 +83,8 @@ methods in the `{Assertions}` class.
 [source,java,indent=0]
 [subs="verbatim"]
 ----
-import static org.junit.gen5.api.Assertions.*;
-
-import org.junit.gen5.api.*;
-
-class MyTest {
-
-	@Test
-	void standardAssertions() {
-		assertEquals(2, 2);
-		assertEquals(4, 4, "The optional assertion message is now the last parameter.");
-		assertTrue(2 == 2, () -> "Assertion messages can be lazily evaluated -- " +
-								 "to avoid constructing complex messages unnecessarily.");
-	}
-
-	@Test
-	void groupedAssertions() {
-		// In a grouped assertion all assertions are executed, and any
-		// failures will be reported together.
-		assertAll("address",
-			() -> assertEquals("Johannes", address.getFirstName()),
-			() -> assertEquals("Link", address.getLastName())
-		);
-	}
-
-	@Test
-	void exceptionTesting() {
-		Throwable exception == expectThrows(IllegalArgumentException.class,
-			() -> throw new IllegalArgumentException("a message")
-		);
-		assertEquals("a message", exception.getMessage());
-	}
-
-}
+include::{testDir}/example/AssertionsDemo.java[tags=user_guide]
 ----
-
 
 
 === Assumptions
@@ -139,40 +96,8 @@ are static methods in the `{Assumptions}` class.
 [source,java,indent=0]
 [subs="verbatim"]
 ----
-import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.api.Assumptions.*;
-
-import org.junit.gen5.api.*;
-
-class MyTest {
-
-	@Test
-	void testOnlyOnCiServer() {
-		assumeTrue("CI".equals(System.getenv("ENV"));
-		// remainder of test
-	}
-
-	@Test
-	void testOnlyOnDeveloperWorkstation() {
-		assumeTrue("DEV".equals(System.getenv("ENV"),
-				   () -> "Aborting test: not on developer workstation");
-		// remainder of test
-	}
-
-	@Test
-	void testInAllEnvironments() {
-		assumingThat("CI".equals(System.getenv("ENV"), () -> {
-				// perform these assertions only on the CI server
-				assertEquals(...);
-		});
-
-		// perform these assertions in all environments
-		assertEquals(...);
-	}
-
-}
+include::{testDir}/example/AssumptionsDemo.java[tags=user_guide]
 ----
-
 
 
 === Disabling Tests
@@ -182,15 +107,7 @@ Here's a disabled test case:
 [source,java,indent=0]
 [subs="verbatim"]
 ----
-import org.junit.gen5.api.*;
-
-@Disabled
-class MyTest {
-
-	@Test
-	void testWillBeSkipped() {}
-
-}
+include::{testDir}/example/DisabledClassDemo.java[tags=user_guide]
 ----
 
 And here's a test case with a disabled test method:
@@ -198,20 +115,8 @@ And here's a test case with a disabled test method:
 [source,java,indent=0]
 [subs="verbatim"]
 ----
-import org.junit.gen5.api.*;
-
-class MyTest {
-
-	@Disabled
-	@Test
-	void testWillBeSkipped() {}
-
-	@Test
-	void testWillBeExecuted() {}
-
-}
+include::{testDir}/example/DisabledTestsDemo.java[tags=user_guide]
 ----
-
 
 [[tagging-and-filtering]]
 === Tagging and Filtering
@@ -222,17 +127,7 @@ Test classes and methods can be tagged. Those tags can later be used to filter
 [source,java,indent=0]
 [subs="verbatim"]
 ----
-import org.junit.gen5.api.*;
-
-@Tag("fast")
-@Tag("model")
-class FastModelTests {
-
-	@Test
-	@Tag("taxes")
-	void testingTaxCalculation() {}
-
-}
+include::{testDir}/example/TaggingDemo.java[tags=user_guide]
 ----
 
 
@@ -282,7 +177,7 @@ import static org.junit.gen5.api.Assertions.*;
 
 import org.junit.gen5.api.*;
 
-include::{testDir}/example/TestInfoTests.java[tags=user_guide]
+include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
 ----
 
 Other parameter resolvers must be explicitly enabled by registering a <<extension-model,

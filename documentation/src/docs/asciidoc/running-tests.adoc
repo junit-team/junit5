@@ -255,42 +255,20 @@ test class.
 [source,java,indent=0]
 [subs="verbatim"]
 ----
-package com.example;
-
-import static org.junit.gen5.api.Assertions.fail;
-
-import org.junit.gen5.api.Test;
-import org.junit.gen5.junit4runner.JUnit5;
-import org.junit.runner.RunWith;
-
-@RunWith(JUnit5.class)
-public class AJUnit5TestCaseRunWithJUnit4 {
-
-	@Test
-	void aSucceedingTest() {
-		/* no-op */
-	}
-
-	@Test
-	void aFailingTest() {
-		fail("Failing for failing's sake.");
-	}
-
-}
+include::{testDir}/example/JUnit4ClassDemo.java[tags=user_guide]
 ----
 
-==== Multiple Tests
+==== Test Suite
 
 If you have multiple JUnit 5 tests you can create a test suite.
 
 [source,java,indent=0]
 [subs="verbatim"]
-.A JUnit 5 suite run through JUnit 4
 ----
-include::{testDir}/example/JUnit4SampleSuite.java[tags=user_guide]
+include::{testDir}/example/JUnit4SuiteDemo.java[tags=user_guide]
 ----
 
-The `JUnit4SamplesSuite` will discover and run all tests in the `example` package
+The `JUnit4SuiteDemo` will discover and run all tests in the `example` package
 and its subpackages.
 
 There are more configuration options for discovering and filtering tests than just

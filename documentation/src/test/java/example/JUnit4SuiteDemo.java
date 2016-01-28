@@ -17,6 +17,6 @@ import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
 @Packages({ "example" })
-public class JUnit4SampleSuite {
+public class JUnit4SuiteDemo {
 }
 // end::user_guide[]

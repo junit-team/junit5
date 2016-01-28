@@ -27,14 +27,13 @@ Usage Example:
 [source,java,indent=0]
 [subs="verbatim"]
 ----
-import static org.junit.gen5.engine.DiscoveryRequest.*;
+include::{testDir}/example/UsingTheLauncherDemo.java[tags=imports]
+----
 
-TestPlanSpecification specification = build(
-	forPackage("com.mycompany.mytests"),
-	forClass(MyTestClass.class)
-).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
-
-TestPlan plan = new Launcher().discover(specification);
+[source,java,indent=0]
+[subs="verbatim"]
+----
+include::{testDir}/example/UsingTheLauncherDemo.java[tags=discovery]
 ----
 
 There's currently the possibility to search for classes, methods, all classes in a
@@ -57,16 +56,7 @@ be achieved through a `{TestExecutionListener}`:
 [source,java,indent=0]
 [subs="verbatim"]
 ----
-TestPlanSpecification specification = build(
-	forPackage("com.mycompany.mytests"),
-	forClass(MyTestClass.class)
-).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
-
-Launcher launcher = new Launcher();
-TestPlanExecutionListener listener = createListener();
-launcher.registerTestPlanExecutionListener(listener);
-
-launcher.execute(specification);
+include::{testDir}/example/UsingTheLauncherDemo.java[tags=execution]
 ----
 
 There's currently no result object, but you can easily use a listener to aggregate the

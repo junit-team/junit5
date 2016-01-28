@@ -15,7 +15,7 @@ import java.util.HashMap;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestReporter;
 
-public class ExtendedReportingTests {
+public class ExtendedReportingDemo {
 
 	@Test
 	void reportSingleValue(TestReporter testReporter) {
