@@ -16,7 +16,9 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import org.junit.gen5.api.*;
+import org.junit.gen5.api.extension.*;
 import org.junit.gen5.commons.util.*;
+import org.mockito.*;
 
 class TestReporterParameterResolverTests {
 
@@ -24,27 +26,34 @@ class TestReporterParameterResolverTests {
 
 	@Test
 	void testSupports() {
-		Method methodWithTestReporterParameter = ReflectionUtils.findMethod(Sample.class,
-			"methodWithTestReporterParameter", new Class[] { TestReporter.class }).get();
-		Parameter parameter1 = methodWithTestReporterParameter.getParameters()[0];
-		assertTrue(resolver.supports(parameter1, null, null));
+		Parameter parameter1 = findParameterOfMethod("methodWithTestReporterParameter",
+			new Class[] { TestReporter.class });
+		assertTrue(this.resolver.supports(parameter1, null, null));
 
-		Method methodWithoutTestReporterParameter = ReflectionUtils.findMethod(Sample.class,
-			"methodWithoutTestReporterParameter", new Class[] { String.class }).get();
-		Parameter parameter2 = methodWithoutTestReporterParameter.getParameters()[0];
-		assertFalse(resolver.supports(parameter2, null, null));
+		Parameter parameter2 = findParameterOfMethod("methodWithoutTestReporterParameter",
+			new Class[] { String.class });
+		assertFalse(this.resolver.supports(parameter2, null, null));
 	}
 
 	@Test
 	void testSupports_NullSafe() {
 		assertThrows(PreconditionViolationException.class, () -> {
-			resolver.supports(null, null, null);
+			this.resolver.supports(null, null, null);
 		});
 	}
 
 	@Test
 	void testResolve() {
+		Parameter parameter = findParameterOfMethod("methodWithTestReporterParameter",
+			new Class[] { TestReporter.class });
 
+		TestReporter testReporter = this.resolver.resolve(parameter, null, Mockito.mock(ExtensionContext.class));
+		assertNotNull(testReporter);
+	}
+
+	private Parameter findParameterOfMethod(String methodName, Class[] parameterTypes) {
+		Method method = ReflectionUtils.findMethod(Sample.class, methodName, parameterTypes).get();
+		return method.getParameters()[0];
 	}
 
 }
