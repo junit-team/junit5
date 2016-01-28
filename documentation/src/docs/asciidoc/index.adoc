@@ -19,6 +19,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :junit5-engine:                     {master-branch}/junit5-engine[junit5-engine]
 :api-package:                       {master-branch}/junit5-api/src/main/java/org/junit/gen5/api[org.junit.gen5.api]
 :extension-api-package:             {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension[org.junit.gen5.api.extension]
+:API:                               {master-branch}/junit-commons/src/main/java/org/junit/gen5/commons/meta/API.java[@API]
 :Assertions:                        {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java[org.junit.gen5.Assertions]
 :Assumptions:                       {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/Assumptions.java[org.junit.gen5.Assumptions]
 :ConsoleRunner:                     {master-branch}/junit-console/src/main/java/org/junit/gen5/console/ConsoleRunner.java[ConsoleRunner]
@@ -58,3 +59,5 @@ include::launcher-api.adoc[]
 === Modules
 
 === Engines
+
+include::api-evolution.adoc[]

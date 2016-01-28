@@ -1,0 +1,42 @@
+[[api-evolution]]
+== API Evolution
+
+One of the major goal of JUnit 5 is to improve maintainers' capabilities to evolve JUnit
+despite its being used in many projects. With JUnit 4 a lot of stuff that was originally added as an internal
+construct only got used by external extension writers and tool builders. That made changing JUnit 4
+especially difficult and sometimes impossible.
+
+That's why JUnit 5 introduces a defined lifecycle for all publicly available interfaces, classes and methods.
+
+=== API Annotations
+
+All publicly available interfaces, classes and methods are marked with {API}.
+The annotation's `Usage` value can have one of five values:
+
+|===
+|Usage |Description
+
+|*`Internal`*       | Must not be used by any code other than JUnit itself. Might be removed without prior notice.
+|*`Deprecated`*     | Should no longer be used, might disappear in the next minor release.
+|*`Experimental`*   | Intended for new, experimental features where we are looking for feedback. +
+                      Use this element with caution; it might be promoted to `Maintained` or
+                      `Stable` in the future, but might also be removed without prior notice, even in a patch.
+|*`Maintained`*     | Intended for features that will not be changed in a backwards-
+                      incompatible way for *at least* the next minor release of the current
+                      major version. If scheduled for removal, it will be demoted to `Deprecated` first.
+|*`Stable`*         | Intended for features that will not be changed in a backwards-
+                      incompatible way in the current major version (`5.*`).
+|===
+
+If the annotation is present on a type, it is considered to hold for all public members of this type as well.
+A member is allowed to declare a different `Usage` value of lower stability.
+
+=== Semantic Versioning
+
+JUnit 5 version numbers are used in a semantic way: `<major>.<minor>.<patch>`
+
+=== Tool Support
+
+We are planning to provide native tool support for all JUnit 5 users, extenders and tool builders.
+Those tools will provide them with means to check if they are using the JUnit 5 API in accordance with
+the API annotations.
