@@ -26,33 +26,40 @@ import org.junit.gen5.launcher.main.LauncherFactory;
 import org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder;
 // end::imports[]
 
+/**
+ * @since 5.0
+ */
 class UsingTheLauncherDemo {
 
 	@Test
+	@SuppressWarnings("unused")
 	void discovery() {
+		// @formatter:off
 		// tag::discovery[]
-		TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request() //
-		.select( //
-			forPackageName("com.mycompany.mytests"), //
-			forClass(MyTestClass.class) //
-		) //
-		.filter(byNamePattern(".*Test")) //
-		.build();
+		TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request()
+			.select(
+				forPackageName("com.mycompany.mytests"),
+				forClass(MyTestClass.class)
+			)
+			.filter(byNamePattern(".*Test"))
+			.build();
 
 		TestPlan plan = LauncherFactory.create().discover(specification);
 		// end::discovery[]
+		// @formatter:on
 	}
 
 	@Test
 	void execution() {
+		// @formatter:off
 		// tag::execution[]
-		TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request() //
-		.select( //
-			forPackageName("com.mycompany.mytests"), //
-			forClass(MyTestClass.class) //
-		) //
-		.filter(byNamePattern(".*Test")) //
-		.build();
+		TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request()
+			.select(
+				forPackageName("com.mycompany.mytests"),
+				forClass(MyTestClass.class)
+			)
+			.filter(byNamePattern(".*Test"))
+			.build();
 
 		Launcher launcher = LauncherFactory.create();
 
@@ -62,6 +69,7 @@ class UsingTheLauncherDemo {
 
 		launcher.execute(specification);
 		// end::execution[]
+		// @formatter:on
 	}
 }
 

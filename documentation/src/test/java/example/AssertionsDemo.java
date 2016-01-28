@@ -10,6 +10,7 @@
 
 package example;
 
+// @formatter:off
 // tag::user_guide[]
 import static org.junit.gen5.api.Assertions.*;
 
@@ -25,17 +26,17 @@ class AssertionsDemo {
 	void standardAssertions() {
 		assertEquals(2, 2);
 		assertEquals(4, 4, "The optional assertion message is now the last parameter.");
-		assertTrue(2 == 2, () -> "Assertion messages can be lazily evaluated -- " + //
-				"to avoid constructing complex messages unnecessarily."); //
+		assertTrue(2 == 2, () -> "Assertion messages can be lazily evaluated -- "
+				+ "to avoid constructing complex messages unnecessarily.");
 	}
 
 	@Test
 	void groupedAssertions() {
 		// In a grouped assertion all assertions are executed, and any
 		// failures will be reported together.
-		assertAll("address", //
-			() -> assertEquals("John", address.getFirstName()), //
-			() -> assertEquals("User", address.getLastName()) //
+		assertAll("address",
+			() -> assertEquals("John", address.getFirstName()),
+			() -> assertEquals("User", address.getLastName())
 		);
 	}
 
@@ -49,8 +50,10 @@ class AssertionsDemo {
 
 }
 // end::user_guide[]
+// @formatter:on
 
 class Address {
+
 	private final String firstName;
 
 	public String getLastName() {

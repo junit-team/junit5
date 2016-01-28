@@ -10,6 +10,7 @@
 
 package example;
 
+// @formatter:off
 // tag::user_guide[]
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assumptions.*;
@@ -26,14 +27,14 @@ public class AssumptionsDemo {
 
 	@Test
 	void testOnlyOnDeveloperWorkstation() {
-		assumeTrue("DEV".equals(System.getenv("ENV")), //
+		assumeTrue("DEV".equals(System.getenv("ENV")),
 			() -> "Aborting test: not on developer workstation");
 		// remainder of test
 	}
 
 	@Test
 	void testInAllEnvironments() {
-		assumingThat("CI".equals(System.getenv("ENV")), //
+		assumingThat("CI".equals(System.getenv("ENV")),
 			() -> {
 				// perform these assertions only on the CI server
 				assertEquals(2, 2);
@@ -45,3 +46,4 @@ public class AssumptionsDemo {
 
 }
 // end::user_guide[]
+// @formatter:on
