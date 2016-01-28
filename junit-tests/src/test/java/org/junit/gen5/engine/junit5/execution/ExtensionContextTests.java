@@ -23,6 +23,7 @@ import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodBasedTestExtensionContext;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 import org.junit.gen5.engine.reporting.ReportEntry;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 /**
@@ -69,23 +70,25 @@ public class ExtensionContextTests {
 	@Test
 	public void reportEntriesArePublishedToExecutionContext() {
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(null);
-
 		EngineExecutionListener engineExecutionListener = Mockito.spy(EngineExecutionListener.class);
-
 		ExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, engineExecutionListener,
 			classTestDescriptor);
 
-		Map<String, String> entry1 = Collections.emptyMap();
-		Map<String, String> entry2 = Collections.singletonMap("key", "value");
+		Map<String, String> entry1 = Collections.singletonMap("key", "value");
+		Map<String, String> entry2 = Collections.singletonMap("other key", "other value");
 
 		extensionContext.publishReportEntry(entry1);
 		extensionContext.publishReportEntry(entry2);
 
-		//TODO: fix expectations
-		//	Mockito.verify(engineExecutionListener).reportingEntryPublished(classTestDescriptor,
-		//			ReportEntry.from(entry1));
-		//	Mockito.verify(engineExecutionListener, Mockito.times(1)).reportingEntryPublished(classTestDescriptor,
-		//			ReportEntry.from(entry2));
+		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
+		Mockito.verify(engineExecutionListener, Mockito.times(2)).reportingEntryPublished(
+			Mockito.eq(classTestDescriptor), entryCaptor.capture());
+
+		ReportEntry reportEntry1 = entryCaptor.getAllValues().get(0);
+		ReportEntry reportEntry2 = entryCaptor.getAllValues().get(1);
+
+		assertEquals(entry1, reportEntry1.getValues());
+		assertEquals(entry2, reportEntry2.getValues());
 	}
 
 	@Test
