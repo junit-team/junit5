@@ -138,6 +138,32 @@ class XmlReportsWritingListenerTests {
 	}
 
 	@Test
+	void writesFileForSingleErroneousTest() throws Exception {
+		DummyTestEngine engine = new DummyTestEngine("dummy");
+		engine.addTest("failingTest", () -> {
+			throw new RuntimeException("error occurred");
+		});
+
+		executeTests(engine);
+
+		String content = readValidXmlFile("TEST-dummy.xml");
+		//@formatter:off
+		assertThat(content)
+			.containsSequence(
+				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"0\" errors=\"1\"",
+				"<testcase name=\"failingTest\"",
+				"<error message=\"error occurred\" type=\"java.lang.RuntimeException\">",
+				"RuntimeException: error occurred",
+				"\tat ",
+				"</error>",
+				"</testcase>",
+				"</testsuite>")
+			.doesNotContain("<skipped")
+			.doesNotContain("<failure");
+		//@formatter:on
+	}
+
+	@Test
 	void writesFileForSingleSkippedTest() throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
 		DummyTestDescriptor testDescriptor = engine.addTest("skippedTest", () -> fail("never called"));

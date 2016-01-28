@@ -73,6 +73,7 @@ class XmlReportWriter {
 
 		long skipped = 0;
 		long failures = 0;
+		long errors = 0;
 		for (TestIdentifier test : tests) {
 			if (reportData.wasSkipped(test)) {
 				skipped++;
@@ -80,8 +81,12 @@ class XmlReportWriter {
 			else {
 				Optional<TestExecutionResult> result = reportData.getResult(test);
 				if (result.isPresent() && result.get().getStatus() == FAILED) {
-					// TODO #86 compute error count
-					failures++;
+					if (isFailure(result.get().getThrowable())) {
+						failures++;
+					}
+					else {
+						errors++;
+					}
 				}
 			}
 		}
@@ -90,7 +95,7 @@ class XmlReportWriter {
 		writer.writeAttribute("tests", String.valueOf(tests.size()));
 		writer.writeAttribute("skipped", String.valueOf(skipped));
 		writer.writeAttribute("failures", String.valueOf(failures));
-		writer.writeAttribute("errors", "0");
+		writer.writeAttribute("errors", String.valueOf(errors));
 
 		NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
 		writer.writeAttribute("time", numberFormat.format(reportData.getDurationInSeconds(testIdentifier)));
@@ -120,7 +125,7 @@ class XmlReportWriter {
 		else {
 			Optional<TestExecutionResult> result = reportData.getResult(test);
 			if (result.isPresent() && result.get().getStatus() == FAILED) {
-				writeFailure(result.get().getThrowable(), writer);
+				writeErrorOrFailure(result.get().getThrowable(), writer);
 			}
 		}
 		writer.writeEndElement();
@@ -137,9 +142,8 @@ class XmlReportWriter {
 		}
 	}
 
-	private void writeFailure(Optional<Throwable> throwable, XMLStreamWriter writer) throws XMLStreamException {
-		// TODO #86 write error elements
-		writer.writeStartElement("failure");
+	private void writeErrorOrFailure(Optional<Throwable> throwable, XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeStartElement(isFailure(throwable) ? "failure" : "error");
 		if (throwable.isPresent()) {
 			writeFailureAttributesAndContent(throwable.get(), writer);
 		}
@@ -153,6 +157,10 @@ class XmlReportWriter {
 		}
 		writer.writeAttribute("type", throwable.getClass().getName());
 		writer.writeCharacters(readStackTrace(throwable));
+	}
+
+	private boolean isFailure(Optional<Throwable> throwable) {
+		return throwable.isPresent() && throwable.get() instanceof AssertionError;
 	}
 
 }
