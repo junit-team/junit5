@@ -28,14 +28,6 @@ import org.junit.gen5.commons.util.Preconditions;
 public interface ExtensionContext {
 
 	/**
-	 * Publish a map of values to be consumed by an
-	 * {@code org.junit.gen5.engine.EngineExecutionListener}.
-	 *
-	 * @param values the map of values to be reported for this entry
-	 */
-	void publishReportEntry(Map<String, String> values);
-
-	/**
 	 * Get the parent extension context if there is one.
 	 */
 	Optional<ExtensionContext> getParent();
@@ -85,6 +77,14 @@ public interface ExtensionContext {
 	 * @see #getTestClass()
 	 */
 	AnnotatedElement getElement();
+
+	/**
+	 * Publish a map of values to be consumed by an
+	 * {@code org.junit.gen5.engine.EngineExecutionListener}.
+	 *
+	 * @param values the map of values to be reported for this entry
+	 */
+	void publishReportEntry(Map<String, String> values);
 
 	/**
 	 * Get a {@link Store} with the default {@link Namespace}.
