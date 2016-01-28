@@ -79,33 +79,35 @@ class XmlReportWriter {
 
 	private void writeTestsuite(TestIdentifier testIdentifier, List<TestIdentifier> tests, XMLStreamWriter writer)
 			throws XMLStreamException {
+		// NumberFormat is not thread-safe. Thus, we instantiate it here and pass it to
+		// writeTestcase instead of using a constant
+		NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+
 		writer.writeStartElement("testsuite");
+		writeAttributes(testIdentifier, tests, numberFormat, writer);
+		writer.writeComment("Unique ID: " + testIdentifier.getUniqueId().toString());
+		writeSystemProperties(writer);
+		for (TestIdentifier test : tests) {
+			writeTestcase(test, numberFormat, writer);
+		}
+		writer.writeEndElement();
+	}
 
+	private void writeAttributes(TestIdentifier testIdentifier, List<TestIdentifier> tests, NumberFormat numberFormat,
+			XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeAttribute("name", testIdentifier.getDisplayName());
+		writeTestCounts(tests, writer);
+		writer.writeAttribute("time", getTime(testIdentifier, numberFormat));
+		writeHostname(writer);
+		writeTimestamp(writer);
+	}
 
+	private void writeTestCounts(List<TestIdentifier> tests, XMLStreamWriter writer) throws XMLStreamException {
 		TestCounts testCounts = TestCounts.from(reportData, tests);
 		writer.writeAttribute("tests", String.valueOf(testCounts.getTotal()));
 		writer.writeAttribute("skipped", String.valueOf(testCounts.getSkipped()));
 		writer.writeAttribute("failures", String.valueOf(testCounts.getFailures()));
 		writer.writeAttribute("errors", String.valueOf(testCounts.getErrors()));
-
-		// NumberFormat is not thread-safe. Thus, we instantiate it here and pass it to
-		// writeTestcase instead of using a constant
-		NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-		writer.writeAttribute("time", getTime(testIdentifier, numberFormat));
-
-		writeHostname(writer);
-		writeTimestamp(writer);
-
-		writer.writeComment("Unique ID: " + testIdentifier.getUniqueId().toString());
-
-		writeSystemProperties(writer);
-
-		for (TestIdentifier test : tests) {
-			writeTestcase(test, numberFormat, writer);
-		}
-
-		writer.writeEndElement();
 	}
 
 	private void writeHostname(XMLStreamWriter writer) throws XMLStreamException {
