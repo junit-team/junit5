@@ -231,7 +231,7 @@ class XmlReportsWritingListenerTests {
 	@Test
 	void writesFileForSkippedContainer() throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
-		engine.addTest("skippedTest", () -> fail("never called"));
+		engine.addTest("test", () -> fail("never called"));
 		engine.getEngineDescriptor().markSkipped("should be skipped");
 
 		executeTests(engine);
@@ -241,12 +241,33 @@ class XmlReportsWritingListenerTests {
 		assertThat(content)
 			.containsSequence(
 				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"1\" failures=\"0\" errors=\"0\"",
-				"<testcase name=\"skippedTest\"",
+				"<testcase name=\"test\"",
 				"<skipped>parent was skipped: should be skipped</skipped>",
 				"</testcase>",
-				"</testsuite>")
-			.doesNotContain("<failure")
-			.doesNotContain("<error");
+				"</testsuite>");
+		//@formatter:on
+	}
+
+	@Test
+	void writesFileForFailingContainer() throws Exception {
+		DummyTestEngine engine = new DummyTestEngine("dummy");
+		engine.addTest("test", () -> fail("never called"));
+		engine.getEngineDescriptor().setBeforeAllBehavior(() -> fail("failure before all tests"));
+
+		executeTests(engine);
+
+		String content = readValidXmlFile("TEST-dummy.xml");
+		//@formatter:off
+		assertThat(content)
+			.containsSequence(
+				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"1\" errors=\"0\"",
+				"<testcase name=\"test\"",
+				"<failure message=\"failure before all tests\" type=\"" + AssertionFailedError.class.getName() + "\">",
+				"AssertionFailedError: failure before all tests",
+				"\tat",
+				"</failure>",
+				"</testcase>",
+				"</testsuite>");
 		//@formatter:on
 	}
 

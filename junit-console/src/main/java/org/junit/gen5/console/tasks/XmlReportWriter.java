@@ -43,7 +43,6 @@ class XmlReportWriter {
 	}
 
 	void writeXmlReport(TestIdentifier testIdentifier, File xmlFile) throws IOException, XMLStreamException {
-		// TODO #86 consider skipped/failed/aborted containers
 		// @formatter:off
 		List<TestIdentifier> tests = reportData.getTestPlan().getDescendants(testIdentifier)
 				.stream()
@@ -78,9 +77,10 @@ class XmlReportWriter {
 			if (reportData.wasSkipped(test)) {
 				skipped++;
 			}
-			else if (reportData.wasFinished(test)) {
-				TestExecutionResult result = reportData.getResult(test);
-				if (result.getStatus() == FAILED) {
+			else {
+				Optional<TestExecutionResult> result = reportData.getResult(test);
+				if (result.isPresent() && result.get().getStatus() == FAILED) {
+					// TODO #86 compute error count
 					failures++;
 				}
 			}
@@ -88,7 +88,6 @@ class XmlReportWriter {
 
 		writer.writeAttribute("name", testIdentifier.getDisplayName());
 		writer.writeAttribute("tests", String.valueOf(tests.size()));
-		// TODO #86 compute error count
 		writer.writeAttribute("skipped", String.valueOf(skipped));
 		writer.writeAttribute("failures", String.valueOf(failures));
 		writer.writeAttribute("errors", "0");
@@ -114,15 +113,14 @@ class XmlReportWriter {
 			writer.writeAttribute("classname", parent.get().getName());
 		}
 		writer.writeAttribute("time", numberFormat.format(reportData.getDurationInSeconds(test)));
-		// TODO #86 write error elements
 		writer.writeComment("Unique ID: " + test.getUniqueId().toString());
 		if (reportData.wasSkipped(test)) {
 			writeSkipped(reportData.getSkipReason(test), writer);
 		}
-		else if (reportData.wasFinished(test)) {
-			TestExecutionResult result = reportData.getResult(test);
-			if (result.getStatus() == FAILED) {
-				writeFailure(result.getThrowable(), writer);
+		else {
+			Optional<TestExecutionResult> result = reportData.getResult(test);
+			if (result.isPresent() && result.get().getStatus() == FAILED) {
+				writeFailure(result.get().getThrowable(), writer);
 			}
 		}
 		writer.writeEndElement();
@@ -140,6 +138,7 @@ class XmlReportWriter {
 	}
 
 	private void writeFailure(Optional<Throwable> throwable, XMLStreamWriter writer) throws XMLStreamException {
+		// TODO #86 write error elements
 		writer.writeStartElement("failure");
 		if (throwable.isPresent()) {
 			writeFailureAttributesAndContent(throwable.get(), writer);

@@ -11,6 +11,7 @@
 package org.junit.gen5.console.tasks;
 
 import static org.junit.gen5.engine.TestExecutionResult.Status.ABORTED;
+import static org.junit.gen5.engine.TestExecutionResult.Status.SUCCESSFUL;
 
 import java.time.Clock;
 import java.time.Duration;
@@ -69,10 +70,6 @@ class XmlReportData {
 		return findSkippedAncestor(testIdentifier).isPresent();
 	}
 
-	boolean wasFinished(TestIdentifier testIdentifier) {
-		return finishedTests.containsKey(testIdentifier);
-	}
-
 	double getDurationInSeconds(TestIdentifier testIdentifier) {
 		Instant startInstant = startInstants.getOrDefault(testIdentifier, Instant.EPOCH);
 		Instant endInstant = endInstants.getOrDefault(testIdentifier, startInstant);
@@ -89,16 +86,28 @@ class XmlReportData {
 		}).orElse(null);
 	}
 
-	TestExecutionResult getResult(TestIdentifier testIdentifier) {
-		return finishedTests.get(testIdentifier);
+	Optional<TestExecutionResult> getResult(TestIdentifier testIdentifier) {
+		if (finishedTests.containsKey(testIdentifier)) {
+			return Optional.of(finishedTests.get(testIdentifier));
+		}
+		Optional<TestIdentifier> parent = testPlan.getParent(testIdentifier);
+		Optional<TestIdentifier> ancestor = findAncestor(parent, finishedTests::containsKey);
+		if (ancestor.isPresent()) {
+			TestExecutionResult result = finishedTests.get(ancestor.get());
+			if (result.getStatus() != SUCCESSFUL) {
+				return Optional.of(result);
+			}
+		}
+		return Optional.empty();
 	}
 
 	private Optional<TestIdentifier> findSkippedAncestor(TestIdentifier testIdentifier) {
-		return findAncestor(testIdentifier, skippedTests::containsKey);
+		return findAncestor(Optional.of(testIdentifier), skippedTests::containsKey);
 	}
 
-	private Optional<TestIdentifier> findAncestor(TestIdentifier testIdentifier, Predicate<TestIdentifier> predicate) {
-		Optional<TestIdentifier> current = Optional.of(testIdentifier);
+	private Optional<TestIdentifier> findAncestor(Optional<TestIdentifier> testIdentifier,
+			Predicate<TestIdentifier> predicate) {
+		Optional<TestIdentifier> current = testIdentifier;
 		while (current.isPresent()) {
 			if (predicate.test(current.get())) {
 				return current;

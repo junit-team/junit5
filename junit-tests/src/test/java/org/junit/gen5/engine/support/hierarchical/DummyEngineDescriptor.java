@@ -15,10 +15,12 @@ import static org.junit.gen5.engine.support.hierarchical.Node.SkipResult.skip;
 
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
-public class DummyEngineDescriptor extends EngineDescriptor implements Node<DummyEngineExecutionContext> {
+public class DummyEngineDescriptor extends EngineDescriptor implements Container<DummyEngineExecutionContext> {
 
 	private String skippedReason;
 	private boolean skipped;
+	private Runnable beforeAllBehavior = () -> {
+	};
 
 	public DummyEngineDescriptor(String engineId) {
 		super(engineId, engineId);
@@ -29,9 +31,19 @@ public class DummyEngineDescriptor extends EngineDescriptor implements Node<Dumm
 		this.skippedReason = reason;
 	}
 
+	public void setBeforeAllBehavior(Runnable beforeAllBehavior) {
+		this.beforeAllBehavior = beforeAllBehavior;
+	}
+
 	@Override
 	public SkipResult shouldBeSkipped(DummyEngineExecutionContext context) {
 		return skipped ? skip(skippedReason) : dontSkip();
+	}
+
+	@Override
+	public DummyEngineExecutionContext beforeAll(DummyEngineExecutionContext context) throws Exception {
+		beforeAllBehavior.run();
+		return context;
 	}
 
 }
