@@ -11,6 +11,7 @@
 package org.junit.gen5.console.tasks;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.ExceptionUtils.readStackTrace;
 import static org.junit.gen5.commons.util.StringUtils.isNotBlank;
@@ -23,7 +24,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.NumberFormat;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -40,9 +45,11 @@ import org.junit.gen5.launcher.TestIdentifier;
 class XmlReportWriter {
 
 	private final XmlReportData reportData;
+	private final Clock clock;
 
-	XmlReportWriter(XmlReportData reportData) {
+	XmlReportWriter(XmlReportData reportData, Clock clock) {
 		this.reportData = reportData;
+		this.clock = clock;
 	}
 
 	void writeXmlReport(TestIdentifier testIdentifier, File xmlFile) throws IOException, XMLStreamException {
@@ -87,6 +94,9 @@ class XmlReportWriter {
 		NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
 		writer.writeAttribute("time", getTime(testIdentifier, numberFormat));
 
+		writeHostname(writer);
+		writeTimestamp(writer);
+
 		writer.writeComment("Unique ID: " + testIdentifier.getUniqueId().toString());
 
 		writeSystemProperties(writer);
@@ -96,6 +106,18 @@ class XmlReportWriter {
 		}
 
 		writer.writeEndElement();
+	}
+
+	private void writeHostname(XMLStreamWriter writer) throws XMLStreamException {
+		Optional<String> hostname = getHostname();
+		if (hostname.isPresent()) {
+			writer.writeAttribute("hostname", hostname.get());
+		}
+	}
+
+	private void writeTimestamp(XMLStreamWriter writer) throws XMLStreamException {
+		LocalDateTime now = LocalDateTime.now(clock).withNano(0);
+		writer.writeAttribute("timestamp", ISO_LOCAL_DATE_TIME.format(now));
 	}
 
 	private void writeSystemProperties(XMLStreamWriter writer) throws XMLStreamException {
@@ -170,6 +192,15 @@ class XmlReportWriter {
 
 	private String getTime(TestIdentifier testIdentifier, NumberFormat numberFormat) {
 		return numberFormat.format(reportData.getDurationInSeconds(testIdentifier));
+	}
+
+	private Optional<String> getHostname() {
+		try {
+			return Optional.ofNullable(InetAddress.getLocalHost().getHostName());
+		}
+		catch (UnknownHostException e) {
+			return Optional.empty();
+		}
 	}
 
 	private static class TestCounts {

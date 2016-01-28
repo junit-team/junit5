@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.InetAddress;
 import java.net.URL;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -33,7 +34,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -315,6 +318,29 @@ class XmlReportsWritingListenerTests {
 				"<property name=\"file.separator\" value=\"" + File.separator + "\"/>",
 				"<property name=\"path.separator\" value=\"" + File.pathSeparator + "\"/>",
 				"</properties>",
+				"<testcase",
+				"</testsuite>");
+		//@formatter:on
+	}
+
+	@Test
+	void writesHostNameAndTimestamp() throws Exception {
+		DummyTestEngine engine = new DummyTestEngine("dummy");
+		engine.addTest("test", () -> {
+		});
+
+		LocalDateTime now = LocalDateTime.parse("2016-01-28T14:02:59.123");
+		ZoneId zone = ZoneId.systemDefault();
+
+		executeTests(engine, Clock.fixed(ZonedDateTime.of(now, zone).toInstant(), zone));
+
+		String content = readValidXmlFile("TEST-dummy.xml");
+		//@formatter:off
+		assertThat(content)
+			.containsSequence(
+				"<testsuite",
+				"hostname=\"" + InetAddress.getLocalHost().getHostName() + "\"",
+				"timestamp=\"2016-01-28T14:02:59\"",
 				"<testcase",
 				"</testsuite>");
 		//@formatter:on

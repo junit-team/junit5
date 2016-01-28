@@ -84,7 +84,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 	private void writeXmlReportSafely(TestIdentifier testIdentifier) {
 		File xmlFile = new File(reportsDir, "TEST-" + testIdentifier.getUniqueId() + ".xml");
 		try {
-			new XmlReportWriter(reportData).writeXmlReport(testIdentifier, xmlFile);
+			new XmlReportWriter(reportData, clock).writeXmlReport(testIdentifier, xmlFile);
 		}
 		catch (XMLStreamException | IOException e) {
 			printException("Could not write file: " + xmlFile, e);
