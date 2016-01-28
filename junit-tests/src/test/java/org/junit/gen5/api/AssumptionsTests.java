@@ -95,8 +95,18 @@ public class AssumptionsTests {
 	}
 
 	@Test
+	void assumeTrueWithBooleanSupplierFalseAndStringMessage() {
+		assertAssumptionFailure("test", () -> assumeTrue(() -> false, "test"));
+	}
+
+	@Test
 	void assumeTrueWithBooleanSupplierFalseAndMessageSupplier() {
 		assertAssumptionFailure("test", () -> assumeTrue(() -> false, () -> "test"));
+	}
+
+	@Test
+	void assumeTrueWithBooleanFalseAndMessageSupplier() {
+		assertAssumptionFailure("test", () -> assumeTrue(false, () -> "test"));
 	}
 
 	// --- assumeFalse ----------------------------------------------------
@@ -165,8 +175,18 @@ public class AssumptionsTests {
 	}
 
 	@Test
+	void assumeFalseWithBooleanSupplierTrueAndMessage() {
+		assertAssumptionFailure("test", () -> assumeFalse(() -> true, "test"));
+	}
+
+	@Test
 	void assumeFalseWithBooleanSupplierTrueAndMessageSupplier() {
 		assertAssumptionFailure("test", () -> assumeFalse(() -> true, () -> "test"));
+	}
+
+	@Test
+	void assumeFalseWithBooleanTrueAndMessageSupplier() {
+		assertAssumptionFailure("test", () -> assumeFalse(true, () -> "test"));
 	}
 
 	// --- assumingThat --------------------------------------------------
