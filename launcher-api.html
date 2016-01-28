@@ -461,14 +461,31 @@ test classes and test methods in the past.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.engine.DiscoveryRequest.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.engine.discovery.ClassFilter.byNamePattern;
+import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 
-TestPlanSpecification specification = build(
-    forPackage("com.mycompany.mytests"),
-    forClass(MyTestClass.class)
-).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
+import org.junit.gen5.api.Test;
+import org.junit.gen5.launcher.Launcher;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
+import org.junit.gen5.launcher.TestExecutionListener;
+import org.junit.gen5.launcher.TestPlan;
+import org.junit.gen5.launcher.listeners.SummaryGeneratingListener;
+import org.junit.gen5.launcher.main.LauncherFactory;
+import org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request() //
+.select( //
+    forPackageName("com.mycompany.mytests"), //
+    forClass(MyTestClass.class) //
+) //
+.filter(byNamePattern(".*Test")) //
+.build();
 
-TestPlan plan = new Launcher().discover(specification);</code></pre>
+TestPlan plan = LauncherFactory.create().discover(specification);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -494,14 +511,19 @@ be achieved through a <code>{TestExecutionListener}</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestPlanSpecification specification = build(
-    forPackage("com.mycompany.mytests"),
-    forClass(MyTestClass.class)
-).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request() //
+.select( //
+    forPackageName("com.mycompany.mytests"), //
+    forClass(MyTestClass.class) //
+) //
+.filter(byNamePattern(".*Test")) //
+.build();
 
-Launcher launcher = new Launcher();
-TestPlanExecutionListener listener = createListener();
-launcher.registerTestPlanExecutionListener(listener);
+Launcher launcher = LauncherFactory.create();
+
+// Register a listener of your choice
+TestExecutionListener listener = new SummaryGeneratingListener();
+launcher.registerTestExecutionListeners(listener);
 
 launcher.execute(specification);</code></pre>
 </div>
@@ -542,7 +564,7 @@ registers its <code>JUnit5TestEngine</code>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-28 05:59:37 -05:00
+Last updated 2016-01-28 06:37:35 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

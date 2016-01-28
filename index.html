@@ -772,15 +772,16 @@ characters, and even emojis&#8201;&#8212;&#8201;that will be displayed by test r
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.DisplayName;
+import org.junit.gen5.api.Test;
 
 @DisplayName("A special test case")
-class CanHaveAnyDisplayNameTest {
+class DisplayNameDemo {
 
     @Test
     @DisplayName("A nice name, isn't it?")
-    void testWithANiceName() {}
-
+    void testWithANiceName() {
+    }
 }</code></pre>
 </div>
 </div>
@@ -796,33 +797,33 @@ methods in the <code><a href="https://github.com/junit-team/junit5/blob/master/j
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.*;
 
-import org.junit.gen5.api.*;
+import org.junit.gen5.api.Test;
 
-class MyTest {
+class AssertionsDemo {
 
     @Test
     void standardAssertions() {
         assertEquals(2, 2);
         assertEquals(4, 4, "The optional assertion message is now the last parameter.");
-        assertTrue(2 == 2, () -&gt; "Assertion messages can be lazily evaluated -- " +
-                                 "to avoid constructing complex messages unnecessarily.");
+        assertTrue(2 == 2, () -&gt; "Assertion messages can be lazily evaluated -- " + //
+                "to avoid constructing complex messages unnecessarily."); //
     }
 
     @Test
     void groupedAssertions() {
         // In a grouped assertion all assertions are executed, and any
         // failures will be reported together.
-        assertAll("address",
-            () -&gt; assertEquals("Johannes", address.getFirstName()),
-            () -&gt; assertEquals("Link", address.getLastName())
+        assertAll("address", //
+            () -&gt; assertEquals("John", address.getFirstName()), //
+            () -&gt; assertEquals("User", address.getLastName()) //
         );
     }
 
     @Test
     void exceptionTesting() {
-        Throwable exception == expectThrows(IllegalArgumentException.class,
-            () -&gt; throw new IllegalArgumentException("a message")
-        );
+        Throwable exception = expectThrows(IllegalArgumentException.class, () -&gt; {
+            throw new IllegalArgumentException("a message");
+        });
         assertEquals("a message", exception.getMessage());
     }
 
@@ -839,35 +840,36 @@ are static methods in the <code><a href="https://github.com/junit-team/junit5/bl
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assumptions.*;
 
-import org.junit.gen5.api.*;
+import org.junit.gen5.api.Test;
 
-class MyTest {
+public class AssumptionsDemo {
 
     @Test
     void testOnlyOnCiServer() {
-        assumeTrue("CI".equals(System.getenv("ENV"));
+        assumeTrue("CI".equals(System.getenv("ENV")));
         // remainder of test
     }
 
     @Test
     void testOnlyOnDeveloperWorkstation() {
-        assumeTrue("DEV".equals(System.getenv("ENV"),
-                   () -&gt; "Aborting test: not on developer workstation");
+        assumeTrue("DEV".equals(System.getenv("ENV")), //
+            () -&gt; "Aborting test: not on developer workstation");
         // remainder of test
     }
 
     @Test
     void testInAllEnvironments() {
-        assumingThat("CI".equals(System.getenv("ENV"), () -&gt; {
+        assumingThat("CI".equals(System.getenv("ENV")), //
+            () -&gt; {
                 // perform these assertions only on the CI server
-                assertEquals(...);
-        });
+                assertEquals(2, 2);
+            });
 
         // perform these assertions in all environments
-        assertEquals(...);
+        assertEquals("a string", "a string");
     }
 
 }</code></pre>
@@ -881,14 +883,14 @@ class MyTest {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.Disabled;
+import org.junit.gen5.api.Test;
 
 @Disabled
-class MyTest {
-
+class DisabledClassDemo {
     @Test
-    void testWillBeSkipped() {}
-
+    void testWillBeSkipped() {
+    }
 }</code></pre>
 </div>
 </div>
@@ -897,17 +899,19 @@ class MyTest {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.Disabled;
+import org.junit.gen5.api.Test;
 
-class MyTest {
+class DisabledTestsDemo {
 
     @Disabled
     @Test
-    void testWillBeSkipped() {}
+    void testWillBeSkipped() {
+    }
 
     @Test
-    void testWillBeExecuted() {}
-
+    void testWillBeExecuted() {
+    }
 }</code></pre>
 </div>
 </div>
@@ -924,11 +928,12 @@ class MyTest {
 
 @Tag("fast")
 @Tag("model")
-class FastModelTests {
+class TaggingDemo {
 
     @Test
     @Tag("taxes")
-    void testingTaxCalculation() {}
+    void testingTaxCalculation() {
+    }
 
 }</code></pre>
 </div>
@@ -1067,7 +1072,7 @@ import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
 
-class TestInfoTests {
+class TestInfoDemo {
 
     @BeforeEach
     void init(TestInfo testInfo) {
@@ -1424,16 +1429,16 @@ test class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">package com.example;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.fail;
 
-import static org.junit.gen5.api.Assertions.fail;
+import extensions.ExpectToFail;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.junit4runner.JUnit5;
+import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
-public class AJUnit5TestCaseRunWithJUnit4 {
+public class JUnit4ClassDemo {
 
     @Test
     void aSucceedingTest() {
@@ -1450,12 +1455,11 @@ public class AJUnit5TestCaseRunWithJUnit4 {
 </div>
 </div>
 <div class="sect3">
-<h4 id="multiple-tests">4.4.3. Multiple Tests</h4>
+<h4 id="test-suite">4.4.3. Test Suite</h4>
 <div class="paragraph">
 <p>If you have multiple JUnit 5 tests you can create a test suite.</p>
 </div>
 <div class="listingblock">
-<div class="title">A JUnit 5 suite run through JUnit 4</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.gen5.junit4.runner.Packages;
@@ -1463,12 +1467,12 @@ import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
 @Packages({ "example" })
-public class JUnit4SampleSuite {
+public class JUnit4SuiteDemo {
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>JUnit4SamplesSuite</code> will discover and run all tests in the <code>example</code> package
+<p>The <code>JUnit4SuiteDemo</code> will discover and run all tests in the <code>example</code> package
 and its subpackages.</p>
 </div>
 <div class="paragraph">
@@ -1876,14 +1880,31 @@ test classes and test methods in the past.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.engine.DiscoveryRequest.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.engine.discovery.ClassFilter.byNamePattern;
+import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 
-TestPlanSpecification specification = build(
-    forPackage("com.mycompany.mytests"),
-    forClass(MyTestClass.class)
-).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
+import org.junit.gen5.api.Test;
+import org.junit.gen5.launcher.Launcher;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
+import org.junit.gen5.launcher.TestExecutionListener;
+import org.junit.gen5.launcher.TestPlan;
+import org.junit.gen5.launcher.listeners.SummaryGeneratingListener;
+import org.junit.gen5.launcher.main.LauncherFactory;
+import org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request() //
+.select( //
+    forPackageName("com.mycompany.mytests"), //
+    forClass(MyTestClass.class) //
+) //
+.filter(byNamePattern(".*Test")) //
+.build();
 
-TestPlan plan = new Launcher().discover(specification);</code></pre>
+TestPlan plan = LauncherFactory.create().discover(specification);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1909,14 +1930,19 @@ be achieved through a <code><a href="https://github.com/junit-team/junit5/blob/m
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestPlanSpecification specification = build(
-    forPackage("com.mycompany.mytests"),
-    forClass(MyTestClass.class)
-).filterWith(classNameMatches("*Test").or(classNameMatches("Test*")));
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request() //
+.select( //
+    forPackageName("com.mycompany.mytests"), //
+    forClass(MyTestClass.class) //
+) //
+.filter(byNamePattern(".*Test")) //
+.build();
 
-Launcher launcher = new Launcher();
-TestPlanExecutionListener listener = createListener();
-launcher.registerTestPlanExecutionListener(listener);
+Launcher launcher = LauncherFactory.create();
+
+// Register a listener of your choice
+TestExecutionListener listener = new SummaryGeneratingListener();
+launcher.registerTestExecutionListeners(listener);
 
 launcher.execute(specification);</code></pre>
 </div>
@@ -2045,7 +2071,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-28 05:59:37 -05:00
+Last updated 2016-01-28 06:37:35 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

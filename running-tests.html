@@ -732,16 +732,16 @@ test class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">package com.example;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.fail;
 
-import static org.junit.gen5.api.Assertions.fail;
+import extensions.ExpectToFail;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.junit4runner.JUnit5;
+import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
-public class AJUnit5TestCaseRunWithJUnit4 {
+public class JUnit4ClassDemo {
 
     @Test
     void aSucceedingTest() {
@@ -758,12 +758,11 @@ public class AJUnit5TestCaseRunWithJUnit4 {
 </div>
 </div>
 <div class="sect3">
-<h4 id="multiple-tests">Multiple Tests</h4>
+<h4 id="test-suite">Test Suite</h4>
 <div class="paragraph">
 <p>If you have multiple JUnit 5 tests you can create a test suite.</p>
 </div>
 <div class="listingblock">
-<div class="title">A JUnit 5 suite run through JUnit 4</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.gen5.junit4.runner.Packages;
@@ -771,12 +770,12 @@ import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
 @Packages({ "example" })
-public class JUnit4SampleSuite {
+public class JUnit4SuiteDemo {
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>JUnit4SamplesSuite</code> will discover and run all tests in the <code>example</code> package
+<p>The <code>JUnit4SuiteDemo</code> will discover and run all tests in the <code>example</code> package
 and its subpackages.</p>
 </div>
 <div class="paragraph">
@@ -793,7 +792,7 @@ code for the <code>{JUnit5-Runner}</code> runner for further details.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-28 05:59:37 -05:00
+Last updated 2016-01-28 06:37:35 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
