@@ -491,6 +491,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#engines">7.3. Engines</a></li>
 </ul>
 </li>
+<li><a href="#api-evolution">8. API Evolution</a>
+<ul class="sectlevel2">
+<li><a href="#api-annotations">8.1. API Annotations</a></li>
+<li><a href="#semantic-versioning">8.2. Semantic Versioning</a></li>
+<li><a href="#tool-support">8.3. Tool Support</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -1956,11 +1963,89 @@ registers its <code>JUnit5TestEngine</code>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="api-evolution">8. API Evolution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>One of the major goal of JUnit 5 is to improve maintainers' capabilities to evolve JUnit
+despite its being used in many projects. With JUnit 4 a lot of stuff that was originally added as an internal
+construct only got used by external extension writers and tool builders. That made changing JUnit 4
+especially difficult and sometimes impossible.</p>
+</div>
+<div class="paragraph">
+<p>That&#8217;s why JUnit 5 introduces a defined lifecycle for all publicly available interfaces, classes and methods.</p>
+</div>
+<div class="sect2">
+<h3 id="api-annotations">8.1. API Annotations</h3>
+<div class="paragraph">
+<p>All publicly available interfaces, classes and methods are marked with <a href="https://github.com/junit-team/junit5/blob/master/junit-commons/src/main/java/org/junit/gen5/commons/meta/API.java">@API</a>.
+The annotation&#8217;s <code>Usage</code> value can have one of five values:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>Internal</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Must not be used by any code other than JUnit itself. Might be removed without prior notice.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>Deprecated</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Should no longer be used, might disappear in the next minor release.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>Experimental</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Intended for new, experimental features where we are looking for feedback.<br>
+                      Use this element with caution; it might be promoted to <code>Maintained</code> or
+                      <code>Stable</code> in the future, but might also be removed without prior notice, even in a patch.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>Maintained</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Intended for features that will not be changed in a backwards-
+                      incompatible way for <strong>at least</strong> the next minor release of the current
+                      major version. If scheduled for removal, it will be demoted to <code>Deprecated</code> first.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>Stable</code></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Intended for features that will not be changed in a backwards-
+                      incompatible way in the current major version (<code>5.*</code>).</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>If the annotation is present on a type, it is considered to hold for all public members of this type as well.
+A member is allowed to declare a different <code>Usage</code> value of lower stability.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="semantic-versioning">8.2. Semantic Versioning</h3>
+<div class="paragraph">
+<p>JUnit 5 version numbers are used in a semantic way: <code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="tool-support">8.3. Tool Support</h3>
+<div class="paragraph">
+<p>We are planning to provide native tool support for all JUnit 5 users, extenders and tool builders.
+Those tools will provide them with means to check if they are using the JUnit 5 API in accordance with
+the API annotations.</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-28 02:50:36 -05:00
+Last updated 2016-01-28 03:40:04 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
