@@ -117,4 +117,8 @@ class XmlReportData {
 		return Optional.empty();
 	}
 
+	static boolean isFailure(Optional<Throwable> throwable) {
+		return throwable.isPresent() && throwable.get() instanceof AssertionError;
+	}
+
 }
