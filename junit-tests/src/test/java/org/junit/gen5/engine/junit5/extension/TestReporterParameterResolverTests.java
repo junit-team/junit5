@@ -24,11 +24,15 @@ class TestReporterParameterResolverTests {
 
 	@Test
 	void testSupports() {
-		Method method = ReflectionUtils.findMethod(Sample.class, "methodWithTestReporterParameter",
-			new Class[] { TestReporter.class }).get();
-		Parameter parameter = method.getParameters()[0];
+		Method methodWithTestReporterParameter = ReflectionUtils.findMethod(Sample.class,
+			"methodWithTestReporterParameter", new Class[] { TestReporter.class }).get();
+		Parameter parameter1 = methodWithTestReporterParameter.getParameters()[0];
+		assertTrue(resolver.supports(parameter1, null, null));
 
-		assertTrue(resolver.supports(parameter, null, null));
+		Method methodWithoutTestReporterParameter = ReflectionUtils.findMethod(Sample.class,
+			"methodWithoutTestReporterParameter", new Class[] { String.class }).get();
+		Parameter parameter2 = methodWithoutTestReporterParameter.getParameters()[0];
+		assertFalse(resolver.supports(parameter2, null, null));
 
 		//	assertTrue(resolver.supports(null, null, null));
 
@@ -44,7 +48,9 @@ class TestReporterParameterResolverTests {
 class Sample {
 
 	public void methodWithTestReporterParameter(TestReporter reporter) {
+	}
 
+	public void methodWithoutTestReporterParameter(String nothing) {
 	}
 
 }
