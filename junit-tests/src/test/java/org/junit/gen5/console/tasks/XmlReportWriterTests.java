@@ -19,13 +19,15 @@ import java.io.StringWriter;
 import java.time.Clock;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
+import org.junit.gen5.launcher.TestId;
 import org.junit.gen5.launcher.TestPlan;
 
 class XmlReportWriterTests {
 
 	@Test
-	void writesFileWithoutTestcaseElementsWithoutAnyTests() throws Exception {
+	void writesTestsuiteElementsWithoutTestcaseElementsWithoutAnyTests() throws Exception {
 		TestPlan testPlan = TestPlan.from(singleton(new EngineDescriptor("emptyEngine", "Empty Engine")));
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 
@@ -39,6 +41,30 @@ class XmlReportWriterTests {
 				"<testsuite name=\"Empty Engine\" tests=\"0\"",
 				"</testsuite>")
 			.doesNotContain("<testcase");
+		//@formatter:on
+	}
+
+	@Test
+	void writesEmptySkippedElementForSkippedTestWithoutReason() throws Exception {
+		EngineDescriptor engineDescriptor = new EngineDescriptor("engine", "Engine");
+		engineDescriptor.addChild(new TestDescriptorStub("skippedTest"));
+
+		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		reportData.markSkipped(testPlan.getTestIdentifier(new TestId("skippedTest")), null);
+
+		StringWriter out = new StringWriter();
+		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
+
+		String content = ensureValidAccordingToJenkinsSchema(out.toString());
+		//@formatter:off
+		assertThat(content)
+			.containsSequence(
+				"<testsuite name=\"Engine\" tests=\"1\" skipped=\"1\" failures=\"0\" errors=\"0\"",
+				"<testcase name=\"skippedTest\"",
+				"<skipped/>",
+				"</testcase>",
+				"</testsuite>");
 		//@formatter:on
 	}
 
