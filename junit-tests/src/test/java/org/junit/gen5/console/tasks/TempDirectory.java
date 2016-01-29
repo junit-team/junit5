@@ -39,7 +39,6 @@ public class TempDirectory implements AfterEachExtensionPoint, MethodParameterRe
 	public @interface Root {
 	}
 
-	private static final Namespace NAMESPACE = Namespace.of(TempDirectory.class);
 	private static final String KEY = "tempDirectory";
 
 	@Override
@@ -51,15 +50,23 @@ public class TempDirectory implements AfterEachExtensionPoint, MethodParameterRe
 	@Override
 	public Object resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
 			ExtensionContext context) throws ParameterResolutionException {
-		return context.getStore(NAMESPACE).getOrComputeIfAbsent(KEY, key -> createTempDirectory(context));
+		return getLocalStore(context).getOrComputeIfAbsent(KEY, key -> createTempDirectory(context));
 	}
 
 	@Override
 	public void afterEach(TestExtensionContext context) throws Exception {
-		Path tempDirectory = (Path) context.getStore(NAMESPACE).get(KEY);
+		Path tempDirectory = (Path) getLocalStore(context).get(KEY);
 		if (tempDirectory != null) {
 			delete(tempDirectory);
 		}
+	}
+
+	private ExtensionContext.Store getLocalStore(ExtensionContext context) {
+		return context.getStore(localNamespace(context));
+	}
+
+	private Namespace localNamespace(ExtensionContext context) {
+		return Namespace.of(TempDirectory.class, context);
 	}
 
 	private Path createTempDirectory(ExtensionContext context) {
