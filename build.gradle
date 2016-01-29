@@ -104,9 +104,11 @@ subprojects {
 
 	def signArtifacts = !project.version.contains('SNAPSHOT')
 
-	if (signArtifacts) {
-		signing {
-			sign configurations.archives
+	afterEvaluate {
+		if (signArtifacts && uploadArchives.enabled) {
+			signing {
+				sign configurations.archives
+			}
 		}
 	}
 
