@@ -85,8 +85,8 @@ class XmlReportWriter {
 		writer.writeAttribute("name", testIdentifier.getDisplayName());
 		writeTestCounts(tests, writer);
 		writer.writeAttribute("time", getTime(testIdentifier, numberFormat));
-		writeHostname(writer);
-		writeTimestamp(writer);
+		writer.writeAttribute("hostname", getHostname().orElse("<unknown host>"));
+		writer.writeAttribute("timestamp", ISO_LOCAL_DATE_TIME.format(getCurrentDateTime()));
 	}
 
 	private void writeTestCounts(List<TestIdentifier> tests, XMLStreamWriter writer) throws XMLStreamException {
@@ -95,18 +95,6 @@ class XmlReportWriter {
 		writer.writeAttribute("skipped", String.valueOf(testCounts.getSkipped()));
 		writer.writeAttribute("failures", String.valueOf(testCounts.getFailures()));
 		writer.writeAttribute("errors", String.valueOf(testCounts.getErrors()));
-	}
-
-	private void writeHostname(XMLStreamWriter writer) throws XMLStreamException {
-		Optional<String> hostname = getHostname();
-		if (hostname.isPresent()) {
-			writer.writeAttribute("hostname", hostname.get());
-		}
-	}
-
-	private void writeTimestamp(XMLStreamWriter writer) throws XMLStreamException {
-		LocalDateTime now = LocalDateTime.now(reportData.getClock()).withNano(0);
-		writer.writeAttribute("timestamp", ISO_LOCAL_DATE_TIME.format(now));
 	}
 
 	private void writeSystemProperties(XMLStreamWriter writer) throws XMLStreamException {
@@ -126,9 +114,7 @@ class XmlReportWriter {
 
 		writer.writeAttribute("name", test.getDisplayName());
 		Optional<TestIdentifier> parent = reportData.getTestPlan().getParent(test);
-		if (parent.isPresent()) {
-			writer.writeAttribute("classname", parent.get().getName());
-		}
+		writer.writeAttribute("classname", parent.map(TestIdentifier::getName).orElse("<unrooted>"));
 		writer.writeAttribute("time", getTime(test, numberFormat));
 		writer.writeComment("Unique ID: " + test.getUniqueId().toString());
 
@@ -193,6 +179,10 @@ class XmlReportWriter {
 		catch (UnknownHostException e) {
 			return Optional.empty();
 		}
+	}
+
+	private LocalDateTime getCurrentDateTime() {
+		return LocalDateTime.now(reportData.getClock()).withNano(0);
 	}
 
 	private static class TestCounts {
