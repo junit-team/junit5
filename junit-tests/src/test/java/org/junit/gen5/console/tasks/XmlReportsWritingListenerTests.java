@@ -11,11 +11,14 @@
 package org.junit.gen5.console.tasks;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.api.Assumptions.assumeFalse;
 import static org.junit.gen5.console.tasks.XmlReportAssertions.ensureValidAccordingToJenkinsSchema;
+import static org.junit.gen5.engine.TestExecutionResult.successful;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
@@ -42,9 +45,12 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 import org.junit.gen5.launcher.Launcher;
+import org.junit.gen5.launcher.TestIdentifier;
+import org.junit.gen5.launcher.TestPlan;
 import org.opentest4j.AssertionFailedError;
 
 class XmlReportsWritingListenerTests {
@@ -328,6 +334,37 @@ class XmlReportsWritingListenerTests {
 				"<testcase",
 				"</testsuite>");
 		//@formatter:on
+	}
+
+	@Test
+	void printsExceptionWhenReportsDirCannotBeCreated() throws Exception {
+		Path reportsDir = tempDirectory.resolve("dummy.txt");
+		Files.write(reportsDir, singleton("content"));
+
+		StringWriter out = new StringWriter();
+		XmlReportsWritingListener listener = new XmlReportsWritingListener(reportsDir.toString(), new PrintWriter(out));
+
+		listener.testPlanExecutionStarted(TestPlan.from(emptySet()));
+
+		assertThat(out.toString()).containsSequence("Could not create reports directory", "FileAlreadyExistsException",
+			"at ");
+	}
+
+	@Test
+	void printsExceptionWhenReportCouldNotBeWritten() throws Exception {
+		EngineDescriptor engineDescriptor = new EngineDescriptor("engine", "Engine");
+
+		Path xmlFile = tempDirectory.resolve("TEST-engine.xml");
+		Files.createDirectories(xmlFile);
+
+		StringWriter out = new StringWriter();
+		XmlReportsWritingListener listener = new XmlReportsWritingListener(tempDirectory.toString(),
+			new PrintWriter(out));
+
+		listener.testPlanExecutionStarted(TestPlan.from(singleton(engineDescriptor)));
+		listener.executionFinished(TestIdentifier.from(engineDescriptor), successful());
+
+		assertThat(out.toString()).containsSequence("Could not write XML report", "FileNotFoundException", "at ");
 	}
 
 	private void executeTests(TestEngine engine) {

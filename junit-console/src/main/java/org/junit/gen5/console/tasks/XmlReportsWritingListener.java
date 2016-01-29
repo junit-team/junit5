@@ -55,7 +55,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 			Files.createDirectories(reportsDir.toPath());
 		}
 		catch (IOException e) {
-			printException("Could not create report directory: " + reportsDir, e);
+			printException("Could not create reports directory: " + reportsDir, e);
 		}
 	}
 
@@ -93,7 +93,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 			new XmlReportWriter(reportData).writeXmlReport(testIdentifier, fileWriter);
 		}
 		catch (XMLStreamException | IOException e) {
-			printException("Could not write file: " + xmlFile, e);
+			printException("Could not write XML report: " + xmlFile, e);
 		}
 	}
 
