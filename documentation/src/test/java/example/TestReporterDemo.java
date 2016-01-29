@@ -10,12 +10,13 @@
 
 package example;
 
+// tag::user_guide[]
 import java.util.HashMap;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestReporter;
 
-public class ExtendedReportingDemo {
+class TestReporterDemo {
 
 	@Test
 	void reportSingleValue(TestReporter testReporter) {
@@ -32,3 +33,4 @@ public class ExtendedReportingDemo {
 	}
 
 }
+// end::user_guide[]

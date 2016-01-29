@@ -41,6 +41,8 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :TestExecutionListener:             {master-branch}/junit-launcher/src/main/java/org/junit/gen5/launcher/TestExecutionListener.java[TestExecutionListener]
 :TestInfoParameterResolver:         {master-branch}/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java[TestInfoParameterResolver]
 :TestInfo:                          {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/TestInfo.java[TestInfo]
+:TestReporterParameterResolver:     {master-branch}/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestReporterParameterResolver.java[TestReporterParameterResolver]
+:TestReporter:                      {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/TestReporter.java[TestReporter]
 
 include::overview.adoc[]
 

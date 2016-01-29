@@ -161,24 +161,33 @@ _dynamically_ resolve method parameters at runtime. If a `@Test`, `@BeforeEach`,
 `@AfterEach`, `@BeforeAll`, or `@AfterAll` method accepts a parameter, the parameter must
 be resolved at runtime by a registered `MethodParameterResolver`.
 
-There is currently one built-in resolver that is registered automatically.
+There are currently two built-in resolvers that are registered automatically.
 
 * `{TestInfoParameterResolver}`: if a method parameter is of type `{TestInfo}`, the
   `TestInfoParameterResolver` will supply an instance of `TestInfo` corresponding to the
   current test as the value for the parameter. The `TestInfo` can then be used to retrieve
   information about the current test such as the test's name or display name (as
   configured via `@DisplayName`). This acts as a drop-in replacement for the `TestName`
-  rule from JUnit 4. See `TestInfoTests` for an example.
+  rule from JUnit 4. See `TestInfoDemo` for an example.
 
 [source,java,indent=0]
 [subs="verbatim"]
 ----
-import static org.junit.gen5.api.Assertions.*;
-
-import org.junit.gen5.api.*;
-
 include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
 ----
+
+* `{TestReporterParameterResolver}`: if a method parameter is of type `{TestReporter}`, the
+  `TestReporterParameterResolver` will supply an instance of `TestReporter`.
+  The `TestReporter` can be used to publish additional data about the current test run.
+  The data can be consumed through `{TestExecutionListener}.reportingEntryPublished()` and thus
+  be viewed by IDEs or included in reports.
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+include::{testDir}/example/TestReporterDemo.java[tags=user_guide]
+----
+
 
 Other parameter resolvers must be explicitly enabled by registering a <<extension-model,
 test extension>> via `@ExtendWith`.
