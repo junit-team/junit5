@@ -163,11 +163,14 @@ class XmlReportWriter {
 
 	private void writeErrorOrFailureElement(Optional<Throwable> throwable, XMLStreamWriter writer)
 			throws XMLStreamException {
-		writer.writeStartElement(isFailure(throwable) ? "failure" : "error");
 		if (throwable.isPresent()) {
+			writer.writeStartElement(isFailure(throwable) ? "failure" : "error");
 			writeFailureAttributesAndContent(throwable.get(), writer);
+			writer.writeEndElement();
 		}
-		writer.writeEndElement();
+		else {
+			writer.writeEmptyElement("error");
+		}
 	}
 
 	private void writeFailureAttributesAndContent(Throwable throwable, XMLStreamWriter writer)

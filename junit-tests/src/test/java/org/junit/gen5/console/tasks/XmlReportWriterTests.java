@@ -14,6 +14,7 @@ import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.console.tasks.XmlReportAssertions.ensureValidAccordingToJenkinsSchema;
+import static org.junit.gen5.engine.TestExecutionResult.failed;
 
 import java.io.StringWriter;
 import java.time.Clock;
@@ -63,6 +64,30 @@ class XmlReportWriterTests {
 				"<testsuite name=\"Engine\" tests=\"1\" skipped=\"1\" failures=\"0\" errors=\"0\"",
 				"<testcase name=\"skippedTest\"",
 				"<skipped/>",
+				"</testcase>",
+				"</testsuite>");
+		//@formatter:on
+	}
+
+	@Test
+	void writesEmptyErrorElementForFailedTestWithoutCause() throws Exception {
+		EngineDescriptor engineDescriptor = new EngineDescriptor("engine", "Engine");
+		engineDescriptor.addChild(new TestDescriptorStub("failedTest"));
+
+		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		reportData.markFinished(testPlan.getTestIdentifier(new TestId("failedTest")), failed(null));
+
+		StringWriter out = new StringWriter();
+		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
+
+		String content = ensureValidAccordingToJenkinsSchema(out.toString());
+		//@formatter:off
+		assertThat(content)
+			.containsSequence(
+				"<testsuite name=\"Engine\" tests=\"1\" skipped=\"0\" failures=\"0\" errors=\"1\"",
+				"<testcase name=\"failedTest\"",
+				"<error/>",
 				"</testcase>",
 				"</testsuite>");
 		//@formatter:on
