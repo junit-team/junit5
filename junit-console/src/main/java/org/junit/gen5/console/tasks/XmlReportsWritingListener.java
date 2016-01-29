@@ -10,9 +10,15 @@
 
 package org.junit.gen5.console.tasks;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.time.Clock;
 
@@ -83,8 +89,8 @@ class XmlReportsWritingListener implements TestExecutionListener {
 
 	private void writeXmlReportSafely(TestIdentifier testIdentifier) {
 		File xmlFile = new File(reportsDir, "TEST-" + testIdentifier.getUniqueId() + ".xml");
-		try {
-			new XmlReportWriter(reportData, clock).writeXmlReport(testIdentifier, xmlFile);
+		try (Writer fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(xmlFile), UTF_8))) {
+			new XmlReportWriter(reportData).writeXmlReport(testIdentifier, fileWriter);
 		}
 		catch (XMLStreamException | IOException e) {
 			printException("Could not write file: " + xmlFile, e);

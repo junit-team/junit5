@@ -47,6 +47,10 @@ class XmlReportData {
 		return testPlan;
 	}
 
+	Clock getClock() {
+		return clock;
+	}
+
 	void markSkipped(TestIdentifier testIdentifier, String reason) {
 		skippedTests.put(testIdentifier, reason == null ? "" : reason);
 	}

@@ -10,7 +10,6 @@
 
 package org.junit.gen5.console.tasks;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.ExceptionUtils.readStackTrace;
@@ -18,16 +17,10 @@ import static org.junit.gen5.commons.util.StringUtils.isNotBlank;
 import static org.junit.gen5.console.tasks.XmlReportData.isFailure;
 import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.NumberFormat;
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
@@ -45,36 +38,30 @@ import org.junit.gen5.launcher.TestIdentifier;
 class XmlReportWriter {
 
 	private final XmlReportData reportData;
-	private final Clock clock;
 
-	XmlReportWriter(XmlReportData reportData, Clock clock) {
+	XmlReportWriter(XmlReportData reportData) {
 		this.reportData = reportData;
-		this.clock = clock;
 	}
 
-	void writeXmlReport(TestIdentifier testIdentifier, File xmlFile) throws IOException, XMLStreamException {
+	void writeXmlReport(TestIdentifier testIdentifier, Writer out) throws XMLStreamException {
 		// @formatter:off
 		List<TestIdentifier> tests = reportData.getTestPlan().getDescendants(testIdentifier)
 				.stream()
 				.filter(TestIdentifier::isTest)
 				.collect(toList());
 		// @formatter:on
-		if (!tests.isEmpty()) {
-			writeXmlReport(testIdentifier, tests, xmlFile);
-		}
+		writeXmlReport(testIdentifier, tests, out);
 	}
 
-	private void writeXmlReport(TestIdentifier testIdentifier, List<TestIdentifier> tests, File xmlFile)
-			throws IOException, XMLStreamException {
-		try (Writer fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(xmlFile), UTF_8))) {
-			XMLOutputFactory factory = XMLOutputFactory.newInstance();
-			XMLStreamWriter xmlWriter = factory.createXMLStreamWriter(fileWriter);
-			xmlWriter.writeStartDocument();
-			writeTestsuite(testIdentifier, tests, xmlWriter);
-			xmlWriter.writeEndDocument();
-			xmlWriter.flush();
-			xmlWriter.close();
-		}
+	private void writeXmlReport(TestIdentifier testIdentifier, List<TestIdentifier> tests, Writer out)
+			throws XMLStreamException {
+		XMLOutputFactory factory = XMLOutputFactory.newInstance();
+		XMLStreamWriter xmlWriter = factory.createXMLStreamWriter(out);
+		xmlWriter.writeStartDocument();
+		writeTestsuite(testIdentifier, tests, xmlWriter);
+		xmlWriter.writeEndDocument();
+		xmlWriter.flush();
+		xmlWriter.close();
 	}
 
 	private void writeTestsuite(TestIdentifier testIdentifier, List<TestIdentifier> tests, XMLStreamWriter writer)
@@ -118,7 +105,7 @@ class XmlReportWriter {
 	}
 
 	private void writeTimestamp(XMLStreamWriter writer) throws XMLStreamException {
-		LocalDateTime now = LocalDateTime.now(clock).withNano(0);
+		LocalDateTime now = LocalDateTime.now(reportData.getClock()).withNano(0);
 		writer.writeAttribute("timestamp", ISO_LOCAL_DATE_TIME.format(now));
 	}
 

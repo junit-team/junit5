@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.api.Assumptions.assumeFalse;
+import static org.junit.gen5.console.tasks.XmlReportAssertions.ensureValidAccordingToJenkinsSchema;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
@@ -22,10 +23,8 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.InetAddress;
-import java.net.URL;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,13 +37,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import javax.xml.XMLConstants;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-
 import org.junit.gen5.api.AfterEach;
-import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
@@ -53,19 +46,10 @@ import org.junit.gen5.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 import org.junit.gen5.launcher.Launcher;
 import org.opentest4j.AssertionFailedError;
-import org.xml.sax.SAXException;
 
 class XmlReportsWritingListenerTests {
 
-	private static Validator schemaValidator;
 	private Path tempDirectory;
-
-	@BeforeAll
-	static void initializeSchemaValidator() throws Exception {
-		URL schemaFile = XmlReportsWritingListener.class.getResource("/jenkins-junit.xsd");
-		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		schemaValidator = schemaFactory.newSchema(schemaFile).newValidator();
-	}
 
 	@BeforeEach
 	void createTempDirectory(TestInfo testInfo) throws Exception {
@@ -362,16 +346,7 @@ class XmlReportsWritingListenerTests {
 		Path xmlFile = tempDirectory.resolve(filename);
 		assertTrue(Files.exists(xmlFile), () -> "File does not exist: " + xmlFile);
 		String content = new String(Files.readAllBytes(xmlFile), UTF_8);
-		assertValidAccordingToJenkinsSchema(content);
-		return content;
+		return ensureValidAccordingToJenkinsSchema(content);
 	}
 
-	private static void assertValidAccordingToJenkinsSchema(String content) throws Exception {
-		try {
-			schemaValidator.validate(new StreamSource(new StringReader(content)));
-		}
-		catch (SAXException e) {
-			throw new AssertionFailedError("Invalid XML document: " + content, e);
-		}
-	}
 }
