@@ -93,4 +93,27 @@ class XmlReportWriterTests {
 		//@formatter:on
 	}
 
+	@Test
+	void omitsMessageAttributeForFailedTestWithThrowableWithoutMessage() throws Exception {
+		EngineDescriptor engineDescriptor = new EngineDescriptor("engine", "Engine");
+		engineDescriptor.addChild(new TestDescriptorStub("failedTest"));
+
+		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		reportData.markFinished(testPlan.getTestIdentifier(new TestId("failedTest")),
+			failed(new NullPointerException()));
+
+		StringWriter out = new StringWriter();
+		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
+
+		String content = ensureValidAccordingToJenkinsSchema(out.toString());
+		//@formatter:off
+		assertThat(content)
+			.containsSequence(
+				"<testcase name=\"failedTest\"",
+				"<error type=\"java.lang.NullPointerException\">",
+				"</testcase>");
+		//@formatter:on
+	}
+
 }
