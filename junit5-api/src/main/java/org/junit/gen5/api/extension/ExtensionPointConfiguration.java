@@ -29,11 +29,24 @@ public class ExtensionPointConfiguration {
 		type2config.put(extensionPointType, configuration);
 	}
 
-	public static ExtensionPointConfiguration getFor(Class<? extends ExtensionPoint> extensionPointType) {
-		return type2config.getOrDefault(extensionPointType, DEFAULT);
+	/**
+	 * Currently only used for testing purposes to unregister extension point types that are only used in a test.
+	 *
+	 * @param extensionPointType
+	 */
+	public static void unregister(Class<? extends ExtensionPoint> extensionPointType) {
+		type2config.remove(extensionPointType);
 	}
 
-	private static ExtensionPointConfiguration DEFAULT = new ExtensionPointConfiguration(
+	public static ExtensionPointConfiguration getFor(Class<? extends ExtensionPoint> extensionPointType) {
+		return type2config.get(extensionPointType);
+	}
+
+	/**
+	 * Default configuration which only allows {@link Position#DEFAULT} and applies the extension point
+	 * in {@link ExtensionPointRegistry.ApplicationOrder#FORWARD FORWARD} order.
+	 */
+	public static ExtensionPointConfiguration DEFAULT = new ExtensionPointConfiguration(
 		new Position[] { Position.DEFAULT }, ExtensionPointRegistry.ApplicationOrder.FORWARD);
 
 	public Position[] getAllowedPositions() {

@@ -26,6 +26,7 @@ import org.junit.gen5.api.extension.AfterAllExtensionPoint;
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeAllExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.ContainerExecutionCondition;
 import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
 import org.junit.gen5.api.extension.Extension;
 import org.junit.gen5.api.extension.ExtensionPoint;
@@ -35,6 +36,8 @@ import org.junit.gen5.api.extension.ExtensionPointRegistry.ApplicationOrder;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.InstancePostProcessor;
+import org.junit.gen5.api.extension.MethodParameterResolver;
+import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
@@ -66,8 +69,10 @@ public class ExtensionRegistry {
 		ExtensionPointConfiguration.register(AfterEachExtensionPoint.class, AfterEachExtensionPoint.CONFIG);
 		ExtensionPointConfiguration.register(AfterAllExtensionPoint.class, AfterAllExtensionPoint.CONFIG);
 		ExtensionPointConfiguration.register(InstancePostProcessor.class, InstancePostProcessor.CONFIG);
-		ExtensionPointConfiguration.register(ExceptionHandlerExtensionPoint.class,
-			ExceptionHandlerExtensionPoint.CONFIG);
+		ExtensionPointConfiguration.register(ExceptionHandlerExtensionPoint.class, ExceptionHandlerExtensionPoint.CONFIG);
+		ExtensionPointConfiguration.register(ContainerExecutionCondition.class, ExtensionPointConfiguration.DEFAULT);
+		ExtensionPointConfiguration.register(TestExecutionCondition.class, ExtensionPointConfiguration.DEFAULT);
+		ExtensionPointConfiguration.register(MethodParameterResolver.class, ExtensionPointConfiguration.DEFAULT);
 	}
 
 	/**

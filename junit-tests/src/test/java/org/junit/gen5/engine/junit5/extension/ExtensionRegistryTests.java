@@ -17,12 +17,15 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.Assertions;
+import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ContainerExecutionCondition;
 import org.junit.gen5.api.extension.Extension;
 import org.junit.gen5.api.extension.ExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionPointConfiguration;
 import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
@@ -35,6 +38,18 @@ import org.junit.gen5.api.extension.TestExecutionCondition;
 public class ExtensionRegistryTests {
 
 	private ExtensionRegistry registry;
+
+	@BeforeAll
+	static void registerExtensionPoint() {
+		ExtensionPointConfiguration.register(MyExtensionPoint.class, ExtensionPointConfiguration.DEFAULT);
+		ExtensionPointConfiguration.register(AnotherExtensionPoint.class, ExtensionPointConfiguration.DEFAULT);
+	}
+
+	@AfterAll
+	static void unregisterExtensionPoints() {
+		ExtensionPointConfiguration.unregister(MyExtensionPoint.class);
+		ExtensionPointConfiguration.unregister(AnotherExtensionPoint.class);
+	}
 
 	@BeforeEach
 	public void initRegistry() {
