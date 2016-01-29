@@ -1,0 +1,93 @@
+/*
+ * Copyright 2015-2016 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
+
+package org.junit.gen5.console.tasks;
+
+import java.io.IOException;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Parameter;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+
+import org.junit.gen5.api.extension.AfterEachExtensionPoint;
+import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ExtensionContext.Namespace;
+import org.junit.gen5.api.extension.MethodInvocationContext;
+import org.junit.gen5.api.extension.MethodParameterResolver;
+import org.junit.gen5.api.extension.ParameterResolutionException;
+import org.junit.gen5.api.extension.TestExtensionContext;
+
+public class TempDirectory implements AfterEachExtensionPoint, MethodParameterResolver {
+
+	@Target(ElementType.PARAMETER)
+	@Retention(RetentionPolicy.RUNTIME)
+	@Documented
+	public @interface Root {
+	}
+
+	private static final Namespace NAMESPACE = Namespace.of(TempDirectory.class);
+	private static final String KEY = "tempDirectory";
+
+	@Override
+	public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,
+			ExtensionContext extensionContext) throws ParameterResolutionException {
+		return parameter.getAnnotation(Root.class) != null && Path.class.equals(parameter.getType());
+	}
+
+	@Override
+	public Object resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
+			ExtensionContext context) throws ParameterResolutionException {
+		return context.getStore(NAMESPACE).getOrComputeIfAbsent(KEY, key -> createTempDirectory(context));
+	}
+
+	@Override
+	public void afterEach(TestExtensionContext context) throws Exception {
+		Path tempDirectory = (Path) context.getStore(NAMESPACE).get(KEY);
+		if (tempDirectory != null) {
+			delete(tempDirectory);
+		}
+	}
+
+	private Path createTempDirectory(ExtensionContext context) {
+		try {
+			return Files.createTempDirectory(context.getName());
+		}
+		catch (IOException e) {
+			throw new ParameterResolutionException("Could not create temp directory", e);
+		}
+	}
+
+	private void delete(Path tempDirectory) throws IOException {
+		Files.walkFileTree(tempDirectory, new SimpleFileVisitor<Path>() {
+
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				return deleteAndContinue(file);
+			}
+
+			@Override
+			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+				return deleteAndContinue(dir);
+			}
+
+			private FileVisitResult deleteAndContinue(Path path) throws IOException {
+				Files.delete(path);
+				return FileVisitResult.CONTINUE;
+			}
+		});
+	}
+}

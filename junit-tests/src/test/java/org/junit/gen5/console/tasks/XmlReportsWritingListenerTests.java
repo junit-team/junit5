@@ -24,15 +24,11 @@ import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.InetAddress;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -40,10 +36,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import org.junit.gen5.api.AfterEach;
-import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.TestInfo;
+import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.console.tasks.TempDirectory.Root;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestDescriptor;
@@ -53,45 +48,18 @@ import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.opentest4j.AssertionFailedError;
 
+@ExtendWith(TempDirectory.class)
 class XmlReportsWritingListenerTests {
 
-	private Path tempDirectory;
-
-	@BeforeEach
-	void createTempDirectory(TestInfo testInfo) throws Exception {
-		tempDirectory = Files.createTempDirectory(testInfo.getName());
-	}
-
-	@AfterEach
-	void deleteTempDirectory() throws Exception {
-		Files.walkFileTree(tempDirectory, new SimpleFileVisitor<Path>() {
-
-			@Override
-			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				return deleteAndContinue(file);
-			}
-
-			@Override
-			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-				return deleteAndContinue(dir);
-			}
-
-			private FileVisitResult deleteAndContinue(Path path) throws IOException {
-				Files.delete(path);
-				return FileVisitResult.CONTINUE;
-			}
-		});
-	}
-
 	@Test
-	void writesFileForSingleSucceedingTest() throws Exception {
+	void writesFileForSingleSucceedingTest(@Root Path tempDirectory) throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
 		engine.addTest("succeedingTest", () -> {
 		}).setDisplayName("display<>Name");
 
-		executeTests(engine);
+		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile("TEST-dummy.xml");
+		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
@@ -108,13 +76,13 @@ class XmlReportsWritingListenerTests {
 	}
 
 	@Test
-	void writesFileForSingleFailingTest() throws Exception {
+	void writesFileForSingleFailingTest(@Root Path tempDirectory) throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
 		engine.addTest("failingTest", () -> fail("expected to <b>fail</b>"));
 
-		executeTests(engine);
+		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile("TEST-dummy.xml");
+		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
@@ -132,15 +100,15 @@ class XmlReportsWritingListenerTests {
 	}
 
 	@Test
-	void writesFileForSingleErroneousTest() throws Exception {
+	void writesFileForSingleErroneousTest(@Root Path tempDirectory) throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
 		engine.addTest("failingTest", () -> {
 			throw new RuntimeException("error occurred");
 		});
 
-		executeTests(engine);
+		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile("TEST-dummy.xml");
+		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
@@ -158,14 +126,14 @@ class XmlReportsWritingListenerTests {
 	}
 
 	@Test
-	void writesFileForSingleSkippedTest() throws Exception {
+	void writesFileForSingleSkippedTest(@Root Path tempDirectory) throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
 		DummyTestDescriptor testDescriptor = engine.addTest("skippedTest", () -> fail("never called"));
 		testDescriptor.markSkipped("should be skipped");
 
-		executeTests(engine);
+		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile("TEST-dummy.xml");
+		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
@@ -180,13 +148,13 @@ class XmlReportsWritingListenerTests {
 	}
 
 	@Test
-	void writesFileForSingleAbortedTest() throws Exception {
+	void writesFileForSingleAbortedTest(@Root Path tempDirectory) throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
 		engine.addTest("abortedTest", () -> assumeFalse(true, "deliberately aborted"));
 
-		executeTests(engine);
+		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile("TEST-dummy.xml");
+		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
@@ -205,16 +173,16 @@ class XmlReportsWritingListenerTests {
 	}
 
 	@Test
-	void measuresTimesInSeconds() throws Exception {
+	void measuresTimesInSeconds(@Root Path tempDirectory) throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
 		engine.addTest("firstTest", () -> {
 		});
 		engine.addTest("secondTest", () -> {
 		});
 
-		executeTests(engine, new IncrementingClock(0, Duration.ofMillis(333)));
+		executeTests(engine, tempDirectory, new IncrementingClock(0, Duration.ofMillis(333)));
 
-		String content = readValidXmlFile("TEST-dummy.xml");
+		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
 		//@formatter:off
 		//               start        end
@@ -231,14 +199,14 @@ class XmlReportsWritingListenerTests {
 	}
 
 	@Test
-	void testWithImmeasurableTimeIsOutputCorrectly() throws Exception {
+	void testWithImmeasurableTimeIsOutputCorrectly(@Root Path tempDirectory) throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
 		engine.addTest("test", () -> {
 		});
 
-		executeTests(engine, Clock.fixed(Instant.EPOCH, ZoneId.systemDefault()));
+		executeTests(engine, tempDirectory, Clock.fixed(Instant.EPOCH, ZoneId.systemDefault()));
 
-		String content = readValidXmlFile("TEST-dummy.xml");
+		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 
 		//@formatter:off
 		assertThat(content)
@@ -249,14 +217,14 @@ class XmlReportsWritingListenerTests {
 	}
 
 	@Test
-	void writesFileForSkippedContainer() throws Exception {
+	void writesFileForSkippedContainer(@Root Path tempDirectory) throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
 		engine.addTest("test", () -> fail("never called"));
 		engine.getEngineDescriptor().markSkipped("should be skipped");
 
-		executeTests(engine);
+		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile("TEST-dummy.xml");
+		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
@@ -269,14 +237,14 @@ class XmlReportsWritingListenerTests {
 	}
 
 	@Test
-	void writesFileForFailingContainer() throws Exception {
+	void writesFileForFailingContainer(@Root Path tempDirectory) throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
 		engine.addTest("test", () -> fail("never called"));
 		engine.getEngineDescriptor().setBeforeAllBehavior(() -> fail("failure before all tests"));
 
-		executeTests(engine);
+		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile("TEST-dummy.xml");
+		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
@@ -292,14 +260,14 @@ class XmlReportsWritingListenerTests {
 	}
 
 	@Test
-	void writesSystemProperties() throws Exception {
+	void writesSystemProperties(@Root Path tempDirectory) throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
 		engine.addTest("test", () -> {
 		});
 
-		executeTests(engine);
+		executeTests(engine, tempDirectory);
 
-		String content = readValidXmlFile("TEST-dummy.xml");
+		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
@@ -314,7 +282,7 @@ class XmlReportsWritingListenerTests {
 	}
 
 	@Test
-	void writesHostNameAndTimestamp() throws Exception {
+	void writesHostNameAndTimestamp(@Root Path tempDirectory) throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
 		engine.addTest("test", () -> {
 		});
@@ -322,9 +290,9 @@ class XmlReportsWritingListenerTests {
 		LocalDateTime now = LocalDateTime.parse("2016-01-28T14:02:59.123");
 		ZoneId zone = ZoneId.systemDefault();
 
-		executeTests(engine, Clock.fixed(ZonedDateTime.of(now, zone).toInstant(), zone));
+		executeTests(engine, tempDirectory, Clock.fixed(ZonedDateTime.of(now, zone).toInstant(), zone));
 
-		String content = readValidXmlFile("TEST-dummy.xml");
+		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
@@ -337,7 +305,7 @@ class XmlReportsWritingListenerTests {
 	}
 
 	@Test
-	void printsExceptionWhenReportsDirCannotBeCreated() throws Exception {
+	void printsExceptionWhenReportsDirCannotBeCreated(@Root Path tempDirectory) throws Exception {
 		Path reportsDir = tempDirectory.resolve("dummy.txt");
 		Files.write(reportsDir, singleton("content"));
 
@@ -351,7 +319,7 @@ class XmlReportsWritingListenerTests {
 	}
 
 	@Test
-	void printsExceptionWhenReportCouldNotBeWritten() throws Exception {
+	void printsExceptionWhenReportCouldNotBeWritten(@Root Path tempDirectory) throws Exception {
 		EngineDescriptor engineDescriptor = new EngineDescriptor("engine", "Engine");
 
 		Path xmlFile = tempDirectory.resolve("TEST-engine.xml");
@@ -367,11 +335,11 @@ class XmlReportsWritingListenerTests {
 		assertThat(out.toString()).containsSequence("Could not write XML report", "Exception", "at ");
 	}
 
-	private void executeTests(TestEngine engine) {
-		executeTests(engine, Clock.systemDefaultZone());
+	private void executeTests(TestEngine engine, Path tempDirectory) {
+		executeTests(engine, tempDirectory, Clock.systemDefaultZone());
 	}
 
-	private void executeTests(TestEngine engine, Clock clock) {
+	private void executeTests(TestEngine engine, Path tempDirectory, Clock clock) {
 		PrintWriter out = new PrintWriter(new StringWriter());
 		XmlReportsWritingListener reportListener = new XmlReportsWritingListener(tempDirectory.toString(), out, clock);
 		Launcher launcher = createLauncher(engine);
@@ -379,8 +347,7 @@ class XmlReportsWritingListenerTests {
 		launcher.execute(request().select(forUniqueId(engine.getId())).build());
 	}
 
-	private String readValidXmlFile(String filename) throws Exception {
-		Path xmlFile = tempDirectory.resolve(filename);
+	private String readValidXmlFile(Path xmlFile) throws Exception {
 		assertTrue(Files.exists(xmlFile), () -> "File does not exist: " + xmlFile);
 		String content = new String(Files.readAllBytes(xmlFile), UTF_8);
 		return ensureValidAccordingToJenkinsSchema(content);
