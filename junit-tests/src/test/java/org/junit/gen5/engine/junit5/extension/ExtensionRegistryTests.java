@@ -10,8 +10,8 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.*;
 
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -24,6 +24,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ContainerExecutionCondition;
 import org.junit.gen5.api.extension.Extension;
+import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPointConfiguration;
 import org.junit.gen5.api.extension.ExtensionPointRegistry;
@@ -41,14 +42,14 @@ public class ExtensionRegistryTests {
 
 	@BeforeAll
 	static void registerExtensionPoint() {
-		ExtensionPointConfiguration.register(MyExtensionPoint.class, ExtensionPointConfiguration.DEFAULT);
-		ExtensionPointConfiguration.register(AnotherExtensionPoint.class, ExtensionPointConfiguration.DEFAULT);
+		ExtensionPointConfiguration.registerType(MyExtensionPoint.class, MyExtensionPoint.CONFIG);
+		ExtensionPointConfiguration.registerType(AnotherExtensionPoint.class, ExtensionPointConfiguration.DEFAULT);
 	}
 
 	@AfterAll
 	static void unregisterExtensionPoints() {
-		ExtensionPointConfiguration.unregister(MyExtensionPoint.class);
-		ExtensionPointConfiguration.unregister(AnotherExtensionPoint.class);
+		ExtensionPointConfiguration.unregisterType(MyExtensionPoint.class);
+		ExtensionPointConfiguration.unregisterType(AnotherExtensionPoint.class);
 	}
 
 	@BeforeEach
@@ -140,6 +141,14 @@ public class ExtensionRegistryTests {
 	}
 
 	@Test
+	void registerExtensionPointWithNotAllowedPositionFails() {
+		ExtensionConfigurationException ex = expectThrows(ExtensionConfigurationException.class,
+			() -> registry.registerExtension(FaultyExtensionRegistrar.class));
+		assertTrue(ex.getMessage().startsWith("'Position.OUTERMOST' not allowed:"));
+		assertTrue(ex.getMessage().contains(FaultyExtensionRegistrar.class.getName()));
+	}
+
+	@Test
 	public void canStreamOverRegisteredExceptionPoint() throws Exception {
 
 		registry.registerExtension(MyExtension.class);
@@ -211,6 +220,13 @@ public class ExtensionRegistryTests {
 
 interface MyExtensionPoint extends ExtensionPoint {
 
+	/**
+	 * Configuration for {@code BeforeEachExtensionPoint}
+	 */
+	ExtensionPointConfiguration CONFIG = new ExtensionPointConfiguration(
+		new ExtensionPointRegistry.Position[] { FIRST, DEFAULT, LAST },
+		ExtensionPointRegistry.ApplicationOrder.FORWARD);
+
 	void doNothing(String test);
 }
 
@@ -252,11 +268,23 @@ class MyExtensionRegistrar implements ExtensionRegistrar {
 
 	@Override
 	public void registerExtensions(ExtensionPointRegistry registry) {
-		registry.register((MyExtensionPoint) this::doNothing);
-		registry.register((AnotherExtensionPoint) this::doMore);
+		registry.register((MyExtensionPoint) this::doNothing, Position.FIRST);
+		registry.register((AnotherExtensionPoint) this::doMore, Position.DEFAULT);
 	}
 
 	private void doMore() {
+	}
+
+	private void doNothing(String s) {
+	}
+}
+
+class FaultyExtensionRegistrar implements ExtensionRegistrar {
+
+	@Override
+	public void registerExtensions(ExtensionPointRegistry registry) {
+		//MyExtensionPoint does not allow OUTERMOST
+		registry.register((MyExtensionPoint) this::doNothing, Position.OUTERMOST);
 	}
 
 	private void doNothing(String s) {

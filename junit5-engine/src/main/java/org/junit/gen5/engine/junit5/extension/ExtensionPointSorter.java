@@ -43,28 +43,8 @@ class ExtensionPointSorter {
 	 */
 	public <T extends ExtensionPoint> void sort(List<RegisteredExtensionPoint<T>> registeredExtensionPoints,
 			Position[] allowedPositions) {
-		checkOnlyAllowedPositions(registeredExtensionPoints, allowedPositions);
 		checkNoUniquePositionConflict(registeredExtensionPoints, allowedPositions);
 		registeredExtensionPoints.sort(new DefaultComparator());
-	}
-
-	private <T extends ExtensionPoint> void checkOnlyAllowedPositions(
-			List<RegisteredExtensionPoint<T>> registeredExtensionPoints, Position[] allowedPositions) {
-
-		// @formatter:off
-        registeredExtensionPoints
-                .stream()
-                .filter(rep -> notIn(rep.getPosition(), allowedPositions))
-                .forEach(r -> {
-                    String exceptionMessage = String.format("'%s' not allowed: %s", r.getPosition(), r.getSource());
-                    throw new ExtensionConfigurationException(exceptionMessage);
-                });
-        // @formatter:on
-
-	}
-
-	private boolean notIn(Position position, Position[] allowedPositions) {
-		return !Arrays.asList(allowedPositions).contains(position);
 	}
 
 	private <T extends ExtensionPoint> void checkNoUniquePositionConflict(

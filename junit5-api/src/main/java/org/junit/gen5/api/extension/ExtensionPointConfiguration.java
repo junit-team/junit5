@@ -12,6 +12,7 @@ package org.junit.gen5.api.extension;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 
@@ -24,22 +25,25 @@ public class ExtensionPointConfiguration {
 
 	private static Map<Class<? extends ExtensionPoint>, ExtensionPointConfiguration> type2config = new HashMap<>();
 
-	public static void register(Class<? extends ExtensionPoint> extensionPointType,
+	public static void registerType(Class<? extends ExtensionPoint> extensionPointType,
 			ExtensionPointConfiguration configuration) {
 		type2config.put(extensionPointType, configuration);
 	}
 
 	/**
 	 * Currently only used for testing purposes to unregister extension point types that are only used in a test.
-	 *
-	 * @param extensionPointType
 	 */
-	public static void unregister(Class<? extends ExtensionPoint> extensionPointType) {
+	public static void unregisterType(Class<? extends ExtensionPoint> extensionPointType) {
 		type2config.remove(extensionPointType);
 	}
 
-	public static ExtensionPointConfiguration getFor(Class<? extends ExtensionPoint> extensionPointType) {
+	public static ExtensionPointConfiguration getConfigurationForType(
+			Class<? extends ExtensionPoint> extensionPointType) {
 		return type2config.get(extensionPointType);
+	}
+
+	public static Set<Class<? extends ExtensionPoint>> getAllExtensionPointTypes() {
+		return type2config.keySet();
 	}
 
 	/**

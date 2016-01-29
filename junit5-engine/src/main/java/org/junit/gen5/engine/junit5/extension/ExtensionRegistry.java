@@ -29,6 +29,7 @@ import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
 import org.junit.gen5.api.extension.ContainerExecutionCondition;
 import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
 import org.junit.gen5.api.extension.Extension;
+import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPointConfiguration;
 import org.junit.gen5.api.extension.ExtensionPointRegistry;
@@ -63,16 +64,22 @@ public class ExtensionRegistry {
 	 * than {@link ExtensionPointConfiguration#DEFAULT}
 	 */
 	static {
-		//TODO: Replace static block by something equivalent to registration of default extensions
-		ExtensionPointConfiguration.register(BeforeEachExtensionPoint.class, BeforeEachExtensionPoint.CONFIG);
-		ExtensionPointConfiguration.register(BeforeAllExtensionPoint.class, BeforeAllExtensionPoint.CONFIG);
-		ExtensionPointConfiguration.register(AfterEachExtensionPoint.class, AfterEachExtensionPoint.CONFIG);
-		ExtensionPointConfiguration.register(AfterAllExtensionPoint.class, AfterAllExtensionPoint.CONFIG);
-		ExtensionPointConfiguration.register(InstancePostProcessor.class, InstancePostProcessor.CONFIG);
-		ExtensionPointConfiguration.register(ExceptionHandlerExtensionPoint.class, ExceptionHandlerExtensionPoint.CONFIG);
-		ExtensionPointConfiguration.register(ContainerExecutionCondition.class, ExtensionPointConfiguration.DEFAULT);
-		ExtensionPointConfiguration.register(TestExecutionCondition.class, ExtensionPointConfiguration.DEFAULT);
-		ExtensionPointConfiguration.register(MethodParameterResolver.class, ExtensionPointConfiguration.DEFAULT);
+		//TODO: Replace static block by a different solution. Or maybe not.
+		ExtensionPointConfiguration.registerType(BeforeEachExtensionPoint.class, BeforeEachExtensionPoint.CONFIG);
+		ExtensionPointConfiguration.registerType(BeforeAllExtensionPoint.class, BeforeAllExtensionPoint.CONFIG);
+		ExtensionPointConfiguration.registerType(AfterEachExtensionPoint.class, AfterEachExtensionPoint.CONFIG);
+		ExtensionPointConfiguration.registerType(AfterAllExtensionPoint.class, AfterAllExtensionPoint.CONFIG);
+		ExtensionPointConfiguration.registerType(InstancePostProcessor.class, InstancePostProcessor.CONFIG);
+		ExtensionPointConfiguration.registerType(ExceptionHandlerExtensionPoint.class,
+			ExceptionHandlerExtensionPoint.CONFIG);
+		ExtensionPointConfiguration.registerType(ContainerExecutionCondition.class,
+			ExtensionPointConfiguration.DEFAULT);
+		ExtensionPointConfiguration.registerType(TestExecutionCondition.class, ExtensionPointConfiguration.DEFAULT);
+		ExtensionPointConfiguration.registerType(MethodParameterResolver.class, ExtensionPointConfiguration.DEFAULT);
+	}
+
+	private static ExtensionPointConfiguration getConfigurationFor(Class<? extends ExtensionPoint> extensionPointType) {
+		return ExtensionPointConfiguration.getConfigurationForType(extensionPointType);
 	}
 
 	/**
@@ -163,8 +170,8 @@ public class ExtensionRegistry {
 
 		List<RegisteredExtensionPoint<E>> registeredExtensionPoints = getRegisteredExtensionPoints(extensionPointType);
 
-		Position[] allowedPositions = ExtensionPointConfiguration.getFor(extensionPointType).getAllowedPositions();
-		ApplicationOrder order = ExtensionPointConfiguration.getFor(extensionPointType).getApplicationOrder();
+		Position[] allowedPositions = getConfigurationFor(extensionPointType).getAllowedPositions();
+		ApplicationOrder order = getConfigurationFor(extensionPointType).getApplicationOrder();
 
 		new ExtensionPointSorter().sort(registeredExtensionPoints, allowedPositions);
 		if (order == ApplicationOrder.BACKWARD) {
@@ -215,9 +222,33 @@ public class ExtensionRegistry {
 		LOG.finer(() -> String.format("Registering extension point [%s] from source [%s] with position [%s].",
 			extension, source, position));
 
-		//TODO: Check if position is allowed for the current ExtensionPoint
+		RegisteredExtensionPoint<ExtensionPoint> registeredExtensionPoint = new RegisteredExtensionPoint<>(extension,
+			source, position);
 
-		this.registeredExtensionPoints.add(new RegisteredExtensionPoint<>(extension, source, position));
+		// @formatter:off
+		ExtensionPointConfiguration.getAllExtensionPointTypes().stream()
+			.filter(extensionPointType -> extensionPointType.isInstance(extension))
+			.forEach(extensionPointType -> {
+				Position[] allowedPositions = getConfigurationFor(extensionPointType).getAllowedPositions();
+				checkOnlyAllowedPositions(registeredExtensionPoint, allowedPositions);
+			});
+		// @formatter:on
+
+		this.registeredExtensionPoints.add(registeredExtensionPoint);
+	}
+
+	private <T extends ExtensionPoint> void checkOnlyAllowedPositions(RegisteredExtensionPoint<T> rep,
+			Position[] allowedPositions) {
+
+		if (notIn(rep.getPosition(), allowedPositions)) {
+			String exceptionMessage = String.format("'%s' not allowed: %s", rep.getPosition(), rep.getSource());
+			throw new ExtensionConfigurationException(exceptionMessage);
+		}
+
+	}
+
+	private boolean notIn(Position position, Position[] allowedPositions) {
+		return !Arrays.asList(allowedPositions).contains(position);
 	}
 
 	private void registerExtensionPointsFromRegistrar(Extension extension) {
@@ -249,7 +280,7 @@ public class ExtensionRegistry {
 
 		@Override
 		public void register(ExtensionPoint extensionPoint, Position position) {
-			registerExtensionPoint(extensionPoint, this.extensionRegistrar, position);
+			registerExtensionPoint(extensionPoint, this.extensionRegistrar.getClass(), position);
 		}
 
 	}
