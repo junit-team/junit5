@@ -1044,7 +1044,7 @@ enables method-level <em>Dependency Injection</em>.</p>
 be resolved at runtime by a registered <code>MethodParameterResolver</code>.</p>
 </div>
 <div class="paragraph">
-<p>There is currently one built-in resolver that is registered automatically.</p>
+<p>There are currently two built-in resolvers that are registered automatically.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1054,17 +1054,13 @@ be resolved at runtime by a registered <code>MethodParameterResolver</code>.</p>
 current test as the value for the parameter. The <code>TestInfo</code> can then be used to retrieve
 information about the current test such as the test&#8217;s name or display name (as
 configured via <code>@DisplayName</code>). This acts as a drop-in replacement for the <code>TestName</code>
-rule from JUnit 4. See <code>TestInfoTests</code> for an example.</p>
+rule from JUnit 4. See <code>TestInfoDemo</code> for an example.</p>
 </li>
 </ul>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.*;
-
-import org.junit.gen5.api.*;
-
-import static org.junit.gen5.api.Assertions.assertEquals;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
 
 import org.junit.gen5.api.BeforeEach;
@@ -1088,6 +1084,43 @@ class TestInfoDemo {
 
     @Test
     void test2() {
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a method parameter is of type <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/TestReporter.java">TestReporter</a></code>, the
+<code>TestReporterParameterResolver</code> will supply an instance of <code>TestReporter</code>.
+The <code>TestReporter</code> can be used to publish additional data about the current test run.
+The data can be consumed through <code><a href="https://github.com/junit-team/junit5/blob/master/junit-launcher/src/main/java/org/junit/gen5/launcher/TestExecutionListener.java">TestExecutionListener</a>.reportingEntryPublished()</code> and thus
+be viewed by IDEs or included in reports.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import java.util.HashMap;
+
+import org.junit.gen5.api.Test;
+import org.junit.gen5.api.TestReporter;
+
+class TestReporterDemo {
+
+    @Test
+    void reportSingleValue(TestReporter testReporter) {
+        testReporter.publishEntry("a key", "a value");
+    }
+
+    @Test
+    void reportSeveralValues(TestReporter testReporter) {
+        HashMap&lt;String, String&gt; values = new HashMap&lt;&gt;();
+        values.put("user name", "dk38");
+        values.put("award year", "1974");
+
+        testReporter.publishEntry(values);
     }
 
 }</code></pre>
@@ -2073,7 +2106,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-01-29 04:36:34 -05:00
+Last updated 2016-01-29 06:41:41 -05:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
