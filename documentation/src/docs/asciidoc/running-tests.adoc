@@ -219,6 +219,9 @@ Option                       Description
                                classes whose fully qualified names match.
 -p, --classpath              Additional classpath entries, e.g. for adding
                                engines and their dependencies
+-r, --xml-reports-dir        Enable XML report output into a specified local
+                               directory (will be created if it does not
+                               exist)
 -t, --filter-tags            Give a tag to include in the test run. This
                                option can be repeated.
 -x, --enable-exit-code       Exit process with number of failing tests as
