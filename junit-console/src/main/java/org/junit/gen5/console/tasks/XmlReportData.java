@@ -10,12 +10,15 @@
 
 package org.junit.gen5.console.tasks;
 
+import static java.util.Collections.emptyList;
 import static org.junit.gen5.engine.TestExecutionResult.Status.ABORTED;
 import static org.junit.gen5.engine.TestExecutionResult.Status.SUCCESSFUL;
 
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,6 +26,7 @@ import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 
@@ -34,6 +38,7 @@ class XmlReportData {
 	private final Map<TestIdentifier, String> skippedTests = new ConcurrentHashMap<>();
 	private final Map<TestIdentifier, Instant> startInstants = new ConcurrentHashMap<>();
 	private final Map<TestIdentifier, Instant> endInstants = new ConcurrentHashMap<>();
+	private final Map<TestIdentifier, List<ReportEntry>> reportEntries = new ConcurrentHashMap<>();
 
 	private final TestPlan testPlan;
 	private final Clock clock;
@@ -70,6 +75,11 @@ class XmlReportData {
 		}
 	}
 
+	void addReportEntry(TestIdentifier testIdentifier, ReportEntry entry) {
+		List<ReportEntry> entries = reportEntries.computeIfAbsent(testIdentifier, key -> new ArrayList<>());
+		entries.add(entry);
+	}
+
 	boolean wasSkipped(TestIdentifier testIdentifier) {
 		return findSkippedAncestor(testIdentifier).isPresent();
 	}
@@ -103,6 +113,10 @@ class XmlReportData {
 			}
 		}
 		return Optional.empty();
+	}
+
+	List<ReportEntry> getReportEntries(TestIdentifier testIdentifier) {
+		return reportEntries.getOrDefault(testIdentifier, emptyList());
 	}
 
 	private Optional<TestIdentifier> findSkippedAncestor(TestIdentifier testIdentifier) {

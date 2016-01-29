@@ -10,6 +10,7 @@
 
 package org.junit.gen5.console.tasks;
 
+import static java.text.MessageFormat.format;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.ExceptionUtils.readStackTrace;
@@ -24,6 +25,7 @@ import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.TreeSet;
@@ -33,6 +35,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.launcher.TestIdentifier;
 
 class XmlReportWriter {
@@ -119,6 +122,7 @@ class XmlReportWriter {
 		writer.writeComment("Unique ID: " + test.getUniqueId().toString());
 
 		writeSkippedOrErrorOrFailureElement(test, writer);
+		writeReportEntriesToSystemOutElement(test, writer);
 
 		writer.writeEndElement();
 	}
@@ -166,6 +170,23 @@ class XmlReportWriter {
 		}
 		writer.writeAttribute("type", throwable.getClass().getName());
 		writer.writeCharacters(readStackTrace(throwable));
+	}
+
+	private void writeReportEntriesToSystemOutElement(TestIdentifier test, XMLStreamWriter writer)
+			throws XMLStreamException {
+		List<ReportEntry> entries = reportData.getReportEntries(test);
+		if (!entries.isEmpty()) {
+			writer.writeStartElement("system-out");
+			for (int i = 0; i < entries.size(); i++) {
+				ReportEntry reportEntry = entries.get(i);
+				writer.writeCharacters(format("Report Entry #{0} (creation timestamp: {1})\n", //
+					i + 1, ISO_LOCAL_DATE_TIME.format(reportEntry.getCreationTimestamp())));
+				for (Entry<String, String> entry : reportEntry.getValues().entrySet()) {
+					writer.writeCharacters(format("- {0}: {1}\n", entry.getKey(), entry.getValue()));
+				}
+			}
+			writer.writeEndElement();
+		}
 	}
 
 	private String getTime(TestIdentifier testIdentifier, NumberFormat numberFormat) {

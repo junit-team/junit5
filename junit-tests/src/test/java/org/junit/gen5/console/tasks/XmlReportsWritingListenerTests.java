@@ -33,17 +33,24 @@ import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.Year;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.api.TestReporter;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.console.tasks.TempDirectory.Root;
+import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 import org.junit.gen5.launcher.Launcher;
+import org.junit.gen5.launcher.TestId;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.opentest4j.AssertionFailedError;
@@ -333,6 +340,46 @@ class XmlReportsWritingListenerTests {
 		listener.executionFinished(TestIdentifier.from(engineDescriptor), successful());
 
 		assertThat(out.toString()).containsSequence("Could not write XML report", "Exception", "at ");
+	}
+
+	@Test
+	void writesReportEntriesToSystemOutElement(@Root Path tempDirectory, TestReporter testReporter) throws Exception {
+		EngineDescriptor engineDescriptor = new EngineDescriptor("engine", "Engine");
+		engineDescriptor.addChild(new TestDescriptorStub("test"));
+		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+
+		StringWriter out = new StringWriter();
+		XmlReportsWritingListener listener = new XmlReportsWritingListener(tempDirectory.toString(),
+			new PrintWriter(out));
+
+		listener.testPlanExecutionStarted(testPlan);
+		TestIdentifier testIdentifier = testPlan.getTestIdentifier(new TestId("test"));
+		listener.executionStarted(testIdentifier);
+		listener.reportingEntryPublished(testIdentifier, ReportEntry.from("foo", "bar"));
+		Map<String, String> map = new LinkedHashMap<>();
+		map.put("bar", "baz");
+		map.put("qux", "foo");
+		listener.reportingEntryPublished(testIdentifier, ReportEntry.from(map));
+		listener.executionFinished(testIdentifier, successful());
+		listener.executionFinished(testPlan.getTestIdentifier(new TestId("engine")), successful());
+
+		String content = readValidXmlFile(tempDirectory.resolve("TEST-engine.xml"));
+		testReporter.publishEntry("xml", content);
+		//@formatter:off
+		assertThat(content)
+			.containsSequence(
+				"<testsuite",
+				"<testcase",
+				"<system-out>",
+				"Report Entry #1 (creation timestamp: " + Year.now(),
+				"- foo: bar\n",
+				"Report Entry #2 (creation timestamp: " + Year.now(),
+				"- bar: baz\n",
+				"- qux: foo\n",
+				"</system-out>",
+				"</testcase>",
+				"</testsuite>");
+		//@formatter:on
 	}
 
 	private void executeTests(TestEngine engine, Path tempDirectory) {

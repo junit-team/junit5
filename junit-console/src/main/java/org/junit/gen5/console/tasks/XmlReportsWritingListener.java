@@ -21,6 +21,7 @@ import java.time.Clock;
 import javax.xml.stream.XMLStreamException;
 
 import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -69,6 +70,11 @@ class XmlReportsWritingListener implements TestExecutionListener {
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
 		reportData.markStarted(testIdentifier);
+	}
+
+	@Override
+	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
+		reportData.addReportEntry(testIdentifier, entry);
 	}
 
 	@Override
