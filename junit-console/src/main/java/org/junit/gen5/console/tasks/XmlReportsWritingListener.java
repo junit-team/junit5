@@ -10,16 +10,12 @@
 
 package org.junit.gen5.console.tasks;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Clock;
 
 import javax.xml.stream.XMLStreamException;
@@ -31,7 +27,7 @@ import org.junit.gen5.launcher.TestPlan;
 
 class XmlReportsWritingListener implements TestExecutionListener {
 
-	private final File reportsDir;
+	private final Path reportsDir;
 	private final PrintWriter out;
 	private final Clock clock;
 
@@ -43,7 +39,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 
 	// For tests only
 	XmlReportsWritingListener(String reportsDir, PrintWriter out, Clock clock) {
-		this.reportsDir = new File(reportsDir);
+		this.reportsDir = Paths.get(reportsDir);
 		this.out = out;
 		this.clock = clock;
 	}
@@ -52,7 +48,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 	public void testPlanExecutionStarted(TestPlan testPlan) {
 		this.reportData = new XmlReportData(testPlan, clock);
 		try {
-			Files.createDirectories(reportsDir.toPath());
+			Files.createDirectories(reportsDir);
 		}
 		catch (IOException e) {
 			printException("Could not create reports directory: " + reportsDir, e);
@@ -88,8 +84,8 @@ class XmlReportsWritingListener implements TestExecutionListener {
 	}
 
 	private void writeXmlReportSafely(TestIdentifier testIdentifier) {
-		File xmlFile = new File(reportsDir, "TEST-" + testIdentifier.getUniqueId() + ".xml");
-		try (Writer fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(xmlFile), UTF_8))) {
+		Path xmlFile = reportsDir.resolve("TEST-" + testIdentifier.getUniqueId() + ".xml");
+		try (Writer fileWriter = Files.newBufferedWriter(xmlFile)) {
 			new XmlReportWriter(reportData).writeXmlReport(testIdentifier, fileWriter);
 		}
 		catch (XMLStreamException | IOException e) {

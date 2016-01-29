@@ -364,7 +364,7 @@ class XmlReportsWritingListenerTests {
 		listener.testPlanExecutionStarted(TestPlan.from(singleton(engineDescriptor)));
 		listener.executionFinished(TestIdentifier.from(engineDescriptor), successful());
 
-		assertThat(out.toString()).containsSequence("Could not write XML report", "FileNotFoundException", "at ");
+		assertThat(out.toString()).containsSequence("Could not write XML report", "Exception", "at ");
 	}
 
 	private void executeTests(TestEngine engine) {
