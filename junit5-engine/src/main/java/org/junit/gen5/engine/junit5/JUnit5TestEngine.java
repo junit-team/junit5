@@ -14,9 +14,10 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.junit5.discovery.DiscoverySelectorResolver;
-import org.junit.gen5.engine.junit5.discovery.JUnit5EngineDescriptor;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
+import org.junit.gen5.engine.junit5.resolver.EngineResolver;
+import org.junit.gen5.engine.junit5.resolver.PreconfiguredTestResolverRegistry;
+import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.engine.support.hierarchical.HierarchicalTestEngine;
 
 public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecutionContext> {
@@ -32,21 +33,10 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest) {
 		Preconditions.notNull(discoveryRequest, "discovery request must not be null");
-		JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(ENGINE_ID);
-		resolveDiscoveryRequest(discoveryRequest, engineDescriptor);
-		return engineDescriptor;
-	}
-
-	private void resolveDiscoveryRequest(EngineDiscoveryRequest discoveryRequest,
-			JUnit5EngineDescriptor engineDescriptor) {
-		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver(engineDescriptor);
-		resolver.resolveSelectors(discoveryRequest);
-		applyDiscoveryFilters(discoveryRequest, engineDescriptor);
-	}
-
-	private void applyDiscoveryFilters(EngineDiscoveryRequest discoveryRequest,
-			JUnit5EngineDescriptor engineDescriptor) {
+		EngineDescriptor engineDescriptor = EngineResolver.resolveEngine(this);
+		new PreconfiguredTestResolverRegistry().notifyResolvers(engineDescriptor, discoveryRequest);
 		new DiscoveryFilterApplier().applyAllFilters(discoveryRequest, engineDescriptor);
+		return engineDescriptor;
 	}
 
 	@Override

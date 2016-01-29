@@ -13,6 +13,7 @@ package org.junit.gen5.engine.discovery;
 import java.lang.reflect.Method;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.commons.util.ToStringBuilder;
 import org.junit.gen5.engine.DiscoverySelector;
 
 /**
@@ -59,4 +60,33 @@ public class MethodSelector implements DiscoverySelector {
 		return ReflectionUtils.findMethod(testClass, testMethodName).get();
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		MethodSelector that = (MethodSelector) o;
+		if (!testClass.equals(that.testClass))
+			return false;
+		return testMethod.equals(that.testMethod);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = testClass.hashCode();
+		result = 31 * result + testMethod.hashCode();
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		// @formatter:off
+		return new ToStringBuilder(this)
+				.append("testClass", testClass)
+				.append("testMethod", testMethod)
+				.toString();
+		// @formatter:on
+	}
 }

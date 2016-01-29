@@ -48,7 +48,7 @@ import org.junit.gen5.commons.meta.API;
 public final class ReflectionUtils {
 
 	public enum MethodSortOrder {
-		HierarchyDown, HierarchyUp
+		HierarchyDown, HierarchyUp;
 	}
 
 	private ReflectionUtils() {
@@ -236,9 +236,24 @@ public final class ReflectionUtils {
 		// @formatter:on
 	}
 
+	public static List<String> findAllPackagesInClasspathRoot(String basePackageName) {
+		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
+			ReflectionUtils::loadClass).scanForPackagesInPackage(basePackageName);
+	}
+
 	public static List<Class<?>> findAllClassesInClasspathRoot(File root, Predicate<Class<?>> classTester) {
 		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
 			ReflectionUtils::loadClass).scanForClassesInClasspathRoot(root, classTester);
+	}
+
+	public static List<Class<?>> findAllClassesInClasspathRoots(List<File> roots, Predicate<Class<?>> classTester) {
+		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
+			ReflectionUtils::loadClass).scanForClassesInClasspathRoots(roots, classTester);
+	}
+
+	public static List<Class<?>> findAllClassesInPackageOnly(String basePackageName, Predicate<Class<?>> classTester) {
+		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
+			ReflectionUtils::loadClass).scanForClassesInPackageOnly(basePackageName, classTester);
 	}
 
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester) {

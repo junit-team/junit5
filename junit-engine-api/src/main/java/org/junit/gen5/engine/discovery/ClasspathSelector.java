@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.junit.gen5.commons.util.ToStringBuilder;
 import org.junit.gen5.engine.DiscoverySelector;
 
 /**
@@ -47,4 +48,24 @@ public class ClasspathSelector implements DiscoverySelector {
 		return classpathRoot;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+
+		ClasspathSelector that = (ClasspathSelector) o;
+		return classpathRoot.equals(that.classpathRoot);
+	}
+
+	@Override
+	public int hashCode() {
+		return classpathRoot.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("classpathRoot", classpathRoot).toString();
+	}
 }

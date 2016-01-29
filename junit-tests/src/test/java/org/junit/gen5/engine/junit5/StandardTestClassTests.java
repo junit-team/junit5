@@ -42,14 +42,14 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 	public void standardTestClassIsCorrectlyDiscovered() {
 		TestDiscoveryRequest request = request().select(forClass(MyStandardTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(10, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsCorrectlyDiscovered() {
 		TestDiscoveryRequest request = request().select(forClass(SecondOfTwoTestCases.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(2 + 2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(5 + 2 + 2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
@@ -63,8 +63,8 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(5L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(3L, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(3L, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(8L, eventRecorder.getContainerStartedCount(), "# containers started");
+		assertEquals(8L, eventRecorder.getContainerFinishedCount(), "# containers finished");
 	}
 
 	@Test
@@ -76,8 +76,8 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(1L, eventRecorder.getTestAbortedCount(), "# tests aborted");
 		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(2L, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(2L, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(7L, eventRecorder.getContainerStartedCount(), "# containers started");
+		assertEquals(7L, eventRecorder.getContainerFinishedCount(), "# containers finished");
 
 		assertEquals(4, MyStandardTestCase.countBefore1, "# before1 calls");
 		assertEquals(4, MyStandardTestCase.countBefore2, "# before2 calls");
@@ -90,8 +90,8 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(4L, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(4, MyStandardTestCase.countAfter, "# after each calls");
 
-		assertEquals(2L, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(2L, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(7L, eventRecorder.getContainerStartedCount(), "# containers started");
+		assertEquals(7L, eventRecorder.getContainerFinishedCount(), "# containers finished");
 	}
 
 	@Test
@@ -102,8 +102,8 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(0L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 		assertEquals(2L, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(2L, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(2L, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(7L, eventRecorder.getContainerStartedCount(), "# containers started");
+		assertEquals(7L, eventRecorder.getContainerFinishedCount(), "# containers finished");
 
 		assertEquals(2, TestCaseWithFailingBefore.countBefore, "# before each calls");
 	}
@@ -116,8 +116,8 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(0L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(2L, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(2L, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(7L, eventRecorder.getContainerStartedCount(), "# containers started");
+		assertEquals(7L, eventRecorder.getContainerFinishedCount(), "# containers finished");
 
 		assertTrue(TestCaseWithFailingAfter.testExecuted, "test executed?");
 	}
