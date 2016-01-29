@@ -61,11 +61,9 @@ class XmlReportWriterTests {
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
-				"<testsuite name=\"Engine\" tests=\"1\" skipped=\"1\" failures=\"0\" errors=\"0\"",
 				"<testcase name=\"skippedTest\"",
 				"<skipped/>",
-				"</testcase>",
-				"</testsuite>");
+				"</testcase>");
 		//@formatter:on
 	}
 
@@ -85,11 +83,9 @@ class XmlReportWriterTests {
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
-				"<testsuite name=\"Engine\" tests=\"1\" skipped=\"0\" failures=\"0\" errors=\"1\"",
 				"<testcase name=\"failedTest\"",
 				"<error/>",
-				"</testcase>",
-				"</testsuite>");
+				"</testcase>");
 		//@formatter:on
 	}
 
