@@ -26,7 +26,7 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
  * The {@code DiscoveryRequestBuilder} provides a light-weight DSL for
- * generating a {@link DiscoveryRequest}.
+ * generating a {@link TestDiscoveryRequest}.
  *
  * <h4>Example</h4>
  *
