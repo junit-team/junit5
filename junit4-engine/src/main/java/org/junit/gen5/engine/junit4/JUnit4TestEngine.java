@@ -10,11 +10,13 @@
 
 package org.junit.gen5.engine.junit4;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import static org.junit.gen5.engine.TestExecutionResult.successful;
 import static org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor.ENGINE_ID;
 
 import java.util.logging.Logger;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
@@ -25,6 +27,7 @@ import org.junit.gen5.engine.junit4.discovery.JUnit4DiscoveryRequestResolver;
 import org.junit.gen5.engine.junit4.execution.RunnerExecutor;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
+@API(Experimental)
 public class JUnit4TestEngine implements TestEngine {
 
 	private static final Logger LOG = Logger.getLogger(JUnit4TestEngine.class.getName());

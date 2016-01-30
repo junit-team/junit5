@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit4.descriptor;
 
 import static java.util.Arrays.stream;
 import static java.util.function.Predicate.isEqual;
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
@@ -24,6 +25,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.experimental.categories.Category;
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestSource;
@@ -35,6 +37,7 @@ import org.junit.runner.Description;
 /**
  * @since 5.0
  */
+@API(Internal)
 public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 
 	public static final String ENGINE_ID = "junit4";

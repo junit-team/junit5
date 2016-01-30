@@ -11,12 +11,14 @@
 package org.junit.gen5.engine.junit4.discovery;
 
 import static java.util.Arrays.asList;
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.engine.DiscoveryFilter.combine;
 
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.Filter;
@@ -24,6 +26,7 @@ import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.engine.support.filter.ExclusionReasonConsumingFilter;
 
+@API(Internal)
 public class JUnit4DiscoveryRequestResolver {
 
 	private final EngineDescriptor engineDescriptor;

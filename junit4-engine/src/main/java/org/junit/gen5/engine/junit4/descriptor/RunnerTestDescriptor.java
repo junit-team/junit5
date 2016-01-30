@@ -10,8 +10,11 @@
 
 package org.junit.gen5.engine.junit4.descriptor;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.util.Optional;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.support.descriptor.JavaSource;
 import org.junit.runner.Request;
@@ -20,6 +23,7 @@ import org.junit.runner.Runner;
 /**
  * @since 5.0
  */
+@API(Internal)
 public class RunnerTestDescriptor extends JUnit4TestDescriptor {
 
 	public static final char SEPARATOR = ':';

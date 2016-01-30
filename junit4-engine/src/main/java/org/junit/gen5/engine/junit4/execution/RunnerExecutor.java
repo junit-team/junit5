@@ -10,15 +10,18 @@
 
 package org.junit.gen5.engine.junit4.execution;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.engine.TestExecutionResult.failed;
 
 import java.util.logging.Logger;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.runner.JUnitCore;
 
+@API(Internal)
 public class RunnerExecutor {
 
 	private final EngineExecutionListener engineExecutionListener;
