@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.Filter;
@@ -95,6 +96,11 @@ public final class TestDiscoveryRequestBuilder {
 		}
 		else if (filter instanceof DiscoveryFilter<?>) {
 			this.discoveryFilters.add((DiscoveryFilter<?>) filter);
+		}
+		else {
+			throw new PreconditionViolationException("Filter must implement " + EngineIdFilter.class.getSimpleName()
+					+ ", " + PostDiscoveryFilter.class.getSimpleName() //
+					+ ", or " + DiscoveryFilter.class.getSimpleName() + ".");
 		}
 	}
 

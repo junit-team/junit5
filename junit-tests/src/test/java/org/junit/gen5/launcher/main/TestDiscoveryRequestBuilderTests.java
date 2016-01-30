@@ -12,6 +12,9 @@ package org.junit.gen5.launcher.main;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.expectThrows;
+import static org.junit.gen5.engine.FilterResult.excluded;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClassName;
 import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
@@ -25,12 +28,13 @@ import java.util.List;
 
 import org.assertj.core.util.Files;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
-import org.junit.gen5.launcher.*;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 public class TestDiscoveryRequestBuilderTests {
 
@@ -153,6 +157,15 @@ public class TestDiscoveryRequestBuilderTests {
 			UniqueIdSelector::getUniqueId).collect(toList());
 
 		assertThat(uniqueIds).contains("engine:bla:foo:bar:id1", "engine:bla:foo:bar:id2");
+	}
+
+	@Test
+	public void exceptionForIllegalFilterClass() throws Exception {
+		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+			() -> request().filter(o -> excluded("reason")));
+
+		assertEquals("Filter must implement EngineIdFilter, PostDiscoveryFilter, or DiscoveryFilter.",
+			exception.getMessage());
 	}
 
 	private static class SampleTestClass {
