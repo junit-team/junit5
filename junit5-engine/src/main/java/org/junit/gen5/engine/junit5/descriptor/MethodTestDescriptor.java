@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
 import java.lang.reflect.Method;
@@ -25,6 +26,7 @@ import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
@@ -45,6 +47,7 @@ import org.junit.gen5.engine.support.hierarchical.Leaf;
  *
  * @since 5.0
  */
+@API(Internal)
 public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
 
 	private final String displayName;

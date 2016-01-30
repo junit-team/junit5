@@ -10,6 +10,8 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.util.logging.Logger;
 
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
@@ -17,6 +19,7 @@ import org.junit.gen5.api.extension.ContainerExecutionCondition;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 
 /**
@@ -27,6 +30,7 @@ import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
  * @see ContainerExecutionCondition
  * @see TestExecutionCondition
  */
+@API(Internal)
 public class ConditionEvaluator {
 
 	private static final Logger LOG = Logger.getLogger(ConditionEvaluator.class.getName());

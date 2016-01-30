@@ -10,12 +10,16 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.lang.reflect.AnnotatedElement;
 
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.*;
 
+@API(Internal)
 final public class ClassBasedContainerExtensionContext extends AbstractExtensionContext
 		implements ContainerExtensionContext {
 

@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.junit5;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
@@ -19,6 +22,7 @@ import org.junit.gen5.engine.junit5.discovery.JUnit5EngineDescriptor;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.support.hierarchical.HierarchicalTestEngine;
 
+@API(Experimental)
 public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecutionContext> {
 
 	public static final String ENGINE_ID = "junit5";

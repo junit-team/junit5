@@ -10,13 +10,17 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.*;
 
+@API(Internal)
 final public class MethodBasedTestExtensionContext extends AbstractExtensionContext implements TestExtensionContext {
 
 	private final Object testInstance;

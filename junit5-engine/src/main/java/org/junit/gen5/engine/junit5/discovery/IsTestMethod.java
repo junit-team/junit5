@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.discovery;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
 import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
 import static org.junit.gen5.commons.util.ReflectionUtils.isPrivate;
@@ -19,12 +20,14 @@ import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.meta.API;
 
 /**
  * Test if a method is a JUnit 5 test method.
  *
  * @since 5.0
  */
+@API(Internal)
 public class IsTestMethod implements Predicate<Method> {
 
 	@Override

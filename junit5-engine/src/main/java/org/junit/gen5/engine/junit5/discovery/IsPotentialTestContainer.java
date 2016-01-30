@@ -10,10 +10,13 @@
 
 package org.junit.gen5.engine.junit5.discovery;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
 import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
 
 import java.util.function.Predicate;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * Test if a class is a potential top-level JUnit 5 test container, even if
@@ -21,6 +24,7 @@ import java.util.function.Predicate;
  *
  * @since 5.0
  */
+@API(Internal)
 public class IsPotentialTestContainer implements Predicate<Class<?>> {
 
 	@Override

@@ -10,8 +10,11 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
@@ -21,6 +24,7 @@ import org.junit.gen5.commons.util.ToStringBuilder;
  * @param <E> the type of registered {@link ExtensionPoint}
  * @since 5.0
  */
+@API(Internal)
 public class RegisteredExtensionPoint<E extends ExtensionPoint> {
 
 	private final E extensionPoint;

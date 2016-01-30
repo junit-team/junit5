@@ -10,15 +10,19 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.lang.reflect.Method;
 
 import org.junit.gen5.api.extension.MethodInvocationContext;
+import org.junit.gen5.commons.meta.API;
 
 /**
  * Factory for {@link MethodInvocationContext} instances.
  *
  * @since 5.0
  */
+@API(Internal)
 public class MethodInvocationContextFactory {
 
 	/**

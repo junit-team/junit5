@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5.execution;
 
 import static java.util.stream.Collectors.joining;
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry.ApplicationOrder;
@@ -32,6 +34,7 @@ import org.junit.gen5.engine.junit5.extension.ExtensionRegistry.ApplicationOrder
  *
  * @since 5.0
  */
+@API(Internal)
 public class MethodInvoker {
 
 	private final ExtensionContext extensionContext;

@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.junit5.discovery;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
@@ -18,6 +21,7 @@ import org.junit.gen5.engine.support.hierarchical.Container;
 /**
  * @since 5.0
  */
+@API(Internal)
 public class JUnit5EngineDescriptor extends EngineDescriptor implements Container<JUnit5EngineExecutionContext> {
 
 	public JUnit5EngineDescriptor(String uniqueId) {

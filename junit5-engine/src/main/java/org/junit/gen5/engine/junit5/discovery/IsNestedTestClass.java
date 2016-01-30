@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.discovery;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
 import static org.junit.gen5.commons.util.ReflectionUtils.isPrivate;
 import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
@@ -17,12 +18,14 @@ import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
 import java.util.function.Predicate;
 
 import org.junit.gen5.api.Nested;
+import org.junit.gen5.commons.meta.API;
 
 /**
  * Test if a class is a JUnit 5 nested, inner test class.
  *
  * @since 5.0
  */
+@API(Internal)
 public class IsNestedTestClass implements Predicate<Class<?>> {
 
 	@Override

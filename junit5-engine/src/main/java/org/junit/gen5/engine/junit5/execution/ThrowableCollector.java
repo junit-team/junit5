@@ -10,11 +10,14 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.junit.gen5.api.Executable;
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.Preconditions;
 
@@ -24,6 +27,7 @@ import org.junit.gen5.commons.util.Preconditions;
  *
  * @since 5.0
  */
+@API(Internal)
 public class ThrowableCollector {
 
 	private final List<Throwable> throwables = new ArrayList<>();

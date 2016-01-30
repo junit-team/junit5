@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
@@ -23,6 +26,7 @@ import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
  *
  * @since 5.0
  */
+@API(Internal)
 public class NestedClassTestDescriptor extends ClassTestDescriptor {
 
 	public NestedClassTestDescriptor(String uniqueId, Class<?> testClass) {

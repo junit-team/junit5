@@ -10,8 +10,11 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.commons.JUnitException;
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 import org.junit.gen5.engine.support.hierarchical.EngineExecutionContext;
@@ -19,6 +22,7 @@ import org.junit.gen5.engine.support.hierarchical.EngineExecutionContext;
 /**
  * @since 5.0
  */
+@API(Internal)
 public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 
 	private final State state;

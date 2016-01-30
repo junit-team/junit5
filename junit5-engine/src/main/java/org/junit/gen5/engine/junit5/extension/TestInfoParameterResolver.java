@@ -24,7 +24,7 @@ import org.junit.gen5.commons.util.ToStringBuilder;
  *
  * @since 5.0
  */
-public class TestInfoParameterResolver implements MethodParameterResolver {
+class TestInfoParameterResolver implements MethodParameterResolver {
 
 	@Override
 	public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,

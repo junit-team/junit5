@@ -23,7 +23,7 @@ import org.junit.gen5.commons.util.*;
  *
  * @since 5.0
  */
-public class TestReporterParameterResolver implements MethodParameterResolver {
+class TestReporterParameterResolver implements MethodParameterResolver {
 
 	@Override
 	public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,

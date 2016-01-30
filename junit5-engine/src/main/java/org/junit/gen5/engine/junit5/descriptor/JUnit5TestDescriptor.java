@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.gen5.commons.util.AnnotationUtils.findRepeatableAnnotations;
 
@@ -26,6 +27,7 @@ import org.junit.gen5.api.Executable;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.Extension;
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestTag;
@@ -35,6 +37,7 @@ import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 /**
  * @since 5.0
  */
+@API(Internal)
 public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 
 	protected JUnit5TestDescriptor(String uniqueId) {

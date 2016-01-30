@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
 import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
@@ -33,6 +34,7 @@ import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
@@ -56,6 +58,7 @@ import org.junit.gen5.engine.support.hierarchical.Container;
  *
  * @since 5.0
  */
+@API(Internal)
 public class ClassTestDescriptor extends JUnit5TestDescriptor implements Container<JUnit5EngineExecutionContext> {
 
 	private final String displayName;

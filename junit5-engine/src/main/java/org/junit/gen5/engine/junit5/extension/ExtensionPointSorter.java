@@ -29,7 +29,7 @@ import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
  *
  * @since 5.0
  */
-public class ExtensionPointSorter {
+class ExtensionPointSorter {
 
 	/**
 	 * Sort the list of extension points according to their specified {@link Position}.

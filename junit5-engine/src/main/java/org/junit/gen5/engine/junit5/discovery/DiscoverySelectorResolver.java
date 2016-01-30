@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.discovery;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackage;
 import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
@@ -20,6 +21,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -37,6 +39,7 @@ import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 /**
  * @since 5.0
  */
+@API(Internal)
 public class DiscoverySelectorResolver {
 	private final JUnit5EngineDescriptor engineDescriptor;
 	private final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();

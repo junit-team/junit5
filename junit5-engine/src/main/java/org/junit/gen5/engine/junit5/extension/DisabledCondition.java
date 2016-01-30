@@ -32,7 +32,7 @@ import org.junit.gen5.commons.util.StringUtils;
  * @see #evaluate(ContainerExtensionContext)
  * @see #evaluate(TestExtensionContext)
  */
-public class DisabledCondition implements ContainerExecutionCondition, TestExecutionCondition {
+class DisabledCondition implements ContainerExecutionCondition, TestExecutionCondition {
 
 	private static final ConditionEvaluationResult ENABLED = ConditionEvaluationResult.enabled(
 		"@Disabled is not present");

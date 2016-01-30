@@ -10,14 +10,18 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.util.function.Function;
 
 import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 import org.junit.gen5.api.extension.ExtensionContext.Store;
+import org.junit.gen5.commons.meta.API;
 
 /**
  * @since 5.0
  */
+@API(Internal)
 public class NamespaceAwareStore implements Store {
 
 	private final ExtensionValuesStore valuesStore;

@@ -10,11 +10,14 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 import org.junit.gen5.api.extension.ExtensionContext.Namespace;
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
@@ -23,6 +26,7 @@ import org.junit.gen5.commons.util.Preconditions;
  * to store and retrieve attributes with {@link #get}, {@link #put}, or
  * {@link #getOrComputeIfAbsent}.
  */
+@API(Internal)
 public class ExtensionValuesStore {
 
 	private final ExtensionValuesStore parentStore;

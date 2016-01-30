@@ -10,7 +10,12 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
+import org.junit.gen5.commons.meta.API;
+
 @FunctionalInterface
+@API(Internal)
 public interface TestInstanceProvider {
 
 	Object getTestInstance() throws Exception;
