@@ -11,6 +11,7 @@
 package org.junit.gen5.commons.util;
 
 import static java.util.Arrays.asList;
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
@@ -28,6 +29,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 
 /**
@@ -43,6 +45,7 @@ import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
  * @see Annotation
  * @see AnnotatedElement
  */
+@API(Internal)
 public final class AnnotationUtils {
 
 	private static final Map<AnnotationCacheKey, Annotation> annotationCache = new ConcurrentHashMap<>(256);

@@ -11,11 +11,14 @@
 package org.junit.gen5.commons.util;
 
 import static java.util.stream.Collectors.joining;
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * Simple builder for generating strings in custom implementations of
@@ -29,6 +32,7 @@ import java.util.Objects;
  *
  * @since 5.0
  */
+@API(Internal)
 public class ToStringBuilder {
 
 	private final Class<?> type;

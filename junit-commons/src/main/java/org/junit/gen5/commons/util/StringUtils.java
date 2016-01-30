@@ -12,6 +12,9 @@ package org.junit.gen5.commons.util;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * Collection of utilities for working with {@link String Strings},
@@ -25,6 +28,7 @@ import static java.util.stream.Collectors.joining;
  *
  * @since 5.0
  */
+@API(Internal)
 public final class StringUtils {
 
 	private StringUtils() {

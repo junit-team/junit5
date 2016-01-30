@@ -10,7 +10,10 @@
 
 package org.junit.gen5.commons.util;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import org.junit.gen5.commons.JUnitException;
+import org.junit.gen5.commons.meta.API;
 
 /**
  * Thrown if a <em>precondition</em> is violated.
@@ -18,6 +21,7 @@ import org.junit.gen5.commons.JUnitException;
  * @since 5.0
  * @see Preconditions
  */
+@API(Internal)
 public class PreconditionViolationException extends JUnitException {
 
 	private static final long serialVersionUID = 5652830566059484475L;

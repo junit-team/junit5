@@ -10,6 +10,8 @@
 
 package org.junit.gen5.commons.util;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -22,6 +24,8 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import org.junit.gen5.commons.meta.API;
+
 /**
  * <h3>DISCLAIMER</h3>
  *
@@ -31,6 +35,7 @@ import java.util.function.Supplier;
  *
  * @since 5.0
  */
+@API(Internal)
 class ClasspathScanner {
 
 	private static final String CLASS_FILE_SUFFIX = ".class";

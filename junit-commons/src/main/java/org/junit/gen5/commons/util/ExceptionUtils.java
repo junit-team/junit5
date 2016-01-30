@@ -10,8 +10,12 @@
 
 package org.junit.gen5.commons.util;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * Collection of utilities for working with exceptions.
@@ -24,6 +28,7 @@ import java.io.StringWriter;
  *
  * @since 5.0
  */
+@API(Internal)
 public final class ExceptionUtils {
 
 	private ExceptionUtils() {

@@ -10,12 +10,17 @@
 
 package org.junit.gen5.commons;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * Base class for all {@link RuntimeException RuntimeExceptions} thrown
  * by JUnit.
  *
  * @since 5.0
  */
+@API(Internal)
 public class JUnitException extends RuntimeException {
 
 	private static final long serialVersionUID = -1751494513161886551L;

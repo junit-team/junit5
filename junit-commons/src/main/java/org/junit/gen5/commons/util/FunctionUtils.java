@@ -10,8 +10,12 @@
 
 package org.junit.gen5.commons.util;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * Collection of utilities for working with {@link Function Functions},
@@ -25,6 +29,7 @@ import java.util.function.Predicate;
  *
  * @since 5.0
  */
+@API(Internal)
 public final class FunctionUtils {
 
 	private FunctionUtils() {
