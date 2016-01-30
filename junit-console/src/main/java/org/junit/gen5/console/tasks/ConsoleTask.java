@@ -10,11 +10,16 @@
 
 package org.junit.gen5.console.tasks;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.io.PrintWriter;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * A task to be executed from the console.
  */
+@API(Internal)
 public interface ConsoleTask {
 
 	/**

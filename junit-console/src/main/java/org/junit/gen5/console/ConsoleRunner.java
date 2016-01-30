@@ -10,8 +10,12 @@
 
 package org.junit.gen5.console;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.gen5.commons.meta.API.Usage.Maintained;
+
 import java.io.PrintWriter;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.console.options.CommandLineOptionsParser;
 import org.junit.gen5.console.options.JOptSimpleCommandLineOptionsParser;
@@ -23,8 +27,10 @@ import org.junit.gen5.console.tasks.ExecuteTestsTask;
 /**
  * @since 5.0
  */
+@API(Maintained)
 public class ConsoleRunner {
 
+	@API(Maintained)
 	public static void main(String... args) {
 		ConsoleRunner consoleRunner = new ConsoleRunner(new JOptSimpleCommandLineOptionsParser(),
 			new ConsoleTaskExecutor(System.out, System.err));

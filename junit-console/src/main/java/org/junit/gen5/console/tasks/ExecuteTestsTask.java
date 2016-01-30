@@ -10,6 +10,8 @@
 
 package org.junit.gen5.console.tasks;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.launcher.Launcher;
@@ -28,6 +31,7 @@ import org.junit.gen5.launcher.main.LauncherFactory;
 /**
  * @since 5.0
  */
+@API(Internal)
 public class ExecuteTestsTask implements ConsoleTask {
 
 	private final CommandLineOptions options;

@@ -10,8 +10,13 @@
 
 package org.junit.gen5.console.options;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.io.Writer;
 
+import org.junit.gen5.commons.meta.API;
+
+@API(Internal)
 public interface CommandLineOptionsParser {
 
 	CommandLineOptions parse(String... arguments);

@@ -10,10 +10,15 @@
 
 package org.junit.gen5.console.tasks;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.function.Consumer;
 
+import org.junit.gen5.commons.meta.API;
+
+@API(Internal)
 public class ConsoleTaskExecutor {
 
 	private final PrintStream out;

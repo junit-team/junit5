@@ -11,10 +11,14 @@
 package org.junit.gen5.console.options;
 
 import static java.util.Collections.emptyList;
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.gen5.commons.meta.API;
+
+@API(Internal)
 public class CommandLineOptions {
 
 	private boolean displayHelp;

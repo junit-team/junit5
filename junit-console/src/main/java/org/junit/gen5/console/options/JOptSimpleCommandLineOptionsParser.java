@@ -10,6 +10,8 @@
 
 package org.junit.gen5.console.options;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.io.IOException;
 import java.io.Writer;
 
@@ -18,7 +20,9 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
 import org.junit.gen5.commons.JUnitException;
+import org.junit.gen5.commons.meta.API;
 
+@API(Internal)
 public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsParser {
 
 	@Override
