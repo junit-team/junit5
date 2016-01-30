@@ -32,7 +32,7 @@ import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.launcher.*;
 
-public class DiscoveryRequestBuilderTests {
+public class TestDiscoveryRequestBuilderTests {
 
 	@Test
 	public void packagesAreStoredInDiscoveryRequest() throws Exception {
@@ -53,7 +53,7 @@ public class DiscoveryRequestBuilderTests {
 		// @formatter:off
         TestDiscoveryRequest discoveryRequest = request()
 				.select(
-						forClassName(DiscoveryRequestBuilderTests.class.getName()),
+						forClassName(TestDiscoveryRequestBuilderTests.class.getName()),
 						forClass(SampleTestClass.class)
 				)
             .build();
@@ -61,7 +61,7 @@ public class DiscoveryRequestBuilderTests {
 
 		List<Class<?>> classes = discoveryRequest.getSelectorsByType(ClassSelector.class).stream().map(
 			ClassSelector::getTestClass).collect(toList());
-		assertThat(classes).contains(SampleTestClass.class, DiscoveryRequestBuilderTests.class);
+		assertThat(classes).contains(SampleTestClass.class, TestDiscoveryRequestBuilderTests.class);
 	}
 
 	@Test
