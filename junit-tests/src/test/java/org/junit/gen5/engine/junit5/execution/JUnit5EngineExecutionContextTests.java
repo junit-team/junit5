@@ -17,13 +17,18 @@ import org.mockito.*;
 
 public class JUnit5EngineExecutionContextTests {
 
+	//this verifies that the reporting mechanism within the EngineExecutionListener survives the builder
+	//is this really what we want to check?
 	@Test
 	void getExecutionListener() {
 		EngineExecutionListener engineExecutionListener = Mockito.spy(EngineExecutionListener.class);
-		JUnit5EngineExecutionContext engineExecutionContext = new JUnit5EngineExecutionContext(engineExecutionListener);
+		JUnit5EngineExecutionContext originalEngineExecutionContext = new JUnit5EngineExecutionContext(
+			engineExecutionListener);
+		JUnit5EngineExecutionContext newEngineExecutionContext = JUnit5EngineExecutionContext.builder(
+			originalEngineExecutionContext).build();
 
 		ReportEntry entry = ReportEntry.from("one", "two");
-		engineExecutionContext.getExecutionListener().reportingEntryPublished(null, entry);
+		newEngineExecutionContext.getExecutionListener().reportingEntryPublished(null, entry);
 		Mockito.verify(engineExecutionListener, Mockito.times(1)).reportingEntryPublished(null, entry);
 	}
 
