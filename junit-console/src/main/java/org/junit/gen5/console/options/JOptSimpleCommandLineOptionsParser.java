@@ -14,8 +14,11 @@ import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.LinkedHashSet;
+import java.util.Map;
 
 import joptsimple.BuiltinHelpFormatter;
+import joptsimple.OptionDescriptor;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
@@ -36,7 +39,7 @@ public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsPar
 	@Override
 	public void printHelp(Writer writer) {
 		OptionParser optionParser = getAvailableOptions().getParser();
-		optionParser.formatHelpWith(new BuiltinHelpFormatter(100, 4));
+		optionParser.formatHelpWith(new OrderPreservingHelpFormatter());
 		try {
 			optionParser.printHelpOn(writer);
 		}
@@ -49,4 +52,16 @@ public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsPar
 		return new AvailableOptions();
 	}
 
+	private static final class OrderPreservingHelpFormatter extends BuiltinHelpFormatter {
+
+		private OrderPreservingHelpFormatter() {
+			super(100, 4);
+		}
+
+		@Override
+		public String format(Map<String, ? extends OptionDescriptor> options) {
+			addRows(new LinkedHashSet<>(options.values()));
+			return formattedHelpOutput();
+		}
+	}
 }
