@@ -10,7 +10,6 @@
 
 package org.junit.gen5.console;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.commons.meta.API.Usage.Maintained;
 
 import java.io.PrintWriter;
