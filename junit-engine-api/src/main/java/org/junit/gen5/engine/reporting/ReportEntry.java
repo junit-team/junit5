@@ -10,10 +10,15 @@
 
 package org.junit.gen5.engine.reporting;
 
+import static java.text.MessageFormat.format;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
 
+import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
@@ -80,6 +85,20 @@ public class ReportEntry {
 	public String toString() {
 		//migrate to org.junit.gen5.commons.util.ToStringBuilder?
 		return this.values.toString() + " @ " + this.creationTimestamp;
+	}
+
+	public void appendDescription(Appendable appendable, String entryTitle) {
+		try {
+			appendable.append(format("Report Entry #{0} (creation timestamp: {1})\n", entryTitle,
+				ISO_LOCAL_DATE_TIME.format(this.getCreationTimestamp())));
+			for (Map.Entry<String, String> entry : this.getValues().entrySet()) {
+				appendable.append(format("- {0}: {1}\n", entry.getKey(), entry.getValue()));
+			}
+		}
+		catch (IOException cannotHappen) {
+			ExceptionUtils.throwAsUncheckedException(cannotHappen);
+		}
+
 	}
 
 }

@@ -71,7 +71,9 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
 		printlnTestDescriptor(PURPLE, "Reported:", testIdentifier);
-		printlnMessage(PURPLE, "Reported values", entry.toString());
+		StringBuilder stringBuilder = new StringBuilder();
+		entry.appendDescription(stringBuilder, "");
+		printlnMessage(PURPLE, "Reported values", stringBuilder.toString());
 	}
 
 	private Color determineColor(Status status) {

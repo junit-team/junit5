@@ -10,7 +10,6 @@
 
 package org.junit.gen5.console.tasks;
 
-import static java.text.MessageFormat.format;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.ExceptionUtils.readStackTrace;
@@ -25,7 +24,6 @@ import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.TreeSet;
@@ -179,11 +177,9 @@ class XmlReportWriter {
 			writer.writeStartElement("system-out");
 			for (int i = 0; i < entries.size(); i++) {
 				ReportEntry reportEntry = entries.get(i);
-				writer.writeCharacters(format("Report Entry #{0} (creation timestamp: {1})\n", //
-					i + 1, ISO_LOCAL_DATE_TIME.format(reportEntry.getCreationTimestamp())));
-				for (Entry<String, String> entry : reportEntry.getValues().entrySet()) {
-					writer.writeCharacters(format("- {0}: {1}\n", entry.getKey(), entry.getValue()));
-				}
+				StringBuilder stringBuilder = new StringBuilder();
+				reportEntry.appendDescription(stringBuilder, String.valueOf(i + 1));
+				writer.writeCharacters(stringBuilder.toString());
 			}
 			writer.writeEndElement();
 		}
