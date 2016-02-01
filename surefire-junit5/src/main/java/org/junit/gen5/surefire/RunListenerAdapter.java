@@ -11,7 +11,8 @@
 package org.junit.gen5.surefire;
 
 import static org.apache.maven.surefire.report.SimpleReportEntry.ignored;
-import static org.junit.gen5.engine.TestExecutionResult.Status.*;
+import static org.junit.gen5.engine.TestExecutionResult.Status.ABORTED;
+import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
 
 import java.util.Optional;
 
@@ -34,7 +35,9 @@ final class RunListenerAdapter implements TestExecutionListener {
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		runListener.testStarting(createReportEntry(testIdentifier));
+		if (testIdentifier.isTest()) {
+			runListener.testStarting(createReportEntry(testIdentifier));
+		}
 	}
 
 	@Override
@@ -45,14 +48,14 @@ final class RunListenerAdapter implements TestExecutionListener {
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-		if (testExecutionResult.getStatus() == SUCCESSFUL) {
-			runListener.testSucceeded(createReportEntry(testIdentifier));
-		}
-		else if (testExecutionResult.getStatus() == ABORTED) {
+		if (testExecutionResult.getStatus() == ABORTED) {
 			runListener.testAssumptionFailure(createReportEntry(testIdentifier, testExecutionResult.getThrowable()));
 		}
-		else {
+		if (testExecutionResult.getStatus() == FAILED) {
 			runListener.testFailed(createReportEntry(testIdentifier, testExecutionResult.getThrowable()));
+		}
+		if (testIdentifier.isTest()) {
+			runListener.testSucceeded(createReportEntry(testIdentifier));
 		}
 	}
 
