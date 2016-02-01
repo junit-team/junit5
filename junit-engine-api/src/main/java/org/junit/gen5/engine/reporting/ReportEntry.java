@@ -89,10 +89,10 @@ public class ReportEntry {
 
 	public void appendDescription(Appendable appendable, String entryTitle) {
 		try {
-			appendable.append(format("Report Entry #{0} (creation timestamp: {1})\n", entryTitle,
+			appendable.append(format("Report Entry{0} (creation timestamp: {1})\n", entryTitle,
 				ISO_LOCAL_DATE_TIME.format(this.getCreationTimestamp())));
 			for (Map.Entry<String, String> entry : this.getValues().entrySet()) {
-				appendable.append(format("- {0}: {1}\n", entry.getKey(), entry.getValue()));
+				appendable.append(format("\t- {0}: {1}\n", entry.getKey(), entry.getValue()));
 			}
 		}
 		catch (IOException cannotHappen) {
