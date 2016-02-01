@@ -16,7 +16,7 @@ junit5 {
 dependencies {
 	testCompile(project(':junit-commons'))
 	testCompile(project(':junit-console'))
-	testCompile(project(':junit-engine-api'))
+	testCompile(project(':junit-engine-api'))|
 	testCompile(project(':junit-launcher'))
 	testCompile(project(':junit4-engine'))
 	testCompile(project(':junit4-runner'))

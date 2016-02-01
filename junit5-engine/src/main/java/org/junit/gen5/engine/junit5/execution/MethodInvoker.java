@@ -46,8 +46,8 @@ public class MethodInvoker {
 		this.extensionRegistry = extensionRegistry;
 	}
 
-	public Object invoke(MethodInvocationContext methodInvocationContext) {
-		return ReflectionUtils.invokeMethod(methodInvocationContext.getMethod(), methodInvocationContext.getInstance(),
+	public void invoke(MethodInvocationContext methodInvocationContext) {
+		ReflectionUtils.invokeMethod(methodInvocationContext.getMethod(), methodInvocationContext.getInstance(),
 			resolveParameters(methodInvocationContext));
 	}
 
