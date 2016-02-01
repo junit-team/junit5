@@ -10,7 +10,7 @@
 
 package org.junit.gen5.junit4.runner;
 
-import org.junit.gen5.commons.meta.API;
+import static org.junit.gen5.commons.meta.API.Usage.Maintained;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -19,7 +19,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static org.junit.gen5.commons.meta.API.Usage.Maintained;
+import org.junit.gen5.commons.meta.API;
 
 /**
  * {@code @Packages} specifies the names of packages to be run when a class
