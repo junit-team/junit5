@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
-<title>Extension Model</title>
+<title>Release Notes 5.0 Alpha</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -422,311 +422,24 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
-<li><a href="#extension-model">Extension Model</a>
 <ul class="sectlevel2">
-<li><a href="#overview">Overview</a></li>
-<li><a href="#extension-registration">Registering Extensions</a></li>
-<li><a href="#conditional-test-execution">Conditional Test Execution</a></li>
-<li><a href="#test-instance-post-processing">Test Instance Post-processing</a></li>
-<li><a href="#parameter-resolution">Parameter Resolution</a></li>
-<li><a href="#test-lifecycle-callbacks">Test Lifecycle Callbacks</a></li>
-<li><a href="#exception-handling">Exception Handling</a></li>
-<li><a href="#keeping-state-in-extensions">Keeping State in Extensions</a></li>
-<li><a href="#additional-planned-extensions">Additional Planned Extensions</a></li>
-</ul>
-</li>
+<li><a href="#release-notes-5-0-alpha">Release Notes 5.0 Alpha</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="extension-model">Extension Model</h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="overview">Overview</h3>
+<h3 id="release-notes-5-0-alpha">Release Notes 5.0 Alpha</h3>
 <div class="paragraph">
-<p>In contrast to the competing <code>Runner</code>, <code>@Rule</code>, and <code>@ClassRule</code> extension points in
-JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
-<code>Extension</code> API. Note, however, that <code>Extension</code> itself is just a marker interface.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="extension-registration">Registering Extensions</h3>
-<div class="paragraph">
-<p>Extensions can be registered either declaratively via <code>{ExtendWith}</code> or programmatically
-via an <code>{ExtensionRegistrar}</code>.</p>
+<p><strong>Date of Release:</strong> February 1, 2016</p>
 </div>
 <div class="paragraph">
-<p>Note that registered extensions are inherited within test class hierarchies.</p>
+<p><strong>Scope:</strong> First public release of JUnit 5</p>
 </div>
 <div class="sect3">
-<h4 id="extension-registration-declarative">Declarative Extension Registration</h4>
+<h4 id="summary-of-changes">Summary of Changes</h4>
 <div class="paragraph">
-<p>Developers can register one or more extensions <em>declaratively</em> by annotating a test
-class, test method, or custom <em><a href="#meta-annotations">composed annotation</a></em> with
-<code>@ExtendWith(&#8230;&#8203;)</code> and supplying class references for the extensions to register. For
-example, to register a custom <code>MockitoExtension</code> for all tests in a particular class and
-its subclasses, you would annotate the test class as follows.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">@ExtendWith(MockitoExtension.class)
-class MockTests {
-    // ...
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Multiple extensions can be registered together like this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">@ExtendWith({ FooExtension.class, BarExtension.class })
-class MyTestsV1 {
-    // ...
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>As an alternative, multiple extensions can be registered separately like this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">@ExtendWith(FooExtension.class)
-@ExtendWith(BarExtension.class)
-class MyTestsV2 {
-    // ...
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The execution of tests in both <code>MyTestsV1</code> and <code>MyTestsV2</code> will be extended by the
-<code>FooExtension</code> and <code>BarExtension</code>, in exactly that order.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="extension-registration-programmatic">Programmatic Extension Registration</h4>
-<div class="paragraph">
-<p>Developers can register one or more extensions <em>programmatically</em> by implementing the
-<code>{ExtensionRegistrar}</code> API and registering the custom <code>ExtensionRegistrar</code> implementation
-via <code>@ExtendWith</code> as mentioned above. The following examples demonstrate the various
-options in implementations of the <code>ExtensionRegistrar.registerExtensions()</code> method.</p>
-</div>
-<div class="sect4">
-<h5 id="registering-an-extensionpoint-instance">Registering an ExtensionPoint Instance</h5>
-<div class="paragraph">
-<p>If you have an instance of an extension that implements one or more <code>ExtensionPoint</code>
-APIs, you can register it as follows using the <em>default</em> <code>Position</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public void registerExtensions(ExtensionPointRegistry registry) {
-    CustomExtension customExtension = // instantiate extension
-    registry.register(customExtension);
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If you would like to influence the order in which multiple implementations of the same
-<code>ExtensionPoint</code> API are applied, you can do so by registering the extensions
-programmatically and supplying the <code>Position</code>. The following values are permitted.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>OUTERMOST</code>: Applied first. Only a single extension is allowed to be assigned this
-position; otherwise, an <code>ExtensionConfigurationException</code> will be thrown.</p>
-</li>
-<li>
-<p><code>OUTSIDE_DEFAULT</code>: Applied after <code>OUTERMOST</code> but before <code>DEFAULT</code>, <code>INSIDE_DEFAULT</code>,
-and <code>INNERMOST</code>. Multiple extensions can be assigned this position; however, the
-ordering among such extensions is undefined.</p>
-</li>
-<li>
-<p><code>DEFAULT</code>: (?)</p>
-</li>
-<li>
-<p><code>INSIDE_DEFAULT</code>: (?)</p>
-</li>
-<li>
-<p><code>INNERMOST</code>: (?)</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The following listing demonstrates how to configure an explicit position for an instance
-of an extension. Note, however, that a <code>Position</code> can also be supplied for lambda
-expressions and method references.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public void registerExtensions(ExtensionPointRegistry registry) {
-    registry.register(new TimingExtension(), Position.INNERMOST);
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="registering-a-lambda-expression-as-an-extensionpoint">Registering a Lambda Expression as an ExtensionPoint</h5>
-<div class="paragraph">
-<p>If you would like to implement a single <code>ExtensionPoint</code> API as a <em>lambda expression</em>,
-you can register it as follows. Note, however, that the API must be a <em>functional
-interface</em>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public void registerExtensions(ExtensionPointRegistry registry) {
-    registry.register((BeforeEachExtensionPoint) context -&gt; { /* ... */ });
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="registering-a-method-reference-as-an-extensionpoint">Registering a Method Reference as an ExtensionPoint</h5>
-<div class="paragraph">
-<p>If you would like to implement a single <code>ExtensionPoint</code> API via a <em>method reference</em>,
-you can register it as follows. Note, however, that the API must be a <em>functional
-interface</em>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public void registerExtensions(ExtensionPointRegistry registry) {
-    registry.register((BeforeEachExtensionPoint) this::beforeEach);
-}
-
-void beforeEach(TestExtensionContext context) {
-    /* ... */
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="conditional-test-execution">Conditional Test Execution</h3>
-<div class="paragraph">
-<p><code>{ContainerExecutionCondition}</code> and <code>{TestExecutionCondition}</code> define the <code>Extension</code>
-APIs for programmatic, <em>conditional test execution</em>.</p>
-</div>
-<div class="paragraph">
-<p>A <code>ContainerExecutionCondition</code> is <em>evaluated</em> to determine if all tests in a given
-container (e.g., a test class) should be executed based on the supplied
-<code>ContainerExtensionContext</code>. Similarly, a <code>TestExecutionCondition</code> is <em>evaluated</em> to
-determine if a given test method should be executed based on the supplied
-<code>TestExtensionContext</code>.</p>
-</div>
-<div class="paragraph">
-<p>See the source code of <code>{DisabledCondition}</code> and <code>{Disabled}</code> for concrete examples.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="test-instance-post-processing">Test Instance Post-processing</h3>
-<div class="paragraph">
-<p><code>{InstancePostProcessor}</code> defines the API for <code>Extensions</code> that wish to <em>post
-process</em> test instances.</p>
-</div>
-<div class="paragraph">
-<p>Common use cases include injecting dependencies into the test instance, invoking custom
-initialization methods on the test instance, etc.</p>
-</div>
-<div class="paragraph">
-<p>For concrete examples, consult the source code for the <code>{MockitoExtension}</code> and the
-<code>{SpringExtension}</code>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="parameter-resolution">Parameter Resolution</h3>
-<div class="paragraph">
-<p><code>{MethodParameterResolver}</code> is an <code>Extension</code> strategy for dynamically resolving
-method parameters at runtime.</p>
-</div>
-<div class="paragraph">
-<p>If a <code>@Test</code>, <code>@BeforeEach</code>, <code>@AfterEach</code> , <code>@BeforeAll</code> or <code>@AfterAll</code> method accepts a
-parameter, the parameter must be <em>resolved</em> at runtime by a <code>MethodParameterResolver</code>. A
-<code>MethodParameterResolver</code> can either be built-in (see <code>{TestInfoParameterResolver}</code>) or
-<a href="#extension-registration">registered by the user</a>. Generally speaking, parameters may be
-resolved by <em>name</em>, <em>type</em>, <em>annotation</em>, or any combination thereof. For concrete examples,
-consult the source code for <code>{CustomTypeParameterResolver}</code> and
-<code>{CustomAnnotationParameterResolver}</code>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="test-lifecycle-callbacks">Test Lifecycle Callbacks</h3>
-<div class="paragraph">
-<p>The following interfaces define the APIs for extending tests at various points in the
-test execution lifecycle. Consult the Javadoc for each of these in the
-<code>{extension-api-package}</code> package.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>BeforeEachExtensionPoint</code></p>
-</li>
-<li>
-<p><code>AfterEachExtensionPoint</code></p>
-</li>
-<li>
-<p><code>BeforeAllExtensionPoint</code></p>
-</li>
-<li>
-<p><code>AfterAllExtensionPoint</code></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Note that extension developers may choose to implement any number of these interfaces
-within a single extension. Consult the source code of the <code>{SpringExtension}</code> for a
-concrete example.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="exception-handling">Exception Handling</h3>
-<div class="paragraph">
-<p><code>{ExceptionHandlerExtensionPoint}</code> defines the API for <code>Extensions</code> that wish to <em>react to
-exceptions</em> thrown in a test.</p>
-</div>
-<div class="paragraph">
-<p>The following example shows an extension which will swallow all instances of <code>IOException</code>
-but rethrow any other type of exception:</p>
-</div>
-<div class="listingblock">
-<div class="title">An exception handling extension</div>
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public class IgnoreIOExceptionExtension implements ExceptionHandlerExtensionPoint {
-
-    @Override
-    public void handleException(TestExtensionContext context, Throwable throwable)
-            throws Throwable {
-
-        if (throwable instanceof IOException) {
-            return;
-        }
-        throw throwable;
-    }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="keeping-state-in-extensions">Keeping State in Extensions</h3>
-<div class="paragraph">
-<p>Usually, an extension is instantiated only once. So the question becomes relevant: How do you keep the state
-from one invocation of an extension point to the next? &#8230;&#8203;</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="additional-planned-extensions">Additional Planned Extensions</h3>
-<div class="paragraph">
-<p>Several additional extensions are planned, including but not limited to the following:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Dynamic test registration – for example, for computing parameterized tests at runtime</p>
-</li>
-</ul>
-</div>
+<p>Since this is the first public release, the set of changes is the set of features as described in this user guide.</p>
 </div>
 </div>
 </div>
