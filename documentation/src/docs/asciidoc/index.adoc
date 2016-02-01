@@ -69,4 +69,3 @@ include::api-evolution.adoc[]
 [[release-notes]]
 
 include::release-notes-5.0-Alpha.adoc[]
-

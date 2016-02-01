@@ -7,5 +7,3 @@
 ==== Summary of Changes
 
 Since this is the first public release, the set of changes is the set of features as described in this user guide.
-
-
