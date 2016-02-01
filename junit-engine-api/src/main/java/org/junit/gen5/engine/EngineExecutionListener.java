@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.TestExecutionResult.Status;
 import org.junit.gen5.engine.reporting.ReportEntry;
 
@@ -25,6 +28,7 @@ import org.junit.gen5.engine.reporting.ReportEntry;
  * @see TestEngine
  * @see ExecutionRequest
  */
+@API(Experimental)
 public interface EngineExecutionListener {
 
 	/**

@@ -10,13 +10,17 @@
 
 package org.junit.gen5.engine.support.descriptor;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.Optional;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestSource;
 
+@API(Experimental)
 public class FileSystemSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;

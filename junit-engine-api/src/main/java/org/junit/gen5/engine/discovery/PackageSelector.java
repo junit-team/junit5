@@ -10,11 +10,15 @@
 
 package org.junit.gen5.engine.discovery;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.DiscoverySelector;
 
 /**
  * @since 5.0
  */
+@API(Experimental)
 public class PackageSelector implements DiscoverySelector {
 
 	public static PackageSelector forPackageName(String packageName) {

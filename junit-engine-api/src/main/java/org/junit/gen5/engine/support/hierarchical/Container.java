@@ -10,6 +10,10 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * A <em>container</em> within the execution hierarchy.
  *
@@ -19,6 +23,7 @@ package org.junit.gen5.engine.support.hierarchical;
  * @see Node
  * @see Leaf
  */
+@API(Experimental)
 public interface Container<C extends EngineExecutionContext> extends Node<C> {
 
 	default C beforeAll(C context) throws Exception {

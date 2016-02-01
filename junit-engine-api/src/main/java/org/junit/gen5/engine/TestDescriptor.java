@@ -10,14 +10,19 @@
 
 package org.junit.gen5.engine;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.junit.gen5.commons.meta.API;
+
 /**
  * @since 5.0
  */
+@API(Experimental)
 public interface TestDescriptor {
 	/**
 	 * Get the unique identifier (UID) for the described test.

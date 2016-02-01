@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.support.descriptor;
 
 import static java.util.Collections.emptySet;
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.commons.JUnitException;
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestSource;
@@ -26,6 +28,7 @@ import org.junit.gen5.engine.TestTag;
 /**
  * @since 5.0
  */
+@API(Experimental)
 public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final String uniqueId;

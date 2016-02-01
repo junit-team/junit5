@@ -10,7 +10,11 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.util.Optional;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * A <em>node</em> within the execution hierarchy.
@@ -21,6 +25,7 @@ import java.util.Optional;
  * @see Container
  * @see Leaf
  */
+@API(Experimental)
 public interface Node<C extends EngineExecutionContext> {
 
 	default C prepare(C context) throws Exception {

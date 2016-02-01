@@ -10,6 +10,10 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * Marker interface for an execution context used by a concrete implementation
  * of {@link HierarchicalTestEngine} and its collaborators.
@@ -17,5 +21,6 @@ package org.junit.gen5.engine.support.hierarchical;
  * @since 5.0
  * @see HierarchicalTestEngine
  */
+@API(Experimental)
 public interface EngineExecutionContext {
 }

@@ -10,9 +10,15 @@
 
 package org.junit.gen5.engine;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.gen5.commons.meta.API;
+
+@API(Experimental)
 public class ExecutionRequest {
 
 	private final TestDescriptor rootTestDescriptor;
@@ -21,6 +27,7 @@ public class ExecutionRequest {
 
 	private final Map<String, Object> attributes = new HashMap<>();
 
+	@API(Internal)
 	public ExecutionRequest(TestDescriptor rootTestDescriptor, EngineExecutionListener engineExecutionListener) {
 		this.rootTestDescriptor = rootTestDescriptor;
 		this.engineExecutionListener = engineExecutionListener;

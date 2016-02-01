@@ -10,8 +10,13 @@
 
 package org.junit.gen5.engine;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.io.Serializable;
 
+import org.junit.gen5.commons.meta.API;
+
+@API(Experimental)
 public interface TestSource extends Serializable {
 
 	boolean isJavaClass();

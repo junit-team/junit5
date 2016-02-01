@@ -10,14 +10,18 @@
 
 package org.junit.gen5.engine.discovery;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.lang.reflect.Method;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.DiscoverySelector;
 
 /**
  * @since 5.0
  */
+@API(Experimental)
 public class MethodSelector implements DiscoverySelector {
 
 	public static MethodSelector forMethod(String testClassName, String testMethodName) {

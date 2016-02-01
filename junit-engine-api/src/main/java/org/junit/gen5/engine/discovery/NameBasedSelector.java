@@ -12,6 +12,7 @@ package org.junit.gen5.engine.discovery;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
@@ -22,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.DiscoverySelector;
@@ -29,6 +31,7 @@ import org.junit.gen5.engine.DiscoverySelector;
 /**
  * @since 5.0
  */
+@API(Experimental)
 public class NameBasedSelector {
 
 	public static DiscoverySelector forName(String name) {

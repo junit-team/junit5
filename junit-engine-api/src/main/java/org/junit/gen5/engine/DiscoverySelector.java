@@ -10,11 +10,16 @@
 
 package org.junit.gen5.engine;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * A selector defines location(s) a {@link TestEngine} should lookup tests at.
  *
  * @since 5.0
  * @see EngineDiscoveryRequest
  */
+@API(Experimental)
 public interface DiscoverySelector {
 }

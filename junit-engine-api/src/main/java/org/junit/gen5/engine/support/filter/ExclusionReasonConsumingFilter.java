@@ -10,12 +10,16 @@
 
 package org.junit.gen5.engine.support.filter;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.Filter;
 import org.junit.gen5.engine.FilterResult;
 
+@API(Internal)
 public class ExclusionReasonConsumingFilter<T> implements Filter<T> {
 
 	private final Filter<T> filter;

@@ -10,6 +10,10 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * A <em>leaf</em> within the execution hierarchy.
  *
@@ -19,6 +23,7 @@ package org.junit.gen5.engine.support.hierarchical;
  * @see Node
  * @see Container
  */
+@API(Experimental)
 public interface Leaf<C extends EngineExecutionContext> extends Node<C> {
 
 	C execute(C context) throws Exception;

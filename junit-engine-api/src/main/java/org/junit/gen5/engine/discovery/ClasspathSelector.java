@@ -11,17 +11,20 @@
 package org.junit.gen5.engine.discovery;
 
 import static java.util.Collections.singleton;
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.io.File;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.DiscoverySelector;
 
 /**
  * @since 5.0
  */
+@API(Experimental)
 public class ClasspathSelector implements DiscoverySelector {
 
 	public static List<DiscoverySelector> forPath(String path) {

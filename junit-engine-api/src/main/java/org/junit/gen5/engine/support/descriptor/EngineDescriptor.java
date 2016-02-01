@@ -10,9 +10,14 @@
 
 package org.junit.gen5.engine.support.descriptor;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * @since 5.0
  */
+@API(Experimental)
 public class EngineDescriptor extends AbstractTestDescriptor {
 
 	private final String displayName;

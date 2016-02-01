@@ -10,7 +10,11 @@
 
 package org.junit.gen5.engine;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.util.List;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * An {@code EngineDiscoveryRequest} gives {@link TestEngine}s
@@ -18,6 +22,7 @@ import java.util.List;
  *
  * @since 5.0
  */
+@API(Experimental)
 public interface EngineDiscoveryRequest {
 
 	List<DiscoverySelector> getSelectors();

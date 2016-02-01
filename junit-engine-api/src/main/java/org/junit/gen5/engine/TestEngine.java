@@ -10,9 +10,14 @@
 
 package org.junit.gen5.engine;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * @since 5.0
  */
+@API(Experimental)
 public interface TestEngine {
 
 	default String getId() {

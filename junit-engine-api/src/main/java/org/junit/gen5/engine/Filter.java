@@ -10,7 +10,11 @@
 
 package org.junit.gen5.engine;
 
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
+
 import java.util.function.Predicate;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * Filters particular tests during/after test discovery.
@@ -22,6 +26,7 @@ import java.util.function.Predicate;
  * @see DiscoveryFilter
  */
 @FunctionalInterface
+@API(Internal)
 public interface Filter<T> {
 
 	FilterResult filter(T object);

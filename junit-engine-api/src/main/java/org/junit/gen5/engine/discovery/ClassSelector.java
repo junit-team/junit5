@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.discovery;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.DiscoverySelector;
@@ -17,6 +20,7 @@ import org.junit.gen5.engine.DiscoverySelector;
 /**
  * @since 5.0
  */
+@API(Experimental)
 public class ClassSelector implements DiscoverySelector {
 
 	public static ClassSelector forClass(Class<?> testClass) {

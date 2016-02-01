@@ -10,16 +10,19 @@
 
 package org.junit.gen5.engine;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import static org.junit.gen5.engine.TestExecutionResult.Status.*;
 
 import java.util.Optional;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
  * @since 5.0
  */
+@API(Experimental)
 public class TestExecutionResult {
 
 	private static final TestExecutionResult SUCCESSFUL_RESULT = new TestExecutionResult(SUCCESSFUL, null);

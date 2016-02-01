@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestEngine;
 
@@ -24,6 +27,7 @@ import org.junit.gen5.engine.TestEngine;
  * @see Container
  * @see Leaf
  */
+@API(Experimental)
 public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> implements TestEngine {
 
 	@Override

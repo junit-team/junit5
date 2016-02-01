@@ -11,10 +11,13 @@
 package org.junit.gen5.engine;
 
 import static java.util.Arrays.asList;
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.engine.CombinedDiscoveryFilter.alwaysIncluded;
 
 import java.util.Collection;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * Filters particular tests during test discovery.
@@ -26,6 +29,7 @@ import java.util.Collection;
  * @see EngineDiscoveryRequest
  * @see TestEngine
  */
+@API(Experimental)
 public interface DiscoveryFilter<T> extends Filter<T> {
 
 	/**

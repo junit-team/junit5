@@ -10,8 +10,12 @@
 
 package org.junit.gen5.engine.discovery;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.DiscoveryFilter;
 
+@API(Experimental)
 public interface ClassFilter extends DiscoveryFilter<Class<?>> {
 
 	static ClassFilter byNamePattern(String pattern) {

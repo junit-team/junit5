@@ -12,12 +12,14 @@ package org.junit.gen5.engine.reporting;
 
 import static java.text.MessageFormat.format;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.Preconditions;
 
@@ -28,6 +30,7 @@ import org.junit.gen5.commons.util.Preconditions;
  *
  * @since 5.0
  */
+@API(Experimental)
 public class ReportEntry {
 
 	private final LocalDateTime creationTimestamp = LocalDateTime.now();

@@ -10,13 +10,16 @@
 
 package org.junit.gen5.engine.support.descriptor;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import static org.junit.gen5.commons.util.StringUtils.nullSafeToString;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.TestSource;
 
+@API(Experimental)
 public class JavaSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;

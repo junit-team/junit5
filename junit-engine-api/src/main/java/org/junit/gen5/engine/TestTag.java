@@ -10,9 +10,14 @@
 
 package org.junit.gen5.engine;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+import org.junit.gen5.commons.meta.API;
+
+@API(Experimental)
 public final class TestTag implements Serializable {
 
 	private static final long serialVersionUID = 1L;
