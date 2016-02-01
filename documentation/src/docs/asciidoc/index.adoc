@@ -63,3 +63,10 @@ include::launcher-api.adoc[]
 === Engines
 
 include::api-evolution.adoc[]
+
+== Release Notes
+
+[[release-notes]]
+
+include::release-notes-5.0-Alpha.adoc[]
+
