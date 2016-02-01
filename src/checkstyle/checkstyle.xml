@@ -19,5 +19,8 @@
 		<module name="NonEmptyAtclauseDescription" />
 
 	</module>
+
+	<module name="JavadocPackage" />
 	<module name="SuppressWarningsFilter" />
+
 </module>

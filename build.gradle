@@ -40,6 +40,7 @@ allprojects {
 	checkstyle {
 		toolVersion = 6.11
 		configFile = rootProject.file('src/checkstyle/checkstyle.xml')
+		sourceSets = [ sourceSets.main ]
 	}
 
 	eclipse {
