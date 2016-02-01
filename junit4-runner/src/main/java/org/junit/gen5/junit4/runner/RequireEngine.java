@@ -10,12 +10,16 @@
 
 package org.junit.gen5.junit4.runner;
 
+import org.junit.gen5.commons.meta.API;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import static org.junit.gen5.commons.meta.API.Usage.Maintained;
 
 /**
  * {@code @RequireEngine} specifies the engine ID (e.g., {@code "junit5"}) of
@@ -28,6 +32,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
+@API(Maintained)
 public @interface RequireEngine {
 
 	/**

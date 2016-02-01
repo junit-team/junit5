@@ -12,6 +12,7 @@ package org.junit.gen5.junit4.runner;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
+import static org.junit.gen5.commons.meta.API.Usage.Maintained;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Annotation;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.DiscoverySelector;
@@ -57,13 +59,14 @@ import org.junit.runners.model.InitializationError;
  *
  * @since 5.0
  * @see Classes
- * @see ClassNamePattern
+ * @see FilterClassName
  * @see Packages
  * @see UniqueIds
  * @see RequireTags
  * @see ExcludeTags
  * @see RequireEngine
  */
+@API(Maintained)
 public class JUnit5 extends Runner implements Filterable {
 
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
@@ -196,7 +199,7 @@ public class JUnit5 extends Runner implements Filterable {
 	}
 
 	private String getClassNameRegExPattern() {
-		return getValueFromAnnotation(ClassNamePattern.class, ClassNamePattern::value, EMPTY_STRING).trim();
+		return getValueFromAnnotation(FilterClassName.class, FilterClassName::value, EMPTY_STRING).trim();
 	}
 
 	private <A extends Annotation, V> V getValueFromAnnotation(Class<A> annotationClass, Function<A, V> extractor,

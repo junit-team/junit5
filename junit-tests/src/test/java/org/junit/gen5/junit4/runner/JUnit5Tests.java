@@ -173,7 +173,7 @@ class JUnit5Tests {
 
 		@Test
 		void addsClassFilterToRequestWhenClassNamePatternAnnotationIsPresent() throws Exception {
-			@ClassNamePattern(".*Foo")
+			@FilterClassName(".*Foo")
 			class TestCase {
 			}
 			class Foo {

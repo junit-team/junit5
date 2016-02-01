@@ -10,6 +10,8 @@
 
 package org.junit.gen5.junit4.runner;
 
+import org.junit.gen5.commons.meta.API;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -17,10 +19,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static org.junit.gen5.commons.meta.API.Usage.Maintained;
+
 /**
- * {@code @ClassNamePattern} specifies a regular expression that is used
- * to match against class names when a test class annotated with
- * {@code @RunWith(JUnit5.class)} is executed.
+ * {@code @FilterClassName} specifies a regular expression that is used
+ * to match against fully qualified class names
+ * when a test class annotated with {@code @RunWith(JUnit5.class)} is executed.
  *
  * @since 5.0
  */
@@ -28,10 +32,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
-public @interface ClassNamePattern {
+@API(Maintained)
+public @interface FilterClassName {
 
 	/**
-	 * Regular expression used to match against class names.
+	 * Regular expression used to match against fully qualified class names.
 	 */
 	String value();
 
