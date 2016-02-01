@@ -23,9 +23,11 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.discovery.ClassFilter;
-import org.junit.gen5.launcher.*;
+import org.junit.gen5.launcher.TagFilter;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 class DiscoveryRequestCreator {
+
 	TestDiscoveryRequest toDiscoveryRequest(CommandLineOptions options) {
 		TestDiscoveryRequest discoveryRequest = buildDiscoveryRequest(options);
 		applyFilters(discoveryRequest, options);
@@ -46,7 +48,11 @@ class DiscoveryRequestCreator {
 
 	private Set<File> determineClasspathRootDirectories(CommandLineOptions options) {
 		if (options.getArguments().isEmpty()) {
-			return ReflectionUtils.getAllClasspathRootDirectories();
+			Set<File> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
+			if (!options.getAdditionalClasspathEntries().isEmpty()) {
+				rootDirs.addAll(new ClasspathEntriesParser().toDirectories(options.getAdditionalClasspathEntries()));
+			}
+			return rootDirs;
 		}
 		return options.getArguments().stream().map(File::new).collect(toCollection(LinkedHashSet::new));
 	}

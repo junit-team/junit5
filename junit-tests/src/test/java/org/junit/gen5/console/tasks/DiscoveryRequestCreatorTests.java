@@ -103,6 +103,20 @@ public class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
+	public void convertsAllOptionWithAdditionalClasspathEntries() {
+		options.setRunAllTests(true);
+		options.setAdditionalClasspathEntries(asList(".", ".."));
+
+		TestDiscoveryRequest request = convert();
+
+		List<ClasspathSelector> classpathSelectors = request.getSelectorsByType(ClasspathSelector.class);
+		// @formatter:off
+		assertThat(classpathSelectors).extracting(ClasspathSelector::getClasspathRoot)
+			.contains(new File("."), new File(".."));
+		// @formatter:on
+	}
+
+	@Test
 	public void convertsClassnameFilterOption() {
 		options.setRunAllTests(true);
 		options.setClassnameFilter(".*Test");
