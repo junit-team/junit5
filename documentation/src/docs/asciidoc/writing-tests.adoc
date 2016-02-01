@@ -180,8 +180,11 @@ include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
   `TestReporterParameterResolver` will supply an instance of `TestReporter`.
   The `TestReporter` can be used to publish additional data about the current test run.
   The data can be consumed through `{TestExecutionListener}.reportingEntryPublished()` and thus
-  be viewed by IDEs or included in reports. In JUnit 5 you would typically use `TestReporter` where
-  you used to print information to `stdout` or `stderr` in JUnit 4.
+  be viewed by IDEs or included in reports.
++
+In JUnit 5 you should use `TestReporter` where
+you used to print information to `stdout` or `stderr` in JUnit 4.
+Using `@RunWith(JUnit5.class)` will even output all reported entries to `stdout`.
 
 [source,java,indent=0]
 [subs="verbatim"]
