@@ -1,4 +1,4 @@
-=== Release Notes 5.0 Alpha
+=== Release Notes 5.0.0-ALPHA
 
 *Date of Release:* February 1, 2016
 
