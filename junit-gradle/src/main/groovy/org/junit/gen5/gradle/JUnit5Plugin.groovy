@@ -76,7 +76,7 @@ class JUnit5Plugin implements Plugin<Project> {
 			args.add(junit5.classNameFilter)
 		}
 
-		junit5.includeTags.each { String tag ->
+		junit5.requireTags.each { String tag ->
 			args.add('-t')
 			args.add(tag)
 		}
