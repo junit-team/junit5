@@ -10,26 +10,29 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import org.junit.gen5.api.*;
-import org.junit.gen5.engine.*;
-import org.junit.gen5.engine.reporting.*;
-import org.mockito.*;
+import static org.junit.gen5.api.Assertions.assertSame;
 
-public class JUnit5EngineExecutionContextTests {
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.EngineExecutionListener;
+import org.mockito.Mockito;
 
-	//this verifies that the reporting mechanism within the EngineExecutionListener survives the builder
-	//is this really what we want to check?
+class JUnit5EngineExecutionContextTests {
+
+	private JUnit5EngineExecutionContext originalContext;
+	private EngineExecutionListener engineExecutionListener;
+
+	@BeforeEach
+	void initOriginalContext() {
+		engineExecutionListener = Mockito.mock(EngineExecutionListener.class);
+		originalContext = new JUnit5EngineExecutionContext(engineExecutionListener);
+	}
+
 	@Test
-	void getExecutionListener() {
-		EngineExecutionListener engineExecutionListener = Mockito.spy(EngineExecutionListener.class);
-		JUnit5EngineExecutionContext originalEngineExecutionContext = new JUnit5EngineExecutionContext(
-			engineExecutionListener);
-		JUnit5EngineExecutionContext newEngineExecutionContext = JUnit5EngineExecutionContext.builder(
-			originalEngineExecutionContext).build();
-
-		ReportEntry entry = ReportEntry.from("one", "two");
-		newEngineExecutionContext.getExecutionListener().reportingEntryPublished(null, entry);
-		Mockito.verify(engineExecutionListener, Mockito.times(1)).reportingEntryPublished(null, entry);
+	void executionListenerIsHandedOnWhenContextIsExtended() {
+		assertSame(engineExecutionListener, originalContext.getExecutionListener());
+		JUnit5EngineExecutionContext newContext = originalContext.extend().build();
+		assertSame(engineExecutionListener, newContext.getExecutionListener());
 	}
 
 }
