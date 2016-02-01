@@ -21,3 +21,4 @@ bin/
 # Misc
 *.log
 *.graphml
+coverage.db*
