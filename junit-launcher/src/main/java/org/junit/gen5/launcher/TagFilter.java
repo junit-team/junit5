@@ -38,8 +38,8 @@ public final class TagFilter {
 	 * <p>Containers and tests will only be executed if they are tagged with
 	 * at least one of the supplied <em>include</em> tags.
 	 */
-	public static PostDiscoveryFilter includeTags(String... tags) {
-		return includeTags(asList(tags));
+	public static PostDiscoveryFilter requireTags(String... tags) {
+		return requireTags(asList(tags));
 	}
 
 	/**
@@ -48,7 +48,7 @@ public final class TagFilter {
 	 * <p>Containers and tests will only be executed if they are tagged with
 	 * at least one of the supplied <em>include</em> tags.
 	 */
-	public static PostDiscoveryFilter includeTags(List<String> tags) {
+	public static PostDiscoveryFilter requireTags(List<String> tags) {
 		// @formatter:off
         return descriptor -> FilterResult.includedIf(
 				descriptor.getTags().stream()

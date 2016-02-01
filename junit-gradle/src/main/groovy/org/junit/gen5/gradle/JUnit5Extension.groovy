@@ -54,10 +54,10 @@ class JUnit5Extension {
 	String classNameFilter
 
 	/**
-	 * A list of <em>tags</em> to include when building the test plan
+	 * A list of <em>tags</em> to be required when building the test plan
 	 * specification.
 	 */
-	List includeTags = []
+	List requireTags = []
 
 	/**
 	 * A list of <em>tags</em> to include when building the test plan
@@ -69,8 +69,8 @@ class JUnit5Extension {
 	 * Add a <em>tag</em> to be included when building the test plan
 	 * specification.
 	 */
-	void includeTag(tag) {
-		includeTags.add tag
+	void requireTag(tag) {
+		requireTags.add tag
 	}
 
 	/**

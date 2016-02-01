@@ -26,8 +26,8 @@ class AvailableOptions {
 	private final OptionSpec<Void> runAllTests;
 	private final OptionSpec<Void> hideDetails;
 	private final OptionSpec<String> classnameFilter;
-	private final OptionSpec<String> tagFilter;
-	private final OptionSpec<String> excludeTags;
+	private final OptionSpec<String> requiredTagsFilter;
+	private final OptionSpec<String> excludedTagsFilter;
 	private final OptionSpec<String> additionalClasspathEntries;
 	private final OptionSpec<String> xmlReportsDir;
 	private final OptionSpec<String> arguments;
@@ -46,11 +46,11 @@ class AvailableOptions {
 		classnameFilter = parser.acceptsAll(asList("n", "filter-classname"),
 			"Give a regular expression to include only classes whose fully qualified names match.") //
 			.withRequiredArg();
-		tagFilter = parser.acceptsAll(asList("t", "filter-tags"),
-			"Give a tag to include in the test run. This option can be repeated.") //
+		requiredTagsFilter = parser.acceptsAll(asList("t", "require-tag"),
+			"Give a tag to be required in the test run. This option can be repeated.") //
 			.withRequiredArg();
-		excludeTags = parser.acceptsAll(asList("T", "exclude-tags"),
-			"Give a tag to include in the test run. This option can be repeated.") //
+		excludedTagsFilter = parser.acceptsAll(asList("T", "exclude-tag"),
+			"Give a tag to exclude from the test run. This option can be repeated.") //
 			.withRequiredArg();
 		additionalClasspathEntries = parser.acceptsAll(asList("p", "classpath"), //
 			"Additional classpath entries, e.g. for adding engines and their dependencies") //
@@ -75,8 +75,8 @@ class AvailableOptions {
 		result.setRunAllTests(detectedOptions.has(runAllTests));
 		result.setHideDetails(detectedOptions.has(hideDetails));
 		result.setClassnameFilter(detectedOptions.valueOf(classnameFilter));
-		result.setTagsFilter(detectedOptions.valuesOf(tagFilter));
-		result.setExcludeTags(detectedOptions.valuesOf(excludeTags));
+		result.setRequiredTagsFilter(detectedOptions.valuesOf(requiredTagsFilter));
+		result.setExcludedTagsFilter(detectedOptions.valuesOf(excludedTagsFilter));
 		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(additionalClasspathEntries));
 		result.setXmlReportsDir(detectedOptions.valueOf(xmlReportsDir));
 		result.setArguments(detectedOptions.valuesOf(arguments));

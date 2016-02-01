@@ -64,11 +64,11 @@ class DiscoveryRequestCreator {
 
 	private void applyFilters(TestDiscoveryRequest discoveryRequest, CommandLineOptions options) {
 		options.getClassnameFilter().ifPresent(regex -> discoveryRequest.addFilter(ClassFilter.byNamePattern(regex)));
-		if (!options.getTagsFilter().isEmpty()) {
-			discoveryRequest.addPostFilter(TagFilter.includeTags(options.getTagsFilter()));
+		if (!options.getRequiredTagsFilter().isEmpty()) {
+			discoveryRequest.addPostFilter(TagFilter.requireTags(options.getRequiredTagsFilter()));
 		}
-		if (!options.getExcludeTags().isEmpty()) {
-			discoveryRequest.addPostFilter(TagFilter.excludeTags(options.getExcludeTags()));
+		if (!options.getExcludedTagsFilter().isEmpty()) {
+			discoveryRequest.addPostFilter(TagFilter.excludeTags(options.getExcludedTagsFilter()));
 		}
 	}
 }

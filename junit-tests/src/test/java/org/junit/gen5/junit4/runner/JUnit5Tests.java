@@ -123,7 +123,7 @@ class JUnit5Tests {
 
 		@Test
 		void addsTagFilterToRequestWhenOnlyIncludeTagsAnnotationIsPresent() throws Exception {
-			@OnlyIncludeTags({ "foo", "bar" })
+			@RequireTags({ "foo", "bar" })
 			class TestCase {
 			}
 
@@ -157,7 +157,7 @@ class JUnit5Tests {
 
 		@Test
 		void addsEngineIdFilterToRequestWhenOnlyEngineAnnotationIsPresent() throws Exception {
-			@OnlyEngine("foo")
+			@RequireEngine("foo")
 			class TestCase {
 			}
 

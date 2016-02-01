@@ -131,8 +131,8 @@ public class DiscoveryRequestCreatorTests {
 	@Test
 	public void convertsTagFilterOption() {
 		options.setRunAllTests(true);
-		options.setTagsFilter(asList("fast", "medium", "slow"));
-		options.setExcludeTags(asList("slow"));
+		options.setRequiredTagsFilter(asList("fast", "medium", "slow"));
+		options.setExcludedTagsFilter(asList("slow"));
 
 		TestDiscoveryRequest request = convert();
 		List<PostDiscoveryFilter> postDiscoveryFilters = request.getPostDiscoveryFilters();

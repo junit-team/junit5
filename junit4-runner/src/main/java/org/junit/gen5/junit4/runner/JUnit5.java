@@ -60,9 +60,9 @@ import org.junit.runners.model.InitializationError;
  * @see ClassNamePattern
  * @see Packages
  * @see UniqueIds
- * @see OnlyIncludeTags
+ * @see RequireTags
  * @see ExcludeTags
- * @see OnlyEngine
+ * @see RequireEngine
  */
 public class JUnit5 extends Runner implements Filterable {
 
@@ -121,8 +121,8 @@ public class JUnit5 extends Runner implements Filterable {
 
 	private void addFiltersFromAnnotations(TestDiscoveryRequest request) {
 		addClassNameMatchesFilter(request);
-		addIncludeTagsFilter(request);
-		addExcludeTagsFilter(request);
+		addRequiredTagsFilter(request);
+		addExcludedTagsFilter(request);
 		addEngineIdFilter(request);
 	}
 
@@ -147,18 +147,18 @@ public class JUnit5 extends Runner implements Filterable {
 		}
 	}
 
-	private void addIncludeTagsFilter(TestDiscoveryRequest discoveryRequest) {
-		String[] includeTags = getIncludeTags();
-		if (includeTags.length > 0) {
-			PostDiscoveryFilter tagNamesFilter = TagFilter.includeTags(includeTags);
+	private void addRequiredTagsFilter(TestDiscoveryRequest discoveryRequest) {
+		String[] requiredTags = getRequiredTags();
+		if (requiredTags.length > 0) {
+			PostDiscoveryFilter tagNamesFilter = TagFilter.requireTags(requiredTags);
 			discoveryRequest.addPostFilter(tagNamesFilter);
 		}
 	}
 
-	private void addExcludeTagsFilter(TestDiscoveryRequest discoveryRequest) {
-		String[] excludeTags = getExcludeTags();
-		if (excludeTags.length > 0) {
-			PostDiscoveryFilter excludeTagsFilter = TagFilter.excludeTags(excludeTags);
+	private void addExcludedTagsFilter(TestDiscoveryRequest discoveryRequest) {
+		String[] excludedTags = getExcludedTags();
+		if (excludedTags.length > 0) {
+			PostDiscoveryFilter excludeTagsFilter = TagFilter.excludeTags(excludedTags);
 			discoveryRequest.addPostFilter(excludeTagsFilter);
 		}
 	}
@@ -183,16 +183,16 @@ public class JUnit5 extends Runner implements Filterable {
 		return getValueFromAnnotation(Packages.class, Packages::value, EMPTY_STRING_ARRAY);
 	}
 
-	private String[] getIncludeTags() {
-		return getValueFromAnnotation(OnlyIncludeTags.class, OnlyIncludeTags::value, EMPTY_STRING_ARRAY);
+	private String[] getRequiredTags() {
+		return getValueFromAnnotation(RequireTags.class, RequireTags::value, EMPTY_STRING_ARRAY);
 	}
 
-	private String[] getExcludeTags() {
+	private String[] getExcludedTags() {
 		return getValueFromAnnotation(ExcludeTags.class, ExcludeTags::value, EMPTY_STRING_ARRAY);
 	}
 
 	private String getExplicitEngineId() {
-		return getValueFromAnnotation(OnlyEngine.class, OnlyEngine::value, EMPTY_STRING).trim();
+		return getValueFromAnnotation(RequireEngine.class, RequireEngine::value, EMPTY_STRING).trim();
 	}
 
 	private String getClassNameRegExPattern() {

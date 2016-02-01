@@ -27,10 +27,10 @@ public class CommandLineOptions {
 	private boolean runAllTests;
 	private boolean hideDetails;
 	private String classnameFilter;
-	private List<String> tagsFilter = emptyList();
+	private List<String> requiredTagsFilter = emptyList();
 	private List<String> additionalClasspathEntries = emptyList();
 	private List<String> arguments = emptyList();
-	private List<String> excludeTags = emptyList();
+	private List<String> excludedTagsFilter = emptyList();
 	private String xmlReportsDir;
 
 	public boolean isDisplayHelp() {
@@ -81,20 +81,20 @@ public class CommandLineOptions {
 		this.classnameFilter = classnameFilter;
 	}
 
-	public List<String> getTagsFilter() {
-		return tagsFilter;
+	public List<String> getRequiredTagsFilter() {
+		return requiredTagsFilter;
 	}
 
-	public void setTagsFilter(List<String> tagsFilter) {
-		this.tagsFilter = tagsFilter;
+	public void setRequiredTagsFilter(List<String> requiredTagsFilter) {
+		this.requiredTagsFilter = requiredTagsFilter;
 	}
 
-	public List<String> getExcludeTags() {
-		return excludeTags;
+	public List<String> getExcludedTagsFilter() {
+		return excludedTagsFilter;
 	}
 
-	public void setExcludeTags(List<String> excludeTags) {
-		this.excludeTags = excludeTags;
+	public void setExcludedTagsFilter(List<String> excludedTagsFilter) {
+		this.excludedTagsFilter = excludedTagsFilter;
 	}
 
 	public List<String> getAdditionalClasspathEntries() {

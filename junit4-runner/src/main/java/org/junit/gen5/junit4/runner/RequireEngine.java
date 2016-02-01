@@ -18,7 +18,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@code @OnlyEngine} specifies the engine ID (e.g., {@code "junit5"}) of
+ * {@code @RequireEngine} specifies the engine ID (e.g., {@code "junit5"}) of
  * the sole {@link org.junit.gen5.engine.TestEngine TestEngine} to be used
  * when a class annotated with {@code @RunWith(JUnit5.class)} is run.
  *
@@ -28,10 +28,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
-public @interface OnlyEngine {
+public @interface RequireEngine {
 
 	/**
-	 * The Engine ID.
+	 * The Engine ID to be required
 	 */
 	String value();
 

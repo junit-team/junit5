@@ -45,7 +45,7 @@ public class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertFalse(options.isHideDetails()),
 			() -> assertFalse(options.isRunAllTests()),
 			() -> assertEquals(Optional.empty(), options.getClassnameFilter()),
-			() -> assertEquals(emptyList(), options.getTagsFilter()),
+			() -> assertEquals(emptyList(), options.getRequiredTagsFilter()),
 			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
 			() -> assertEquals(Optional.empty(), options.getXmlReportsDir()),
 			() -> assertEquals(emptyList(), options.getArguments())
@@ -86,10 +86,10 @@ public class JOptSimpleCommandLineOptionsParserTests {
 	public void parseValidTagFilters() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("fast"), parseArgLine("-t fast").getTagsFilter()),
-			() -> assertEquals(asList("fast"), parseArgLine("--filter-tags fast").getTagsFilter()),
-			() -> assertEquals(asList("fast"), parseArgLine("--filter-tags=fast").getTagsFilter()),
-			() -> assertEquals(asList("fast", "slow"), parseArgLine("-t fast -t slow").getTagsFilter())
+			() -> assertEquals(asList("fast"), parseArgLine("-t fast").getRequiredTagsFilter()),
+			() -> assertEquals(asList("fast"), parseArgLine("--require-tag fast").getRequiredTagsFilter()),
+			() -> assertEquals(asList("fast"), parseArgLine("--require-tag=fast").getRequiredTagsFilter()),
+			() -> assertEquals(asList("fast", "slow"), parseArgLine("-t fast -t slow").getRequiredTagsFilter())
 		);
 		// @formatter:on
 	}

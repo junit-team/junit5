@@ -18,7 +18,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@code @OnlyIncludeTags} specifies tags to be considered when a class
+ * {@code @RequireTags} specifies tags to be considered when a class
  * annotated with {@code @RunWith(JUnit5.class)} is run.
  *
  * @since 5.0
@@ -27,10 +27,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
-public @interface OnlyIncludeTags {
+public @interface RequireTags {
 
 	/**
-	 * One or more tags to include.
+	 * One or more tags to be required.
 	 */
 	String[]value();
 

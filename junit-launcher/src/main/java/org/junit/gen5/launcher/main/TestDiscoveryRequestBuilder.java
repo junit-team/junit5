@@ -50,7 +50,7 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  *     )
  *     .filter(byEngineIds("junit5"))
  *     .filter(byNamePattern("org\.junit\.gen5\.tests.*"), byNamePattern(".*Test[s]?"))
- *     .filter(includeTags("fast"), excludeTags("flow"))
+ *     .filter(requireTags("fast"), excludeTags("flow"))
  *   ).build();
  * </pre>
  */
