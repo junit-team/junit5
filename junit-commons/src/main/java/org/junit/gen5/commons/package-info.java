@@ -1,5 +1,5 @@
 /**
- * Internal common utilities for JUnit.
+ * Internal common library of JUnit.
  *
  * <h3>DISCLAIMER</h3>
  *
@@ -8,4 +8,4 @@
  * Use at your own risk!
  */
 
-package org.junit.gen5.commons.util;
+package org.junit.gen5.commons;
