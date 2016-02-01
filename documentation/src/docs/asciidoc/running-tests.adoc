@@ -205,27 +205,32 @@ final release.
 
 [subs="none"]
 ----
+Non-option arguments:
+Test classes, methods or packages to execute. If --all|-a has been chosen, arguments can list all
+  classpath roots that should be considered for test scanning, or none if the full classpath shall
+  be scanned.
+
 Option                       Description
 ------                       -----------
+-a, --all                    Run all tests
+-p, --classpath              Additional classpath entries, e.g. for adding
+                               engines and their dependencies
+-n, --filter-classname       Give a regular expression to include only
+                               classes whose fully qualified names match.
+-t, --require-tag            Give a tag to be required in the test run. This
+                               option can be repeated.
+-T, --exclude-tag            Give a tag to exclude from the test run. This
+                               option can be repeated.
+-r, --xml-reports-dir        Enable XML report output into a specified local
+                               directory (will be created if it does not
+                               exist)
+-x, --enable-exit-code       Exit process with number of failing tests as
+                               exit code
 -C, --disable-ansi-colors    Disable colored output (not supported by all
                                terminals)
 -D, --hide-details           Hide details while tests are being executed.
                                Only show the summary and test failures.
--T, --exclude-tag            Give a tag to exclude from the test run.
-                               This option can be repeated.
--a, --all                    Run all tests
 -h, --help                   Display help information
--n, --filter-classname       Give a regular expression to include only
-                               classes whose fully qualified names match.
--p, --classpath              Additional classpath entries, e.g. for adding
-                               engines and their dependencies
--r, --xml-reports-dir        Enable XML report output into a specified local
-                               directory (will be created if it does not
-                               exist)
--t, --require-tag             Give a tag to be required in the test run.
-                               This option can be repeated.
--x, --enable-exit-code       Exit process with number of failing tests as
-                               exit code
 ----
 
 

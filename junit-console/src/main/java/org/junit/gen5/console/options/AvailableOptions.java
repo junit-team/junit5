@@ -33,16 +33,12 @@ class AvailableOptions {
 	private final OptionSpec<String> arguments;
 
 	AvailableOptions() {
-		help = parser.acceptsAll(asList("h", "help"), //
-			"Display help information");
-		enableExitCode = parser.acceptsAll(asList("x", "enable-exit-code"), //
-			"Exit process with number of failing tests as exit code");
-		disableAnsiColors = parser.acceptsAll(asList("C", "disable-ansi-colors"),
-			"Disable colored output (not supported by all terminals)");
 		runAllTests = parser.acceptsAll(asList("a", "all"), //
 			"Run all tests");
-		hideDetails = parser.acceptsAll(asList("D", "hide-details"),
-			"Hide details while tests are being executed. Only show the summary and test failures.");
+		additionalClasspathEntries = parser.acceptsAll(asList("p", "classpath"), //
+			"Additional classpath entries, e.g. for adding engines and their dependencies") //
+			.withRequiredArg();
+
 		classnameFilter = parser.acceptsAll(asList("n", "filter-classname"),
 			"Give a regular expression to include only classes whose fully qualified names match.") //
 			.withRequiredArg();
@@ -52,12 +48,20 @@ class AvailableOptions {
 		excludedTagsFilter = parser.acceptsAll(asList("T", "exclude-tag"),
 			"Give a tag to exclude from the test run. This option can be repeated.") //
 			.withRequiredArg();
-		additionalClasspathEntries = parser.acceptsAll(asList("p", "classpath"), //
-			"Additional classpath entries, e.g. for adding engines and their dependencies") //
-			.withRequiredArg();
+
 		xmlReportsDir = parser.acceptsAll(asList("r", "xml-reports-dir"), //
 			"Enable XML report output into a specified local directory (will be created if it does not exist)") //
 			.withRequiredArg();
+
+		enableExitCode = parser.acceptsAll(asList("x", "enable-exit-code"), //
+			"Exit process with number of failing tests as exit code");
+		disableAnsiColors = parser.acceptsAll(asList("C", "disable-ansi-colors"),
+			"Disable colored output (not supported by all terminals)");
+		hideDetails = parser.acceptsAll(asList("D", "hide-details"),
+			"Hide details while tests are being executed. Only show the summary and test failures.");
+		help = parser.acceptsAll(asList("h", "help"), //
+			"Display help information");
+
 		arguments = parser.nonOptions("Test classes, methods or packages to execute. If --all|-a has been chosen, "
 				+ "arguments can list all classpath roots that should be considered for test scanning, "
 				+ "or none if the full classpath shall be scanned.");
