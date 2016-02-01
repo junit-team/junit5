@@ -10,7 +10,11 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.lang.reflect.Parameter;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * {@code MethodParameterResolver} defines the API for {@link Extension
@@ -27,6 +31,7 @@ import java.lang.reflect.Parameter;
  *
  * @since 5.0
  */
+@API(Experimental)
 public interface MethodParameterResolver extends ExtensionPoint {
 
 	/**

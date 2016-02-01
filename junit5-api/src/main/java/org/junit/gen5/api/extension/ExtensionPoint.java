@@ -10,6 +10,10 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * Super interface for all extension points.
  *
@@ -29,5 +33,6 @@ package org.junit.gen5.api.extension;
  * @see AfterAllExtensionPoint
  * @see ExtensionRegistrar
  */
+@API(Experimental)
 public interface ExtensionPoint extends Extension {
 }

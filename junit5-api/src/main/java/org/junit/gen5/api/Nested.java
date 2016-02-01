@@ -10,11 +10,15 @@
 
 package org.junit.gen5.api;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * {@code @Nested} is used to signal that the annotated class is a nested,
@@ -25,5 +29,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@API(Experimental)
 public @interface Nested {
 }

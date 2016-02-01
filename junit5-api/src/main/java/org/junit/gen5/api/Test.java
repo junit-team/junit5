@@ -10,11 +10,16 @@
 
 package org.junit.gen5.api;
 
+import static org.junit.gen5.commons.meta.API.Usage.Maintained;
+import static org.junit.gen5.commons.meta.API.Usage.Stable;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * {@code @Test} is used to signal that the annotated method is a
@@ -41,5 +46,6 @@ import java.lang.annotation.Target;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@API(Stable)
 public @interface Test {
 }

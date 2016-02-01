@@ -10,6 +10,10 @@
 
 package org.junit.gen5.api;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * {@code TestInfo} is used to inject information about the current test
  * into to {@code @Test}, {@code @BeforeEach}, {@code @AfterEach},
@@ -23,6 +27,7 @@ package org.junit.gen5.api;
  * @see Test
  * @see DisplayName
  */
+@API(Experimental)
 public interface TestInfo {
 
 	/**

@@ -10,6 +10,10 @@
 
 package org.junit.gen5.api;
 
+import static org.junit.gen5.commons.meta.API.Usage.Stable;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * {@code Executable} is a functional interface that can be used to
  * implement any generic block of code that potentially throws a
@@ -34,6 +38,7 @@ package org.junit.gen5.api;
  * @see Assumptions#assumingThat(java.util.function.BooleanSupplier, Executable)
  */
 @FunctionalInterface
+@API(Stable)
 public interface Executable {
 
 	void execute() throws Throwable;

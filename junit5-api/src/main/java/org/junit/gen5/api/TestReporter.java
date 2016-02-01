@@ -10,7 +10,11 @@
 
 package org.junit.gen5.api;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.util.*;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * Parameters of type {@code TestReporter} can be injected into methods of
@@ -23,6 +27,7 @@ import java.util.*;
  * @since 5.0
  */
 @FunctionalInterface
+@API(Experimental)
 public interface TestReporter {
 
 	/**

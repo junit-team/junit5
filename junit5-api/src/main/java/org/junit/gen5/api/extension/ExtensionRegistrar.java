@@ -10,6 +10,10 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * Interface to be implemented by {@linkplain Extension extensions} that
  * wish to programmatically register {@link ExtensionPoint} implementations
@@ -21,6 +25,7 @@ package org.junit.gen5.api.extension;
  *
  * @since 5.0
  */
+@API(Experimental)
 public interface ExtensionRegistrar extends Extension {
 
 	void registerExtensions(ExtensionPointRegistry registry);

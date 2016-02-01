@@ -10,6 +10,10 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * {@code InstancePostProcessor} defines the API for {@link Extension
  * Extensions} that wish to <em>post-process</em> test instances.
@@ -22,6 +26,7 @@ package org.junit.gen5.api.extension;
  *
  * @since 5.0
  */
+@API(Experimental)
 public interface InstancePostProcessor extends ExtensionPoint {
 
 	/**

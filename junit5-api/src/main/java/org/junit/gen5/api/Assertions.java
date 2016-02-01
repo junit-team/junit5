@@ -10,10 +10,14 @@
 
 package org.junit.gen5.api;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.gen5.commons.meta.API.Usage.Maintained;
+
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.StringUtils;
 import org.opentest4j.AssertionFailedError;
@@ -28,6 +32,7 @@ import org.opentest4j.MultipleFailuresError;
  * @see AssertionFailedError
  * @see Assumptions
  */
+@API(Maintained)
 public final class Assertions {
 
 	private Assertions() {
@@ -318,6 +323,7 @@ public final class Assertions {
 	 * Asserts that <em>all</em> assertions contained in {@code asserts} do not fail.
 	 * Report a failure of at least one in a {@link MultipleFailuresError}.
 	 */
+	@API(Experimental)
 	public static void assertAll(Executable... asserts) throws MultipleFailuresError {
 		assertAll(null, asserts);
 	}
@@ -328,6 +334,7 @@ public final class Assertions {
 	 *
 	 * <p>Include {@code heading} in the exception's message string.</p>
 	 */
+	@API(Experimental)
 	public static void assertAll(String heading, Executable... asserts) throws MultipleFailuresError {
 		MultipleFailuresError multipleFailuresError = new MultipleFailuresError(heading);
 		for (Executable executable : asserts) {

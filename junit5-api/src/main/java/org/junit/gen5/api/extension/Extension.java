@@ -10,6 +10,10 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * Marker interface for all extensions.
  *
@@ -21,5 +25,6 @@ package org.junit.gen5.api.extension;
  * @see ExtensionPoint
  * @see ExtensionRegistrar
  */
+@API(Experimental)
 public interface Extension {
 }

@@ -10,6 +10,10 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * {@code TestExecutionCondition} defines an {@link ExtensionPoint} for
  * programmatic, <em>conditional test execution</em>.
@@ -25,6 +29,7 @@ package org.junit.gen5.api.extension;
  * @see org.junit.gen5.api.Disabled
  */
 @FunctionalInterface
+@API(Experimental)
 public interface TestExecutionCondition extends ExtensionPoint {
 
 	/**

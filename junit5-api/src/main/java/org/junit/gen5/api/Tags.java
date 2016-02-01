@@ -10,11 +10,15 @@
 
 package org.junit.gen5.api;
 
+import static org.junit.gen5.commons.meta.API.Usage.Maintained;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * {@code @Tags} is a container for one or more {@code @Tag} declarations.
@@ -30,6 +34,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@API(Maintained)
 public @interface Tags {
 
 	/**

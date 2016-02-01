@@ -10,10 +10,13 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.lang.reflect.AnnotatedElement;
 import java.util.*;
 import java.util.function.Function;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
@@ -25,6 +28,7 @@ import org.junit.gen5.commons.util.Preconditions;
  *
  * @since 5.0
  */
+@API(Experimental)
 public interface ExtensionContext {
 
 	/**

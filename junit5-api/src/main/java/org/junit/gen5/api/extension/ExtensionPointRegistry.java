@@ -10,6 +10,10 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * A registry for {@link ExtensionPoint} implementations which can be
  * populated via an {@link ExtensionRegistrar}.
@@ -74,6 +78,7 @@ package org.junit.gen5.api.extension;
  * @see ExtensionPoint
  * @see ExtensionRegistrar
  */
+@API(Experimental)
 public interface ExtensionPointRegistry {
 
 	/**

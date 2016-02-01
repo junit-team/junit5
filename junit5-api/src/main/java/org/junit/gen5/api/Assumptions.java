@@ -10,9 +10,13 @@
 
 package org.junit.gen5.api;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.gen5.commons.meta.API.Usage.Maintained;
+
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.StringUtils;
 import org.opentest4j.TestAbortedException;
@@ -34,6 +38,7 @@ import org.opentest4j.TestAbortedException;
  * @see TestAbortedException
  * @see Assertions
  */
+@API(Maintained)
 public final class Assumptions {
 
 	private Assumptions() {
@@ -204,6 +209,7 @@ public final class Assumptions {
 	 * @param executable the block of code to execute if the assumption is valid
 	 * @see #assumingThat(boolean, Executable)
 	 */
+	@API(Experimental)
 	public static void assumingThat(BooleanSupplier assumptionSupplier, Executable executable) {
 		assumingThat(assumptionSupplier.getAsBoolean(), executable);
 	}
@@ -222,6 +228,7 @@ public final class Assumptions {
 	 * @param executable the block of code to execute if the assumption is valid
 	 * @see #assumingThat(BooleanSupplier, Executable)
 	 */
+	@API(Experimental)
 	public static void assumingThat(boolean assumption, Executable executable) {
 		if (assumption) {
 			try {

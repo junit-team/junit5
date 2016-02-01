@@ -10,7 +10,10 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import org.junit.gen5.commons.JUnitException;
+import org.junit.gen5.commons.meta.API;
 
 /**
  * Thrown if an error is encountered in the configuration or execution of a
@@ -19,6 +22,7 @@ import org.junit.gen5.commons.JUnitException;
  * @since 5.0
  * @see MethodParameterResolver
  */
+@API(Experimental)
 public class ParameterResolutionException extends JUnitException {
 
 	private static final long serialVersionUID = 5137237798019406636L;

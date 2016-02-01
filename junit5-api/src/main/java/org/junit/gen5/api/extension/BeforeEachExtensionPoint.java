@@ -10,6 +10,10 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * {@code BeforeEachExtensionPoint} defines the API for {@link Extension
  * Extensions} that wish to provide additional behavior to tests before
@@ -26,6 +30,7 @@ package org.junit.gen5.api.extension;
  * @see AfterAllExtensionPoint
  */
 @FunctionalInterface
+@API(Experimental)
 public interface BeforeEachExtensionPoint extends ExtensionPoint {
 
 	/**

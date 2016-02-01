@@ -10,8 +10,11 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.util.Optional;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
@@ -20,6 +23,7 @@ import org.junit.gen5.commons.util.ToStringBuilder;
  *
  * @since 5.0
  */
+@API(Experimental)
 public class ConditionEvaluationResult {
 
 	/**

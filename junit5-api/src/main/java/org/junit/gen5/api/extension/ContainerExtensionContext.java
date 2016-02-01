@@ -10,12 +10,17 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
+
 /**
  * {@code ContainerExtensionContext} encapsulates the <em>context</em> in which
  * the current container is being executed.
  *
  * @since 5.0
  */
+@API(Experimental)
 public interface ContainerExtensionContext extends ExtensionContext {
 
 }

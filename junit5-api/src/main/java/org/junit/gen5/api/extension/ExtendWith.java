@@ -10,6 +10,8 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -17,6 +19,8 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.junit.gen5.commons.meta.API;
 
 /**
  * {@code @ExtendWith} is a {@linkplain Repeatable repeatable} annotation
@@ -44,6 +48,7 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 @Repeatable(Extensions.class)
+@API(Experimental)
 public @interface ExtendWith {
 
 	Class<? extends Extension>[]value();
