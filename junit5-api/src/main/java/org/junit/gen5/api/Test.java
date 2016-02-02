@@ -10,7 +10,6 @@
 
 package org.junit.gen5.api;
 
-import static org.junit.gen5.commons.meta.API.Usage.Maintained;
 import static org.junit.gen5.commons.meta.API.Usage.Stable;
 
 import java.lang.annotation.Documented;
