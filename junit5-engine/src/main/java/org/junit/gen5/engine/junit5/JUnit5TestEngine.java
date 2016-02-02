@@ -12,11 +12,13 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
+import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.GlobalExtensionContext;
 import org.junit.gen5.engine.junit5.discovery.DiscoverySelectorResolver;
 import org.junit.gen5.engine.junit5.discovery.JUnit5EngineDescriptor;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
@@ -55,6 +57,20 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 
 	@Override
 	protected JUnit5EngineExecutionContext createExecutionContext(ExecutionRequest request) {
-		return new JUnit5EngineExecutionContext(request.getEngineExecutionListener());
+
+		ExtensionContext rootExtensionContext = new GlobalExtensionContext(request.getEngineExecutionListener(),
+			request.getRootTestDescriptor());
+
+		// populate extension-context-store from request attributes
+		request.getAttributes().entrySet().forEach(
+			entry -> rootExtensionContext.getStore().put(entry.getKey(), entry.getValue()));
+
+		// @formatter:off
+		return new JUnit5EngineExecutionContext(request.getEngineExecutionListener())
+				.extend()
+				.withExtensionContext(rootExtensionContext)
+				.build();
+		// @formatter:on
+
 	}
 }

@@ -10,13 +10,18 @@
 
 package org.junit.gen5.launcher.main;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import org.junit.gen5.commons.JUnitException;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.FilterResult;
+import org.junit.gen5.engine.GlobalExtensionPoint;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.launcher.Launcher;
@@ -95,11 +100,25 @@ class DefaultLauncher implements Launcher {
 		testExecutionListener.testPlanExecutionStarted(testPlan);
 		ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(testPlan,
 			testExecutionListener);
+
+		Iterable<GlobalExtensionPoint> globalExtensionPoints = getGlobalExtensionPoints();
+
+		Map<String, Object> requestAttributes = new HashMap<>();
+		globalExtensionPoints.forEach(globalExtensionPoint -> globalExtensionPoint.beforeExecute(requestAttributes));
+
 		for (TestEngine testEngine : root.getTestEngines()) {
 			TestDescriptor testDescriptor = root.getTestDescriptorFor(testEngine);
-			testEngine.execute(new ExecutionRequest(testDescriptor, engineExecutionListener));
+			ExecutionRequest request = new ExecutionRequest(testDescriptor, engineExecutionListener);
+			request.getAttributes().putAll(requestAttributes);
+			testEngine.execute(request);
 		}
+
+		globalExtensionPoints.forEach(globalExtensionPoint -> globalExtensionPoint.afterExecute(requestAttributes));
 		testExecutionListener.testPlanExecutionFinished(testPlan);
+	}
+
+	private Iterable<GlobalExtensionPoint> getGlobalExtensionPoints() {
+		return ServiceLoader.load(GlobalExtensionPoint.class, ReflectionUtils.getDefaultClassLoader());
 	}
 
 }
