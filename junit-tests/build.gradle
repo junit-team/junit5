@@ -50,21 +50,29 @@ task cloverInstrument {
     def cloverDir = file("$buildDir/clover")
 	def instrumentedSourcesDir = file("$cloverDir/instrumentedSources")
     outputs.dir cloverDir
+	compileTestJava.dependsOn cloverInstrument
     doLast {
 		ant.taskdef(resource:'cloverlib.xml', classpath: configurations.clover.asPath)
 		ant.property(name: 'clover.license.path', value: rootProject.file('clover.license').absolutePath)
 		ant.'clover-instr'(
 			initstring: "$cloverDir/coverage.db",
 			destdir: instrumentedSourcesDir,
-			source: compileJava.sourceCompatibility) {
+			source: compileTestJava.sourceCompatibility) {
 			testedProjects.each { project ->
 				project.sourceSets.main.allJava.addToAntBuilder(ant, 'fileset', FileCollection.AntType.FileSet)
 			}
+			sourceSets.test.allJava.addToAntBuilder(ant, 'fileset', FileCollection.AntType.FileSet)
+			testsources(dir: sourceSets.test.allJava.srcDirs[0].absolutePath) {
+				testclass(name: '.*Tests?') {
+					testmethod(annotation: 'org.junit.gen5.api.Test')
+				}
+			}
 		}
-		compileJava.source instrumentedSourcesDir
+		compileTestJava.source = instrumentedSourcesDir
+		compileTestJava.classpath = configurations.testRuntime.plus(configurations.clover)
 		testedProjects.each { project ->
-			compileJava.classpath = compileJava.classpath.plus(project.compileJava.classpath)
+			compileTestJava.classpath = compileTestJava.classpath.plus(project.configurations.runtime)
 		}
-		compileJava.classpath = compileJava.classpath.plus(configurations.clover)
+		sourceSets.test.runtimeClasspath = files(instrumentedSourcesDir).plus(compileTestJava.classpath)
     }
 }
