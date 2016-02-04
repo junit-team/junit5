@@ -364,7 +364,7 @@ class XmlReportsWritingListenerTests {
 		listener.executionFinished(testPlan.getTestIdentifier(new TestId("engine")), successful());
 
 		String content = readValidXmlFile(tempDirectory.resolve("TEST-engine.xml"));
-		testReporter.publishEntry("xml", content);
+		//testReporter.publishEntry("xml", content);
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
