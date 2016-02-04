@@ -6,7 +6,14 @@ jar {
 	}
 }
 
+junit5 {
+	runJunit4 true
+}
+
 dependencies {
 	compile localGroovy()
 	compile gradleApi()
+	testCompile(group: 'org.spockframework', name: 'spock-core', version: '1.0-groovy-2.4') {
+		transitive = false
+	}
 }

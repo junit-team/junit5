@@ -11,48 +11,52 @@ package org.junit.gen5.gradle
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.JavaExec
 
 class JUnit5Plugin implements Plugin<Project> {
 	void apply(Project project) {
 		def junit5 = project.extensions.create('junit5', JUnit5Extension)
 
 		project.afterEvaluate {
+			configure(project, junit5)
+		}
+	}
 
-			if (junit5.version) {
-				def junit5Version = junit5.version
-				project.dependencies.add("testRuntime", "org.junit:junit-console:${junit5Version}")
-				project.dependencies.add("testCompile", "org.junit:junit5-api:${junit5Version}")
-				project.dependencies.add("testRuntime", "org.junit:junit5-engine:${junit5Version}")
+	void configure(Project project, junit5) {
+		if (junit5.version) {
+			def junit5Version = junit5.version
+			project.dependencies.add("testRuntime", "org.junit:junit-console:${junit5Version}")
+			project.dependencies.add("testCompile", "org.junit:junit5-api:${junit5Version}")
+			project.dependencies.add("testRuntime", "org.junit:junit5-engine:${junit5Version}")
 
-				if (junit5.runJunit4) {
-					project.dependencies.add("testRuntime", "org.junit:junit4-engine:${junit5Version}")
-				}
+			if (junit5.runJunit4) {
+				project.dependencies.add("testRuntime", "org.junit:junit4-engine:${junit5Version}")
+			}
+		}
+
+		project.task('junit5Test', group: 'verification', type: JavaExec) { task ->
+
+			task.description = 'Runs JUnit 5 tests.'
+
+			task.inputs.property('version', junit5.version)
+			task.inputs.property('runJunit4', junit5.runJunit4)
+			task.inputs.property('classNameFilter', junit5.classNameFilter)
+			task.inputs.property('requireTags', junit5.requireTags)
+			task.inputs.property('excludeTags', junit5.excludeTags)
+
+			def reportsDir = junit5.reportsDir ?: project.file("build/test-results/junit5")
+			task.outputs.dir reportsDir
+
+			if (junit5.logManager) {
+				systemProperty 'java.util.logging.manager', junit5.logManager
 			}
 
-			project.task('junit5Test', group: 'verification', type: org.gradle.api.tasks.JavaExec) { task ->
+			defineTaskDependencies(project, task, junit5)
 
-				task.description = 'Runs JUnit 5 tests.'
+			task.classpath = project.sourceSets.test.runtimeClasspath
+			task.main = 'org.junit.gen5.console.ConsoleRunner'
 
-				task.inputs.property('version', junit5.version)
-				task.inputs.property('runJunit4', junit5.runJunit4)
-				task.inputs.property('classNameFilter', junit5.classNameFilter)
-				task.inputs.property('requireTags', junit5.requireTags)
-				task.inputs.property('excludeTags', junit5.excludeTags)
-
-				def reportsDir = junit5.reportsDir ?: project.file("build/test-results/junit5")
-				task.outputs.dir reportsDir
-
-				if (junit5.logManager) {
-					systemProperty 'java.util.logging.manager', junit5.logManager
-				}
-
-				defineTaskDependencies(project, task, junit5)
-
-				task.classpath = project.sourceSets.test.runtimeClasspath
-				task.main = 'org.junit.gen5.console.ConsoleRunner'
-
-				task.args buildArgs(project, junit5, reportsDir)
-			}
+			task.args buildArgs(project, junit5, reportsDir)
 		}
 	}
 
