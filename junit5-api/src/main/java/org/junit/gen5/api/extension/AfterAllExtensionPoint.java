@@ -39,7 +39,7 @@ public interface AfterAllExtensionPoint extends ExtensionPoint {
 	 */
 	ExtensionPointConfiguration CONFIG = new ExtensionPointConfiguration(
 		new ExtensionPointRegistry.Position[] { OUTERMOST, OUTSIDE_DEFAULT, DEFAULT, INSIDE_DEFAULT, INNERMOST },
-		ExtensionPointRegistry.ApplicationOrder.BACKWARD);
+		ExtensionPointRegistry.Position.DEFAULT, ExtensionPointRegistry.ApplicationOrder.BACKWARD);
 
 	/**
 	 * Callback that is invoked <em>after</em> all test methods have been invoked.

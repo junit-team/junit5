@@ -34,7 +34,7 @@ public interface InstancePostProcessor extends ExtensionPoint {
 	 * Configuration for {@code ExceptionHandlerExtensionPoint}
 	 */
 	ExtensionPointConfiguration CONFIG = new ExtensionPointConfiguration(
-		new ExtensionPointRegistry.Position[] { FIRST, DEFAULT, LAST },
+		new ExtensionPointRegistry.Position[] { FIRST, DEFAULT, LAST }, ExtensionPointRegistry.Position.DEFAULT,
 		ExtensionPointRegistry.ApplicationOrder.FORWARD);
 
 	/**

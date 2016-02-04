@@ -51,7 +51,7 @@ public class ExtensionPointConfiguration {
 	 * in {@link ExtensionPointRegistry.ApplicationOrder#FORWARD FORWARD} order.
 	 */
 	public static ExtensionPointConfiguration DEFAULT = new ExtensionPointConfiguration(
-		new Position[] { Position.DEFAULT }, ExtensionPointRegistry.ApplicationOrder.FORWARD);
+		new Position[] { Position.DEFAULT }, Position.DEFAULT, ExtensionPointRegistry.ApplicationOrder.FORWARD);
 
 	public Position[] getAllowedPositions() {
 		return allowedPositions;
@@ -62,11 +62,24 @@ public class ExtensionPointConfiguration {
 	}
 
 	private final Position[] allowedPositions;
+
+	/**
+	 * The defaultPosition for a given extension point type. Currently all have Position.DEFAULT,
+	 * but others are probable, eg. Position.UNIQUE for extension points that can only be registered once.
+	 */
+	//TODO: Is not used yet, but should be used during extension point registration.
+	// That will require to register all extension points individually though.
+	public Position getDefaultPosition() {
+		return defaultPosition;
+	}
+
+	private final Position defaultPosition;
 	private final ExtensionPointRegistry.ApplicationOrder applicationOrder;
 
-	public ExtensionPointConfiguration(Position[] allowedPositions,
+	public ExtensionPointConfiguration(Position[] allowedPositions, Position defaultPosition,
 			ExtensionPointRegistry.ApplicationOrder applicationOrder) {
 		this.allowedPositions = allowedPositions;
+		this.defaultPosition = defaultPosition;
 		this.applicationOrder = applicationOrder;
 	}
 }

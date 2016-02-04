@@ -39,7 +39,7 @@ public interface BeforeEachExtensionPoint extends ExtensionPoint {
 	 */
 	ExtensionPointConfiguration CONFIG = new ExtensionPointConfiguration(
 		new ExtensionPointRegistry.Position[] { OUTERMOST, OUTSIDE_DEFAULT, DEFAULT, INSIDE_DEFAULT, INNERMOST },
-		ExtensionPointRegistry.ApplicationOrder.FORWARD);
+		ExtensionPointRegistry.Position.DEFAULT, ExtensionPointRegistry.ApplicationOrder.FORWARD);
 
 	/**
 	 * Callback that is invoked <em>before</em> each test method has been invoked.

@@ -40,7 +40,7 @@ public interface AfterEachExtensionPoint extends ExtensionPoint {
 	 */
 	ExtensionPointConfiguration CONFIG = new ExtensionPointConfiguration(
 		new ExtensionPointRegistry.Position[] { OUTERMOST, OUTSIDE_DEFAULT, DEFAULT, INSIDE_DEFAULT, INNERMOST },
-		ExtensionPointRegistry.ApplicationOrder.BACKWARD);
+		ExtensionPointRegistry.Position.DEFAULT, ExtensionPointRegistry.ApplicationOrder.BACKWARD);
 
 	/**
 	 * Callback that is invoked after each test

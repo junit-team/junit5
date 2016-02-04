@@ -224,7 +224,7 @@ interface MyExtensionPoint extends ExtensionPoint {
 	 * Configuration for {@code BeforeEachExtensionPoint}
 	 */
 	ExtensionPointConfiguration CONFIG = new ExtensionPointConfiguration(
-		new ExtensionPointRegistry.Position[] { FIRST, DEFAULT, LAST },
+		new ExtensionPointRegistry.Position[] { FIRST, DEFAULT, LAST }, Position.DEFAULT,
 		ExtensionPointRegistry.ApplicationOrder.FORWARD);
 
 	void doNothing(String test);

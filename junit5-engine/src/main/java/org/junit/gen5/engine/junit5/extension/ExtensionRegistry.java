@@ -215,6 +215,8 @@ public class ExtensionRegistry {
 	}
 
 	public void registerExtensionPoint(ExtensionPoint extension, Object source) {
+		//TODO: Use an extension type's config.getDefaultPosition() instead of Position.DEFAULT.
+		// That requires the individual registration per extension point type.
 		registerExtensionPoint(extension, source, Position.DEFAULT);
 	}
 
