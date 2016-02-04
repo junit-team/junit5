@@ -10,6 +10,8 @@
 package org.junit.gen5.gradle
 
 import org.gradle.api.Project
+import org.gradle.api.Task
+import org.gradle.api.tasks.JavaExec
 import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification
 
@@ -31,8 +33,9 @@ class JUnit5PluginSpec extends Specification {
 			project.extensions.findByName('junit5') instanceof JUnit5Extension
 	}
 
-	def "setting extension params"() {
+	def "setting junit5 properties"() {
 
+		project.apply plugin: 'java'
 		project.apply plugin: 'org.junit.gen5.gradle'
 
 		when:
@@ -45,13 +48,38 @@ class JUnit5PluginSpec extends Specification {
 				excludeTag 'slow'
 				reportsDir new File("any")
 			}
-			//JUnit5Plugin plugin = project.plugins.getPlugin(JUnit5Plugin)
-			//JUnit5Extension junit5Extension = project.extensions.findByName('junit5')
-			//Todo: somehow set the project's configurations otherwise configure() will throw NPE
-			// plugin.configure(project, junit5Extension)
 		then:
-			//Task junit5TestTask = project.tasks.findByName('junit5test')
-			//junit5TestTask != null
 			true == true
+	}
+
+	def "creating junit5Test task"() {
+
+		project.apply plugin: 'java'
+		project.apply plugin: 'org.junit.gen5.gradle'
+
+		when:
+			project.junit5 {
+				//version '5.0.0-Alpha' // cannot be set in micro test
+				//runJunit4 true // cannot be set in micro test
+				matchClassName '.*Tests?'
+				logManager 'org.apache.logging.log4j.jul.LogManager'
+				requireTag 'fast'
+				excludeTag 'slow'
+				reportsDir new File("/any")
+			}
+			project.evaluate()
+
+		then:
+			Task junit5TestTask = project.tasks.findByName('junit5Test')
+			junit5TestTask instanceof JavaExec
+			junit5TestTask.main == 'org.junit.gen5.console.ConsoleRunner'
+
+			junit5TestTask.args.contains('--enable-exit-code')
+			junit5TestTask.args.contains('--hide-details')
+			junit5TestTask.args.contains('--all')
+			junit5TestTask.args.containsAll('-n', '.*Tests?')
+			junit5TestTask.args.containsAll('-t', 'fast')
+			junit5TestTask.args.containsAll('-T', 'slow')
+			junit5TestTask.args.containsAll('-r', '/any')
 	}
 }

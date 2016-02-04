@@ -22,7 +22,7 @@ class JUnit5Plugin implements Plugin<Project> {
 		}
 	}
 
-	void configure(Project project, junit5) {
+	private void configure(Project project, junit5) {
 		if (junit5.version) {
 			def junit5Version = junit5.version
 			project.dependencies.add("testRuntime", "org.junit:junit-console:${junit5Version}")
