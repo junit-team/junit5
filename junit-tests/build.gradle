@@ -1,4 +1,3 @@
-apply plugin: 'jacoco'
 apply plugin: 'org.junit.gen5.gradle'
 
 jar.enabled = false
@@ -16,6 +15,12 @@ junit5 {
 	// excludeTag 'slow'
 }
 
+
+configurations {
+	clover {}
+	tested {}
+}
+
 def testedProjects = [
 	project(':junit-commons'),
 	project(':junit-console'),
@@ -29,7 +34,7 @@ def testedProjects = [
 
 dependencies {
 	testedProjects.each { project ->
-		testCompile(project)
+		tested(project)
 	}
 
 	testCompile("org.assertj:assertj-core:${assertJVersion}")
@@ -37,31 +42,29 @@ dependencies {
 
 	testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
+
+    clover 'com.atlassian.clover:clover:4.1.1'
 }
 
-// The JUnit5Plugin registers the junit5Test task *after* the project has
-// been evaluated. We can therefore only configure the junit5Test task
-// once it actually exists.
-afterEvaluate {
-
-	jacoco {
-		toolVersion = '0.7.4.201502262128'
-		applyTo junit5Test
-	}
-
-	task junit5CodeCoverageReport(type:JacocoReport){
-		executionData junit5Test
-		sourceSets sourceSets.main
-		sourceDirectories = files()
-		classDirectories = files()
+task cloverInstrument {
+    def cloverDir = file("$buildDir/clover")
+	def instrumentedSourcesDir = file("$cloverDir/instrumentedSources")
+    outputs.dir cloverDir
+    doLast {
+		ant.taskdef(resource:'cloverlib.xml', classpath: configurations.clover.asPath)
+		ant.property(name: 'clover.license.path', value: rootProject.file('clover.license').absolutePath)
+		ant.'clover-instr'(
+			initstring: "$cloverDir/coverage.db",
+			destdir: instrumentedSourcesDir,
+			source: compileJava.sourceCompatibility) {
+			testedProjects.each { project ->
+				project.sourceSets.main.allJava.addToAntBuilder(ant, 'fileset', FileCollection.AntType.FileSet)
+			}
+		}
+		compileJava.source instrumentedSourcesDir
 		testedProjects.each { project ->
-			sourceDirectories = files(sourceDirectories, project.sourceSets.main.allSource.srcDirs)
-			classDirectories = files(classDirectories, project.sourceSets.main.output)
+			compileJava.classpath = compileJava.classpath.plus(project.compileJava.classpath)
 		}
-		reports {
-			xml.enabled = true
-			html.enabled = true
-		}
-	}
-
+		compileJava.classpath = compileJava.classpath.plus(configurations.clover)
+    }
 }
