@@ -43,6 +43,7 @@ class ExtensionPointSorter {
 	 */
 	public <T extends ExtensionPoint> void sort(List<RegisteredExtensionPoint<T>> registeredExtensionPoints,
 			Position[] allowedPositions) {
+		//Todo: This checking should take place during registration in ExtensionRegistry.
 		checkNoUniquePositionConflict(registeredExtensionPoints, allowedPositions);
 		registeredExtensionPoints.sort(new DefaultComparator());
 	}

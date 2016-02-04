@@ -143,9 +143,9 @@ public class ExtensionRegistryTests {
 	@Test
 	void registerExtensionPointWithNotAllowedPositionFails() {
 		ExtensionConfigurationException ex = expectThrows(ExtensionConfigurationException.class,
-			() -> registry.registerExtension(FaultyExtensionRegistrar.class));
+			() -> registry.registerExtension(RegistrarUsingNotAllowedPosition.class));
 		assertTrue(ex.getMessage().startsWith("'Position.OUTERMOST' not allowed:"));
-		assertTrue(ex.getMessage().contains(FaultyExtensionRegistrar.class.getName()));
+		assertTrue(ex.getMessage().contains(RegistrarUsingNotAllowedPosition.class.getName()));
 	}
 
 	@Test
@@ -279,7 +279,7 @@ class MyExtensionRegistrar implements ExtensionRegistrar {
 	}
 }
 
-class FaultyExtensionRegistrar implements ExtensionRegistrar {
+class RegistrarUsingNotAllowedPosition implements ExtensionRegistrar {
 
 	@Override
 	public void registerExtensions(ExtensionPointRegistry registry) {
