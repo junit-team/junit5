@@ -6,10 +6,6 @@ jar {
 	}
 }
 
-junit5 {
-	runJunit4 true
-}
-
 dependencies {
 	compile localGroovy()
 	compile gradleApi()

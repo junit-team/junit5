@@ -27,6 +27,8 @@ class JUnit5PluginSpec extends Specification {
 			project.apply plugin: 'org.junit.gen5.gradle'
 		then:
 			project.plugins.hasPlugin(JUnit5Plugin)
+			project.plugins.getPlugin(JUnit5Plugin) instanceof JUnit5Plugin
+			project.extensions.findByName('junit5') instanceof JUnit5Extension
 	}
 
 	def "setting extension params"() {
@@ -36,9 +38,17 @@ class JUnit5PluginSpec extends Specification {
 		when:
 			project.junit5 {
 				version '5.0.0-Alpha'
+				runJunit4 true
+				matchClassName '.*Tests?'
+				logManager 'org.apache.logging.log4j.jul.LogManager'
+				requireTag 'fast'
+				excludeTag 'slow'
+				reportsDir new File("any")
 			}
-			JUnit5Plugin plugin = project.plugins.getPlugin(JUnit5Plugin)
-			//plugin.configure(project, project.extensions.findByName('junit5'))
+			//JUnit5Plugin plugin = project.plugins.getPlugin(JUnit5Plugin)
+			//JUnit5Extension junit5Extension = project.extensions.findByName('junit5')
+			//Todo: somehow set the project's configurations otherwise configure() will throw NPE
+			// plugin.configure(project, junit5Extension)
 		then:
 			//Task junit5TestTask = project.tasks.findByName('junit5test')
 			//junit5TestTask != null
