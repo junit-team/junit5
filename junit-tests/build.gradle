@@ -51,6 +51,12 @@ task cloverInstrument {
 	def instrumentedSourcesDir = file("$cloverDir/instrumentedSources")
     outputs.dir cloverDir
 	compileTestJava.dependsOn cloverInstrument
+	compileTestJava.source = instrumentedSourcesDir
+	compileTestJava.classpath = configurations.testRuntime.plus(configurations.clover)
+	testedProjects.each { project ->
+		compileTestJava.classpath = compileTestJava.classpath.plus(files(project.configurations.runtime, project.sourceSets.main.output.resourcesDir))
+	}
+	sourceSets.test.runtimeClasspath = files(sourceSets.test.output.classesDir, sourceSets.test.output.resourcesDir, compileTestJava.classpath)
     doLast {
 		ant.taskdef(resource:'cloverlib.xml', classpath: configurations.clover.asPath)
 		ant.property(name: 'clover.license.path', value: rootProject.file('clover.license').absolutePath)
@@ -68,11 +74,5 @@ task cloverInstrument {
 				}
 			}
 		}
-		compileTestJava.source = instrumentedSourcesDir
-		compileTestJava.classpath = configurations.testRuntime.plus(configurations.clover)
-		testedProjects.each { project ->
-			compileTestJava.classpath = compileTestJava.classpath.plus(project.configurations.runtime)
-		}
-		sourceSets.test.runtimeClasspath = files(instrumentedSourcesDir).plus(compileTestJava.classpath)
     }
 }
