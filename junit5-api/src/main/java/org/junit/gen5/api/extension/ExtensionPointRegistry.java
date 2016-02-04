@@ -10,14 +10,13 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.lang.reflect.Field;
 import java.util.Optional;
 
-import org.junit.gen5.commons.util.ReflectionUtils;
-
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
-
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * A registry for {@link ExtensionPoint} implementations which can be
