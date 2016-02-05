@@ -51,10 +51,10 @@ final class RunListenerAdapter implements TestExecutionListener {
 		if (testExecutionResult.getStatus() == ABORTED) {
 			runListener.testAssumptionFailure(createReportEntry(testIdentifier, testExecutionResult.getThrowable()));
 		}
-		if (testExecutionResult.getStatus() == FAILED) {
+		else if (testExecutionResult.getStatus() == FAILED) {
 			runListener.testFailed(createReportEntry(testIdentifier, testExecutionResult.getThrowable()));
 		}
-		if (testIdentifier.isTest()) {
+		else if (testIdentifier.isTest()) {
 			runListener.testSucceeded(createReportEntry(testIdentifier));
 		}
 	}
