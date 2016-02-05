@@ -16,7 +16,7 @@ The [JUnit 5 Javadoc] is available online.
 
 ## Continuous Integration Builds
 
-[![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg?branch=master)](https://travis-ci.org/junit-team/junit5) [![codecov.io](https://codecov.io/github/junit-team/junit5/coverage.svg?branch=master)](https://codecov.io/github/junit-team/junit5?branch=master)
+[![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg?branch=master)](https://travis-ci.org/junit-team/junit5)
 
 ## Code Coverage
 
