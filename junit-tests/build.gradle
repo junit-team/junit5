@@ -38,44 +38,47 @@ dependencies {
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 }
 
-def cloverAggregationFile = "$cloverDir/aggregated.db"
+if (project.hasProperty('enableClover')) {
 
-task cloverAggregateDatabases(dependsOn: cloverTaskdef) {
-	outputs.file cloverAggregationFile
-	doLast {
-		ant.'clover-merge'(initString: cloverAggregationFile) {
-			testedProjects.each { project ->
-				def cloverDbFile = project.file("${project.cloverDir}/coverage.db")
-				if(cloverDbFile.exists()) {
-					cloverDb(initString: cloverDbFile.canonicalPath)
+	def cloverAggregationFile = "$cloverDir/aggregated.db"
+
+	task cloverAggregateDatabases(dependsOn: cloverTaskdef) {
+		outputs.file cloverAggregationFile
+		doLast {
+			ant.'clover-merge'(initString: cloverAggregationFile) {
+				testedProjects.each { project ->
+					def cloverDbFile = project.file(project.cloverInitstring)
+					if(cloverDbFile.exists()) {
+						cloverDb(initString: project.cloverInitstring)
+					}
 				}
 			}
 		}
 	}
-}
 
-task cloverHtmlReport(dependsOn: cloverAggregateDatabases) {
-	outputs.dir "$buildDir/reports/clover/html"
-	doLast {
-		ant."clover-report"(initString: cloverAggregationFile) {
-			current(outfile: "$buildDir/reports/clover/html", title: rootProject.description) {
-				format(type: 'html')
+	task cloverHtmlReport(dependsOn: cloverAggregateDatabases) {
+		outputs.dir "$buildDir/reports/clover/html"
+		doLast {
+			ant."clover-report"(initString: cloverAggregationFile) {
+				current(outfile: "$buildDir/reports/clover/html", title: rootProject.description) {
+					format(type: 'html')
+				}
 			}
 		}
 	}
-}
 
-task cloverXmlReport(dependsOn: cloverAggregateDatabases) {
-	outputs.file "$buildDir/reports/clover/clover.xml"
-	doLast {
-		ant."clover-report"(initString: cloverAggregationFile) {
-			current(outfile: "$buildDir/reports/clover/clover.xml") {
-				format(type: 'xml')
+	task cloverXmlReport(dependsOn: cloverAggregateDatabases) {
+		outputs.file "$buildDir/reports/clover/clover.xml"
+		doLast {
+			ant."clover-report"(initString: cloverAggregationFile) {
+				current(outfile: "$buildDir/reports/clover/clover.xml") {
+					format(type: 'xml')
+				}
 			}
 		}
 	}
-}
 
-afterEvaluate {
-	cloverAggregateDatabases.dependsOn junit5Test
+	afterEvaluate {
+		cloverAggregateDatabases.dependsOn junit5Test
+	}
 }

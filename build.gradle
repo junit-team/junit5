@@ -74,40 +74,45 @@ allprojects {
 		}
 	}
 
-	configurations {
-		clover
-	}
+	if (project.hasProperty('enableClover')) {
 
-	dependencies {
-		clover 'com.atlassian.clover:clover:4.1.1'
-	}
+		configurations {
+			clover
+		}
 
-	ext.cloverDir = file("$buildDir/clover")
-	ext.instrumentedSourcesDir = file("$cloverDir/instrumentedSources")
+		dependencies {
+			clover 'com.atlassian.clover:clover:4.1.1'
+		}
 
-	task cloverTaskdef {
-		ant.taskdef(resource:'cloverlib.xml', classpath: configurations.clover.asPath)
-		ant.property(name: 'clover.license.path', value: rootProject.file('clover.license').absolutePath)
-	}
+		ext.cloverDir = file("$buildDir/clover")
+		ext.cloverInitstring = "$cloverDir/coverage.db"
 
-	task cloverInstrument(dependsOn: cloverTaskdef) {
-		outputs.dir cloverDir
-		onlyIf { sourceSets.main.allJava.any { it.exists() } }
-		doLast {
-			ant.'clover-instr'(
-				initstring: "$cloverDir/coverage.db",
-				recordTestResults: false,
-				destdir: instrumentedSourcesDir,
-				source: compileJava.sourceCompatibility) {
+		def instrumentedSourcesDir = file("$cloverDir/instrumentedSources")
+
+		task cloverTaskdef {
+			ant.taskdef(resource:'cloverlib.xml', classpath: configurations.clover.asPath)
+			ant.property(name: 'clover.license.path', value: rootProject.file('clover.license').absolutePath)
+		}
+
+		task cloverInstrument(dependsOn: cloverTaskdef) {
+			outputs.dir cloverDir
+			onlyIf { sourceSets.main.allJava.any { it.exists() } }
+			doLast {
+				ant.'clover-instr'(
+					initstring: "$cloverDir/coverage.db",
+					recordTestResults: false,
+					destdir: instrumentedSourcesDir,
+					source: compileJava.sourceCompatibility) {
 					sourceSets.main.allJava.addToAntBuilder(ant, 'fileset', FileCollection.AntType.FileSet)
+				}
 			}
 		}
-	}
 
-	compileJava.source = instrumentedSourcesDir
-	sourceSets.main.compileClasspath += configurations.clover
-	sourceSets.test.runtimeClasspath += configurations.clover
-	compileJava.dependsOn cloverInstrument
+		compileJava.source = instrumentedSourcesDir
+		sourceSets.main.compileClasspath += configurations.clover
+		sourceSets.test.runtimeClasspath += configurations.clover
+		compileJava.dependsOn cloverInstrument
+	}
 }
 
 subprojects {
