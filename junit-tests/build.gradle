@@ -38,36 +38,12 @@ dependencies {
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 }
 
-def instrumentedTestsDir = file("$cloverDir/instrumentedTests")
-
-task cloverTestInstrument(dependsOn: cloverTaskdef) {
-	outputs.dir cloverDir
-	doLast {
-		ant.'clover-instr'(
-			initstring: "$cloverDir/coverage.db",
-			destdir: instrumentedTestsDir,
-			source: compileTestJava.sourceCompatibility) {
-				sourceSets.test.allJava.addToAntBuilder(ant, 'fileset', FileCollection.AntType.FileSet)
-				testsources(dir: sourceSets.test.allJava.srcDirs[0].absolutePath) {
-					testclass(name: '[^.]*Tests?(\\.((?!TestCase).)*)?$') {
-						testmethod(annotation: '.*Test')
-					}
-				}
-		}
-	}
-}
-
-compileTestJava.source = instrumentedTestsDir
-compileTestJava.classpath += configurations.clover
-compileTestJava.dependsOn cloverTestInstrument
-
 def cloverAggregationFile = "$cloverDir/aggregated.db"
 
 task cloverAggregateDatabases(dependsOn: cloverTaskdef) {
 	outputs.file cloverAggregationFile
 	doLast {
 		ant.'clover-merge'(initString: cloverAggregationFile) {
-			cloverDb(initString: "$cloverDir/coverage.db")
 			testedProjects.each { project ->
 				def cloverDbFile = project.file("${project.cloverDir}/coverage.db")
 				if(cloverDbFile.exists()) {
@@ -93,7 +69,7 @@ task cloverXmlReport(dependsOn: cloverAggregateDatabases) {
 	outputs.file "$buildDir/reports/clover/clover.xml"
 	doLast {
 		ant."clover-report"(initString: cloverAggregationFile) {
-			current(outfile: "$buildDir/reports/clover/clover.xml", title: rootProject.description) {
+			current(outfile: "$buildDir/reports/clover/clover.xml") {
 				format(type: 'xml')
 			}
 		}
