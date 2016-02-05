@@ -90,8 +90,10 @@ allprojects {
 		def instrumentedSourcesDir = file("$cloverDir/instrumentedSources")
 
 		task cloverTaskdef {
+			def cloverLicensePath = project.hasProperty('clover.license.path')
+					? project.property('clover.license.path') : rootProject.file('clover.license').absolutePath
 			ant.taskdef(resource:'cloverlib.xml', classpath: configurations.clover.asPath)
-			ant.property(name: 'clover.license.path', value: rootProject.file('clover.license').absolutePath)
+			ant.property(name: 'clover.license.path', value: cloverLicensePath)
 		}
 
 		task cloverInstrument(dependsOn: cloverTaskdef) {
