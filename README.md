@@ -20,13 +20,10 @@ The [JUnit 5 Javadoc] is available online.
 
 ## Code Coverage
 
-Code coverage for the latest build is available online at
-[codecov.io](https://codecov.io/github/junit-team/junit5) and on a per-build basis using
-JaCoCo on the [Jenkins CI server](https://junit.ci.cloudbees.com/job/JUnit5/lastSuccessfulBuild/artifact/repo/junit-tests/build/reports/jacoco/junit5CodeCoverageReport/html/index.html).
+Code coverage using [Clover](https://www.atlassian.com/software/clover/) for the latest build is available on the [Jenkins CI server](https://junit.ci.cloudbees.com/job/JUnit5/lastSuccessfulBuild/artifact/clover/html/index.html).
 
-A code coverage report can also be generated locally by executing `gradlew
-junit5CodeCoverageReport`. The results will be available in
-`junit-tests/build/reports/jacoco/junit5CodeCoverageReport/html/index.html`.
+A code coverage report can also be generated locally by executing `gradlew -PenableClover clean cloverHtmlReport`. The results will be available in
+`junit-tests/build/reports/clover/html/index.html`.
 
 
 ## Building from Source
