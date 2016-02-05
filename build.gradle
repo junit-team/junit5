@@ -85,7 +85,7 @@ allprojects {
 		}
 
 		ext.cloverDir = file("$buildDir/clover")
-		ext.cloverInitstring = "$cloverDir/coverage.db"
+		ext.cloverInitstring = "$cloverDir/clover.db"
 
 		def instrumentedSourcesDir = file("$cloverDir/instrumentedSources")
 
@@ -101,7 +101,7 @@ allprojects {
 			onlyIf { sourceSets.main.allJava.any { it.exists() } }
 			doLast {
 				ant.'clover-instr'(
-					initstring: "$cloverDir/coverage.db",
+					initstring: cloverInitstring,
 					recordTestResults: false,
 					destdir: instrumentedSourcesDir,
 					source: compileJava.sourceCompatibility) {

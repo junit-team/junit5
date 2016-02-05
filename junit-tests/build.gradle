@@ -40,7 +40,7 @@ dependencies {
 
 if (project.hasProperty('enableClover')) {
 
-	def cloverAggregationFile = "$cloverDir/aggregated.db"
+	def cloverAggregationFile = "$cloverDir/coverage.db"
 
 	task cloverAggregateDatabases(dependsOn: cloverTaskdef) {
 		outputs.file cloverAggregationFile
