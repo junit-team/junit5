@@ -12,7 +12,8 @@ package org.junit.gen5.commons.util;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.function.Supplier;
 
 import org.junit.gen5.commons.meta.API;
@@ -80,34 +81,6 @@ public final class Preconditions {
 	public static <T> T notNull(T object, Supplier<String> messageSupplier) throws PreconditionViolationException {
 		condition(object != null, messageSupplier);
 		return object;
-	}
-
-	/**
-	 * Assert that the supplied {@link String} is not {@code null} or empty.
-	 *
-	 * @param str the string to check
-	 * @param message precondition violation message
-	 * @return the supplied string as a convenience
-	 * @throws PreconditionViolationException if the supplied string is {@code null} or empty
-	 * @see #notEmpty(String, Supplier)
-	 */
-	public static String notEmpty(String str, String message) throws PreconditionViolationException {
-		return notEmpty(str, () -> message);
-	}
-
-	/**
-	 * Assert that the supplied {@link String} is not {@code null} or empty.
-	 *
-	 * @param str the string to check
-	 * @param messageSupplier precondition violation message supplier
-	 * @return the supplied string as a convenience
-	 * @throws PreconditionViolationException if the supplied string is {@code null} or empty
-	 * @see StringUtils#isNotEmpty(CharSequence)
-	 * @see #condition(boolean, Supplier)
-	 */
-	public static String notEmpty(String str, Supplier<String> messageSupplier) throws PreconditionViolationException {
-		condition(StringUtils.isNotEmpty(str), messageSupplier);
-		return str;
 	}
 
 	/**

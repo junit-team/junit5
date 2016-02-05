@@ -36,39 +36,12 @@ public final class StringUtils {
 	}
 
 	/**
-	 * Determine if the supplied {@link CharSequence} is <em>empty</em> (i.e.,
-	 * {@code null} or zero-length).
-	 *
-	 * @param charSequence the {@code CharSequence} to check
-	 * @return {@code true} if the {@code CharSequence} is empty
-	 * @see #isNotEmpty(CharSequence)
-	 * @see #isBlank(String)
-	 */
-	public static boolean isEmpty(CharSequence charSequence) {
-		return (charSequence == null || charSequence.length() == 0);
-	}
-
-	/**
-	 * Determine if the supplied {@link CharSequence} is not {@linkplain #isEmpty
-	 * empty}.
-	 *
-	 * @param charSequence the {@code CharSequence} to check
-	 * @return {@code true} if the {@code CharSequence} is not empty
-	 * @see #isEmpty(CharSequence)
-	 * @see #isNotBlank(String)
-	 */
-	public static boolean isNotEmpty(CharSequence charSequence) {
-		return !isEmpty(charSequence);
-	}
-
-	/**
 	 * Determine if the supplied {@link String} is <em>blank</em> (i.e.,
 	 * {@code null} or consisting only of whitespace characters).
 	 *
 	 * @param str the string to check
 	 * @return {@code true} if the string is blank
 	 * @see #isNotBlank(String)
-	 * @see #isEmpty(CharSequence)
 	 */
 	public static boolean isBlank(String str) {
 		return (str == null || str.trim().length() == 0);
@@ -81,7 +54,6 @@ public final class StringUtils {
 	 * @param str the string to check
 	 * @return {@code true} if the string is not blank
 	 * @see #isBlank(String)
-	 * @see #isEmpty(CharSequence)
 	 */
 	public static boolean isNotBlank(String str) {
 		return !isBlank(str);
