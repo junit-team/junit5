@@ -51,7 +51,7 @@ gradlew clean install
 ## Dependency Metadata
 
 - **Group ID**: `org.junit`
-- **Version**: `5.0.0-SNAPSHOT`
+- **Version**: `5.0.0-ALPHA` OR `5.0.0-SNAPSHOT`
 - **Artifact IDs**:
 	- `junit-commons`
 	- `junit-console`
@@ -66,16 +66,6 @@ gradlew clean install
 
 See also: <https://oss.sonatype.org/content/repositories/snapshots/org/junit/>
 
-## Contributing
-
-At the current stage, we are not accepting pull requests for the following reasons.
-
-- **Legal reasons**: Any contributor will have to sign a contributor's agreement along the lines of [CONTRIBUTING.md]. The exact details have not been figured out yet, but we will contact you *before accepting your first pull request*.
-
-If you want to provide input in the interim, please use [the project's issue tracker](https://github.com/junit-team/junit5/issues) or send us comments via [Twitter].
-
-
-[CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
 [JUnit 5 Javadoc]: https://junit.ci.cloudbees.com/job/JUnit5/javadoc/
 [JUnit 5 User Guide]: http://junit-team.github.io/junit5/
 [Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
