@@ -20,7 +20,7 @@ The [JUnit 5 Javadoc] is available online.
 
 ## Code Coverage
 
-Code coverage using [Clover](https://www.atlassian.com/software/clover/) for the latest build is available on the [Jenkins CI server](https://junit.ci.cloudbees.com/job/JUnit5/lastSuccessfulBuild/artifact/clover/html/pkg-summary.html).
+Code coverage using [Clover](https://www.atlassian.com/software/clover/) for the latest build is available on the [Jenkins CI server](https://junit.ci.cloudbees.com/job/JUnit5/clover/).
 
 A code coverage report can also be generated locally by executing `gradlew -PenableClover clean cloverHtmlReport`. The results will be available in
 `junit-tests/build/reports/clover/html/index.html`.
