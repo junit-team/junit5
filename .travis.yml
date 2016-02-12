@@ -10,11 +10,4 @@ install: true
 script:
   - sudo apt-get update && sudo apt-get install oracle-java8-installer
   - java -version
-  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && ./gradlew -PenableClover check cloverXmlReport || ./gradlew check'
-
-before_install:
-  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && openssl aes-256-cbc -K $encrypted_a09ab8d62120_key -iv $encrypted_a09ab8d62120_iv -in clover.license.enc -out clover.license -d'
-  - pip install --user codecov
-
-after_success:
-  - codecov
+  - ./gradlew check
