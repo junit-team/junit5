@@ -10,6 +10,7 @@ install: true
 script:
   - sudo apt-get update && sudo apt-get install oracle-java8-installer
   - java -version
+  - echo ${TRAVIS_PULL_REQUEST}
   - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && ./gradlew -PenableClover check cloverXmlReport || ./gradlew check'
 
 before_install:
