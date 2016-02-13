@@ -80,6 +80,6 @@ class JUnit5PluginSpec extends Specification {
 			junit5TestTask.args.containsAll('-n', '.*Tests?')
 			junit5TestTask.args.containsAll('-t', 'fast')
 			junit5TestTask.args.containsAll('-T', 'slow')
-			junit5TestTask.args.containsAll('-r', '/any')
+			junit5TestTask.args.containsAll('-r', new File('/any').getCanonicalFile().toString())
 	}
 }
