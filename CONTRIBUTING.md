@@ -30,6 +30,7 @@ Code formatting is enforced using the [Spotless](https://github.com/diffplug/spo
 - Blank line before at-clauses/tags.
 - Prefer to use `{@code foo}` over `<code>foo</code>` (better escaping).
 - Use `@since 5.0` instead of `@since 5.0.0`.
+- Do _not_ use `@author`tags. Instead, we will list contributors on the website and in release notes.
 
 ### Tests
 
