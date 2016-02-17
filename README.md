@@ -2,7 +2,13 @@
 
 This repository is the home of the next generation of JUnit, _JUnit 5_.
 
-The project is currently in _Phase 3_, building the _Alpha 1 milestone_ which is based on feedback received for the [Prototype].
+The project is currently in _Phase 4_, working toward the first official [_milestone_](https://github.com/junit-team/junit5/milestones/5.0%20M1) release.
+
+[JUnit 5.0.0-ALPHA](https://github.com/junit-team/junit5/releases/tag/r5.0.0-ALPHA) was released on February 1st, 2016.
+
+## Roadmap
+
+Consult the wiki for details on the current [JUnit 5 roadmap](https://github.com/junit-team/junit5/wiki#roadmap).
 
 ## Documentation
 
