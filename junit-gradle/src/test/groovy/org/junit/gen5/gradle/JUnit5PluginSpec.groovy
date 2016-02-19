@@ -46,6 +46,7 @@ class JUnit5PluginSpec extends Specification {
 				logManager 'org.apache.logging.log4j.jul.LogManager'
 				requireTag 'fast'
 				excludeTag 'slow'
+				requireEngine 'junit5'
 				reportsDir new File("any")
 			}
 		then:
@@ -65,6 +66,7 @@ class JUnit5PluginSpec extends Specification {
 				logManager 'org.apache.logging.log4j.jul.LogManager'
 				requireTag 'fast'
 				excludeTag 'slow'
+				requireEngine 'junit5'
 				reportsDir new File("/any")
 			}
 			project.evaluate()
@@ -80,6 +82,7 @@ class JUnit5PluginSpec extends Specification {
 			junit5TestTask.args.containsAll('-n', '.*Tests?')
 			junit5TestTask.args.containsAll('-t', 'fast')
 			junit5TestTask.args.containsAll('-T', 'slow')
+			junit5TestTask.args.containsAll('-e', 'junit5')
 			junit5TestTask.args.containsAll('-r', new File('/any').getCanonicalFile().toString())
 	}
 }

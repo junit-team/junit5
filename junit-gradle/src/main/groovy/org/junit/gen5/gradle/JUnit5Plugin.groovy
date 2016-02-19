@@ -90,6 +90,11 @@ class JUnit5Plugin implements Plugin<Project> {
 			args.add(tag)
 		}
 
+		if (junit5.requiredEngine) {
+			args.add('-e')
+			args.add(junit5.requiredEngine)
+		}
+
 		args.add('-r')
 		args.add(reportsDir.getAbsolutePath())
 
