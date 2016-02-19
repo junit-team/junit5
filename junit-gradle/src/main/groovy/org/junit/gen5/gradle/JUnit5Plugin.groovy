@@ -43,6 +43,7 @@ class JUnit5Plugin implements Plugin<Project> {
 			task.inputs.property('classNameFilter', junit5.classNameFilter)
 			task.inputs.property('requireTags', junit5.requireTags)
 			task.inputs.property('excludeTags', junit5.excludeTags)
+			task.inputs.property('requiredEngine', junit5.requiredEngine)
 
 			def reportsDir = junit5.reportsDir ?: project.file("build/test-results/junit5")
 			task.outputs.dir reportsDir

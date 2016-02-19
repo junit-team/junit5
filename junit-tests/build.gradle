@@ -12,7 +12,8 @@ junit5 {
 	runJunit4 true
 	matchClassName '.*Tests?'
 	logManager 'org.apache.logging.log4j.jul.LogManager'
-	// includeTag 'fast'
+	// requireEngine 'junit5'
+	// requireTag 'fast'
 	// excludeTag 'slow'
 }
 
