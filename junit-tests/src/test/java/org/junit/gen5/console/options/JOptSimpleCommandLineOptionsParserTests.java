@@ -100,6 +100,22 @@ public class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
+	public void parseValidEngineFilter() {
+		// @formatter:off
+		assertAll(
+			() -> assertEquals(Optional.of("junit5"), parseArgLine("-e junit5").getRequiredEngineFilter()),
+			() -> assertEquals(Optional.of("junit4"), parseArgLine("--require-engine junit4").getRequiredEngineFilter()),
+			() -> assertEquals(Optional.empty(), parseArgLine("").getRequiredEngineFilter())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidEngineFilter() throws Exception {
+		assertOptionWithRequiredArgumentThrowsExceptionWithoutArgument("-e", "--require-engine");
+	}
+
+	@Test
 	public void parseValidAdditionalClasspathEntries() {
 		// @formatter:off
 		assertAll(

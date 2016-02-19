@@ -23,6 +23,7 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.discovery.ClassFilter;
+import org.junit.gen5.launcher.EngineIdFilter;
 import org.junit.gen5.launcher.TagFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
@@ -70,5 +71,7 @@ class DiscoveryRequestCreator {
 		if (!options.getExcludedTagsFilter().isEmpty()) {
 			discoveryRequest.addPostFilter(TagFilter.excludeTags(options.getExcludedTagsFilter()));
 		}
+		options.getRequiredEngineFilter().ifPresent(
+			engineId -> discoveryRequest.addEngineIdFilter(EngineIdFilter.byEngineId(engineId)));
 	}
 }

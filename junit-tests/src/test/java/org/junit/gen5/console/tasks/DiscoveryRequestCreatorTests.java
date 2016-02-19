@@ -27,6 +27,7 @@ import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
+import org.junit.gen5.launcher.EngineIdFilter;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
@@ -140,6 +141,18 @@ public class DiscoveryRequestCreatorTests {
 		assertThat(postDiscoveryFilters).hasSize(2);
 		assertThat(postDiscoveryFilters.get(0).toString()).contains("TagFilter");
 		assertThat(postDiscoveryFilters.get(1).toString()).contains("TagFilter");
+	}
+
+	@Test
+	public void convertsEngineFilterOption() {
+		options.setRunAllTests(true);
+		options.setRequiredEngineFilter("junit5");
+
+		TestDiscoveryRequest request = convert();
+		List<EngineIdFilter> engineIdFilters = request.getEngineIdFilters();
+
+		assertThat(engineIdFilters).hasSize(1);
+		assertThat(engineIdFilters.get(0).toString()).contains("junit5");
 	}
 
 	private TestDiscoveryRequest convert() {

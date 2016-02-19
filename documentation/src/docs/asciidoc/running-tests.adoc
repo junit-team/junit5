@@ -221,6 +221,8 @@ Option                       Description
                                option can be repeated.
 -T, --exclude-tag            Give a tag to exclude from the test run. This
                                option can be repeated.
+-e, --require-engine         Give the engine id of the only engine to be used in
+                               the test run.
 -r, --xml-reports-dir        Enable XML report output into a specified local
                                directory (will be created if it does not
                                exist)

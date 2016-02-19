@@ -45,4 +45,10 @@ public class EngineIdFilter implements Filter<String> {
 			() -> "Engine ID matches", //
 			() -> "Engine ID does not match");
 	}
+
+	@Override
+	public String toString() {
+		return "Include engines with ID: " + engineId;
+	}
+
 }

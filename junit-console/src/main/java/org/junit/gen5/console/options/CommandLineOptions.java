@@ -31,6 +31,7 @@ public class CommandLineOptions {
 	private List<String> additionalClasspathEntries = emptyList();
 	private List<String> arguments = emptyList();
 	private List<String> excludedTagsFilter = emptyList();
+	private String requiredEngineFilter;
 	private String xmlReportsDir;
 
 	public boolean isDisplayHelp() {
@@ -95,6 +96,14 @@ public class CommandLineOptions {
 
 	public void setExcludedTagsFilter(List<String> excludedTagsFilter) {
 		this.excludedTagsFilter = excludedTagsFilter;
+	}
+
+	public Optional<String> getRequiredEngineFilter() {
+		return Optional.ofNullable(requiredEngineFilter);
+	}
+
+	public void setRequiredEngineFilter(String requiredEngineFilter) {
+		this.requiredEngineFilter = requiredEngineFilter;
 	}
 
 	public List<String> getAdditionalClasspathEntries() {

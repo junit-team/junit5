@@ -28,6 +28,7 @@ class AvailableOptions {
 	private final OptionSpec<String> classnameFilter;
 	private final OptionSpec<String> requiredTagsFilter;
 	private final OptionSpec<String> excludedTagsFilter;
+	private final OptionSpec<String> requiredEngineFilter;
 	private final OptionSpec<String> additionalClasspathEntries;
 	private final OptionSpec<String> xmlReportsDir;
 	private final OptionSpec<String> arguments;
@@ -47,6 +48,9 @@ class AvailableOptions {
 			.withRequiredArg();
 		excludedTagsFilter = parser.acceptsAll(asList("T", "exclude-tag"),
 			"Give a tag to exclude from the test run. This option can be repeated.") //
+			.withRequiredArg();
+		requiredEngineFilter = parser.acceptsAll(asList("e", "require-engine"),
+			"Give the engine id of the only engine to be used in the test run.") //
 			.withRequiredArg();
 
 		xmlReportsDir = parser.acceptsAll(asList("r", "xml-reports-dir"), //
@@ -81,6 +85,7 @@ class AvailableOptions {
 		result.setClassnameFilter(detectedOptions.valueOf(classnameFilter));
 		result.setRequiredTagsFilter(detectedOptions.valuesOf(requiredTagsFilter));
 		result.setExcludedTagsFilter(detectedOptions.valuesOf(excludedTagsFilter));
+		result.setRequiredEngineFilter(detectedOptions.valueOf(requiredEngineFilter));
 		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(additionalClasspathEntries));
 		result.setXmlReportsDir(detectedOptions.valueOf(xmlReportsDir));
 		result.setArguments(detectedOptions.valuesOf(arguments));
