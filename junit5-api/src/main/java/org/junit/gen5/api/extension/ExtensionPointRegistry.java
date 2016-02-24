@@ -12,7 +12,11 @@ package org.junit.gen5.api.extension;
 
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
+import java.lang.reflect.Field;
+import java.util.Optional;
+
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * A registry for {@link ExtensionPoint} implementations which can be
@@ -82,6 +86,19 @@ import org.junit.gen5.commons.meta.API;
 public interface ExtensionPointRegistry {
 
 	/**
+	 * The order in which a specific {@link ExtensionPoint} is applied.
+	 *
+	 * <p>{@code FORWARD} means that registered extension points are applied
+	 * from lower to higher {@link Position#ordinal()}. {@code BACKWARD} is the other way round.</p>
+	 *
+	 * <p>{@code FORWARD} is typical for extension points before the actual test execution.
+	 *  {@code BACKWARD} for those after the test execution. There can be exceptions, though.</p>
+	 */
+	enum ApplicationOrder {
+		FORWARD, BACKWARD
+	}
+
+	/**
 	 * {@code Position} specifies the position in which a registered
 	 * {@link ExtensionPoint} is applied with regard to all other registered
 	 * extension points of the same type.
@@ -93,7 +110,7 @@ public interface ExtensionPointRegistry {
 	 * {@link #DEFAULT DEFAULT}, {@link #INSIDE_DEFAULT INSIDE_DEFAULT}, and
 	 * {@link #INNERMOST INNERMOST}.
 	 */
-	enum Position {
+	class Position {
 
 		/**
 		 * Apply first.
@@ -102,7 +119,9 @@ public interface ExtensionPointRegistry {
 		 * otherwise, an {@link ExtensionConfigurationException} will be
 		 * thrown.
 		 */
-		OUTERMOST,
+		public static Position OUTERMOST = new Position("OUTERMOST", 1, true);
+
+		public static Position FIRST = new Position("FIRST", 1, true);
 
 		/**
 		 * Apply after {@link #OUTERMOST} but before {@link #DEFAULT},
@@ -111,17 +130,49 @@ public interface ExtensionPointRegistry {
 		 * <p>Multiple extensions can be assigned this position; however,
 		 * the ordering among such extensions is undefined.
 		 */
-		OUTSIDE_DEFAULT,
+		public static Position OUTSIDE_DEFAULT = new Position("OUTSIDE_DEFAULT", 2);
 
-		// TODO Document DEFAULT position.
-		DEFAULT,
+		/**
+		 * Use the position derived from the order of registration using {@link ExtendWith}
+		 * in the source code. That means than an {@link ExtensionPoint} registered above or in
+		 * a superclass comes before one that is registered below.
+		 */
+		public static Position DEFAULT = new Position("DEFAULT", 3);
 
 		// TODO Document INSIDE_DEFAULT position.
-		INSIDE_DEFAULT,
+		public static Position INSIDE_DEFAULT = new Position("INSIDE_DEFAULT", 4);
 
 		// TODO Document INNERMOST position.
-		INNERMOST;
+		public static Position INNERMOST = new Position("INNERMOST", 5, true);
 
+		public static Position LAST = new Position("LAST", 5, true);
+
+		private final String displayName;
+		private final int ordinalValue;
+		private final boolean unique;
+
+		Position(String displayName, int ordinalValue) {
+			this(displayName, ordinalValue, false);
+		}
+
+		Position(String displayName, int ordinalValue, boolean unique) {
+			this.displayName = displayName;
+			this.ordinalValue = ordinalValue;
+			this.unique = unique;
+		}
+
+		public int ordinal() {
+			return ordinalValue;
+		}
+
+		public boolean shouldBeUnique() {
+			return unique;
+		}
+
+		@Override
+		public String toString() {
+			return "Position." + displayName;
+		}
 	}
 
 	/**

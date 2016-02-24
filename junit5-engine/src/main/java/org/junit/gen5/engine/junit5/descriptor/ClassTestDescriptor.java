@@ -170,8 +170,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 				() -> registeredExtensionPoint.getExtensionPoint().beforeAll(containerExtensionContext));
 		};
 
-		newExtensionRegistry.stream(BeforeAllExtensionPoint.class, ExtensionRegistry.ApplicationOrder.FORWARD).forEach(
-			applyBeforeEach);
+		newExtensionRegistry.stream(BeforeAllExtensionPoint.class).forEach(applyBeforeEach);
 	}
 
 	private void invokeAfterAllExtensionPoints(ExtensionRegistry newExtensionRegistry,
@@ -183,8 +182,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 				() -> registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext));
 		};
 
-		newExtensionRegistry.stream(AfterAllExtensionPoint.class, ExtensionRegistry.ApplicationOrder.BACKWARD).forEach(
-			applyAfterAll);
+		newExtensionRegistry.stream(AfterAllExtensionPoint.class).forEach(applyAfterAll);
 	}
 
 	private void registerBeforeAllMethods(ExtensionRegistry extensionRegistry) {

@@ -10,8 +10,10 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.DEFAULT;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
+import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.commons.meta.API;
 
 /**
@@ -35,4 +37,5 @@ import org.junit.gen5.commons.meta.API;
  */
 @API(Experimental)
 public interface ExtensionPoint extends Extension {
+
 }

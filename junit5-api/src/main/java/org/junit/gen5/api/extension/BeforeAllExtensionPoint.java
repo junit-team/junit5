@@ -10,6 +10,7 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.*;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import org.junit.gen5.commons.meta.API;
@@ -32,6 +33,13 @@ import org.junit.gen5.commons.meta.API;
 @FunctionalInterface
 @API(Experimental)
 public interface BeforeAllExtensionPoint extends ExtensionPoint {
+
+	/**
+	 * Configuration for {@code BeforeAllExtensionPoint}
+	 */
+	ExtensionPointConfiguration CONFIG = new ExtensionPointConfiguration(
+		new ExtensionPointRegistry.Position[] { OUTERMOST, OUTSIDE_DEFAULT, DEFAULT, INSIDE_DEFAULT, INNERMOST },
+		ExtensionPointRegistry.Position.DEFAULT, ExtensionPointRegistry.ApplicationOrder.FORWARD);
 
 	/**
 	 * Callback that is invoked <em>before</em> all {@code @BeforeAll}

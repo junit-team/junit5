@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,13 +37,25 @@ class ExtensionPointSorter {
 	 *
 	 * <p>Note: the supplied list instance will be resorted.
 	 *
+	 * @param <T>                       concrete subtype of {@link ExtensionPoint}
 	 * @param registeredExtensionPoints list of extension points in order of registration
-	 * @param <T> concrete subtype of {@link ExtensionPoint}
+	 * @param allowedPositions          all {@link Position positions} that are allowed for the {@code registeredExtensionPoints} of type T
 	 */
-	public <T extends ExtensionPoint> void sort(List<RegisteredExtensionPoint<T>> registeredExtensionPoints) {
-		checkPositionUnique(registeredExtensionPoints, Position.INNERMOST);
-		checkPositionUnique(registeredExtensionPoints, Position.OUTERMOST);
+	public <T extends ExtensionPoint> void sort(List<RegisteredExtensionPoint<T>> registeredExtensionPoints,
+			Position[] allowedPositions) {
+		//Todo: This checking should take place during registration in ExtensionRegistry.
+		checkNoUniquePositionConflict(registeredExtensionPoints, allowedPositions);
 		registeredExtensionPoints.sort(new DefaultComparator());
+	}
+
+	private <T extends ExtensionPoint> void checkNoUniquePositionConflict(
+			List<RegisteredExtensionPoint<T>> registeredExtensionPoints, Position[] allowedPositions) {
+		List<Position> uniquePositions = getUniquePositions(allowedPositions);
+		uniquePositions.stream().forEach(position -> checkPositionUnique(registeredExtensionPoints, position));
+	}
+
+	private <T extends ExtensionPoint> List<Position> getUniquePositions(Position[] allowedPositions) {
+		return Arrays.stream(allowedPositions).filter(Position::shouldBeUnique).collect(Collectors.toList());
 	}
 
 	private <T extends ExtensionPoint> void checkPositionUnique(
@@ -65,12 +78,12 @@ class ExtensionPointSorter {
 			List<RegisteredExtensionPoint<T>> registeredExtensionPoints, Position positionToFind) {
 
 		// @formatter:off
-		return registeredExtensionPoints.stream()
-				.filter(point -> point.getPosition() == positionToFind)
-				.map(RegisteredExtensionPoint::getSource)
-				.map(Object::toString)
-				.collect(Collectors.toList());
-		// @formatter:on
+        return registeredExtensionPoints.stream()
+                .filter(point -> point.getPosition() == positionToFind)
+                .map(RegisteredExtensionPoint::getSource)
+                .map(Object::toString)
+                .collect(Collectors.toList());
+        // @formatter:on
 	}
 
 	private static class DefaultComparator implements Comparator<RegisteredExtensionPoint<?>> {

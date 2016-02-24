@@ -10,6 +10,7 @@
 
 package org.junit.gen5.api.extension;
 
+import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.*;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import org.junit.gen5.commons.meta.API;
@@ -28,6 +29,13 @@ import org.junit.gen5.commons.meta.API;
  */
 @API(Experimental)
 public interface InstancePostProcessor extends ExtensionPoint {
+
+	/**
+	 * Configuration for {@code ExceptionHandlerExtensionPoint}
+	 */
+	ExtensionPointConfiguration CONFIG = new ExtensionPointConfiguration(
+		new ExtensionPointRegistry.Position[] { FIRST, DEFAULT, LAST }, ExtensionPointRegistry.Position.DEFAULT,
+		ExtensionPointRegistry.ApplicationOrder.FORWARD);
 
 	/**
 	 * Callback for post-processing the test instance in the supplied
