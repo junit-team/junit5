@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5.extension;
 
 import java.lang.reflect.Parameter;
+import java.util.Set;
 
 import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.api.extension.ExtensionContext;
@@ -37,17 +38,20 @@ class TestInfoParameterResolver implements MethodParameterResolver {
 	public TestInfo resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
 			final ExtensionContext extensionContext) {
 
-		return new DefaultTestInfo(extensionContext.getName(), extensionContext.getDisplayName());
+		return new DefaultTestInfo(extensionContext.getName(), extensionContext.getDisplayName(),
+			extensionContext.getTags());
 	}
 
 	private static class DefaultTestInfo implements TestInfo {
 
 		private final String name;
 		private final String displayName;
+		private final Set<String> tags;
 
-		DefaultTestInfo(String name, String displayName) {
+		DefaultTestInfo(String name, String displayName, Set<String> tags) {
 			this.name = name;
 			this.displayName = displayName;
+			this.tags = tags;
 		}
 
 		@Override
@@ -58,6 +62,11 @@ class TestInfoParameterResolver implements MethodParameterResolver {
 		@Override
 		public String getDisplayName() {
 			return this.displayName;
+		}
+
+		@Override
+		public Set<String> getTags() {
+			return tags;
 		}
 
 		@Override

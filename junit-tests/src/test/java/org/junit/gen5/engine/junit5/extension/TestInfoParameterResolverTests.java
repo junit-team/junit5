@@ -21,6 +21,7 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.DisplayName;
+import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.api.extension.MethodParameterResolver;
@@ -29,10 +30,11 @@ import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 /**
  * Microtests for {@link TestInfoParameterResolver}
  */
+@Tag("class-tag")
 class TestInfoParameterResolverTests {
 
 	private Set<String> allDisplayNames = new HashSet<>(
-		Arrays.asList(new String[] { "getName", "defaultDisplayName", "myName" }));
+		Arrays.asList(new String[] { "getName", "defaultDisplayName", "myName", "getTags" }));
 
 	@Test
 	void getName(TestInfo testInfo) {
@@ -50,6 +52,14 @@ class TestInfoParameterResolverTests {
 		assertEquals("myName", testInfo.getDisplayName());
 	}
 
+	@Test
+	@Tag("method-tag")
+	void getTags(TestInfo testInfo) {
+		assertEquals(2, testInfo.getTags().size());
+		assertTrue(testInfo.getTags().contains("method-tag"));
+		assertTrue(testInfo.getTags().contains("class-tag"));
+	}
+
 	@BeforeEach
 	void before(TestInfo testInfo) {
 		assertTrue(allDisplayNames.contains(testInfo.getDisplayName()));
@@ -64,6 +74,8 @@ class TestInfoParameterResolverTests {
 	static void beforeAll(TestInfo testInfo) {
 		assertEquals(TestInfoParameterResolverTests.class.getName(), testInfo.getDisplayName());
 		assertEquals(TestInfoParameterResolverTests.class.getName(), testInfo.getName());
+		assertEquals(1, testInfo.getTags().size());
+		assertTrue(testInfo.getTags().contains("class-tag"));
 	}
 
 	@AfterAll

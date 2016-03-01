@@ -12,6 +12,8 @@ package org.junit.gen5.api;
 
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
+import java.util.Set;
+
 import org.junit.gen5.commons.meta.API;
 
 /**
@@ -49,4 +51,9 @@ public interface TestInfo {
 	 */
 	String getDisplayName();
 
+	/**
+	 * Get the set of all tags. Might be declared directly on this element
+	 * or "inherited" from an outer context.
+	 */
+	Set<String> getTags();
 }
