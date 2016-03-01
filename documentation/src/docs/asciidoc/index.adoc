@@ -64,6 +64,12 @@ include::launcher-api.adoc[]
 
 include::api-evolution.adoc[]
 
+== Contributors
+
+[[contributors]]
+
+Browse the https://github.com/junit-team/junit5/graphs/contributors[current list of contributors] directly on github.
+
 == Release Notes
 
 [[release-notes]]
