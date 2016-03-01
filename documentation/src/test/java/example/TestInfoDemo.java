@@ -16,6 +16,7 @@ import static org.junit.gen5.api.Assertions.assertTrue;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.DisplayName;
+import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
 
@@ -29,8 +30,10 @@ class TestInfoDemo {
 
 	@Test
 	@DisplayName("TEST 1")
+	@Tag("my tag")
 	void test1(TestInfo testInfo) {
 		assertEquals("TEST 1", testInfo.getDisplayName());
+		assertTrue(testInfo.getTags().contains("my tag"));
 	}
 
 	@Test
