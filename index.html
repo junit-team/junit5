@@ -1046,9 +1046,12 @@ be resolved at runtime by a registered <code>MethodParameterResolver</code>.</p>
 <p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a method parameter is of type <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/TestInfo.java">TestInfo</a></code>, the
 <code>TestInfoParameterResolver</code> will supply an instance of <code>TestInfo</code> corresponding to the
 current test as the value for the parameter. The <code>TestInfo</code> can then be used to retrieve
-information about the current test such as the test&#8217;s name or display name (as
-configured via <code>@DisplayName</code>). This acts as a drop-in replacement for the <code>TestName</code>
-rule from JUnit 4. See <code>TestInfoDemo</code> for an example.</p>
+information about the current test such as the test&#8217;s name, display name (as
+configured via <code>@DisplayName</code>) or associated tags.</p>
+<div class="paragraph">
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/TestInfo.java">TestInfo</a></code> acts as a drop-in replacement for the <code>TestName</code>
+rule from JUnit 4. Here is an example of its usage:</p>
+</div>
 </li>
 </ul>
 </div>
@@ -1059,6 +1062,7 @@ import static org.junit.gen5.api.Assertions.assertTrue;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.DisplayName;
+import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
 
@@ -1072,8 +1076,10 @@ class TestInfoDemo {
 
     @Test
     @DisplayName("TEST 1")
+    @Tag("my tag")
     void test1(TestInfo testInfo) {
         assertEquals("TEST 1", testInfo.getDisplayName());
+        assertTrue(testInfo.getTags().contains("my tag"));
     }
 
     @Test
