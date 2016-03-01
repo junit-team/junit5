@@ -10,7 +10,8 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -24,8 +25,6 @@ import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
-import org.junit.gen5.api.extension.MethodParameterResolver;
-import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 
 /**
  * Microtests for {@link TestInfoParameterResolver}
