@@ -35,14 +35,14 @@ import org.junit.gen5.engine.junit5.execution.injection.sample.CustomTypeParamet
  *
  * @since 5.0
  */
-public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
+class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsForMethodInjectionCases() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(MethodInjectionTestCase.class);
 
-		assertEquals(8L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(7L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(7L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(6L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
 		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
 		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
@@ -87,18 +87,8 @@ public class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 	private static class MethodInjectionTestCase {
 
 		@Test
-		void parameterInjectionOfStandardTestName(TestInfo testInfo) {
-			assertTrue(
-				testInfo.getName().endsWith("parameterInjectionOfStandardTestName(org.junit.gen5.api.TestInfo)"));
-			assertEquals("parameterInjectionOfStandardTestName", testInfo.getDisplayName());
-		}
-
-		@Test
-		@DisplayName("myName")
-		void parameterInjectionOfUserProvidedTestName(TestInfo testInfo) {
-			assertTrue(
-				testInfo.getName().endsWith("parameterInjectionOfUserProvidedTestName(org.junit.gen5.api.TestInfo)"));
-			assertEquals("myName", testInfo.getDisplayName());
+		void parameterInjectionOfTestInfo(TestInfo testInfo) {
+			assertNotNull(testInfo);
 		}
 
 		@Test
