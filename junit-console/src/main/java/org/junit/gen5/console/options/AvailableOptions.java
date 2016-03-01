@@ -41,8 +41,9 @@ class AvailableOptions {
 			.withRequiredArg();
 
 		classnameFilter = parser.acceptsAll(asList("n", "filter-classname"),
-			"Give a regular expression to include only classes whose fully qualified names match.") //
-			.withRequiredArg();
+			"Give a regular expression to include only classes whose fully qualified names match. " //
+					+ "By default any class name is accepted and thus all classes with tests are included.") //
+					.withRequiredArg();
 		requiredTagsFilter = parser.acceptsAll(asList("t", "require-tag"),
 			"Give a tag to be required in the test run. This option can be repeated.") //
 			.withRequiredArg();
