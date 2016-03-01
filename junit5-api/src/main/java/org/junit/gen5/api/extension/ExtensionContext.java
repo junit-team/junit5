@@ -61,6 +61,12 @@ public interface ExtensionContext {
 	String getDisplayName();
 
 	/**
+	 * Get the set of all tags. Might be declared directly on this element
+	 * or "inherited" from an outer context.
+	 */
+	Set<String> getTags();
+
+	/**
 	 * Get the {@link Class} associated with the current test or container.
 	 */
 	Class<?> getTestClass();

@@ -89,7 +89,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	@Override
-	public final Set<TestTag> getTags() {
+	public Set<TestTag> getTags() {
 		return getTags(this.testClass);
 	}
 

@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.engine.EngineExecutionListener;
@@ -64,4 +65,8 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 		return new NamespaceAwareStore(valuesStore, namespace);
 	}
 
+	@Override
+	public Set<String> getTags() {
+		return testDescriptor.getTags().stream().map(tag -> tag.getName()).collect(Collectors.toSet());
+	}
 }

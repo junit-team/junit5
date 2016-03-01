@@ -12,9 +12,12 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
+import java.util.Set;
+
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
 
@@ -39,6 +42,13 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 			Object outerInstance = context.getTestInstanceProvider().getTestInstance();
 			return ReflectionUtils.newInstance(getTestClass(), outerInstance);
 		};
+	}
+
+	@Override
+	public final Set<TestTag> getTags() {
+		Set<TestTag> localTags = super.getTags();
+		getParent().ifPresent(parentDescriptor -> localTags.addAll(parentDescriptor.getTags()));
+		return localTags;
 	}
 
 }
