@@ -15,27 +15,28 @@ import java.util.function.Supplier;
 
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.FilterResult;
+import org.junit.gen5.engine.TestDescriptor;
 
-public class DiscoveryFilterMock implements DiscoveryFilter<Object> {
+public class PostDiscoveryFilterMock implements PostDiscoveryFilter {
 	private final Function<Object, FilterResult> function;
 	private final Supplier<String> toString;
 
-	public DiscoveryFilterMock(String toString) {
+	public PostDiscoveryFilterMock(String toString) {
 		this(o -> FilterResult.included("always"), () -> toString);
 	}
 
-	public DiscoveryFilterMock(Function<Object, FilterResult> function, Supplier<String> toString) {
+	public PostDiscoveryFilterMock(Function<Object, FilterResult> function, Supplier<String> toString) {
 		this.function = function;
 		this.toString = toString;
 	}
 
 	@Override
-	public FilterResult filter(Object object) {
-		return function.apply(object);
+	public String toString() {
+		return toString.get();
 	}
 
 	@Override
-	public String toString() {
-		return toString.get();
+	public FilterResult filter(TestDescriptor object) {
+		return FilterResult.included("always");
 	}
 }
