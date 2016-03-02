@@ -12,7 +12,7 @@ package org.junit.gen5.engine;
 
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 
-public final class TestDescriptorStub extends AbstractTestDescriptor {
+public class TestDescriptorStub extends AbstractTestDescriptor {
 
 	private final String name;
 	private final String displayName;

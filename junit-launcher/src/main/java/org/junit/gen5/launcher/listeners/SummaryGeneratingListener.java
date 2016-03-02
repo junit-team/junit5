@@ -12,9 +12,7 @@ package org.junit.gen5.launcher.listeners;
 
 import static java.util.stream.Stream.concat;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
-import static org.junit.gen5.engine.TestExecutionResult.Status.ABORTED;
-import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
-import static org.junit.gen5.engine.TestExecutionResult.Status.SUCCESSFUL;
+import static org.junit.gen5.engine.TestExecutionResult.Status.*;
 
 import java.util.stream.Stream;
 
@@ -90,8 +88,9 @@ public class SummaryGeneratingListener implements TestExecutionListener {
 			}
 			else if (testExecutionResult.getStatus() == FAILED) {
 				summary.testsFailed.incrementAndGet();
+				testExecutionResult.getThrowable().ifPresent(
+					throwable -> summary.addFailure(testIdentifier, throwable));
 			}
 		}
-		testExecutionResult.getThrowable().ifPresent(throwable -> summary.addFailure(testIdentifier, throwable));
 	}
 }
