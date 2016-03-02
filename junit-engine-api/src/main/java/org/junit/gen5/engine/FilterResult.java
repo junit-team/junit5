@@ -40,7 +40,7 @@ public class FilterResult {
 	 * Factory for creating <em>excluded</em> results.
 	 *
 	 * @param reason the reason why the result was excluded
-	 * @return a excluded {@code FilterResult} with the given reason
+	 * @return an excluded {@code FilterResult} with the given reason
 	 */
 	public static FilterResult excluded(String reason) {
 		return new FilterResult(false, reason);
