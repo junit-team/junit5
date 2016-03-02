@@ -13,7 +13,6 @@ package org.junit.gen5.launcher;
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.TestDescriptorBuilder;
 
@@ -77,22 +76,18 @@ class TagFilterTests {
 
 	@Tag("tag1")
 	private static class ATestWithATag1 {
-
 	}
 
 	@Tag("tag2")
 	private static class ATestWithATag2 {
-
 	}
 
 	@Tag("tag1")
 	@Tag("tag2")
 	private static class ATestWithBothTags {
-
 	}
 
 	private static class ATestWithNoTags {
-
 	}
 
 }

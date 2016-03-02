@@ -10,7 +10,9 @@
 
 package org.junit.gen5.launcher.listener;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertAll;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -21,7 +23,6 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestSource;
-import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.gen5.engine.support.descriptor.JavaSource;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
