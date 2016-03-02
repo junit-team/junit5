@@ -23,13 +23,16 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.launcher.DiscoveryFilterStub;
 
+/**
+ * Unit tests for {@link DiscoveryFilter}.
+ *
+ * @since 5.0
+ */
 class DiscoveryFilterTests {
 
-	@SuppressWarnings("unchecked")
 	@Test
 	void combineWithoutFilter() {
-		DiscoveryFilter<Object>[] noFilters = new DiscoveryFilter[0];
-		DiscoveryFilter<Object> combinedFilter = DiscoveryFilter.combine(noFilters);
+		DiscoveryFilter<Object> combinedFilter = DiscoveryFilter.combine();
 
 		assertTrue(combinedFilter.filter(String.class).included());
 		assertTrue(combinedFilter.filter(Object.class).included());
@@ -63,4 +66,5 @@ class DiscoveryFilterTests {
 		assertFalse(combined.filter(String.class).included());
 		assertEquals("(1st) and (2nd)", combined.toString());
 	}
+
 }

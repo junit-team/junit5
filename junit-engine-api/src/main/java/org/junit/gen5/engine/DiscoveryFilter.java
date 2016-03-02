@@ -48,6 +48,9 @@ public interface DiscoveryFilter<T> extends Filter<T> {
 		if (filters == null) {
 			return alwaysIncluded();
 		}
+		if (filters.length == 1) {
+			return filters[0];
+		}
 		return combine(asList(filters));
 	}
 
