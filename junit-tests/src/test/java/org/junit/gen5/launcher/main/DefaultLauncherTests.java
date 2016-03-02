@@ -11,7 +11,7 @@
 package org.junit.gen5.launcher.main;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.EngineIdFilter.byEngineId;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
@@ -25,6 +25,7 @@ import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
+import org.junit.gen5.launcher.PostDiscoveryFilterMock;
 import org.junit.gen5.launcher.TestId;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -122,12 +123,9 @@ class DefaultLauncherTests {
 
 		DefaultLauncher launcher = createLauncher(engine);
 
-		PostDiscoveryFilter excludeTest2Filter = new PostDiscoveryFilter() {
-			@Override
-			public FilterResult filter(TestDescriptor testDescriptor) {
-				return FilterResult.includedIf(!testDescriptor.getUniqueId().equals(test2.getUniqueId()));
-			}
-		};
+		PostDiscoveryFilter excludeTest2Filter = new PostDiscoveryFilterMock(
+			descriptor -> FilterResult.includedIf(!descriptor.getUniqueId().equals(test2.getUniqueId())),
+			() -> "filter");
 
 		TestPlan testPlan = launcher.discover(
 			request().select(PackageSelector.forPackageName("any")).filter(excludeTest2Filter).build());

@@ -18,14 +18,14 @@ import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
 
 public class PostDiscoveryFilterMock implements PostDiscoveryFilter {
-	private final Function<Object, FilterResult> function;
+	private final Function<TestDescriptor, FilterResult> function;
 	private final Supplier<String> toString;
 
 	public PostDiscoveryFilterMock(String toString) {
 		this(o -> FilterResult.included("always"), () -> toString);
 	}
 
-	public PostDiscoveryFilterMock(Function<Object, FilterResult> function, Supplier<String> toString) {
+	public PostDiscoveryFilterMock(Function<TestDescriptor, FilterResult> function, Supplier<String> toString) {
 		this.function = function;
 		this.toString = toString;
 	}
@@ -36,7 +36,7 @@ public class PostDiscoveryFilterMock implements PostDiscoveryFilter {
 	}
 
 	@Override
-	public FilterResult filter(TestDescriptor object) {
-		return FilterResult.included("always");
+	public FilterResult filter(TestDescriptor testDescriptor) {
+		return function.apply(testDescriptor);
 	}
 }
