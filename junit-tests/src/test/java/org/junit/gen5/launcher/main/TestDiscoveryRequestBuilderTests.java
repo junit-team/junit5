@@ -29,11 +29,17 @@ import java.util.List;
 import org.assertj.core.util.Files;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.PreconditionViolationException;
+import org.junit.gen5.engine.DiscoveryFilter;
+import org.junit.gen5.engine.FilterResult;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
+import org.junit.gen5.launcher.EngineIdFilter;
+import org.junit.gen5.launcher.PostDiscoveryFilter;
+import org.junit.gen5.launcher.TagFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 public class TestDiscoveryRequestBuilderTests {
@@ -157,6 +163,84 @@ public class TestDiscoveryRequestBuilderTests {
 			UniqueIdSelector::getUniqueId).collect(toList());
 
 		assertThat(uniqueIds).contains("engine:bla:foo:bar:id1", "engine:bla:foo:bar:id2");
+	}
+
+	@Test
+	public void engineFiltersAreStoredInDiscoveryRequest() throws Exception {
+		// @formatter:off
+        TestDiscoveryRequest discoveryRequest = request()
+				.filter(
+						EngineIdFilter.byEngineId("engine1"),
+						EngineIdFilter.byEngineId("engine2")
+				).build();
+        // @formatter:on
+
+		List<String> engineIds = discoveryRequest.getEngineIdFilters().stream().map(
+			EngineIdFilter::getEngineId).collect(toList());
+		assertThat(engineIds).hasSize(2);
+		assertThat(engineIds).contains("engine1", "engine2");
+	}
+
+	@Test
+	public void discoveryFiltersAreStoredInDiscoveryRequest() throws Exception {
+
+		// @formatter:off
+        TestDiscoveryRequest discoveryRequest = request()
+				.filter(
+						createDiscoveryFilter("filter1"),
+						createDiscoveryFilter("filter2")
+				).build();
+        // @formatter:on
+
+		List<String> filterNames = discoveryRequest.getDiscoveryFiltersByType(DiscoveryFilter.class).stream().map(
+			DiscoveryFilter::toString).collect(toList());
+		assertThat(filterNames).hasSize(2);
+		assertThat(filterNames).contains("filter1", "filter2");
+	}
+
+	private DiscoveryFilter createDiscoveryFilter(final String name) {
+		return new DiscoveryFilter() {
+			@Override
+			public FilterResult filter(Object object) {
+				return null;
+			}
+
+			@Override
+			public String toString() {
+				return name;
+			}
+		};
+	}
+
+	@Test
+	public void postDiscoveryFiltersAreStoredInDiscoveryRequest() throws Exception {
+
+		// @formatter:off
+        TestDiscoveryRequest discoveryRequest = request()
+				.filter(
+						createPostDiscoveryFilter("postFilter1"),
+						createPostDiscoveryFilter("postFilter2")
+				).build();
+        // @formatter:on
+
+		List<String> filterNames = discoveryRequest.getPostDiscoveryFilters().stream().map(
+			PostDiscoveryFilter::toString).collect(toList());
+		assertThat(filterNames).hasSize(2);
+		assertThat(filterNames).contains("postFilter1", "postFilter2");
+	}
+
+	private PostDiscoveryFilter createPostDiscoveryFilter(final String name) {
+		return new PostDiscoveryFilter() {
+			@Override
+			public FilterResult filter(TestDescriptor object) {
+				return null;
+			}
+
+			@Override
+			public String toString() {
+				return name;
+			}
+		};
 	}
 
 	@Test

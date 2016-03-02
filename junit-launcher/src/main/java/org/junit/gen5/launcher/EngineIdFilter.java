@@ -33,6 +33,10 @@ public class EngineIdFilter implements Filter<String> {
 		return new EngineIdFilter(engineId);
 	}
 
+	public String getEngineId() {
+		return engineId;
+	}
+
 	private final String engineId;
 
 	private EngineIdFilter(String engineId) {
