@@ -11,7 +11,7 @@
 package org.junit.gen5.launcher.main;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.expectThrows;
+import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.EngineIdFilter.byEngineId;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
@@ -19,8 +19,12 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.JUnitException;
+import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.discovery.PackageSelector;
+import org.junit.gen5.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
+import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.TestId;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -59,18 +63,19 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void discoverTestPlanForSingleEngineWithASingleTest() {
+	void discoverTestPlanForSingleEngine() {
 		DummyTestEngine engine = new DummyTestEngine("myEngine");
-		TestDescriptor testDescriptor = engine.addTest("test", noOp());
+		engine.addTest("test1", noOp());
+		engine.addTest("test2", noOp());
 
 		DefaultLauncher launcher = createLauncher(engine);
 
-		TestPlan testPlan = launcher.discover(request().select(forUniqueId(testDescriptor.getUniqueId())).build());
+		TestPlan testPlan = launcher.discover(request().select(PackageSelector.forPackageName("any")).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
-		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(1);
-		assertThat(testPlan.getChildren(new TestId("myEngine"))).hasSize(1);
+		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(2);
+		assertThat(testPlan.getChildren(new TestId("myEngine"))).hasSize(2);
 	}
 
 	@Test
@@ -107,6 +112,28 @@ class DefaultLauncherTests {
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
 		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(1);
 		assertThat(testPlan.getChildren(new TestId("first"))).hasSize(1);
+	}
+
+	@Test
+	void launcherAppliesPostDiscoveryFilters() {
+		DummyTestEngine engine = new DummyTestEngine("myEngine");
+		DummyTestDescriptor test1 = engine.addTest("test1", noOp());
+		DummyTestDescriptor test2 = engine.addTest("test2", noOp());
+
+		DefaultLauncher launcher = createLauncher(engine);
+
+		PostDiscoveryFilter excludeTest2Filter = new PostDiscoveryFilter() {
+			@Override
+			public FilterResult filter(TestDescriptor testDescriptor) {
+				return FilterResult.includedIf(!testDescriptor.getUniqueId().equals(test2.getUniqueId()));
+			}
+		};
+
+		TestPlan testPlan = launcher.discover(
+			request().select(PackageSelector.forPackageName("any")).filter(excludeTest2Filter).build());
+
+		assertThat(testPlan.getChildren(new TestId("myEngine"))).hasSize(1);
+		assertThat(testPlan.getTestIdentifier(new TestId(test1.getUniqueId()))).isNotNull();
 	}
 
 	private static Runnable noOp() {
