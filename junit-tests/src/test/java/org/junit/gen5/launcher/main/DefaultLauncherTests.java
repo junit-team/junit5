@@ -25,7 +25,7 @@ import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
-import org.junit.gen5.launcher.PostDiscoveryFilterMock;
+import org.junit.gen5.launcher.PostDiscoveryFilterStub;
 import org.junit.gen5.launcher.TestId;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -123,7 +123,7 @@ class DefaultLauncherTests {
 
 		DefaultLauncher launcher = createLauncher(engine);
 
-		PostDiscoveryFilter excludeTest2Filter = new PostDiscoveryFilterMock(
+		PostDiscoveryFilter excludeTest2Filter = new PostDiscoveryFilterStub(
 			descriptor -> FilterResult.includedIf(!descriptor.getUniqueId().equals(test2.getUniqueId())),
 			() -> "filter");
 

@@ -13,19 +13,18 @@ package org.junit.gen5.launcher;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
 
-public class PostDiscoveryFilterMock implements PostDiscoveryFilter {
+public class PostDiscoveryFilterStub implements PostDiscoveryFilter {
 	private final Function<TestDescriptor, FilterResult> function;
 	private final Supplier<String> toString;
 
-	public PostDiscoveryFilterMock(String toString) {
+	public PostDiscoveryFilterStub(String toString) {
 		this(o -> FilterResult.included("always"), () -> toString);
 	}
 
-	public PostDiscoveryFilterMock(Function<TestDescriptor, FilterResult> function, Supplier<String> toString) {
+	public PostDiscoveryFilterStub(Function<TestDescriptor, FilterResult> function, Supplier<String> toString) {
 		this.function = function;
 		this.toString = toString;
 	}

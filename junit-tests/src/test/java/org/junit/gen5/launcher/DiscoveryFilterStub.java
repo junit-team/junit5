@@ -16,15 +16,15 @@ import java.util.function.Supplier;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.FilterResult;
 
-public class DiscoveryFilterMock implements DiscoveryFilter<Object> {
+public class DiscoveryFilterStub implements DiscoveryFilter<Object> {
 	private final Function<Object, FilterResult> function;
 	private final Supplier<String> toString;
 
-	public DiscoveryFilterMock(String toString) {
+	public DiscoveryFilterStub(String toString) {
 		this(o -> FilterResult.included("always"), () -> toString);
 	}
 
-	public DiscoveryFilterMock(Function<Object, FilterResult> function, Supplier<String> toString) {
+	public DiscoveryFilterStub(Function<Object, FilterResult> function, Supplier<String> toString) {
 		this.function = function;
 		this.toString = toString;
 	}

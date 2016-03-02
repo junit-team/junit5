@@ -21,7 +21,7 @@ import java.util.StringJoiner;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.discovery.ClassFilter;
-import org.junit.gen5.launcher.DiscoveryFilterMock;
+import org.junit.gen5.launcher.DiscoveryFilterStub;
 
 class DiscoveryFilterTests {
 
@@ -55,8 +55,8 @@ class DiscoveryFilterTests {
 
 	@Test
 	void combineWithMultipleFiltersHasReadableDescription() {
-		DiscoveryFilter<Object> firstFilter = new DiscoveryFilterMock(o -> excluded("wrong"), () -> "1st");
-		DiscoveryFilter<Object> secondFilter = new DiscoveryFilterMock(o -> included("right"), () -> "2nd");
+		DiscoveryFilter<Object> firstFilter = new DiscoveryFilterStub(o -> excluded("wrong"), () -> "1st");
+		DiscoveryFilter<Object> secondFilter = new DiscoveryFilterStub(o -> included("right"), () -> "2nd");
 
 		DiscoveryFilter<Object> combined = DiscoveryFilter.combine(firstFilter, secondFilter);
 

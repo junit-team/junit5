@@ -35,10 +35,10 @@ import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
-import org.junit.gen5.launcher.DiscoveryFilterMock;
+import org.junit.gen5.launcher.DiscoveryFilterStub;
 import org.junit.gen5.launcher.EngineIdFilter;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
-import org.junit.gen5.launcher.PostDiscoveryFilterMock;
+import org.junit.gen5.launcher.PostDiscoveryFilterStub;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 public class TestDiscoveryRequestBuilderTests {
@@ -186,8 +186,8 @@ public class TestDiscoveryRequestBuilderTests {
 		// @formatter:off
         TestDiscoveryRequest discoveryRequest = request()
 				.filter(
-						new DiscoveryFilterMock("filter1"),
-						new DiscoveryFilterMock("filter2")
+						new DiscoveryFilterStub("filter1"),
+						new DiscoveryFilterStub("filter2")
 				).build();
         // @formatter:on
 
@@ -203,8 +203,8 @@ public class TestDiscoveryRequestBuilderTests {
 		// @formatter:off
         TestDiscoveryRequest discoveryRequest = request()
 				.filter(
-						new PostDiscoveryFilterMock("postFilter1"),
-						new PostDiscoveryFilterMock("postFilter2")
+						new PostDiscoveryFilterStub("postFilter1"),
+						new PostDiscoveryFilterStub("postFilter2")
 				).build();
         // @formatter:on
 
