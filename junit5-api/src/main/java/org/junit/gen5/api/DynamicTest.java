@@ -10,8 +10,6 @@
 
 package org.junit.gen5.api;
 
-import org.junit.gen5.commons.util.ExceptionUtils;
-
 public class DynamicTest {
 
 	private final String name;
@@ -22,16 +20,11 @@ public class DynamicTest {
 		this.executable = executable;
 	}
 
-	public void execute() {
-		try {
-			executable.execute();
-		}
-		catch (Throwable throwable) {
-			ExceptionUtils.throwAsUncheckedException(throwable);
-		}
-	}
-
 	public String getName() {
 		return name;
+	}
+
+	public Executable getExecutable() {
+		return executable;
 	}
 }

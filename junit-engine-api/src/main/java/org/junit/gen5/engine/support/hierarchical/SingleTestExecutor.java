@@ -21,14 +21,15 @@ import org.opentest4j.TestAbortedException;
 /**
  * @since 5.0
  */
-class SingleTestExecutor {
-	interface Executable {
+public class SingleTestExecutor {
+
+	public interface Executable {
 
 		void execute() throws Throwable;
 
 	}
 
-	TestExecutionResult executeSafely(Executable executable) {
+	public TestExecutionResult executeSafely(Executable executable) {
 		try {
 			executable.execute();
 			return successful();
