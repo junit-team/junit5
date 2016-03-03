@@ -33,6 +33,7 @@ class JUnit5TestableFactory {
 	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();
 	private static final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
 	private static final IsTestMethod isTestMethod = new IsTestMethod();
+	private static final IsDynamicTestMethod isDynamicTestMethod = new IsDynamicTestMethod();
 
 	JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
 		Preconditions.notBlank(uniqueId, "Unique ID must not be null or empty");
@@ -62,12 +63,21 @@ class JUnit5TestableFactory {
 	}
 
 	JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
-		if (!isTestMethod.test(testMethod)) {
-			throwCannotResolveMethodException(testMethod);
+		if (isTestMethod.test(testMethod)) {
+			String uniqueId = createUniqueIdForMethod(testMethod, clazz, engineId);
+			return new JUnit5Method(uniqueId, testMethod, clazz);
 		}
-		String uniqueId = String.format("%s#%s(%s)", fromClass(clazz, engineId).getUniqueId(), testMethod.getName(),
+		if (isDynamicTestMethod.test(testMethod)) {
+			String uniqueId = createUniqueIdForMethod(testMethod, clazz, engineId);
+			return new JUnit5DynamicMethod(uniqueId, testMethod, clazz);
+		}
+		throwCannotResolveMethodException(testMethod);
+		return null;
+	}
+
+	private String createUniqueIdForMethod(Method testMethod, Class<?> clazz, String engineId) {
+		return String.format("%s#%s(%s)", fromClass(clazz, engineId).getUniqueId(), testMethod.getName(),
 			StringUtils.nullSafeToString(testMethod.getParameterTypes()));
-		return new JUnit5Method(uniqueId, testMethod, clazz);
 	}
 
 	private List<String> split(String uniqueId) {

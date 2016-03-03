@@ -31,6 +31,7 @@ import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
+import org.junit.gen5.engine.junit5.descriptor.DynamicMethodTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.JUnit5TestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
@@ -43,6 +44,7 @@ import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 public class DiscoverySelectorResolver {
 	private final JUnit5EngineDescriptor engineDescriptor;
 	private final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
+	private final IsDynamicTestMethod isDynamicTestMethod = new IsDynamicTestMethod();
 	private final IsTestMethod isTestMethod = new IsTestMethod();
 	private final IsScannableTestClass isScannableTestClass = new IsScannableTestClass();
 
@@ -98,6 +100,11 @@ public class DiscoverySelectorResolver {
 			}
 
 			@Override
+			public void visitDynamicMethod(String uniqueId, Method method, Class<?> container) {
+				resolveDynamicMethodTestable(method, container, uniqueId);
+			}
+
+			@Override
 			public void visitNestedClass(String uniqueId, Class<?> testClass, Class<?> containerClass) {
 				resolveNestedClassTestable(uniqueId, testClass, containerClass, withChildren);
 			}
@@ -106,6 +113,13 @@ public class DiscoverySelectorResolver {
 
 	private void resolveTestable(JUnit5Testable testable) {
 		resolveTestable(testable, true);
+	}
+
+	private void resolveDynamicMethodTestable(Method method, Class<?> testClass, String uniqueId) {
+		JUnit5Testable parentTestable = JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueId());
+		TestDescriptor newParentDescriptor = resolveAndReturnParentTestable(parentTestable);
+		DynamicMethodTestDescriptor descriptor = getOrCreateDynamicMethodDescriptor(testClass, method, uniqueId);
+		newParentDescriptor.addChild(descriptor);
 	}
 
 	private void resolveMethodTestable(Method method, Class<?> testClass, String uniqueId) {
@@ -123,6 +137,7 @@ public class DiscoverySelectorResolver {
 		if (withChildren) {
 			resolveContainedNestedClasses(testClass);
 			resolveContainedTestMethods(testClass, descriptor);
+			resolveContainedDynamicTestMethods(testClass, descriptor);
 		}
 	}
 
@@ -136,6 +151,7 @@ public class DiscoverySelectorResolver {
 		if (withChildren) {
 			resolveContainedNestedClasses(testClass);
 			resolveContainedTestMethods(testClass, descriptor);
+			resolveContainedDynamicTestMethods(testClass, descriptor);
 		}
 	}
 
@@ -146,6 +162,18 @@ public class DiscoverySelectorResolver {
 				containerTestable.getUniqueId());
 			return new RuntimeException(errorMessage);
 		});
+	}
+
+	private void resolveContainedDynamicTestMethods(Class<?> testClass, AbstractTestDescriptor parentDescriptor) {
+		List<Method> testMethodCandidates = findMethods(testClass, isDynamicTestMethod,
+			ReflectionUtils.MethodSortOrder.HierarchyDown);
+		for (Method method : testMethodCandidates) {
+			JUnit5Testable dynamicMethodTestable = JUnit5Testable.fromMethod(method, testClass,
+				engineDescriptor.getUniqueId());
+			DynamicMethodTestDescriptor dynamicMethodDescriptor = getOrCreateDynamicMethodDescriptor(testClass, method,
+				dynamicMethodTestable.getUniqueId());
+			parentDescriptor.addChild(dynamicMethodDescriptor);
+		}
 	}
 
 	private void resolveContainedTestMethods(Class<?> testClass, AbstractTestDescriptor parentDescriptor) {
@@ -166,6 +194,12 @@ public class DiscoverySelectorResolver {
 			JUnit5Testable nestedClassTestable = JUnit5Testable.fromClass(nestedClass, engineDescriptor.getUniqueId());
 			resolveTestable(nestedClassTestable);
 		}
+	}
+
+	private DynamicMethodTestDescriptor getOrCreateDynamicMethodDescriptor(Class<?> testClass, Method method,
+			String uniqueId) {
+		return (DynamicMethodTestDescriptor) descriptorByUniqueId(uniqueId).orElseGet(
+			() -> new DynamicMethodTestDescriptor(uniqueId, testClass, method));
 	}
 
 	private MethodTestDescriptor getOrCreateMethodDescriptor(Class<?> testClass, Method method, String uniqueId) {
