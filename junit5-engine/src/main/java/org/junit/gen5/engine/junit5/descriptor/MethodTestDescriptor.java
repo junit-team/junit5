@@ -102,12 +102,12 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	}
 
 	@Override
-	public final boolean isTest() {
+	public boolean isTest() {
 		return true;
 	}
 
 	@Override
-	public final boolean isContainer() {
+	public boolean isContainer() {
 		return false;
 	}
 
@@ -144,7 +144,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 		invokeInstancePostProcessorExtensionPoints(context.getExtensionRegistry(), testExtensionContext);
 		invokeBeforeEachExtensionPoints(context.getExtensionRegistry(), testExtensionContext);
-		invokeTestMethod(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
+		invokeTestMethod(context, testExtensionContext, throwableCollector);
 		invokeAfterEachExtensionPoints(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
 
 		throwableCollector.assertEmpty();
@@ -175,17 +175,17 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		extensionRegistry.stream(BeforeEachExtensionPoint.class, ApplicationOrder.FORWARD).forEach(applyBeforeEach);
 	}
 
-	private void invokeTestMethod(ExtensionRegistry ExtensionRegistry, TestExtensionContext testExtensionContext,
+	protected void invokeTestMethod(JUnit5EngineExecutionContext context, TestExtensionContext testExtensionContext,
 			ThrowableCollector throwableCollector) {
 
 		throwableCollector.execute(() -> {
 			MethodInvocationContext methodInvocationContext = methodInvocationContext(
 				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod());
 			try {
-				new MethodInvoker(testExtensionContext, ExtensionRegistry).invoke(methodInvocationContext);
+				new MethodInvoker(testExtensionContext, context.getExtensionRegistry()).invoke(methodInvocationContext);
 			}
 			catch (Throwable throwable) {
-				invokeExceptionHandlerExtensionPoints(ExtensionRegistry, testExtensionContext, throwable);
+				invokeExceptionHandlerExtensionPoints(context.getExtensionRegistry(), testExtensionContext, throwable);
 			}
 
 		});

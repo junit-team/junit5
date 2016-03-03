@@ -50,8 +50,8 @@ public class MethodInvoker {
 		this.extensionRegistry = extensionRegistry;
 	}
 
-	public void invoke(MethodInvocationContext methodInvocationContext) {
-		ReflectionUtils.invokeMethod(methodInvocationContext.getMethod(), methodInvocationContext.getInstance(),
+	public Object invoke(MethodInvocationContext methodInvocationContext) {
+		return ReflectionUtils.invokeMethod(methodInvocationContext.getMethod(), methodInvocationContext.getInstance(),
 			resolveParameters(methodInvocationContext));
 	}
 
