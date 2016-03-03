@@ -10,8 +10,7 @@
 
 package org.junit.gen5.junit4.runner;
 
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -20,6 +19,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import org.junit.gen5.launcher.TestId;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.runner.Description;
@@ -56,6 +56,11 @@ class JUnit5TestTree {
 	private void buildDescriptionTree(Description suiteDescription, TestPlan testPlan) {
 		testPlan.getRoots().stream().forEach(
 			testIdentifier -> buildDescription(testIdentifier, suiteDescription, testPlan));
+	}
+
+	void addDynamicDescription(TestIdentifier newIdentifier, TestId parentId) {
+		Description parent = getDescription(plan.getTestIdentifier(parentId));
+		buildDescription(newIdentifier, parent, this.plan);
 	}
 
 	private void buildDescription(TestIdentifier identifier, Description parent, TestPlan testPlan) {

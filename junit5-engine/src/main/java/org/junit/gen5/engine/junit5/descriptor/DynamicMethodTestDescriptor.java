@@ -56,19 +56,22 @@ public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements
 			MethodInvocationContext methodInvocationContext = methodInvocationContext(
 				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod());
 
-			//Todo: Handle cast exceptions
-			Stream<DynamicTest> dynamicTestStream = (Stream<DynamicTest>) new MethodInvoker(testExtensionContext,
-				context.getExtensionRegistry()).invoke(methodInvocationContext);
+			MethodInvoker methodInvoker = new MethodInvoker(testExtensionContext, context.getExtensionRegistry());
+
+			@SuppressWarnings("unchecked")
+			//Todo: Handle cast exceptionsgit
+			Stream<DynamicTest> dynamicTestStream = (Stream<DynamicTest>) methodInvoker.invoke(methodInvocationContext);
 
 			dynamicTestStream.forEach(dynamicTest -> registerAndExecute(dynamicTest, listener));
 		});
 	}
 
 	private void registerAndExecute(DynamicTest dynamicTest, EngineExecutionListener listener) {
-		UniqueId uniqueId = getUniqueId().append("dynamic-test", dynamicTest.getName());
-		DynamicTestTestDescriptor dynamicTestTestDescriptor = new DynamicTestTestDescriptor(uniqueId, dynamicTest);
+        UniqueId uniqueId = getUniqueId().append("dynamic-test", dynamicTest.getName());
+        DynamicTestTestDescriptor dynamicTestTestDescriptor = new DynamicTestTestDescriptor(uniqueId, dynamicTest,
+                getSource().get());
 
-		//This would lead to double execution of dynamic tests due to code in HierarchicalTestExecutor
+        //This would lead to double execution of dynamic tests due to code in HierarchicalTestExecutor
 		//addChild(dynamicTestTestDescriptor);
 
 		dynamicTestTestDescriptor.setParent(this);
