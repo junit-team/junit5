@@ -104,12 +104,12 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	}
 
 	@Override
-	public final boolean isTest() {
+	public boolean isTest() {
 		return true;
 	}
 
 	@Override
-	public final boolean isContainer() {
+	public boolean isContainer() {
 		return false;
 	}
 
@@ -149,7 +149,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		invokeBeforeEachCallbacks(registry, testExtensionContext);
 			invokeBeforeEachMethods(registry, testExtensionContext);
 				invokeBeforeTestMethodCallbacks(registry, testExtensionContext);
-					invokeTestMethod(registry, testExtensionContext, throwableCollector);
+					invokeTestMethod(context, testExtensionContext, throwableCollector);
 				invokeAfterTestMethodCallbacks(registry, testExtensionContext, throwableCollector);
 			invokeAfterEachMethods(registry, testExtensionContext, throwableCollector);
 		invokeAfterEachCallbacks(registry, testExtensionContext, throwableCollector);
@@ -175,17 +175,17 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				.forEach(extension -> executeAndMaskThrowable(() -> extension.beforeTestMethod(context)));
 	}
 
-	private void invokeTestMethod(ExtensionRegistry ExtensionRegistry, TestExtensionContext testExtensionContext,
+	protected void invokeTestMethod(JUnit5EngineExecutionContext context, TestExtensionContext testExtensionContext,
 			ThrowableCollector throwableCollector) {
 
 		throwableCollector.execute(() -> {
 			MethodInvocationContext methodInvocationContext = methodInvocationContext(
 				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod());
 			try {
-				new MethodInvoker(testExtensionContext, ExtensionRegistry).invoke(methodInvocationContext);
+				new MethodInvoker(testExtensionContext, context.getExtensionRegistry()).invoke(methodInvocationContext);
 			}
 			catch (Throwable throwable) {
-				invokeExceptionHandlers(ExtensionRegistry, testExtensionContext, throwable);
+				invokeExceptionHandlers(context.getExtensionRegistry(), testExtensionContext, throwable);
 			}
 		});
 	}

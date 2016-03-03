@@ -13,6 +13,7 @@ package org.junit.gen5.engine;
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
+import static org.junit.gen5.engine.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
 import static org.junit.gen5.engine.ExecutionEvent.Type.FINISHED;
 import static org.junit.gen5.engine.ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED;
 import static org.junit.gen5.engine.ExecutionEvent.Type.SKIPPED;
@@ -91,6 +92,10 @@ public class ExecutionEventRecorder implements EngineExecutionListener {
 
 	public long getReportingEntryPublishedCount() {
 		return testEventsByType(REPORTING_ENTRY_PUBLISHED).count();
+	}
+
+	public long getDynamicTestRegisteredCount() {
+		return testEventsByType(DYNAMIC_TEST_REGISTERED).count();
 	}
 
 	public long getTestFinishedCount() {

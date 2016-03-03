@@ -64,6 +64,7 @@ public class DiscoverySelectorResolver {
 		resolvers.add(new TestContainerResolver());
 		resolvers.add(new NestedTestsResolver());
 		resolvers.add(new TestMethodResolver());
+		resolvers.add(new DynamicTestMethodResolver());
 		return new JavaElementsResolver(engineDescriptor, resolvers);
 	}
 
