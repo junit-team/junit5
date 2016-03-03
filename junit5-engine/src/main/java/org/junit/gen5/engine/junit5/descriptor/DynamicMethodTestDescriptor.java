@@ -14,12 +14,18 @@ import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestExecutionResult;
@@ -57,14 +63,45 @@ public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements
 			MethodInvocationContext methodInvocationContext = methodInvocationContext(
 				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod());
 
-			//Todo: Handle cast exceptions
-			Stream<DynamicTest> dynamicTestStream = (Stream<DynamicTest>) new MethodInvoker(testExtensionContext,
-				context.getExtensionRegistry()).invoke(methodInvocationContext);
+			MethodInvoker methodInvoker = new MethodInvoker(testExtensionContext, context.getExtensionRegistry());
+			Object dynamicMethodResult = methodInvoker.invoke(methodInvocationContext);
+			Stream<? extends DynamicTest> dynamicTestStream = toDynamicTestStream(dynamicMethodResult);
 
 			AtomicInteger index = new AtomicInteger();
-			dynamicTestStream.forEach(
-				dynamicTest -> registerAndExecute(dynamicTest, index.incrementAndGet(), listener));
+			try {
+				dynamicTestStream.forEach(
+					dynamicTest -> registerAndExecute(dynamicTest, index.incrementAndGet(), listener));
+			}
+			catch (ClassCastException cce) {
+				throw new JUnitException(
+					"Dynamic test must return Stream, Collection or Iterator of " + DynamicTest.class);
+			}
+
 		});
+	}
+
+	@SuppressWarnings("unchecked")
+	private Stream<? extends DynamicTest> toDynamicTestStream(Object dynamicMethodResult) {
+
+		if (dynamicMethodResult instanceof Stream) {
+			return (Stream<? extends DynamicTest>) dynamicMethodResult;
+		}
+		// use Collection's stream() implementation even though it implements Iterable
+		if (dynamicMethodResult instanceof Collection) {
+			Collection<? extends DynamicTest> dynamicTestCollection = (Collection<? extends DynamicTest>) dynamicMethodResult;
+			return dynamicTestCollection.stream();
+		}
+		if (dynamicMethodResult instanceof Iterable) {
+			Iterable<? extends DynamicTest> dynamicTestIterable = (Iterable<? extends DynamicTest>) dynamicMethodResult;
+			return StreamSupport.stream(dynamicTestIterable.spliterator(), false);
+		}
+		if (dynamicMethodResult instanceof Iterator) {
+			Iterator<? extends DynamicTest> dynamicTestIterator = (Iterator<? extends DynamicTest>) dynamicMethodResult;
+			return StreamSupport.stream(Spliterators.spliteratorUnknownSize(dynamicTestIterator, Spliterator.ORDERED),
+				false);
+		}
+
+		throw new JUnitException("Dynamic test must return Stream, Iterable, or Iterator of " + DynamicTest.class);
 	}
 
 	private void registerAndExecute(DynamicTest dynamicTest, int index, EngineExecutionListener listener) {
