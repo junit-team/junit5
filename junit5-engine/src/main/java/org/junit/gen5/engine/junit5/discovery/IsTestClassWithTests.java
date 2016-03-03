@@ -41,6 +41,7 @@ public class IsTestClassWithTests implements Predicate<Class<?>> {
 	}
 
 	private boolean hasTestMethods(Class<?> candidate) {
+		//Todo: Add check for dynamic tests (IsDynamicTestMethod)
 		return !ReflectionUtils.findMethods(candidate, isTestMethod, HierarchyDown).isEmpty();
 	}
 
