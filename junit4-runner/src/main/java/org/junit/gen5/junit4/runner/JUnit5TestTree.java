@@ -57,6 +57,11 @@ class JUnit5TestTree {
 		testPlan.getRoots().forEach(testIdentifier -> buildDescription(testIdentifier, suiteDescription, testPlan));
 	}
 
+	void addDynamicDescription(TestIdentifier newIdentifier, String parentId) {
+		Description parent = getDescription(plan.getTestIdentifier(parentId));
+		buildDescription(newIdentifier, parent, this.plan);
+	}
+
 	private void buildDescription(TestIdentifier identifier, Description parent, TestPlan testPlan) {
 		Description newDescription = createJUnit4Description(identifier, testPlan);
 		parent.addChild(newDescription);

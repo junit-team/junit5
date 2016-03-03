@@ -69,7 +69,8 @@ public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements
 
 	private void registerAndExecute(DynamicTest dynamicTest, int index, EngineExecutionListener listener) {
 		UniqueId uniqueId = getUniqueId().append("dynamic-test", "%" + index);
-		DynamicTestTestDescriptor dynamicTestTestDescriptor = new DynamicTestTestDescriptor(uniqueId, dynamicTest);
+		DynamicTestTestDescriptor dynamicTestTestDescriptor = new DynamicTestTestDescriptor(uniqueId, dynamicTest,
+			getSource().get());
 		addChild(dynamicTestTestDescriptor);
 
 		listener.dynamicTestRegistered(dynamicTestTestDescriptor);
