@@ -12,15 +12,17 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.engine.UniqueId;
+import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 
 public class DynamicTestTestDescriptor extends AbstractTestDescriptor {
 
 	private final DynamicTest dynamicTest;
 
-	public DynamicTestTestDescriptor(UniqueId uniqueId, DynamicTest dynamicTest) {
+	public DynamicTestTestDescriptor(UniqueId  uniqueId, DynamicTest dynamicTest, TestSource source) {
 		super(uniqueId);
 		this.dynamicTest = dynamicTest;
+		setSource(source);
 	}
 
 	@Override
