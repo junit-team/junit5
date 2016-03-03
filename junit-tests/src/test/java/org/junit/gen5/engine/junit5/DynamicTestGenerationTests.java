@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5;
 
+import static org.junit.gen5.api.Assertions.assertAll;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
@@ -35,17 +36,20 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
-	//@Test
+	@Test
 	public void dynamicTestsAreExecuted() {
 		TestDiscoveryRequest request = request().select(forClass(MyDynamicTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(2L, eventRecorder.getContainerStartedCount(), "# container started");
-		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
-		assertEquals(2L, eventRecorder.getContainerFinishedCount(), "# container finished");
+		//dynamic test methods are counted as both container and test
+		assertAll( //
+			() -> assertEquals(3L, eventRecorder.getContainerStartedCount(), "# container started"),
+			() -> assertEquals(2L, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
+			() -> assertEquals(3L, eventRecorder.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed"),
+			() -> assertEquals(3L, eventRecorder.getContainerFinishedCount(), "# container finished"));
 	}
 
 	private static class MyDynamicTestCase {

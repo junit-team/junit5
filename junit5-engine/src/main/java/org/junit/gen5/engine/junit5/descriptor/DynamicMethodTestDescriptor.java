@@ -11,122 +11,72 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
 import java.lang.reflect.Method;
-import java.util.Set;
+import java.util.stream.Stream;
 
+import org.junit.gen5.api.DynamicTest;
+import org.junit.gen5.api.extension.MethodInvocationContext;
+import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.StringUtils;
-import org.junit.gen5.engine.TestTag;
-import org.junit.gen5.engine.UniqueId;
+import org.junit.gen5.engine.EngineExecutionListener;
+import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
-import org.junit.gen5.engine.support.descriptor.JavaSource;
+import org.junit.gen5.engine.junit5.execution.MethodInvoker;
+import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
 import org.junit.gen5.engine.support.hierarchical.Leaf;
+import org.junit.gen5.engine.support.hierarchical.SingleTestExecutor;
 
 @API(Internal)
-public class DynamicMethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
+public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
 
-	private final String displayName;
-
-	private final Class<?> testClass;
-
-	private final Method testMethod;
-
-	public DynamicMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
-		super(uniqueId);
-
-		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
-		this.testMethod = Preconditions.notNull(testMethod, "Method must not be null");
-		this.displayName = determineDisplayName(testMethod, testMethod.getName());
-
-		setSource(new JavaSource(testMethod));
+	public DynamicMethodTestDescriptor(String uniqueId, Class<?> testClass, Method testMethod) {
+		super(uniqueId, testClass, testMethod);
 	}
 
 	@Override
-	public final Set<TestTag> getTags() {
-		Set<TestTag> methodTags = getTags(getTestMethod());
-		getParent().ifPresent(parentDescriptor -> methodTags.addAll(parentDescriptor.getTags()));
-		return methodTags;
-	}
-
-	@Override
-	public String getName() {
-		// Intentionally get the class name via getTestClass() instead of
-		// testMethod.getDeclaringClass() in order to ensure that inherited
-		// test methods in different test subclasses get different names
-		// via this method (e.g., for reporting purposes). The caller is,
-		// however, still able to determine the declaring class via
-		// reflection is necessary.
-
-		// TODO Consider extracting JUnit 5's "method representation" into a common utility.
-		return String.format("%s#%s(%s)", getTestClass().getName(), testMethod.getName(),
-			StringUtils.nullSafeToString(testMethod.getParameterTypes()));
-	}
-
-	@Override
-	public final String getDisplayName() {
-		return this.displayName;
-	}
-
-	public final Class<?> getTestClass() {
-		return this.testClass;
-	}
-
-	public final Method getTestMethod() {
-		return this.testMethod;
-	}
-
-	@Override
-	public final boolean isTest() {
+	public boolean isContainer() {
 		return true;
 	}
 
 	@Override
-	public final boolean isContainer() {
+	public boolean isTest() {
 		return true;
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext prepare(JUnit5EngineExecutionContext context) throws Exception {
-		return context;
-		//		ExtensionRegistry extensionRegistry = populateNewExtensionRegistryFromExtendWith(testMethod,
-		//			context.getExtensionRegistry());
-		//		Object testInstance = context.getTestInstanceProvider().getTestInstance();
-		//		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(context.getExtensionContext(),
-		//			context.getExecutionListener(), this, testInstance);
-		//
-//		// @formatter:off
-//		return context.extend()
-//				.withExtensionRegistry(extensionRegistry)
-//				.withExtensionContext(testExtensionContext)
-//				.build();
-//		// @formatter:on
+	protected void invokeTestMethod(JUnit5EngineExecutionContext context, TestExtensionContext testExtensionContext,
+			ThrowableCollector throwableCollector) {
+
+		EngineExecutionListener listener = context.getExecutionListener();
+
+		throwableCollector.execute(() -> {
+			MethodInvocationContext methodInvocationContext = methodInvocationContext(
+				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod());
+
+			//Todo: Handle cast exceptions
+			Stream<DynamicTest> dynamicTestStream = (Stream<DynamicTest>) new MethodInvoker(testExtensionContext,
+				context.getExtensionRegistry()).invoke(methodInvocationContext);
+
+			dynamicTestStream.forEach(dynamicTest -> registerAndExecute(dynamicTest, listener));
+		});
 	}
 
-	@Override
-	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Exception {
-		//		ConditionEvaluationResult evaluationResult = new ConditionEvaluator().evaluateForTest(
-		//			context.getExtensionRegistry(), (TestExtensionContext) context.getExtensionContext());
-		//		if (evaluationResult.isDisabled()) {
-		//			return SkipResult.skip(evaluationResult.getReason().orElse(""));
-		//		}
-		return SkipResult.dontSkip();
-	}
+	private void registerAndExecute(DynamicTest dynamicTest, EngineExecutionListener listener) {
+		String uniqueId = getUniqueId() + ":" + dynamicTest.getName();
+		DynamicTestTestDescriptor dynamicTestTestDescriptor = new DynamicTestTestDescriptor(uniqueId, dynamicTest);
 
-	@Override
-	public JUnit5EngineExecutionContext execute(JUnit5EngineExecutionContext context) throws Exception {
-		//		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
-		//		ThrowableCollector throwableCollector = new ThrowableCollector();
-		//
-		//		invokeInstancePostProcessorExtensionPoints(context.getExtensionRegistry(), testExtensionContext);
-		//		invokeBeforeEachExtensionPoints(context.getExtensionRegistry(), testExtensionContext);
-		//		invokeTestMethod(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
-		//		invokeAfterEachExtensionPoints(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
-		//
-		//		throwableCollector.assertEmpty();
+		//This would lead to double execution of dynamic tests due to code in HierarchicalTestExecutor
+		//addChild(dynamicTestTestDescriptor);
 
-		return context;
+		dynamicTestTestDescriptor.setParent(this);
+		listener.dynamicTestRegistered(dynamicTestTestDescriptor);
+
+		listener.executionStarted(dynamicTestTestDescriptor);
+
+		TestExecutionResult result = new SingleTestExecutor().executeSafely(dynamicTest.getExecutable()::execute);
+		listener.executionFinished(dynamicTestTestDescriptor, result);
 	}
 
 }
