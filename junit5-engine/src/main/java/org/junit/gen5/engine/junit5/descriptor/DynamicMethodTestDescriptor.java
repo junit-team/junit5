@@ -14,6 +14,7 @@ import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import org.junit.gen5.api.DynamicTest;
@@ -62,12 +63,14 @@ public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements
 			//Todo: Handle cast exceptions
 			Stream<DynamicTest> dynamicTestStream = (Stream<DynamicTest>) methodInvoker.invoke(methodInvocationContext);
 
-			dynamicTestStream.forEach(dynamicTest -> registerAndExecute(dynamicTest, listener));
+			AtomicInteger index = new AtomicInteger();
+			dynamicTestStream.forEach(
+				dynamicTest -> registerAndExecute(dynamicTest, index.incrementAndGet(), listener));
 		});
 	}
 
-	private void registerAndExecute(DynamicTest dynamicTest, EngineExecutionListener listener) {
-		UniqueId uniqueId = getUniqueId().append("dynamic-test", dynamicTest.getName());
+	private void registerAndExecute(DynamicTest dynamicTest, int index, EngineExecutionListener listener) {
+		UniqueId uniqueId = getUniqueId().append("dynamic-test", "%" + index);
 		DynamicTestTestDescriptor dynamicTestTestDescriptor = new DynamicTestTestDescriptor(uniqueId, dynamicTest,
 			getSource().get());
 		addChild(dynamicTestTestDescriptor);
