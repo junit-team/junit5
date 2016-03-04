@@ -80,8 +80,10 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 			C context = adapter.asContainer(testDescriptor).beforeAll(preparedContext);
 			context = adapter.asLeaf(testDescriptor).execute(context);
 
-			for (TestDescriptor child : testDescriptor.getChildren()) {
-				executeAll(child, context);
+			if (testDescriptor instanceof Container) { // to prevent execution of dynamically added children
+				for (TestDescriptor child : testDescriptor.getChildren()) {
+					executeAll(child, context);
+				}
 			}
 			context = adapter.asContainer(testDescriptor).afterAll(context);
 		});

@@ -38,9 +38,6 @@ public class IsDynamicTestMethod implements Predicate<Method> {
 		if (isAbstract(candidate))
 			return false;
 
-		//Type erasure prevents us from checking for Stream<DynamicTest>
-		//		if (!Stream.class.isAssignableFrom(candidate.getReturnType()))
-		//			return false;
 		return isAnnotated(candidate, Dynamic.class);
 	}
 

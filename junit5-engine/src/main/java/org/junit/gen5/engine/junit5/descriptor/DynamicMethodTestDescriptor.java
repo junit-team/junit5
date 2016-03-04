@@ -70,15 +70,10 @@ public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements
 		UniqueId uniqueId = getUniqueId().append("dynamic-test", dynamicTest.getName());
 		DynamicTestTestDescriptor dynamicTestTestDescriptor = new DynamicTestTestDescriptor(uniqueId, dynamicTest,
 			getSource().get());
+		addChild(dynamicTestTestDescriptor);
 
-		//This would lead to double execution of dynamic tests due to code in HierarchicalTestExecutor
-		//addChild(dynamicTestTestDescriptor);
-
-		dynamicTestTestDescriptor.setParent(this);
 		listener.dynamicTestRegistered(dynamicTestTestDescriptor);
-
 		listener.executionStarted(dynamicTestTestDescriptor);
-
 		TestExecutionResult result = new SingleTestExecutor().executeSafely(dynamicTest.getExecutable()::execute);
 		listener.executionFinished(dynamicTestTestDescriptor, result);
 	}
