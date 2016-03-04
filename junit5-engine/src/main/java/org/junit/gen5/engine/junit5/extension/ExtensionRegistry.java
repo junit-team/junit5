@@ -131,10 +131,22 @@ public class ExtensionRegistry {
 
 	/**
 	 * Return a stream for iterating over all registered extension points
+	 * of the specified type, using {@link ApplicationOrder#FORWARD}.
+	 *
+	 * @param extensionPointType the type of {@link ExtensionPoint} to stream
+	 * @see #stream(Class, ApplicationOrder)
+	 */
+	public <E extends ExtensionPoint> Stream<RegisteredExtensionPoint<E>> stream(Class<E> extensionPointType) {
+		return stream(extensionPointType, ApplicationOrder.FORWARD);
+	}
+
+	/**
+	 * Return a stream for iterating over all registered extension points
 	 * of the specified type.
 	 *
 	 * @param extensionPointType the type of {@link ExtensionPoint} to stream
 	 * @param order the order in which to apply the extension points after sorting
+	 * @see #stream(Class)
 	 */
 	public <E extends ExtensionPoint> Stream<RegisteredExtensionPoint<E>> stream(Class<E> extensionPointType,
 			ApplicationOrder order) {

@@ -11,12 +11,13 @@
 package org.junit.gen5.engine.junit5.execution;
 
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.MethodInvocationContext;
@@ -25,7 +26,7 @@ import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
-import org.junit.gen5.engine.junit5.extension.ExtensionRegistry.ApplicationOrder;
+import org.junit.gen5.engine.junit5.extension.RegisteredExtensionPoint;
 
 /**
  * {@code MethodInvoker} encapsulates the invocation of a method, including
@@ -36,6 +37,8 @@ import org.junit.gen5.engine.junit5.extension.ExtensionRegistry.ApplicationOrder
  */
 @API(Internal)
 public class MethodInvoker {
+
+	private static final Logger LOG = Logger.getLogger(MethodInvoker.class.getName());
 
 	private final ExtensionContext extensionContext;
 
@@ -70,19 +73,19 @@ public class MethodInvoker {
 			throws ParameterResolutionException {
 
 		try {
-			final List<MethodParameterResolver> matchingResolvers = new ArrayList<>();
-			extensionRegistry.stream(MethodParameterResolver.class, ApplicationOrder.FORWARD).forEach(
-				registeredExtensionPoint -> {
-					if (registeredExtensionPoint.getExtensionPoint().supports(parameter, methodInvocationContext,
-						extensionContext))
-						matchingResolvers.add(registeredExtensionPoint.getExtensionPoint());
-				});
+			// @formatter:off
+			List<MethodParameterResolver> matchingResolvers = extensionRegistry.stream(MethodParameterResolver.class)
+					.map(RegisteredExtensionPoint::getExtensionPoint)
+					.filter(extensionPoint -> extensionPoint.supports(parameter, methodInvocationContext, extensionContext))
+					.collect(toList());
+			// @formatter:on
 
 			if (matchingResolvers.size() == 0) {
 				throw new ParameterResolutionException(
 					String.format("No MethodParameterResolver registered for parameter [%s] in method [%s].", parameter,
 						methodInvocationContext.getMethod().toGenericString()));
 			}
+
 			if (matchingResolvers.size() > 1) {
 				// @formatter:off
 				String resolverNames = matchingResolvers.stream()
@@ -93,7 +96,25 @@ public class MethodInvoker {
 					"Discovered multiple competing MethodParameterResolvers for parameter [%s] in method [%s]: %s",
 					parameter, methodInvocationContext.getMethod().toGenericString(), resolverNames));
 			}
-			return matchingResolvers.get(0).resolve(parameter, methodInvocationContext, extensionContext);
+
+			MethodParameterResolver resolver = matchingResolvers.get(0);
+			Object value = resolver.resolve(parameter, methodInvocationContext, extensionContext);
+
+			// Note: null is permissible as a resolved value.
+			if (value != null && !parameter.getType().isInstance(value)) {
+				throw new ParameterResolutionException(String.format(
+					"MethodParameterResolver [%s] resolved a value of type [%s] for parameter [%s] "
+							+ "in method [%s], but a value assignment compatible with [%s] is required.",
+					resolver.getClass().getName(), value.getClass().getName(), parameter,
+					methodInvocationContext.getMethod().toGenericString(), parameter.getType().getName()));
+			}
+
+			LOG.finer(() -> String.format(
+				"MethodParameterResolver [%s] resolved a value of type [%s] for parameter [%s] in method [%s].",
+				resolver.getClass().getName(), (value != null ? value.getClass().getName() : null), parameter,
+				methodInvocationContext.getMethod().toGenericString()));
+
+			return value;
 		}
 		catch (Throwable ex) {
 			if (ex instanceof ParameterResolutionException) {

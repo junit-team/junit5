@@ -13,11 +13,15 @@ package org.junit.gen5.engine;
 import static java.util.function.Predicate.isEqual;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
 
+import java.util.function.Predicate;
+
 import org.assertj.core.api.Condition;
 import org.junit.gen5.engine.TestExecutionResult.Status;
 
 /**
  * Collection of AssertJ conditions for {@link TestExecutionResult}.
+ *
+ * @since 5.0
  */
 public class TestExecutionResultConditions {
 
@@ -29,6 +33,10 @@ public class TestExecutionResultConditions {
 	public static Condition<Throwable> message(String expectedMessage) {
 		return new Condition<>(where(Throwable::getMessage, isEqual(expectedMessage)), "message is \"%s\"",
 			expectedMessage);
+	}
+
+	public static Condition<Throwable> message(Predicate<String> predicate) {
+		return new Condition<>(where(Throwable::getMessage, predicate), "message is \"%s\"");
 	}
 
 	public static Condition<Throwable> isA(Class<? extends Throwable> expectedClass) {

@@ -10,7 +10,18 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.assertj.core.api.Assertions.allOf;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.engine.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.gen5.engine.ExecutionEventConditions.event;
+import static org.junit.gen5.engine.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.gen5.engine.ExecutionEventConditions.test;
+import static org.junit.gen5.engine.TestExecutionResultConditions.isA;
+import static org.junit.gen5.engine.TestExecutionResultConditions.message;
+
+import java.util.function.Predicate;
 
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
@@ -21,6 +32,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.MethodParameterResolver;
+import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.junit5.AbstractJUnit5TestEngineTests;
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
@@ -28,6 +40,7 @@ import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotationParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomType;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomTypeParameterResolver;
+import org.junit.gen5.engine.junit5.execution.injection.sample.NumberParameterResolver;
 
 /**
  * Integration tests that verify support for {@link MethodParameterResolver}
@@ -46,6 +59,29 @@ class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
 		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
 		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
+	}
+
+	@Test
+	public void executeTestsForPotentiallyIncompatibleTypeMethodInjectionCases() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(
+			PotentiallyIncompatibleTypeMethodInjectionTestCase.class);
+
+		assertEquals(3L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
+
+		// @formatter:off
+		Predicate<String> expectations = s ->
+				s.contains("NumberParameterResolver") &&
+				s.contains("resolved a value of type [java.lang.Integer]") &&
+				s.contains("but a value assignment compatible with [java.lang.Double] is required");
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getFailedTestFinishedEvents(),
+			event(
+				test("doubleParameterInjection"),
+				finishedWithFailure(allOf(isA(ParameterResolutionException.class), message(expectations)
+			))));
+		// @formatter:on
 	}
 
 	@Test
@@ -123,6 +159,30 @@ class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 			assertNotNull(customType);
 			assertNotNull(value);
 		}
+	}
+
+	@ExtendWith(NumberParameterResolver.class)
+	private static class PotentiallyIncompatibleTypeMethodInjectionTestCase {
+
+		@Test
+		void numberParameterInjection(Number number) {
+			assertEquals(new Integer(42), number);
+		}
+
+		@Test
+		void integerParameterInjection(Integer number) {
+			assertEquals(new Integer(42), number);
+		}
+
+		/**
+		 * This test must fail, since {@link Double} is a {@link Number} but not an {@link Integer}.
+		 * @see NumberParameterResolver
+		 */
+		@Test
+		void doubleParameterInjection(Double number) {
+			/* no-op */
+		}
+
 	}
 
 	private static class BeforeAndAfterMethodInjectionTestCase {
