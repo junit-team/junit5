@@ -22,9 +22,13 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.junit.gen5.api.Dynamic;
+import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.JUnitException;
@@ -53,11 +57,12 @@ public class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
 
-		assertEquals(3, engineDescriptor.allDescendants().size());
+		assertEquals(4, engineDescriptor.allDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "dynamicTest()")));
 	}
 
 	@Test
@@ -67,11 +72,12 @@ public class DiscoverySelectorResolverTests {
 			ClassSelector.forClass(MyTestClass.class) //
 		).build(), engineDescriptor);
 
-		assertEquals(3, engineDescriptor.allDescendants().size());
+		assertEquals(4, engineDescriptor.allDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "dynamicTest()")));
 	}
 
 	@Test
@@ -81,10 +87,11 @@ public class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request().select(selector1, selector2).build(), engineDescriptor);
 
-		assertEquals(6, engineDescriptor.allDescendants().size());
+		assertEquals(7, engineDescriptor.allDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
 		assertTrue(uniqueIds.contains(uniqueIdForClass(YourTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(YourTestClass.class, "test3()")));
@@ -145,10 +152,11 @@ public class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
 
-		assertEquals(3, engineDescriptor.allDescendants().size());
+		assertEquals(4, engineDescriptor.allDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
 	}
 
@@ -482,6 +490,11 @@ class MyTestClass {
 
 	void notATest() {
 
+	}
+
+	@Dynamic
+	Stream<DynamicTest> dynamicTest() {
+		return new ArrayList<DynamicTest>().stream();
 	}
 }
 
