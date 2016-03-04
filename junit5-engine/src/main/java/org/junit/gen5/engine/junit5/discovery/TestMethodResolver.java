@@ -33,6 +33,16 @@ public class TestMethodResolver implements ElementResolver {
 
 	public static final String SEGMENT_TYPE = "method";
 
+	private final String segmentType;
+
+	public TestMethodResolver() {
+		this(SEGMENT_TYPE);
+	}
+
+	protected TestMethodResolver(String segmentType) {
+		this.segmentType = segmentType;
+	}
+
 	@Override
 	public Set<TestDescriptor> resolveElement(AnnotatedElement element, TestDescriptor parent) {
 		if (!(element instanceof Method))
@@ -51,7 +61,7 @@ public class TestMethodResolver implements ElementResolver {
 
 	@Override
 	public Optional<TestDescriptor> resolveUniqueId(UniqueId.Segment segment, TestDescriptor parent) {
-		if (!segment.getType().equals(SEGMENT_TYPE))
+		if (!segment.getType().equals(segmentType))
 			return Optional.empty();
 
 		if (!(parent instanceof ClassTestDescriptor))
@@ -73,10 +83,10 @@ public class TestMethodResolver implements ElementResolver {
 		return new IsTestMethod().test(candidate);
 	}
 
-	protected UniqueId createUniqueId(Method testMethod, TestDescriptor parent) {
-		String methodId = String.format("%s(%s)", testMethod.getName(),
-			StringUtils.nullSafeToString(testMethod.getParameterTypes()));
-		return parent.getUniqueId().append(SEGMENT_TYPE, methodId);
+	private UniqueId createUniqueId(Method testMethod, TestDescriptor parent) {
+		Class<?>[] parameterTypes = testMethod.getParameterTypes();
+		String methodId = String.format("%s(%s)", testMethod.getName(), StringUtils.nullSafeToString(parameterTypes));
+		return parent.getUniqueId().append(segmentType, methodId);
 	}
 
 	private Optional<Method> findMethod(UniqueId.Segment segment, ClassTestDescriptor parent) {

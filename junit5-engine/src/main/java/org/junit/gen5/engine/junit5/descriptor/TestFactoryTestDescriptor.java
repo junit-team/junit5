@@ -39,6 +39,8 @@ import org.junit.gen5.engine.support.hierarchical.SingleTestExecutor;
 @API(Internal)
 public class TestFactoryTestDescriptor extends MethodTestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
 
+	public static final String DYNAMIC_TEST_SEGMENT_TYPE = "dynamic-test";
+
 	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, testClass, testMethod);
 	}
@@ -106,7 +108,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor implements L
 	}
 
 	private void registerAndExecute(DynamicTest dynamicTest, int index, EngineExecutionListener listener) {
-		UniqueId uniqueId = getUniqueId().append("dynamic-test", "%" + index);
+		UniqueId uniqueId = getUniqueId().append(DYNAMIC_TEST_SEGMENT_TYPE, "%" + index);
 		DynamicTestTestDescriptor dynamicTestTestDescriptor = new DynamicTestTestDescriptor(uniqueId, dynamicTest,
 			getSource().get());
 		addChild(dynamicTestTestDescriptor);

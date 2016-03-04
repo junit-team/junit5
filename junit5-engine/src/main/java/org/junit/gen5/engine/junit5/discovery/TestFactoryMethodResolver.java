@@ -12,7 +12,6 @@ package org.junit.gen5.engine.junit5.discovery;
 
 import java.lang.reflect.Method;
 
-import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
@@ -22,14 +21,14 @@ public class TestFactoryMethodResolver extends TestMethodResolver {
 
 	public static final String SEGMENT_TYPE = "test-factory";
 
-	protected boolean isTestMethod(Method candidate) {
-		return new IsTestFactoryMethod().test(candidate);
+	private final IsTestFactoryMethod isTestFactoryMethod = new IsTestFactoryMethod();
+
+	public TestFactoryMethodResolver() {
+		super(SEGMENT_TYPE);
 	}
 
-	protected UniqueId createUniqueId(Method testMethod, TestDescriptor parent) {
-		String methodId = String.format("%s(%s)", testMethod.getName(),
-			StringUtils.nullSafeToString(testMethod.getParameterTypes()));
-		return parent.getUniqueId().append(SEGMENT_TYPE, methodId);
+	protected boolean isTestMethod(Method candidate) {
+		return isTestFactoryMethod.test(candidate);
 	}
 
 	protected TestDescriptor resolveMethod(Method testMethod, ClassTestDescriptor parentClassDescriptor,

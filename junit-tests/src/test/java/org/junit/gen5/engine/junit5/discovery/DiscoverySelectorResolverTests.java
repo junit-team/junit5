@@ -43,6 +43,7 @@ import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
+import org.junit.gen5.engine.junit5.descriptor.TestFactoryTestDescriptor;
 
 /**
  * @since 5.0
@@ -320,6 +321,33 @@ public class DiscoverySelectorResolverTests {
 
 		assertEquals(classFromMethod1, classFromMethod2);
 		assertSame(classFromMethod1, classFromMethod2);
+	}
+
+	@Test
+	public void resolvingDynamicTestByUniqueIdResolvesOnlyUpToParentTestFactory() {
+		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
+			uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()").append(
+				TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE, "%1"));
+
+		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
+
+		assertThat(engineDescriptor.allDescendants()).hasSize(2);
+
+		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(MyTestClass.class),
+			uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()"));
+	}
+
+	@Test
+	public void resolvingTestFactoryMethodByUniqueId() {
+		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
+			uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()"));
+
+		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
+
+		assertThat(engineDescriptor.allDescendants()).hasSize(2);
+
+		assertThat(uniqueIds()).containsSequence(uniqueIdForClass(MyTestClass.class),
+			uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()"));
 	}
 
 	@Test
