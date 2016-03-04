@@ -17,6 +17,7 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -34,7 +35,7 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 	public void dynamicTestMethodsAreCorrectlyDiscoveredForClassSelector() {
 		TestDiscoveryRequest request = request().select(forClass(MyDynamicTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(3, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(4, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
@@ -77,6 +78,22 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 			() -> assertEquals(3L, eventRecorder.getContainerFinishedCount(), "# container finished"));
 	}
 
+	@Test
+	public void dynamicTestsAreExecutedFromIterator() {
+		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "dynamicIterator")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		//dynamic test methods are counted as both container and test
+		assertAll( //
+			() -> assertEquals(3L, eventRecorder.getContainerStartedCount(), "# container started"),
+			() -> assertEquals(2L, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
+			() -> assertEquals(3L, eventRecorder.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed"),
+			() -> assertEquals(3L, eventRecorder.getContainerFinishedCount(), "# container finished"));
+	}
+
 	private static class MyDynamicTestCase {
 
 		@Dynamic
@@ -97,6 +114,16 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 			tests.add(new DynamicTest("failingTest", () -> Assertions.assertTrue(false, "failing")));
 
 			return tests;
+		}
+
+		@Dynamic
+		Iterator<DynamicTest> dynamicIterator() {
+			List<DynamicTest> tests = new ArrayList<>();
+
+			tests.add(new DynamicTest("succeedingTest", () -> Assertions.assertTrue(true, "succeeding")));
+			tests.add(new DynamicTest("failingTest", () -> Assertions.assertTrue(false, "failing")));
+
+			return tests.iterator();
 		}
 
 	}

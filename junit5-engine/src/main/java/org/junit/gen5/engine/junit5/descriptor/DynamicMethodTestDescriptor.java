@@ -15,8 +15,12 @@ import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFact
 
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.api.extension.MethodInvocationContext;
@@ -78,6 +82,11 @@ public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements
 			if (dynamicMethodResult instanceof Collection) {
 				Collection<DynamicTest> dynamicTestCollection = (Collection<DynamicTest>) dynamicMethodResult;
 				return dynamicTestCollection.stream();
+			}
+			if (dynamicMethodResult instanceof Iterator) {
+				Iterator<DynamicTest> dynamicTestIterator = (Iterator<DynamicTest>) dynamicMethodResult;
+				return StreamSupport.stream(
+					Spliterators.spliteratorUnknownSize(dynamicTestIterator, Spliterator.ORDERED), false);
 			}
 
 		}
