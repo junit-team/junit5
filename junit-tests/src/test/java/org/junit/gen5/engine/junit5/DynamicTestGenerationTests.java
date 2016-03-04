@@ -16,6 +16,7 @@ import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -38,14 +39,31 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void dynamicTestMethodIsCorrectlyDiscoveredForMethodSelector() {
-		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "myDynamicTest")).build();
+		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "dynamicStream")).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void dynamicTestsAreExecutedFromStream() {
-		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "myDynamicTest")).build();
+		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "dynamicStream")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		//dynamic test methods are counted as both container and test
+		assertAll( //
+			() -> assertEquals(3L, eventRecorder.getContainerStartedCount(), "# container started"),
+			() -> assertEquals(2L, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
+			() -> assertEquals(3L, eventRecorder.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed"),
+			() -> assertEquals(3L, eventRecorder.getContainerFinishedCount(), "# container finished"));
+	}
+
+	@Test
+	public void dynamicTestsAreExecutedFromCollection() {
+		TestDiscoveryRequest request = request().select(
+			forMethod(MyDynamicTestCase.class, "dynamicCollection")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -62,7 +80,7 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 	private static class MyDynamicTestCase {
 
 		@Dynamic
-		Stream<DynamicTest> myDynamicTest() {
+		Stream<DynamicTest> dynamicStream() {
 			List<DynamicTest> tests = new ArrayList<>();
 
 			tests.add(new DynamicTest("succeedingTest", () -> Assertions.assertTrue(true, "succeeding")));
@@ -72,8 +90,13 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 		}
 
 		@Dynamic
-		Stream<DynamicTest> otherDynamicTest() {
-			return new ArrayList<DynamicTest>().stream();
+		Collection<DynamicTest> dynamicCollection() {
+			List<DynamicTest> tests = new ArrayList<>();
+
+			tests.add(new DynamicTest("succeedingTest", () -> Assertions.assertTrue(true, "succeeding")));
+			tests.add(new DynamicTest("failingTest", () -> Assertions.assertTrue(false, "failing")));
+
+			return tests;
 		}
 
 	}
