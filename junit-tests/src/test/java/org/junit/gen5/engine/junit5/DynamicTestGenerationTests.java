@@ -10,9 +10,9 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.assertAll;
-import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
@@ -30,15 +30,22 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
 class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
-	public void dynamicTestMethodIsCorrectlyDiscovered() {
+	public void dynamicTestMethodsAreCorrectlyDiscoveredForClassSelector() {
 		TestDiscoveryRequest request = request().select(forClass(MyDynamicTestCase.class)).build();
+		TestDescriptor engineDescriptor = discoverTests(request);
+		assertEquals(3, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+	}
+
+	@Test
+	public void dynamicTestMethodIsCorrectlyDiscoveredForMethodSelector() {
+		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "myDynamicTest")).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
-	public void dynamicTestsAreExecuted() {
-		TestDiscoveryRequest request = request().select(forClass(MyDynamicTestCase.class)).build();
+	public void dynamicTestsAreExecutedFromStream() {
+		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "myDynamicTest")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -62,6 +69,11 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 			tests.add(new DynamicTest("failingTest", () -> Assertions.assertTrue(false, "failing")));
 
 			return tests.stream();
+		}
+
+		@Dynamic
+		Stream<DynamicTest> otherDynamicTest() {
+			return new ArrayList<DynamicTest>().stream();
 		}
 
 	}
