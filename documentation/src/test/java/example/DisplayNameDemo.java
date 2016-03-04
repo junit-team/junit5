@@ -18,8 +18,19 @@ import org.junit.gen5.api.Test;
 class DisplayNameDemo {
 
 	@Test
-	@DisplayName("A nice name, isn't it?")
-	void testWithANiceName() {
+	@DisplayName("Custom test name containing spaces")
+	void testWithDisplayNameContainingSpaces() {
 	}
+
+	@Test
+	@DisplayName("╯°□°）╯")
+	void testWithDisplayNameContainingSpecialCharacters() {
+	}
+
+	@Test
+	@DisplayName("😱")
+	void testWithDisplayNameContainingEmoji() {
+	}
+
 }
 // end::user_guide[]
