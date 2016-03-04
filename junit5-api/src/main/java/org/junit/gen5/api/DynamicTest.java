@@ -10,6 +10,14 @@
 
 package org.junit.gen5.api;
 
+import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
 public class DynamicTest {
 
 	private final String name;
@@ -26,5 +34,17 @@ public class DynamicTest {
 
 	public Executable getExecutable() {
 		return executable;
+	}
+
+	public static <T extends Object> Stream<DynamicTest> streamFrom(Iterator<T> generator,
+			Function<T, String> nameSupplier, Consumer<T> assertion) {
+		Stream<T> targetStream = StreamSupport.stream(
+			Spliterators.spliteratorUnknownSize(generator, Spliterator.ORDERED), false);
+		return targetStream.map(element -> {
+			String testName = nameSupplier.apply(element);
+			Executable testExecutable = () -> assertion.accept(element);
+			return new DynamicTest(testName, testExecutable);
+		});
+
 	}
 }

@@ -68,30 +68,31 @@ public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements
 			Stream<DynamicTest> dynamicTestStream = toDynamicTestStream(dynamicMethodResult);
 
 			AtomicInteger index = new AtomicInteger();
-			dynamicTestStream.forEach(
-				dynamicTest -> registerAndExecute(dynamicTest, index.incrementAndGet(), listener));
+			try {
+				dynamicTestStream.forEach(
+					dynamicTest -> registerAndExecute(dynamicTest, index.incrementAndGet(), listener));
+			}
+			catch (ClassCastException cce) {
+				throw new JUnitException(
+					"Dynamic test must return Stream, Collection or Iterator of " + DynamicTest.class);
+			}
+
 		});
 	}
 
 	@SuppressWarnings("unchecked")
 	private Stream<DynamicTest> toDynamicTestStream(Object dynamicMethodResult) {
 
-		try {
-			if (dynamicMethodResult instanceof Stream)
-				return (Stream<DynamicTest>) dynamicMethodResult;
-			if (dynamicMethodResult instanceof Collection) {
-				Collection<DynamicTest> dynamicTestCollection = (Collection<DynamicTest>) dynamicMethodResult;
-				return dynamicTestCollection.stream();
-			}
-			if (dynamicMethodResult instanceof Iterator) {
-				Iterator<DynamicTest> dynamicTestIterator = (Iterator<DynamicTest>) dynamicMethodResult;
-				return StreamSupport.stream(
-					Spliterators.spliteratorUnknownSize(dynamicTestIterator, Spliterator.ORDERED), false);
-			}
-
+		if (dynamicMethodResult instanceof Stream)
+			return (Stream<DynamicTest>) dynamicMethodResult;
+		if (dynamicMethodResult instanceof Collection) {
+			Collection<DynamicTest> dynamicTestCollection = (Collection<DynamicTest>) dynamicMethodResult;
+			return dynamicTestCollection.stream();
 		}
-		catch (ClassCastException cce) {
-			// swallow to throw default exception below
+		if (dynamicMethodResult instanceof Iterator) {
+			Iterator<DynamicTest> dynamicTestIterator = (Iterator<DynamicTest>) dynamicMethodResult;
+			return StreamSupport.stream(Spliterators.spliteratorUnknownSize(dynamicTestIterator, Spliterator.ORDERED),
+				false);
 		}
 
 		throw new JUnitException("Dynamic test must return Stream, Collection or Iterator of " + DynamicTest.class);
