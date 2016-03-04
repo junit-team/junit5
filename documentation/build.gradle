@@ -11,6 +11,7 @@ install.enabled = false
 
 junit5 {
 	runJunit4 true
+	excludeTag 'exclude'
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 }
 
