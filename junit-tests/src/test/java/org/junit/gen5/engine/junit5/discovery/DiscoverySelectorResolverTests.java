@@ -323,6 +323,19 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
+	public void testDynamicTestByUniqueIdWillOnlyResolveUpToParent() {
+		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
+			"ENGINE_ID:org.junit.gen5.engine.junit5.discovery.MyTestClass#dynamicTest()%1");
+
+		resolver.resolveSelectors(request().select(selector).build());
+
+		assertEquals(2, engineDescriptor.allDescendants().size());
+		List<String> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.discovery.MyTestClass"));
+		assertTrue(uniqueIds.contains("ENGINE_ID:org.junit.gen5.engine.junit5.discovery.MyTestClass#dynamicTest()"));
+	}
+
+	@Test
 	public void packageResolution() {
 		PackageSelector selector = PackageSelector.forPackageName("org.junit.gen5.engine.junit5.descriptor.subpackage");
 
