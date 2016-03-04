@@ -14,12 +14,14 @@ import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestExecutionResult;
@@ -58,15 +60,32 @@ public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements
 				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod());
 
 			MethodInvoker methodInvoker = new MethodInvoker(testExtensionContext, context.getExtensionRegistry());
-
-			@SuppressWarnings("unchecked")
-			//Todo: Handle cast exceptions
-			Stream<DynamicTest> dynamicTestStream = (Stream<DynamicTest>) methodInvoker.invoke(methodInvocationContext);
+			Object dynamicMethodResult = methodInvoker.invoke(methodInvocationContext);
+			Stream<DynamicTest> dynamicTestStream = toDynamicTestStream(dynamicMethodResult);
 
 			AtomicInteger index = new AtomicInteger();
 			dynamicTestStream.forEach(
 				dynamicTest -> registerAndExecute(dynamicTest, index.incrementAndGet(), listener));
 		});
+	}
+
+	@SuppressWarnings("unchecked")
+	private Stream<DynamicTest> toDynamicTestStream(Object dynamicMethodResult) {
+
+		try {
+			if (dynamicMethodResult instanceof Stream)
+				return (Stream<DynamicTest>) dynamicMethodResult;
+			if (dynamicMethodResult instanceof Collection) {
+				Collection<DynamicTest> dynamicTestCollection = (Collection<DynamicTest>) dynamicMethodResult;
+				return dynamicTestCollection.stream();
+			}
+
+		}
+		catch (ClassCastException cce) {
+			// swallow to throw default exception below
+		}
+
+		throw new JUnitException("Dynamic test must return Stream, Collection or Iterator of " + DynamicTest.class);
 	}
 
 	private void registerAndExecute(DynamicTest dynamicTest, int index, EngineExecutionListener listener) {
