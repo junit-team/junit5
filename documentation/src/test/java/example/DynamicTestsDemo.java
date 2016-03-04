@@ -15,10 +15,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.Spliterator;
-import java.util.Spliterators;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.Dynamic;
@@ -29,28 +26,41 @@ import org.junit.runner.RunWith;
 @RunWith(JUnit5.class)
 public class DynamicTestsDemo {
 
+	//	@Dynamic
+	List<String> dynamicTestsWithWrongReturnType() {
+		List<String> tests = new ArrayList<>();
+		tests.add("Hallo");
+		return tests;
+	}
+
 	@Dynamic
-	Stream<DynamicTest> myDynamicTest() {
+	List<DynamicTest> dynamicTestsFromList() {
 		List<DynamicTest> tests = new ArrayList<>();
 
 		tests.add(new DynamicTest("succeedingTest", () -> Assertions.assertTrue(true, "succeeding")));
 		tests.add(new DynamicTest("failingTest", () -> Assertions.assertTrue(false, "failing")));
 
-		return tests.stream();
+		return tests;
 	}
 
 	@Dynamic
-	Stream<DynamicTest> generatedTestsFromIterator() {
-		Iterator<String> stringIterator = Arrays.asList("ATest", "BTest", "CTest").iterator();
-		Stream<String> targetStream = StreamSupport.stream(
-			Spliterators.spliteratorUnknownSize(stringIterator, Spliterator.ORDERED), false);
-		return targetStream.map(s -> new DynamicTest(s, () -> {
+	Stream<DynamicTest> dynamicTestsFromStream() {
+		String[] testNames = new String[] { "test1", "test2" };
+		return Arrays.stream(testNames).map(name -> new DynamicTest(name, () -> {
 		}));
 	}
 
 	@Dynamic
-	Stream<DynamicTest> generatedTestsFromGeneratorFunction() {
-		Iterator<Integer> generator = new Iterator<Integer>() {
+	Iterator<DynamicTest> dynamicTestStreamFromIterator() {
+		List<DynamicTest> tests = new ArrayList<>();
+		tests.add(new DynamicTest("succeedingTest", () -> Assertions.assertTrue(true, "succeeding")));
+		tests.add(new DynamicTest("failingTest", () -> Assertions.assertTrue(false, "failing")));
+		return tests.iterator();
+	}
+
+	@Dynamic
+	Iterator<DynamicTest> generatedTestsFromGeneratorFunction() {
+		Iterator<DynamicTest> generator = new Iterator<DynamicTest>() {
 			int counter = 0;
 
 			@Override
@@ -59,13 +69,12 @@ public class DynamicTestsDemo {
 			}
 
 			@Override
-			public Integer next() {
-				return counter++;
+			public DynamicTest next() {
+				int index = counter++;
+				return new DynamicTest("test" + index, () -> Assertions.assertTrue(index % 11 != 0));
 			}
 		};
-		Stream<Integer> targetStream = StreamSupport.stream(
-			Spliterators.spliteratorUnknownSize(generator, Spliterator.ORDERED), false);
-		return targetStream.map(index -> new DynamicTest("test" + index, () -> Assertions.assertTrue(index % 11 != 0)));
+		return generator;
 	}
 
 	@Dynamic
@@ -87,10 +96,8 @@ public class DynamicTestsDemo {
 				return last;
 			}
 		};
-		Stream<Integer> targetStream = StreamSupport.stream(
-			Spliterators.spliteratorUnknownSize(generator, Spliterator.ORDERED), false);
-		return targetStream.map(
-			index -> new DynamicTest("test" + index, () -> Assertions.assertFalse(index % AVERAGE == 0)));
+		return DynamicTest.streamFrom(generator, index -> "test" + index,
+			index -> Assertions.assertFalse(index % AVERAGE == 0));
 	}
 
 }
