@@ -60,7 +60,7 @@ public class UniqueId implements Cloneable {
 	}
 
 	public List<Segment> getSegments() {
-		return Collections.unmodifiableList(segments);
+		return new ArrayList<>(segments);
 	}
 
 	/**
@@ -128,6 +128,11 @@ public class UniqueId implements Cloneable {
 			Segment segment = (Segment) o;
 			return type.equals(segment.type) && value.equals(segment.value);
 
+		}
+
+		@Override
+		public String toString() {
+			return String.format("[%s:%s]", getType(), getValue());
 		}
 
 		@Override

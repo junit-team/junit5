@@ -14,7 +14,6 @@ import static java.lang.String.format;
 import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -24,6 +23,7 @@ import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.StringUtils;
+import org.junit.gen5.engine.UniqueId;
 
 /**
  * @since 5.0
@@ -38,19 +38,21 @@ class JUnit5TestableFactory {
 	private static final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
 	private static final IsTestMethod isTestMethod = new IsTestMethod();
 
-	JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
-		Preconditions.notBlank(uniqueId, "Unique ID must not be null or empty");
-		List<String> parts = split(uniqueId);
-		Preconditions.condition(parts.remove(0).equals(engineId), "uniqueId must start with engineId");
+	JUnit5Testable fromUniqueId(UniqueId uniqueId, UniqueId engineId) {
+		Preconditions.notNull(uniqueId, "Unique ID must not be null");
+		List<UniqueId.Segment> parts = uniqueId.getSegments();
+
+		//Engine ID is not used
+		parts.remove(0);
 
 		return createTestable(uniqueId, engineId, parts, null);
 	}
 
-	JUnit5Testable fromClass(Class<?> clazz, String engineId) {
+	JUnit5Testable fromClass(Class<?> clazz, UniqueId engineId) {
 		Preconditions.notNull(clazz, "Class must not be null");
-		Preconditions.notBlank(engineId, "Engine ID must not be null or empty");
+		Preconditions.notNull(engineId, "Engine ID must not be null");
 		if (isPotentialTestContainer.test(clazz)) {
-			String uniqueId = engineId + ":" + clazz.getName();
+			UniqueId uniqueId = engineId.append("class", clazz.getName());
 			return new JUnit5Class(uniqueId, clazz);
 		}
 		if (isNestedTestClass.test(clazz)) {
@@ -63,12 +65,12 @@ class JUnit5TestableFactory {
 		return JUnit5Testable.doNothing();
 	}
 
-	private JUnit5Testable createNestedClassTestable(Class<?> testClass, Class<?> container, String engineId) {
-		String uniqueId = fromClass(container, engineId).getUniqueId() + "@" + testClass.getSimpleName();
+	private JUnit5Testable createNestedClassTestable(Class<?> testClass, Class<?> container, UniqueId engineId) {
+		UniqueId uniqueId = fromClass(container, engineId).getUniqueId().append("class", testClass.getSimpleName());
 		return new JUnit5NestedClass(uniqueId, testClass, container);
 	}
 
-	JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
+	JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, UniqueId engineId) {
 		if (!isTestMethod.test(testMethod)) {
 			LOG.warning(() -> {
 				String methodDescription = testMethod.getDeclaringClass().getName() + "#" + testMethod.getName();
@@ -77,68 +79,55 @@ class JUnit5TestableFactory {
 
 			return JUnit5Testable.doNothing();
 		}
-		String uniqueId = String.format("%s#%s(%s)", fromClass(clazz, engineId).getUniqueId(), testMethod.getName(),
+		String methodId = String.format("%s(%s)", testMethod.getName(),
 			StringUtils.nullSafeToString(testMethod.getParameterTypes()));
+		UniqueId uniqueId = fromClass(clazz, engineId).getUniqueId().append("method", methodId);
 		return new JUnit5Method(uniqueId, testMethod, clazz);
 	}
 
-	private List<String> split(String uniqueId) {
-		List<String> parts = new ArrayList<>();
-		String currentPart = "";
-		for (char c : uniqueId.toCharArray()) {
-			if (SEPARATORS.contains(Character.toString(c))) {
-				parts.add(currentPart);
-				currentPart = "";
-			}
-			currentPart += c;
-		}
-		parts.add(currentPart);
-		return parts;
-	}
-
-	private JUnit5Testable createTestable(String uniqueId, String engineId, List<String> parts, JUnit5Testable last) {
+	private JUnit5Testable createTestable(UniqueId uniqueId, UniqueId engineId, List<UniqueId.Segment> parts, JUnit5Testable last) {
 		if (parts.isEmpty())
 			return last;
-		JUnit5Testable next;
-		String head = parts.remove(0);
-		switch (head.charAt(0)) {
-			case ':':
-				next = fromClass(findTopLevelClass(head), engineId);
+		JUnit5Testable next = null;
+		UniqueId.Segment head = parts.remove(0);
+		switch (head.getType()) {
+			case "class":
+				next = fromClass(findTopLevelClass(head.getValue()), engineId);
 				break;
-			case '@': {
+			case "nested-class": {
 				Class<?> container = ((JUnit5Class) last).getJavaClass();
-				next = fromClass(findNestedClass(head, container), engineId);
+				next = fromClass(findNestedClass(head.getValue(), container), engineId);
 				break;
 			}
-			case '#': {
+			case "method": {
 				Class<?> container = ((JUnit5Class) last).getJavaClass();
-				next = fromMethod(findMethod(head, container, uniqueId), container, engineId);
+				next = fromMethod(findMethod(head.getValue(), container, uniqueId), container, engineId);
 				break;
 			}
 			default:
-				throw createCannotResolveUniqueIdException(uniqueId, head);
+				throw createCannotResolveUniqueIdException(uniqueId, head.toString());
 		}
 		return createTestable(uniqueId, engineId, parts, next);
 	}
 
-	private Method findMethod(String methodSpecPart, Class<?> clazz, String uniqueId) {
+	private Method findMethod(String methodSpecPart, Class<?> clazz, UniqueId uniqueId) {
 		// TODO Throw IAE when format wrong. Currently you get IndexOutOfBoundsException.
 		int startParams = methodSpecPart.indexOf('(');
-		String methodName = methodSpecPart.substring(1, startParams);
+		String methodName = methodSpecPart.substring(0, startParams);
 		int endParams = methodSpecPart.lastIndexOf(')');
 		String paramsPart = methodSpecPart.substring(startParams + 1, endParams);
 		Class<?>[] parameterTypes = resolveParameterTypes(paramsPart, uniqueId);
 		return findMethod(clazz, methodName, parameterTypes);
 	}
 
-	private Class<?>[] resolveParameterTypes(String paramsPart, String uniqueId) {
+	private Class<?>[] resolveParameterTypes(String paramsPart, UniqueId uniqueId) {
 		if (paramsPart.isEmpty()) {
 			return new Class<?>[0];
 		}
 
 		// @formatter:off
 		List<Class<?>> types = Arrays.stream(paramsPart.split(","))
-				.map(className -> loadRequiredClass(className, uniqueId, paramsPart))
+				.map(className -> loadRequiredParamterClass(className, uniqueId, paramsPart))
 				.collect(Collectors.toList());
 		// @formatter:on
 
@@ -152,11 +141,11 @@ class JUnit5TestableFactory {
 	}
 
 	private Class<?> findNestedClass(String nameExtension, Class<?> containerClass) {
-		return classByName(containerClass.getName() + "$" + nameExtension.substring(1));
+		return classByName(containerClass.getName() + "$" + nameExtension);
 	}
 
 	private Class<?> findTopLevelClass(String classNamePart) {
-		return loadClassByName(classNamePart.substring(1));
+		return loadClassByName(classNamePart);
 	}
 
 	private Class<?> classByName(String className) {
@@ -169,13 +158,13 @@ class JUnit5TestableFactory {
 			() -> new PreconditionViolationException(String.format("Cannot load class '%s'", className)));
 	}
 
-	private Class<?> loadRequiredClass(String className, String fullUniqueId, String uniqueIdPart) {
+	private Class<?> loadRequiredParamterClass(String className, UniqueId fullUniqueId, String paramsPart) {
 		return ReflectionUtils.loadClass(className).orElseThrow(
-			() -> createCannotResolveUniqueIdException(fullUniqueId, uniqueIdPart));
+			() -> createCannotResolveUniqueIdException(fullUniqueId, paramsPart));
 	}
 
-	private static RuntimeException createCannotResolveUniqueIdException(String fullUniqueId, String uniqueIdPart) {
+	private static RuntimeException createCannotResolveUniqueIdException(UniqueId fullUniqueId, String uniqueIdPart) {
 		return new PreconditionViolationException(
-			String.format("Cannot resolve part '%s' of unique ID '%s'", uniqueIdPart, fullUniqueId));
+			String.format("Cannot resolve part '%s' of unique ID '%s'", uniqueIdPart, fullUniqueId.getUniqueString()));
 	}
 }

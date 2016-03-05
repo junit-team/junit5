@@ -12,6 +12,8 @@ package org.junit.gen5.engine.junit5.discovery;
 
 import java.lang.reflect.Method;
 
+import org.junit.gen5.engine.UniqueId;
+
 /**
  * @since 5.0
  */
@@ -19,22 +21,37 @@ abstract class JUnit5Testable {
 
 	private static final JUnit5TestableFactory testableFactory = new JUnit5TestableFactory();
 
-	private static final JUnit5Testable noOpTestable = new JUnit5Testable("ignored") {
+	private static final JUnit5Testable noOpTestable = new JUnit5Testable(null) {
 		@Override
 		void accept(Visitor visitor) {
 			/* no-op */
 		}
 	};
 
+	@Deprecated
 	static JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
+		return fromUniqueId(UniqueId.parse(uniqueId), UniqueId.forEngine("engine", engineId));
+	}
+
+	static JUnit5Testable fromUniqueId(UniqueId uniqueId, UniqueId engineId) {
 		return testableFactory.fromUniqueId(uniqueId, engineId);
 	}
 
+	@Deprecated
 	static JUnit5Testable fromClass(Class<?> clazz, String engineId) {
+		return fromClass(clazz, UniqueId.forEngine("engine", engineId));
+	}
+
+	static JUnit5Testable fromClass(Class<?> clazz, UniqueId engineId) {
 		return testableFactory.fromClass(clazz, engineId);
 	}
 
+	@Deprecated
 	static JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
+		return fromMethod(testMethod, clazz, UniqueId.forEngine("engine", engineId));
+	}
+
+	static JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, UniqueId engineId) {
 		return testableFactory.fromMethod(testMethod, clazz, engineId);
 	}
 
@@ -42,13 +59,13 @@ abstract class JUnit5Testable {
 		return noOpTestable;
 	}
 
-	private final String uniqueId;
+	private final UniqueId uniqueId;
 
-	JUnit5Testable(String uniqueId) {
+	JUnit5Testable(UniqueId uniqueId) {
 		this.uniqueId = uniqueId;
 	}
 
-	String getUniqueId() {
+	UniqueId getUniqueId() {
 		return this.uniqueId;
 	}
 
@@ -56,11 +73,11 @@ abstract class JUnit5Testable {
 
 	interface Visitor {
 
-		void visitClass(String uniqueId, Class<?> testClass);
+		void visitClass(UniqueId uniqueId, Class<?> testClass);
 
-		void visitMethod(String uniqueId, Method method, Class<?> container);
+		void visitMethod(UniqueId uniqueId, Method method, Class<?> container);
 
-		void visitNestedClass(String uniqueId, Class<?> javaClass, Class<?> containerClass);
+		void visitNestedClass(UniqueId uniqueId, Class<?> javaClass, Class<?> containerClass);
 	}
 
 }
