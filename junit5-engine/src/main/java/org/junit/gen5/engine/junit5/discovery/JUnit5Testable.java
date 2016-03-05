@@ -14,9 +14,6 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.engine.UniqueId;
 
-/**
- * @since 5.0
- */
 abstract class JUnit5Testable {
 
 	private static final JUnit5TestableFactory testableFactory = new JUnit5TestableFactory();
@@ -37,18 +34,8 @@ abstract class JUnit5Testable {
 		return testableFactory.fromUniqueId(uniqueId, engineId);
 	}
 
-	@Deprecated
-	static JUnit5Testable fromClass(Class<?> clazz, String engineId) {
-		return fromClass(clazz, UniqueId.forEngine("engine", engineId));
-	}
-
 	static JUnit5Testable fromClass(Class<?> clazz, UniqueId engineId) {
 		return testableFactory.fromClass(clazz, engineId);
-	}
-
-	@Deprecated
-	static JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
-		return fromMethod(testMethod, clazz, UniqueId.forEngine("engine", engineId));
 	}
 
 	static JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, UniqueId engineId) {

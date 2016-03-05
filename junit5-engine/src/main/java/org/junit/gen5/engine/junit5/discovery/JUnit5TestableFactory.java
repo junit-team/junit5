@@ -38,6 +38,11 @@ class JUnit5TestableFactory {
 	private static final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
 	private static final IsTestMethod isTestMethod = new IsTestMethod();
 
+	public static final String TYPE_CLASS = "class";
+	public static final String TYPE_NESTED_CLASS = "nested-class";
+	public static final String TYPE_METHOD = "method";
+	public static final String TYPE_ENGINE = "engine";
+
 	JUnit5Testable fromUniqueId(UniqueId uniqueId, UniqueId engineId) {
 		Preconditions.notNull(uniqueId, "Unique ID must not be null");
 		List<UniqueId.Segment> parts = uniqueId.getSegments();
@@ -52,7 +57,7 @@ class JUnit5TestableFactory {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(engineId, "Engine ID must not be null");
 		if (isPotentialTestContainer.test(clazz)) {
-			UniqueId uniqueId = engineId.append("class", clazz.getName());
+			UniqueId uniqueId = engineId.append(TYPE_CLASS, clazz.getName());
 			return new JUnit5Class(uniqueId, clazz);
 		}
 		if (isNestedTestClass.test(clazz)) {
@@ -66,7 +71,8 @@ class JUnit5TestableFactory {
 	}
 
 	private JUnit5Testable createNestedClassTestable(Class<?> testClass, Class<?> container, UniqueId engineId) {
-		UniqueId uniqueId = fromClass(container, engineId).getUniqueId().append("class", testClass.getSimpleName());
+		UniqueId uniqueId = fromClass(container, engineId).getUniqueId().append(TYPE_NESTED_CLASS,
+			testClass.getSimpleName());
 		return new JUnit5NestedClass(uniqueId, testClass, container);
 	}
 
@@ -81,20 +87,21 @@ class JUnit5TestableFactory {
 		}
 		String methodId = String.format("%s(%s)", testMethod.getName(),
 			StringUtils.nullSafeToString(testMethod.getParameterTypes()));
-		UniqueId uniqueId = fromClass(clazz, engineId).getUniqueId().append("method", methodId);
+		UniqueId uniqueId = fromClass(clazz, engineId).getUniqueId().append(TYPE_METHOD, methodId);
 		return new JUnit5Method(uniqueId, testMethod, clazz);
 	}
 
-	private JUnit5Testable createTestable(UniqueId uniqueId, UniqueId engineId, List<UniqueId.Segment> parts, JUnit5Testable last) {
+	private JUnit5Testable createTestable(UniqueId uniqueId, UniqueId engineId, List<UniqueId.Segment> parts,
+			JUnit5Testable last) {
 		if (parts.isEmpty())
 			return last;
 		JUnit5Testable next = null;
 		UniqueId.Segment head = parts.remove(0);
 		switch (head.getType()) {
-			case "class":
+			case TYPE_CLASS:
 				next = fromClass(findTopLevelClass(head.getValue()), engineId);
 				break;
-			case "nested-class": {
+			case TYPE_NESTED_CLASS: {
 				Class<?> container = ((JUnit5Class) last).getJavaClass();
 				next = fromClass(findNestedClass(head.getValue(), container), engineId);
 				break;
