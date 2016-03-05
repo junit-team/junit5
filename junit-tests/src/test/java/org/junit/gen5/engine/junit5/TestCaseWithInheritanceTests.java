@@ -10,10 +10,9 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.fail;
+import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.api.Assumptions.assumeTrue;
-import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
+import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.AfterEach;
@@ -57,8 +56,7 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 	@Test
 	public void executeSingleTest() {
-		TestDiscoveryRequest request = request().select(forUniqueId(
-			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#alwaysPasses()")).build();
+		TestDiscoveryRequest request = request().select(forMethod(LocalTestCase.class, "alwaysPasses")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -71,8 +69,7 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 	@Test
 	public void executeTestDeclaredInSuperClass() {
-		TestDiscoveryRequest request = request().select(forUniqueId(
-			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#superclassTest()")).build();
+		TestDiscoveryRequest request = request().select(forMethod(LocalTestCase.class, "superclassTest")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -91,8 +88,8 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 	@Test
 	public void executeTestWithExceptionThrownInAfterMethod() {
-		TestDiscoveryRequest request = request().select(forUniqueId(
-			"junit5:org.junit.gen5.engine.junit5.TestCaseWithInheritanceTests$LocalTestCase#throwExceptionInAfterMethod()")).build();
+		TestDiscoveryRequest request = request().select(
+			forMethod(LocalTestCase.class, "throwExceptionInAfterMethod")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
