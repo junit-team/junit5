@@ -18,6 +18,8 @@ import java.math.BigDecimal;
 
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.UniqueId;
+import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
 public class JUnit5TestableTests {
 
