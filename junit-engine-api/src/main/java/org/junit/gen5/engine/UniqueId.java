@@ -13,10 +13,6 @@ package org.junit.gen5.engine;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
-
-import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.StringUtils;
 
 /**
  * {@code UniqueId} is a class to encapsulate the creation, parsing and display of unique IDs for {@link TestDescriptor}.
@@ -24,6 +20,8 @@ import org.junit.gen5.commons.util.StringUtils;
  * <p>Instances of this class have value semantics and are immutable.</p>
  */
 public class UniqueId implements Cloneable {
+
+	private static final String TYPE_ENGINE = "engine";
 
 	/**
 	 * Create a {@code UniqueId} by parsing its string representation {@code uniqueIdString}.
@@ -39,6 +37,13 @@ public class UniqueId implements Cloneable {
 	private static final UniqueIdFormat uniqueIdFormat = UniqueIdFormat.getDefault();
 
 	private final List<Segment> segments = new ArrayList<>();
+
+	/**
+	 * Create an engine's unique ID by providing {@code engineId}
+	 */
+	public static UniqueId forEngine(String engineId) {
+		return forEngine(TYPE_ENGINE, engineId);
+	}
 
 	/**
 	 * Create an engine's unique ID by providing the node type {@code segmentType} and {@code engineId}

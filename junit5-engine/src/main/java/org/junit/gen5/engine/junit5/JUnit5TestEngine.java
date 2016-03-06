@@ -17,6 +17,7 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.discovery.DiscoverySelectorResolver;
 import org.junit.gen5.engine.junit5.discovery.JUnit5EngineDescriptor;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
@@ -36,7 +37,8 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest) {
 		Preconditions.notNull(discoveryRequest, "discovery request must not be null");
-		JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(ENGINE_ID);
+		JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(
+			UniqueId.forEngine(ENGINE_ID).getUniqueString());
 		resolveDiscoveryRequest(discoveryRequest, engineDescriptor);
 		return engineDescriptor;
 	}

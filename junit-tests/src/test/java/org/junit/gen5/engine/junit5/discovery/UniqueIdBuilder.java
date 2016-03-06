@@ -30,7 +30,7 @@ public class UniqueIdBuilder {
 	}
 
 	public static UniqueId engineId() {
-		return UniqueId.forEngine(JUnit5TestableFactory.TYPE_ENGINE, JUnit5TestEngine.ENGINE_ID);
+		return UniqueId.forEngine(JUnit5TestEngine.ENGINE_ID);
 	}
 
 }

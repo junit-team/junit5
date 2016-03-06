@@ -18,12 +18,14 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 
 class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelector> {
 
-	private static final String ENGINE_PREFIX = ENGINE_ID + RunnerTestDescriptor.SEPARATOR;
+	private static final String ENGINE_PREFIX = UniqueId.forEngine(ENGINE_ID).getUniqueString()
+			+ RunnerTestDescriptor.SEPARATOR;
 	private final Logger logger;
 
 	UniqueIdSelectorResolver(Logger logger) {
@@ -34,7 +36,7 @@ class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelecto
 	@Override
 	void resolve(UniqueIdSelector selector, TestClassCollector collector) {
 		String uniqueId = selector.getUniqueId();
-		if (ENGINE_ID.equals(uniqueId)) {
+		if (UniqueId.forEngine(ENGINE_ID).getUniqueString().equals(uniqueId)) {
 			logger.warning(
 				() -> format("Unresolvable Unique ID (%s): Cannot resolve the engine's unique ID", uniqueId));
 		}
