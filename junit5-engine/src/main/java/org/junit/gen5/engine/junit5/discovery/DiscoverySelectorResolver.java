@@ -171,17 +171,17 @@ public class DiscoverySelectorResolver {
 
 	private MethodTestDescriptor getOrCreateMethodDescriptor(Class<?> testClass, Method method, UniqueId uniqueId) {
 		return (MethodTestDescriptor) descriptorByUniqueId(uniqueId).orElseGet(
-			() -> new MethodTestDescriptor(uniqueId.getUniqueString(), testClass, method));
+			() -> new MethodTestDescriptor(uniqueId, testClass, method));
 	}
 
 	private NestedClassTestDescriptor getOrCreateNestedClassDescriptor(Class<?> clazz, UniqueId uniqueId) {
 		return (NestedClassTestDescriptor) descriptorByUniqueId(uniqueId).orElseGet(
-			() -> new NestedClassTestDescriptor(uniqueId.getUniqueString(), clazz));
+			() -> new NestedClassTestDescriptor(uniqueId, clazz));
 	}
 
 	private JUnit5TestDescriptor getOrCreateClassDescriptor(Class<?> clazz, UniqueId uniqueId) {
 		return (JUnit5TestDescriptor) descriptorByUniqueId(uniqueId).orElseGet(
-			() -> new ClassTestDescriptor(uniqueId.getUniqueString(), clazz));
+			() -> new ClassTestDescriptor(uniqueId, clazz));
 	}
 
 	@SuppressWarnings("unchecked")
