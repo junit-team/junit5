@@ -46,10 +46,10 @@ public class UniqueId implements Cloneable {
 	}
 
 	/**
-	 * Create an engine's unique ID by providing the node type {@code segmentType} and {@code engineId}
+	 * Create a root unique ID by providing the node type {@code segmentType} and {@code nodeValue}
 	 */
-	public static UniqueId root(String segmentType, String engineId) {
-		List<Segment> segments = Collections.singletonList(new Segment(segmentType, engineId));
+	public static UniqueId root(String segmentType, String nodeValue) {
+		List<Segment> segments = Collections.singletonList(new Segment(segmentType, nodeValue));
 		return new UniqueId(segments);
 	}
 
