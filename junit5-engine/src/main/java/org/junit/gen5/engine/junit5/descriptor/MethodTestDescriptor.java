@@ -32,6 +32,7 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.execution.ConditionEvaluator;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
@@ -55,6 +56,19 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	private final Class<?> testClass;
 
 	private final Method testMethod;
+
+	/**
+	 * Temporary parallel implementation to string-based constructor
+	 */
+	public MethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
+		super(uniqueId);
+
+		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
+		this.testMethod = Preconditions.notNull(testMethod, "Method must not be null");
+		this.displayName = determineDisplayName(testMethod, testMethod.getName());
+
+		setSource(new JavaSource(testMethod));
+	}
 
 	public MethodTestDescriptor(String uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId);

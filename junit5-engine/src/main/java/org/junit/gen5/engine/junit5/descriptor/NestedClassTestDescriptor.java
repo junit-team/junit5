@@ -18,6 +18,7 @@ import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
 
@@ -31,6 +32,13 @@ import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
  */
 @API(Internal)
 public class NestedClassTestDescriptor extends ClassTestDescriptor {
+
+	/**
+	 * Temporary parallel implementation to string-based constructor
+	 */
+	public NestedClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
+		super(uniqueId, testClass);
+	}
 
 	public NestedClassTestDescriptor(String uniqueId, Class<?> testClass) {
 		super(uniqueId, testClass);

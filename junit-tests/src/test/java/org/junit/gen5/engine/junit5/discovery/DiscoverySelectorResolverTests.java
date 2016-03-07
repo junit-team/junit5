@@ -125,6 +125,7 @@ public class DiscoverySelectorResolverTests {
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
 		List<String> uniqueIds = uniqueIds();
+		System.out.println(uniqueIds);
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class).getUniqueString()));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()").getUniqueString()));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()").getUniqueString()));

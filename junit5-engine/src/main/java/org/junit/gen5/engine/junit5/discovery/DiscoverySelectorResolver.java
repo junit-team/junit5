@@ -11,10 +11,7 @@
 package org.junit.gen5.engine.junit5.discovery;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
-import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
-import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackage;
-import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
-import static org.junit.gen5.commons.util.ReflectionUtils.findNestedClasses;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -72,20 +69,18 @@ public class DiscoverySelectorResolver {
 	}
 
 	private void resolveTestClass(Class<?> testClass) {
-		JUnit5Testable testable = JUnit5Testable.fromClass(testClass,
-			engineIdStringToUniqueId(engineDescriptor.getUniqueId()));
+		JUnit5Testable testable = JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueIdObject());
 		resolveTestable(testable);
 	}
 
 	private void resolveTestMethod(Class<?> testClass, Method testMethod) {
 		JUnit5Testable testable = JUnit5Testable.fromMethod(testMethod, testClass,
-			engineIdStringToUniqueId(engineDescriptor.getUniqueId()));
+			engineDescriptor.getUniqueIdObject());
 		resolveTestable(testable);
 	}
 
 	private void resolveUniqueId(UniqueId uniqueId) {
-		JUnit5Testable testable = JUnit5Testable.fromUniqueId(uniqueId,
-			engineIdStringToUniqueId(engineDescriptor.getUniqueId()));
+		JUnit5Testable testable = JUnit5Testable.fromUniqueId(uniqueId, engineDescriptor.getUniqueIdObject());
 		resolveTestable(testable);
 	}
 
@@ -113,8 +108,7 @@ public class DiscoverySelectorResolver {
 	}
 
 	private void resolveMethodTestable(Method method, Class<?> testClass, UniqueId uniqueId) {
-		JUnit5Testable parentTestable = JUnit5Testable.fromClass(testClass,
-			engineIdStringToUniqueId(engineDescriptor.getUniqueId()));
+		JUnit5Testable parentTestable = JUnit5Testable.fromClass(testClass, engineDescriptor.getUniqueIdObject());
 		TestDescriptor newParentDescriptor = resolveAndReturnParentTestable(parentTestable);
 		MethodTestDescriptor descriptor = getOrCreateMethodDescriptor(testClass, method, uniqueId);
 		newParentDescriptor.addChild(descriptor);
@@ -134,7 +128,7 @@ public class DiscoverySelectorResolver {
 	private void resolveNestedClassTestable(UniqueId uniqueId, Class<?> testClass, Class<?> containerClass,
 			boolean withChildren) {
 		JUnit5Testable containerTestable = JUnit5Testable.fromClass(containerClass,
-			engineIdStringToUniqueId(engineDescriptor.getUniqueId()));
+			engineDescriptor.getUniqueIdObject());
 		TestDescriptor parentDescriptor = resolveAndReturnParentTestable(containerTestable);
 		NestedClassTestDescriptor descriptor = getOrCreateNestedClassDescriptor(testClass, uniqueId);
 		parentDescriptor.addChild(descriptor);
@@ -159,7 +153,7 @@ public class DiscoverySelectorResolver {
 			ReflectionUtils.MethodSortOrder.HierarchyDown);
 		for (Method method : testMethodCandidates) {
 			JUnit5Testable methodTestable = JUnit5Testable.fromMethod(method, testClass,
-				engineIdStringToUniqueId(engineDescriptor.getUniqueId()));
+				engineDescriptor.getUniqueIdObject());
 			MethodTestDescriptor methodDescriptor = getOrCreateMethodDescriptor(testClass, method,
 				methodTestable.getUniqueId());
 			parentDescriptor.addChild(methodDescriptor);
@@ -170,7 +164,7 @@ public class DiscoverySelectorResolver {
 		List<Class<?>> nestedClasses = findNestedClasses(clazz, isNestedTestClass);
 		for (Class<?> nestedClass : nestedClasses) {
 			JUnit5Testable nestedClassTestable = JUnit5Testable.fromClass(nestedClass,
-				engineIdStringToUniqueId(engineDescriptor.getUniqueId()));
+				engineDescriptor.getUniqueIdObject());
 			resolveTestable(nestedClassTestable);
 		}
 	}
@@ -193,10 +187,6 @@ public class DiscoverySelectorResolver {
 	@SuppressWarnings("unchecked")
 	private Optional<TestDescriptor> descriptorByUniqueId(UniqueId uniqueId) {
 		return (Optional<TestDescriptor>) engineDescriptor.findByUniqueId(uniqueId.getUniqueString());
-	}
-
-	private static UniqueId engineIdStringToUniqueId(String engineId) {
-		return UniqueId.forEngine(JUnit5TestableFactory.TYPE_ENGINE, engineId);
 	}
 
 }

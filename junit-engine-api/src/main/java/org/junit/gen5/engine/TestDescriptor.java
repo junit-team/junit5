@@ -32,6 +32,13 @@ public interface TestDescriptor {
 	 */
 	String getUniqueId();
 
+	/**
+	 * Temporary parallel to string-based unique id
+	 */
+	default UniqueId getUniqueIdObject() {
+		return null;
+	}
+
 	String getName();
 
 	String getDisplayName();

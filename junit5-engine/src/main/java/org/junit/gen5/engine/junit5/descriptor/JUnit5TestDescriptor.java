@@ -31,6 +31,7 @@ import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestTag;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 
@@ -41,6 +42,13 @@ import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 
 	protected JUnit5TestDescriptor(String uniqueId) {
+		super(uniqueId);
+	}
+
+	/**
+	 * Temporary parallel implementation to string-based constructor
+	 */
+	protected JUnit5TestDescriptor(UniqueId uniqueId) {
 		super(uniqueId);
 	}
 

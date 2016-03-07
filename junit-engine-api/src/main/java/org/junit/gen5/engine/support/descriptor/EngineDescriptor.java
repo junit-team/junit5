@@ -13,6 +13,7 @@ package org.junit.gen5.engine.support.descriptor;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.engine.UniqueId;
 
 /**
  * @since 5.0
@@ -21,6 +22,14 @@ import org.junit.gen5.commons.meta.API;
 public class EngineDescriptor extends AbstractTestDescriptor {
 
 	private final String displayName;
+
+	/**
+	 * Temporary parallel implementation to string-based constructor
+	 */
+	public EngineDescriptor(UniqueId uniqueId, String displayName) {
+		super(uniqueId);
+		this.displayName = displayName;
+	}
 
 	public EngineDescriptor(String uniqueId, String displayName) {
 		super(uniqueId);
