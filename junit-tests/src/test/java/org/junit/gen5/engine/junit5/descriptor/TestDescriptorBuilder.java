@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.discovery.JUnit5EngineDescriptor;
 
 public abstract class TestDescriptorBuilder {
@@ -66,7 +67,7 @@ public abstract class TestDescriptorBuilder {
 
 		@Override
 		TestDescriptor buildDescriptor() {
-			return new ClassTestDescriptor(uniqueId, testClass);
+			return new ClassTestDescriptor(UniqueId.root("class", uniqueId), testClass);
 		}
 	}
 
@@ -78,7 +79,7 @@ public abstract class TestDescriptorBuilder {
 
 		@Override
 		TestDescriptor buildDescriptor() {
-			return new NestedClassTestDescriptor(uniqueId, testClass);
+			return new NestedClassTestDescriptor(UniqueId.root("nested-class", uniqueId), testClass);
 		}
 	}
 }

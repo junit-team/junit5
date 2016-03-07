@@ -26,7 +26,7 @@ class UniqueIdTests {
 
 		@Test
 		void uniqueIdMustBeCreatedWithEngineId() {
-			UniqueId uniqueId = UniqueId.forEngine("engine", ENGINE_ID);
+			UniqueId uniqueId = UniqueId.root("engine", ENGINE_ID);
 
 			assertEquals("[engine:junit5]", uniqueId.getUniqueString());
 			assertSegment(uniqueId.getSegments().get(0), "engine", "junit5");
@@ -34,7 +34,7 @@ class UniqueIdTests {
 
 		@Test
 		void appendingOneSegment() {
-			UniqueId engineId = UniqueId.forEngine("engine", ENGINE_ID);
+			UniqueId engineId = UniqueId.root("engine", ENGINE_ID);
 			UniqueId classId = engineId.append("class", "org.junit.MyClass");
 
 			assertEquals(2, classId.getSegments().size());
@@ -44,7 +44,7 @@ class UniqueIdTests {
 
 		@Test
 		void appendingSegmentLeavesOriginialUnchanged() {
-			UniqueId uniqueId = UniqueId.forEngine("engine", ENGINE_ID);
+			UniqueId uniqueId = UniqueId.root("engine", ENGINE_ID);
 			uniqueId.append("class", "org.junit.MyClass");
 
 			assertEquals(1, uniqueId.getSegments().size());
@@ -53,7 +53,7 @@ class UniqueIdTests {
 
 		@Test
 		void appendingSeveralSegments() {
-			UniqueId engineId = UniqueId.forEngine("engine", ENGINE_ID);
+			UniqueId engineId = UniqueId.root("engine", ENGINE_ID);
 			UniqueId uniqueId = engineId.append("t1", "v1").append("t2", "v2").append("t3", "v3");
 
 			assertEquals(4, uniqueId.getSegments().size());
@@ -89,8 +89,8 @@ class UniqueIdTests {
 
 		@Test
 		void sameEnginesAreEqual() {
-			UniqueId id1 = UniqueId.forEngine("engine", "junit5");
-			UniqueId id2 = UniqueId.forEngine("engine", "junit5");
+			UniqueId id1 = UniqueId.root("engine", "junit5");
+			UniqueId id2 = UniqueId.root("engine", "junit5");
 
 			Assertions.assertTrue(id1.equals(id2));
 			Assertions.assertTrue(id2.equals(id1));
@@ -99,8 +99,8 @@ class UniqueIdTests {
 
 		@Test
 		void differentEnginesAreNotEqual() {
-			UniqueId id1 = UniqueId.forEngine("engine", "junit4");
-			UniqueId id2 = UniqueId.forEngine("engine", "junit5");
+			UniqueId id1 = UniqueId.root("engine", "junit4");
+			UniqueId id2 = UniqueId.root("engine", "junit5");
 
 			Assertions.assertFalse(id1.equals(id2));
 			Assertions.assertFalse(id2.equals(id1));
@@ -108,8 +108,8 @@ class UniqueIdTests {
 
 		@Test
 		void uniqueIdWithSameSegmentsAreEqual() {
-			UniqueId id1 = UniqueId.forEngine("engine", "junit5").append("t1", "v1").append("t2", "v2");
-			UniqueId id2 = UniqueId.forEngine("engine", "junit5").append("t1", "v1").append("t2", "v2");
+			UniqueId id1 = UniqueId.root("engine", "junit5").append("t1", "v1").append("t2", "v2");
+			UniqueId id2 = UniqueId.root("engine", "junit5").append("t1", "v1").append("t2", "v2");
 
 			Assertions.assertTrue(id1.equals(id2));
 			Assertions.assertTrue(id2.equals(id1));
@@ -118,8 +118,8 @@ class UniqueIdTests {
 
 		@Test
 		void differentOrderOfSegmentsAreNotEqual() {
-			UniqueId id1 = UniqueId.forEngine("engine", "junit5").append("t2", "v2").append("t1", "v1");
-			UniqueId id2 = UniqueId.forEngine("engine", "junit5").append("t1", "v1").append("t2", "v2");
+			UniqueId id1 = UniqueId.root("engine", "junit5").append("t2", "v2").append("t1", "v1");
+			UniqueId id2 = UniqueId.root("engine", "junit5").append("t1", "v1").append("t2", "v2");
 
 			Assertions.assertFalse(id1.equals(id2));
 			Assertions.assertFalse(id2.equals(id1));
@@ -127,7 +127,7 @@ class UniqueIdTests {
 
 		@Test
 		void additionalSegmentMakesItNotEqual() {
-			UniqueId id1 = UniqueId.forEngine("engine", "junit5").append("t1", "v1");
+			UniqueId id1 = UniqueId.root("engine", "junit5").append("t1", "v1");
 			UniqueId id2 = id1.append("t2", "v2");
 
 			Assertions.assertFalse(id1.equals(id2));

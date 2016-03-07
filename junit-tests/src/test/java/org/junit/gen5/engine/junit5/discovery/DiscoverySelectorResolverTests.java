@@ -22,6 +22,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
@@ -40,10 +41,10 @@ public class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
-		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()").getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()").getUniqueString()));
+		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
 	}
 
 	@Test
@@ -54,14 +55,13 @@ public class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().select(selector1, selector2).build());
 
 		assertEquals(6, engineDescriptor.allDescendants().size());
-		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
-			Collectors.toList());
-		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()").getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()").getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(YourTestClass.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(YourTestClass.class, "test3()").getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(YourTestClass.class, "test4()").getUniqueString()));
+		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(YourTestClass.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(YourTestClass.class, "test3()")));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(YourTestClass.class, "test4()")));
 	}
 
 	@Test
@@ -71,13 +71,10 @@ public class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
-		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
-			Collectors.toList());
-		assertTrue(uniqueIds.contains(uniqueIdForClass(OtherTestClass.NestedTestClass.class).getUniqueString()));
-		assertTrue(
-			uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test5()").getUniqueString()));
-		assertTrue(
-			uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test6()").getUniqueString()));
+		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains(uniqueIdForClass(OtherTestClass.NestedTestClass.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test5()")));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test6()")));
 	}
 
 	@Test
@@ -89,9 +86,9 @@ public class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
-		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()").getUniqueString()));
+		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 	}
 
 	@Test
@@ -102,9 +99,9 @@ public class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
-		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains(uniqueIdForClass(HerTestClass.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(HerTestClass.class, "test1()").getUniqueString()));
+		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains(uniqueIdForClass(HerTestClass.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(HerTestClass.class, "test1()")));
 	}
 
 	@Test
@@ -124,11 +121,10 @@ public class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
-		List<String> uniqueIds = uniqueIds();
-		System.out.println(uniqueIds);
-		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()").getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()").getUniqueString()));
+		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
 	}
 
 	@Test
@@ -139,12 +135,10 @@ public class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
-		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains(uniqueIdForClass(OtherTestClass.NestedTestClass.class).getUniqueString()));
-		assertTrue(
-			uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test5()").getUniqueString()));
-		assertTrue(
-			uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test6()").getUniqueString()));
+		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains(uniqueIdForClass(OtherTestClass.NestedTestClass.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test5()")));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test6()")));
 	}
 
 	@Test
@@ -155,10 +149,9 @@ public class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
-		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains(uniqueIdForClass(OtherTestClass.NestedTestClass.class).getUniqueString()));
-		assertTrue(
-			uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test5()").getUniqueString()));
+		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains(uniqueIdForClass(OtherTestClass.NestedTestClass.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test5()")));
 	}
 
 	@Test
@@ -192,9 +185,9 @@ public class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
-		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()").getUniqueString()));
+		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 	}
 
 	@Test
@@ -205,11 +198,11 @@ public class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
-		List<String> uniqueIds = uniqueIds();
+		List<UniqueId> uniqueIds = uniqueIds();
 
 		// System.out.println(uniqueIds);
-		assertTrue(uniqueIds.contains(uniqueIdForClass(HerTestClass.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(HerTestClass.class, "test1()").getUniqueString()));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(HerTestClass.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(HerTestClass.class, "test1()")));
 	}
 
 	@Test
@@ -220,12 +213,9 @@ public class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
-		List<String> uniqueIds = uniqueIds();
-
-		// System.out.println(uniqueIds);
-		assertTrue(uniqueIds.contains(uniqueIdForClass(HerTestClass.class).getUniqueString()));
-		assertTrue(
-			uniqueIds.contains(uniqueIdForMethod(HerTestClass.class, "test7(java.lang.String)").getUniqueString()));
+		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains(uniqueIdForClass(HerTestClass.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(HerTestClass.class, "test7(java.lang.String)")));
 	}
 
 	@Test
@@ -248,15 +238,15 @@ public class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().select(selector1, selector2, selector2).build());
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
-		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()").getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()").getUniqueString()));
+		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
 
 		TestDescriptor classFromMethod1 = descriptorByUniqueId(
-			uniqueIdForMethod(MyTestClass.class, "test1()").getUniqueString()).getParent().get();
+			uniqueIdForMethod(MyTestClass.class, "test1()")).getParent().get();
 		TestDescriptor classFromMethod2 = descriptorByUniqueId(
-			uniqueIdForMethod(MyTestClass.class, "test2()").getUniqueString()).getParent().get();
+			uniqueIdForMethod(MyTestClass.class, "test2()")).getParent().get();
 
 		assertEquals(classFromMethod1, classFromMethod2);
 		assertSame(classFromMethod1, classFromMethod2);
@@ -269,20 +259,18 @@ public class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(6, engineDescriptor.allDescendants().size());
-		List<String> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains(uniqueIdForClass(
-			org.junit.gen5.engine.junit5.descriptor.subpackage.Class1WithTestCases.class).getUniqueString()));
+		List<UniqueId> uniqueIds = uniqueIds();
 		assertTrue(uniqueIds.contains(
-			uniqueIdForMethod(org.junit.gen5.engine.junit5.descriptor.subpackage.Class1WithTestCases.class,
-				"test1()").getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(
-			org.junit.gen5.engine.junit5.descriptor.subpackage.Class2WithTestCases.class).getUniqueString()));
+			uniqueIdForClass(org.junit.gen5.engine.junit5.descriptor.subpackage.Class1WithTestCases.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(
+			org.junit.gen5.engine.junit5.descriptor.subpackage.Class1WithTestCases.class, "test1()")));
 		assertTrue(uniqueIds.contains(
-			uniqueIdForMethod(org.junit.gen5.engine.junit5.descriptor.subpackage.Class2WithTestCases.class,
-				"test2()").getUniqueString()));
+			uniqueIdForClass(org.junit.gen5.engine.junit5.descriptor.subpackage.Class2WithTestCases.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(
+			org.junit.gen5.engine.junit5.descriptor.subpackage.Class2WithTestCases.class, "test2()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(
 			org.junit.gen5.engine.junit5.descriptor.subpackage.ClassWithStaticInnerTestCases.ShouldBeDiscovered.class,
-			"test1()").getUniqueString()));
+			"test1()")));
 	}
 
 	@Test
@@ -291,21 +279,16 @@ public class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request().select(selector).build());
 
-		// engineDescriptor.allDescendants().stream().forEach(d -> System.out.println(d));
-
-		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
-			Collectors.toList());
+		List<UniqueId> uniqueIds = uniqueIds();
 		assertEquals(6, uniqueIds.size());
 
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.class, "testA()").getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class).getUniqueString()));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.class, "testA()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.class, "testB()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class)));
 		assertTrue(
-			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.class, "testB()").getUniqueString()));
-		assertTrue(uniqueIds.contains(
-			uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(
-			uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()").getUniqueString()));
+			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
 	}
 
 	@Test
@@ -314,18 +297,15 @@ public class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request().select(selector).build());
 
-		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
-			Collectors.toList());
+		List<UniqueId> uniqueIds = uniqueIds();
 		assertEquals(5, uniqueIds.size());
 
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class).getUniqueString()));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.class, "testB()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class)));
 		assertTrue(
-			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.class, "testB()").getUniqueString()));
-		assertTrue(uniqueIds.contains(
-			uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(
-			uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()").getUniqueString()));
+			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
 	}
 
 	@Test
@@ -335,16 +315,14 @@ public class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request().select(selector).build());
 
-		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
-			Collectors.toList());
+		List<UniqueId> uniqueIds = uniqueIds();
 		assertEquals(4, uniqueIds.size());
 
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(
-			uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(
-			uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()").getUniqueString()));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class)));
+		assertTrue(
+			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
 	}
 
 	@Test
@@ -353,16 +331,14 @@ public class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request().select(selector).build());
 
-		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
-			Collectors.toList());
+		List<UniqueId> uniqueIds = uniqueIds();
 		assertEquals(4, uniqueIds.size());
 
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(
-			uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(
-			uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()").getUniqueString()));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class)));
+		assertTrue(
+			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
 	}
 
 	@Test
@@ -372,22 +348,21 @@ public class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request().select(selector).build());
 
-		List<String> uniqueIds = engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(
-			Collectors.toList());
+		List<UniqueId> uniqueIds = uniqueIds();
 		assertEquals(3, uniqueIds.size());
-
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class).getUniqueString()));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class).getUniqueString()));
-		assertTrue(
-			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.class, "testB()").getUniqueString()));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.class, "testB()")));
 	}
 
-	private TestDescriptor descriptorByUniqueId(String id) {
-		return engineDescriptor.allDescendants().stream().filter(d -> d.getUniqueId().equals(id)).findFirst().get();
+	private TestDescriptor descriptorByUniqueId(UniqueId uniqueId) {
+		return engineDescriptor.allDescendants().stream().filter(
+			d -> d.getUniqueIdObject().equals(uniqueId)).findFirst().get();
 	}
 
-	private List<String> uniqueIds() {
-		return engineDescriptor.allDescendants().stream().map(d -> d.getUniqueId()).collect(Collectors.toList());
+	private List<UniqueId> uniqueIds() {
+		return engineDescriptor.allDescendants().stream().map(TestDescriptor::getUniqueIdObject).collect(
+			Collectors.toList());
 	}
 
 }

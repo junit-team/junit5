@@ -22,6 +22,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassBasedContainerExtensionContext;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodBasedTestExtensionContext;
@@ -158,11 +159,13 @@ public class ExtensionContextTests {
 	}
 
 	private ClassTestDescriptor nestedClassDescriptor() {
-		return new NestedClassTestDescriptor("NestedClass", OuterClass.NestedClass.class);
+		return new NestedClassTestDescriptor(UniqueId.root("nested-class", "NestedClass"),
+			OuterClass.NestedClass.class);
 	}
 
 	private ClassTestDescriptor outerClassDescriptor(TestDescriptor child) {
-		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor("OuterClass", OuterClass.class);
+		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(UniqueId.root("class", "OuterClass"),
+			OuterClass.class);
 		if (child != null)
 			classTestDescriptor.addChild(child);
 		return classTestDescriptor;
@@ -170,7 +173,8 @@ public class ExtensionContextTests {
 
 	private MethodTestDescriptor methodDescriptor() {
 		try {
-			return new MethodTestDescriptor("aMethod", OuterClass.class, OuterClass.class.getDeclaredMethod("aMethod"));
+			return new MethodTestDescriptor(UniqueId.root("method", "aMethod"), OuterClass.class,
+				OuterClass.class.getDeclaredMethod("aMethod"));
 		}
 		catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);

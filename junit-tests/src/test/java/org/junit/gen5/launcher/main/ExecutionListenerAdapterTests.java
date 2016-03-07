@@ -17,6 +17,7 @@ import java.util.*;
 
 import org.junit.gen5.api.*;
 import org.junit.gen5.commons.util.*;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.*;
 import org.junit.gen5.engine.reporting.*;
 import org.junit.gen5.launcher.*;
@@ -46,7 +47,7 @@ class ExecutionListenerAdapterTests {
 
 	private MethodTestDescriptor getSampleMethodTestDescriptor() {
 		Method localMethodNamedNothing = ReflectionUtils.findMethod(this.getClass(), "nothing", new Class[] {}).get();
-		return new MethodTestDescriptor("unique_id", this.getClass(), localMethodNamedNothing);
+		return new MethodTestDescriptor(UniqueId.root("method", "unique_id"), this.getClass(), localMethodNamedNothing);
 	}
 
 	//for reflection purposes only

@@ -57,20 +57,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	private final Method testMethod;
 
-	/**
-	 * Temporary parallel implementation to string-based constructor
-	 */
 	public MethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
-		super(uniqueId);
-
-		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
-		this.testMethod = Preconditions.notNull(testMethod, "Method must not be null");
-		this.displayName = determineDisplayName(testMethod, testMethod.getName());
-
-		setSource(new JavaSource(testMethod));
-	}
-
-	public MethodTestDescriptor(String uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId);
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");

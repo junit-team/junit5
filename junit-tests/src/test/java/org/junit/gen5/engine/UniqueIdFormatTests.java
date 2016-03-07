@@ -27,20 +27,20 @@ class UniqueIdFormatTests {
 
 		@Test
 		void uniqueIdOnly() {
-			UniqueId uniqueId = UniqueId.forEngine("engine", ENGINE_ID);
+			UniqueId uniqueId = UniqueId.root("engine", ENGINE_ID);
 			Assertions.assertEquals("[engine:junit5]", uniqueId.getUniqueString());
 		}
 
 		@Test
 		void withTwoSegments() {
-			UniqueId engineId = UniqueId.forEngine("engine", ENGINE_ID);
+			UniqueId engineId = UniqueId.root("engine", ENGINE_ID);
 			UniqueId classId = engineId.append("class", "org.junit.MyClass");
 			Assertions.assertEquals("[engine:junit5]/[class:org.junit.MyClass]", classId.getUniqueString());
 		}
 
 		@Test
 		void withManySegments() {
-			UniqueId engineId = UniqueId.forEngine("engine", ENGINE_ID);
+			UniqueId engineId = UniqueId.root("engine", ENGINE_ID);
 			UniqueId uniqueId = engineId.append("t1", "v1").append("t2", "v2").append("t3", "v3");
 			Assertions.assertEquals("[engine:junit5]/[t1:v1]/[t2:v2]/[t3:v3]", uniqueId.getUniqueString());
 		}

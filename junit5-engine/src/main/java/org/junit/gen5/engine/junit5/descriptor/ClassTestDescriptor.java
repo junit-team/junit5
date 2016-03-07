@@ -55,7 +55,7 @@ import org.junit.gen5.engine.support.hierarchical.Container;
  * {@link TestDescriptor} for tests based on Java classes.
  *
  * <p>The pattern of the {@link #getUniqueId unique ID} takes the form of
- * <code>{parent unique id}:{fully qualified class name}</code>.
+ * <code>{parent unique id}/[class:{fully qualified class name}]</code>.
  *
  * @since 5.0
  */
@@ -66,19 +66,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 	private final Class<?> testClass;
 
-	/**
-	 * Temporary parallel implementation to string-based constructor
-	 */
 	public ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
-		super(uniqueId);
-
-		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
-		this.displayName = determineDisplayName(testClass, testClass.getName());
-
-		setSource(new JavaSource(testClass));
-	}
-
-	public ClassTestDescriptor(String uniqueId, Class<?> testClass) {
 		super(uniqueId);
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");

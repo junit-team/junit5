@@ -42,13 +42,13 @@ public class UniqueId implements Cloneable {
 	 * Create an engine's unique ID by providing {@code engineId}
 	 */
 	public static UniqueId forEngine(String engineId) {
-		return forEngine(TYPE_ENGINE, engineId);
+		return root(TYPE_ENGINE, engineId);
 	}
 
 	/**
 	 * Create an engine's unique ID by providing the node type {@code segmentType} and {@code engineId}
 	 */
-	public static UniqueId forEngine(String segmentType, String engineId) {
+	public static UniqueId root(String segmentType, String engineId) {
 		List<Segment> segments = Collections.singletonList(new Segment(segmentType, engineId));
 		return new UniqueId(segments);
 	}

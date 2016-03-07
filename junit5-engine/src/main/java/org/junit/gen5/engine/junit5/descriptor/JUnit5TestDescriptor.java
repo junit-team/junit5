@@ -41,13 +41,6 @@ import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 @API(Internal)
 public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 
-	protected JUnit5TestDescriptor(String uniqueId) {
-		super(uniqueId);
-	}
-
-	/**
-	 * Temporary parallel implementation to string-based constructor
-	 */
 	protected JUnit5TestDescriptor(UniqueId uniqueId) {
 		super(uniqueId);
 	}
