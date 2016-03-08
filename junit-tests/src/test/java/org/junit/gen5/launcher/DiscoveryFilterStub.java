@@ -16,26 +16,12 @@ import java.util.function.Supplier;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.FilterResult;
 
-public class DiscoveryFilterStub implements DiscoveryFilter<Object> {
-	private final Function<Object, FilterResult> function;
-	private final Supplier<String> toString;
-
+public class DiscoveryFilterStub<T> extends FilterStub<T>implements DiscoveryFilter<T> {
 	public DiscoveryFilterStub(String toString) {
-		this(o -> FilterResult.included("always"), () -> toString);
+		super(toString);
 	}
 
-	public DiscoveryFilterStub(Function<Object, FilterResult> function, Supplier<String> toString) {
-		this.function = function;
-		this.toString = toString;
-	}
-
-	@Override
-	public FilterResult filter(Object object) {
-		return function.apply(object);
-	}
-
-	@Override
-	public String toString() {
-		return toString.get();
+	public DiscoveryFilterStub(Function<T, FilterResult> function, Supplier<String> toString) {
+		super(function, toString);
 	}
 }

@@ -16,26 +16,12 @@ import java.util.function.Supplier;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
 
-public class PostDiscoveryFilterStub implements PostDiscoveryFilter {
-	private final Function<TestDescriptor, FilterResult> function;
-	private final Supplier<String> toString;
-
+public class PostDiscoveryFilterStub extends FilterStub<TestDescriptor>implements PostDiscoveryFilter {
 	public PostDiscoveryFilterStub(String toString) {
-		this(o -> FilterResult.included("always"), () -> toString);
+		super(toString);
 	}
 
 	public PostDiscoveryFilterStub(Function<TestDescriptor, FilterResult> function, Supplier<String> toString) {
-		this.function = function;
-		this.toString = toString;
-	}
-
-	@Override
-	public String toString() {
-		return toString.get();
-	}
-
-	@Override
-	public FilterResult filter(TestDescriptor testDescriptor) {
-		return function.apply(testDescriptor);
+		super(function, toString);
 	}
 }

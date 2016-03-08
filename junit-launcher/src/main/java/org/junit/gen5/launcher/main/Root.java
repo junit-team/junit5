@@ -71,10 +71,11 @@ class Root {
 
 	private boolean isExcluded(TestDiscoveryRequest discoveryRequest, TestDescriptor descriptor) {
 		// @formatter:off
-		return discoveryRequest.getPostDiscoveryFilters().stream()
-				.map(filter -> filter.filter(descriptor))
-				.anyMatch(FilterResult::excluded);
+//		return discoveryRequest.getPostDiscoveryFilters().stream()
+//				.map(filter -> filter.filter(descriptor))
+//				.anyMatch(FilterResult::excluded);
 		// @formatter:on
+		return Filter.composeFilters(discoveryRequest.getPostDiscoveryFilters()).filter(descriptor).excluded();
 	}
 
 	private void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {

@@ -10,11 +10,16 @@
 
 package org.junit.gen5.engine;
 
+import static java.util.Arrays.asList;
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.gen5.engine.CompositeFilter.alwaysIncluded;
 
+import java.util.Collection;
 import java.util.function.Predicate;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.Preconditions;
 
 /**
  * Filters particular tests during/after test discovery.
@@ -28,6 +33,45 @@ import org.junit.gen5.commons.meta.API;
 @FunctionalInterface
 @API(Internal)
 public interface Filter<T> {
+
+	/**
+	 * Combines an array of {@code Filter objects} into a new filter that will
+	 * include elements if and only if all of the filters in the specified array
+	 * include it.
+	 *
+	 * <p>If the length of the array is 1, this method will return the filter
+	 * contained in the array.
+	 */
+	@SafeVarargs
+	static <T> Filter<T> composeFilters(Filter<T>... filters) {
+		if (filters.length == 1) {
+			return filters[0];
+		}
+		return composeFilters(asList(filters));
+	}
+
+	/**
+	 * Combines a collection of {@code Filter objects} into a new filter that
+	 * will include elements if and only if all of the filters in the specified
+	 * collection include it.
+	 *
+	 * <p>If the collection is empty, the returned filter will
+	 * include all elements it is asked to filter.
+	 *
+	 * <p>If the size of the collection is 1, this method will return the filter
+	 * contained in the collection.
+	 */
+	static <T> Filter<T> composeFilters(Collection<? extends Filter<T>> filters) {
+		Preconditions.notNull(filters, "Filters should not be null");
+
+		if (filters.isEmpty()) {
+			return alwaysIncluded();
+		}
+		if (filters.size() == 1) {
+			return getOnlyElement(filters);
+		}
+		return new CompositeFilter<>(filters);
+	}
 
 	FilterResult filter(T object);
 

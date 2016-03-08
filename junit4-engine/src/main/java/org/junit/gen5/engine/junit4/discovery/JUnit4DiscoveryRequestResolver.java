@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit4.discovery;
 
 import static java.util.Arrays.asList;
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
-import static org.junit.gen5.engine.DiscoveryFilter.combine;
+import static org.junit.gen5.engine.Filter.composeFilters;
 
 import java.util.List;
 import java.util.Set;
@@ -70,7 +70,7 @@ public class JUnit4DiscoveryRequestResolver {
 	private Set<TestClassRequest> filterAndConvertToTestClassRequests(EngineDiscoveryRequest discoveryRequest,
 			TestClassCollector collector) {
 		List<ClassFilter> allClassFilters = discoveryRequest.getDiscoveryFiltersByType(ClassFilter.class);
-		Filter<Class<?>> classFilter = new ExclusionReasonConsumingFilter<>(combine(allClassFilters),
+		Filter<Class<?>> classFilter = new ExclusionReasonConsumingFilter<>(composeFilters(allClassFilters),
 			(testClass, reason) -> {
 				logger.info(String.format("Class %s was excluded by a class filter: %s", testClass.getName(),
 					reason.orElse("<unknown reason>")));

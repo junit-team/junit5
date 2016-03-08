@@ -17,23 +17,23 @@ import static org.junit.gen5.engine.FilterResult.included;
 import java.util.Collection;
 
 /**
- * Combines a collection of {@link DiscoveryFilter DiscoveryFilters} into a new
+ * Combines a collection of {@link Filter Filters} into a new
  * filter that will include elements if and only if all of the filters in the
  * specified collection include it.
  */
-class CombinedDiscoveryFilter<T> implements DiscoveryFilter<T> {
+class CompositeFilter<T> implements Filter<T> {
 
 	@SuppressWarnings("rawtypes")
-	private static final DiscoveryFilter ALWAYS_INCLUDED_DISCOVERY_FILTER = obj -> included("Always included");
+	private static final Filter ALWAYS_INCLUDED_DISCOVERY_FILTER = obj -> included("Always included");
 
 	@SuppressWarnings("unchecked")
-	static <T> DiscoveryFilter<T> alwaysIncluded() {
+	static <T> Filter<T> alwaysIncluded() {
 		return ALWAYS_INCLUDED_DISCOVERY_FILTER;
 	}
 
-	private final Collection<? extends DiscoveryFilter<T>> filters;
+	private final Collection<? extends Filter<T>> filters;
 
-	public CombinedDiscoveryFilter(Collection<? extends DiscoveryFilter<T>> filters) {
+	CompositeFilter(Collection<? extends Filter<T>> filters) {
 		this.filters = filters;
 	}
 
