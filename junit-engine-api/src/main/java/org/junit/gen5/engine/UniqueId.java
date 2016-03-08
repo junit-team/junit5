@@ -124,6 +124,11 @@ public class UniqueId implements Cloneable {
 		return segments.hashCode();
 	}
 
+	@Override
+	public String toString() {
+		return getUniqueString();
+	}
+
 	public static class Segment {
 
 		private final String type;
