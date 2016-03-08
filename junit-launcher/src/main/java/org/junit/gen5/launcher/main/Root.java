@@ -70,11 +70,6 @@ class Root {
 	}
 
 	private boolean isExcluded(TestDiscoveryRequest discoveryRequest, TestDescriptor descriptor) {
-		// @formatter:off
-//		return discoveryRequest.getPostDiscoveryFilters().stream()
-//				.map(filter -> filter.filter(descriptor))
-//				.anyMatch(FilterResult::excluded);
-		// @formatter:on
 		return Filter.composeFilters(discoveryRequest.getPostDiscoveryFilters()).filter(descriptor).excluded();
 	}
 

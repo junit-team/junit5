@@ -123,12 +123,16 @@ class DefaultLauncherTests {
 
 		DefaultLauncher launcher = createLauncher(engine);
 
-		PostDiscoveryFilter excludeTest2Filter = new PostDiscoveryFilterStub(
-			descriptor -> FilterResult.includedIf(!descriptor.getUniqueId().equals(test2.getUniqueId())),
-			() -> "filter");
+		PostDiscoveryFilter includeWithUniqueIdContainsTest = new PostDiscoveryFilterStub(
+			descriptor -> FilterResult.includedIf(descriptor.getUniqueId().contains("test")), () -> "filter1");
+		PostDiscoveryFilter includeWithUniqueIdContains1 = new PostDiscoveryFilterStub(
+			descriptor -> FilterResult.includedIf(descriptor.getUniqueId().contains("1")), () -> "filter2");
 
-		TestPlan testPlan = launcher.discover(
-			request().select(PackageSelector.forPackageName("any")).filter(excludeTest2Filter).build());
+		TestPlan testPlan = launcher.discover( //
+			request() //
+			.select(PackageSelector.forPackageName("any")) //
+			.filter(includeWithUniqueIdContainsTest, includeWithUniqueIdContains1) //
+			.build());
 
 		assertThat(testPlan.getChildren(new TestId("myEngine"))).hasSize(1);
 		assertThat(testPlan.getTestIdentifier(new TestId(test1.getUniqueId()))).isNotNull();
