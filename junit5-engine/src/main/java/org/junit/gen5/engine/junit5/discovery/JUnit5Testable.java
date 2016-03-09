@@ -27,7 +27,7 @@ abstract class JUnit5Testable {
 
 	@Deprecated
 	static JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
-		return fromUniqueId(UniqueId.parse(uniqueId), UniqueId.forEngine("engine", engineId));
+		return fromUniqueId(UniqueId.parse(uniqueId), UniqueId.forEngine(engineId));
 	}
 
 	static JUnit5Testable fromUniqueId(UniqueId uniqueId, UniqueId engineId) {
