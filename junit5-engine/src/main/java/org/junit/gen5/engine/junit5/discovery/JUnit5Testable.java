@@ -12,14 +12,17 @@ package org.junit.gen5.engine.junit5.discovery;
 
 import java.lang.reflect.Method;
 
+/**
+ * @since 5.0
+ */
 abstract class JUnit5Testable {
 
 	private static final JUnit5TestableFactory testableFactory = new JUnit5TestableFactory();
 
-	private static final JUnit5Testable NULL = new JUnit5Testable("ignoredå") {
+	private static final JUnit5Testable noOpTestable = new JUnit5Testable("ignored") {
 		@Override
 		void accept(Visitor visitor) {
-			//do nothing
+			/* no-op */
 		}
 	};
 
@@ -35,6 +38,10 @@ abstract class JUnit5Testable {
 		return testableFactory.fromMethod(testMethod, clazz, engineId);
 	}
 
+	static JUnit5Testable doNothing() {
+		return noOpTestable;
+	}
+
 	private final String uniqueId;
 
 	JUnit5Testable(String uniqueId) {
@@ -46,10 +53,6 @@ abstract class JUnit5Testable {
 	}
 
 	abstract void accept(Visitor visitor);
-
-	public static JUnit5Testable doNothing() {
-		return NULL;
-	}
 
 	interface Visitor {
 
