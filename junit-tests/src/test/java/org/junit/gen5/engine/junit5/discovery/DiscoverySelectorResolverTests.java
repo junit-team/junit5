@@ -111,12 +111,13 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testResolutionOfNotTestMethod() throws NoSuchMethodException {
+	public void resolvingSelectorOfNonTestMethodResolvesNothing() throws NoSuchMethodException {
 		MethodSelector selector = MethodSelector.forMethod(
 			MyTestClass.class.getDeclaredMethod("notATest").getDeclaringClass(),
 			MyTestClass.class.getDeclaredMethod("notATest"));
 		EngineDiscoveryRequest request = request().select(selector).build();
-		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
+		resolver.resolveSelectors(request);
+		assertTrue(engineDescriptor.allDescendants().isEmpty());
 	}
 
 	@Test
@@ -177,12 +178,13 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testUniqueIdOfNotTestMethod() {
+	public void resolvingUniqueIdOfNonTestMethodResolvesNothing() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			"ENGINE_ID:org.junit.gen5.engine.junit5.discovery.MyTestClass#notATest()");
 		EngineDiscoveryRequest request = request().select(selector).build();
 
-		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
+		resolver.resolveSelectors(request);
+		assertTrue(engineDescriptor.allDescendants().isEmpty());
 	}
 
 	@Test

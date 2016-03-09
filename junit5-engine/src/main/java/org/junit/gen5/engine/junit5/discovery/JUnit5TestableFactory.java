@@ -10,12 +10,14 @@
 
 package org.junit.gen5.engine.junit5.discovery;
 
+import static java.lang.String.format;
 import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.util.PreconditionViolationException;
@@ -27,6 +29,8 @@ import org.junit.gen5.commons.util.StringUtils;
  * @since 5.0
  */
 class JUnit5TestableFactory {
+
+	private static final Logger LOG = Logger.getLogger(JUnit5TestableFactory.class.getName());
 
 	private static final String SEPARATORS = ":@#";
 
@@ -52,8 +56,11 @@ class JUnit5TestableFactory {
 		if (isNestedTestClass.test(clazz)) {
 			return createNestedClassTestable(clazz, clazz.getEnclosingClass(), engineId);
 		}
-		throwCannotResolveClassException(clazz);
-		return null; //cannot happen
+		LOG.warning(() -> {
+			String classDescription = clazz.getDeclaringClass().getName();
+			return format("Class '%s' is not a test container", classDescription);
+		});
+		return JUnit5Testable.doNothing();
 	}
 
 	private JUnit5Testable createNestedClassTestable(Class<?> testClass, Class<?> container, String engineId) {
@@ -63,7 +70,12 @@ class JUnit5TestableFactory {
 
 	JUnit5Testable fromMethod(Method testMethod, Class<?> clazz, String engineId) {
 		if (!isTestMethod.test(testMethod)) {
-			throwCannotResolveMethodException(testMethod);
+			LOG.warning(() -> {
+				String methodDescription = testMethod.getDeclaringClass().getName() + "#" + testMethod.getName();
+				return format("Method '%s' is not a test method", methodDescription);
+			});
+
+			return JUnit5Testable.doNothing();
 		}
 		String uniqueId = String.format("%s#%s(%s)", fromClass(clazz, engineId).getUniqueId(), testMethod.getName(),
 			StringUtils.nullSafeToString(testMethod.getParameterTypes()));
@@ -166,14 +178,4 @@ class JUnit5TestableFactory {
 		return new PreconditionViolationException(
 			String.format("Cannot resolve part '%s' of unique ID '%s'", uniqueIdPart, fullUniqueId));
 	}
-
-	private static void throwCannotResolveMethodException(Method method) {
-		throw new PreconditionViolationException(String.format("Method '%s' is not a test method.", method.getName()));
-	}
-
-	private void throwCannotResolveClassException(Class<?> clazz) {
-		throw new PreconditionViolationException(
-			String.format("Cannot resolve class name '%s' because it's not a test container", clazz.getName()));
-	}
-
 }

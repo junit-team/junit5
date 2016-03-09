@@ -16,6 +16,13 @@ abstract class JUnit5Testable {
 
 	private static final JUnit5TestableFactory testableFactory = new JUnit5TestableFactory();
 
+	private static final JUnit5Testable NULL = new JUnit5Testable("ignoredå") {
+		@Override
+		void accept(Visitor visitor) {
+			//do nothing
+		}
+	};
+
 	static JUnit5Testable fromUniqueId(String uniqueId, String engineId) {
 		return testableFactory.fromUniqueId(uniqueId, engineId);
 	}
@@ -39,6 +46,10 @@ abstract class JUnit5Testable {
 	}
 
 	abstract void accept(Visitor visitor);
+
+	public static JUnit5Testable doNothing() {
+		return NULL;
+	}
 
 	interface Visitor {
 
