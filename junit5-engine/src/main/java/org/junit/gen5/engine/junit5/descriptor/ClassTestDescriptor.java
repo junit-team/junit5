@@ -165,9 +165,8 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	private void invokeBeforeAllExtensionPoints(ExtensionRegistry newExtensionRegistry,
 			ContainerExtensionContext containerExtensionContext) throws Exception {
 
-		Consumer<RegisteredExtensionPoint<BeforeAllExtensionPoint>> applyBeforeEach = registeredExtensionPoint ->
-			executeAndMaskThrowable(
-				() -> registeredExtensionPoint.getExtensionPoint().beforeAll(containerExtensionContext));
+		Consumer<RegisteredExtensionPoint<BeforeAllExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> executeAndMaskThrowable(
+			() -> registeredExtensionPoint.getExtensionPoint().beforeAll(containerExtensionContext));
 
 		newExtensionRegistry.stream(BeforeAllExtensionPoint.class, ExtensionRegistry.ApplicationOrder.FORWARD).forEach(
 			applyBeforeEach);
@@ -177,9 +176,8 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			ContainerExtensionContext containerExtensionContext, ThrowableCollector throwableCollector)
 					throws Exception {
 
-		Consumer<RegisteredExtensionPoint<AfterAllExtensionPoint>> applyAfterAll = registeredExtensionPoint ->
-			throwableCollector.execute(
-				() -> registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext));
+		Consumer<RegisteredExtensionPoint<AfterAllExtensionPoint>> applyAfterAll = registeredExtensionPoint -> throwableCollector.execute(
+			() -> registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext));
 
 		newExtensionRegistry.stream(AfterAllExtensionPoint.class, ExtensionRegistry.ApplicationOrder.BACKWARD).forEach(
 			applyAfterAll);
@@ -219,11 +217,13 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	private BeforeAllExtensionPoint synthesizeBeforeAllExtensionPoint(ExtensionRegistry registry, Method method) {
-		return extensionContext -> new MethodInvoker(extensionContext, registry).invoke(methodInvocationContext(null, method));
+		return extensionContext -> new MethodInvoker(extensionContext, registry).invoke(
+			methodInvocationContext(null, method));
 	}
 
 	private AfterAllExtensionPoint synthesizeAfterAllExtensionPoint(ExtensionRegistry registry, Method method) {
-		return extensionContext -> new MethodInvoker(extensionContext, registry).invoke(methodInvocationContext(null, method));
+		return extensionContext -> new MethodInvoker(extensionContext, registry).invoke(
+			methodInvocationContext(null, method));
 	}
 
 	private BeforeEachExtensionPoint synthesizeBeforeEachExtensionPoint(ExtensionRegistry registry, Method method) {
