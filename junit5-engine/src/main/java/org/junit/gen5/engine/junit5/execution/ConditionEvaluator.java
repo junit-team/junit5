@@ -21,6 +21,7 @@ import org.junit.gen5.api.extension.TestExecutionCondition;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
+import org.junit.gen5.engine.junit5.extension.RegisteredExtensionPoint;
 
 /**
  * {@code ConditionEvaluator} evaluates {@link ContainerExecutionCondition}
@@ -51,7 +52,7 @@ public class ConditionEvaluator {
 			ContainerExtensionContext context) {
 		// @formatter:off
 		return extensionRegistry.stream(ContainerExecutionCondition.class, ExtensionRegistry.ApplicationOrder.FORWARD)
-				.map(extensionPoint -> extensionPoint.getExtensionPoint())
+				.map(RegisteredExtensionPoint::getExtensionPoint)
 				.map(condition -> evaluate(condition, context))
 				.filter(ConditionEvaluationResult::isDisabled)
 				.findFirst()
@@ -72,7 +73,7 @@ public class ConditionEvaluator {
 			TestExtensionContext context) {
 		// @formatter:off
 		return extensionRegistry.stream(TestExecutionCondition.class, ExtensionRegistry.ApplicationOrder.FORWARD)
-				.map(extensionPoint -> extensionPoint.getExtensionPoint())
+				.map(RegisteredExtensionPoint::getExtensionPoint)
 				.map(condition -> evaluate(condition, context))
 				.filter(ConditionEvaluationResult::isDisabled)
 				.findFirst()
