@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.junit5.execution.ExtensionValuesStore;
 import org.junit.gen5.engine.junit5.execution.NamespaceAwareStore;
 import org.junit.gen5.engine.reporting.ReportEntry;
@@ -67,6 +68,6 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 
 	@Override
 	public Set<String> getTags() {
-		return testDescriptor.getTags().stream().map(tag -> tag.getName()).collect(Collectors.toSet());
+		return testDescriptor.getTags().stream().map(TestTag::getName).collect(Collectors.toSet());
 	}
 }
