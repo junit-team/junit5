@@ -52,7 +52,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
 	}
 
-//	@Test
+	//	@Test
 	public void testTwoClassesResolution() {
 		ClassSelector selector1 = ClassSelector.forClass(MyTestClass.class);
 		ClassSelector selector2 = ClassSelector.forClass(YourTestClass.class);
@@ -69,7 +69,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(YourTestClass.class, "test4()")));
 	}
 
-//	@Test
+	//	@Test
 	public void testClassResolutionOfNestedClass() {
 		ClassSelector selector = ClassSelector.forClass(OtherTestClass.NestedTestClass.class);
 
@@ -82,7 +82,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test6()")));
 	}
 
-//	@Test
+	//	@Test
 	public void testMethodResolution() throws NoSuchMethodException {
 		MethodSelector selector = MethodSelector.forMethod(
 			MyTestClass.class.getDeclaredMethod("test1").getDeclaringClass(),
@@ -96,7 +96,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 	}
 
-//	@Test
+	//	@Test
 	public void testMethodResolutionFromInheritedMethod() throws NoSuchMethodException {
 		MethodSelector selector = MethodSelector.forMethod(HerTestClass.class,
 			MyTestClass.class.getDeclaredMethod("test1"));
@@ -109,7 +109,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(HerTestClass.class, "test1()")));
 	}
 
-//	@Test
+	//	@Test
 	public void testResolutionOfNotTestMethod() throws NoSuchMethodException {
 		MethodSelector selector = MethodSelector.forMethod(
 			MyTestClass.class.getDeclaredMethod("notATest").getDeclaringClass(),
@@ -118,7 +118,7 @@ public class DiscoverySelectorResolverTests {
 		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
 	}
 
-//	@Test
+	//	@Test
 	public void testClassResolutionByUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueIdForClass(MyTestClass.class).getUniqueString());
 
@@ -131,7 +131,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
 	}
 
-//	@Test
+	//	@Test
 	public void testInnerClassResolutionByUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForClass(OtherTestClass.NestedTestClass.class).getUniqueString());
@@ -145,7 +145,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test6()")));
 	}
 
-//	@Test
+	//	@Test
 	public void testMethodOfInnerClassByUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test5()").getUniqueString());
@@ -158,7 +158,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test5()")));
 	}
 
-//	@Test
+	//	@Test
 	public void testNonResolvableUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			engineId().append("poops", "machine").getUniqueString());
@@ -171,7 +171,7 @@ public class DiscoverySelectorResolverTests {
 			"Exception message wrong: " + exception.getMessage());
 	}
 
-//	@Test
+	//	@Test
 	public void testUniqueIdOfNotTestMethod() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(MyTestClass.class, "notATest()").getUniqueString());
@@ -180,7 +180,7 @@ public class DiscoverySelectorResolverTests {
 		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
 	}
 
-//	@Test
+	//	@Test
 	public void testMethodResolutionByUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(MyTestClass.class, "test1()").getUniqueString());
@@ -193,7 +193,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 	}
 
-//	@Test
+	//	@Test
 	public void testMethodResolutionByUniqueIdFromInheritedClass() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(HerTestClass.class, "test1()").getUniqueString());
@@ -208,7 +208,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(HerTestClass.class, "test1()")));
 	}
 
-//	@Test
+	//	@Test
 	public void testMethodResolutionByUniqueIdWithParams() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(HerTestClass.class, "test7(java.lang.String)").getUniqueString());
@@ -221,7 +221,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(HerTestClass.class, "test7(java.lang.String)")));
 	}
 
-//	@Test
+	//	@Test
 	public void testMethodResolutionByUniqueIdWithWrongParams() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(HerTestClass.class, "test7(java.math.BigDecimal)").getUniqueString());
@@ -230,7 +230,7 @@ public class DiscoverySelectorResolverTests {
 		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
 	}
 
-//	@Test
+	//	@Test
 	public void testTwoMethodResolutionsByUniqueId() {
 		UniqueIdSelector selector1 = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(MyTestClass.class, "test1()").getUniqueString());
@@ -255,7 +255,7 @@ public class DiscoverySelectorResolverTests {
 		assertSame(classFromMethod1, classFromMethod2);
 	}
 
-//	@Test
+	//	@Test
 	public void testPackageResolution() {
 		PackageSelector selector = PackageSelector.forPackageName("org.junit.gen5.engine.junit5.descriptor.subpackage");
 
@@ -276,7 +276,7 @@ public class DiscoverySelectorResolverTests {
 			"test1()")));
 	}
 
-//	@Test
+	//	@Test
 	public void testNestedTestResolutionFromBaseClass() {
 		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.class);
 
@@ -294,7 +294,7 @@ public class DiscoverySelectorResolverTests {
 			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
 	}
 
-//	@Test
+	//	@Test
 	public void testNestedTestResolutionFromNestedTestClass() {
 		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.NestedTest.class);
 
@@ -311,7 +311,7 @@ public class DiscoverySelectorResolverTests {
 			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
 	}
 
-//	@Test
+	//	@Test
 	public void testNestedTestResolutionFromUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class).getUniqueString());
@@ -328,7 +328,7 @@ public class DiscoverySelectorResolverTests {
 			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
 	}
 
-//	@Test
+	//	@Test
 	public void testNestedTestResolutionFromClass() {
 		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class);
 
@@ -344,7 +344,7 @@ public class DiscoverySelectorResolverTests {
 			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
 	}
 
-//	@Test
+	//	@Test
 	public void testNestedTestResolutionFromUniqueIdToMethod() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(TestCaseWithNesting.NestedTest.class, "testB()").getUniqueString());
