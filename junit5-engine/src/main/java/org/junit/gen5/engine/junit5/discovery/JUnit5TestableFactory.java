@@ -99,7 +99,7 @@ class JUnit5TestableFactory {
 	private JUnit5Testable createTestable(String uniqueId, String engineId, List<String> parts, JUnit5Testable last) {
 		if (parts.isEmpty())
 			return last;
-		JUnit5Testable next = null;
+		JUnit5Testable next;
 		String head = parts.remove(0);
 		switch (head.charAt(0)) {
 			case ':':
