@@ -119,7 +119,7 @@ class DefaultLauncherTests {
 	void launcherAppliesPostDiscoveryFilters() {
 		DummyTestEngine engine = new DummyTestEngine("myEngine");
 		DummyTestDescriptor test1 = engine.addTest("test1", noOp());
-		DummyTestDescriptor test2 = engine.addTest("test2", noOp());
+		engine.addTest("test2", noOp());
 
 		DefaultLauncher launcher = createLauncher(engine);
 

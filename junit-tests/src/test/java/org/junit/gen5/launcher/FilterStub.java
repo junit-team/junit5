@@ -13,11 +13,14 @@ package org.junit.gen5.launcher;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.Filter;
 import org.junit.gen5.engine.FilterResult;
 
+/**
+ * @since 5.0
+ */
 public class FilterStub<T> implements Filter<T> {
+
 	private final Function<T, FilterResult> function;
 	private final Supplier<String> toString;
 
@@ -39,4 +42,5 @@ public class FilterStub<T> implements Filter<T> {
 	public String toString() {
 		return toString.get();
 	}
+
 }

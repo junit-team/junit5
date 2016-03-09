@@ -41,16 +41,19 @@ import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.PostDiscoveryFilterStub;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
+/**
+ * @since 5.0
+ */
 public class TestDiscoveryRequestBuilderTests {
 
 	@Test
 	public void packagesAreStoredInDiscoveryRequest() throws Exception {
 		// @formatter:off
-        TestDiscoveryRequest discoveryRequest = request()
+		TestDiscoveryRequest discoveryRequest = request()
 				.select(
 						forPackageName("org.junit.gen5.engine")
 				).build();
-        // @formatter:on
+		// @formatter:on
 
 		List<String> packageSelectors = discoveryRequest.getSelectorsByType(PackageSelector.class).stream().map(
 			PackageSelector::getPackageName).collect(toList());
@@ -60,13 +63,13 @@ public class TestDiscoveryRequestBuilderTests {
 	@Test
 	public void classesAreStoredInDiscoveryRequest() throws Exception {
 		// @formatter:off
-        TestDiscoveryRequest discoveryRequest = request()
+		TestDiscoveryRequest discoveryRequest = request()
 				.select(
 						forClassName(TestDiscoveryRequestBuilderTests.class.getName()),
 						forClass(SampleTestClass.class)
 				)
-            .build();
-        // @formatter:on
+			.build();
+		// @formatter:on
 
 		List<Class<?>> classes = discoveryRequest.getSelectorsByType(ClassSelector.class).stream().map(
 			ClassSelector::getTestClass).collect(toList());
@@ -79,10 +82,10 @@ public class TestDiscoveryRequestBuilderTests {
 		Method testMethod = testClass.getMethod("test");
 
 		// @formatter:off
-        TestDiscoveryRequest discoveryRequest = request()
+		TestDiscoveryRequest discoveryRequest = request()
 				.select(forMethod(SampleTestClass.class.getName(), "test"))
 				.build();
-        // @formatter:on
+		// @formatter:on
 
 		List<MethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
 		assertThat(methodSelectors).hasSize(1);
@@ -98,7 +101,7 @@ public class TestDiscoveryRequestBuilderTests {
 		Method testMethod = testClass.getMethod("test");
 
 		// @formatter:off
-        DiscoveryRequest discoveryRequest = (DiscoveryRequest) request()
+		DiscoveryRequest discoveryRequest = (DiscoveryRequest) request()
 				.select(
 						MethodSelector.forMethod(SampleTestClass.class, "test")
 				).build();
@@ -115,11 +118,11 @@ public class TestDiscoveryRequestBuilderTests {
 	@Test
 	public void unavailableFoldersAreNotStoredInDiscoveryRequest() throws Exception {
 		// @formatter:off
-        TestDiscoveryRequest discoveryRequest = request()
+		TestDiscoveryRequest discoveryRequest = request()
 				.select(
 						ClasspathSelector.forPath("/some/local/path")
 				).build();
-        // @formatter:on
+		// @formatter:on
 
 		List<String> folders = discoveryRequest.getSelectorsByType(ClasspathSelector.class).stream().map(
 			ClasspathSelector::getClasspathRoot).map(File::getAbsolutePath).collect(toList());
@@ -151,12 +154,12 @@ public class TestDiscoveryRequestBuilderTests {
 	@Test
 	public void uniqueIdsAreStoredInDiscoveryRequest() throws Exception {
 		// @formatter:off
-        TestDiscoveryRequest discoveryRequest = request()
+		TestDiscoveryRequest discoveryRequest = request()
 				.select(
 						forUniqueId("engine:bla:foo:bar:id1"),
 						forUniqueId("engine:bla:foo:bar:id2")
 				).build();
-        // @formatter:on
+		// @formatter:on
 
 		List<String> uniqueIds = discoveryRequest.getSelectorsByType(UniqueIdSelector.class).stream().map(
 			UniqueIdSelector::getUniqueId).collect(toList());
@@ -167,12 +170,12 @@ public class TestDiscoveryRequestBuilderTests {
 	@Test
 	public void engineFiltersAreStoredInDiscoveryRequest() throws Exception {
 		// @formatter:off
-        TestDiscoveryRequest discoveryRequest = request()
+		TestDiscoveryRequest discoveryRequest = request()
 				.filter(
 						EngineIdFilter.byEngineId("engine1"),
 						EngineIdFilter.byEngineId("engine2")
 				).build();
-        // @formatter:on
+		// @formatter:on
 
 		List<String> engineIds = discoveryRequest.getEngineIdFilters().stream().map(
 			EngineIdFilter::getEngineId).collect(toList());
@@ -181,15 +184,16 @@ public class TestDiscoveryRequestBuilderTests {
 	}
 
 	@Test
+	@SuppressWarnings("rawtypes")
 	public void discoveryFiltersAreStoredInDiscoveryRequest() throws Exception {
 
 		// @formatter:off
-        TestDiscoveryRequest discoveryRequest = request()
+		TestDiscoveryRequest discoveryRequest = request()
 				.filter(
 						new DiscoveryFilterStub("filter1"),
 						new DiscoveryFilterStub("filter2")
 				).build();
-        // @formatter:on
+		// @formatter:on
 
 		List<String> filterStrings = discoveryRequest.getDiscoveryFiltersByType(DiscoveryFilter.class).stream().map(
 			DiscoveryFilter::toString).collect(toList());
@@ -201,12 +205,12 @@ public class TestDiscoveryRequestBuilderTests {
 	public void postDiscoveryFiltersAreStoredInDiscoveryRequest() throws Exception {
 
 		// @formatter:off
-        TestDiscoveryRequest discoveryRequest = request()
+		TestDiscoveryRequest discoveryRequest = request()
 				.filter(
 						new PostDiscoveryFilterStub("postFilter1"),
 						new PostDiscoveryFilterStub("postFilter2")
 				).build();
-        // @formatter:on
+		// @formatter:on
 
 		List<String> filterStrings = discoveryRequest.getPostDiscoveryFilters().stream().map(
 			PostDiscoveryFilter::toString).collect(toList());
@@ -229,4 +233,5 @@ public class TestDiscoveryRequestBuilderTests {
 		public void test() {
 		}
 	}
+
 }
