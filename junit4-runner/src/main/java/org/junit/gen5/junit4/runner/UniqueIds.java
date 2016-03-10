@@ -37,6 +37,6 @@ public @interface UniqueIds {
 	/**
 	 * One or more unique IDs of test classes or test methods.
 	 */
-	String[]value();
+	String[] value();
 
 }

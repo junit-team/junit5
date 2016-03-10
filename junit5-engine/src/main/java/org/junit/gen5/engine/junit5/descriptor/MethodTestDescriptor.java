@@ -214,7 +214,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	private void executeFirstExceptionHandler(Throwable throwable,
 			List<ExceptionHandlerExtensionPoint> exceptionHandlers, TestExtensionContext testExtensionContext)
-					throws Throwable {
+			throws Throwable {
 		ExceptionHandlerExtensionPoint exceptionHandler = exceptionHandlers.remove(0);
 		exceptionHandler.handleException(testExtensionContext, throwable);
 	}

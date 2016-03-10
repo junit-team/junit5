@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
 
-public class PostDiscoveryFilterStub extends FilterStub<TestDescriptor>implements PostDiscoveryFilter {
+public class PostDiscoveryFilterStub extends FilterStub<TestDescriptor> implements PostDiscoveryFilter {
 	public PostDiscoveryFilterStub(String toString) {
 		super(toString);
 	}

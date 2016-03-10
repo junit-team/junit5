@@ -19,7 +19,7 @@ import org.junit.gen5.engine.FilterResult;
 /**
  * @since 5.0
  */
-public class DiscoveryFilterStub<T> extends FilterStub<T>implements DiscoveryFilter<T> {
+public class DiscoveryFilterStub<T> extends FilterStub<T> implements DiscoveryFilter<T> {
 
 	public DiscoveryFilterStub(String toString) {
 		super(toString);

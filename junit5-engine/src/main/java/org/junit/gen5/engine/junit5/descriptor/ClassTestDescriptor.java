@@ -174,7 +174,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 	private void invokeAfterAllExtensionPoints(ExtensionRegistry newExtensionRegistry,
 			ContainerExtensionContext containerExtensionContext, ThrowableCollector throwableCollector)
-					throws Exception {
+			throws Exception {
 
 		Consumer<RegisteredExtensionPoint<AfterAllExtensionPoint>> applyAfterAll = registeredExtensionPoint -> throwableCollector.execute(
 			() -> registeredExtensionPoint.getExtensionPoint().afterAll(containerExtensionContext));

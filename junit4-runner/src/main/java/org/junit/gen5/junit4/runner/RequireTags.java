@@ -37,6 +37,6 @@ public @interface RequireTags {
 	/**
 	 * One or more tags to be required.
 	 */
-	String[]value();
+	String[] value();
 
 }

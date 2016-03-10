@@ -17,7 +17,8 @@ import org.junit.Test;
 public class MalformedJUnit4TestCase {
 
 	@Test
-	/* not public */ void nonPublicTest() {
+	/* intentionally not public */
+	void nonPublicTest() {
 		fail("this should never be called");
 	}
 

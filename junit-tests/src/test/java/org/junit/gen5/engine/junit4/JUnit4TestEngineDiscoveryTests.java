@@ -480,7 +480,7 @@ class JUnit4TestEngineDiscoveryTests {
 			MethodSelector.forMethod(testClass, testClass.getMethod("failingTest")), //
 			forUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods"
 					+ "/abortedTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods)" //
-		)).build();
+			)).build();
 
 		TestDescriptor engineDescriptor = engine.discover(discoveryRequest);
 
@@ -502,7 +502,7 @@ class JUnit4TestEngineDiscoveryTests {
 			MethodSelector.forMethod(testClass, testClass.getMethod("failingTest")), //
 			forUniqueId("junit4:org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods"
 					+ "/failingTest(org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods)" //
-		)).build();
+			)).build();
 
 		TestDescriptor engineDescriptor = engine.discover(discoveryRequest);
 

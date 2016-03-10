@@ -43,6 +43,6 @@ public @interface Extensions {
 	/**
 	 * An array of one or more {@link ExtendWith @ExtendWith} declarations.
 	 */
-	ExtendWith[]value();
+	ExtendWith[] value();
 
 }

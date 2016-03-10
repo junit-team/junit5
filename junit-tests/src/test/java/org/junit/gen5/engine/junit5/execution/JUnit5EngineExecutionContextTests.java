@@ -47,10 +47,10 @@ class JUnit5EngineExecutionContextTests {
 		ExtensionRegistry extensionRegistry = new ExtensionRegistry();
 		TestInstanceProvider testInstanceProvider = Mockito.mock(TestInstanceProvider.class);
 		JUnit5EngineExecutionContext newContext = originalContext.extend() //
-		.withExtensionContext(extensionContext) //
-		.withExtensionRegistry(extensionRegistry) //
-		.withTestInstanceProvider(testInstanceProvider) //
-		.build();
+				.withExtensionContext(extensionContext) //
+				.withExtensionRegistry(extensionRegistry) //
+				.withTestInstanceProvider(testInstanceProvider) //
+				.build();
 
 		assertSame(extensionContext, newContext.getExtensionContext());
 		assertSame(extensionRegistry, newContext.getExtensionRegistry());
@@ -67,13 +67,13 @@ class JUnit5EngineExecutionContextTests {
 			extensionContext, null, null);
 
 		JUnit5EngineExecutionContext newContext = originalContext.extend() //
-		.withExtensionContext(extensionContext) //
-		.withExtensionRegistry(extensionRegistry) //
-		.withTestInstanceProvider(testInstanceProvider) //
-		.build() //
-		.extend() //
-		.withExtensionContext(newExtensionContext) //
-		.build();
+				.withExtensionContext(extensionContext) //
+				.withExtensionRegistry(extensionRegistry) //
+				.withTestInstanceProvider(testInstanceProvider) //
+				.build() //
+				.extend() //
+				.withExtensionContext(newExtensionContext) //
+				.build();
 
 		assertSame(newExtensionContext, newContext.getExtensionContext());
 		assertSame(extensionRegistry, newContext.getExtensionRegistry());

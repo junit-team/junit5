@@ -130,9 +130,9 @@ class DefaultLauncherTests {
 
 		TestPlan testPlan = launcher.discover( //
 			request() //
-			.select(PackageSelector.forPackageName("any")) //
-			.filter(includeWithUniqueIdContainsTest, includeWithUniqueIdContains1) //
-			.build());
+					.select(PackageSelector.forPackageName("any")) //
+					.filter(includeWithUniqueIdContainsTest, includeWithUniqueIdContains1) //
+					.build());
 
 		assertThat(testPlan.getChildren(new TestId("myEngine"))).hasSize(1);
 		assertThat(testPlan.getTestIdentifier(new TestId(test1.getUniqueId()))).isNotNull();

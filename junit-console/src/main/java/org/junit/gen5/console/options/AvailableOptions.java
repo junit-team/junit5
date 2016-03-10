@@ -38,25 +38,25 @@ class AvailableOptions {
 			"Run all tests");
 		additionalClasspathEntries = parser.acceptsAll(asList("p", "classpath"), //
 			"Additional classpath entries, e.g. for adding engines and their dependencies") //
-			.withRequiredArg();
+				.withRequiredArg();
 
 		classnameFilter = parser.acceptsAll(asList("n", "filter-classname"),
 			"Give a regular expression to include only classes whose fully qualified names match. " //
 					+ "By default any class name is accepted and thus all classes with tests are included.") //
-					.withRequiredArg();
+				.withRequiredArg();
 		requiredTagsFilter = parser.acceptsAll(asList("t", "require-tag"),
 			"Give a tag to be required in the test run. This option can be repeated.") //
-			.withRequiredArg();
+				.withRequiredArg();
 		excludedTagsFilter = parser.acceptsAll(asList("T", "exclude-tag"),
 			"Give a tag to exclude from the test run. This option can be repeated.") //
-			.withRequiredArg();
+				.withRequiredArg();
 		requiredEngineFilter = parser.acceptsAll(asList("e", "require-engine"),
 			"Give the engine id of the only engine to be used in the test run.") //
-			.withRequiredArg();
+				.withRequiredArg();
 
 		xmlReportsDir = parser.acceptsAll(asList("r", "xml-reports-dir"), //
 			"Enable XML report output into a specified local directory (will be created if it does not exist)") //
-			.withRequiredArg();
+				.withRequiredArg();
 
 		enableExitCode = parser.acceptsAll(asList("x", "enable-exit-code"), //
 			"Exit process with number of failing tests as exit code");

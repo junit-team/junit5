@@ -51,6 +51,6 @@ import org.junit.gen5.commons.meta.API;
 @API(Experimental)
 public @interface ExtendWith {
 
-	Class<? extends Extension>[]value();
+	Class<? extends Extension>[] value();
 
 }

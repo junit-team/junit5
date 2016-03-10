@@ -140,7 +140,7 @@ public final class AnnotationUtilsTests {
 	@Retention(RetentionPolicy.RUNTIME)
 	@interface Tags {
 
-		Tag[]value();
+		Tag[] value();
 	}
 
 	@Target({ ElementType.TYPE, ElementType.METHOD })
