@@ -46,7 +46,7 @@ class DefaultLauncher implements Launcher {
 
 	@Override
 	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
-		listenerRegistry.registerListener(listeners);
+		listenerRegistry.registerListeners(listeners);
 	}
 
 	@Override

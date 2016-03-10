@@ -27,7 +27,7 @@ class TestExecutionListenerRegistry {
 
 	private final List<TestExecutionListener> testExecutionListeners = new LinkedList<>();
 
-	void registerListener(TestExecutionListener... listeners) {
+	void registerListeners(TestExecutionListener... listeners) {
 		for (TestExecutionListener listener : listeners) {
 			this.testExecutionListeners.add(listener);
 		}
