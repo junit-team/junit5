@@ -41,7 +41,18 @@ class DefaultLauncher implements Launcher {
 	private final Iterable<TestEngine> testEngines;
 
 	DefaultLauncher(Iterable<TestEngine> testEngines) {
-		this.testEngines = testEngines;
+		this.testEngines = validateUniqueIds(testEngines);
+	}
+
+	private Iterable<TestEngine> validateUniqueIds(Iterable<TestEngine> testEngines) {
+		Set<String> ids = new HashSet<>();
+		for (TestEngine testEngine : testEngines) {
+			if (!ids.add(testEngine.getId())) {
+				throw new JUnitException(String.format(
+					"Cannot create launcher that has multiple engines with the same ID '%s'.", testEngine.getId()));
+			}
+		}
+		return testEngines;
 	}
 
 	@Override
@@ -62,8 +73,6 @@ class DefaultLauncher implements Launcher {
 	private Root discoverRoot(TestDiscoveryRequest discoveryRequest, String phase) {
 		Root root = new Root();
 
-		Set<String> uniqueEngineIds = new HashSet<>();
-
 		for (TestEngine testEngine : testEngines) {
 			final String engineId = testEngine.getId();
 
@@ -72,11 +81,6 @@ class DefaultLauncher implements Launcher {
 				LOG.fine(() -> String.format(
 					"Test discovery for engine '%s' was skipped due to a filter in phase '%s'.", engineId, phase));
 				continue;
-			}
-
-			if (!uniqueEngineIds.add(engineId)) {
-				throw new JUnitException(
-					String.format("Failure in launcher: multiple engines with the same ID [%s].", engineId));
 			}
 
 			LOG.fine(

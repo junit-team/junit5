@@ -46,10 +46,8 @@ class DefaultLauncherTests {
 
 	@Test
 	void constructLauncherWithMultipleTestEnginesWithDuplicateIds() {
-		DefaultLauncher launcher = createLauncher(new DummyTestEngine(), new DummyTestEngine());
-
 		JUnitException exception = expectThrows(JUnitException.class,
-			() -> launcher.discover(request().select(forUniqueId("foo")).build()));
+			() -> createLauncher(new DummyTestEngine("dummy id"), new DummyTestEngine("dummy id")));
 
 		assertThat(exception).hasMessageContaining("multiple engines with the same ID");
 	}
