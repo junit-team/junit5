@@ -40,6 +40,6 @@ public @interface Tags {
 	/**
 	 * An array of one or more {@link Tag Tags}.
 	 */
-	Tag[]value();
+	Tag[] value();
 
 }

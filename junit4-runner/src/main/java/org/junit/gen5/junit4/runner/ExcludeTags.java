@@ -37,6 +37,6 @@ public @interface ExcludeTags {
 	/**
 	 * One or more tags to exclude.
 	 */
-	String[]value();
+	String[] value();
 
 }
