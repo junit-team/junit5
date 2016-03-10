@@ -37,6 +37,6 @@ public @interface Classes {
 	/**
 	 * One or more test classes.
 	 */
-	Class<?>[]value();
+	Class<?>[] value();
 
 }

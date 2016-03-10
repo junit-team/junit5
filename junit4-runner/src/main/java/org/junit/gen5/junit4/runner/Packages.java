@@ -37,6 +37,6 @@ public @interface Packages {
 	/**
 	 * One or more package names.
 	 */
-	String[]value();
+	String[] value();
 
 }
