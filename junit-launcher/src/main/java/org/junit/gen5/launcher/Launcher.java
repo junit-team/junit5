@@ -20,10 +20,12 @@ import org.junit.gen5.commons.meta.API;
  * {@linkplain org.junit.gen5.engine.TestEngine test engines}.
  *
  * <p>Implementations of this interface are responsible for determining
- * the set of test engines to delegate to at runtime. For example, the
- * default implementation as returned by
+ * the set of test engines to delegate to at runtime and for ensuring that
+ * each test engine has an {@linkplain org.junit.gen5.engine.TestEngine#getId ID}
+ * that is unique among the registered test engines. For example, the
+ * default implementation returned by
  * {@link org.junit.gen5.launcher.main.LauncherFactory#create LauncherFactory.create()}
- * dynamically registers test engines via Java's
+ * dynamically discovers test engines via Java's
  * {@link java.util.ServiceLoader ServiceLoader} mechanism.
  *
  * <p>Discovery and execution of tests require a {@link TestDiscoveryRequest}
