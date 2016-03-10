@@ -44,7 +44,7 @@ class DefaultLauncher implements Launcher {
 		this.testEngines = validateUniqueIds(testEngines);
 	}
 
-	private Iterable<TestEngine> validateUniqueIds(Iterable<TestEngine> testEngines) {
+	private static Iterable<TestEngine> validateUniqueIds(Iterable<TestEngine> testEngines) {
 		Set<String> ids = new HashSet<>();
 		for (TestEngine testEngine : testEngines) {
 			if (!ids.add(testEngine.getId())) {
@@ -73,7 +73,7 @@ class DefaultLauncher implements Launcher {
 	private Root discoverRoot(TestDiscoveryRequest discoveryRequest, String phase) {
 		Root root = new Root();
 
-		for (TestEngine testEngine : testEngines) {
+		for (TestEngine testEngine : this.testEngines) {
 			final String engineId = testEngine.getId();
 
 			if (discoveryRequest.getEngineIdFilters().stream().map(
