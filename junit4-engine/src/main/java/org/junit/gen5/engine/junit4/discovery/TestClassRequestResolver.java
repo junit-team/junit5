@@ -102,7 +102,7 @@ class TestClassRequestResolver {
 			String uniqueId = entry.getKey();
 			List<Description> childrenWithSameUniqueId = entry.getValue();
 			IntFunction<String> uniqueIdGenerator = determineUniqueIdGenerator(uniqueId, childrenWithSameUniqueId);
-			for (int index = 0; index < childrenWithSameUniqueId.size(); index++) {
+			for (int index = 0, size = childrenWithSameUniqueId.size(); index < size; index++) {
 				String reallyUniqueId = uniqueIdGenerator.apply(index);
 				Description description = childrenWithSameUniqueId.get(index);
 				JUnit4TestDescriptor child = new JUnit4TestDescriptor(parent, DEFAULT_SEPARATOR, reallyUniqueId,
