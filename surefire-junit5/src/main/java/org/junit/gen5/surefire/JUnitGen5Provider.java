@@ -60,8 +60,7 @@ public class JUnitGen5Provider extends AbstractProvider {
 	private TestsToRun scanClasspath(Launcher launcher) {
 		TestsToRun scannedClasses = parameters.getScanResult().applyFilter(new TestPlanScannerFilter(launcher),
 			parameters.getTestClassLoader());
-		TestsToRun orderedClasses = parameters.getRunOrderCalculator().orderTestClasses(scannedClasses);
-		return orderedClasses;
+		return parameters.getRunOrderCalculator().orderTestClasses(scannedClasses);
 	}
 
 	private RunResult invokeAllTests(TestsToRun testsToRun, Launcher launcher) {

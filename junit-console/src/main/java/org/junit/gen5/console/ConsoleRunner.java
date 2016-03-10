@@ -48,7 +48,7 @@ public class ConsoleRunner {
 	int execute(String... args) {
 		CommandLineOptions options = commandLineOptionsParser.parse(args);
 		ConsoleTask task = determineTask(options);
-		return consoleTaskExecutor.executeTask(task, out -> displayHelp(out));
+		return consoleTaskExecutor.executeTask(task, this::displayHelp);
 	}
 
 	private ConsoleTask determineTask(CommandLineOptions options) {
