@@ -10,7 +10,7 @@
 
 package org.junit.gen5.launcher.main;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.StreamSupport.stream;
 
 import java.util.ServiceLoader;
@@ -30,7 +30,7 @@ class ServiceLoaderTestEngineRegistry {
 		Iterable<TestEngine> testEngines = ServiceLoader.load(TestEngine.class,
 			ReflectionUtils.getDefaultClassLoader());
 		LOG.info(() -> "Discovered TestEngines with IDs "
-				+ stream(testEngines.spliterator(), false).map(TestEngine::getId).collect(toList()));
+				+ stream(testEngines.spliterator(), false).map(TestEngine::getId).collect(joining(", ")));
 		return testEngines;
 	}
 
