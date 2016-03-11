@@ -68,7 +68,8 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		child.setParent(null);
 	}
 
-	protected void removeFromHierarchy() {
+	@Override
+	public void removeFromHierarchy() {
 		if (isRoot()) {
 			throw new JUnitException("You cannot remove the root of a hierarchy.");
 		}
@@ -108,8 +109,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public void accept(Visitor visitor) {
-		Runnable remove = this::removeFromHierarchy;
-		visitor.visit(this, remove);
+		visitor.visit(this);
 		new LinkedHashSet<>(getChildren()).forEach(child -> child.accept(visitor));
 	}
 

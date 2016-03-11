@@ -24,9 +24,9 @@ import org.junit.gen5.launcher.*;
  */
 class Root {
 
-	private static final TestDescriptor.Visitor REMOVE_DESCRIPTORS_WITHOUT_TESTS = (descriptor, remove) -> {
+	private static final TestDescriptor.Visitor REMOVE_DESCRIPTORS_WITHOUT_TESTS = descriptor -> {
 		if (!descriptor.isRoot() && !descriptor.hasTests())
-			remove.run();
+			descriptor.removeFromHierarchy();
 	};
 
 	private final Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
@@ -52,9 +52,9 @@ class Root {
 
 	void applyPostDiscoveryFilters(TestDiscoveryRequest discoveryRequest) {
 		Filter<TestDescriptor> postDiscoveryFilter = composeFilters(discoveryRequest.getPostDiscoveryFilters());
-		TestDescriptor.Visitor removeExcludedTests = (descriptor, remove) -> {
+		TestDescriptor.Visitor removeExcludedTests = descriptor -> {
 			if (isExcludedTest(descriptor, postDiscoveryFilter)) {
-				remove.run();
+				descriptor.removeFromHierarchy();
 			}
 		};
 		acceptInAllTestEngines(removeExcludedTests);
