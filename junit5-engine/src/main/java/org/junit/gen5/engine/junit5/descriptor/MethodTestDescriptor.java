@@ -32,6 +32,7 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.execution.ConditionEvaluator;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
@@ -56,7 +57,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	private final Method testMethod;
 
-	public MethodTestDescriptor(String uniqueId, Class<?> testClass, Method testMethod) {
+	public MethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId);
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");

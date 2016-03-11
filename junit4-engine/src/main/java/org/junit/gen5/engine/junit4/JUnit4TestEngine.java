@@ -22,6 +22,7 @@ import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.gen5.engine.junit4.discovery.JUnit4DiscoveryRequestResolver;
 import org.junit.gen5.engine.junit4.execution.RunnerExecutor;
@@ -39,7 +40,8 @@ public class JUnit4TestEngine implements TestEngine {
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest) {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(ENGINE_ID, "JUnit 4");
+		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine(ENGINE_ID).getUniqueString(),
+			"JUnit 4");
 		new JUnit4DiscoveryRequestResolver(engineDescriptor, LOG).resolve(discoveryRequest);
 		return engineDescriptor;
 	}

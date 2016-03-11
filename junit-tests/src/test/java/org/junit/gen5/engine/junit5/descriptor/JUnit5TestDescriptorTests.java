@@ -26,6 +26,7 @@ import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestTag;
+import org.junit.gen5.engine.UniqueId;
 
 /**
  * Unit tests for {@link ClassTestDescriptor} and {@link MethodTestDescriptor}.
@@ -38,19 +39,21 @@ public class JUnit5TestDescriptorTests {
 	public void constructFromMethod() throws Exception {
 		Class<?> testClass = ASampleTestCase.class;
 		Method testMethod = testClass.getDeclaredMethod("test");
-		MethodTestDescriptor descriptor = new MethodTestDescriptor("a method id", testClass, testMethod);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(UniqueId.root("method", "a method id"), testClass,
+			testMethod);
 
-		assertEquals("a method id", descriptor.getUniqueId());
+		assertEquals(UniqueId.root("method", "a method id"), descriptor.getUniqueIdObject());
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test", descriptor.getDisplayName(), "display name:");
 	}
 
 	@Test
 	public void constructFromMethodWithAnnotations() throws Exception {
-		JUnit5TestDescriptor classDescriptor = new ClassTestDescriptor("class id", ASampleTestCase.class);
+		JUnit5TestDescriptor classDescriptor = new ClassTestDescriptor(UniqueId.root("class", "class id"),
+			ASampleTestCase.class);
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("foo");
-		MethodTestDescriptor methodDescriptor = new MethodTestDescriptor("method id", ASampleTestCase.class,
-			testMethod);
+		MethodTestDescriptor methodDescriptor = new MethodTestDescriptor(UniqueId.root("method", "method id"),
+			ASampleTestCase.class, testMethod);
 		classDescriptor.addChild(methodDescriptor);
 
 		assertEquals(testMethod, methodDescriptor.getTestMethod());
@@ -68,7 +71,8 @@ public class JUnit5TestDescriptorTests {
 
 	@Test
 	public void constructClassDescriptorWithAnnotations() throws Exception {
-		ClassTestDescriptor descriptor = new ClassTestDescriptor("any id", ASampleTestCase.class);
+		ClassTestDescriptor descriptor = new ClassTestDescriptor(UniqueId.root("class", "any id"),
+			ASampleTestCase.class);
 
 		assertEquals(ASampleTestCase.class, descriptor.getTestClass());
 		assertEquals("custom class name", descriptor.getDisplayName(), "display name:");
@@ -78,7 +82,8 @@ public class JUnit5TestDescriptorTests {
 	@Test
 	public void constructFromMethodWithCustomTestAnnotation() throws Exception {
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("customTestAnnotation");
-		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", ASampleTestCase.class, testMethod);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(UniqueId.root("method", "any id"),
+			ASampleTestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom name", descriptor.getDisplayName(), "display name:");
@@ -88,7 +93,8 @@ public class JUnit5TestDescriptorTests {
 	@Test
 	public void constructFromMethodWithParameters() throws Exception {
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", String.class, BigDecimal.class);
-		MethodTestDescriptor descriptor = new MethodTestDescriptor("any id", ASampleTestCase.class, testMethod);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(UniqueId.root("method", "any id"),
+			ASampleTestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test", descriptor.getDisplayName(), "display name:");

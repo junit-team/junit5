@@ -14,6 +14,8 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
+import java.util.stream.Stream;
+
 import org.junit.gen5.commons.meta.API;
 
 /**
@@ -72,7 +74,18 @@ public final class StringUtils {
 		if (classes == null || classes.length == 0) {
 			return "";
 		}
-		return stream(classes).map(Class::getName).collect(joining(", "));
+		return join(stream(classes).map(Class::getName), ", ");
+	}
+
+	/**
+	 * Join a stream of {@link String}s together.
+	 *
+	 * @param stringStream the stream of Stings
+	 * @param delimiter the delimiter between elements
+	 * @return the joined string
+	 */
+	public static String join(Stream<String> stringStream, String delimiter) {
+		return stringStream.collect(joining(delimiter));
 	}
 
 }

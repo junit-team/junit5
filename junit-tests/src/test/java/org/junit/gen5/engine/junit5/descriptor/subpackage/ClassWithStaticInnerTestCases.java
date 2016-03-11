@@ -17,7 +17,7 @@ import org.junit.gen5.api.Test;
  */
 public class ClassWithStaticInnerTestCases {
 
-	static class ShouldBeDiscovered {
+	public static class ShouldBeDiscovered {
 
 		@Test
 		void test1() {

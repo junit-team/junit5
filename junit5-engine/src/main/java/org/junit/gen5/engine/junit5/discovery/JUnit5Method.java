@@ -12,13 +12,15 @@ package org.junit.gen5.engine.junit5.discovery;
 
 import java.lang.reflect.Method;
 
+import org.junit.gen5.engine.UniqueId;
+
 class JUnit5Method extends JUnit5Testable {
 
 	private final Class<?> containerClass;
 
 	private final Method javaMethod;
 
-	JUnit5Method(String uniqueId, Method javaElement, Class<?> containerClass) {
+	JUnit5Method(UniqueId uniqueId, Method javaElement, Class<?> containerClass) {
 		super(uniqueId);
 		this.javaMethod = javaElement;
 		this.containerClass = containerClass;

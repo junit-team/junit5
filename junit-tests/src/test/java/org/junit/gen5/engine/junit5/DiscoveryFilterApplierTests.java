@@ -21,6 +21,7 @@ import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.ClassFilter;
 
 /**
@@ -46,10 +47,10 @@ class DiscoveryFilterApplierTests {
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		List<String> includedDescriptors = engineDescriptor.allDescendants().stream().map(
-			TestDescriptor::getUniqueId).collect(Collectors.toList());
+		List<UniqueId> includedDescriptors = engineDescriptor.allDescendants().stream().map(
+			TestDescriptor::getUniqueIdObject).collect(Collectors.toList());
 		Assertions.assertEquals(1, includedDescriptors.size());
-		Assertions.assertTrue(includedDescriptors.contains("matching"));
+		Assertions.assertTrue(includedDescriptors.contains(UniqueId.root("class", "matching")));
 	}
 
 	@Test
@@ -67,11 +68,11 @@ class DiscoveryFilterApplierTests {
 
 		applier.applyAllFilters(request, engineDescriptor);
 
-		List<String> includedDescriptors = engineDescriptor.allDescendants().stream().map(
-			TestDescriptor::getUniqueId).collect(Collectors.toList());
+		List<UniqueId> includedDescriptors = engineDescriptor.allDescendants().stream().map(
+			TestDescriptor::getUniqueIdObject).collect(Collectors.toList());
 		Assertions.assertEquals(2, includedDescriptors.size());
-		Assertions.assertTrue(includedDescriptors.contains("matching"));
-		Assertions.assertTrue(includedDescriptors.contains("nested"));
+		Assertions.assertTrue(includedDescriptors.contains(UniqueId.root("class", "matching")));
+		Assertions.assertTrue(includedDescriptors.contains(UniqueId.root("nested-class", "nested")));
 	}
 
 	private static class MatchingClass {

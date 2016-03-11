@@ -20,10 +20,12 @@ import java.util.Set;
 
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.TestTag;
+import org.junit.gen5.engine.UniqueId;
 
 /**
  * @since 5.0
@@ -33,19 +35,46 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final String uniqueId;
 
+	/**
+	 * Temporary parallel to string-based unique id
+	 */
+	private UniqueId uniqueIdObject;
+
 	private TestDescriptor parent;
 
 	private TestSource source;
 
 	private final Set<TestDescriptor> children = new LinkedHashSet<>();
 
+	/**
+	 * Temporary parallel implementation to string-based constructor
+	 */
+	protected AbstractTestDescriptor(UniqueId uniqueIdObject) {
+		this.uniqueIdObject = Preconditions.notNull(uniqueIdObject, "uniqueId must not be null");
+		this.uniqueId = uniqueIdObject.getUniqueString();
+	}
+
 	protected AbstractTestDescriptor(String uniqueId) {
 		this.uniqueId = Preconditions.notBlank(uniqueId, "uniqueId must not be null or empty");
+		try {
+			this.uniqueIdObject = UniqueId.parse(uniqueId);
+		}
+		catch (JUnitException ignore) {
+			this.uniqueIdObject = null;
+		}
 	}
 
 	@Override
 	public final String getUniqueId() {
 		return this.uniqueId;
+	}
+
+	/**
+	 * Temporary parallel to string-based unique id
+	 */
+	@Override
+	public UniqueId getUniqueIdObject() {
+		return uniqueIdObject;
 	}
 
 	@Override

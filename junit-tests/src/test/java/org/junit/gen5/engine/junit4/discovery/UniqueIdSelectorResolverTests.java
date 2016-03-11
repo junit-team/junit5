@@ -20,13 +20,14 @@ import java.util.logging.LogRecord;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.logging.RecordCollectingLogger;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
 
 class UniqueIdSelectorResolverTests {
 
 	@Test
 	void logsWarningOnUnloadableTestClass() {
-		String uniqueId = "junit4:foo.bar.UnknownClass";
+		String uniqueId = engineId() + ":foo.bar.UnknownClass";
 		RecordCollectingLogger logger = new RecordCollectingLogger();
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueId);
 		TestClassCollector collector = new TestClassCollector();
@@ -44,7 +45,7 @@ class UniqueIdSelectorResolverTests {
 
 	@Test
 	void logsWarningForEngineUniqueId() {
-		String uniqueId = "junit4";
+		String uniqueId = engineId();
 		RecordCollectingLogger logger = new RecordCollectingLogger();
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueId);
 		TestClassCollector collector = new TestClassCollector();
@@ -56,7 +57,12 @@ class UniqueIdSelectorResolverTests {
 		assertThat(logger.getLogRecords()).hasSize(1);
 		LogRecord logRecord = getOnlyElement(logger.getLogRecords());
 		assertEquals(Level.WARNING, logRecord.getLevel());
-		assertEquals("Unresolvable Unique ID (junit4): Cannot resolve the engine's unique ID", logRecord.getMessage());
+		assertEquals("Unresolvable Unique ID (" + engineId() + "): Cannot resolve the engine's unique ID",
+			logRecord.getMessage());
+	}
+
+	private static String engineId() {
+		return UniqueId.forEngine("junit4").getUniqueString();
 	}
 
 	@Test

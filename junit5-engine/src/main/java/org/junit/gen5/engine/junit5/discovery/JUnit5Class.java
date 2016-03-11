@@ -10,11 +10,13 @@
 
 package org.junit.gen5.engine.junit5.discovery;
 
+import org.junit.gen5.engine.UniqueId;
+
 class JUnit5Class extends JUnit5Testable {
 
 	private final Class<?> javaClass;
 
-	JUnit5Class(String uniqueId, Class<?> javaClass) {
+	JUnit5Class(UniqueId uniqueId, Class<?> javaClass) {
 		super(uniqueId);
 		this.javaClass = javaClass;
 	}

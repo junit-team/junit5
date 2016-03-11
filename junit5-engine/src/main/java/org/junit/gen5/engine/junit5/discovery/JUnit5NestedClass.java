@@ -10,11 +10,13 @@
 
 package org.junit.gen5.engine.junit5.discovery;
 
+import org.junit.gen5.engine.UniqueId;
+
 class JUnit5NestedClass extends JUnit5Class {
 
 	private final Class<?> containerClass;
 
-	JUnit5NestedClass(String uniqueId, Class<?> javaClass, Class<?> containerClass) {
+	JUnit5NestedClass(UniqueId uniqueId, Class<?> javaClass, Class<?> containerClass) {
 		super(uniqueId, javaClass);
 		this.containerClass = containerClass;
 	}

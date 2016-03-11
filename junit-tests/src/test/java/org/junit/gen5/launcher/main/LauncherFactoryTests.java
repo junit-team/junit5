@@ -38,7 +38,7 @@ class LauncherFactoryTests {
 				.collect(toList());
 		// @formatter:on
 
-		assertThat(ids).containsOnly("junit4", "junit5");
+		assertThat(ids).containsOnly("[engine:junit4]", "[engine:junit5]");
 	}
 
 	private TestDiscoveryRequest createTestDiscoveryRequestForBothStandardEngineExampleClasses() {

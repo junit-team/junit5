@@ -40,6 +40,7 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.execution.ConditionEvaluator;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
@@ -54,7 +55,7 @@ import org.junit.gen5.engine.support.hierarchical.Container;
  * {@link TestDescriptor} for tests based on Java classes.
  *
  * <p>The pattern of the {@link #getUniqueId unique ID} takes the form of
- * <code>{parent unique id}:{fully qualified class name}</code>.
+ * <code>{parent unique id}/[class:{fully qualified class name}]</code>.
  *
  * @since 5.0
  */
@@ -65,7 +66,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 	private final Class<?> testClass;
 
-	public ClassTestDescriptor(String uniqueId, Class<?> testClass) {
+	public ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
 		super(uniqueId);
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
