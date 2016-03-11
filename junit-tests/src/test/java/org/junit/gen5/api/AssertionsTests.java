@@ -275,6 +275,302 @@ public class AssertionsTests {
 	// --- assertEquals -------------------------------------------------
 
 	@Test
+	void assertEqualsByte() {
+		byte expected = 1;
+		byte actual = 1;
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	void assertEqualsByteWithOneVsTwo() {
+		byte expected = 1;
+		byte actual = 2;
+		try {
+			assertEquals(expected, actual);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "expected: <1> but was: <2>");
+		}
+	}
+
+	@Test
+	void assertEqualsByteWithOneVsTwoAndMessage() {
+		byte expected = 1;
+		byte actual = 2;
+		try {
+			assertEquals(expected, actual, "message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "message");
+			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+		}
+	}
+
+	@Test
+	void assertEqualsByteWithOneVsTwoAndMessageSupplier() {
+		byte expected = 1;
+		byte actual = 2;
+		try {
+			assertEquals(expected, actual, () -> "message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "message");
+			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+		}
+	}
+
+	@Test
+	void assertEqualsShort() {
+		short expected = 1;
+		short actual = 1;
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	void assertEqualsShortWithOneVsTwo() {
+		short expected = 1;
+		short actual = 2;
+		try {
+			assertEquals(expected, actual);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "expected: <1> but was: <2>");
+		}
+	}
+
+	@Test
+	void assertEqualsShortWithOneVsTwoAndMessage() {
+		short expected = 1;
+		short actual = 2;
+		try {
+			assertEquals(expected, actual, "message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "message");
+			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+		}
+	}
+
+	@Test
+	void assertEqualsShortWithOneVsTwoAndMessageSupplier() {
+		short expected = 1;
+		short actual = 2;
+		try {
+			assertEquals(expected, actual, () -> "message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "message");
+			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+		}
+	}
+
+	@Test
+	void assertEqualsInt() {
+		assertEquals(1, 1);
+	}
+
+	@Test
+	void assertEqualsIntWithOneVsTwo() {
+		try {
+			assertEquals(1, 2);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "expected: <1> but was: <2>");
+		}
+	}
+
+	@Test
+	void assertEqualsIntWithOneVsTwoAndMessage() {
+		try {
+			assertEquals(1, 2, "message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "message");
+			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+		}
+	}
+
+	@Test
+	void assertEqualsIntWithOneVsTwoAndMessageSupplier() {
+		try {
+			assertEquals(1, 2, () -> "message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "message");
+			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+		}
+	}
+
+	@Test
+	void assertEqualsLong() {
+		assertEquals(1L, 1L);
+	}
+
+	@Test
+	void assertEqualsLongWithOneVsTwo() {
+		try {
+			assertEquals(1L, 2L);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "expected: <1> but was: <2>");
+		}
+	}
+
+	@Test
+	void assertEqualsLongWithOneVsTwoAndMessage() {
+		try {
+			assertEquals(1L, 2L, "message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "message");
+			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+		}
+	}
+
+	@Test
+	void assertEqualsLongWithOneVsTwoAndMessageSupplier() {
+		try {
+			assertEquals(1L, 2L, () -> "message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "message");
+			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+		}
+	}
+
+	@Test
+	void assertEqualsChar() {
+		assertEquals('a', 'a');
+	}
+
+	@Test
+	void assertEqualsCharWithOneVsTwo() {
+		try {
+			assertEquals('a', 'b');
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "expected: <a> but was: <b>");
+		}
+	}
+
+	@Test
+	void assertEqualsCharWithOneVsTwoAndMessage() {
+		try {
+			assertEquals('a', 'b', "message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "message");
+			assertMessageEndsWith(ex, "expected: <a> but was: <b>");
+		}
+	}
+
+	@Test
+	void assertEqualsCharWithOneVsTwoAndMessageSupplier() {
+		try {
+			assertEquals('a', 'b', () -> "message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "message");
+			assertMessageEndsWith(ex, "expected: <a> but was: <b>");
+		}
+	}
+
+	@Test
+	void assertEqualsFloat() {
+		assertEquals(1.0f, 1.0f);
+	}
+
+	@Test
+	void assertEqualsFloatWithOneVsTwo() {
+		try {
+			assertEquals(1.0f, 1.1f);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "expected: <1.0> but was: <1.1>");
+		}
+	}
+
+	@Test
+	void assertEqualsFloatWithOneVsTwoAndMessage() {
+		try {
+			assertEquals(1.0f, 1.1f, "message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "message");
+			assertMessageEndsWith(ex, "expected: <1.0> but was: <1.1>");
+		}
+	}
+
+	@Test
+	void assertEqualsFloatWithOneVsTwoAndMessageSupplier() {
+		try {
+			assertEquals(1.0f, 1.1f, () -> "message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "message");
+			assertMessageEndsWith(ex, "expected: <1.0> but was: <1.1>");
+		}
+	}
+
+	@Test
+	void assertEqualsDouble() {
+		assertEquals(1.0, 1.0);
+	}
+
+	@Test
+	void assertEqualsDoubleWithOneVsTwo() {
+		try {
+			assertEquals(1.0, 1.1);
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageEquals(ex, "expected: <1.0> but was: <1.1>");
+		}
+	}
+
+	@Test
+	void assertEqualsDoubleWithOneVsTwoAndMessage() {
+		try {
+			assertEquals(1.0, 1.1, "message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "message");
+			assertMessageEndsWith(ex, "expected: <1.0> but was: <1.1>");
+		}
+	}
+
+	@Test
+	void assertEqualsDoubleWithOneVsTwoAndMessageSupplier() {
+		try {
+			assertEquals(1.0, 1.1, () -> "message");
+			expectAssertionFailedError();
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "message");
+			assertMessageEndsWith(ex, "expected: <1.0> but was: <1.1>");
+		}
+	}
+
+	@Test
 	void assertEqualsWithTwoNulls() {
 		assertEquals(null, null);
 	}
