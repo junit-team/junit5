@@ -32,8 +32,6 @@ class JUnit5TestableFactory {
 
 	private static final Logger LOG = Logger.getLogger(JUnit5TestableFactory.class.getName());
 
-	private static final String SEPARATORS = ":@#";
-
 	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();
 	private static final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
 	private static final IsTestMethod isTestMethod = new IsTestMethod();
@@ -41,7 +39,6 @@ class JUnit5TestableFactory {
 	public static final String TYPE_CLASS = "class";
 	public static final String TYPE_NESTED_CLASS = "nested-class";
 	public static final String TYPE_METHOD = "method";
-	public static final String TYPE_ENGINE = "engine";
 
 	JUnit5Testable fromUniqueId(UniqueId uniqueId, UniqueId engineId) {
 		Preconditions.notNull(uniqueId, "Unique ID must not be null");
@@ -106,7 +103,7 @@ class JUnit5TestableFactory {
 				next = fromClass(findNestedClass(head.getValue(), container), engineId);
 				break;
 			}
-			case "method": {
+			case TYPE_METHOD: {
 				Class<?> container = ((JUnit5Class) last).getJavaClass();
 				next = fromMethod(findMethod(head.getValue(), container, uniqueId), container, engineId);
 				break;

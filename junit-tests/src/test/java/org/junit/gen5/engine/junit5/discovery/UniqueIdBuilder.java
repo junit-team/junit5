@@ -14,6 +14,11 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 
+/**
+ * Test data builder for unique IDs.
+ *
+ * Used to decouple tests from concrete unique ID strings.
+ */
 public class UniqueIdBuilder {
 
 	public static UniqueId uniqueIdForClass(Class<?> clazz) {

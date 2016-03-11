@@ -14,11 +14,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.gen5.commons.meta.API;
+
 /**
  * {@code UniqueId} is a class to encapsulate the creation, parsing and display of unique IDs for {@link TestDescriptor}.
  *
  * <p>Instances of this class have value semantics and are immutable.</p>
+ *
+ * @since 5.0
  */
+@API(API.Usage.Experimental)
 public class UniqueId implements Cloneable {
 
 	private static final String TYPE_ENGINE = "engine";
