@@ -16,6 +16,9 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.engine.UniqueId.Segment;
 
+/**
+ * @since 5.0
+ */
 class UniqueIdFormatTests {
 
 	static final String ENGINE_ID = "junit5";
@@ -50,7 +53,6 @@ class UniqueIdFormatTests {
 	@Nested
 	class Parsing {
 
-		@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
 		@Test
 		void parseError() {
 			Throwable throwable = Assertions.expectThrows(JUnitException.class, () -> format.parse("malformed uid"));

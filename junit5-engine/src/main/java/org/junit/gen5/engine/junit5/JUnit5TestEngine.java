@@ -17,7 +17,6 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.discovery.DiscoverySelectorResolver;
 import org.junit.gen5.engine.junit5.discovery.JUnit5EngineDescriptor;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
@@ -58,4 +57,5 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 	protected JUnit5EngineExecutionContext createExecutionContext(ExecutionRequest request) {
 		return new JUnit5EngineExecutionContext(request.getEngineExecutionListener());
 	}
+
 }

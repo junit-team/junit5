@@ -17,6 +17,9 @@ import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.UniqueId.Segment;
 
+/**
+ * @since 5.0
+ */
 class UniqueIdTests {
 
 	static final String ENGINE_ID = "junit5";

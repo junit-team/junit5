@@ -20,7 +20,6 @@ import java.util.Set;
 
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestSource;
