@@ -10,6 +10,8 @@
 
 package org.junit.gen5.launcher.main;
 
+import static org.junit.gen5.engine.Filter.composeFilters;
+
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -22,6 +24,10 @@ import org.junit.gen5.launcher.*;
  */
 class Root {
 
+	private static final TestDescriptor.Visitor REMOVE_DESCRIPTORS_WITHOUT_TESTS = (descriptor, remove) -> {
+		if (!descriptor.isRoot() && !descriptor.hasTests())
+			remove.run();
+	};
 	private final Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
 
 	/**
@@ -44,15 +50,13 @@ class Root {
 	}
 
 	void applyPostDiscoveryFilters(TestDiscoveryRequest discoveryRequest) {
-		TestDescriptor.Visitor filteringVisitor = (descriptor, remove) -> {
-			if (!descriptor.isTest())
-				return;
-
-			if (isExcluded(discoveryRequest, descriptor)) {
+		Filter<TestDescriptor> postDiscoveryFilter = composeFilters(discoveryRequest.getPostDiscoveryFilters());
+		TestDescriptor.Visitor removeExcludedTests = (descriptor, remove) -> {
+			if (isExcludedTest(descriptor, postDiscoveryFilter)) {
 				remove.run();
 			}
 		};
-		acceptInAllTestEngines(filteringVisitor);
+		acceptInAllTestEngines(removeExcludedTests);
 	}
 
 	/**
@@ -60,17 +64,12 @@ class Root {
 	 * If a {@link TestEngine} ends up with no {@link TestDescriptor}s after pruning, it will be removed.
 	 */
 	void prune() {
-		TestDescriptor.Visitor pruningVisitor = (descriptor, remove) -> {
-			if (descriptor.isRoot() || descriptor.hasTests())
-				return;
-			remove.run();
-		};
-		acceptInAllTestEngines(pruningVisitor);
+		acceptInAllTestEngines(REMOVE_DESCRIPTORS_WITHOUT_TESTS);
 		pruneEmptyTestEngines();
 	}
 
-	private boolean isExcluded(TestDiscoveryRequest discoveryRequest, TestDescriptor descriptor) {
-		return Filter.composeFilters(discoveryRequest.getPostDiscoveryFilters()).filter(descriptor).excluded();
+	private boolean isExcludedTest(TestDescriptor descriptor, Filter<TestDescriptor> postDiscoveryFilter) {
+		return descriptor.isTest() && postDiscoveryFilter.filter(descriptor).excluded();
 	}
 
 	private void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {
