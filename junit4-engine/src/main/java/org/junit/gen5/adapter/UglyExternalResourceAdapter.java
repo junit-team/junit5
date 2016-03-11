@@ -12,27 +12,28 @@ package org.junit.gen5.adapter;
 
 import java.lang.reflect.Method;
 
-import org.junit.gen5.api.extension.AfterAllExtensionPoint;
-import org.junit.gen5.api.extension.BeforeAllExtensionPoint;
-import org.junit.gen5.api.extension.ContainerExtensionContext;
+import org.junit.gen5.api.extension.*;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.rules.ExternalResource;
 
 // very early thoughts - please do not polish yet :)
 
-public class UglyExternalResourceAdapter implements BeforeAllExtensionPoint, AfterAllExtensionPoint {
+public class UglyExternalResourceAdapter implements BeforeEachExtensionPoint, AfterEachExtensionPoint {
 
 	ExternalResource externalResource;
 
 	@Override
-	public void beforeAll(ContainerExtensionContext context) throws Exception {
+	public void beforeEach(TestExtensionContext context) throws Exception {
 		this.findAndInvokeMethod("before");
 	}
 
 	@Override
-	public void afterAll(ContainerExtensionContext context) throws Exception {
+	public void afterEach(TestExtensionContext context) throws Exception {
 		this.findAndInvokeMethod("after");
 	}
+
+
+
 
 	//exception handling?
 	private void findAndInvokeMethod(String name) throws NoSuchMethodException {
@@ -44,5 +45,6 @@ public class UglyExternalResourceAdapter implements BeforeAllExtensionPoint, Aft
 	private Method findMethod(String name) throws NoSuchMethodException {
 		return this.externalResource.getClass().getMethod(name);
 	}
+
 
 }
