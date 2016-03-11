@@ -282,7 +282,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsByteWithOneVsTwo() {
+	void assertEqualsByteWithUnequalValues() {
 		byte expected = 1;
 		byte actual = 2;
 		try {
@@ -295,7 +295,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsByteWithOneVsTwoAndMessage() {
+	void assertEqualsByteWithUnequalValuesAndMessage() {
 		byte expected = 1;
 		byte actual = 2;
 		try {
@@ -309,7 +309,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsByteWithOneVsTwoAndMessageSupplier() {
+	void assertEqualsByteWithUnequalValuesAndMessageSupplier() {
 		byte expected = 1;
 		byte actual = 2;
 		try {
@@ -330,7 +330,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsShortWithOneVsTwo() {
+	void assertEqualsShortWithUnequalValues() {
 		short expected = 1;
 		short actual = 2;
 		try {
@@ -343,7 +343,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsShortWithOneVsTwoAndMessage() {
+	void assertEqualsShortWithUnequalValuesAndMessage() {
 		short expected = 1;
 		short actual = 2;
 		try {
@@ -357,7 +357,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsShortWithOneVsTwoAndMessageSupplier() {
+	void assertEqualsShortWithUnequalValuesAndMessageSupplier() {
 		short expected = 1;
 		short actual = 2;
 		try {
@@ -376,7 +376,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsIntWithOneVsTwo() {
+	void assertEqualsIntWithUnequalValues() {
 		try {
 			assertEquals(1, 2);
 			expectAssertionFailedError();
@@ -387,7 +387,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsIntWithOneVsTwoAndMessage() {
+	void assertEqualsIntWithUnequalValuesAndMessage() {
 		try {
 			assertEquals(1, 2, "message");
 			expectAssertionFailedError();
@@ -399,7 +399,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsIntWithOneVsTwoAndMessageSupplier() {
+	void assertEqualsIntWithUnequalValuesAndMessageSupplier() {
 		try {
 			assertEquals(1, 2, () -> "message");
 			expectAssertionFailedError();
@@ -416,7 +416,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsLongWithOneVsTwo() {
+	void assertEqualsLongWithUnequalValues() {
 		try {
 			assertEquals(1L, 2L);
 			expectAssertionFailedError();
@@ -427,7 +427,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsLongWithOneVsTwoAndMessage() {
+	void assertEqualsLongWithUnequalValuesAndMessage() {
 		try {
 			assertEquals(1L, 2L, "message");
 			expectAssertionFailedError();
@@ -439,7 +439,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsLongWithOneVsTwoAndMessageSupplier() {
+	void assertEqualsLongWithUnequalValuesAndMessageSupplier() {
 		try {
 			assertEquals(1L, 2L, () -> "message");
 			expectAssertionFailedError();
@@ -456,7 +456,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsCharWithOneVsTwo() {
+	void assertEqualsCharWithUnequalValues() {
 		try {
 			assertEquals('a', 'b');
 			expectAssertionFailedError();
@@ -467,7 +467,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsCharWithOneVsTwoAndMessage() {
+	void assertEqualsCharWithUnequalValuesAndMessage() {
 		try {
 			assertEquals('a', 'b', "message");
 			expectAssertionFailedError();
@@ -479,7 +479,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsCharWithOneVsTwoAndMessageSupplier() {
+	void assertEqualsCharWithUnequalValuesAndMessageSupplier() {
 		try {
 			assertEquals('a', 'b', () -> "message");
 			expectAssertionFailedError();
@@ -496,7 +496,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsFloatWithOneVsTwo() {
+	void assertEqualsFloatWithUnequalValues() {
 		try {
 			assertEquals(1.0f, 1.1f);
 			expectAssertionFailedError();
@@ -507,7 +507,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsFloatWithOneVsTwoAndMessage() {
+	void assertEqualsFloatWithUnequalValuesAndMessage() {
 		try {
 			assertEquals(1.0f, 1.1f, "message");
 			expectAssertionFailedError();
@@ -519,7 +519,7 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsFloatWithOneVsTwoAndMessageSupplier() {
+	void assertEqualsFloatWithUnequalValuesAndMessageSupplier() {
 		try {
 			assertEquals(1.0f, 1.1f, () -> "message");
 			expectAssertionFailedError();
@@ -532,13 +532,13 @@ public class AssertionsTests {
 
 	@Test
 	void assertEqualsDouble() {
-		assertEquals(1.0, 1.0);
+		assertEquals(1.0d, 1.0d);
 	}
 
 	@Test
-	void assertEqualsDoubleWithOneVsTwo() {
+	void assertEqualsDoubleWithUnequalValues() {
 		try {
-			assertEquals(1.0, 1.1);
+			assertEquals(1.0d, 1.1d);
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
@@ -547,9 +547,9 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsDoubleWithOneVsTwoAndMessage() {
+	void assertEqualsDoubleWithUnequalValuesAndMessage() {
 		try {
-			assertEquals(1.0, 1.1, "message");
+			assertEquals(1.0d, 1.1d, "message");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
@@ -559,9 +559,9 @@ public class AssertionsTests {
 	}
 
 	@Test
-	void assertEqualsDoubleWithOneVsTwoAndMessageSupplier() {
+	void assertEqualsDoubleWithUnequalValuesAndMessageSupplier() {
 		try {
-			assertEquals(1.0, 1.1, () -> "message");
+			assertEquals(1.0d, 1.1d, () -> "message");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
