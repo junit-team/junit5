@@ -17,15 +17,19 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
+import extensions.DynamicTestExtension;
+
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.Dynamic;
 import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.api.Tag;
+import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
 @Tag("exclude")
+@ExtendWith(DynamicTestExtension.class)
 public class DynamicTestsDemo {
 
 	//	@Dynamic
@@ -102,4 +106,8 @@ public class DynamicTestsDemo {
 			index -> Assertions.assertFalse(index % AVERAGE == 0));
 	}
 
+	@Dynamic
+	void dynamicTestsFromExtension(boolean success) {
+		Assertions.assertTrue(success, "failing");
+	}
 }

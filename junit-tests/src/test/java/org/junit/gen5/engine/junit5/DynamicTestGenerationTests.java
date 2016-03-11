@@ -11,20 +11,22 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.invokeMethod;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.lang.reflect.Method;
+import java.util.*;
 import java.util.stream.Stream;
 
-import org.junit.gen5.api.Assertions;
-import org.junit.gen5.api.Dynamic;
-import org.junit.gen5.api.DynamicTest;
-import org.junit.gen5.api.Test;
+import org.junit.gen5.api.*;
+import org.junit.gen5.api.extension.DynamicTestCreator;
+import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.MethodInvocationContext;
+import org.junit.gen5.commons.JUnitException;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
@@ -35,7 +37,7 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 	public void dynamicTestMethodsAreCorrectlyDiscoveredForClassSelector() {
 		TestDiscoveryRequest request = request().select(forClass(MyDynamicTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(4, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
@@ -94,6 +96,25 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 			() -> assertEquals(3L, eventRecorder.getContainerFinishedCount(), "# container finished"));
 	}
 
+	@Test
+	public void dynamicTestsAreExecutedFromExtension() {
+		Optional<Method> testMethod = ReflectionUtils.findMethod(MyDynamicTestCase.class, "dynamicByExtension",
+			Boolean.TYPE);
+		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, testMethod.get())).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		//dynamic test methods are counted as both container and test
+		assertAll( //
+			() -> assertEquals(3L, eventRecorder.getContainerStartedCount(), "# container started"),
+			() -> assertEquals(2L, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
+			() -> assertEquals(3L, eventRecorder.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed"),
+			() -> assertEquals(3L, eventRecorder.getContainerFinishedCount(), "# container finished"));
+	}
+
+	@ExtendWith(TestExtension.class)
 	private static class MyDynamicTestCase {
 
 		@Dynamic
@@ -126,6 +147,29 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 			return tests.iterator();
 		}
 
+		@Dynamic
+		void dynamicByExtension(boolean success) {
+			Assertions.assertTrue(success, "failing");
+		}
 	}
 
+	private static class TestExtension implements DynamicTestCreator {
+		@Override
+		public boolean supports(MethodInvocationContext methodInvocationContext, ExtensionContext extensionContext)
+				throws JUnitException {
+			Class<?>[] parameterTypes = methodInvocationContext.getMethod().getParameterTypes();
+			return parameterTypes.length == 1 && parameterTypes[0] == Boolean.TYPE;
+		}
+
+		@Override
+		public Stream<DynamicTest> replace(MethodInvocationContext methodInvocationContext,
+				ExtensionContext extensionContext) throws JUnitException {
+			return Stream.of(new DynamicTest("extensionTest", testExecutable(methodInvocationContext, true)),
+				new DynamicTest("extensionTest", testExecutable(methodInvocationContext, false)));
+		}
+
+		private Executable testExecutable(MethodInvocationContext context, boolean parameter) {
+			return () -> invokeMethod(context.getMethod(), context.getInstance(), parameter);
+		}
+	}
 }

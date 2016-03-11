@@ -1,3 +1,13 @@
+/*
+ * Copyright 2015-2016 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
+
 package org.junit.gen5.api.extension;
 
 import org.junit.gen5.commons.JUnitException;
@@ -15,29 +25,29 @@ import org.junit.gen5.commons.JUnitException;
  */
 public interface DynamicTestCreator extends ExtensionPoint {
 
-    /**
-     * Determine if this creator supports replacement of the supplied
-     * {@link MethodInvocationContext} and {@link ExtensionContext}.
-     *
-     * @param methodInvocationContext method invocation context for the creation
-     * @param extensionContext extension context of the method about to be replaced
-     * @return {@code true} if this creator can replace the method
-     * @see #replace(MethodInvocationContext, ExtensionContext)
-     */
-    boolean supports(MethodInvocationContext methodInvocationContext,
-                     ExtensionContext extensionContext) throws JUnitException;
+	/**
+	 * Determine if this creator supports replacement of the supplied
+	 * {@link MethodInvocationContext} and {@link ExtensionContext}.
+	 *
+	 * @param methodInvocationContext method invocation context for the creation
+	 * @param extensionContext extension context of the method about to be replaced
+	 * @return {@code true} if this creator can replace the method
+	 * @see #replace(MethodInvocationContext, ExtensionContext)
+	 */
+	boolean supports(MethodInvocationContext methodInvocationContext, ExtensionContext extensionContext)
+			throws JUnitException;
 
-    /**
-     * Replace the method for the supplied {@link MethodInvocationContext} and
-     * {@link ExtensionContext} by the returned {@link java.util.stream.Stream},
-     * {@link java.util.Collection} or {@link Iterable} of
-     * {@link org.junit.gen5.api.DynamicTest DynamicTests}.
-     *
-     * @param methodInvocationContext method invocation context for the creation
-     * @param extensionContext extension context of the method about to be replaced
-     * @return the dynamic tests
-     * @see #supports(MethodInvocationContext, ExtensionContext)
-     */
-    Object replace(MethodInvocationContext methodInvocationContext,
-                   ExtensionContext extensionContext) throws JUnitException;
+	/**
+	 * Replace the method for the supplied {@link MethodInvocationContext} and
+	 * {@link ExtensionContext} by the returned {@link java.util.stream.Stream},
+	 * {@link java.util.Collection} or {@link Iterable} of
+	 * {@link org.junit.gen5.api.DynamicTest DynamicTests}.
+	 *
+	 * @param methodInvocationContext method invocation context for the creation
+	 * @param extensionContext extension context of the method about to be replaced
+	 * @return the dynamic tests
+	 * @see #supports(MethodInvocationContext, ExtensionContext)
+	 */
+	Object replace(MethodInvocationContext methodInvocationContext, ExtensionContext extensionContext)
+			throws JUnitException;
 }
