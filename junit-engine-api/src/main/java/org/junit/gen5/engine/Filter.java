@@ -35,34 +35,48 @@ import org.junit.gen5.commons.util.Preconditions;
 public interface Filter<T> {
 
 	/**
-	 * Combines an array of {@code Filter objects} into a new filter that will
-	 * include elements if and only if all of the filters in the specified array
-	 * include it.
+	 * Combines an array of {@link Filter filters} into a new composite filter
+	 * that will include elements if and only if all of the filters in the
+	 * specified array include it.
 	 *
-	 * <p>If the length of the array is 1, this method will return the filter
-	 * contained in the array.
+	 * <p>If the array is empty, the returned filter will include all elements
+	 * it is asked to filter.
+	 *
+	 * <p>If the length of the array is 1, this method will return the single
+	 * filter contained in the array.
+	 *
+	 * @param filters the array of filters to compose; never {@code null}
+	 * @see #composeFilters(Collection)
 	 */
 	@SafeVarargs
 	static <T> Filter<T> composeFilters(Filter<T>... filters) {
+		Preconditions.notNull(filters, "Filters must not be null");
+
+		if (filters.length == 0) {
+			return alwaysIncluded();
+		}
 		if (filters.length == 1) {
 			return filters[0];
 		}
-		return composeFilters(asList(filters));
+		return new CompositeFilter<>(asList(filters));
 	}
 
 	/**
-	 * Combines a collection of {@code Filter objects} into a new filter that
-	 * will include elements if and only if all of the filters in the specified
+	 * Combines a collection of {@link Filter filters} into a new composite filter
+	 * that will include elements if and only if all of the filters in the specified
 	 * collection include it.
 	 *
-	 * <p>If the collection is empty, the returned filter will
-	 * include all elements it is asked to filter.
+	 * <p>If the collection is empty, the returned filter will include all
+	 * elements it is asked to filter.
 	 *
-	 * <p>If the size of the collection is 1, this method will return the filter
-	 * contained in the collection.
+	 * <p>If the size of the collection is 1, this method will return the single
+	 * filter contained in the collection.
+	 *
+	 * @param filters the collection of filters to compose; never {@code null}
+	 * @see #composeFilters(Filter...)
 	 */
 	static <T> Filter<T> composeFilters(Collection<? extends Filter<T>> filters) {
-		Preconditions.notNull(filters, "Filters should not be null");
+		Preconditions.notNull(filters, "Filters must not be null");
 
 		if (filters.isEmpty()) {
 			return alwaysIncluded();
