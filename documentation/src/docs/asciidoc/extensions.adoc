@@ -208,7 +208,19 @@ but rethrow any other type of exception:
 include::{testDir}/example/exception/IgnoreIOExceptionExtension.java[tags=user_guide]
 ----
 
+=== Dynamic Test Creation
 
+To add dynamic tests on runtime, an `Extension` API `DynamicTestCreator` is available.
+It can be used to replace an existing `void` method annotated by `@Dynamic` by a number of
+`DynamicTest` created on runtime. This can easily be used to create parameterized tests.
+
+[source,java,indent=0]
+[subs="verbatim"]
+.An extension replacing a `void` method with a `boolean` parameter by two dynamic tests,
+one for each value.
+----
+include::{testDir}/extensions/DynamicTestExtension.java[tags=user_guide]
+----
 
 === Keeping State in Extensions
 
@@ -220,5 +232,3 @@ from one invocation of an extension point to the next? ...
 === Additional Planned Extensions
 
 Several additional extensions are planned, including but not limited to the following:
-
-* Dynamic test registration – for example, for computing parameterized tests at runtime

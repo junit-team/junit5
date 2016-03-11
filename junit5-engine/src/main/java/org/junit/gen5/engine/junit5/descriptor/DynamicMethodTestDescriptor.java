@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import static java.util.function.Function.identity;
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
@@ -23,6 +24,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.junit.gen5.api.DynamicTest;
+import org.junit.gen5.api.extension.DynamicTestCreator;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.JUnitException;
@@ -32,6 +34,7 @@ import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
+import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 import org.junit.gen5.engine.support.hierarchical.Leaf;
 import org.junit.gen5.engine.support.hierarchical.SingleTestExecutor;
 
@@ -61,11 +64,20 @@ public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements
 		throwableCollector.execute(() -> {
 			MethodInvocationContext methodInvocationContext = methodInvocationContext(
 				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod());
-
-			MethodInvoker methodInvoker = new MethodInvoker(testExtensionContext, context.getExtensionRegistry());
-			Object dynamicMethodResult = methodInvoker.invoke(methodInvocationContext);
-			Stream<DynamicTest> dynamicTestStream = toDynamicTestStream(dynamicMethodResult);
-
+			Stream<DynamicTest> dynamicTestStream;
+			if (methodInvocationContext.getMethod().getReturnType() == Void.TYPE) {
+				dynamicTestStream = context.getExtensionRegistry().stream(DynamicTestCreator.class,
+					ExtensionRegistry.ApplicationOrder.FORWARD).filter(
+						creator -> creator.getExtensionPoint().supports(methodInvocationContext,
+							testExtensionContext)).map(
+								creator -> creator.getExtensionPoint().replace(methodInvocationContext,
+									testExtensionContext)).map(this::toDynamicTestStream).flatMap(identity());
+			}
+			else {
+				MethodInvoker methodInvoker = new MethodInvoker(testExtensionContext, context.getExtensionRegistry());
+				Object dynamicMethodResult = methodInvoker.invoke(methodInvocationContext);
+				dynamicTestStream = toDynamicTestStream(dynamicMethodResult);
+			}
 			AtomicInteger index = new AtomicInteger();
 			try {
 				dynamicTestStream.forEach(
