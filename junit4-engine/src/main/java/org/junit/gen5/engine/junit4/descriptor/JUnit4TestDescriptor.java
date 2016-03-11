@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit4.descriptor;
 
 import static java.util.Arrays.stream;
+import static java.util.Optional.ofNullable;
 import static java.util.function.Predicate.isEqual;
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
@@ -67,8 +68,7 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 
 	@Override
 	public String getDisplayName() {
-		String methodName = description.getMethodName();
-		return methodName != null ? methodName : description.getDisplayName();
+		return ofNullable(description.getMethodName()).orElse(description.getDisplayName());
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 
 	private Optional<Class<?>[]> getDeclaredCategories() {
 		Category annotation = description.getAnnotation(Category.class);
-		return Optional.ofNullable(annotation).map(Category::value);
+		return ofNullable(annotation).map(Category::value);
 	}
 
 	private static Optional<JavaSource> toJavaSource(Description description) {
