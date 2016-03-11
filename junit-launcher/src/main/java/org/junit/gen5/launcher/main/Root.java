@@ -28,10 +28,11 @@ class Root {
 		if (!descriptor.isRoot() && !descriptor.hasTests())
 			remove.run();
 	};
+
 	private final Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
 
 	/**
-	 * Add an {@code engine}'s discovered root {@code testDescriptor}
+	 * Add an {@code engine}'s discovered root {@code testDescriptor}.
 	 */
 	void add(TestEngine engine, TestDescriptor testDescriptor) {
 		testEngineDescriptors.put(engine, testDescriptor);
