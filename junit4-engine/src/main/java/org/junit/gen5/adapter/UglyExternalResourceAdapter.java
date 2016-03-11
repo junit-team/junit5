@@ -10,41 +10,59 @@
 
 package org.junit.gen5.adapter;
 
-import java.lang.reflect.Method;
+import static java.util.stream.Collectors.*;
 
+import java.lang.reflect.*;
+import java.util.*;
+
+import org.junit.Rule;
 import org.junit.gen5.api.extension.*;
-import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.commons.util.*;
 import org.junit.rules.ExternalResource;
 
 // very early thoughts - please do not polish yet :)
 
 public class UglyExternalResourceAdapter implements BeforeEachExtensionPoint, AfterEachExtensionPoint {
 
-	ExternalResource externalResource;
+	final Class<Rule> annotationType = Rule.class;
+	final Class<ExternalResource> ruleType = ExternalResource.class;
 
 	@Override
 	public void beforeEach(TestExtensionContext context) throws Exception {
-		this.findAndInvokeMethod("before");
+		this.invokeNamedMethodOnRuleAnnotatedField(context, "before");
 	}
 
 	@Override
 	public void afterEach(TestExtensionContext context) throws Exception {
-		this.findAndInvokeMethod("after");
+		this.invokeNamedMethodOnRuleAnnotatedField(context, "after");
 	}
 
+	public void invokeNamedMethodOnRuleAnnotatedField(TestExtensionContext context, String name)
+			throws IllegalAccessException, NoSuchMethodException {
+		Object testInstance = context.getTestInstance();
 
+		List<Field> externalResourceFields = this.findRuleAnnotatedFieldsOfTargetType(testInstance);
 
+		//TODO: generalize to several fields (and methods!)
+		Field field = externalResourceFields.get(0);
+		this.invokeNamedMethod(testInstance, name, field);
+	}
 
-	//exception handling?
-	private void findAndInvokeMethod(String name) throws NoSuchMethodException {
-		Method method = this.findMethod(name);
+	private void invokeNamedMethod(Object testInstance, String name, Field field)
+			throws IllegalAccessException, NoSuchMethodException {
+		ExternalResource externalResource = (ExternalResource) field.get(testInstance);
+
+		Method method = externalResource.getClass().getMethod(name);
 		method.setAccessible(true);
-		ReflectionUtils.invokeMethod(method, this.externalResource);
+		ReflectionUtils.invokeMethod(method, externalResource);
 	}
 
-	private Method findMethod(String name) throws NoSuchMethodException {
-		return this.externalResource.getClass().getMethod(name);
-	}
+	private List<Field> findRuleAnnotatedFieldsOfTargetType(Object testInstance) {
+		Field[] declaredFields = testInstance.getClass().getDeclaredFields();
 
+		return Arrays.asList(declaredFields).stream().filter(
+			field -> field.getClass().isAssignableFrom(this.ruleType)).filter(
+				field -> field.isAnnotationPresent(this.annotationType)).collect(toList());
+	}
 
 }
