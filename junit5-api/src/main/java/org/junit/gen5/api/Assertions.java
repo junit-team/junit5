@@ -210,6 +210,166 @@ public final class Assertions {
 	}
 
 	// --- assertEquals -------------------------------------------------
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(short expected, short actual) {
+		assertEquals(expected, actual, () -> null);
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(short expected, short actual, String message) {
+		assertEquals(expected, actual, () -> message);
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(short expected, short actual, Supplier<String> messageSupplier) {
+		if (expected != actual) {
+			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
+		}
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(byte expected, byte actual) {
+		assertEquals(expected, actual, () -> null);
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(byte expected, byte actual, String message) {
+		assertEquals(expected, actual, () -> message);
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(byte expected, byte actual, Supplier<String> messageSupplier) {
+		if (expected != actual) {
+			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
+		}
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(int expected, int actual) {
+		assertEquals(expected, actual, () -> null);
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(int expected, int actual, String message) {
+		assertEquals(expected, actual, () -> message);
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(int expected, int actual, Supplier<String> messageSupplier) {
+		if (expected != actual) {
+			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
+		}
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(long expected, long actual) {
+		assertEquals(expected, actual, () -> null);
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(long expected, long actual, String message) {
+		assertEquals(expected, actual, () -> message);
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(long expected, long actual, Supplier<String> messageSupplier) {
+		if (expected != actual) {
+			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
+		}
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(char expected, char actual) {
+		assertEquals(expected, actual, () -> null);
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(char expected, char actual, String message) {
+		assertEquals(expected, actual, () -> message);
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(char expected, char actual, Supplier<String> messageSupplier) {
+		if (expected != actual) {
+			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
+		}
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(float expected, float actual) {
+		assertEquals(expected, actual, () -> null);
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(float expected, float actual, String message) {
+		assertEquals(expected, actual, () -> message);
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(float expected, float actual, Supplier<String> messageSupplier) {
+		if (expected != actual) {
+			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
+		}
+	}
+
+	/**
+	* Asserts that {@code expected} and {@code actual} are equal.
+	*/
+	public static void assertEquals(double expected, double actual) {
+		assertEquals(expected, actual, () -> null);
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(double expected, double actual, String message) {
+		assertEquals(expected, actual, () -> message);
+	}
+
+	/**
+	 * Asserts that {@code expected} and {@code actual} are equal.
+	 */
+	public static void assertEquals(double expected, double actual, Supplier<String> messageSupplier) {
+		if (expected != actual) {
+			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
+		}
+	}
 
 	/**
 	 * Asserts that {@code expected} and {@code actual} are equal. If both are null, they are considered equal.
