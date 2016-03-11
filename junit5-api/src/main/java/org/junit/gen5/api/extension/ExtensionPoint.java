@@ -32,6 +32,7 @@ import org.junit.gen5.commons.meta.API;
  * @see BeforeAllExtensionPoint
  * @see AfterAllExtensionPoint
  * @see ExtensionRegistrar
+ * @see DynamicTestCreator
  */
 @API(Experimental)
 public interface ExtensionPoint extends Extension {
