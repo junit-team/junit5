@@ -80,7 +80,7 @@ public class UniqueId implements Cloneable {
 	 * <p>The current instance is left unchanged.</p>
 	 *
 	 * <p>Both {@code segmentType} and {@code segmentType} must not contain any of the special characters used
-	 * fot constructing the string representation. This allows more robust parsing.</p>
+	 * for constructing the string representation. This allows more robust parsing.</p>
 	 */
 	public UniqueId append(String segmentType, String value) {
 		UniqueId clone = new UniqueId(segments);
