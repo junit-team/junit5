@@ -223,7 +223,7 @@ public final class AnnotationUtils {
 		private final AnnotatedElement element;
 		private final Class<? extends Annotation> annotationType;
 
-		public AnnotationCacheKey(AnnotatedElement element, Class<? extends Annotation> annotationType) {
+		AnnotationCacheKey(AnnotatedElement element, Class<? extends Annotation> annotationType) {
 			this.element = element;
 			this.annotationType = annotationType;
 		}
