@@ -99,11 +99,10 @@ public class ToStringBuilder {
 	@Override
 	public String toString() {
 		// @formatter:off
-		return new StringBuilder(this.type.getSimpleName()).append(" ")
-			.append("[")
-			.append(this.values.stream().collect(joining(", ")))
-			.append("]")
-			.toString();
+		return this.type.getSimpleName() + " " +
+				"[" +
+				this.values.stream().collect(joining(", ")) +
+				"]";
 		// @formatter:on
 	}
 
