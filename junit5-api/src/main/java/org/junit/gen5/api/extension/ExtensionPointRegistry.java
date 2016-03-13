@@ -120,7 +120,7 @@ public interface ExtensionPointRegistry {
 		INSIDE_DEFAULT,
 
 		// TODO Document INNERMOST position.
-		INNERMOST;
+		INNERMOST
 
 	}
 
