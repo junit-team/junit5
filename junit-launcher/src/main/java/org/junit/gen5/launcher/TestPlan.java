@@ -53,8 +53,8 @@ import org.junit.gen5.engine.TestDescriptor.Visitor;
 public final class TestPlan {
 
 	private final Set<TestIdentifier> roots = new LinkedHashSet<>();
-	private final Map<TestId, LinkedHashSet<TestIdentifier>> children = new LinkedHashMap<>();
-	private final Map<TestId, TestIdentifier> allIdentifiers = new LinkedHashMap<>();
+	private final Map<String, LinkedHashSet<TestIdentifier>> children = new LinkedHashMap<>();
+	private final Map<String, TestIdentifier> allIdentifiers = new LinkedHashMap<>();
 
 	public static TestPlan from(Collection<TestDescriptor> engineDescriptors) {
 		TestPlan testPlan = new TestPlan();
@@ -74,7 +74,7 @@ public final class TestPlan {
 	public void add(TestIdentifier testIdentifier) {
 		allIdentifiers.put(testIdentifier.getUniqueId(), testIdentifier);
 		if (testIdentifier.getParentId().isPresent()) {
-			TestId parentId = testIdentifier.getParentId().get();
+			String parentId = testIdentifier.getParentId().get();
 			Set<TestIdentifier> directChildren = children.computeIfAbsent(parentId, key -> new LinkedHashSet<>());
 			directChildren.add(testIdentifier);
 		}
@@ -99,7 +99,7 @@ public final class TestPlan {
 	 * @return an {@code Optional} containing the parent, if present
 	 */
 	public Optional<TestIdentifier> getParent(TestIdentifier child) {
-		Optional<TestId> optionalParentId = child.getParentId();
+		Optional<String> optionalParentId = child.getParentId();
 		if (optionalParentId.isPresent()) {
 			return Optional.of(getTestIdentifier(optionalParentId.get()));
 		}
@@ -111,35 +111,35 @@ public final class TestPlan {
 	 *
 	 * @param parent the identifier to look up the children for
 	 * @return an unmodifiable set of the parent's children, potentially empty
-	 * @see #getChildren(TestId)
+	 * @see #getChildren(String)
 	 */
 	public Set<TestIdentifier> getChildren(TestIdentifier parent) {
 		return getChildren(parent.getUniqueId());
 	}
 
 	/**
-	 * Get the children of the supplied {@link TestId}.
+	 * Get the children of the supplied unique ID.
 	 *
 	 * @param parentId the ID to look up the children for
 	 * @return an unmodifiable set of the parent's children, potentially empty
 	 * @see #getChildren(TestIdentifier)
 	 */
-	public Set<TestIdentifier> getChildren(TestId parentId) {
+	public Set<TestIdentifier> getChildren(String parentId) {
 		return children.containsKey(parentId) ? unmodifiableSet(children.get(parentId)) : emptySet();
 	}
 
 	/**
-	 * Get the {@link TestIdentifier} with the specified {@link TestId}.
+	 * Get the {@link TestIdentifier} with the supplied unique ID.
 	 *
-	 * @param testId the unique ID to look up the identifier for
-	 * @return the identifier with the specified unique ID
+	 * @param uniqueId the unique ID to look up the identifier for
+	 * @return the identifier with the supplied unique ID
 	 * @throws PreconditionViolationException if no {@code TestIdentifier}
-	 * with the specified unique ID is present in this test plan
+	 * with the supplied unique ID is present in this test plan
 	 */
-	public TestIdentifier getTestIdentifier(TestId testId) throws PreconditionViolationException {
-		Preconditions.condition(allIdentifiers.containsKey(testId),
-			() -> "No TestIdentifier with this TestId has been added to this TestPlan: " + testId);
-		return allIdentifiers.get(testId);
+	public TestIdentifier getTestIdentifier(String uniqueId) throws PreconditionViolationException {
+		Preconditions.condition(allIdentifiers.containsKey(uniqueId),
+			() -> "No TestIdentifier with this unique ID has been added to this TestPlan: " + uniqueId);
+		return allIdentifiers.get(uniqueId);
 	}
 
 	/**
@@ -148,7 +148,7 @@ public final class TestPlan {
 	 *
 	 * @param predicate a predicate which returns {@code true} for identifiers
 	 * to be counted
-	 * @return the number of identifiers that satisfy the specified predicate
+	 * @return the number of identifiers that satisfy the supplied predicate
 	 */
 	public long countTestIdentifiers(Predicate<? super TestIdentifier> predicate) {
 		return allIdentifiers.values().stream().filter(predicate).count();

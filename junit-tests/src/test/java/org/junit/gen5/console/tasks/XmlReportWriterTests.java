@@ -23,7 +23,6 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
-import org.junit.gen5.launcher.TestId;
 import org.junit.gen5.launcher.TestPlan;
 
 class XmlReportWriterTests {
@@ -54,7 +53,7 @@ class XmlReportWriterTests {
 
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		reportData.markSkipped(testPlan.getTestIdentifier(new TestId("skippedTest")), null);
+		reportData.markSkipped(testPlan.getTestIdentifier("skippedTest"), null);
 
 		StringWriter out = new StringWriter();
 		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
@@ -76,7 +75,7 @@ class XmlReportWriterTests {
 
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		reportData.markFinished(testPlan.getTestIdentifier(new TestId("failedTest")), failed(null));
+		reportData.markFinished(testPlan.getTestIdentifier("failedTest"), failed(null));
 
 		StringWriter out = new StringWriter();
 		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
@@ -98,8 +97,7 @@ class XmlReportWriterTests {
 
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		reportData.markFinished(testPlan.getTestIdentifier(new TestId("failedTest")),
-			failed(new NullPointerException()));
+		reportData.markFinished(testPlan.getTestIdentifier("failedTest"), failed(new NullPointerException()));
 
 		StringWriter out = new StringWriter();
 		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);

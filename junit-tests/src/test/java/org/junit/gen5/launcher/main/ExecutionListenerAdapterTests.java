@@ -10,17 +10,19 @@
 
 package org.junit.gen5.launcher.main;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.util.Collections;
 
-import org.junit.gen5.api.*;
-import org.junit.gen5.commons.util.*;
+import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.junit5.descriptor.*;
-import org.junit.gen5.engine.reporting.*;
-import org.junit.gen5.launcher.*;
+import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
+import org.junit.gen5.engine.reporting.ReportEntry;
+import org.junit.gen5.launcher.TestExecutionListener;
+import org.junit.gen5.launcher.TestIdentifier;
+import org.junit.gen5.launcher.TestPlan;
 
 //TODO: test other adapter methods
 class ExecutionListenerAdapterTests {
@@ -31,7 +33,7 @@ class ExecutionListenerAdapterTests {
 
 		//cannot mock final classes with mockito
 		TestPlan testPlan = TestPlan.from(Collections.singleton(testDescriptor));
-		TestIdentifier testIdentifier = testPlan.getTestIdentifier(new TestId(testDescriptor.getUniqueId()));
+		TestIdentifier testIdentifier = testPlan.getTestIdentifier(testDescriptor.getUniqueId());
 
 		//not yet spyable with mockito? -> https://github.com/mockito/mockito/issues/146
 		MockTestExecutionListener testExecutionListener = new MockTestExecutionListener();
