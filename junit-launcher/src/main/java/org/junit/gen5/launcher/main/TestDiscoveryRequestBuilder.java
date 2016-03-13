@@ -100,7 +100,7 @@ public final class TestDiscoveryRequestBuilder {
 		else {
 			throw new PreconditionViolationException("Filter must implement " + EngineIdFilter.class.getSimpleName()
 					+ ", " + PostDiscoveryFilter.class.getSimpleName() //
-					+ ", or " + DiscoveryFilter.class.getSimpleName() + ".");
+					+ " or " + DiscoveryFilter.class.getSimpleName() + ".");
 		}
 	}
 
