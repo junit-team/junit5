@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit4.execution;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.gen5.engine.junit4.JUnit4UniqueIdBuilder.engineId;
 import static org.junit.runner.Description.createTestDescription;
 
 import java.util.Optional;
@@ -22,7 +23,6 @@ import java.util.logging.LogRecord;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.logging.RecordCollectingLogger;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
@@ -35,7 +35,7 @@ class RunListenerAdapterTests {
 	void logsUnknownDescriptions() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
 		RecordCollectingLogger logger = new RecordCollectingLogger();
-		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("junit4"), "JUnit 4");
+		EngineDescriptor engineDescriptor = new EngineDescriptor(engineId(), "JUnit 4");
 		RunnerTestDescriptor runnerTestDescriptor = new RunnerTestDescriptor(engineDescriptor, testClass,
 			new BlockJUnit4ClassRunner(testClass));
 

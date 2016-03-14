@@ -25,9 +25,13 @@ import java.util.logging.LogRecord;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.logging.RecordCollectingLogger;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestDescriptorStub;
+import org.junit.gen5.engine.UniqueId;
+import org.junit.gen5.engine.junit4.JUnit4UniqueIdBuilder;
 import org.junit.gen5.engine.junit4.samples.junit4.IgnoredJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
+import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.internal.builders.IgnoredClassRunner;
 
 class TestClassRequestResolverTests {
@@ -72,7 +76,7 @@ class TestClassRequestResolverTests {
 	}
 
 	private List<LogRecord> resolve(TestClassRequest request) {
-		TestDescriptorStub engineDescriptor = new TestDescriptorStub("junit4");
+		TestDescriptor engineDescriptor = new EngineDescriptor(JUnit4UniqueIdBuilder.engineId(), "JUnit 4");
 		RecordCollectingLogger logger = new RecordCollectingLogger();
 
 		TestClassRequestResolver resolver = new TestClassRequestResolver(engineDescriptor, logger);
