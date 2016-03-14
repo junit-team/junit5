@@ -60,9 +60,12 @@ public class UglyExternalResourceAdapter implements BeforeEachExtensionPoint, Af
 	private List<Field> findRuleAnnotatedFieldsOfTargetType(Object testInstance) {
 		Field[] declaredFields = testInstance.getClass().getDeclaredFields();
 
-		return Arrays.asList(declaredFields).stream().filter(
-			field -> field.getClass().isAssignableFrom(this.ruleType)).filter(
-				field -> field.isAnnotationPresent(this.annotationType)).collect(toList());
+		// @formatter:off
+        return Arrays.asList(declaredFields).stream()
+                .filter(field -> this.ruleType.isAssignableFrom(field.getType()))
+                .filter(field -> field.isAnnotationPresent(this.annotationType))
+                .collect(toList());
+		// @formatter:on
 	}
 
 }
