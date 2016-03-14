@@ -22,12 +22,13 @@ import java.util.logging.LogRecord;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.logging.RecordCollectingLogger;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
+import org.junit.gen5.engine.junit4.JUnit4UniqueIdBuilder;
 
 class UniqueIdSelectorResolverTests {
 
 	@Test
 	void logsWarningOnUnloadableTestClass() {
-		String uniqueId = engineId().getUniqueString() + ":foo.bar.UnknownClass";
+		String uniqueId = JUnit4UniqueIdBuilder.uniqueIdForClass("foo.bar.UnknownClass");
 		RecordCollectingLogger logger = new RecordCollectingLogger();
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueId);
 		TestClassCollector collector = new TestClassCollector();

@@ -20,14 +20,34 @@ import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
  */
 public class JUnit4UniqueIdBuilder {
 
-	public static String uniqueIdForClass(Class<?> clazz) {
-		UniqueId containerId = engineId();
-		return containerId.getUniqueString(); //TODO add class stuff
+	public static String uniqueIdForErrorInClass(Class<?> clazz, Class<?> failingClass) {
+		return uniqueIdForClasses(clazz) + "/initializationError(" + failingClass.getName() + ")";
 	}
 
-	public static String uniqueIdForMethod(Class<?> clazz, String methodPart) {
+	public static String uniqueIdForClass(Class<?> clazz) {
+		return uniqueIdForClasses(clazz);
+	}
+
+	public static String uniqueIdForClasses(Class<?> clazz, Class<?>... clazzes) {
 		UniqueId containerId = engineId();
-		return containerId.getUniqueString(); //TODO add method stuff
+		String uniqueId = containerId.getUniqueString() + ":" + clazz.getName();
+		for (Class<?> each : clazzes) {
+			uniqueId += "/" + each.getName();
+		}
+		return uniqueId;
+	}
+
+	public static String uniqueIdForClass(String fullyQualifiedClassName) {
+		UniqueId containerId = engineId();
+		return containerId.getUniqueString() + ":" + fullyQualifiedClassName;
+	}
+
+	public static String uniqueIdForMethod(Class<?> testClass, String methodName) {
+		return uniqueIdForClass(testClass) + "/" + methodName + "(" + testClass.getName() + ")";
+	}
+
+	public static String uniqueIdForMethod(String containerId, Class<?> testClass, String methodName) {
+		return containerId + "/" + methodName + "(" + testClass.getName() + ")";
 	}
 
 	public static UniqueId engineId() {
