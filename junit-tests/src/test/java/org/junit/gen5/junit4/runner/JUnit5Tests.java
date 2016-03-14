@@ -52,7 +52,6 @@ import org.junit.gen5.launcher.EngineIdFilter;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
-import org.junit.gen5.launcher.TestId;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.NoTestsRemainException;
@@ -342,11 +341,11 @@ class JUnit5Tests {
 	}
 
 	private static Description suiteDescription(String uniqueId) {
-		return createSuiteDescription(uniqueId, new TestId(uniqueId));
+		return createSuiteDescription(uniqueId, uniqueId);
 	}
 
 	private static Description testDescription(String uniqueId) {
-		return createTestDescription(uniqueId, uniqueId, new TestId(uniqueId));
+		return createTestDescription(uniqueId, uniqueId, uniqueId);
 	}
 
 	private TestDescriptor testDescriptorWithTag(String tag) {

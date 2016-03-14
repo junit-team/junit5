@@ -24,7 +24,7 @@ class TestIdentifierTests {
 
 		TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
 
-		assertEquals(new TestId("uniqueId"), testIdentifier.getUniqueId());
+		assertEquals("uniqueId", testIdentifier.getUniqueId());
 		assertEquals("displayName", testIdentifier.getDisplayName());
 		assertEquals("name", testIdentifier.getName());
 	}

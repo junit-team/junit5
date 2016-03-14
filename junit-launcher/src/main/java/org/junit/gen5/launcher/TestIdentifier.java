@@ -36,30 +36,30 @@ public final class TestIdentifier implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private final TestId uniqueId;
+	private final String uniqueId;
 	private final String name;
 	private final String displayName;
 	private final TestSource source;
 	private final Set<TestTag> tags;
 	private final boolean test;
 	private final boolean container;
-	private final TestId parentId;
+	private final String parentId;
 
 	public static TestIdentifier from(TestDescriptor testDescriptor) {
 		// TODO Use Flyweight Pattern for TestId?
-		TestId uniqueId = new TestId(testDescriptor.getUniqueId());
+		String uniqueId = testDescriptor.getUniqueId();
 		String name = testDescriptor.getName();
 		String displayName = testDescriptor.getDisplayName();
 		Optional<TestSource> source = testDescriptor.getSource();
 		Set<TestTag> tags = testDescriptor.getTags();
 		boolean test = testDescriptor.isTest();
 		boolean container = !test || !testDescriptor.getChildren().isEmpty();
-		Optional<TestId> parentId = testDescriptor.getParent().map(TestDescriptor::getUniqueId).map(TestId::new);
+		Optional<String> parentId = testDescriptor.getParent().map(TestDescriptor::getUniqueId);
 		return new TestIdentifier(uniqueId, name, displayName, source, tags, test, container, parentId);
 	}
 
-	private TestIdentifier(TestId uniqueId, String name, String displayName, Optional<TestSource> source,
-			Set<TestTag> tags, boolean test, boolean container, Optional<TestId> parentId) {
+	private TestIdentifier(String uniqueId, String name, String displayName, Optional<TestSource> source,
+			Set<TestTag> tags, boolean test, boolean container, Optional<String> parentId) {
 		this.uniqueId = uniqueId;
 		this.name = name;
 		this.displayName = displayName;
@@ -77,7 +77,7 @@ public final class TestIdentifier implements Serializable {
 	 * {@linkplain TestPlan test plan}, regardless of how many engines are used
 	 * behind the scenes.
 	 */
-	public TestId getUniqueId() {
+	public String getUniqueId() {
 		return uniqueId;
 	}
 
@@ -141,7 +141,7 @@ public final class TestIdentifier implements Serializable {
 	 *
 	 * <p>An identifier without a parent ID is called a <em>root</em>.
 	 */
-	public Optional<TestId> getParentId() {
+	public Optional<String> getParentId() {
 		return Optional.ofNullable(parentId);
 	}
 

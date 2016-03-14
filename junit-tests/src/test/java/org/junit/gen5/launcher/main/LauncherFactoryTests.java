@@ -10,15 +10,19 @@
 
 package org.junit.gen5.launcher.main;
 
-import static java.util.stream.Collectors.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.gen5.engine.discovery.ClassSelector.*;
-import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.*;
+import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
-import org.junit.gen5.api.*;
-import org.junit.gen5.launcher.*;
+import org.junit.gen5.api.Test;
+import org.junit.gen5.launcher.Launcher;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
+import org.junit.gen5.launcher.TestIdentifier;
+import org.junit.gen5.launcher.TestPlan;
 
 class LauncherFactoryTests {
 
@@ -34,7 +38,6 @@ class LauncherFactoryTests {
 		// @formatter:off
 		List<String> ids = roots.stream()
 				.map(TestIdentifier::getUniqueId)
-				.map(TestId::toString)
 				.collect(toList());
 		// @formatter:on
 

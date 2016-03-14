@@ -23,7 +23,6 @@ import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
-import org.junit.gen5.launcher.TestId;
 import org.junit.gen5.launcher.TestPlan;
 
 class XmlReportDataTests {
@@ -35,7 +34,7 @@ class XmlReportDataTests {
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		Optional<TestExecutionResult> result = reportData.getResult(testPlan.getTestIdentifier(new TestId("test")));
+		Optional<TestExecutionResult> result = reportData.getResult(testPlan.getTestIdentifier("test"));
 
 		assertThat(result).isEmpty();
 	}
@@ -48,9 +47,9 @@ class XmlReportDataTests {
 
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		TestExecutionResult failureOfAncestor = failed(new RuntimeException("failed!"));
-		reportData.markFinished(testPlan.getTestIdentifier(new TestId("[engine:engine]")), failureOfAncestor);
+		reportData.markFinished(testPlan.getTestIdentifier("[engine:engine]"), failureOfAncestor);
 
-		Optional<TestExecutionResult> result = reportData.getResult(testPlan.getTestIdentifier(new TestId("test")));
+		Optional<TestExecutionResult> result = reportData.getResult(testPlan.getTestIdentifier("test"));
 
 		assertThat(result).contains(failureOfAncestor);
 	}
@@ -62,9 +61,9 @@ class XmlReportDataTests {
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		reportData.markFinished(testPlan.getTestIdentifier(new TestId("[engine:engine]")), successful());
+		reportData.markFinished(testPlan.getTestIdentifier("[engine:engine]"), successful());
 
-		Optional<TestExecutionResult> result = reportData.getResult(testPlan.getTestIdentifier(new TestId("test")));
+		Optional<TestExecutionResult> result = reportData.getResult(testPlan.getTestIdentifier("test"));
 
 		assertThat(result).isEmpty();
 	}

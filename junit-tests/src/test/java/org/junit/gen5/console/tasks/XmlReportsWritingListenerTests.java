@@ -51,7 +51,6 @@ import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 import org.junit.gen5.launcher.Launcher;
-import org.junit.gen5.launcher.TestId;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.opentest4j.AssertionFailedError;
@@ -354,7 +353,7 @@ class XmlReportsWritingListenerTests {
 			new PrintWriter(out));
 
 		listener.testPlanExecutionStarted(testPlan);
-		TestIdentifier testIdentifier = testPlan.getTestIdentifier(new TestId("test"));
+		TestIdentifier testIdentifier = testPlan.getTestIdentifier("test");
 		listener.executionStarted(testIdentifier);
 		listener.reportingEntryPublished(testIdentifier, ReportEntry.from("foo", "bar"));
 		Map<String, String> map = new LinkedHashMap<>();
@@ -362,7 +361,7 @@ class XmlReportsWritingListenerTests {
 		map.put("qux", "foo");
 		listener.reportingEntryPublished(testIdentifier, ReportEntry.from(map));
 		listener.executionFinished(testIdentifier, successful());
-		listener.executionFinished(testPlan.getTestIdentifier(new TestId("[engine:engine]")), successful());
+		listener.executionFinished(testPlan.getTestIdentifier("[engine:engine]"), successful());
 
 		String content = readValidXmlFile(tempDirectory.resolve("TEST-engine.xml"));
 		//testReporter.publishEntry("xml", content);
