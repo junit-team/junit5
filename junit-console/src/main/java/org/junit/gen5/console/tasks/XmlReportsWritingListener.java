@@ -21,6 +21,7 @@ import java.time.Clock;
 import javax.xml.stream.XMLStreamException;
 
 import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
@@ -85,12 +86,13 @@ class XmlReportsWritingListener implements TestExecutionListener {
 
 	private void writeXmlReportInCaseOfRoot(TestIdentifier testIdentifier) {
 		if (isARoot(testIdentifier)) {
-			writeXmlReportSafely(testIdentifier);
+			String rootName = UniqueId.parse(testIdentifier.getUniqueId().toString()).getSegments().get(0).getValue();
+			writeXmlReportSafely(testIdentifier, rootName);
 		}
 	}
 
-	private void writeXmlReportSafely(TestIdentifier testIdentifier) {
-		Path xmlFile = reportsDir.resolve("TEST-" + testIdentifier.getUniqueId() + ".xml");
+	private void writeXmlReportSafely(TestIdentifier testIdentifier, String rootName) {
+		Path xmlFile = reportsDir.resolve("TEST-" + rootName + ".xml");
 		try (Writer fileWriter = Files.newBufferedWriter(xmlFile)) {
 			new XmlReportWriter(reportData).writeXmlReport(testIdentifier, fileWriter);
 		}

@@ -13,6 +13,7 @@ package org.junit.gen5.engine.support.hierarchical;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.UniqueId;
 
 public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExecutionContext> {
 
@@ -38,7 +39,8 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 	}
 
 	public DummyTestDescriptor addTest(String uniqueName, Runnable runnable) {
-		DummyTestDescriptor child = new DummyTestDescriptor(engineId + ":" + uniqueName, uniqueName, runnable);
+		UniqueId uniqueId = engineDescriptor.getUniqueIdObject().append("test", uniqueName);
+		DummyTestDescriptor child = new DummyTestDescriptor(uniqueId, uniqueName, runnable);
 		engineDescriptor.addChild(child);
 		return child;
 	}

@@ -295,18 +295,18 @@ class JUnit5Tests {
 
 			InOrder inOrder = inOrder(runListener);
 
-			inOrder.verify(runListener).testStarted(testDescription("dummy:failingTest"));
+			inOrder.verify(runListener).testStarted(testDescription("[engine:dummy]/[test:failingTest]"));
 			inOrder.verify(runListener).testFailure(any());
-			inOrder.verify(runListener).testFinished(testDescription("dummy:failingTest"));
+			inOrder.verify(runListener).testFinished(testDescription("[engine:dummy]/[test:failingTest]"));
 
-			inOrder.verify(runListener).testStarted(testDescription("dummy:succeedingTest"));
-			inOrder.verify(runListener).testFinished(testDescription("dummy:succeedingTest"));
+			inOrder.verify(runListener).testStarted(testDescription("[engine:dummy]/[test:succeedingTest]"));
+			inOrder.verify(runListener).testFinished(testDescription("[engine:dummy]/[test:succeedingTest]"));
 
-			inOrder.verify(runListener).testStarted(testDescription("dummy:skippedTest"));
+			inOrder.verify(runListener).testStarted(testDescription("[engine:dummy]/[test:skippedTest]"));
 			inOrder.verify(runListener).testAssumptionFailure(any());
-			inOrder.verify(runListener).testFinished(testDescription("dummy:skippedTest"));
+			inOrder.verify(runListener).testFinished(testDescription("[engine:dummy]/[test:skippedTest]"));
 
-			inOrder.verify(runListener).testIgnored(testDescription("dummy:ignoredTest"));
+			inOrder.verify(runListener).testIgnored(testDescription("[engine:dummy]/[test:ignoredTest]"));
 
 			inOrder.verifyNoMoreInteractions();
 		}

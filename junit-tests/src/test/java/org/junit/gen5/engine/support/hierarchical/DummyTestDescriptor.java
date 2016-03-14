@@ -13,6 +13,7 @@ package org.junit.gen5.engine.support.hierarchical;
 import static org.junit.gen5.engine.support.hierarchical.Node.SkipResult.dontSkip;
 import static org.junit.gen5.engine.support.hierarchical.Node.SkipResult.skip;
 
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 
 public class DummyTestDescriptor extends AbstractTestDescriptor
@@ -24,7 +25,7 @@ public class DummyTestDescriptor extends AbstractTestDescriptor
 	private String skippedReason;
 	private boolean skipped;
 
-	DummyTestDescriptor(String uniqueId, String name, Runnable runnable) {
+	DummyTestDescriptor(UniqueId uniqueId, String name, Runnable runnable) {
 		super(uniqueId);
 		this.name = name;
 		this.displayName = name;

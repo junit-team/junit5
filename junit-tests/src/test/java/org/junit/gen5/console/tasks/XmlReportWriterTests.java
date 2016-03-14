@@ -21,6 +21,7 @@ import java.time.Clock;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptorStub;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.launcher.TestId;
 import org.junit.gen5.launcher.TestPlan;
@@ -29,7 +30,8 @@ class XmlReportWriterTests {
 
 	@Test
 	void writesTestsuiteElementsWithoutTestcaseElementsWithoutAnyTests() throws Exception {
-		TestPlan testPlan = TestPlan.from(singleton(new EngineDescriptor("emptyEngine", "Empty Engine")));
+		TestPlan testPlan = TestPlan.from(
+			singleton(new EngineDescriptor(UniqueId.forEngine("emptyEngine"), "Empty Engine")));
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 
 		StringWriter out = new StringWriter();
@@ -47,7 +49,7 @@ class XmlReportWriterTests {
 
 	@Test
 	void writesEmptySkippedElementForSkippedTestWithoutReason() throws Exception {
-		EngineDescriptor engineDescriptor = new EngineDescriptor("engine", "Engine");
+		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub("skippedTest"));
 
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
@@ -69,7 +71,7 @@ class XmlReportWriterTests {
 
 	@Test
 	void writesEmptyErrorElementForFailedTestWithoutCause() throws Exception {
-		EngineDescriptor engineDescriptor = new EngineDescriptor("engine", "Engine");
+		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub("failedTest"));
 
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
@@ -91,7 +93,7 @@ class XmlReportWriterTests {
 
 	@Test
 	void omitsMessageAttributeForFailedTestWithThrowableWithoutMessage() throws Exception {
-		EngineDescriptor engineDescriptor = new EngineDescriptor("engine", "Engine");
+		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub("failedTest"));
 
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));

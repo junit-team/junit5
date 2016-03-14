@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
@@ -30,7 +31,7 @@ public class AbstractTestDescriptorTests {
 
 	@BeforeEach
 	public void initTree() {
-		engineDescriptor = new EngineDescriptor("testEngine", "testEngine");
+		engineDescriptor = new EngineDescriptor(UniqueId.forEngine("testEngine"), "testEngine");
 		GroupDescriptor group1 = new GroupDescriptor("group1");
 		engineDescriptor.addChild(group1);
 		GroupDescriptor group2 = new GroupDescriptor("group2");

@@ -23,6 +23,7 @@ import java.util.logging.LogRecord;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.logging.RecordCollectingLogger;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
@@ -30,7 +31,7 @@ class JUnit4DiscoveryRequestResolverTests {
 
 	@Test
 	void logsWarningWhenFilterExcludesClass() {
-		EngineDescriptor engineDescriptor = new EngineDescriptor("junit4", "JUnit 4");
+		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("junit4"), "JUnit 4");
 		RecordCollectingLogger logger = new RecordCollectingLogger();
 
 		ClassFilter filter = testClass -> includedIf(Foo.class.equals(testClass), () -> "match", () -> "no match");

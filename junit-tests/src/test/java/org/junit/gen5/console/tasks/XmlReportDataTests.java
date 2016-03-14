@@ -21,6 +21,7 @@ import java.util.Optional;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.launcher.TestId;
 import org.junit.gen5.launcher.TestPlan;
@@ -29,7 +30,7 @@ class XmlReportDataTests {
 
 	@Test
 	void resultOfTestIdentifierWithoutAnyReportedEventsIsEmpty() {
-		EngineDescriptor engineDescriptor = new EngineDescriptor("engine", "Engine");
+		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub("test"));
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 
@@ -41,13 +42,13 @@ class XmlReportDataTests {
 
 	@Test
 	void resultOfTestIdentifierWithoutReportedEventsIsFailureOfAncestor() {
-		EngineDescriptor engineDescriptor = new EngineDescriptor("engine", "Engine");
+		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub("test"));
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		TestExecutionResult failureOfAncestor = failed(new RuntimeException("failed!"));
-		reportData.markFinished(testPlan.getTestIdentifier(new TestId("engine")), failureOfAncestor);
+		reportData.markFinished(testPlan.getTestIdentifier(new TestId("[engine:engine]")), failureOfAncestor);
 
 		Optional<TestExecutionResult> result = reportData.getResult(testPlan.getTestIdentifier(new TestId("test")));
 
@@ -56,12 +57,12 @@ class XmlReportDataTests {
 
 	@Test
 	void resultOfTestIdentifierWithoutReportedEventsIsEmptyWhenAncestorWasSuccessful() {
-		EngineDescriptor engineDescriptor = new EngineDescriptor("engine", "Engine");
+		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub("test"));
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		reportData.markFinished(testPlan.getTestIdentifier(new TestId("engine")), successful());
+		reportData.markFinished(testPlan.getTestIdentifier(new TestId("[engine:engine]")), successful());
 
 		Optional<TestExecutionResult> result = reportData.getResult(testPlan.getTestIdentifier(new TestId("test")));
 

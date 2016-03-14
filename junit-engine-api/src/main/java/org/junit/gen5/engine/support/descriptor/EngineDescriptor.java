@@ -23,15 +23,7 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 
 	private final String displayName;
 
-	/**
-	 * Temporary parallel implementation to string-based constructor
-	 */
 	public EngineDescriptor(UniqueId uniqueId, String displayName) {
-		super(uniqueId);
-		this.displayName = displayName;
-	}
-
-	public EngineDescriptor(String uniqueId, String displayName) {
 		super(uniqueId);
 		this.displayName = displayName;
 	}

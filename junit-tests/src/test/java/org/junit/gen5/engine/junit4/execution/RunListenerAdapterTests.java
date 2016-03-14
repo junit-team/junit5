@@ -22,6 +22,7 @@ import java.util.logging.LogRecord;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.logging.RecordCollectingLogger;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
@@ -34,7 +35,7 @@ class RunListenerAdapterTests {
 	void logsUnknownDescriptions() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
 		RecordCollectingLogger logger = new RecordCollectingLogger();
-		EngineDescriptor engineDescriptor = new EngineDescriptor("junit4", "JUnit 4");
+		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("junit4"), "JUnit 4");
 		RunnerTestDescriptor runnerTestDescriptor = new RunnerTestDescriptor(engineDescriptor, testClass,
 			new BlockJUnit4ClassRunner(testClass));
 

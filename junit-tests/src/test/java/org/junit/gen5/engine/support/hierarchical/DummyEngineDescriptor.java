@@ -13,6 +13,7 @@ package org.junit.gen5.engine.support.hierarchical;
 import static org.junit.gen5.engine.support.hierarchical.Node.SkipResult.dontSkip;
 import static org.junit.gen5.engine.support.hierarchical.Node.SkipResult.skip;
 
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
 public class DummyEngineDescriptor extends EngineDescriptor implements Container<DummyEngineExecutionContext> {
@@ -23,7 +24,7 @@ public class DummyEngineDescriptor extends EngineDescriptor implements Container
 	};
 
 	public DummyEngineDescriptor(String engineId) {
-		super(engineId, engineId);
+		super(UniqueId.forEngine(engineId), engineId);
 	}
 
 	public void markSkipped(String reason) {

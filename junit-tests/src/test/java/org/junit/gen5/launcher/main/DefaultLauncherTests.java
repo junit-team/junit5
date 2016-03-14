@@ -74,7 +74,7 @@ class DefaultLauncherTests {
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
 		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(2);
-		assertThat(testPlan.getChildren(new TestId("myEngine"))).hasSize(2);
+		assertThat(testPlan.getChildren(new TestId("[engine:myEngine]"))).hasSize(2);
 	}
 
 	@Test
@@ -90,8 +90,8 @@ class DefaultLauncherTests {
 			request().select(forUniqueId(test1.getUniqueId()), forUniqueId(test2.getUniqueId())).build());
 
 		assertThat(testPlan.getRoots()).hasSize(2);
-		assertThat(testPlan.getChildren(new TestId("engine1"))).hasSize(1);
-		assertThat(testPlan.getChildren(new TestId("engine2"))).hasSize(1);
+		assertThat(testPlan.getChildren(new TestId("[engine:engine1]"))).hasSize(1);
+		assertThat(testPlan.getChildren(new TestId("[engine:engine2]"))).hasSize(1);
 	}
 
 	@Test
@@ -110,7 +110,7 @@ class DefaultLauncherTests {
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
 		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(1);
-		assertThat(testPlan.getChildren(new TestId("first"))).hasSize(1);
+		assertThat(testPlan.getChildren(new TestId("[engine:first]"))).hasSize(1);
 	}
 
 	@Test
@@ -132,7 +132,7 @@ class DefaultLauncherTests {
 					.filter(includeWithUniqueIdContainsTest, includeWithUniqueIdContains1) //
 					.build());
 
-		assertThat(testPlan.getChildren(new TestId("myEngine"))).hasSize(1);
+		assertThat(testPlan.getChildren(new TestId("[engine:myEngine]"))).hasSize(1);
 		assertThat(testPlan.getTestIdentifier(new TestId(test1.getUniqueId()))).isNotNull();
 	}
 

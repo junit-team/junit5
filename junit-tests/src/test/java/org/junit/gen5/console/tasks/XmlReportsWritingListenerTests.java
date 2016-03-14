@@ -45,6 +45,7 @@ import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.console.tasks.TempDirectory.Root;
 import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestDescriptor;
@@ -71,9 +72,9 @@ class XmlReportsWritingListenerTests {
 		assertThat(content)
 			.containsSequence(
 				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"0\" errors=\"0\"",
-				"<!--Unique ID: dummy-->",
+				"<!--Unique ID: [engine:dummy]-->",
 				"<testcase name=\"display&lt;&gt;Name\" classname=\"dummy\"",
-				"<!--Unique ID: dummy:succeedingTest-->",
+				"<!--Unique ID: [engine:dummy]/[test:succeedingTest]-->",
 				"</testcase>",
 				"</testsuite>")
 			.doesNotContain("<skipped")
@@ -327,7 +328,7 @@ class XmlReportsWritingListenerTests {
 
 	@Test
 	void printsExceptionWhenReportCouldNotBeWritten(@Root Path tempDirectory) throws Exception {
-		EngineDescriptor engineDescriptor = new EngineDescriptor("engine", "Engine");
+		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 
 		Path xmlFile = tempDirectory.resolve("TEST-engine.xml");
 		Files.createDirectories(xmlFile);
@@ -344,7 +345,7 @@ class XmlReportsWritingListenerTests {
 
 	@Test
 	void writesReportEntriesToSystemOutElement(@Root Path tempDirectory, TestReporter testReporter) throws Exception {
-		EngineDescriptor engineDescriptor = new EngineDescriptor("engine", "Engine");
+		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub("test"));
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 
@@ -361,7 +362,7 @@ class XmlReportsWritingListenerTests {
 		map.put("qux", "foo");
 		listener.reportingEntryPublished(testIdentifier, ReportEntry.from(map));
 		listener.executionFinished(testIdentifier, successful());
-		listener.executionFinished(testPlan.getTestIdentifier(new TestId("engine")), successful());
+		listener.executionFinished(testPlan.getTestIdentifier(new TestId("[engine:engine]")), successful());
 
 		String content = readValidXmlFile(tempDirectory.resolve("TEST-engine.xml"));
 		//testReporter.publishEntry("xml", content);
