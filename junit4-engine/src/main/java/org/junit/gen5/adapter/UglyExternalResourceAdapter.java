@@ -21,7 +21,6 @@ import org.junit.gen5.commons.util.*;
 import org.junit.rules.ExternalResource;
 
 // very early thoughts - please do not polish yet :)
-
 public class UglyExternalResourceAdapter implements BeforeEachExtensionPoint, AfterEachExtensionPoint {
 
 	final Class<Rule> annotationType = Rule.class;
@@ -52,7 +51,7 @@ public class UglyExternalResourceAdapter implements BeforeEachExtensionPoint, Af
 			throws IllegalAccessException, NoSuchMethodException {
 		ExternalResource externalResource = (ExternalResource) field.get(testInstance);
 
-		Method method = externalResource.getClass().getMethod(name);
+		Method method = externalResource.getClass().getDeclaredMethod(name);
 		method.setAccessible(true);
 		ReflectionUtils.invokeMethod(method, externalResource);
 	}
