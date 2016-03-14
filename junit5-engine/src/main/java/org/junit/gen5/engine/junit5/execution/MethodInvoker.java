@@ -100,15 +100,7 @@ public class MethodInvoker {
 
 			MethodParameterResolver resolver = matchingResolvers.get(0);
 			Object value = resolver.resolve(parameter, methodInvocationContext, extensionContext);
-
-			// Note: null is permissible as a resolved value.
-			if (value != null && !isAssignableTo(value, parameter.getType())) {
-				throw new ParameterResolutionException(String.format(
-					"MethodParameterResolver [%s] resolved a value of type [%s] for parameter [%s] "
-							+ "in method [%s], but a value assignment compatible with [%s] is required.",
-					resolver.getClass().getName(), value.getClass().getName(), parameter,
-					methodInvocationContext.getMethod().toGenericString(), parameter.getType().getName()));
-			}
+			validateResolvedType(parameter, value, methodInvocationContext, resolver);
 
 			LOG.finer(() -> String.format(
 				"MethodParameterResolver [%s] resolved a value of type [%s] for parameter [%s] in method [%s].",
@@ -123,6 +115,33 @@ public class MethodInvoker {
 			}
 			throw new ParameterResolutionException(String.format("Failed to resolve parameter [%s] in method [%s]",
 				parameter, methodInvocationContext.getMethod().toGenericString()), ex);
+		}
+	}
+
+	private void validateResolvedType(Parameter parameter, Object value,
+			MethodInvocationContext methodInvocationContext, MethodParameterResolver resolver) {
+
+		final Class<?> type = parameter.getType();
+
+		// Note: null is permissible as a resolved value but only for non-primitive types.
+		if (!isAssignableTo(value, type)) {
+			String message;
+			if (value == null && type.isPrimitive()) {
+				message = String.format(
+					"MethodParameterResolver [%s] resolved a null value for parameter [%s] "
+							+ "in method [%s], but a primitive of type [%s] is required.",
+					resolver.getClass().getName(), parameter, methodInvocationContext.getMethod().toGenericString(),
+					type.getName());
+			}
+			else {
+				message = String.format(
+					"MethodParameterResolver [%s] resolved a value of type [%s] for parameter [%s] "
+							+ "in method [%s], but a value assignment compatible with [%s] is required.",
+					resolver.getClass().getName(), (value != null ? value.getClass().getName() : null), parameter,
+					methodInvocationContext.getMethod().toGenericString(), type.getName());
+			}
+
+			throw new ParameterResolutionException(message);
 		}
 	}
 

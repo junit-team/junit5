@@ -124,7 +124,8 @@ public final class ReflectionUtils {
 	 * {@code true} if the supplied type represents a primitive type whose
 	 * wrapper matches the supplied object's type.
 	 *
-	 * <p>Returns {@code false} if the supplied object is {@code null}.
+	 * <p>Returns {@code true} if the supplied object is {@code null} and the
+	 * supplied type does not represent a primitive type.
 	 *
 	 * @param obj the object to test for assignment compatibility; potentially {@code null}
 	 * @param type the type to check against; never {@code null}
@@ -136,7 +137,7 @@ public final class ReflectionUtils {
 		Preconditions.notNull(type, "type must not be null");
 
 		if (obj == null) {
-			return false;
+			return !type.isPrimitive();
 		}
 
 		if (type.isInstance(obj)) {

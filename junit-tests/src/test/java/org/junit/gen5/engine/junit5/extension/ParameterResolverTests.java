@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit5.extension;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.gen5.api.Assertions.assertNull;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.engine.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.gen5.engine.ExecutionEventConditions.event;
@@ -41,6 +42,7 @@ import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotationParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomType;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomTypeParameterResolver;
+import org.junit.gen5.engine.junit5.execution.injection.sample.NullIntegerParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.NumberParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.PrimitiveArrayParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.PrimitiveIntegerParameterResolver;
@@ -62,6 +64,28 @@ class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
 		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
 		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+	}
+
+	@Test
+	void executeTestsForNullValuedMethodInjectionCases() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(NullMethodInjectionTestCase.class);
+
+		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+
+		// @formatter:off
+		Predicate<String> expectations = s ->
+				s.contains("NullIntegerParameterResolver") &&
+				s.contains("resolved a null value for parameter") &&
+				s.contains("but a primitive of type [int] is required");
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getFailedTestFinishedEvents(),
+			event(
+				test("injectPrimitive"),
+				finishedWithFailure(allOf(isA(ParameterResolutionException.class), message(expectations)))
+			));
+		// @formatter:on
 	}
 
 	@Test
@@ -180,6 +204,21 @@ class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 			assertNotNull(customType);
 			assertNotNull(value);
 		}
+	}
+
+	@ExtendWith(NullIntegerParameterResolver.class)
+	private static class NullMethodInjectionTestCase {
+
+		@Test
+		void injectWrapper(Integer number) {
+			assertNull(number);
+		}
+
+		@Test
+		void injectPrimitive(int number) {
+			// should never be invoked since an int cannot be null
+		}
+
 	}
 
 	@ExtendWith(PrimitiveIntegerParameterResolver.class)
