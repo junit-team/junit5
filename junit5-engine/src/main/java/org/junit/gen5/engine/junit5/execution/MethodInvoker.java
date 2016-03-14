@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit5.execution;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.gen5.commons.util.ReflectionUtils.isAssignableTo;
 
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
@@ -101,7 +102,7 @@ public class MethodInvoker {
 			Object value = resolver.resolve(parameter, methodInvocationContext, extensionContext);
 
 			// Note: null is permissible as a resolved value.
-			if (value != null && !parameter.getType().isInstance(value)) {
+			if (value != null && !isAssignableTo(value, parameter.getType())) {
 				throw new ParameterResolutionException(String.format(
 					"MethodParameterResolver [%s] resolved a value of type [%s] for parameter [%s] "
 							+ "in method [%s], but a value assignment compatible with [%s] is required.",

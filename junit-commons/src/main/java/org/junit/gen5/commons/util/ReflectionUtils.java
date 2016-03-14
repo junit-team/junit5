@@ -25,8 +25,10 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -49,6 +51,23 @@ public final class ReflectionUtils {
 
 	public enum MethodSortOrder {
 		HierarchyDown, HierarchyUp
+	}
+
+	private static final Map<Class<?>, Class<?>> primitiveToWrapperMap;
+
+	static {
+		Map<Class<?>, Class<?>> map = new HashMap<>(8);
+
+		map.put(boolean.class, Boolean.class);
+		map.put(byte.class, Byte.class);
+		map.put(char.class, Character.class);
+		map.put(short.class, Short.class);
+		map.put(int.class, Integer.class);
+		map.put(long.class, Long.class);
+		map.put(float.class, Float.class);
+		map.put(double.class, Double.class);
+
+		primitiveToWrapperMap = Collections.unmodifiableMap(map);
 	}
 
 	private ReflectionUtils() {
@@ -95,6 +114,40 @@ public final class ReflectionUtils {
 
 	public static boolean isStatic(Member member) {
 		return Modifier.isStatic(member.getModifiers());
+	}
+
+	/**
+	 * Determine if the supplied object can be assigned to the supplied type
+	 * for the purpose of reflective method invocations.
+	 *
+	 * <p>In contrast to {@link Class#isInstance(Object)}, this method returns
+	 * {@code true} if the supplied type represents a primitive type whose
+	 * wrapper matches the supplied object's type.
+	 *
+	 * <p>Returns {@code false} if the supplied object is {@code null}.
+	 *
+	 * @param obj the object to test for assignment compatibility; potentially {@code null}
+	 * @param type the type to check against; never {@code null}
+	 * @return {@code true} if the object is assignment compatible
+	 * @see Class#isInstance(Object)
+	 * @see Class#isAssignableFrom(Class)
+	 */
+	public static boolean isAssignableTo(Object obj, Class<?> type) {
+		Preconditions.notNull(type, "type must not be null");
+
+		if (obj == null) {
+			return false;
+		}
+
+		if (type.isInstance(obj)) {
+			return true;
+		}
+
+		if (type.isPrimitive()) {
+			return primitiveToWrapperMap.get(type) == obj.getClass();
+		}
+
+		return false;
 	}
 
 	/**
