@@ -41,8 +41,8 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void discoverByUniqueId() {
-		TestDiscoveryRequest request = request().select(forUniqueId(
-			JUnit5UniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test1()").getUniqueString())).build();
+		TestDiscoveryRequest request = request().select(
+			forUniqueId(JUnit5UniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test1()"))).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
@@ -60,7 +60,7 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void discoverCompositeSpec() {
 		TestDiscoveryRequest spec = request().select(
-			forUniqueId(JUnit5UniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test2()").getUniqueString()),
+			forUniqueId(JUnit5UniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test2()")),
 			forClass(LocalTestCase.class)).build();
 
 		TestDescriptor engineDescriptor = discoverTests(spec);

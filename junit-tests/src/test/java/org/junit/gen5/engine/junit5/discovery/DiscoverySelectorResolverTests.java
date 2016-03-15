@@ -116,7 +116,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void testClassResolutionByUniqueId() {
-		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueIdForClass(MyTestClass.class).getUniqueString());
+		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueIdForClass(MyTestClass.class));
 
 		resolver.resolveSelectors(request().select(selector).build());
 
@@ -130,7 +130,7 @@ public class DiscoverySelectorResolverTests {
 	@Test
 	public void testInnerClassResolutionByUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
-			uniqueIdForClass(OtherTestClass.NestedTestClass.class).getUniqueString());
+			uniqueIdForClass(OtherTestClass.NestedTestClass.class));
 
 		resolver.resolveSelectors(request().select(selector).build());
 
@@ -144,7 +144,7 @@ public class DiscoverySelectorResolverTests {
 	@Test
 	public void testMethodOfInnerClassByUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
-			uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test5()").getUniqueString());
+			uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test5()"));
 
 		resolver.resolveSelectors(request().select(selector).build());
 
@@ -156,8 +156,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void testNonResolvableUniqueId() {
-		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
-			engineId().append("poops", "machine").getUniqueString());
+		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(engineId().append("poops", "machine"));
 		EngineDiscoveryRequest request = request().select(selector).build();
 
 		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class, () -> {
@@ -169,8 +168,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void resolvingUniqueIdOfNonTestMethodResolvesNothing() {
-		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
-			uniqueIdForMethod(MyTestClass.class, "notATest()").getUniqueString());
+		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueIdForMethod(MyTestClass.class, "notATest()"));
 		EngineDiscoveryRequest request = request().select(selector).build();
 
 		resolver.resolveSelectors(request);
@@ -179,8 +177,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void testMethodResolutionByUniqueId() {
-		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
-			uniqueIdForMethod(MyTestClass.class, "test1()").getUniqueString());
+		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueIdForMethod(MyTestClass.class, "test1()"));
 
 		resolver.resolveSelectors(request().select(selector).build());
 
@@ -192,8 +189,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void testMethodResolutionByUniqueIdFromInheritedClass() {
-		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
-			uniqueIdForMethod(HerTestClass.class, "test1()").getUniqueString());
+		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueIdForMethod(HerTestClass.class, "test1()"));
 
 		resolver.resolveSelectors(request().select(selector).build());
 
@@ -208,7 +204,7 @@ public class DiscoverySelectorResolverTests {
 	@Test
 	public void testMethodResolutionByUniqueIdWithParams() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
-			uniqueIdForMethod(HerTestClass.class, "test7(java.lang.String)").getUniqueString());
+			uniqueIdForMethod(HerTestClass.class, "test7(java.lang.String)"));
 
 		resolver.resolveSelectors(request().select(selector).build());
 
@@ -221,7 +217,7 @@ public class DiscoverySelectorResolverTests {
 	@Test
 	public void testMethodResolutionByUniqueIdWithWrongParams() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
-			uniqueIdForMethod(HerTestClass.class, "test7(java.math.BigDecimal)").getUniqueString());
+			uniqueIdForMethod(HerTestClass.class, "test7(java.math.BigDecimal)"));
 		EngineDiscoveryRequest request = request().select(selector).build();
 
 		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
@@ -229,10 +225,8 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void testTwoMethodResolutionsByUniqueId() {
-		UniqueIdSelector selector1 = UniqueIdSelector.forUniqueId(
-			uniqueIdForMethod(MyTestClass.class, "test1()").getUniqueString());
-		UniqueIdSelector selector2 = UniqueIdSelector.forUniqueId(
-			uniqueIdForMethod(MyTestClass.class, "test2()").getUniqueString());
+		UniqueIdSelector selector1 = UniqueIdSelector.forUniqueId(uniqueIdForMethod(MyTestClass.class, "test1()"));
+		UniqueIdSelector selector2 = UniqueIdSelector.forUniqueId(uniqueIdForMethod(MyTestClass.class, "test2()"));
 
 		// adding same selector twice should have no effect
 		resolver.resolveSelectors(request().select(selector1, selector2, selector2).build());
@@ -311,7 +305,7 @@ public class DiscoverySelectorResolverTests {
 	@Test
 	public void testNestedTestResolutionFromUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
-			uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class).getUniqueString());
+			uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class));
 
 		resolver.resolveSelectors(request().select(selector).build());
 
@@ -344,7 +338,7 @@ public class DiscoverySelectorResolverTests {
 	@Test
 	public void testNestedTestResolutionFromUniqueIdToMethod() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
-			uniqueIdForMethod(TestCaseWithNesting.NestedTest.class, "testB()").getUniqueString());
+			uniqueIdForMethod(TestCaseWithNesting.NestedTest.class, "testB()"));
 
 		resolver.resolveSelectors(request().select(selector).build());
 
