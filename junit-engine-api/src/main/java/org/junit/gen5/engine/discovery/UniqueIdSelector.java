@@ -14,12 +14,17 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.DiscoverySelector;
+import org.junit.gen5.engine.UniqueId;
 
 /**
  * @since 5.0
  */
 @API(Experimental)
 public class UniqueIdSelector implements DiscoverySelector {
+
+	public static UniqueIdSelector forUniqueId(UniqueId uniqueId) {
+		return forUniqueId(uniqueId.getUniqueString());
+	}
 
 	public static UniqueIdSelector forUniqueId(String uniqueId) {
 		return new UniqueIdSelector(uniqueId);

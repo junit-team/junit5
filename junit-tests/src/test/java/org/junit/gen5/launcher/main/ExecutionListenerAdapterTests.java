@@ -33,7 +33,8 @@ class ExecutionListenerAdapterTests {
 
 		//cannot mock final classes with mockito
 		TestPlan testPlan = TestPlan.from(Collections.singleton(testDescriptor));
-		TestIdentifier testIdentifier = testPlan.getTestIdentifier(testDescriptor.getUniqueId());
+		TestIdentifier testIdentifier = testPlan.getTestIdentifier(
+			testDescriptor.getUniqueIdObject().getUniqueString());
 
 		//not yet spyable with mockito? -> https://github.com/mockito/mockito/issues/146
 		MockTestExecutionListener testExecutionListener = new MockTestExecutionListener();

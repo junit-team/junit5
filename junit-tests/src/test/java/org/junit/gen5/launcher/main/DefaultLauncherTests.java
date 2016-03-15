@@ -21,6 +21,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
@@ -86,11 +87,11 @@ class DefaultLauncherTests {
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
 
 		TestPlan testPlan = launcher.discover(
-			request().select(forUniqueId(test1.getUniqueId()), forUniqueId(test2.getUniqueId())).build());
+			request().select(forUniqueId(test1.getUniqueIdObject()), forUniqueId(test2.getUniqueIdObject())).build());
 
 		assertThat(testPlan.getRoots()).hasSize(2);
-		assertThat(testPlan.getChildren("[engine:engine1]")).hasSize(1);
-		assertThat(testPlan.getChildren("[engine:engine2]")).hasSize(1);
+		assertThat(testPlan.getChildren(UniqueId.forEngine("engine1").getUniqueString())).hasSize(1);
+		assertThat(testPlan.getChildren(UniqueId.forEngine("engine2").getUniqueString())).hasSize(1);
 	}
 
 	@Test
@@ -103,13 +104,13 @@ class DefaultLauncherTests {
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
 
 		TestPlan testPlan = launcher.discover(
-			request().select(forUniqueId(test1.getUniqueId()), forUniqueId(test2.getUniqueId())).filter(
+			request().select(forUniqueId(test1.getUniqueIdObject()), forUniqueId(test2.getUniqueIdObject())).filter(
 				byEngineId("first")).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
 		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(1);
-		assertThat(testPlan.getChildren("[engine:first]")).hasSize(1);
+		assertThat(testPlan.getChildren(UniqueId.forEngine("first").getUniqueString())).hasSize(1);
 	}
 
 	@Test
@@ -121,9 +122,11 @@ class DefaultLauncherTests {
 		DefaultLauncher launcher = createLauncher(engine);
 
 		PostDiscoveryFilter includeWithUniqueIdContainsTest = new PostDiscoveryFilterStub(
-			descriptor -> FilterResult.includedIf(descriptor.getUniqueId().contains("test")), () -> "filter1");
+			descriptor -> FilterResult.includedIf(descriptor.getUniqueIdObject().getUniqueString().contains("test")),
+			() -> "filter1");
 		PostDiscoveryFilter includeWithUniqueIdContains1 = new PostDiscoveryFilterStub(
-			descriptor -> FilterResult.includedIf(descriptor.getUniqueId().contains("1")), () -> "filter2");
+			descriptor -> FilterResult.includedIf(descriptor.getUniqueIdObject().getUniqueString().contains("1")),
+			() -> "filter2");
 
 		TestPlan testPlan = launcher.discover( //
 			request() //
@@ -131,8 +134,8 @@ class DefaultLauncherTests {
 					.filter(includeWithUniqueIdContainsTest, includeWithUniqueIdContains1) //
 					.build());
 
-		assertThat(testPlan.getChildren("[engine:myEngine]")).hasSize(1);
-		assertThat(testPlan.getTestIdentifier(test1.getUniqueId())).isNotNull();
+		assertThat(testPlan.getChildren(UniqueId.forEngine("myEngine").getUniqueString())).hasSize(1);
+		assertThat(testPlan.getTestIdentifier(test1.getUniqueIdObject().getUniqueString())).isNotNull();
 	}
 
 	private static Runnable noOp() {
