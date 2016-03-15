@@ -11,27 +11,18 @@
 package org.junit.gen5.junit4.runner;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.singleton;
-import static org.assertj.core.api.Assertions.assertThat;
+import static java.util.Collections.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.fail;
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertThrows;
-import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.api.Assumptions.assumeFalse;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.engine.TestExecutionResult.successful;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
-import static org.junit.runner.Description.createSuiteDescription;
-import static org.junit.runner.Description.createTestDescription;
+import static org.junit.runner.Description.*;
 import static org.junit.runner.manipulation.Filter.matchMethodDescription;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
 
@@ -43,6 +34,7 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.TestTag;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
@@ -193,11 +185,11 @@ class JUnit5Tests {
 		@Test
 		void convertsTestIdentifiersIntoDescriptions() throws Exception {
 
-			TestDescriptor container1 = new TestDescriptorStub("container1");
-			container1.addChild(new TestDescriptorStub("test1"));
-			TestDescriptor container2 = new TestDescriptorStub("container2");
-			container2.addChild(new TestDescriptorStub("test2a"));
-			container2.addChild(new TestDescriptorStub("test2b"));
+			TestDescriptor container1 = new TestDescriptorStub(UniqueId.root("root", "container1"), "container1");
+			container1.addChild(new TestDescriptorStub(UniqueId.root("root", "test1"), "test1"));
+			TestDescriptor container2 = new TestDescriptorStub(UniqueId.root("root", "container2"), "container2");
+			container2.addChild(new TestDescriptorStub(UniqueId.root("root", "test2a"), "test2a"));
+			container2.addChild(new TestDescriptorStub(UniqueId.root("root", "test2b"), "test2b"));
 			TestPlan testPlan = TestPlan.from(asList(container1, container2));
 
 			Launcher launcher = mock(Launcher.class);
@@ -210,16 +202,16 @@ class JUnit5Tests {
 
 			List<Description> containerDescriptions = runnerDescription.getChildren();
 			assertThat(containerDescriptions).hasSize(2);
-			assertEquals(suiteDescription("container1"), containerDescriptions.get(0));
-			assertEquals(suiteDescription("container2"), containerDescriptions.get(1));
+			assertEquals(suiteDescription("[root:container1]"), containerDescriptions.get(0));
+			assertEquals(suiteDescription("[root:container2]"), containerDescriptions.get(1));
 
 			List<Description> testDescriptions = containerDescriptions.get(0).getChildren();
-			assertEquals(testDescription("test1"), getOnlyElement(testDescriptions));
+			assertEquals(testDescription("[root:test1]"), getOnlyElement(testDescriptions));
 
 			testDescriptions = containerDescriptions.get(1).getChildren();
 			assertThat(testDescriptions).hasSize(2);
-			assertEquals(testDescription("test2a"), testDescriptions.get(0));
-			assertEquals(testDescription("test2b"), testDescriptions.get(1));
+			assertEquals(testDescription("[root:test2a]"), testDescriptions.get(0));
+			assertEquals(testDescription("[root:test2b]"), testDescriptions.get(1));
 		}
 
 	}
@@ -230,15 +222,15 @@ class JUnit5Tests {
 		@Test
 		void appliesFilter() throws Exception {
 
-			TestDescriptor originalParent1 = new TestDescriptorStub("parent1");
-			originalParent1.addChild(new TestDescriptorStub("leaf1"));
-			TestDescriptor originalParent2 = new TestDescriptorStub("parent2");
-			originalParent2.addChild(new TestDescriptorStub("leaf2a"));
-			originalParent2.addChild(new TestDescriptorStub("leaf2b"));
+			TestDescriptor originalParent1 = new TestDescriptorStub(UniqueId.root("root", "parent1"), "parent1");
+			originalParent1.addChild(new TestDescriptorStub(UniqueId.root("root", "leaf1"), "leaf1"));
+			TestDescriptor originalParent2 = new TestDescriptorStub(UniqueId.root("root", "parent2"), "parent2");
+			originalParent2.addChild(new TestDescriptorStub(UniqueId.root("root", "leaf2a"), "leaf2a"));
+			originalParent2.addChild(new TestDescriptorStub(UniqueId.root("root", "leaf2b"), "leaf2b"));
 			TestPlan fullTestPlan = TestPlan.from(asList(originalParent1, originalParent2));
 
-			TestDescriptor filteredParent = new TestDescriptorStub("parent2");
-			filteredParent.addChild(new TestDescriptorStub("leaf2b"));
+			TestDescriptor filteredParent = new TestDescriptorStub(UniqueId.root("root", "parent2"), "parent2");
+			filteredParent.addChild(new TestDescriptorStub(UniqueId.root("root", "leaf2b"), "leaf2b"));
 			TestPlan filteredTestPlan = TestPlan.from(singleton(filteredParent));
 
 			Launcher launcher = mock(Launcher.class);
@@ -246,22 +238,22 @@ class JUnit5Tests {
 			when(launcher.discover(captor.capture())).thenReturn(fullTestPlan).thenReturn(filteredTestPlan);
 
 			JUnit5 runner = new JUnit5(TestClass.class, launcher);
-			runner.filter(matchMethodDescription(testDescription("leaf2b")));
+			runner.filter(matchMethodDescription(testDescription("[root:leaf2b]")));
 
 			TestDiscoveryRequest lastDiscoveryRequest = captor.getValue();
 			List<UniqueIdSelector> uniqueIdSelectors = lastDiscoveryRequest.getSelectorsByType(UniqueIdSelector.class);
-			assertEquals("leaf2b", getOnlyElement(uniqueIdSelectors).getUniqueId());
+			assertEquals("[root:leaf2b]", getOnlyElement(uniqueIdSelectors).getUniqueId());
 
 			Description parentDescription = getOnlyElement(runner.getDescription().getChildren());
-			assertEquals(suiteDescription("parent2"), parentDescription);
+			assertEquals(suiteDescription("[root:parent2]"), parentDescription);
 
 			Description testDescription = getOnlyElement(parentDescription.getChildren());
-			assertEquals(testDescription("leaf2b"), testDescription);
+			assertEquals(testDescription("[root:leaf2b]"), testDescription);
 		}
 
 		@Test
 		void throwsNoTestsRemainExceptionWhenNoTestIdentifierMatchesFilter() throws Exception {
-			TestPlan testPlan = TestPlan.from(singleton(new TestDescriptorStub("test")));
+			TestPlan testPlan = TestPlan.from(singleton(new TestDescriptorStub(UniqueId.root("root", "test"), "test")));
 
 			Launcher launcher = mock(Launcher.class);
 			when(launcher.discover(any())).thenReturn(testPlan);
@@ -269,7 +261,7 @@ class JUnit5Tests {
 			JUnit5 runner = new JUnit5(TestClass.class, launcher);
 
 			assertThrows(NoTestsRemainException.class,
-				() -> runner.filter(matchMethodDescription(suiteDescription("doesNotExist"))));
+				() -> runner.filter(matchMethodDescription(suiteDescription("[root:doesNotExist]"))));
 		}
 
 	}
@@ -312,9 +304,9 @@ class JUnit5Tests {
 
 		@Test
 		void reportsIgnoredEventsForLeafsWhenContainerIsSkipped() throws Exception {
-			TestDescriptor engineDescriptor = new TestDescriptorStub("engine");
-			TestDescriptor container = new TestDescriptorStub("container");
-			container.addChild(new TestDescriptorStub("leaf"));
+			TestDescriptor engineDescriptor = new TestDescriptorStub(UniqueId.forEngine("engine"), "engine");
+			TestDescriptor container = new TestDescriptorStub(UniqueId.root("root", "container"), "container");
+			container.addChild(new TestDescriptorStub(UniqueId.root("root", "leaf"), "leaf"));
 			engineDescriptor.addChild(container);
 
 			TestEngine engine = mock(TestEngine.class);
@@ -334,7 +326,7 @@ class JUnit5Tests {
 			notifier.addListener(runListener);
 			new JUnit5(TestClass.class, createLauncher(engine)).run(notifier);
 
-			verify(runListener).testIgnored(testDescription("leaf"));
+			verify(runListener).testIgnored(testDescription("[root:leaf]"));
 			verifyNoMoreInteractions(runListener);
 		}
 

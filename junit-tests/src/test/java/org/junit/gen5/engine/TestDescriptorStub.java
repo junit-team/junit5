@@ -17,11 +17,11 @@ public class TestDescriptorStub extends AbstractTestDescriptor {
 	private final String name;
 	private final String displayName;
 
-	public TestDescriptorStub(String uniqueId) {
-		this(uniqueId, uniqueId, uniqueId);
+	public TestDescriptorStub(UniqueId uniqueId, String name) {
+		this(uniqueId, name, name);
 	}
 
-	public TestDescriptorStub(String uniqueId, String name, String displayName) {
+	public TestDescriptorStub(UniqueId uniqueId, String name, String displayName) {
 		super(uniqueId);
 		this.name = name;
 		this.displayName = displayName;

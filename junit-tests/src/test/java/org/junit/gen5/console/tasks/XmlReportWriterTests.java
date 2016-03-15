@@ -49,11 +49,11 @@ class XmlReportWriterTests {
 	@Test
 	void writesEmptySkippedElementForSkippedTestWithoutReason() throws Exception {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
-		engineDescriptor.addChild(new TestDescriptorStub("skippedTest"));
+		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("test", "skippedTest"), "skippedTest"));
 
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		reportData.markSkipped(testPlan.getTestIdentifier("skippedTest"), null);
+		reportData.markSkipped(testPlan.getTestIdentifier("[test:skippedTest]"), null);
 
 		StringWriter out = new StringWriter();
 		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
@@ -71,11 +71,11 @@ class XmlReportWriterTests {
 	@Test
 	void writesEmptyErrorElementForFailedTestWithoutCause() throws Exception {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
-		engineDescriptor.addChild(new TestDescriptorStub("failedTest"));
+		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("test", "failedTest"), "failedTest"));
 
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		reportData.markFinished(testPlan.getTestIdentifier("failedTest"), failed(null));
+		reportData.markFinished(testPlan.getTestIdentifier("[test:failedTest]"), failed(null));
 
 		StringWriter out = new StringWriter();
 		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
@@ -93,11 +93,11 @@ class XmlReportWriterTests {
 	@Test
 	void omitsMessageAttributeForFailedTestWithThrowableWithoutMessage() throws Exception {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
-		engineDescriptor.addChild(new TestDescriptorStub("failedTest"));
+		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("test", "failedTest"), "failedTest"));
 
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		reportData.markFinished(testPlan.getTestIdentifier("failedTest"), failed(new NullPointerException()));
+		reportData.markFinished(testPlan.getTestIdentifier("[test:failedTest]"), failed(new NullPointerException()));
 
 		StringWriter out = new StringWriter();
 		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);

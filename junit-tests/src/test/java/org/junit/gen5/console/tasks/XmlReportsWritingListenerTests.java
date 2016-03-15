@@ -345,7 +345,7 @@ class XmlReportsWritingListenerTests {
 	@Test
 	void writesReportEntriesToSystemOutElement(@Root Path tempDirectory, TestReporter testReporter) throws Exception {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
-		engineDescriptor.addChild(new TestDescriptorStub("test"));
+		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 
 		StringWriter out = new StringWriter();
@@ -353,7 +353,7 @@ class XmlReportsWritingListenerTests {
 			new PrintWriter(out));
 
 		listener.testPlanExecutionStarted(testPlan);
-		TestIdentifier testIdentifier = testPlan.getTestIdentifier("test");
+		TestIdentifier testIdentifier = testPlan.getTestIdentifier("[child:test]");
 		listener.executionStarted(testIdentifier);
 		listener.reportingEntryPublished(testIdentifier, ReportEntry.from("foo", "bar"));
 		Map<String, String> map = new LinkedHashMap<>();

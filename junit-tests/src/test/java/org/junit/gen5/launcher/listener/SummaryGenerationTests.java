@@ -10,9 +10,7 @@
 
 package org.junit.gen5.launcher.listener;
 
-import static org.junit.gen5.api.Assertions.assertAll;
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -23,6 +21,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestSource;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.JavaSource;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -84,14 +83,15 @@ class SummaryGenerationTests {
 
 	@Test
 	void reportingCorrectFailures() throws Exception {
-		TestDescriptorStub testDescriptor = new TestDescriptorStub("2", "name", "failingTest") {
+		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("root", "2"), "name", "failingTest") {
 			@Override
 			public Optional<TestSource> getSource() {
 				return Optional.of(new JavaSource(Object.class));
 			}
 		};
 		TestIdentifier failed = TestIdentifier.from(testDescriptor);
-		TestIdentifier aborted = TestIdentifier.from(new TestDescriptorStub("3", "name", "abortedTest"));
+		TestIdentifier aborted = TestIdentifier.from(
+			new TestDescriptorStub(UniqueId.root("root", "3"), "name", "abortedTest"));
 
 		listener.testPlanExecutionStarted(testPlan);
 		listener.executionStarted(failed);
@@ -113,7 +113,8 @@ class SummaryGenerationTests {
 	}
 
 	private TestIdentifier createTestIdentifier(String uniqueId) {
-		TestIdentifier identifier = TestIdentifier.from(new TestDescriptorStub(uniqueId, "name", "displayName"));
+		TestIdentifier identifier = TestIdentifier.from(
+			new TestDescriptorStub(UniqueId.root("root", uniqueId), "name", "displayName"));
 		testPlan.add(identifier);
 		return identifier;
 	}
