@@ -29,7 +29,7 @@ class UniqueIdSelectorResolverTests {
 
 	@Test
 	void logsWarningOnUnloadableTestClass() {
-		String uniqueId = JUnit4UniqueIdBuilder.uniqueIdForClass("foo.bar.UnknownClass");
+		UniqueId uniqueId = JUnit4UniqueIdBuilder.uniqueIdForClass("foo.bar.UnknownClass");
 		RecordCollectingLogger logger = new RecordCollectingLogger();
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueId);
 		TestClassCollector collector = new TestClassCollector();
