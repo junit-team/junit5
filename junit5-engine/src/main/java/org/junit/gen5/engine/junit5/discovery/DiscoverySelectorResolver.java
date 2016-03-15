@@ -186,7 +186,7 @@ public class DiscoverySelectorResolver {
 
 	@SuppressWarnings("unchecked")
 	private Optional<TestDescriptor> descriptorByUniqueId(UniqueId uniqueId) {
-		return (Optional<TestDescriptor>) engineDescriptor.findByUniqueId(uniqueId.getUniqueString());
+		return (Optional<TestDescriptor>) engineDescriptor.findByUniqueId(uniqueId);
 	}
 
 }

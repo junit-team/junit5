@@ -89,13 +89,13 @@ public interface TestDescriptor {
 		return (isTest() || getChildren().stream().anyMatch(TestDescriptor::hasTests));
 	}
 
-	default Optional<? extends TestDescriptor> findByUniqueId(String uniqueId) {
-		if (getUniqueId().equals(uniqueId)) {
+	default Optional<? extends TestDescriptor> findByUniqueId(UniqueId uniqueId) {
+		if (getUniqueIdObject().equals(uniqueId)) {
 			return Optional.of(this);
 		}
 		// else
 		return getChildren().stream().filter(
-			testDescriptor -> testDescriptor.getUniqueId().equals(uniqueId)).findFirst();
+			testDescriptor -> testDescriptor.getUniqueIdObject().equals(uniqueId)).findFirst();
 	}
 
 	interface Visitor {

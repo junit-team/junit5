@@ -51,7 +51,7 @@ class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelecto
 	private void resolveIntoFilteredTestClass(String testClassName, UniqueId uniqueId, TestClassCollector collector) {
 		Optional<Class<?>> testClass = ReflectionUtils.loadClass(testClassName);
 		if (testClass.isPresent()) {
-			collector.addFiltered(testClass.get(), new UniqueIdFilter(uniqueId.getUniqueString()));
+			collector.addFiltered(testClass.get(), new UniqueIdFilter(uniqueId));
 		}
 		else {
 			logger.warning(() -> format("Unresolvable Unique ID (%s): Unknown class %s", uniqueId, testClassName));

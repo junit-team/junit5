@@ -19,18 +19,19 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.runner.Description;
 
 class UniqueIdFilter extends RunnerTestDescriptorAwareFilter {
 
-	private final String uniqueId;
+	private final UniqueId uniqueId;
 
 	private Deque<Description> path;
 	private Set<Description> descendants;
 
-	public UniqueIdFilter(String uniqueId) {
+	public UniqueIdFilter(UniqueId uniqueId) {
 		this.uniqueId = uniqueId;
 	}
 

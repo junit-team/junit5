@@ -82,8 +82,8 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public Optional<? extends TestDescriptor> findByUniqueId(String uniqueId) {
-		if (getUniqueId().equals(uniqueId)) {
+	public Optional<? extends TestDescriptor> findByUniqueId(UniqueId uniqueId) {
+		if (getUniqueIdObject().equals(uniqueId)) {
 			return Optional.of(this);
 		}
 		for (TestDescriptor child : this.children) {
