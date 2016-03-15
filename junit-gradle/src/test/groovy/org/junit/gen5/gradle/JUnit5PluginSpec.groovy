@@ -85,4 +85,83 @@ class JUnit5PluginSpec extends Specification {
 			junit5TestTask.args.containsAll('-e', 'junit5')
 			junit5TestTask.args.containsAll('-r', new File('/any').getCanonicalFile().toString())
 	}
+
+	def "setting junit5 properties (android)"() {
+
+		project.apply plugin: 'com.android.application'
+		project.apply plugin: 'org.junit.gen5.gradle'
+
+		when:
+            project.android {
+                compileSdkVersion 23
+                buildToolsVersion "23.0.2"
+
+                defaultConfig {
+                    applicationId "org.junit.android.sample"
+                    minSdkVersion 23
+                    targetSdkVersion 23
+                    versionCode 1
+                    versionName "1.0"
+                }
+            }
+			project.junit5 {
+				version '5.0.0-Alpha'
+				runJunit4 true
+				matchClassName '.*Tests?'
+				logManager 'org.apache.logging.log4j.jul.LogManager'
+				requireTag 'fast'
+				excludeTag 'slow'
+				requireEngine 'junit5'
+				reportsDir new File("any")
+			}
+			project.evaluate()
+
+		then:
+			true == true
+	}
+
+    def "creating junit5Test task (android)"() {
+
+        project.apply plugin: 'com.android.application'
+        project.apply plugin: 'org.junit.gen5.gradle'
+
+        when:
+            project.android {
+                compileSdkVersion 23
+                buildToolsVersion "23.0.2"
+
+                defaultConfig {
+                    applicationId "org.junit.android.sample"
+                    minSdkVersion 23
+                    targetSdkVersion 23
+                    versionCode 1
+                    versionName "1.0"
+                }
+            }
+            project.junit5 {
+                //version '5.0.0-Alpha' // cannot be set in micro test
+                //runJunit4 true // cannot be set in micro test
+                matchClassName '.*Tests?'
+                logManager 'org.apache.logging.log4j.jul.LogManager'
+                requireTag 'fast'
+                excludeTag 'slow'
+                requireEngine 'junit5'
+                reportsDir new File("/any")
+            }
+            project.evaluate()
+
+        then:
+            Task junit5TestTask = project.tasks.findByName('junit5Test')
+            junit5TestTask instanceof JavaExec
+            junit5TestTask.main == 'org.junit.gen5.console.ConsoleRunner'
+
+            junit5TestTask.args.contains('--enable-exit-code')
+            junit5TestTask.args.contains('--hide-details')
+            junit5TestTask.args.contains('--all')
+            junit5TestTask.args.containsAll('-n', '.*Tests?')
+            junit5TestTask.args.containsAll('-t', 'fast')
+            junit5TestTask.args.containsAll('-T', 'slow')
+            junit5TestTask.args.containsAll('-e', 'junit5')
+            junit5TestTask.args.containsAll('-r', new File('/any').getCanonicalFile().toString())
+    }
 }

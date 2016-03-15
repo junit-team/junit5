@@ -14,6 +14,11 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.JavaExec
 
 class JUnit5Plugin implements Plugin<Project> {
+
+	String runtimeConfiguration
+	def testSourceSet
+	def runtimeClasspath
+
 	void apply(Project project) {
 		def junit5 = project.extensions.create('junit5', JUnit5Extension)
 
@@ -23,14 +28,25 @@ class JUnit5Plugin implements Plugin<Project> {
 	}
 
 	private void configure(Project project, junit5) {
+		if (isAndroidProject(project)) {
+			runtimeConfiguration = "testProvided"
+			testSourceSet = project.android.sourceSets.test
+			runtimeClasspath = testSourceSet.java.sourceFiles
+		} else {
+			runtimeConfiguration = "testRuntime"
+			testSourceSet = project.sourceSets.test
+			runtimeClasspath = testSourceSet.runtimeClasspath
+		}
+
 		if (junit5.version) {
 			def junit5Version = junit5.version
-			project.dependencies.add("testRuntime", "org.junit:junit-console:${junit5Version}")
+
 			project.dependencies.add("testCompile", "org.junit:junit5-api:${junit5Version}")
-			project.dependencies.add("testRuntime", "org.junit:junit5-engine:${junit5Version}")
+			project.dependencies.add(runtimeConfiguration, "org.junit:junit-console:${junit5Version}")
+			project.dependencies.add(runtimeConfiguration, "org.junit:junit5-engine:${junit5Version}")
 
 			if (junit5.runJunit4) {
-				project.dependencies.add("testRuntime", "org.junit:junit4-engine:${junit5Version}")
+				project.dependencies.add(runtimeConfiguration, "org.junit:junit4-engine:${junit5Version}")
 			}
 		}
 
@@ -53,8 +69,7 @@ class JUnit5Plugin implements Plugin<Project> {
 			}
 
 			defineTaskDependencies(project, task, junit5)
-
-			task.classpath = project.sourceSets.test.runtimeClasspath
+			task.classpath = runtimeClasspath
 			task.main = 'org.junit.gen5.console.ConsoleRunner'
 
 			task.args buildArgs(project, junit5, reportsDir)
@@ -63,9 +78,11 @@ class JUnit5Plugin implements Plugin<Project> {
 
 	private void defineTaskDependencies(project, task, junit5) {
 		def test = project.tasks.getByName('test')
-		def testClasses = project.tasks.getByName('testClasses')
+		def testClasses = project.tasks.findByName('testClasses')
 
-		task.dependsOn testClasses
+		if (testClasses) {
+			task.dependsOn testClasses
+		}
 		test.dependsOn task
 		if (junit5.runJunit4) {
 			test.enabled = false
@@ -99,7 +116,7 @@ class JUnit5Plugin implements Plugin<Project> {
 		args.add('-r')
 		args.add(reportsDir.getAbsolutePath())
 
-		def classpathRoots = project.sourceSets.test.runtimeClasspath.files
+		def classpathRoots = runtimeClasspath.files
 
 		def rootDirs = classpathRoots.findAll { it.isDirectory() }
 		rootDirs.each { File root ->
@@ -107,5 +124,13 @@ class JUnit5Plugin implements Plugin<Project> {
 		}
 
 		return args
+	}
+
+	private boolean isAndroidProject(Project project) {
+		return project.plugins.findPlugin("com.android.application") ||
+				project.plugins.findPlugin("android") ||
+				project.plugins.findPlugin("com.android.test") ||
+				project.plugins.findPlugin("com.android.library") ||
+				project.plugins.findPlugin("android-library")
 	}
 }
