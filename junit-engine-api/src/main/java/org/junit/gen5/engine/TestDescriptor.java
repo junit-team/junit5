@@ -37,9 +37,7 @@ public interface TestDescriptor {
 	 *
 	 * Should be renamed to getUniqueId() as soon as no clients are using the String any more.
 	 */
-	default UniqueId getUniqueIdObject() {
-		return null;
-	}
+	UniqueId getUniqueIdObject();
 
 	String getName();
 
