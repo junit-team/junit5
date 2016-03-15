@@ -10,9 +10,7 @@
 
 package org.junit.gen5.engine.support.discovery;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertFalse;
-import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,19 +30,19 @@ public class AbstractTestDescriptorTests {
 	@BeforeEach
 	public void initTree() {
 		engineDescriptor = new EngineDescriptor(UniqueId.forEngine("testEngine"), "testEngine");
-		GroupDescriptor group1 = new GroupDescriptor("group1");
+		GroupDescriptor group1 = new GroupDescriptor(UniqueId.root("group", "group1"));
 		engineDescriptor.addChild(group1);
-		GroupDescriptor group2 = new GroupDescriptor("group2");
+		GroupDescriptor group2 = new GroupDescriptor(UniqueId.root("group", "group2"));
 		engineDescriptor.addChild(group2);
-		GroupDescriptor group11 = new GroupDescriptor("group1-1");
+		GroupDescriptor group11 = new GroupDescriptor(UniqueId.root("group", "group1-1"));
 		group1.addChild(group11);
 
-		group1.addChild(new LeafDescriptor("leaf1-1"));
-		group1.addChild(new LeafDescriptor("leaf1-2"));
+		group1.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf1-1")));
+		group1.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf1-2")));
 
-		group2.addChild(new LeafDescriptor("leaf2-1"));
+		group2.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf2-1")));
 
-		group11.addChild(new LeafDescriptor("leaf11-1"));
+		group11.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf11-1")));
 	}
 
 	@Test
@@ -58,24 +56,24 @@ public class AbstractTestDescriptorTests {
 	@Test
 	public void pruneLeaf() {
 		TestDescriptor.Visitor visitor = (TestDescriptor descriptor, Runnable delete) -> {
-			if (descriptor.getUniqueId().equals("leaf1-1"))
+			if (descriptor.getUniqueIdObject().equals(UniqueId.root("leaf", "leaf1-1")))
 				delete.run();
 		};
 		engineDescriptor.accept(visitor);
 
-		List<String> visited = new ArrayList<>();
-		engineDescriptor.accept((descriptor, delete) -> visited.add(descriptor.getUniqueId()));
+		List<UniqueId> visited = new ArrayList<>();
+		engineDescriptor.accept((descriptor, delete) -> visited.add(descriptor.getUniqueIdObject()));
 
 		assertEquals(7, visited.size());
-		assertTrue(visited.contains("group1"));
-		assertFalse(visited.contains("leaf1-1"));
+		assertTrue(visited.contains(UniqueId.root("group", "group1")));
+		assertFalse(visited.contains(UniqueId.root("leaf", "leaf1-1")));
 	}
 
 	@Test
 	public void pruneGroup() {
 		final AtomicInteger countVisited = new AtomicInteger();
 		TestDescriptor.Visitor visitor = (descriptor, delete) -> {
-			if (descriptor.getUniqueId().equals("group1"))
+			if (descriptor.getUniqueIdObject().equals(UniqueId.root("group", "group1")))
 				delete.run();
 			countVisited.incrementAndGet();
 		};
@@ -83,18 +81,18 @@ public class AbstractTestDescriptorTests {
 
 		assertEquals(4, countVisited.get(), "Children of pruned element are not visited");
 
-		List<String> visited = new ArrayList<>();
-		engineDescriptor.accept((descriptor, delete) -> visited.add(descriptor.getUniqueId()));
+		List<UniqueId> visited = new ArrayList<>();
+		engineDescriptor.accept((descriptor, delete) -> visited.add(descriptor.getUniqueIdObject()));
 
 		assertEquals(3, visited.size());
-		assertFalse(visited.contains("group1"));
+		assertFalse(visited.contains(UniqueId.root("group", "group1")));
 	}
 
 }
 
 class GroupDescriptor extends AbstractTestDescriptor {
 
-	GroupDescriptor(String uniqueId) {
+	GroupDescriptor(UniqueId uniqueId) {
 		super(uniqueId);
 	}
 
@@ -121,7 +119,7 @@ class GroupDescriptor extends AbstractTestDescriptor {
 
 class LeafDescriptor extends AbstractTestDescriptor {
 
-	LeafDescriptor(String uniqueId) {
+	LeafDescriptor(UniqueId uniqueId) {
 		super(uniqueId);
 	}
 

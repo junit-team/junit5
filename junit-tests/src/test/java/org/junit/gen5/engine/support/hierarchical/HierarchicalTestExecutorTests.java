@@ -27,6 +27,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
@@ -45,7 +46,7 @@ public class HierarchicalTestExecutorTests {
 
 	@BeforeEach
 	public void init() {
-		root = spy(new MyContainer("root"));
+		root = spy(new MyContainer(UniqueId.root("container", "root")));
 		listener = Mockito.mock(EngineExecutionListener.class);
 		rootContext = new MyEngineExecutionContext();
 		ExecutionRequest request = new ExecutionRequest(root, listener);
@@ -74,7 +75,7 @@ public class HierarchicalTestExecutorTests {
 	@Test
 	public void rootDescriptorWithOneChildContainer() throws Exception {
 
-		MyContainer child = spy(new MyContainer("child container"));
+		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		root.addChild(child);
 
 		InOrder inOrder = inOrder(listener, root, child);
@@ -98,7 +99,7 @@ public class HierarchicalTestExecutorTests {
 	@Test
 	public void rootDescriptorWithOneChildLeaf() throws Exception {
 
-		MyLeaf child = spy(new MyLeaf("child leaf"));
+		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "child leaf")));
 		root.addChild(child);
 
 		InOrder inOrder = inOrder(listener, root, child);
@@ -121,7 +122,7 @@ public class HierarchicalTestExecutorTests {
 	@Test
 	public void skippingAContainer() throws Exception {
 
-		MyContainer child = spy(new MyContainer("child container"));
+		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		stub(child.shouldBeSkipped(rootContext)).toReturn(Node.SkipResult.skip("in test"));
 		root.addChild(child);
 
@@ -142,7 +143,7 @@ public class HierarchicalTestExecutorTests {
 	@Test
 	public void skippingALeaf() throws Exception {
 
-		MyLeaf child = spy(new MyLeaf("child leaf"));
+		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "child leaf")));
 		stub(child.shouldBeSkipped(rootContext)).toReturn(Node.SkipResult.skip("in test"));
 		root.addChild(child);
 
@@ -163,7 +164,7 @@ public class HierarchicalTestExecutorTests {
 	@Test
 	public void exceptionInShouldBeSkipped() throws Exception {
 
-		MyContainer child = spy(new MyContainer("child container"));
+		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		RuntimeException anException = new RuntimeException("in skip");
 		stub(child.shouldBeSkipped(rootContext)).toThrow(anException);
 		root.addChild(child);
@@ -190,7 +191,7 @@ public class HierarchicalTestExecutorTests {
 	@Test
 	public void exceptionInContainerBeforeAll() throws Exception {
 
-		MyContainer child = spy(new MyContainer("child container"));
+		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		root.addChild(child);
 		RuntimeException anException = new RuntimeException("in test");
 		stub(root.beforeAll(rootContext)).toThrow(anException);
@@ -217,7 +218,7 @@ public class HierarchicalTestExecutorTests {
 	@Test
 	public void exceptionInContainerAfterAll() throws Exception {
 
-		MyLeaf child = spy(new MyLeaf("child container"));
+		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "child container")));
 		root.addChild(child);
 		RuntimeException anException = new RuntimeException("in test");
 		stub(root.afterAll(rootContext)).toThrow(anException);
@@ -245,7 +246,7 @@ public class HierarchicalTestExecutorTests {
 	@Test
 	public void exceptionInLeafExecute() throws Exception {
 
-		MyLeaf child = spy(new MyLeaf("leaf"));
+		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "leaf")));
 		RuntimeException anException = new RuntimeException("in test");
 		stub(child.execute(rootContext)).toThrow(anException);
 		root.addChild(child);
@@ -271,7 +272,7 @@ public class HierarchicalTestExecutorTests {
 	@Test
 	public void abortInContainerBeforeAll() throws Exception {
 
-		MyContainer child = spy(new MyContainer("child container"));
+		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		root.addChild(child);
 		TestAbortedException anAbortedException = new TestAbortedException("in BeforeAll");
 		stub(root.beforeAll(rootContext)).toThrow(anAbortedException);
@@ -298,7 +299,7 @@ public class HierarchicalTestExecutorTests {
 	@Test
 	public void abortInLeafExecute() throws Exception {
 
-		MyLeaf child = spy(new MyLeaf("leaf"));
+		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "leaf")));
 		TestAbortedException anAbortedException = new TestAbortedException("in test");
 		stub(child.execute(rootContext)).toThrow(anAbortedException);
 		root.addChild(child);
@@ -326,7 +327,7 @@ public class HierarchicalTestExecutorTests {
 	 */
 	@Test
 	public void outOfMemoryErrorInShouldBeSkipped() throws Exception {
-		MyContainer child = spy(new MyContainer("child container"));
+		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		OutOfMemoryError outOfMemoryError = new OutOfMemoryError("in skip");
 		stub(child.shouldBeSkipped(rootContext)).toThrow(outOfMemoryError);
 		root.addChild(child);
@@ -340,7 +341,7 @@ public class HierarchicalTestExecutorTests {
 	 */
 	@Test
 	public void outOfMemoryErrorInLeafExecution() throws Exception {
-		MyLeaf child = spy(new MyLeaf("leaf"));
+		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "leaf")));
 		OutOfMemoryError outOfMemoryError = new OutOfMemoryError("in test");
 		stub(child.execute(rootContext)).toThrow(outOfMemoryError);
 		root.addChild(child);
@@ -356,7 +357,7 @@ public class HierarchicalTestExecutorTests {
 
 	private static class MyContainer extends AbstractTestDescriptor implements Container<MyEngineExecutionContext> {
 
-		protected MyContainer(String uniqueId) {
+		protected MyContainer(UniqueId uniqueId) {
 			super(uniqueId);
 		}
 
@@ -384,7 +385,7 @@ public class HierarchicalTestExecutorTests {
 
 	private static class MyLeaf extends AbstractTestDescriptor implements Leaf<MyEngineExecutionContext> {
 
-		protected MyLeaf(String uniqueId) {
+		protected MyLeaf(UniqueId uniqueId) {
 			super(uniqueId);
 		}
 
