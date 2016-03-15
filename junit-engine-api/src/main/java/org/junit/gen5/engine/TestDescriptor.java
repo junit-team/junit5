@@ -65,29 +65,11 @@ public interface TestDescriptor {
 		return all;
 	}
 
-	default long countStaticTests() {
-		AtomicLong staticTests = new AtomicLong(0);
-		Visitor visitor = (descriptor, remove) -> {
-			if (descriptor.isTest()) {
-				staticTests.incrementAndGet();
-			}
-		};
-		accept(visitor);
-		return staticTests.get();
-	}
-
 	default boolean hasTests() {
 		return (isTest() || getChildren().stream().anyMatch(TestDescriptor::hasTests));
 	}
 
-	default Optional<? extends TestDescriptor> findByUniqueId(UniqueId uniqueId) {
-		if (getUniqueId().equals(uniqueId)) {
-			return Optional.of(this);
-		}
-		// else
-		return getChildren().stream().filter(
-			testDescriptor -> testDescriptor.getUniqueId().equals(uniqueId)).findFirst();
-	}
+	Optional<? extends TestDescriptor> findByUniqueId(UniqueId uniqueId);
 
 	interface Visitor {
 
