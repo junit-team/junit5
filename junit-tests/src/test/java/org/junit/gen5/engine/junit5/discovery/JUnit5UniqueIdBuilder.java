@@ -15,11 +15,11 @@ import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 
 /**
- * Test data builder for unique IDs.
+ * Test data builder for unique IDs for JUnit5TestEngine.
  *
  * Used to decouple tests from concrete unique ID strings.
  */
-public class UniqueIdBuilder {
+public class JUnit5UniqueIdBuilder {
 
 	public static UniqueId uniqueIdForClass(Class<?> clazz) {
 		UniqueId containerId = engineId();
