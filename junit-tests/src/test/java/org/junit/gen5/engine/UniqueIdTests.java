@@ -12,12 +12,16 @@ package org.junit.gen5.engine;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
 
+import java.util.Optional;
+
 import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.UniqueId.Segment;
 
 /**
+ * Microtests for class {@link UniqueId}
+ *
  * @since 5.0
  */
 class UniqueIdTests {
@@ -28,11 +32,35 @@ class UniqueIdTests {
 	class Creation {
 
 		@Test
-		void uniqueIdMustBeCreatedWithEngineId() {
-			UniqueId uniqueId = UniqueId.root("engine", ENGINE_ID);
+		void uniqueIdCanBeCreatedFromEngineId() {
+			UniqueId uniqueId = UniqueId.forEngine(ENGINE_ID);
 
 			assertEquals("[engine:junit5]", uniqueId.getUniqueString());
 			assertSegment(uniqueId.getSegments().get(0), "engine", "junit5");
+		}
+
+		@Test
+		void retrievingOptionalEngineId() {
+			UniqueId uniqueIdWithEngine = UniqueId.forEngine(ENGINE_ID);
+			assertEquals("junit5", uniqueIdWithEngine.getEngineId().get());
+
+			UniqueId uniqueIdWithoutEngine = UniqueId.root("root", "avalue");
+			assertEquals(Optional.empty(), uniqueIdWithoutEngine.getEngineId());
+		}
+
+		@Test
+		void uniqueIdCanBeCreatedFromTypeAndValue() {
+			UniqueId uniqueId = UniqueId.root("aType", "aValue");
+
+			assertEquals("[aType:aValue]", uniqueId.getUniqueString());
+			assertSegment(uniqueId.getSegments().get(0), "aType", "aValue");
+		}
+
+		@Test
+		void rootSegmentCanBeRetrieved() {
+			UniqueId uniqueId = UniqueId.root("aType", "aValue");
+
+			assertEquals(new Segment("aType", "aValue"), uniqueId.getRoot().get());
 		}
 
 		@Test
@@ -46,7 +74,7 @@ class UniqueIdTests {
 		}
 
 		@Test
-		void appendingSegmentLeavesOriginialUnchanged() {
+		void appendingSegmentLeavesOriginalUnchanged() {
 			UniqueId uniqueId = UniqueId.root("engine", ENGINE_ID);
 			uniqueId.append("class", "org.junit.MyClass");
 
