@@ -56,7 +56,7 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 	}
 
 	private TestIdentifier getTestIdentifier(TestDescriptor testDescriptor) {
-		return testPlan.getTestIdentifier(testDescriptor.getUniqueId());
+		return testPlan.getTestIdentifier(testDescriptor.getUniqueId().getUniqueString());
 	}
 
 }

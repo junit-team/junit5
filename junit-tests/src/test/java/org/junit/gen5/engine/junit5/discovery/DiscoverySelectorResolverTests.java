@@ -357,12 +357,11 @@ public class DiscoverySelectorResolverTests {
 
 	private TestDescriptor descriptorByUniqueId(UniqueId uniqueId) {
 		return engineDescriptor.allDescendants().stream().filter(
-			d -> d.getUniqueIdObject().equals(uniqueId)).findFirst().get();
+			d -> d.getUniqueId().equals(uniqueId)).findFirst().get();
 	}
 
 	private List<UniqueId> uniqueIds() {
-		return engineDescriptor.allDescendants().stream().map(TestDescriptor::getUniqueIdObject).collect(
-			Collectors.toList());
+		return engineDescriptor.allDescendants().stream().map(TestDescriptor::getUniqueId).collect(Collectors.toList());
 	}
 
 }

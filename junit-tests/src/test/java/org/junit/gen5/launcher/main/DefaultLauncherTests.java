@@ -87,7 +87,7 @@ class DefaultLauncherTests {
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
 
 		TestPlan testPlan = launcher.discover(
-			request().select(forUniqueId(test1.getUniqueIdObject()), forUniqueId(test2.getUniqueIdObject())).build());
+			request().select(forUniqueId(test1.getUniqueId()), forUniqueId(test2.getUniqueId())).build());
 
 		assertThat(testPlan.getRoots()).hasSize(2);
 		assertThat(testPlan.getChildren(UniqueId.forEngine("engine1").getUniqueString())).hasSize(1);
@@ -104,7 +104,7 @@ class DefaultLauncherTests {
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
 
 		TestPlan testPlan = launcher.discover(
-			request().select(forUniqueId(test1.getUniqueIdObject()), forUniqueId(test2.getUniqueIdObject())).filter(
+			request().select(forUniqueId(test1.getUniqueId()), forUniqueId(test2.getUniqueId())).filter(
 				byEngineId("first")).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
@@ -122,10 +122,10 @@ class DefaultLauncherTests {
 		DefaultLauncher launcher = createLauncher(engine);
 
 		PostDiscoveryFilter includeWithUniqueIdContainsTest = new PostDiscoveryFilterStub(
-			descriptor -> FilterResult.includedIf(descriptor.getUniqueIdObject().getUniqueString().contains("test")),
+			descriptor -> FilterResult.includedIf(descriptor.getUniqueId().getUniqueString().contains("test")),
 			() -> "filter1");
 		PostDiscoveryFilter includeWithUniqueIdContains1 = new PostDiscoveryFilterStub(
-			descriptor -> FilterResult.includedIf(descriptor.getUniqueIdObject().getUniqueString().contains("1")),
+			descriptor -> FilterResult.includedIf(descriptor.getUniqueId().getUniqueString().contains("1")),
 			() -> "filter2");
 
 		TestPlan testPlan = launcher.discover( //
@@ -135,7 +135,7 @@ class DefaultLauncherTests {
 					.build());
 
 		assertThat(testPlan.getChildren(UniqueId.forEngine("myEngine").getUniqueString())).hasSize(1);
-		assertThat(testPlan.getTestIdentifier(test1.getUniqueIdObject().getUniqueString())).isNotNull();
+		assertThat(testPlan.getTestIdentifier(test1.getUniqueId().getUniqueString())).isNotNull();
 	}
 
 	private static Runnable noOp() {

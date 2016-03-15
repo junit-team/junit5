@@ -56,13 +56,13 @@ public class AbstractTestDescriptorTests {
 	@Test
 	public void pruneLeaf() {
 		TestDescriptor.Visitor visitor = (TestDescriptor descriptor, Runnable delete) -> {
-			if (descriptor.getUniqueIdObject().equals(UniqueId.root("leaf", "leaf1-1")))
+			if (descriptor.getUniqueId().equals(UniqueId.root("leaf", "leaf1-1")))
 				delete.run();
 		};
 		engineDescriptor.accept(visitor);
 
 		List<UniqueId> visited = new ArrayList<>();
-		engineDescriptor.accept((descriptor, delete) -> visited.add(descriptor.getUniqueIdObject()));
+		engineDescriptor.accept((descriptor, delete) -> visited.add(descriptor.getUniqueId()));
 
 		assertEquals(7, visited.size());
 		assertTrue(visited.contains(UniqueId.root("group", "group1")));
@@ -73,7 +73,7 @@ public class AbstractTestDescriptorTests {
 	public void pruneGroup() {
 		final AtomicInteger countVisited = new AtomicInteger();
 		TestDescriptor.Visitor visitor = (descriptor, delete) -> {
-			if (descriptor.getUniqueIdObject().equals(UniqueId.root("group", "group1")))
+			if (descriptor.getUniqueId().equals(UniqueId.root("group", "group1")))
 				delete.run();
 			countVisited.incrementAndGet();
 		};
@@ -82,7 +82,7 @@ public class AbstractTestDescriptorTests {
 		assertEquals(4, countVisited.get(), "Children of pruned element are not visited");
 
 		List<UniqueId> visited = new ArrayList<>();
-		engineDescriptor.accept((descriptor, delete) -> visited.add(descriptor.getUniqueIdObject()));
+		engineDescriptor.accept((descriptor, delete) -> visited.add(descriptor.getUniqueId()));
 
 		assertEquals(3, visited.size());
 		assertFalse(visited.contains(UniqueId.root("group", "group1")));
@@ -98,7 +98,7 @@ class GroupDescriptor extends AbstractTestDescriptor {
 
 	@Override
 	public String getName() {
-		return getUniqueIdObject().getUniqueString();
+		return getUniqueId().getUniqueString();
 	}
 
 	@Override
@@ -125,7 +125,7 @@ class LeafDescriptor extends AbstractTestDescriptor {
 
 	@Override
 	public String getName() {
-		return getUniqueIdObject().getUniqueString();
+		return getUniqueId().getUniqueString();
 	}
 
 	@Override

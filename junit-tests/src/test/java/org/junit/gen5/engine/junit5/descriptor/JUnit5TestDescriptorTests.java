@@ -42,7 +42,7 @@ public class JUnit5TestDescriptorTests {
 		MethodTestDescriptor descriptor = new MethodTestDescriptor(UniqueId.root("method", "a method id"), testClass,
 			testMethod);
 
-		assertEquals(UniqueId.root("method", "a method id"), descriptor.getUniqueIdObject());
+		assertEquals(UniqueId.root("method", "a method id"), descriptor.getUniqueId());
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test", descriptor.getDisplayName(), "display name:");
 	}

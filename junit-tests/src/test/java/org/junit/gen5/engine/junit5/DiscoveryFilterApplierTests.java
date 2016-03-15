@@ -48,7 +48,7 @@ class DiscoveryFilterApplierTests {
 		applier.applyAllFilters(request, engineDescriptor);
 
 		List<UniqueId> includedDescriptors = engineDescriptor.allDescendants().stream().map(
-			TestDescriptor::getUniqueIdObject).collect(Collectors.toList());
+			TestDescriptor::getUniqueId).collect(Collectors.toList());
 		Assertions.assertEquals(1, includedDescriptors.size());
 		Assertions.assertTrue(includedDescriptors.contains(UniqueId.root("class", "matching")));
 	}
@@ -69,7 +69,7 @@ class DiscoveryFilterApplierTests {
 		applier.applyAllFilters(request, engineDescriptor);
 
 		List<UniqueId> includedDescriptors = engineDescriptor.allDescendants().stream().map(
-			TestDescriptor::getUniqueIdObject).collect(Collectors.toList());
+			TestDescriptor::getUniqueId).collect(Collectors.toList());
 		Assertions.assertEquals(2, includedDescriptors.size());
 		Assertions.assertTrue(includedDescriptors.contains(UniqueId.root("class", "matching")));
 		Assertions.assertTrue(includedDescriptors.contains(UniqueId.root("nested-class", "nested")));

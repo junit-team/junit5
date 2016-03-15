@@ -30,14 +30,7 @@ public interface TestDescriptor {
 	 * <p>Uniqueness must be guaranteed across an entire test plan,
 	 * regardless of how many engines are used behind the scenes.
 	 */
-	String getUniqueId();
-
-	/**
-	 * Temporary parallel getter to string-based unique id.
-	 *
-	 * Should be renamed to getUniqueId() as soon as no clients are using the String any more.
-	 */
-	UniqueId getUniqueIdObject();
+	UniqueId getUniqueId();
 
 	String getName();
 
@@ -88,12 +81,12 @@ public interface TestDescriptor {
 	}
 
 	default Optional<? extends TestDescriptor> findByUniqueId(UniqueId uniqueId) {
-		if (getUniqueIdObject().equals(uniqueId)) {
+		if (getUniqueId().equals(uniqueId)) {
 			return Optional.of(this);
 		}
 		// else
 		return getChildren().stream().filter(
-			testDescriptor -> testDescriptor.getUniqueIdObject().equals(uniqueId)).findFirst();
+			testDescriptor -> testDescriptor.getUniqueId().equals(uniqueId)).findFirst();
 	}
 
 	interface Visitor {

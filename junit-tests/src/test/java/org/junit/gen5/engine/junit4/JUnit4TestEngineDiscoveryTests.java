@@ -91,7 +91,7 @@ class JUnit4TestEngineDiscoveryTests {
 		assertFalse(runnerDescriptor.isContainer());
 		assertTrue(runnerDescriptor.isTest());
 		assertEquals(testClass.getName(), runnerDescriptor.getDisplayName());
-		assertEquals(uniqueIdForClass(testClass), runnerDescriptor.getUniqueIdObject());
+		assertEquals(uniqueIdForClass(testClass), runnerDescriptor.getUniqueId());
 		assertThat(runnerDescriptor.getChildren()).isEmpty();
 	}
 
@@ -175,12 +175,12 @@ class JUnit4TestEngineDiscoveryTests {
 
 		TestDescriptor testMethodDescriptor = testMethodDescriptors.get(0);
 		assertEquals("theory", testMethodDescriptor.getDisplayName());
-		assertEquals(uniqueIdForMethod(testClass, "theory", "0"), testMethodDescriptor.getUniqueIdObject());
+		assertEquals(uniqueIdForMethod(testClass, "theory", "0"), testMethodDescriptor.getUniqueId());
 		assertClassSource(testClass, testMethodDescriptor);
 
 		testMethodDescriptor = testMethodDescriptors.get(1);
 		assertEquals("theory", testMethodDescriptor.getDisplayName());
-		assertEquals(uniqueIdForMethod(testClass, "theory", "1"), testMethodDescriptor.getUniqueIdObject());
+		assertEquals(uniqueIdForMethod(testClass, "theory", "1"), testMethodDescriptor.getUniqueId());
 		assertClassSource(testClass, testMethodDescriptor);
 	}
 
@@ -522,7 +522,7 @@ class JUnit4TestEngineDiscoveryTests {
 
 		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
 		assertEquals(testClass.getName(), runnerDescriptor.getDisplayName());
-		assertEquals(uniqueIdForClass(testClass), runnerDescriptor.getUniqueIdObject());
+		assertEquals(uniqueIdForClass(testClass), runnerDescriptor.getUniqueId());
 		assertThat(runnerDescriptor.getChildren()).isEmpty();
 	}
 
@@ -539,9 +539,9 @@ class JUnit4TestEngineDiscoveryTests {
 		TestDescriptor childDescriptor = getOnlyElement(runnerDescriptor.getChildren());
 
 		UniqueId prefix = uniqueIdForClass(testClass);
-		assertThat(childDescriptor.getUniqueIdObject().getUniqueString()).startsWith(prefix.getUniqueString());
+		assertThat(childDescriptor.getUniqueId().getUniqueString()).startsWith(prefix.getUniqueString());
 
-		String customUniqueIdValue = childDescriptor.getUniqueIdObject().getSegments().get(2).getType();
+		String customUniqueIdValue = childDescriptor.getUniqueId().getSegments().get(2).getType();
 		assertNotNull(Base64.getDecoder().decode(customUniqueIdValue.getBytes(StandardCharsets.UTF_8)),
 			"is a valid Base64 encoding scheme");
 	}
@@ -580,7 +580,7 @@ class JUnit4TestEngineDiscoveryTests {
 		assertFalse(runnerDescriptor.isTest());
 		assertEquals(testClass.getName(), runnerDescriptor.getDisplayName());
 		assertEquals(testClass.getName(), runnerDescriptor.getName());
-		assertEquals(uniqueIdForClass(testClass), runnerDescriptor.getUniqueIdObject());
+		assertEquals(uniqueIdForClass(testClass), runnerDescriptor.getUniqueId());
 		assertClassSource(testClass, runnerDescriptor);
 	}
 
@@ -590,8 +590,7 @@ class JUnit4TestEngineDiscoveryTests {
 		assertFalse(testMethodDescriptor.isContainer());
 		assertEquals(methodName, testMethodDescriptor.getDisplayName());
 		assertEquals(methodName + "(" + testClass.getName() + ")", testMethodDescriptor.getName());
-		assertEquals(uniqueIdForMethod(uniqueContainerId, testClass, methodName),
-			testMethodDescriptor.getUniqueIdObject());
+		assertEquals(uniqueIdForMethod(uniqueContainerId, testClass, methodName), testMethodDescriptor.getUniqueId());
 		assertThat(testMethodDescriptor.getChildren()).isEmpty();
 		assertMethodSource(testClass.getMethod(methodName), testMethodDescriptor);
 	}
@@ -602,7 +601,7 @@ class JUnit4TestEngineDiscoveryTests {
 		assertFalse(containerDescriptor.isTest());
 		assertEquals(testClass.getName(), containerDescriptor.getDisplayName());
 		assertEquals(testClass.getName(), containerDescriptor.getName());
-		assertEquals(uniqueIdForClasses(suiteClass, testClass), containerDescriptor.getUniqueIdObject());
+		assertEquals(uniqueIdForClasses(suiteClass, testClass), containerDescriptor.getUniqueId());
 		assertClassSource(testClass, containerDescriptor);
 	}
 
@@ -611,7 +610,7 @@ class JUnit4TestEngineDiscoveryTests {
 		assertTrue(testDescriptor.isTest());
 		assertFalse(testDescriptor.isContainer());
 		assertEquals("initializationError", testDescriptor.getDisplayName());
-		assertEquals(uniqueIdForErrorInClass(testClass, failingClass), testDescriptor.getUniqueIdObject());
+		assertEquals(uniqueIdForErrorInClass(testClass, failingClass), testDescriptor.getUniqueId());
 		assertThat(testDescriptor.getChildren()).isEmpty();
 		assertClassSource(failingClass, testDescriptor);
 	}

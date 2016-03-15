@@ -25,9 +25,6 @@ import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
 /**
  * {@link TestDescriptor} for tests based on nested (but not static) Java classes.
  *
- * <p>The pattern of the {@link #getUniqueId unique ID} takes the form of
- * <code>{parent unique id}/[class:{fully qualified class name}]/[nested-class:{simple class name}]</code>.
- *
  * @since 5.0
  */
 @API(Internal)

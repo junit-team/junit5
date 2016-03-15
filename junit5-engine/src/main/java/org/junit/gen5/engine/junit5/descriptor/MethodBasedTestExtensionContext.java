@@ -48,7 +48,7 @@ final public class MethodBasedTestExtensionContext extends AbstractExtensionCont
 
 	@Override
 	public String getUniqueId() {
-		return getTestDescriptor().getUniqueIdObject().getUniqueString();
+		return getTestDescriptor().getUniqueId().getUniqueString();
 	}
 
 	@Override

@@ -39,7 +39,7 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 	}
 
 	public DummyTestDescriptor addTest(String uniqueName, Runnable runnable) {
-		UniqueId uniqueId = engineDescriptor.getUniqueIdObject().append("test", uniqueName);
+		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", uniqueName);
 		DummyTestDescriptor child = new DummyTestDescriptor(uniqueId, uniqueName, runnable);
 		engineDescriptor.addChild(child);
 		return child;

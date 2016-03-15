@@ -30,7 +30,7 @@ final public class ClassBasedContainerExtensionContext extends AbstractExtension
 
 	@Override
 	public String getUniqueId() {
-		return getTestDescriptor().getUniqueIdObject().getUniqueString();
+		return getTestDescriptor().getUniqueId().getUniqueString();
 	}
 
 	@Override

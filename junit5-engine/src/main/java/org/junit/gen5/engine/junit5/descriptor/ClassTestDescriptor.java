@@ -54,9 +54,6 @@ import org.junit.gen5.engine.support.hierarchical.Container;
 /**
  * {@link TestDescriptor} for tests based on Java classes.
  *
- * <p>The pattern of the {@link #getUniqueId unique ID} takes the form of
- * <code>{parent unique id}/[class:{fully qualified class name}]</code>.
- *
  * @since 5.0
  */
 @API(Internal)

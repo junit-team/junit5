@@ -53,7 +53,7 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 
 	JUnit4TestDescriptor(TestDescriptor parent, String segmentType, String segmentValue, Description description,
 			Optional<? extends TestSource> source) {
-		super(parent.getUniqueIdObject().append(segmentType, segmentValue));
+		super(parent.getUniqueId().append(segmentType, segmentValue));
 
 		this.description = description;
 		source.ifPresent(this::setSource);
