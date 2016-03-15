@@ -32,12 +32,7 @@ import org.junit.gen5.engine.UniqueId;
 @API(Experimental)
 public abstract class AbstractTestDescriptor implements TestDescriptor {
 
-	private final String uniqueId;
-
-	/**
-	 * Temporary parallel to string-based unique id
-	 */
-	private UniqueId uniqueIdObject;
+	private UniqueId uniqueId;
 
 	private TestDescriptor parent;
 
@@ -45,27 +40,13 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final Set<TestDescriptor> children = new LinkedHashSet<>();
 
-	/**
-	 * Temporary parallel implementation to string-based constructor
-	 */
-	protected AbstractTestDescriptor(UniqueId uniqueIdObject) {
-		this.uniqueIdObject = Preconditions.notNull(uniqueIdObject, "uniqueId must not be null");
-		this.uniqueId = uniqueIdObject.getUniqueString();
-	}
-
-	protected AbstractTestDescriptor(String uniqueId) {
-		this.uniqueId = Preconditions.notBlank(uniqueId, "uniqueId must not be null or empty");
-		try {
-			this.uniqueIdObject = UniqueId.parse(uniqueId);
-		}
-		catch (JUnitException ignore) {
-			this.uniqueIdObject = null;
-		}
+	protected AbstractTestDescriptor(UniqueId uniqueId) {
+		this.uniqueId = Preconditions.notNull(uniqueId, "uniqueId must not be null");
 	}
 
 	@Override
 	public final String getUniqueId() {
-		return this.uniqueId;
+		return this.uniqueId.getUniqueString();
 	}
 
 	/**
@@ -73,7 +54,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	 */
 	@Override
 	public UniqueId getUniqueIdObject() {
-		return uniqueIdObject;
+		return uniqueId;
 	}
 
 	@Override

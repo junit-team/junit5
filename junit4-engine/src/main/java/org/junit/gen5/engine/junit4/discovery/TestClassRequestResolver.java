@@ -12,7 +12,6 @@ package org.junit.gen5.engine.junit4.discovery;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toCollection;
-import static org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor.DEFAULT_SEPARATOR;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -105,8 +104,8 @@ class TestClassRequestResolver {
 			for (int index = 0; index < childrenWithSameUniqueId.size(); index++) {
 				String reallyUniqueId = uniqueIdGenerator.apply(index);
 				Description description = childrenWithSameUniqueId.get(index);
-				JUnit4TestDescriptor child = new JUnit4TestDescriptor(parent, DEFAULT_SEPARATOR, reallyUniqueId,
-					description);
+				JUnit4TestDescriptor child = new JUnit4TestDescriptor(parent, JUnit4TestDescriptor.SEGMENT_TYPE_TEST,
+					reallyUniqueId, description);
 				parent.addChild(child);
 				addChildrenRecursively(child);
 			}

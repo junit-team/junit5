@@ -174,12 +174,12 @@ class JUnit4TestEngineDiscoveryTests {
 
 		TestDescriptor testMethodDescriptor = testMethodDescriptors.get(0);
 		assertEquals("theory", testMethodDescriptor.getDisplayName());
-		assertEquals(uniqueIdForMethod(testClass, "theory") + "[0]", testMethodDescriptor.getUniqueId());
+		assertEquals(uniqueIdForMethod(testClass, "theory", "0"), testMethodDescriptor.getUniqueId());
 		assertClassSource(testClass, testMethodDescriptor);
 
 		testMethodDescriptor = testMethodDescriptors.get(1);
 		assertEquals("theory", testMethodDescriptor.getDisplayName());
-		assertEquals(uniqueIdForMethod(testClass, "theory") + "[1]", testMethodDescriptor.getUniqueId());
+		assertEquals(uniqueIdForMethod(testClass, "theory", "1"), testMethodDescriptor.getUniqueId());
 		assertClassSource(testClass, testMethodDescriptor);
 	}
 
@@ -432,7 +432,7 @@ class JUnit4TestEngineDiscoveryTests {
 	void doesNotResolveMissingUniqueIdSelectorForSingleClass() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		TestDiscoveryRequest discoveryRequest = request().select(
-			forUniqueId(uniqueIdForClass(testClass) + "/doesNotExist")).build();
+			forUniqueId(uniqueIdForClass(testClass) + "/[test:doesNotExist]")).build();
 
 		TestDescriptor engineDescriptor = engine.discover(discoveryRequest);
 
@@ -536,10 +536,12 @@ class JUnit4TestEngineDiscoveryTests {
 		assertRunnerTestDescriptor(runnerDescriptor, testClass);
 
 		TestDescriptor childDescriptor = getOnlyElement(runnerDescriptor.getChildren());
-		String prefix = uniqueIdForClass(testClass) + "/";
-		assertThat(childDescriptor.getUniqueId()).startsWith(prefix);
-		String suffix = childDescriptor.getUniqueId().substring(prefix.length());
-		assertNotNull(Base64.getDecoder().decode(suffix.getBytes(StandardCharsets.UTF_8)),
+
+		String prefix = uniqueIdForClass(testClass);
+		assertThat(childDescriptor.getUniqueIdObject().getUniqueString()).startsWith(prefix);
+
+		String customUniqueIdValue = childDescriptor.getUniqueIdObject().getSegments().get(2).getType();
+		assertNotNull(Base64.getDecoder().decode(customUniqueIdValue.getBytes(StandardCharsets.UTF_8)),
 			"is a valid Base64 encoding scheme");
 	}
 

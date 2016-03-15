@@ -21,7 +21,7 @@ import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 public class JUnit4UniqueIdBuilder {
 
 	public static String uniqueIdForErrorInClass(Class<?> clazz, Class<?> failingClass) {
-		return uniqueIdForClasses(clazz) + "/initializationError(" + failingClass.getName() + ")";
+		return uniqueIdForClasses(clazz) + "/[test:initializationError(" + failingClass.getName() + ")]";
 	}
 
 	public static String uniqueIdForClass(Class<?> clazz) {
@@ -29,25 +29,28 @@ public class JUnit4UniqueIdBuilder {
 	}
 
 	public static String uniqueIdForClasses(Class<?> clazz, Class<?>... clazzes) {
-		UniqueId containerId = engineId();
-		String uniqueId = containerId.getUniqueString() + ":" + clazz.getName();
+		String uniqueId = uniqueIdForClass(clazz.getName());
 		for (Class<?> each : clazzes) {
-			uniqueId += "/" + each.getName();
+			uniqueId += "/[test:" + each.getName() + "]";
 		}
 		return uniqueId;
 	}
 
 	public static String uniqueIdForClass(String fullyQualifiedClassName) {
 		UniqueId containerId = engineId();
-		return containerId.getUniqueString() + ":" + fullyQualifiedClassName;
+		return containerId.append(JUnit4TestDescriptor.SEGMENT_TYPE_RUNNER, fullyQualifiedClassName).getUniqueString();
 	}
 
 	public static String uniqueIdForMethod(Class<?> testClass, String methodName) {
-		return uniqueIdForClass(testClass) + "/" + methodName + "(" + testClass.getName() + ")";
+		return uniqueIdForClass(testClass) + "/[test:" + methodName + "(" + testClass.getName() + ")]";
+	}
+
+	public static String uniqueIdForMethod(Class<?> testClass, String methodName, String index) {
+		return uniqueIdForClass(testClass) + "/[test:" + methodName + "(" + testClass.getName() + ")[" + index + "]]";
 	}
 
 	public static String uniqueIdForMethod(String containerId, Class<?> testClass, String methodName) {
-		return containerId + "/" + methodName + "(" + testClass.getName() + ")";
+		return containerId + "/[test:" + methodName + "(" + testClass.getName() + ")]";
 	}
 
 	public static UniqueId engineId() {

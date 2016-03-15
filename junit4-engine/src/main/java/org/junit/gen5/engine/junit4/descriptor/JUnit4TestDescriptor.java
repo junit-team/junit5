@@ -41,17 +41,20 @@ import org.junit.runner.Description;
 public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 
 	public static final String ENGINE_ID = "junit4";
-	public static final char DEFAULT_SEPARATOR = '/';
+	public static final String SEGMENT_TYPE_RUNNER = "runner";
+	public static final String SEGMENT_TYPE_TEST = "test";
 
 	private final Description description;
 
-	public JUnit4TestDescriptor(TestDescriptor parent, char separator, String uniqueIdSuffix, Description description) {
-		this(parent, separator, uniqueIdSuffix, description, toJavaSource(description));
+	public JUnit4TestDescriptor(TestDescriptor parent, String segmentType, String segmentValue,
+			Description description) {
+		this(parent, segmentType, segmentValue, description, toJavaSource(description));
 	}
 
-	JUnit4TestDescriptor(TestDescriptor parent, char separator, String uniqueIdSuffix, Description description,
+	JUnit4TestDescriptor(TestDescriptor parent, String segmentType, String segmentValue, Description description,
 			Optional<? extends TestSource> source) {
-		super(parent.getUniqueId() + separator + uniqueIdSuffix);
+		super(parent.getUniqueIdObject().append(segmentType, segmentValue));
+
 		this.description = description;
 		source.ifPresent(this::setSource);
 	}

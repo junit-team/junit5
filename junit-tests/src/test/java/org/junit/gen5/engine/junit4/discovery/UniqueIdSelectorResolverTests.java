@@ -21,6 +21,7 @@ import java.util.logging.LogRecord;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.logging.RecordCollectingLogger;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.engine.junit4.JUnit4UniqueIdBuilder;
 
@@ -65,7 +66,7 @@ class UniqueIdSelectorResolverTests {
 
 	@Test
 	void ignoresUniqueIdsOfOtherEngines() {
-		String uniqueId = "someEngine:foo";
+		UniqueId uniqueId = UniqueId.forEngine("someEngine");
 		RecordCollectingLogger logger = new RecordCollectingLogger();
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueId);
 		TestClassCollector collector = new TestClassCollector();

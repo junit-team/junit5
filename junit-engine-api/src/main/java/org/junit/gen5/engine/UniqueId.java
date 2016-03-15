@@ -13,6 +13,7 @@ package org.junit.gen5.engine;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.gen5.commons.meta.API;
 
@@ -69,6 +70,14 @@ public class UniqueId implements Cloneable {
 		return uniqueIdFormat.format(this);
 	}
 
+	public Optional<Segment> getRoot() {
+		return getSegments().stream().findFirst();
+	}
+
+	public Optional<String> getEngineId() {
+		return getRoot().filter(segment -> segment.getType().equals(TYPE_ENGINE)).map(Segment::getValue);
+	}
+
 	public List<Segment> getSegments() {
 		return new ArrayList<>(segments);
 	}
@@ -103,6 +112,11 @@ public class UniqueId implements Cloneable {
 		UniqueId uniqueId = (UniqueId) o;
 		return segments.equals(uniqueId.segments);
 
+	}
+
+	@Override
+	public String toString() {
+		return getUniqueString();
 	}
 
 	@Override
