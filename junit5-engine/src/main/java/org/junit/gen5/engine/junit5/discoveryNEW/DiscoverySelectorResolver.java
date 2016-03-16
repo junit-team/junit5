@@ -42,42 +42,61 @@ public class DiscoverySelectorResolver {
 		request.getSelectorsByType(MethodSelector.class).forEach(selector -> {
 			resolveMethod(selector.getTestClass(), selector.getTestMethod());
 		});
+		pruneTree();
+	}
 
+	private void pruneTree() {
+		TestDescriptor.Visitor removeDescriptorsWithoutTests = (descriptor, remove) -> {
+			if (!descriptor.isRoot() && !descriptor.hasTests())
+				remove.run();
+		};
+		engineDescriptor.accept(removeDescriptorsWithoutTests);
 	}
 
 	private void resolveMethod(Class<?> testClass, Method testMethod) {
-		if (!new IsTestMethod().test(testMethod))
-			return;
-		Optional<TestDescriptor> optionalParentDescriptor = resolve(testClass, engineDescriptor, false);
+		Optional<TestDescriptor> optionalParentDescriptor = resolve(testClass, engineDescriptor);
 		optionalParentDescriptor.ifPresent(parent -> {
-			Optional<TestDescriptor> optionalMethodDescriptor = resolve(testMethod, parent, true);
+			Optional<TestDescriptor> optionalMethodDescriptor = resolve(testMethod, parent);
 		});
 	}
 
 	private void resolveClass(Class<?> testClass) {
 		TestDescriptor parent = engineDescriptor;
-		resolve(testClass, parent, true);
-	}
-
-	private Optional<TestDescriptor> resolve(Class<?> testClass, TestDescriptor parent, boolean withChildren) {
-		if (!new IsPotentialTestContainer().test(testClass))
-			return Optional.empty();
-		UniqueId uniqueId = parent.getUniqueId().append("class", testClass.getName());
-		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, testClass);
-		parent.addChild(classTestDescriptor);
-
-		if (withChildren) {
+		Optional<TestDescriptor> optionalClassDescriptor = resolve(testClass, parent);
+		optionalClassDescriptor.ifPresent(classDescriptor -> {
 			List<Method> testMethodCandidates = findMethods(testClass, new IsTestMethod(),
 				ReflectionUtils.MethodSortOrder.HierarchyDown);
-			testMethodCandidates.forEach(method -> resolve(method, classTestDescriptor, true));
+			testMethodCandidates.forEach(method -> resolve(method, classDescriptor));
+		});
+	}
+
+	private Optional<TestDescriptor> resolve(Class<?> testClass, TestDescriptor parent) {
+		UniqueId uniqueId = parent.getUniqueId().append("class", testClass.getName());
+		Optional<TestDescriptor> optionalMethodTestDescriptor = (Optional<TestDescriptor>) parent.findByUniqueId(
+			uniqueId);
+		if (optionalMethodTestDescriptor.isPresent())
+			return optionalMethodTestDescriptor;
+
+		if (!new IsPotentialTestContainer().test(testClass)) {
+			return Optional.empty();
 		}
+		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, testClass);
+		parent.addChild(classTestDescriptor);
 
 		return Optional.of(classTestDescriptor);
 	}
 
-	private Optional<TestDescriptor> resolve(Method testMethod, TestDescriptor parent, boolean withChildren) {
+	private Optional<TestDescriptor> resolve(Method testMethod, TestDescriptor parent) {
 		ClassTestDescriptor parentClassDescriptor = (ClassTestDescriptor) parent;
 		UniqueId uniqueId = parentClassDescriptor.getUniqueId().append("method", testMethod.getName() + "()");
+
+		Optional<TestDescriptor> optionalMethodTestDescriptor = (Optional<TestDescriptor>) parent.findByUniqueId(
+			uniqueId);
+		if (optionalMethodTestDescriptor.isPresent())
+			return optionalMethodTestDescriptor;
+
+		if (!new IsTestMethod().test(testMethod))
+			return Optional.empty();
 		MethodTestDescriptor methodTestDescriptor = new MethodTestDescriptor(uniqueId,
 			parentClassDescriptor.getTestClass(), testMethod);
 		parentClassDescriptor.addChild(methodTestDescriptor);
