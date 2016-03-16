@@ -56,13 +56,14 @@ class JUnit5Plugin implements Plugin<Project> {
 
 			// Setup classpath for this variant's tests and add the test task
 			def testApkSource = project.configurations.getByName("testApk")
-			def tree = project.files(new File("build/intermediates/classes/$variant.dirName"))
+			def testCompileSource = project.configurations.getByName("testCompile")
+			def testClasses = project.files(new File("build/intermediates/classes/$variant.dirName"))
 
 			addJUnitTask(
 					project: project,
 					junit5: junit5,
 					nameSuffix: nameSuffix,
-					classpath: testApkSource + tree,
+					classpath: testApkSource + testCompileSource + testClasses,
 					dependentTasks: Collections.singletonList("assemble${nameSuffix}UnitTest")
 			)
 		}
