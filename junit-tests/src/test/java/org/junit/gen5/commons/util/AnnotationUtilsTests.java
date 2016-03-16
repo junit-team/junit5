@@ -12,8 +12,12 @@ package org.junit.gen5.commons.util;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.commons.util.AnnotationUtils.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
+import static org.junit.gen5.commons.util.AnnotationUtils.findRepeatableAnnotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -114,6 +118,40 @@ public final class AnnotationUtilsTests {
 			() -> "Tags found for class " + clazz.getName());
 	}
 
+	@Test
+	public void findRepeatableAnnotationsWithSingleAnnotationOnSuperclass() throws Exception {
+		assertExtensionsFound(SingleExtensionClass.class, "a");
+		assertExtensionsFound(SubSingleExtensionClass.class, "a");
+	}
+
+	@Test
+	public void findRepeatableAnnotationsWithMultipleAnnotationsOnSuperclass() throws Exception {
+		assertExtensionsFound(MultiExtensionClass.class, "a", "b", "c");
+
+		// Ideally we would expect top-down ordering...
+		// assertExtensionsFound(SubMultiExtensionClass.class, "a", "b", "c", "x", "y", "z");
+
+		// But the current search algorithm results in the following.
+		assertExtensionsFound(SubMultiExtensionClass.class, "x", "y", "z", "a", "b", "c");
+	}
+
+	@Test
+	public void findRepeatableAnnotationsWithContainerAnnotationOnSuperclass() throws Exception {
+		assertExtensionsFound(ContainerExtensionClass.class, "a", "b", "c");
+
+		// Ideally we would expect top-down ordering...
+		// assertExtensionsFound(SubContainerExtensionClass.class, "a", "b", "c", "x");
+
+		// But the current search algorithm results in the following.
+		assertExtensionsFound(SubContainerExtensionClass.class, "x", "a", "b", "c");
+	}
+
+	private void assertExtensionsFound(Class<?> clazz, String... tags) throws Exception {
+		assertEquals(asList(tags),
+			findRepeatableAnnotations(clazz, ExtendWith.class).stream().map(ExtendWith::value).collect(toList()),
+			() -> "Extensions found for class " + clazz.getName());
+	}
+
 	@Target({ ElementType.TYPE, ElementType.METHOD })
 	@Retention(RetentionPolicy.RUNTIME)
 	@interface Annotation1 {
@@ -165,6 +203,23 @@ public final class AnnotationUtilsTests {
 	@Fast
 	@Smoke
 	@interface FastAndSmoky {
+	}
+
+	@Target({ ElementType.TYPE, ElementType.METHOD })
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	public @interface Extensions {
+
+		ExtendWith[] value();
+	}
+
+	@Target({ ElementType.TYPE, ElementType.METHOD })
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@Repeatable(Extensions.class)
+	public @interface ExtendWith {
+
+		String value();
 	}
 
 	@Annotation1
@@ -225,6 +280,33 @@ public final class AnnotationUtilsTests {
 	@Fast
 	@Tags({ @Tag("a"), @Tag("b"), @Tag("c") })
 	static class ContainerAfterComposedTaggedClass {
+	}
+
+	@ExtendWith("a")
+	static class SingleExtensionClass {
+	}
+
+	static class SubSingleExtensionClass extends SingleExtensionClass {
+	}
+
+	@ExtendWith("a")
+	@ExtendWith("b")
+	@ExtendWith("c")
+	static class MultiExtensionClass {
+	}
+
+	@ExtendWith("x")
+	@ExtendWith("y")
+	@ExtendWith("z")
+	static class SubMultiExtensionClass extends MultiExtensionClass {
+	}
+
+	@Extensions({ @ExtendWith("a"), @ExtendWith("b"), @ExtendWith("c") })
+	static class ContainerExtensionClass {
+	}
+
+	@ExtendWith("x")
+	static class SubContainerExtensionClass extends ContainerExtensionClass {
 	}
 
 }

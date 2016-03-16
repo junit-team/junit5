@@ -307,6 +307,18 @@ public final class ReflectionUtils {
 		return Arrays.stream(clazz.getDeclaredClasses()).filter(predicate).collect(toList());
 	}
 
+	public static Optional<Method> getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notBlank(methodName, "method name must not be null or empty");
+
+		try {
+			return Optional.ofNullable(clazz.getMethod(methodName, parameterTypes));
+		}
+		catch (Throwable t) {
+			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
+		}
+	}
+
 	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Predicate<Method> nameAndParameterTypesMatch = (method -> method.getName().equals(methodName)
 				&& Arrays.equals(method.getParameterTypes(), parameterTypes));

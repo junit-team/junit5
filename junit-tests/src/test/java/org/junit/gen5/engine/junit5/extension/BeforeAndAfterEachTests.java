@@ -42,6 +42,11 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  */
 public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 
+	@BeforeEach
+	void resetCallSequence() {
+		callSequence.clear();
+	}
+
 	@Test
 	public void beforeEachAndAfterEachCallbacks() {
 		TestDiscoveryRequest request = request().select(forClass(OuterTestCase.class)).build();
@@ -92,9 +97,37 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 		// @formatter:on
 	}
 
+	@Test
+	public void inheritedBeforeEachAndAfterEachCallbacks() {
+		TestDiscoveryRequest request = request().select(forClass(ChildTestCase.class)).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
+
+		assertEquals(asList("fooBefore", "testChild", "fooAfter"), callSequence, "wrong call sequence");
+	}
+
 	// -------------------------------------------------------------------
 
 	private static List<String> callSequence = new ArrayList<>();
+
+	@ExtendWith(FooMethodLevelCallbacks.class)
+	private static class ParentTestCase {
+	}
+
+	private static class ChildTestCase extends ParentTestCase {
+
+		@Test
+		void test() {
+			callSequence.add("testChild");
+		}
+
+	}
 
 	@ExtendWith({ FooMethodLevelCallbacks.class, BarMethodLevelCallbacks.class, InnermostAndOutermost.class })
 	private static class OuterTestCase {
