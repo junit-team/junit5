@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.junit5.discoveryNEW;
 
 import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.engine.junit5.discovery.UniqueIdBuilder.*;
+import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.*;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.List;
@@ -110,6 +110,16 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	//	@Test
+	public void resolvingSelectorOfNonTestMethodResolvesNothing() throws NoSuchMethodException {
+		MethodSelector selector = MethodSelector.forMethod(
+			MyTestClass.class.getDeclaredMethod("notATest").getDeclaringClass(),
+			MyTestClass.class.getDeclaredMethod("notATest"));
+		EngineDiscoveryRequest request = request().select(selector).build();
+		resolver.resolveSelectors(request);
+		assertTrue(engineDescriptor.allDescendants().isEmpty());
+	}
+
+	//	@Test
 	public void testResolutionOfNotTestMethod() throws NoSuchMethodException {
 		MethodSelector selector = MethodSelector.forMethod(
 			MyTestClass.class.getDeclaredMethod("notATest").getDeclaringClass(),
@@ -171,13 +181,13 @@ public class DiscoverySelectorResolverTests {
 			"Exception message wrong: " + exception.getMessage());
 	}
 
-	//	@Test
-	public void testUniqueIdOfNotTestMethod() {
-		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
-			uniqueIdForMethod(MyTestClass.class, "notATest()").getUniqueString());
+	// @Test
+	public void resolvingUniqueIdOfNonTestMethodResolvesNothing() {
+		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueIdForMethod(MyTestClass.class, "notATest()"));
 		EngineDiscoveryRequest request = request().select(selector).build();
 
-		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
+		resolver.resolveSelectors(request);
+		assertTrue(engineDescriptor.allDescendants().isEmpty());
 	}
 
 	//	@Test
@@ -360,12 +370,11 @@ public class DiscoverySelectorResolverTests {
 
 	private TestDescriptor descriptorByUniqueId(UniqueId uniqueId) {
 		return engineDescriptor.allDescendants().stream().filter(
-			d -> d.getUniqueIdObject().equals(uniqueId)).findFirst().get();
+			d -> d.getUniqueId().equals(uniqueId)).findFirst().get();
 	}
 
 	private List<UniqueId> uniqueIds() {
-		return engineDescriptor.allDescendants().stream().map(TestDescriptor::getUniqueIdObject).collect(
-			Collectors.toList());
+		return engineDescriptor.allDescendants().stream().map(TestDescriptor::getUniqueId).collect(Collectors.toList());
 	}
 
 }

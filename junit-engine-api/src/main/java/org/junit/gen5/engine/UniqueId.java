@@ -115,11 +115,6 @@ public class UniqueId implements Cloneable {
 	}
 
 	@Override
-	public String toString() {
-		return getUniqueString();
-	}
-
-	@Override
 	public int hashCode() {
 		return segments.hashCode();
 	}
