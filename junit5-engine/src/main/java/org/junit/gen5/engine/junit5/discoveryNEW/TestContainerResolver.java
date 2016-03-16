@@ -11,7 +11,9 @@
 package org.junit.gen5.engine.junit5.discoveryNEW;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.Optional;
 
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
@@ -19,8 +21,10 @@ import org.junit.gen5.engine.junit5.discovery.IsPotentialTestContainer;
 
 public class TestContainerResolver implements ElementResolver {
 
+	private static final String SEGMENT_TYPE = "class";
+
 	@Override
-	public boolean willResolve(AnnotatedElement element, TestDescriptor parent) {
+	public boolean canResolveElement(AnnotatedElement element, TestDescriptor parent) {
 		//Do not collapse
 		if (!(element instanceof Class))
 			return false;
@@ -30,12 +34,30 @@ public class TestContainerResolver implements ElementResolver {
 	@Override
 	public UniqueId createUniqueId(AnnotatedElement element, TestDescriptor parent) {
 		Class<?> testClass = (Class<?>) element;
-		return parent.getUniqueId().append("class", testClass.getName());
+		return parent.getUniqueId().append(SEGMENT_TYPE, testClass.getName());
 	}
 
 	@Override
 	public TestDescriptor resolve(AnnotatedElement element, TestDescriptor parent, UniqueId uniqueId) {
 		return resolveClass((Class<?>) element, parent, uniqueId);
+	}
+
+	@Override
+	public boolean canResolveUniqueId(UniqueId.Segment segment, TestDescriptor parent) {
+		//Do not collapse
+		if (!segment.getType().equals(SEGMENT_TYPE))
+			return false;
+		Optional<Class<?>> optionalContainerClass = ReflectionUtils.loadClass(segment.getValue());
+		if (!optionalContainerClass.isPresent())
+			return false;
+		return canResolveElement(optionalContainerClass.get(), parent);
+	}
+
+	@Override
+	public TestDescriptor resolve(UniqueId.Segment segment, TestDescriptor parent, UniqueId uniqueId) {
+		Optional<Class<?>> optionalContainerClass = ReflectionUtils.loadClass(segment.getValue());
+
+		return resolve(optionalContainerClass.get(), parent, uniqueId);
 	}
 
 	private TestDescriptor resolveClass(Class<?> testClass, TestDescriptor parent, UniqueId uniqueId) {

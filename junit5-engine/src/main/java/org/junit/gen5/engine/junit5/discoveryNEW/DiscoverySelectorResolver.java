@@ -14,6 +14,7 @@ import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +27,8 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
+import org.junit.gen5.engine.discovery.UniqueIdSelector;
+import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.discovery.JUnit5EngineDescriptor;
 
 public class DiscoverySelectorResolver {
@@ -45,6 +48,9 @@ public class DiscoverySelectorResolver {
 		request.getSelectorsByType(MethodSelector.class).forEach(selector -> {
 			resolveMethod(selector.getTestClass(), selector.getTestMethod());
 		});
+		request.getSelectorsByType(UniqueIdSelector.class).forEach(selector -> {
+			resolveUniqueId(UniqueId.parse(selector.getUniqueId()));
+		});
 		pruneTree();
 	}
 
@@ -54,6 +60,29 @@ public class DiscoverySelectorResolver {
 				remove.run();
 		};
 		engineDescriptor.accept(removeDescriptorsWithoutTests);
+	}
+
+	private void resolveUniqueId(UniqueId uniqueId) {
+		List<UniqueId.Segment> segments = uniqueId.getSegments();
+		segments.remove(0); // Ignore engine unique ID
+		resolveUniqueId(engineDescriptor, segments);
+	}
+
+	private void resolveUniqueId(TestDescriptor parent, List<UniqueId.Segment> remainingSegments) {
+		if (remainingSegments.isEmpty()) {
+			resolveChildren(parent);
+			return;
+		}
+
+		UniqueId.Segment head = remainingSegments.remove(0);
+		resolvers.forEach(resolver -> {
+			if (!resolver.canResolveUniqueId(head, parent))
+				return;
+			UniqueId uniqueId = parent.getUniqueId().append(head);
+			TestDescriptor newDescriptor = resolver.resolve(head, parent, uniqueId);
+			parent.addChild(newDescriptor);
+			resolveUniqueId(newDescriptor, new ArrayList<>(remainingSegments));
+		});
 	}
 
 	private void resolveMethod(Class<?> testClass, Method testMethod) {
@@ -66,13 +95,18 @@ public class DiscoverySelectorResolver {
 	private void resolveClass(Class<?> testClass) {
 		TestDescriptor parent = engineDescriptor;
 		Set<TestDescriptor> resolvedClassDescriptors = resolve(testClass, parent);
-		if (resolvedClassDescriptors.isEmpty())
-			return;
 		resolvedClassDescriptors.forEach(classDescriptor -> {
+			resolveChildren(classDescriptor);
+		});
+	}
+
+	private void resolveChildren(TestDescriptor descriptor) {
+		if (descriptor instanceof ClassTestDescriptor) {
+			Class<?> testClass = ((ClassTestDescriptor) descriptor).getTestClass();
 			List<Method> testMethodCandidates = findMethods(testClass, method -> !ReflectionUtils.isPrivate(method),
 				ReflectionUtils.MethodSortOrder.HierarchyDown);
-			testMethodCandidates.forEach(method -> resolve(method, classDescriptor));
-		});
+			testMethodCandidates.forEach(method -> resolve(method, descriptor));
+		}
 	}
 
 	private Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {
@@ -85,7 +119,7 @@ public class DiscoverySelectorResolver {
 
 	private Optional<TestDescriptor> tryToResolveWithResolver(AnnotatedElement element, TestDescriptor parent,
 			ElementResolver resolver) {
-		if (!resolver.willResolve(element, parent))
+		if (!resolver.canResolveElement(element, parent))
 			return Optional.empty();
 
 		UniqueId uniqueId = resolver.createUniqueId(element, parent);

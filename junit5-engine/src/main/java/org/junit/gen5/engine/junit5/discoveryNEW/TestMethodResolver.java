@@ -22,7 +22,7 @@ import org.junit.gen5.engine.junit5.discovery.IsTestMethod;
 public class TestMethodResolver implements ElementResolver {
 
 	@Override
-	public boolean willResolve(AnnotatedElement element, TestDescriptor parent) {
+	public boolean canResolveElement(AnnotatedElement element, TestDescriptor parent) {
 		//Do not collapse
 		if (!(element instanceof Method))
 			return false;
@@ -40,6 +40,16 @@ public class TestMethodResolver implements ElementResolver {
 	@Override
 	public TestDescriptor resolve(AnnotatedElement element, TestDescriptor parent, UniqueId uniqueId) {
 		return resolveMethod((Method) element, (ClassTestDescriptor) parent, uniqueId);
+	}
+
+	@Override
+	public boolean canResolveUniqueId(UniqueId.Segment segment, TestDescriptor parent) {
+		return false;
+	}
+
+	@Override
+	public TestDescriptor resolve(UniqueId.Segment segment, TestDescriptor parent, UniqueId uniqueId) {
+		return null;
 	}
 
 	private TestDescriptor resolveMethod(Method testMethod, ClassTestDescriptor parentClassDescriptor,

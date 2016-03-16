@@ -133,7 +133,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(engineDescriptor.allDescendants().isEmpty());
 	}
 
-	//	@Test
+	@Test
 	public void testClassResolutionByUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueIdForClass(MyTestClass.class).getUniqueString());
 
