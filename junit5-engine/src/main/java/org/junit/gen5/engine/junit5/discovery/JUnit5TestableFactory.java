@@ -61,7 +61,7 @@ class JUnit5TestableFactory {
 			return createNestedClassTestable(clazz, clazz.getEnclosingClass(), engineId);
 		}
 		LOG.warning(() -> {
-			String classDescription = clazz.getDeclaringClass().getName();
+			String classDescription = clazz.getName();
 			return format("Class '%s' is not a test container", classDescription);
 		});
 		return JUnit5Testable.doNothing();
