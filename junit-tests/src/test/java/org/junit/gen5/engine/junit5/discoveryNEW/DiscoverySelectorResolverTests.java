@@ -46,7 +46,21 @@ public class DiscoverySelectorResolverTests {
 
 		assertEquals(3, engineDescriptor.allDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
-		System.out.println(uniqueIds);
+		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
+	}
+
+	@Test
+	public void duplicateClassSelectorOnlyResolvesOnce() {
+
+		resolver.resolveSelectors(request().select( //
+			ClassSelector.forClass(MyTestClass.class), //
+			ClassSelector.forClass(MyTestClass.class) //
+		).build());
+
+		assertEquals(3, engineDescriptor.allDescendants().size());
+		List<UniqueId> uniqueIds = uniqueIds();
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
@@ -109,13 +123,14 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(HerTestClass.class, "test1()")));
 	}
 
-	//	@Test
+	@Test
 	public void resolvingSelectorOfNonTestMethodResolvesNothing() throws NoSuchMethodException {
 		MethodSelector selector = MethodSelector.forMethod(
 			MyTestClass.class.getDeclaredMethod("notATest").getDeclaringClass(),
 			MyTestClass.class.getDeclaredMethod("notATest"));
 		EngineDiscoveryRequest request = request().select(selector).build();
 		resolver.resolveSelectors(request);
+		System.out.println(uniqueIds());
 		assertTrue(engineDescriptor.allDescendants().isEmpty());
 	}
 
