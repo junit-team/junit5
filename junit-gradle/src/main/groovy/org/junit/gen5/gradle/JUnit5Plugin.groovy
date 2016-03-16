@@ -15,42 +15,80 @@ import org.gradle.api.tasks.JavaExec
 
 class JUnit5Plugin implements Plugin<Project> {
 
-	String runtimeConfiguration
-	def testSourceSet
-	def runtimeClasspath
-
 	void apply(Project project) {
 		def junit5 = project.extensions.create('junit5', JUnit5Extension)
 
 		project.afterEvaluate {
-			configure(project, junit5)
+			if (isAndroidProject(project)) {
+				configureAndroid(project, junit5)
+			} else {
+				configureJava(project, junit5)
+			}
 		}
 	}
 
-	private void configure(Project project, junit5) {
-		if (isAndroidProject(project)) {
-			runtimeConfiguration = "testProvided"
-			testSourceSet = project.android.sourceSets.test
-			runtimeClasspath = testSourceSet.java.sourceFiles
-		} else {
-			runtimeConfiguration = "testRuntime"
-			testSourceSet = project.sourceSets.test
-			runtimeClasspath = testSourceSet.runtimeClasspath
-		}
+	private static void configureJava(Project project, junit5) {
 
+		// Add JUnit dependencies
+		addJUnitDependencies(project, junit5, "testCompile", "testRuntime")
+
+		// Add the test task
+		addJUnitTask(
+				project: project,
+				junit5: junit5,
+				classpath: project.sourceSets.test.runtimeClasspath,
+				dependentTasks: Collections.singletonList("testClasses")
+		)
+	}
+
+	private static void configureAndroid(Project project, junit5) {
+
+		// Add JUnit dependencies
+		addJUnitDependencies(project, junit5, "testCompile", "testApk")
+
+		// Add the test task to each of the project's unit test variants
+		def allVariants = isAndroidLibrary(project) ? "libraryVariants" : "applicationVariants"
+		def testVariants = project.android[allVariants].findAll { it.hasProperty("unitTestVariant") }
+
+		testVariants.collect { it.unitTestVariant }.each { variant ->
+			def buildType = variant.buildType.name
+			def nameSuffix = "${variant.flavorName.capitalize()}${buildType.capitalize()}"
+
+			// Setup classpath for this variant's tests and add the test task
+			def testApkSource = project.configurations.getByName("testApk")
+			def tree = project.files(new File("build/intermediates/classes/$variant.dirName"))
+
+			addJUnitTask(
+					project: project,
+					junit5: junit5,
+					nameSuffix: nameSuffix,
+					classpath: testApkSource + tree,
+					dependentTasks: Collections.singletonList("assemble${nameSuffix}UnitTest")
+			)
+		}
+	}
+
+	private static void addJUnitDependencies(project, junit5, compileConfigName, runtimeConfigName) {
 		if (junit5.version) {
 			def junit5Version = junit5.version
-
-			project.dependencies.add("testCompile", "org.junit:junit5-api:${junit5Version}")
-			project.dependencies.add(runtimeConfiguration, "org.junit:junit-console:${junit5Version}")
-			project.dependencies.add(runtimeConfiguration, "org.junit:junit5-engine:${junit5Version}")
+			project.dependencies.add(runtimeConfigName, "org.junit:junit-console:${junit5Version}")
+			project.dependencies.add(compileConfigName, "org.junit:junit5-api:${junit5Version}")
+			project.dependencies.add(runtimeConfigName, "org.junit:junit5-engine:${junit5Version}")
 
 			if (junit5.runJunit4) {
-				project.dependencies.add(runtimeConfiguration, "org.junit:junit4-engine:${junit5Version}")
+				project.dependencies.add(runtimeConfigName, "org.junit:junit4-engine:${junit5Version}")
 			}
 		}
+	}
 
-		project.task('junit5Test', group: 'verification', type: JavaExec) { task ->
+	private static void addJUnitTask(Map map) {
+		Project project = map.project
+		def junit5 = map.junit5
+		def classpath = map.classpath
+		String nameSuffix = map.getOrDefault('nameSuffix', '')
+		def dependentTasks = map.dependentTasks
+
+		project.task("junit5Test${nameSuffix}", group: 'verification', type: JavaExec) { task ->
 
 			task.description = 'Runs JUnit 5 tests.'
 
@@ -68,29 +106,35 @@ class JUnit5Plugin implements Plugin<Project> {
 				systemProperty 'java.util.logging.manager', junit5.logManager
 			}
 
-			defineTaskDependencies(project, task, junit5)
-			task.classpath = runtimeClasspath
+			// Define dependencies and setup task
+			defineTaskDependencies(project, task, junit5, dependentTasks)
+			task.classpath = classpath
 			task.main = 'org.junit.gen5.console.ConsoleRunner'
 
-			task.args buildArgs(project, junit5, reportsDir)
+			// Add arguments
+			task.args buildArgs(project, junit5, classpath, reportsDir)
 		}
 	}
 
-	private void defineTaskDependencies(project, task, junit5) {
-		def test = project.tasks.getByName('test')
-		def testClasses = project.tasks.findByName('testClasses')
+	private static void defineTaskDependencies(project, task, junit5, dependentTasks) {
+		if (!dependentTasks) dependentTasks = Collections.emptyList()
 
-		if (testClasses) {
-			task.dependsOn testClasses
+		def test = project.tasks.getByName('test')
+
+		dependentTasks.each {
+			def t = project.tasks.findByName(it)
+			if (t) {
+				task.dependsOn t
+			}
 		}
+
 		test.dependsOn task
 		if (junit5.runJunit4) {
 			test.enabled = false
 		}
 	}
 
-	private ArrayList<String> buildArgs(project, junit5, reportsDir) {
-
+	private static ArrayList<String> buildArgs(project, junit5, classpath, reportsDir) {
 		def args = ['--enable-exit-code', '--hide-details', '--all']
 
 		if (junit5.classNameFilter) {
@@ -114,23 +158,27 @@ class JUnit5Plugin implements Plugin<Project> {
 		}
 
 		args.add('-r')
-		args.add(reportsDir.getAbsolutePath())
+		args.add(reportsDir.absolutePath)
 
-		def classpathRoots = runtimeClasspath.files
+		def classpathRoots = classpath.files
 
 		def rootDirs = classpathRoots.findAll { it.isDirectory() }
 		rootDirs.each { File root ->
-			args.add(root.getAbsolutePath())
+			args.add(root.absolutePath)
 		}
 
 		return args
 	}
 
-	private boolean isAndroidProject(Project project) {
+	private static boolean isAndroidProject(Project project) {
 		return project.plugins.findPlugin("com.android.application") ||
 				project.plugins.findPlugin("android") ||
 				project.plugins.findPlugin("com.android.test") ||
-				project.plugins.findPlugin("com.android.library") ||
+				isAndroidLibrary(project)
+	}
+
+	private static boolean isAndroidLibrary(Project project) {
+		return project.plugins.findPlugin("com.android.library") ||
 				project.plugins.findPlugin("android-library")
 	}
 }
