@@ -46,9 +46,11 @@ public class DiscoverySelectorResolver {
 	}
 
 	private void resolveMethod(Class<?> testClass, Method testMethod) {
-		Optional<TestDescriptor> optionalParent = resolve(testClass, engineDescriptor, false);
-		optionalParent.ifPresent(parent -> {
-			resolve(testMethod, parent, true);
+		if (!new IsTestMethod().test(testMethod))
+			return;
+		Optional<TestDescriptor> optionalParentDescriptor = resolve(testClass, engineDescriptor, false);
+		optionalParentDescriptor.ifPresent(parent -> {
+			Optional<TestDescriptor> optionalMethodDescriptor = resolve(testMethod, parent, true);
 		});
 	}
 
