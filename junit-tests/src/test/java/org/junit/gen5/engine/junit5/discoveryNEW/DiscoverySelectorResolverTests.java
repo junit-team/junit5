@@ -53,7 +53,6 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void duplicateClassSelectorOnlyResolvesOnce() {
-
 		resolver.resolveSelectors(request().select( //
 			ClassSelector.forClass(MyTestClass.class), //
 			ClassSelector.forClass(MyTestClass.class) //
