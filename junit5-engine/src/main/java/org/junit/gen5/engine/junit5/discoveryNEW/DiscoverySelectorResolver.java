@@ -48,7 +48,7 @@ public class DiscoverySelectorResolver {
 	private void resolve(Class<?> testClass, TestDescriptor parent, boolean withChildren) {
 		if (!new IsPotentialTestContainer().test(testClass))
 			return;
-		UniqueId uniqueId = parent.getUniqueIdObject().append("class", testClass.getName());
+		UniqueId uniqueId = parent.getUniqueId().append("class", testClass.getName());
 		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, testClass);
 		parent.addChild(descriptor);
 
@@ -61,7 +61,7 @@ public class DiscoverySelectorResolver {
 
 	private void resolve(Method testMethod, TestDescriptor parent, boolean withChildren) {
 		ClassTestDescriptor parentClassDescriptor = (ClassTestDescriptor) parent;
-		UniqueId uniqueId = parentClassDescriptor.getUniqueIdObject().append("method", testMethod.getName() + "()");
+		UniqueId uniqueId = parentClassDescriptor.getUniqueId().append("method", testMethod.getName() + "()");
 		MethodTestDescriptor methodTestDescriptor = new MethodTestDescriptor(uniqueId,
 			parentClassDescriptor.getTestClass(), testMethod);
 		parentClassDescriptor.addChild(methodTestDescriptor);
