@@ -17,9 +17,13 @@ import org.junit.gen5.engine.UniqueId;
 
 public interface ElementResolver {
 
-	boolean willResolve(AnnotatedElement element, TestDescriptor parent);
+	boolean canResolveElement(AnnotatedElement element, TestDescriptor parent);
 
 	UniqueId createUniqueId(AnnotatedElement element, TestDescriptor parent);
 
-	TestDescriptor resolve(AnnotatedElement element, TestDescriptor parent, UniqueId parentId);
+	TestDescriptor resolve(AnnotatedElement element, TestDescriptor parent, UniqueId uniqueId);
+
+	boolean canResolveUniqueId(UniqueId.Segment segment, TestDescriptor parent);
+
+	TestDescriptor resolve(UniqueId.Segment segment, TestDescriptor parent, UniqueId uniqueId);
 }
