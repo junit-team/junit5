@@ -14,12 +14,14 @@ import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.ClassSelector;
+import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 import org.junit.gen5.engine.junit5.discovery.IsPotentialTestContainer;
@@ -37,7 +39,17 @@ public class DiscoverySelectorResolver {
 		request.getSelectorsByType(ClassSelector.class).forEach(selector -> {
 			resolveClass(selector.getTestClass());
 		});
+		request.getSelectorsByType(MethodSelector.class).forEach(selector -> {
+			resolveMethod(selector.getTestClass(), selector.getTestMethod());
+		});
 
+	}
+
+	private void resolveMethod(Class<?> testClass, Method testMethod) {
+		Optional<TestDescriptor> optionalParent = resolve(testClass, engineDescriptor, false);
+		optionalParent.ifPresent(parent -> {
+			resolve(testMethod, parent, true);
+		});
 	}
 
 	private void resolveClass(Class<?> testClass) {
@@ -45,25 +57,28 @@ public class DiscoverySelectorResolver {
 		resolve(testClass, parent, true);
 	}
 
-	private void resolve(Class<?> testClass, TestDescriptor parent, boolean withChildren) {
+	private Optional<TestDescriptor> resolve(Class<?> testClass, TestDescriptor parent, boolean withChildren) {
 		if (!new IsPotentialTestContainer().test(testClass))
-			return;
+			return Optional.empty();
 		UniqueId uniqueId = parent.getUniqueId().append("class", testClass.getName());
-		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, testClass);
-		parent.addChild(descriptor);
+		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, testClass);
+		parent.addChild(classTestDescriptor);
 
 		if (withChildren) {
 			List<Method> testMethodCandidates = findMethods(testClass, new IsTestMethod(),
 				ReflectionUtils.MethodSortOrder.HierarchyDown);
-			testMethodCandidates.forEach(method -> resolve(method, descriptor, true));
+			testMethodCandidates.forEach(method -> resolve(method, classTestDescriptor, true));
 		}
+
+		return Optional.of(classTestDescriptor);
 	}
 
-	private void resolve(Method testMethod, TestDescriptor parent, boolean withChildren) {
+	private Optional<TestDescriptor> resolve(Method testMethod, TestDescriptor parent, boolean withChildren) {
 		ClassTestDescriptor parentClassDescriptor = (ClassTestDescriptor) parent;
 		UniqueId uniqueId = parentClassDescriptor.getUniqueId().append("method", testMethod.getName() + "()");
 		MethodTestDescriptor methodTestDescriptor = new MethodTestDescriptor(uniqueId,
 			parentClassDescriptor.getTestClass(), testMethod);
 		parentClassDescriptor.addChild(methodTestDescriptor);
+		return Optional.of(methodTestDescriptor);
 	}
 }

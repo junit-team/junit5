@@ -52,7 +52,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
 	}
 
-	//	@Test
+	@Test
 	public void testTwoClassesResolution() {
 		ClassSelector selector1 = ClassSelector.forClass(MyTestClass.class);
 		ClassSelector selector2 = ClassSelector.forClass(YourTestClass.class);
@@ -82,7 +82,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test6()")));
 	}
 
-	//	@Test
+	@Test
 	public void testMethodResolution() throws NoSuchMethodException {
 		MethodSelector selector = MethodSelector.forMethod(
 			MyTestClass.class.getDeclaredMethod("test1").getDeclaringClass(),
@@ -96,7 +96,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 	}
 
-	//	@Test
+	@Test
 	public void testMethodResolutionFromInheritedMethod() throws NoSuchMethodException {
 		MethodSelector selector = MethodSelector.forMethod(HerTestClass.class,
 			MyTestClass.class.getDeclaredMethod("test1"));
@@ -117,15 +117,6 @@ public class DiscoverySelectorResolverTests {
 		EngineDiscoveryRequest request = request().select(selector).build();
 		resolver.resolveSelectors(request);
 		assertTrue(engineDescriptor.allDescendants().isEmpty());
-	}
-
-	//	@Test
-	public void testResolutionOfNotTestMethod() throws NoSuchMethodException {
-		MethodSelector selector = MethodSelector.forMethod(
-			MyTestClass.class.getDeclaredMethod("notATest").getDeclaringClass(),
-			MyTestClass.class.getDeclaredMethod("notATest"));
-		EngineDiscoveryRequest request = request().select(selector).build();
-		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
 	}
 
 	//	@Test
