@@ -11,14 +11,15 @@
 package org.junit.gen5.engine.junit5.discoveryNEW;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.Optional;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 
 public interface ElementResolver {
 
-	Optional<UniqueId> willResolve(AnnotatedElement element, TestDescriptor parent);
+	boolean willResolve(AnnotatedElement element, TestDescriptor parent);
+
+	UniqueId createUniqueId(AnnotatedElement element, TestDescriptor parent);
 
 	TestDescriptor resolve(AnnotatedElement element, TestDescriptor parent, UniqueId parentId);
 }

@@ -12,9 +12,7 @@ package org.junit.gen5.engine.junit5.discoveryNEW;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.Optional;
 
-import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
@@ -24,20 +22,19 @@ import org.junit.gen5.engine.junit5.discovery.IsTestMethod;
 public class TestMethodResolver implements ElementResolver {
 
 	@Override
-	public Optional<UniqueId> willResolve(AnnotatedElement element, TestDescriptor parent) {
+	public boolean willResolve(AnnotatedElement element, TestDescriptor parent) {
+		//Do not collapse
 		if (!(element instanceof Method))
-			return Optional.empty();
-
+			return false;
 		if (!(parent instanceof ClassTestDescriptor))
-			return Optional.empty();
+			return false;
+		return new IsTestMethod().test((Method) element);
+	}
 
+	@Override
+	public UniqueId createUniqueId(AnnotatedElement element, TestDescriptor parent) {
 		Method testMethod = (Method) element;
-
-		if (!new IsTestMethod().test(testMethod)) {
-			return Optional.empty();
-		}
-
-		return Optional.of(parent.getUniqueId().append("method", testMethod.getName() + "()"));
+		return parent.getUniqueId().append("method", testMethod.getName() + "()");
 	}
 
 	@Override

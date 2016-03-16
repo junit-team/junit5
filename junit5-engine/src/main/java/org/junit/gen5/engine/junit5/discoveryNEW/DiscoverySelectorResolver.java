@@ -85,11 +85,10 @@ public class DiscoverySelectorResolver {
 
 	private Optional<TestDescriptor> tryToResolveWithResolver(AnnotatedElement element, TestDescriptor parent,
 			ElementResolver resolver) {
-		Optional<UniqueId> optionalUniqueId = resolver.willResolve(element, parent);
-		if (!optionalUniqueId.isPresent())
+		if (!resolver.willResolve(element, parent))
 			return Optional.empty();
 
-		UniqueId uniqueId = optionalUniqueId.get();
+		UniqueId uniqueId = resolver.createUniqueId(element, parent);
 
 		Optional<TestDescriptor> optionalMethodTestDescriptor = findTestDescriptorByUniqueId(uniqueId);
 		if (optionalMethodTestDescriptor.isPresent())

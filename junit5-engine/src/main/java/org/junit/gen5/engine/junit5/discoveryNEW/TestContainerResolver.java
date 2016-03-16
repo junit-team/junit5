@@ -11,7 +11,6 @@
 package org.junit.gen5.engine.junit5.discoveryNEW;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.Optional;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
@@ -21,16 +20,17 @@ import org.junit.gen5.engine.junit5.discovery.IsPotentialTestContainer;
 public class TestContainerResolver implements ElementResolver {
 
 	@Override
-	public Optional<UniqueId> willResolve(AnnotatedElement element, TestDescriptor parent) {
+	public boolean willResolve(AnnotatedElement element, TestDescriptor parent) {
+		//Do not collapse
 		if (!(element instanceof Class))
-			return Optional.empty();
+			return false;
+		return new IsPotentialTestContainer().test((Class<?>) element);
+	}
 
+	@Override
+	public UniqueId createUniqueId(AnnotatedElement element, TestDescriptor parent) {
 		Class<?> testClass = (Class<?>) element;
-		if (!new IsPotentialTestContainer().test(testClass)) {
-			return Optional.empty();
-		}
-
-		return Optional.of(parent.getUniqueId().append("class", testClass.getName()));
+		return parent.getUniqueId().append("class", testClass.getName());
 	}
 
 	@Override
