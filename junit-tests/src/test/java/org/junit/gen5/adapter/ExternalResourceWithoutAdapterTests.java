@@ -16,7 +16,7 @@ import org.junit.gen5.api.Test;
 import org.junit.rules.TemporaryFolder;
 
 
-public class OtherExternalResourceAdapterTests {
+public class ExternalResourceWithoutAdapterTests {
 
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
@@ -25,17 +25,17 @@ public class OtherExternalResourceAdapterTests {
 	void setup() {
         try {
             folder.newFile("temp.txt");
-        } catch (Exception exception) {
-
+        }
+        catch (Exception exception) {
             System.out.println("exception = " + exception.getMessage());
             assert exception.getMessage().equals("the temporary folder has not yet been created");
-
-        }
+       }
     }
 
 
     @Test
     void checkTemporaryFolder() {
+        //only needed to invoke testing at all
     }
 
 
