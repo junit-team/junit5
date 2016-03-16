@@ -18,7 +18,7 @@ import org.junit.gen5.engine.UniqueId;
 
 public interface ElementResolver {
 
-	Optional<UniqueId> willResolveTo(AnnotatedElement element, TestDescriptor parent);
+	Optional<UniqueId> willResolve(AnnotatedElement element, TestDescriptor parent);
 
-	Optional<TestDescriptor> resolveClass(AnnotatedElement element, TestDescriptor parent, UniqueId parentId);
+	TestDescriptor resolve(AnnotatedElement element, TestDescriptor parent, UniqueId parentId);
 }

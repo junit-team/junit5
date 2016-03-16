@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit5.discoveryNEW;
 
 import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +57,7 @@ public class DiscoverySelectorResolver {
 	private void resolveMethod(Class<?> testClass, Method testMethod) {
 		Optional<TestDescriptor> optionalParentDescriptor = resolve(testClass, engineDescriptor);
 		optionalParentDescriptor.ifPresent(parent -> {
-			Optional<TestDescriptor> optionalMethodDescriptor = resolve(testMethod, parent);
+			resolve(testMethod, parent);
 		});
 	}
 
@@ -64,42 +65,39 @@ public class DiscoverySelectorResolver {
 		TestDescriptor parent = engineDescriptor;
 		Optional<TestDescriptor> optionalClassDescriptor = resolve(testClass, parent);
 		optionalClassDescriptor.ifPresent(classDescriptor -> {
-			List<Method> testMethodCandidates = findMethods(testClass, new IsTestMethod(),
+			List<Method> testMethodCandidates = findMethods(testClass, method -> !ReflectionUtils.isPrivate(method),
 				ReflectionUtils.MethodSortOrder.HierarchyDown);
 			testMethodCandidates.forEach(method -> resolve(method, classDescriptor));
 		});
 	}
 
 	private Optional<TestDescriptor> resolve(Class<?> testClass, TestDescriptor parent) {
-		UniqueId uniqueId = parent.getUniqueId().append("class", testClass.getName());
-		Optional<TestDescriptor> optionalMethodTestDescriptor = (Optional<TestDescriptor>) parent.findByUniqueId(
-			uniqueId);
-		if (optionalMethodTestDescriptor.isPresent())
-			return optionalMethodTestDescriptor;
-
-		if (!new IsPotentialTestContainer().test(testClass)) {
-			return Optional.empty();
-		}
-		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, testClass);
-		parent.addChild(classTestDescriptor);
-
-		return Optional.of(classTestDescriptor);
+		TestContainerResolver resolver = new TestContainerResolver();
+		return resolve(testClass, parent, resolver);
 	}
 
 	private Optional<TestDescriptor> resolve(Method testMethod, TestDescriptor parent) {
-		ClassTestDescriptor parentClassDescriptor = (ClassTestDescriptor) parent;
-		UniqueId uniqueId = parentClassDescriptor.getUniqueId().append("method", testMethod.getName() + "()");
+		TestMethodResolver resolver = new TestMethodResolver();
+		return resolve(testMethod, parent, resolver);
+	}
+
+	private Optional<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent,
+			ElementResolver resolver) {
+		Optional<UniqueId> optionalUniqueId = resolver.willResolve(element, parent);
+
+		if (!optionalUniqueId.isPresent())
+			return Optional.empty();
+
+		UniqueId uniqueId = optionalUniqueId.get();
 
 		Optional<TestDescriptor> optionalMethodTestDescriptor = (Optional<TestDescriptor>) parent.findByUniqueId(
 			uniqueId);
 		if (optionalMethodTestDescriptor.isPresent())
 			return optionalMethodTestDescriptor;
 
-		if (!new IsTestMethod().test(testMethod))
-			return Optional.empty();
-		MethodTestDescriptor methodTestDescriptor = new MethodTestDescriptor(uniqueId,
-			parentClassDescriptor.getTestClass(), testMethod);
-		parentClassDescriptor.addChild(methodTestDescriptor);
-		return Optional.of(methodTestDescriptor);
+		TestDescriptor newDescriptor = resolver.resolve(element, parent, uniqueId);
+		parent.addChild(newDescriptor);
+		return Optional.of(newDescriptor);
 	}
+
 }
