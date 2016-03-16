@@ -15,7 +15,6 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.rules.TemporaryFolder;
 
-
 public class ExternalResourceWithoutAdapterTests {
 
 	@Rule
@@ -23,21 +22,18 @@ public class ExternalResourceWithoutAdapterTests {
 
 	@BeforeEach
 	void setup() {
-        try {
-            folder.newFile("temp.txt");
-        }
-        catch (Exception exception) {
-            System.out.println("exception = " + exception.getMessage());
-            assert exception.getMessage().equals("the temporary folder has not yet been created");
-       }
-    }
+		try {
+			folder.newFile("temp.txt");
+		}
+		catch (Exception exception) {
+			System.out.println("exception = " + exception.getMessage());
+			assert exception.getMessage().equals("the temporary folder has not yet been created");
+		}
+	}
 
-
-    @Test
-    void checkTemporaryFolder() {
-        //only needed to invoke testing at all
-    }
-
-
+	@Test
+	void checkTemporaryFolder() {
+		//only needed to invoke testing at all
+	}
 
 }
