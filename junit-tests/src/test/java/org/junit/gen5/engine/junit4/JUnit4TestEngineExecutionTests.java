@@ -52,6 +52,7 @@ import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithErrorInAfte
 import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithErrorInBeforeClass;
 import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithExceptionThrowingRunner;
 import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithOverloadedMethod;
+import org.junit.gen5.engine.junit4.samples.junit4.JUnit4TestCaseWithRunnerWithCustomUniqueIds;
 import org.junit.gen5.engine.junit4.samples.junit4.MalformedJUnit4TestCase;
 import org.junit.gen5.engine.junit4.samples.junit4.ParameterizedTestCase;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
@@ -454,6 +455,21 @@ class JUnit4TestEngineExecutionTests {
 			event(engine(), started()), //
 			event(uniqueIdSubstring(testClass.getName()), started()), //
 			event(uniqueIdSubstring(testClass.getName()), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	public void executesJUnit4TestCaseWithRunnerWithCustomUniqueIds() {
+		Class<?> testClass = JUnit4TestCaseWithRunnerWithCustomUniqueIds.class;
+
+		List<ExecutionEvent> executionEvents = execute(testClass);
+
+		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(uniqueIdSubstring(testClass.getName()), started()), //
+			event(uniqueIdSubstring(testClass.getName()), finishedWithFailure()), //
+			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 

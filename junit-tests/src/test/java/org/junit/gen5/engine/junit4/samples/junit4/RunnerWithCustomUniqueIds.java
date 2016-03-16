@@ -50,5 +50,10 @@ public class RunnerWithCustomUniqueIds extends BlockJUnit4ClassRunner {
 			}
 			return false;
 		}
+
+		@Override
+		public int hashCode() {
+			return testName.hashCode();
+		}
 	}
 }
