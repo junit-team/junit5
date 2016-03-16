@@ -14,8 +14,11 @@ import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
@@ -23,17 +26,16 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
-import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
-import org.junit.gen5.engine.junit5.discovery.IsPotentialTestContainer;
-import org.junit.gen5.engine.junit5.discovery.IsTestMethod;
 import org.junit.gen5.engine.junit5.discovery.JUnit5EngineDescriptor;
 
 public class DiscoverySelectorResolver {
 	private final JUnit5EngineDescriptor engineDescriptor;
+	private final Set<ElementResolver> resolvers = new HashSet<>();
 
 	public DiscoverySelectorResolver(JUnit5EngineDescriptor engineDescriptor) {
 		this.engineDescriptor = engineDescriptor;
+		resolvers.add(new TestContainerResolver());
+		resolvers.add(new TestMethodResolver());
 	}
 
 	public void resolveSelectors(EngineDiscoveryRequest request) {
@@ -55,49 +57,52 @@ public class DiscoverySelectorResolver {
 	}
 
 	private void resolveMethod(Class<?> testClass, Method testMethod) {
-		Optional<TestDescriptor> optionalParentDescriptor = resolve(testClass, engineDescriptor);
-		optionalParentDescriptor.ifPresent(parent -> {
+		Set<TestDescriptor> resolvedParentDescriptors = resolve(testClass, engineDescriptor);
+		resolvedParentDescriptors.forEach(parent -> {
 			resolve(testMethod, parent);
 		});
 	}
 
 	private void resolveClass(Class<?> testClass) {
 		TestDescriptor parent = engineDescriptor;
-		Optional<TestDescriptor> optionalClassDescriptor = resolve(testClass, parent);
-		optionalClassDescriptor.ifPresent(classDescriptor -> {
+		Set<TestDescriptor> resolvedClassDescriptors = resolve(testClass, parent);
+		if (resolvedClassDescriptors.isEmpty())
+			return;
+		resolvedClassDescriptors.forEach(classDescriptor -> {
 			List<Method> testMethodCandidates = findMethods(testClass, method -> !ReflectionUtils.isPrivate(method),
 				ReflectionUtils.MethodSortOrder.HierarchyDown);
 			testMethodCandidates.forEach(method -> resolve(method, classDescriptor));
 		});
 	}
 
-	private Optional<TestDescriptor> resolve(Class<?> testClass, TestDescriptor parent) {
-		TestContainerResolver resolver = new TestContainerResolver();
-		return resolve(testClass, parent, resolver);
+	private Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {
+		return resolvers.stream() //
+				.map(resolver -> tryToResolveWithResolver(element, parent, resolver)) //
+				.filter(Optional::isPresent) //
+				.map(Optional::get) //
+				.collect(Collectors.toSet());
 	}
 
-	private Optional<TestDescriptor> resolve(Method testMethod, TestDescriptor parent) {
-		TestMethodResolver resolver = new TestMethodResolver();
-		return resolve(testMethod, parent, resolver);
-	}
-
-	private Optional<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent,
+	private Optional<TestDescriptor> tryToResolveWithResolver(AnnotatedElement element, TestDescriptor parent,
 			ElementResolver resolver) {
 		Optional<UniqueId> optionalUniqueId = resolver.willResolve(element, parent);
-
 		if (!optionalUniqueId.isPresent())
 			return Optional.empty();
 
 		UniqueId uniqueId = optionalUniqueId.get();
 
-		Optional<TestDescriptor> optionalMethodTestDescriptor = (Optional<TestDescriptor>) parent.findByUniqueId(
-			uniqueId);
+		Optional<TestDescriptor> optionalMethodTestDescriptor = findTestDescriptorByUniqueId(uniqueId);
 		if (optionalMethodTestDescriptor.isPresent())
 			return optionalMethodTestDescriptor;
 
 		TestDescriptor newDescriptor = resolver.resolve(element, parent, uniqueId);
 		parent.addChild(newDescriptor);
 		return Optional.of(newDescriptor);
+	}
+
+	@SuppressWarnings("unchecked")
+	private Optional<TestDescriptor> findTestDescriptorByUniqueId(UniqueId uniqueId) {
+		return (Optional<TestDescriptor>) engineDescriptor.findByUniqueId(uniqueId);
 	}
 
 }
