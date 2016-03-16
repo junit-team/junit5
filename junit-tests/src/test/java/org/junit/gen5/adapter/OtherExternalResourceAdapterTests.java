@@ -10,32 +10,34 @@
 
 package org.junit.gen5.adapter;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.junit.Rule;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.rules.TemporaryFolder;
 
-@ExtendWith(UglyExternalResourceAdapter.class)
-public class ExternalResourceAdapterTests {
 
-	File file;
+public class OtherExternalResourceAdapterTests {
 
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 
 	@BeforeEach
-	void setup() throws IOException {
-		this.file = folder.newFile("temp.txt");
-	}
+	void setup() {
+        try {
+            folder.newFile("temp.txt");
+        } catch (Exception exception) {
 
-	@Test
-	void checkTemporaryFolder() {
-		System.out.println("file of TemporaryFolder: " + this.file);
-		assert file.canRead();
-	}
+            System.out.println("exception = " + exception.getMessage());
+            assert exception.getMessage().equals("the temporary folder has not yet been created");
+
+        }
+    }
+
+
+    @Test
+    void checkTemporaryFolder() {
+    }
+
+
 
 }

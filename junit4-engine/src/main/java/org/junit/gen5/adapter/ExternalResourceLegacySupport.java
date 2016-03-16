@@ -21,7 +21,7 @@ import org.junit.gen5.commons.util.*;
 import org.junit.rules.ExternalResource;
 
 // very early thoughts - please do not polish yet :)
-public class UglyExternalResourceAdapter implements BeforeEachExtensionPoint, AfterEachExtensionPoint {
+public class ExternalResourceLegacySupport implements BeforeEachExtensionPoint, AfterEachExtensionPoint {
 
 	final Class<Rule> annotationType = Rule.class;
 	final Class<ExternalResource> ruleType = ExternalResource.class;
