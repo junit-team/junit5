@@ -38,7 +38,6 @@ class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelecto
 				uniqueId.getUniqueString()));
 		}
 		else {
-			// List<UniqueId.Segment> segments = uniqueId.getSegments();
 			uniqueId.getEngineId().ifPresent(engineId -> {
 				if (engineId.equals(ENGINE_ID)) {
 					String testClassName = determineTestClassName(uniqueId);
