@@ -119,31 +119,47 @@ public final class AnnotationUtilsTests {
 	}
 
 	@Test
-	public void findRepeatableAnnotationsWithSingleAnnotationOnSuperclass() throws Exception {
+	public void findInheritedRepeatableAnnotationsWithSingleAnnotationOnSuperclass() throws Exception {
 		assertExtensionsFound(SingleExtensionClass.class, "a");
 		assertExtensionsFound(SubSingleExtensionClass.class, "a");
 	}
 
 	@Test
-	public void findRepeatableAnnotationsWithMultipleAnnotationsOnSuperclass() throws Exception {
+	public void findInheritedRepeatableAnnotationsWithMultipleAnnotationsOnSuperclass() throws Exception {
 		assertExtensionsFound(MultiExtensionClass.class, "a", "b", "c");
-
-		// Ideally we would expect top-down ordering...
-		// assertExtensionsFound(SubMultiExtensionClass.class, "a", "b", "c", "x", "y", "z");
-
-		// But the current search algorithm results in the following.
-		assertExtensionsFound(SubMultiExtensionClass.class, "x", "y", "z", "a", "b", "c");
+		assertExtensionsFound(SubMultiExtensionClass.class, "a", "b", "c", "x", "y", "z");
 	}
 
 	@Test
-	public void findRepeatableAnnotationsWithContainerAnnotationOnSuperclass() throws Exception {
+	public void findInheritedRepeatableAnnotationsWithContainerAnnotationOnSuperclass() throws Exception {
 		assertExtensionsFound(ContainerExtensionClass.class, "a", "b", "c");
+		assertExtensionsFound(SubContainerExtensionClass.class, "a", "b", "c", "x");
+	}
 
-		// Ideally we would expect top-down ordering...
-		// assertExtensionsFound(SubContainerExtensionClass.class, "a", "b", "c", "x");
+	@Test
+	public void findInheritedRepeatableAnnotationsWithSingleComposedAnnotation() throws Exception {
+		assertExtensionsFound(SingleComposedExtensionClass.class, "foo");
+	}
 
-		// But the current search algorithm results in the following.
-		assertExtensionsFound(SubContainerExtensionClass.class, "x", "a", "b", "c");
+	@Test
+	public void findInheritedRepeatableAnnotationsWithSingleComposedAnnotationOnSuperclass() throws Exception {
+		assertExtensionsFound(SubSingleComposedExtensionClass.class, "foo");
+	}
+
+	@Test
+	public void findInheritedRepeatableAnnotationsWithMultipleComposedAnnotations() throws Exception {
+		assertExtensionsFound(MultiComposedExtensionClass.class, "foo", "bar");
+	}
+
+	@Test
+	public void findInheritedRepeatableAnnotationsWithMultipleComposedAnnotationsOnSuperclass() throws Exception {
+		assertExtensionsFound(SubMultiComposedExtensionClass.class, "foo", "bar");
+	}
+
+	@Test
+	public void findInheritedRepeatableAnnotationsWithMultipleComposedAnnotationsOnSuperclassAndLocalContainerAndComposed()
+			throws Exception {
+		assertExtensionsFound(ContainerPlusSubMultiComposedExtensionClass.class, "foo", "bar", "x", "y", "z");
 	}
 
 	private void assertExtensionsFound(Class<?> clazz, String... tags) throws Exception {
@@ -222,6 +238,20 @@ public final class AnnotationUtilsTests {
 		String value();
 	}
 
+	@Target({ ElementType.TYPE, ElementType.METHOD })
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@ExtendWith("foo")
+	public @interface ExtendWithFoo {
+	}
+
+	@Target({ ElementType.TYPE, ElementType.METHOD })
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@ExtendWith("bar")
+	public @interface ExtendWithBar {
+	}
+
 	@Annotation1
 	static class Annotation1Class {
 	}
@@ -297,16 +327,38 @@ public final class AnnotationUtilsTests {
 
 	@ExtendWith("x")
 	@ExtendWith("y")
+	@ExtendWith("b") // duplicates parent
 	@ExtendWith("z")
+	@ExtendWith("a") // duplicates parent
 	static class SubMultiExtensionClass extends MultiExtensionClass {
 	}
 
-	@Extensions({ @ExtendWith("a"), @ExtendWith("b"), @ExtendWith("c") })
+	@Extensions({ @ExtendWith("a"), @ExtendWith("b"), @ExtendWith("c"), @ExtendWith("a") })
 	static class ContainerExtensionClass {
 	}
 
 	@ExtendWith("x")
 	static class SubContainerExtensionClass extends ContainerExtensionClass {
+	}
+
+	@ExtendWithFoo
+	static class SingleComposedExtensionClass {
+	}
+
+	static class SubSingleComposedExtensionClass extends SingleComposedExtensionClass {
+	}
+
+	@ExtendWithFoo
+	@ExtendWithBar
+	static class MultiComposedExtensionClass {
+	}
+
+	static class SubMultiComposedExtensionClass extends MultiComposedExtensionClass {
+	}
+
+	@Extensions({ @ExtendWith("x"), @ExtendWith("y"), @ExtendWith("z") })
+	@ExtendWithBar
+	static class ContainerPlusSubMultiComposedExtensionClass extends MultiComposedExtensionClass {
 	}
 
 }

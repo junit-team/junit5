@@ -133,50 +133,83 @@ public final class AnnotationUtils {
 	}
 
 	/**
-	 * Find all <em>repeatable</em> {@linkplain Annotation annotations} of {@code annotationType} that are either
-	 * <em>present</em>, <em>indirectly present</em>, or <em>meta-present</em> on the supplied {@link AnnotatedElement}.
+	 * Find all <em>repeatable</em> {@linkplain Annotation annotations} of
+	 * {@code annotationType} that are either <em>present</em>, <em>indirectly
+	 * present</em>, or <em>meta-present</em> on the supplied {@link AnnotatedElement}.
 	 *
-	 * <p>This method extends the functionality of {@link java.lang.reflect.AnnotatedElement#getAnnotationsByType(Class)}
+	 * <p>This method extends the functionality of
+	 * {@link java.lang.reflect.AnnotatedElement#getAnnotationsByType(Class)}
 	 * with additional support for meta-annotations.
 	 *
+	 * <p>In addition, if the element is a class and the repeatable annotation
+	 * is {@link Inherited @Inherited}, this method will search on superclasses
+	 * first in order to support top-down semantics. The result is that this
+	 * algorithm finds repeatable annotations that would be <em>shadowed</em>
+	 * and therefore not visible according to Java's standard semantics for
+	 * inherited, repeatable annotations, but most developers will naturally
+	 * assume that all repeatable annotations in JUnit are discovered regardless
+	 * of whether they are declared stand-alone, in a container, or as a
+	 * meta-annotation (e.g., multiple declarations of {@code @ExtendWith}
+	 * within a test class hierarchy).
+	 *
+	 * <p>If the supplied {@code element} is {@code null}, this method simply
+	 * returns an empty list.
+	 *
+	 * @param element the element to search on, potentially {@code null}
+	 * @param annotationType the repeatable annotation type to search for; never {@code null}
 	 * @return the list of all such annotations found; never {@code null}
+	 * @see Repeatable
+	 * @see Inherited
 	 */
 	public static <A extends Annotation> List<A> findRepeatableAnnotations(AnnotatedElement element,
 			Class<A> annotationType) {
 
-		return findRepeatableAnnotations(element, annotationType, new HashSet<>());
-	}
-
-	private static <A extends Annotation> List<A> findRepeatableAnnotations(AnnotatedElement element,
-			Class<A> annotationType, Set<Annotation> visited) {
-
 		Preconditions.notNull(annotationType, "annotationType must not be null");
-		Class<? extends Annotation> containerType = annotationType.isAnnotationPresent(Repeatable.class)
-				? annotationType.getAnnotation(Repeatable.class).value() : null;
-		Preconditions.notNull(containerType, "annotationType must be @Repeatable");
+		Repeatable repeatable = annotationType.getAnnotation(Repeatable.class);
+		Preconditions.notNull(repeatable, "annotationType must be @Repeatable");
+		Class<? extends Annotation> containerType = repeatable.value();
+		boolean inherited = containerType.isAnnotationPresent(Inherited.class);
 
+		// Short circuit the search algorithm.
 		if (element == null) {
 			return Collections.emptyList();
 		}
 
-		// Use a Set because the search algorithm may discover duplicates, but maintain the original order.
-		Set<A> annotations = new LinkedHashSet<>();
+		// We use a LinkedHashSet because the search algorithm may discover
+		// duplicates, but we need to maintain the original order.
+		Set<A> found = new LinkedHashSet<>(16);
+		findRepeatableAnnotations(element, annotationType, containerType, inherited, found, new HashSet<>(16));
+		return new ArrayList<>(found);
+	}
 
-		// Collect annotations that are directly present and meta-present on directly present annotations.
-		findRepeatableAnnotations(element, annotationType, visited, containerType, element.getDeclaredAnnotations(),
-			annotations);
+	private static <A extends Annotation> void findRepeatableAnnotations(AnnotatedElement element,
+			Class<A> annotationType, Class<? extends Annotation> containerType, boolean inherited, Set<A> found,
+			Set<Annotation> visited) {
 
-		// Collect annotations that are indirectly present and meta-present on indirectly present annotations.
-		findRepeatableAnnotations(element, annotationType, visited, containerType, element.getAnnotations(),
-			annotations);
+		if (element == null) {
+			return;
+		}
 
-		return new ArrayList<>(annotations);
+		// Recurse first in order to support top-down semantics for inherited, repeatable annotations.
+		if (inherited && element instanceof Class) {
+			Class<?> superclass = ((Class<?>) element).getSuperclass();
+			if (superclass != null && superclass != Object.class) {
+				findRepeatableAnnotations(superclass, annotationType, containerType, inherited, found, visited);
+			}
+		}
+
+		// Find annotations that are directly present or meta-present on directly present annotations.
+		findRepeatableAnnotations(element.getDeclaredAnnotations(), annotationType, containerType, inherited, found,
+			visited);
+
+		// Find annotations that are indirectly present or meta-present on indirectly present annotations.
+		findRepeatableAnnotations(element.getAnnotations(), annotationType, containerType, inherited, found, visited);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <A extends Annotation> void findRepeatableAnnotations(AnnotatedElement element,
-			Class<A> annotationType, Set<Annotation> visited, Class<? extends Annotation> containerType,
-			Annotation[] candidateAnnotations, Set<A> collectedAnnotations) {
+	private static <A extends Annotation> void findRepeatableAnnotations(Annotation[] candidates,
+			Class<A> annotationType, Class<? extends Annotation> containerType, boolean inherited, Set<A> found,
+			Set<Annotation> visited) {
 
 		// TODO Ensure that all locally declared annotations are favored over inherited
 		// annotations. "Locally declared" includes those that are meta-present on
@@ -185,44 +218,25 @@ public final class AnnotationUtils {
 		// The only way to ensure this is to add sufficient tests for all corner cases in
 		// AnnotationUtilsTests.
 
-		for (Annotation candidateAnnotation : candidateAnnotations) {
-			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
+		for (Annotation candidate : candidates) {
+			if (!isInJavaLangAnnotationPackage(candidate) && visited.add(candidate)) {
 				// Exact match?
-				if (candidateAnnotation.annotationType().equals(annotationType)) {
-					collectedAnnotations.add(annotationType.cast(candidateAnnotation));
+				if (candidate.annotationType().equals(annotationType)) {
+					found.add(annotationType.cast(candidate));
 				}
 				// Container?
-				else if (candidateAnnotation.annotationType().equals(containerType)) {
-
+				else if (candidate.annotationType().equals(containerType)) {
 					// Note: it's not a legitimate container annotation if it doesn't declare
 					// a 'value' attribute that returns an array of the contained annotation type.
 					// Thus we proceed without verifying this assumption.
 					Method method = ReflectionUtils.getMethod(containerType, "value").get();
-					Annotation[] containedAnnotations = (Annotation[]) ReflectionUtils.invokeMethod(method,
-						candidateAnnotation);
-					collectedAnnotations.addAll((Collection<? extends A>) asList(containedAnnotations));
-
-					// If the container is @Inherited, the fact that we discovered a container
-					// for the current annotated element might mean that the current container
-					// shadows a container that would otherwise have been inherited (if the
-					// current element is a class). This conflicts with the semantics of
-					// @Inherited in Java, but most developers would assume that all repeatable
-					// annotations in JUnit are discovered (e.g., multiple declarations of
-					// @ExtendWith within a test class hierarchy).
-					//
-					// We therefore need to manually search on superclasses.
-					if (containerType.isAnnotationPresent(Inherited.class) && element instanceof Class) {
-						Class<?> superclass = ((Class<?>) element).getSuperclass();
-						if (superclass != null && superclass != Object.class) {
-							collectedAnnotations.addAll(findRepeatableAnnotations(superclass, annotationType, visited));
-						}
-					}
+					Annotation[] containedAnnotations = (Annotation[]) ReflectionUtils.invokeMethod(method, candidate);
+					found.addAll((Collection<? extends A>) asList(containedAnnotations));
 				}
 				// Otherwise search recursively through the meta-annotation hierarchy...
 				else {
-					List<A> metaAnnotations = findRepeatableAnnotations(candidateAnnotation.annotationType(),
-						annotationType, visited);
-					collectedAnnotations.addAll(metaAnnotations);
+					findRepeatableAnnotations(candidate.annotationType(), annotationType, containerType, inherited,
+						found, visited);
 				}
 			}
 		}
