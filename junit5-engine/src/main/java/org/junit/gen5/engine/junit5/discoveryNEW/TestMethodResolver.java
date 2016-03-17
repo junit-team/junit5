@@ -12,6 +12,8 @@ package org.junit.gen5.engine.junit5.discoveryNEW;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.Set;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
@@ -38,8 +40,8 @@ public class TestMethodResolver implements ElementResolver {
 	}
 
 	@Override
-	public TestDescriptor resolve(AnnotatedElement element, TestDescriptor parent, UniqueId uniqueId) {
-		return resolveMethod((Method) element, (ClassTestDescriptor) parent, uniqueId);
+	public Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent, UniqueId uniqueId) {
+		return Collections.singleton(resolveMethod((Method) element, (ClassTestDescriptor) parent, uniqueId));
 	}
 
 	@Override

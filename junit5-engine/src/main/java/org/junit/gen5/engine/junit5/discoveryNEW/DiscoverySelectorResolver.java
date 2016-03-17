@@ -15,6 +15,8 @@ import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -86,18 +88,21 @@ public class DiscoverySelectorResolver {
 	}
 
 	private void resolveMethod(Class<?> testClass, Method testMethod) {
-		Set<TestDescriptor> resolvedParentDescriptors = resolve(testClass, engineDescriptor);
-		resolvedParentDescriptors.forEach(parent -> {
-			resolve(testMethod, parent);
-		});
+		Set<TestDescriptor> potentialParents = resolve(testClass, engineDescriptor);
+		resolveElementWithChildren(testMethod, potentialParents);
 	}
 
 	private void resolveClass(Class<?> testClass) {
-		TestDescriptor parent = engineDescriptor;
-		Set<TestDescriptor> resolvedClassDescriptors = resolve(testClass, parent);
-		resolvedClassDescriptors.forEach(classDescriptor -> {
-			resolveChildren(classDescriptor);
+		Set<TestDescriptor> potentialParents = Collections.singleton(engineDescriptor);
+		resolveElementWithChildren(testClass, potentialParents);
+	}
+
+	private void resolveElementWithChildren(AnnotatedElement element, Set<TestDescriptor> potentialParents) {
+		Set<TestDescriptor> resolvedDescriptors = new HashSet<>();
+		potentialParents.forEach(parent -> {
+			resolvedDescriptors.addAll(resolve(element, parent));
 		});
+		resolvedDescriptors.forEach(this::resolveChildren);
 	}
 
 	private void resolveChildren(TestDescriptor descriptor) {
@@ -105,32 +110,33 @@ public class DiscoverySelectorResolver {
 			Class<?> testClass = ((ClassTestDescriptor) descriptor).getTestClass();
 			List<Method> testMethodCandidates = findMethods(testClass, method -> !ReflectionUtils.isPrivate(method),
 				ReflectionUtils.MethodSortOrder.HierarchyDown);
-			testMethodCandidates.forEach(method -> resolve(method, descriptor));
+			testMethodCandidates.forEach(
+				method -> resolveElementWithChildren(method, Collections.singleton(descriptor)));
 		}
 	}
 
 	private Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {
 		return resolvers.stream() //
 				.map(resolver -> tryToResolveWithResolver(element, parent, resolver)) //
-				.filter(Optional::isPresent) //
-				.map(Optional::get) //
+				.filter(testDescriptors -> !testDescriptors.isEmpty()) //
+				.flatMap(Collection::stream) //
 				.collect(Collectors.toSet());
 	}
 
-	private Optional<TestDescriptor> tryToResolveWithResolver(AnnotatedElement element, TestDescriptor parent,
+	private Set<TestDescriptor> tryToResolveWithResolver(AnnotatedElement element, TestDescriptor parent,
 			ElementResolver resolver) {
 		if (!resolver.canResolveElement(element, parent))
-			return Optional.empty();
+			return Collections.emptySet();
 
 		UniqueId uniqueId = resolver.createUniqueId(element, parent);
 
 		Optional<TestDescriptor> optionalMethodTestDescriptor = findTestDescriptorByUniqueId(uniqueId);
 		if (optionalMethodTestDescriptor.isPresent())
-			return optionalMethodTestDescriptor;
+			return Collections.singleton(optionalMethodTestDescriptor.get());
 
-		TestDescriptor newDescriptor = resolver.resolve(element, parent, uniqueId);
-		parent.addChild(newDescriptor);
-		return Optional.of(newDescriptor);
+		Set<TestDescriptor> newDescriptors = resolver.resolve(element, parent, uniqueId);
+		newDescriptors.forEach(parent::addChild);
+		return newDescriptors;
 	}
 
 	@SuppressWarnings("unchecked")
