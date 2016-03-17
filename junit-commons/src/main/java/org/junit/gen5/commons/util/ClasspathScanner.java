@@ -123,7 +123,7 @@ class ClasspathScanner {
 		for (File file : files) {
 			if (isClassFile(file)) {
 				Optional<Class<?>> classForClassFile = loadClassForClassFile(file, packageName);
-				classForClassFile.filter(classFilter).ifPresent(clazz -> classesCollector.add(clazz));
+				classForClassFile.filter(classFilter).ifPresent(classesCollector::add);
 			}
 			else if (file.isDirectory()) {
 				collectClassesRecursively(file, appendPackageName(packageName, file.getName()), classesCollector,
