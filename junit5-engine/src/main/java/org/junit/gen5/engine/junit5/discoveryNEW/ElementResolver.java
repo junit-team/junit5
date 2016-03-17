@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5.discoveryNEW;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.engine.TestDescriptor;
@@ -23,12 +24,12 @@ public interface ElementResolver {
 	 */
 	Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent);
 
-	boolean canResolveUniqueId(UniqueId.Segment segment, TestDescriptor parent);
+//	boolean canResolveUniqueId(UniqueId.Segment segment, TestDescriptor parent);
 
 	/**
 	 * Will only be called if {@linkplain #canResolveUniqueId(UniqueId.Segment, TestDescriptor)} returns true.
 	 *
 	 * <p>Must return a valid {@linkplain TestDescriptor testDescriptor}.
 	 */
-	TestDescriptor resolve(UniqueId.Segment segment, TestDescriptor parent, UniqueId uniqueId);
+	Optional<TestDescriptor> resolve(UniqueId.Segment segment, TestDescriptor parent);
 }
