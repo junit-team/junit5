@@ -16,6 +16,7 @@ import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -115,33 +116,8 @@ class JUnit5TestableFactory {
 	}
 
 	private Method findMethod(String methodSpecPart, Class<?> clazz, UniqueId uniqueId) {
-		// TODO Throw IAE when format wrong. Currently you get IndexOutOfBoundsException.
-		int startParams = methodSpecPart.indexOf('(');
-		String methodName = methodSpecPart.substring(0, startParams);
-		int endParams = methodSpecPart.lastIndexOf(')');
-		String paramsPart = methodSpecPart.substring(startParams + 1, endParams);
-		Class<?>[] parameterTypes = resolveParameterTypes(paramsPart, uniqueId);
-		return findMethod(clazz, methodName, parameterTypes);
-	}
-
-	private Class<?>[] resolveParameterTypes(String paramsPart, UniqueId uniqueId) {
-		if (paramsPart.isEmpty()) {
-			return new Class<?>[0];
-		}
-
-		// @formatter:off
-		List<Class<?>> types = Arrays.stream(paramsPart.split(","))
-				.map(className -> loadRequiredParamterClass(className, uniqueId, paramsPart))
-				.collect(Collectors.toList());
-		// @formatter:on
-
-		return types.toArray(new Class<?>[types.size()]);
-	}
-
-	private Method findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
-		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes).orElseThrow(
-			() -> new PreconditionViolationException(String.format("No method with name '%s' and parameter types '%s'",
-				methodName, StringUtils.nullSafeToString(parameterTypes))));
+		Optional<Method> optionalMethod = new MethodFinder().findMethod(methodSpecPart, clazz);
+		return optionalMethod.orElseThrow(() -> createCannotResolveUniqueIdException(uniqueId, methodSpecPart));
 	}
 
 	private Class<?> findNestedClass(String nameExtension, Class<?> containerClass) {
@@ -160,11 +136,6 @@ class JUnit5TestableFactory {
 	private Class<?> loadClassByName(String className) {
 		return ReflectionUtils.loadClass(className).orElseThrow(
 			() -> new PreconditionViolationException(String.format("Cannot load class '%s'", className)));
-	}
-
-	private Class<?> loadRequiredParamterClass(String className, UniqueId fullUniqueId, String paramsPart) {
-		return ReflectionUtils.loadClass(className).orElseThrow(
-			() -> createCannotResolveUniqueIdException(fullUniqueId, paramsPart));
 	}
 
 	private static RuntimeException createCannotResolveUniqueIdException(UniqueId fullUniqueId, String uniqueIdPart) {
