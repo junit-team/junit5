@@ -14,11 +14,9 @@ import static java.lang.String.format;
 import static org.junit.gen5.commons.util.ReflectionUtils.loadClass;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.Preconditions;
@@ -106,18 +104,25 @@ class JUnit5TestableFactory {
 			}
 			case TYPE_METHOD: {
 				Class<?> container = ((JUnit5Class) last).getJavaClass();
-				next = fromMethod(findMethod(head.getValue(), container, uniqueId), container, engineId);
+				Optional<Method> optionalMethod = findMethod(head.getValue(), container);
+				if (!optionalMethod.isPresent()) {
+					LOG.warning(() -> String.format("Cannot resolve part '%s' of unique ID '%s'", head,
+						uniqueId.getUniqueString()));
+					return JUnit5Testable.doNothing();
+				}
+				next = fromMethod(optionalMethod.get(), container, engineId);
 				break;
 			}
 			default:
-				throw createCannotResolveUniqueIdException(uniqueId, head.toString());
+				LOG.warning(() -> String.format("Cannot resolve part '%s' of unique ID '%s'", head,
+					uniqueId.getUniqueString()));
+				return JUnit5Testable.doNothing();
 		}
 		return createTestable(uniqueId, engineId, parts, next);
 	}
 
-	private Method findMethod(String methodSpecPart, Class<?> clazz, UniqueId uniqueId) {
-		Optional<Method> optionalMethod = new MethodFinder().findMethod(methodSpecPart, clazz);
-		return optionalMethod.orElseThrow(() -> createCannotResolveUniqueIdException(uniqueId, methodSpecPart));
+	private Optional<Method> findMethod(String methodSpecPart, Class<?> clazz) {
+		return new MethodFinder().findMethod(methodSpecPart, clazz);
 	}
 
 	private Class<?> findNestedClass(String nameExtension, Class<?> containerClass) {
