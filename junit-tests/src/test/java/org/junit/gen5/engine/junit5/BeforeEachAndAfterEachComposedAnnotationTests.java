@@ -30,7 +30,7 @@ import org.junit.gen5.engine.ExecutionEventRecorder;
  * @since 5.0
  * @see BeforeAllAndAfterAllComposedAnnotationTests
  */
-class BeforeAllAndAfterEachComposedAnnotationTests extends AbstractJUnit5TestEngineTests {
+class BeforeEachAndAfterEachComposedAnnotationTests extends AbstractJUnit5TestEngineTests {
 
 	private static final List<String> methodsInvoked = new ArrayList<>();
 

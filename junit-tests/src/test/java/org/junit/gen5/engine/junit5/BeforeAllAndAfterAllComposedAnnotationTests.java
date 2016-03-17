@@ -28,7 +28,7 @@ import org.junit.gen5.engine.ExecutionEventRecorder;
  * when used as meta-annotations in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
- * @see BeforeAllAndAfterEachComposedAnnotationTests
+ * @see BeforeEachAndAfterEachComposedAnnotationTests
  */
 class BeforeAllAndAfterAllComposedAnnotationTests extends AbstractJUnit5TestEngineTests {
 
