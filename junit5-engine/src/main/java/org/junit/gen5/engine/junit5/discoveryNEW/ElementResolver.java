@@ -24,12 +24,8 @@ public interface ElementResolver {
 	 */
 	Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent);
 
-//	boolean canResolveUniqueId(UniqueId.Segment segment, TestDescriptor parent);
-
 	/**
-	 * Will only be called if {@linkplain #canResolveUniqueId(UniqueId.Segment, TestDescriptor)} returns true.
-	 *
-	 * <p>Must return a valid {@linkplain TestDescriptor testDescriptor}.
+	 * Return an optional {@linkplain TestDescriptor testDescriptor}.
 	 */
 	Optional<TestDescriptor> resolve(UniqueId.Segment segment, TestDescriptor parent);
 }

@@ -10,8 +10,6 @@
 
 package org.junit.gen5.engine.junit5.discoveryNEW;
 
-import static java.lang.String.format;
-
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collections;
 import java.util.Optional;
@@ -43,25 +41,21 @@ public class TestContainerResolver implements ElementResolver {
 	@Override
 	public Optional<TestDescriptor> resolve(UniqueId.Segment segment, TestDescriptor parent) {
 
-		if (!canResolveUniqueId(segment, parent))
+		if (!segment.getType().equals(SEGMENT_TYPE))
 			return Optional.empty();
 
 		Optional<Class<?>> optionalContainerClass = ReflectionUtils.loadClass(segment.getValue());
-		UniqueId uniqueId = createUniqueId(optionalContainerClass.get(), parent);
-		return Optional.of(resolveClass(optionalContainerClass.get(), parent, uniqueId));
-	}
-
-	private boolean canResolveUniqueId(UniqueId.Segment segment, TestDescriptor parent) {
-		//Do not collapse
-		if (!segment.getType().equals(SEGMENT_TYPE))
-			return false;
-
-		Optional<Class<?>> optionalContainerClass = ReflectionUtils.loadClass(segment.getValue());
 		if (!optionalContainerClass.isPresent())
-			return false;
+			return Optional.empty();
 
-		return isPotentialTestContainer(optionalContainerClass.get());
+		Class<?> containerClass = optionalContainerClass.get();
+		if (!isPotentialTestContainer(containerClass))
+			return Optional.empty();
+
+		UniqueId uniqueId = createUniqueId(containerClass, parent);
+		return Optional.of(resolveClass(containerClass, parent, uniqueId));
 	}
+
 	private boolean isPotentialTestContainer(Class<?> element) {
 		return new IsPotentialTestContainer().test(element);
 	}
