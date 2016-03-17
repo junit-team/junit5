@@ -245,7 +245,7 @@ public class DiscoverySelectorResolverTests {
 		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
 	}
 
-	// @Test
+	@Test
 	public void testTwoMethodResolutionsByUniqueId() {
 		UniqueIdSelector selector1 = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(MyTestClass.class, "test1()").getUniqueString());

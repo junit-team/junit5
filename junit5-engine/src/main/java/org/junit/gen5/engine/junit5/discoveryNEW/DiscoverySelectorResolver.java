@@ -81,9 +81,13 @@ public class DiscoverySelectorResolver {
 			if (!resolver.canResolveUniqueId(head, parent))
 				return;
 			UniqueId uniqueId = parent.getUniqueId().append(head);
-			TestDescriptor newDescriptor = resolver.resolve(head, parent, uniqueId);
-			parent.addChild(newDescriptor);
-			resolveUniqueId(newDescriptor, new ArrayList<>(remainingSegments));
+			Optional<TestDescriptor> foundTestDescriptor = findTestDescriptorByUniqueId(uniqueId);
+			TestDescriptor descriptor = foundTestDescriptor.orElseGet(() -> {
+				TestDescriptor newDescriptor = resolver.resolve(head, parent, uniqueId);
+				parent.addChild(newDescriptor);
+				return newDescriptor;
+			});
+			resolveUniqueId(descriptor, new ArrayList<>(remainingSegments));
 		});
 	}
 
