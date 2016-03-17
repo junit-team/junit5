@@ -129,7 +129,6 @@ public class DiscoverySelectorResolverTests {
 			MyTestClass.class.getDeclaredMethod("notATest"));
 		EngineDiscoveryRequest request = request().select(selector).build();
 		resolver.resolveSelectors(request);
-		System.out.println(uniqueIds());
 		assertTrue(engineDescriptor.allDescendants().isEmpty());
 	}
 
@@ -231,6 +230,7 @@ public class DiscoverySelectorResolverTests {
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
+		System.out.println(uniqueIds);
 		assertTrue(uniqueIds.contains(uniqueIdForClass(HerTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(HerTestClass.class, "test7(java.lang.String)")));
 	}

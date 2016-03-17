@@ -10,14 +10,13 @@
 
 package org.junit.gen5.engine.junit5.discoveryNEW;
 
-import static java.lang.String.format;
-
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
@@ -47,26 +46,22 @@ public class TestMethodResolver implements ElementResolver {
 
 	@Override
 	public Optional<TestDescriptor> resolve(UniqueId.Segment segment, TestDescriptor parent) {
-		if (!canResolveUniqueId(segment, parent))
+		if (!segment.getType().equals(SEGMENT_TYPE))
+			return Optional.empty();
+
+		if (!(parent instanceof ClassTestDescriptor))
 			return Optional.empty();
 
 		Optional<Method> optionalMethod = findMethod(segment, (ClassTestDescriptor) parent);
-		UniqueId uniqueId = createUniqueId(optionalMethod.get(), parent);
-		return Optional.of(resolveMethod(optionalMethod.get(), (ClassTestDescriptor) parent, uniqueId));
-	}
-
-	private boolean canResolveUniqueId(UniqueId.Segment segment, TestDescriptor parent) {
-		if (!segment.getType().equals(SEGMENT_TYPE))
-			return false;
-
-		if (!(parent instanceof ClassTestDescriptor))
-			return false;
-
-		Optional<Method> optionalMethod = findMethod(segment, (ClassTestDescriptor) parent);
 		if (!optionalMethod.isPresent())
-			return false;
+			return Optional.empty();
 
-		return isTestMethod(optionalMethod.get());
+		Method testMethod = optionalMethod.get();
+		if (!isTestMethod(testMethod))
+			return Optional.empty();
+
+		UniqueId uniqueId = createUniqueId(testMethod, parent);
+		return Optional.of(resolveMethod(testMethod, (ClassTestDescriptor) parent, uniqueId));
 	}
 
 	private boolean isTestMethod(Method candidate) {
@@ -74,7 +69,9 @@ public class TestMethodResolver implements ElementResolver {
 	}
 
 	private UniqueId createUniqueId(Method testMethod, TestDescriptor parent) {
-		return parent.getUniqueId().append(SEGMENT_TYPE, testMethod.getName() + "()");
+		String methodId = String.format("%s(%s)", testMethod.getName(),
+			StringUtils.nullSafeToString(testMethod.getParameterTypes()));
+		return parent.getUniqueId().append(SEGMENT_TYPE, methodId);
 	}
 
 	private Optional<Method> findMethod(UniqueId.Segment segment, ClassTestDescriptor parent) {

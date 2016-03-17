@@ -141,10 +141,10 @@ public class DiscoverySelectorResolver {
 
 	private Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {
 		return resolvers.stream() //
-		.map(resolver -> tryToResolveWithResolver(element, parent, resolver)) //
-		.filter(testDescriptors -> !testDescriptors.isEmpty()) //
-		.flatMap(Collection::stream) //
-		.collect(Collectors.toSet());
+				.map(resolver -> tryToResolveWithResolver(element, parent, resolver)) //
+				.filter(testDescriptors -> !testDescriptors.isEmpty()) //
+				.flatMap(Collection::stream) //
+				.collect(Collectors.toSet());
 	}
 
 	private Set<TestDescriptor> tryToResolveWithResolver(AnnotatedElement element, TestDescriptor parent,
