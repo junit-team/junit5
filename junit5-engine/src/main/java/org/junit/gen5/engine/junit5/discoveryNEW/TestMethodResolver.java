@@ -10,11 +10,14 @@
 
 package org.junit.gen5.engine.junit5.discoveryNEW;
 
+import static java.lang.String.format;
+
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
@@ -26,6 +29,8 @@ import org.junit.gen5.engine.junit5.discovery.MethodFinder;
 public class TestMethodResolver implements ElementResolver {
 
 	public static final String SEGMENT_TYPE = "method";
+
+	private static final Logger LOG = Logger.getLogger(TestMethodResolver.class.getName());
 
 	private boolean canResolveElement(AnnotatedElement element, TestDescriptor parent) {
 		//Do not collapse
@@ -46,6 +51,11 @@ public class TestMethodResolver implements ElementResolver {
 
 		Method testMethod = (Method) element;
 		if (!isTestMethod(testMethod)) {
+			LOG.info(() -> {
+				String methodDescription = testMethod.getDeclaringClass().getName() + "#" + testMethod.getName();
+				return format("Method '%s' is not a test method", methodDescription);
+			});
+
 			return Collections.emptySet();
 		}
 

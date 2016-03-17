@@ -26,9 +26,9 @@ import org.junit.gen5.engine.junit5.discovery.IsPotentialTestContainer;
 
 public class TestContainerResolver implements ElementResolver {
 
-	private static final Logger LOG = Logger.getLogger(TestContainerResolver.class.getName());
+	public static final String SEGMENT_TYPE = "class";
 
-	private static final String SEGMENT_TYPE = "class";
+	private static final Logger LOG = Logger.getLogger(TestContainerResolver.class.getName());
 
 	@Override
 	public Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {
@@ -37,7 +37,7 @@ public class TestContainerResolver implements ElementResolver {
 
 		Class<?> clazz = (Class<?>) element;
 		if (!isPotentialTestContainer(clazz)) {
-			LOG.warning(() -> {
+			LOG.info(() -> {
 				String classDescription = clazz.getName();
 				return format("Class '%s' is not a test container", classDescription);
 			});

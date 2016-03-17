@@ -186,7 +186,7 @@ public class DiscoverySelectorResolverTests {
 			"Exception message wrong: " + exception.getMessage());
 	}
 
-	// @Test
+	@Test
 	public void resolvingUniqueIdOfNonTestMethodResolvesNothing() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueIdForMethod(MyTestClass.class, "notATest()"));
 		EngineDiscoveryRequest request = request().select(selector).build();
