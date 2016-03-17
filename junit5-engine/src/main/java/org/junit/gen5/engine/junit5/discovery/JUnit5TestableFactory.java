@@ -142,9 +142,4 @@ class JUnit5TestableFactory {
 		return ReflectionUtils.loadClass(className).orElseThrow(
 			() -> new PreconditionViolationException(String.format("Cannot load class '%s'", className)));
 	}
-
-	private static RuntimeException createCannotResolveUniqueIdException(UniqueId fullUniqueId, String uniqueIdPart) {
-		return new PreconditionViolationException(
-			String.format("Cannot resolve part '%s' of unique ID '%s'", uniqueIdPart, fullUniqueId.getUniqueString()));
-	}
 }
