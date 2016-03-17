@@ -195,7 +195,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(engineDescriptor.allDescendants().isEmpty());
 	}
 
-	//	@Test
+	@Test
 	public void testMethodResolutionByUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(MyTestClass.class, "test1()").getUniqueString());
@@ -208,7 +208,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 	}
 
-	//	@Test
+	@Test
 	public void testMethodResolutionByUniqueIdFromInheritedClass() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(HerTestClass.class, "test1()").getUniqueString());
@@ -223,7 +223,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(HerTestClass.class, "test1()")));
 	}
 
-	//	@Test
+	@Test
 	public void testMethodResolutionByUniqueIdWithParams() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(HerTestClass.class, "test7(java.lang.String)").getUniqueString());
@@ -245,7 +245,7 @@ public class DiscoverySelectorResolverTests {
 		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
 	}
 
-	//	@Test
+	// @Test
 	public void testTwoMethodResolutionsByUniqueId() {
 		UniqueIdSelector selector1 = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(MyTestClass.class, "test1()").getUniqueString());
