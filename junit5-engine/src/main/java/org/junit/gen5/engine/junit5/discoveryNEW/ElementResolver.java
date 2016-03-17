@@ -18,19 +18,10 @@ import org.junit.gen5.engine.UniqueId;
 
 public interface ElementResolver {
 
-	boolean canResolveElement(AnnotatedElement element, TestDescriptor parent);
-
 	/**
-	 * Will only be called if {@linkplain #canResolveElement(AnnotatedElement, TestDescriptor)} returns true.
+	 * Return a set of {@linkplain TestDescriptor testDescriptors} that can be resolved by this resolver
 	 */
-	UniqueId createUniqueId(AnnotatedElement element, TestDescriptor parent);
-
-	/**
-	 * Will only be called if {@linkplain #canResolveElement(AnnotatedElement, TestDescriptor)} returns true.
-	 *
-	 * <p>Must return a non empty {@code Set<TestDescriptor>}
-	 */
-	Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent, UniqueId uniqueId);
+	Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent);
 
 	boolean canResolveUniqueId(UniqueId.Segment segment, TestDescriptor parent);
 
