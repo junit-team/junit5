@@ -173,7 +173,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test5()")));
 	}
 
-	//	@Test
+	//@Test
 	public void testNonResolvableUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			engineId().append("poops", "machine").getUniqueString());
@@ -218,7 +218,6 @@ public class DiscoverySelectorResolverTests {
 		assertEquals(2, engineDescriptor.allDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
 
-		// System.out.println(uniqueIds);
 		assertTrue(uniqueIds.contains(uniqueIdForClass(HerTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(HerTestClass.class, "test1()")));
 	}

@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
@@ -29,15 +28,6 @@ import org.junit.gen5.engine.junit5.discovery.MethodFinder;
 public class TestMethodResolver implements ElementResolver {
 
 	public static final String SEGMENT_TYPE = "method";
-
-	private boolean canResolveElement(AnnotatedElement element, TestDescriptor parent) {
-		//Do not collapse
-		if (!(element instanceof Method))
-			return false;
-		if (!(parent instanceof ClassTestDescriptor))
-			return false;
-		return isTestMethod((Method) element);
-	}
 
 	@Override
 	public Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {
@@ -56,7 +46,16 @@ public class TestMethodResolver implements ElementResolver {
 	}
 
 	@Override
-	public boolean canResolveUniqueId(UniqueId.Segment segment, TestDescriptor parent) {
+	public Optional<TestDescriptor> resolve(UniqueId.Segment segment, TestDescriptor parent) {
+		if (!canResolveUniqueId(segment, parent))
+			return Optional.empty();
+
+		Optional<Method> optionalMethod = findMethod(segment, (ClassTestDescriptor) parent);
+		UniqueId uniqueId = createUniqueId(optionalMethod.get(), parent);
+		return Optional.of(resolveMethod(optionalMethod.get(), (ClassTestDescriptor) parent, uniqueId));
+	}
+
+	private boolean canResolveUniqueId(UniqueId.Segment segment, TestDescriptor parent) {
 		if (!segment.getType().equals(SEGMENT_TYPE))
 			return false;
 
@@ -68,12 +67,6 @@ public class TestMethodResolver implements ElementResolver {
 			return false;
 
 		return isTestMethod(optionalMethod.get());
-	}
-
-	@Override
-	public TestDescriptor resolve(UniqueId.Segment segment, TestDescriptor parent, UniqueId uniqueId) {
-		Optional<Method> optionalMethod = findMethod(segment, (ClassTestDescriptor) parent);
-		return resolveMethod(optionalMethod.get(), (ClassTestDescriptor) parent, uniqueId);
 	}
 
 	private boolean isTestMethod(Method candidate) {

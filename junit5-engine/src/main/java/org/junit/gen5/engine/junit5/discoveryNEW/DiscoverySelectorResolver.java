@@ -103,12 +103,15 @@ public class DiscoverySelectorResolver {
 
 		UniqueId.Segment head = remainingSegments.remove(0);
 		resolvers.forEach(resolver -> {
-			if (!resolver.canResolveUniqueId(head, parent))
+
+			Optional<TestDescriptor> resolvedDescriptor = resolver.resolve(head, parent);
+			if (!resolvedDescriptor.isPresent())
 				return;
-			UniqueId uniqueId = parent.getUniqueId().append(head);
-			Optional<TestDescriptor> foundTestDescriptor = findTestDescriptorByUniqueId(uniqueId);
+
+			Optional<TestDescriptor> foundTestDescriptor = findTestDescriptorByUniqueId(
+				resolvedDescriptor.get().getUniqueId());
 			TestDescriptor descriptor = foundTestDescriptor.orElseGet(() -> {
-				TestDescriptor newDescriptor = resolver.resolve(head, parent, uniqueId);
+				TestDescriptor newDescriptor = resolvedDescriptor.get();
 				parent.addChild(newDescriptor);
 				return newDescriptor;
 			});
@@ -138,10 +141,10 @@ public class DiscoverySelectorResolver {
 
 	private Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {
 		return resolvers.stream() //
-				.map(resolver -> tryToResolveWithResolver(element, parent, resolver)) //
-				.filter(testDescriptors -> !testDescriptors.isEmpty()) //
-				.flatMap(Collection::stream) //
-				.collect(Collectors.toSet());
+		.map(resolver -> tryToResolveWithResolver(element, parent, resolver)) //
+		.filter(testDescriptors -> !testDescriptors.isEmpty()) //
+		.flatMap(Collection::stream) //
+		.collect(Collectors.toSet());
 	}
 
 	private Set<TestDescriptor> tryToResolveWithResolver(AnnotatedElement element, TestDescriptor parent,
