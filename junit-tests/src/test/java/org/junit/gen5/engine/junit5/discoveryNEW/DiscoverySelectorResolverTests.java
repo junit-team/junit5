@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
@@ -172,17 +171,14 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test5()")));
 	}
 
-	//@Test
-	public void testNonResolvableUniqueId() {
+	@Test
+	public void resolvingUniqueIdWithUnknownSegmentTypeResolvesNothing() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			engineId().append("poops", "machine").getUniqueString());
 		EngineDiscoveryRequest request = request().select(selector).build();
 
-		PreconditionViolationException exception = expectThrows(PreconditionViolationException.class, () -> {
-			resolver.resolveSelectors(request);
-		});
-		assertTrue(exception.getMessage().contains("Cannot resolve part '[poops:machine]'"),
-			"Exception message wrong: " + exception.getMessage());
+		resolver.resolveSelectors(request);
+		assertTrue(engineDescriptor.allDescendants().isEmpty());
 	}
 
 	@Test
@@ -230,18 +226,18 @@ public class DiscoverySelectorResolverTests {
 
 		assertEquals(2, engineDescriptor.allDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
-		System.out.println(uniqueIds);
 		assertTrue(uniqueIds.contains(uniqueIdForClass(HerTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(HerTestClass.class, "test7(java.lang.String)")));
 	}
 
-	//	@Test
-	public void testMethodResolutionByUniqueIdWithWrongParams() {
+	@Test
+	public void resolvingUniqueIdWithWrongParamsResolvesNothing() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(HerTestClass.class, "test7(java.math.BigDecimal)").getUniqueString());
 		EngineDiscoveryRequest request = request().select(selector).build();
 
-		assertThrows(PreconditionViolationException.class, () -> resolver.resolveSelectors(request));
+		resolver.resolveSelectors(request);
+		assertTrue(engineDescriptor.allDescendants().isEmpty());
 	}
 
 	@Test
