@@ -30,8 +30,6 @@ public class TestMethodResolver implements ElementResolver {
 
 	public static final String SEGMENT_TYPE = "method";
 
-	private static final Logger LOG = Logger.getLogger(TestMethodResolver.class.getName());
-
 	private boolean canResolveElement(AnnotatedElement element, TestDescriptor parent) {
 		//Do not collapse
 		if (!(element instanceof Method))
@@ -50,14 +48,8 @@ public class TestMethodResolver implements ElementResolver {
 			return Collections.emptySet();
 
 		Method testMethod = (Method) element;
-		if (!isTestMethod(testMethod)) {
-			LOG.info(() -> {
-				String methodDescription = testMethod.getDeclaringClass().getName() + "#" + testMethod.getName();
-				return format("Method '%s' is not a test method", methodDescription);
-			});
-
+		if (!isTestMethod(testMethod))
 			return Collections.emptySet();
-		}
 
 		UniqueId uniqueId = createUniqueId(testMethod, parent);
 		return Collections.singleton(resolveMethod(testMethod, (ClassTestDescriptor) parent, uniqueId));
