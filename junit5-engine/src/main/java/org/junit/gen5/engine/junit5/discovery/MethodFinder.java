@@ -15,10 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.UniqueId;
 
 public class MethodFinder {
 
@@ -58,11 +55,6 @@ public class MethodFinder {
 
 	private Class<?> loadRequiredParameterClass(String className) {
 		return ReflectionUtils.loadClass(className).orElseThrow(() -> new RuntimeException("Not found: " + className));
-	}
-
-	private static RuntimeException createCannotResolveUniqueIdException(UniqueId fullUniqueId, String uniqueIdPart) {
-		return new PreconditionViolationException(
-			String.format("Cannot resolve part '%s' of unique ID '%s'", uniqueIdPart, fullUniqueId.getUniqueString()));
 	}
 
 }
