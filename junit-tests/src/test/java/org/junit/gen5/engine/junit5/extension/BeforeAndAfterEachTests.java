@@ -109,7 +109,8 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
 		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(asList("fooBefore", "testChild", "fooAfter"), callSequence, "wrong call sequence");
+		assertEquals(asList("fooBefore", "barBefore", "testChild", "barAfter", "fooAfter"), callSequence,
+			"wrong call sequence");
 	}
 
 	// -------------------------------------------------------------------
@@ -120,6 +121,7 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 	private static class ParentTestCase {
 	}
 
+	@ExtendWith(BarMethodLevelCallbacks.class)
 	private static class ChildTestCase extends ParentTestCase {
 
 		@Test
