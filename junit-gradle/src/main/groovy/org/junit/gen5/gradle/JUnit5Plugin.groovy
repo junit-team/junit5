@@ -55,15 +55,39 @@ class JUnit5Plugin implements Plugin<Project> {
 			def nameSuffix = "${variant.flavorName.capitalize()}${buildType.capitalize()}"
 
 			// Setup classpath for this variant's tests and add the test task
-			def testApkSource = project.configurations.getByName("testApk")
-			def testCompileSource = project.configurations.getByName("testCompile")
-			def testClasses = project.files(new File("build/intermediates/classes/$variant.dirName"))
+			// Add the compiler's classpath
+			def classpath = new ArrayList<>()
+			def variantData = variant.variantData
+			if (variantData.javacTask) {
+				def javaCompiler = variant.javaCompiler
+				classpath.add(javaCompiler.classpath)
+				classpath.add(javaCompiler.outputs.files)
+			}
+
+			// Add the testApk configuration
+			classpath.add(project.configurations.getByName("testApk"))
+
+			// Add the variant's scope (account for typo in VariantScope#getJavaOuptuts)
+			def variantScope = variantData.scope
+			def scopeJavaOutputs = variantScope.hasProperty("javaOutputs") ? variantScope.javaOutputs : variantScope.javaOuptuts
+			classpath.add(scopeJavaOutputs)
+
+			// Add test resources
+			classpath.add(variantData.javaResourcesForUnitTesting)
+			classpath.add(variant.testedVariant.variantData.javaResourcesForUnitTesting)
+
+			// Add filtered boot classpath
+			def globalScope = variantScope.globalScope
+			classpath.add(globalScope.androidBuilder.getBootClasspath(false).findAll { !it.name.equals("android.jar") })
+
+			// Add mocked version of android.jar
+			classpath.add(globalScope.mockableAndroidJarFile)
 
 			addJUnitTask(
 					project: project,
 					junit5: junit5,
 					nameSuffix: nameSuffix,
-					classpath: testApkSource + testCompileSource + testClasses,
+					classpath: project.files(classpath),
 					dependentTasks: Collections.singletonList("assemble${nameSuffix}UnitTest")
 			)
 		}
