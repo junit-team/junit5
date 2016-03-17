@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.discoveryNEW;
 
+import static java.lang.String.format;
 import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.AnnotatedElement;
@@ -36,6 +37,8 @@ import org.junit.gen5.engine.junit5.discovery.JUnit5EngineDescriptor;
 
 public class DiscoverySelectorResolver {
 
+	private static final Logger LOG = Logger.getLogger(DiscoverySelectorResolver.class.getName());
+
 	private final JUnit5EngineDescriptor engineDescriptor;
 	private final Set<ElementResolver> resolvers = new HashSet<>();
 
@@ -58,18 +61,38 @@ public class DiscoverySelectorResolver {
 		pruneTree();
 	}
 
-	private void pruneTree() {
-		TestDescriptor.Visitor removeDescriptorsWithoutTests = (descriptor, remove) -> {
-			if (!descriptor.isRoot() && !descriptor.hasTests())
-				remove.run();
-		};
-		engineDescriptor.accept(removeDescriptorsWithoutTests);
+	private void resolveClass(Class<?> testClass) {
+		Set<TestDescriptor> potentialParents = Collections.singleton(engineDescriptor);
+		if (resolveElementWithChildren(testClass, potentialParents).isEmpty()) {
+			LOG.info(() -> {
+				String classDescription = testClass.getName();
+				return format("Class '%s' could not be resolved", classDescription);
+			});
+		}
+	}
+
+	private void resolveMethod(Class<?> testClass, Method testMethod) {
+		Set<TestDescriptor> potentialParents = resolve(testClass, engineDescriptor);
+		if (resolveElementWithChildren(testMethod, potentialParents).isEmpty()) {
+			LOG.info(() -> {
+				String methodDescription = testMethod.getDeclaringClass().getName() + "#" + testMethod.getName();
+				return format("Method '%s' could not be resolved", methodDescription);
+			});
+		}
 	}
 
 	private void resolveUniqueId(UniqueId uniqueId) {
 		List<UniqueId.Segment> segments = uniqueId.getSegments();
 		segments.remove(0); // Ignore engine unique ID
 		resolveUniqueId(engineDescriptor, segments);
+	}
+
+	private void pruneTree() {
+		TestDescriptor.Visitor removeDescriptorsWithoutTests = (descriptor, remove) -> {
+			if (!descriptor.isRoot() && !descriptor.hasTests())
+				remove.run();
+		};
+		engineDescriptor.accept(removeDescriptorsWithoutTests);
 	}
 
 	private void resolveUniqueId(TestDescriptor parent, List<UniqueId.Segment> remainingSegments) {
@@ -93,22 +116,14 @@ public class DiscoverySelectorResolver {
 		});
 	}
 
-	private void resolveMethod(Class<?> testClass, Method testMethod) {
-		Set<TestDescriptor> potentialParents = resolve(testClass, engineDescriptor);
-		resolveElementWithChildren(testMethod, potentialParents);
-	}
-
-	private void resolveClass(Class<?> testClass) {
-		Set<TestDescriptor> potentialParents = Collections.singleton(engineDescriptor);
-		resolveElementWithChildren(testClass, potentialParents);
-	}
-
-	private void resolveElementWithChildren(AnnotatedElement element, Set<TestDescriptor> potentialParents) {
+	private Set<TestDescriptor> resolveElementWithChildren(AnnotatedElement element,
+			Set<TestDescriptor> potentialParents) {
 		Set<TestDescriptor> resolvedDescriptors = new HashSet<>();
 		potentialParents.forEach(parent -> {
 			resolvedDescriptors.addAll(resolve(element, parent));
 		});
 		resolvedDescriptors.forEach(this::resolveChildren);
+		return resolvedDescriptors;
 	}
 
 	private void resolveChildren(TestDescriptor descriptor) {

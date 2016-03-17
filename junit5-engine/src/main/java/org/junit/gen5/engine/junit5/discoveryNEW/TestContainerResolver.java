@@ -28,22 +28,14 @@ public class TestContainerResolver implements ElementResolver {
 
 	public static final String SEGMENT_TYPE = "class";
 
-	private static final Logger LOG = Logger.getLogger(TestContainerResolver.class.getName());
-
 	@Override
 	public Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {
 		if (!(element instanceof Class))
 			return Collections.emptySet();
 
 		Class<?> clazz = (Class<?>) element;
-		if (!isPotentialTestContainer(clazz)) {
-			LOG.info(() -> {
-				String classDescription = clazz.getName();
-				return format("Class '%s' is not a test container", classDescription);
-			});
+		if (!isPotentialTestContainer(clazz))
 			return Collections.emptySet();
-		}
-		;
 
 		UniqueId uniqueId = createUniqueId(clazz, parent);
 		return Collections.singleton(resolveClass(clazz, parent, uniqueId));
