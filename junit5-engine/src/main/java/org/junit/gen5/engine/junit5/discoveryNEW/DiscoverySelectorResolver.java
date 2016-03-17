@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
@@ -34,6 +35,7 @@ import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.discovery.JUnit5EngineDescriptor;
 
 public class DiscoverySelectorResolver {
+
 	private final JUnit5EngineDescriptor engineDescriptor;
 	private final Set<ElementResolver> resolvers = new HashSet<>();
 
@@ -129,18 +131,18 @@ public class DiscoverySelectorResolver {
 
 	private Set<TestDescriptor> tryToResolveWithResolver(AnnotatedElement element, TestDescriptor parent,
 			ElementResolver resolver) {
-		if (!resolver.canResolveElement(element, parent))
-			return Collections.emptySet();
 
-		UniqueId uniqueId = resolver.createUniqueId(element, parent);
+		Set<TestDescriptor> resolvedDescriptors = resolver.resolve(element, parent);
 
-		Optional<TestDescriptor> optionalMethodTestDescriptor = findTestDescriptorByUniqueId(uniqueId);
-		if (optionalMethodTestDescriptor.isPresent())
-			return Collections.singleton(optionalMethodTestDescriptor.get());
+		resolvedDescriptors.forEach(testDescriptor -> {
+			Optional<TestDescriptor> existingTestDescriptor = findTestDescriptorByUniqueId(
+				testDescriptor.getUniqueId());
+			if (!existingTestDescriptor.isPresent()) {
+				parent.addChild(testDescriptor);
+			}
+		});
 
-		Set<TestDescriptor> newDescriptors = resolver.resolve(element, parent, uniqueId);
-		newDescriptors.forEach(parent::addChild);
-		return newDescriptors;
+		return resolvedDescriptors;
 	}
 
 	@SuppressWarnings("unchecked")

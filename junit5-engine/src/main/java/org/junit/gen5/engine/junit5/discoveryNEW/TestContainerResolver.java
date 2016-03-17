@@ -10,10 +10,13 @@
 
 package org.junit.gen5.engine.junit5.discoveryNEW;
 
+import static java.lang.String.format;
+
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
@@ -23,25 +26,27 @@ import org.junit.gen5.engine.junit5.discovery.IsPotentialTestContainer;
 
 public class TestContainerResolver implements ElementResolver {
 
+	private static final Logger LOG = Logger.getLogger(TestContainerResolver.class.getName());
+
 	private static final String SEGMENT_TYPE = "class";
 
 	@Override
-	public boolean canResolveElement(AnnotatedElement element, TestDescriptor parent) {
-		//Do not collapse
+	public Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {
 		if (!(element instanceof Class))
-			return false;
-		return new IsPotentialTestContainer().test((Class<?>) element);
-	}
+			return Collections.emptySet();
 
-	@Override
-	public UniqueId createUniqueId(AnnotatedElement element, TestDescriptor parent) {
-		Class<?> testClass = (Class<?>) element;
-		return parent.getUniqueId().append(SEGMENT_TYPE, testClass.getName());
-	}
+		Class<?> clazz = (Class<?>) element;
+		if (!isPotentialTestContainer(clazz)) {
+			LOG.warning(() -> {
+				String classDescription = clazz.getName();
+				return format("Class '%s' is not a test container", classDescription);
+			});
+			return Collections.emptySet();
+		}
+		;
 
-	@Override
-	public Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent, UniqueId uniqueId) {
-		return Collections.singleton(resolveClass((Class<?>) element, parent, uniqueId));
+		UniqueId uniqueId = createUniqueId(clazz, parent);
+		return Collections.singleton(resolveClass(clazz, parent, uniqueId));
 	}
 
 	@Override
@@ -49,16 +54,26 @@ public class TestContainerResolver implements ElementResolver {
 		//Do not collapse
 		if (!segment.getType().equals(SEGMENT_TYPE))
 			return false;
+
 		Optional<Class<?>> optionalContainerClass = ReflectionUtils.loadClass(segment.getValue());
 		if (!optionalContainerClass.isPresent())
 			return false;
-		return canResolveElement(optionalContainerClass.get(), parent);
+
+		return isPotentialTestContainer(optionalContainerClass.get());
 	}
 
 	@Override
 	public TestDescriptor resolve(UniqueId.Segment segment, TestDescriptor parent, UniqueId uniqueId) {
 		Optional<Class<?>> optionalContainerClass = ReflectionUtils.loadClass(segment.getValue());
 		return resolveClass(optionalContainerClass.get(), parent, uniqueId);
+	}
+
+	private boolean isPotentialTestContainer(Class<?> element) {
+		return new IsPotentialTestContainer().test(element);
+	}
+
+	private UniqueId createUniqueId(Class<?> testClass, TestDescriptor parent) {
+		return parent.getUniqueId().append(SEGMENT_TYPE, testClass.getName());
 	}
 
 	private TestDescriptor resolveClass(Class<?> testClass, TestDescriptor parent, UniqueId uniqueId) {
