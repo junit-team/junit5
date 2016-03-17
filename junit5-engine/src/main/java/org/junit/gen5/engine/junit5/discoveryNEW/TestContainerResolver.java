@@ -11,7 +11,9 @@
 package org.junit.gen5.engine.junit5.discoveryNEW;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
@@ -38,8 +40,8 @@ public class TestContainerResolver implements ElementResolver {
 	}
 
 	@Override
-	public TestDescriptor resolve(AnnotatedElement element, TestDescriptor parent, UniqueId uniqueId) {
-		return resolveClass((Class<?>) element, parent, uniqueId);
+	public Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent, UniqueId uniqueId) {
+		return Collections.singleton(resolveClass((Class<?>) element, parent, uniqueId));
 	}
 
 	@Override
@@ -56,8 +58,7 @@ public class TestContainerResolver implements ElementResolver {
 	@Override
 	public TestDescriptor resolve(UniqueId.Segment segment, TestDescriptor parent, UniqueId uniqueId) {
 		Optional<Class<?>> optionalContainerClass = ReflectionUtils.loadClass(segment.getValue());
-
-		return resolve(optionalContainerClass.get(), parent, uniqueId);
+		return resolveClass(optionalContainerClass.get(), parent, uniqueId);
 	}
 
 	private TestDescriptor resolveClass(Class<?> testClass, TestDescriptor parent, UniqueId uniqueId) {
