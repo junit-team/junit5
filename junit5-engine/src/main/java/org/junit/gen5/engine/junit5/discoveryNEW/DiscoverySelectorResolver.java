@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
@@ -64,7 +65,7 @@ public class DiscoverySelectorResolver {
 	private void resolveClass(Class<?> testClass) {
 		Set<TestDescriptor> potentialParents = Collections.singleton(engineDescriptor);
 		if (resolveElementWithChildren(testClass, potentialParents).isEmpty()) {
-			LOG.info(() -> {
+			LOG.warning(() -> {
 				String classDescription = testClass.getName();
 				return format("Class '%s' could not be resolved", classDescription);
 			});
@@ -74,8 +75,10 @@ public class DiscoverySelectorResolver {
 	private void resolveMethod(Class<?> testClass, Method testMethod) {
 		Set<TestDescriptor> potentialParents = resolve(testClass, engineDescriptor);
 		if (resolveElementWithChildren(testMethod, potentialParents).isEmpty()) {
-			LOG.info(() -> {
-				String methodDescription = testMethod.getDeclaringClass().getName() + "#" + testMethod.getName();
+			LOG.warning(() -> {
+				String methodId = String.format("%s(%s)", testMethod.getName(),
+					StringUtils.nullSafeToString(testMethod.getParameterTypes()));
+				String methodDescription = testMethod.getDeclaringClass().getName() + "#" + methodId;
 				return format("Method '%s' could not be resolved", methodDescription);
 			});
 		}
@@ -84,7 +87,10 @@ public class DiscoverySelectorResolver {
 	private void resolveUniqueId(UniqueId uniqueId) {
 		List<UniqueId.Segment> segments = uniqueId.getSegments();
 		segments.remove(0); // Ignore engine unique ID
-		resolveUniqueId(engineDescriptor, segments);
+		if (!resolveUniqueId(engineDescriptor, segments))
+			LOG.warning(() -> {
+				return format("Unique ID '%s' could not be resolved", uniqueId.getUniqueString());
+			});
 	}
 
 	private void pruneTree() {
@@ -95,18 +101,20 @@ public class DiscoverySelectorResolver {
 		engineDescriptor.accept(removeDescriptorsWithoutTests);
 	}
 
-	private void resolveUniqueId(TestDescriptor parent, List<UniqueId.Segment> remainingSegments) {
+	/**
+	 * Return true if all segments of unique ID could be resolved
+	 */
+	private boolean resolveUniqueId(TestDescriptor parent, List<UniqueId.Segment> remainingSegments) {
 		if (remainingSegments.isEmpty()) {
 			resolveChildren(parent);
-			return;
+			return true;
 		}
 
 		UniqueId.Segment head = remainingSegments.remove(0);
-		resolvers.forEach(resolver -> {
-
+		for (ElementResolver resolver : resolvers) {
 			Optional<TestDescriptor> resolvedDescriptor = resolver.resolve(head, parent);
 			if (!resolvedDescriptor.isPresent())
-				return;
+				continue;
 
 			Optional<TestDescriptor> foundTestDescriptor = findTestDescriptorByUniqueId(
 				resolvedDescriptor.get().getUniqueId());
@@ -115,8 +123,9 @@ public class DiscoverySelectorResolver {
 				parent.addChild(newDescriptor);
 				return newDescriptor;
 			});
-			resolveUniqueId(descriptor, new ArrayList<>(remainingSegments));
-		});
+			return resolveUniqueId(descriptor, new ArrayList<>(remainingSegments));
+		}
+		return false;
 	}
 
 	private Set<TestDescriptor> resolveElementWithChildren(AnnotatedElement element,
