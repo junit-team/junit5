@@ -24,7 +24,11 @@ public interface TestEngine {
 		return getClass().getCanonicalName();
 	}
 
-	TestDescriptor discover(EngineDiscoveryRequest discoveryRequest);
+	default TestDescriptor discover(EngineDiscoveryRequest discoveryRequest) {
+		return discover(discoveryRequest, UniqueId.forEngine(getId()));
+	}
+
+	TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId);
 
 	void execute(ExecutionRequest request);
 }

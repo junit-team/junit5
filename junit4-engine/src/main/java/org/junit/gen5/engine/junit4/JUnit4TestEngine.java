@@ -39,8 +39,8 @@ public class JUnit4TestEngine implements TestEngine {
 	}
 
 	@Override
-	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest) {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine(ENGINE_ID), "JUnit 4");
+	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+		EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "JUnit 4");
 		new JUnit4DiscoveryRequestResolver(engineDescriptor, LOG).resolve(discoveryRequest);
 		return engineDescriptor;
 	}

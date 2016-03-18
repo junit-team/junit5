@@ -14,6 +14,7 @@ import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.UniqueId;
 
 /**
  * @since 5.0
@@ -28,7 +29,7 @@ public class TestEngineStub implements TestEngine {
 	}
 
 	@Override
-	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest) {
+	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 		return null;
 	}
 
