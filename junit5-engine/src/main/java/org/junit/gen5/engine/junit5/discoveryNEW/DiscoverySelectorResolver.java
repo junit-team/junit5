@@ -11,8 +11,9 @@
 package org.junit.gen5.engine.junit5.discoveryNEW;
 
 import static java.lang.String.format;
-import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,14 +21,27 @@ import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.ClassSelector;
+import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
+import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
+import org.junit.gen5.engine.junit5.discovery.IsScannableTestClass;
 
 public class DiscoverySelectorResolver {
 
 	public void resolveSelectors(EngineDiscoveryRequest request, TestDescriptor engineDescriptor) {
 		JavaElementsResolver javaElementsResolver = createJavaElementsResolver(engineDescriptor);
 
+		request.getSelectorsByType(ClasspathSelector.class).forEach(selector -> {
+			File rootDirectory = selector.getClasspathRoot();
+			findAllClassesInClasspathRoot(rootDirectory, new IsScannableTestClass()).stream().forEach(
+				javaElementsResolver::resolveClass);
+		});
+		request.getSelectorsByType(PackageSelector.class).forEach(selector -> {
+			String packageName = selector.getPackageName();
+			findAllClassesInPackage(packageName, new IsScannableTestClass()).stream().forEach(
+				javaElementsResolver::resolveClass);
+		});
 		request.getSelectorsByType(ClassSelector.class).forEach(selector -> {
 			javaElementsResolver.resolveClass(selector.getTestClass());
 		});
