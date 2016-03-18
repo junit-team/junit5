@@ -45,15 +45,11 @@ public class JavaElementsResolver {
 	}
 
 	public void resolveClass(Class<?> testClass) {
-		Set<TestDescriptor> potentialParents = new HashSet<>();
-		if (new IsNonStaticInnerClass().test(testClass)) {
-			potentialParents.addAll(resolveContainerWithParents(testClass.getDeclaringClass()));
-		}
-		else {
-			potentialParents.add(engineDescriptor);
-		}
 
-		if (resolveElementWithChildren(testClass, potentialParents).isEmpty()) {
+		Set<TestDescriptor> resolvedDescriptors = resolveContainerWithParents(testClass);
+		resolvedDescriptors.forEach(this::resolveChildren);
+
+		if (resolvedDescriptors.isEmpty()) {
 			LOG.warning(() -> {
 				String classDescription = testClass.getName();
 				return format("Class '%s' could not be resolved", classDescription);
@@ -63,7 +59,9 @@ public class JavaElementsResolver {
 
 	public void resolveMethod(Class<?> testClass, Method testMethod) {
 		Set<TestDescriptor> potentialParents = resolveContainerWithParents(testClass);
-		if (resolveElementWithChildren(testMethod, potentialParents).isEmpty()) {
+		Set<TestDescriptor> resolvedDescriptors = resolveForAllParents(testMethod, potentialParents);
+
+		if (resolvedDescriptors.isEmpty()) {
 			LOG.warning(() -> {
 				String methodId = String.format("%s(%s)", testMethod.getName(),
 					StringUtils.nullSafeToString(testMethod.getParameterTypes()));
@@ -74,17 +72,13 @@ public class JavaElementsResolver {
 	}
 
 	private Set<TestDescriptor> resolveContainerWithParents(Class<?> testClass) {
-		Set<TestDescriptor> resolvedParents = new HashSet<>();
 		if (new IsNonStaticInnerClass().test(testClass)) {
 			Set<TestDescriptor> potentialParents = resolveContainerWithParents(testClass.getDeclaringClass());
-			potentialParents.forEach(parent -> {
-				resolvedParents.addAll(resolve(testClass, parent));
-			});
+			return resolveForAllParents(testClass, potentialParents);
 		}
 		else {
-			resolvedParents.addAll(resolve(testClass, engineDescriptor));
+			return resolveForAllParents(testClass, Collections.singleton(engineDescriptor));
 		}
-		return resolvedParents;
 	}
 
 	public void resolveUniqueId(UniqueId uniqueId) {
@@ -123,13 +117,18 @@ public class JavaElementsResolver {
 		return false;
 	}
 
-	private Set<TestDescriptor> resolveElementWithChildren(AnnotatedElement element,
+	private Set<TestDescriptor> resolveContainerWithChildren(Class<?> containerClass,
 			Set<TestDescriptor> potentialParents) {
+		Set<TestDescriptor> resolvedDescriptors = resolveForAllParents(containerClass, potentialParents);
+		resolvedDescriptors.forEach(this::resolveChildren);
+		return resolvedDescriptors;
+	}
+
+	private Set<TestDescriptor> resolveForAllParents(AnnotatedElement element, Set<TestDescriptor> potentialParents) {
 		Set<TestDescriptor> resolvedDescriptors = new HashSet<>();
 		potentialParents.forEach(parent -> {
 			resolvedDescriptors.addAll(resolve(element, parent));
 		});
-		resolvedDescriptors.forEach(this::resolveChildren);
 		return resolvedDescriptors;
 	}
 
@@ -144,14 +143,13 @@ public class JavaElementsResolver {
 	private void resolveContainedNestedClasses(TestDescriptor containerDescriptor, Class<?> clazz) {
 		List<Class<?>> nestedClassesCandidates = findNestedClasses(clazz, new IsNonStaticInnerClass());
 		nestedClassesCandidates.forEach(
-			nestedClass -> resolveElementWithChildren(nestedClass, Collections.singleton(containerDescriptor)));
+			nestedClass -> resolveContainerWithChildren(nestedClass, Collections.singleton(containerDescriptor)));
 	}
 
 	private void resolveContainedMethods(TestDescriptor containerDescriptor, Class<?> testClass) {
 		List<Method> testMethodCandidates = findMethods(testClass, method -> !ReflectionUtils.isPrivate(method),
 			ReflectionUtils.MethodSortOrder.HierarchyDown);
-		testMethodCandidates.forEach(
-			method -> resolveElementWithChildren(method, Collections.singleton(containerDescriptor)));
+		testMethodCandidates.forEach(method -> resolve(method, containerDescriptor));
 	}
 
 	private Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {
