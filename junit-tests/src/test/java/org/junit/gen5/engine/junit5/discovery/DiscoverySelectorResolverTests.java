@@ -14,15 +14,18 @@ import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.*;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.ClassSelector;
+import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
@@ -249,6 +252,31 @@ public class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().select(selector).build());
 
 		assertEquals(6, engineDescriptor.allDescendants().size());
+		List<UniqueId> uniqueIds = uniqueIds();
+		assertTrue(uniqueIds.contains(
+			uniqueIdForClass(org.junit.gen5.engine.junit5.descriptor.subpackage.Class1WithTestCases.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(
+			org.junit.gen5.engine.junit5.descriptor.subpackage.Class1WithTestCases.class, "test1()")));
+		assertTrue(uniqueIds.contains(
+			uniqueIdForClass(org.junit.gen5.engine.junit5.descriptor.subpackage.Class2WithTestCases.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(
+			org.junit.gen5.engine.junit5.descriptor.subpackage.Class2WithTestCases.class, "test2()")));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(
+			org.junit.gen5.engine.junit5.descriptor.subpackage.ClassWithStaticInnerTestCases.ShouldBeDiscovered.class,
+			"test1()")));
+	}
+
+	@Test
+	public void testClasspathResolution() {
+		File classpath = new File(
+			DiscoverySelectorResolverTests.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+
+		List<DiscoverySelector> selector = ClasspathSelector.forPath(classpath.getAbsolutePath());
+
+		resolver.resolveSelectors(request().select(selector).build());
+
+		assertTrue(engineDescriptor.allDescendants().size() > 500, "Too few test descriptors in classpath");
+
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertTrue(uniqueIds.contains(
 			uniqueIdForClass(org.junit.gen5.engine.junit5.descriptor.subpackage.Class1WithTestCases.class)));
