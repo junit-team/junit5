@@ -21,7 +21,6 @@ import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
 import org.junit.gen5.engine.junit5.discovery.IsNestedTestClass;
-import org.junit.gen5.engine.junit5.discovery.IsPotentialTestContainer;
 
 public class NestedTestsResolver implements ElementResolver {
 
@@ -42,20 +41,24 @@ public class NestedTestsResolver implements ElementResolver {
 
 	@Override
 	public Optional<TestDescriptor> resolve(UniqueId.Segment segment, TestDescriptor parent) {
-		return Optional.empty();
-		//		if (!segment.getType().equals(SEGMENT_TYPE))
-		//			return Optional.empty();
-		//
-		//		Optional<Class<?>> optionalContainerClass = ReflectionUtils.loadClass(segment.getValue());
-		//		if (!optionalContainerClass.isPresent())
-		//			return Optional.empty();
-		//
-		//		Class<?> containerClass = optionalContainerClass.get();
-		//		if (!isNestedTestClass(containerClass))
-		//			return Optional.empty();
-		//
-		//		UniqueId uniqueId = createUniqueId(containerClass, parent);
-		//		return Optional.of(resolveClass(containerClass, parent, uniqueId));
+		if (!segment.getType().equals(SEGMENT_TYPE))
+			return Optional.empty();
+
+		if (!(parent instanceof ClassTestDescriptor))
+			return Optional.empty();
+
+		String nestedClassName = ((ClassTestDescriptor) parent).getTestClass().getName() + "$" + segment.getValue();
+
+		Optional<Class<?>> optionalContainerClass = ReflectionUtils.loadClass(nestedClassName);
+		if (!optionalContainerClass.isPresent())
+			return Optional.empty();
+
+		Class<?> containerClass = optionalContainerClass.get();
+		if (!isNestedTestClass(containerClass))
+			return Optional.empty();
+
+		UniqueId uniqueId = createUniqueId(containerClass, parent);
+		return Optional.of(resolveClass(containerClass, parent, uniqueId));
 	}
 
 	private boolean isNestedTestClass(Class<?> element) {
