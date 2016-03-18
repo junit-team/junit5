@@ -80,8 +80,8 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(YourTestClass.class, "test4()")));
 	}
 
-	//	@Test
-	public void testClassResolutionOfNestedClass() {
+	@Test
+	public void testClassResolutionOfStaticNestedClass() {
 		ClassSelector selector = ClassSelector.forClass(OtherTestClass.NestedTestClass.class);
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
@@ -285,7 +285,7 @@ public class DiscoverySelectorResolverTests {
 			"test1()")));
 	}
 
-	//	@Test
+	@Test
 	public void testNestedTestResolutionFromBaseClass() {
 		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.class);
 
@@ -303,13 +303,14 @@ public class DiscoverySelectorResolverTests {
 			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
 	}
 
-	//	@Test
+	@Test
 	public void testNestedTestResolutionFromNestedTestClass() {
 		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.NestedTest.class);
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
 
 		List<UniqueId> uniqueIds = uniqueIds();
+		uniqueIds.forEach(id -> System.out.println(id));
 		assertEquals(5, uniqueIds.size());
 
 		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class)));
@@ -337,8 +338,8 @@ public class DiscoverySelectorResolverTests {
 			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
 	}
 
-	//	@Test
-	public void testNestedTestResolutionFromClass() {
+	// @Test
+	public void testDoubleNestedTestResolutionFromClass() {
 		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class);
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);

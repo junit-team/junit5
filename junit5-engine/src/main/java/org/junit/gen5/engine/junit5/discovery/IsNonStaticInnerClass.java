@@ -12,8 +12,7 @@ package org.junit.gen5.engine.junit5.discovery;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
-import static org.junit.gen5.commons.util.ReflectionUtils.isPrivate;
-import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.util.function.Predicate;
 
@@ -21,21 +20,21 @@ import org.junit.gen5.api.Nested;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * Test if a class is a JUnit 5 nested, inner test class.
+ * Test if a class is a non-static inner class.
  *
  * @since 5.0
  */
 @API(Internal)
-public class IsNestedTestClass implements Predicate<Class<?>> {
-
-	private static final IsNonStaticInnerClass isNonStaticInnerClass = new IsNonStaticInnerClass();
+public class IsNonStaticInnerClass implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> candidate) {
 		//please do not collapse into single return
-		if (!isNonStaticInnerClass.test(candidate))
+		if (isStatic(candidate))
 			return false;
-		return isAnnotated(candidate, Nested.class);
+		if (isPrivate(candidate))
+			return false;
+		return candidate.isMemberClass();
 	}
 
 }
