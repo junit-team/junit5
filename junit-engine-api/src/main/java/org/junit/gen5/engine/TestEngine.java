@@ -20,13 +20,7 @@ import org.junit.gen5.commons.meta.API;
 @API(Experimental)
 public interface TestEngine {
 
-	default String getId() {
-		return getClass().getCanonicalName();
-	}
-
-	default TestDescriptor discover(EngineDiscoveryRequest discoveryRequest) {
-		return discover(discoveryRequest, UniqueId.forEngine(getId()));
-	}
+	String getId();
 
 	TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId);
 

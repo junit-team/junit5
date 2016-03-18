@@ -16,6 +16,7 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
@@ -39,7 +40,7 @@ public abstract class AbstractJUnit5TestEngineTests {
 	}
 
 	protected TestDescriptor discoverTests(TestDiscoveryRequest request) {
-		return engine.discover(request);
+		return engine.discover(request, UniqueId.forEngine(engine.getId()));
 	}
 
 }
