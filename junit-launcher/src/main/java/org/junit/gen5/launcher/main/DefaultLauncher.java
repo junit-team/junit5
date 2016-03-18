@@ -19,6 +19,7 @@ import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.gen5.launcher.TestExecutionListener;
@@ -85,7 +86,9 @@ class DefaultLauncher implements Launcher {
 
 			LOG.fine(
 				() -> String.format("Discovering tests during launcher %s phase in engine '%s'.", phase, engineId));
-			TestDescriptor engineRoot = testEngine.discover(discoveryRequest);
+
+			UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
+			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);
 			root.add(testEngine, engineRoot);
 		}
 		root.applyPostDiscoveryFilters(discoveryRequest);

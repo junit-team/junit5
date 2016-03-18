@@ -26,6 +26,7 @@ import static org.junit.runner.Description.createSuiteDescription;
 import static org.junit.runner.Description.createTestDescription;
 import static org.junit.runner.manipulation.Filter.matchMethodDescription;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -48,6 +49,7 @@ import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
+import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 import org.junit.gen5.launcher.EngineIdFilter;
 import org.junit.gen5.launcher.Launcher;
@@ -313,13 +315,15 @@ class JUnit5Tests {
 
 		@Test
 		void reportsIgnoredEventsForLeafsWhenContainerIsSkipped() throws Exception {
-			TestDescriptor engineDescriptor = new TestDescriptorStub(UniqueId.forEngine("engine"), "engine");
+			UniqueId uniqueEngineId = UniqueId.forEngine("engine");
+			TestDescriptor engineDescriptor = new EngineDescriptor(uniqueEngineId, "engine");
 			TestDescriptor container = new TestDescriptorStub(UniqueId.root("root", "container"), "container");
 			container.addChild(new TestDescriptorStub(UniqueId.root("root", "leaf"), "leaf"));
 			engineDescriptor.addChild(container);
 
 			TestEngine engine = mock(TestEngine.class);
-			when(engine.discover(any())).thenReturn(engineDescriptor);
+			when(engine.getId()).thenReturn("engine");
+			when(engine.discover(any(), eq(uniqueEngineId))).thenReturn(engineDescriptor);
 			doAnswer(invocation -> {
 				ExecutionRequest request = invocation.getArgumentAt(0, ExecutionRequest.class);
 				EngineExecutionListener listener = request.getEngineExecutionListener();
