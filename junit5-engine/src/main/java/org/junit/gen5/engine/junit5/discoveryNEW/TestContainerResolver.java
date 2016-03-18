@@ -31,40 +31,61 @@ public class TestContainerResolver implements ElementResolver {
 			return Collections.emptySet();
 
 		Class<?> clazz = (Class<?>) element;
-		if (!isPotentialTestContainer(clazz))
+		if (!isPotentialCandidate(clazz))
 			return Collections.emptySet();
 
 		UniqueId uniqueId = createUniqueId(clazz, parent);
-		return Collections.singleton(resolveClass(clazz, parent, uniqueId));
+		return Collections.singleton(resolveClass(clazz, uniqueId));
 	}
 
 	@Override
 	public Optional<TestDescriptor> resolve(UniqueId.Segment segment, TestDescriptor parent) {
 
-		if (!segment.getType().equals(SEGMENT_TYPE))
+		if (!segment.getType().equals(getSegmentType()))
 			return Optional.empty();
 
-		Optional<Class<?>> optionalContainerClass = ReflectionUtils.loadClass(segment.getValue());
+		if (!requiredParentType().isInstance(parent))
+			return Optional.empty();
+
+		String className = getClassName(parent, segment.getValue());
+
+		Optional<Class<?>> optionalContainerClass = ReflectionUtils.loadClass(className);
 		if (!optionalContainerClass.isPresent())
 			return Optional.empty();
 
 		Class<?> containerClass = optionalContainerClass.get();
-		if (!isPotentialTestContainer(containerClass))
+		if (!isPotentialCandidate(containerClass))
 			return Optional.empty();
 
 		UniqueId uniqueId = createUniqueId(containerClass, parent);
-		return Optional.of(resolveClass(containerClass, parent, uniqueId));
+		return Optional.of(resolveClass(containerClass, uniqueId));
 	}
 
-	private boolean isPotentialTestContainer(Class<?> element) {
+	protected Class<? extends TestDescriptor> requiredParentType() {
+		return TestDescriptor.class;
+	}
+
+	protected String getClassName(TestDescriptor parent, String segmentValue) {
+		return segmentValue;
+	}
+
+	protected String getSegmentType() {
+		return SEGMENT_TYPE;
+	}
+
+	protected String getSegmentValue(Class<?> testClass) {
+		return testClass.getName();
+	}
+
+	protected boolean isPotentialCandidate(Class<?> element) {
 		return new IsPotentialTestContainer().test(element);
 	}
 
-	private UniqueId createUniqueId(Class<?> testClass, TestDescriptor parent) {
-		return parent.getUniqueId().append(SEGMENT_TYPE, testClass.getName());
+	protected UniqueId createUniqueId(Class<?> testClass, TestDescriptor parent) {
+		return parent.getUniqueId().append(getSegmentType(), getSegmentValue(testClass));
 	}
 
-	private TestDescriptor resolveClass(Class<?> testClass, TestDescriptor parent, UniqueId uniqueId) {
+	protected TestDescriptor resolveClass(Class<?> testClass, UniqueId uniqueId) {
 		return new ClassTestDescriptor(uniqueId, testClass);
 	}
 }
