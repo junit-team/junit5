@@ -45,7 +45,13 @@ public class JavaElementsResolver {
 	}
 
 	public void resolveClass(Class<?> testClass) {
-		Set<TestDescriptor> potentialParents = potentialParents(testClass);
+		Set<TestDescriptor> potentialParents = new HashSet<>();
+		if (new IsNonStaticInnerClass().test(testClass)) {
+			potentialParents.addAll(resolveContainerWithParents(testClass.getDeclaringClass()));
+		}
+		else {
+			potentialParents.add(engineDescriptor);
+		}
 
 		if (resolveElementWithChildren(testClass, potentialParents).isEmpty()) {
 			LOG.warning(() -> {
@@ -56,7 +62,7 @@ public class JavaElementsResolver {
 	}
 
 	public void resolveMethod(Class<?> testClass, Method testMethod) {
-		Set<TestDescriptor> potentialParents = resolve(testClass, engineDescriptor);
+		Set<TestDescriptor> potentialParents = resolveContainerWithParents(testClass);
 		if (resolveElementWithChildren(testMethod, potentialParents).isEmpty()) {
 			LOG.warning(() -> {
 				String methodId = String.format("%s(%s)", testMethod.getName(),
@@ -67,6 +73,20 @@ public class JavaElementsResolver {
 		}
 	}
 
+	private Set<TestDescriptor> resolveContainerWithParents(Class<?> testClass) {
+		Set<TestDescriptor> resolvedParents = new HashSet<>();
+		if (new IsNonStaticInnerClass().test(testClass)) {
+			Set<TestDescriptor> potentialParents = resolveContainerWithParents(testClass.getDeclaringClass());
+			potentialParents.forEach(parent -> {
+				resolvedParents.addAll(resolve(testClass, parent));
+			});
+		}
+		else {
+			resolvedParents.addAll(resolve(testClass, engineDescriptor));
+		}
+		return resolvedParents;
+	}
+
 	public void resolveUniqueId(UniqueId uniqueId) {
 		List<UniqueId.Segment> segments = uniqueId.getSegments();
 		segments.remove(0); // Ignore engine unique ID
@@ -74,17 +94,6 @@ public class JavaElementsResolver {
 			LOG.warning(() -> {
 				return format("Unique ID '%s' could not be resolved", uniqueId.getUniqueString());
 			});
-	}
-
-	private Set<TestDescriptor> potentialParents(Class<?> testClass) {
-		Set<TestDescriptor> potentialParents = new HashSet<>();
-		if (new IsNonStaticInnerClass().test(testClass)) {
-			potentialParents.addAll(resolve(testClass.getDeclaringClass(), engineDescriptor));
-		}
-		else {
-			potentialParents.add(engineDescriptor);
-		}
-		return potentialParents;
 	}
 
 	/**
