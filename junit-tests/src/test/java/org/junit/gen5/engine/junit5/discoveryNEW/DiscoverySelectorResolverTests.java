@@ -157,7 +157,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test6()")));
 	}
 
-	//	@Test
+	@Test
 	public void testMethodOfInnerClassByUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test5()").getUniqueString());
@@ -310,7 +310,6 @@ public class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
 
 		List<UniqueId> uniqueIds = uniqueIds();
-		uniqueIds.forEach(id -> System.out.println(id));
 		assertEquals(5, uniqueIds.size());
 
 		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class)));
@@ -338,7 +337,7 @@ public class DiscoverySelectorResolverTests {
 			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
 	}
 
-	// @Test
+	@Test
 	public void testDoubleNestedTestResolutionFromClass() {
 		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class);
 
@@ -347,6 +346,22 @@ public class DiscoverySelectorResolverTests {
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertEquals(4, uniqueIds.size());
 
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class)));
+		assertTrue(
+			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
+	}
+
+	@Test
+	public void testMethodResolutionInDoubleNestedTestClass() throws NoSuchMethodException {
+		MethodSelector selector = MethodSelector.forMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class,
+			TestCaseWithNesting.NestedTest.DoubleNestedTest.class.getDeclaredMethod("testC"));
+
+		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
+
+		assertEquals(4, engineDescriptor.allDescendants().size());
+		List<UniqueId> uniqueIds = uniqueIds();
 		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class)));
