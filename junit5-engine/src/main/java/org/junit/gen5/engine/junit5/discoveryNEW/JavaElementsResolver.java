@@ -11,7 +11,7 @@
 package org.junit.gen5.engine.junit5.discoveryNEW;
 
 import static java.lang.String.format;
-import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
+import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -27,14 +27,10 @@ import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.StringUtils;
-import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.discovery.ClassSelector;
-import org.junit.gen5.engine.discovery.MethodSelector;
-import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
-import org.junit.gen5.engine.junit5.discovery.JUnit5EngineDescriptor;
+import org.junit.gen5.engine.junit5.discovery.IsNonStaticInnerClass;
 
 public class JavaElementsResolver {
 
@@ -49,7 +45,8 @@ public class JavaElementsResolver {
 	}
 
 	public void resolveClass(Class<?> testClass) {
-		Set<TestDescriptor> potentialParents = Collections.singleton(engineDescriptor);
+		Set<TestDescriptor> potentialParents = potentialParents(testClass);
+
 		if (resolveElementWithChildren(testClass, potentialParents).isEmpty()) {
 			LOG.warning(() -> {
 				String classDescription = testClass.getName();
@@ -77,6 +74,17 @@ public class JavaElementsResolver {
 			LOG.warning(() -> {
 				return format("Unique ID '%s' could not be resolved", uniqueId.getUniqueString());
 			});
+	}
+
+	private Set<TestDescriptor> potentialParents(Class<?> testClass) {
+		Set<TestDescriptor> potentialParents = new HashSet<>();
+		if (new IsNonStaticInnerClass().test(testClass)) {
+			potentialParents.addAll(resolve(testClass.getDeclaringClass(), engineDescriptor));
+		}
+		else {
+			potentialParents.add(engineDescriptor);
+		}
+		return potentialParents;
 	}
 
 	/**
@@ -119,11 +127,22 @@ public class JavaElementsResolver {
 	private void resolveChildren(TestDescriptor descriptor) {
 		if (descriptor instanceof ClassTestDescriptor) {
 			Class<?> testClass = ((ClassTestDescriptor) descriptor).getTestClass();
-			List<Method> testMethodCandidates = findMethods(testClass, method -> !ReflectionUtils.isPrivate(method),
-				ReflectionUtils.MethodSortOrder.HierarchyDown);
-			testMethodCandidates.forEach(
-				method -> resolveElementWithChildren(method, Collections.singleton(descriptor)));
+			resolveContainedMethods(descriptor, testClass);
+			resolveContainedNestedClasses(descriptor, testClass);
 		}
+	}
+
+	private void resolveContainedNestedClasses(TestDescriptor containerDescriptor, Class<?> clazz) {
+		List<Class<?>> nestedClassesCandidates = findNestedClasses(clazz, new IsNonStaticInnerClass());
+		nestedClassesCandidates.forEach(
+			nestedClass -> resolveElementWithChildren(nestedClass, Collections.singleton(containerDescriptor)));
+	}
+
+	private void resolveContainedMethods(TestDescriptor containerDescriptor, Class<?> testClass) {
+		List<Method> testMethodCandidates = findMethods(testClass, method -> !ReflectionUtils.isPrivate(method),
+			ReflectionUtils.MethodSortOrder.HierarchyDown);
+		testMethodCandidates.forEach(
+			method -> resolveElementWithChildren(method, Collections.singleton(containerDescriptor)));
 	}
 
 	private Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {

@@ -43,6 +43,7 @@ public class DiscoverySelectorResolver {
 	private JavaElementsResolver createJavaElementsResolver(TestDescriptor engineDescriptor) {
 		Set<ElementResolver> resolvers = new HashSet<>();
 		resolvers.add(new TestContainerResolver());
+		resolvers.add(new NestedTestsResolver());
 		resolvers.add(new TestMethodResolver());
 		return new JavaElementsResolver(engineDescriptor, resolvers);
 	}
