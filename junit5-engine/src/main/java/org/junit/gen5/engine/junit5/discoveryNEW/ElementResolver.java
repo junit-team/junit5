@@ -20,12 +20,14 @@ import org.junit.gen5.engine.UniqueId;
 public interface ElementResolver {
 
 	/**
-	 * Return a set of {@linkplain TestDescriptor testDescriptors} that can be resolved by this resolver
+	 * Return a set of {@linkplain TestDescriptor testDescriptors} that can be resolved by this resolver.
+	 * Returned set must be empty if {@code element} cannot be resolved.
 	 */
-	Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent);
+	Set<TestDescriptor> resolveElement(AnnotatedElement element, TestDescriptor parent);
 
 	/**
 	 * Return an optional {@linkplain TestDescriptor testDescriptor}.
+	 * Return {@code Optional.empty()} if {@code segment} cannot be resolved.
 	 */
-	Optional<TestDescriptor> resolve(UniqueId.Segment segment, TestDescriptor parent);
+	Optional<TestDescriptor> resolveUniqueId(UniqueId.Segment segment, TestDescriptor parent);
 }
