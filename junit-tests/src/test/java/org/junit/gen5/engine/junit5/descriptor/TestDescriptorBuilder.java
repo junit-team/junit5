@@ -51,7 +51,7 @@ public abstract class TestDescriptorBuilder {
 
 		@Override
 		TestDescriptor buildDescriptor() {
-			return new JUnit5EngineDescriptor("junit5");
+			return new JUnit5EngineDescriptor(UniqueId.forEngine("junit5"));
 		}
 	}
 

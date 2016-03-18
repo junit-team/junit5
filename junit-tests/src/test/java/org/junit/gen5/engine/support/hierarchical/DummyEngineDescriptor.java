@@ -23,8 +23,8 @@ public class DummyEngineDescriptor extends EngineDescriptor implements Container
 	private Runnable beforeAllBehavior = () -> {
 	};
 
-	public DummyEngineDescriptor(String engineId) {
-		super(UniqueId.forEngine(engineId), engineId);
+	public DummyEngineDescriptor(UniqueId uniqueId) {
+		super(uniqueId, uniqueId.getEngineId().get());
 	}
 
 	public void markSkipped(String reason) {

@@ -30,7 +30,7 @@ import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 
 public class DiscoverySelectorResolverTests {
 
-	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(JUnit5TestEngine.ENGINE_ID);
+	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(engineId());
 	private DiscoverySelectorResolver resolver = new DiscoverySelectorResolver(engineDescriptor);
 
 	@Test

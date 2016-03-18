@@ -25,8 +25,8 @@ import org.junit.gen5.engine.support.hierarchical.Container;
 @API(Internal)
 public class JUnit5EngineDescriptor extends EngineDescriptor implements Container<JUnit5EngineExecutionContext> {
 
-	public JUnit5EngineDescriptor(String uniqueId) {
-		super(UniqueId.forEngine(uniqueId), "JUnit 5");
+	public JUnit5EngineDescriptor(UniqueId uniqueId) {
+		super(uniqueId, "JUnit 5");
 	}
 
 	@Override

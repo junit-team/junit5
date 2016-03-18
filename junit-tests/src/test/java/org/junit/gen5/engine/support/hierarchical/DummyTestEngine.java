@@ -26,7 +26,7 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 
 	public DummyTestEngine(String engineId) {
 		this.engineId = engineId;
-		this.engineDescriptor = new DummyEngineDescriptor(engineId);
+		this.engineDescriptor = new DummyEngineDescriptor(UniqueId.forEngine(getId()));
 	}
 
 	@Override
