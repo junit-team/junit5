@@ -101,7 +101,7 @@ public class JavaElementsResolver {
 
 		UniqueId.Segment head = remainingSegments.remove(0);
 		for (ElementResolver resolver : resolvers) {
-			Optional<TestDescriptor> resolvedDescriptor = resolver.resolve(head, parent);
+			Optional<TestDescriptor> resolvedDescriptor = resolver.resolveUniqueId(head, parent);
 			if (!resolvedDescriptor.isPresent())
 				continue;
 
@@ -163,7 +163,7 @@ public class JavaElementsResolver {
 	private Set<TestDescriptor> tryToResolveWithResolver(AnnotatedElement element, TestDescriptor parent,
 			ElementResolver resolver) {
 
-		Set<TestDescriptor> resolvedDescriptors = resolver.resolve(element, parent);
+		Set<TestDescriptor> resolvedDescriptors = resolver.resolveElement(element, parent);
 
 		resolvedDescriptors.forEach(testDescriptor -> {
 			Optional<TestDescriptor> existingTestDescriptor = findTestDescriptorByUniqueId(

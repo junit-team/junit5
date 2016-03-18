@@ -26,7 +26,7 @@ public class TestContainerResolver implements ElementResolver {
 	public static final String SEGMENT_TYPE = "class";
 
 	@Override
-	public Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {
+	public Set<TestDescriptor> resolveElement(AnnotatedElement element, TestDescriptor parent) {
 		if (!(element instanceof Class))
 			return Collections.emptySet();
 
@@ -39,7 +39,7 @@ public class TestContainerResolver implements ElementResolver {
 	}
 
 	@Override
-	public Optional<TestDescriptor> resolve(UniqueId.Segment segment, TestDescriptor parent) {
+	public Optional<TestDescriptor> resolveUniqueId(UniqueId.Segment segment, TestDescriptor parent) {
 
 		if (!segment.getType().equals(getSegmentType()))
 			return Optional.empty();

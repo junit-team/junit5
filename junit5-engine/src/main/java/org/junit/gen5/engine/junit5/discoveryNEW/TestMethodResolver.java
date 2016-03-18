@@ -29,7 +29,7 @@ public class TestMethodResolver implements ElementResolver {
 	public static final String SEGMENT_TYPE = "method";
 
 	@Override
-	public Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {
+	public Set<TestDescriptor> resolveElement(AnnotatedElement element, TestDescriptor parent) {
 		if (!(element instanceof Method))
 			return Collections.emptySet();
 
@@ -45,7 +45,7 @@ public class TestMethodResolver implements ElementResolver {
 	}
 
 	@Override
-	public Optional<TestDescriptor> resolve(UniqueId.Segment segment, TestDescriptor parent) {
+	public Optional<TestDescriptor> resolveUniqueId(UniqueId.Segment segment, TestDescriptor parent) {
 		if (!segment.getType().equals(SEGMENT_TYPE))
 			return Optional.empty();
 
