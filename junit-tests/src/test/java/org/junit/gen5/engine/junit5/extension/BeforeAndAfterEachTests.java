@@ -63,6 +63,19 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 
 		assertEquals(asList(
 
+			//OuterTestCase
+			"outermostBefore",
+				"fooBefore",
+				"barBefore",
+					"beforeMethod",
+						"innermostBefore",
+							"testOuter",
+						"innermostAfter",
+					"afterMethod",
+				"barAfter",
+				"fooAfter",
+			"outermostAfter",
+
 			//InnerTestCase
 			"outermostBefore",
 				"fooBefore",
@@ -75,19 +88,6 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 								"innermostAfter",
 							"afterInnerMethod",
 						"fizzAfter",
-					"afterMethod",
-				"barAfter",
-				"fooAfter",
-			"outermostAfter",
-
-			//OuterTestCase
-			"outermostBefore",
-				"fooBefore",
-				"barBefore",
-					"beforeMethod",
-						"innermostBefore",
-							"testOuter",
-						"innermostAfter",
 					"afterMethod",
 				"barAfter",
 				"fooAfter",

@@ -18,8 +18,8 @@ import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.junit5.discovery.DiscoverySelectorResolver;
 import org.junit.gen5.engine.junit5.discovery.JUnit5EngineDescriptor;
+import org.junit.gen5.engine.junit5.discoveryNEW.DiscoverySelectorResolver;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.support.hierarchical.HierarchicalTestEngine;
 
@@ -44,8 +44,10 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 
 	private void resolveDiscoveryRequest(EngineDiscoveryRequest discoveryRequest,
 			JUnit5EngineDescriptor engineDescriptor) {
-		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver(engineDescriptor);
-		resolver.resolveSelectors(discoveryRequest);
+		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver();
+		resolver.resolveSelectors(discoveryRequest, engineDescriptor);
+		//		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver(engineDescriptor);
+		//		resolver.resolveSelectors(discoveryRequest);
 		applyDiscoveryFilters(discoveryRequest, engineDescriptor);
 	}
 
