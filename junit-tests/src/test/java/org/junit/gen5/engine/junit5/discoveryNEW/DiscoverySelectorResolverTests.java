@@ -34,7 +34,7 @@ import org.junit.runner.RunWith;
 @RunWith(JUnit5.class)
 public class DiscoverySelectorResolverTests {
 
-	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(JUnit5TestEngine.ENGINE_ID);
+	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(engineId());
 	private DiscoverySelectorResolver resolver = new DiscoverySelectorResolver(engineDescriptor);
 
 	@Test
