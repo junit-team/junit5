@@ -226,3 +226,35 @@ class MyMockitoTest {
 
 }
 ----
+
+=== Interface Default Methods
+
+JUnit 5 allows tests to be declared in interface default methods. One possible application of this feature is to write tests for interface contracts. For example, you can write tests for how implementations of `Object.equals` or `Comparable.compareTo` should behave as follows:
+
+[source,java]
+[subs="verbatim"]
+----
+include::{testDir}/example/defaultmethods/Testable.java[tags=user_guide]
+----
+
+[source,java]
+[subs="verbatim"]
+----
+include::{testDir}/example/defaultmethods/EqualsContract.java[tags=user_guide]
+----
+
+[source,java]
+[subs="verbatim"]
+----
+include::{testDir}/example/defaultmethods/ComparableContract.java[tags=user_guide]
+----
+
+In your test class you can then implement both contract interfaces thereby inheriting the corresponding tests. Of course you'll have to implement the abstract methods:
+
+[source,java]
+[subs="verbatim"]
+----
+include::{testDir}/example/defaultmethods/StringTests.java[tags=user_guide]
+----
+
+The above tests are merely meant as examples and therefore not complete.
