@@ -455,6 +455,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#tagging-and-filtering">3.7. Tagging and Filtering</a></li>
 <li><a href="#nested-tests">3.8. Nested Tests</a></li>
 <li><a href="#method-parameters-and-dependency-injection">3.9. Method Parameters and Dependency Injection</a></li>
+<li><a href="#interface-default-methods">3.10. Interface Default Methods</a></li>
 </ul>
 </li>
 <li><a href="#running-tests">4. Running Tests</a>
@@ -1177,6 +1178,107 @@ class MyMockitoTest {
 
 }</code></pre>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="interface-default-methods">3.10. Interface Default Methods</h3>
+<div class="paragraph">
+<p>JUnit 5 allows tests to be declared in interface default methods. One possible application of this feature is to write tests for interface contracts. For example, you can write tests for how implementations of <code>Object.equals</code> or <code>Comparable.compareTo</code> should behave as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public interface Testable&lt;T&gt; {
+
+    T createValue();
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public interface EqualsContract&lt;T&gt; extends Testable&lt;T&gt; {
+
+    T createNotEqualValue();
+
+    @Test
+    default void valueEqualsItself() {
+        T value = createValue();
+        assertEquals(value, value);
+    }
+
+    @Test
+    default void valueDoesNotEqualNull() {
+        T value = createValue();
+        assertFalse(value.equals(null));
+    }
+
+    @Test
+    default void valueDoesNotEqualDifferentValue() {
+        T value = createValue();
+        T differentValue = createNotEqualValue();
+        assertNotEquals(value, differentValue);
+        assertNotEquals(differentValue, value);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public interface ComparableContract&lt;T extends Comparable&lt;T&gt;&gt; extends Testable&lt;T&gt; {
+
+    T createSmallerValue();
+
+    @Test
+    default void returnsZeroWhenComparedToItself() {
+        T value = createValue();
+        assertEquals(0, value.compareTo(value));
+    }
+
+    @Test
+    default void returnsPositiveNumberComparedToSmallerValue() {
+        T value = createValue();
+        T smallerValue = createSmallerValue();
+        assertTrue(value.compareTo(smallerValue) &gt; 0);
+    }
+
+    @Test
+    default void returnsNegativeNumberComparedToSmallerValue() {
+        T value = createValue();
+        T smallerValue = createSmallerValue();
+        assertTrue(smallerValue.compareTo(value) &lt; 0);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In your test class you can then implement both contract interfaces thereby inheriting the corresponding tests. Of course you&#8217;ll have to implement the abstract methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">class StringTests implements ComparableContract&lt;String&gt;, EqualsContract&lt;String&gt; {
+
+    @Override
+    public String createValue() {
+        return "foo";
+    }
+
+    @Override
+    public String createSmallerValue() {
+        return "bar"; // 'b' &lt; 'f' in "foo"
+    }
+
+    @Override
+    public String createNotEqualValue() {
+        return "baz";
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above tests are merely meant as examples and therefore not complete.</p>
 </div>
 </div>
 </div>
@@ -2162,7 +2264,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-03-18 10:29:38 -04:00
+Last updated 2016-03-19 13:07:21 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
