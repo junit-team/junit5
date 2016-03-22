@@ -28,7 +28,6 @@ class JUnit5Plugin implements Plugin<Project> {
 	}
 
 	private static void configureJava(Project project, junit5) {
-
 		// Add JUnit dependencies
 		addJUnitDependencies(project, junit5, "testCompile", "testRuntime")
 
@@ -42,7 +41,6 @@ class JUnit5Plugin implements Plugin<Project> {
 	}
 
 	private static void configureAndroid(Project project, junit5) {
-
 		// Add JUnit dependencies
 		addJUnitDependencies(project, junit5, "testCompile", "testApk")
 
@@ -54,40 +52,50 @@ class JUnit5Plugin implements Plugin<Project> {
 			def buildType = variant.buildType.name
 			def nameSuffix = "${variant.flavorName.capitalize()}${buildType.capitalize()}"
 
-			// Setup classpath for this variant's tests and add the test task
-			// Add the compiler's classpath
-			def classpath = new ArrayList<>()
+			// Obtain variant properties
 			def variantData = variant.variantData
-			if (variantData.javacTask) {
-				def javaCompiler = variant.javaCompiler
-				classpath.add(javaCompiler.classpath)
-				classpath.add(javaCompiler.outputs.files)
-			}
-
-			// Add the testApk configuration
-			classpath.add(project.configurations.getByName("testApk"))
-
-			// Add the variant's scope (account for typo in VariantScope#getJavaOuptuts)
 			def variantScope = variantData.scope
 			def scopeJavaOutputs = variantScope.hasProperty("javaOutputs") ? variantScope.javaOutputs : variantScope.javaOuptuts
-			classpath.add(scopeJavaOutputs)
 
-			// Add test resources
-			classpath.add(variantData.javaResourcesForUnitTesting)
-			classpath.add(variant.testedVariant.variantData.javaResourcesForUnitTesting)
+			// Obtain tested variant properties
+			def testedVariantData = variant.testedVariant.variantData
+			def testedVariantScope = testedVariantData.scope
+			def testedScopeJavaOutputs = testedVariantScope.hasProperty("javaOutputs") ? testedVariantScope.javaOutputs : testedVariantScope.javaOuptuts
 
-			// Add filtered boot classpath
+			// Setup classpath for this variant's tests and add the test task
+			// (refer to com.android.build.gradle.tasks.factory.UnitTestConfigAction)
+			// 1) Add the compiler's classpath
+			def classpaths = new ArrayList<>()
+			if (variantData.javacTask) {
+				def javaCompiler = variant.javaCompiler
+				classpaths.add(javaCompiler.classpath)
+				classpaths.add(javaCompiler.outputs.files)
+			} else {
+				classpaths.add(testedScopeJavaOutputs)
+				classpaths.add(scopeJavaOutputs)
+			}
+
+			// 2) Add the testApk configuration
+			classpaths.add(project.configurations.getByName("testApk"))
+
+			// 3) Add test resources
+			classpaths.add(variantData.javaResourcesForUnitTesting)
+			classpaths.add(testedVariantData.javaResourcesForUnitTesting)
+
+			// 4) Add filtered boot classpath
 			def globalScope = variantScope.globalScope
-			classpath.add(globalScope.androidBuilder.getBootClasspath(false).findAll { !it.name.equals("android.jar") })
+			classpaths.add(globalScope.androidBuilder.getBootClasspath(false).findAll {
+				!it.name.equals("android.jar")
+			})
 
-			// Add mocked version of android.jar
-			classpath.add(globalScope.mockableAndroidJarFile)
+			// 5) Add mocked version of android.jar
+			classpaths.add(globalScope.mockableAndroidJarFile)
 
 			addJUnitTask(
 					project: project,
 					junit5: junit5,
 					nameSuffix: nameSuffix,
-					classpath: project.files(classpath),
+					classpath: project.files(classpaths),
 					dependentTasks: Collections.singletonList("assemble${nameSuffix}UnitTest")
 			)
 		}
@@ -95,13 +103,12 @@ class JUnit5Plugin implements Plugin<Project> {
 
 	private static void addJUnitDependencies(project, junit5, compileConfigName, runtimeConfigName) {
 		if (junit5.version) {
-			def junit5Version = junit5.version
-			project.dependencies.add(runtimeConfigName, "org.junit:junit-console:${junit5Version}")
-			project.dependencies.add(compileConfigName, "org.junit:junit5-api:${junit5Version}")
-			project.dependencies.add(runtimeConfigName, "org.junit:junit5-engine:${junit5Version}")
+			project.dependencies.add(runtimeConfigName, "org.junit:junit-console:${junit5.version}")
+			project.dependencies.add(compileConfigName, "org.junit:junit5-api:${junit5.version}")
+			project.dependencies.add(runtimeConfigName, "org.junit:junit5-engine:${junit5.version}")
 
 			if (junit5.runJunit4) {
-				project.dependencies.add(runtimeConfigName, "org.junit:junit4-engine:${junit5Version}")
+				project.dependencies.add(runtimeConfigName, "org.junit:junit4-engine:${junit5.version}")
 			}
 		}
 	}
