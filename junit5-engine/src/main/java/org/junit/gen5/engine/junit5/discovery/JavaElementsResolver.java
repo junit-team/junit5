@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.discoveryNEW;
+package org.junit.gen5.engine.junit5.discovery;
 
 import static java.lang.String.format;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
@@ -30,7 +30,6 @@ import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
-import org.junit.gen5.engine.junit5.discovery.IsNonStaticInnerClass;
 
 public class JavaElementsResolver {
 

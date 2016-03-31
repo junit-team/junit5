@@ -8,13 +8,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.discoveryNEW;
+package org.junit.gen5.engine.junit5.discovery;
 
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
-import org.junit.gen5.engine.junit5.discovery.IsNestedTestClass;
 
 public class NestedTestsResolver extends TestContainerResolver {
 

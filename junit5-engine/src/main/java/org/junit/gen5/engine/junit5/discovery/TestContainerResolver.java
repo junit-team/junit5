@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.discoveryNEW;
+package org.junit.gen5.engine.junit5.discovery;
 
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collections;
@@ -19,7 +19,6 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
-import org.junit.gen5.engine.junit5.discovery.IsPotentialTestContainer;
 
 public class TestContainerResolver implements ElementResolver {
 

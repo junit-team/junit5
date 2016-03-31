@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.discoveryNEW;
+package org.junit.gen5.engine.junit5.discovery;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -21,8 +21,6 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
-import org.junit.gen5.engine.junit5.discovery.IsTestMethod;
-import org.junit.gen5.engine.junit5.discovery.MethodFinder;
 
 public class TestMethodResolver implements ElementResolver {
 

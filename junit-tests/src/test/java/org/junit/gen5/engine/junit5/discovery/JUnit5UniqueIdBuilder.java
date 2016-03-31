@@ -13,9 +13,6 @@ package org.junit.gen5.engine.junit5.discovery;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
-import org.junit.gen5.engine.junit5.discoveryNEW.NestedTestsResolver;
-import org.junit.gen5.engine.junit5.discoveryNEW.TestContainerResolver;
-import org.junit.gen5.engine.junit5.discoveryNEW.TestMethodResolver;
 
 /**
  * Test data builder for unique IDs for JUnit5TestEngine.
