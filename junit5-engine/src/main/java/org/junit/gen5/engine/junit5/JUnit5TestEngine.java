@@ -30,7 +30,6 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 
 	@Override
 	public String getId() {
-		// TODO Consider using class names for engine IDs.
 		return ENGINE_ID;
 	}
 
