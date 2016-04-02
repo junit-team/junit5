@@ -71,7 +71,7 @@ public final class StringUtils {
 	 * the supplied class array is {@code null} or empty
 	 */
 	public static String nullSafeToString(Class<?>... classes) {
-		if (classes == null || classes.length == 0) {
+		if (classes == null) {
 			return "";
 		}
 		return join(stream(classes).map(Class::getName), ", ");
