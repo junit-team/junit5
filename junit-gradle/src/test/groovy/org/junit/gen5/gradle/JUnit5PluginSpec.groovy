@@ -14,6 +14,7 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.tasks.JavaExec
 import org.gradle.testfixtures.ProjectBuilder
+import spock.lang.Requires
 import spock.lang.Specification
 
 class JUnit5PluginSpec extends Specification {
@@ -87,6 +88,7 @@ class JUnit5PluginSpec extends Specification {
 			junit5TestTask.args.containsAll('-r', new File('/any').getCanonicalFile().toString())
 	}
 
+	@Requires({ System.getenv("ANDROID_HOME") })
 	def "setting junit5 properties (android)"() {
 
 		Project androidProject = ProjectBuilder.builder().withParent(project).build()
@@ -131,6 +133,7 @@ class JUnit5PluginSpec extends Specification {
 			true == true
 	}
 
+	@Requires({ System.getenv("ANDROID_HOME") })
 	def "creating junit5Test task (android)"() {
 
 		Project androidProject = ProjectBuilder.builder().withParent(project).build()
