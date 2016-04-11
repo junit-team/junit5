@@ -62,10 +62,24 @@ public class ExtensionRegistry {
 	 */
 	public static ExtensionRegistry newRegistryFrom(ExtensionRegistry parentRegistry,
 			List<Class<? extends Extension>> extensionTypes) {
-
-		ExtensionRegistry newExtensionRegistry = new ExtensionRegistry(parentRegistry);
+		// @formatter:off
+		ExtensionRegistry newExtensionRegistry = Optional.ofNullable(parentRegistry)
+				.map(parent -> new ExtensionRegistry(Optional.of(parent)))
+				.orElseGet(ExtensionRegistry::newRootRegistryWithDefaultExtensions);
+		// @formatter:on
 		extensionTypes.forEach(newExtensionRegistry::registerExtension);
 		return newExtensionRegistry;
+	}
+
+	/**
+	 * Factory for creating and populating a new root registry with the default extension types.
+	 *
+	 * @return a new {@code ExtensionRegistry}
+	 */
+	public static ExtensionRegistry newRootRegistryWithDefaultExtensions() {
+		ExtensionRegistry extensionRegistry = new ExtensionRegistry(Optional.empty());
+		getDefaultExtensionTypes().stream().forEach(extensionRegistry::registerExtension);
+		return extensionRegistry;
 	}
 
 	private static final Logger LOG = Logger.getLogger(ExtensionRegistry.class.getName());
@@ -86,19 +100,8 @@ public class ExtensionRegistry {
 
 	private final Optional<ExtensionRegistry> parent;
 
-	public ExtensionRegistry() {
-		this(null);
-	}
-
-	ExtensionRegistry(ExtensionRegistry parent) {
-		this.parent = Optional.ofNullable(parent);
-		if (!this.parent.isPresent()) {
-			addDefaultExtensions();
-		}
-	}
-
-	private void addDefaultExtensions() {
-		getDefaultExtensionTypes().stream().forEach(this::registerExtension);
+	public ExtensionRegistry(Optional<ExtensionRegistry> parent) {
+		this.parent = parent;
 	}
 
 	/**

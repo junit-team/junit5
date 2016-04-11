@@ -31,7 +31,7 @@ public class JUnit5EngineDescriptor extends EngineDescriptor implements Containe
 
 	@Override
 	public JUnit5EngineExecutionContext beforeAll(JUnit5EngineExecutionContext context) {
-		return context.extend().withExtensionRegistry(new ExtensionRegistry()).build();
+		return context.extend().withExtensionRegistry(ExtensionRegistry.newRootRegistryWithDefaultExtensions()).build();
 	}
 
 }
