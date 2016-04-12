@@ -12,7 +12,6 @@ package org.junit.gen5.console;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.PrintWriter;
