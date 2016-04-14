@@ -10,6 +10,7 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
+import static java.util.Collections.emptyList;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
 
@@ -38,7 +39,7 @@ public class ExtensionRegistryTests {
 
 	@BeforeEach
 	public void initRegistry() {
-		registry = new ExtensionRegistry();
+		registry = ExtensionRegistry.newRootRegistryWithDefaultExtensions();
 	}
 
 	@Test
@@ -98,17 +99,17 @@ public class ExtensionRegistryTests {
 	@Test
 	public void extensionsAreInheritedFromParent() throws Exception {
 
-		ExtensionRegistry parent = new ExtensionRegistry();
+		ExtensionRegistry parent = ExtensionRegistry.newRootRegistryWithDefaultExtensions();
 		parent.registerExtension(MyExtension.class);
 
-		registry = new ExtensionRegistry(parent);
+		registry = ExtensionRegistry.newRegistryFrom(parent, emptyList());
 		registry.registerExtension(YourExtension.class);
 
 		assertExtensionRegistered(registry, MyExtension.class);
 		assertExtensionRegistered(registry, YourExtension.class);
 		assertEquals(2, countExtensionPoints(MyExtensionPoint.class));
 
-		ExtensionRegistry grandChild = new ExtensionRegistry(registry);
+		ExtensionRegistry grandChild = ExtensionRegistry.newRegistryFrom(registry, emptyList());
 		assertExtensionRegistered(grandChild, MyExtension.class);
 		assertExtensionRegistered(registry, YourExtension.class);
 		assertEquals(2, countExtensionPoints(MyExtensionPoint.class));
