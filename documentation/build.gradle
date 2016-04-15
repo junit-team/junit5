@@ -28,6 +28,8 @@ dependencies {
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 }
 
+def asciidoctorOutputDir = "$buildDir/asciidoc"
+
 githubPages {
 	repoUri = 'https://github.com/junit-team/junit5.git'
 
@@ -37,14 +39,18 @@ githubPages {
 	}
 
 	pages {
-		from file(asciidoctor.outputDir.path + '/html5')
-		from file('src/docs/static')
+		from file(asciidoctorOutputDir)
 	}
+
+	deleteExistingFiles = false
 }
 
 publishGhPages.dependsOn asciidoctor
 
 asciidoctor {
+	outputDir = file(asciidoctorOutputDir + '/docs/current/user-guide')
+	separateOutputDirs = false
+	sources { include 'index.adoc' }
 	attributes	'junit-version': project.version,
 				'revnumber' : project.version,
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
