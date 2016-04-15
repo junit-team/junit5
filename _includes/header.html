@@ -1,0 +1,27 @@
+<nav id="navbar-main" class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ site.baseurl }}/"><img src="{{ site.baseurl }}/img/junit5-logo.png"> {{ site.title }}</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+      {% for my_page in site.pages %}
+      {% if my_page.title and my_page.show_in_navigation %}
+      {% if my_page.url == page.url %}
+      <li class="active">
+      {% else %}
+      <li>
+      {% endif %}
+      <a href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a></li>
+      {% endif %}
+      {% endfor %}
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container-fluid -->
+</nav>
