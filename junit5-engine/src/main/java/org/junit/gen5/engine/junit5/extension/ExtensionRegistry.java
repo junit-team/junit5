@@ -28,6 +28,7 @@ import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
@@ -62,11 +63,8 @@ public class ExtensionRegistry {
 	 */
 	public static ExtensionRegistry newRegistryFrom(ExtensionRegistry parentRegistry,
 			List<Class<? extends Extension>> extensionTypes) {
-		// @formatter:off
-		ExtensionRegistry newExtensionRegistry = Optional.ofNullable(parentRegistry)
-				.map(parent -> new ExtensionRegistry(Optional.of(parent)))
-				.orElseGet(ExtensionRegistry::newRootRegistryWithDefaultExtensions);
-		// @formatter:on
+		Preconditions.notNull(parentRegistry, "parentRegistry must not be null");
+		ExtensionRegistry newExtensionRegistry = new ExtensionRegistry(Optional.of(parentRegistry));
 		extensionTypes.forEach(newExtensionRegistry::registerExtension);
 		return newExtensionRegistry;
 	}
