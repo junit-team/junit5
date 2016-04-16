@@ -76,21 +76,14 @@ public class ExtensionRegistry {
 	 */
 	public static ExtensionRegistry newRootRegistryWithDefaultExtensions() {
 		ExtensionRegistry extensionRegistry = new ExtensionRegistry(Optional.empty());
-		getDefaultExtensionTypes().stream().forEach(extensionRegistry::registerExtension);
+		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerExtension);
 		return extensionRegistry;
 	}
 
 	private static final Logger LOG = Logger.getLogger(ExtensionRegistry.class.getName());
 
-	private static final List<Class<? extends Extension>> defaultExtensionTypes = Collections.unmodifiableList(
+	private static final List<Class<? extends Extension>> DEFAULT_EXTENSIONS = Collections.unmodifiableList(
 		Arrays.asList(DisabledCondition.class, TestInfoParameterResolver.class, TestReporterParameterResolver.class));
-
-	/**
-	 * @return the list of all extension types that are added by default to all root registries
-	 */
-	static List<Class<? extends Extension>> getDefaultExtensionTypes() {
-		return defaultExtensionTypes;
-	}
 
 	private final Set<Class<? extends Extension>> registeredExtensionTypes = new LinkedHashSet<>();
 
