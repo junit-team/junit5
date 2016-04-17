@@ -17,5 +17,41 @@
     "speakers": [
       "marcphilipp"
     ]
+  },
+  {
+    "title": "Skills Matter",
+    "date": "2016-04-13",
+    "location": "London, England",
+    "link": "https://skillsmatter.com/meetups/8039-in-the-brain-of-sam-brannen",
+    "speakers": [
+      "sbrannen"
+    ]
+  },
+  {
+    "title": "Java User Group Zurich",
+    "date": "2016-04-20",
+    "location": "Zurich, Switzerland",
+    "link": "http://www.jug.ch/html/events/2016/testing_on_the_jvm.html",
+    "speakers": [
+      "sbrannen"
+    ]
+  },
+  {
+    "title": "Spring I/O",
+    "date": "2016-05-19",
+    "location": "Barcelona, Spain",
+    "link": "http://www.springio.net/",
+    "speakers": [
+      "sbrannen"
+    ]
+  },
+  {
+    "title": "JEEConf 2016",
+    "date": "2016-05-21",
+    "location": "Kyiv, Ukraine",
+    "link": "http://jeeconf.com/program/junit-5-next-generation-testing-on-the-jvm/",
+    "speakers": [
+      "nicolaiparlog"
+    ]
   }
 ]
