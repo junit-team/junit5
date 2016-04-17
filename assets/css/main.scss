@@ -35,6 +35,15 @@
 	margin-bottom: 30px;
 	font-weight: 300;
 	line-height: 120%;
+	font-size: $font-size-h2;
+}
+@media (min-width: $screen-sm-min) {
+	.jumbotron h1 {
+		font-size: $jumbotron-heading-font-size;
+	}
+}
+.jumbotron li {
+	padding: 5px;
 }
 
 #events dt {
