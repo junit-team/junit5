@@ -15,7 +15,6 @@ import static org.junit.gen5.api.Assertions.*;
 import java.util.Collection;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.discovery.ClassFilter;
 
 class ClassFilterTests {
 	@Test
