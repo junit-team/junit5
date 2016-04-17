@@ -1,0 +1,21 @@
+[
+  {
+    "title": "Java Forum Stuttgart",
+    "date": "2016-07-07",
+    "location": "Stuttgart, Germany",
+    "link": "http://www.java-forum-stuttgart.de",
+    "speakers": [
+      "marcphilipp",
+      "mmerdes"
+    ]
+  },
+  {
+    "title": "ObjektForum Stuttgart",
+    "date": "2016-06-06",
+    "location": "Stuttgart, Germany",
+    "link": "https://www.andrena.de/event/objektforum-stuttgart-juni2016",
+    "speakers": [
+      "marcphilipp"
+    ]
+  }
+]
