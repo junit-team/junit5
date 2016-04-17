@@ -12,6 +12,6 @@ The JUnit 5 team released the [Alpha version](https://github.com/junit-team/juni
 
 You're invited to follow our ongoing work, review it and give feedback. This short list of links will get you started:
 
-- [GitHub Repository](https://github.com/junit-team/junit5/) with all the code and issues
 - [User Guide]({{ site.baseurl }}/docs/current/user-guide)
 - [Javadoc](https://junit.ci.cloudbees.com/job/JUnit5/javadoc/)
+- [GitHub Repository](https://github.com/junit-team/junit5/) with all the code and issues
