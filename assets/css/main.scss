@@ -66,6 +66,6 @@ footer {
 	bottom: 0;
 	width: 100%;
 	height: $footer_height;
-	background-color: $gray-lighter;
-	color: $gray-light;
+	background-color: $jumbotron-bg;
+	color: darken($jumbotron-bg, 25%);
 }
