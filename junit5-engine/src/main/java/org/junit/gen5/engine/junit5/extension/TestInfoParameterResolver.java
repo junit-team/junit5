@@ -75,6 +75,7 @@ class TestInfoParameterResolver implements MethodParameterResolver {
 			return new ToStringBuilder(this)
 				.append("name", this.name)
 				.append("displayName", this.displayName)
+				.append("tags", this.tags)
 				.toString();
 			// @formatter:on
 		}
