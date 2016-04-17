@@ -8,7 +8,7 @@
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
-@media (min-width: $grid-float-breakpoint) {
+@media (min-width: $screen-sm-min) {
 	#navbar-main {
 		margin-top: 50px;
 		margin-bottom: 30px;
