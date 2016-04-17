@@ -40,3 +40,23 @@
 #events dt {
 	margin-top: 7px;
 }
+
+/* Sticky footer styles
+-------------------------------------------------- */
+$footer_height: 40px;
+html {
+	position: relative;
+	min-height: 100%;
+}
+body {
+	margin-bottom: $footer_height;
+}
+footer {
+	padding-top: ($footer_height - ($line-height-base * $font-size-base)) / 2;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: $footer_height;
+	background-color: $gray-lighter;
+	color: $gray-light;
+}
