@@ -25,8 +25,6 @@ import org.junit.gen5.api.extension.ExtensionConfigurationException;
 import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.junit5.extension.ExtensionPointSorter;
-import org.junit.gen5.engine.junit5.extension.RegisteredExtensionPoint;
 
 /**
  * Unit tests for {@link ExtensionPointSorter}.
