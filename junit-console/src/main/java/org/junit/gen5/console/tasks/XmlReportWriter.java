@@ -73,7 +73,7 @@ class XmlReportWriter {
 
 		writer.writeStartElement("testsuite");
 		writeAttributes(testIdentifier, tests, numberFormat, writer);
-		writer.writeComment("Unique ID: " + testIdentifier.getUniqueId().toString());
+		writer.writeComment("Unique ID: " + testIdentifier.getUniqueId());
 		writeSystemProperties(writer);
 		for (TestIdentifier test : tests) {
 			writeTestcase(test, numberFormat, writer);
@@ -117,7 +117,7 @@ class XmlReportWriter {
 		Optional<TestIdentifier> parent = reportData.getTestPlan().getParent(test);
 		writer.writeAttribute("classname", parent.map(TestIdentifier::getName).orElse("<unrooted>"));
 		writer.writeAttribute("time", getTime(test, numberFormat));
-		writer.writeComment("Unique ID: " + test.getUniqueId().toString());
+		writer.writeComment("Unique ID: " + test.getUniqueId());
 
 		writeSkippedOrErrorOrFailureElement(test, writer);
 		writeReportEntriesToSystemOutElement(test, writer);
