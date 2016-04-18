@@ -13,6 +13,7 @@ package org.junit.gen5.console.tasks;
 import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.*;
 
 import java.io.PrintWriter;
+import java.util.regex.Pattern;
 
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestExecutionResult.Status;
@@ -25,6 +26,10 @@ import org.junit.gen5.launcher.TestPlan;
  * @since 5.0
  */
 class ColoredPrintingTestListener implements TestExecutionListener {
+
+	private static final Pattern LINE_START_PATTERN = Pattern.compile("(?m)^");
+
+	static final String INDENTATION = "             ";
 
 	private final PrintWriter out;
 	private final boolean disableAnsiColors;
@@ -98,7 +103,7 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	}
 
 	private void printlnMessage(Color color, String message, String detail) {
-		println(color, "             => " + message + ": %s", detail);
+		println(color, INDENTATION + "=> " + message + ": %s", indented(detail));
 	}
 
 	private void println(Color color, String format, Object... args) {
@@ -113,6 +118,17 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 			// Use string concatenation to avoid ANSI disruption on console
 			out.println(color + message + NONE);
 		}
+	}
+
+	/**
+	 * Indents the given message if it is a multi-line string. {@link #INDENTATION} is used to prefix the start of each
+	 * new line except the first one.
+	 *
+	 * @param message the message to indent.
+	 * @return indented message.
+	 */
+	private static String indented(String message) {
+		return LINE_START_PATTERN.matcher(message).replaceAll(INDENTATION).trim();
 	}
 
 	enum Color {
