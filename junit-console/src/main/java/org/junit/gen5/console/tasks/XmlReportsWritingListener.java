@@ -86,7 +86,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 
 	private void writeXmlReportInCaseOfRoot(TestIdentifier testIdentifier) {
 		if (isARoot(testIdentifier)) {
-			String rootName = UniqueId.parse(testIdentifier.getUniqueId().toString()).getSegments().get(0).getValue();
+			String rootName = UniqueId.parse(testIdentifier.getUniqueId()).getSegments().get(0).getValue();
 			writeXmlReportSafely(testIdentifier, rootName);
 		}
 	}

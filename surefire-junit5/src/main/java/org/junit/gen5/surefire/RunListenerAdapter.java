@@ -84,7 +84,7 @@ final class RunListenerAdapter implements TestExecutionListener {
 	}
 
 	private String getClassNameOrUniqueId(TestIdentifier testIdentifier) {
-		return getClassName(testIdentifier).orElse(testIdentifier.getUniqueId().toString());
+		return getClassName(testIdentifier).orElse(testIdentifier.getUniqueId());
 	}
 
 	private Optional<String> getClassName(TestIdentifier testIdentifier) {
