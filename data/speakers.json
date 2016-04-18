@@ -1,0 +1,27 @@
+{
+  "marcphilipp": {
+    "name": "Marc Philipp",
+    "github_username": "marcphilipp",
+    "twitter_username": "marcphilipp",
+    "link": "http://www.marcphilipp.de/",
+    "picture": "https://avatars0.githubusercontent.com/u/214207?v=3&s=460"
+  },
+  "mmerdes": {
+    "name": "Matthias Merdes",
+    "github_username": "mmerdes",
+    "picture": "https://avatars3.githubusercontent.com/u/9845887?v=3&s=400"
+  },
+  "sbrannen": {
+    "name": "Sam Brannen",
+    "github_username": "sbrannen",
+    "twitter_username": "sam_brannen",
+    "link": "http://sambrannen.com/",
+    "picture": "https://avatars2.githubusercontent.com/u/104798?v=3&s=460"
+  },
+  "nicolaiparlog": {
+    "name": "Nicolai Parlog",
+    "github_username": "nicolaiparlog",
+    "twitter_username": "nipafx",
+    "link": "http://codefx.org/"
+  }
+}

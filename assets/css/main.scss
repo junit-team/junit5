@@ -1,0 +1,71 @@
+---
+---
+
+@import "bootstrap";
+
+#navbar-main {
+	border: 0;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+@media (min-width: $screen-sm-min) {
+	#navbar-main {
+		margin-top: 50px;
+		margin-bottom: 30px;
+	}
+}
+.navbar-brand {
+	margin-top: -15px;
+	font-size: $navbar-height - 10px;
+	font-weight: 300;
+	line-height: $navbar-height;
+}
+.navbar-brand img {
+	height: $navbar-height;
+	float: left;
+	margin-right: 20px;
+}
+#navbar-main .container-fluid {
+	padding: 0;
+}
+.jumbotron {
+	text-align: center;
+}
+.jumbotron h1 {
+	margin-bottom: 30px;
+	font-weight: 300;
+	line-height: 120%;
+	font-size: $font-size-h2;
+}
+@media (min-width: $screen-sm-min) {
+	.jumbotron h1 {
+		font-size: $jumbotron-heading-font-size;
+	}
+}
+.jumbotron li {
+	padding: 5px;
+}
+
+#events dt {
+	margin-top: 7px;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+$footer_height: 40px;
+html {
+	position: relative;
+	min-height: 100%;
+}
+body {
+	margin-bottom: $footer_height;
+}
+footer {
+	padding-top: ($footer_height - ($line-height-base * $font-size-base)) / 2;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: $footer_height;
+	background-color: $jumbotron-bg;
+	color: darken($jumbotron-bg, 25%);
+}
