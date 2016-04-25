@@ -124,6 +124,10 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 		if (methods.size() == 1) {
 			return new JavaSource(getOnlyElement(methods));
 		}
+		// special case for parameterized tests
+		if (methodName.contains("[") && methodName.endsWith("]")) {
+			return toJavaMethodSource(testClass, methodName.substring(0, methodName.indexOf("[")));
+		}
 		return new JavaSource(testClass);
 	}
 
