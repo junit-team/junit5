@@ -8,6 +8,7 @@ dependencies {
 	// see: https://github.com/junit-team/junit5/issues/146
 	runtime(project(':junit4-engine'))
 	runtime(project(':junit5-engine'))
+	runtime(project(':junit4-runner'))
 }
 
 mainClassName = "org.junit.gen5.console.ConsoleRunner"
