@@ -71,5 +71,14 @@
     "speakers": [
       "bechte"
     ]
+  },
+  {
+    "title": "Devoxx Poland",
+    "date": "2016-06-23",
+    "location": "Krakow, Poland",
+    "link": "http://cfp.devoxx.pl/2016/talk/OOT-4758",
+    "speakers": [
+      "nicolaiparlog"
+    ]
   }
 ]
