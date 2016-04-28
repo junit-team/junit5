@@ -1,5 +1,15 @@
 [
   {
+    "title": "Entwicklertag Karlsruhe",
+    "date": "2016-06-16",
+    "location": "Karlsruhe, Germany",
+    "link": "https://entwicklertag.de/karlsruhe/2016/junit5-was-bringt-die",
+    "speakers": [
+      "jlink",
+      "mmerdes"
+    ]
+  },
+    {
     "title": "Java Forum Stuttgart",
     "date": "2016-07-07",
     "location": "Stuttgart, Germany",
