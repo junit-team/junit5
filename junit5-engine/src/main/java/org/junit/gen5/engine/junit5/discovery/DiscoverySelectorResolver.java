@@ -62,9 +62,9 @@ public class DiscoverySelectorResolver {
 	}
 
 	private void pruneTree(TestDescriptor root) {
-		TestDescriptor.Visitor removeChildrenWithoutTests = (descriptor, remove) -> {
+		TestDescriptor.Visitor removeChildrenWithoutTests = (descriptor) -> {
 			if (!descriptor.isRoot() && !descriptor.hasTests())
-				remove.run();
+				descriptor.removeFromHierarchy();
 		};
 		root.accept(removeChildrenWithoutTests);
 	}
