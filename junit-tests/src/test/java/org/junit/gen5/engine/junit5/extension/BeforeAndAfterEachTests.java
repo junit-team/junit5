@@ -60,7 +60,6 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
 
 		// @formatter:off
-
 		assertEquals(asList(
 
 			//OuterTestCase
@@ -98,7 +97,7 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 	}
 
 	@Test
-	public void inheritedBeforeEachAndAfterEachCallbacks() {
+	public void beforeEachAndAfterEachCallbacksDeclaredOnSuperclassAndSubclass() {
 		TestDiscoveryRequest request = request().select(forClass(ChildTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -111,6 +110,39 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 
 		assertEquals(asList("fooBefore", "barBefore", "testChild", "barAfter", "fooAfter"), callSequence,
 			"wrong call sequence");
+	}
+
+	@Test
+	public void beforeEachAndAfterEachCallbacksDeclaredOnInterfaceAndClass() {
+		TestDiscoveryRequest request = request().select(forClass(TestInterfaceTestCase.class)).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+
+		// @formatter:off
+		assertEquals(asList(
+
+			// Test Interface
+			"fooBefore",
+				"barBefore",
+					"defaultTestMethod",
+				"barAfter",
+			"fooAfter",
+
+			// Test Class
+			"fooBefore",
+				"barBefore",
+					"localTestMethod",
+				"barAfter",
+			"fooAfter"
+
+		), callSequence, "wrong call sequence");
+		// @formatter:on
 	}
 
 	// -------------------------------------------------------------------
@@ -129,6 +161,25 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 			callSequence.add("testChild");
 		}
 
+	}
+
+	@ExtendWith(FooMethodLevelCallbacks.class)
+	private interface TestInterface {
+
+		@Test
+		default void defaultTest() {
+			callSequence.add("defaultTestMethod");
+		}
+
+	}
+
+	@ExtendWith(BarMethodLevelCallbacks.class)
+	private static class TestInterfaceTestCase implements TestInterface {
+
+		@Test
+		void localTest() {
+			callSequence.add("localTestMethod");
+		}
 	}
 
 	@ExtendWith({ FooMethodLevelCallbacks.class, BarMethodLevelCallbacks.class, InnermostAndOutermost.class })

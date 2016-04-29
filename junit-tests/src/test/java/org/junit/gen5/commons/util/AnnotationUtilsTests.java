@@ -92,6 +92,16 @@ public final class AnnotationUtilsTests {
 	}
 
 	@Test
+	public void findRepeatableAnnotationsWithSingleComposedTagOnImplementedInterface() throws Exception {
+		assertTagsFound(TaggedInterfaceClass.class, "fast");
+	}
+
+	@Test
+	public void findRepeatableAnnotationsWithLocalComposedTagAndComposedTagOnImplementedInterface() throws Exception {
+		assertTagsFound(LocalTagOnTaggedInterfaceClass.class, "fast", "smoke");
+	}
+
+	@Test
 	public void findRepeatableAnnotationsWithMultipleTags() throws Exception {
 		assertTagsFound(MultiTaggedClass.class, "a", "b", "c");
 	}
@@ -300,6 +310,17 @@ public final class AnnotationUtilsTests {
 
 	@FastAndSmoky
 	static class FastAndSmokyTaggedClass {
+	}
+
+	@Fast
+	interface TaggedInterface {
+	}
+
+	static class TaggedInterfaceClass implements TaggedInterface {
+	}
+
+	@Smoke
+	static class LocalTagOnTaggedInterfaceClass implements TaggedInterface {
 	}
 
 	@Tags({ @Tag("a"), @Tag("b"), @Tag("c") })
