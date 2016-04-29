@@ -35,10 +35,10 @@ class DiscoveryFilterApplier {
 		if (classFilters.isEmpty()) {
 			return;
 		}
-		TestDescriptor.Visitor filteringVisitor = (descriptor, remove) -> {
+		TestDescriptor.Visitor filteringVisitor = descriptor -> {
 			if (descriptor instanceof ClassTestDescriptor) {
 				if (!includeClass((ClassTestDescriptor) descriptor, classFilters))
-					remove.run();
+					descriptor.removeFromHierarchy();
 			}
 		};
 		engineDescriptor.accept(filteringVisitor);

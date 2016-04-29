@@ -55,6 +55,8 @@ public interface TestDescriptor {
 
 	void removeChild(TestDescriptor descriptor);
 
+	void removeFromHierarchy();
+
 	default Set<? extends TestDescriptor> allDescendants() {
 		Set<TestDescriptor> all = new LinkedHashSet<>();
 		all.addAll(getChildren());
@@ -72,7 +74,7 @@ public interface TestDescriptor {
 
 	interface Visitor {
 
-		void visit(TestDescriptor descriptor, Runnable remove);
+		void visit(TestDescriptor descriptor);
 	}
 
 	void accept(Visitor visitor);
