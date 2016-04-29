@@ -25,13 +25,13 @@ public class JUnit5UniqueIdBuilder {
 		UniqueId containerId = engineId();
 		if (clazz.getEnclosingClass() != null && !ReflectionUtils.isStatic(clazz)) {
 			containerId = uniqueIdForClass(clazz.getEnclosingClass());
-			return containerId.append(JUnit5TestableFactory.TYPE_NESTED_CLASS, clazz.getSimpleName());
+			return containerId.append(NestedTestsResolver.SEGMENT_TYPE, clazz.getSimpleName());
 		}
-		return containerId.append(JUnit5TestableFactory.TYPE_CLASS, clazz.getName());
+		return containerId.append(TestContainerResolver.SEGMENT_TYPE, clazz.getName());
 	}
 
 	public static UniqueId uniqueIdForMethod(Class<?> clazz, String methodPart) {
-		return uniqueIdForClass(clazz).append(JUnit5TestableFactory.TYPE_METHOD, methodPart);
+		return uniqueIdForClass(clazz).append(TestMethodResolver.SEGMENT_TYPE, methodPart);
 	}
 
 	public static UniqueId engineId() {

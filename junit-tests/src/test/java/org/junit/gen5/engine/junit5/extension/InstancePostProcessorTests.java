@@ -45,11 +45,11 @@ public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 		// @formatter:off
 		assertEquals(asList(
 
-			//NestedTestCase
-			"fooPostProcessTestInstance", "barPostProcessTestInstance", "beforeMethod", "beforeInnerMethod", "testInner",
-
 			//OuterTestCase
-			"fooPostProcessTestInstance", "beforeMethod", "testOuter"
+			"fooPostProcessTestInstance", "beforeMethod", "testOuter",
+
+			//NestedTestCase
+			"fooPostProcessTestInstance", "barPostProcessTestInstance", "beforeMethod", "beforeInnerMethod", "testInner"
 
 		), callSequence, "wrong call sequence");
 		// @formatter:on

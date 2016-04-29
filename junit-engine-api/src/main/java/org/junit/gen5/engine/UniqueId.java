@@ -92,8 +92,13 @@ public class UniqueId implements Cloneable {
 	 * for constructing the string representation. This allows more robust parsing.</p>
 	 */
 	public UniqueId append(String segmentType, String value) {
+		Segment segment = new Segment(segmentType, value);
+		return append(segment);
+	}
+
+	public UniqueId append(Segment segment) {
 		UniqueId clone = new UniqueId(segments);
-		clone.segments.add(new Segment(segmentType, value));
+		clone.segments.add(segment);
 		return clone;
 	}
 
@@ -115,13 +120,13 @@ public class UniqueId implements Cloneable {
 	}
 
 	@Override
-	public String toString() {
-		return getUniqueString();
+	public int hashCode() {
+		return segments.hashCode();
 	}
 
 	@Override
-	public int hashCode() {
-		return segments.hashCode();
+	public String toString() {
+		return getUniqueString();
 	}
 
 	public static class Segment {
