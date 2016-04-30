@@ -22,8 +22,8 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.AfterEachExtensionPoint;
-import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.AfterEachCallback;
+import org.junit.gen5.api.extension.BeforeEachCallback;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.ExtensionPointRegistry;
 import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
@@ -35,8 +35,8 @@ import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
- * Integration tests that verify support for {@link BeforeEach}, {@link AfterEach}, {@link BeforeEachExtensionPoint},
- * and {@link AfterEachExtensionPoint} in the {@link JUnit5TestEngine}.
+ * Integration tests that verify support for {@link BeforeEach}, {@link AfterEach}, {@link BeforeEachCallback},
+ * and {@link AfterEachCallback} in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
@@ -226,11 +226,11 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 
 		@Override
 		public void registerExtensions(ExtensionPointRegistry registry) {
-			registry.register((BeforeEachExtensionPoint) ctx -> callSequence.add("innermostBefore"),
+			registry.register((BeforeEachCallback) ctx -> callSequence.add("innermostBefore"),
 				Position.INNERMOST);
-			registry.register((AfterEachExtensionPoint) this::innermostAfter, Position.INNERMOST);
-			registry.register((BeforeEachExtensionPoint) this::outermostBefore, Position.OUTERMOST);
-			registry.register((AfterEachExtensionPoint) this::outermostAfter, Position.OUTERMOST);
+			registry.register((AfterEachCallback) this::innermostAfter, Position.INNERMOST);
+			registry.register((BeforeEachCallback) this::outermostBefore, Position.OUTERMOST);
+			registry.register((AfterEachCallback) this::outermostAfter, Position.OUTERMOST);
 		}
 
 		private void outermostBefore(TestExtensionContext context) {
@@ -246,7 +246,7 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 		}
 	}
 
-	private static class FooMethodLevelCallbacks implements BeforeEachExtensionPoint, AfterEachExtensionPoint {
+	private static class FooMethodLevelCallbacks implements BeforeEachCallback, AfterEachCallback {
 
 		@Override
 		public void beforeEach(TestExtensionContext context) {
@@ -260,7 +260,7 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 
 	}
 
-	private static class BarMethodLevelCallbacks implements BeforeEachExtensionPoint, AfterEachExtensionPoint {
+	private static class BarMethodLevelCallbacks implements BeforeEachCallback, AfterEachCallback {
 
 		@Override
 		public void beforeEach(TestExtensionContext context) {
@@ -274,7 +274,7 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 
 	}
 
-	private static class FizzMethodLevelCallbacks implements BeforeEachExtensionPoint, AfterEachExtensionPoint {
+	private static class FizzMethodLevelCallbacks implements BeforeEachCallback, AfterEachCallback {
 
 		@Override
 		public void beforeEach(TestExtensionContext context) {

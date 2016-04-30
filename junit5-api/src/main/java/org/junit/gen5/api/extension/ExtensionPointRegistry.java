@@ -53,7 +53,7 @@ import org.junit.gen5.commons.meta.API;
  *
  * <pre style="code">
  * public void registerExtensions(ExtensionPointRegistry registry) {
- *     registry.register((BeforeEachExtensionPoint) context -&gt; { &#47;* ... *&#47; });
+ *     registry.register((BeforeEachCallback) context -&gt; { &#47;* ... *&#47; });
  * }
  * </pre>
  *
@@ -66,7 +66,7 @@ import org.junit.gen5.commons.meta.API;
  *
  * <pre style="code">
  * public void registerExtensions(ExtensionPointRegistry registry) {
- *     registry.register((BeforeEachExtensionPoint) this::beforeEach);
+ *     registry.register((BeforeEachCallback) this::beforeEach);
  * }
  *
  * void beforeEach(TestExtensionContext context) {

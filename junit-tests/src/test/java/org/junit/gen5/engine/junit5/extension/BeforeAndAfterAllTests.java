@@ -21,8 +21,8 @@ import java.util.List;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.AfterAllExtensionPoint;
-import org.junit.gen5.api.extension.BeforeAllExtensionPoint;
+import org.junit.gen5.api.extension.AfterAllCallback;
+import org.junit.gen5.api.extension.BeforeAllCallback;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.ExtensionPointRegistry;
@@ -35,7 +35,7 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests that verify support of {@link BeforeAll}, {@link AfterAll},
- * {@link BeforeAllExtensionPoint}, and {@link AfterAllExtensionPoint} in the {@link JUnit5TestEngine}.
+ * {@link BeforeAllCallback}, and {@link AfterAllCallback} in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
@@ -95,10 +95,10 @@ public class BeforeAndAfterAllTests extends AbstractJUnit5TestEngineTests {
 
 		@Override
 		public void registerExtensions(ExtensionPointRegistry registry) {
-			registry.register((BeforeAllExtensionPoint) this::innermostBefore, Position.INNERMOST);
-			registry.register((AfterAllExtensionPoint) this::innermostAfter, Position.INNERMOST);
-			registry.register((BeforeAllExtensionPoint) this::outermostBefore, Position.OUTERMOST);
-			registry.register((AfterAllExtensionPoint) this::outermostAfter, Position.OUTERMOST);
+			registry.register((BeforeAllCallback) this::innermostBefore, Position.INNERMOST);
+			registry.register((AfterAllCallback) this::innermostAfter, Position.INNERMOST);
+			registry.register((BeforeAllCallback) this::outermostBefore, Position.OUTERMOST);
+			registry.register((AfterAllCallback) this::outermostAfter, Position.OUTERMOST);
 		}
 
 		private void outermostBefore(ContainerExtensionContext context) {
@@ -118,7 +118,7 @@ public class BeforeAndAfterAllTests extends AbstractJUnit5TestEngineTests {
 		}
 	}
 
-	private static class FooClassLevelCallbacks implements BeforeAllExtensionPoint, AfterAllExtensionPoint {
+	private static class FooClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
 		public void beforeAll(ContainerExtensionContext testExecutionContext) {
@@ -131,7 +131,7 @@ public class BeforeAndAfterAllTests extends AbstractJUnit5TestEngineTests {
 		}
 	}
 
-	private static class BarClassLevelCallbacks implements BeforeAllExtensionPoint, AfterAllExtensionPoint {
+	private static class BarClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
 		public void beforeAll(ContainerExtensionContext testExecutionContext) {

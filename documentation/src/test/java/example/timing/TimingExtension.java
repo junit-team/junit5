@@ -15,8 +15,8 @@ import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.INNER
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
-import org.junit.gen5.api.extension.AfterEachExtensionPoint;
-import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.AfterEachCallback;
+import org.junit.gen5.api.extension.BeforeEachCallback;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 import org.junit.gen5.api.extension.ExtensionPointRegistry;
@@ -38,7 +38,7 @@ public class TimingExtension implements ExtensionRegistrar {
 		registry.register(new TestMethodInvocationWrapper(), INNERMOST);
 	}
 
-	private static class TestMethodInvocationWrapper implements BeforeEachExtensionPoint, AfterEachExtensionPoint {
+	private static class TestMethodInvocationWrapper implements BeforeEachCallback, AfterEachCallback {
 
 		@Override
 		public void beforeEach(TestExtensionContext context) throws Exception {

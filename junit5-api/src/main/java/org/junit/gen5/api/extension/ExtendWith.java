@@ -34,10 +34,10 @@ import org.junit.gen5.commons.meta.API;
  * <li>{@link InstancePostProcessor}</li>
  * <li>{@link MethodParameterResolver}</li>
  * <li>{@link ExceptionHandler}</li>
- * <li>{@link BeforeEachExtensionPoint}</li>
- * <li>{@link AfterEachExtensionPoint}</li>
- * <li>{@link BeforeAllExtensionPoint}</li>
- * <li>{@link AfterAllExtensionPoint}</li>
+ * <li>{@link BeforeEachCallback}</li>
+ * <li>{@link AfterEachCallback}</li>
+ * <li>{@link BeforeAllCallback}</li>
+ * <li>{@link AfterAllCallback}</li>
  * </ul>
  *
  * @since 5.0

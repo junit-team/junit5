@@ -15,23 +15,23 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code BeforeAllExtensionPoint} defines the API for {@link Extension
- * Extensions} that wish to provide additional behavior to tests before
- * all test methods have been invoked.
+ * {@code BeforeAllCallback} defines the API for {@link Extension Extensions}
+ * that wish to provide additional behavior to tests before all test methods
+ * have been invoked.
  *
- * <p>Concrete implementations often implement {@link AfterAllExtensionPoint} as well.
+ * <p>Concrete implementations often implement {@link AfterAllCallback} as well.
  *
  * <p>Implementations must provide a no-args constructor.
  *
  * @since 5.0
  * @see org.junit.gen5.api.BeforeAll
- * @see AfterAllExtensionPoint
- * @see BeforeEachExtensionPoint
- * @see AfterEachExtensionPoint
+ * @see AfterAllCallback
+ * @see BeforeEachCallback
+ * @see AfterEachCallback
  */
 @FunctionalInterface
 @API(Experimental)
-public interface BeforeAllExtensionPoint extends ExtensionPoint {
+public interface BeforeAllCallback extends ExtensionPoint {
 
 	/**
 	 * Callback that is invoked <em>before</em> all {@code @BeforeAll}

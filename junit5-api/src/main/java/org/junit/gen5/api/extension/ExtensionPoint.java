@@ -27,10 +27,10 @@ import org.junit.gen5.commons.meta.API;
  * @see InstancePostProcessor
  * @see ExceptionHandler
  * @see MethodParameterResolver
- * @see BeforeEachExtensionPoint
- * @see AfterEachExtensionPoint
- * @see BeforeAllExtensionPoint
- * @see AfterAllExtensionPoint
+ * @see BeforeEachCallback
+ * @see AfterEachCallback
+ * @see BeforeAllCallback
+ * @see AfterAllCallback
  * @see ExtensionRegistrar
  */
 @API(Experimental)

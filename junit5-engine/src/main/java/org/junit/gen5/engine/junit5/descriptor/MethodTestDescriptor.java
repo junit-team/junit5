@@ -19,8 +19,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.junit.gen5.api.extension.AfterEachExtensionPoint;
-import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.AfterEachCallback;
+import org.junit.gen5.api.extension.BeforeEachCallback;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ExceptionHandler;
 import org.junit.gen5.api.extension.InstancePostProcessor;
@@ -143,9 +143,9 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 
 		invokeInstancePostProcessors(context.getExtensionRegistry(), testExtensionContext);
-		invokeBeforeEachExtensionPoints(context.getExtensionRegistry(), testExtensionContext);
+		invokeBeforeEachCallbacks(context.getExtensionRegistry(), testExtensionContext);
 		invokeTestMethod(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
-		invokeAfterEachExtensionPoints(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
+		invokeAfterEachCallbacks(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
 
 		throwableCollector.assertEmpty();
 
@@ -163,15 +163,15 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		extensionRegistry.stream(InstancePostProcessor.class).forEach(applyInstancePostProcessor);
 	}
 
-	private void invokeBeforeEachExtensionPoints(ExtensionRegistry extensionRegistry,
+	private void invokeBeforeEachCallbacks(ExtensionRegistry extensionRegistry,
 			TestExtensionContext testExtensionContext) throws Exception {
 
-		Consumer<RegisteredExtensionPoint<BeforeEachExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
+		Consumer<RegisteredExtensionPoint<BeforeEachCallback>> applyBeforeEach = registeredExtensionPoint -> {
 			executeAndMaskThrowable(
 				() -> registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext));
 		};
 
-		extensionRegistry.stream(BeforeEachExtensionPoint.class).forEach(applyBeforeEach);
+		extensionRegistry.stream(BeforeEachCallback.class).forEach(applyBeforeEach);
 	}
 
 	private void invokeTestMethod(ExtensionRegistry ExtensionRegistry, TestExtensionContext testExtensionContext,
@@ -220,10 +220,10 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		}
 	}
 
-	private void invokeAfterEachExtensionPoints(ExtensionRegistry extensionRegistry,
+	private void invokeAfterEachCallbacks(ExtensionRegistry extensionRegistry,
 			TestExtensionContext testExtensionContext, ThrowableCollector throwableCollector) throws Exception {
 
-		extensionRegistry.stream(AfterEachExtensionPoint.class, ApplicationOrder.BACKWARD).forEach(
+		extensionRegistry.stream(AfterEachCallback.class, ApplicationOrder.BACKWARD).forEach(
 			registeredExtensionPoint -> {
 				throwableCollector.execute(
 					() -> registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext));
