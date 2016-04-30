@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import org.junit.gen5.api.extension.AfterEachExtensionPoint;
 import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
-import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
+import org.junit.gen5.api.extension.ExceptionHandler;
 import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
@@ -142,7 +142,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 
-		invokeInstancePostProcessorExtensionPoints(context.getExtensionRegistry(), testExtensionContext);
+		invokeInstancePostProcessors(context.getExtensionRegistry(), testExtensionContext);
 		invokeBeforeEachExtensionPoints(context.getExtensionRegistry(), testExtensionContext);
 		invokeTestMethod(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
 		invokeAfterEachExtensionPoints(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
@@ -152,7 +152,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		return context;
 	}
 
-	private void invokeInstancePostProcessorExtensionPoints(ExtensionRegistry extensionRegistry,
+	private void invokeInstancePostProcessors(ExtensionRegistry extensionRegistry,
 			TestExtensionContext testExtensionContext) throws Exception {
 
 		Consumer<RegisteredExtensionPoint<InstancePostProcessor>> applyInstancePostProcessor = registeredExtensionPoint -> {
@@ -160,8 +160,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				() -> registeredExtensionPoint.getExtensionPoint().postProcessTestInstance(testExtensionContext));
 		};
 
-		extensionRegistry.stream(InstancePostProcessor.class, ApplicationOrder.FORWARD).forEach(
-			applyInstancePostProcessor);
+		extensionRegistry.stream(InstancePostProcessor.class).forEach(applyInstancePostProcessor);
 	}
 
 	private void invokeBeforeEachExtensionPoints(ExtensionRegistry extensionRegistry,
@@ -172,7 +171,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				() -> registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext));
 		};
 
-		extensionRegistry.stream(BeforeEachExtensionPoint.class, ApplicationOrder.FORWARD).forEach(applyBeforeEach);
+		extensionRegistry.stream(BeforeEachExtensionPoint.class).forEach(applyBeforeEach);
 	}
 
 	private void invokeTestMethod(ExtensionRegistry ExtensionRegistry, TestExtensionContext testExtensionContext,
@@ -185,51 +184,40 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				new MethodInvoker(testExtensionContext, ExtensionRegistry).invoke(methodInvocationContext);
 			}
 			catch (Throwable throwable) {
-				invokeExceptionHandlerExtensionPoints(ExtensionRegistry, testExtensionContext, throwable);
+				invokeExceptionHandlers(ExtensionRegistry, testExtensionContext, throwable);
 			}
 
 		});
 	}
 
-	private void invokeExceptionHandlerExtensionPoints(ExtensionRegistry extensionRegistry,
+	private void invokeExceptionHandlers(ExtensionRegistry extensionRegistry,
 			TestExtensionContext testExtensionContext, Throwable throwable) {
 
-		// Necessary because mere streaming over exceptions does not work in this case.
-		List<ExceptionHandlerExtensionPoint> exceptionHandlers = collectExceptionHandlerExtensionPoints(
-			extensionRegistry);
-		executeExceptionHandlers(throwable, exceptionHandlers, testExtensionContext);
+		// Necessary because mere streaming over exception handlers does not suffice.
+		List<ExceptionHandler> exceptionHandlers = collectExceptionHandlers(extensionRegistry);
+		invokeExceptionHandlers(throwable, exceptionHandlers, testExtensionContext);
 	}
 
-	private void executeExceptionHandlers(Throwable throwable, List<ExceptionHandlerExtensionPoint> exceptionHandlers,
+	private List<ExceptionHandler> collectExceptionHandlers(ExtensionRegistry extensionRegistry) {
+		return extensionRegistry.stream(ExceptionHandler.class).map(
+			RegisteredExtensionPoint::getExtensionPoint).collect(Collectors.toList());
+	}
+
+	private void invokeExceptionHandlers(Throwable throwable, List<ExceptionHandler> exceptionHandlers,
 			TestExtensionContext testExtensionContext) {
 
-		rethrowExceptionIfThereIsNoHandlerLeft(throwable, exceptionHandlers);
+		// No handlers left?
+		if (exceptionHandlers.isEmpty()) {
+			ExceptionUtils.throwAsUncheckedException(throwable);
+		}
 
 		try {
-			executeFirstExceptionHandler(throwable, exceptionHandlers, testExtensionContext);
+			// Invoke next available handler
+			exceptionHandlers.remove(0).handleException(testExtensionContext, throwable);
 		}
 		catch (Throwable t) {
-			executeExceptionHandlers(t, exceptionHandlers, testExtensionContext);
+			invokeExceptionHandlers(t, exceptionHandlers, testExtensionContext);
 		}
-	}
-
-	private void executeFirstExceptionHandler(Throwable throwable,
-			List<ExceptionHandlerExtensionPoint> exceptionHandlers, TestExtensionContext testExtensionContext)
-			throws Throwable {
-		ExceptionHandlerExtensionPoint exceptionHandler = exceptionHandlers.remove(0);
-		exceptionHandler.handleException(testExtensionContext, throwable);
-	}
-
-	private void rethrowExceptionIfThereIsNoHandlerLeft(Throwable throwable,
-			List<ExceptionHandlerExtensionPoint> exceptionHandlers) {
-		if (exceptionHandlers.isEmpty())
-			throw ExceptionUtils.throwAsUncheckedException(throwable);
-	}
-
-	private List<ExceptionHandlerExtensionPoint> collectExceptionHandlerExtensionPoints(
-			ExtensionRegistry extensionRegistry) {
-		return extensionRegistry.stream(ExceptionHandlerExtensionPoint.class, ApplicationOrder.FORWARD).map(
-			RegisteredExtensionPoint::getExtensionPoint).collect(Collectors.toList());
 	}
 
 	private void invokeAfterEachExtensionPoints(ExtensionRegistry extensionRegistry,

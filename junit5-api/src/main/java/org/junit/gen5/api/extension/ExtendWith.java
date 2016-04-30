@@ -33,6 +33,7 @@ import org.junit.gen5.commons.meta.API;
  * <li>{@link TestExecutionCondition}</li>
  * <li>{@link InstancePostProcessor}</li>
  * <li>{@link MethodParameterResolver}</li>
+ * <li>{@link ExceptionHandler}</li>
  * <li>{@link BeforeEachExtensionPoint}</li>
  * <li>{@link AfterEachExtensionPoint}</li>
  * <li>{@link BeforeAllExtensionPoint}</li>

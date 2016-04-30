@@ -25,7 +25,7 @@ import org.junit.gen5.commons.meta.API;
  * @see ContainerExecutionCondition
  * @see TestExecutionCondition
  * @see InstancePostProcessor
- * @see ExceptionHandlerExtensionPoint
+ * @see ExceptionHandler
  * @see MethodParameterResolver
  * @see BeforeEachExtensionPoint
  * @see AfterEachExtensionPoint

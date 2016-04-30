@@ -68,7 +68,7 @@ public class RegisteredExtensionPoint<E extends ExtensionPoint> {
 	 * <h4>Semantics for Source</h4>
 	 * <p>If an extension point is registered declaratively via
 	 * {@link org.junit.gen5.api.extension.ExtendWith @ExtendWith},
-	 * {@link #getExtensionPoint()} and this method will return the same
+	 * {@link #getExtensionPoint()} this method will return the same
 	 * object. However, if an extension point is registered programmatically
 	 * &mdash; for example, as a lambda expression or method reference by
 	 * an {@link org.junit.gen5.api.extension.ExtensionRegistrar ExtensionRegistrar}
