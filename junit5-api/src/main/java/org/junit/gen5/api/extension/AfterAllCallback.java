@@ -16,7 +16,7 @@ import org.junit.gen5.commons.meta.API;
 
 /**
  * {@code AfterAllCallback} defines the API for {@link Extension Extensions}
- * that wish to provide additional behavior to tests after all test methods
+ * that wish to provide additional behavior to test containers after all tests
  * have been invoked.
  *
  * <p>Concrete implementations often implement {@link BeforeAllCallback} as well.
@@ -34,7 +34,8 @@ import org.junit.gen5.commons.meta.API;
 public interface AfterAllCallback extends ExtensionPoint {
 
 	/**
-	 * Callback that is invoked <em>after</em> all test methods have been invoked.
+	 * Callback that is invoked once <em>after</em> all tests in the current
+	 * container.
 	 *
 	 * @param context the current container extension context
 	 */

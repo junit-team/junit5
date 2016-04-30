@@ -16,8 +16,11 @@ import org.junit.gen5.commons.meta.API;
 
 /**
  * {@code BeforeEachCallback} defines the API for {@link Extension Extensions}
- * that wish to provide additional behavior to tests before each test method has
- * been invoked.
+ * that wish to provide additional behavior to tests before each test is invoked.
+ *
+ * <p>In this context, the term <em>test</em> refers to the actual test method
+ * plus any user defined setup methods (e.g.,
+ * {@link org.junit.gen5.api.BeforeEach @BeforeEach} methods).
  *
  * <p>Concrete implementations often implement {@link AfterEachCallback} as well.
  *
@@ -34,7 +37,7 @@ import org.junit.gen5.commons.meta.API;
 public interface BeforeEachCallback extends ExtensionPoint {
 
 	/**
-	 * Callback that is invoked <em>before</em> each test method has been invoked.
+	 * Callback that is invoked <em>before</em> each test is invoked.
 	 *
 	 * @param context the current test extension context
 	 */

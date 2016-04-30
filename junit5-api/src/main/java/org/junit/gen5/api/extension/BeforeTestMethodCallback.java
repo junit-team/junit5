@@ -15,34 +15,34 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code AfterEachCallback} defines the API for {@link Extension Extensions}
- * that wish to provide additional behavior to tests after each test method
- * has been invoked.
+ * {@code BeforeTestMethodCallback} defines the API for {@link Extension Extensions}
+ * that wish to provide additional behavior to tests before each test method is
+ * invoked.
  *
- * <p>In this context, the term <em>test</em> refers to the actual test method
- * plus any user defined teardown methods (e.g.,
- * {@link org.junit.gen5.api.AfterEach @AfterEach} methods).
+ * <p>Such callbacks will be invoked after any user defined setup methods (e.g.,
+ * {@link org.junit.gen5.api.BeforeEach @BeforeEach} methods).
  *
- * <p>Concrete implementations often implement {@link BeforeEachCallback}
- * as well.
+ * <p>Concrete implementations often implement {@link AfterTestMethodCallback} as well.
  *
  * <p>Implementations must provide a no-args constructor.
  *
  * @since 5.0
- * @see org.junit.gen5.api.AfterEach
+ * @see org.junit.gen5.api.Test
+ * @see AfterTestMethodCallback
  * @see BeforeEachCallback
+ * @see AfterEachCallback
  * @see BeforeAllCallback
  * @see AfterAllCallback
  */
 @FunctionalInterface
 @API(Experimental)
-public interface AfterEachCallback extends ExtensionPoint {
+public interface BeforeTestMethodCallback extends ExtensionPoint {
 
 	/**
-	 * Callback that is invoked <em>after</em> each test has been invoked.
+	 * Callback that is invoked <em>before</em> each test method is invoked.
 	 *
 	 * @param context the current test extension context
 	 */
-	void afterEach(TestExtensionContext context) throws Exception;
+	void beforeTestMethod(TestExtensionContext context) throws Exception;
 
 }

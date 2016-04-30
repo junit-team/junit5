@@ -20,7 +20,9 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.api.extension.AfterEachCallback;
+import org.junit.gen5.api.extension.AfterTestMethodCallback;
 import org.junit.gen5.api.extension.BeforeEachCallback;
+import org.junit.gen5.api.extension.BeforeTestMethodCallback;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ExceptionHandler;
 import org.junit.gen5.api.extension.InstancePostProcessor;
@@ -144,7 +146,9 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 		invokeInstancePostProcessors(context.getExtensionRegistry(), testExtensionContext);
 		invokeBeforeEachCallbacks(context.getExtensionRegistry(), testExtensionContext);
+		invokeBeforeTestMethodCallbacks(context.getExtensionRegistry(), testExtensionContext);
 		invokeTestMethod(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
+		invokeAfterTestMethodCallbacks(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
 		invokeAfterEachCallbacks(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
 
 		throwableCollector.assertEmpty();
@@ -172,6 +176,17 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		};
 
 		extensionRegistry.stream(BeforeEachCallback.class).forEach(applyBeforeEach);
+	}
+
+	private void invokeBeforeTestMethodCallbacks(ExtensionRegistry extensionRegistry,
+			TestExtensionContext testExtensionContext) throws Exception {
+
+		Consumer<RegisteredExtensionPoint<BeforeTestMethodCallback>> action = registeredExtensionPoint -> {
+			executeAndMaskThrowable(
+				() -> registeredExtensionPoint.getExtensionPoint().beforeTestMethod(testExtensionContext));
+		};
+
+		extensionRegistry.stream(BeforeTestMethodCallback.class).forEachOrdered(action);
 	}
 
 	private void invokeTestMethod(ExtensionRegistry ExtensionRegistry, TestExtensionContext testExtensionContext,
@@ -218,6 +233,16 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		catch (Throwable t) {
 			invokeExceptionHandlers(t, exceptionHandlers, testExtensionContext);
 		}
+	}
+
+	private void invokeAfterTestMethodCallbacks(ExtensionRegistry extensionRegistry,
+			TestExtensionContext testExtensionContext, ThrowableCollector throwableCollector) throws Exception {
+
+		extensionRegistry.stream(AfterTestMethodCallback.class, ApplicationOrder.BACKWARD).forEach(
+			registeredExtensionPoint -> {
+				throwableCollector.execute(
+					() -> registeredExtensionPoint.getExtensionPoint().afterTestMethod(testExtensionContext));
+			});
 	}
 
 	private void invokeAfterEachCallbacks(ExtensionRegistry extensionRegistry,

@@ -16,8 +16,8 @@ import org.junit.gen5.commons.meta.API;
 
 /**
  * {@code BeforeAllCallback} defines the API for {@link Extension Extensions}
- * that wish to provide additional behavior to tests before all test methods
- * have been invoked.
+ * that wish to provide additional behavior to test containers before all tests
+ * are invoked.
  *
  * <p>Concrete implementations often implement {@link AfterAllCallback} as well.
  *
@@ -34,8 +34,8 @@ import org.junit.gen5.commons.meta.API;
 public interface BeforeAllCallback extends ExtensionPoint {
 
 	/**
-	 * Callback that is invoked <em>before</em> all {@code @BeforeAll}
-	 * methods have been invoked.
+	 * Callback that is invoked once <em>before</em> all tests in the current
+	 * container.
 	 *
 	 * @param context the current container extension context
 	 */
