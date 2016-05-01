@@ -11,12 +11,10 @@
 package org.junit.gen5.engine.junit5.discovery;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
-import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.util.function.Predicate;
 
-import org.junit.gen5.api.Nested;
 import org.junit.gen5.commons.meta.API;
 
 /**
