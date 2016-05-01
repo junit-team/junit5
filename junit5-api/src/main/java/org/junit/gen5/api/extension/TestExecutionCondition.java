@@ -15,7 +15,7 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code TestExecutionCondition} defines an {@link Extension} for
+ * {@code TestExecutionCondition} defines the {@link Extension} API for
  * programmatic, <em>conditional test execution</em>.
  *
  * <p>A {@code TestExecutionCondition} is {@linkplain #evaluate evaluated}

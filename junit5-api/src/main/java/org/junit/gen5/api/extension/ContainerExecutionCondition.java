@@ -15,7 +15,7 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code ContainerExecutionCondition} defines an {@link Extension} for
+ * {@code ContainerExecutionCondition} defines the {@link Extension} API for
  * programmatic, <em>conditional container execution</em>.
  *
  * <p>A {@code ContainerExecutionCondition} is {@linkplain #evaluate evaluated}

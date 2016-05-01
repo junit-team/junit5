@@ -15,11 +15,11 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code AfterTestCallback} defines the API for {@link Extension Extensions}
+ * {@code AfterTestMethodCallback} defines the API for {@link Extension Extensions}
  * that wish to provide additional behavior to tests after each test method has
  * been invoked.
  *
- * <p>Such callbacks will be invoked before any user defined setup methods (e.g.,
+ * <p>Such callbacks will be invoked before any user defined teardown methods (e.g.,
  * {@link org.junit.gen5.api.AfterEach @AfterEach} methods).
  *
  * <p>Concrete implementations often implement {@link BeforeTestMethodCallback} as well.
