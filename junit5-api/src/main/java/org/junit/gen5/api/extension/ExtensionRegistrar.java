@@ -16,7 +16,7 @@ import org.junit.gen5.commons.meta.API;
 
 /**
  * Interface to be implemented by {@linkplain Extension extensions} that
- * wish to programmatically register {@link ExtensionPoint} implementations
+ * wish to programmatically register {@code Extension} implementations
  * in the {@link ExtensionPointRegistry} &mdash; for example, if a
  * {@link ExtensionPointRegistry.Position Position} other than
  * {@link ExtensionPointRegistry.Position#DEFAULT DEFAULT} is desired.

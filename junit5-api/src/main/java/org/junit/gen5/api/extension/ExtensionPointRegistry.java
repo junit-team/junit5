@@ -15,17 +15,17 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * A registry for {@link ExtensionPoint} implementations which can be
+ * A registry for {@link Extension} implementations which can be
  * populated via an {@link ExtensionRegistrar}.
  *
  * <h3>Example Usage</h3>
  * <p>All examples below are implementations of
  * {@link ExtensionRegistrar#registerExtensions}.
  *
- * <h5>Registering an {@code ExtensionPoint} Instance</h5>
+ * <h5>Registering an {@code Extension} Instance</h5>
  *
  * <p>If you have an instance of an extension that implements one or more
- * {@code ExtensionPoint} APIs, you can register it as follows.
+ * {@code Extension} APIs, you can register it as follows.
  *
  * <pre style="code">
  * public void registerExtensions(ExtensionPointRegistry registry) {
@@ -44,9 +44,9 @@ import org.junit.gen5.commons.meta.API;
  * }
  * </pre>
  *
- * <h5>Registering a Lambda Expression as an {@code ExtensionPoint}</h5>
+ * <h5>Registering a Lambda Expression as an {@code Extension}</h5>
  *
- * <p>If you would like to implement a single {@code ExtensionPoint} API
+ * <p>If you would like to implement a single {@code Extension} API
  * as a lambda expression, you can register it as follows. Note, however,
  * that the API must be a {@linkplain FunctionalInterface functional
  * interface}.
@@ -57,9 +57,9 @@ import org.junit.gen5.commons.meta.API;
  * }
  * </pre>
  *
- * <h5>Registering a Method Reference as an {@code ExtensionPoint}</h5>
+ * <h5>Registering a Method Reference as an {@code Extension}</h5>
  *
- * <p>If you would like to implement a single {@code ExtensionPoint} API
+ * <p>If you would like to implement a single {@code Extension} API
  * via a method reference, you can register it as follows. Note, however,
  * that the API must be a {@linkplain FunctionalInterface functional
  * interface}.
@@ -75,7 +75,7 @@ import org.junit.gen5.commons.meta.API;
  * </pre>
  *
  * @since 5.0
- * @see ExtensionPoint
+ * @see Extension
  * @see ExtensionRegistrar
  */
 @API(Experimental)
@@ -83,12 +83,12 @@ public interface ExtensionPointRegistry {
 
 	/**
 	 * {@code Position} specifies the position in which a registered
-	 * {@link ExtensionPoint} is applied with regard to all other registered
-	 * extension points of the same type.
+	 * {@link Extension} is applied with regard to all other registered
+	 * extensions of the same type.
 	 *
 	 * <p>The position can be specified when programmatically
-	 * {@linkplain ExtensionPointRegistry#register(ExtensionPoint, Position)
-	 * registering} an extension point. Possible values include
+	 * {@linkplain ExtensionPointRegistry#register(Extension, Position)
+	 * registering} an extension. Possible values include
 	 * {@link #OUTERMOST OUTERMOST}, {@link #OUTSIDE_DEFAULT OUTSIDE_DEFAULT},
 	 * {@link #DEFAULT DEFAULT}, {@link #INSIDE_DEFAULT INSIDE_DEFAULT}, and
 	 * {@link #INNERMOST INNERMOST}.
@@ -125,31 +125,30 @@ public interface ExtensionPointRegistry {
 	}
 
 	/**
-	 * Register the supplied {@link ExtensionPoint} using the
+	 * Register the supplied {@link Extension} using the
 	 * {@linkplain Position#DEFAULT default position}.
 	 *
 	 * <p>See the {@linkplain ExtensionPointRegistry class-level Javadoc}
 	 * and user guide for examples.
 	 *
-	 * @param extensionPoint the extension point to register
-	 * @see #register(ExtensionPoint, Position)
+	 * @param extension the extension to register
+	 * @see #register(Extension, Position)
 	 */
-	default void register(ExtensionPoint extensionPoint) {
-		register(extensionPoint, Position.DEFAULT);
+	default void register(Extension extension) {
+		register(extension, Position.DEFAULT);
 	}
 
 	/**
-	 * Register the supplied {@link ExtensionPoint} using the supplied
+	 * Register the supplied {@link Extension} using the supplied
 	 * {@link Position}.
 	 *
 	 * <p>See the {@linkplain ExtensionPointRegistry class-level Javadoc}
 	 * and user guide for examples.
 	 *
-	 * @param extensionPoint the extension point to register
-	 * @param position the position in which the extension point
-	 * should be registered
-	 * @see #register(ExtensionPoint)
+	 * @param extension the extension to register
+	 * @param position the position in which the extension should be registered
+	 * @see #register(Extension)
 	 */
-	void register(ExtensionPoint extensionPoint, Position position);
+	void register(Extension extension, Position position);
 
 }

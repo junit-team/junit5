@@ -22,7 +22,6 @@ import org.junit.gen5.commons.meta.API;
  * {@link ExtensionRegistrar}.
  *
  * @since 5.0
- * @see ExtensionPoint
  * @see ExtensionRegistrar
  */
 @API(Experimental)

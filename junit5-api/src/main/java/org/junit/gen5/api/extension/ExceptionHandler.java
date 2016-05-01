@@ -27,7 +27,7 @@ import org.junit.gen5.commons.meta.API;
  */
 @FunctionalInterface
 @API(Experimental)
-public interface ExceptionHandler extends ExtensionPoint {
+public interface ExceptionHandler extends Extension {
 
 	/**
 	 * Handle the supplied {@link Throwable throwable}.

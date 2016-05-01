@@ -36,7 +36,7 @@ import org.junit.gen5.commons.meta.API;
  */
 @FunctionalInterface
 @API(Experimental)
-public interface AfterEachCallback extends ExtensionPoint {
+public interface AfterEachCallback extends Extension {
 
 	/**
 	 * Callback that is invoked <em>after</em> each test has been invoked.

@@ -75,7 +75,7 @@ public class MethodInvoker {
 		try {
 			// @formatter:off
 			List<MethodParameterResolver> matchingResolvers = extensionRegistry.stream(MethodParameterResolver.class)
-					.filter(extensionPoint -> extensionPoint.supports(parameter, methodInvocationContext, extensionContext))
+					.filter(extension -> extension.supports(parameter, methodInvocationContext, extensionContext))
 					.collect(toList());
 			// @formatter:on
 

@@ -30,8 +30,8 @@ import org.junit.gen5.api.extension.BeforeAllCallback;
 import org.junit.gen5.api.extension.BeforeEachCallback;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
+import org.junit.gen5.api.extension.Extension;
 import org.junit.gen5.api.extension.ExtensionConfigurationException;
-import org.junit.gen5.api.extension.ExtensionPoint;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
@@ -195,13 +195,13 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	private void registerAnnotatedMethodsAsExtensions(ExtensionRegistry extensionRegistry,
 			Class<? extends Annotation> annotationType, Class<?> extensionType,
 			BiConsumer<Class<?>, Method> methodValidator,
-			BiFunction<ExtensionRegistry, Method, ExtensionPoint> extensionPointSynthesizer) {
+			BiFunction<ExtensionRegistry, Method, Extension> extensionSynthesizer) {
 
 		// @formatter:off
 		findAnnotatedMethods(testClass, annotationType, MethodSortOrder.HierarchyDown).stream()
 			.peek(method -> methodValidator.accept(extensionType, method))
 			.forEach(method ->
-				extensionRegistry.registerExtensionPoint(extensionPointSynthesizer.apply(extensionRegistry, method), method));
+				extensionRegistry.registerExtension(extensionSynthesizer.apply(extensionRegistry, method), method));
 		// @formatter:on
 	}
 
