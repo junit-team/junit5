@@ -18,11 +18,9 @@ import org.junit.gen5.commons.meta.API;
  * Marker interface for all extensions.
  *
  * <p>An {@code Extension} can be registered declaratively via
- * {@link ExtendWith @ExtendWith} or programmatically via an
- * {@link ExtensionRegistrar}.
+ * {@link ExtendWith @ExtendWith}.
  *
  * @since 5.0
- * @see ExtensionRegistrar
  */
 @API(Experimental)
 public interface Extension {

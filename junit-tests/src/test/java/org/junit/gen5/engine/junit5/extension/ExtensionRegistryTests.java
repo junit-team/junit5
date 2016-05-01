@@ -22,9 +22,6 @@ import java.util.stream.Stream;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ContainerExecutionCondition;
 import org.junit.gen5.api.extension.Extension;
-import org.junit.gen5.api.extension.ExtensionPointRegistry;
-import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
-import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 
@@ -34,7 +31,7 @@ import org.junit.gen5.api.extension.TestExecutionCondition;
 public class ExtensionRegistryTests {
 
 	@Test
-	public void newRegistryWithoutParentHasDefaultExtensions() throws Exception {
+	void newRegistryWithoutParentHasDefaultExtensions() {
 		ExtensionRegistry registry = ExtensionRegistry.newRootRegistryWithDefaultExtensions();
 		Set<Class<? extends Extension>> extensions = registry.getRegisteredExtensionTypes();
 
@@ -49,8 +46,7 @@ public class ExtensionRegistryTests {
 	}
 
 	@Test
-	public void registerExtensionByImplementingClass() throws Exception {
-
+	void registerExtensionByImplementingClass() {
 		ExtensionRegistry registry = new ExtensionRegistry(Optional.empty());
 		registry.registerExtension(MyExtension.class);
 
@@ -70,8 +66,7 @@ public class ExtensionRegistryTests {
 	}
 
 	@Test
-	public void registerTestExtensionThatImplementsMultipleExtensions() throws Exception {
-
+	void registerExtensionThatImplementsMultipleExtensionApis() {
 		ExtensionRegistry registry = new ExtensionRegistry(Optional.empty());
 		registry.registerExtension(MultipleExtension.class);
 
@@ -82,8 +77,7 @@ public class ExtensionRegistryTests {
 	}
 
 	@Test
-	public void extensionsAreInheritedFromParent() throws Exception {
-
+	void extensionsAreInheritedFromParent() {
 		ExtensionRegistry parent = new ExtensionRegistry(Optional.empty());
 		parent.registerExtension(MyExtension.class);
 
@@ -99,19 +93,7 @@ public class ExtensionRegistryTests {
 	}
 
 	@Test
-	public void registerExtensionsByExtensionRegistrar() throws Exception {
-
-		ExtensionRegistry registry = new ExtensionRegistry(Optional.empty());
-		registry.registerExtension(MyExtensionRegistrar.class);
-
-		assertExtensionRegistered(registry, MyExtensionRegistrar.class);
-		assertEquals(1, countExtensions(registry, MyExtensionApi.class));
-		assertEquals(1, countExtensions(registry, AnotherExtensionApi.class));
-	}
-
-	@Test
-	public void canStreamOverRegisteredExtension() throws Exception {
-
+	void canStreamOverRegisteredExtension() {
 		ExtensionRegistry registry = new ExtensionRegistry(Optional.empty());
 		registry.registerExtension(MyExtension.class);
 
@@ -119,7 +101,6 @@ public class ExtensionRegistryTests {
 
 		stream(registry, MyExtensionApi.class).forEach(registeredExtension -> {
 			assertEquals(MyExtension.class.getName(), registeredExtension.getSource().getClass().getName());
-			assertEquals(Position.DEFAULT, registeredExtension.getPosition());
 			hasRun.set(true);
 		});
 
@@ -127,7 +108,7 @@ public class ExtensionRegistryTests {
 	}
 
 	@Test
-	public void registerExtensionFromLambdaExpression() throws Exception {
+	void registerExtensionFromLambdaExpression() {
 		ExtensionRegistry registry = new ExtensionRegistry(Optional.empty());
 		registry.registerExtension((MyExtensionApi) test -> {
 		}, this);
@@ -136,7 +117,7 @@ public class ExtensionRegistryTests {
 	}
 
 	@Test
-	public void registerExtensionFromMethodReference() throws Exception {
+	void registerExtensionFromMethodReference() {
 		ExtensionRegistry registry = new ExtensionRegistry(Optional.empty());
 		registry.registerExtension((MyExtensionApi) this::consumeString, this);
 		assertBehaviorForExtensionRegisteredFromLambdaExpressionOrMethodReference(registry);
@@ -149,15 +130,13 @@ public class ExtensionRegistryTests {
 		/* no-op */
 	}
 
-	private void assertBehaviorForExtensionRegisteredFromLambdaExpressionOrMethodReference(ExtensionRegistry registry)
-			throws Exception {
+	private void assertBehaviorForExtensionRegisteredFromLambdaExpressionOrMethodReference(ExtensionRegistry registry) {
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
 		stream(registry, MyExtensionApi.class).forEach(registeredExtension -> {
 			Class<? extends MyExtensionApi> lambdaType = registeredExtension.getExtension().getClass();
 			assertTrue(lambdaType.getName().contains("$Lambda$"));
 			assertEquals(getClass().getName(), registeredExtension.getSource().getClass().getName());
-			assertEquals(Position.DEFAULT, registeredExtension.getPosition());
 			hasRun.set(true);
 		});
 
@@ -173,65 +152,46 @@ public class ExtensionRegistryTests {
 		return registry.stream(extensionType).count();
 	}
 
-	private void assertExtensionRegistered(ExtensionRegistry registry, Class<? extends Extension> extensionClass) {
-		assertTrue(registry.getRegisteredExtensionTypes().contains(extensionClass),
-			() -> extensionClass.getSimpleName() + " should be present");
+	private void assertExtensionRegistered(ExtensionRegistry registry, Class<? extends Extension> extensionType) {
+		assertTrue(registry.getRegisteredExtensionTypes().contains(extensionType),
+			() -> extensionType.getSimpleName() + " should be present");
 	}
 
-}
+	// -------------------------------------------------------------------------
 
-interface MyExtensionApi extends Extension {
+	interface MyExtensionApi extends Extension {
 
-	void doNothing(String test);
-
-}
-
-interface AnotherExtensionApi extends Extension {
-
-	void doMore();
-
-}
-
-class MyExtension implements MyExtensionApi {
-
-	@Override
-	public void doNothing(String test) {
+		void doNothing(String test);
 	}
 
-}
+	interface AnotherExtensionApi extends Extension {
 
-class YourExtension implements MyExtensionApi {
-
-	@Override
-	public void doNothing(String test) {
+		void doMore();
 	}
 
-}
+	static class MyExtension implements MyExtensionApi {
 
-class MultipleExtension implements MyExtensionApi, AnotherExtensionApi {
-
-	@Override
-	public void doNothing(String test) {
+		@Override
+		public void doNothing(String test) {
+		}
 	}
 
-	@Override
-	public void doMore() {
+	static class YourExtension implements MyExtensionApi {
+
+		@Override
+		public void doNothing(String test) {
+		}
 	}
 
-}
+	static class MultipleExtension implements MyExtensionApi, AnotherExtensionApi {
 
-class MyExtensionRegistrar implements ExtensionRegistrar {
+		@Override
+		public void doNothing(String test) {
+		}
 
-	@Override
-	public void registerExtensions(ExtensionPointRegistry registry) {
-		registry.register((MyExtensionApi) this::doNothing);
-		registry.register((AnotherExtensionApi) this::doMore);
-	}
-
-	private void doMore() {
-	}
-
-	private void doNothing(String s) {
+		@Override
+		public void doMore() {
+		}
 	}
 
 }

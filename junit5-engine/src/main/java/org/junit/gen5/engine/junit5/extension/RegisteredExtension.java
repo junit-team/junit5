@@ -13,7 +13,6 @@ package org.junit.gen5.engine.junit5.extension;
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import org.junit.gen5.api.extension.Extension;
-import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
@@ -25,17 +24,15 @@ import org.junit.gen5.commons.util.ToStringBuilder;
  * @since 5.0
  */
 @API(Internal)
-public class RegisteredExtension<E extends Extension> implements Comparable<RegisteredExtension<E>> {
+public class RegisteredExtension<E extends Extension> {
 
 	private final E extension;
 
 	private final Object source;
 
-	private final Position position;
-
 	/**
 	 * Construct a new {@code RegisteredExtension} from the supplied
-	 * extension, source, and position.
+	 * extension and source.
 	 *
 	 * <p>See {@link #getSource()} for an explanation of the semantics for
 	 * the {@code source}.
@@ -44,13 +41,11 @@ public class RegisteredExtension<E extends Extension> implements Comparable<Regi
 	 * never {@code null}
 	 * @param source the <em>source</em> of the extension; used solely for
 	 * error reporting and logging; never {@code null}
-	 * @param position the position in which the extension is registered;
 	 * never {@code null}
 	 */
-	public RegisteredExtension(E extension, Object source, Position position) {
+	public RegisteredExtension(E extension, Object source) {
 		this.extension = Preconditions.notNull(extension, "extension must not be null");
 		this.source = Preconditions.notNull(source, "source must not be null");
-		this.position = Preconditions.notNull(position, "Position must not be null");
 	}
 
 	/**
@@ -67,42 +62,24 @@ public class RegisteredExtension<E extends Extension> implements Comparable<Regi
 	 *
 	 * <h4>Semantics for Source</h4>
 	 * <p>If an extension is registered declaratively via
-	 * {@link org.junit.gen5.api.extension.ExtendWith @ExtendWith},
-	 * {@link #getExtension()} this method will return the same
-	 * object. However, if an extension is registered programmatically
-	 * &mdash; for example, as a lambda expression or method reference by
-	 * an {@link org.junit.gen5.api.extension.ExtensionRegistrar ExtensionRegistrar}
-	 * or by the framework via the {@link ExtensionRegistry} &mdash;
-	 * the {@code source} object may be the {@code ExtensionRegistrar} that
-	 * registered the extension, the underlying
-	 * {@link java.lang.reflect.Method} that implements the extension
+	 * {@link org.junit.gen5.api.extension.ExtendWith @ExtendWith}, this method
+	 * and {@link #getExtension()} will return the same object. However, if an
+	 * extension is registered programmatically &mdash; for example, as a lambda
+	 * expression or method reference &mdash; the {@code source} object may be the
+	 * underlying {@link java.lang.reflect.Method} that implements the extension
 	 * API, or similar.
 	 */
 	public Object getSource() {
 		return this.source;
 	}
 
-	/**
-	 * Get the position in which the {@link #getExtension Extension}
-	 * is registered.
-	 */
-	public Position getPosition() {
-		return this.position;
-	}
-
-	@Override
-	public int compareTo(RegisteredExtension<E> that) {
-		return Integer.compare(this.getPosition().ordinal(), that.getPosition().ordinal());
-	}
-
 	@Override
 	public String toString() {
 		// @formatter:off
 		return new ToStringBuilder(this)
-				.append("extension", this.extension)
-				.append("source", this.source)
-				.append("position", this.position)
-				.toString();
+			.append("extension", this.extension)
+			.append("source", this.source)
+			.toString();
 		// @formatter:on
 	}
 

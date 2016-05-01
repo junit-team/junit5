@@ -10,17 +10,13 @@
 
 package example.timing;
 
-import static org.junit.gen5.api.extension.ExtensionPointRegistry.Position.INNERMOST;
-
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
-import org.junit.gen5.api.extension.AfterEachCallback;
-import org.junit.gen5.api.extension.BeforeEachCallback;
-import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.AfterTestMethodCallback;
+import org.junit.gen5.api.extension.BeforeTestMethodCallback;
 import org.junit.gen5.api.extension.ExtensionContext.Namespace;
-import org.junit.gen5.api.extension.ExtensionPointRegistry;
-import org.junit.gen5.api.extension.ExtensionRegistrar;
+import org.junit.gen5.api.extension.ExtensionContext.Store;
 import org.junit.gen5.api.extension.TestExtensionContext;
 
 /**
@@ -29,37 +25,26 @@ import org.junit.gen5.api.extension.TestExtensionContext;
  *
  * @since 5.0
  */
-public class TimingExtension implements ExtensionRegistrar {
+public class TimingExtension implements BeforeTestMethodCallback, AfterTestMethodCallback {
 
 	private static final Logger LOG = Logger.getLogger(TimingExtension.class.getName());
 
 	@Override
-	public void registerExtensions(ExtensionPointRegistry registry) {
-		registry.register(new TestMethodInvocationWrapper(), INNERMOST);
+	public void beforeTestMethod(TestExtensionContext context) throws Exception {
+		getStore(context).put(context.getTestMethod(), System.currentTimeMillis());
 	}
 
-	private static class TestMethodInvocationWrapper implements BeforeEachCallback, AfterEachCallback {
+	@Override
+	public void afterTestMethod(TestExtensionContext context) throws Exception {
+		Method testMethod = context.getTestMethod();
+		long start = (long) getStore(context).remove(testMethod);
+		long duration = System.currentTimeMillis() - start;
 
-		@Override
-		public void beforeEach(TestExtensionContext context) throws Exception {
-			ExtensionContext.Store times = context.getStore(getNamespace(context));
-			times.put(context.getTestMethod(), System.currentTimeMillis());
-		}
+		LOG.info(() -> String.format("Method [%s] took %s ms.", testMethod, duration));
+	}
 
-		private Namespace getNamespace(TestExtensionContext context) {
-			return Namespace.of(getClass(), context);
-		}
-
-		@Override
-		public void afterEach(TestExtensionContext context) throws Exception {
-			ExtensionContext.Store times = context.getStore(getNamespace(context));
-			Method testMethod = context.getTestMethod();
-			long start = (long) times.remove(testMethod);
-			long duration = System.currentTimeMillis() - start;
-
-			LOG.info(() -> String.format("Method [%s] took %s ms.", testMethod, duration));
-		}
-
+	private Store getStore(TestExtensionContext context) {
+		return context.getStore(Namespace.of(getClass(), context));
 	}
 
 }

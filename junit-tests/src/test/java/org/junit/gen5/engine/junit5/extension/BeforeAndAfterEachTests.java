@@ -25,9 +25,6 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.AfterEachCallback;
 import org.junit.gen5.api.extension.BeforeEachCallback;
 import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.api.extension.ExtensionPointRegistry;
-import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
-import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.junit5.AbstractJUnit5TestEngineTests;
@@ -35,12 +32,14 @@ import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
- * Integration tests that verify support for {@link BeforeEach}, {@link AfterEach}, {@link BeforeEachCallback},
- * and {@link AfterEachCallback} in the {@link JUnit5TestEngine}.
+ * Integration tests that verify support for {@link BeforeEach}, {@link AfterEach},
+ * {@link BeforeEachCallback}, and {@link AfterEachCallback} in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
 public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
+
+	private static final List<String> callSequence = new ArrayList<>();
 
 	@BeforeEach
 	void resetCallSequence() {
@@ -53,44 +52,36 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
 
 		// @formatter:off
 		assertEquals(asList(
 
-			//OuterTestCase
-			"outermostBefore",
-				"fooBefore",
-				"barBefore",
-					"beforeMethod",
-						"innermostBefore",
-							"testOuter",
-						"innermostAfter",
-					"afterMethod",
-				"barAfter",
-				"fooAfter",
-			"outermostAfter",
+			// OuterTestCase
+			"fooBefore",
+			"barBefore",
+				"beforeMethod",
+					"testOuter",
+				"afterMethod",
+			"barAfter",
+			"fooAfter",
 
-			//InnerTestCase
-			"outermostBefore",
-				"fooBefore",
-				"barBefore",
-					"beforeMethod",
-						"fizzBefore",
-							"beforeInnerMethod",
-								"innermostBefore",
-									"testInner",
-								"innermostAfter",
-							"afterInnerMethod",
-						"fizzAfter",
-					"afterMethod",
-				"barAfter",
-				"fooAfter",
-			"outermostAfter"
+			// InnerTestCase
+			"fooBefore",
+			"barBefore",
+				"beforeMethod",
+					"fizzBefore",
+						"beforeInnerMethod",
+							"testInner",
+						"afterInnerMethod",
+					"fizzAfter",
+				"afterMethod",
+			"barAfter",
+			"fooAfter"
 
 			), callSequence, "wrong call sequence");
 		// @formatter:on
@@ -102,14 +93,21 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(asList("fooBefore", "barBefore", "testChild", "barAfter", "fooAfter"), callSequence,
-			"wrong call sequence");
+		// @formatter:off
+		assertEquals(asList(
+			"fooBefore",
+			"barBefore",
+				"testChild",
+			"barAfter",
+			"fooAfter"
+		), callSequence, "wrong call sequence");
+		// @formatter:on
 	}
 
 	@Test
@@ -129,25 +127,23 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 
 			// Test Interface
 			"fooBefore",
-				"barBefore",
-					"defaultTestMethod",
-				"barAfter",
+			"barBefore",
+				"defaultTestMethod",
+			"barAfter",
 			"fooAfter",
 
 			// Test Class
 			"fooBefore",
-				"barBefore",
-					"localTestMethod",
-				"barAfter",
+			"barBefore",
+				"localTestMethod",
+			"barAfter",
 			"fooAfter"
 
 		), callSequence, "wrong call sequence");
 		// @formatter:on
 	}
 
-	// -------------------------------------------------------------------
-
-	private static List<String> callSequence = new ArrayList<>();
+	// -------------------------------------------------------------------------
 
 	@ExtendWith(FooMethodLevelCallbacks.class)
 	private static class ParentTestCase {
@@ -160,7 +156,6 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 		void test() {
 			callSequence.add("testChild");
 		}
-
 	}
 
 	@ExtendWith(FooMethodLevelCallbacks.class)
@@ -170,7 +165,6 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 		default void defaultTest() {
 			callSequence.add("defaultTestMethod");
 		}
-
 	}
 
 	@ExtendWith(BarMethodLevelCallbacks.class)
@@ -182,7 +176,7 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 		}
 	}
 
-	@ExtendWith({ FooMethodLevelCallbacks.class, BarMethodLevelCallbacks.class, InnermostAndOutermost.class })
+	@ExtendWith({ FooMethodLevelCallbacks.class, BarMethodLevelCallbacks.class })
 	private static class OuterTestCase {
 
 		@BeforeEach
@@ -222,29 +216,6 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 
 	}
 
-	private static class InnermostAndOutermost implements ExtensionRegistrar {
-
-		@Override
-		public void registerExtensions(ExtensionPointRegistry registry) {
-			registry.register((BeforeEachCallback) ctx -> callSequence.add("innermostBefore"), Position.INNERMOST);
-			registry.register((AfterEachCallback) this::innermostAfter, Position.INNERMOST);
-			registry.register((BeforeEachCallback) this::outermostBefore, Position.OUTERMOST);
-			registry.register((AfterEachCallback) this::outermostAfter, Position.OUTERMOST);
-		}
-
-		private void outermostBefore(TestExtensionContext context) {
-			callSequence.add("outermostBefore");
-		}
-
-		private void outermostAfter(TestExtensionContext context) {
-			callSequence.add("outermostAfter");
-		}
-
-		private void innermostAfter(TestExtensionContext context) {
-			callSequence.add("innermostAfter");
-		}
-	}
-
 	private static class FooMethodLevelCallbacks implements BeforeEachCallback, AfterEachCallback {
 
 		@Override
@@ -256,7 +227,6 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 		public void afterEach(TestExtensionContext context) {
 			callSequence.add("fooAfter");
 		}
-
 	}
 
 	private static class BarMethodLevelCallbacks implements BeforeEachCallback, AfterEachCallback {
@@ -270,7 +240,6 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 		public void afterEach(TestExtensionContext context) {
 			callSequence.add("barAfter");
 		}
-
 	}
 
 	private static class FizzMethodLevelCallbacks implements BeforeEachCallback, AfterEachCallback {
@@ -284,6 +253,6 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 		public void afterEach(TestExtensionContext context) {
 			callSequence.add("fizzAfter");
 		}
-
 	}
+
 }
