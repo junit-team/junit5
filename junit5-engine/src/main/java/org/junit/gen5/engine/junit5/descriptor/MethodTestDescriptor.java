@@ -34,6 +34,8 @@ import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.UniqueId;
+import org.junit.gen5.engine.junit5.execution.AfterEachMethodAdapter;
+import org.junit.gen5.engine.junit5.execution.BeforeEachMethodAdapter;
 import org.junit.gen5.engine.junit5.execution.ConditionEvaluator;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
@@ -140,15 +142,21 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	@Override
 	public JUnit5EngineExecutionContext execute(JUnit5EngineExecutionContext context) throws Exception {
+		ExtensionRegistry registry = context.getExtensionRegistry();
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 
-		invokeInstancePostProcessors(context.getExtensionRegistry(), testExtensionContext);
-		invokeBeforeEachCallbacks(context.getExtensionRegistry(), testExtensionContext);
-		invokeBeforeTestMethodCallbacks(context.getExtensionRegistry(), testExtensionContext);
-		invokeTestMethod(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
-		invokeAfterTestMethodCallbacks(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
-		invokeAfterEachCallbacks(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
+		invokeInstancePostProcessors(registry, testExtensionContext);
+
+		// @formatter:off
+		invokeBeforeEachCallbacks(registry, testExtensionContext);
+			invokeBeforeEachMethods(registry, testExtensionContext);
+				invokeBeforeTestMethodCallbacks(registry, testExtensionContext);
+					invokeTestMethod(registry, testExtensionContext, throwableCollector);
+				invokeAfterTestMethodCallbacks(registry, testExtensionContext, throwableCollector);
+			invokeAfterEachMethods(registry, testExtensionContext, throwableCollector);
+		invokeAfterEachCallbacks(registry, testExtensionContext, throwableCollector);
+		// @formatter:on
 
 		throwableCollector.assertEmpty();
 
@@ -163,6 +171,11 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	private void invokeBeforeEachCallbacks(ExtensionRegistry registry, TestExtensionContext context) {
 		registry.stream(BeforeEachCallback.class)//
 				.forEach(extension -> executeAndMaskThrowable(() -> extension.beforeEach(context)));
+	}
+
+	private void invokeBeforeEachMethods(ExtensionRegistry registry, TestExtensionContext context) {
+		registry.stream(BeforeEachMethodAdapter.class)//
+				.forEach(extension -> executeAndMaskThrowable(() -> extension.invoke(context)));
 	}
 
 	private void invokeBeforeTestMethodCallbacks(ExtensionRegistry registry, TestExtensionContext context) {
@@ -210,6 +223,13 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 		registry.reverseStream(AfterTestMethodCallback.class)//
 				.forEach(extension -> throwableCollector.execute(() -> extension.afterTestMethod(context)));
+	}
+
+	private void invokeAfterEachMethods(ExtensionRegistry registry, TestExtensionContext context,
+			ThrowableCollector throwableCollector) {
+
+		registry.reverseStream(AfterEachMethodAdapter.class)//
+				.forEach(extension -> throwableCollector.execute(() -> extension.invoke(context)));
 	}
 
 	private void invokeAfterEachCallbacks(ExtensionRegistry registry, TestExtensionContext context,

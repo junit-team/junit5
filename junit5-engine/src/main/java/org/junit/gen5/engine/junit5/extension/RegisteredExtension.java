@@ -10,10 +10,7 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
-
 import org.junit.gen5.api.extension.Extension;
-import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
@@ -23,8 +20,7 @@ import org.junit.gen5.commons.util.ToStringBuilder;
  * @param <E> the type of registered {@link Extension}
  * @since 5.0
  */
-@API(Internal)
-public class RegisteredExtension<E extends Extension> {
+class RegisteredExtension<E extends Extension> {
 
 	private final E extension;
 
@@ -43,7 +39,7 @@ public class RegisteredExtension<E extends Extension> {
 	 * error reporting and logging; never {@code null}
 	 * never {@code null}
 	 */
-	public RegisteredExtension(E extension, Object source) {
+	RegisteredExtension(E extension, Object source) {
 		this.extension = Preconditions.notNull(extension, "extension must not be null");
 		this.source = Preconditions.notNull(source, "source must not be null");
 	}
@@ -51,7 +47,7 @@ public class RegisteredExtension<E extends Extension> {
 	/**
 	 * Get the physical implementation of the registered {@link Extension}.
 	 */
-	public E getExtension() {
+	E getExtension() {
 		return this.extension;
 	}
 
@@ -69,7 +65,7 @@ public class RegisteredExtension<E extends Extension> {
 	 * underlying {@link java.lang.reflect.Method} that implements the extension
 	 * API, or similar.
 	 */
-	public Object getSource() {
+	Object getSource() {
 		return this.source;
 	}
 

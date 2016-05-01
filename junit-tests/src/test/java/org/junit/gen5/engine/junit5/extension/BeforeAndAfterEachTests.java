@@ -73,13 +73,13 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 			// InnerTestCase
 			"fooBefore",
 			"barBefore",
+			"fizzBefore",
 				"beforeMethod",
-					"fizzBefore",
-						"beforeInnerMethod",
-							"testInner",
-						"afterInnerMethod",
-					"fizzAfter",
+					"beforeInnerMethod",
+						"testInner",
+					"afterInnerMethod",
 				"afterMethod",
+			"fizzAfter",
 			"barAfter",
 			"fooAfter"
 
