@@ -48,10 +48,6 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 @API(Internal)
 public class ExtensionRegistry {
 
-	public enum ApplicationOrder {
-		FORWARD, BACKWARD
-	}
-
 	/**
 	 * Factory for creating and populating a new registry from a list of
 	 * extension types and a parent registry.
@@ -85,6 +81,8 @@ public class ExtensionRegistry {
 	private static final List<Class<? extends Extension>> DEFAULT_EXTENSIONS = Collections.unmodifiableList(
 		Arrays.asList(DisabledCondition.class, TestInfoParameterResolver.class, TestReporterParameterResolver.class));
 
+	private static final ExtensionPointSorter extensionSorter = new ExtensionPointSorter();
+
 	private final Set<Class<? extends Extension>> registeredExtensionTypes = new LinkedHashSet<>();
 
 	private final List<RegisteredExtensionPoint<?>> registeredExtensionPoints = new ArrayList<>();
@@ -107,8 +105,7 @@ public class ExtensionRegistry {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <E extends ExtensionPoint> List<RegisteredExtensionPoint<E>> getRegisteredExtensionPoints(
-			Class<E> extensionType) {
+	<E extends ExtensionPoint> List<RegisteredExtensionPoint<E>> getRegisteredExtensionPoints(Class<E> extensionType) {
 
 		List<RegisteredExtensionPoint<E>> allExtensionPoints = new ArrayList<>();
 		this.parent.ifPresent(
@@ -124,33 +121,39 @@ public class ExtensionRegistry {
 	}
 
 	/**
-	 * Return a stream for iterating over all registered extension points
-	 * of the specified type, using {@link ApplicationOrder#FORWARD}.
+	 * Generate a stream for iterating over all registered extensions of the
+	 * specified type.
 	 *
-	 * @param extensionPointType the type of {@link ExtensionPoint} to stream
-	 * @see #stream(Class, ApplicationOrder)
+	 * @param extensionType the type of {@link ExtensionPoint} to stream
 	 */
-	public <E extends ExtensionPoint> Stream<RegisteredExtensionPoint<E>> stream(Class<E> extensionPointType) {
-		return stream(extensionPointType, ApplicationOrder.FORWARD);
+	public <E extends ExtensionPoint> Stream<E> stream(Class<E> extensionType) {
+		return stream(extensionType, false);
 	}
 
 	/**
-	 * Return a stream for iterating over all registered extension points
-	 * of the specified type.
+	 * Generate a stream for iterating over all registered extensions of the
+	 * specified type in reverse order.
 	 *
-	 * @param extensionPointType the type of {@link ExtensionPoint} to stream
-	 * @param order the order in which to apply the extension points after sorting
-	 * @see #stream(Class)
+	 * @param extensionType the type of {@link ExtensionPoint} to stream
 	 */
-	public <E extends ExtensionPoint> Stream<RegisteredExtensionPoint<E>> stream(Class<E> extensionPointType,
-			ApplicationOrder order) {
+	public <E extends ExtensionPoint> Stream<E> reverseStream(Class<E> extensionType) {
+		return stream(extensionType, true);
+	}
 
-		List<RegisteredExtensionPoint<E>> registeredExtensionPoints = getRegisteredExtensionPoints(extensionPointType);
-		new ExtensionPointSorter().sort(registeredExtensionPoints);
-		if (order == ApplicationOrder.BACKWARD) {
+	/**
+	 * Generate a stream for iterating over all registered extensions of the
+	 * specified type, using the supplied application order.
+	 *
+	 * @param extensionType the type of {@link ExtensionPoint} to stream
+	 * @param reverse whether the extensions should be applied in reverse order
+	 */
+	private <E extends ExtensionPoint> Stream<E> stream(Class<E> extensionType, boolean reverse) {
+		List<RegisteredExtensionPoint<E>> registeredExtensionPoints = getRegisteredExtensionPoints(extensionType);
+		extensionSorter.sort(registeredExtensionPoints);
+		if (reverse) {
 			Collections.reverse(registeredExtensionPoints);
 		}
-		return registeredExtensionPoints.stream();
+		return registeredExtensionPoints.stream().map(RegisteredExtensionPoint::getExtensionPoint);
 	}
 
 	/**

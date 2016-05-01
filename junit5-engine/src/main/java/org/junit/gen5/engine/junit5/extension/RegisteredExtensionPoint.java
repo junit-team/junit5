@@ -25,7 +25,7 @@ import org.junit.gen5.commons.util.ToStringBuilder;
  * @since 5.0
  */
 @API(Internal)
-public class RegisteredExtensionPoint<E extends ExtensionPoint> {
+public class RegisteredExtensionPoint<E extends ExtensionPoint> implements Comparable<RegisteredExtensionPoint<E>> {
 
 	private final E extensionPoint;
 
@@ -88,6 +88,11 @@ public class RegisteredExtensionPoint<E extends ExtensionPoint> {
 	 */
 	public Position getPosition() {
 		return this.position;
+	}
+
+	@Override
+	public int compareTo(RegisteredExtensionPoint<E> that) {
+		return Integer.compare(this.getPosition().ordinal(), that.getPosition().ordinal());
 	}
 
 	@Override

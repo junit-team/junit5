@@ -10,7 +10,6 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +41,7 @@ class ExtensionPointSorter {
 	public <T extends ExtensionPoint> void sort(List<RegisteredExtensionPoint<T>> registeredExtensionPoints) {
 		checkPositionUnique(registeredExtensionPoints, Position.INNERMOST);
 		checkPositionUnique(registeredExtensionPoints, Position.OUTERMOST);
-		registeredExtensionPoints.sort(new DefaultComparator());
+		registeredExtensionPoints.sort(null);
 	}
 
 	private <T extends ExtensionPoint> void checkPositionUnique(
@@ -71,15 +70,6 @@ class ExtensionPointSorter {
 				.map(Object::toString)
 				.collect(Collectors.toList());
 		// @formatter:on
-	}
-
-	private static class DefaultComparator implements Comparator<RegisteredExtensionPoint<?>> {
-
-		@Override
-		public int compare(RegisteredExtensionPoint<?> first, RegisteredExtensionPoint<?> second) {
-			return Integer.compare(first.getPosition().ordinal(), second.getPosition().ordinal());
-		}
-
 	}
 
 }

@@ -17,7 +17,7 @@ import static org.junit.gen5.api.Assertions.assertTrue;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ContainerExecutionCondition;
@@ -118,12 +118,11 @@ public class ExtensionRegistryTests {
 
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
-		registry.stream(MyExtensionPoint.class, ExtensionRegistry.ApplicationOrder.FORWARD).forEach(
-			registeredExtensionPoint -> {
-				assertEquals(MyExtension.class.getName(), registeredExtensionPoint.getSource().getClass().getName());
-				assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
-				hasRun.set(true);
-			});
+		stream(registry, MyExtensionPoint.class).forEach(registeredExtensionPoint -> {
+			assertEquals(MyExtension.class.getName(), registeredExtensionPoint.getSource().getClass().getName());
+			assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
+			hasRun.set(true);
+		});
 
 		assertTrue(hasRun.get());
 	}
@@ -155,24 +154,24 @@ public class ExtensionRegistryTests {
 			ExtensionRegistry registry) throws Exception {
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
-		registry.stream(MyExtensionPoint.class, ExtensionRegistry.ApplicationOrder.FORWARD).forEach(
-			registeredExtensionPoint -> {
-				Class<? extends MyExtensionPoint> lambdaType = registeredExtensionPoint.getExtensionPoint().getClass();
-				assertTrue(lambdaType.getName().contains("$Lambda$"));
-				assertEquals(getClass().getName(), registeredExtensionPoint.getSource().getClass().getName());
-				assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
-				hasRun.set(true);
-			});
+		stream(registry, MyExtensionPoint.class).forEach(registeredExtensionPoint -> {
+			Class<? extends MyExtensionPoint> lambdaType = registeredExtensionPoint.getExtensionPoint().getClass();
+			assertTrue(lambdaType.getName().contains("$Lambda$"));
+			assertEquals(getClass().getName(), registeredExtensionPoint.getSource().getClass().getName());
+			assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
+			hasRun.set(true);
+		});
 
 		assertTrue(hasRun.get());
 	}
 
-	private int countExtensionPoints(ExtensionRegistry registry, Class<? extends ExtensionPoint> extensionPointType)
-			throws Exception {
-		AtomicInteger counter = new AtomicInteger();
-		registry.stream(extensionPointType, ExtensionRegistry.ApplicationOrder.FORWARD).forEach(
-			registeredExtensionPoint -> counter.incrementAndGet());
-		return counter.get();
+	private <E extends ExtensionPoint> Stream<RegisteredExtensionPoint<E>> stream(ExtensionRegistry registry,
+			Class<E> extensionType) {
+		return registry.getRegisteredExtensionPoints(extensionType).stream();
+	}
+
+	private long countExtensionPoints(ExtensionRegistry registry, Class<? extends ExtensionPoint> extensionType) {
+		return registry.stream(extensionType).count();
 	}
 
 	private void assertExtensionRegistered(ExtensionRegistry registry, Class<? extends Extension> extensionClass) {

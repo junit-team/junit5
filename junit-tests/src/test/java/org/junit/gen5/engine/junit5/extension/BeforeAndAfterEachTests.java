@@ -226,8 +226,7 @@ public class BeforeAndAfterEachTests extends AbstractJUnit5TestEngineTests {
 
 		@Override
 		public void registerExtensions(ExtensionPointRegistry registry) {
-			registry.register((BeforeEachCallback) ctx -> callSequence.add("innermostBefore"),
-				Position.INNERMOST);
+			registry.register((BeforeEachCallback) ctx -> callSequence.add("innermostBefore"), Position.INNERMOST);
 			registry.register((AfterEachCallback) this::innermostAfter, Position.INNERMOST);
 			registry.register((BeforeEachCallback) this::outermostBefore, Position.OUTERMOST);
 			registry.register((AfterEachCallback) this::outermostAfter, Position.OUTERMOST);
