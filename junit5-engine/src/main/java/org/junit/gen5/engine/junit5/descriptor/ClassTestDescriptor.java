@@ -57,6 +57,8 @@ import org.junit.gen5.engine.support.hierarchical.Container;
 @API(Internal)
 public class ClassTestDescriptor extends JUnit5TestDescriptor implements Container<JUnit5EngineExecutionContext> {
 
+	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
+
 	private final String displayName;
 
 	private final Class<?> testClass;
@@ -124,10 +126,10 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 	@Override
 	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Exception {
-		ConditionEvaluationResult evaluationResult = new ConditionEvaluator().evaluateForContainer(
+		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForContainer(
 			context.getExtensionRegistry(), (ContainerExtensionContext) context.getExtensionContext());
 		if (evaluationResult.isDisabled()) {
-			return SkipResult.skip(evaluationResult.getReason().orElse(""));
+			return SkipResult.skip(evaluationResult.getReason().orElse("<unknown>"));
 		}
 		return SkipResult.dontSkip();
 	}
@@ -157,19 +159,15 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	private void invokeBeforeAllCallbacks(ExtensionRegistry registry, ContainerExtensionContext context) {
-		// @formatter:off
-		registry.stream(BeforeAllCallback.class)
+		registry.stream(BeforeAllCallback.class)//
 				.forEach(extension -> executeAndMaskThrowable(() -> extension.beforeAll(context)));
-		// @formatter:on
 	}
 
 	private void invokeAfterAllCallbacks(ExtensionRegistry registry, ContainerExtensionContext context,
 			ThrowableCollector throwableCollector) {
 
-		// @formatter:off
-		registry.reverseStream(AfterAllCallback.class)
+		registry.reverseStream(AfterAllCallback.class)//
 				.forEach(extension -> throwableCollector.execute(() -> extension.afterAll(context)));
-		// @formatter:on
 	}
 
 	private void registerBeforeAllMethods(ExtensionRegistry extensionRegistry) {

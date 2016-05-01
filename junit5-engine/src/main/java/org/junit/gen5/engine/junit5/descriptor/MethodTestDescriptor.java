@@ -50,6 +50,8 @@ import org.junit.gen5.engine.support.hierarchical.Leaf;
 @API(Internal)
 public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
 
+	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
+
 	private final String displayName;
 
 	private final Class<?> testClass;
@@ -128,10 +130,10 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	@Override
 	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Exception {
-		ConditionEvaluationResult evaluationResult = new ConditionEvaluator().evaluateForTest(
-			context.getExtensionRegistry(), (TestExtensionContext) context.getExtensionContext());
+		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForTest(context.getExtensionRegistry(),
+			(TestExtensionContext) context.getExtensionContext());
 		if (evaluationResult.isDisabled()) {
-			return SkipResult.skip(evaluationResult.getReason().orElse(""));
+			return SkipResult.skip(evaluationResult.getReason().orElse("<unknown>"));
 		}
 		return SkipResult.dontSkip();
 	}
@@ -154,24 +156,18 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	}
 
 	private void invokeInstancePostProcessors(ExtensionRegistry registry, TestExtensionContext context) {
-		// @formatter:off
-		registry.stream(InstancePostProcessor.class)
+		registry.stream(InstancePostProcessor.class)//
 				.forEach(extension -> executeAndMaskThrowable(() -> extension.postProcessTestInstance(context)));
-		// @formatter:on
 	}
 
 	private void invokeBeforeEachCallbacks(ExtensionRegistry registry, TestExtensionContext context) {
-		// @formatter:off
-		registry.stream(BeforeEachCallback.class)
+		registry.stream(BeforeEachCallback.class)//
 				.forEach(extension -> executeAndMaskThrowable(() -> extension.beforeEach(context)));
-		// @formatter:on
 	}
 
 	private void invokeBeforeTestMethodCallbacks(ExtensionRegistry registry, TestExtensionContext context) {
-		// @formatter:off
-		registry.stream(BeforeTestMethodCallback.class)
+		registry.stream(BeforeTestMethodCallback.class)//
 				.forEach(extension -> executeAndMaskThrowable(() -> extension.beforeTestMethod(context)));
-		// @formatter:on
 	}
 
 	private void invokeTestMethod(ExtensionRegistry ExtensionRegistry, TestExtensionContext testExtensionContext,
@@ -191,12 +187,10 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	private void invokeExceptionHandlers(ExtensionRegistry registry, TestExtensionContext context, Throwable ex) {
 		List<ExceptionHandler> exceptionHandlers = registry.stream(ExceptionHandler.class).collect(toList());
-
 		invokeExceptionHandlers(ex, exceptionHandlers, context);
 	}
 
 	private void invokeExceptionHandlers(Throwable ex, List<ExceptionHandler> handlers, TestExtensionContext context) {
-
 		// No handlers left?
 		if (handlers.isEmpty()) {
 			ExceptionUtils.throwAsUncheckedException(ex);
@@ -214,19 +208,15 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	private void invokeAfterTestMethodCallbacks(ExtensionRegistry registry, TestExtensionContext context,
 			ThrowableCollector throwableCollector) {
 
-		// @formatter:off
-		registry.reverseStream(AfterTestMethodCallback.class)
+		registry.reverseStream(AfterTestMethodCallback.class)//
 				.forEach(extension -> throwableCollector.execute(() -> extension.afterTestMethod(context)));
-		// @formatter:on
 	}
 
 	private void invokeAfterEachCallbacks(ExtensionRegistry registry, TestExtensionContext context,
 			ThrowableCollector throwableCollector) {
 
-		// @formatter:off
-		registry.reverseStream(AfterEachCallback.class)
+		registry.reverseStream(AfterEachCallback.class)//
 				.forEach(extension -> throwableCollector.execute(() -> extension.afterEach(context)));
-		// @formatter:on
 	}
 
 }
