@@ -11,8 +11,7 @@ JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
 [[extension-registration]]
 === Registering Extensions
 
-Extensions can be registered either declaratively via `{ExtendWith}` or programmatically
-via an `{ExtensionRegistrar}`.
+Extensions can be registered declaratively via `{ExtendWith}`.
 
 Note that registered extensions are inherited within test class hierarchies.
 
@@ -59,85 +58,6 @@ class MyTestsV2 {
 
 The execution of tests in both `MyTestsV1` and `MyTestsV2` will be extended by the
 `FooExtension` and `BarExtension`, in exactly that order.
-
-[[extension-registration-programmatic]]
-==== Programmatic Extension Registration
-
-Developers can register one or more extensions _programmatically_ by implementing the
-`{ExtensionRegistrar}` API and registering the custom `ExtensionRegistrar` implementation
-via `@ExtendWith` as mentioned above. The following examples demonstrate the various
-options in implementations of the `ExtensionRegistrar.registerExtensions()` method.
-
-===== Registering an ExtensionPoint Instance
-
-If you have an instance of an extension that implements one or more `ExtensionPoint`
-APIs, you can register it as follows using the _default_ `Position`.
-
-[source,java,indent=0]
-[subs="verbatim"]
-----
-public void registerExtensions(ExtensionPointRegistry registry) {
-    CustomExtension customExtension = // instantiate extension
-    registry.register(customExtension);
-}
-----
-
-If you would like to influence the order in which multiple implementations of the same
-`ExtensionPoint` API are applied, you can do so by registering the extensions
-programmatically and supplying the `Position`. The following values are permitted.
-
-- `OUTERMOST`: Applied first. Only a single extension is allowed to be assigned this
-  position; otherwise, an `ExtensionConfigurationException` will be thrown.
-- `OUTSIDE_DEFAULT`: Applied after `OUTERMOST` but before `DEFAULT`, `INSIDE_DEFAULT`,
-  and `INNERMOST`. Multiple extensions can be assigned this position; however, the
-  ordering among such extensions is undefined.
-- `DEFAULT`: (?)
-- `INSIDE_DEFAULT`: (?)
-- `INNERMOST`: (?)
-
-The following listing demonstrates how to configure an explicit position for an instance
-of an extension. Note, however, that a `Position` can also be supplied for lambda
-expressions and method references.
-
-[source,java,indent=0]
-[subs="verbatim"]
-----
-public void registerExtensions(ExtensionPointRegistry registry) {
-    registry.register(new TimingExtension(), Position.INNERMOST);
-}
-----
-
-===== Registering a Lambda Expression as an ExtensionPoint
-
-If you would like to implement a single `ExtensionPoint` API as a _lambda expression_,
-you can register it as follows. Note, however, that the API must be a _functional
-interface_.
-
-[source,java,indent=0]
-[subs="verbatim"]
-----
-public void registerExtensions(ExtensionPointRegistry registry) {
-    registry.register((BeforeEachExtensionPoint) context -> { /* ... */ });
-}
-----
-
-===== Registering a Method Reference as an ExtensionPoint
-
-If you would like to implement a single `ExtensionPoint` API via a _method reference_,
-you can register it as follows. Note, however, that the API must be a _functional
-interface_.
-
-[source,java,indent=0]
-[subs="verbatim"]
-----
-public void registerExtensions(ExtensionPointRegistry registry) {
-    registry.register((BeforeEachExtensionPoint) this::beforeEach);
-}
-
-void beforeEach(TestExtensionContext context) {
-    /* ... */
-}
-----
 
 
 === Conditional Test Execution
