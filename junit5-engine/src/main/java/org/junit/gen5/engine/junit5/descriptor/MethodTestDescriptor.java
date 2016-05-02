@@ -87,8 +87,8 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		// reflection is necessary.
 
 		// TODO Consider extracting JUnit 5's "method representation" into a common utility.
-		return String.format("%s#%s(%s)", getTestClass().getName(), testMethod.getName(),
-			StringUtils.nullSafeToString(testMethod.getParameterTypes()));
+		return String.format("%s#%s(%s)", getTestClass().getName(), this.testMethod.getName(),
+			StringUtils.nullSafeToString(this.testMethod.getParameterTypes()));
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	@Override
 	public JUnit5EngineExecutionContext prepare(JUnit5EngineExecutionContext context) throws Exception {
-		ExtensionRegistry extensionRegistry = populateNewExtensionRegistryFromExtendWith(testMethod,
+		ExtensionRegistry extensionRegistry = populateNewExtensionRegistryFromExtendWith(this.testMethod,
 			context.getExtensionRegistry());
 		Object testInstance = context.getTestInstanceProvider().getTestInstance();
 		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(context.getExtensionContext(),

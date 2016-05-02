@@ -119,14 +119,13 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		registerBeforeEachMethodAdapters(registry);
 		registerAfterEachMethodAdapters(registry);
 
-		context = context.extend().withExtensionRegistry(registry).build();
-
 		ContainerExtensionContext containerExtensionContext = new ClassBasedContainerExtensionContext(
 			context.getExtensionContext(), context.getExecutionListener(), this);
 
 		// @formatter:off
 		return context.extend()
 				.withTestInstanceProvider(testInstanceProvider(context))
+				.withExtensionRegistry(registry)
 				.withExtensionContext(containerExtensionContext)
 				.build();
 		// @formatter:on
@@ -167,7 +166,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	protected TestInstanceProvider testInstanceProvider(JUnit5EngineExecutionContext context) {
-		return () -> ReflectionUtils.newInstance(testClass);
+		return () -> ReflectionUtils.newInstance(this.testClass);
 	}
 
 	private void invokeBeforeAllCallbacks(ExtensionRegistry registry, ContainerExtensionContext context) {
