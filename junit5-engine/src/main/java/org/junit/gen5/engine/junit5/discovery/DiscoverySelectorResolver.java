@@ -58,7 +58,8 @@ public class DiscoverySelectorResolver {
 		resolvers.add(new TestContainerResolver());
 		resolvers.add(new NestedTestsResolver());
 		resolvers.add(new TestMethodResolver());
-		return new JavaElementsResolver(engineDescriptor, resolvers);
+		resolvers.add(new DynamicTestMethodResolver());
+        return new JavaElementsResolver(engineDescriptor, resolvers);
 	}
 
 	private void pruneTree(TestDescriptor root) {
