@@ -11,11 +11,29 @@
 package org.junit.gen5.commons.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.api.Assertions.assertThrows;
+
+import java.io.IOException;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.JUnitException;
 
 class ExceptionUtilsTests {
+
+	@Test
+	void throwAsUncheckedExceptionForNullThrowable() {
+		assertThrows(PreconditionViolationException.class, () -> ExceptionUtils.throwAsUncheckedException(null));
+	}
+
+	@Test
+	void throwAsUncheckedException() {
+		assertThrows(IOException.class, (ExceptionUtilsTests::throwIOExceptionAsUnchecked));
+	}
+
+	@Test
+	void readStackTraceForNullThrowable() {
+		assertThrows(PreconditionViolationException.class, () -> ExceptionUtils.readStackTrace(null));
+	}
 
 	@Test
 	void readStackTrace() {
@@ -32,4 +50,7 @@ class ExceptionUtilsTests {
 		}
 	}
 
+	private static void throwIOExceptionAsUnchecked() {
+		ExceptionUtils.throwAsUncheckedException(new IOException());
+	}
 }
