@@ -10,16 +10,16 @@
 
 package org.junit.gen5.engine;
 
+import static java.util.stream.Collectors.joining;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.UniqueId.Segment;
 
 /**
@@ -78,8 +78,12 @@ public class UniqueIdFormat {
 	 * Create and deliver the string representation of the {@code UniqueId}
 	 */
 	public String format(UniqueId uniqueId) {
-		Stream<String> segmentStream = uniqueId.getSegments().stream().map(this::describe);
-		return StringUtils.join(segmentStream, Character.toString(segmentDelimiter));
+		// @formatter:off
+		return uniqueId.getSegments()
+			.stream()
+			.map(this::describe)
+			.collect(joining(Character.toString(segmentDelimiter)));
+		// @formatter:on
 	}
 
 	private String describe(Segment segment) {
