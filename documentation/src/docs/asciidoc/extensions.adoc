@@ -85,6 +85,7 @@ initialization methods on the test instance, etc.
 For concrete examples, consult the source code for the `{MockitoExtension}` and the
 `{SpringExtension}`.
 
+
 === Parameter Resolution
 
 `{MethodParameterResolver}` is an `Extension` strategy for dynamically resolving
@@ -98,25 +99,29 @@ resolved by _name_, _type_, _annotation_, or any combination thereof. For concre
 consult the source code for `{CustomTypeParameterResolver}` and
 `{CustomAnnotationParameterResolver}`.
 
+
 === Test Lifecycle Callbacks
 
 The following interfaces define the APIs for extending tests at various points in the
 test execution lifecycle. Consult the Javadoc for each of these in the
-`{extension-api-package}` package.
+`{extension-api-package}` package for further details.
 
-* `BeforeEachExtensionPoint`
-* `AfterEachExtensionPoint`
-* `BeforeAllExtensionPoint`
-* `AfterAllExtensionPoint`
+* `BeforeAllCallback`
+* `AfterAllCallback`
+* `BeforeEachCallback`
+* `AfterEachCallback`
+* `BeforeTestMethodCallback`
+* `AfterTestMethodCallback`
 
 Note that extension developers may choose to implement any number of these interfaces
 within a single extension. Consult the source code of the `{SpringExtension}` for a
 concrete example.
 
+
 === Exception Handling
 
-`{ExceptionHandlerExtensionPoint}` defines the API for `Extensions` that wish to _react to
-exceptions_ thrown in a test.
+`{ExceptionHandler}` defines the API for `Extensions` that wish to handle exceptions
+thrown from tests.
 
 The following example shows an extension which will swallow all instances of `IOException`
 but rethrow any other type of exception:
@@ -129,12 +134,10 @@ include::{testDir}/example/exception/IgnoreIOExceptionExtension.java[tags=user_g
 ----
 
 
-
 === Keeping State in Extensions
 
 Usually, an extension is instantiated only once. So the question becomes relevant: How do you keep the state
 from one invocation of an extension point to the next? ...
-
 
 
 === Additional Planned Extensions
