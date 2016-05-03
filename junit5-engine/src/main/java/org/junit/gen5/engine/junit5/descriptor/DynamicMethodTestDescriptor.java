@@ -22,6 +22,7 @@ import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
@@ -31,7 +32,7 @@ import org.junit.gen5.engine.support.hierarchical.SingleTestExecutor;
 @API(Internal)
 public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
 
-	public DynamicMethodTestDescriptor(String uniqueId, Class<?> testClass, Method testMethod) {
+	public DynamicMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, testClass, testMethod);
 	}
 
@@ -64,7 +65,7 @@ public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements
 	}
 
 	private void registerAndExecute(DynamicTest dynamicTest, EngineExecutionListener listener) {
-		String uniqueId = getUniqueId() + ":" + dynamicTest.getName();
+        UniqueId uniqueId = getUniqueId().append("dynamic-test", dynamicTest.getName()) ;
 		DynamicTestTestDescriptor dynamicTestTestDescriptor = new DynamicTestTestDescriptor(uniqueId, dynamicTest);
 
 		//This would lead to double execution of dynamic tests due to code in HierarchicalTestExecutor
