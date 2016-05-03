@@ -40,6 +40,15 @@ public class ToStringBuilderTests {
 	}
 
 	@Test
+	public void appendWithIllegalName() {
+		ToStringBuilder builder = new ToStringBuilder("");
+
+		assertThrows(PreconditionViolationException.class, () -> builder.append(null, ""));
+		assertThrows(PreconditionViolationException.class, () -> builder.append("", ""));
+		assertThrows(PreconditionViolationException.class, () -> builder.append("    ", ""));
+	}
+
+	@Test
 	public void withZeroFields() {
 		assertEquals("RoleModel []", new ToStringBuilder(new RoleModel()).toString());
 		assertEquals("RoleModel []", new ToStringBuilder(RoleModel.class).toString());
