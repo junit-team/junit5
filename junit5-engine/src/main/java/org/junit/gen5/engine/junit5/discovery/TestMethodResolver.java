@@ -62,11 +62,11 @@ public class TestMethodResolver implements ElementResolver {
 		return Optional.of(resolveMethod(testMethod, (ClassTestDescriptor) parent, uniqueId));
 	}
 
-	private boolean isTestMethod(Method candidate) {
+	protected boolean isTestMethod(Method candidate) {
 		return new IsTestMethod().test(candidate);
 	}
 
-	private UniqueId createUniqueId(Method testMethod, TestDescriptor parent) {
+	protected UniqueId createUniqueId(Method testMethod, TestDescriptor parent) {
 		String methodId = String.format("%s(%s)", testMethod.getName(),
 			StringUtils.nullSafeToString(testMethod.getParameterTypes()));
 		return parent.getUniqueId().append(SEGMENT_TYPE, methodId);
@@ -76,7 +76,7 @@ public class TestMethodResolver implements ElementResolver {
 		return new MethodFinder().findMethod(segment.getValue(), parent.getTestClass());
 	}
 
-	private TestDescriptor resolveMethod(Method testMethod, ClassTestDescriptor parentClassDescriptor,
+	protected TestDescriptor resolveMethod(Method testMethod, ClassTestDescriptor parentClassDescriptor,
 			UniqueId uniqueId) {
 		return new MethodTestDescriptor(uniqueId, parentClassDescriptor.getTestClass(), testMethod);
 	}
