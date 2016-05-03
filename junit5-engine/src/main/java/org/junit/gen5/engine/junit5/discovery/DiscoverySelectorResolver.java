@@ -10,7 +10,6 @@
 
 package org.junit.gen5.engine.junit5.discovery;
 
-import static java.lang.String.format;
 import static org.junit.gen5.commons.util.ReflectionUtils.*;
 
 import java.io.File;
@@ -59,7 +58,7 @@ public class DiscoverySelectorResolver {
 		resolvers.add(new NestedTestsResolver());
 		resolvers.add(new TestMethodResolver());
 		resolvers.add(new DynamicTestMethodResolver());
-        return new JavaElementsResolver(engineDescriptor, resolvers);
+		return new JavaElementsResolver(engineDescriptor, resolvers);
 	}
 
 	private void pruneTree(TestDescriptor root) {
