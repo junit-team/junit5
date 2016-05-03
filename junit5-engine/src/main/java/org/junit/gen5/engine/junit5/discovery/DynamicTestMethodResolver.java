@@ -18,11 +18,9 @@ import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.DynamicMethodTestDescriptor;
 
-
 public class DynamicTestMethodResolver extends TestMethodResolver {
 
 	public static final String SEGMENT_TYPE = "dynamic";
-
 
 	protected boolean isTestMethod(Method candidate) {
 		return new IsDynamicTestMethod().test(candidate);
@@ -35,7 +33,7 @@ public class DynamicTestMethodResolver extends TestMethodResolver {
 	}
 
 	protected TestDescriptor resolveMethod(Method testMethod, ClassTestDescriptor parentClassDescriptor,
-                                           UniqueId uniqueId) {
+			UniqueId uniqueId) {
 		return new DynamicMethodTestDescriptor(uniqueId, parentClassDescriptor.getTestClass(), testMethod);
 	}
 
