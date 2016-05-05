@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 buildscript {
 	repositories {
 		// mavenLocal()
@@ -9,7 +11,14 @@ buildscript {
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
 		classpath 'org.ajoberstar:gradle-git:1.3.2'
 		classpath 'org.junit:junit-gradle:5.0.0-SNAPSHOT'
+		classpath 'net.nemerosa:versioning:1.7.1'
 	}
+}
+
+Date buildTimeAndDate = new Date()
+ext {
+	buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+	buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
 }
 
 allprojects {
@@ -19,6 +28,7 @@ allprojects {
 	apply plugin: 'idea'
 	apply plugin: 'com.diffplug.gradle.spotless'
 	apply plugin: 'checkstyle'
+	apply plugin: 'net.nemerosa.versioning'
 
 	repositories {
 		mavenCentral()
@@ -221,6 +231,20 @@ subprojects {
 		}
 	}
 
+	jar {
+		manifest {
+			attributes(
+				'Built-By': System.properties['user.name'],
+				'Created-By': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString(),
+				'Build-Date': buildDate,
+				'Build-Time': buildTime,
+				'Build-Revision': versioning.info.commit,
+				'Specification-Title': project.name,
+				'Specification-Version': project.version,
+				'Specification-Vendor': 'junit.org',
+			)
+		}
+	}
 }
 
 configure(rootProject) {
