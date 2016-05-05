@@ -16,7 +16,6 @@ import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestExecutionResult.Status;
 import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.launcher.TestExecutionListener;
-import org.junit.gen5.launcher.TestId;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
@@ -37,7 +36,7 @@ class JUnit5RunnerListener implements TestExecutionListener {
 
 	@Override
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
-		TestId parentId = testIdentifier.getParentId().get();
+		String parentId = testIdentifier.getParentId().get();
 		testTree.addDynamicDescription(testIdentifier, parentId);
 	}
 
