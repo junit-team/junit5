@@ -19,7 +19,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import org.junit.gen5.launcher.TestId;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.runner.Description;
@@ -57,7 +56,7 @@ class JUnit5TestTree {
 		testPlan.getRoots().forEach(testIdentifier -> buildDescription(testIdentifier, suiteDescription, testPlan));
 	}
 
-	void addDynamicDescription(TestIdentifier newIdentifier, TestId parentId) {
+	void addDynamicDescription(TestIdentifier newIdentifier, String parentId) {
 		Description parent = getDescription(plan.getTestIdentifier(parentId));
 		buildDescription(newIdentifier, parent, this.plan);
 	}
