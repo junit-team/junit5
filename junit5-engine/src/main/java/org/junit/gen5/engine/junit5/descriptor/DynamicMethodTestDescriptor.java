@@ -59,7 +59,7 @@ public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements
 			MethodInvoker methodInvoker = new MethodInvoker(testExtensionContext, context.getExtensionRegistry());
 
 			@SuppressWarnings("unchecked")
-			//Todo: Handle cast exceptionsgit
+			//Todo: Handle cast exceptions
 			Stream<DynamicTest> dynamicTestStream = (Stream<DynamicTest>) methodInvoker.invoke(methodInvocationContext);
 
 			dynamicTestStream.forEach(dynamicTest -> registerAndExecute(dynamicTest, listener));
