@@ -247,7 +247,7 @@ public final class ReflectionUtils {
 		return testMethodOptional;
 	}
 
-	public static Optional<Object> getOuterInstance(Object inner) {
+	private static Optional<Object> getOuterInstance(Object inner) {
 		// This is risky since it depends on the name of the field which is nowhere guaranteed
 		// but has been stable so far in all JDKs
 
@@ -263,6 +263,9 @@ public final class ReflectionUtils {
 	}
 
 	public static Optional<Object> getOuterInstance(Object inner, Class<?> targetType) {
+		Preconditions.notNull(inner, "inner object must not be null");
+		Preconditions.notNull(targetType, "targetType must not be null");
+
 		if (targetType.isInstance(inner))
 			return Optional.of(inner);
 		Optional<Object> candidate = getOuterInstance(inner);
@@ -280,9 +283,8 @@ public final class ReflectionUtils {
 	public static Set<File> getAllClasspathRootDirectories() {
 		// TODO This is quite a hack, since sometimes the classpath is quite different
 		String fullClassPath = System.getProperty("java.class.path");
-		final String separator = System.getProperty("path.separator");
 		// @formatter:off
-		return Arrays.stream(fullClassPath.split(separator))
+		return Arrays.stream(fullClassPath.split(File.pathSeparator))
 				.filter(part -> !part.endsWith(".jar"))
 				.map(File::new)
 				.filter(File::isDirectory)
@@ -346,11 +348,10 @@ public final class ReflectionUtils {
 	/**
 	 * Return all methods in superclass hierarchy except from Object.
 	 */
-	public static List<Method> findAllMethodsInHierarchy(Class<?> clazz, MethodSortOrder sortOrder) {
+	private static List<Method> findAllMethodsInHierarchy(Class<?> clazz, MethodSortOrder sortOrder) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(sortOrder, "MethodSortOrder must not be null");
 
-		// TODO Support interface default methods.
 		// TODO Determine if we need to support bridged methods.
 
 		List<Method> localMethods = Arrays.asList(clazz.getDeclaredMethods());
@@ -446,15 +447,8 @@ public final class ReflectionUtils {
 		if (!lower.getName().equals(upper.getName())) {
 			return false;
 		}
-		Class<?>[] lowerParameterTypes = lower.getParameterTypes();
-		Class<?>[] upperParameterTypes = upper.getParameterTypes();
-		if (lowerParameterTypes.length != upperParameterTypes.length) {
+		if (!Arrays.equals(lower.getParameterTypes(), upper.getParameterTypes())) {
 			return false;
-		}
-		for (int i = 0; i < lowerParameterTypes.length; i++) {
-			if (!lowerParameterTypes[i].equals(upperParameterTypes[i])) {
-				return false;
-			}
 		}
 		return true;
 	}
@@ -491,6 +485,8 @@ public final class ReflectionUtils {
 	 * @see Class#isAssignableFrom
 	 */
 	public static Set<Class<?>> getAllAssignmentCompatibleClasses(Class<?> clazz) {
+		Preconditions.notNull(clazz, "class must not be null");
+
 		Set<Class<?>> result = new LinkedHashSet<>();
 		getAllAssignmentCompatibleClasses(clazz, result);
 		return result;

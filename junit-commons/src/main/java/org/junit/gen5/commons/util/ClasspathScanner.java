@@ -51,6 +51,8 @@ class ClasspathScanner {
 	}
 
 	boolean isPackage(String packageName) {
+		Preconditions.notBlank(packageName, "package name must not be null or empty");
+
 		String path = packagePath(packageName);
 		try {
 			Enumeration<URL> resource = classLoaderSupplier.get().getResources(path);
@@ -109,6 +111,8 @@ class ClasspathScanner {
 
 	private List<Class<?>> findClassesInSourceDirRecursively(File sourceDir, String packageName,
 			Predicate<Class<?>> classFilter) {
+		Preconditions.notNull(classFilter, "classFilter must not be null");
+
 		List<Class<?>> classesCollector = new ArrayList<>();
 		collectClassesRecursively(sourceDir, packageName, classesCollector, classFilter);
 		return classesCollector;
@@ -123,7 +127,7 @@ class ClasspathScanner {
 		for (File file : files) {
 			if (isClassFile(file)) {
 				Optional<Class<?>> classForClassFile = loadClassForClassFile(file, packageName);
-				classForClassFile.filter(classFilter).ifPresent(clazz -> classesCollector.add(clazz));
+				classForClassFile.filter(classFilter).ifPresent(classesCollector::add);
 			}
 			else if (file.isDirectory()) {
 				collectClassesRecursively(file, appendPackageName(packageName, file.getName()), classesCollector,
