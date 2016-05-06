@@ -17,6 +17,7 @@ import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.engineId;
 import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.uniqueIdForClass;
+import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.uniqueIdForDynamicMethod;
 import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.uniqueIdForMethod;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
