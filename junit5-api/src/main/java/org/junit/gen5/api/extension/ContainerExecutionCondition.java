@@ -15,7 +15,7 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code ContainerExecutionCondition} defines an {@link ExtensionPoint} for
+ * {@code ContainerExecutionCondition} defines the {@link Extension} API for
  * programmatic, <em>conditional container execution</em>.
  *
  * <p>A {@code ContainerExecutionCondition} is {@linkplain #evaluate evaluated}
@@ -30,7 +30,7 @@ import org.junit.gen5.commons.meta.API;
  */
 @FunctionalInterface
 @API(Experimental)
-public interface ContainerExecutionCondition extends ExtensionPoint {
+public interface ContainerExecutionCondition extends Extension {
 
 	/**
 	 * Evaluate this condition for the supplied {@link ContainerExtensionContext}.

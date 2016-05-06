@@ -32,7 +32,7 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Experimental)
-public interface MethodParameterResolver extends ExtensionPoint {
+public interface MethodParameterResolver extends Extension {
 
 	/**
 	 * Determine if this resolver supports resolution of the given {@link Parameter}

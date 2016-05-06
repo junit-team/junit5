@@ -27,7 +27,7 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Experimental)
-public interface InstancePostProcessor extends ExtensionPoint {
+public interface InstancePostProcessor extends Extension {
 
 	/**
 	 * Callback for post-processing the test instance in the supplied

@@ -23,50 +23,47 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.junit.gen5.api.extension.Extension;
-import org.junit.gen5.api.extension.ExtensionPoint;
-import org.junit.gen5.api.extension.ExtensionPointRegistry;
-import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
-import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
  * An {@code ExtensionRegistry} holds all registered extensions (i.e.
- * instances of {@link ExtensionPoint}) for a given
+ * instances of {@link Extension}) for a given
  * {@link org.junit.gen5.engine.support.hierarchical.Container} or
  * {@link org.junit.gen5.engine.support.hierarchical.Leaf}.
  *
  * <p>A registry has a reference to its parent registry, and all lookups are
- * performed first in the current registry itself and then in its parent and
- * thereby all its ancestors.
+ * performed first in the current registry itself and then recursively in its
+ * ancestors.
  *
  * @since 5.0
- * @see ExtensionPointRegistry
- * @see ExtensionRegistrar
  */
 @API(Internal)
 public class ExtensionRegistry {
 
-	public enum ApplicationOrder {
-		FORWARD, BACKWARD
-	}
+	private static final Logger LOG = Logger.getLogger(ExtensionRegistry.class.getName());
+
+	private static final List<Class<? extends Extension>> DEFAULT_EXTENSIONS = Collections.unmodifiableList(
+		Arrays.asList(DisabledCondition.class, TestInfoParameterResolver.class, TestReporterParameterResolver.class));
 
 	/**
 	 * Factory for creating and populating a new registry from a list of
 	 * extension types and a parent registry.
 	 *
-	 * @param parentRegistry the parent registry to be used
+	 * @param parentRegistry the parent registry
 	 * @param extensionTypes the types of extensions to be registered in
 	 * the new registry
 	 * @return a new {@code ExtensionRegistry}
 	 */
 	public static ExtensionRegistry newRegistryFrom(ExtensionRegistry parentRegistry,
 			List<Class<? extends Extension>> extensionTypes) {
+
 		Preconditions.notNull(parentRegistry, "parentRegistry must not be null");
-		ExtensionRegistry newExtensionRegistry = new ExtensionRegistry(Optional.of(parentRegistry));
-		extensionTypes.forEach(newExtensionRegistry::registerExtension);
-		return newExtensionRegistry;
+
+		ExtensionRegistry registry = new ExtensionRegistry(Optional.of(parentRegistry));
+		extensionTypes.forEach(registry::registerExtension);
+		return registry;
 	}
 
 	/**
@@ -80,18 +77,13 @@ public class ExtensionRegistry {
 		return extensionRegistry;
 	}
 
-	private static final Logger LOG = Logger.getLogger(ExtensionRegistry.class.getName());
-
-	private static final List<Class<? extends Extension>> DEFAULT_EXTENSIONS = Collections.unmodifiableList(
-		Arrays.asList(DisabledCondition.class, TestInfoParameterResolver.class, TestReporterParameterResolver.class));
+	private final Optional<ExtensionRegistry> parent;
 
 	private final Set<Class<? extends Extension>> registeredExtensionTypes = new LinkedHashSet<>();
 
-	private final List<RegisteredExtensionPoint<?>> registeredExtensionPoints = new ArrayList<>();
+	private final List<RegisteredExtension<?>> registeredExtensions = new ArrayList<>();
 
-	private final Optional<ExtensionRegistry> parent;
-
-	public ExtensionRegistry(Optional<ExtensionRegistry> parent) {
+	ExtensionRegistry(Optional<ExtensionRegistry> parent) {
 		this.parent = parent;
 	}
 
@@ -106,67 +98,69 @@ public class ExtensionRegistry {
 		return Collections.unmodifiableSet(allRegisteredExtensionTypes);
 	}
 
+	/**
+	 * @return all {@code RegisteredExtensions} in this registry or one of its ancestors
+	 */
 	@SuppressWarnings("unchecked")
-	private <E extends ExtensionPoint> List<RegisteredExtensionPoint<E>> getRegisteredExtensionPoints(
-			Class<E> extensionType) {
+	<E extends Extension> List<RegisteredExtension<E>> getRegisteredExtensions(Class<E> extensionType) {
 
-		List<RegisteredExtensionPoint<E>> allExtensionPoints = new ArrayList<>();
+		List<RegisteredExtension<E>> extensions = new ArrayList<>();
 		this.parent.ifPresent(
-			parentRegistry -> allExtensionPoints.addAll(parentRegistry.getRegisteredExtensionPoints(extensionType)));
+			parentRegistry -> extensions.addAll(parentRegistry.getRegisteredExtensions(extensionType)));
 
 		// @formatter:off
-		this.registeredExtensionPoints.stream()
-				.filter(registeredExtensionPoint -> extensionType.isAssignableFrom(registeredExtensionPoint.getExtensionPoint().getClass()))
-				.forEach(extensionPoint -> allExtensionPoints.add((RegisteredExtensionPoint<E>) extensionPoint));
+		this.registeredExtensions.stream()
+				.filter(registeredExtension -> extensionType.isAssignableFrom(registeredExtension.getExtension().getClass()))
+				.forEach(extension -> extensions.add((RegisteredExtension<E>) extension));
 		// @formatter:on
 
-		return allExtensionPoints;
+		return extensions;
 	}
 
 	/**
-	 * Return a stream for iterating over all registered extension points
-	 * of the specified type, using {@link ApplicationOrder#FORWARD}.
+	 * Generate a stream for iterating over all registered extensions of the
+	 * specified type.
 	 *
-	 * @param extensionPointType the type of {@link ExtensionPoint} to stream
-	 * @see #stream(Class, ApplicationOrder)
+	 * @param extensionType the type of {@link Extension} to stream
 	 */
-	public <E extends ExtensionPoint> Stream<RegisteredExtensionPoint<E>> stream(Class<E> extensionPointType) {
-		return stream(extensionPointType, ApplicationOrder.FORWARD);
+	public <E extends Extension> Stream<E> stream(Class<E> extensionType) {
+		return stream(extensionType, false);
 	}
 
 	/**
-	 * Return a stream for iterating over all registered extension points
-	 * of the specified type.
+	 * Generate a stream for iterating over all registered extensions of the
+	 * specified type in reverse order.
 	 *
-	 * @param extensionPointType the type of {@link ExtensionPoint} to stream
-	 * @param order the order in which to apply the extension points after sorting
-	 * @see #stream(Class)
+	 * @param extensionType the type of {@link Extension} to stream
 	 */
-	public <E extends ExtensionPoint> Stream<RegisteredExtensionPoint<E>> stream(Class<E> extensionPointType,
-			ApplicationOrder order) {
+	public <E extends Extension> Stream<E> reverseStream(Class<E> extensionType) {
+		return stream(extensionType, true);
+	}
 
-		List<RegisteredExtensionPoint<E>> registeredExtensionPoints = getRegisteredExtensionPoints(extensionPointType);
-		new ExtensionPointSorter().sort(registeredExtensionPoints);
-		if (order == ApplicationOrder.BACKWARD) {
-			Collections.reverse(registeredExtensionPoints);
+	/**
+	 * Generate a stream for iterating over all registered extensions of the
+	 * specified type.
+	 *
+	 * @param extensionType the type of {@link Extension} to stream
+	 * @param reverse whether the extensions should be streamed in reversed
+	 * registration order
+	 */
+	private <E extends Extension> Stream<E> stream(Class<E> extensionType, boolean reverse) {
+		List<RegisteredExtension<E>> registeredExtensions = getRegisteredExtensions(extensionType);
+		if (reverse) {
+			Collections.reverse(registeredExtensions);
 		}
-		return registeredExtensionPoints.stream();
+		return registeredExtensions.stream().map(RegisteredExtension::getExtension);
 	}
 
 	/**
-	 * Instantiate an extension of the given type using its default constructor,
-	 * and potentially register it in this registry.
+	 * Instantiate an extension of the given type using its default constructor
+	 * and register it in this registry.
 	 *
-	 * <p>If the extension is an {@link ExtensionPoint}, it will be registered
-	 * in this registry, unless an extension of the given type already exists
-	 * in this registry.
+	 * <p>A new {@link Extension} will not be registered if an extension of the
+	 * given type already exists in this registry.
 	 *
-	 * <p>If the extension is an {@link ExtensionRegistrar},
-	 * its {@link ExtensionRegistrar#registerExtensions registerExtensions()}
-	 * method will be invoked to register extensions from the registrar in
-	 * this registry.
-	 *
-	 * @param extensionType the type extension to register
+	 * @param extensionType the type of extension to register
 	 */
 	void registerExtension(Class<? extends Extension> extensionType) {
 
@@ -174,61 +168,18 @@ public class ExtensionRegistry {
 			registeredType -> registeredType.equals(extensionType));
 
 		if (!extensionAlreadyRegistered) {
-			Extension extension = ReflectionUtils.newInstance(extensionType);
-			registerExtensionPoint(extension);
-			registerExtensionPointsFromRegistrar(extension);
+			registerExtension(ReflectionUtils.newInstance(extensionType));
 			this.registeredExtensionTypes.add(extensionType);
 		}
 	}
 
-	private void registerExtensionPoint(Extension extension) {
-		if (extension instanceof ExtensionPoint) {
-			registerExtensionPoint((ExtensionPoint) extension, extension);
-		}
+	private void registerExtension(Extension extension) {
+		registerExtension(extension, extension);
 	}
 
-	public void registerExtensionPoint(ExtensionPoint extension, Object source) {
-		registerExtensionPoint(extension, source, Position.DEFAULT);
-	}
-
-	private void registerExtensionPoint(ExtensionPoint extension, Object source, Position position) {
-		LOG.finer(() -> String.format("Registering extension point [%s] from source [%s] with position [%s].",
-			extension, source, position));
-		this.registeredExtensionPoints.add(new RegisteredExtensionPoint<>(extension, source, position));
-	}
-
-	private void registerExtensionPointsFromRegistrar(Extension extension) {
-		if (extension instanceof ExtensionRegistrar) {
-			ExtensionRegistrar extensionRegistrar = (ExtensionRegistrar) extension;
-			extensionRegistrar.registerExtensions(new DelegatingExtensionPointRegistry(extensionRegistrar));
-		}
-	}
-
-	/**
-	 * A {@code DelegatingExtensionPointRegistry} enables an
-	 * {@link ExtensionRegistrar} to populate an {@link ExtensionRegistry}
-	 * via the simpler {@link ExtensionPointRegistry} API.
-	 *
-	 * <p>Furthermore, a {@code DelegatingExtensionPointRegistry} internally
-	 * delegates to the enclosing {@code ExtensionRegistry} to {@linkplain
-	 * ExtensionRegistry#registerExtensionPoint(ExtensionPoint, Object, Position)
-	 * register} extension points with the {@link RegisteredExtensionPoint#getSource() source}
-	 * set to the {@code ExtensionRegistrar} supplied to this registry's
-	 * constructor.
-	 */
-	private class DelegatingExtensionPointRegistry implements ExtensionPointRegistry {
-
-		private final ExtensionRegistrar extensionRegistrar;
-
-		DelegatingExtensionPointRegistry(ExtensionRegistrar extensionRegistrar) {
-			this.extensionRegistrar = extensionRegistrar;
-		}
-
-		@Override
-		public void register(ExtensionPoint extensionPoint, Position position) {
-			registerExtensionPoint(extensionPoint, this.extensionRegistrar, position);
-		}
-
+	public void registerExtension(Extension extension, Object source) {
+		LOG.finer(() -> String.format("Registering extension [%s] from source [%s].", extension, source));
+		this.registeredExtensions.add(new RegisteredExtension<>(extension, source));
 	}
 
 }

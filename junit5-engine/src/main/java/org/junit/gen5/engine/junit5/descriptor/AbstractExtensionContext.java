@@ -10,8 +10,12 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toCollection;
+
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.engine.EngineExecutionListener;
@@ -68,6 +72,7 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 
 	@Override
 	public Set<String> getTags() {
-		return testDescriptor.getTags().stream().map(TestTag::getName).collect(Collectors.toSet());
+		return testDescriptor.getTags().stream().map(TestTag::getName).collect(toCollection(LinkedHashSet::new));
 	}
+
 }

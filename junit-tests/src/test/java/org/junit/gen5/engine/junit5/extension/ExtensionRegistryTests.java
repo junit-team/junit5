@@ -17,15 +17,11 @@ import static org.junit.gen5.api.Assertions.assertTrue;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ContainerExecutionCondition;
 import org.junit.gen5.api.extension.Extension;
-import org.junit.gen5.api.extension.ExtensionPoint;
-import org.junit.gen5.api.extension.ExtensionPointRegistry;
-import org.junit.gen5.api.extension.ExtensionPointRegistry.Position;
-import org.junit.gen5.api.extension.ExtensionRegistrar;
 import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 
@@ -35,7 +31,7 @@ import org.junit.gen5.api.extension.TestExecutionCondition;
 public class ExtensionRegistryTests {
 
 	@Test
-	public void newRegistryWithoutParentHasDefaultExtensions() throws Exception {
+	void newRegistryWithoutParentHasDefaultExtensions() {
 		ExtensionRegistry registry = ExtensionRegistry.newRootRegistryWithDefaultExtensions();
 		Set<Class<? extends Extension>> extensions = registry.getRegisteredExtensionTypes();
 
@@ -44,14 +40,13 @@ public class ExtensionRegistryTests {
 		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
 		assertExtensionRegistered(registry, TestReporterParameterResolver.class);
 
-		assertEquals(2, countExtensionPoints(registry, MethodParameterResolver.class));
-		assertEquals(1, countExtensionPoints(registry, ContainerExecutionCondition.class));
-		assertEquals(1, countExtensionPoints(registry, TestExecutionCondition.class));
+		assertEquals(2, countExtensions(registry, MethodParameterResolver.class));
+		assertEquals(1, countExtensions(registry, ContainerExecutionCondition.class));
+		assertEquals(1, countExtensions(registry, TestExecutionCondition.class));
 	}
 
 	@Test
-	public void registerExtensionByImplementingClass() throws Exception {
-
+	void registerExtensionByImplementingClass() {
 		ExtensionRegistry registry = new ExtensionRegistry(Optional.empty());
 		registry.registerExtension(MyExtension.class);
 
@@ -63,175 +58,140 @@ public class ExtensionRegistryTests {
 
 		assertEquals(1, registry.getRegisteredExtensionTypes().size());
 		assertExtensionRegistered(registry, MyExtension.class);
-		assertEquals(1, countExtensionPoints(registry, MyExtensionPoint.class));
+		assertEquals(1, countExtensions(registry, MyExtensionApi.class));
 
 		registry.registerExtension(YourExtension.class);
 		assertExtensionRegistered(registry, YourExtension.class);
-		assertEquals(2, countExtensionPoints(registry, MyExtensionPoint.class));
+		assertEquals(2, countExtensions(registry, MyExtensionApi.class));
 	}
 
 	@Test
-	public void registerTestExtensionThatImplementsMultipleExtensionPoints() throws Exception {
-
+	void registerExtensionThatImplementsMultipleExtensionApis() {
 		ExtensionRegistry registry = new ExtensionRegistry(Optional.empty());
 		registry.registerExtension(MultipleExtension.class);
 
 		assertExtensionRegistered(registry, MultipleExtension.class);
 
-		assertEquals(1, countExtensionPoints(registry, MyExtensionPoint.class));
-		assertEquals(1, countExtensionPoints(registry, AnotherExtensionPoint.class));
+		assertEquals(1, countExtensions(registry, MyExtensionApi.class));
+		assertEquals(1, countExtensions(registry, AnotherExtensionApi.class));
 	}
 
 	@Test
-	public void extensionsAreInheritedFromParent() throws Exception {
-
+	void extensionsAreInheritedFromParent() {
 		ExtensionRegistry parent = new ExtensionRegistry(Optional.empty());
 		parent.registerExtension(MyExtension.class);
 
 		ExtensionRegistry child = ExtensionRegistry.newRegistryFrom(parent, singletonList(YourExtension.class));
 		assertExtensionRegistered(child, MyExtension.class);
 		assertExtensionRegistered(child, YourExtension.class);
-		assertEquals(2, countExtensionPoints(child, MyExtensionPoint.class));
+		assertEquals(2, countExtensions(child, MyExtensionApi.class));
 
 		ExtensionRegistry grandChild = new ExtensionRegistry(Optional.of(child));
 		assertExtensionRegistered(grandChild, MyExtension.class);
 		assertExtensionRegistered(grandChild, YourExtension.class);
-		assertEquals(2, countExtensionPoints(grandChild, MyExtensionPoint.class));
+		assertEquals(2, countExtensions(grandChild, MyExtensionApi.class));
 	}
 
 	@Test
-	public void registerExtensionPointsByExtensionRegistrar() throws Exception {
-
-		ExtensionRegistry registry = new ExtensionRegistry(Optional.empty());
-		registry.registerExtension(MyExtensionRegistrar.class);
-
-		assertExtensionRegistered(registry, MyExtensionRegistrar.class);
-		assertEquals(1, countExtensionPoints(registry, MyExtensionPoint.class));
-		assertEquals(1, countExtensionPoints(registry, AnotherExtensionPoint.class));
-	}
-
-	@Test
-	public void canStreamOverRegisteredExtensionPoint() throws Exception {
-
+	void canStreamOverRegisteredExtension() {
 		ExtensionRegistry registry = new ExtensionRegistry(Optional.empty());
 		registry.registerExtension(MyExtension.class);
 
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
-		registry.stream(MyExtensionPoint.class, ExtensionRegistry.ApplicationOrder.FORWARD).forEach(
-			registeredExtensionPoint -> {
-				assertEquals(MyExtension.class.getName(), registeredExtensionPoint.getSource().getClass().getName());
-				assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
-				hasRun.set(true);
-			});
+		stream(registry, MyExtensionApi.class).forEach(registeredExtension -> {
+			assertEquals(MyExtension.class.getName(), registeredExtension.getSource().getClass().getName());
+			hasRun.set(true);
+		});
 
 		assertTrue(hasRun.get());
 	}
 
 	@Test
-	public void registerExtensionPointFromLambdaExpression() throws Exception {
+	void registerExtensionFromLambdaExpression() {
 		ExtensionRegistry registry = new ExtensionRegistry(Optional.empty());
-		registry.registerExtensionPoint((MyExtensionPoint) test -> {
+		registry.registerExtension((MyExtensionApi) test -> {
 		}, this);
 
-		assertBehaviorForExtensionPointRegisteredFromLambdaExpressionOrMethodReference(registry);
+		assertBehaviorForExtensionRegisteredFromLambdaExpressionOrMethodReference(registry);
 	}
 
 	@Test
-	public void registerExtensionPointFromMethodReference() throws Exception {
+	void registerExtensionFromMethodReference() {
 		ExtensionRegistry registry = new ExtensionRegistry(Optional.empty());
-		registry.registerExtensionPoint((MyExtensionPoint) this::consumeString, this);
-		assertBehaviorForExtensionPointRegisteredFromLambdaExpressionOrMethodReference(registry);
+		registry.registerExtension((MyExtensionApi) this::consumeString, this);
+		assertBehaviorForExtensionRegisteredFromLambdaExpressionOrMethodReference(registry);
 	}
 
 	/**
-	 * "Implements" MyExtensionPoint.
+	 * "Implements" MyExtensionApi.
 	 */
 	private void consumeString(String test) {
 		/* no-op */
 	}
 
-	private void assertBehaviorForExtensionPointRegisteredFromLambdaExpressionOrMethodReference(
-			ExtensionRegistry registry) throws Exception {
+	private void assertBehaviorForExtensionRegisteredFromLambdaExpressionOrMethodReference(ExtensionRegistry registry) {
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
-		registry.stream(MyExtensionPoint.class, ExtensionRegistry.ApplicationOrder.FORWARD).forEach(
-			registeredExtensionPoint -> {
-				Class<? extends MyExtensionPoint> lambdaType = registeredExtensionPoint.getExtensionPoint().getClass();
-				assertTrue(lambdaType.getName().contains("$Lambda$"));
-				assertEquals(getClass().getName(), registeredExtensionPoint.getSource().getClass().getName());
-				assertEquals(Position.DEFAULT, registeredExtensionPoint.getPosition());
-				hasRun.set(true);
-			});
+		stream(registry, MyExtensionApi.class).forEach(registeredExtension -> {
+			Class<? extends MyExtensionApi> lambdaType = registeredExtension.getExtension().getClass();
+			assertTrue(lambdaType.getName().contains("$Lambda$"));
+			assertEquals(getClass().getName(), registeredExtension.getSource().getClass().getName());
+			hasRun.set(true);
+		});
 
 		assertTrue(hasRun.get());
 	}
 
-	private int countExtensionPoints(ExtensionRegistry registry, Class<? extends ExtensionPoint> extensionPointType)
-			throws Exception {
-		AtomicInteger counter = new AtomicInteger();
-		registry.stream(extensionPointType, ExtensionRegistry.ApplicationOrder.FORWARD).forEach(
-			registeredExtensionPoint -> counter.incrementAndGet());
-		return counter.get();
+	private <E extends Extension> Stream<RegisteredExtension<E>> stream(ExtensionRegistry registry,
+			Class<E> extensionType) {
+		return registry.getRegisteredExtensions(extensionType).stream();
 	}
 
-	private void assertExtensionRegistered(ExtensionRegistry registry, Class<? extends Extension> extensionClass) {
-		assertTrue(registry.getRegisteredExtensionTypes().contains(extensionClass),
-			() -> extensionClass.getSimpleName() + " should be present");
+	private long countExtensions(ExtensionRegistry registry, Class<? extends Extension> extensionType) {
+		return registry.stream(extensionType).count();
 	}
 
-}
-
-interface MyExtensionPoint extends ExtensionPoint {
-
-	void doNothing(String test);
-}
-
-interface AnotherExtensionPoint extends ExtensionPoint {
-
-	void doMore();
-}
-
-class MyExtension implements MyExtensionPoint {
-
-	@Override
-	public void doNothing(String test) {
-
-	}
-}
-
-class YourExtension implements MyExtensionPoint {
-
-	@Override
-	public void doNothing(String test) {
-
-	}
-}
-
-class MultipleExtension implements MyExtensionPoint, AnotherExtensionPoint {
-
-	@Override
-	public void doNothing(String test) {
-
+	private void assertExtensionRegistered(ExtensionRegistry registry, Class<? extends Extension> extensionType) {
+		assertTrue(registry.getRegisteredExtensionTypes().contains(extensionType),
+			() -> extensionType.getSimpleName() + " should be present");
 	}
 
-	@Override
-	public void doMore() {
+	// -------------------------------------------------------------------------
 
-	}
-}
+	interface MyExtensionApi extends Extension {
 
-class MyExtensionRegistrar implements ExtensionRegistrar {
-
-	@Override
-	public void registerExtensions(ExtensionPointRegistry registry) {
-		registry.register((MyExtensionPoint) this::doNothing);
-		registry.register((AnotherExtensionPoint) this::doMore);
+		void doNothing(String test);
 	}
 
-	private void doMore() {
+	interface AnotherExtensionApi extends Extension {
+
+		void doMore();
 	}
 
-	private void doNothing(String s) {
+	static class MyExtension implements MyExtensionApi {
+
+		@Override
+		public void doNothing(String test) {
+		}
 	}
+
+	static class YourExtension implements MyExtensionApi {
+
+		@Override
+		public void doNothing(String test) {
+		}
+	}
+
+	static class MultipleExtension implements MyExtensionApi, AnotherExtensionApi {
+
+		@Override
+		public void doNothing(String test) {
+		}
+
+		@Override
+		public void doMore() {
+		}
+	}
+
 }

@@ -23,7 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
-import org.junit.gen5.api.extension.AfterEachExtensionPoint;
+import org.junit.gen5.api.extension.AfterEachCallback;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 import org.junit.gen5.api.extension.MethodInvocationContext;
@@ -31,7 +31,7 @@ import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.TestExtensionContext;
 
-public class TempDirectory implements AfterEachExtensionPoint, MethodParameterResolver {
+public class TempDirectory implements AfterEachCallback, MethodParameterResolver {
 
 	@Target(ElementType.PARAMETER)
 	@Retention(RetentionPolicy.RUNTIME)
