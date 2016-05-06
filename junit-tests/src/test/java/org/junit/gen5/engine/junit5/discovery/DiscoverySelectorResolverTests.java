@@ -62,7 +62,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "dynamicTest()")));
+		assertTrue(uniqueIds.contains(uniqueIdForDynamicMethod(MyTestClass.class, "dynamicTest()")));
 	}
 
 	@Test
@@ -77,7 +77,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "dynamicTest()")));
+		assertTrue(uniqueIds.contains(uniqueIdForDynamicMethod(MyTestClass.class, "dynamicTest()")));
 	}
 
 	@Test
