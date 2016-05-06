@@ -42,22 +42,22 @@ import org.junit.gen5.api.Test;
  *
  * @since 5.0
  */
-public final class AnnotationUtilsTests {
+class AnnotationUtilsTests {
 
 	@Test
-	public void findAnnotationForNullAnnotatedElement() {
+	void findAnnotationForNullAnnotatedElement() {
 		assertThat(findAnnotation(null, Annotation1.class)).isEmpty();
 	}
 
 	@Test
-	public void findAnnotationOnClassWithoutAnnotation() {
+	void findAnnotationOnClassWithoutAnnotation() {
 		Optional<Annotation2> optionalAnnotation = findAnnotation(Annotation1Class.class, Annotation2.class);
 		assertNotNull(optionalAnnotation);
 		assertFalse(optionalAnnotation.isPresent());
 	}
 
 	@Test
-	public void findAnnotationIndirectlyPresentOnClass() {
+	void findAnnotationIndirectlyPresentOnClass() {
 		Optional<InheritedAnnotation> optionalAnnotation = findAnnotation(SubInheritedAnnotationClass.class,
 			InheritedAnnotation.class);
 		assertNotNull(optionalAnnotation);
@@ -65,14 +65,14 @@ public final class AnnotationUtilsTests {
 	}
 
 	@Test
-	public void findAnnotationDirectlyPresentOnClass() {
+	void findAnnotationDirectlyPresentOnClass() {
 		Optional<Annotation1> optionalAnnotation = findAnnotation(Annotation1Class.class, Annotation1.class);
 		assertNotNull(optionalAnnotation);
 		assertTrue(optionalAnnotation.isPresent());
 	}
 
 	@Test
-	public void findAnnotationMetaPresentOnClass() {
+	void findAnnotationMetaPresentOnClass() {
 		Optional<Annotation1> optionalAnnotation = findAnnotation(ComposedAnnotationClass.class, Annotation1.class);
 		assertNotNull(optionalAnnotation);
 		assertTrue(optionalAnnotation.isPresent());
@@ -85,12 +85,12 @@ public final class AnnotationUtilsTests {
 	 * @see Inherited
 	 */
 	@Test
-	public void findAnnotationIndirectlyMetaPresentOnClass() {
+	void findAnnotationIndirectlyMetaPresentOnClass() {
 		assertThat(findAnnotation(InheritedComposedAnnotationSubClass.class, Annotation1.class)).isPresent();
 	}
 
 	@Test
-	public void findAnnotationDirectlyPresentOnMethod() throws Exception {
+	void findAnnotationDirectlyPresentOnMethod() throws Exception {
 		Optional<Annotation1> optionalAnnotation = findAnnotation(Annotation2Class.class.getDeclaredMethod("method"),
 			Annotation1.class);
 		assertNotNull(optionalAnnotation);
@@ -98,7 +98,7 @@ public final class AnnotationUtilsTests {
 	}
 
 	@Test
-	public void findAnnotationMetaPresentOnMethod() throws Exception {
+	void findAnnotationMetaPresentOnMethod() throws Exception {
 		Optional<Annotation1> optionalAnnotation = findAnnotation(
 			ComposedAnnotationClass.class.getDeclaredMethod("method"), Annotation1.class);
 		assertNotNull(optionalAnnotation);
@@ -106,78 +106,78 @@ public final class AnnotationUtilsTests {
 	}
 
 	@Test
-	public void isAnnotatedWhenClassWithoutAnnotation() {
+	void isAnnotatedForClassWithoutAnnotation() {
 		assertFalse(isAnnotated(Annotation1Class.class, Annotation2.class));
 	}
 
 	@Test
-	public void isAnnotatedWhenIndirectlyPresentOnClass() {
+	void isAnnotatedWhenIndirectlyPresentOnClass() {
 		assertTrue(isAnnotated(SubInheritedAnnotationClass.class, InheritedAnnotation.class));
 	}
 
 	@Test
-	public void isAnnotatedWhenDirectlyPresentOnClass() {
+	void isAnnotatedWhenDirectlyPresentOnClass() {
 		assertTrue(isAnnotated(Annotation1Class.class, Annotation1.class));
 	}
 
 	@Test
-	public void isAnnotatedWhenMetaPresentOnClass() {
+	void isAnnotatedWhenMetaPresentOnClass() {
 		assertTrue(isAnnotated(ComposedAnnotationClass.class, Annotation1.class));
 	}
 
 	@Test
-	public void isAnnotatedWhenDirectlyPresentOnMethod() throws Exception {
+	void isAnnotatedWhenDirectlyPresentOnMethod() throws Exception {
 		assertTrue(isAnnotated(Annotation2Class.class.getDeclaredMethod("method"), Annotation1.class));
 	}
 
 	@Test
-	public void isAnnotatedWhenMetaPresentOnMethod() throws Exception {
+	void isAnnotatedWhenMetaPresentOnMethod() throws Exception {
 		assertTrue(isAnnotated(ComposedAnnotationClass.class.getDeclaredMethod("method"), Annotation1.class));
 	}
 
 	@Test
-	public void findRepeatableAnnotationsForNullAnnotatedElement() {
+	void findRepeatableAnnotationsForNullAnnotatedElement() {
 		assertThat(findRepeatableAnnotations(null, Tag.class)).isEmpty();
 	}
 
 	@Test
-	public void findRepeatableAnnotationsWithSingleTag() throws Exception {
+	void findRepeatableAnnotationsWithSingleTag() throws Exception {
 		assertTagsFound(SingleTaggedClass.class, "a");
 	}
 
 	@Test
-	public void findRepeatableAnnotationsWithSingleComposedTag() throws Exception {
+	void findRepeatableAnnotationsWithSingleComposedTag() throws Exception {
 		assertTagsFound(SingleComposedTaggedClass.class, "fast");
 	}
 
 	@Test
-	public void findRepeatableAnnotationsWithSingleComposedTagOnImplementedInterface() throws Exception {
+	void findRepeatableAnnotationsWithSingleComposedTagOnImplementedInterface() throws Exception {
 		assertTagsFound(TaggedInterfaceClass.class, "fast");
 	}
 
 	@Test
-	public void findRepeatableAnnotationsWithLocalComposedTagAndComposedTagOnImplementedInterface() throws Exception {
+	void findRepeatableAnnotationsWithLocalComposedTagAndComposedTagOnImplementedInterface() throws Exception {
 		assertTagsFound(LocalTagOnTaggedInterfaceClass.class, "fast", "smoke");
 	}
 
 	@Test
-	public void findRepeatableAnnotationsWithMultipleTags() throws Exception {
+	void findRepeatableAnnotationsWithMultipleTags() throws Exception {
 		assertTagsFound(MultiTaggedClass.class, "a", "b", "c");
 	}
 
 	@Test
-	public void findRepeatableAnnotationsWithMultipleComposedTags() throws Exception {
+	void findRepeatableAnnotationsWithMultipleComposedTags() throws Exception {
 		assertTagsFound(MultiComposedTaggedClass.class, "fast", "smoke");
 		assertTagsFound(FastAndSmokyTaggedClass.class, "fast", "smoke");
 	}
 
 	@Test
-	public void findRepeatableAnnotationsWithContainer() throws Exception {
+	void findRepeatableAnnotationsWithContainer() throws Exception {
 		assertTagsFound(ContainerTaggedClass.class, "a", "b", "c", "d");
 	}
 
 	@Test
-	public void findRepeatableAnnotationsWithComposedTagBeforeContainer() throws Exception {
+	void findRepeatableAnnotationsWithComposedTagBeforeContainer() throws Exception {
 		assertTagsFound(ContainerAfterComposedTaggedClass.class, "fast", "a", "b", "c");
 	}
 
@@ -188,45 +188,45 @@ public final class AnnotationUtilsTests {
 	}
 
 	@Test
-	public void findInheritedRepeatableAnnotationsWithSingleAnnotationOnSuperclass() throws Exception {
+	void findInheritedRepeatableAnnotationsWithSingleAnnotationOnSuperclass() throws Exception {
 		assertExtensionsFound(SingleExtensionClass.class, "a");
 		assertExtensionsFound(SubSingleExtensionClass.class, "a");
 	}
 
 	@Test
-	public void findInheritedRepeatableAnnotationsWithMultipleAnnotationsOnSuperclass() throws Exception {
+	void findInheritedRepeatableAnnotationsWithMultipleAnnotationsOnSuperclass() throws Exception {
 		assertExtensionsFound(MultiExtensionClass.class, "a", "b", "c");
 		assertExtensionsFound(SubMultiExtensionClass.class, "a", "b", "c", "x", "y", "z");
 	}
 
 	@Test
-	public void findInheritedRepeatableAnnotationsWithContainerAnnotationOnSuperclass() throws Exception {
+	void findInheritedRepeatableAnnotationsWithContainerAnnotationOnSuperclass() throws Exception {
 		assertExtensionsFound(ContainerExtensionClass.class, "a", "b", "c");
 		assertExtensionsFound(SubContainerExtensionClass.class, "a", "b", "c", "x");
 	}
 
 	@Test
-	public void findInheritedRepeatableAnnotationsWithSingleComposedAnnotation() throws Exception {
+	void findInheritedRepeatableAnnotationsWithSingleComposedAnnotation() throws Exception {
 		assertExtensionsFound(SingleComposedExtensionClass.class, "foo");
 	}
 
 	@Test
-	public void findInheritedRepeatableAnnotationsWithSingleComposedAnnotationOnSuperclass() throws Exception {
+	void findInheritedRepeatableAnnotationsWithSingleComposedAnnotationOnSuperclass() throws Exception {
 		assertExtensionsFound(SubSingleComposedExtensionClass.class, "foo");
 	}
 
 	@Test
-	public void findInheritedRepeatableAnnotationsWithMultipleComposedAnnotations() throws Exception {
+	void findInheritedRepeatableAnnotationsWithMultipleComposedAnnotations() throws Exception {
 		assertExtensionsFound(MultiComposedExtensionClass.class, "foo", "bar");
 	}
 
 	@Test
-	public void findInheritedRepeatableAnnotationsWithMultipleComposedAnnotationsOnSuperclass() throws Exception {
+	void findInheritedRepeatableAnnotationsWithMultipleComposedAnnotationsOnSuperclass() throws Exception {
 		assertExtensionsFound(SubMultiComposedExtensionClass.class, "foo", "bar");
 	}
 
 	@Test
-	public void findInheritedRepeatableAnnotationsWithMultipleComposedAnnotationsOnSuperclassAndLocalContainerAndComposed()
+	void findInheritedRepeatableAnnotationsWithMultipleComposedAnnotationsOnSuperclassAndLocalContainerAndComposed()
 			throws Exception {
 		assertExtensionsFound(ContainerPlusSubMultiComposedExtensionClass.class, "foo", "bar", "x", "y", "z");
 	}
@@ -238,26 +238,26 @@ public final class AnnotationUtilsTests {
 	}
 
 	@Test
-	public void findAnnotatedMethodsForNullClass() {
+	void findAnnotatedMethodsForNullClass() {
 		assertThrows(PreconditionViolationException.class,
 			() -> findAnnotatedMethods(null, Annotation1.class, HierarchyDown));
 	}
 
 	@Test
-	public void findAnnotatedMethodsForNullAnnotationType() {
+	void findAnnotatedMethodsForNullAnnotationType() {
 		assertThrows(PreconditionViolationException.class,
 			() -> findAnnotatedMethods(ClassWithAnnotatedMethods.class, null, HierarchyDown));
 	}
 
 	@Test
-	public void findAnnotatedMethodsForUnusedAnnotation() {
+	void findAnnotatedMethodsForAnnotationThatIsNotPresent() {
 		assertThat(findAnnotatedMethods(ClassWithAnnotatedMethods.class, Fast.class, HierarchyDown)).isEmpty();
 	}
 
 	@Test
-	public void findAnnotatedMethodsForAnnotationUsedInClassOnly() throws Exception {
-		Method method2 = ClassWithAnnotatedMethods.class.getMethod("method2");
-		Method method3 = ClassWithAnnotatedMethods.class.getMethod("method3");
+	void findAnnotatedMethodsForAnnotationOnMethodsInClassUsingHierarchyDownMode() throws Exception {
+		Method method2 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method2");
+		Method method3 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method3");
 
 		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation2.class, HierarchyDown);
 
@@ -265,30 +265,38 @@ public final class AnnotationUtilsTests {
 	}
 
 	@Test
-	public void findAnnotatedMethodsForAnnotationUsedInClassAndSuperClassHierarchyUp() throws Exception {
+	void findAnnotatedMethodsForAnnotationOnMethodsInClassHierarchyUsingHierarchyUpMode() throws Exception {
+		Method method1 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method1");
+		Method method3 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method3");
+		Method superMethod = SuperClassWithAnnotatedMethod.class.getDeclaredMethod("superMethod");
+
 		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation1.class, HierarchyUp);
 
 		assertEquals(3, methods.size());
-		assertThat(methods.subList(0, 2)).containsOnly(ClassWithAnnotatedMethods.class.getMethod("method1"),
-			ClassWithAnnotatedMethods.class.getMethod("method3"));
-		assertEquals(ClassWithAnnotatedMethods.class.getMethod("superMethod"), methods.get(2));
+		assertThat(methods.subList(0, 2)).containsOnly(method1, method3);
+		assertEquals(superMethod, methods.get(2));
 	}
 
 	@Test
-	public void findAnnotatedMethodsForAnnotationUsedInClassAndSuperClassHierarchyDown() throws Exception {
+	void findAnnotatedMethodsForAnnotationUsedInClassAndSuperClassHierarchyDown() throws Exception {
+		Method method1 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method1");
+		Method method3 = ClassWithAnnotatedMethods.class.getDeclaredMethod("method3");
+		Method superMethod = SuperClassWithAnnotatedMethod.class.getDeclaredMethod("superMethod");
+
 		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation1.class, HierarchyDown);
 
 		assertEquals(3, methods.size());
-		assertEquals(ClassWithAnnotatedMethods.class.getMethod("superMethod"), methods.get(0));
-		assertThat(methods.subList(1, 3)).containsOnly(ClassWithAnnotatedMethods.class.getMethod("method1"),
-			ClassWithAnnotatedMethods.class.getMethod("method3"));
+		assertEquals(superMethod, methods.get(0));
+		assertThat(methods.subList(1, 3)).containsOnly(method1, method3);
 	}
 
 	@Test
-	public void findAnnotatedMethodsForAnnotationUsedInInterface() throws Exception {
+	void findAnnotatedMethodsForAnnotationUsedInInterface() throws Exception {
+		Method interfaceMethod = InterfaceWithAnnotatedDefaultMethod.class.getDeclaredMethod("interfaceMethod");
+
 		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation3.class, HierarchyUp);
 
-		assertThat(methods).containsExactly(ClassWithAnnotatedMethods.class.getMethod("interfaceMethod"));
+		assertThat(methods).containsExactly(interfaceMethod);
 	}
 
 	@Target({ ElementType.TYPE, ElementType.METHOD })
@@ -359,7 +367,7 @@ public final class AnnotationUtilsTests {
 	@Target({ ElementType.TYPE, ElementType.METHOD })
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
-	public @interface Extensions {
+	@interface Extensions {
 
 		ExtendWith[] value();
 	}
@@ -368,7 +376,7 @@ public final class AnnotationUtilsTests {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
 	@Repeatable(Extensions.class)
-	public @interface ExtendWith {
+	@interface ExtendWith {
 
 		String value();
 	}
@@ -377,14 +385,14 @@ public final class AnnotationUtilsTests {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
 	@ExtendWith("foo")
-	public @interface ExtendWithFoo {
+	@interface ExtendWithFoo {
 	}
 
 	@Target({ ElementType.TYPE, ElementType.METHOD })
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
 	@ExtendWith("bar")
-	public @interface ExtendWithBar {
+	@interface ExtendWithBar {
 	}
 
 	@Annotation1
@@ -418,7 +426,7 @@ public final class AnnotationUtilsTests {
 	static class InheritedComposedAnnotationClass {
 
 		@InheritedComposedAnnotation
-		public void method() {
+		void method() {
 		}
 	}
 
@@ -518,7 +526,7 @@ public final class AnnotationUtilsTests {
 	static class ContainerPlusSubMultiComposedExtensionClass extends MultiComposedExtensionClass {
 	}
 
-	interface InterfaceWithAnnotatedMethod {
+	interface InterfaceWithAnnotatedDefaultMethod {
 
 		@Annotation3
 		default void interfaceMethod() {
@@ -528,24 +536,25 @@ public final class AnnotationUtilsTests {
 	static class SuperClassWithAnnotatedMethod {
 
 		@Annotation1
-		public void superMethod() {
+		void superMethod() {
 		}
 	}
 
 	static class ClassWithAnnotatedMethods extends SuperClassWithAnnotatedMethod
-			implements InterfaceWithAnnotatedMethod {
+			implements InterfaceWithAnnotatedDefaultMethod {
 
 		@Annotation1
-		public void method1() {
+		void method1() {
 		}
 
 		@Annotation2
-		public void method2() {
+		void method2() {
 		}
 
 		@Annotation1
 		@Annotation2
-		public void method3() {
+		void method3() {
 		}
 	}
+
 }

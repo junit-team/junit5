@@ -12,45 +12,53 @@ package org.junit.gen5.commons.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertThrows;
+import static org.junit.gen5.commons.util.ExceptionUtils.readStackTrace;
+import static org.junit.gen5.commons.util.ExceptionUtils.throwAsUncheckedException;
 
 import java.io.IOException;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.JUnitException;
 
+/**
+ * Unit tests for {@link ExceptionUtils}.
+ *
+ * @since 5.0
+ */
 class ExceptionUtilsTests {
 
 	@Test
-	void throwAsUncheckedExceptionForNullThrowable() {
-		assertThrows(PreconditionViolationException.class, () -> ExceptionUtils.throwAsUncheckedException(null));
+	void throwAsUncheckedExceptionWithNullException() {
+		assertThrows(PreconditionViolationException.class, () -> throwAsUncheckedException(null));
 	}
 
 	@Test
-	void throwAsUncheckedException() {
-		assertThrows(IOException.class, (ExceptionUtilsTests::throwIOExceptionAsUnchecked));
+	void throwAsUncheckedExceptionWithCheckedException() {
+		assertThrows(IOException.class, () -> throwAsUncheckedException(new IOException()));
+	}
+
+	@Test
+	void throwAsUncheckedExceptionWithUncheckedException() {
+		assertThrows(RuntimeException.class, () -> throwAsUncheckedException(new NumberFormatException()));
 	}
 
 	@Test
 	void readStackTraceForNullThrowable() {
-		assertThrows(PreconditionViolationException.class, () -> ExceptionUtils.readStackTrace(null));
+		assertThrows(PreconditionViolationException.class, () -> readStackTrace(null));
 	}
 
 	@Test
-	void readStackTrace() {
+	void readStackTraceForLocalJUnitException() {
 		try {
 			throw new JUnitException("expected");
 		}
 		catch (JUnitException e) {
-			String stackTrace = ExceptionUtils.readStackTrace(e);
 			// @formatter:off
-			assertThat(stackTrace)
+			assertThat(readStackTrace(e))
 				.startsWith(JUnitException.class.getName() + ": expected")
 				.contains("at " + ExceptionUtilsTests.class.getName());
 			// @formatter:on
 		}
 	}
 
-	private static void throwIOExceptionAsUnchecked() {
-		ExceptionUtils.throwAsUncheckedException(new IOException());
-	}
 }

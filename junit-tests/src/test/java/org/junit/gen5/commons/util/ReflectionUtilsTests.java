@@ -10,7 +10,6 @@
 
 package org.junit.gen5.commons.util;
 
-import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertFalse;
@@ -18,7 +17,7 @@ import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 import static org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder.HierarchyUp;
-import static org.mockito.Mockito.anyString;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,8 +40,12 @@ import org.junit.gen5.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.N
 import org.junit.gen5.console.tasks.TempDirectory;
 import org.junit.gen5.console.tasks.TempDirectory.Root;
 
-@ExtendWith(TempDirectory.class)
-public class ReflectionUtilsTests {
+/**
+ * Unit tests for {@link ReflectionUtils}.
+ *
+ * @since 5.0
+ */
+class ReflectionUtilsTests {
 
 	@Test
 	void isPublic() throws Exception {
@@ -63,7 +66,7 @@ public class ReflectionUtilsTests {
 	}
 
 	@Test
-	void isStaticForStaticClass() throws Exception {
+	void isStatic() throws Exception {
 		assertTrue(ReflectionUtils.isStatic(StaticClass.class));
 		assertTrue(ReflectionUtils.isStatic(StaticClass.class.getDeclaredMethod("staticMethod")));
 
@@ -72,7 +75,7 @@ public class ReflectionUtilsTests {
 	}
 
 	@Test
-	void getAllAssignmentCompatibleClassesPreconditions() {
+	void getAllAssignmentCompatibleClassesWithNullClass() {
 		assertThrows(PreconditionViolationException.class,
 			() -> ReflectionUtils.getAllAssignmentCompatibleClasses(null));
 	}
@@ -89,7 +92,7 @@ public class ReflectionUtilsTests {
 	void newInstance() {
 		assertThat(ReflectionUtils.newInstance(C.class, "one", "two")).isNotNull();
 		assertThat(ReflectionUtils.newInstance(C.class)).isNotNull();
-		assertThat(ReflectionUtils.newInstance(C.class, new Object[] {})).isNotNull();
+		assertThat(ReflectionUtils.newInstance(C.class, new Object[0])).isNotNull();
 
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.newInstance(C.class, "one", null));
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.newInstance(C.class, null, "two"));
@@ -247,15 +250,15 @@ public class ReflectionUtilsTests {
 
 	@Test
 	void getOuterInstance() {
-		ThirdClass thirdClass = new ThirdClass();
-		ThirdClass.SecondClass secondClass = thirdClass.new SecondClass();
-		ThirdClass.SecondClass.FirstClass firstClass = secondClass.new FirstClass();
+		FirstClass firstClass = new FirstClass();
+		FirstClass.SecondClass secondClass = firstClass.new SecondClass();
+		FirstClass.SecondClass.ThirdClass thirdClass = secondClass.new ThirdClass();
 
-		assertThat(ReflectionUtils.getOuterInstance(firstClass, ThirdClass.SecondClass.FirstClass.class)).contains(
-			firstClass);
-		assertThat(ReflectionUtils.getOuterInstance(firstClass, ThirdClass.SecondClass.class)).contains(secondClass);
-		assertThat(ReflectionUtils.getOuterInstance(firstClass, ThirdClass.class)).contains(thirdClass);
-		assertThat(ReflectionUtils.getOuterInstance(firstClass, String.class)).isEmpty();
+		assertThat(ReflectionUtils.getOuterInstance(thirdClass, FirstClass.SecondClass.ThirdClass.class)).contains(
+			thirdClass);
+		assertThat(ReflectionUtils.getOuterInstance(thirdClass, FirstClass.SecondClass.class)).contains(secondClass);
+		assertThat(ReflectionUtils.getOuterInstance(thirdClass, FirstClass.class)).contains(firstClass);
+		assertThat(ReflectionUtils.getOuterInstance(thirdClass, String.class)).isEmpty();
 	}
 
 	@Test
@@ -272,6 +275,7 @@ public class ReflectionUtilsTests {
 	}
 
 	@Test
+	@ExtendWith(TempDirectory.class)
 	void getAllClasspathRootDirectories(@Root Path tempDirectory) throws Exception {
 		Path root1 = tempDirectory.resolve("root1").toAbsolutePath();
 		Path root2 = tempDirectory.resolve("root2").toAbsolutePath();
@@ -294,18 +298,24 @@ public class ReflectionUtilsTests {
 		assertThrows(PreconditionViolationException.class,
 			() -> ReflectionUtils.findNestedClasses(null, clazz -> true));
 		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findNestedClasses(ThirdClass.class, null));
+			() -> ReflectionUtils.findNestedClasses(FirstClass.class, null));
 	}
 
 	@Test
 	void findNestedClasses() {
-		assertThat(ReflectionUtils.findNestedClasses(Object.class, clazz -> true)).isEmpty();
+		// @formatter:off
+		assertThat(ReflectionUtils.findNestedClasses(Object.class, clazz -> true))
+			.isEmpty();
 
-		assertThat(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, clazz -> true)).containsOnly(
-			Nested1.class, Nested2.class, Nested3.class);
+		assertThat(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, clazz -> true))
+			.containsOnly(Nested1.class, Nested2.class, Nested3.class);
 
-		assertThat(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class,
-			clazz -> clazz.getName().contains("1"))).containsExactly(Nested1.class);
+		assertThat(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, clazz -> clazz.getName().contains("1")))
+			.containsExactly(Nested1.class);
+
+		assertThat(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, ReflectionUtils::isStatic))
+			.containsExactly(Nested3.class);
+		// @formatter:on
 	}
 
 	@Test
@@ -364,7 +374,7 @@ public class ReflectionUtilsTests {
 	}
 
 	@Test
-	void findMethodsHierarchyUp() throws Exception {
+	void findMethodsUsingHierarchyUpMode() throws Exception {
 		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().contains("method"),
 			HierarchyUp)).containsExactly(ChildClass.class.getMethod("method4"), ParentClass.class.getMethod("method3"),
 				GrandparentInterface.class.getMethod("method2"), GrandparentClass.class.getMethod("method1"));
@@ -385,7 +395,7 @@ public class ReflectionUtilsTests {
 	}
 
 	@Test
-	void findMethodsHierarchyDown() throws Exception {
+	void findMethodsUsingHierarchyDownMode() throws Exception {
 		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().contains("method"),
 			HierarchyDown)).containsExactly(GrandparentClass.class.getMethod("method1"),
 				GrandparentInterface.class.getMethod("method2"), ParentClass.class.getMethod("method3"),
@@ -407,7 +417,7 @@ public class ReflectionUtilsTests {
 	}
 
 	@Test
-	void findMethodsWithShadowingHierarchyUp() throws Exception {
+	void findMethodsWithShadowingUsingHierarchyUpMode() throws Exception {
 		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("1"),
 			HierarchyUp)).containsExactly(MethodShadowingChild.class.getMethod("method1", String.class));
 
@@ -435,7 +445,7 @@ public class ReflectionUtilsTests {
 	}
 
 	@Test
-	void findMethodsWithShadowingHierarchyDown() throws Exception {
+	void findMethodsWithShadowingUsingHierarchyDownMode() throws Exception {
 		assertThat(ReflectionUtils.findMethods(MethodShadowingChild.class, method -> method.getName().contains("1"),
 			HierarchyDown)).containsExactly(MethodShadowingChild.class.getMethod("method1", String.class));
 
@@ -461,7 +471,7 @@ public class ReflectionUtilsTests {
 			MethodShadowingChild.class.getMethod("method5", Long.class));
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static ClassLoader newClassLoaderMock() throws Exception {
 		ClassLoader classLoader = mock(ClassLoader.class);
 		when(classLoader.loadClass(anyString())).thenReturn((Class) Integer.class);
@@ -517,6 +527,7 @@ public class ReflectionUtilsTests {
 		}
 	}
 
+	// Intentionally non-static
 	public class PublicClass {
 
 		public void publicMethod() {
@@ -525,11 +536,12 @@ public class ReflectionUtilsTests {
 
 	private class PrivateClass {
 
+		@SuppressWarnings("unused")
 		private void privateMethod() {
 		}
 	}
 
-	abstract class AbstractClass {
+	abstract static class AbstractClass {
 
 		abstract void abstractMethod();
 	}
@@ -552,6 +564,7 @@ public class ReflectionUtilsTests {
 			publicStaticMethodInvoked = true;
 		}
 
+		@SuppressWarnings("unused")
 		private static void privateStaticMethod() {
 			privateStaticMethodInvoked = true;
 		}
@@ -560,16 +573,17 @@ public class ReflectionUtilsTests {
 			publicMethodInvoked = true;
 		}
 
+		@SuppressWarnings("unused")
 		private void privateMethod() {
 			privateMethodInvoked = true;
 		}
 	}
 
-	static class ThirdClass {
+	static class FirstClass {
 
 		class SecondClass {
 
-			class FirstClass {
+			class ThirdClass {
 			}
 		}
 	}
@@ -657,4 +671,5 @@ public class ReflectionUtilsTests {
 		public void method5(Long i) {
 		}
 	}
+
 }

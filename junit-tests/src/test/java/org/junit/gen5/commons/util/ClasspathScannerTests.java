@@ -24,20 +24,20 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 
-public class ClasspathScannerTests {
+/**
+ * Unit tests for {@link ClasspathScanner}.
+ *
+ * @since 5.0
+ */
+class ClasspathScannerTests {
 
-	private ClasspathScanner classpathScanner;
-
-	@BeforeEach
-	public void init() {
-		classpathScanner = new ClasspathScanner(ReflectionUtils::getDefaultClassLoader, ReflectionUtils::loadClass);
-	}
+	private final ClasspathScanner classpathScanner = new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
+		ReflectionUtils::loadClass);
 
 	@Test
-	public void findAllClassesInThisPackage() throws Exception {
+	void findAllClassesInThisPackage() throws Exception {
 		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.gen5.commons", clazz -> true);
 		assertThat(classes.size()).isGreaterThanOrEqualTo(20);
 		assertTrue(classes.contains(NestedClassToBeFound.class));
@@ -45,50 +45,50 @@ public class ClasspathScannerTests {
 	}
 
 	@Test
-	public void findAllClassesInThisPackageWithFilter() throws Exception {
+	void findAllClassesInThisPackageWithFilter() throws Exception {
 		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTests.class;
 		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.gen5.commons", thisClassOnly);
 		assertSame(ClasspathScannerTests.class, classes.get(0));
 	}
 
 	@Test
-	public void scanForClassesInPackageForNullBasePackage() {
+	void scanForClassesInPackageForNullBasePackage() {
 		assertThrows(PreconditionViolationException.class,
 			() -> classpathScanner.scanForClassesInPackage(null, clazz -> true));
 	}
 
 	@Test
-	public void scanForClassesInPackageForNullClassFilter() {
+	void scanForClassesInPackageForNullClassFilter() {
 		assertThrows(PreconditionViolationException.class,
 			() -> classpathScanner.scanForClassesInPackage("org.junit.gen5.commons", null));
 	}
 
 	@Test
-	public void scanForClassesInPackageWhenIOExceptionOccurs() {
+	void scanForClassesInPackageWhenIOExceptionOccurs() {
 		ClasspathScanner scanner = new ClasspathScanner(new ThrowingClassLoaderSupplier(), ReflectionUtils::loadClass);
 		List<Class<?>> classes = scanner.scanForClassesInPackage("org.junit.gen5.commons", clazz -> true);
 		assertThat(classes).isEmpty();
 	}
 
 	@Test
-	public void isPackage() throws Exception {
+	void isPackage() throws Exception {
 		assertTrue(classpathScanner.isPackage("org.junit.gen5.commons"));
 		assertFalse(classpathScanner.isPackage("org.doesnotexist"));
 	}
 
 	@Test
-	public void isPackageForNullPackageName() {
+	void isPackageForNullPackageName() {
 		assertThrows(PreconditionViolationException.class, () -> classpathScanner.isPackage(null));
 	}
 
 	@Test
-	public void isPackageWhenIOExceptionOccurs() {
+	void isPackageWhenIOExceptionOccurs() {
 		ClasspathScanner scanner = new ClasspathScanner(new ThrowingClassLoaderSupplier(), ReflectionUtils::loadClass);
 		assertFalse(scanner.isPackage("org.junit.gen5.commons"));
 	}
 
 	@Test
-	public void findAllClassesInClasspathRoot() throws Exception {
+	void findAllClassesInClasspathRoot() throws Exception {
 		Predicate<Class<?>> thisClassOnly = clazz -> clazz == ClasspathScannerTests.class;
 		File root = getTestClasspathRoot();
 		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(root, thisClassOnly);
@@ -96,7 +96,7 @@ public class ClasspathScannerTests {
 	}
 
 	@Test
-	public void findAllClassesInClasspathRootWithFilter() throws Exception {
+	void findAllClassesInClasspathRootWithFilter() throws Exception {
 		File root = getTestClasspathRoot();
 		List<Class<?>> classes = classpathScanner.scanForClassesInClasspathRoot(root, clazz -> true);
 
@@ -105,19 +105,19 @@ public class ClasspathScannerTests {
 	}
 
 	@Test
-	public void findAllClassesInClasspathRootForNullRoot() throws Exception {
+	void findAllClassesInClasspathRootForNullRoot() throws Exception {
 		assertThrows(PreconditionViolationException.class,
 			() -> classpathScanner.scanForClassesInClasspathRoot(null, clazz -> true));
 	}
 
 	@Test
-	public void findAllClassesInClasspathRootForNonExistingRoot() throws Exception {
+	void findAllClassesInClasspathRootForNonExistingRoot() throws Exception {
 		assertThrows(PreconditionViolationException.class,
 			() -> classpathScanner.scanForClassesInClasspathRoot(new File("does_not_exist"), clazz -> true));
 	}
 
 	@Test
-	public void findAllClassesInClasspathRootForNullClassFilter() throws Exception {
+	void findAllClassesInClasspathRootForNullClassFilter() throws Exception {
 		assertThrows(PreconditionViolationException.class,
 			() -> classpathScanner.scanForClassesInClasspathRoot(getTestClasspathRoot(), null));
 	}
@@ -148,4 +148,5 @@ public class ClasspathScannerTests {
 			throw new IOException();
 		}
 	}
+
 }

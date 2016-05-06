@@ -20,6 +20,11 @@ import java.util.Collections;
 
 import org.junit.gen5.api.Test;
 
+/**
+ * Unit tests for {@link Preconditions}.
+ *
+ * @since 5.0
+ */
 class PreconditionsTests {
 
 	@Test
@@ -33,10 +38,10 @@ class PreconditionsTests {
 	}
 
 	@Test
-	void notNullPassesForNotNullObject() {
+	void notNullPassesForNonNullObject() {
 		Object object = new Object();
-		Object notNullObject = Preconditions.notNull(object, "");
-		assertSame(object, notNullObject);
+		Object nonNullObject = Preconditions.notNull(object, "");
+		assertSame(object, nonNullObject);
 	}
 
 	@Test
@@ -63,19 +68,19 @@ class PreconditionsTests {
 	@Test
 	void notNullPassesForEmptyObjectArray() {
 		Object[] objects = new Object[0];
-		Object notNullObjects = Preconditions.notNull(objects, "");
-		assertSame(objects, notNullObjects);
+		Object nonNullObjects = Preconditions.notNull(objects, "");
+		assertSame(objects, nonNullObjects);
 	}
 
 	@Test
-	void notNullPassesForObjectArrayWithoutNulls() {
+	void notNullPassesForObjectArrayContainingObjects() {
 		Object[] objects = { new Object(), new Object(), new Object() };
-		Object notNullObjects = Preconditions.notNull(objects, "");
-		assertSame(objects, notNullObjects);
+		Object nonNullObjects = Preconditions.notNull(objects, "");
+		assertSame(objects, nonNullObjects);
 	}
 
 	@Test
-	void notNullThrowsForObjectArrayWithNulls() {
+	void notNullThrowsForObjectArrayContainingNulls() {
 		String message = "there is null in the array";
 		Object[] objects = { new Object(), null, new Object() };
 
@@ -86,10 +91,10 @@ class PreconditionsTests {
 	}
 
 	@Test
-	void notEmptyPassesForNotEmptyCollection() {
+	void notEmptyPassesForNonEmptyCollection() {
 		Collection<String> collection = Arrays.asList("a", "b", "c");
-		Collection<String> notEmptyCollection = Preconditions.notEmpty(collection, "");
-		assertSame(collection, notEmptyCollection);
+		Collection<String> nonEmptyCollection = Preconditions.notEmpty(collection, "");
+		assertSame(collection, nonEmptyCollection);
 	}
 
 	@Test
@@ -113,10 +118,10 @@ class PreconditionsTests {
 	}
 
 	@Test
-	void notBlankPassesForNotBlankString() {
+	void notBlankPassesForNonBlankString() {
 		String string = "abc";
-		String notBlankString = Preconditions.notBlank(string, "");
-		assertSame(string, notBlankString);
+		String nonBlankString = Preconditions.notBlank(string, "");
+		assertSame(string, nonBlankString);
 	}
 
 	@Test
@@ -208,4 +213,5 @@ class PreconditionsTests {
 
 		assertEquals(message, exception.getMessage());
 	}
+
 }

@@ -352,7 +352,6 @@ public final class ReflectionUtils {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(sortOrder, "MethodSortOrder must not be null");
 
-		// TODO Support interface default methods.
 		// TODO Determine if we need to support bridged methods.
 
 		List<Method> localMethods = Arrays.asList(clazz.getDeclaredMethods());
@@ -448,15 +447,8 @@ public final class ReflectionUtils {
 		if (!lower.getName().equals(upper.getName())) {
 			return false;
 		}
-		Class<?>[] lowerParameterTypes = lower.getParameterTypes();
-		Class<?>[] upperParameterTypes = upper.getParameterTypes();
-		if (lowerParameterTypes.length != upperParameterTypes.length) {
+		if (!Arrays.equals(lower.getParameterTypes(), upper.getParameterTypes())) {
 			return false;
-		}
-		for (int i = 0; i < lowerParameterTypes.length; i++) {
-			if (!lowerParameterTypes[i].equals(upperParameterTypes[i])) {
-				return false;
-			}
 		}
 		return true;
 	}

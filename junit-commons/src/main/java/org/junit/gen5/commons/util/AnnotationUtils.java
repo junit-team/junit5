@@ -123,6 +123,7 @@ public final class AnnotationUtils {
 
 	private static <A extends Annotation> Optional<A> findMetaAnnotation(Class<A> annotationType,
 			Annotation[] candidates, AnnotationCacheKey key, Set<Annotation> visited) {
+
 		for (Annotation candidateAnnotation : candidates) {
 			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
 				Optional<A> metaAnnotation = findAnnotation(candidateAnnotation.annotationType(), annotationType,
