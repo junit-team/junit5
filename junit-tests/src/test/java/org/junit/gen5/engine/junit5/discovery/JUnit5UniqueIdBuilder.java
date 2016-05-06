@@ -34,6 +34,10 @@ public class JUnit5UniqueIdBuilder {
 		return uniqueIdForClass(clazz).append(TestMethodResolver.SEGMENT_TYPE, methodPart);
 	}
 
+	public static UniqueId uniqueIdForDynamicMethod(Class<?> clazz, String methodPart) {
+		return uniqueIdForClass(clazz).append(DynamicTestMethodResolver.SEGMENT_TYPE, methodPart);
+	}
+
 	public static UniqueId engineId() {
 		return UniqueId.forEngine(JUnit5TestEngine.ENGINE_ID);
 	}
