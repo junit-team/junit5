@@ -256,10 +256,12 @@ public final class AnnotationUtilsTests {
 
 	@Test
 	public void findAnnotatedMethodsForAnnotationUsedInClassOnly() throws Exception {
+		Method method2 = ClassWithAnnotatedMethods.class.getMethod("method2");
+		Method method3 = ClassWithAnnotatedMethods.class.getMethod("method3");
+
 		List<Method> methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation2.class, HierarchyDown);
 
-		assertThat(methods).containsExactly(ClassWithAnnotatedMethods.class.getMethod("method2"),
-			ClassWithAnnotatedMethods.class.getMethod("method3"));
+		assertThat(methods).containsOnly(method2, method3);
 	}
 
 	@Test
