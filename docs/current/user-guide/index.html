@@ -1662,8 +1662,7 @@ JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
 <div class="sect2">
 <h3 id="extension-registration">5.2. Registering Extensions</h3>
 <div class="paragraph">
-<p>Extensions can be registered either declaratively via <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtendWith.java">@ExtendWith</a></code> or programmatically
-via an <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtensionRegistrar.java">ExtensionRegistrar</a></code>.</p>
+<p>Extensions can be registered declaratively via <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtendWith.java">@ExtendWith</a></code>.</p>
 </div>
 <div class="paragraph">
 <p>Note that registered extensions are inherited within test class hierarchies.</p>
@@ -1711,103 +1710,6 @@ class MyTestsV2 {
 <div class="paragraph">
 <p>The execution of tests in both <code>MyTestsV1</code> and <code>MyTestsV2</code> will be extended by the
 <code>FooExtension</code> and <code>BarExtension</code>, in exactly that order.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="extension-registration-programmatic">5.2.2. Programmatic Extension Registration</h4>
-<div class="paragraph">
-<p>Developers can register one or more extensions <em>programmatically</em> by implementing the
-<code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtensionRegistrar.java">ExtensionRegistrar</a></code> API and registering the custom <code>ExtensionRegistrar</code> implementation
-via <code>@ExtendWith</code> as mentioned above. The following examples demonstrate the various
-options in implementations of the <code>ExtensionRegistrar.registerExtensions()</code> method.</p>
-</div>
-<div class="sect4">
-<h5 id="registering-an-extensionpoint-instance">Registering an ExtensionPoint Instance</h5>
-<div class="paragraph">
-<p>If you have an instance of an extension that implements one or more <code>ExtensionPoint</code>
-APIs, you can register it as follows using the <em>default</em> <code>Position</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public void registerExtensions(ExtensionPointRegistry registry) {
-    CustomExtension customExtension = // instantiate extension
-    registry.register(customExtension);
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If you would like to influence the order in which multiple implementations of the same
-<code>ExtensionPoint</code> API are applied, you can do so by registering the extensions
-programmatically and supplying the <code>Position</code>. The following values are permitted.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>OUTERMOST</code>: Applied first. Only a single extension is allowed to be assigned this
-position; otherwise, an <code>ExtensionConfigurationException</code> will be thrown.</p>
-</li>
-<li>
-<p><code>OUTSIDE_DEFAULT</code>: Applied after <code>OUTERMOST</code> but before <code>DEFAULT</code>, <code>INSIDE_DEFAULT</code>,
-and <code>INNERMOST</code>. Multiple extensions can be assigned this position; however, the
-ordering among such extensions is undefined.</p>
-</li>
-<li>
-<p><code>DEFAULT</code>: (?)</p>
-</li>
-<li>
-<p><code>INSIDE_DEFAULT</code>: (?)</p>
-</li>
-<li>
-<p><code>INNERMOST</code>: (?)</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The following listing demonstrates how to configure an explicit position for an instance
-of an extension. Note, however, that a <code>Position</code> can also be supplied for lambda
-expressions and method references.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public void registerExtensions(ExtensionPointRegistry registry) {
-    registry.register(new TimingExtension(), Position.INNERMOST);
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="registering-a-lambda-expression-as-an-extensionpoint">Registering a Lambda Expression as an ExtensionPoint</h5>
-<div class="paragraph">
-<p>If you would like to implement a single <code>ExtensionPoint</code> API as a <em>lambda expression</em>,
-you can register it as follows. Note, however, that the API must be a <em>functional
-interface</em>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public void registerExtensions(ExtensionPointRegistry registry) {
-    registry.register((BeforeEachExtensionPoint) context -&gt; { /* ... */ });
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="registering-a-method-reference-as-an-extensionpoint">Registering a Method Reference as an ExtensionPoint</h5>
-<div class="paragraph">
-<p>If you would like to implement a single <code>ExtensionPoint</code> API via a <em>method reference</em>,
-you can register it as follows. Note, however, that the API must be a <em>functional
-interface</em>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public void registerExtensions(ExtensionPointRegistry registry) {
-    registry.register((BeforeEachExtensionPoint) this::beforeEach);
-}
-
-void beforeEach(TestExtensionContext context) {
-    /* ... */
-}</code></pre>
-</div>
-</div>
 </div>
 </div>
 </div>
@@ -1864,21 +1766,27 @@ consult the source code for <code><a href="https://github.com/junit-team/junit5/
 <div class="paragraph">
 <p>The following interfaces define the APIs for extending tests at various points in the
 test execution lifecycle. Consult the Javadoc for each of these in the
-<code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension">org.junit.gen5.api.extension</a></code> package.</p>
+<code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension">org.junit.gen5.api.extension</a></code> package for further details.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>BeforeEachExtensionPoint</code></p>
+<p><code>BeforeAllCallback</code></p>
 </li>
 <li>
-<p><code>AfterEachExtensionPoint</code></p>
+<p><code>AfterAllCallback</code></p>
 </li>
 <li>
-<p><code>BeforeAllExtensionPoint</code></p>
+<p><code>BeforeEachCallback</code></p>
 </li>
 <li>
-<p><code>AfterAllExtensionPoint</code></p>
+<p><code>AfterEachCallback</code></p>
+</li>
+<li>
+<p><code>BeforeTestMethodCallback</code></p>
+</li>
+<li>
+<p><code>AfterTestMethodCallback</code></p>
 </li>
 </ul>
 </div>
@@ -1891,8 +1799,8 @@ concrete example.</p>
 <div class="sect2">
 <h3 id="exception-handling">5.7. Exception Handling</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExceptionHandlerExtensionPoint.java">ExceptionHandlerExtensionPoint</a></code> defines the API for <code>Extensions</code> that wish to <em>react to
-exceptions</em> thrown in a test.</p>
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExceptionHandler.java">ExceptionHandler</a></code> defines the API for <code>Extensions</code> that wish to handle exceptions
+thrown from tests.</p>
 </div>
 <div class="paragraph">
 <p>The following example shows an extension which will swallow all instances of <code>IOException</code>
@@ -1901,7 +1809,7 @@ but rethrow any other type of exception:</p>
 <div class="listingblock">
 <div class="title">An exception handling extension</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public class IgnoreIOExceptionExtension implements ExceptionHandlerExtensionPoint {
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public class IgnoreIOExceptionExtension implements ExceptionHandler {
 
     @Override
     public void handleException(TestExtensionContext context, Throwable throwable)
@@ -2264,7 +2172,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-05-06 04:49:11 -04:00
+Last updated 2016-05-06 06:44:11 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
