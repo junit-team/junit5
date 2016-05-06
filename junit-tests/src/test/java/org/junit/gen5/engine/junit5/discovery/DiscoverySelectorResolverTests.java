@@ -12,7 +12,6 @@ package org.junit.gen5.engine.junit5.discovery;
 
 import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.*;
-import static org.junit.gen5.api.Assertions.*;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
