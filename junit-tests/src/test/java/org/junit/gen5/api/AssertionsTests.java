@@ -68,7 +68,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageIsNull(ex);
+			assertMessageEquals(ex, "");
 		}
 	}
 
@@ -79,7 +79,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageIsNull(ex);
+			assertMessageEquals(ex, "");
 		}
 	}
 
@@ -107,7 +107,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageIsNull(ex);
+			assertMessageEquals(ex, "");
 		}
 	}
 
@@ -934,12 +934,6 @@ public class AssertionsTests {
 
 	private static void expectAssertionFailedError() {
 		throw new AssertionError("Should have thrown an " + AssertionFailedError.class.getName());
-	}
-
-	private static void assertMessageIsNull(AssertionFailedError ex) throws AssertionError {
-		if (ex.getMessage() != null) {
-			throw new AssertionError("Message in AssertionFailedError should be null");
-		}
 	}
 
 	private static void assertMessageEquals(AssertionFailedError ex, String msg) throws AssertionError {
