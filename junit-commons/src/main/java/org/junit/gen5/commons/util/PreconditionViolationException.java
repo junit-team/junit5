@@ -30,8 +30,4 @@ public class PreconditionViolationException extends JUnitException {
 		super(message);
 	}
 
-	public PreconditionViolationException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
 }
