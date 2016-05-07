@@ -83,7 +83,7 @@ public class ExtensionRegistry {
 
 	private final List<RegisteredExtension<?>> registeredExtensions = new ArrayList<>();
 
-	ExtensionRegistry(Optional<ExtensionRegistry> parent) {
+	public ExtensionRegistry(Optional<ExtensionRegistry> parent) {
 		this.parent = parent;
 	}
 
