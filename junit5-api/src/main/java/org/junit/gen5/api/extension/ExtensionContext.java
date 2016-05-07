@@ -144,11 +144,11 @@ public interface ExtensionContext {
 		 * Get the object that is stored under the supplied {@code key}.
 		 *
 		 * <p>If no value is currently stored under the supplied {@code key},
-		 * a new value will be computed by the {@code defaultCreator}, stored,
-		 * and returned.
+		 * a new value will be computed by the {@code defaultCreator} (given
+		 * the {@code key} as input parameter), stored, and returned.
 		 *
 		 * @param key the key
-		 * @param defaultCreator the function called to create new values
+		 * @param defaultCreator the function called with the supplied {@code key} to create new values
 		 * @return the value
 		 */
 		Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator);
