@@ -187,10 +187,6 @@ public abstract class AnnotationUtils {
 			Class<A> annotationType, Class<? extends Annotation> containerType, boolean inherited, Set<A> found,
 			Set<Annotation> visited) {
 
-		if (element == null) {
-			return;
-		}
-
 		if (element instanceof Class) {
 			Class<?> clazz = (Class<?>) element;
 
