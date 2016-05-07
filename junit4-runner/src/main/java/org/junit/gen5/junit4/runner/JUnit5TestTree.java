@@ -54,15 +54,14 @@ class JUnit5TestTree {
 	}
 
 	private void buildDescriptionTree(Description suiteDescription, TestPlan testPlan) {
-		testPlan.getRoots().stream().forEach(
-			testIdentifier -> buildDescription(testIdentifier, suiteDescription, testPlan));
+		testPlan.getRoots().forEach(testIdentifier -> buildDescription(testIdentifier, suiteDescription, testPlan));
 	}
 
 	private void buildDescription(TestIdentifier identifier, Description parent, TestPlan testPlan) {
 		Description newDescription = createJUnit4Description(identifier, testPlan);
 		parent.addChild(newDescription);
 		this.descriptions.put(identifier, newDescription);
-		testPlan.getChildren(identifier).stream().forEach(
+		testPlan.getChildren(identifier).forEach(
 			testIdentifier -> buildDescription(testIdentifier, newDescription, testPlan));
 	}
 

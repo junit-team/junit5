@@ -17,7 +17,6 @@ import static org.junit.gen5.api.Assertions.assertTrue;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Stream;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ContainerExecutionCondition;
@@ -99,7 +98,7 @@ public class ExtensionRegistryTests {
 
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
-		stream(registry, MyExtensionApi.class).forEach(registeredExtension -> {
+		registry.getRegisteredExtensions(MyExtensionApi.class).forEach(registeredExtension -> {
 			assertEquals(MyExtension.class.getName(), registeredExtension.getSource().getClass().getName());
 			hasRun.set(true);
 		});
@@ -133,7 +132,7 @@ public class ExtensionRegistryTests {
 	private void assertBehaviorForExtensionRegisteredFromLambdaExpressionOrMethodReference(ExtensionRegistry registry) {
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
-		stream(registry, MyExtensionApi.class).forEach(registeredExtension -> {
+		registry.getRegisteredExtensions(MyExtensionApi.class).forEach(registeredExtension -> {
 			Class<? extends MyExtensionApi> lambdaType = registeredExtension.getExtension().getClass();
 			assertTrue(lambdaType.getName().contains("$Lambda$"));
 			assertEquals(getClass().getName(), registeredExtension.getSource().getClass().getName());
@@ -141,11 +140,6 @@ public class ExtensionRegistryTests {
 		});
 
 		assertTrue(hasRun.get());
-	}
-
-	private <E extends Extension> Stream<RegisteredExtension<E>> stream(ExtensionRegistry registry,
-			Class<E> extensionType) {
-		return registry.getRegisteredExtensions(extensionType).stream();
 	}
 
 	private long countExtensions(ExtensionRegistry registry, Class<? extends Extension> extensionType) {

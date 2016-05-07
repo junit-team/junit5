@@ -36,7 +36,7 @@ public abstract class TestDescriptorBuilder {
 
 	public TestDescriptor build() {
 		TestDescriptor testDescriptor = buildDescriptor();
-		children.stream().forEach(builder -> testDescriptor.addChild(builder.build()));
+		children.forEach(builder -> testDescriptor.addChild(builder.build()));
 		return testDescriptor;
 	}
 

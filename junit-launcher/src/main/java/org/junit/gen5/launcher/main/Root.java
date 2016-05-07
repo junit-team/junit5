@@ -74,7 +74,7 @@ class Root {
 	}
 
 	private void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {
-		testEngineDescriptors.values().stream().forEach(testEngine -> testEngine.accept(visitor));
+		testEngineDescriptors.values().forEach(testEngine -> testEngine.accept(visitor));
 	}
 
 	private void pruneEmptyTestEngines() {

@@ -76,7 +76,7 @@ public class TestExecutionSummary {
 		if (countFailedTests() > 0) {
 			writer.println();
 			writer.println(String.format("Test failures (%d):", testsFailed.get()));
-			failures.stream().forEach(failure -> {
+			failures.forEach(failure -> {
 				// TODO Add source description to text
 				writer.println(String.format("  %s", describeTest(failure.getTestIdentifier())));
 				failure.getTestIdentifier().getSource().ifPresent(scource -> {

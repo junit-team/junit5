@@ -53,6 +53,8 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  *     .filter(requireTags("fast"), excludeTags("flow"))
  *   ).build();
  * </pre>
+ *
+ * @since 5.0
  */
 @API(Experimental)
 public final class TestDiscoveryRequestBuilder {
