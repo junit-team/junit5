@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.PreconditionViolationException;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.DiscoverySelector;
 
@@ -35,6 +36,8 @@ import org.junit.gen5.engine.DiscoverySelector;
 public class NameBasedSelector {
 
 	public static DiscoverySelector forName(String name) {
+		Preconditions.notBlank(name, "name must not be blank or empty");
+
 		Optional<Class<?>> testClassOptional = ReflectionUtils.loadClass(name);
 		if (testClassOptional.isPresent()) {
 			return forClass(testClassOptional.get());

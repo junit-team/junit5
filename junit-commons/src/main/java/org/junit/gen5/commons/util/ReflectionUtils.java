@@ -53,6 +53,9 @@ public abstract class ReflectionUtils {
 		HierarchyDown, HierarchyUp
 	}
 
+	private static final ClasspathScanner classpathScanner = new ClasspathScanner(
+		ReflectionUtils::getDefaultClassLoader, ReflectionUtils::loadClass);
+
 	private static final Map<Class<?>, Class<?>> primitiveToWrapperMap;
 
 	static {
@@ -201,79 +204,108 @@ public abstract class ReflectionUtils {
 		}
 	}
 
+	/**
+	 * Load a class by its <em>fully qualified name</em>.
+	 * @param name the fully qualified name of the class to load; never
+	 * {@code null} or empty
+	 * @see #loadClass(String, ClassLoader)
+	 */
 	public static Optional<Class<?>> loadClass(String name) {
 		return loadClass(name, getDefaultClassLoader());
 	}
 
+	/**
+	 * Load a class by its <em>fully qualified name</em>, using the supplied
+	 * {@link ClassLoader}.
+	 * @param name the fully qualified name of the class to load; never
+	 * {@code null} or empty
+	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
+	 * @see #loadClass(String)
+	 */
 	public static Optional<Class<?>> loadClass(String name, ClassLoader classLoader) {
 		Preconditions.notBlank(name, "class name must not be null or empty");
 		Preconditions.notNull(classLoader, "ClassLoader must not be null");
+
+		// TODO Add support for primitive types and arrays.
+
 		try {
-			// TODO Add support for primitive types and arrays.
 			return Optional.of(classLoader.loadClass(name.trim()));
 		}
-		catch (ClassNotFoundException e) {
+		catch (ClassNotFoundException ignore) {
 			return Optional.empty();
 		}
 	}
 
 	/**
-	 * Try to load a method by its fully qualified name (if such a thing exists for methods).
-	 * @param fullyQualifiedMethodName In the form 'package.subpackage.ClassName#methodName'
+	 * Load a method by its <em>fully qualified name</em>.
+	 * <p>The supported format is {@code [fully qualified class name]#[methodName]}.
+	 * For example, the fully qualified name for the {@code chars()} method in
+	 * {@code java.lang.String} is {@code java.lang.String#chars}.
+	 * @param fullyQualifiedMethodName the fully qualified name of the method to load;
+	 * never {@code null} or empty
 	 * @return Optional of Method
 	 */
 	public static Optional<Method> loadMethod(String fullyQualifiedMethodName) {
-		Preconditions.notBlank(fullyQualifiedMethodName, "full method name must not be null or empty");
+		Preconditions.notBlank(fullyQualifiedMethodName, "fully qualified method name must not be null or empty");
+		fullyQualifiedMethodName = fullyQualifiedMethodName.trim();
+
 		// TODO Handle overloaded and inherited methods
 
-		Optional<Method> testMethodOptional = Optional.empty();
 		int hashPosition = fullyQualifiedMethodName.lastIndexOf('#');
 		if (hashPosition >= 0 && hashPosition < fullyQualifiedMethodName.length()) {
 			String className = fullyQualifiedMethodName.substring(0, hashPosition);
 			String methodName = fullyQualifiedMethodName.substring(hashPosition + 1);
-			Optional<Class<?>> methodClassOptional = loadClass(className);
-			if (methodClassOptional.isPresent()) {
-				try {
-					testMethodOptional = Optional.of(methodClassOptional.get().getDeclaredMethod(methodName));
-				}
-				catch (NoSuchMethodException ignore) {
+			if (StringUtils.isNotBlank(className) && StringUtils.isNotBlank(methodName)) {
+				Optional<Class<?>> classOptional = loadClass(className);
+				if (classOptional.isPresent()) {
+					try {
+						return Optional.of(classOptional.get().getDeclaredMethod(methodName));
+					}
+					catch (NoSuchMethodException ignore) {
+					}
 				}
 			}
 		}
-		return testMethodOptional;
+		return Optional.empty();
 	}
 
 	private static Optional<Object> getOuterInstance(Object inner) {
 		// This is risky since it depends on the name of the field which is nowhere guaranteed
 		// but has been stable so far in all JDKs
 
-		return Arrays.stream(inner.getClass().getDeclaredFields()).filter(
-			f -> f.getName().startsWith("this$")).findFirst().map(f -> {
-				try {
-					return makeAccessible(f).get(inner);
-				}
-				catch (IllegalAccessException e) {
-					return Optional.empty();
-				}
-			});
+		// @formatter:off
+		return Arrays.stream(inner.getClass().getDeclaredFields())
+				.filter(field -> field.getName().startsWith("this$"))
+				.findFirst()
+				.map(field -> {
+					try {
+						return makeAccessible(field).get(inner);
+					}
+					catch (SecurityException | IllegalArgumentException | IllegalAccessException ignore) {
+						return Optional.empty();
+					}
+				});
+		// @formatter:on
 	}
 
 	public static Optional<Object> getOuterInstance(Object inner, Class<?> targetType) {
 		Preconditions.notNull(inner, "inner object must not be null");
 		Preconditions.notNull(targetType, "targetType must not be null");
 
-		if (targetType.isInstance(inner))
+		if (targetType.isInstance(inner)) {
 			return Optional.of(inner);
+		}
+
 		Optional<Object> candidate = getOuterInstance(inner);
-		if (candidate.isPresent())
+		if (candidate.isPresent()) {
 			return getOuterInstance(candidate.get(), targetType);
-		else
-			return Optional.empty();
+		}
+
+		return Optional.empty();
 	}
 
 	public static boolean isPackage(String packageName) {
-		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader, ReflectionUtils::loadClass).isPackage(
-			packageName);
+		return classpathScanner.isPackage(packageName);
 	}
 
 	public static Set<File> getAllClasspathRootDirectories() {
@@ -289,13 +321,11 @@ public abstract class ReflectionUtils {
 	}
 
 	public static List<Class<?>> findAllClassesInClasspathRoot(File root, Predicate<Class<?>> classTester) {
-		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
-			ReflectionUtils::loadClass).scanForClassesInClasspathRoot(root, classTester);
+		return classpathScanner.scanForClassesInClasspathRoot(root, classTester);
 	}
 
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classTester) {
-		return new ClasspathScanner(ReflectionUtils::getDefaultClassLoader,
-			ReflectionUtils::loadClass).scanForClassesInPackage(basePackageName, classTester);
+		return classpathScanner.scanForClassesInPackage(basePackageName, classTester);
 	}
 
 	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
@@ -378,17 +408,21 @@ public abstract class ReflectionUtils {
 	}
 
 	/**
-	 * Reads the value of a potentially inaccessible field.
+	 * Read the value of a potentially inaccessible field.
 	 *
 	 * <p>If the field does not exist, an exception occurs while reading it, or
 	 * the value of the field is {@code null}, an empty {@link Optional} is
 	 * returned.
 	 *
-	 * @param clazz the class where the field is declared.
-	 * @param fieldName the name of the field
-	 * @param instance the instance from where the value is to be read
+	 * @param clazz the class where the field is declared; never {@code null}
+	 * @param fieldName the name of the field; never {@code null} or empty
+	 * @param instance the instance from where the value is to be read; may
+	 * be {@code null} for a static field
 	 */
 	public static <T> Optional<Object> readFieldValue(Class<T> clazz, String fieldName, T instance) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notBlank(fieldName, "fieldName must not be null or empty");
+
 		try {
 			Field field = makeAccessible(clazz.getDeclaredField(fieldName));
 			return Optional.ofNullable(field.get(instance));

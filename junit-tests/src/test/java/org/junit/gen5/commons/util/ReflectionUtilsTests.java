@@ -15,6 +15,7 @@ import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertFalse;
 import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 import static org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder.HierarchyUp;
 import static org.mockito.Matchers.anyString;
@@ -46,6 +47,17 @@ import org.junit.gen5.console.tasks.TempDirectory.Root;
  * @since 5.0
  */
 class ReflectionUtilsTests {
+
+	@Test
+	void getDefaultClassLoader() {
+		ClassLoader original = Thread.currentThread().getContextClassLoader();
+		try {
+			assertEquals(ClassLoader.getSystemClassLoader(), ReflectionUtils.getDefaultClassLoader());
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(original);
+		}
+	}
 
 	@Test
 	void isPublic() throws Exception {
@@ -100,6 +112,10 @@ class ReflectionUtilsTests {
 		assertThrows(PreconditionViolationException.class, () -> {
 			ReflectionUtils.newInstance(C.class, ((Object[]) null));
 		});
+
+		RuntimeException exception = expectThrows(RuntimeException.class,
+			() -> ReflectionUtils.newInstance(Exploder.class));
+		assertThat(exception).hasMessage("boom");
 	}
 
 	@Test
@@ -236,9 +252,11 @@ class ReflectionUtilsTests {
 	void loadMethod() throws Exception {
 		assertThat(ReflectionUtils.loadMethod(PublicClass.class.getName() + "#publicMethod")).isPresent();
 		assertThat(ReflectionUtils.loadMethod(PrivateClass.class.getName() + "#privateMethod")).isPresent();
+		assertThat(ReflectionUtils.loadMethod("  " + PrivateClass.class.getName() + "#privateMethod  ")).isPresent();
 
 		assertThat(ReflectionUtils.loadMethod(PublicClass.class.getName() + "#nonExistingMethod")).isEmpty();
-		assertThat(ReflectionUtils.loadMethod(PublicClass.class.getName() + "#otherNonExistingMethod")).isEmpty();
+		assertThat(ReflectionUtils.loadMethod("#nonExistingMethod")).isEmpty();
+		assertThat(ReflectionUtils.loadMethod("java.lang.String#")).isEmpty();
 	}
 
 	@Test
@@ -510,10 +528,18 @@ class ReflectionUtilsTests {
 
 	static class C {
 
-		public C() {
+		C() {
 		}
 
-		public C(String a, String b) {
+		C(String a, String b) {
+		}
+
+	}
+
+	static class Exploder {
+
+		Exploder() {
+			throw new RuntimeException("boom");
 		}
 
 	}
