@@ -47,7 +47,7 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Internal)
-public final class ReflectionUtils {
+public abstract class ReflectionUtils {
 
 	public enum MethodSortOrder {
 		HierarchyDown, HierarchyUp
@@ -68,10 +68,6 @@ public final class ReflectionUtils {
 		map.put(double.class, Double.class);
 
 		primitiveToWrapperMap = Collections.unmodifiableMap(map);
-	}
-
-	private ReflectionUtils() {
-		/* no-op */
 	}
 
 	public static ClassLoader getDefaultClassLoader() {

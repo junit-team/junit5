@@ -29,11 +29,7 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Internal)
-public final class ExceptionUtils {
-
-	private ExceptionUtils() {
-		/* no-op */
-	}
+public abstract class ExceptionUtils {
 
 	/**
 	 * Throw the supplied {@link Throwable}, <em>masked</em> as an

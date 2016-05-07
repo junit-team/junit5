@@ -29,11 +29,7 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Internal)
-public final class StringUtils {
-
-	private StringUtils() {
-		/* no-op */
-	}
+public abstract class StringUtils {
 
 	/**
 	 * Determine if the supplied {@link String} is <em>blank</em> (i.e.,

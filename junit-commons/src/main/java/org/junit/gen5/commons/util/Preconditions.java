@@ -34,11 +34,7 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Internal)
-public final class Preconditions {
-
-	private Preconditions() {
-		/* no-op */
-	}
+public abstract class Preconditions {
 
 	/**
 	 * Assert that the supplied {@link Object} is not {@code null}.

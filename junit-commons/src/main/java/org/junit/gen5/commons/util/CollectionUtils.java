@@ -28,11 +28,7 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Internal)
-public final class CollectionUtils {
-
-	private CollectionUtils() {
-		/* no-op */
-	}
+public abstract class CollectionUtils {
 
 	/**
 	 * Read the only element of a collection of size 1.

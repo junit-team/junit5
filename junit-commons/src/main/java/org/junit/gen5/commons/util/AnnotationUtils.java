@@ -48,13 +48,9 @@ import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
  * @see AnnotatedElement
  */
 @API(Internal)
-public final class AnnotationUtils {
+public abstract class AnnotationUtils {
 
 	private static final Map<AnnotationCacheKey, Annotation> annotationCache = new ConcurrentHashMap<>(256);
-
-	private AnnotationUtils() {
-		/* no-op */
-	}
 
 	/**
 	 * Determine if an annotation of {@code annotationType} is either <em>present</em> or <em>meta-present</em> on the
