@@ -44,7 +44,7 @@ class JUnit5EngineExecutionContextTests {
 	void extendWithAllAttributes() {
 		ClassBasedContainerExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, null,
 			null);
-		ExtensionRegistry extensionRegistry = ExtensionRegistry.newRootRegistryWithDefaultExtensions();
+		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions();
 		TestInstanceProvider testInstanceProvider = Mockito.mock(TestInstanceProvider.class);
 		JUnit5EngineExecutionContext newContext = originalContext.extend() //
 				.withExtensionContext(extensionContext) //
@@ -61,7 +61,7 @@ class JUnit5EngineExecutionContextTests {
 	void canOverrideAttributeWhenContextIsExtended() {
 		ClassBasedContainerExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, null,
 			null);
-		ExtensionRegistry extensionRegistry = ExtensionRegistry.newRootRegistryWithDefaultExtensions();
+		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions();
 		TestInstanceProvider testInstanceProvider = Mockito.mock(TestInstanceProvider.class);
 		ClassBasedContainerExtensionContext newExtensionContext = new ClassBasedContainerExtensionContext(
 			extensionContext, null, null);

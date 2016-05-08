@@ -31,7 +31,7 @@ public class ExtensionRegistryTests {
 
 	@Test
 	void newRegistryWithoutParentHasDefaultExtensions() {
-		ExtensionRegistry registry = ExtensionRegistry.newRootRegistryWithDefaultExtensions();
+		ExtensionRegistry registry = ExtensionRegistry.createRegistryWithDefaultExtensions();
 		Set<Class<? extends Extension>> extensions = registry.getRegisteredExtensionTypes();
 
 		assertEquals(3, extensions.size());
@@ -80,7 +80,7 @@ public class ExtensionRegistryTests {
 		ExtensionRegistry parent = new ExtensionRegistry(Optional.empty());
 		parent.registerExtension(MyExtension.class);
 
-		ExtensionRegistry child = ExtensionRegistry.newRegistryFrom(parent, singletonList(YourExtension.class));
+		ExtensionRegistry child = ExtensionRegistry.createRegistryFrom(parent, singletonList(YourExtension.class));
 		assertExtensionRegistered(child, MyExtension.class);
 		assertExtensionRegistered(child, YourExtension.class);
 		assertEquals(2, countExtensions(child, MyExtensionApi.class));
