@@ -13,6 +13,7 @@ package org.junit.gen5.commons.util;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertSame;
 import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.expectThrows;
@@ -51,8 +52,10 @@ class ReflectionUtilsTests {
 	@Test
 	void getDefaultClassLoader() {
 		ClassLoader original = Thread.currentThread().getContextClassLoader();
+		ClassLoader mock = mock(ClassLoader.class);
+		Thread.currentThread().setContextClassLoader(mock);
 		try {
-			assertEquals(ClassLoader.getSystemClassLoader(), ReflectionUtils.getDefaultClassLoader());
+			assertSame(mock, ReflectionUtils.getDefaultClassLoader());
 		}
 		finally {
 			Thread.currentThread().setContextClassLoader(original);
