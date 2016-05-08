@@ -48,6 +48,26 @@ public class ExtensionRegistry {
 		Arrays.asList(DisabledCondition.class, TestInfoParameterResolver.class, TestReporterParameterResolver.class));
 
 	/**
+	 * Factory for creating a new empty root registry.
+	 *
+	 * @return a new {@code ExtensionRegistry}
+	 */
+	public static ExtensionRegistry createEmptyRegistry() {
+		return new ExtensionRegistry(Optional.empty());
+	}
+
+	/**
+	 * Factory for creating and populating a new root registry with the default extension types.
+	 *
+	 * @return a new {@code ExtensionRegistry}
+	 */
+	public static ExtensionRegistry createRegistryWithDefaultExtensions() {
+		ExtensionRegistry extensionRegistry = new ExtensionRegistry(Optional.empty());
+		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerExtension);
+		return extensionRegistry;
+	}
+
+	/**
 	 * Factory for creating and populating a new registry from a list of
 	 * extension types and a parent registry.
 	 *
@@ -56,7 +76,7 @@ public class ExtensionRegistry {
 	 * the new registry
 	 * @return a new {@code ExtensionRegistry}
 	 */
-	public static ExtensionRegistry newRegistryFrom(ExtensionRegistry parentRegistry,
+	public static ExtensionRegistry createRegistryFrom(ExtensionRegistry parentRegistry,
 			List<Class<? extends Extension>> extensionTypes) {
 
 		Preconditions.notNull(parentRegistry, "parentRegistry must not be null");
@@ -66,24 +86,13 @@ public class ExtensionRegistry {
 		return registry;
 	}
 
-	/**
-	 * Factory for creating and populating a new root registry with the default extension types.
-	 *
-	 * @return a new {@code ExtensionRegistry}
-	 */
-	public static ExtensionRegistry newRootRegistryWithDefaultExtensions() {
-		ExtensionRegistry extensionRegistry = new ExtensionRegistry(Optional.empty());
-		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerExtension);
-		return extensionRegistry;
-	}
-
 	private final Optional<ExtensionRegistry> parent;
 
 	private final Set<Class<? extends Extension>> registeredExtensionTypes = new LinkedHashSet<>();
 
 	private final List<RegisteredExtension<?>> registeredExtensions = new ArrayList<>();
 
-	public ExtensionRegistry(Optional<ExtensionRegistry> parent) {
+	ExtensionRegistry(Optional<ExtensionRegistry> parent) {
 		this.parent = parent;
 	}
 
