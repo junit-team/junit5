@@ -54,19 +54,19 @@ public @interface FullLogging {
 		@Override
 		public void beforeAll(ContainerExtensionContext context) throws Exception {
 		// @formatter:off
-        Class<?>[] loggerClasses = findAnnotation(context.getTestClass(), FullLogging.class)
-                .orElseThrow(() -> new PreconditionViolationException("@FullLogging must be declared on class " +
-                		context.getTestClass().getName()))
-                .value();
+		Class<?>[] loggerClasses = findAnnotation(context.getTestClass(), FullLogging.class)
+				.orElseThrow(() -> new PreconditionViolationException("@FullLogging must be declared on class " +
+						context.getTestClass().getName()))
+				.value();
 
-        Arrays.stream(loggerClasses)
-                .map(Class::getName)
-                .forEach(loggerName -> {
-                    Logger logger = Logger.getLogger(loggerName);
-                    previouslyActiveLogLevels.put(loggerName, logger.getLevel());
-                    logger.setLevel(Level.ALL);
-                });
-        // @formatter:on
+		Arrays.stream(loggerClasses)
+				.map(Class::getName)
+				.forEach(loggerName -> {
+					Logger logger = Logger.getLogger(loggerName);
+					previouslyActiveLogLevels.put(loggerName, logger.getLevel());
+					logger.setLevel(Level.ALL);
+				});
+		// @formatter:on
 		}
 
 		@Override
