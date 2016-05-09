@@ -11,24 +11,30 @@
 package org.junit.gen5.engine;
 
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.UniqueId.Segment;
 
 /**
- * Used to parse a unique ID string representation into a {@link UniqueId}
- * or to format a {@link UniqueId} into a string representation.
+ * Used to {@link #parse} a {@link UniqueId} from a string representation
+ * or to {@link #format} a {@link UniqueId} into a string representation.
  *
  * @since 5.0
  */
 public class UniqueIdFormat {
+
+	private static final UniqueIdFormat defaultFormat = new UniqueIdFormat('[', ':', ']', '/');
+
+	public static UniqueIdFormat getDefault() {
+		return defaultFormat;
+	}
 
 	private final char openSegment;
 	private final char closeSegment;
@@ -36,23 +42,19 @@ public class UniqueIdFormat {
 	private final char typeValueSeparator;
 	private final Pattern segmentPattern;
 
-	public static UniqueIdFormat getDefault() {
-		return new UniqueIdFormat('[', ':', ']', '/');
-	}
-
 	public UniqueIdFormat(char openSegment, char typeValueSeparator, char closeSegment, char segmentDelimiter) {
 		this.openSegment = openSegment;
 		this.typeValueSeparator = typeValueSeparator;
 		this.closeSegment = closeSegment;
 		this.segmentDelimiter = segmentDelimiter;
 		this.segmentPattern = Pattern.compile(
-			String.format("\\%s(.+)\\%s(.+)\\%s", openSegment, typeValueSeparator, closeSegment));
+			String.format("%s(.+)%s(.+)%s", quote(openSegment), quote(typeValueSeparator), quote(closeSegment)));
 	}
 
 	public UniqueId parse(String source) {
-		String[] parts = source.split(Character.toString(this.segmentDelimiter));
-		List<Segment> segments = Arrays.stream(parts).map(this::createSegment).collect(Collectors.toList());
-		return new UniqueId(segments);
+		String[] parts = source.split(String.valueOf(this.segmentDelimiter));
+		List<Segment> segments = Arrays.stream(parts).map(this::createSegment).collect(toList());
+		return new UniqueId(this, segments);
 	}
 
 	private Segment createSegment(String segmentString) {
@@ -85,12 +87,17 @@ public class UniqueIdFormat {
 		// @formatter:off
 		return uniqueId.getSegments().stream()
 			.map(this::describe)
-			.collect(joining(Character.toString(this.segmentDelimiter)));
+			.collect(joining(String.valueOf(this.segmentDelimiter)));
 		// @formatter:on
 	}
 
 	private String describe(Segment segment) {
-		return String.format("[%s%s%s]", segment.getType(), this.typeValueSeparator, segment.getValue());
+		return String.format("%s%s%s%s%s", this.openSegment, segment.getType(), this.typeValueSeparator,
+			segment.getValue(), this.closeSegment);
+	}
+
+	private static String quote(char c) {
+		return Pattern.quote(String.valueOf(c));
 	}
 
 }
