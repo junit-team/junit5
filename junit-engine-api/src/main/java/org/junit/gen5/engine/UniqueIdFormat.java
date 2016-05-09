@@ -51,13 +51,19 @@ public class UniqueIdFormat {
 			String.format("%s(.+)%s(.+)%s", quote(openSegment), quote(typeValueSeparator), quote(closeSegment)));
 	}
 
-	public UniqueId parse(String source) {
+	/**
+	 * Parse a {@code UniqueId} from the supplied string representation.
+	 *
+	 * @return a properly constructed {@code UniqueId}
+	 * @throws JUnitException if the string cannot be parsed
+	 */
+	public UniqueId parse(String source) throws JUnitException {
 		String[] parts = source.split(String.valueOf(this.segmentDelimiter));
 		List<Segment> segments = Arrays.stream(parts).map(this::createSegment).collect(toList());
 		return new UniqueId(this, segments);
 	}
 
-	private Segment createSegment(String segmentString) {
+	private Segment createSegment(String segmentString) throws JUnitException {
 		Matcher segmentMatcher = this.segmentPattern.matcher(segmentString);
 		if (!segmentMatcher.matches()) {
 			throw new JUnitException(String.format("'%s' is not a well-formed UniqueId segment", segmentString));
