@@ -47,7 +47,7 @@ public @interface FullLogging {
 
 	Class<?>[] value();
 
-	static class Extension implements BeforeAllCallback, AfterAllCallback {
+	class Extension implements BeforeAllCallback, AfterAllCallback {
 
 		private final Map<String, Level> previouslyActiveLogLevels = new HashMap<>();
 
