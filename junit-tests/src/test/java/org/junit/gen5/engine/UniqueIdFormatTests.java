@@ -24,23 +24,21 @@ import org.junit.gen5.engine.UniqueId.Segment;
  */
 class UniqueIdFormatTests {
 
-	static final String ENGINE_ID = "junit5";
-
 	@Nested
 	class Formatting {
+
+		private final UniqueId engineId = UniqueId.root("engine", "junit5");
 
 		private final UniqueIdFormat format = UniqueIdFormat.getDefault();
 
 		@Test
-		void uniqueIdOnly() {
-			UniqueId uniqueId = UniqueId.root("engine", ENGINE_ID);
-			assertEquals("[engine:junit5]", uniqueId.getUniqueString());
-			assertEquals(format.format(uniqueId), uniqueId.getUniqueString());
+		void engineIdOnly() {
+			assertEquals("[engine:junit5]", engineId.getUniqueString());
+			assertEquals(format.format(engineId), engineId.getUniqueString());
 		}
 
 		@Test
 		void withTwoSegments() {
-			UniqueId engineId = UniqueId.root("engine", ENGINE_ID);
 			UniqueId classId = engineId.append("class", "org.junit.MyClass");
 			assertEquals("[engine:junit5]/[class:org.junit.MyClass]", classId.getUniqueString());
 			assertEquals(format.format(classId), classId.getUniqueString());
@@ -48,7 +46,6 @@ class UniqueIdFormatTests {
 
 		@Test
 		void withManySegments() {
-			UniqueId engineId = UniqueId.root("engine", ENGINE_ID);
 			UniqueId uniqueId = engineId.append("t1", "v1").append("t2", "v2").append("t3", "v3");
 			assertEquals("[engine:junit5]/[t1:v1]/[t2:v2]/[t3:v3]", uniqueId.getUniqueString());
 			assertEquals(format.format(uniqueId), uniqueId.getUniqueString());
