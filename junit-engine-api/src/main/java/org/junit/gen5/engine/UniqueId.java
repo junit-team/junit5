@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
@@ -38,12 +39,10 @@ public class UniqueId implements Cloneable {
 	 * Parse a {@code UniqueId} from the supplied string representation using the
 	 * default format.
 	 *
-	 * <p>Throws a {@link org.junit.gen5.commons.JUnitException JUnitException}
-	 * if the string cannot be parsed.
-	 *
 	 * @return a properly constructed {@code UniqueId}
+	 * @throws JUnitException if the string cannot be parsed
 	 */
-	public static UniqueId parse(String uniqueIdString) {
+	public static UniqueId parse(String uniqueIdString) throws JUnitException {
 		return UniqueIdFormat.getDefault().parse(uniqueIdString);
 	}
 
