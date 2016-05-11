@@ -14,6 +14,9 @@ import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import org.junit.gen5.commons.meta.API;
 
+/**
+ * @since 5.0
+ */
 @FunctionalInterface
 @API(Internal)
 public interface TestInstanceProvider {

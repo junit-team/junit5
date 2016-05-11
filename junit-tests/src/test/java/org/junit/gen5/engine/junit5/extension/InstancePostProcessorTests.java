@@ -22,8 +22,8 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.InstancePostProcessor;
-import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.junit5.AbstractJUnit5TestEngineTests;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
@@ -48,13 +48,18 @@ public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(asList(
 
 			// OuterTestCase
-			"fooPostProcessTestInstance:OuterTestCase", "beforeOuterMethod", "testOuter",
+			"fooPostProcessTestInstance:OuterTestCase",
+				"beforeOuterMethod",
+					"testOuter",
 
 			// InnerTestCase
 
-			// TODO Uncomment once issue #252 is fixed.
-			// "fooPostProcessTestInstance:OuterTestCase",
-			"fooPostProcessTestInstance:InnerTestCase", "barPostProcessTestInstance:InnerTestCase", "beforeOuterMethod", "beforeInnerMethod", "testInner"
+			"fooPostProcessTestInstance:OuterTestCase",
+			"fooPostProcessTestInstance:InnerTestCase",
+				"barPostProcessTestInstance:InnerTestCase",
+					"beforeOuterMethod",
+						"beforeInnerMethod",
+							"testInner"
 
 		), callSequence, "wrong call sequence");
 		// @formatter:on
@@ -101,8 +106,7 @@ public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 
 			@Test
 			void testInner() {
-				// TODO Uncomment once issue #252 is fixed.
-				// assertEquals("foo", outerName);
+				assertEquals("foo", outerName);
 				assertEquals("bar", innerName);
 				callSequence.add("testInner");
 			}
@@ -113,8 +117,7 @@ public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 	private static class FooInstancePostProcessor implements InstancePostProcessor {
 
 		@Override
-		public void postProcessTestInstance(TestExtensionContext context) throws Exception {
-			Object testInstance = context.getTestInstance();
+		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
 			if (testInstance instanceof Named) {
 				((Named) testInstance).setName("foo");
 			}
@@ -125,12 +128,11 @@ public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 	private static class BarInstancePostProcessor implements InstancePostProcessor {
 
 		@Override
-		public void postProcessTestInstance(TestExtensionContext context) throws Exception {
-			Object testInstance = context.getTestInstance();
+		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
 			if (testInstance instanceof Named) {
 				((Named) testInstance).setName("bar");
 			}
-			callSequence.add("barPostProcessTestInstance:" + context.getTestInstance().getClass().getSimpleName());
+			callSequence.add("barPostProcessTestInstance:" + testInstance.getClass().getSimpleName());
 		}
 	}
 

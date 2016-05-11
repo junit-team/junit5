@@ -24,7 +24,6 @@ import org.junit.gen5.api.extension.BeforeEachCallback;
 import org.junit.gen5.api.extension.BeforeTestMethodCallback;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ExceptionHandler;
-import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.meta.API;
@@ -146,8 +145,6 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 
-		invokeInstancePostProcessors(registry, testExtensionContext);
-
 		// @formatter:off
 		invokeBeforeEachCallbacks(registry, testExtensionContext);
 			invokeBeforeEachMethods(registry, testExtensionContext);
@@ -161,11 +158,6 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		throwableCollector.assertEmpty();
 
 		return context;
-	}
-
-	private void invokeInstancePostProcessors(ExtensionRegistry registry, TestExtensionContext context) {
-		registry.stream(InstancePostProcessor.class)//
-				.forEach(extension -> executeAndMaskThrowable(() -> extension.postProcessTestInstance(context)));
 	}
 
 	private void invokeBeforeEachCallbacks(ExtensionRegistry registry, TestExtensionContext context) {
