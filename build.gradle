@@ -25,14 +25,12 @@ allprojects {
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 
-	compileJava {
-		sourceCompatibility = 1.8
-		targetCompatibility = 1.8
+	tasks.withType(JavaCompile) {
+		sourceCompatibility = rootProject.sourceCompatibility
+		targetCompatibility = rootProject.targetCompatibility
 	}
 
 	compileTestJava {
-		sourceCompatibility = 1.8
-		targetCompatibility = 1.8
 		options.compilerArgs += '-parameters'
 	}
 
