@@ -1,12 +1,5 @@
 apply plugin: 'org.junit.gen5.gradle'
 
-jar.enabled = false
-javadoc.enabled = false
-javadocJar.enabled = false
-sourcesJar.enabled = false
-uploadArchives.enabled = false
-install.enabled = false
-
 junit5 {
 	// version '5.0.0-SNAPSHOT' // not needed since all dependencies are declared explicitly
 	runJunit4 true
