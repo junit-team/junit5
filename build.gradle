@@ -19,6 +19,7 @@ Date buildTimeAndDate = new Date()
 ext {
 	buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
 	buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+	builtByValue = project.hasProperty('builtBy') ? project.builtBy : project.defaultBuiltBy
 }
 
 allprojects {
@@ -231,17 +232,28 @@ subprojects {
 		}
 	}
 
+	def normalizeVersion = { versionLiteral ->
+		try {
+			(versionLiteral =~ /(\d+)\.(\d+)\.(\d+).*/)[0][1..3].join('.')
+		} catch(x) {
+			throw new GradleException("Version '$versionLiteral' does not match version pattern, e.g. 5.0.0-QUALIFIER")
+		}
+	}
+
 	jar {
 		manifest {
 			attributes(
-				'Built-By': System.properties['user.name'],
+				'Built-By': builtByValue,
 				'Created-By': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString(),
 				'Build-Date': buildDate,
 				'Build-Time': buildTime,
 				'Build-Revision': versioning.info.commit,
 				'Specification-Title': project.name,
-				'Specification-Version': project.version,
+				'Specification-Version': normalizeVersion(project.version),
 				'Specification-Vendor': 'junit.org',
+				'Implementation-Title': project.name,
+				'Implementation-Version': project.version,
+				'Implementation-Vendor': 'junit.org'
 			)
 		}
 	}
