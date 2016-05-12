@@ -11,34 +11,31 @@
 package org.junit.gen5.engine.support.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertFalse;
-import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
-import org.junit.gen5.engine.support.descriptor.JavaSource;
+import org.junit.gen5.engine.support.descriptor.JavaClassSource;
+import org.junit.gen5.engine.support.descriptor.JavaMethodSource;
+import org.junit.gen5.engine.support.descriptor.JavaPackageSource;
 
 class JavaSourceTests {
 
 	@Test
+	void packageSource() {
+		Package testPackage = JavaSourceTests.class.getPackage();
+		JavaPackageSource source = new JavaPackageSource(testPackage);
+
+		assertThat(source.getPackageName()).isEqualTo(testPackage.getName());
+	}
+
+	@Test
 	void classSource() {
 		Class<JavaSourceTests> testClass = JavaSourceTests.class;
-		JavaSource source = new JavaSource(testClass);
+		JavaClassSource source = new JavaClassSource(testClass);
 
-		assertTrue(source.isJavaClass());
-		assertFalse(source.isJavaMethod());
-		assertFalse(source.isDirectory());
-		assertFalse(source.isFile());
-		assertFalse(source.isFilePosition());
-
-		assertThat(source.getJavaClass()).hasValue(testClass);
-		assertThat(source.getJavaMethodName()).isEmpty();
-		assertThat(source.getJavaMethodParameterTypes()).isEmpty();
-
-		assertEquals(testClass.getName(), source.toString());
+		assertThat(source.getJavaClass()).isEqualTo(testClass);
 	}
 
 	@Test
@@ -46,19 +43,10 @@ class JavaSourceTests {
 		Class<JavaSourceTests> testClass = JavaSourceTests.class;
 		final String testName = testInfo.getDisplayName();
 		Method testMethod = testClass.getDeclaredMethod(testName, TestInfo.class);
-		JavaSource source = new JavaSource(testMethod);
+		JavaMethodSource source = new JavaMethodSource(testMethod);
 
-		assertTrue(source.isJavaMethod());
-		assertFalse(source.isJavaClass());
-		assertFalse(source.isDirectory());
-		assertFalse(source.isFile());
-		assertFalse(source.isFilePosition());
-
-		assertThat(source.getJavaClass()).hasValue(testClass);
-		assertThat(source.getJavaMethodName()).hasValue(testName);
-		assertThat(source.getJavaMethodParameterTypes().get()).containsExactly(TestInfo.class);
-
-		assertEquals(testClass.getName() + "#" + testName + "(" + TestInfo.class.getName() + ")", source.toString());
+		assertThat(source.getJavaClass()).isEqualTo(testClass);
+		assertThat(source.getJavaMethodName()).isEqualTo(testName);
+		assertThat(source.getJavaMethodParameterTypes()).containsExactly(TestInfo.class);
 	}
-
 }

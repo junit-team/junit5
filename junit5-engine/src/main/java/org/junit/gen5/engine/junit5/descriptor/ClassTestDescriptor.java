@@ -45,7 +45,7 @@ import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
 import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
-import org.junit.gen5.engine.support.descriptor.JavaSource;
+import org.junit.gen5.engine.support.descriptor.JavaClassSource;
 import org.junit.gen5.engine.support.hierarchical.Container;
 
 /**
@@ -81,7 +81,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		this.beforeEachMethods = findBeforeEachMethods(testClass);
 		this.afterEachMethods = findAfterEachMethods(testClass);
 
-		setSource(new JavaSource(testClass));
+		setSource(new JavaClassSource(testClass));
 	}
 
 	public final Class<?> getTestClass() {

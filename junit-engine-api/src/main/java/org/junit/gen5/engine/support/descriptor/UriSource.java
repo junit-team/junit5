@@ -8,14 +8,20 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.support.descriptor;
 
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
-import java.io.Serializable;
+import java.net.URI;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.engine.TestSource;
 
+/**
+ * @since 5.0
+ */
 @API(Experimental)
-public interface TestSource extends Serializable {
+public interface UriSource extends TestSource {
+
+	URI getUri();
 }
