@@ -231,7 +231,7 @@ subprojects {
 			}
 		}
 	}
-	
+
 	def normalizeVersion = { versionLiteral ->
 		try {
 			(versionLiteral =~ /(\d+)\.(\d+)\.(\d+).*/)[0][1..3].join('.')
