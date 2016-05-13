@@ -263,8 +263,8 @@ subprojects { subproj ->
 	jar {
 		manifest {
 			attributes(
-				'Built-By': builtByValue,
 				'Created-By': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString(),
+				'Built-By': builtByValue,
 				'Build-Date': buildDate,
 				'Build-Time': buildTime,
 				'Build-Revision': versioning.info.commit,
