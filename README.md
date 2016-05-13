@@ -2,9 +2,11 @@
 
 This repository is the home of the next generation of JUnit, _JUnit 5_.
 
-The project is currently in _Phase 4_, working toward the first official [_milestone_](https://github.com/junit-team/junit5/milestones/5.0%20M1) release.
+The project is currently in _Phase 4_, working toward the first official
+[_milestone_](https://github.com/junit-team/junit5/milestones/5.0%20M1) release.
 
-[JUnit 5.0.0-ALPHA](https://github.com/junit-team/junit5/releases/tag/r5.0.0-ALPHA) was released on February 1st, 2016.
+[JUnit 5.0.0-ALPHA](https://github.com/junit-team/junit5/releases/tag/r5.0.0-ALPHA)
+was released on February 1st, 2016.
 
 ## Roadmap
 
@@ -20,15 +22,28 @@ The [JUnit 5 User Guide] is available online.
 
 The [JUnit 5 Javadoc] is available online.
 
+## Contributing
+
+Contributions to JUnit 5 are both welcomed and appreciated. For specific guidelines
+regarding contributions, please see [CONTRIBUTING.md] in the root directory of the
+project. Those willing to use the ALPHA, milestone, or SNAPSHOT releases are encouraged
+to file feature requests and bug requests using the project's
+[issue tracker](https://github.com/junit-team/junit5/issues). Issues marked with an
+<a href="https://github.com/junit-team/junit5/issues?q=is%3Aissue+is%3Aopen+label%3Aup-for-grabs"><img src="src/images/up-for-grabs.png"></a>
+(`up-for-grabs`) label are specifically targeted for community contributions.
+
 ## Continuous Integration Builds
 
 [![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg?branch=master)](https://travis-ci.org/junit-team/junit5)
 
 ## Code Coverage
 
-Code coverage using [Clover](https://www.atlassian.com/software/clover/) for the latest build is available on the [Jenkins CI server](https://junit.ci.cloudbees.com/job/JUnit5/lastSuccessfulBuild/clover-report/). We are thankful to [Atlassian](https://www.atlassian.com/) for providing the Clover license free of charge.
+Code coverage using [Clover] for the latest build is available on the [Jenkins CI server].
+We are thankful to [Atlassian] for providing the Clover license free of charge.
 
-A code coverage report can also be generated locally by executing `gradlew -PenableClover clean cloverHtmlReport` if you have a local Clover license file on your computer. The results will be available in
+A code coverage report can also be generated locally by executing
+`gradlew -PenableClover clean cloverHtmlReport` if you have a local Clover license file
+on your computer. The results will be available in
 `junit-tests/build/reports/clover/html/index.html`.
 
 
@@ -72,6 +87,11 @@ gradlew clean install
 
 See also: <https://oss.sonatype.org/content/repositories/snapshots/org/junit/>
 
+
+[Atlassian]: https://www.atlassian.com/
+[Clover]: https://www.atlassian.com/software/clover/
+[CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
+[Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/lastSuccessfulBuild/clover-report/
 [JUnit 5 Javadoc]: https://junit.ci.cloudbees.com/job/JUnit5/javadoc/
 [JUnit 5 User Guide]: http://junit-team.github.io/junit5/
 [Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
