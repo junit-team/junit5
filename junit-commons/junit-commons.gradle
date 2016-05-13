@@ -1,0 +1,2 @@
+// this file is required because settings.gradle will autodetect
+// the project build file based on the project name
