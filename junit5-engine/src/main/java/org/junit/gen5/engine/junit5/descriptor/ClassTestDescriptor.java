@@ -27,6 +27,8 @@ import org.junit.gen5.api.extension.BeforeAllCallback;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.Extension;
+import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
@@ -124,7 +126,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 		// @formatter:off
 		return context.extend()
-				.withTestInstanceProvider(testInstanceProvider(context))
+				.withTestInstanceProvider(testInstanceProvider(context, registry, containerExtensionContext))
 				.withExtensionRegistry(registry)
 				.withExtensionContext(containerExtensionContext)
 				.build();
@@ -165,8 +167,20 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		return context;
 	}
 
-	protected TestInstanceProvider testInstanceProvider(JUnit5EngineExecutionContext context) {
-		return () -> ReflectionUtils.newInstance(this.testClass);
+	protected TestInstanceProvider testInstanceProvider(JUnit5EngineExecutionContext parentExecutionContext,
+			ExtensionRegistry registry, ExtensionContext extensionContext) {
+		return () -> {
+			Object instance = ReflectionUtils.newInstance(this.testClass);
+			invokeInstancePostProcessors(instance, registry, extensionContext);
+			return instance;
+		};
+	}
+
+	protected void invokeInstancePostProcessors(Object instance, ExtensionRegistry registry, ExtensionContext context) {
+		// @formatter:off
+		registry.stream(InstancePostProcessor.class)
+				.forEach(extension -> executeAndMaskThrowable(() -> extension.postProcessTestInstance(instance, context)));
+		// @formatter:on
 	}
 
 	private void invokeBeforeAllCallbacks(ExtensionRegistry registry, ContainerExtensionContext context) {
