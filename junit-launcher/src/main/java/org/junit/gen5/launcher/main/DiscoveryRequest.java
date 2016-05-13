@@ -11,16 +11,14 @@
 package org.junit.gen5.launcher.main;
 
 import static java.util.Collections.unmodifiableList;
-import static java.util.Collections.unmodifiableMap;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
+import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.TestEngine;
@@ -67,7 +65,7 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 	private final List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
 
 	// Additional Configuration Parameters can be used to provide configuration, e.g. for extensions
-	private final Map<String, String> configurationParameters = new HashMap<>();
+	private final LauncherConfigurationParameters configurationParameters = new LauncherConfigurationParameters();
 
 	@Override
 	public void addSelector(DiscoverySelector selector) {
@@ -136,16 +134,11 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 
 	@Override
 	public void addConfigurationParameters(Map<String, String> configurationParameters) {
-		this.configurationParameters.putAll(configurationParameters);
+		this.configurationParameters.addAll(configurationParameters);
 	}
 
 	@Override
-	public Map<String, String> getConfigurationParameters() {
-		return unmodifiableMap(this.configurationParameters);
-	}
-
-	@Override
-	public Optional<String> getConfigurationParameter(String key) {
-		return Optional.ofNullable(configurationParameters.get(key));
+	public ConfigurationParameters getConfigurationParameters() {
+		return this.configurationParameters;
 	}
 }

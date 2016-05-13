@@ -31,6 +31,7 @@ import org.assertj.core.util.Files;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.PreconditionViolationException;
+import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.ClasspathSelector;
@@ -241,8 +242,8 @@ public class TestDiscoveryRequestBuilderTests {
 		void withoutConfigurationParametersSet_NoConfigurationParametersAreStoredInDiscoveryRequest() throws Exception {
 			TestDiscoveryRequest discoveryRequest = request().build();
 
-			assertThat(discoveryRequest.getConfigurationParameter("key").isPresent()).isFalse();
-			assertThat(discoveryRequest.getConfigurationParameters()).isEmpty();
+			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
+			assertThat(configurationParameters.get("key").isPresent()).isFalse();
 		}
 
 		@Test
@@ -251,14 +252,11 @@ public class TestDiscoveryRequestBuilderTests {
 			TestDiscoveryRequest discoveryRequest = request()
 					.configurationParameter("key", "value")
 					.build();
-
-			assertThat(discoveryRequest.getConfigurationParameter("key").isPresent()).isTrue();
-			assertThat(discoveryRequest.getConfigurationParameter("key").get()).isEqualTo("value");
-			assertThat(discoveryRequest.getConfigurationParameters())
-					.hasSize(1)
-					.containsKey("key")
-					.containsValue("value");
 			// @formatter:on
+
+			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
+			assertThat(configurationParameters.get("key").isPresent()).isTrue();
+			assertThat(configurationParameters.get("key").get()).isEqualTo("value");
 		}
 
 		@Test
@@ -268,14 +266,11 @@ public class TestDiscoveryRequestBuilderTests {
 					.configurationParameter("key", "value")
 					.configurationParameter("key", "value-new")
 					.build();
-
-			assertThat(discoveryRequest.getConfigurationParameter("key").isPresent()).isTrue();
-			assertThat(discoveryRequest.getConfigurationParameter("key").get()).isEqualTo("value-new");
-			assertThat(discoveryRequest.getConfigurationParameters())
-					.hasSize(1)
-					.containsKey("key")
-					.containsValue("value-new");
 			// @formatter:on
+
+			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
+			assertThat(configurationParameters.get("key").isPresent()).isTrue();
+			assertThat(configurationParameters.get("key").get()).isEqualTo("value-new");
 		}
 
 		@Test
@@ -285,57 +280,48 @@ public class TestDiscoveryRequestBuilderTests {
 					.configurationParameter("key1", "value1")
 					.configurationParameter("key2", "value2")
 					.build();
-
-			assertThat(discoveryRequest.getConfigurationParameter("key1").isPresent()).isTrue();
-			assertThat(discoveryRequest.getConfigurationParameter("key1").get()).isEqualTo("value1");
-			assertThat(discoveryRequest.getConfigurationParameter("key2").isPresent()).isTrue();
-			assertThat(discoveryRequest.getConfigurationParameter("key2").get()).isEqualTo("value2");
-			assertThat(discoveryRequest.getConfigurationParameters())
-					.hasSize(2)
-					.containsKeys("key1", "key2")
-					.containsValues("value1", "value2");
 			// @formatter:on
+
+			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
+			assertThat(configurationParameters.get("key1").isPresent()).isTrue();
+			assertThat(configurationParameters.get("key1").get()).isEqualTo("value1");
+			assertThat(configurationParameters.get("key2").isPresent()).isTrue();
+			assertThat(configurationParameters.get("key2").get()).isEqualTo("value2");
 		}
 
 		@Test
 		void configurationParameterAddedByMap_isStoredInDiscoveryRequest() throws Exception {
-			HashMap<String, String> configurationParameters = new HashMap<>();
-			configurationParameters.put("key", "value");
+			HashMap<String, String> configurationParams = new HashMap<>();
+			configurationParams.put("key", "value");
 
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.configurationParameters(configurationParameters)
+					.configurationParameters(configurationParams)
 					.build();
-
-			assertThat(discoveryRequest.getConfigurationParameter("key").isPresent()).isTrue();
-			assertThat(discoveryRequest.getConfigurationParameter("key").get()).isEqualTo("value");
-			assertThat(discoveryRequest.getConfigurationParameters())
-					.hasSize(1)
-					.containsKey("key")
-					.containsValue("value");
 			// @formatter:on
+
+			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
+			assertThat(configurationParameters.get("key").isPresent()).isTrue();
+			assertThat(configurationParameters.get("key").get()).isEqualTo("value");
 		}
 
 		@Test
 		void multipleConfigurationParametersAddedByMap_areStoredInDiscoveryRequest() throws Exception {
-			HashMap<String, String> configurationParameters = new HashMap<>();
-			configurationParameters.put("key1", "value1");
-			configurationParameters.put("key2", "value2");
+			HashMap<String, String> configurationParams = new HashMap<>();
+			configurationParams.put("key1", "value1");
+			configurationParams.put("key2", "value2");
 
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.configurationParameters(configurationParameters)
+					.configurationParameters(configurationParams)
 					.build();
-
-			assertThat(discoveryRequest.getConfigurationParameter("key1").isPresent()).isTrue();
-			assertThat(discoveryRequest.getConfigurationParameter("key1").get()).isEqualTo("value1");
-			assertThat(discoveryRequest.getConfigurationParameter("key2").isPresent()).isTrue();
-			assertThat(discoveryRequest.getConfigurationParameter("key2").get()).isEqualTo("value2");
-			assertThat(discoveryRequest.getConfigurationParameters())
-					.hasSize(2)
-					.containsKeys("key1", "key2")
-					.containsValues("value1", "value2");
 			// @formatter:on
+
+			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
+			assertThat(configurationParameters.get("key1").isPresent()).isTrue();
+			assertThat(configurationParameters.get("key1").get()).isEqualTo("value1");
+			assertThat(configurationParameters.get("key2").isPresent()).isTrue();
+			assertThat(configurationParameters.get("key2").get()).isEqualTo("value2");
 		}
 	}
 
