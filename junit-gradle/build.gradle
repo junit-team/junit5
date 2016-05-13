@@ -6,10 +6,16 @@ jar {
 	}
 }
 
+repositories {
+	jcenter()
+	mavenCentral()
+}
+
 dependencies {
 	compile localGroovy()
 	compile gradleApi()
 	testCompile(group: 'org.spockframework', name: 'spock-core', version: '1.0-groovy-2.4') {
 		transitive = false
 	}
+	testCompile(group: 'com.android.tools.build', name: 'gradle', version: '2.1.0-alpha1')
 }
