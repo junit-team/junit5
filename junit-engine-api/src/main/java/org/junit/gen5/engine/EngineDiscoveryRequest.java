@@ -13,6 +13,8 @@ package org.junit.gen5.engine;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.junit.gen5.commons.meta.API;
 
@@ -31,4 +33,7 @@ public interface EngineDiscoveryRequest {
 
 	<T extends DiscoveryFilter<?>> List<T> getDiscoveryFiltersByType(Class<T> filterType);
 
+	Map<String, String> getLaunchParameters();
+
+	Optional<String> getLaunchParameter(String key);
 }

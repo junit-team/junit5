@@ -14,8 +14,11 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
@@ -61,6 +64,9 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 
 	// Descriptor Filters are evaluated by the launcher itself after engines have done their discovery.
 	private final List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
+
+	// Additional Launch Parameters can be used to provide configuration, e.g. for extensions
+	private final Map<String, String> launchParameters = new HashMap<>();
 
 	@Override
 	public void addSelector(DiscoverySelector selector) {
@@ -127,4 +133,17 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 		return unmodifiableList(this.postDiscoveryFilters);
 	}
 
+	@Override
+	public void addLaunchParameters(Map<String, String> launchParameters) {
+	}
+
+	@Override
+	public Map<String, String> getLaunchParameters() {
+		return null;
+	}
+
+	@Override
+	public Optional<String> getLaunchParameter(String key) {
+		return null;
+	}
 }

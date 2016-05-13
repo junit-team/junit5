@@ -14,6 +14,7 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.DiscoveryFilter;
@@ -49,6 +50,8 @@ public interface TestDiscoveryRequest extends EngineDiscoveryRequest {
 	void addPostFilter(PostDiscoveryFilter postDiscoveryFilter);
 
 	void addPostFilters(Collection<PostDiscoveryFilter> postDiscoveryFilters);
+
+	void addLaunchParameters(Map<String, String> launchParameters);
 
 	List<EngineIdFilter> getEngineIdFilters();
 

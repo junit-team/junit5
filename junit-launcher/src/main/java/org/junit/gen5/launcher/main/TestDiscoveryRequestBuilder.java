@@ -15,6 +15,7 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.PreconditionViolationException;
@@ -22,6 +23,7 @@ import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.Filter;
 import org.junit.gen5.launcher.EngineIdFilter;
+import org.junit.gen5.launcher.LaunchParameter;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
@@ -51,6 +53,12 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  *     .filter(byEngineIds("junit5"))
  *     .filter(byNamePattern("org\.junit\.gen5\.tests.*"), byNamePattern(".*Test[s]?"))
  *     .filter(requireTags("fast"), excludeTags("flow"))
+ *     .launchParameter("key1", "value1")
+ *     .launchParameters(
+ *       keyValuePair("key2", "value2"),
+ *       keyValuePair("key3", "value3")
+ *     )
+ *     .launchParameters(launchParameterMap)
  *   ).build();
  * </pre>
  *
@@ -86,6 +94,18 @@ public final class TestDiscoveryRequestBuilder {
 		if (filters != null) {
 			Arrays.stream(filters).forEach(this::storeFilter);
 		}
+		return this;
+	}
+
+	public TestDiscoveryRequestBuilder launchParameter(String key, String value) {
+		return this;
+	}
+
+	public TestDiscoveryRequestBuilder launchParameters(LaunchParameter... launchParameters) {
+		return this;
+	}
+
+	public TestDiscoveryRequestBuilder launchParameters(Map<String, String> launchParameters) {
 		return this;
 	}
 
