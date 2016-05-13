@@ -20,7 +20,6 @@ import static org.junit.gen5.engine.discovery.ClassSelector.forClassName;
 import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
-import static org.junit.gen5.launcher.main.DefaultLaunchParameter.keyValuePair;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
@@ -237,25 +236,25 @@ public class TestDiscoveryRequestBuilderTests {
 	}
 
 	@Nested
-	class DiscoveryLaunchParameterTests {
+	class DiscoveryConfigurationParameterTests {
 		@Test
-		void withoutLaunchParametersSet_NoLaunchParametersAreStoredInDiscoveryRequest() throws Exception {
+		void withoutConfigurationParametersSet_NoConfigurationParametersAreStoredInDiscoveryRequest() throws Exception {
 			TestDiscoveryRequest discoveryRequest = request().build();
 
-			assertThat(discoveryRequest.getLaunchParameter("key").isPresent()).isFalse();
-			assertThat(discoveryRequest.getLaunchParameters()).isEmpty();
+			assertThat(discoveryRequest.getConfigurationParameter("key").isPresent()).isFalse();
+			assertThat(discoveryRequest.getConfigurationParameters()).isEmpty();
 		}
 
 		@Test
-		void launchParameterAddedDirectly_isStoredInDiscoveryRequest() throws Exception {
+		void configurationParameterAddedDirectly_isStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.launchParameter("key", "value")
+					.configurationParameter("key", "value")
 					.build();
 
-			assertThat(discoveryRequest.getLaunchParameter("key").isPresent()).isTrue();
-			assertThat(discoveryRequest.getLaunchParameter("key").get()).isEqualTo("value");
-			assertThat(discoveryRequest.getLaunchParameters())
+			assertThat(discoveryRequest.getConfigurationParameter("key").isPresent()).isTrue();
+			assertThat(discoveryRequest.getConfigurationParameter("key").get()).isEqualTo("value");
+			assertThat(discoveryRequest.getConfigurationParameters())
 					.hasSize(1)
 					.containsKey("key")
 					.containsValue("value");
@@ -263,16 +262,16 @@ public class TestDiscoveryRequestBuilderTests {
 		}
 
 		@Test
-		void launchParameterAddedDirectlyTwice_overridesPreviousValueInDiscoveryRequest() throws Exception {
+		void configurationParameterAddedDirectlyTwice_overridesPreviousValueInDiscoveryRequest() throws Exception {
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.launchParameter("key", "value")
-					.launchParameter("key", "value-new")
+					.configurationParameter("key", "value")
+					.configurationParameter("key", "value-new")
 					.build();
 
-			assertThat(discoveryRequest.getLaunchParameter("key").isPresent()).isTrue();
-			assertThat(discoveryRequest.getLaunchParameter("key").get()).isEqualTo("value-new");
-			assertThat(discoveryRequest.getLaunchParameters())
+			assertThat(discoveryRequest.getConfigurationParameter("key").isPresent()).isTrue();
+			assertThat(discoveryRequest.getConfigurationParameter("key").get()).isEqualTo("value-new");
+			assertThat(discoveryRequest.getConfigurationParameters())
 					.hasSize(1)
 					.containsKey("key")
 					.containsValue("value-new");
@@ -280,18 +279,18 @@ public class TestDiscoveryRequestBuilderTests {
 		}
 
 		@Test
-		void multipleLaunchParameterAddedDirectly_isStoredInDiscoveryRequest() throws Exception {
+		void multipleConfigurationParameterAddedDirectly_isStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.launchParameter("key1", "value1")
-					.launchParameter("key2", "value2")
+					.configurationParameter("key1", "value1")
+					.configurationParameter("key2", "value2")
 					.build();
 
-			assertThat(discoveryRequest.getLaunchParameter("key1").isPresent()).isTrue();
-			assertThat(discoveryRequest.getLaunchParameter("key1").get()).isEqualTo("value1");
-			assertThat(discoveryRequest.getLaunchParameter("key2").isPresent()).isTrue();
-			assertThat(discoveryRequest.getLaunchParameter("key2").get()).isEqualTo("value2");
-			assertThat(discoveryRequest.getLaunchParameters())
+			assertThat(discoveryRequest.getConfigurationParameter("key1").isPresent()).isTrue();
+			assertThat(discoveryRequest.getConfigurationParameter("key1").get()).isEqualTo("value1");
+			assertThat(discoveryRequest.getConfigurationParameter("key2").isPresent()).isTrue();
+			assertThat(discoveryRequest.getConfigurationParameter("key2").get()).isEqualTo("value2");
+			assertThat(discoveryRequest.getConfigurationParameters())
 					.hasSize(2)
 					.containsKeys("key1", "key2")
 					.containsValues("value1", "value2");
@@ -299,15 +298,18 @@ public class TestDiscoveryRequestBuilderTests {
 		}
 
 		@Test
-		void launchParameterAddedByList_isStoredInDiscoveryRequest() throws Exception {
+		void configurationParameterAddedByMap_isStoredInDiscoveryRequest() throws Exception {
+			HashMap<String, String> configurationParameters = new HashMap<>();
+			configurationParameters.put("key", "value");
+
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.launchParameters(keyValuePair("key", "value"))
+					.configurationParameters(configurationParameters)
 					.build();
 
-			assertThat(discoveryRequest.getLaunchParameter("key").isPresent()).isTrue();
-			assertThat(discoveryRequest.getLaunchParameter("key").get()).isEqualTo("value");
-			assertThat(discoveryRequest.getLaunchParameters())
+			assertThat(discoveryRequest.getConfigurationParameter("key").isPresent()).isTrue();
+			assertThat(discoveryRequest.getConfigurationParameter("key").get()).isEqualTo("value");
+			assertThat(discoveryRequest.getConfigurationParameters())
 					.hasSize(1)
 					.containsKey("key")
 					.containsValue("value");
@@ -315,78 +317,21 @@ public class TestDiscoveryRequestBuilderTests {
 		}
 
 		@Test
-		void multipleLaunchParameterAddedByList_isStoredInDiscoveryRequest() throws Exception {
-			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
-					.launchParameters(keyValuePair("key1", "value1"))
-					.launchParameters(keyValuePair("key2", "value2"))
-					.build();
-
-			assertThat(discoveryRequest.getLaunchParameter("key1").isPresent()).isTrue();
-			assertThat(discoveryRequest.getLaunchParameter("key1").get()).isEqualTo("value1");
-			assertThat(discoveryRequest.getLaunchParameter("key2").isPresent()).isTrue();
-			assertThat(discoveryRequest.getLaunchParameter("key2").get()).isEqualTo("value2");
-			assertThat(discoveryRequest.getLaunchParameters())
-					.hasSize(2)
-					.containsKeys("key1", "key2")
-					.containsValues("value1", "value2");
-			// @formatter:on
-		}
-
-		@Test
-		void launchParameterAddedByListTwice_overridesPreviousValueInDiscoveryRequest() throws Exception {
-			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
-					.launchParameters(
-							keyValuePair("key", "value"),
-							keyValuePair("key", "value-new")
-					)
-					.build();
-
-			assertThat(discoveryRequest.getLaunchParameter("key").isPresent()).isTrue();
-			assertThat(discoveryRequest.getLaunchParameter("key").get()).isEqualTo("value-new");
-			assertThat(discoveryRequest.getLaunchParameters())
-					.hasSize(1)
-					.containsKey("key")
-					.containsValue("value-new");
-			// @formatter:on
-		}
-
-		@Test
-		void launchParameterAddedByMap_isStoredInDiscoveryRequest() throws Exception {
-			HashMap<String, String> launchParameters = new HashMap<>();
-			launchParameters.put("key", "value");
+		void multipleConfigurationParametersAddedByMap_areStoredInDiscoveryRequest() throws Exception {
+			HashMap<String, String> configurationParameters = new HashMap<>();
+			configurationParameters.put("key1", "value1");
+			configurationParameters.put("key2", "value2");
 
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.launchParameters(launchParameters)
+					.configurationParameters(configurationParameters)
 					.build();
 
-			assertThat(discoveryRequest.getLaunchParameter("key").isPresent()).isTrue();
-			assertThat(discoveryRequest.getLaunchParameter("key").get()).isEqualTo("value");
-			assertThat(discoveryRequest.getLaunchParameters())
-					.hasSize(1)
-					.containsKey("key")
-					.containsValue("value");
-			// @formatter:on
-		}
-
-		@Test
-		void multipleLaunchParametersAddedByMap_areStoredInDiscoveryRequest() throws Exception {
-			HashMap<String, String> launchParameters = new HashMap<>();
-			launchParameters.put("key1", "value1");
-			launchParameters.put("key2", "value2");
-
-			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
-					.launchParameters(launchParameters)
-					.build();
-
-			assertThat(discoveryRequest.getLaunchParameter("key1").isPresent()).isTrue();
-			assertThat(discoveryRequest.getLaunchParameter("key1").get()).isEqualTo("value1");
-			assertThat(discoveryRequest.getLaunchParameter("key2").isPresent()).isTrue();
-			assertThat(discoveryRequest.getLaunchParameter("key2").get()).isEqualTo("value2");
-			assertThat(discoveryRequest.getLaunchParameters())
+			assertThat(discoveryRequest.getConfigurationParameter("key1").isPresent()).isTrue();
+			assertThat(discoveryRequest.getConfigurationParameter("key1").get()).isEqualTo("value1");
+			assertThat(discoveryRequest.getConfigurationParameter("key2").isPresent()).isTrue();
+			assertThat(discoveryRequest.getConfigurationParameter("key2").get()).isEqualTo("value2");
+			assertThat(discoveryRequest.getConfigurationParameters())
 					.hasSize(2)
 					.containsKeys("key1", "key2")
 					.containsValues("value1", "value2");

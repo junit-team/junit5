@@ -66,8 +66,8 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 	// Descriptor Filters are evaluated by the launcher itself after engines have done their discovery.
 	private final List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
 
-	// Additional Launch Parameters can be used to provide configuration, e.g. for extensions
-	private final Map<String, String> launchParameters = new HashMap<>();
+	// Additional Configuration Parameters can be used to provide configuration, e.g. for extensions
+	private final Map<String, String> configurationParameters = new HashMap<>();
 
 	@Override
 	public void addSelector(DiscoverySelector selector) {
@@ -135,17 +135,17 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 	}
 
 	@Override
-	public void addLaunchParameters(Map<String, String> launchParameters) {
-		this.launchParameters.putAll(launchParameters);
+	public void addConfigurationParameters(Map<String, String> configurationParameters) {
+		this.configurationParameters.putAll(configurationParameters);
 	}
 
 	@Override
-	public Map<String, String> getLaunchParameters() {
-		return unmodifiableMap(this.launchParameters);
+	public Map<String, String> getConfigurationParameters() {
+		return unmodifiableMap(this.configurationParameters);
 	}
 
 	@Override
-	public Optional<String> getLaunchParameter(String key) {
-		return Optional.ofNullable(launchParameters.get(key));
+	public Optional<String> getConfigurationParameter(String key) {
+		return Optional.ofNullable(configurationParameters.get(key));
 	}
 }

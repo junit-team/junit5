@@ -51,7 +51,7 @@ public interface TestDiscoveryRequest extends EngineDiscoveryRequest {
 
 	void addPostFilters(Collection<PostDiscoveryFilter> postDiscoveryFilters);
 
-	void addLaunchParameters(Map<String, String> launchParameters);
+	void addConfigurationParameters(Map<String, String> launchParameters);
 
 	List<EngineIdFilter> getEngineIdFilters();
 

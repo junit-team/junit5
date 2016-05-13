@@ -24,7 +24,6 @@ import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.Filter;
 import org.junit.gen5.launcher.EngineIdFilter;
-import org.junit.gen5.launcher.LaunchParameter;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
@@ -54,12 +53,8 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  *     .filter(byEngineIds("junit5"))
  *     .filter(byNamePattern("org\.junit\.gen5\.tests.*"), byNamePattern(".*Test[s]?"))
  *     .filter(requireTags("fast"), excludeTags("flow"))
- *     .launchParameter("key1", "value1")
- *     .launchParameters(
- *       keyValuePair("key2", "value2"),
- *       keyValuePair("key3", "value3")
- *     )
- *     .launchParameters(launchParameterMap)
+ *     .configurationParameter("key1", "value1")
+ *     .configurationParameters(configParameterMap)
  *   ).build();
  * </pre>
  *
@@ -72,7 +67,7 @@ public final class TestDiscoveryRequestBuilder {
 	private List<EngineIdFilter> engineIdFilters = new LinkedList<>();
 	private List<DiscoveryFilter<?>> discoveryFilters = new LinkedList<>();
 	private List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
-	private Map<String, String> launchParameters = new HashMap<>();
+	private Map<String, String> configurationParameters = new HashMap<>();
 
 	public static TestDiscoveryRequestBuilder request() {
 		return new TestDiscoveryRequestBuilder();
@@ -99,20 +94,13 @@ public final class TestDiscoveryRequestBuilder {
 		return this;
 	}
 
-	public TestDiscoveryRequestBuilder launchParameter(String key, String value) {
-		launchParameters.put(key, value);
+	public TestDiscoveryRequestBuilder configurationParameter(String key, String value) {
+		configurationParameters.put(key, value);
 		return this;
 	}
 
-	public TestDiscoveryRequestBuilder launchParameters(LaunchParameter... launchParameters) {
-		for (LaunchParameter parameter : launchParameters) {
-			launchParameter(parameter.getKey(), parameter.getValue());
-		}
-		return this;
-	}
-
-	public TestDiscoveryRequestBuilder launchParameters(Map<String, String> launchParameters) {
-		launchParameters.forEach(this::launchParameter);
+	public TestDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
+		configurationParameters.forEach(this::configurationParameter);
 		return this;
 	}
 
@@ -139,7 +127,7 @@ public final class TestDiscoveryRequestBuilder {
 		discoveryRequest.addEngineIdFilters(this.engineIdFilters);
 		discoveryRequest.addFilters(this.discoveryFilters);
 		discoveryRequest.addPostFilters(this.postDiscoveryFilters);
-		discoveryRequest.addLaunchParameters(this.launchParameters);
+		discoveryRequest.addConfigurationParameters(this.configurationParameters);
 		return discoveryRequest;
 	}
 

@@ -33,7 +33,7 @@ public interface EngineDiscoveryRequest {
 
 	<T extends DiscoveryFilter<?>> List<T> getDiscoveryFiltersByType(Class<T> filterType);
 
-	Map<String, String> getLaunchParameters();
+	Map<String, String> getConfigurationParameters();
 
-	Optional<String> getLaunchParameter(String key);
+	Optional<String> getConfigurationParameter(String key);
 }
