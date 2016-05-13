@@ -1,4 +1,13 @@
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+	}
+}
 apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 dependencies {
 	compile(project(':junit-launcher'))
@@ -12,3 +21,8 @@ dependencies {
 }
 
 mainClassName = "org.junit.gen5.console.ConsoleRunner"
+
+shadowJar {
+	mergeServiceFiles()
+}
+jar.finalizedBy shadowJar
