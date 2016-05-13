@@ -16,7 +16,7 @@ import java.util.Optional;
 
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.support.descriptor.JavaSource;
+import org.junit.gen5.engine.support.descriptor.JavaClassSource;
 import org.junit.runner.Request;
 import org.junit.runner.Runner;
 
@@ -31,7 +31,7 @@ public class RunnerTestDescriptor extends JUnit4TestDescriptor {
 
 	public RunnerTestDescriptor(TestDescriptor parent, Class<?> testClass, Runner runner) {
 		super(parent, SEGMENT_TYPE_RUNNER, testClass.getName(), runner.getDescription(),
-			Optional.of(new JavaSource(testClass)));
+			Optional.of(new JavaClassSource(testClass)));
 		this.testClass = testClass;
 		this.runner = runner;
 	}

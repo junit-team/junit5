@@ -40,7 +40,7 @@ import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
-import org.junit.gen5.engine.support.descriptor.JavaSource;
+import org.junit.gen5.engine.support.descriptor.JavaMethodSource;
 import org.junit.gen5.engine.support.hierarchical.Leaf;
 
 /**
@@ -66,7 +66,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		this.testMethod = Preconditions.notNull(testMethod, "Method must not be null");
 		this.displayName = determineDisplayName(testMethod, testMethod.getName());
 
-		setSource(new JavaSource(testMethod));
+		setSource(new JavaMethodSource(testMethod));
 	}
 
 	@Override

@@ -59,7 +59,8 @@ import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingle
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods;
 import org.junit.gen5.engine.junit4.samples.junit4.SingleFailingTheoryTestCase;
 import org.junit.gen5.engine.junit4.samples.junit4.TestCaseRunWithJUnit5;
-import org.junit.gen5.engine.support.descriptor.JavaSource;
+import org.junit.gen5.engine.support.descriptor.JavaClassSource;
+import org.junit.gen5.engine.support.descriptor.JavaMethodSource;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.runner.manipulation.Filter;
 
@@ -643,25 +644,20 @@ class JUnit4TestEngineDiscoveryTests {
 	}
 
 	private static void assertClassSource(Class<?> expectedClass, TestDescriptor testDescriptor) {
-		assertThat(testDescriptor.getSource()).containsInstanceOf(JavaSource.class);
-		JavaSource classSource = (JavaSource) testDescriptor.getSource().get();
-		assertThat(classSource.getJavaClass()).hasValue(expectedClass);
-		assertThat(classSource.getJavaMethodName()).isEmpty();
-		assertThat(classSource.getJavaMethodParameterTypes()).isEmpty();
+		assertThat(testDescriptor.getSource()).containsInstanceOf(JavaClassSource.class);
+		JavaClassSource classSource = (JavaClassSource) testDescriptor.getSource().get();
+		assertThat(classSource.getJavaClass()).isEqualTo(expectedClass);
 	}
 
 	private static void assertMethodSource(Method expectedMethod, TestDescriptor testDescriptor) {
-		assertThat(testDescriptor.getSource()).containsInstanceOf(JavaSource.class);
-		JavaSource methodSource = (JavaSource) testDescriptor.getSource().get();
-		assertThat(methodSource.getJavaClass()).hasValue(expectedMethod.getDeclaringClass());
-		assertThat(methodSource.getJavaMethodName()).hasValue(expectedMethod.getName());
-		assertThat(methodSource.getJavaMethodParameterTypes()).isPresent();
-		assertThat(methodSource.getJavaMethodParameterTypes().get()).containsExactly(
-			expectedMethod.getParameterTypes());
+		assertThat(testDescriptor.getSource()).containsInstanceOf(JavaMethodSource.class);
+		JavaMethodSource methodSource = (JavaMethodSource) testDescriptor.getSource().get();
+		assertThat(methodSource.getJavaClass()).isEqualTo(expectedMethod.getDeclaringClass());
+		assertThat(methodSource.getJavaMethodName()).isEqualTo(expectedMethod.getName());
+		assertThat(methodSource.getJavaMethodParameterTypes()).containsExactly(expectedMethod.getParameterTypes());
 	}
 
 	private static TestDiscoveryRequest discoveryRequestForClass(Class<?> testClass) {
 		return request().select(forClass(testClass)).build();
 	}
-
 }
