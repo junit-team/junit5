@@ -164,6 +164,13 @@ subprojects { subproj ->
 			archives javadocJar
 		}
 
+		tasks.withType(Jar) {
+			from(rootProject.projectDir) {
+				include 'LICENSE.md'
+				into 'META-INF'
+			}
+		}
+
 		def signArtifacts = !project.version.contains('SNAPSHOT')
 
 		afterEvaluate {
