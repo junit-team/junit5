@@ -29,8 +29,8 @@ regarding contributions, please see [CONTRIBUTING.md] in the root directory of t
 project. Those willing to use the ALPHA, milestone, or SNAPSHOT releases are encouraged
 to file feature requests and bug requests using the project's
 [issue tracker](https://github.com/junit-team/junit5/issues). Issues marked with an
-<a href="https://github.com/junit-team/junit5/issues?q=is%3Aissue+is%3Aopen+label%3Aup-for-grabs"><img src="src/images/up-for-grabs.png"></a>
-(`up-for-grabs`) label are specifically targeted for community contributions.
+<a href="https://github.com/junit-team/junit5/issues?q=is%3Aissue+is%3Aopen+label%3Aup-for-grabs">`up-for-grabs`</a>
+label are specifically targeted for community contributions.
 
 ## Continuous Integration Builds
 
