@@ -9,6 +9,7 @@ buildscript {
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
 		classpath 'org.ajoberstar:gradle-git:1.3.2'
 		classpath 'org.junit:junit-gradle:5.0.0-SNAPSHOT'
+		classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
 	}
 }
 
@@ -19,20 +20,19 @@ allprojects {
 	apply plugin: 'idea'
 	apply plugin: 'com.diffplug.gradle.spotless'
 	apply plugin: 'checkstyle'
+	apply plugin: 'com.github.ben-manes.versions'
 
 	repositories {
 		mavenCentral()
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 
-	compileJava {
-		sourceCompatibility = 1.8
-		targetCompatibility = 1.8
+	tasks.withType(JavaCompile) {
+		sourceCompatibility = rootProject.sourceCompatibility
+		targetCompatibility = rootProject.targetCompatibility
 	}
 
 	compileTestJava {
-		sourceCompatibility = 1.8
-		targetCompatibility = 1.8
 		options.compilerArgs += '-parameters'
 	}
 
@@ -110,117 +110,136 @@ allprojects {
 	}
 }
 
-subprojects {
+ext {
+	mavenizedProjects = [
+		'junit-commons',
+		'junit-console',
+		'junit-engine-api',
+		'junit-gradle',
+		'junit-launcher',
+		'junit4-engine',
+		'junit4-runner',
+		'junit5-api',
+		'junit5-engine',
+		'surefire-junit5'
+	]
+}
 
-	apply plugin: 'maven'
-	apply plugin: 'signing'
+subprojects { subproj ->
+	if (subproj.name in mavenizedProjects) {
+		apply plugin: 'maven'
+		apply plugin: 'signing'
 
-	javadoc {
-		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
-		options.author = true
-		options.header = project.name
-		options.addStringOption('Xdoclint:html,syntax,reference', '-quiet')
-		exclude '**/com/example/**'
-	}
-
-	task sourcesJar(type: Jar, dependsOn: classes) {
-		classifier = 'sources'
-		from sourceSets.main.allSource
-	}
-
-	task javadocJar(type: Jar) {
-		classifier = 'javadoc'
-		from javadoc
-	}
-
-	artifacts {
-		archives sourcesJar
-		archives javadocJar
-	}
-
-	def signArtifacts = !project.version.contains('SNAPSHOT')
-
-	afterEvaluate {
-		if (signArtifacts && uploadArchives.enabled) {
-			signing {
-				sign configurations.archives
-			}
+		javadoc {
+			options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+			options.author = true
+			options.header = project.name
+			options.addStringOption('Xdoclint:html,syntax,reference', '-quiet')
+			exclude '**/com/example/**'
 		}
-	}
 
-	uploadArchives {
+		task sourcesJar(type: Jar, dependsOn: classes) {
+			classifier = 'sources'
+			from sourceSets.main.allSource
+		}
 
-		dependsOn check
+		task javadocJar(type: Jar) {
+			classifier = 'javadoc'
+			from javadoc
+		}
 
-		repositories {
-			mavenDeployer {
+		artifacts {
+			archives sourcesJar
+			archives javadocJar
+		}
 
-				if (signArtifacts) {
-					beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-				}
+		def signArtifacts = !project.version.contains('SNAPSHOT')
 
-				def ossrhUsername = rootProject.hasProperty('ossrhUsername') ? rootProject.ossrhUsername : ''
-				def ossrhPassword = rootProject.hasProperty('ossrhPassword') ? rootProject.ossrhPassword : ''
-
-				repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-					authentication(userName: ossrhUsername, password: ossrhPassword)
-				}
-
-				snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-					authentication(userName: ossrhUsername, password: ossrhPassword)
-				}
-
-				pom.project {
-					name "${project.group}:${project.name}"
-					packaging 'jar'
-					description "Module \"${project.name}\" of JUnit 5."
-					url 'http://junit.org/junit-lambda.html'
-
-					scm {
-						connection 'scm:git:git://github.com/junit-team/junit5.git'
-						developerConnection 'scm:git:git://github.com/junit-team/junit5.git'
-						url 'https://github.com/junit-team/junit5'
-					}
-
-					licenses {
-						license {
-							name 'Eclipse Public License v1.0'
-							url 'http://www.eclipse.org/legal/epl-v10.html'
-						}
-					}
-
-					developers {
-						developer {
-							id 'bechte'
-							name 'Stefan Bechtold'
-							email 'stefan.bechtold@me.com'
-						}
-						developer {
-							id 'jlink'
-							name 'Johannes Link'
-							email 'business@johanneslink.net'
-						}
-						developer {
-							id 'marcphilipp'
-							name 'Marc Philipp'
-							email 'mail@marcphilipp.de'
-						}
-						developer {
-							id 'mmerdes'
-							name 'Matthias Merdes'
-							email 'Matthias.Merdes@heidelberg-mobil.com'
-						}
-						developer {
-							id 'sbrannen'
-							name 'Sam Brannen'
-							email 'sam@sambrannen.com'
-						}
-					}
+		afterEvaluate {
+			if (signArtifacts && uploadArchives.enabled) {
+				signing {
+					sign configurations.archives
 				}
 			}
 		}
-	}
 
+		uploadArchives {
+
+			dependsOn check
+
+			repositories {
+				mavenDeployer {
+
+					if (signArtifacts) {
+						beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+					}
+
+					def ossrhUsername = rootProject.hasProperty('ossrhUsername') ? rootProject.ossrhUsername : ''
+					def ossrhPassword = rootProject.hasProperty('ossrhPassword') ? rootProject.ossrhPassword : ''
+
+					repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+						authentication(userName: ossrhUsername, password: ossrhPassword)
+					}
+
+					snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+						authentication(userName: ossrhUsername, password: ossrhPassword)
+					}
+
+					pom.project {
+						name "${project.group}:${project.name}"
+						packaging 'jar'
+						description "Module \"${project.name}\" of JUnit 5."
+						url 'http://junit.org/junit-lambda.html'
+
+						scm {
+							connection 'scm:git:git://github.com/junit-team/junit5.git'
+							developerConnection 'scm:git:git://github.com/junit-team/junit5.git'
+							url 'https://github.com/junit-team/junit5'
+						}
+
+						licenses {
+							license {
+								name 'Eclipse Public License v1.0'
+								url 'http://www.eclipse.org/legal/epl-v10.html'
+							}
+						}
+
+						developers {
+							developer {
+								id 'bechte'
+								name 'Stefan Bechtold'
+								email 'stefan.bechtold@me.com'
+							}
+							developer {
+								id 'jlink'
+								name 'Johannes Link'
+								email 'business@johanneslink.net'
+							}
+							developer {
+								id 'marcphilipp'
+								name 'Marc Philipp'
+								email 'mail@marcphilipp.de'
+							}
+							developer {
+								id 'mmerdes'
+								name 'Matthias Merdes'
+								email 'Matthias.Merdes@heidelberg-mobil.com'
+							}
+							developer {
+								id 'sbrannen'
+								name 'Sam Brannen'
+								email 'sam@sambrannen.com'
+							}
+						}
+					}
+				}
+			}
+		}
+	} else {
+		jar.enabled = false
+		javadoc.enabled = false
+		uploadArchives.enabled = false
+	}
 }
 
 configure(rootProject) {
