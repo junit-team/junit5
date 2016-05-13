@@ -31,6 +31,11 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		return Optional.ofNullable(this.configurationParameters.get(key));
 	}
 
+	@Override
+	public int getSize() {
+		return configurationParameters.size();
+	}
+
 	void addAll(Map<String, String> configurationParameters) {
 		this.configurationParameters.putAll(configurationParameters);
 	}

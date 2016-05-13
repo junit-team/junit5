@@ -41,7 +41,8 @@ public class ExecutionEventRecorder implements EngineExecutionListener {
 		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest,
 			UniqueId.forEngine(testEngine.getId()));
 		ExecutionEventRecorder listener = new ExecutionEventRecorder();
-		testEngine.execute(new ExecutionRequest(engineTestDescriptor, listener));
+		testEngine.execute(
+			new ExecutionRequest(engineTestDescriptor, listener, discoveryRequest.getConfigurationParameters()));
 		return listener.getExecutionEvents();
 	}
 

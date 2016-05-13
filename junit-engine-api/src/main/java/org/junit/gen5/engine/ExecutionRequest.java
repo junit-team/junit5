@@ -25,12 +25,16 @@ public class ExecutionRequest {
 
 	private final EngineExecutionListener engineExecutionListener;
 
+	private ConfigurationParameters configurationParameters;
+
 	private final Map<String, Object> attributes = new HashMap<>();
 
 	@API(Internal)
-	public ExecutionRequest(TestDescriptor rootTestDescriptor, EngineExecutionListener engineExecutionListener) {
+	public ExecutionRequest(TestDescriptor rootTestDescriptor, EngineExecutionListener engineExecutionListener,
+			ConfigurationParameters configurationParameters) {
 		this.rootTestDescriptor = rootTestDescriptor;
 		this.engineExecutionListener = engineExecutionListener;
+		this.configurationParameters = configurationParameters;
 	}
 
 	public TestDescriptor getRootTestDescriptor() {
@@ -39,6 +43,10 @@ public class ExecutionRequest {
 
 	public EngineExecutionListener getEngineExecutionListener() {
 		return engineExecutionListener;
+	}
+
+	public ConfigurationParameters getConfigurationParameters() {
+		return configurationParameters;
 	}
 
 	public Map<String, Object> getAttributes() {

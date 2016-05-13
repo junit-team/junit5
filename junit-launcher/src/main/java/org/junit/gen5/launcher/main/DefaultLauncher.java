@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
@@ -77,7 +78,7 @@ class DefaultLauncher implements Launcher {
 
 	@Override
 	public void execute(TestDiscoveryRequest discoveryRequest) {
-		execute(discoverRoot(discoveryRequest, "execution"));
+		execute(discoverRoot(discoveryRequest, "execution"), discoveryRequest.getConfigurationParameters());
 	}
 
 	private Root discoverRoot(TestDiscoveryRequest discoveryRequest, String phase) {
@@ -105,7 +106,7 @@ class DefaultLauncher implements Launcher {
 		return root;
 	}
 
-	private void execute(Root root) {
+	private void execute(Root root, ConfigurationParameters configurationParameters) {
 		TestPlan testPlan = TestPlan.from(root.getEngineDescriptors());
 		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
 		testExecutionListener.testPlanExecutionStarted(testPlan);
@@ -113,7 +114,7 @@ class DefaultLauncher implements Launcher {
 			testExecutionListener);
 		for (TestEngine testEngine : root.getTestEngines()) {
 			TestDescriptor testDescriptor = root.getTestDescriptorFor(testEngine);
-			testEngine.execute(new ExecutionRequest(testDescriptor, engineExecutionListener));
+			testEngine.execute(new ExecutionRequest(testDescriptor, engineExecutionListener, configurationParameters));
 		}
 		testExecutionListener.testPlanExecutionFinished(testPlan);
 	}
