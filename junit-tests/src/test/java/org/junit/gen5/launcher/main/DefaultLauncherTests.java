@@ -19,6 +19,7 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.JUnitException;
+import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
@@ -36,12 +37,10 @@ import org.junit.gen5.launcher.TestPlan;
 class DefaultLauncherTests {
 
 	@Test
-	void discoverEmptyTestPlanWithoutAnyEngines() {
-		DefaultLauncher launcher = createLauncher();
+	void constructLauncherWithoutAnyEngines() {
+		Throwable exception = expectThrows(PreconditionViolationException.class, () -> createLauncher());
 
-		TestPlan testPlan = launcher.discover(request().select(forUniqueId("foo")).build());
-
-		assertThat(testPlan.getRoots()).isEmpty();
+		assertThat(exception).hasMessageContaining("Cannot create Launcher without at least one TestEngine");
 	}
 
 	@Test

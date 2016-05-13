@@ -13,17 +13,18 @@ package org.junit.gen5.launcher.main;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.launcher.Launcher;
 
 /**
  * Factory for creating {@link Launcher} instances by invoking {@link #create()}.
  *
- * <p>Test engines are registered at runtime using the
+ * <p>Test engines are discovered at runtime using the
  * {@link java.util.ServiceLoader ServiceLoader} facility. For that purpose, a
  * text file named {@code META-INF/services/org.junit.gen5.engine.TestEngine}
  * has to be added to the engine's JAR file in which the fully qualified name
  * of the implementation class of the {@link org.junit.gen5.engine.TestEngine}
- * interface is stated.
+ * interface is declared.
  *
  * @since 5.0
  * @see Launcher
@@ -32,10 +33,12 @@ import org.junit.gen5.launcher.Launcher;
 public class LauncherFactory {
 
 	/**
-	 * Factory method for creating a new instance of {@link Launcher} using dynamically
-	 * registered test engines.
+	 * Factory method for creating a new {@link Launcher} using dynamically
+	 * detected test engines.
+	 *
+	 * @throws PreconditionViolationException if no test engines are detected
 	 */
-	public static Launcher create() {
+	public static Launcher create() throws PreconditionViolationException {
 		return new DefaultLauncher(new ServiceLoaderTestEngineRegistry().loadTestEngines());
 	}
 

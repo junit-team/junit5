@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.junit.gen5.commons.JUnitException;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
@@ -41,7 +42,15 @@ class DefaultLauncher implements Launcher {
 	private final TestExecutionListenerRegistry listenerRegistry = new TestExecutionListenerRegistry();
 	private final Iterable<TestEngine> testEngines;
 
+	/**
+	 * Construct a new {@code DefaultLauncher} with the supplied test engines.
+	 *
+	 * @param testEngines the test engines to delegate to; never {@code null} or empty
+	 */
 	DefaultLauncher(Iterable<TestEngine> testEngines) {
+		Preconditions.condition(testEngines != null && testEngines.iterator().hasNext(),
+			() -> "Cannot create Launcher without at least one TestEngine; "
+					+ "consider adding an engine implementation JAR to the classpath");
 		this.testEngines = validateUniqueIds(testEngines);
 	}
 
@@ -50,7 +59,7 @@ class DefaultLauncher implements Launcher {
 		for (TestEngine testEngine : testEngines) {
 			if (!ids.add(testEngine.getId())) {
 				throw new JUnitException(String.format(
-					"Cannot create launcher that has multiple engines with the same ID '%s'.", testEngine.getId()));
+					"Cannot create Launcher for multiple engines with the same ID '%s'.", testEngine.getId()));
 			}
 		}
 		return testEngines;
@@ -85,7 +94,7 @@ class DefaultLauncher implements Launcher {
 			}
 
 			LOG.fine(
-				() -> String.format("Discovering tests during launcher %s phase in engine '%s'.", phase, engineId));
+				() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase, engineId));
 
 			UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
 			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);
