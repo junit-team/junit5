@@ -25,53 +25,8 @@ The [JUnit 5 Javadoc] is available online.
 Contributions to JUnit 5 are both welcomed and appreciated.  For specific
 guidelines regarding contributions, please see the [CONTRIBUTIONS.md](https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md) in the root directory of the project.
 Those willing to use the ALPHA and SNAPSHOT releases are encouraged to file
-feature requests and bug requests using the the project's [issue tracker](https://github.com/junit-team/junit5/issues).  Issues are marked with an <a href="#"><svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   version="1.1"
-   width="91.0625"
-   height="19"
-   id="svg2">
-  <defs
-     id="defs4" />
-  <metadata
-     id="metadata7">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     transform="translate(-89.5,-151.875)"
-     id="layer1">
-    <rect
-       width="90.226646"
-       height="18.178434"
-       rx="1.5612383"
-       ry="1.9765702"
-       x="89.910782"
-       y="152.27278"
-       id="rect2987"
-       style="fill:#159818;fill-opacity:1;fill-rule:evenodd;stroke:#159818;stroke-width:0.82156605px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-    <text
-       x="99.757614"
-       y="165.4026"
-       id="text3757"
-       xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"><tspan
-         x="99.757614"
-         y="165.4026"
-         id="tspan3759">up-for-grabs</tspan></text>
-  </g>
-</svg></a> label are specifically targeted for community contributions.
+feature requests and bug requests using the the project's [issue tracker](https://github.com/junit-team/junit5/issues).  Issues are marked with an <a href="https://github.com/junit-team/junit5/issues?q=is%3Aissue+is%3Aopen+label%3Aup-for-grabs"><img src="src/images/up-for-grab.png"></a>
+label are specifically targeted for community contributions.
 
 ## Continuous Integration Builds
 
