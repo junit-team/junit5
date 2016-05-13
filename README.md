@@ -27,7 +27,7 @@ The [JUnit 5 Javadoc] is available online.
 Contributions to JUnit 5 are both welcomed and appreciated. For specific guidelines
 regarding contributions, please see [CONTRIBUTING.md] in the root directory of the
 project. Those willing to use the ALPHA, milestone, or SNAPSHOT releases are encouraged
-to file feature requests and bug requests using the project's
+to file feature requests and bug reports using the project's
 [issue tracker](https://github.com/junit-team/junit5/issues). Issues marked with an
 <a href="https://github.com/junit-team/junit5/issues?q=is%3Aissue+is%3Aopen+label%3Aup-for-grabs">`up-for-grabs`</a>
 label are specifically targeted for community contributions.
