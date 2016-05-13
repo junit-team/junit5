@@ -13,6 +13,7 @@ package org.junit.gen5.launcher.main;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +72,7 @@ public final class TestDiscoveryRequestBuilder {
 	private List<EngineIdFilter> engineIdFilters = new LinkedList<>();
 	private List<DiscoveryFilter<?>> discoveryFilters = new LinkedList<>();
 	private List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
+	private Map<String, String> launchParameters = new HashMap<>();
 
 	public static TestDiscoveryRequestBuilder request() {
 		return new TestDiscoveryRequestBuilder();
@@ -98,6 +100,7 @@ public final class TestDiscoveryRequestBuilder {
 	}
 
 	public TestDiscoveryRequestBuilder launchParameter(String key, String value) {
+		launchParameters.put(key, value);
 		return this;
 	}
 
@@ -132,6 +135,7 @@ public final class TestDiscoveryRequestBuilder {
 		discoveryRequest.addEngineIdFilters(this.engineIdFilters);
 		discoveryRequest.addFilters(this.discoveryFilters);
 		discoveryRequest.addPostFilters(this.postDiscoveryFilters);
+		discoveryRequest.addLaunchParameters(this.launchParameters);
 		return discoveryRequest;
 	}
 

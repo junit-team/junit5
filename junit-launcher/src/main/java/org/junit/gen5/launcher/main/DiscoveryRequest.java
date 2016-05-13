@@ -11,6 +11,7 @@
 package org.junit.gen5.launcher.main;
 
 import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableMap;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Collection;
@@ -135,15 +136,16 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 
 	@Override
 	public void addLaunchParameters(Map<String, String> launchParameters) {
+		this.launchParameters.putAll(launchParameters);
 	}
 
 	@Override
 	public Map<String, String> getLaunchParameters() {
-		return null;
+		return unmodifiableMap(this.launchParameters);
 	}
 
 	@Override
 	public Optional<String> getLaunchParameter(String key) {
-		return null;
+		return Optional.ofNullable(launchParameters.get(key));
 	}
 }
