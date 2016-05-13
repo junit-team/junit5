@@ -20,6 +20,14 @@ The [JUnit 5 User Guide] is available online.
 
 The [JUnit 5 Javadoc] is available online.
 
+## Contributing
+
+Contributions to JUnit 5 are both welcomed and appreciated.  For specific
+guidelines regarding contributions, please see the [CONTRIBUTIONS.md](https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md) in the root directory of the project.
+Those willing to use the ALPHA and SNAPSHOT releases are encouraged to file
+feature requests and bug requests using the the project's [issue tracker](https://github.com/junit-team/junit5/issues).  Issues are marked with an <a href="https://github.com/junit-team/junit5/issues?q=is%3Aissue+is%3Aopen+label%3Aup-for-grabs"><img src="src/images/up-for-grabs.png"></a>
+label are specifically targeted for community contributions.
+
 ## Continuous Integration Builds
 
 [![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg?branch=master)](https://travis-ci.org/junit-team/junit5)
