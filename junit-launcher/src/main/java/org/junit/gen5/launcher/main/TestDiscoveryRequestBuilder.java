@@ -105,6 +105,9 @@ public final class TestDiscoveryRequestBuilder {
 	}
 
 	public TestDiscoveryRequestBuilder launchParameters(LaunchParameter... launchParameters) {
+		for (LaunchParameter parameter : launchParameters) {
+			launchParameter(parameter.getKey(), parameter.getValue());
+		}
 		return this;
 	}
 

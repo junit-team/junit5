@@ -20,6 +20,7 @@ import static org.junit.gen5.engine.discovery.ClassSelector.forClassName;
 import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
+import static org.junit.gen5.launcher.main.DefaultLaunchParameter.keyValuePair;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
@@ -243,7 +244,6 @@ public class TestDiscoveryRequestBuilderTests {
 	}
 
 	@Test
-	void singleLaunchParameterIsStoredInDiscoveryRequest() throws Exception {
 	void launchParameterAddedDirectly_isStoredInDiscoveryRequest() throws Exception {
 		// @formatter:off
 		TestDiscoveryRequest discoveryRequest = request()
@@ -260,7 +260,6 @@ public class TestDiscoveryRequestBuilderTests {
 	}
 
 	@Test
-	void overriddenLaunchParameterIsStoredInDiscoveryRequest() throws Exception {
 	void launchParameterAddedDirectlyTwice_overridesPreviousValueInDiscoveryRequest() throws Exception {
 		// @formatter:off
 		TestDiscoveryRequest discoveryRequest = request()
@@ -293,6 +292,60 @@ public class TestDiscoveryRequestBuilderTests {
 				.hasSize(2)
 				.containsKeys("key1", "key2")
 				.containsValues("value1", "value2");
+		// @formatter:on
+	}
+
+	@Test
+	void launchParameterAddedByList_isStoredInDiscoveryRequest() throws Exception {
+		// @formatter:off
+		TestDiscoveryRequest discoveryRequest = request()
+				.launchParameters(keyValuePair("key", "value"))
+				.build();
+
+		assertThat(discoveryRequest.getLaunchParameter("key").isPresent()).isTrue();
+		assertThat(discoveryRequest.getLaunchParameter("key").get()).isEqualTo("value");
+		assertThat(discoveryRequest.getLaunchParameters())
+				.hasSize(1)
+				.containsKey("key")
+				.containsValue("value");
+		// @formatter:on
+	}
+
+	@Test
+	void multipleLaunchParameterAddedByList_isStoredInDiscoveryRequest() throws Exception {
+		// @formatter:off
+		TestDiscoveryRequest discoveryRequest = request()
+				.launchParameters(keyValuePair("key1", "value1"))
+				.launchParameters(keyValuePair("key2", "value2"))
+				.build();
+
+		assertThat(discoveryRequest.getLaunchParameter("key1").isPresent()).isTrue();
+		assertThat(discoveryRequest.getLaunchParameter("key1").get()).isEqualTo("value1");
+		assertThat(discoveryRequest.getLaunchParameter("key2").isPresent()).isTrue();
+		assertThat(discoveryRequest.getLaunchParameter("key2").get()).isEqualTo("value2");
+		assertThat(discoveryRequest.getLaunchParameters())
+				.hasSize(2)
+				.containsKeys("key1", "key2")
+				.containsValues("value1", "value2");
+		// @formatter:on
+	}
+
+	@Test
+	void launchParameterAddedByListTwice_overridesPreviousValueInDiscoveryRequest() throws Exception {
+		// @formatter:off
+		TestDiscoveryRequest discoveryRequest = request()
+				.launchParameters(
+						keyValuePair("key", "value"),
+						keyValuePair("key", "value-new")
+				)
+				.build();
+
+		assertThat(discoveryRequest.getLaunchParameter("key").isPresent()).isTrue();
+		assertThat(discoveryRequest.getLaunchParameter("key").get()).isEqualTo("value-new");
+		assertThat(discoveryRequest.getLaunchParameters())
+				.hasSize(1)
+				.containsKey("key")
+				.containsValue("value-new");
 		// @formatter:on
 	}
 
