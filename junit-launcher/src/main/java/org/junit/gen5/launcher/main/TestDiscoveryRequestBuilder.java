@@ -112,6 +112,7 @@ public final class TestDiscoveryRequestBuilder {
 	}
 
 	public TestDiscoveryRequestBuilder launchParameters(Map<String, String> launchParameters) {
+		launchParameters.forEach(this::launchParameter);
 		return this;
 	}
 

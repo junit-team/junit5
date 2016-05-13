@@ -25,6 +25,7 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 
 import org.assertj.core.util.Files;
@@ -348,6 +349,47 @@ public class TestDiscoveryRequestBuilderTests {
 					.hasSize(1)
 					.containsKey("key")
 					.containsValue("value-new");
+			// @formatter:on
+		}
+
+		@Test
+		void launchParameterAddedByMap_isStoredInDiscoveryRequest() throws Exception {
+			HashMap<String, String> launchParameters = new HashMap<>();
+			launchParameters.put("key", "value");
+
+			// @formatter:off
+			TestDiscoveryRequest discoveryRequest = request()
+					.launchParameters(launchParameters)
+					.build();
+
+			assertThat(discoveryRequest.getLaunchParameter("key").isPresent()).isTrue();
+			assertThat(discoveryRequest.getLaunchParameter("key").get()).isEqualTo("value");
+			assertThat(discoveryRequest.getLaunchParameters())
+					.hasSize(1)
+					.containsKey("key")
+					.containsValue("value");
+			// @formatter:on
+		}
+
+		@Test
+		void multipleLaunchParametersAddedByMap_areStoredInDiscoveryRequest() throws Exception {
+			HashMap<String, String> launchParameters = new HashMap<>();
+			launchParameters.put("key1", "value1");
+			launchParameters.put("key2", "value2");
+
+			// @formatter:off
+			TestDiscoveryRequest discoveryRequest = request()
+					.launchParameters(launchParameters)
+					.build();
+
+			assertThat(discoveryRequest.getLaunchParameter("key1").isPresent()).isTrue();
+			assertThat(discoveryRequest.getLaunchParameter("key1").get()).isEqualTo("value1");
+			assertThat(discoveryRequest.getLaunchParameter("key2").isPresent()).isTrue();
+			assertThat(discoveryRequest.getLaunchParameter("key2").get()).isEqualTo("value2");
+			assertThat(discoveryRequest.getLaunchParameters())
+					.hasSize(2)
+					.containsKeys("key1", "key2")
+					.containsValues("value1", "value2");
 			// @formatter:on
 		}
 	}
