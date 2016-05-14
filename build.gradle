@@ -207,7 +207,7 @@ subprojects { subproj ->
 						name "${project.group}:${project.name}"
 						packaging 'jar'
 						description "Module \"${project.name}\" of JUnit 5."
-						url 'http://junit.org/junit-lambda.html'
+						url 'http://junit.org/junit5/'
 
 						scm {
 							connection 'scm:git:git://github.com/junit-team/junit5.git'
