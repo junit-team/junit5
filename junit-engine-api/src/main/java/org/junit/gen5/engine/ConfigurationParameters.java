@@ -21,7 +21,9 @@ import org.junit.gen5.commons.meta.API;
  */
 @API(Experimental)
 public interface ConfigurationParameters {
+
 	Optional<String> get(String key);
 
 	int getSize();
+
 }

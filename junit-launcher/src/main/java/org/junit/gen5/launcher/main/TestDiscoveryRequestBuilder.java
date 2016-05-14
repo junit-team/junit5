@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.PreconditionViolationException;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.Filter;
@@ -28,13 +29,13 @@ import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
- * The {@code DiscoveryRequestBuilder} provides a light-weight DSL for
+ * The {@code TestDiscoveryRequestBuilder} provides a light-weight DSL for
  * generating a {@link TestDiscoveryRequest}.
  *
  * <h4>Example</h4>
  *
  * <pre style="code">
- *   DiscoveryRequestBuilder.request()
+ *   TestDiscoveryRequestBuilder.request()
  *     .select(
  *       forPackageName("org.junit.gen5"),
  *       forPackageName("com.junit.samples"),
@@ -95,12 +96,15 @@ public final class TestDiscoveryRequestBuilder {
 	}
 
 	public TestDiscoveryRequestBuilder configurationParameter(String key, String value) {
-		configurationParameters.put(key, value);
+		Preconditions.notBlank(key, "key must not be null or empty");
+		this.configurationParameters.put(key, value);
 		return this;
 	}
 
 	public TestDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
-		configurationParameters.forEach(this::configurationParameter);
+		if (configurationParameters != null) {
+			configurationParameters.forEach(this::configurationParameter);
+		}
 		return this;
 	}
 

@@ -22,12 +22,11 @@ import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 
 /**
- * This class extends the {@link EngineDiscoveryRequest}
- * by providing access to filters which are applied by the
- * {@link Launcher} itself
+ * {@code TestDiscoveryRequest} is an extension of {@link EngineDiscoveryRequest}
+ * that provides access to filters which are applied by the {@link Launcher} itself.
  *
- * <p>Moreover, the add*-methods can be used by external clients
- * that do not want to use the
+ * <p>Moreover, the {@code add*()} methods can be used by external clients that
+ * do not want to use the
  * {@link org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder}.
  *
  * @since 5.0
@@ -51,7 +50,7 @@ public interface TestDiscoveryRequest extends EngineDiscoveryRequest {
 
 	void addPostFilters(Collection<PostDiscoveryFilter> postDiscoveryFilters);
 
-	void addConfigurationParameters(Map<String, String> launchParameters);
+	void addConfigurationParameters(Map<String, String> configurationParameters);
 
 	List<EngineIdFilter> getEngineIdFilters();
 

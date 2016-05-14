@@ -24,6 +24,7 @@ import org.junit.gen5.engine.ConfigurationParameters;
  */
 @API(Experimental)
 class LauncherConfigurationParameters implements ConfigurationParameters {
+
 	private final Map<String, String> configurationParameters = new HashMap<>();
 
 	@Override
@@ -33,10 +34,11 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 
 	@Override
 	public int getSize() {
-		return configurationParameters.size();
+		return this.configurationParameters.size();
 	}
 
 	void addAll(Map<String, String> configurationParameters) {
 		this.configurationParameters.putAll(configurationParameters);
 	}
+
 }
