@@ -34,6 +34,7 @@ class FileSystemSourceTests {
 	void directory() {
 		File directory = new File(".");
 		DirectorySource source = new DirectorySource(directory);
+		assertThat(source.getUri()).isEqualTo(directory.getAbsoluteFile().toURI());
 		assertThat(source.getFile()).isEqualTo(directory.getAbsoluteFile());
 	}
 
@@ -42,6 +43,7 @@ class FileSystemSourceTests {
 		File file = new File("test.txt");
 		FileSource source = new FileSource(file);
 
+		assertThat(source.getUri()).isEqualTo(file.getAbsoluteFile().toURI());
 		assertThat(source.getFile()).isEqualTo(file.getAbsoluteFile());
 		assertThat(source.getPosition()).isEmpty();
 	}
@@ -52,6 +54,7 @@ class FileSystemSourceTests {
 		FilePosition position = new FilePosition(42, 23);
 		FileSource source = new FileSource(file, position);
 
+		assertThat(source.getUri()).isEqualTo(file.getAbsoluteFile().toURI());
 		assertThat(source.getFile()).isEqualTo(file.getAbsoluteFile());
 		assertThat(source.getPosition()).hasValue(position);
 	}
