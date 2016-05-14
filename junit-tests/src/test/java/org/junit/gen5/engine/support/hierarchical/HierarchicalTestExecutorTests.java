@@ -49,7 +49,7 @@ public class HierarchicalTestExecutorTests {
 		root = spy(new MyContainer(UniqueId.root("container", "root")));
 		listener = Mockito.mock(EngineExecutionListener.class);
 		rootContext = new MyEngineExecutionContext();
-		ExecutionRequest request = new ExecutionRequest(root, listener);
+		ExecutionRequest request = new ExecutionRequest(root, listener, null);
 		executor = new MyExecutor(request, rootContext);
 	}
 

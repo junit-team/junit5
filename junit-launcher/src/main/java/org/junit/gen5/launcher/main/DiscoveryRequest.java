@@ -16,7 +16,9 @@ import static java.util.stream.Collectors.toList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.TestEngine;
@@ -61,6 +63,9 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 
 	// Descriptor Filters are evaluated by the launcher itself after engines have done their discovery.
 	private final List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
+
+	// Additional Configuration Parameters can be used to provide configuration, e.g. for extensions
+	private final LauncherConfigurationParameters configurationParameters = new LauncherConfigurationParameters();
 
 	@Override
 	public void addSelector(DiscoverySelector selector) {
@@ -127,4 +132,13 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 		return unmodifiableList(this.postDiscoveryFilters);
 	}
 
+	@Override
+	public void addConfigurationParameters(Map<String, String> configurationParameters) {
+		this.configurationParameters.addAll(configurationParameters);
+	}
+
+	@Override
+	public ConfigurationParameters getConfigurationParameters() {
+		return this.configurationParameters;
+	}
 }

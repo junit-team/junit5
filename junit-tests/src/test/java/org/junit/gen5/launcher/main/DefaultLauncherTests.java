@@ -20,10 +20,12 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.util.PreconditionViolationException;
+import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.PackageSelector;
+import org.junit.gen5.engine.junit5.stubs.TestEngineSpy;
 import org.junit.gen5.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
@@ -135,6 +137,31 @@ class DefaultLauncherTests {
 
 		assertThat(testPlan.getChildren(UniqueId.forEngine("myEngine").getUniqueString())).hasSize(1);
 		assertThat(testPlan.getTestIdentifier(test1.getUniqueId().getUniqueString())).isNotNull();
+	}
+
+	@Test
+	void withoutConfigurationParameters_launcherPassesEmptyConfigurationParametersIntoTheExecutionRequest() {
+		TestEngineSpy engine = new TestEngineSpy();
+
+		DefaultLauncher launcher = createLauncher(engine);
+		launcher.execute(request().build());
+
+		ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
+		assertThat(configurationParameters.get("key").isPresent()).isFalse();
+		assertThat(configurationParameters.getSize()).isEqualTo(0);
+	}
+
+	@Test
+	void withConfigurationParameters_launcherPassesEmptyConfigurationParametersIntoTheExecutionRequest() {
+		TestEngineSpy engine = new TestEngineSpy();
+
+		DefaultLauncher launcher = createLauncher(engine);
+		launcher.execute(request().configurationParameter("key", "value").build());
+
+		ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
+		assertThat(configurationParameters.getSize()).isEqualTo(1);
+		assertThat(configurationParameters.get("key").isPresent()).isTrue();
+		assertThat(configurationParameters.get("key").get()).isEqualTo("value");
 	}
 
 	private static Runnable noOp() {

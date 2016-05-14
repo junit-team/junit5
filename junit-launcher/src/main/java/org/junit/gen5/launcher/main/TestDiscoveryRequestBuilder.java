@@ -13,8 +13,10 @@ package org.junit.gen5.launcher.main;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.PreconditionViolationException;
@@ -51,6 +53,8 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  *     .filter(byEngineIds("junit5"))
  *     .filter(byNamePattern("org\.junit\.gen5\.tests.*"), byNamePattern(".*Test[s]?"))
  *     .filter(requireTags("fast"), excludeTags("flow"))
+ *     .configurationParameter("key1", "value1")
+ *     .configurationParameters(configParameterMap)
  *   ).build();
  * </pre>
  *
@@ -63,6 +67,7 @@ public final class TestDiscoveryRequestBuilder {
 	private List<EngineIdFilter> engineIdFilters = new LinkedList<>();
 	private List<DiscoveryFilter<?>> discoveryFilters = new LinkedList<>();
 	private List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
+	private Map<String, String> configurationParameters = new HashMap<>();
 
 	public static TestDiscoveryRequestBuilder request() {
 		return new TestDiscoveryRequestBuilder();
@@ -89,6 +94,16 @@ public final class TestDiscoveryRequestBuilder {
 		return this;
 	}
 
+	public TestDiscoveryRequestBuilder configurationParameter(String key, String value) {
+		configurationParameters.put(key, value);
+		return this;
+	}
+
+	public TestDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
+		configurationParameters.forEach(this::configurationParameter);
+		return this;
+	}
+
 	private void storeFilter(Filter<?> filter) {
 		if (filter instanceof EngineIdFilter) {
 			this.engineIdFilters.add((EngineIdFilter) filter);
@@ -112,6 +127,7 @@ public final class TestDiscoveryRequestBuilder {
 		discoveryRequest.addEngineIdFilters(this.engineIdFilters);
 		discoveryRequest.addFilters(this.discoveryFilters);
 		discoveryRequest.addPostFilters(this.postDiscoveryFilters);
+		discoveryRequest.addConfigurationParameters(this.configurationParameters);
 		return discoveryRequest;
 	}
 

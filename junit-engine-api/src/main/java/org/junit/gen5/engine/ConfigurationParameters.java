@@ -12,24 +12,16 @@ package org.junit.gen5.engine;
 
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.junit.gen5.commons.meta.API;
 
 /**
- * An {@code EngineDiscoveryRequest} gives {@link TestEngine}s
- * access to the information necessary to discover {@link TestDescriptor}s.
- *
  * @since 5.0
  */
 @API(Experimental)
-public interface EngineDiscoveryRequest {
+public interface ConfigurationParameters {
+	Optional<String> get(String key);
 
-	List<DiscoverySelector> getSelectors();
-
-	<T extends DiscoverySelector> List<T> getSelectorsByType(Class<T> selectorType);
-
-	<T extends DiscoveryFilter<?>> List<T> getDiscoveryFiltersByType(Class<T> filterType);
-
-	ConfigurationParameters getConfigurationParameters();
+	int getSize();
 }

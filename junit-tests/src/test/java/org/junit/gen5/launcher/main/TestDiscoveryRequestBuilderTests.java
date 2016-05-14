@@ -24,12 +24,14 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 
 import org.assertj.core.util.Files;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.PreconditionViolationException;
+import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.ClasspathSelector;
@@ -231,6 +233,95 @@ public class TestDiscoveryRequestBuilderTests {
 
 			assertEquals("Filter must implement EngineIdFilter, PostDiscoveryFilter or DiscoveryFilter.",
 				exception.getMessage());
+		}
+	}
+
+	@Nested
+	class DiscoveryConfigurationParameterTests {
+		@Test
+		void withoutConfigurationParametersSet_NoConfigurationParametersAreStoredInDiscoveryRequest() throws Exception {
+			TestDiscoveryRequest discoveryRequest = request().build();
+
+			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
+			assertThat(configurationParameters.get("key").isPresent()).isFalse();
+		}
+
+		@Test
+		void configurationParameterAddedDirectly_isStoredInDiscoveryRequest() throws Exception {
+			// @formatter:off
+			TestDiscoveryRequest discoveryRequest = request()
+					.configurationParameter("key", "value")
+					.build();
+			// @formatter:on
+
+			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
+			assertThat(configurationParameters.get("key").isPresent()).isTrue();
+			assertThat(configurationParameters.get("key").get()).isEqualTo("value");
+		}
+
+		@Test
+		void configurationParameterAddedDirectlyTwice_overridesPreviousValueInDiscoveryRequest() throws Exception {
+			// @formatter:off
+			TestDiscoveryRequest discoveryRequest = request()
+					.configurationParameter("key", "value")
+					.configurationParameter("key", "value-new")
+					.build();
+			// @formatter:on
+
+			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
+			assertThat(configurationParameters.get("key").isPresent()).isTrue();
+			assertThat(configurationParameters.get("key").get()).isEqualTo("value-new");
+		}
+
+		@Test
+		void multipleConfigurationParameterAddedDirectly_isStoredInDiscoveryRequest() throws Exception {
+			// @formatter:off
+			TestDiscoveryRequest discoveryRequest = request()
+					.configurationParameter("key1", "value1")
+					.configurationParameter("key2", "value2")
+					.build();
+			// @formatter:on
+
+			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
+			assertThat(configurationParameters.get("key1").isPresent()).isTrue();
+			assertThat(configurationParameters.get("key1").get()).isEqualTo("value1");
+			assertThat(configurationParameters.get("key2").isPresent()).isTrue();
+			assertThat(configurationParameters.get("key2").get()).isEqualTo("value2");
+		}
+
+		@Test
+		void configurationParameterAddedByMap_isStoredInDiscoveryRequest() throws Exception {
+			HashMap<String, String> configurationParams = new HashMap<>();
+			configurationParams.put("key", "value");
+
+			// @formatter:off
+			TestDiscoveryRequest discoveryRequest = request()
+					.configurationParameters(configurationParams)
+					.build();
+			// @formatter:on
+
+			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
+			assertThat(configurationParameters.get("key").isPresent()).isTrue();
+			assertThat(configurationParameters.get("key").get()).isEqualTo("value");
+		}
+
+		@Test
+		void multipleConfigurationParametersAddedByMap_areStoredInDiscoveryRequest() throws Exception {
+			HashMap<String, String> configurationParams = new HashMap<>();
+			configurationParams.put("key1", "value1");
+			configurationParams.put("key2", "value2");
+
+			// @formatter:off
+			TestDiscoveryRequest discoveryRequest = request()
+					.configurationParameters(configurationParams)
+					.build();
+			// @formatter:on
+
+			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
+			assertThat(configurationParameters.get("key1").isPresent()).isTrue();
+			assertThat(configurationParameters.get("key1").get()).isEqualTo("value1");
+			assertThat(configurationParameters.get("key2").isPresent()).isTrue();
+			assertThat(configurationParameters.get("key2").get()).isEqualTo("value2");
 		}
 	}
 
