@@ -33,15 +33,15 @@ public class ExecutionRequest {
 	}
 
 	public TestDescriptor getRootTestDescriptor() {
-		return rootTestDescriptor;
+		return this.rootTestDescriptor;
 	}
 
 	public EngineExecutionListener getEngineExecutionListener() {
-		return engineExecutionListener;
+		return this.engineExecutionListener;
 	}
 
 	public ConfigurationParameters getConfigurationParameters() {
-		return configurationParameters;
+		return this.configurationParameters;
 	}
 
 }

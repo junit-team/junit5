@@ -45,8 +45,6 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 			JUnit5EngineDescriptor engineDescriptor) {
 		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver();
 		resolver.resolveSelectors(discoveryRequest, engineDescriptor);
-		//		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver(engineDescriptor);
-		//		resolver.resolveSelectors(discoveryRequest);
 		applyDiscoveryFilters(discoveryRequest, engineDescriptor);
 	}
 

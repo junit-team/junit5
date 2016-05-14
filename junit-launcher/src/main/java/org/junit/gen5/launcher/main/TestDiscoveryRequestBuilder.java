@@ -96,7 +96,7 @@ public final class TestDiscoveryRequestBuilder {
 	}
 
 	public TestDiscoveryRequestBuilder configurationParameter(String key, String value) {
-		Preconditions.notBlank(key, "key must not be null or empty");
+		Preconditions.notBlank(key, "configuration parameter key must not be null or empty");
 		this.configurationParameters.put(key, value);
 		return this;
 	}
