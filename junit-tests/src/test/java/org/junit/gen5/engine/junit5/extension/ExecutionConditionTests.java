@@ -10,31 +10,23 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
-import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.junit5.Constants.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.Objects;
-import java.util.Optional;
 
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Disabled;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ContainerExecutionCondition;
-import org.junit.gen5.api.extension.ContainerExtensionContext;
-import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.TestExecutionCondition;
-import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.junit5.AbstractJUnit5TestEngineTests;
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
+import org.junit.gen5.engine.junit5.extension.sub.SystemPropertyCondition;
+import org.junit.gen5.engine.junit5.extension.sub.SystemPropertyCondition.SystemProperty;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
@@ -60,23 +52,95 @@ public class ExecutionConditionTests extends AbstractJUnit5TestEngineTests {
 	}
 
 	@Test
-	public void executionConditionWorksOnContainer() {
+	public void conditionWorksOnContainer() {
 		TestDiscoveryRequest request = request().select(
 			forClass(TestCaseWithContainerExecutionCondition.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(1L, eventRecorder.getContainerSkippedCount(), "# container skipped");
-		assertEquals(0L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getContainerSkippedCount(), "# container skipped");
+		assertEquals(0, eventRecorder.getTestStartedCount(), "# tests started");
 	}
 
 	@Test
-	public void executionConditionWorksOnTest() {
+	public void conditionWorksOnTest() {
 		TestDiscoveryRequest request = request().select(forClass(TestCaseWithTestExecutionCondition.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(2L, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(3, eventRecorder.getTestSkippedCount(), "# tests skipped");
+	}
+
+	@Test
+	public void overrideConditionsUsingFullyQualifiedClassName() {
+		String deactivatePattern = SystemPropertyCondition.class.getName();
+		assertContainerExecutionConditionOverride(deactivatePattern, 1, 1);
+		assertTestExecutionConditionOverride(deactivatePattern, 4, 2, 2);
+	}
+
+	@Test
+	public void overrideConditionsUsingStar() {
+		// "*" should deactivate DisabledCondition and SystemPropertyCondition
+		String deactivatePattern = "*";
+		assertContainerExecutionConditionOverride(deactivatePattern, 2, 2);
+		assertTestExecutionConditionOverride(deactivatePattern, 5, 2, 3);
+	}
+
+	@Test
+	public void overrideConditionsUsingStarPlusSimpleClassName() {
+		// DisabledCondition should remain activated
+		String deactivatePattern = "*" + SystemPropertyCondition.class.getSimpleName();
+		assertContainerExecutionConditionOverride(deactivatePattern, 1, 1);
+		assertTestExecutionConditionOverride(deactivatePattern, 4, 2, 2);
+	}
+
+	@Test
+	public void overrideConditionsUsingPackageNamePlusDotStar() {
+		// DisabledCondition should remain activated
+		String deactivatePattern = SystemPropertyCondition.class.getPackage().getName() + ".*";
+		assertContainerExecutionConditionOverride(deactivatePattern, 1, 1);
+		assertTestExecutionConditionOverride(deactivatePattern, 4, 2, 2);
+	}
+
+	@Test
+	public void overrideConditionsUsingMultipleWildcards() {
+		// DisabledCondition should remain activated
+		String deactivatePattern = "org.junit.gen5.*.System*Condition";
+		assertContainerExecutionConditionOverride(deactivatePattern, 1, 1);
+		assertTestExecutionConditionOverride(deactivatePattern, 4, 2, 2);
+	}
+
+	private void assertContainerExecutionConditionOverride(String deactivatePattern, int testStartedCount,
+			int testFailedCount) {
+		// @formatter:off
+		TestDiscoveryRequest request = request()
+				.select(forClass(TestCaseWithContainerExecutionCondition.class))
+				.configurationParameter(DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME, deactivatePattern)
+				.build();
+		// @formatter:on
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertEquals(0, eventRecorder.getContainerSkippedCount(), "# containers skipped");
+		assertEquals(2, eventRecorder.getContainerStartedCount(), "# containers started");
+		assertEquals(testStartedCount, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(testFailedCount, eventRecorder.getTestFailedCount(), "# tests failed");
+	}
+
+	private void assertTestExecutionConditionOverride(String deactivatePattern, int started, int succeeded,
+			int failed) {
+		// @formatter:off
+		TestDiscoveryRequest request = request()
+				.select(forClass(TestCaseWithTestExecutionCondition.class))
+				.configurationParameter(DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME, deactivatePattern)
+				.build();
+		// @formatter:on
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertEquals(started, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(succeeded, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(failed, eventRecorder.getTestFailedCount(), "# tests failed");
 	}
 
 	// -------------------------------------------------------------------
@@ -86,6 +150,12 @@ public class ExecutionConditionTests extends AbstractJUnit5TestEngineTests {
 
 		@Test
 		void disabledTest() {
+			fail("this should be disabled");
+		}
+
+		@Test
+		@Disabled
+		void atDisabledTest() {
 			fail("this should be @Disabled");
 		}
 	}
@@ -94,6 +164,12 @@ public class ExecutionConditionTests extends AbstractJUnit5TestEngineTests {
 
 		@Test
 		void enabledTest() {
+		}
+
+		@Test
+		@Disabled
+		void atDisabledTest() {
+			fail("this should be @Disabled");
 		}
 
 		@Test
@@ -113,47 +189,6 @@ public class ExecutionConditionTests extends AbstractJUnit5TestEngineTests {
 			fail("this should be disabled");
 		}
 
-	}
-
-	@Target({ ElementType.METHOD, ElementType.TYPE })
-	@Retention(RetentionPolicy.RUNTIME)
-	@ExtendWith(SystemPropertyCondition.class)
-	@interface SystemProperty {
-
-		String key();
-
-		String value();
-	}
-
-	private static class SystemPropertyCondition implements TestExecutionCondition, ContainerExecutionCondition {
-
-		@Override
-		public ConditionEvaluationResult evaluate(ContainerExtensionContext context) {
-			return evaluate((ExtensionContext) context);
-		}
-
-		@Override
-		public ConditionEvaluationResult evaluate(TestExtensionContext context) {
-			return evaluate((ExtensionContext) context);
-		}
-
-		private ConditionEvaluationResult evaluate(ExtensionContext context) {
-			Optional<SystemProperty> optional = findAnnotation(context.getElement(), SystemProperty.class);
-
-			if (optional.isPresent()) {
-				SystemProperty systemProperty = optional.get();
-				String key = systemProperty.key();
-				String expected = systemProperty.value();
-				String actual = System.getProperty(key);
-
-				if (!Objects.equals(expected, actual)) {
-					return ConditionEvaluationResult.disabled(String.format(
-						"System property [%s] has a value of [%s] instead of [%s]", key, actual, expected));
-				}
-			}
-
-			return ConditionEvaluationResult.enabled("@SystemProperty is not present");
-		}
 	}
 
 }

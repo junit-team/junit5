@@ -11,13 +11,14 @@
 package org.junit.gen5.engine.junit5.execution;
 
 import static org.junit.gen5.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.junit5.descriptor.ClassBasedContainerExtensionContext;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
-import org.mockito.Mockito;
 
 /**
  * Microtests for {@link JUnit5EngineExecutionContext}
@@ -29,8 +30,9 @@ class JUnit5EngineExecutionContextTests {
 
 	@BeforeEach
 	void initOriginalContext() {
-		engineExecutionListener = Mockito.mock(EngineExecutionListener.class);
-		originalContext = new JUnit5EngineExecutionContext(engineExecutionListener);
+		engineExecutionListener = mock(EngineExecutionListener.class);
+		originalContext = new JUnit5EngineExecutionContext(engineExecutionListener,
+			mock(ConfigurationParameters.class));
 	}
 
 	@Test
@@ -45,7 +47,7 @@ class JUnit5EngineExecutionContextTests {
 		ClassBasedContainerExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, null,
 			null);
 		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions();
-		TestInstanceProvider testInstanceProvider = Mockito.mock(TestInstanceProvider.class);
+		TestInstanceProvider testInstanceProvider = mock(TestInstanceProvider.class);
 		JUnit5EngineExecutionContext newContext = originalContext.extend() //
 				.withExtensionContext(extensionContext) //
 				.withExtensionRegistry(extensionRegistry) //
@@ -62,7 +64,7 @@ class JUnit5EngineExecutionContextTests {
 		ClassBasedContainerExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, null,
 			null);
 		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions();
-		TestInstanceProvider testInstanceProvider = Mockito.mock(TestInstanceProvider.class);
+		TestInstanceProvider testInstanceProvider = mock(TestInstanceProvider.class);
 		ClassBasedContainerExtensionContext newExtensionContext = new ClassBasedContainerExtensionContext(
 			extensionContext, null, null);
 

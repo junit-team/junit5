@@ -55,7 +55,8 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 
 	@Override
 	protected JUnit5EngineExecutionContext createExecutionContext(ExecutionRequest request) {
-		return new JUnit5EngineExecutionContext(request.getEngineExecutionListener());
+		return new JUnit5EngineExecutionContext(request.getEngineExecutionListener(),
+			request.getConfigurationParameters());
 	}
 
 }

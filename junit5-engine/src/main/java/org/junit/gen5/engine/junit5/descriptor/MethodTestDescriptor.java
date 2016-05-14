@@ -132,7 +132,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	@Override
 	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Exception {
 		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForTest(context.getExtensionRegistry(),
-			(TestExtensionContext) context.getExtensionContext());
+			context.getConfigurationParameters(), (TestExtensionContext) context.getExtensionContext());
 		if (evaluationResult.isDisabled()) {
 			return SkipResult.skip(evaluationResult.getReason().orElse("<unknown>"));
 		}
