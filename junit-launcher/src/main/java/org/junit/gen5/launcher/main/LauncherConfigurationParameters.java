@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.ToStringBuilder;
 import org.junit.gen5.engine.ConfigurationParameters;
 
 /**
@@ -39,6 +40,13 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 
 	void addAll(Map<String, String> configurationParameters) {
 		this.configurationParameters.putAll(configurationParameters);
+	}
+
+	@Override
+	public String toString() {
+		ToStringBuilder builder = new ToStringBuilder(this);
+		this.configurationParameters.forEach(builder::append);
+		return builder.toString();
 	}
 
 }
