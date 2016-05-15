@@ -1729,6 +1729,54 @@ determine if a given test method should be executed based on the supplied
 <div class="paragraph">
 <p>See the source code of <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Disabled.java">@Disabled</a></code> for concrete examples.</p>
 </div>
+<div class="sect3">
+<h4 id="deactivating-conditions">5.3.1. Deactivating Conditions</h4>
+<div class="paragraph">
+<p>Sometimes it can be useful to run a test suite <em>without</em> certain conditions being active.
+For example, you may wish to run tests even if they are annotated with <code>@Disabled</code> in
+order to see if they are still <em>broken</em>. To do this, simply provide a pattern for the
+<code>junit.conditions.deactivate</code> configuration key to specify which conditions should be
+deactivated (i.e., not evaluated) for the current test run. The pattern can be supplied
+as a <em>configuration parameter</em> in the <code>TestDiscoveryRequest</code> that is passed to the
+<code>Launcher</code>.</p>
+</div>
+<div class="sect4">
+<h5 id="pattern-matching-syntax">Pattern Matching Syntax</h5>
+<div class="paragraph">
+<p>If the <code>junit.conditions.deactivate</code> pattern consists solely of an asterisk (<code>*</code>), all
+conditions will be deactivated. Otherwise, the pattern will be used to match against the
+fully qualified class name (<em>FQCN</em>) of each registered condition. Any dot (<code>.</code>) in the
+pattern will match against a dot (<code>.</code>) or a dollar sign (<code>$</code>) in the FQCN. Any asterisk
+(<code>*</code>) will match against one or more characters in the FQCN. All other characters in the
+pattern will be matched one-to-one against the FQCN.</p>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>*</code>: deactivates all conditions.</p>
+</li>
+<li>
+<p><code>org.junit.*</code>: deactivates every condition under the <code>org.junit</code> base package and any
+of its subpackages.</p>
+</li>
+<li>
+<p><code>*.MyCondition</code>: deactivates every condition whose simple class name is exactly
+<code>MyCondition</code>.</p>
+</li>
+<li>
+<p><code>*System*</code>: deactivates every condition whose simple class name contains <code>System</code>.</p>
+</li>
+<li>
+<p><code>org.example.MyCondition</code>: deactivates the condition whose FQCN is exactly
+<code>org.example.MyCondition</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="test-instance-post-processing">5.4. Test Instance Post-processing</h3>
@@ -2172,7 +2220,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-05-15 14:52:04 -04:00
+Last updated 2016-05-15 15:16:43 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
