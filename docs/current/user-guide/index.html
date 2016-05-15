@@ -1737,8 +1737,15 @@ For example, you may wish to run tests even if they are annotated with <code>@Di
 order to see if they are still <em>broken</em>. To do this, simply provide a pattern for the
 <code>junit.conditions.deactivate</code> configuration key to specify which conditions should be
 deactivated (i.e., not evaluated) for the current test run. The pattern can be supplied
-as a <em>configuration parameter</em> in the <code>TestDiscoveryRequest</code> that is passed to the
-<code>Launcher</code>.</p>
+as a JVM system property or as a <em>configuration parameter</em> in the <code>TestDiscoveryRequest</code>
+that is passed to the <code>Launcher</code>.</p>
+</div>
+<div class="paragraph">
+<p>For example, to deactivate JUnit&#8217;s <code>@Disabled</code> condition, you can start your JVM with
+the following system property:</p>
+</div>
+<div class="paragraph">
+<p><code>-Djunit.conditions.deactivate=org.junit.*DisabledCondition</code></p>
 </div>
 <div class="sect4">
 <h5 id="pattern-matching-syntax">Pattern Matching Syntax</h5>
@@ -2220,7 +2227,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-05-15 15:16:43 -04:00
+Last updated 2016-05-15 15:46:17 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
