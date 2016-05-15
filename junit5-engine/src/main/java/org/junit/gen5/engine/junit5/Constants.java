@@ -18,7 +18,7 @@ package org.junit.gen5.engine.junit5;
 public final class Constants {
 
 	/**
-	 * Property name used to provide a pattern for deactivating conditions.
+	 * Property name used to provide a pattern for deactivating conditions: {@value}
 	 *
 	 * <h3>Pattern Matching Syntax</h3>
 	 *
@@ -51,7 +51,7 @@ public final class Constants {
 	public static final String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = "junit.conditions.deactivate";
 
 	/**
-	 * Wildcard pattern which signals that all conditions should be deactivated.
+	 * Wildcard pattern which signals that all conditions should be deactivated: {@value}
 	 *
 	 * @see #DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME
 	 * @see org.junit.gen5.api.extension.ContainerExecutionCondition
