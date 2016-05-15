@@ -22,8 +22,21 @@ import org.junit.gen5.commons.meta.API;
 @API(Experimental)
 public interface ConfigurationParameters {
 
+	/**
+	 * Get the configuration property stored under the specified {@code key}.
+	 *
+	 * <p>If no such key is present in this {@code ConfigurationParameters},
+	 * an attempt will be made to look up the value as a Java system property.
+	 *
+	 * @param key the key to look up; never {@code null} or empty
+	 * @return an {@code Optional} containing the potential value
+	 */
 	Optional<String> get(String key);
 
+	/**
+	 * Get the number of configuration properties stored directly in this
+	 * {@code ConfigurationParameters}.
+	 */
 	int getSize();
 
 }

@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
 import org.junit.gen5.engine.ConfigurationParameters;
 
@@ -30,7 +31,17 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 
 	@Override
 	public Optional<String> get(String key) {
-		return Optional.ofNullable(this.configurationParameters.get(key));
+		Preconditions.notBlank(key, "key must not be null or empty");
+		String value = this.configurationParameters.get(key);
+		if (value == null) {
+			try {
+				value = System.getProperty(key);
+			}
+			catch (Exception ex) {
+				/* ignore */
+			}
+		}
+		return Optional.ofNullable(value);
 	}
 
 	@Override
