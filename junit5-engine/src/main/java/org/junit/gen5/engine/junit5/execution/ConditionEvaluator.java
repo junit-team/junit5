@@ -163,7 +163,7 @@ public class ConditionEvaluator {
 	 * details on the pattern matching syntax.
 	 */
 	private String convertToRegEx(String pattern) {
-		pattern = Matcher.quoteReplacement(pattern.trim());
+		pattern = Matcher.quoteReplacement(pattern);
 
 		// Match "." against "." and "$" since users may declare a "." instead of a
 		// "$" as the separator between classes and nested classes.
