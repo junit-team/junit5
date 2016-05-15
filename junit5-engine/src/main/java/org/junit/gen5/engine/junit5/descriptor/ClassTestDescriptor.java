@@ -136,7 +136,8 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	@Override
 	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Exception {
 		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForContainer(
-			context.getExtensionRegistry(), (ContainerExtensionContext) context.getExtensionContext());
+			context.getExtensionRegistry(), context.getConfigurationParameters(),
+			(ContainerExtensionContext) context.getExtensionContext());
 		if (evaluationResult.isDisabled()) {
 			return SkipResult.skip(evaluationResult.getReason().orElse("<unknown>"));
 		}

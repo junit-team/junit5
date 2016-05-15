@@ -73,6 +73,36 @@ determine if a given test method should be executed based on the supplied
 
 See the source code of `{DisabledCondition}` and `{Disabled}` for concrete examples.
 
+==== Deactivating Conditions
+
+Sometimes it can be useful to run a test suite _without_ certain conditions being active.
+For example, you may wish to run tests even if they are annotated with `@Disabled` in
+order to see if they are still _broken_. To do this, simply provide a pattern for the
+`junit.conditions.deactivate` configuration key to specify which conditions should be
+deactivated (i.e., not evaluated) for the current test run. The pattern can be supplied
+as a _configuration parameter_ in the `TestDiscoveryRequest` that is passed to the
+`Launcher`.
+
+===== Pattern Matching Syntax
+
+If the `junit.conditions.deactivate` pattern consists solely of an asterisk (`+*+`), all
+conditions will be deactivated. Otherwise, the pattern will be used to match against the
+fully qualified class name (_FQCN_) of each registered condition. Any dot (`.`) in the
+pattern will match against a dot (`.`) or a dollar sign (`$`) in the FQCN. Any asterisk
+(`+*+`) will match against one or more characters in the FQCN. All other characters in the
+pattern will be matched one-to-one against the FQCN.
+
+Examples:
+
+- `+*+`: deactivates all conditions.
+- `+org.junit.*+`: deactivates every condition under the `org.junit` base package and any
+  of its subpackages.
+- `+*.MyCondition+`: deactivates every condition whose simple class name is exactly
+  `MyCondition`.
+- `+*System*+`: deactivates every condition whose simple class name contains `System`.
+- `org.example.MyCondition`: deactivates the condition whose FQCN is exactly
+  `org.example.MyCondition`.
+
 
 === Test Instance Post-processing
 
