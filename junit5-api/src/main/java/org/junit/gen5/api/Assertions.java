@@ -334,6 +334,8 @@ public final class Assertions {
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
+	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
+	 * {@link Float#compare(float, float)}.</p>
 	 */
 	public static void assertEquals(float expected, float actual) {
 		assertEquals(expected, actual, () -> null);
@@ -341,6 +343,8 @@ public final class Assertions {
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
+	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
+	 * {@link Float#compare(float, float)}.</p>
 	 */
 	public static void assertEquals(float expected, float actual, String message) {
 		assertEquals(expected, actual, () -> message);
@@ -348,16 +352,20 @@ public final class Assertions {
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
+	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
+	 * {@link Float#compare(float, float)}.</p>
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(float expected, float actual, Supplier<String> messageSupplier) {
-		if (expected != actual) {
+		if (!floatsEqual(expected, actual)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
+	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
+	 * {@link Double#compare(double, double)}.</p>
 	 */
 	public static void assertEquals(double expected, double actual) {
 		assertEquals(expected, actual, () -> null);
@@ -365,6 +373,8 @@ public final class Assertions {
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
+	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
+	 * {@link Double#compare(double, double)}.</p>
 	 */
 	public static void assertEquals(double expected, double actual, String message) {
 		assertEquals(expected, actual, () -> message);
@@ -372,10 +382,12 @@ public final class Assertions {
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
+	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
+	 * {@link Double#compare(double, double)}.</p>
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(double expected, double actual, Supplier<String> messageSupplier) {
-		if (expected != actual) {
+		if (!doublesEqual(expected, actual)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
@@ -653,6 +665,14 @@ public final class Assertions {
 
 	private static String nullSafeGet(Supplier<String> messageSupplier) {
 		return (messageSupplier != null ? messageSupplier.get() : null);
+	}
+
+	private static boolean floatsEqual(float value1, float value2) {
+		return Float.floatToIntBits(value1) == Float.floatToIntBits(value2);
+	}
+
+	private static boolean doublesEqual(double value1, double value2) {
+		return Double.doubleToLongBits(value1) == Double.doubleToLongBits(value2);
 	}
 
 }

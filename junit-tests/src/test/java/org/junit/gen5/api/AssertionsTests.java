@@ -493,6 +493,13 @@ public class AssertionsTests {
 	@Test
 	void assertEqualsFloat() {
 		assertEquals(1.0f, 1.0f);
+		assertEquals(Float.NaN, Float.NaN);
+		assertEquals(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
+		assertEquals(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
+		assertEquals(Float.MIN_VALUE, Float.MIN_VALUE);
+		assertEquals(Float.MAX_VALUE, Float.MAX_VALUE);
+		assertEquals(Float.MIN_NORMAL, Float.MIN_NORMAL);
+		assertEquals(Double.NaN, Float.NaN);
 	}
 
 	@Test
@@ -533,6 +540,12 @@ public class AssertionsTests {
 	@Test
 	void assertEqualsDouble() {
 		assertEquals(1.0d, 1.0d);
+		assertEquals(Double.NaN, Double.NaN);
+		assertEquals(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
+		assertEquals(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+		assertEquals(Double.MIN_VALUE, Double.MIN_VALUE);
+		assertEquals(Double.MAX_VALUE, Double.MAX_VALUE);
+		assertEquals(Double.MIN_NORMAL, Double.MIN_NORMAL);
 	}
 
 	@Test
