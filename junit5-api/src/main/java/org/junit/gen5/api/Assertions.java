@@ -357,8 +357,8 @@ public final class Assertions {
 	}
 
 	/**
-	* <em>Asserts</em> that {@code expected} and {@code actual} are equal.
-	*/
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
+	 */
 	public static void assertEquals(double expected, double actual) {
 		assertEquals(expected, actual, () -> null);
 	}
