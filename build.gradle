@@ -31,7 +31,7 @@ allprojects {
 	apply plugin: 'com.diffplug.gradle.spotless'
 	apply plugin: 'checkstyle'
 	apply plugin: 'net.nemerosa.versioning'
-	apply plugin: 'com.github.ben-manes.versions'
+	apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates
 
 	repositories {
 		mavenCentral()
