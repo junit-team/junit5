@@ -363,6 +363,36 @@ public final class Assertions {
 	}
 
 	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given {@code delta}.
+	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
+	 * {@link Float#compare(float, float)}.</p>
+	 */
+	public static void assertEquals(float expected, float actual, float delta) {
+		assertEquals(expected, actual, delta, () -> null);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given {@code delta}.
+	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
+	 * {@link Float#compare(float, float)}.</p>
+	 */
+	public static void assertEquals(float expected, float actual, float delta, String message) {
+		assertEquals(expected, actual, delta, () -> message);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given {@code delta}.
+	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
+	 * {@link Float#compare(float, float)}.</p>
+	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 */
+	public static void assertEquals(float expected, float actual, float delta, Supplier<String> messageSupplier) {
+		if (floatsDifferent(expected, actual, delta)) {
+			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
+		}
+	}
+
+	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.</p>
@@ -388,6 +418,36 @@ public final class Assertions {
 	 */
 	public static void assertEquals(double expected, double actual, Supplier<String> messageSupplier) {
 		if (!doublesEqual(expected, actual)) {
+			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
+		}
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given {@code delta}.
+	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
+	 * {@link Double#compare(double, double)}.</p>
+	 */
+	public static void assertEquals(double expected, double actual, double delta) {
+		assertEquals(expected, actual, delta, () -> null);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given {@code delta}.
+	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
+	 * {@link Double#compare(double, double)}.</p>
+	 */
+	public static void assertEquals(double expected, double actual, double delta, String message) {
+		assertEquals(expected, actual, delta, () -> message);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given {@code delta}.
+	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
+	 * {@link Double#compare(double, double)}.</p>
+	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 */
+	public static void assertEquals(double expected, double actual, double delta, Supplier<String> messageSupplier) {
+		if (doublesDifferent(expected, actual, delta)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
@@ -665,6 +725,26 @@ public final class Assertions {
 
 	private static String nullSafeGet(Supplier<String> messageSupplier) {
 		return (messageSupplier != null ? messageSupplier.get() : null);
+	}
+
+	private static boolean floatsDifferent(float value1, float value2, float delta) {
+		if (floatsEqual(value1, value2)) {
+			return false;
+		}
+		if (Math.abs(value1 - value2) <= delta) {
+			return false;
+		}
+		return true;
+	}
+
+	private static boolean doublesDifferent(double value1, double value2, double delta) {
+		if (doublesEqual(value1, value2)) {
+			return false;
+		}
+		if (Math.abs(value1 - value2) <= delta) {
+			return false;
+		}
+		return true;
 	}
 
 	private static boolean floatsEqual(float value1, float value2) {
