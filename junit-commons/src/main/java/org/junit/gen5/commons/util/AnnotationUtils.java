@@ -48,13 +48,9 @@ import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
  * @see AnnotatedElement
  */
 @API(Internal)
-public final class AnnotationUtils {
+public abstract class AnnotationUtils {
 
 	private static final Map<AnnotationCacheKey, Annotation> annotationCache = new ConcurrentHashMap<>(256);
-
-	private AnnotationUtils() {
-		/* no-op */
-	}
 
 	/**
 	 * Determine if an annotation of {@code annotationType} is either <em>present</em> or <em>meta-present</em> on the
@@ -71,7 +67,7 @@ public final class AnnotationUtils {
 	 * the supplied {@code element}.
 	 */
 	public static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType) {
-		return findAnnotation(element, annotationType, new HashSet<Annotation>());
+		return findAnnotation(element, annotationType, new HashSet<>());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -99,15 +95,10 @@ public final class AnnotationUtils {
 		}
 
 		// Meta-present on directly present annotations?
-		for (Annotation candidateAnnotation : element.getDeclaredAnnotations()) {
-			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
-				Optional<A> metaAnnotation = findAnnotation(candidateAnnotation.annotationType(), annotationType,
-					visited);
-				if (metaAnnotation.isPresent()) {
-					annotationCache.put(key, metaAnnotation.get());
-					return metaAnnotation;
-				}
-			}
+		Optional<A> directMetaAnnotation = findMetaAnnotation(annotationType, element.getDeclaredAnnotations(), key,
+			visited);
+		if (directMetaAnnotation.isPresent()) {
+			return directMetaAnnotation;
 		}
 
 		// Indirectly present?
@@ -118,7 +109,18 @@ public final class AnnotationUtils {
 		}
 
 		// Meta-present on indirectly present annotations?
-		for (Annotation candidateAnnotation : element.getAnnotations()) {
+		Optional<A> indirectMetaAnnotation = findMetaAnnotation(annotationType, element.getAnnotations(), key, visited);
+		if (indirectMetaAnnotation.isPresent()) {
+			return indirectMetaAnnotation;
+		}
+
+		return Optional.empty();
+	}
+
+	private static <A extends Annotation> Optional<A> findMetaAnnotation(Class<A> annotationType,
+			Annotation[] candidates, AnnotationCacheKey key, Set<Annotation> visited) {
+
+		for (Annotation candidateAnnotation : candidates) {
 			if (!isInJavaLangAnnotationPackage(candidateAnnotation) && visited.add(candidateAnnotation)) {
 				Optional<A> metaAnnotation = findAnnotation(candidateAnnotation.annotationType(), annotationType,
 					visited);
@@ -128,7 +130,6 @@ public final class AnnotationUtils {
 				}
 			}
 		}
-
 		return Optional.empty();
 	}
 
@@ -185,10 +186,6 @@ public final class AnnotationUtils {
 	private static <A extends Annotation> void findRepeatableAnnotations(AnnotatedElement element,
 			Class<A> annotationType, Class<? extends Annotation> containerType, boolean inherited, Set<A> found,
 			Set<Annotation> visited) {
-
-		if (element == null) {
-			return;
-		}
 
 		if (element instanceof Class) {
 			Class<?> clazz = (Class<?>) element;

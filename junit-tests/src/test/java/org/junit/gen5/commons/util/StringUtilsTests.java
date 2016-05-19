@@ -15,6 +15,11 @@ import static org.junit.gen5.api.Assertions.assertTrue;
 
 import org.junit.gen5.api.Test;
 
+/**
+ * Unit tests for {@link StringUtils}.
+ *
+ * @since 5.0
+ */
 class StringUtilsTests {
 
 	@Test

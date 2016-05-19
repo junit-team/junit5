@@ -11,18 +11,25 @@
 package org.junit.gen5.launcher.main;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
 import static org.junit.gen5.launcher.EngineIdFilter.byEngineId;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
+import java.util.Optional;
+
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.JUnitException;
+import org.junit.gen5.commons.util.PreconditionViolationException;
+import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.PackageSelector;
+import org.junit.gen5.engine.junit5.stubs.TestEngineSpy;
 import org.junit.gen5.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
@@ -35,13 +42,17 @@ import org.junit.gen5.launcher.TestPlan;
  */
 class DefaultLauncherTests {
 
+	private static final String FOO = DefaultLauncherTests.class.getSimpleName() + ".foo";
+	private static final String BAR = DefaultLauncherTests.class.getSimpleName() + ".bar";
+
+	private static final Runnable noOp = () -> {
+	};
+
 	@Test
-	void discoverEmptyTestPlanWithoutAnyEngines() {
-		DefaultLauncher launcher = createLauncher();
+	void constructLauncherWithoutAnyEngines() {
+		Throwable exception = expectThrows(PreconditionViolationException.class, () -> createLauncher());
 
-		TestPlan testPlan = launcher.discover(request().select(forUniqueId("foo")).build());
-
-		assertThat(testPlan.getRoots()).isEmpty();
+		assertThat(exception).hasMessageContaining("Cannot create Launcher without at least one TestEngine");
 	}
 
 	@Test
@@ -64,8 +75,8 @@ class DefaultLauncherTests {
 	@Test
 	void discoverTestPlanForSingleEngine() {
 		DummyTestEngine engine = new DummyTestEngine("myEngine");
-		engine.addTest("test1", noOp());
-		engine.addTest("test2", noOp());
+		engine.addTest("test1", noOp);
+		engine.addTest("test2", noOp);
 
 		DefaultLauncher launcher = createLauncher(engine);
 
@@ -80,9 +91,9 @@ class DefaultLauncherTests {
 	@Test
 	void discoverTestPlanForMultipleEngines() {
 		DummyTestEngine firstEngine = new DummyTestEngine("engine1");
-		TestDescriptor test1 = firstEngine.addTest("test1", noOp());
+		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
 		DummyTestEngine secondEngine = new DummyTestEngine("engine2");
-		TestDescriptor test2 = secondEngine.addTest("test2", noOp());
+		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
 
@@ -97,9 +108,9 @@ class DefaultLauncherTests {
 	@Test
 	void launcherWillNotCallEnginesThatAreFilteredByAnEngineIdFilter() {
 		DummyTestEngine firstEngine = new DummyTestEngine("first");
-		TestDescriptor test1 = firstEngine.addTest("test1", noOp());
+		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
 		DummyTestEngine secondEngine = new DummyTestEngine("second");
-		TestDescriptor test2 = secondEngine.addTest("test2", noOp());
+		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
 
@@ -116,8 +127,8 @@ class DefaultLauncherTests {
 	@Test
 	void launcherAppliesPostDiscoveryFilters() {
 		DummyTestEngine engine = new DummyTestEngine("myEngine");
-		DummyTestDescriptor test1 = engine.addTest("test1", noOp());
-		engine.addTest("test2", noOp());
+		DummyTestDescriptor test1 = engine.addTest("test1", noOp);
+		engine.addTest("test2", noOp);
 
 		DefaultLauncher launcher = createLauncher(engine);
 
@@ -138,8 +149,50 @@ class DefaultLauncherTests {
 		assertThat(testPlan.getTestIdentifier(test1.getUniqueId().getUniqueString())).isNotNull();
 	}
 
-	private static Runnable noOp() {
-		return () -> {
-		};
+	@Test
+	void withoutConfigurationParameters_launcherPassesEmptyConfigurationParametersIntoTheExecutionRequest() {
+		TestEngineSpy engine = new TestEngineSpy();
+
+		DefaultLauncher launcher = createLauncher(engine);
+		launcher.execute(request().build());
+
+		ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
+		assertThat(configurationParameters.get("key").isPresent()).isFalse();
+		assertThat(configurationParameters.getSize()).isEqualTo(0);
 	}
+
+	@Test
+	void withConfigurationParameters_launcherPassesPopulatedConfigurationParametersIntoTheExecutionRequest() {
+		TestEngineSpy engine = new TestEngineSpy();
+
+		DefaultLauncher launcher = createLauncher(engine);
+		launcher.execute(request().configurationParameter("key", "value").build());
+
+		ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
+		assertThat(configurationParameters.getSize()).isEqualTo(1);
+		assertThat(configurationParameters.get("key").isPresent()).isTrue();
+		assertThat(configurationParameters.get("key").get()).isEqualTo("value");
+	}
+
+	@Test
+	void withoutConfigurationParameters_LookupFallsBackToSystemProperty() {
+		System.setProperty(FOO, BAR);
+
+		try {
+			TestEngineSpy engine = new TestEngineSpy();
+
+			DefaultLauncher launcher = createLauncher(engine);
+			launcher.execute(request().build());
+
+			ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
+			assertThat(configurationParameters.getSize()).isEqualTo(0);
+			Optional<String> optionalFoo = configurationParameters.get(FOO);
+			assertTrue(optionalFoo.isPresent(), "foo should have been picked up via system property");
+			assertEquals(BAR, optionalFoo.get(), "foo property");
+		}
+		finally {
+			System.clearProperty(FOO);
+		}
+	}
+
 }

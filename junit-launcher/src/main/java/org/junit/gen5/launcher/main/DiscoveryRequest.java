@@ -16,7 +16,9 @@ import static java.util.stream.Collectors.toList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.TestEngine;
@@ -25,21 +27,21 @@ import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
- * The {@code DiscoveryRequest} represents the configuration for the test
+ * {@code DiscoveryRequest} represents the configuration for test
  * discovery and execution. It is passed to every active {@link TestEngine}
- * and should be used to lookup tests for the given configuration.
+ * and should be used to look up tests for the given configuration.
  *
  * <p>A {@code DiscoveryRequest} contains different configuration options.
  *
  * <ul>
- * <li>{@link DiscoverySelector}: A selector defines location(s) a
- * {@link TestEngine} should lookup tests at</li>
- * <li>{@link EngineIdFilter}: A special filter that is applied before an
- * {@link TestEngine} is executed</li>
- * <li>{@link DiscoveryFilter}: A filter that should be applied by the
- * {@link TestEngine} during test discovery.</li>
- * <li>{@link PostDiscoveryFilter}: A filter that will be applied after
- * test discovery.</li>
+ * <li>{@link DiscoverySelector}: A selector defines where a {@code TestEngine}
+ * should look up tests</li>
+ * <li>{@link EngineIdFilter}: A special filter that is applied before each
+ * {@code TestEngine} is executed</li>
+ * <li>{@link DiscoveryFilter}: A filter that should be applied by
+ * {@code TestEngines} during test discovery</li>
+ * <li>{@link PostDiscoveryFilter}: A filter that will be applied by the
+ * launcher after {@code TestEngines} have performed test discovery</li>
  * </ul>
  *
  * @since 5.0
@@ -56,11 +58,14 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 	// Filter based on the engine id
 	private final List<EngineIdFilter> engineIdFilters = new LinkedList<>();
 
-	// Discovery filters are handed through to all test engines to be applied during discovery
+	// Discovery filters are handed through to all engines to be applied during discovery.
 	private final List<DiscoveryFilter<?>> discoveryFilters = new LinkedList<>();
 
-	// Descriptor Filters are evaluated by the launcher itself after engines have done their discovery.
+	// Descriptor filters are applied by the launcher itself after engines have performed discovery.
 	private final List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
+
+	// Configuration parameters can be used to provide custom configuration to engines, e.g. for extensions
+	private final LauncherConfigurationParameters configurationParameters = new LauncherConfigurationParameters();
 
 	@Override
 	public void addSelector(DiscoverySelector selector) {
@@ -125,6 +130,16 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 	@Override
 	public List<PostDiscoveryFilter> getPostDiscoveryFilters() {
 		return unmodifiableList(this.postDiscoveryFilters);
+	}
+
+	@Override
+	public void addConfigurationParameters(Map<String, String> configurationParameters) {
+		this.configurationParameters.addAll(configurationParameters);
+	}
+
+	@Override
+	public ConfigurationParameters getConfigurationParameters() {
+		return this.configurationParameters;
 	}
 
 }

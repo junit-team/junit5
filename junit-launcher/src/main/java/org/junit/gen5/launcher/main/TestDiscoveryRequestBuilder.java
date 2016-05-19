@@ -13,11 +13,14 @@ package org.junit.gen5.launcher.main;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.PreconditionViolationException;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.Filter;
@@ -26,13 +29,13 @@ import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
- * The {@code DiscoveryRequestBuilder} provides a light-weight DSL for
+ * The {@code TestDiscoveryRequestBuilder} provides a light-weight DSL for
  * generating a {@link TestDiscoveryRequest}.
  *
  * <h4>Example</h4>
  *
  * <pre style="code">
- *   DiscoveryRequestBuilder.request()
+ *   TestDiscoveryRequestBuilder.request()
  *     .select(
  *       forPackageName("org.junit.gen5"),
  *       forPackageName("com.junit.samples"),
@@ -51,8 +54,12 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  *     .filter(byEngineIds("junit5"))
  *     .filter(byNamePattern("org\.junit\.gen5\.tests.*"), byNamePattern(".*Test[s]?"))
  *     .filter(requireTags("fast"), excludeTags("flow"))
+ *     .configurationParameter("key1", "value1")
+ *     .configurationParameters(configParameterMap)
  *   ).build();
  * </pre>
+ *
+ * @since 5.0
  */
 @API(Experimental)
 public final class TestDiscoveryRequestBuilder {
@@ -61,6 +68,7 @@ public final class TestDiscoveryRequestBuilder {
 	private List<EngineIdFilter> engineIdFilters = new LinkedList<>();
 	private List<DiscoveryFilter<?>> discoveryFilters = new LinkedList<>();
 	private List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
+	private Map<String, String> configurationParameters = new HashMap<>();
 
 	public static TestDiscoveryRequestBuilder request() {
 		return new TestDiscoveryRequestBuilder();
@@ -83,6 +91,19 @@ public final class TestDiscoveryRequestBuilder {
 	public TestDiscoveryRequestBuilder filter(Filter<?>... filters) {
 		if (filters != null) {
 			Arrays.stream(filters).forEach(this::storeFilter);
+		}
+		return this;
+	}
+
+	public TestDiscoveryRequestBuilder configurationParameter(String key, String value) {
+		Preconditions.notBlank(key, "configuration parameter key must not be null or empty");
+		this.configurationParameters.put(key, value);
+		return this;
+	}
+
+	public TestDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
+		if (configurationParameters != null) {
+			configurationParameters.forEach(this::configurationParameter);
 		}
 		return this;
 	}
@@ -110,6 +131,7 @@ public final class TestDiscoveryRequestBuilder {
 		discoveryRequest.addEngineIdFilters(this.engineIdFilters);
 		discoveryRequest.addFilters(this.discoveryFilters);
 		discoveryRequest.addPostFilters(this.postDiscoveryFilters);
+		discoveryRequest.addConfigurationParameters(this.configurationParameters);
 		return discoveryRequest;
 	}
 

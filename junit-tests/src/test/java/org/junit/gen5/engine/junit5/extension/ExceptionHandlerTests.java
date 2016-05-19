@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
+import org.junit.gen5.api.extension.ExceptionHandler;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.ExecutionEventRecorder;
@@ -32,9 +32,9 @@ import org.junit.gen5.engine.junit5.AbstractJUnit5TestEngineTests;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
- * Integration tests that verify support for {@link ExceptionHandlerExtensionPoint}.
+ * Integration tests that verify support for {@link ExceptionHandler}.
  */
-class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests {
+class ExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
 
 	static List<String> handlerCalls = new ArrayList<>();
 
@@ -152,7 +152,7 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 		}
 	}
 
-	private static class RethrowException implements ExceptionHandlerExtensionPoint {
+	private static class RethrowException implements ExceptionHandler {
 
 		static boolean handleExceptionCalled = false;
 
@@ -166,7 +166,7 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 		}
 	}
 
-	private static class SwallowException implements ExceptionHandlerExtensionPoint {
+	private static class SwallowException implements ExceptionHandler {
 
 		static boolean handleExceptionCalled = false;
 
@@ -179,7 +179,7 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 		}
 	}
 
-	private static class ConvertException implements ExceptionHandlerExtensionPoint {
+	private static class ConvertException implements ExceptionHandler {
 
 		static boolean handleExceptionCalled = false;
 
@@ -192,7 +192,7 @@ class ExceptionHandlerExtensionPointTests extends AbstractJUnit5TestEngineTests 
 		}
 
 	}
-	private static class ShouldNotBeCalled implements ExceptionHandlerExtensionPoint {
+	private static class ShouldNotBeCalled implements ExceptionHandler {
 
 		static boolean handleExceptionCalled = false;
 

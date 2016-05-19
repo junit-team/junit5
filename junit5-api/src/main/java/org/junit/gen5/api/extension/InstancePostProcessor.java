@@ -27,14 +27,14 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Experimental)
-public interface InstancePostProcessor extends ExtensionPoint {
+public interface InstancePostProcessor extends Extension {
 
 	/**
-	 * Callback for post-processing the test instance in the supplied
-	 * {@link TestExtensionContext}.
+	 * Callback for post-processing the supplied test instance.
 	 *
-	 * @param context the current test extension context
+	 * @param testInstance the instance to post-process
+	 * @param context the current extension context
 	 */
-	void postProcessTestInstance(TestExtensionContext context) throws Exception;
+	void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception;
 
 }

@@ -2,13 +2,6 @@ apply plugin: 'org.asciidoctor.convert'
 apply plugin: "org.ajoberstar.github-pages"
 apply plugin: 'org.junit.gen5.gradle'
 
-jar.enabled = false
-javadoc.enabled = false
-javadocJar.enabled = false
-sourcesJar.enabled = false
-uploadArchives.enabled = false
-install.enabled = false
-
 junit5 {
 	runJunit4 true
 	excludeTag 'exclude'
@@ -29,7 +22,7 @@ dependencies {
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 }
 
-def asciidoctorOutputDir = "$buildDir/asciidoc"
+ext.asciidoctorOutputDir = "$buildDir/asciidoc"
 
 githubPages {
 	repoUri = 'https://github.com/junit-team/junit5.git'

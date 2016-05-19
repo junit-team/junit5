@@ -82,7 +82,7 @@ class TestClassRequestResolver {
 
 	private Filter createOrFilter(List<RunnerTestDescriptorAwareFilter> filters,
 			RunnerTestDescriptor runnerTestDescriptor) {
-		filters.stream().forEach(filter -> filter.initialize(runnerTestDescriptor));
+		filters.forEach(filter -> filter.initialize(runnerTestDescriptor));
 		return new OrFilter(filters);
 	}
 

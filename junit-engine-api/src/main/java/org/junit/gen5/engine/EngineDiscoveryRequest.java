@@ -31,4 +31,5 @@ public interface EngineDiscoveryRequest {
 
 	<T extends DiscoveryFilter<?>> List<T> getDiscoveryFiltersByType(Class<T> filterType);
 
+	ConfigurationParameters getConfigurationParameters();
 }

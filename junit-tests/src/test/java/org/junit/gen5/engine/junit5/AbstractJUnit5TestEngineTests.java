@@ -35,7 +35,7 @@ public abstract class AbstractJUnit5TestEngineTests {
 	protected ExecutionEventRecorder executeTests(TestDiscoveryRequest request) {
 		TestDescriptor testDescriptor = discoverTests(request);
 		ExecutionEventRecorder eventRecorder = new ExecutionEventRecorder();
-		engine.execute(new ExecutionRequest(testDescriptor, eventRecorder));
+		engine.execute(new ExecutionRequest(testDescriptor, eventRecorder, request.getConfigurationParameters()));
 		return eventRecorder;
 	}
 

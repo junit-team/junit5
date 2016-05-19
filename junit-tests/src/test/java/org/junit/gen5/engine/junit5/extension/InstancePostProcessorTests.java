@@ -22,34 +22,44 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.InstancePostProcessor;
-import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.junit5.AbstractJUnit5TestEngineTests;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
- * Integration tests that verify support for {@link org.junit.gen5.api.extension.InstancePostProcessor}.
+ * Integration tests that verify support for {@link InstancePostProcessor}.
  */
 public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 
+	private static final List<String> callSequence = new ArrayList<>();
+
 	@Test
-	public void instancePostProcessorInTopLevelClass() {
+	public void instancePostProcessorsInNestedClasses() {
 		TestDiscoveryRequest request = request().select(forClass(OuterTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 
 		// @formatter:off
 		assertEquals(asList(
 
-			//OuterTestCase
-			"fooPostProcessTestInstance", "beforeMethod", "testOuter",
+			// OuterTestCase
+			"fooPostProcessTestInstance:OuterTestCase",
+				"beforeOuterMethod",
+					"testOuter",
 
-			//NestedTestCase
-			"fooPostProcessTestInstance", "barPostProcessTestInstance", "beforeMethod", "beforeInnerMethod", "testInner"
+			// InnerTestCase
+
+			"fooPostProcessTestInstance:OuterTestCase",
+			"fooPostProcessTestInstance:InnerTestCase",
+				"barPostProcessTestInstance:InnerTestCase",
+					"beforeOuterMethod",
+						"beforeInnerMethod",
+							"testInner"
 
 		), callSequence, "wrong call sequence");
 		// @formatter:on
@@ -57,24 +67,38 @@ public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 
 	// -------------------------------------------------------------------
 
-	private static List<String> callSequence = new ArrayList<>();
+	@ExtendWith(FooInstancePostProcessor.class)
+	private static class OuterTestCase implements Named {
 
-	@ExtendWith({ FooInstancePostProcessor.class })
-	private static class OuterTestCase {
+		private String outerName;
+
+		@Override
+		public void setName(String name) {
+			this.outerName = name;
+		}
 
 		@BeforeEach
-		void beforeEach() {
-			callSequence.add("beforeMethod");
+		void beforeOuterMethod() {
+			callSequence.add("beforeOuterMethod");
 		}
 
 		@Test
 		void testOuter() {
+			assertEquals("foo", outerName);
 			callSequence.add("testOuter");
 		}
 
 		@Nested
 		@ExtendWith(BarInstancePostProcessor.class)
-		class InnerTestCase {
+		class InnerTestCase implements Named {
+
+			private String innerName;
+
+			@Override
+			public void setName(String name) {
+				this.innerName = name;
+			}
+
 			@BeforeEach
 			void beforeInnerMethod() {
 				callSequence.add("beforeInnerMethod");
@@ -82,6 +106,8 @@ public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 
 			@Test
 			void testInner() {
+				assertEquals("foo", outerName);
+				assertEquals("bar", innerName);
 				callSequence.add("testInner");
 			}
 		}
@@ -91,17 +117,28 @@ public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 	private static class FooInstancePostProcessor implements InstancePostProcessor {
 
 		@Override
-		public void postProcessTestInstance(TestExtensionContext context) throws Exception {
-			callSequence.add("fooPostProcessTestInstance");
+		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
+			if (testInstance instanceof Named) {
+				((Named) testInstance).setName("foo");
+			}
+			callSequence.add("fooPostProcessTestInstance:" + testInstance.getClass().getSimpleName());
 		}
 	}
 
 	private static class BarInstancePostProcessor implements InstancePostProcessor {
 
 		@Override
-		public void postProcessTestInstance(TestExtensionContext context) throws Exception {
-			callSequence.add("barPostProcessTestInstance");
+		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
+			if (testInstance instanceof Named) {
+				((Named) testInstance).setName("bar");
+			}
+			callSequence.add("barPostProcessTestInstance:" + testInstance.getClass().getSimpleName());
 		}
+	}
+
+	private interface Named {
+
+		void setName(String name);
 	}
 
 }

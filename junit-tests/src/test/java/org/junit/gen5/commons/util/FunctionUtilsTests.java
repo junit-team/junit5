@@ -20,6 +20,11 @@ import java.util.function.Predicate;
 
 import org.junit.gen5.api.Test;
 
+/**
+ * Unit tests for {@link FunctionUtils}.
+ *
+ * @since 5.0
+ */
 class FunctionUtilsTests {
 
 	@Test
@@ -45,4 +50,5 @@ class FunctionUtilsTests {
 		assertTrue(combinedPredicate.test("foo"));
 		assertFalse(combinedPredicate.test("fooo"));
 	}
+
 }

@@ -12,12 +12,12 @@ package example.exception;
 
 import java.io.IOException;
 
-import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
+import org.junit.gen5.api.extension.ExceptionHandler;
 import org.junit.gen5.api.extension.TestExtensionContext;
 
 // @formatter:off
 // tag::user_guide[]
-public class IgnoreIOExceptionExtension implements ExceptionHandlerExtensionPoint {
+public class IgnoreIOExceptionExtension implements ExceptionHandler {
 
 	@Override
 	public void handleException(TestExtensionContext context, Throwable throwable)

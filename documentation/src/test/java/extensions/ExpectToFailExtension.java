@@ -12,13 +12,13 @@ package extensions;
 
 import static org.junit.gen5.api.Assertions.assertNotNull;
 
-import org.junit.gen5.api.extension.AfterEachExtensionPoint;
-import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
+import org.junit.gen5.api.extension.AfterEachCallback;
+import org.junit.gen5.api.extension.ExceptionHandler;
 import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 import org.junit.gen5.api.extension.ExtensionContext.Store;
 import org.junit.gen5.api.extension.TestExtensionContext;
 
-public class ExpectToFailExtension implements ExceptionHandlerExtensionPoint, AfterEachExtensionPoint {
+public class ExpectToFailExtension implements ExceptionHandler, AfterEachCallback {
 
 	@Override
 	public void handleException(TestExtensionContext context, Throwable throwable) throws Throwable {

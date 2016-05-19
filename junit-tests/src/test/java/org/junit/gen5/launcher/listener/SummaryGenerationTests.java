@@ -22,7 +22,7 @@ import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.support.descriptor.JavaSource;
+import org.junit.gen5.engine.support.descriptor.JavaClassSource;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.gen5.launcher.listeners.SummaryGeneratingListener;
@@ -86,7 +86,7 @@ class SummaryGenerationTests {
 		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("root", "2"), "name", "failingTest") {
 			@Override
 			public Optional<TestSource> getSource() {
-				return Optional.of(new JavaSource(Object.class));
+				return Optional.of(new JavaClassSource(Object.class));
 			}
 		};
 		TestIdentifier failed = TestIdentifier.from(testDescriptor);

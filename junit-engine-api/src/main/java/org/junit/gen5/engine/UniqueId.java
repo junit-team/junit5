@@ -10,56 +10,65 @@
 
 package org.junit.gen5.engine;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
- * {@code UniqueId} is a class to encapsulate the creation, parsing and display of unique IDs for {@link TestDescriptor}.
+ * {@code UniqueId} encapsulates the creation, parsing, and display of unique IDs
+ * for {@link TestDescriptor TestDescriptors}.
  *
  * <p>Instances of this class have value semantics and are immutable.</p>
  *
  * @since 5.0
  */
-@API(API.Usage.Experimental)
+@API(Experimental)
 public class UniqueId implements Cloneable {
 
 	private static final String TYPE_ENGINE = "engine";
 
 	/**
-	 * Create a {@code UniqueId} by parsing its string representation {@code uniqueIdString}.
-	 *
-	 * <p>Throws {@link org.junit.gen5.commons.JUnitException} if the string cannot be parsed.
+	 * Parse a {@code UniqueId} from the supplied string representation using the
+	 * default format.
 	 *
 	 * @return a properly constructed {@code UniqueId}
+	 * @throws JUnitException if the string cannot be parsed
 	 */
-	public static UniqueId parse(String uniqueIdString) {
-		return uniqueIdFormat.parse(uniqueIdString);
+	public static UniqueId parse(String uniqueIdString) throws JUnitException {
+		return UniqueIdFormat.getDefault().parse(uniqueIdString);
 	}
 
-	private static final UniqueIdFormat uniqueIdFormat = UniqueIdFormat.getDefault();
-
-	private final List<Segment> segments = new ArrayList<>();
-
 	/**
-	 * Create an engine's unique ID by providing {@code engineId}
+	 * Create an engine's unique ID by from its {@code engineId} using the default
+	 * format.
 	 */
 	public static UniqueId forEngine(String engineId) {
 		return root(TYPE_ENGINE, engineId);
 	}
 
 	/**
-	 * Create a root unique ID by providing the node type {@code segmentType} and {@code nodeValue}
+	 * Create a root unique ID from the supplied {@code segmentType} and
+	 * {@code nodeValue} using the default format.
 	 */
 	public static UniqueId root(String segmentType, String nodeValue) {
 		List<Segment> segments = Collections.singletonList(new Segment(segmentType, nodeValue));
-		return new UniqueId(segments);
+		return new UniqueId(UniqueIdFormat.getDefault(), segments);
 	}
 
-	UniqueId(List<Segment> segments) {
+	private final UniqueIdFormat uniqueIdFormat;
+
+	private final List<Segment> segments = new ArrayList<>();
+
+	UniqueId(UniqueIdFormat uniqueIdFormat, List<Segment> segments) {
+		this.uniqueIdFormat = uniqueIdFormat;
 		this.segments.addAll(segments);
 	}
 
@@ -97,7 +106,7 @@ public class UniqueId implements Cloneable {
 	}
 
 	public UniqueId append(Segment segment) {
-		UniqueId clone = new UniqueId(segments);
+		UniqueId clone = new UniqueId(this.uniqueIdFormat, this.segments);
 		clone.segments.add(segment);
 		return clone;
 	}
@@ -140,11 +149,11 @@ public class UniqueId implements Cloneable {
 		}
 
 		public String getType() {
-			return type;
+			return this.type;
 		}
 
 		public String getValue() {
-			return value;
+			return this.value;
 		}
 
 		@Override
@@ -154,19 +163,25 @@ public class UniqueId implements Cloneable {
 			if (o == null || getClass() != o.getClass())
 				return false;
 
-			Segment segment = (Segment) o;
-			return type.equals(segment.type) && value.equals(segment.value);
+			Segment that = (Segment) o;
+			return Objects.equals(this.type, that.type) && Objects.equals(this.value, that.value);
 
 		}
 
 		@Override
 		public String toString() {
-			return String.format("[%s:%s]", getType(), getValue());
+			// @formatter:off
+			return new ToStringBuilder(this)
+				.append("type", this.type)
+				.append("value", this.value)
+				.toString();
+			// @formatter:on
 		}
 
 		@Override
 		public int hashCode() {
-			return 31 * type.hashCode() + value.hashCode();
+			return Objects.hash(this.type, this.value);
 		}
 	}
+
 }

@@ -19,6 +19,11 @@ import static org.junit.gen5.api.Assertions.expectThrows;
 
 import org.junit.gen5.api.Test;
 
+/**
+ * Unit tests for {@link CollectionUtils}.
+ *
+ * @since 5.0
+ */
 class CollectionUtilsTests {
 
 	@Test

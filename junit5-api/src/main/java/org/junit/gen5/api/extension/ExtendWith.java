@@ -31,17 +31,19 @@ import org.junit.gen5.commons.meta.API;
  * <ul>
  * <li>{@link ContainerExecutionCondition}</li>
  * <li>{@link TestExecutionCondition}</li>
+ * <li>{@link BeforeAllCallback}</li>
+ * <li>{@link AfterAllCallback}</li>
+ * <li>{@link BeforeEachCallback}</li>
+ * <li>{@link AfterEachCallback}</li>
+ * <li>{@link BeforeTestMethodCallback}</li>
+ * <li>{@link AfterTestMethodCallback}</li>
  * <li>{@link InstancePostProcessor}</li>
  * <li>{@link MethodParameterResolver}</li>
- * <li>{@link BeforeEachExtensionPoint}</li>
- * <li>{@link AfterEachExtensionPoint}</li>
- * <li>{@link BeforeAllExtensionPoint}</li>
- * <li>{@link AfterAllExtensionPoint}</li>
+ * <li>{@link ExceptionHandler}</li>
  * </ul>
  *
  * @since 5.0
  * @see Extension
- * @see ExtensionRegistrar
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)

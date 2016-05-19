@@ -10,20 +10,20 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
-import org.junit.gen5.api.extension.AfterEachExtensionPoint;
-import org.junit.gen5.api.extension.BeforeEachExtensionPoint;
+import org.junit.gen5.api.extension.AfterEachCallback;
+import org.junit.gen5.api.extension.AfterTestMethodCallback;
+import org.junit.gen5.api.extension.BeforeEachCallback;
+import org.junit.gen5.api.extension.BeforeTestMethodCallback;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
-import org.junit.gen5.api.extension.ExceptionHandlerExtensionPoint;
-import org.junit.gen5.api.extension.InstancePostProcessor;
+import org.junit.gen5.api.extension.ExceptionHandler;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.meta.API;
@@ -33,14 +33,14 @@ import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.UniqueId;
+import org.junit.gen5.engine.junit5.execution.AfterEachMethodAdapter;
+import org.junit.gen5.engine.junit5.execution.BeforeEachMethodAdapter;
 import org.junit.gen5.engine.junit5.execution.ConditionEvaluator;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
-import org.junit.gen5.engine.junit5.extension.ExtensionRegistry.ApplicationOrder;
-import org.junit.gen5.engine.junit5.extension.RegisteredExtensionPoint;
-import org.junit.gen5.engine.support.descriptor.JavaSource;
+import org.junit.gen5.engine.support.descriptor.JavaMethodSource;
 import org.junit.gen5.engine.support.hierarchical.Leaf;
 
 /**
@@ -50,6 +50,8 @@ import org.junit.gen5.engine.support.hierarchical.Leaf;
  */
 @API(Internal)
 public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
+
+	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
 	private final String displayName;
 
@@ -64,7 +66,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		this.testMethod = Preconditions.notNull(testMethod, "Method must not be null");
 		this.displayName = determineDisplayName(testMethod, testMethod.getName());
 
-		setSource(new JavaSource(testMethod));
+		setSource(new JavaMethodSource(testMethod));
 	}
 
 	@Override
@@ -84,8 +86,8 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		// reflection is necessary.
 
 		// TODO Consider extracting JUnit 5's "method representation" into a common utility.
-		return String.format("%s#%s(%s)", getTestClass().getName(), testMethod.getName(),
-			StringUtils.nullSafeToString(testMethod.getParameterTypes()));
+		return String.format("%s#%s(%s)", getTestClass().getName(), this.testMethod.getName(),
+			StringUtils.nullSafeToString(this.testMethod.getParameterTypes()));
 	}
 
 	@Override
@@ -113,7 +115,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	@Override
 	public JUnit5EngineExecutionContext prepare(JUnit5EngineExecutionContext context) throws Exception {
-		ExtensionRegistry extensionRegistry = populateNewExtensionRegistryFromExtendWith(testMethod,
+		ExtensionRegistry extensionRegistry = populateNewExtensionRegistryFromExtendWith(this.testMethod,
 			context.getExtensionRegistry());
 		Object testInstance = context.getTestInstanceProvider().getTestInstance();
 		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(context.getExtensionContext(),
@@ -129,50 +131,48 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	@Override
 	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Exception {
-		ConditionEvaluationResult evaluationResult = new ConditionEvaluator().evaluateForTest(
-			context.getExtensionRegistry(), (TestExtensionContext) context.getExtensionContext());
+		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForTest(context.getExtensionRegistry(),
+			context.getConfigurationParameters(), (TestExtensionContext) context.getExtensionContext());
 		if (evaluationResult.isDisabled()) {
-			return SkipResult.skip(evaluationResult.getReason().orElse(""));
+			return SkipResult.skip(evaluationResult.getReason().orElse("<unknown>"));
 		}
 		return SkipResult.dontSkip();
 	}
 
 	@Override
 	public JUnit5EngineExecutionContext execute(JUnit5EngineExecutionContext context) throws Exception {
+		ExtensionRegistry registry = context.getExtensionRegistry();
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 
-		invokeInstancePostProcessorExtensionPoints(context.getExtensionRegistry(), testExtensionContext);
-		invokeBeforeEachExtensionPoints(context.getExtensionRegistry(), testExtensionContext);
-		invokeTestMethod(context, testExtensionContext, throwableCollector);
-		invokeAfterEachExtensionPoints(context.getExtensionRegistry(), testExtensionContext, throwableCollector);
+		// @formatter:off
+		invokeBeforeEachCallbacks(registry, testExtensionContext);
+			invokeBeforeEachMethods(registry, testExtensionContext);
+				invokeBeforeTestMethodCallbacks(registry, testExtensionContext);
+					invokeTestMethod(context, testExtensionContext, throwableCollector);
+				invokeAfterTestMethodCallbacks(registry, testExtensionContext, throwableCollector);
+			invokeAfterEachMethods(registry, testExtensionContext, throwableCollector);
+		invokeAfterEachCallbacks(registry, testExtensionContext, throwableCollector);
+		// @formatter:on
 
 		throwableCollector.assertEmpty();
 
 		return context;
 	}
 
-	private void invokeInstancePostProcessorExtensionPoints(ExtensionRegistry extensionRegistry,
-			TestExtensionContext testExtensionContext) throws Exception {
-
-		Consumer<RegisteredExtensionPoint<InstancePostProcessor>> applyInstancePostProcessor = registeredExtensionPoint -> {
-			executeAndMaskThrowable(
-				() -> registeredExtensionPoint.getExtensionPoint().postProcessTestInstance(testExtensionContext));
-		};
-
-		extensionRegistry.stream(InstancePostProcessor.class, ApplicationOrder.FORWARD).forEach(
-			applyInstancePostProcessor);
+	private void invokeBeforeEachCallbacks(ExtensionRegistry registry, TestExtensionContext context) {
+		registry.stream(BeforeEachCallback.class)//
+				.forEach(extension -> executeAndMaskThrowable(() -> extension.beforeEach(context)));
 	}
 
-	private void invokeBeforeEachExtensionPoints(ExtensionRegistry extensionRegistry,
-			TestExtensionContext testExtensionContext) throws Exception {
+	private void invokeBeforeEachMethods(ExtensionRegistry registry, TestExtensionContext context) {
+		registry.stream(BeforeEachMethodAdapter.class)//
+				.forEach(extension -> executeAndMaskThrowable(() -> extension.invoke(context)));
+	}
 
-		Consumer<RegisteredExtensionPoint<BeforeEachExtensionPoint>> applyBeforeEach = registeredExtensionPoint -> {
-			executeAndMaskThrowable(
-				() -> registeredExtensionPoint.getExtensionPoint().beforeEach(testExtensionContext));
-		};
-
-		extensionRegistry.stream(BeforeEachExtensionPoint.class, ApplicationOrder.FORWARD).forEach(applyBeforeEach);
+	private void invokeBeforeTestMethodCallbacks(ExtensionRegistry registry, TestExtensionContext context) {
+		registry.stream(BeforeTestMethodCallback.class)//
+				.forEach(extension -> executeAndMaskThrowable(() -> extension.beforeTestMethod(context)));
 	}
 
 	protected void invokeTestMethod(JUnit5EngineExecutionContext context, TestExtensionContext testExtensionContext,
@@ -185,61 +185,50 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				new MethodInvoker(testExtensionContext, context.getExtensionRegistry()).invoke(methodInvocationContext);
 			}
 			catch (Throwable throwable) {
-				invokeExceptionHandlerExtensionPoints(context.getExtensionRegistry(), testExtensionContext, throwable);
+				invokeExceptionHandlers(context.getExtensionRegistry(), testExtensionContext, throwable);
 			}
-
 		});
 	}
 
-	private void invokeExceptionHandlerExtensionPoints(ExtensionRegistry extensionRegistry,
-			TestExtensionContext testExtensionContext, Throwable throwable) {
-
-		// Necessary because mere streaming over exceptions does not work in this case.
-		List<ExceptionHandlerExtensionPoint> exceptionHandlers = collectExceptionHandlerExtensionPoints(
-			extensionRegistry);
-		executeExceptionHandlers(throwable, exceptionHandlers, testExtensionContext);
+	private void invokeExceptionHandlers(ExtensionRegistry registry, TestExtensionContext context, Throwable ex) {
+		List<ExceptionHandler> exceptionHandlers = registry.stream(ExceptionHandler.class).collect(toList());
+		invokeExceptionHandlers(ex, exceptionHandlers, context);
 	}
 
-	private void executeExceptionHandlers(Throwable throwable, List<ExceptionHandlerExtensionPoint> exceptionHandlers,
-			TestExtensionContext testExtensionContext) {
-
-		rethrowExceptionIfThereIsNoHandlerLeft(throwable, exceptionHandlers);
+	private void invokeExceptionHandlers(Throwable ex, List<ExceptionHandler> handlers, TestExtensionContext context) {
+		// No handlers left?
+		if (handlers.isEmpty()) {
+			ExceptionUtils.throwAsUncheckedException(ex);
+		}
 
 		try {
-			executeFirstExceptionHandler(throwable, exceptionHandlers, testExtensionContext);
+			// Invoke next available handler
+			handlers.remove(0).handleException(context, ex);
 		}
 		catch (Throwable t) {
-			executeExceptionHandlers(t, exceptionHandlers, testExtensionContext);
+			invokeExceptionHandlers(t, handlers, context);
 		}
 	}
 
-	private void executeFirstExceptionHandler(Throwable throwable,
-			List<ExceptionHandlerExtensionPoint> exceptionHandlers, TestExtensionContext testExtensionContext)
-			throws Throwable {
-		ExceptionHandlerExtensionPoint exceptionHandler = exceptionHandlers.remove(0);
-		exceptionHandler.handleException(testExtensionContext, throwable);
+	private void invokeAfterTestMethodCallbacks(ExtensionRegistry registry, TestExtensionContext context,
+			ThrowableCollector throwableCollector) {
+
+		registry.reverseStream(AfterTestMethodCallback.class)//
+				.forEach(extension -> throwableCollector.execute(() -> extension.afterTestMethod(context)));
 	}
 
-	private void rethrowExceptionIfThereIsNoHandlerLeft(Throwable throwable,
-			List<ExceptionHandlerExtensionPoint> exceptionHandlers) {
-		if (exceptionHandlers.isEmpty())
-			throw ExceptionUtils.throwAsUncheckedException(throwable);
+	private void invokeAfterEachMethods(ExtensionRegistry registry, TestExtensionContext context,
+			ThrowableCollector throwableCollector) {
+
+		registry.reverseStream(AfterEachMethodAdapter.class)//
+				.forEach(extension -> throwableCollector.execute(() -> extension.invoke(context)));
 	}
 
-	private List<ExceptionHandlerExtensionPoint> collectExceptionHandlerExtensionPoints(
-			ExtensionRegistry extensionRegistry) {
-		return extensionRegistry.stream(ExceptionHandlerExtensionPoint.class, ApplicationOrder.FORWARD).map(
-			RegisteredExtensionPoint::getExtensionPoint).collect(Collectors.toList());
-	}
+	private void invokeAfterEachCallbacks(ExtensionRegistry registry, TestExtensionContext context,
+			ThrowableCollector throwableCollector) {
 
-	private void invokeAfterEachExtensionPoints(ExtensionRegistry extensionRegistry,
-			TestExtensionContext testExtensionContext, ThrowableCollector throwableCollector) throws Exception {
-
-		extensionRegistry.stream(AfterEachExtensionPoint.class, ApplicationOrder.BACKWARD).forEach(
-			registeredExtensionPoint -> {
-				throwableCollector.execute(
-					() -> registeredExtensionPoint.getExtensionPoint().afterEach(testExtensionContext));
-			});
+		registry.reverseStream(AfterEachCallback.class)//
+				.forEach(extension -> throwableCollector.execute(() -> extension.afterEach(context)));
 	}
 
 }

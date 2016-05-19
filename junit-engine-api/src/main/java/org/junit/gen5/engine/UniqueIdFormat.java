@@ -10,32 +10,37 @@
 
 package org.junit.gen5.engine;
 
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.UniqueId.Segment;
 
 /**
- * Used to parse a unique ID string representation into a {@link UniqueId}
- * or to format a {@link UniqueId uniqueId} into a string representation.
+ * Used to {@link #parse} a {@link UniqueId} from a string representation
+ * or to {@link #format} a {@link UniqueId} into a string representation.
+ *
+ * @since 5.0
  */
 public class UniqueIdFormat {
+
+	private static final UniqueIdFormat defaultFormat = new UniqueIdFormat('[', ':', ']', '/');
+
+	public static UniqueIdFormat getDefault() {
+		return defaultFormat;
+	}
+
 	private final char openSegment;
 	private final char closeSegment;
 	private final char segmentDelimiter;
 	private final char typeValueSeparator;
 	private final Pattern segmentPattern;
-
-	public static UniqueIdFormat getDefault() {
-		return new UniqueIdFormat('[', ':', ']', '/');
-	}
 
 	public UniqueIdFormat(char openSegment, char typeValueSeparator, char closeSegment, char segmentDelimiter) {
 		this.openSegment = openSegment;
@@ -43,47 +48,62 @@ public class UniqueIdFormat {
 		this.closeSegment = closeSegment;
 		this.segmentDelimiter = segmentDelimiter;
 		this.segmentPattern = Pattern.compile(
-			String.format("\\%s(.+)\\%s(.+)\\%s", openSegment, typeValueSeparator, closeSegment));
+			String.format("%s(.+)%s(.+)%s", quote(openSegment), quote(typeValueSeparator), quote(closeSegment)));
 	}
 
-	public UniqueId parse(String source) {
-		String[] parts = source.split(Character.toString(segmentDelimiter));
-		List<Segment> segments = Arrays.stream(parts).map(this::createSegment).collect(Collectors.toList());
-		return new UniqueId(segments);
+	/**
+	 * Parse a {@code UniqueId} from the supplied string representation.
+	 *
+	 * @return a properly constructed {@code UniqueId}
+	 * @throws JUnitException if the string cannot be parsed
+	 */
+	public UniqueId parse(String source) throws JUnitException {
+		String[] parts = source.split(String.valueOf(this.segmentDelimiter));
+		List<Segment> segments = Arrays.stream(parts).map(this::createSegment).collect(toList());
+		return new UniqueId(this, segments);
 	}
 
-	private Segment createSegment(String segmentString) {
-		Matcher segmentMatcher = segmentPattern.matcher(segmentString);
-		if (!segmentMatcher.matches())
+	private Segment createSegment(String segmentString) throws JUnitException {
+		Matcher segmentMatcher = this.segmentPattern.matcher(segmentString);
+		if (!segmentMatcher.matches()) {
 			throw new JUnitException(String.format("'%s' is not a well-formed UniqueId segment", segmentString));
+		}
 		String type = checkAllowed(segmentMatcher.group(1));
 		String value = checkAllowed(segmentMatcher.group(2));
 		return new Segment(type, value);
 	}
 
 	private String checkAllowed(String typeOrValue) {
-		checkDoesNotContain(typeOrValue, segmentDelimiter);
-		checkDoesNotContain(typeOrValue, typeValueSeparator);
-		checkDoesNotContain(typeOrValue, openSegment);
-		checkDoesNotContain(typeOrValue, closeSegment);
+		checkDoesNotContain(typeOrValue, this.segmentDelimiter);
+		checkDoesNotContain(typeOrValue, this.typeValueSeparator);
+		checkDoesNotContain(typeOrValue, this.openSegment);
+		checkDoesNotContain(typeOrValue, this.closeSegment);
 		return typeOrValue;
 	}
 
-	private void checkDoesNotContain(String typeOrValue, char forbiddenString) {
-		Preconditions.condition(typeOrValue.indexOf(forbiddenString) < 0,
-			String.format("type or value '%s' must not contain '%s'", typeOrValue, forbiddenString));
+	private void checkDoesNotContain(String typeOrValue, char forbiddenCharacter) {
+		Preconditions.condition(typeOrValue.indexOf(forbiddenCharacter) < 0,
+			() -> String.format("type or value '%s' must not contain '%s'", typeOrValue, forbiddenCharacter));
 	}
 
 	/**
-	 * Create and deliver the string representation of the {@code UniqueId}
+	 * Format and return the string representation of the supplied {@code UniqueId}.
 	 */
 	public String format(UniqueId uniqueId) {
-		Stream<String> segmentStream = uniqueId.getSegments().stream().map(this::describe);
-		return StringUtils.join(segmentStream, Character.toString(segmentDelimiter));
+		// @formatter:off
+		return uniqueId.getSegments().stream()
+			.map(this::describe)
+			.collect(joining(String.valueOf(this.segmentDelimiter)));
+		// @formatter:on
 	}
 
 	private String describe(Segment segment) {
-		return String.format("[%s%s%s]", segment.getType(), typeValueSeparator, segment.getValue());
+		return String.format("%s%s%s%s%s", this.openSegment, segment.getType(), this.typeValueSeparator,
+			segment.getValue(), this.closeSegment);
+	}
+
+	private static String quote(char c) {
+		return Pattern.quote(String.valueOf(c));
 	}
 
 }

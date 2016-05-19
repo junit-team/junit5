@@ -30,11 +30,7 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Internal)
-public final class FunctionUtils {
-
-	private FunctionUtils() {
-		/* no-op */
-	}
+public abstract class FunctionUtils {
 
 	/**
 	 * Returns a predicate that first applies the specified function and then

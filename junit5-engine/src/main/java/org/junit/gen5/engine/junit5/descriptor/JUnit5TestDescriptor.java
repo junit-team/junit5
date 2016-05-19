@@ -72,7 +72,7 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 				.flatMap(Arrays::stream)
 				.collect(toList());
 		// @formatter:on
-		return ExtensionRegistry.newRegistryFrom(existingExtensionRegistry, extensionTypes);
+		return ExtensionRegistry.createRegistryFrom(existingExtensionRegistry, extensionTypes);
 	}
 
 	/**

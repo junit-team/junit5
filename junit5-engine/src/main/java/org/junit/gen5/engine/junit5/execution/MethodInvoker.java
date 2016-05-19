@@ -27,7 +27,6 @@ import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
-import org.junit.gen5.engine.junit5.extension.RegisteredExtensionPoint;
 
 /**
  * {@code MethodInvoker} encapsulates the invocation of a method, including
@@ -76,8 +75,7 @@ public class MethodInvoker {
 		try {
 			// @formatter:off
 			List<MethodParameterResolver> matchingResolvers = extensionRegistry.stream(MethodParameterResolver.class)
-					.map(RegisteredExtensionPoint::getExtensionPoint)
-					.filter(extensionPoint -> extensionPoint.supports(parameter, methodInvocationContext, extensionContext))
+					.filter(extension -> extension.supports(parameter, methodInvocationContext, extensionContext))
 					.collect(toList());
 			// @formatter:on
 

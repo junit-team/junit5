@@ -18,14 +18,4 @@ import org.junit.gen5.commons.meta.API;
 
 @API(Experimental)
 public interface TestSource extends Serializable {
-
-	boolean isJavaClass();
-
-	boolean isJavaMethod();
-
-	boolean isDirectory();
-
-	boolean isFile();
-
-	boolean isFilePosition();
 }

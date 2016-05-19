@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit5.stubs;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.UniqueId;
 
@@ -30,7 +31,7 @@ public class TestEngineStub implements TestEngine {
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		return null;
+		return new TestDescriptorStub(UniqueId.forEngine(getId()), getId());
 	}
 
 	@Override

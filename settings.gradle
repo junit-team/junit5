@@ -13,3 +13,10 @@ include "junit5-api"
 include "junit5-engine"
 
 include "surefire-junit5"
+
+// check that every subproject has a custom build file
+// based on the project name
+rootProject.children.each { project ->
+	project.buildFileName = "${project.name}.gradle"
+	assert project.buildFile.isFile()
+}

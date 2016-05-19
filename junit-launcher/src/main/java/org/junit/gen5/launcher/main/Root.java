@@ -16,8 +16,10 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.gen5.engine.*;
-import org.junit.gen5.launcher.*;
+import org.junit.gen5.engine.Filter;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
  * Represents the root of all discovered {@link TestEngine} and their {@link TestDescriptor}s.
@@ -74,11 +76,11 @@ class Root {
 	}
 
 	private void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {
-		testEngineDescriptors.values().stream().forEach(testEngine -> testEngine.accept(visitor));
+		testEngineDescriptors.values().forEach(descriptor -> descriptor.accept(visitor));
 	}
 
 	private void pruneEmptyTestEngines() {
-		testEngineDescriptors.values().removeIf(testEngine -> testEngine.getChildren().isEmpty());
+		testEngineDescriptors.values().removeIf(descriptor -> descriptor.getChildren().isEmpty());
 	}
 
 }

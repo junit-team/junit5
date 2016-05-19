@@ -15,7 +15,7 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code TestExecutionCondition} defines an {@link ExtensionPoint} for
+ * {@code TestExecutionCondition} defines the {@link Extension} API for
  * programmatic, <em>conditional test execution</em>.
  *
  * <p>A {@code TestExecutionCondition} is {@linkplain #evaluate evaluated}
@@ -30,7 +30,7 @@ import org.junit.gen5.commons.meta.API;
  */
 @FunctionalInterface
 @API(Experimental)
-public interface TestExecutionCondition extends ExtensionPoint {
+public interface TestExecutionCondition extends Extension {
 
 	/**
 	 * Evaluate this condition for the supplied {@link TestExtensionContext}.

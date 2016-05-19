@@ -15,6 +15,7 @@ import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 import org.junit.gen5.engine.support.hierarchical.EngineExecutionContext;
@@ -27,8 +28,9 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 
 	private final State state;
 
-	public JUnit5EngineExecutionContext(EngineExecutionListener executionListener) {
-		this(new State(executionListener));
+	public JUnit5EngineExecutionContext(EngineExecutionListener executionListener,
+			ConfigurationParameters configurationParameters) {
+		this(new State(executionListener, configurationParameters));
 	}
 
 	private JUnit5EngineExecutionContext(State state) {
@@ -37,6 +39,10 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 
 	public EngineExecutionListener getExecutionListener() {
 		return this.state.executionListener;
+	}
+
+	public ConfigurationParameters getConfigurationParameters() {
+		return this.state.configurationParameters;
 	}
 
 	public TestInstanceProvider getTestInstanceProvider() {
@@ -62,12 +68,14 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 	private static final class State implements Cloneable {
 
 		final EngineExecutionListener executionListener;
+		final ConfigurationParameters configurationParameters;
 		TestInstanceProvider testInstanceProvider;
 		ExtensionRegistry extensionRegistry;
 		ExtensionContext extensionContext;
 
-		public State(EngineExecutionListener executionListener) {
+		public State(EngineExecutionListener executionListener, ConfigurationParameters configurationParameters) {
 			this.executionListener = executionListener;
+			this.configurationParameters = configurationParameters;
 		}
 
 		@Override

@@ -11,8 +11,7 @@ JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
 [[extension-registration]]
 === Registering Extensions
 
-Extensions can be registered either declaratively via `{ExtendWith}` or programmatically
-via an `{ExtensionRegistrar}`.
+Extensions can be registered declaratively via `{ExtendWith}`.
 
 Note that registered extensions are inherited within test class hierarchies.
 
@@ -60,85 +59,6 @@ class MyTestsV2 {
 The execution of tests in both `MyTestsV1` and `MyTestsV2` will be extended by the
 `FooExtension` and `BarExtension`, in exactly that order.
 
-[[extension-registration-programmatic]]
-==== Programmatic Extension Registration
-
-Developers can register one or more extensions _programmatically_ by implementing the
-`{ExtensionRegistrar}` API and registering the custom `ExtensionRegistrar` implementation
-via `@ExtendWith` as mentioned above. The following examples demonstrate the various
-options in implementations of the `ExtensionRegistrar.registerExtensions()` method.
-
-===== Registering an ExtensionPoint Instance
-
-If you have an instance of an extension that implements one or more `ExtensionPoint`
-APIs, you can register it as follows using the _default_ `Position`.
-
-[source,java,indent=0]
-[subs="verbatim"]
-----
-public void registerExtensions(ExtensionPointRegistry registry) {
-    CustomExtension customExtension = // instantiate extension
-    registry.register(customExtension);
-}
-----
-
-If you would like to influence the order in which multiple implementations of the same
-`ExtensionPoint` API are applied, you can do so by registering the extensions
-programmatically and supplying the `Position`. The following values are permitted.
-
-- `OUTERMOST`: Applied first. Only a single extension is allowed to be assigned this
-  position; otherwise, an `ExtensionConfigurationException` will be thrown.
-- `OUTSIDE_DEFAULT`: Applied after `OUTERMOST` but before `DEFAULT`, `INSIDE_DEFAULT`,
-  and `INNERMOST`. Multiple extensions can be assigned this position; however, the
-  ordering among such extensions is undefined.
-- `DEFAULT`: (?)
-- `INSIDE_DEFAULT`: (?)
-- `INNERMOST`: (?)
-
-The following listing demonstrates how to configure an explicit position for an instance
-of an extension. Note, however, that a `Position` can also be supplied for lambda
-expressions and method references.
-
-[source,java,indent=0]
-[subs="verbatim"]
-----
-public void registerExtensions(ExtensionPointRegistry registry) {
-    registry.register(new TimingExtension(), Position.INNERMOST);
-}
-----
-
-===== Registering a Lambda Expression as an ExtensionPoint
-
-If you would like to implement a single `ExtensionPoint` API as a _lambda expression_,
-you can register it as follows. Note, however, that the API must be a _functional
-interface_.
-
-[source,java,indent=0]
-[subs="verbatim"]
-----
-public void registerExtensions(ExtensionPointRegistry registry) {
-    registry.register((BeforeEachExtensionPoint) context -> { /* ... */ });
-}
-----
-
-===== Registering a Method Reference as an ExtensionPoint
-
-If you would like to implement a single `ExtensionPoint` API via a _method reference_,
-you can register it as follows. Note, however, that the API must be a _functional
-interface_.
-
-[source,java,indent=0]
-[subs="verbatim"]
-----
-public void registerExtensions(ExtensionPointRegistry registry) {
-    registry.register((BeforeEachExtensionPoint) this::beforeEach);
-}
-
-void beforeEach(TestExtensionContext context) {
-    /* ... */
-}
-----
-
 
 === Conditional Test Execution
 
@@ -153,6 +73,42 @@ determine if a given test method should be executed based on the supplied
 
 See the source code of `{DisabledCondition}` and `{Disabled}` for concrete examples.
 
+==== Deactivating Conditions
+
+Sometimes it can be useful to run a test suite _without_ certain conditions being active.
+For example, you may wish to run tests even if they are annotated with `@Disabled` in
+order to see if they are still _broken_. To do this, simply provide a pattern for the
+`junit.conditions.deactivate` configuration key to specify which conditions should be
+deactivated (i.e., not evaluated) for the current test run. The pattern can be supplied
+as a JVM system property or as a _configuration parameter_ in the `TestDiscoveryRequest`
+that is passed to the `Launcher`.
+
+For example, to deactivate JUnit's `@Disabled` condition, you can start your JVM with
+the following system property:
+
+`-Djunit.conditions.deactivate=org.junit.*DisabledCondition`
+
+
+===== Pattern Matching Syntax
+
+If the `junit.conditions.deactivate` pattern consists solely of an asterisk (`+*+`), all
+conditions will be deactivated. Otherwise, the pattern will be used to match against the
+fully qualified class name (_FQCN_) of each registered condition. Any dot (`.`) in the
+pattern will match against a dot (`.`) or a dollar sign (`$`) in the FQCN. Any asterisk
+(`+*+`) will match against one or more characters in the FQCN. All other characters in the
+pattern will be matched one-to-one against the FQCN.
+
+Examples:
+
+- `+*+`: deactivates all conditions.
+- `+org.junit.*+`: deactivates every condition under the `org.junit` base package and any
+  of its subpackages.
+- `+*.MyCondition+`: deactivates every condition whose simple class name is exactly
+  `MyCondition`.
+- `+*System*+`: deactivates every condition whose simple class name contains `System`.
+- `org.example.MyCondition`: deactivates the condition whose FQCN is exactly
+  `org.example.MyCondition`.
+
 
 === Test Instance Post-processing
 
@@ -164,6 +120,7 @@ initialization methods on the test instance, etc.
 
 For concrete examples, consult the source code for the `{MockitoExtension}` and the
 `{SpringExtension}`.
+
 
 === Parameter Resolution
 
@@ -178,25 +135,29 @@ resolved by _name_, _type_, _annotation_, or any combination thereof. For concre
 consult the source code for `{CustomTypeParameterResolver}` and
 `{CustomAnnotationParameterResolver}`.
 
+
 === Test Lifecycle Callbacks
 
 The following interfaces define the APIs for extending tests at various points in the
 test execution lifecycle. Consult the Javadoc for each of these in the
-`{extension-api-package}` package.
+`{extension-api-package}` package for further details.
 
-* `BeforeEachExtensionPoint`
-* `AfterEachExtensionPoint`
-* `BeforeAllExtensionPoint`
-* `AfterAllExtensionPoint`
+* `BeforeAllCallback`
+* `AfterAllCallback`
+* `BeforeEachCallback`
+* `AfterEachCallback`
+* `BeforeTestMethodCallback`
+* `AfterTestMethodCallback`
 
 Note that extension developers may choose to implement any number of these interfaces
 within a single extension. Consult the source code of the `{SpringExtension}` for a
 concrete example.
 
+
 === Exception Handling
 
-`{ExceptionHandlerExtensionPoint}` defines the API for `Extensions` that wish to _react to
-exceptions_ thrown in a test.
+`{ExceptionHandler}` defines the API for `Extensions` that wish to handle exceptions
+thrown from tests.
 
 The following example shows an extension which will swallow all instances of `IOException`
 but rethrow any other type of exception:
@@ -209,12 +170,10 @@ include::{testDir}/example/exception/IgnoreIOExceptionExtension.java[tags=user_g
 ----
 
 
-
 === Keeping State in Extensions
 
 Usually, an extension is instantiated only once. So the question becomes relevant: How do you keep the state
 from one invocation of an extension point to the next? ...
-
 
 
 === Additional Planned Extensions

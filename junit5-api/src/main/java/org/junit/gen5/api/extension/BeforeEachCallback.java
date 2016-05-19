@@ -15,26 +15,31 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code BeforeEachExtensionPoint} defines the API for {@link Extension
- * Extensions} that wish to provide additional behavior to tests before
- * each test method has been invoked.
+ * {@code BeforeEachCallback} defines the API for {@link Extension Extensions}
+ * that wish to provide additional behavior to tests before each test is invoked.
  *
- * <p>Concrete implementations often implement {@link AfterEachExtensionPoint} as well.
+ * <p>In this context, the term <em>test</em> refers to the actual test method
+ * plus any user defined setup methods (e.g.,
+ * {@link org.junit.gen5.api.BeforeEach @BeforeEach} methods).
+ *
+ * <p>Concrete implementations often implement {@link AfterEachCallback} as well.
  *
  * <p>Implementations must provide a no-args constructor.
  *
  * @since 5.0
  * @see org.junit.gen5.api.BeforeEach
- * @see AfterEachExtensionPoint
- * @see BeforeAllExtensionPoint
- * @see AfterAllExtensionPoint
+ * @see AfterEachCallback
+ * @see BeforeTestMethodCallback
+ * @see AfterTestMethodCallback
+ * @see BeforeAllCallback
+ * @see AfterAllCallback
  */
 @FunctionalInterface
 @API(Experimental)
-public interface BeforeEachExtensionPoint extends ExtensionPoint {
+public interface BeforeEachCallback extends Extension {
 
 	/**
-	 * Callback that is invoked <em>before</em> each test method has been invoked.
+	 * Callback that is invoked <em>before</em> each test is invoked.
 	 *
 	 * @param context the current test extension context
 	 */

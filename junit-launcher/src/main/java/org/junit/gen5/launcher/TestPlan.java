@@ -59,7 +59,7 @@ public final class TestPlan {
 	public static TestPlan from(Collection<TestDescriptor> engineDescriptors) {
 		TestPlan testPlan = new TestPlan();
 		Visitor visitor = descriptor -> testPlan.add(TestIdentifier.from(descriptor));
-		engineDescriptors.stream().forEach(engineDescriptor -> engineDescriptor.accept(visitor));
+		engineDescriptors.forEach(engineDescriptor -> engineDescriptor.accept(visitor));
 		return testPlan;
 	}
 

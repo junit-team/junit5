@@ -25,6 +25,9 @@ import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
 
+/**
+ * @since 5.0
+ */
 public class DiscoverySelectorResolver {
 
 	public void resolveSelectors(EngineDiscoveryRequest request, TestDescriptor engineDescriptor) {
@@ -32,12 +35,12 @@ public class DiscoverySelectorResolver {
 
 		request.getSelectorsByType(ClasspathSelector.class).forEach(selector -> {
 			File rootDirectory = selector.getClasspathRoot();
-			findAllClassesInClasspathRoot(rootDirectory, new IsScannableTestClass()).stream().forEach(
+			findAllClassesInClasspathRoot(rootDirectory, new IsScannableTestClass()).forEach(
 				javaElementsResolver::resolveClass);
 		});
 		request.getSelectorsByType(PackageSelector.class).forEach(selector -> {
 			String packageName = selector.getPackageName();
-			findAllClassesInPackage(packageName, new IsScannableTestClass()).stream().forEach(
+			findAllClassesInPackage(packageName, new IsScannableTestClass()).forEach(
 				javaElementsResolver::resolveClass);
 		});
 		request.getSelectorsByType(ClassSelector.class).forEach(selector -> {
