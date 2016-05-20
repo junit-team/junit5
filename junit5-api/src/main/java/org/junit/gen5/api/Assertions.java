@@ -728,6 +728,9 @@ public final class Assertions {
 	}
 
 	private static boolean floatsDifferent(float value1, float value2, float delta) {
+		if (Float.isNaN(delta) || delta <= 0.0) {
+			failIllegalDelta(String.valueOf(delta));
+		}
 		if (floatsEqual(value1, value2)) {
 			return false;
 		}
@@ -738,6 +741,9 @@ public final class Assertions {
 	}
 
 	private static boolean doublesDifferent(double value1, double value2, double delta) {
+		if (Double.isNaN(delta) || delta <= 0.0) {
+			failIllegalDelta(String.valueOf(delta));
+		}
 		if (doublesEqual(value1, value2)) {
 			return false;
 		}
@@ -745,6 +751,10 @@ public final class Assertions {
 			return false;
 		}
 		return true;
+	}
+
+	private static void failIllegalDelta(String delta) {
+		fail("positive delta expected but was: <" + delta + ">");
 	}
 
 	private static boolean floatsEqual(float value1, float value2) {

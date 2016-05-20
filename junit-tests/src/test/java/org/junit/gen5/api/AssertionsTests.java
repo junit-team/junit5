@@ -545,6 +545,18 @@ public class AssertionsTests {
 	}
 
 	@Test
+	void assertEqualsFloatWithIllegalDelta() {
+		AssertionFailedError e1 = expectThrows(AssertionFailedError.class, () -> assertEquals(0.1f, 0.2f, -0.9f));
+		assertMessageEndsWith(e1, "positive delta expected but was: <-0.9>");
+
+		AssertionFailedError e2 = expectThrows(AssertionFailedError.class, () -> assertEquals(.0f, .0f, -10.5f));
+		assertMessageEndsWith(e2, "positive delta expected but was: <-10.5>");
+
+		AssertionFailedError e3 = expectThrows(AssertionFailedError.class, () -> assertEquals(4.5f, 4.6f, Float.NaN));
+		assertMessageEndsWith(e3, "positive delta expected but was: <NaN>");
+	}
+
+	@Test
 	void assertEqualsFloatWithDeltaWithUnequalValues() {
 		AssertionFailedError e1 = expectThrows(AssertionFailedError.class, () -> assertEquals(0.5f, 0.2f, 0.2f));
 		assertMessageEndsWith(e1, "expected: <0.5> but was: <0.2>");
@@ -555,11 +567,11 @@ public class AssertionsTests {
 		AssertionFailedError e3 = expectThrows(AssertionFailedError.class, () -> assertEquals(100.0f, 50.0f, 10.0f));
 		assertMessageEndsWith(e3, "expected: <100.0> but was: <50.0>");
 
-		AssertionFailedError e4 = expectThrows(AssertionFailedError.class, () -> assertEquals(-3.5f, -3.3f, -42.0f));
+		AssertionFailedError e4 = expectThrows(AssertionFailedError.class, () -> assertEquals(-3.5f, -3.3f, 0.01f));
 		assertMessageEndsWith(e4, "expected: <-3.5> but was: <-3.3>");
 
-		AssertionFailedError e5 = expectThrows(AssertionFailedError.class, () -> assertEquals(+0.0f, -0.0f, -1.0f));
-		assertMessageEndsWith(e5, "expected: <0.0> but was: <-0.0>");
+		AssertionFailedError e5 = expectThrows(AssertionFailedError.class, () -> assertEquals(+0.0f, -0.001f, .00001f));
+		assertMessageEndsWith(e5, "expected: <0.0> but was: <-0.001>");
 	}
 
 	@Test
@@ -636,6 +648,18 @@ public class AssertionsTests {
 	}
 
 	@Test
+	void assertEqualsDoubleWithIllegalDelta() {
+		AssertionFailedError e1 = expectThrows(AssertionFailedError.class, () -> assertEquals(1.1d, 1.11d, -0.5d));
+		assertMessageEndsWith(e1, "positive delta expected but was: <-0.5>");
+
+		AssertionFailedError e2 = expectThrows(AssertionFailedError.class, () -> assertEquals(.55d, .56d, -10.5d));
+		assertMessageEndsWith(e2, "positive delta expected but was: <-10.5>");
+
+		AssertionFailedError e3 = expectThrows(AssertionFailedError.class, () -> assertEquals(1.1d, 1.1d, Double.NaN));
+		assertMessageEndsWith(e3, "positive delta expected but was: <NaN>");
+	}
+
+	@Test
 	void assertEqualsDoubleWithDeltaWithUnequalValues() {
 		AssertionFailedError e1 = expectThrows(AssertionFailedError.class, () -> assertEquals(9.9d, 9.7d, 0.1d));
 		assertMessageEndsWith(e1, "expected: <9.9> but was: <9.7>");
@@ -646,11 +670,11 @@ public class AssertionsTests {
 		AssertionFailedError e3 = expectThrows(AssertionFailedError.class, () -> assertEquals(17.11d, 15.11d, 1.1d));
 		assertMessageEndsWith(e3, "expected: <17.11> but was: <15.11>");
 
-		AssertionFailedError e4 = expectThrows(AssertionFailedError.class, () -> assertEquals(-7.2d, -5.9d, -42.0d));
+		AssertionFailedError e4 = expectThrows(AssertionFailedError.class, () -> assertEquals(-7.2d, -5.9d, 1.1d));
 		assertMessageEndsWith(e4, "expected: <-7.2> but was: <-5.9>");
 
-		AssertionFailedError e5 = expectThrows(AssertionFailedError.class, () -> assertEquals(+0.0d, -0.0d, -1.0d));
-		assertMessageEndsWith(e5, "expected: <0.0> but was: <-0.0>");
+		AssertionFailedError e5 = expectThrows(AssertionFailedError.class, () -> assertEquals(+0.0d, -0.001d, .00001d));
+		assertMessageEndsWith(e5, "expected: <0.0> but was: <-0.001>");
 	}
 
 	@Test
