@@ -685,7 +685,7 @@ public final class Assertions {
 	}
 
 	private static void failNotNull(Object actual, String message) {
-		fail(buildPrefix(message) + "expected: <null> but was: <" + actual + ">");
+		fail(buildPrefix(message) + "expected: <null> but was: <" + actual + ">", null, actual);
 	}
 
 	private static void failSame(Object actual, String message) {
@@ -693,11 +693,15 @@ public final class Assertions {
 	}
 
 	private static void failNotSame(Object expected, Object actual, String message) {
-		fail(format(expected, actual, message));
+		fail(format(expected, actual, message), expected, actual);
 	}
 
 	private static void failNotEqual(Object expected, Object actual, String message) {
-		fail(format(expected, actual, message));
+		fail(format(expected, actual, message), expected, actual);
+	}
+
+	private static void fail(String message, Object expected, Object actual) {
+		throw new AssertionFailedError(message, expected, actual);
 	}
 
 	private static String format(Object expected, Object actual, String message) {
