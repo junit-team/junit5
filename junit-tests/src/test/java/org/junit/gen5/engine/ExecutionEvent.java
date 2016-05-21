@@ -12,9 +12,13 @@ package org.junit.gen5.engine;
 
 import static java.util.function.Predicate.isEqual;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
-import static org.junit.gen5.engine.ExecutionEvent.Type.*;
+import static org.junit.gen5.engine.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
+import static org.junit.gen5.engine.ExecutionEvent.Type.FINISHED;
+import static org.junit.gen5.engine.ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED;
+import static org.junit.gen5.engine.ExecutionEvent.Type.SKIPPED;
+import static org.junit.gen5.engine.ExecutionEvent.Type.STARTED;
 
-import java.util.*;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.ToStringBuilder;

@@ -11,7 +11,8 @@
 package org.junit.gen5.engine.junit5.discovery;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.isPrivate;
+import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
 
 import java.util.function.Predicate;
 

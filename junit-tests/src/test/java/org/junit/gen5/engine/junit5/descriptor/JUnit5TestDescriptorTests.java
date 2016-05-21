@@ -11,7 +11,8 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

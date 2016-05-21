@@ -10,7 +10,9 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.engine.junit5.descriptor.TestDescriptorBuilder.*;
+import static org.junit.gen5.engine.junit5.descriptor.TestDescriptorBuilder.classTestDescriptor;
+import static org.junit.gen5.engine.junit5.descriptor.TestDescriptorBuilder.engineDescriptor;
+import static org.junit.gen5.engine.junit5.descriptor.TestDescriptorBuilder.nestedClassTestDescriptor;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.List;

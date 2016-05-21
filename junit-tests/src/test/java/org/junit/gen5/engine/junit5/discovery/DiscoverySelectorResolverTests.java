@@ -10,8 +10,12 @@
 
 package org.junit.gen5.engine.junit5.discovery;
 
-import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertSame;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.engineId;
+import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.uniqueIdForClass;
+import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.uniqueIdForMethod;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;

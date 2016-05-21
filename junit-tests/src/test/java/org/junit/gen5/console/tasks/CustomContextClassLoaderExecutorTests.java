@@ -10,7 +10,8 @@
 
 package org.junit.gen5.console.tasks;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertSame;
 
 import java.net.URL;
 import java.net.URLClassLoader;

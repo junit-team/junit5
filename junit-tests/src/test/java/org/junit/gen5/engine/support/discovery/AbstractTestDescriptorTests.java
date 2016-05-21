@@ -10,7 +10,9 @@
 
 package org.junit.gen5.engine.support.discovery;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;

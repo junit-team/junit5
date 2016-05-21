@@ -10,12 +10,13 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNull;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.ExtensionContext.*;
+import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 
 /**
  * Microtests for {@link ExtensionValuesStore}

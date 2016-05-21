@@ -11,7 +11,8 @@
 package example;
 
 // tag::user_guide[]
-import org.junit.gen5.api.*;
+import org.junit.gen5.api.Tag;
+import org.junit.gen5.api.Test;
 
 @Tag("fast")
 @Tag("model")

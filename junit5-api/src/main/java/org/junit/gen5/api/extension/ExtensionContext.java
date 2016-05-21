@@ -13,7 +13,11 @@ package org.junit.gen5.api.extension;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.junit.gen5.commons.meta.API;

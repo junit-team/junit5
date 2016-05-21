@@ -12,7 +12,8 @@ package org.junit.gen5.api;
 
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
 
 import org.junit.gen5.commons.meta.API;
 

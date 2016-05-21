@@ -10,7 +10,8 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.api.Assumptions.assumeTrue;
 import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;

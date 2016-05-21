@@ -18,7 +18,11 @@ import static org.junit.gen5.commons.util.FunctionUtils.where;
 import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.junit.experimental.categories.Category;
 import org.junit.gen5.commons.meta.API;

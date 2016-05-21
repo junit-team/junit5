@@ -10,7 +10,8 @@
 
 package org.junit.gen5.engine.junit4.samples.junit4;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 

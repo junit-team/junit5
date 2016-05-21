@@ -10,7 +10,12 @@
 
 package org.junit.gen5.console.tasks;
 
-import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.*;
+import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.BLUE;
+import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.GREEN;
+import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.NONE;
+import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.PURPLE;
+import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.RED;
+import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.Color.YELLOW;
 
 import java.io.PrintWriter;
 import java.util.regex.Pattern;

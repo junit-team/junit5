@@ -10,7 +10,8 @@
 
 package org.junit.gen5.engine;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import org.junit.gen5.api.Test;
 

@@ -10,7 +10,9 @@
 
 package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.api.Assertions.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNull;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.Map;

@@ -10,8 +10,12 @@
 
 package org.junit.gen5.engine;
 
-import static org.junit.gen5.api.Assertions.*;
-import static org.junit.gen5.engine.FilterResult.*;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertSame;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.engine.FilterResult.excluded;
+import static org.junit.gen5.engine.FilterResult.included;
 
 import java.util.StringJoiner;
 

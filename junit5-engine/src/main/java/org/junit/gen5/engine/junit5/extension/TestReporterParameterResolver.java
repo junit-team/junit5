@@ -16,7 +16,7 @@ import org.junit.gen5.api.TestReporter;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.MethodParameterResolver;
-import org.junit.gen5.commons.util.*;
+import org.junit.gen5.commons.util.Preconditions;
 
 /**
  * {@link MethodParameterResolver} that injects a {@link TestReporter}.

@@ -13,7 +13,8 @@ package example;
 // @formatter:off
 // tag::user_guide[]
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assumptions.*;
+import static org.junit.gen5.api.Assumptions.assumeTrue;
+import static org.junit.gen5.api.Assumptions.assumingThat;
 
 import org.junit.gen5.api.Test;
 

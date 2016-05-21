@@ -12,7 +12,9 @@ package org.junit.gen5.launcher.listeners;
 
 import static java.util.stream.Stream.concat;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
-import static org.junit.gen5.engine.TestExecutionResult.Status.*;
+import static org.junit.gen5.engine.TestExecutionResult.Status.ABORTED;
+import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
+import static org.junit.gen5.engine.TestExecutionResult.Status.SUCCESSFUL;
 
 import java.util.stream.Stream;
 

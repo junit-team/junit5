@@ -14,15 +14,23 @@ import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.data.Index.atIndex;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
-import static org.junit.gen5.engine.ExecutionEvent.*;
-import static org.junit.gen5.engine.ExecutionEvent.Type.*;
-import static org.junit.gen5.engine.TestExecutionResult.Status.*;
-import static org.junit.gen5.engine.TestExecutionResultConditions.*;
+import static org.junit.gen5.engine.ExecutionEvent.Type.FINISHED;
+import static org.junit.gen5.engine.ExecutionEvent.Type.SKIPPED;
+import static org.junit.gen5.engine.ExecutionEvent.Type.STARTED;
+import static org.junit.gen5.engine.ExecutionEvent.byPayload;
+import static org.junit.gen5.engine.ExecutionEvent.byTestDescriptor;
+import static org.junit.gen5.engine.ExecutionEvent.byType;
+import static org.junit.gen5.engine.TestExecutionResult.Status.ABORTED;
+import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
+import static org.junit.gen5.engine.TestExecutionResult.Status.SUCCESSFUL;
+import static org.junit.gen5.engine.TestExecutionResultConditions.cause;
+import static org.junit.gen5.engine.TestExecutionResultConditions.status;
 
 import java.util.List;
 
 import org.assertj.core.api.Condition;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.gen5.engine.ExecutionEvent.Type;
 import org.junit.gen5.engine.TestExecutionResult.Status;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
