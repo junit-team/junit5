@@ -23,7 +23,7 @@ import org.junit.gen5.engine.UniqueId;
 public class UniqueIdSelector implements DiscoverySelector {
 
 	public static UniqueIdSelector forUniqueId(UniqueId uniqueId) {
-		return forUniqueId(uniqueId.getUniqueString());
+		return forUniqueId(uniqueId.toString());
 	}
 
 	public static UniqueIdSelector forUniqueId(String uniqueId) {

@@ -541,7 +541,7 @@ class JUnit4TestEngineDiscoveryTests {
 		TestDescriptor childDescriptor = getOnlyElement(runnerDescriptor.getChildren());
 
 		UniqueId prefix = uniqueIdForClass(testClass);
-		assertThat(childDescriptor.getUniqueId().getUniqueString()).startsWith(prefix.getUniqueString());
+		assertThat(childDescriptor.getUniqueId().toString()).startsWith(prefix.toString());
 
 		String customUniqueIdValue = childDescriptor.getUniqueId().getSegments().get(2).getType();
 		assertNotNull(Base64.getDecoder().decode(customUniqueIdValue.getBytes(StandardCharsets.UTF_8)),

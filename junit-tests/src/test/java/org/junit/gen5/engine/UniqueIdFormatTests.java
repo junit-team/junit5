@@ -33,22 +33,22 @@ class UniqueIdFormatTests {
 
 		@Test
 		void engineIdOnly() {
-			assertEquals("[engine:junit5]", engineId.getUniqueString());
-			assertEquals(format.format(engineId), engineId.getUniqueString());
+			assertEquals("[engine:junit5]", engineId.toString());
+			assertEquals(format.format(engineId), engineId.toString());
 		}
 
 		@Test
 		void withTwoSegments() {
 			UniqueId classId = engineId.append("class", "org.junit.MyClass");
-			assertEquals("[engine:junit5]/[class:org.junit.MyClass]", classId.getUniqueString());
-			assertEquals(format.format(classId), classId.getUniqueString());
+			assertEquals("[engine:junit5]/[class:org.junit.MyClass]", classId.toString());
+			assertEquals(format.format(classId), classId.toString());
 		}
 
 		@Test
 		void withManySegments() {
 			UniqueId uniqueId = engineId.append("t1", "v1").append("t2", "v2").append("t3", "v3");
-			assertEquals("[engine:junit5]/[t1:v1]/[t2:v2]/[t3:v3]", uniqueId.getUniqueString());
-			assertEquals(format.format(uniqueId), uniqueId.getUniqueString());
+			assertEquals("[engine:junit5]/[t1:v1]/[t2:v2]/[t3:v3]", uniqueId.toString());
+			assertEquals(format.format(uniqueId), uniqueId.toString());
 		}
 
 	}
@@ -123,7 +123,7 @@ class UniqueIdFormatTests {
 			UniqueId parsedId = getFormat().parse(getEngineUid());
 			assertSegment(parsedId.getSegments().get(0), "engine", "junit5");
 			assertEquals(getEngineUid(), getFormat().format(parsedId));
-			assertEquals(getEngineUid(), parsedId.getUniqueString());
+			assertEquals(getEngineUid(), parsedId.toString());
 		}
 
 		@Test
@@ -133,7 +133,7 @@ class UniqueIdFormatTests {
 			assertSegment(parsedId.getSegments().get(1), "class", "MyClass");
 			assertSegment(parsedId.getSegments().get(2), "method", "myMethod");
 			assertEquals(getMethodUid(), getFormat().format(parsedId));
-			assertEquals(getMethodUid(), parsedId.getUniqueString());
+			assertEquals(getMethodUid(), parsedId.toString());
 		}
 
 	}

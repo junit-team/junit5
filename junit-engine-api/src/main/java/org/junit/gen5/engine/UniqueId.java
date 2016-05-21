@@ -47,7 +47,7 @@ public class UniqueId implements Cloneable {
 	}
 
 	/**
-	 * Create an engine's unique ID by from its {@code engineId} using the default
+	 * Create an engine's unique ID from its {@code engineId} using the default
 	 * format.
 	 */
 	public static UniqueId forEngine(String engineId) {
@@ -56,10 +56,10 @@ public class UniqueId implements Cloneable {
 
 	/**
 	 * Create a root unique ID from the supplied {@code segmentType} and
-	 * {@code nodeValue} using the default format.
+	 * {@code value} using the default format.
 	 */
-	public static UniqueId root(String segmentType, String nodeValue) {
-		List<Segment> segments = Collections.singletonList(new Segment(segmentType, nodeValue));
+	public static UniqueId root(String segmentType, String value) {
+		List<Segment> segments = Collections.singletonList(new Segment(segmentType, value));
 		return new UniqueId(UniqueIdFormat.getDefault(), segments);
 	}
 
@@ -72,13 +72,6 @@ public class UniqueId implements Cloneable {
 		this.segments.addAll(segments);
 	}
 
-	/**
-	 * Create and deliver the string representation of the {@code UniqueId}
-	 */
-	public String getUniqueString() {
-		return uniqueIdFormat.format(this);
-	}
-
 	public Optional<Segment> getRoot() {
 		return getSegments().stream().findFirst();
 	}
@@ -88,23 +81,35 @@ public class UniqueId implements Cloneable {
 	}
 
 	public List<Segment> getSegments() {
-		return new ArrayList<>(segments);
+		return new ArrayList<>(this.segments);
 	}
 
 	/**
-	 * Construct a new  {@code UniqueId} by appending a {@link Segment} to the end of the current instance
-	 * with {@code segmentType} and {@code value}.
+	 * Construct a new {@code UniqueId} by appending a new {@link Segment}, based
+	 * on the supplied {@code segmentType} and {@code value}, to the end of this
+	 * {@code UniqueId}.
 	 *
-	 * <p>The current instance is left unchanged.</p>
+	 * <p>This {@code UniqueId} will not be modified.
 	 *
-	 * <p>Both {@code segmentType} and {@code segmentType} must not contain any of the special characters used
-	 * for constructing the string representation. This allows more robust parsing.</p>
+	 * <p>Neither the {@code segmentType} nor the {@code value} may contain any
+	 * of the special characters used for constructing the string representation
+	 * of this {@code UniqueId}.
+	 *
+	 * @see #append(Segment)
 	 */
 	public UniqueId append(String segmentType, String value) {
 		Segment segment = new Segment(segmentType, value);
 		return append(segment);
 	}
 
+	/**
+	 * Construct a new {@code UniqueId} by appending the supplied {@link Segment}
+	 * to the end of this {@code UniqueId}.
+	 *
+	 * <p>This {@code UniqueId} will not be modified.
+	 *
+	 * @see #append(String, String)
+	 */
 	public UniqueId append(Segment segment) {
 		UniqueId clone = new UniqueId(this.uniqueIdFormat, this.segments);
 		clone.segments.add(segment);
@@ -123,19 +128,23 @@ public class UniqueId implements Cloneable {
 		if (o == null || getClass() != o.getClass())
 			return false;
 
-		UniqueId uniqueId = (UniqueId) o;
-		return segments.equals(uniqueId.segments);
+		UniqueId that = (UniqueId) o;
+		return this.segments.equals(that.segments);
 
 	}
 
 	@Override
 	public int hashCode() {
-		return segments.hashCode();
+		return this.segments.hashCode();
 	}
 
+	/**
+	 * Generate the unique, formatted string representation of this {@code UniqueId}
+	 * using the configured {@link UniqueIdFormat}.
+	 */
 	@Override
 	public String toString() {
-		return getUniqueString();
+		return this.uniqueIdFormat.format(this);
 	}
 
 	public static class Segment {
@@ -154,6 +163,11 @@ public class UniqueId implements Cloneable {
 
 		public String getValue() {
 			return this.value;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(this.type, this.value);
 		}
 
 		@Override
@@ -178,10 +192,6 @@ public class UniqueId implements Cloneable {
 			// @formatter:on
 		}
 
-		@Override
-		public int hashCode() {
-			return Objects.hash(this.type, this.value);
-		}
 	}
 
 }

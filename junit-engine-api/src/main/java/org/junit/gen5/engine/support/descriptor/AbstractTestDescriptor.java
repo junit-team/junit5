@@ -140,7 +140,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + ": " + getUniqueId().getUniqueString();
+		return getClass().getSimpleName() + ": " + getUniqueId();
 	}
 
 }

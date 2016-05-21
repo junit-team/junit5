@@ -50,8 +50,8 @@ public final class TestIdentifier implements Serializable {
 	 * Factory for creating a new {@link TestIdentifier} from a {@link TestDescriptor}.
 	 */
 	public static TestIdentifier from(TestDescriptor testDescriptor) {
-		String uniqueId = testDescriptor.getUniqueId().getUniqueString();
 		// TODO Use Flyweight Pattern for TestIdentifier?
+		String uniqueId = testDescriptor.getUniqueId().toString();
 		String name = testDescriptor.getName();
 		String displayName = testDescriptor.getDisplayName();
 		Optional<TestSource> source = testDescriptor.getSource();
@@ -59,7 +59,7 @@ public final class TestIdentifier implements Serializable {
 		boolean test = testDescriptor.isTest();
 		boolean container = !test || !testDescriptor.getChildren().isEmpty();
 		Optional<String> parentId = testDescriptor.getParent().map(
-			parentDescriptor -> parentDescriptor.getUniqueId().getUniqueString());
+			parentDescriptor -> parentDescriptor.getUniqueId().toString());
 		return new TestIdentifier(uniqueId, name, displayName, source, tags, test, container, parentId);
 	}
 

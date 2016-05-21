@@ -35,7 +35,7 @@ class UniqueIdTests {
 		void uniqueIdCanBeCreatedFromEngineId() {
 			UniqueId uniqueId = UniqueId.forEngine(ENGINE_ID);
 
-			assertEquals("[engine:junit5]", uniqueId.getUniqueString());
+			assertEquals("[engine:junit5]", uniqueId.toString());
 			assertSegment(uniqueId.getSegments().get(0), "engine", "junit5");
 		}
 
@@ -52,7 +52,7 @@ class UniqueIdTests {
 		void uniqueIdCanBeCreatedFromTypeAndValue() {
 			UniqueId uniqueId = UniqueId.root("aType", "aValue");
 
-			assertEquals("[aType:aValue]", uniqueId.getUniqueString());
+			assertEquals("[aType:aValue]", uniqueId.toString());
 			assertSegment(uniqueId.getSegments().get(0), "aType", "aValue");
 		}
 
@@ -111,7 +111,7 @@ class UniqueIdTests {
 		@Test
 		void ensureDefaultUniqueIdFormatIsUsedForFormatting() {
 			UniqueId parsedDirectly = UniqueId.parse("[engine:junit5]/[class:MyClass]/[method:myMethod]");
-			assertEquals("[engine:junit5]/[class:MyClass]/[method:myMethod]", parsedDirectly.getUniqueString());
+			assertEquals("[engine:junit5]/[class:MyClass]/[method:myMethod]", parsedDirectly.toString());
 		}
 	}
 

@@ -47,7 +47,7 @@ class UniqueIdSelectorResolverTests {
 
 	@Test
 	void logsWarningForEngineUniqueId() {
-		String uniqueId = engineId().getUniqueString();
+		String uniqueId = engineId().toString();
 		RecordCollectingLogger logger = new RecordCollectingLogger();
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueId);
 		TestClassCollector collector = new TestClassCollector();
@@ -59,8 +59,7 @@ class UniqueIdSelectorResolverTests {
 		assertThat(logger.getLogRecords()).hasSize(1);
 		LogRecord logRecord = getOnlyElement(logger.getLogRecords());
 		assertEquals(Level.WARNING, logRecord.getLevel());
-		assertEquals(
-			"Unresolvable Unique ID (" + engineId().getUniqueString() + "): Cannot resolve the engine's unique ID",
+		assertEquals("Unresolvable Unique ID (" + engineId() + "): Cannot resolve the engine's unique ID",
 			logRecord.getMessage());
 	}
 

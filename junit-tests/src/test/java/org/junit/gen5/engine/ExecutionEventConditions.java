@@ -73,7 +73,7 @@ public class ExecutionEventConditions {
 
 	public static Condition<ExecutionEvent> uniqueIdSubstring(String uniqueIdSubstring) {
 		return new Condition<>(
-			byTestDescriptor(where(testDescriptor -> testDescriptor.getUniqueId().getUniqueString(),
+			byTestDescriptor(where(testDescriptor -> testDescriptor.getUniqueId().toString(),
 				uniqueId -> uniqueId.contains(uniqueIdSubstring))),
 			"descriptor with uniqueId substring \"%s\"", uniqueIdSubstring);
 	}

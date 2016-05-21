@@ -101,8 +101,8 @@ class DefaultLauncherTests {
 			request().select(forUniqueId(test1.getUniqueId()), forUniqueId(test2.getUniqueId())).build());
 
 		assertThat(testPlan.getRoots()).hasSize(2);
-		assertThat(testPlan.getChildren(UniqueId.forEngine("engine1").getUniqueString())).hasSize(1);
-		assertThat(testPlan.getChildren(UniqueId.forEngine("engine2").getUniqueString())).hasSize(1);
+		assertThat(testPlan.getChildren(UniqueId.forEngine("engine1").toString())).hasSize(1);
+		assertThat(testPlan.getChildren(UniqueId.forEngine("engine2").toString())).hasSize(1);
 	}
 
 	@Test
@@ -121,7 +121,7 @@ class DefaultLauncherTests {
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
 		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(1);
-		assertThat(testPlan.getChildren(UniqueId.forEngine("first").getUniqueString())).hasSize(1);
+		assertThat(testPlan.getChildren(UniqueId.forEngine("first").toString())).hasSize(1);
 	}
 
 	@Test
@@ -133,11 +133,10 @@ class DefaultLauncherTests {
 		DefaultLauncher launcher = createLauncher(engine);
 
 		PostDiscoveryFilter includeWithUniqueIdContainsTest = new PostDiscoveryFilterStub(
-			descriptor -> FilterResult.includedIf(descriptor.getUniqueId().getUniqueString().contains("test")),
+			descriptor -> FilterResult.includedIf(descriptor.getUniqueId().toString().contains("test")),
 			() -> "filter1");
 		PostDiscoveryFilter includeWithUniqueIdContains1 = new PostDiscoveryFilterStub(
-			descriptor -> FilterResult.includedIf(descriptor.getUniqueId().getUniqueString().contains("1")),
-			() -> "filter2");
+			descriptor -> FilterResult.includedIf(descriptor.getUniqueId().toString().contains("1")), () -> "filter2");
 
 		TestPlan testPlan = launcher.discover( //
 			request() //
@@ -145,8 +144,8 @@ class DefaultLauncherTests {
 					.filter(includeWithUniqueIdContainsTest, includeWithUniqueIdContains1) //
 					.build());
 
-		assertThat(testPlan.getChildren(UniqueId.forEngine("myEngine").getUniqueString())).hasSize(1);
-		assertThat(testPlan.getTestIdentifier(test1.getUniqueId().getUniqueString())).isNotNull();
+		assertThat(testPlan.getChildren(UniqueId.forEngine("myEngine").toString())).hasSize(1);
+		assertThat(testPlan.getTestIdentifier(test1.getUniqueId().toString())).isNotNull();
 	}
 
 	@Test
