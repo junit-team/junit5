@@ -41,7 +41,7 @@ public final class TestIdentifier implements Serializable {
 	private final String parentId;
 	private final String name;
 	private final String displayName;
-	private final TestSource source;
+	private final Optional<TestSource> source;
 	private final Set<TestTag> tags;
 	private final boolean test;
 	private final boolean container;
@@ -69,7 +69,7 @@ public final class TestIdentifier implements Serializable {
 		this.parentId = parentId.orElse(null);
 		this.name = name;
 		this.displayName = displayName;
-		this.source = source.orElse(null);
+		this.source = (source != null ? source : Optional.empty());
 		this.tags = unmodifiableSet(new LinkedHashSet<>(tags));
 		this.test = test;
 		this.container = container;
@@ -137,7 +137,7 @@ public final class TestIdentifier implements Serializable {
 	 * @see TestSource
 	 */
 	public Optional<TestSource> getSource() {
-		return Optional.ofNullable(this.source);
+		return this.source;
 	}
 
 	/**
