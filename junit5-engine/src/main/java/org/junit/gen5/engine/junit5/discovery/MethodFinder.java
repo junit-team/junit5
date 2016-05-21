@@ -27,7 +27,7 @@ class MethodFinder {
 
 	Optional<Method> findMethod(String methodSpecPart, Class<?> clazz) {
 		try {
-			// TODO Throw IAE when format wrong. Currently you get IndexOutOfBoundsException.
+			// TODO [#272] Throw IAE when format wrong. Currently you get IndexOutOfBoundsException.
 			int startParams = methodSpecPart.indexOf('(');
 			String methodName = methodSpecPart.substring(0, startParams);
 			int endParams = methodSpecPart.lastIndexOf(')');
@@ -59,6 +59,7 @@ class MethodFinder {
 	}
 
 	private Class<?> loadRequiredParameterClass(String className) {
+		// TODO [#272] Throw JUnitException instead of a RuntimeException.
 		return ReflectionUtils.loadClass(className).orElseThrow(() -> new RuntimeException("Not found: " + className));
 	}
 
