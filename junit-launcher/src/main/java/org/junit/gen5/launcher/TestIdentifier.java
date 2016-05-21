@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.ToStringBuilder;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.TestTag;
@@ -165,6 +166,18 @@ public final class TestIdentifier implements Serializable {
 
 	@Override
 	public String toString() {
-		return getDisplayName() + " [" + uniqueId + "]";
+		// @formatter:off
+		return new ToStringBuilder(this)
+				.append("uniqueId", this.uniqueId)
+				.append("parentId", this.parentId)
+				.append("name", this.name)
+				.append("displayName", this.displayName)
+				.append("source", this.source)
+				.append("tags", this.tags)
+				.append("test", this.test)
+				.append("container", this.container)
+				.toString();
+		// @formatter:on
 	}
+
 }
