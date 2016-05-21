@@ -37,17 +37,20 @@ public final class TestIdentifier implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final String uniqueId;
+	private final String parentId;
 	private final String name;
 	private final String displayName;
 	private final TestSource source;
 	private final Set<TestTag> tags;
 	private final boolean test;
 	private final boolean container;
-	private final String parentId;
 
+	/**
+	 * Factory for creating a new {@link TestIdentifier} from a {@link TestDescriptor}.
+	 */
 	public static TestIdentifier from(TestDescriptor testDescriptor) {
-		// TODO Use Flyweight Pattern for TestId?
 		String uniqueId = testDescriptor.getUniqueId().getUniqueString();
+		// TODO Use Flyweight Pattern for TestIdentifier?
 		String name = testDescriptor.getName();
 		String displayName = testDescriptor.getDisplayName();
 		Optional<TestSource> source = testDescriptor.getSource();
@@ -62,13 +65,13 @@ public final class TestIdentifier implements Serializable {
 	private TestIdentifier(String uniqueId, String name, String displayName, Optional<TestSource> source,
 			Set<TestTag> tags, boolean test, boolean container, Optional<String> parentId) {
 		this.uniqueId = uniqueId;
+		this.parentId = parentId.orElse(null);
 		this.name = name;
 		this.displayName = displayName;
 		this.source = source.orElse(null);
 		this.tags = unmodifiableSet(new LinkedHashSet<>(tags));
 		this.test = test;
 		this.container = container;
-		this.parentId = parentId.orElse(null);
 	}
 
 	/**
@@ -79,62 +82,7 @@ public final class TestIdentifier implements Serializable {
 	 * behind the scenes.
 	 */
 	public String getUniqueId() {
-		return uniqueId;
-	}
-
-	/**
-	 * Get the name for the represented test or container.
-	 *
-	 * <p>The <em>name</em> is a technical name for a test or container. It
-	 * must not be parsed or processed besides being displayed to end-users.
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Get the display name for the represented test or container.
-	 *
-	 * <p>The <em>display name</em> is a human-readable name for a test or
-	 * container. It must not be parsed or processed besides being displayed
-	 * to end-users.
-	 */
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	/**
-	 * Returns {@code true} if this identifier represents a test.
-	 */
-	public boolean isTest() {
-		return test;
-	}
-
-	/**
-	 * Returns {@code true} if this identifier represents a container.
-	 */
-	public boolean isContainer() {
-		return container;
-	}
-
-	/**
-	 * Get the {@linkplain TestSource source location} of the represented test
-	 * or container, if available.
-	 *
-	 * @see TestSource
-	 */
-	public Optional<TestSource> getSource() {
-		return Optional.ofNullable(source);
-	}
-
-	/**
-	 * Get the set of {@linkplain TestTag tags} of the represented test or
-	 * container.
-	 *
-	 * @see TestTag
-	 */
-	public Set<TestTag> getTags() {
-		return tags;
+		return this.uniqueId;
 	}
 
 	/**
@@ -143,7 +91,62 @@ public final class TestIdentifier implements Serializable {
 	 * <p>An identifier without a parent ID is called a <em>root</em>.
 	 */
 	public Optional<String> getParentId() {
-		return Optional.ofNullable(parentId);
+		return Optional.ofNullable(this.parentId);
+	}
+
+	/**
+	 * Get the name of the represented test or container.
+	 *
+	 * <p>The <em>name</em> is a technical name for a test or container. It
+	 * must not be parsed or processed besides being displayed to end-users.
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * Get the display name of the represented test or container.
+	 *
+	 * <p>The <em>display name</em> is a human-readable name for a test or
+	 * container. It must not be parsed or processed besides being displayed
+	 * to end-users.
+	 */
+	public String getDisplayName() {
+		return this.displayName;
+	}
+
+	/**
+	 * Determine if this identifier represents a test.
+	 */
+	public boolean isTest() {
+		return this.test;
+	}
+
+	/**
+	 * Determine if this identifier represents a container.
+	 */
+	public boolean isContainer() {
+		return this.container;
+	}
+
+	/**
+	 * Get the {@linkplain TestSource source} of the represented test
+	 * or container, if available.
+	 *
+	 * @see TestSource
+	 */
+	public Optional<TestSource> getSource() {
+		return Optional.ofNullable(this.source);
+	}
+
+	/**
+	 * Get the set of {@linkplain TestTag tags} associated with the represented
+	 * test or container.
+	 *
+	 * @see TestTag
+	 */
+	public Set<TestTag> getTags() {
+		return this.tags;
 	}
 
 	@Override
@@ -157,7 +160,7 @@ public final class TestIdentifier implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return uniqueId.hashCode();
+		return this.uniqueId.hashCode();
 	}
 
 	@Override

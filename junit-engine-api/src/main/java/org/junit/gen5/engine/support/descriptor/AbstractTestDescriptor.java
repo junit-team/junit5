@@ -44,12 +44,9 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		this.uniqueId = Preconditions.notNull(uniqueId, "uniqueId must not be null");
 	}
 
-	/**
-	 * Temporary parallel to string-based unique id
-	 */
 	@Override
 	public final UniqueId getUniqueId() {
-		return uniqueId;
+		return this.uniqueId;
 	}
 
 	@Override
@@ -125,6 +122,11 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
+	public final int hashCode() {
+		return this.uniqueId.hashCode();
+	}
+
+	@Override
 	public final boolean equals(Object other) {
 		if (other == null) {
 			return false;
@@ -132,13 +134,8 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		if (this.getClass() != other.getClass()) {
 			return false;
 		}
-		TestDescriptor otherDescriptor = (TestDescriptor) other;
-		return this.getUniqueId().equals(otherDescriptor.getUniqueId());
-	}
-
-	@Override
-	public final int hashCode() {
-		return this.uniqueId.hashCode();
+		TestDescriptor that = (TestDescriptor) other;
+		return this.getUniqueId().equals(that.getUniqueId());
 	}
 
 	@Override

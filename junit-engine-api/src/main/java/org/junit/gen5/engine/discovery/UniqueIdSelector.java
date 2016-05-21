@@ -37,7 +37,7 @@ public class UniqueIdSelector implements DiscoverySelector {
 	}
 
 	public String getUniqueId() {
-		return uniqueId;
+		return this.uniqueId;
 	}
 
 }

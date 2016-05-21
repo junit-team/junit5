@@ -23,6 +23,7 @@ import org.junit.gen5.commons.meta.API;
  */
 @API(Experimental)
 public interface TestDescriptor {
+
 	/**
 	 * Get the unique identifier (UID) for the described test.
 	 *
@@ -80,4 +81,5 @@ public interface TestDescriptor {
 	void accept(Visitor visitor);
 
 	Optional<TestSource> getSource();
+
 }

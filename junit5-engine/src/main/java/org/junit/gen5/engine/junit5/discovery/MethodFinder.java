@@ -18,11 +18,12 @@ import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 
-public class MethodFinder {
+class MethodFinder {
 
-	public Optional<Method> findMethod(String methodSpecPart, Class<?> clazz) {
+	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
+
+	Optional<Method> findMethod(String methodSpecPart, Class<?> clazz) {
 		try {
-
 			// TODO Throw IAE when format wrong. Currently you get IndexOutOfBoundsException.
 			int startParams = methodSpecPart.indexOf('(');
 			String methodName = methodSpecPart.substring(0, startParams);
@@ -38,7 +39,7 @@ public class MethodFinder {
 
 	private Class<?>[] resolveParameterTypes(String paramsPart) {
 		if (paramsPart.isEmpty()) {
-			return new Class<?>[0];
+			return EMPTY_CLASS_ARRAY;
 		}
 
 		// @formatter:off

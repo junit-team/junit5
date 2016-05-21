@@ -17,10 +17,10 @@ import java.lang.reflect.AnnotatedElement;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.EngineExecutionListener;
 
 @API(Internal)
-final public class ClassBasedContainerExtensionContext extends AbstractExtensionContext
+public final class ClassBasedContainerExtensionContext extends AbstractExtensionContext
 		implements ContainerExtensionContext {
 
 	public ClassBasedContainerExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,

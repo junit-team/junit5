@@ -48,4 +48,5 @@ public class NestedTestsResolver extends TestContainerResolver {
 	protected TestDescriptor resolveClass(Class<?> testClass, UniqueId uniqueId) {
 		return new NestedClassTestDescriptor(uniqueId, testClass);
 	}
+
 }

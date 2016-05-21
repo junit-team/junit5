@@ -80,4 +80,5 @@ public class TestMethodResolver implements ElementResolver {
 			UniqueId uniqueId) {
 		return new MethodTestDescriptor(uniqueId, parentClassDescriptor.getTestClass(), testMethod);
 	}
+
 }

@@ -87,4 +87,5 @@ public class TestContainerResolver implements ElementResolver {
 	protected TestDescriptor resolveClass(Class<?> testClass, UniqueId uniqueId) {
 		return new ClassTestDescriptor(uniqueId, testClass);
 	}
+
 }

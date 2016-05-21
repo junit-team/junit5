@@ -11,7 +11,8 @@
 package org.junit.gen5.engine.junit5.discovery;
 
 import static java.lang.String.format;
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
+import static org.junit.gen5.commons.util.ReflectionUtils.findNestedClasses;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -51,10 +52,7 @@ public class JavaElementsResolver {
 		resolvedDescriptors.forEach(this::resolveChildren);
 
 		if (resolvedDescriptors.isEmpty()) {
-			LOG.warning(() -> {
-				String classDescription = testClass.getName();
-				return format("Class '%s' could not be resolved", classDescription);
-			});
+			LOG.warning(() -> format("Class '%s' could not be resolved", testClass.getName()));
 		}
 	}
 
@@ -85,10 +83,9 @@ public class JavaElementsResolver {
 	public void resolveUniqueId(UniqueId uniqueId) {
 		List<UniqueId.Segment> segments = uniqueId.getSegments();
 		segments.remove(0); // Ignore engine unique ID
-		if (!resolveUniqueId(engineDescriptor, segments))
-			LOG.warning(() -> {
-				return format("Unique ID '%s' could not be resolved", uniqueId.getUniqueString());
-			});
+		if (!resolveUniqueId(this.engineDescriptor, segments)) {
+			LOG.warning(() -> format("Unique ID '%s' could not be resolved", uniqueId));
+		}
 	}
 
 	/**
@@ -154,7 +151,7 @@ public class JavaElementsResolver {
 	}
 
 	private Set<TestDescriptor> resolve(AnnotatedElement element, TestDescriptor parent) {
-		return resolvers.stream() //
+		return this.resolvers.stream() //
 				.map(resolver -> tryToResolveWithResolver(element, parent, resolver)) //
 				.filter(testDescriptors -> !testDescriptors.isEmpty()) //
 				.flatMap(Collection::stream) //
@@ -179,7 +176,7 @@ public class JavaElementsResolver {
 
 	@SuppressWarnings("unchecked")
 	private Optional<TestDescriptor> findTestDescriptorByUniqueId(UniqueId uniqueId) {
-		return (Optional<TestDescriptor>) engineDescriptor.findByUniqueId(uniqueId);
+		return (Optional<TestDescriptor>) this.engineDescriptor.findByUniqueId(uniqueId);
 	}
 
 }

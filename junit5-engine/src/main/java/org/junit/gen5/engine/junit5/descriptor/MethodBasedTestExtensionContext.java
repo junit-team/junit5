@@ -18,10 +18,10 @@ import java.lang.reflect.Method;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.engine.*;
+import org.junit.gen5.engine.EngineExecutionListener;
 
 @API(Internal)
-final public class MethodBasedTestExtensionContext extends AbstractExtensionContext implements TestExtensionContext {
+public final class MethodBasedTestExtensionContext extends AbstractExtensionContext implements TestExtensionContext {
 
 	private final Object testInstance;
 
