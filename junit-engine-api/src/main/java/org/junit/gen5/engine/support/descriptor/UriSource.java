@@ -24,4 +24,5 @@ import org.junit.gen5.engine.TestSource;
 public interface UriSource extends TestSource {
 
 	URI getUri();
+
 }

@@ -43,6 +43,21 @@ public class FilePosition implements Serializable {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		FilePosition that = (FilePosition) o;
+		return this.line == that.line && this.column == that.column;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(line, column);
+	}
+
+	@Override
 	public String toString() {
 		// @formatter:off
 		return new ToStringBuilder(this)
@@ -52,18 +67,4 @@ public class FilePosition implements Serializable {
 		// @formatter:on
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-		FilePosition that = (FilePosition) o;
-		return line == that.line && column == that.column;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(line, column);
-	}
 }

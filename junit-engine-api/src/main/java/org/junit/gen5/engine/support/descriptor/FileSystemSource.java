@@ -23,4 +23,5 @@ import org.junit.gen5.commons.meta.API;
 public interface FileSystemSource extends UriSource {
 
 	File getFile();
+
 }

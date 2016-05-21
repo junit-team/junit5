@@ -34,23 +34,20 @@ public class DirectorySource implements FileSystemSource {
 		this.directory = Preconditions.notNull(directory, "directory must not be null").getAbsoluteFile();
 	}
 
+	/**
+	 * Get the {@link URI} for the source {@linkplain #getFile directory}.
+	 */
 	@Override
-	public URI getUri() {
-		return directory.toURI();
+	public final URI getUri() {
+		return getFile().toURI();
 	}
 
+	/**
+	 * Get the source {@linkplain File directory}.
+	 */
 	@Override
-	public File getFile() {
+	public final File getFile() {
 		return directory;
-	}
-
-	@Override
-	public String toString() {
-		// @formatter:off
-		return new ToStringBuilder(this)
-				.append("directory", directory)
-				.toString();
-		// @formatter:on
 	}
 
 	@Override
@@ -60,11 +57,17 @@ public class DirectorySource implements FileSystemSource {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		DirectorySource that = (DirectorySource) o;
-		return Objects.equals(directory, that.directory);
+		return Objects.equals(this.directory, that.directory);
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(directory);
 	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("directory", directory).toString();
+	}
+
 }

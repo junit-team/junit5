@@ -23,6 +23,7 @@ import org.junit.gen5.commons.util.ToStringBuilder;
  */
 @API(Experimental)
 public class JavaPackageSource implements JavaSource {
+
 	private static final long serialVersionUID = 1L;
 
 	private final String packageName;
@@ -32,16 +33,11 @@ public class JavaPackageSource implements JavaSource {
 	}
 
 	public JavaPackageSource(Package javaPackage) {
-		this(Preconditions.notNull(javaPackage, "java package must not be null").getName());
+		this(Preconditions.notNull(javaPackage, "package must not be null").getName());
 	}
 
 	public String getPackageName() {
 		return packageName;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("packageName", packageName).toString();
 	}
 
 	@Override
@@ -51,11 +47,17 @@ public class JavaPackageSource implements JavaSource {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		JavaPackageSource that = (JavaPackageSource) o;
-		return Objects.equals(packageName, that.packageName);
+		return Objects.equals(this.packageName, that.packageName);
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(packageName);
 	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("packageName", packageName).toString();
+	}
+
 }

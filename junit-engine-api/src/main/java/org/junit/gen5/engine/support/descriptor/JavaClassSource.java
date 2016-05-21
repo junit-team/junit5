@@ -29,16 +29,11 @@ public class JavaClassSource implements JavaSource {
 	private final Class<?> javaClass;
 
 	public JavaClassSource(Class<?> javaClass) {
-		this.javaClass = Preconditions.notNull(javaClass, "java class must not be null");
+		this.javaClass = Preconditions.notNull(javaClass, "class must not be null");
 	}
 
 	public Class<?> getJavaClass() {
 		return javaClass;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this).append("javaClass", javaClass).toString();
 	}
 
 	@Override
@@ -48,11 +43,17 @@ public class JavaClassSource implements JavaSource {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		JavaClassSource that = (JavaClassSource) o;
-		return Objects.equals(javaClass, that.javaClass);
+		return Objects.equals(this.javaClass, that.javaClass);
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(javaClass);
 	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("javaClass", javaClass).toString();
+	}
+
 }

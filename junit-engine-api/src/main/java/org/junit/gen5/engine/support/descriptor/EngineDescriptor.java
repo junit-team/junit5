@@ -29,12 +29,12 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 	}
 
 	@Override
-	public String getName() {
+	public final String getName() {
 		return displayName;
 	}
 
 	@Override
-	public String getDisplayName() {
+	public final String getDisplayName() {
 		return displayName;
 	}
 
@@ -44,7 +44,7 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 	}
 
 	@Override
-	public boolean isContainer() {
+	public final boolean isContainer() {
 		return true;
 	}
 

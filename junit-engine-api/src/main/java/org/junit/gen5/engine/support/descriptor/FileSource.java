@@ -41,18 +41,42 @@ public class FileSource implements FileSystemSource {
 		this.filePosition = filePosition;
 	}
 
+	/**
+	 * Get the {@link URI} for the source {@linkplain #getFile file}.
+	 */
 	@Override
 	public URI getUri() {
 		return file.toURI();
 	}
 
+	/**
+	 * Get the source {@linkplain File file}.
+	 */
 	@Override
 	public File getFile() {
 		return file;
 	}
 
+	/**
+	 * Get the {@link FilePosition}, if available.
+	 */
 	public Optional<FilePosition> getPosition() {
 		return Optional.ofNullable(filePosition);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		FileSource that = (FileSource) o;
+		return Objects.equals(this.file, that.file) && Objects.equals(this.filePosition, that.filePosition);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(file, filePosition);
 	}
 
 	@Override
@@ -65,18 +89,4 @@ public class FileSource implements FileSystemSource {
 		// @formatter:on
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-		FileSource that = (FileSource) o;
-		return Objects.equals(file, that.file) && Objects.equals(filePosition, that.filePosition);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(file, filePosition);
-	}
 }

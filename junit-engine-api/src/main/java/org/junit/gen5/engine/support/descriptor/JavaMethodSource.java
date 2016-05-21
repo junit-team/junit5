@@ -26,6 +26,7 @@ import org.junit.gen5.commons.util.ToStringBuilder;
  */
 @API(Experimental)
 public class JavaMethodSource implements JavaSource {
+
 	private static final long serialVersionUID = 1L;
 
 	private final Class<?> javaClass;
@@ -33,7 +34,7 @@ public class JavaMethodSource implements JavaSource {
 	private final Class<?>[] javaMethodParameterTypes;
 
 	public JavaMethodSource(Method javaMethod) {
-		Preconditions.notNull(javaMethod, "java method must not be null");
+		Preconditions.notNull(javaMethod, "method must not be null");
 		javaClass = javaMethod.getDeclaringClass();
 		javaMethodName = javaMethod.getName();
 		javaMethodParameterTypes = javaMethod.getParameterTypes();
@@ -52,6 +53,23 @@ public class JavaMethodSource implements JavaSource {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		JavaMethodSource that = (JavaMethodSource) o;
+		return Objects.equals(this.javaClass, that.javaClass)
+				&& Objects.equals(this.javaMethodName, that.javaMethodName)
+				&& Arrays.equals(this.javaMethodParameterTypes, that.javaMethodParameterTypes);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(javaClass, javaMethodName, javaMethodParameterTypes);
+	}
+
+	@Override
 	public String toString() {
 		// @formatter:off
 		return new ToStringBuilder(this)
@@ -62,19 +80,4 @@ public class JavaMethodSource implements JavaSource {
 		// @formatter:on
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-		JavaMethodSource that = (JavaMethodSource) o;
-		return Objects.equals(javaClass, that.javaClass) && Objects.equals(javaMethodName, that.javaMethodName)
-				&& Arrays.equals(javaMethodParameterTypes, that.javaMethodParameterTypes);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(javaClass, javaMethodName, javaMethodParameterTypes);
-	}
 }
