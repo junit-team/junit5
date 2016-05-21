@@ -19,19 +19,19 @@ import org.junit.gen5.api.Nested;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * Test if a class is a JUnit 5 nested, inner test class.
+ * Test if a class is a JUnit 5 {@link Nested @Nested} test class.
  *
  * @since 5.0
  */
 @API(Internal)
 public class IsNestedTestClass implements Predicate<Class<?>> {
 
-	private static final IsNonStaticInnerClass isNonStaticInnerClass = new IsNonStaticInnerClass();
+	private static final IsInnerClass isInnerClass = new IsInnerClass();
 
 	@Override
 	public boolean test(Class<?> candidate) {
 		//please do not collapse into single return
-		if (!isNonStaticInnerClass.test(candidate))
+		if (!isInnerClass.test(candidate))
 			return false;
 		return isAnnotated(candidate, Nested.class);
 	}

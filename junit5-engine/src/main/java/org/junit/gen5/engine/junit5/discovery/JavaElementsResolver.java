@@ -35,6 +35,8 @@ public class JavaElementsResolver {
 
 	private static final Logger LOG = Logger.getLogger(JavaElementsResolver.class.getName());
 
+	private static final IsInnerClass isInnerClass = new IsInnerClass();
+
 	private final TestDescriptor engineDescriptor;
 	private final Set<ElementResolver> resolvers;
 
@@ -71,7 +73,7 @@ public class JavaElementsResolver {
 	}
 
 	private Set<TestDescriptor> resolveContainerWithParents(Class<?> testClass) {
-		if (new IsNonStaticInnerClass().test(testClass)) {
+		if (isInnerClass.test(testClass)) {
 			Set<TestDescriptor> potentialParents = resolveContainerWithParents(testClass.getDeclaringClass());
 			return resolveForAllParents(testClass, potentialParents);
 		}
@@ -140,7 +142,7 @@ public class JavaElementsResolver {
 	}
 
 	private void resolveContainedNestedClasses(TestDescriptor containerDescriptor, Class<?> clazz) {
-		List<Class<?>> nestedClassesCandidates = findNestedClasses(clazz, new IsNonStaticInnerClass());
+		List<Class<?>> nestedClassesCandidates = findNestedClasses(clazz, isInnerClass);
 		nestedClassesCandidates.forEach(
 			nestedClass -> resolveContainerWithChildren(nestedClass, Collections.singleton(containerDescriptor)));
 	}

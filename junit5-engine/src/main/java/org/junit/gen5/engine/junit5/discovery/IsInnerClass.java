@@ -18,12 +18,12 @@ import java.util.function.Predicate;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * Test if a class is a non-static inner class.
+ * Test if a class is a non-private inner class (i.e., a non-static nested class).
  *
  * @since 5.0
  */
 @API(Internal)
-public class IsNonStaticInnerClass implements Predicate<Class<?>> {
+public class IsInnerClass implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> candidate) {
