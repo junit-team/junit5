@@ -19,6 +19,7 @@ import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.uniqu
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,17 +34,17 @@ import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
-import org.junit.gen5.junit4.runner.JUnit5;
-import org.junit.runner.RunWith;
 
-@RunWith(JUnit5.class)
+/**
+ * @since 5.0
+ */
 public class DiscoverySelectorResolverTests {
 
 	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(engineId());
 	private DiscoverySelectorResolver resolver = new DiscoverySelectorResolver();
 
 	@Test
-	public void testSingleClassResolution() {
+	public void singleClassResolution() {
 		ClassSelector selector = ClassSelector.forClass(MyTestClass.class);
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
@@ -70,7 +71,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testTwoClassesResolution() {
+	public void twoClassesResolution() {
 		ClassSelector selector1 = ClassSelector.forClass(MyTestClass.class);
 		ClassSelector selector2 = ClassSelector.forClass(YourTestClass.class);
 
@@ -87,7 +88,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testClassResolutionOfStaticNestedClass() {
+	public void classResolutionOfStaticNestedClass() {
 		ClassSelector selector = ClassSelector.forClass(OtherTestClass.NestedTestClass.class);
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
@@ -100,10 +101,9 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testMethodResolution() throws NoSuchMethodException {
-		MethodSelector selector = MethodSelector.forMethod(
-			MyTestClass.class.getDeclaredMethod("test1").getDeclaringClass(),
-			MyTestClass.class.getDeclaredMethod("test1"));
+	public void methodResolution() throws NoSuchMethodException {
+		Method test1 = MyTestClass.class.getDeclaredMethod("test1");
+		MethodSelector selector = MethodSelector.forMethod(test1.getDeclaringClass(), test1);
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
 
@@ -114,7 +114,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testMethodResolutionFromInheritedMethod() throws NoSuchMethodException {
+	public void methodResolutionFromInheritedMethod() throws NoSuchMethodException {
 		MethodSelector selector = MethodSelector.forMethod(HerTestClass.class,
 			MyTestClass.class.getDeclaredMethod("test1"));
 
@@ -128,16 +128,15 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void resolvingSelectorOfNonTestMethodResolvesNothing() throws NoSuchMethodException {
-		MethodSelector selector = MethodSelector.forMethod(
-			MyTestClass.class.getDeclaredMethod("notATest").getDeclaringClass(),
-			MyTestClass.class.getDeclaredMethod("notATest"));
+		Method notATest = MyTestClass.class.getDeclaredMethod("notATest");
+		MethodSelector selector = MethodSelector.forMethod(notATest.getDeclaringClass(), notATest);
 		EngineDiscoveryRequest request = request().select(selector).build();
 		resolver.resolveSelectors(request, engineDescriptor);
 		assertTrue(engineDescriptor.allDescendants().isEmpty());
 	}
 
 	@Test
-	public void testClassResolutionByUniqueId() {
+	public void classResolutionByUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueIdForClass(MyTestClass.class).toString());
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
@@ -150,7 +149,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testStaticNestedClassResolutionByUniqueId() {
+	public void staticNestedClassResolutionByUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForClass(OtherTestClass.NestedTestClass.class).toString());
 
@@ -164,7 +163,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testMethodOfInnerClassByUniqueId() {
+	public void methodOfInnerClassByUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test5()").toString());
 
@@ -195,7 +194,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testMethodResolutionByUniqueId() {
+	public void methodResolutionByUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(MyTestClass.class, "test1()").toString());
 
@@ -208,7 +207,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testMethodResolutionByUniqueIdFromInheritedClass() {
+	public void methodResolutionByUniqueIdFromInheritedClass() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(HerTestClass.class, "test1()").toString());
 
@@ -222,7 +221,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testMethodResolutionByUniqueIdWithParams() {
+	public void methodResolutionByUniqueIdWithParams() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(HerTestClass.class, "test7(java.lang.String)").toString());
 
@@ -245,7 +244,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testTwoMethodResolutionsByUniqueId() {
+	public void twoMethodResolutionsByUniqueId() {
 		UniqueIdSelector selector1 = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(MyTestClass.class, "test1()").toString());
 		UniqueIdSelector selector2 = UniqueIdSelector.forUniqueId(
@@ -270,7 +269,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testPackageResolution() {
+	public void packageResolution() {
 		PackageSelector selector = PackageSelector.forPackageName("org.junit.gen5.engine.junit5.descriptor.subpackage");
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
@@ -291,7 +290,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testClasspathResolution() {
+	public void classpathResolution() {
 		File classpath = new File(
 			DiscoverySelectorResolverTests.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 
@@ -316,7 +315,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testNestedTestResolutionFromBaseClass() {
+	public void nestedTestResolutionFromBaseClass() {
 		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.class);
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
@@ -334,7 +333,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testNestedTestResolutionFromNestedTestClass() {
+	public void nestedTestResolutionFromNestedTestClass() {
 		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.NestedTest.class);
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
@@ -351,7 +350,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testNestedTestResolutionFromUniqueId() {
+	public void nestedTestResolutionFromUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class).toString());
 
@@ -368,7 +367,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testDoubleNestedTestResolutionFromClass() {
+	public void doubleNestedTestResolutionFromClass() {
 		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class);
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
@@ -384,7 +383,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testMethodResolutionInDoubleNestedTestClass() throws NoSuchMethodException {
+	public void methodResolutionInDoubleNestedTestClass() throws NoSuchMethodException {
 		MethodSelector selector = MethodSelector.forMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class,
 			TestCaseWithNesting.NestedTest.DoubleNestedTest.class.getDeclaredMethod("testC"));
 
@@ -400,7 +399,7 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void testNestedTestResolutionFromUniqueIdToMethod() {
+	public void nestedTestResolutionFromUniqueIdToMethod() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
 			uniqueIdForMethod(TestCaseWithNesting.NestedTest.class, "testB()").toString());
 

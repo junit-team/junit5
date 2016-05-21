@@ -47,7 +47,7 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 	}
 
 	@Test
-	public void discoverByUniqueId() {
+	public void discoverMethodByUniqueId() {
 		TestDiscoveryRequest request = request().select(
 			forUniqueId(JUnit5UniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test1()"))).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
@@ -55,7 +55,7 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 	}
 
 	@Test
-	public void discoverByMethod() throws NoSuchMethodException {
+	public void discoverMethodByMethodReference() throws NoSuchMethodException {
 		Method testMethod = LocalTestCase.class.getDeclaredMethod("test3", new Class[0]);
 
 		TestDiscoveryRequest request = request().select(
