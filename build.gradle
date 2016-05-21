@@ -67,7 +67,7 @@ allprojects {
 			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
 
 			trimTrailingWhitespace()
-			// endWithNewline()
+			endWithNewline()
 
 			custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
 		}
