@@ -348,6 +348,9 @@ public abstract class ReflectionUtils {
 	}
 
 	public static Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notBlank(methodName, "method name must not be null or empty");
+
 		Predicate<Method> nameAndParameterTypesMatch = (method -> method.getName().equals(methodName)
 				&& Arrays.equals(method.getParameterTypes(), parameterTypes));
 
@@ -461,7 +464,7 @@ public abstract class ReflectionUtils {
 	}
 
 	private static List<Method> getSuperclassMethods(Class<?> clazz, MethodSortOrder sortOrder) {
-		if (clazz.getSuperclass() != Object.class) {
+		if (clazz != Object.class && clazz.getSuperclass() != Object.class) {
 			return findAllMethodsInHierarchy(clazz.getSuperclass(), sortOrder);
 		}
 		else {

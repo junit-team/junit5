@@ -368,15 +368,20 @@ class ReflectionUtilsTests {
 
 	@Test
 	void findMethod() throws Exception {
-		assertThat(ReflectionUtils.findMethod(String.class, null)).isEmpty();
+		assertThat(ReflectionUtils.findMethod(Object.class, "noSuchMethod")).isEmpty();
 		assertThat(ReflectionUtils.findMethod(String.class, "noSuchMethod")).isEmpty();
 
 		assertThat(ReflectionUtils.findMethod(String.class, "chars")).contains(String.class.getMethod("chars"));
 		assertThat(ReflectionUtils.findMethod(Files.class, "copy", Path.class, OutputStream.class)).contains(
 			Files.class.getMethod("copy", Path.class, OutputStream.class));
 
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.findMethod(Object.class, "noSuchMethod"));
+		RuntimeException exception = expectThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.findMethod(String.class, null));
+		assertThat(exception).hasMessage("method name must not be null or empty");
+
+		exception = expectThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.findMethod(String.class, "   "));
+		assertThat(exception).hasMessage("method name must not be null or empty");
 	}
 
 	@Test
