@@ -20,6 +20,9 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 
+/**
+ * @since 5.0
+ */
 public class TestContainerResolver implements ElementResolver {
 
 	public static final String SEGMENT_TYPE = "class";

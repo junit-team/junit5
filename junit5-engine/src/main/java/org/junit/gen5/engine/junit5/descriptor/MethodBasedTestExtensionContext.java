@@ -20,6 +20,9 @@ import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.EngineExecutionListener;
 
+/**
+ * @since 5.0
+ */
 @API(Internal)
 public final class MethodBasedTestExtensionContext extends AbstractExtensionContext implements TestExtensionContext {
 

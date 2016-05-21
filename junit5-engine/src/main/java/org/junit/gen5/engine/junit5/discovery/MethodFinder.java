@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
 
+/**
+ * @since 5.0
+ */
 class MethodFinder {
 
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];

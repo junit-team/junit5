@@ -17,6 +17,9 @@ import java.util.Set;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 
+/**
+ * @since 5.0
+ */
 public interface ElementResolver {
 
 	/**

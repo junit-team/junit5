@@ -22,6 +22,9 @@ import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 
+/**
+ * @since 5.0
+ */
 public class TestMethodResolver implements ElementResolver {
 
 	public static final String SEGMENT_TYPE = "method";

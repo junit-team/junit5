@@ -15,6 +15,9 @@ import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
 
+/**
+ * @since 5.0
+ */
 public class NestedTestsResolver extends TestContainerResolver {
 
 	public static final String SEGMENT_TYPE = "nested-class";
