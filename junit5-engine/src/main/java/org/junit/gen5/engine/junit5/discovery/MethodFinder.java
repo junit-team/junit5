@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.commons.util.StringUtils;
 
 /**
  * @since 5.0
@@ -41,13 +42,13 @@ class MethodFinder {
 		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes);
 	}
 
-	private Class<?>[] resolveParameterTypes(String paramsPart) {
-		if (paramsPart.isEmpty()) {
+	private Class<?>[] resolveParameterTypes(String params) {
+		if (StringUtils.isBlank(params)) {
 			return EMPTY_CLASS_ARRAY;
 		}
 
 		// @formatter:off
-		return Arrays.stream(paramsPart.split(","))
+		return Arrays.stream(params.trim().split(","))
 				.map(className -> loadRequiredParameterClass(className))
 				.toArray(Class[]::new);
 		// @formatter:on
