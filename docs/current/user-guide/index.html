@@ -701,9 +701,12 @@ as follows. <code>@Fast</code> can then be used as a drop-in replacement for <co
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import java.lang.annotation.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.junit.gen5.api.*;
+import org.junit.gen5.api.Tag;
 
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
@@ -801,7 +804,10 @@ methods in the <code><a href="https://github.com/junit-team/junit5/blob/master/j
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertAll;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.expectThrows;
 
 import org.junit.gen5.api.Test;
 
@@ -847,7 +853,8 @@ are static methods in the <code><a href="https://github.com/junit-team/junit5/bl
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assumptions.*;
+import static org.junit.gen5.api.Assumptions.assumeTrue;
+import static org.junit.gen5.api.Assumptions.assumingThat;
 
 import org.junit.gen5.api.Test;
 
@@ -930,7 +937,8 @@ class DisabledTestsDemo {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.Tag;
+import org.junit.gen5.api.Test;
 
 @Tag("fast")
 @Tag("model")
@@ -2227,7 +2235,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-05-21 09:34:57 -04:00
+Last updated 2016-05-21 11:35:48 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
