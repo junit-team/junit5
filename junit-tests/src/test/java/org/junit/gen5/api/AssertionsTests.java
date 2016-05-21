@@ -24,11 +24,14 @@ import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.api.Assertions.fail;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import org.opentest4j.AssertionFailedError;
 import org.opentest4j.MultipleFailuresError;
+import org.opentest4j.ValueWrapper;
 
 /**
  * Unit tests for JUnit 5 {@link Assertions}.
@@ -215,6 +218,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
+			assertExpectedAndActualValues(ex, null, "foo");
 		}
 	}
 
@@ -227,6 +231,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "a message");
 			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
+			assertExpectedAndActualValues(ex, null, "foo");
 		}
 	}
 
@@ -239,6 +244,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "test");
 			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
+			assertExpectedAndActualValues(ex, null, "foo");
 		}
 	}
 
@@ -291,6 +297,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "expected: <1> but was: <2>");
+			assertExpectedAndActualValues(ex, expected, actual);
 		}
 	}
 
@@ -305,6 +312,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
 			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+			assertExpectedAndActualValues(ex, expected, actual);
 		}
 	}
 
@@ -319,6 +327,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
 			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+			assertExpectedAndActualValues(ex, expected, actual);
 		}
 	}
 
@@ -339,6 +348,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "expected: <1> but was: <2>");
+			assertExpectedAndActualValues(ex, expected, actual);
 		}
 	}
 
@@ -353,6 +363,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
 			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+			assertExpectedAndActualValues(ex, expected, actual);
 		}
 	}
 
@@ -367,6 +378,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
 			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+			assertExpectedAndActualValues(ex, expected, actual);
 		}
 	}
 
@@ -383,6 +395,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "expected: <1> but was: <2>");
+			assertExpectedAndActualValues(ex, 1, 2);
 		}
 	}
 
@@ -395,6 +408,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
 			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+			assertExpectedAndActualValues(ex, 1, 2);
 		}
 	}
 
@@ -407,6 +421,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
 			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+			assertExpectedAndActualValues(ex, 1, 2);
 		}
 	}
 
@@ -423,6 +438,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "expected: <1> but was: <2>");
+			assertExpectedAndActualValues(ex, 1L, 2L);
 		}
 	}
 
@@ -435,6 +451,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
 			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+			assertExpectedAndActualValues(ex, 1L, 2L);
 		}
 	}
 
@@ -447,6 +464,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
 			assertMessageEndsWith(ex, "expected: <1> but was: <2>");
+			assertExpectedAndActualValues(ex, 1L, 2L);
 		}
 	}
 
@@ -463,6 +481,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "expected: <a> but was: <b>");
+			assertExpectedAndActualValues(ex, 'a', 'b');
 		}
 	}
 
@@ -475,6 +494,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
 			assertMessageEndsWith(ex, "expected: <a> but was: <b>");
+			assertExpectedAndActualValues(ex, 'a', 'b');
 		}
 	}
 
@@ -487,6 +507,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
 			assertMessageEndsWith(ex, "expected: <a> but was: <b>");
+			assertExpectedAndActualValues(ex, 'a', 'b');
 		}
 	}
 
@@ -510,6 +531,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "expected: <1.0> but was: <1.1>");
+			assertExpectedAndActualValues(ex, 1.0f, 1.1f);
 		}
 	}
 
@@ -522,6 +544,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
 			assertMessageEndsWith(ex, "expected: <1.0> but was: <1.1>");
+			assertExpectedAndActualValues(ex, 1.0f, 1.1f);
 		}
 	}
 
@@ -534,6 +557,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
 			assertMessageEndsWith(ex, "expected: <1.0> but was: <1.1>");
+			assertExpectedAndActualValues(ex, 1.0f, 1.1f);
 		}
 	}
 
@@ -582,6 +606,7 @@ public class AssertionsTests {
 
 		assertMessageStartsWith(e, "message");
 		assertMessageEndsWith(e, "expected: <0.5> but was: <0.45>");
+		assertExpectedAndActualValues(e, 0.5f, 0.45f);
 	}
 
 	@Test
@@ -592,6 +617,7 @@ public class AssertionsTests {
 
 		assertMessageStartsWith(e, "message");
 		assertMessageEndsWith(e, "expected: <0.5> but was: <0.45>");
+		assertExpectedAndActualValues(e, 0.5f, 0.45f);
 	}
 
 	@Test
@@ -613,6 +639,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "expected: <1.0> but was: <1.1>");
+			assertExpectedAndActualValues(ex, 1.0d, 1.1d);
 		}
 	}
 
@@ -625,6 +652,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
 			assertMessageEndsWith(ex, "expected: <1.0> but was: <1.1>");
+			assertExpectedAndActualValues(ex, 1.0d, 1.1d);
 		}
 	}
 
@@ -637,6 +665,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
 			assertMessageEndsWith(ex, "expected: <1.0> but was: <1.1>");
+			assertExpectedAndActualValues(ex, 1.0d, 1.1d);
 		}
 	}
 
@@ -663,18 +692,23 @@ public class AssertionsTests {
 	void assertEqualsDoubleWithDeltaWithUnequalValues() {
 		AssertionFailedError e1 = expectThrows(AssertionFailedError.class, () -> assertEquals(9.9d, 9.7d, 0.1d));
 		assertMessageEndsWith(e1, "expected: <9.9> but was: <9.7>");
+		assertExpectedAndActualValues(e1, 9.9d, 9.7d);
 
 		AssertionFailedError e2 = expectThrows(AssertionFailedError.class, () -> assertEquals(0.1d, 0.05d, 0.001d));
 		assertMessageEndsWith(e2, "expected: <0.1> but was: <0.05>");
+		assertExpectedAndActualValues(e2, 0.1d, 0.05d);
 
 		AssertionFailedError e3 = expectThrows(AssertionFailedError.class, () -> assertEquals(17.11d, 15.11d, 1.1d));
 		assertMessageEndsWith(e3, "expected: <17.11> but was: <15.11>");
+		assertExpectedAndActualValues(e3, 17.11d, 15.11d);
 
 		AssertionFailedError e4 = expectThrows(AssertionFailedError.class, () -> assertEquals(-7.2d, -5.9d, 1.1d));
 		assertMessageEndsWith(e4, "expected: <-7.2> but was: <-5.9>");
+		assertExpectedAndActualValues(e4, -7.2d, -5.9d);
 
 		AssertionFailedError e5 = expectThrows(AssertionFailedError.class, () -> assertEquals(+0.0d, -0.001d, .00001d));
 		assertMessageEndsWith(e5, "expected: <0.0> but was: <-0.001>");
+		assertExpectedAndActualValues(e5, +0.0d, -0.001d);
 	}
 
 	@Test
@@ -685,6 +719,7 @@ public class AssertionsTests {
 
 		assertMessageStartsWith(e, "message");
 		assertMessageEndsWith(e, "expected: <42.42> but was: <42.4>");
+		assertExpectedAndActualValues(e, 42.42d, 42.4d);
 	}
 
 	@Test
@@ -695,6 +730,7 @@ public class AssertionsTests {
 
 		assertMessageStartsWith(e, "message");
 		assertMessageEndsWith(e, "expected: <0.9> but was: <10.12>");
+		assertExpectedAndActualValues(e, 0.9d, 10.12d);
 	}
 
 	@Test
@@ -721,6 +757,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "expected: <null> but was: <foo>");
+			assertExpectedAndActualValues(ex, null, "foo");
 		}
 	}
 
@@ -732,6 +769,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "expected: <foo> but was: <null>");
+			assertExpectedAndActualValues(ex, "foo", null);
 		}
 	}
 
@@ -744,6 +782,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "test");
 			assertMessageEndsWith(ex, "expected: <null> but was: <foo>");
+			assertExpectedAndActualValues(ex, null, "foo");
 		}
 	}
 
@@ -756,6 +795,7 @@ public class AssertionsTests {
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "test");
 			assertMessageEndsWith(ex, "expected: <foo> but was: <null>");
+			assertExpectedAndActualValues(ex, "foo", null);
 		}
 	}
 
@@ -815,50 +855,60 @@ public class AssertionsTests {
 
 	@Test
 	void assertSameWithObjectVsNull() {
+		Object expected = new Object();
 		try {
-			assertSame(new Object(), null);
+			assertSame(expected, null);
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageContains(ex, "expected: <java.lang.Object@");
 			assertMessageContains(ex, "but was: <null>");
+			assertExpectedAndActualValues(ex, expected, null);
 		}
 	}
 
 	@Test
 	void assertSameWithNullVsObject() {
+		Object actual = new Object();
 		try {
-			assertSame(null, new Object());
+			assertSame(null, actual);
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageContains(ex, "expected: <null>");
 			assertMessageContains(ex, "but was: <java.lang.Object@");
+			assertExpectedAndActualValues(ex, null, actual);
 		}
 	}
 
 	@Test
 	void assertSameWithDifferentObjects() {
+		Object expected = new Object();
+		Object actual = new Object();
 		try {
-			assertSame(new Object(), new Object());
+			assertSame(expected, actual);
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageContains(ex, "expected: <java.lang.Object@");
 			assertMessageContains(ex, "but was: <java.lang.Object@");
+			assertExpectedAndActualValues(ex, expected, actual);
 		}
 	}
 
 	@Test
 	void assertSameWithEquivalentStringsAndMessageSupplier() {
+		String expected = new String("foo");
+		String actual = new String("foo");
 		try {
-			assertSame(new String("foo"), new String("foo"), () -> "test");
+			assertSame(expected, actual, () -> "test");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "test");
 			assertMessageContains(ex, "expected: java.lang.String@");
 			assertMessageContains(ex, "but was: java.lang.String@");
+			assertExpectedAndActualValues(ex, expected, actual);
 		}
 	}
 
@@ -1089,6 +1139,27 @@ public class AssertionsTests {
 			throw new AssertionError(
 				"Message in AssertionFailedError should contain [" + msg + "], but was [" + ex.getMessage() + "].");
 		}
+	}
+
+	private static void assertExpectedAndActualValues(AssertionFailedError ex, Object expected, Object actual)
+			throws AssertionError {
+		if (!wrapsEqualValue(ex.getExpected(), expected)) {
+			throw new AssertionError("Expected value in AssertionFailedError should equal ["
+					+ ValueWrapper.create(expected) + "], but was [" + ex.getExpected() + "].");
+		}
+		if (!wrapsEqualValue(ex.getActual(), actual)) {
+			throw new AssertionError("Actual value in AssertionFailedError should equal [" + ValueWrapper.create(actual)
+					+ "], but was [" + ex.getActual() + "].");
+		}
+	}
+
+	private static boolean wrapsEqualValue(ValueWrapper wrapper, Object value) {
+		if (value == null || value instanceof Serializable) {
+			return Objects.equals(value, wrapper.getValue());
+		}
+		return wrapper.getIdentityHashCode() == System.identityHashCode(value)
+				&& Objects.equals(wrapper.getStringRepresentation(), String.valueOf(value))
+				&& Objects.equals(wrapper.getType(), value.getClass());
 	}
 
 	@SuppressWarnings("serial")
