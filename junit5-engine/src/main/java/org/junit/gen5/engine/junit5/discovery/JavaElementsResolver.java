@@ -11,6 +11,7 @@
 package org.junit.gen5.engine.junit5.discovery;
 
 import static java.lang.String.format;
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
 import static org.junit.gen5.commons.util.ReflectionUtils.findNestedClasses;
 
@@ -26,6 +27,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
@@ -35,6 +37,7 @@ import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 /**
  * @since 5.0
  */
+@API(Experimental)
 public class JavaElementsResolver {
 
 	private static final Logger LOG = Logger.getLogger(JavaElementsResolver.class.getName());

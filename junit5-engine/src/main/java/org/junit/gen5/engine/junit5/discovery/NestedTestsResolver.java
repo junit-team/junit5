@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.junit5.discovery;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
@@ -18,6 +21,7 @@ import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
 /**
  * @since 5.0
  */
+@API(Experimental)
 public class NestedTestsResolver extends TestContainerResolver {
 
 	public static final String SEGMENT_TYPE = "nested-class";

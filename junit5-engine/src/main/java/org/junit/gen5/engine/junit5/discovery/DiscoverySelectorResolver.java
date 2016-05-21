@@ -10,12 +10,15 @@
 
 package org.junit.gen5.engine.junit5.discovery;
 
-import static org.junit.gen5.commons.util.ReflectionUtils.*;
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
+import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackage;
 
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
@@ -28,6 +31,7 @@ import org.junit.gen5.engine.discovery.UniqueIdSelector;
 /**
  * @since 5.0
  */
+@API(Experimental)
 public class DiscoverySelectorResolver {
 
 	public void resolveSelectors(EngineDiscoveryRequest request, TestDescriptor engineDescriptor) {
