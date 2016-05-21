@@ -10,9 +10,11 @@
 
 package org.junit.gen5.engine.junit5.discovery;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertSame;
 import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.engineId;
 import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.uniqueIdForClass;
 import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.uniqueIdForMethod;
@@ -25,6 +27,8 @@ import java.util.stream.Collectors;
 
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.JUnitException;
+import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
@@ -191,6 +195,47 @@ public class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request, engineDescriptor);
 		assertTrue(engineDescriptor.allDescendants().isEmpty());
+	}
+
+	@Test
+	public void methodResolutionByUniqueIdWithNullInput() {
+		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueIdForMethod(getClass(), null));
+		assertMethodDoesNotMatchPattern(selector);
+	}
+
+	@Test
+	public void methodResolutionByUniqueIdWithEmptyInput() {
+		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueIdForMethod(getClass(), "  "));
+		assertMethodDoesNotMatchPattern(selector);
+	}
+
+	@Test
+	public void methodResolutionByUniqueIdWithMissingMethodName() {
+		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueIdForMethod(getClass(), "()"));
+		assertMethodDoesNotMatchPattern(selector);
+	}
+
+	@Test
+	public void methodResolutionByUniqueIdWithMissingParameters() {
+		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueIdForMethod(getClass(), "methodName"));
+		assertMethodDoesNotMatchPattern(selector);
+	}
+
+	@Test
+	public void methodResolutionByUniqueIdWithBogusParameters() {
+		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
+			uniqueIdForMethod(getClass(), "methodName(java.lang.String, junit.foo.Enigma)"));
+		Exception exception = expectThrows(JUnitException.class,
+			() -> resolver.resolveSelectors(request().select(selector).build(), engineDescriptor));
+		assertThat(exception).hasMessageStartingWith("Failed to load parameter type");
+		assertThat(exception).hasMessageContaining("junit.foo.Enigma");
+	}
+
+	private void assertMethodDoesNotMatchPattern(UniqueIdSelector selector) {
+		Exception exception = expectThrows(PreconditionViolationException.class,
+			() -> resolver.resolveSelectors(request().select(selector).build(), engineDescriptor));
+		assertThat(exception).hasMessageStartingWith("Method");
+		assertThat(exception).hasMessageContaining("does not match pattern");
 	}
 
 	@Test

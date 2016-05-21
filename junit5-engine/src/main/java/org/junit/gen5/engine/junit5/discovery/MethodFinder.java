@@ -12,10 +12,12 @@ package org.junit.gen5.engine.junit5.discovery;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.junit.gen5.commons.JUnitException;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
@@ -23,21 +25,20 @@ import org.junit.gen5.commons.util.ReflectionUtils;
  */
 class MethodFinder {
 
+	// Pattern: methodName(comma-separated argument list)
+	private static final Pattern METHOD_PATTERN = Pattern.compile("(.+)\\((.*)\\)");
+
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 
 	Optional<Method> findMethod(String methodSpecPart, Class<?> clazz) {
-		try {
-			// TODO [#272] Throw IAE when format wrong. Currently you get IndexOutOfBoundsException.
-			int startParams = methodSpecPart.indexOf('(');
-			String methodName = methodSpecPart.substring(0, startParams);
-			int endParams = methodSpecPart.lastIndexOf(')');
-			String paramsPart = methodSpecPart.substring(startParams + 1, endParams);
-			Class<?>[] parameterTypes = resolveParameterTypes(paramsPart);
-			return findMethod(clazz, methodName, parameterTypes);
-		}
-		catch (RuntimeException rte) {
-			return Optional.empty();
-		}
+		Matcher matcher = METHOD_PATTERN.matcher(methodSpecPart);
+
+		Preconditions.condition(matcher.matches(),
+			() -> String.format("Method [%s] does not match pattern [%s]", methodSpecPart, METHOD_PATTERN));
+
+		String methodName = matcher.group(1);
+		Class<?>[] parameterTypes = resolveParameterTypes(matcher.group(2));
+		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes);
 	}
 
 	private Class<?>[] resolveParameterTypes(String paramsPart) {
@@ -46,21 +47,15 @@ class MethodFinder {
 		}
 
 		// @formatter:off
-		List<Class<?>> types = Arrays.stream(paramsPart.split(","))
+		return Arrays.stream(paramsPart.split(","))
 				.map(className -> loadRequiredParameterClass(className))
-				.collect(Collectors.toList());
+				.toArray(Class[]::new);
 		// @formatter:on
-
-		return types.toArray(new Class<?>[types.size()]);
-	}
-
-	private Optional<Method> findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
-		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes);
 	}
 
 	private Class<?> loadRequiredParameterClass(String className) {
-		// TODO [#272] Throw JUnitException instead of a RuntimeException.
-		return ReflectionUtils.loadClass(className).orElseThrow(() -> new RuntimeException("Not found: " + className));
+		return ReflectionUtils.loadClass(className).orElseThrow(
+			() -> new JUnitException(String.format("Failed to load parameter type [%s]", className)));
 	}
 
 }
