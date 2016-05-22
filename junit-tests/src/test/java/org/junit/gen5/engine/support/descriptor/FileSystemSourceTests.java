@@ -31,20 +31,27 @@ class FileSystemSourceTests {
 	}
 
 	@Test
-	void directory() {
-		File directory = new File(".");
-		DirectorySource source = new DirectorySource(directory);
-		assertThat(source.getUri()).isEqualTo(directory.getAbsoluteFile().toURI());
-		assertThat(source.getFile()).isEqualTo(directory.getAbsoluteFile());
+	void directory() throws Exception {
+		File canonicalDir = new File(".").getCanonicalFile();
+		File relativeDir = new File("..", canonicalDir.getName());
+
+		DirectorySource source = new DirectorySource(relativeDir);
+
+		assertThat(source.getUri()).isEqualTo(canonicalDir.toURI());
+		assertThat(source.getFile()).isEqualTo(canonicalDir);
 	}
 
 	@Test
 	void fileWithoutPosition() throws Exception {
-		File file = new File("test.txt");
-		FileSource source = new FileSource(file);
+		File canonicalDir = new File(".").getCanonicalFile();
+		File relativeDir = new File("..", canonicalDir.getName());
+		File relativeFile = new File(relativeDir, "test.txt");
+		File canonicalFile = relativeFile.getCanonicalFile();
 
-		assertThat(source.getUri()).isEqualTo(file.getAbsoluteFile().toURI());
-		assertThat(source.getFile()).isEqualTo(file.getAbsoluteFile());
+		FileSource source = new FileSource(relativeFile);
+
+		assertThat(source.getUri()).isEqualTo(canonicalFile.toURI());
+		assertThat(source.getFile()).isEqualTo(canonicalFile);
 		assertThat(source.getPosition()).isEmpty();
 	}
 

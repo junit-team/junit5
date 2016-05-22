@@ -13,10 +13,12 @@ package org.junit.gen5.engine.support.descriptor;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
@@ -37,7 +39,13 @@ public class FileSource implements FileSystemSource {
 	}
 
 	public FileSource(File file, FilePosition filePosition) {
-		this.file = Preconditions.notNull(file, "file must not be null").getAbsoluteFile();
+		Preconditions.notNull(file, "file must not be null");
+		try {
+			this.file = file.getCanonicalFile();
+		}
+		catch (IOException ex) {
+			throw new JUnitException("Failed to retrieve canonical path for file: " + file, ex);
+		}
 		this.filePosition = filePosition;
 	}
 

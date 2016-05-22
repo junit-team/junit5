@@ -13,9 +13,11 @@ package org.junit.gen5.engine.support.descriptor;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Objects;
 
+import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
@@ -31,7 +33,13 @@ public class DirectorySource implements FileSystemSource {
 	private final File directory;
 
 	public DirectorySource(File directory) {
-		this.directory = Preconditions.notNull(directory, "directory must not be null").getAbsoluteFile();
+		Preconditions.notNull(directory, "directory must not be null");
+		try {
+			this.directory = directory.getCanonicalFile();
+		}
+		catch (IOException ex) {
+			throw new JUnitException("Failed to retrieve canonical path for directory: " + directory, ex);
+		}
 	}
 
 	/**
