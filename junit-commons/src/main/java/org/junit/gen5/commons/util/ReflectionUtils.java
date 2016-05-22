@@ -47,7 +47,13 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Internal)
-public abstract class ReflectionUtils {
+public final class ReflectionUtils {
+
+	///CLOVER:OFF
+	private ReflectionUtils() {
+		/* no-op */
+	}
+	///CLOVER:ON
 
 	public enum MethodSortOrder {
 		HierarchyDown, HierarchyUp

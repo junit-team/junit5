@@ -34,7 +34,13 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Internal)
-public abstract class Preconditions {
+public final class Preconditions {
+
+	///CLOVER:OFF
+	private Preconditions() {
+		/* no-op */
+	}
+	///CLOVER:ON
 
 	/**
 	 * Assert that the supplied {@link Object} is not {@code null}.

@@ -29,7 +29,13 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Internal)
-public abstract class ExceptionUtils {
+public final class ExceptionUtils {
+
+	///CLOVER:OFF
+	private ExceptionUtils() {
+		/* no-op */
+	}
+	///CLOVER:ON
 
 	/**
 	 * Throw the supplied {@link Throwable}, <em>masked</em> as an

@@ -28,7 +28,13 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Internal)
-public abstract class CollectionUtils {
+public final class CollectionUtils {
+
+	///CLOVER:OFF
+	private CollectionUtils() {
+		/* no-op */
+	}
+	///CLOVER:ON
 
 	/**
 	 * Read the only element of a collection of size 1.

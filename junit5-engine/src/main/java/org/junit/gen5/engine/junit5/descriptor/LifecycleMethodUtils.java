@@ -29,7 +29,13 @@ import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
  *
  * @since 5.0
  */
-abstract class LifecycleMethodUtils {
+final class LifecycleMethodUtils {
+
+	///CLOVER:OFF
+	private LifecycleMethodUtils() {
+		/* no-op */
+	}
+	///CLOVER:ON
 
 	static List<Method> findBeforeAllMethods(Class<?> testClass) {
 		List<Method> methods = findAnnotatedMethods(testClass, BeforeAll.class, MethodSortOrder.HierarchyDown);

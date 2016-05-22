@@ -30,7 +30,13 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Internal)
-public abstract class FunctionUtils {
+public final class FunctionUtils {
+
+	///CLOVER:OFF
+	private FunctionUtils() {
+		/* no-op */
+	}
+	///CLOVER:ON
 
 	/**
 	 * Returns a predicate that first applies the specified function and then

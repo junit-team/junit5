@@ -48,7 +48,13 @@ import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
  * @see AnnotatedElement
  */
 @API(Internal)
-public abstract class AnnotationUtils {
+public final class AnnotationUtils {
+
+	///CLOVER:OFF
+	private AnnotationUtils() {
+		/* no-op */
+	}
+	///CLOVER:ON
 
 	private static final Map<AnnotationCacheKey, Annotation> annotationCache = new ConcurrentHashMap<>(256);
 

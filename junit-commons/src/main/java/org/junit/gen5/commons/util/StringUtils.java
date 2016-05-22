@@ -29,7 +29,13 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Internal)
-public abstract class StringUtils {
+public final class StringUtils {
+
+	///CLOVER:OFF
+	private StringUtils() {
+		/* no-op */
+	}
+	///CLOVER:ON
 
 	/**
 	 * Determine if the supplied {@link String} is <em>blank</em> (i.e.,
