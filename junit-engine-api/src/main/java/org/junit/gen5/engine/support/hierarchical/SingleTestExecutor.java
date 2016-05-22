@@ -10,17 +10,23 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
+import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import static org.junit.gen5.engine.TestExecutionResult.aborted;
 import static org.junit.gen5.engine.TestExecutionResult.failed;
 import static org.junit.gen5.engine.TestExecutionResult.successful;
 import static org.junit.gen5.engine.support.hierarchical.BlacklistedExceptions.rethrowIfBlacklisted;
 
+import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.opentest4j.TestAbortedException;
 
 /**
+ * Executes a single test wrapped in an {@link Executable} and returns a
+ * {@link TestExecutionResult} by converting exceptions.
+ *
  * @since 5.0
  */
+@API(Experimental)
 public class SingleTestExecutor {
 
 	public interface Executable {

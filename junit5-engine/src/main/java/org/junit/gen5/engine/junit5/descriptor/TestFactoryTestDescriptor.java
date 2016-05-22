@@ -28,6 +28,7 @@ import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.EngineExecutionListener;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
@@ -36,6 +37,11 @@ import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
 import org.junit.gen5.engine.support.hierarchical.Leaf;
 import org.junit.gen5.engine.support.hierarchical.SingleTestExecutor;
 
+/**
+ * {@link TestDescriptor} for test factory methods.
+ *
+ * @since 5.0
+ */
 @API(Internal)
 public class TestFactoryTestDescriptor extends MethodTestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
 

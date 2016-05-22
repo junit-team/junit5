@@ -23,7 +23,7 @@ import org.junit.gen5.api.TestFactory;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * Test if a method is a JUnit 5 test method.
+ * Test if a method is a JUnit 5 test factory method.
  *
  * @since 5.0
  */
