@@ -53,7 +53,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
-		assertTrue(uniqueIds.contains(uniqueIdForDynamicMethod(MyTestClass.class, "dynamicTest()")));
+		assertTrue(uniqueIds.contains(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()")));
 	}
 
 	@Test
@@ -68,7 +68,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
-		assertTrue(uniqueIds.contains(uniqueIdForDynamicMethod(MyTestClass.class, "dynamicTest()")));
+		assertTrue(uniqueIds.contains(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()")));
 	}
 
 	@Test
@@ -277,7 +277,7 @@ public class DiscoverySelectorResolverTests {
 	//	@Test  todo: fix test
 	public void testDynamicTestByUniqueIdWillOnlyResolveUpToParent() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
-			uniqueIdForDynamicMethod(MyTestClass.class, "dynamicTest()").append("dynamic-test", "%1"));
+			uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()").append("dynamic-test", "%1"));
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
 
@@ -285,7 +285,7 @@ public class DiscoverySelectorResolverTests {
 		List<UniqueId> uniqueIds = uniqueIds();
 
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
-		assertTrue(uniqueIds.contains(uniqueIdForDynamicMethod(MyTestClass.class, "dynamicTest()")));
+		assertTrue(uniqueIds.contains(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()")));
 	}
 
 	@Test
