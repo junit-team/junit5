@@ -11,11 +11,13 @@
 package org.junit.gen5.engine.support.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.api.Assertions.assertThrows;
 
 import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
+import org.junit.gen5.commons.util.PreconditionViolationException;
 
 /**
  * Unit tests for {@link JavaPackageSource}, {@link JavaClassSource}, and
@@ -26,8 +28,31 @@ import org.junit.gen5.api.TestInfo;
 class JavaSourceTests {
 
 	@Test
-	void packageSource() {
-		Package testPackage = JavaSourceTests.class.getPackage();
+	void packageSourceFromNullPackageName() {
+		assertThrows(PreconditionViolationException.class, () -> new JavaPackageSource((String) null));
+	}
+
+	@Test
+	void packageSourceFromEmptyPackageName() {
+		assertThrows(PreconditionViolationException.class, () -> new JavaPackageSource("  "));
+	}
+
+	@Test
+	void packageSourceFromPackageName() {
+		String testPackage = getClass().getPackage().getName();
+		JavaPackageSource source = new JavaPackageSource(testPackage);
+
+		assertThat(source.getPackageName()).isEqualTo(testPackage);
+	}
+
+	@Test
+	void packageSourceFromNullPackageReference() {
+		assertThrows(PreconditionViolationException.class, () -> new JavaPackageSource((Package) null));
+	}
+
+	@Test
+	void packageSourceFromPackageReference() {
+		Package testPackage = getClass().getPackage();
 		JavaPackageSource source = new JavaPackageSource(testPackage);
 
 		assertThat(source.getPackageName()).isEqualTo(testPackage.getName());
@@ -35,7 +60,7 @@ class JavaSourceTests {
 
 	@Test
 	void classSource() {
-		Class<?> testClass = JavaSourceTests.class;
+		Class<?> testClass = getClass();
 		JavaClassSource source = new JavaClassSource(testClass);
 
 		assertThat(source.getJavaClass()).isEqualTo(testClass);

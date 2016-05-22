@@ -35,34 +35,36 @@ public class FilePosition implements Serializable {
 	}
 
 	public int getLine() {
-		return line;
+		return this.line;
 	}
 
 	public int getColumn() {
-		return column;
+		return this.column;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 		FilePosition that = (FilePosition) o;
 		return this.line == that.line && this.column == that.column;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(line, column);
+		return Objects.hash(this.line, this.column);
 	}
 
 	@Override
 	public String toString() {
 		// @formatter:off
 		return new ToStringBuilder(this)
-				.append("line", line)
-				.append("column", column)
+				.append("line", this.line)
+				.append("column", this.column)
 				.toString();
 		// @formatter:on
 	}

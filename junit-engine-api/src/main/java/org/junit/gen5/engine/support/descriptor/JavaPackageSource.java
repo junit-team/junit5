@@ -28,36 +28,38 @@ public class JavaPackageSource implements JavaSource {
 
 	private final String packageName;
 
+	public JavaPackageSource(Package pkg) {
+		this(Preconditions.notNull(pkg, "package must not be null").getName());
+	}
+
 	public JavaPackageSource(String packageName) {
-		this.packageName = Preconditions.notNull(packageName, "package name must not be null");
+		this.packageName = Preconditions.notBlank(packageName, "package name must not be null or empty");
 	}
 
-	public JavaPackageSource(Package javaPackage) {
-		this(Preconditions.notNull(javaPackage, "package must not be null").getName());
-	}
-
-	public String getPackageName() {
-		return packageName;
+	public final String getPackageName() {
+		return this.packageName;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 		JavaPackageSource that = (JavaPackageSource) o;
 		return Objects.equals(this.packageName, that.packageName);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(packageName);
+		return this.packageName.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("packageName", packageName).toString();
+		return new ToStringBuilder(this).append("packageName", this.packageName).toString();
 	}
 
 }

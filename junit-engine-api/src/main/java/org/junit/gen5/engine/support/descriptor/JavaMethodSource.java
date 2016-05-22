@@ -33,31 +33,33 @@ public class JavaMethodSource implements JavaSource {
 	private final String javaMethodName;
 	private final Class<?>[] javaMethodParameterTypes;
 
-	public JavaMethodSource(Method javaMethod) {
-		Preconditions.notNull(javaMethod, "method must not be null");
-		javaClass = javaMethod.getDeclaringClass();
-		javaMethodName = javaMethod.getName();
-		javaMethodParameterTypes = javaMethod.getParameterTypes();
+	public JavaMethodSource(Method method) {
+		Preconditions.notNull(method, "method must not be null");
+		this.javaClass = method.getDeclaringClass();
+		this.javaMethodName = method.getName();
+		this.javaMethodParameterTypes = method.getParameterTypes();
 	}
 
-	public Class<?> getJavaClass() {
-		return javaClass;
+	public final Class<?> getJavaClass() {
+		return this.javaClass;
 	}
 
-	public String getJavaMethodName() {
-		return javaMethodName;
+	public final String getJavaMethodName() {
+		return this.javaMethodName;
 	}
 
-	public Class<?>[] getJavaMethodParameterTypes() {
-		return javaMethodParameterTypes;
+	public final Class<?>[] getJavaMethodParameterTypes() {
+		return this.javaMethodParameterTypes;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 		JavaMethodSource that = (JavaMethodSource) o;
 		return Objects.equals(this.javaClass, that.javaClass)
 				&& Objects.equals(this.javaMethodName, that.javaMethodName)
@@ -73,9 +75,9 @@ public class JavaMethodSource implements JavaSource {
 	public String toString() {
 		// @formatter:off
 		return new ToStringBuilder(this)
-				.append("javaClass", javaClass.getName())
-				.append("javaMethodName", javaMethodName)
-				.append("javaMethodParameterTypes", nullSafeToString(getJavaMethodParameterTypes()))
+				.append("javaClass", this.javaClass.getName())
+				.append("javaMethodName", this.javaMethodName)
+				.append("javaMethodParameterTypes", nullSafeToString(this.javaMethodParameterTypes))
 				.toString();
 		// @formatter:on
 	}

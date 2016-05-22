@@ -12,8 +12,6 @@ package org.junit.gen5.engine.support.descriptor;
 
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
-import java.util.Objects;
-
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
@@ -32,28 +30,30 @@ public class JavaClassSource implements JavaSource {
 		this.javaClass = Preconditions.notNull(javaClass, "class must not be null");
 	}
 
-	public Class<?> getJavaClass() {
-		return javaClass;
+	public final Class<?> getJavaClass() {
+		return this.javaClass;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 		JavaClassSource that = (JavaClassSource) o;
-		return Objects.equals(this.javaClass, that.javaClass);
+		return this.javaClass.equals(that.javaClass);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(javaClass);
+		return this.javaClass.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("javaClass", javaClass.getName()).toString();
+		return new ToStringBuilder(this).append("javaClass", this.javaClass.getName()).toString();
 	}
 
 }

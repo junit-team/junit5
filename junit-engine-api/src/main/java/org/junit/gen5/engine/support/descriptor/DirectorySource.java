@@ -15,7 +15,6 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Objects;
 
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
@@ -55,27 +54,29 @@ public class DirectorySource implements FileSystemSource {
 	 */
 	@Override
 	public final File getFile() {
-		return directory;
+		return this.directory;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (o == null || getClass() != o.getClass())
+		}
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 		DirectorySource that = (DirectorySource) o;
-		return Objects.equals(this.directory, that.directory);
+		return this.directory.equals(that.directory);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(directory);
+		return this.directory.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("directory", directory.toString()).toString();
+		return new ToStringBuilder(this).append("directory", this.directory.toString()).toString();
 	}
 
 }
