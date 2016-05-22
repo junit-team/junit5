@@ -15,6 +15,7 @@ import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertFalse;
 import static org.junit.gen5.api.Assertions.assertNotSame;
 import static org.junit.gen5.api.Assertions.assertThrows;
+import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
 
@@ -88,9 +89,9 @@ class JavaSourceTests {
 		assertNotSame(source1, source2);
 		assertFalse(source1.equals(null));
 
-		assertEquals(source1, source1);
-		assertEquals(source1, source2);
-		assertEquals(source2, source1);
+		assertTrue(source1.equals(source1));
+		assertTrue(source1.equals(source2));
+		assertTrue(source2.equals(source1));
 		assertEquals(source1.hashCode(), source2.hashCode());
 	}
 
@@ -103,9 +104,9 @@ class JavaSourceTests {
 		assertNotSame(source1, source2);
 		assertFalse(source1.equals(null));
 
-		assertEquals(source1, source1);
-		assertEquals(source1, source2);
-		assertEquals(source2, source1);
+		assertTrue(source1.equals(source1));
+		assertTrue(source1.equals(source2));
+		assertTrue(source2.equals(source1));
 		assertEquals(source1.hashCode(), source2.hashCode());
 	}
 
@@ -118,9 +119,9 @@ class JavaSourceTests {
 		assertNotSame(source1, source2);
 		assertFalse(source1.equals(null));
 
-		assertEquals(source1, source1);
-		assertEquals(source1, source2);
-		assertEquals(source2, source1);
+		assertTrue(source1.equals(source1));
+		assertTrue(source1.equals(source2));
+		assertTrue(source2.equals(source1));
 		assertEquals(source1.hashCode(), source2.hashCode());
 	}
 
