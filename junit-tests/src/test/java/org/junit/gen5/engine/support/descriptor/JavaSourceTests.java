@@ -11,6 +11,8 @@
 package org.junit.gen5.engine.support.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNotSame;
 import static org.junit.gen5.api.Assertions.assertThrows;
 
 import java.lang.reflect.Method;
@@ -67,15 +69,52 @@ class JavaSourceTests {
 	}
 
 	@Test
-	void methodSource(TestInfo testInfo) throws Exception {
-		Class<?> testClass = JavaSourceTests.class;
-		String testName = testInfo.getDisplayName();
-		Method testMethod = testClass.getDeclaredMethod(testName, TestInfo.class);
+	void methodSource() throws Exception {
+		Method testMethod = getExampleMethod();
 		JavaMethodSource source = new JavaMethodSource(testMethod);
 
-		assertThat(source.getJavaClass()).isEqualTo(testClass);
-		assertThat(source.getJavaMethodName()).isEqualTo(testName);
-		assertThat(source.getJavaMethodParameterTypes()).containsExactly(TestInfo.class);
+		assertThat(source.getJavaClass()).isEqualTo(getClass());
+		assertThat(source.getJavaMethodName()).isEqualTo(testMethod.getName());
+		assertThat(source.getJavaMethodParameterTypes()).containsExactly(String.class);
+	}
+
+	@Test
+	void equalsAndHashCodeForJavaPackageSource() {
+		Package testPackage = getClass().getPackage();
+		JavaPackageSource source1 = new JavaPackageSource(testPackage);
+		JavaPackageSource source2 = new JavaPackageSource(testPackage);
+
+		assertNotSame(source1, source2);
+		assertEquals(source1, source2);
+		assertEquals(source1.hashCode(), source2.hashCode());
+	}
+
+	@Test
+	void equalsAndHashCodeForJavaClassSource() {
+		Class<?> testClass = getClass();
+		JavaClassSource source1 = new JavaClassSource(testClass);
+		JavaClassSource source2 = new JavaClassSource(testClass);
+
+		assertNotSame(source1, source2);
+		assertEquals(source1, source2);
+		assertEquals(source1.hashCode(), source2.hashCode());
+	}
+
+	@Test
+	void equalsAndHashCodeForJavaMethodSource(TestInfo testInfo) throws Exception {
+		Method testMethod = getExampleMethod();
+		JavaMethodSource source1 = new JavaMethodSource(testMethod);
+		JavaMethodSource source2 = new JavaMethodSource(testMethod);
+
+		assertNotSame(source1, source2);
+		assertEquals(source1, source2);
+	}
+
+	void exampleMethod(String text) {
+	}
+
+	private Method getExampleMethod() throws Exception {
+		return getClass().getDeclaredMethod("exampleMethod", String.class);
 	}
 
 }
