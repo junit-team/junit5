@@ -67,7 +67,7 @@ public class DirectorySource implements FileSystemSource {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("directory", directory).toString();
+		return new ToStringBuilder(this).append("directory", directory.toString()).toString();
 	}
 
 }

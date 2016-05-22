@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.support.discovery;
+package org.junit.gen5.engine.support.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,10 +16,13 @@ import java.lang.reflect.Method;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
-import org.junit.gen5.engine.support.descriptor.JavaClassSource;
-import org.junit.gen5.engine.support.descriptor.JavaMethodSource;
-import org.junit.gen5.engine.support.descriptor.JavaPackageSource;
 
+/**
+ * Unit tests for {@link JavaPackageSource}, {@link JavaClassSource}, and
+ * {@link JavaMethodSource}.
+ *
+ * @since 5.0
+ */
 class JavaSourceTests {
 
 	@Test
@@ -32,7 +35,7 @@ class JavaSourceTests {
 
 	@Test
 	void classSource() {
-		Class<JavaSourceTests> testClass = JavaSourceTests.class;
+		Class<?> testClass = JavaSourceTests.class;
 		JavaClassSource source = new JavaClassSource(testClass);
 
 		assertThat(source.getJavaClass()).isEqualTo(testClass);
@@ -40,8 +43,8 @@ class JavaSourceTests {
 
 	@Test
 	void methodSource(TestInfo testInfo) throws Exception {
-		Class<JavaSourceTests> testClass = JavaSourceTests.class;
-		final String testName = testInfo.getDisplayName();
+		Class<?> testClass = JavaSourceTests.class;
+		String testName = testInfo.getDisplayName();
 		Method testMethod = testClass.getDeclaredMethod(testName, TestInfo.class);
 		JavaMethodSource source = new JavaMethodSource(testMethod);
 
@@ -49,4 +52,5 @@ class JavaSourceTests {
 		assertThat(source.getJavaMethodName()).isEqualTo(testName);
 		assertThat(source.getJavaMethodParameterTypes()).containsExactly(TestInfo.class);
 	}
+
 }

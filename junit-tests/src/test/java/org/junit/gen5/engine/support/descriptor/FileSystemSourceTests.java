@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.support.discovery;
+package org.junit.gen5.engine.support.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertThrows;
@@ -17,17 +17,17 @@ import java.io.File;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.PreconditionViolationException;
-import org.junit.gen5.engine.support.descriptor.DirectorySource;
-import org.junit.gen5.engine.support.descriptor.FilePosition;
-import org.junit.gen5.engine.support.descriptor.FileSource;
 
+/**
+ * Unit tests for {@link FileSource} and {@link DirectorySource}.
+ *
+ * @since 5.0
+ */
 class FileSystemSourceTests {
 
 	@Test
 	void nullSourceFileOrDirectoryYieldsException() {
-		assertThrows(PreconditionViolationException.class, () -> {
-			new FileSource(null);
-		});
+		assertThrows(PreconditionViolationException.class, () -> new FileSource(null));
 	}
 
 	@Test
@@ -58,4 +58,5 @@ class FileSystemSourceTests {
 		assertThat(source.getFile()).isEqualTo(file.getAbsoluteFile());
 		assertThat(source.getPosition()).hasValue(position);
 	}
+
 }

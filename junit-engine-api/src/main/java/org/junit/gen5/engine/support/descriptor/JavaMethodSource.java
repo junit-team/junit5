@@ -73,7 +73,7 @@ public class JavaMethodSource implements JavaSource {
 	public String toString() {
 		// @formatter:off
 		return new ToStringBuilder(this)
-				.append("javaClass", javaClass)
+				.append("javaClass", javaClass.getName())
 				.append("javaMethodName", javaMethodName)
 				.append("javaMethodParameterTypes", nullSafeToString(getJavaMethodParameterTypes()))
 				.toString();

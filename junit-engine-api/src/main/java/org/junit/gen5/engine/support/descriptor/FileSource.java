@@ -83,7 +83,7 @@ public class FileSource implements FileSystemSource {
 	public String toString() {
 		// @formatter:off
 		return new ToStringBuilder(this)
-				.append("file", file)
+				.append("file", file.toString())
 				.append("filePosition", filePosition)
 				.toString();
 		// @formatter:on

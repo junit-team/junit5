@@ -53,7 +53,7 @@ public class JavaClassSource implements JavaSource {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("javaClass", javaClass).toString();
+		return new ToStringBuilder(this).append("javaClass", javaClass.getName()).toString();
 	}
 
 }
