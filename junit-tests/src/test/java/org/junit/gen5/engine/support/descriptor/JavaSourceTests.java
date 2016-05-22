@@ -12,6 +12,7 @@ package org.junit.gen5.engine.support.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertFalse;
 import static org.junit.gen5.api.Assertions.assertNotSame;
 import static org.junit.gen5.api.Assertions.assertThrows;
 
@@ -85,7 +86,11 @@ class JavaSourceTests {
 		JavaPackageSource source2 = new JavaPackageSource(testPackage);
 
 		assertNotSame(source1, source2);
+		assertFalse(source1.equals(null));
+
+		assertEquals(source1, source1);
 		assertEquals(source1, source2);
+		assertEquals(source2, source1);
 		assertEquals(source1.hashCode(), source2.hashCode());
 	}
 
@@ -96,7 +101,11 @@ class JavaSourceTests {
 		JavaClassSource source2 = new JavaClassSource(testClass);
 
 		assertNotSame(source1, source2);
+		assertFalse(source1.equals(null));
+
+		assertEquals(source1, source1);
 		assertEquals(source1, source2);
+		assertEquals(source2, source1);
 		assertEquals(source1.hashCode(), source2.hashCode());
 	}
 
@@ -107,7 +116,11 @@ class JavaSourceTests {
 		JavaMethodSource source2 = new JavaMethodSource(testMethod);
 
 		assertNotSame(source1, source2);
+		assertFalse(source1.equals(null));
+
+		assertEquals(source1, source1);
 		assertEquals(source1, source2);
+		assertEquals(source2, source1);
 		assertEquals(source1.hashCode(), source2.hashCode());
 	}
 
