@@ -18,9 +18,9 @@ import java.util.Random;
 import java.util.stream.Stream;
 
 import org.junit.gen5.api.Assertions;
-import org.junit.gen5.api.TestFactory;
 import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.api.Tag;
+import org.junit.gen5.api.TestFactory;
 import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.runner.RunWith;
 

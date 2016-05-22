@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.gen5.api.Assertions;
-import org.junit.gen5.api.TestFactory;
 import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.api.TestFactory;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
