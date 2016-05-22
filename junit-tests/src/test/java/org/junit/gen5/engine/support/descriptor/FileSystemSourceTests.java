@@ -23,7 +23,7 @@ import org.junit.gen5.commons.util.PreconditionViolationException;
  *
  * @since 5.0
  */
-class FileSystemSourceTests {
+class FileSystemSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void nullSourceFileOrDirectoryYieldsException() {
@@ -64,6 +64,18 @@ class FileSystemSourceTests {
 		assertThat(source.getUri()).isEqualTo(file.getAbsoluteFile().toURI());
 		assertThat(source.getFile()).isEqualTo(file.getAbsoluteFile());
 		assertThat(source.getPosition()).hasValue(position);
+	}
+
+	@Test
+	void equalsAndHashCodeForFileSource() {
+		File file = new File("test.txt");
+		assertEqualsAndHashCode(new FileSource(file), new FileSource(file));
+	}
+
+	@Test
+	void equalsAndHashCodeForDirectorySource() {
+		File file = new File(".");
+		assertEqualsAndHashCode(new DirectorySource(file), new DirectorySource(file));
 	}
 
 }

@@ -11,11 +11,7 @@
 package org.junit.gen5.engine.support.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertFalse;
-import static org.junit.gen5.api.Assertions.assertNotSame;
 import static org.junit.gen5.api.Assertions.assertThrows;
-import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
 
@@ -29,7 +25,7 @@ import org.junit.gen5.commons.util.PreconditionViolationException;
  *
  * @since 5.0
  */
-class JavaSourceTests {
+class JavaSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void packageSourceFromNullPackageName() {
@@ -83,46 +79,19 @@ class JavaSourceTests {
 	@Test
 	void equalsAndHashCodeForJavaPackageSource() {
 		Package testPackage = getClass().getPackage();
-		JavaPackageSource source1 = new JavaPackageSource(testPackage);
-		JavaPackageSource source2 = new JavaPackageSource(testPackage);
-
-		assertNotSame(source1, source2);
-		assertFalse(source1.equals(null));
-
-		assertTrue(source1.equals(source1));
-		assertTrue(source1.equals(source2));
-		assertTrue(source2.equals(source1));
-		assertEquals(source1.hashCode(), source2.hashCode());
+		assertEqualsAndHashCode(new JavaPackageSource(testPackage), new JavaPackageSource(testPackage));
 	}
 
 	@Test
 	void equalsAndHashCodeForJavaClassSource() {
 		Class<?> testClass = getClass();
-		JavaClassSource source1 = new JavaClassSource(testClass);
-		JavaClassSource source2 = new JavaClassSource(testClass);
-
-		assertNotSame(source1, source2);
-		assertFalse(source1.equals(null));
-
-		assertTrue(source1.equals(source1));
-		assertTrue(source1.equals(source2));
-		assertTrue(source2.equals(source1));
-		assertEquals(source1.hashCode(), source2.hashCode());
+		assertEqualsAndHashCode(new JavaClassSource(testClass), new JavaClassSource(testClass));
 	}
 
 	@Test
 	void equalsAndHashCodeForJavaMethodSource(TestInfo testInfo) throws Exception {
 		Method testMethod = getExampleMethod();
-		JavaMethodSource source1 = new JavaMethodSource(testMethod);
-		JavaMethodSource source2 = new JavaMethodSource(testMethod);
-
-		assertNotSame(source1, source2);
-		assertFalse(source1.equals(null));
-
-		assertTrue(source1.equals(source1));
-		assertTrue(source1.equals(source2));
-		assertTrue(source2.equals(source1));
-		assertEquals(source1.hashCode(), source2.hashCode());
+		assertEqualsAndHashCode(new JavaMethodSource(testMethod), new JavaMethodSource(testMethod));
 	}
 
 	void exampleMethod(String text) {
