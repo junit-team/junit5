@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.gen5.api.Dynamic;
+import org.junit.gen5.api.TestFactory;
 import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
@@ -507,7 +507,7 @@ class MyTestClass {
 
 	}
 
-	@Dynamic
+	@TestFactory
 	Stream<DynamicTest> dynamicTest() {
 		return new ArrayList<DynamicTest>().stream();
 	}
