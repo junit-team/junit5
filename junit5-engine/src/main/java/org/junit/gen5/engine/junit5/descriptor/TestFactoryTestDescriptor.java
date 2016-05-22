@@ -37,9 +37,9 @@ import org.junit.gen5.engine.support.hierarchical.Leaf;
 import org.junit.gen5.engine.support.hierarchical.SingleTestExecutor;
 
 @API(Internal)
-public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
+public class TestFactoryTestDescriptor extends MethodTestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
 
-	public DynamicMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
+	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, testClass, testMethod);
 	}
 

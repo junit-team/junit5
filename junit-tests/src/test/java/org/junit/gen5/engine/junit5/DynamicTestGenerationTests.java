@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.gen5.api.Assertions;
-import org.junit.gen5.api.Dynamic;
+import org.junit.gen5.api.TestFactory;
 import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.ExecutionEventRecorder;
@@ -96,7 +96,7 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 
 	private static class MyDynamicTestCase {
 
-		@Dynamic
+		@TestFactory
 		Stream<DynamicTest> dynamicStream() {
 			List<DynamicTest> tests = new ArrayList<>();
 
@@ -106,7 +106,7 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 			return tests.stream();
 		}
 
-		@Dynamic
+		@TestFactory
 		Collection<DynamicTest> dynamicCollection() {
 			List<DynamicTest> tests = new ArrayList<>();
 
@@ -116,7 +116,7 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 			return tests;
 		}
 
-		@Dynamic
+		@TestFactory
 		Iterator<DynamicTest> dynamicIterator() {
 			List<DynamicTest> tests = new ArrayList<>();
 

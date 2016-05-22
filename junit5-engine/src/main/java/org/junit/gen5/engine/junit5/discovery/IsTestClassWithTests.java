@@ -27,7 +27,7 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 public class IsTestClassWithTests implements Predicate<Class<?>> {
 
 	private static final IsTestMethod isTestMethod = new IsTestMethod();
-	private static final IsDynamicTestMethod isDynamicTestMethod = new IsDynamicTestMethod();
+	private static final IsTestFactoryMethod IS_TEST_FACTORY_METHOD = new IsTestFactoryMethod();
 
 	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();
 
@@ -46,7 +46,7 @@ public class IsTestClassWithTests implements Predicate<Class<?>> {
 	}
 
 	private boolean hasDynamicTests(Class<?> candidate) {
-		return !ReflectionUtils.findMethods(candidate, isDynamicTestMethod, HierarchyDown).isEmpty();
+		return !ReflectionUtils.findMethods(candidate, IS_TEST_FACTORY_METHOD, HierarchyDown).isEmpty();
 	}
 
 	private boolean hasNestedTests(Class<?> candidate) {

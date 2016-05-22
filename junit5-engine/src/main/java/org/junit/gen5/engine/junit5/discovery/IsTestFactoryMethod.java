@@ -17,7 +17,7 @@ import static org.junit.gen5.commons.util.ReflectionUtils.*;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
-import org.junit.gen5.api.Dynamic;
+import org.junit.gen5.api.TestFactory;
 import org.junit.gen5.commons.meta.API;
 
 /**
@@ -26,7 +26,7 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Internal)
-public class IsDynamicTestMethod implements Predicate<Method> {
+public class IsTestFactoryMethod implements Predicate<Method> {
 
 	@Override
 	public boolean test(Method candidate) {
@@ -38,7 +38,7 @@ public class IsDynamicTestMethod implements Predicate<Method> {
 		if (isAbstract(candidate))
 			return false;
 
-		return isAnnotated(candidate, Dynamic.class);
+		return isAnnotated(candidate, TestFactory.class);
 	}
 
 }

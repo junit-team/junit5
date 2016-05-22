@@ -18,7 +18,7 @@ import java.util.Random;
 import java.util.stream.Stream;
 
 import org.junit.gen5.api.Assertions;
-import org.junit.gen5.api.Dynamic;
+import org.junit.gen5.api.TestFactory;
 import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.junit4.runner.JUnit5;
@@ -28,14 +28,14 @@ import org.junit.runner.RunWith;
 @Tag("exclude")
 public class DynamicTestsDemo {
 
-	//	@Dynamic
+	//	@TestFactory
 	List<String> dynamicTestsWithWrongReturnType() {
 		List<String> tests = new ArrayList<>();
 		tests.add("Hallo");
 		return tests;
 	}
 
-	@Dynamic
+	@TestFactory
 	List<DynamicTest> dynamicTestsFromList() {
 		List<DynamicTest> tests = new ArrayList<>();
 
@@ -45,14 +45,14 @@ public class DynamicTestsDemo {
 		return tests;
 	}
 
-	@Dynamic
+	@TestFactory
 	Stream<DynamicTest> dynamicTestsFromStream() {
 		String[] testNames = new String[] { "test1", "test2" };
 		return Arrays.stream(testNames).map(name -> new DynamicTest(name, () -> {
 		}));
 	}
 
-	@Dynamic
+	@TestFactory
 	Iterator<DynamicTest> dynamicTestStreamFromIterator() {
 		List<DynamicTest> tests = new ArrayList<>();
 		tests.add(new DynamicTest("succeedingTest", () -> Assertions.assertTrue(true, "succeeding")));
@@ -60,7 +60,7 @@ public class DynamicTestsDemo {
 		return tests.iterator();
 	}
 
-	@Dynamic
+	@TestFactory
 	Iterator<DynamicTest> generatedTestsFromGeneratorFunction() {
 		Iterator<DynamicTest> generator = new Iterator<DynamicTest>() {
 			int counter = 0;
@@ -79,7 +79,7 @@ public class DynamicTestsDemo {
 		return generator;
 	}
 
-	@Dynamic
+	@TestFactory
 	Stream<DynamicTest> generatedRandomNumberOfTests() {
 		final int AVERAGE = 49;
 
