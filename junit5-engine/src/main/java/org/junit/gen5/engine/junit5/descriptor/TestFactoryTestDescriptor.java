@@ -37,9 +37,9 @@ import org.junit.gen5.engine.support.hierarchical.Leaf;
 import org.junit.gen5.engine.support.hierarchical.SingleTestExecutor;
 
 @API(Internal)
-public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
+public class TestFactoryTestDescriptor extends MethodTestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
 
-	public DynamicMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
+	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, testClass, testMethod);
 	}
 
@@ -64,8 +64,8 @@ public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements
 				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod());
 
 			MethodInvoker methodInvoker = new MethodInvoker(testExtensionContext, context.getExtensionRegistry());
-			Object dynamicMethodResult = methodInvoker.invoke(methodInvocationContext);
-			Stream<? extends DynamicTest> dynamicTestStream = toDynamicTestStream(dynamicMethodResult);
+			Object testFactoryMethodResult = methodInvoker.invoke(methodInvocationContext);
+			Stream<? extends DynamicTest> dynamicTestStream = toDynamicTestStream(testFactoryMethodResult);
 
 			AtomicInteger index = new AtomicInteger();
 			try {
@@ -81,27 +81,28 @@ public class DynamicMethodTestDescriptor extends MethodTestDescriptor implements
 	}
 
 	@SuppressWarnings("unchecked")
-	private Stream<? extends DynamicTest> toDynamicTestStream(Object dynamicMethodResult) {
+	private Stream<? extends DynamicTest> toDynamicTestStream(Object testFactoryMethodResult) {
 
-		if (dynamicMethodResult instanceof Stream) {
-			return (Stream<? extends DynamicTest>) dynamicMethodResult;
+		if (testFactoryMethodResult instanceof Stream) {
+			return (Stream<? extends DynamicTest>) testFactoryMethodResult;
 		}
 		// use Collection's stream() implementation even though it implements Iterable
-		if (dynamicMethodResult instanceof Collection) {
-			Collection<? extends DynamicTest> dynamicTestCollection = (Collection<? extends DynamicTest>) dynamicMethodResult;
+		if (testFactoryMethodResult instanceof Collection) {
+			Collection<? extends DynamicTest> dynamicTestCollection = (Collection<? extends DynamicTest>) testFactoryMethodResult;
 			return dynamicTestCollection.stream();
 		}
-		if (dynamicMethodResult instanceof Iterable) {
-			Iterable<? extends DynamicTest> dynamicTestIterable = (Iterable<? extends DynamicTest>) dynamicMethodResult;
+		if (testFactoryMethodResult instanceof Iterable) {
+			Iterable<? extends DynamicTest> dynamicTestIterable = (Iterable<? extends DynamicTest>) testFactoryMethodResult;
 			return StreamSupport.stream(dynamicTestIterable.spliterator(), false);
 		}
-		if (dynamicMethodResult instanceof Iterator) {
-			Iterator<? extends DynamicTest> dynamicTestIterator = (Iterator<? extends DynamicTest>) dynamicMethodResult;
+		if (testFactoryMethodResult instanceof Iterator) {
+			Iterator<? extends DynamicTest> dynamicTestIterator = (Iterator<? extends DynamicTest>) testFactoryMethodResult;
 			return StreamSupport.stream(Spliterators.spliteratorUnknownSize(dynamicTestIterator, Spliterator.ORDERED),
 				false);
 		}
 
-		throw new JUnitException("Dynamic test must return Stream, Iterable, or Iterator of " + DynamicTest.class);
+		throw new JUnitException(
+			"Test factory method must return Stream, Iterable, or Iterator of " + DynamicTest.class);
 	}
 
 	private void registerAndExecute(DynamicTest dynamicTest, int index, EngineExecutionListener listener) {

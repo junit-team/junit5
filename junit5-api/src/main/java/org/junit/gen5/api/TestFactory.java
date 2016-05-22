@@ -24,5 +24,5 @@ import org.junit.gen5.commons.meta.API;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(Experimental)
-public @interface Dynamic {
+public @interface TestFactory {
 }

@@ -17,8 +17,8 @@ import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.engineId;
 import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.uniqueIdForClass;
-import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.uniqueIdForDynamicMethod;
 import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.uniqueIdForMethod;
+import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.uniqueIdForTestFactoryMethod;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
@@ -28,10 +28,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.gen5.api.Dynamic;
 import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.api.TestFactory;
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.DiscoverySelector;
@@ -63,7 +63,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
-		assertTrue(uniqueIds.contains(uniqueIdForDynamicMethod(MyTestClass.class, "dynamicTest()")));
+		assertTrue(uniqueIds.contains(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()")));
 	}
 
 	@Test
@@ -78,7 +78,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
-		assertTrue(uniqueIds.contains(uniqueIdForDynamicMethod(MyTestClass.class, "dynamicTest()")));
+		assertTrue(uniqueIds.contains(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()")));
 	}
 
 	@Test
@@ -93,7 +93,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
-		assertTrue(uniqueIds.contains(uniqueIdForDynamicMethod(MyTestClass.class, "dynamicTest()")));
+		assertTrue(uniqueIds.contains(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()")));
 		assertTrue(uniqueIds.contains(uniqueIdForClass(YourTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(YourTestClass.class, "test3()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(YourTestClass.class, "test4()")));
@@ -158,7 +158,7 @@ public class DiscoverySelectorResolverTests {
 		assertTrue(uniqueIds.contains(uniqueIdForClass(MyTestClass.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test1()")));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(MyTestClass.class, "test2()")));
-		assertTrue(uniqueIds.contains(uniqueIdForDynamicMethod(MyTestClass.class, "dynamicTest()")));
+		assertTrue(uniqueIds.contains(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()")));
 	}
 
 	@Test
@@ -493,7 +493,7 @@ class MyTestClass {
 
 	}
 
-	@Dynamic
+	@TestFactory
 	Stream<DynamicTest> dynamicTest() {
 		return new ArrayList<DynamicTest>().stream();
 	}
