@@ -68,7 +68,7 @@ public class JavaMethodSource implements JavaSource {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(javaClass, javaMethodName, javaMethodParameterTypes);
+		return Objects.hash(this.javaClass, this.javaMethodName) + Arrays.hashCode(this.javaMethodParameterTypes);
 	}
 
 	@Override

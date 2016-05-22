@@ -108,6 +108,7 @@ class JavaSourceTests {
 
 		assertNotSame(source1, source2);
 		assertEquals(source1, source2);
+		assertEquals(source1.hashCode(), source2.hashCode());
 	}
 
 	void exampleMethod(String text) {
