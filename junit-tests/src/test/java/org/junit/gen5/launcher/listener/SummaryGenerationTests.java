@@ -85,15 +85,15 @@ class SummaryGenerationTests {
 
 	@Test
 	void reportingCorrectFailures() throws Exception {
-		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("root", "2"), "name", "failingTest") {
+		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("root", "2"), "failingTest") {
+
 			@Override
 			public Optional<TestSource> getSource() {
 				return Optional.of(new JavaClassSource(Object.class));
 			}
 		};
 		TestIdentifier failed = TestIdentifier.from(testDescriptor);
-		TestIdentifier aborted = TestIdentifier.from(
-			new TestDescriptorStub(UniqueId.root("root", "3"), "name", "abortedTest"));
+		TestIdentifier aborted = TestIdentifier.from(new TestDescriptorStub(UniqueId.root("root", "3"), "abortedTest"));
 
 		listener.testPlanExecutionStarted(testPlan);
 		listener.executionStarted(failed);
@@ -116,7 +116,7 @@ class SummaryGenerationTests {
 
 	private TestIdentifier createTestIdentifier(String uniqueId) {
 		TestIdentifier identifier = TestIdentifier.from(
-			new TestDescriptorStub(UniqueId.root("root", uniqueId), "name", "displayName"));
+			new TestDescriptorStub(UniqueId.root("root", uniqueId), "displayName"));
 		testPlan.add(identifier);
 		return identifier;
 	}

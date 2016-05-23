@@ -29,13 +29,8 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 	}
 
 	@Override
-	public final String getName() {
-		return displayName;
-	}
-
-	@Override
 	public final String getDisplayName() {
-		return displayName;
+		return this.displayName;
 	}
 
 	@Override

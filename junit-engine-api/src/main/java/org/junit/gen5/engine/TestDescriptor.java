@@ -32,9 +32,9 @@ public interface TestDescriptor {
 	 */
 	UniqueId getUniqueId();
 
-	String getName();
-
 	String getDisplayName();
+
+	Optional<TestSource> getSource();
 
 	Optional<TestDescriptor> getParent();
 
@@ -79,7 +79,5 @@ public interface TestDescriptor {
 	}
 
 	void accept(Visitor visitor);
-
-	Optional<TestSource> getSource();
 
 }

@@ -24,9 +24,7 @@ class TestIdentifierTests {
 
 	@Test
 	void inheritsIdAndNamesFromDescriptor() {
-		TestDescriptor testDescriptor = new TestDescriptorStub(UniqueId.root("aType", "uniqueId"), "name",
-			"displayName");
-
+		TestDescriptor testDescriptor = new TestDescriptorStub(UniqueId.root("aType", "uniqueId"), "displayName");
 		TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
 
 		assertEquals("[aType:uniqueId]", testIdentifier.getUniqueId());

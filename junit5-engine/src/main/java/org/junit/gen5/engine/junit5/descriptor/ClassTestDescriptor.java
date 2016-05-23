@@ -89,11 +89,6 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	@Override
-	public final String getName() {
-		return getTestClass().getName();
-	}
-
-	@Override
 	public final String getDisplayName() {
 		return this.displayName;
 	}

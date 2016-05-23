@@ -29,7 +29,6 @@ import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.UniqueId;
@@ -64,6 +63,10 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
 		this.testMethod = Preconditions.notNull(testMethod, "Method must not be null");
+
+		// TODO Generate proper default display name.
+		// String.format("%s#%s(%s)", getTestClass().getName(), this.testMethod.getName(),
+		// StringUtils.nullSafeToString(this.testMethod.getParameterTypes()));
 		this.displayName = determineDisplayName(testMethod, testMethod.getName());
 
 		setSource(new JavaMethodSource(testMethod));
@@ -74,20 +77,6 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		Set<TestTag> methodTags = getTags(getTestMethod());
 		getParent().ifPresent(parentDescriptor -> methodTags.addAll(parentDescriptor.getTags()));
 		return methodTags;
-	}
-
-	@Override
-	public String getName() {
-		// Intentionally get the class name via getTestClass() instead of
-		// testMethod.getDeclaringClass() in order to ensure that inherited
-		// test methods in different test subclasses get different names
-		// via this method (e.g., for reporting purposes). The caller is,
-		// however, still able to determine the declaring class via
-		// reflection is necessary.
-
-		// TODO Consider extracting JUnit 5's "method representation" into a common utility.
-		return String.format("%s#%s(%s)", getTestClass().getName(), this.testMethod.getName(),
-			StringUtils.nullSafeToString(this.testMethod.getParameterTypes()));
 	}
 
 	@Override

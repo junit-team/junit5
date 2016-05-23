@@ -362,13 +362,8 @@ public class HierarchicalTestExecutorTests {
 		}
 
 		@Override
-		public String getName() {
-			return getUniqueId().toString();
-		}
-
-		@Override
 		public String getDisplayName() {
-			return getName();
+			return getUniqueId().toString();
 		}
 
 		@Override
@@ -395,13 +390,8 @@ public class HierarchicalTestExecutorTests {
 		}
 
 		@Override
-		public String getName() {
-			return getUniqueId().toString();
-		}
-
-		@Override
 		public String getDisplayName() {
-			return getName();
+			return getUniqueId().toString();
 		}
 
 		@Override
