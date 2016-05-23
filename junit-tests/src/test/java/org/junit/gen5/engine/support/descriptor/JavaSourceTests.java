@@ -68,7 +68,7 @@ class JavaSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void methodSource() throws Exception {
-		Method testMethod = getExampleMethod();
+		Method testMethod = getMethod("method1");
 		JavaMethodSource source = new JavaMethodSource(testMethod);
 
 		assertThat(source.getJavaClass()).isEqualTo(getClass());
@@ -78,27 +78,34 @@ class JavaSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void equalsAndHashCodeForJavaPackageSource() {
-		Package testPackage = getClass().getPackage();
-		assertEqualsAndHashCode(new JavaPackageSource(testPackage), new JavaPackageSource(testPackage));
+		Package pkg1 = getClass().getPackage();
+		Package pkg2 = String.class.getPackage();
+		assertEqualsAndHashCode(new JavaPackageSource(pkg1), new JavaPackageSource(pkg1), new JavaPackageSource(pkg2));
 	}
 
 	@Test
 	void equalsAndHashCodeForJavaClassSource() {
-		Class<?> testClass = getClass();
-		assertEqualsAndHashCode(new JavaClassSource(testClass), new JavaClassSource(testClass));
+		Class<?> class1 = String.class;
+		Class<?> class2 = Number.class;
+		assertEqualsAndHashCode(new JavaClassSource(class1), new JavaClassSource(class1), new JavaClassSource(class2));
 	}
 
 	@Test
 	void equalsAndHashCodeForJavaMethodSource(TestInfo testInfo) throws Exception {
-		Method testMethod = getExampleMethod();
-		assertEqualsAndHashCode(new JavaMethodSource(testMethod), new JavaMethodSource(testMethod));
+		Method method1 = getMethod("method1");
+		Method method2 = getMethod("method2");
+		assertEqualsAndHashCode(new JavaMethodSource(method1), new JavaMethodSource(method1),
+			new JavaMethodSource(method2));
 	}
 
-	void exampleMethod(String text) {
+	private Method getMethod(String name) throws Exception {
+		return getClass().getDeclaredMethod(name, String.class);
 	}
 
-	private Method getExampleMethod() throws Exception {
-		return getClass().getDeclaredMethod("exampleMethod", String.class);
+	void method1(String text) {
+	}
+
+	void method2(String text) {
 	}
 
 }

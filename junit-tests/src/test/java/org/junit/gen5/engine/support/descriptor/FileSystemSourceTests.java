@@ -68,14 +68,16 @@ class FileSystemSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void equalsAndHashCodeForFileSource() {
-		File file = new File("test.txt");
-		assertEqualsAndHashCode(new FileSource(file), new FileSource(file));
+		File file1 = new File("foo.txt");
+		File file2 = new File("bar.txt");
+		assertEqualsAndHashCode(new FileSource(file1), new FileSource(file1), new FileSource(file2));
 	}
 
 	@Test
 	void equalsAndHashCodeForDirectorySource() {
-		File file = new File(".");
-		assertEqualsAndHashCode(new DirectorySource(file), new DirectorySource(file));
+		File dir1 = new File(".");
+		File dir2 = new File("..");
+		assertEqualsAndHashCode(new DirectorySource(dir1), new DirectorySource(dir1), new DirectorySource(dir2));
 	}
 
 }

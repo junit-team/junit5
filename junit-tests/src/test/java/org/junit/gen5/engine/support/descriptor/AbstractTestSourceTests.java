@@ -12,6 +12,7 @@ package org.junit.gen5.engine.support.descriptor;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertNotEquals;
 import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.api.Assertions.assertNotSame;
 import static org.junit.gen5.api.Assertions.assertTrue;
@@ -25,16 +26,21 @@ import org.junit.gen5.engine.TestSource;
  */
 abstract class AbstractTestSourceTests {
 
-	protected void assertEqualsAndHashCode(TestSource source1, TestSource source2) {
-		assertNotNull(source1);
-		assertNotNull(source2);
-		assertNotSame(source1, source2);
-		assertFalse(source1.equals(null));
+	protected void assertEqualsAndHashCode(TestSource equal1, TestSource equal2, TestSource different) {
+		assertNotNull(equal1);
+		assertNotNull(equal2);
+		assertNotNull(different);
 
-		assertTrue(source1.equals(source1));
-		assertTrue(source1.equals(source2));
-		assertTrue(source2.equals(source1));
-		assertEquals(source1.hashCode(), source2.hashCode());
+		assertNotSame(equal1, equal2);
+		assertFalse(equal1.equals(null));
+		assertFalse(equal1.equals(different));
+		assertFalse(different.equals(equal1));
+		assertNotEquals(equal1.hashCode(), different.hashCode());
+
+		assertTrue(equal1.equals(equal1));
+		assertTrue(equal1.equals(equal2));
+		assertTrue(equal2.equals(equal1));
+		assertEquals(equal1.hashCode(), equal2.hashCode());
 	}
 
 }

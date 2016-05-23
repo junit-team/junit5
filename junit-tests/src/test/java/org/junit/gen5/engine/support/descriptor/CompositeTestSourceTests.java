@@ -60,8 +60,10 @@ class CompositeTestSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void equalsAndHashCode() {
-		List<TestSource> sources = Arrays.asList(new JavaClassSource(getClass()));
-		assertEqualsAndHashCode(new CompositeTestSource(sources), new CompositeTestSource(sources));
+		List<TestSource> sources1 = Arrays.asList(new JavaClassSource(Number.class));
+		List<TestSource> sources2 = Arrays.asList(new JavaClassSource(String.class));
+		assertEqualsAndHashCode(new CompositeTestSource(sources1), new CompositeTestSource(sources1),
+			new CompositeTestSource(sources2));
 	}
 
 }
