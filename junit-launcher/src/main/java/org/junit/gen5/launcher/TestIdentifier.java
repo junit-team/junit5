@@ -100,11 +100,17 @@ public final class TestIdentifier implements Serializable {
 	/**
 	 * Get the display name of the represented test or container.
 	 *
-	 * <p>The <em>display name</em> is a human-readable name for a test or
-	 * container. It must not be parsed or processed besides being displayed
-	 * to end-users.
+	 * <p>A <em>display name</em> is a human-readable name for a test or
+	 * container that is typically used for test reporting in IDEs and build
+	 * tools. Display names may contain spaces, special characters, and emoji,
+	 * and the format may be customized by {@link org.junit.gen5.engine.TestEngine
+	 * TestEngines} or potentially by end users as well. Consequently, display
+	 * names should never be parsed; rather, they should be used for display
+	 * purposes only.
 	 *
 	 * @return the display name for this identifier; never {@code null} or empty
+	 * @see #getSource()
+	 * @see org.junit.gen5.engine.TestDescriptor#getDisplayName()
 	 */
 	public String getDisplayName() {
 		return this.displayName;

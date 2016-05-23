@@ -51,6 +51,11 @@ import org.junit.gen5.engine.support.hierarchical.Container;
 /**
  * {@link TestDescriptor} for tests based on Java classes.
  *
+ * <h3>Default Display Names</h3>
+ *
+ * <p>The default display name for a test class is the fully qualified name of
+ * the class.
+ *
  * @since 5.0
  */
 @API(Internal)

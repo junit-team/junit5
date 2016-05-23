@@ -19,8 +19,8 @@ import java.util.Set;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code TestInfo} is used to inject information about the current test
- * into to {@code @Test}, {@code @BeforeEach}, {@code @AfterEach},
+ * {@code TestInfo} is used to inject information about the current test or
+ * container into to {@code @Test}, {@code @BeforeEach}, {@code @AfterEach},
  * {@code @BeforeAll}, and {@code @AfterAll} methods.
  *
  * <p>If a method parameter is of type {@link TestInfo}, JUnit will supply
@@ -35,23 +35,44 @@ import org.junit.gen5.commons.meta.API;
 public interface TestInfo {
 
 	/**
-	 * Get the display name of the current test.
+	 * Get the display name of the current test or container.
 	 *
-	 * <p>The display name is either the canonical name of the test or a
-	 * custom name configured via {@link DisplayName @DisplayName}.
+	 * <p>The display name is either a default name or a custom name configured
+	 * via {@link DisplayName @DisplayName}.
 	 *
-	 * @return the display name of the test; never {@code null}
+	 * <h3>Default Display Names</h3>
+	 *
+	 * <p>If the context in which {@code TestInfo} is used is at the container
+	 * level, the default display name is the fully qualified class name for the
+	 * test class. If the context in which {@code TestInfo} is used is at the
+	 * test level, the default display name is the name of the test method
+	 * concatenated with a comma-separated list of parameter types in parentheses.
+	 * The names of parameter types are retrieved using {@link Class#getSimpleName()}.
+	 * For example, the default display name for the following test method is
+	 * {@code testUser(TestInfo, User)}.
+	 *
+	 * <pre style="code">
+	 *   {@literal @}Test
+	 *   void testUser(TestInfo testInfo, {@literal @}Mock User user) { ... }
+	 * </pre>
+	 *
+	 * <p>Note that display names are typically used for test reporting in IDEs
+	 * and build tools and may contain spaces, special characters, and even emoji.
+	 *
+	 * @return the display name of the test or container; never {@code null} or empty
 	 */
 	String getDisplayName();
 
 	/**
-	 * Get the set of all tags. Might be declared directly on this element
-	 * or "inherited" from an outer context.
+	 * Get the set of all tags for the current test or container.
+	 *
+	 * <p>Tags may be declared directly on the test element or <em>inherited</em>
+	 * from an outer context.
 	 */
 	Set<String> getTags();
 
 	/**
-	 * Get the {@link Class} associated with the current test, if available.
+	 * Get the {@link Class} associated with the current test or container, if available.
 	 */
 	Optional<Class<?>> getTestClass();
 

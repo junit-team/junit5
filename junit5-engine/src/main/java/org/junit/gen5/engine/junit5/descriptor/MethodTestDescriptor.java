@@ -46,6 +46,19 @@ import org.junit.gen5.engine.support.hierarchical.Leaf;
 /**
  * {@link TestDescriptor} for tests based on Java methods.
  *
+ * <h3>Default Display Names</h3>
+ *
+ * <p>The default display name for a test method is the name of the method
+ * concatenated with a comma-separated list of parameter types in parentheses.
+ * The names of parameter types are retrieved using {@link Class#getSimpleName()}.
+ * For example, the default display name for the following test method is
+ * {@code testUser(TestInfo, User)}.
+ *
+ * <pre style="code">
+ *   {@literal @}Test
+ *   void testUser(TestInfo testInfo, {@literal @}Mock User user) { ... }
+ * </pre>
+ *
  * @since 5.0
  */
 @API(Internal)

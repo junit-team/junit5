@@ -166,8 +166,9 @@ There are currently two built-in resolvers that are registered automatically.
 * `{TestInfoParameterResolver}`: if a method parameter is of type `{TestInfo}`, the
   `TestInfoParameterResolver` will supply an instance of `TestInfo` corresponding to the
   current test as the value for the parameter. The `TestInfo` can then be used to retrieve
-  information about the current test such as the test's name, display name (as
-  configured via `@DisplayName`) or associated tags.
+  information about the current test such as the test's display name, the test class, the
+  test method, or associated tags. The display name is either a technical name, such as
+  the name of the test class or test method, or a custom name configured via `@DisplayName`.
 +
 `{TestInfo}` acts as a drop-in replacement for the `TestName`
 rule from JUnit 4. Here is an example of its usage:
