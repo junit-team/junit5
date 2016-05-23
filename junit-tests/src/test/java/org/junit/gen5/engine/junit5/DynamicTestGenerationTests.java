@@ -32,14 +32,14 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
 class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
-	public void dynamicTestMethodsAreCorrectlyDiscoveredForClassSelector() {
+	public void testFactoryMethodsAreCorrectlyDiscoveredForClassSelector() {
 		TestDiscoveryRequest request = request().select(forClass(MyDynamicTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(4, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
-	public void dynamicTestMethodIsCorrectlyDiscoveredForMethodSelector() {
+	public void testFactoryMethodIsCorrectlyDiscoveredForMethodSelector() {
 		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "dynamicStream")).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");

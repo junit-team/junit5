@@ -64,8 +64,8 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor implements L
 				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod());
 
 			MethodInvoker methodInvoker = new MethodInvoker(testExtensionContext, context.getExtensionRegistry());
-			Object dynamicMethodResult = methodInvoker.invoke(methodInvocationContext);
-			Stream<DynamicTest> dynamicTestStream = toDynamicTestStream(dynamicMethodResult);
+			Object testFactoryMethodResult = methodInvoker.invoke(methodInvocationContext);
+			Stream<DynamicTest> dynamicTestStream = toDynamicTestStream(testFactoryMethodResult);
 
 			AtomicInteger index = new AtomicInteger();
 			try {
@@ -81,21 +81,22 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor implements L
 	}
 
 	@SuppressWarnings("unchecked")
-	private Stream<DynamicTest> toDynamicTestStream(Object dynamicMethodResult) {
+	private Stream<DynamicTest> toDynamicTestStream(Object testFactoryMethodResult) {
 
-		if (dynamicMethodResult instanceof Stream)
-			return (Stream<DynamicTest>) dynamicMethodResult;
-		if (dynamicMethodResult instanceof Collection) {
-			Collection<DynamicTest> dynamicTestCollection = (Collection<DynamicTest>) dynamicMethodResult;
+		if (testFactoryMethodResult instanceof Stream)
+			return (Stream<DynamicTest>) testFactoryMethodResult;
+		if (testFactoryMethodResult instanceof Collection) {
+			Collection<DynamicTest> dynamicTestCollection = (Collection<DynamicTest>) testFactoryMethodResult;
 			return dynamicTestCollection.stream();
 		}
-		if (dynamicMethodResult instanceof Iterator) {
-			Iterator<DynamicTest> dynamicTestIterator = (Iterator<DynamicTest>) dynamicMethodResult;
+		if (testFactoryMethodResult instanceof Iterator) {
+			Iterator<DynamicTest> dynamicTestIterator = (Iterator<DynamicTest>) testFactoryMethodResult;
 			return StreamSupport.stream(Spliterators.spliteratorUnknownSize(dynamicTestIterator, Spliterator.ORDERED),
 				false);
 		}
 
-		throw new JUnitException("Dynamic test must return Stream, Collection or Iterator of " + DynamicTest.class);
+		throw new JUnitException(
+			"Test factory method must return Stream, Collection or Iterator of " + DynamicTest.class);
 	}
 
 	private void registerAndExecute(DynamicTest dynamicTest, int index, EngineExecutionListener listener) {
