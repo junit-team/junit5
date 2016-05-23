@@ -13,6 +13,7 @@ package org.junit.gen5.api.extension;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
@@ -36,7 +37,7 @@ import org.junit.gen5.commons.util.Preconditions;
 public interface ExtensionContext {
 
 	/**
-	 * Get the parent extension context if there is one.
+	 * Get the parent extension context, if available.
 	 */
 	Optional<ExtensionContext> getParent();
 
@@ -71,9 +72,15 @@ public interface ExtensionContext {
 	Set<String> getTags();
 
 	/**
-	 * Get the {@link Class} associated with the current test or container.
+	 * Get the {@link Class} associated with the current test or container,
+	 * if available.
 	 */
-	Class<?> getTestClass();
+	Optional<Class<?>> getTestClass();
+
+	/**
+	 * Get the {@link Method} associated with the current test, if available.
+	 */
+	Optional<Method> getTestMethod();
 
 	/**
 	 * Get the {@link AnnotatedElement} corresponding to the current extension

@@ -12,6 +12,8 @@ package org.junit.gen5.api;
 
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
+import java.lang.reflect.Method;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.commons.meta.API;
@@ -56,4 +58,15 @@ public interface TestInfo {
 	 * or "inherited" from an outer context.
 	 */
 	Set<String> getTags();
+
+	/**
+	 * Get the {@link Class} associated with the current test, if available.
+	 */
+	Optional<Class<?>> getTestClass();
+
+	/**
+	 * Get the {@link Method} associated with the current test, if available.
+	 */
+	Optional<Method> getTestMethod();
+
 }

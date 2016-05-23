@@ -180,7 +180,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 		throwableCollector.execute(() -> {
 			MethodInvocationContext methodInvocationContext = methodInvocationContext(
-				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod());
+				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod().get());
 			try {
 				new MethodInvoker(testExtensionContext, context.getExtensionRegistry()).invoke(methodInvocationContext);
 			}

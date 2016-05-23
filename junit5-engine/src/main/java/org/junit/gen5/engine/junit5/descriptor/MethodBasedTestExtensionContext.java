@@ -14,6 +14,7 @@ import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
@@ -35,8 +36,8 @@ public final class MethodBasedTestExtensionContext extends AbstractExtensionCont
 	}
 
 	@Override
-	public Method getTestMethod() {
-		return ((MethodTestDescriptor) getTestDescriptor()).getTestMethod();
+	public Optional<Method> getTestMethod() {
+		return Optional.of(((MethodTestDescriptor) getTestDescriptor()).getTestMethod());
 	}
 
 	@Override
@@ -45,8 +46,8 @@ public final class MethodBasedTestExtensionContext extends AbstractExtensionCont
 	}
 
 	@Override
-	public Class<?> getTestClass() {
-		return ((MethodTestDescriptor) getTestDescriptor()).getTestClass();
+	public Optional<Class<?>> getTestClass() {
+		return Optional.of(((MethodTestDescriptor) getTestDescriptor()).getTestClass());
 	}
 
 	@Override
@@ -66,7 +67,7 @@ public final class MethodBasedTestExtensionContext extends AbstractExtensionCont
 
 	@Override
 	public AnnotatedElement getElement() {
-		return getTestMethod();
+		return getTestMethod().get();
 	}
 
 }
