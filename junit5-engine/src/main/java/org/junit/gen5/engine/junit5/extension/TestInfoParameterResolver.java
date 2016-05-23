@@ -45,23 +45,16 @@ class TestInfoParameterResolver implements MethodParameterResolver {
 
 	private static class DefaultTestInfo implements TestInfo {
 
-		private final String name;
 		private final String displayName;
+		private final Set<String> tags;
 		private final Optional<Class<?>> testClass;
 		private final Optional<Method> testMethod;
-		private final Set<String> tags;
 
 		DefaultTestInfo(ExtensionContext extensionContext) {
-			this.name = extensionContext.getName();
 			this.displayName = extensionContext.getDisplayName();
+			this.tags = extensionContext.getTags();
 			this.testClass = extensionContext.getTestClass();
 			this.testMethod = extensionContext.getTestMethod();
-			this.tags = extensionContext.getTags();
-		}
-
-		@Override
-		public String getName() {
-			return this.name;
 		}
 
 		@Override
@@ -88,7 +81,6 @@ class TestInfoParameterResolver implements MethodParameterResolver {
 		public String toString() {
 			// @formatter:off
 			return new ToStringBuilder(this)
-				.append("name", this.name)
 				.append("displayName", this.displayName)
 				.append("tags", this.tags)
 				.append("testClass", this.testClass)

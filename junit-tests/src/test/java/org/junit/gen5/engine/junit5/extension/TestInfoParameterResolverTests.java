@@ -27,18 +27,13 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
 
 /**
- * Microtests for {@link TestInfoParameterResolver}
+ * Integration tests for {@link TestInfoParameterResolver}
  */
 @Tag("class-tag")
 class TestInfoParameterResolverTests {
 
 	private Set<String> allDisplayNames = new HashSet<>(
 		Arrays.asList(new String[] { "getName", "defaultDisplayName", "myName", "getTags" }));
-
-	@Test
-	void getName(TestInfo testInfo) {
-		assertTrue(testInfo.getName().endsWith("getName(org.junit.gen5.api.TestInfo)"));
-	}
 
 	@Test
 	void defaultDisplayName(TestInfo testInfo) {
@@ -72,7 +67,6 @@ class TestInfoParameterResolverTests {
 	@BeforeAll
 	static void beforeAll(TestInfo testInfo) {
 		assertEquals(TestInfoParameterResolverTests.class.getName(), testInfo.getDisplayName());
-		assertEquals(TestInfoParameterResolverTests.class.getName(), testInfo.getName());
 		assertEquals(1, testInfo.getTags().size());
 		assertTrue(testInfo.getTags().contains("class-tag"));
 	}
@@ -81,4 +75,5 @@ class TestInfoParameterResolverTests {
 	static void afterAll(TestInfo testInfo) {
 		assertEquals(TestInfoParameterResolverTests.class.getName(), testInfo.getDisplayName());
 	}
+
 }

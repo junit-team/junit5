@@ -35,21 +35,12 @@ import org.junit.gen5.commons.meta.API;
 public interface TestInfo {
 
 	/**
-	 * Get the name of the current test.
-	 *
-	 * @return the name of the test; never {@code null}
-	 * @see #getDisplayName()
-	 */
-	String getName();
-
-	/**
 	 * Get the display name of the current test.
 	 *
 	 * <p>The display name is either the canonical name of the test or a
 	 * custom name configured via {@link DisplayName @DisplayName}.
 	 *
 	 * @return the display name of the test; never {@code null}
-	 * @see #getName()
 	 */
 	String getDisplayName();
 
