@@ -13,6 +13,7 @@ package org.junit.gen5.engine.support.descriptor;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.UniqueId;
 
 /**
@@ -25,7 +26,7 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 
 	public EngineDescriptor(UniqueId uniqueId, String displayName) {
 		super(uniqueId);
-		this.displayName = displayName;
+		this.displayName = Preconditions.notBlank(displayName, "display name must not be null or empty");
 	}
 
 	@Override

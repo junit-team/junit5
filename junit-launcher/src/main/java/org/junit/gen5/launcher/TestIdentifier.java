@@ -78,6 +78,8 @@ public final class TestIdentifier implements Serializable {
 	 * <p>Uniqueness must be guaranteed across an entire
 	 * {@linkplain TestPlan test plan}, regardless of how many engines are used
 	 * behind the scenes.
+	 *
+	 * @return the unique ID for this identifier; never {@code null}
 	 */
 	public String getUniqueId() {
 		return this.uniqueId;
@@ -86,7 +88,10 @@ public final class TestIdentifier implements Serializable {
 	/**
 	 * Get the unique ID of this identifier's parent, if available.
 	 *
-	 * <p>An identifier without a parent ID is called a <em>root</em>.
+	 * <p>An identifier without a parent is called a <em>root</em>.
+	 *
+	 * @return a container for the unique ID for this identifier's parent;
+	 * never {@code null} though potentially <em>empty</em>
 	 */
 	public Optional<String> getParentId() {
 		return Optional.ofNullable(this.parentId);
@@ -98,6 +103,8 @@ public final class TestIdentifier implements Serializable {
 	 * <p>The <em>display name</em> is a human-readable name for a test or
 	 * container. It must not be parsed or processed besides being displayed
 	 * to end-users.
+	 *
+	 * @return the display name for this identifier; never {@code null} or empty
 	 */
 	public String getDisplayName() {
 		return this.displayName;

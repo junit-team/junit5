@@ -29,9 +29,20 @@ public interface TestDescriptor {
 	 *
 	 * <p>Uniqueness must be guaranteed across an entire test plan,
 	 * regardless of how many engines are used behind the scenes.
+	 *
+	 * @return the {@code UniqueId} for this descriptor; never {@code null}
 	 */
 	UniqueId getUniqueId();
 
+	/**
+	 * Get the display name of the represented test or container.
+	 *
+	 * <p>The <em>display name</em> is a human-readable name for a test or
+	 * container. It must not be parsed or processed besides being displayed
+	 * to end-users.
+	 *
+	 * @return the display name for this descriptor; never {@code null} or empty
+	 */
 	String getDisplayName();
 
 	Optional<TestSource> getSource();

@@ -32,7 +32,7 @@ import org.junit.gen5.engine.UniqueId;
 @API(Experimental)
 public abstract class AbstractTestDescriptor implements TestDescriptor {
 
-	private UniqueId uniqueId;
+	private final UniqueId uniqueId;
 
 	private TestDescriptor parent;
 
@@ -41,7 +41,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	private final Set<TestDescriptor> children = new LinkedHashSet<>();
 
 	protected AbstractTestDescriptor(UniqueId uniqueId) {
-		this.uniqueId = Preconditions.notNull(uniqueId, "uniqueId must not be null");
+		this.uniqueId = Preconditions.notNull(uniqueId, "UniqueId must not be null");
 	}
 
 	@Override
