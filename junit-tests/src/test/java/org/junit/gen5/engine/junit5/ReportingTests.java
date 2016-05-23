@@ -25,10 +25,13 @@ import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
-public class ReportingTest extends AbstractJUnit5TestEngineTests {
+/**
+ * @since 5.0
+ */
+public class ReportingTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
-	public void threeReportEntriesArePublished() {
+	void threeReportEntriesArePublished() {
 		TestDiscoveryRequest request = request().select(forClass(MyReportingTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
