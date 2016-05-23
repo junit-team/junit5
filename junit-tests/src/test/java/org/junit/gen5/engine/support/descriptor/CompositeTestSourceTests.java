@@ -11,9 +11,6 @@
 package org.junit.gen5.engine.support.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertFalse;
-import static org.junit.gen5.api.Assertions.assertNotSame;
 import static org.junit.gen5.api.Assertions.assertThrows;
 
 import java.io.File;
@@ -31,7 +28,7 @@ import org.junit.gen5.engine.TestSource;
  *
  * @since 5.0
  */
-class CompositeTestSourceTests {
+class CompositeTestSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void createCompositeTestSourceFromNullList() {
@@ -64,17 +61,7 @@ class CompositeTestSourceTests {
 	@Test
 	void equalsAndHashCode() {
 		List<TestSource> sources = Arrays.asList(new JavaClassSource(getClass()));
-		CompositeTestSource composite1 = new CompositeTestSource(sources);
-		CompositeTestSource composite2 = new CompositeTestSource(sources);
-
-		assertNotSame(composite1, composite2);
-		assertNotSame(composite1.getSources(), composite2.getSources());
-		assertFalse(composite1.equals(null));
-
-		assertEquals(composite1, composite1);
-		assertEquals(composite1, composite2);
-		assertEquals(composite2, composite1);
-		assertEquals(composite1.hashCode(), composite2.hashCode());
+		assertEqualsAndHashCode(new CompositeTestSource(sources), new CompositeTestSource(sources));
 	}
 
 }
