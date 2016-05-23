@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Executable;
@@ -55,12 +56,12 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 		// @formatter:on
 	}
 
-	protected String determineDisplayName(AnnotatedElement element, String defaultName) {
+	protected String determineDisplayName(AnnotatedElement element, Supplier<String> defaultNameGenerator) {
 		// @formatter:off
 		return findAnnotation(element, DisplayName.class)
 				.map(DisplayName::value)
 				.filter(StringUtils::isNotBlank)
-				.orElse(defaultName);
+				.orElse(defaultNameGenerator.get());
 		// @formatter:on
 	}
 

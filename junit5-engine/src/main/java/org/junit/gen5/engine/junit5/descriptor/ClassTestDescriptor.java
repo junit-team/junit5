@@ -74,7 +74,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		super(uniqueId);
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
-		this.displayName = determineDisplayName(testClass, testClass.getName());
+		this.displayName = determineDisplayName(testClass, () -> testClass.getName());
 
 		this.beforeAllMethods = findBeforeAllMethods(testClass);
 		this.afterAllMethods = findAfterAllMethods(testClass);

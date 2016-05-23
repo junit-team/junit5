@@ -29,6 +29,7 @@ import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.UniqueId;
@@ -63,11 +64,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
 		this.testMethod = Preconditions.notNull(testMethod, "Method must not be null");
-
-		// TODO Generate proper default display name.
-		// String.format("%s#%s(%s)", getTestClass().getName(), this.testMethod.getName(),
-		// StringUtils.nullSafeToString(this.testMethod.getParameterTypes()));
-		this.displayName = determineDisplayName(testMethod, testMethod.getName());
+		this.displayName = determineDisplayName(testMethod, () -> generateDefaultDisplayName(testMethod));
 
 		setSource(new JavaMethodSource(testMethod));
 	}
@@ -218,6 +215,11 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 		registry.reverseStream(AfterEachCallback.class)//
 				.forEach(extension -> throwableCollector.execute(() -> extension.afterEach(context)));
+	}
+
+	private static String generateDefaultDisplayName(Method method) {
+		return String.format("%s(%s)", method.getName(),
+			StringUtils.nullSafeToString(Class::getSimpleName, method.getParameterTypes()));
 	}
 
 }

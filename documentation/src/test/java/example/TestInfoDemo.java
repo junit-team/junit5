@@ -25,7 +25,7 @@ class TestInfoDemo {
 	@BeforeEach
 	void init(TestInfo testInfo) {
 		String displayName = testInfo.getDisplayName();
-		assertTrue(displayName.equals("TEST 1") || displayName.equals("test2"));
+		assertTrue(displayName.equals("TEST 1") || displayName.equals("test2()"));
 	}
 
 	@Test

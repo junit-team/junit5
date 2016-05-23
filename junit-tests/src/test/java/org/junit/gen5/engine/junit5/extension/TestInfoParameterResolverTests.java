@@ -10,12 +10,12 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
@@ -27,17 +27,19 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
 
 /**
- * Integration tests for {@link TestInfoParameterResolver}
+ * Integration tests for {@link TestInfoParameterResolver}.
+ *
+ * @since 5.0
  */
 @Tag("class-tag")
 class TestInfoParameterResolverTests {
 
-	private Set<String> allDisplayNames = new HashSet<>(
-		Arrays.asList(new String[] { "getName", "defaultDisplayName", "myName", "getTags" }));
+	private static List<String> allDisplayNames = Arrays.asList("defaultDisplayName(TestInfo)", "myName",
+		"getTags(TestInfo)");
 
 	@Test
 	void defaultDisplayName(TestInfo testInfo) {
-		assertEquals("defaultDisplayName", testInfo.getDisplayName());
+		assertEquals("defaultDisplayName(TestInfo)", testInfo.getDisplayName());
 	}
 
 	@Test
@@ -55,13 +57,9 @@ class TestInfoParameterResolverTests {
 	}
 
 	@BeforeEach
-	void before(TestInfo testInfo) {
-		assertTrue(allDisplayNames.contains(testInfo.getDisplayName()));
-	}
-
 	@AfterEach
-	void after(TestInfo testInfo) {
-		assertTrue(allDisplayNames.contains(testInfo.getDisplayName()));
+	void beforeAndAfter(TestInfo testInfo) {
+		assertThat(allDisplayNames).contains(testInfo.getDisplayName());
 	}
 
 	@BeforeAll

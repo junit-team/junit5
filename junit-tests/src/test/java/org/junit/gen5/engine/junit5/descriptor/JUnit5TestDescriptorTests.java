@@ -45,7 +45,7 @@ public class JUnit5TestDescriptorTests {
 
 		assertEquals(UniqueId.root("method", "a method id"), descriptor.getUniqueId());
 		assertEquals(testMethod, descriptor.getTestMethod());
-		assertEquals("test", descriptor.getDisplayName(), "display name:");
+		assertEquals("test()", descriptor.getDisplayName(), "display name:");
 	}
 
 	@Test
@@ -98,7 +98,7 @@ public class JUnit5TestDescriptorTests {
 			ASampleTestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
-		assertEquals("test", descriptor.getDisplayName(), "display name:");
+		assertEquals("test(String, BigDecimal)", descriptor.getDisplayName(), "display name:");
 	}
 
 	@Tag("classTag1")
