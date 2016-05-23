@@ -55,6 +55,9 @@ import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.opentest4j.AssertionFailedError;
 
+/**
+ * @since 5.0
+ */
 @ExtendWith(TempDirectory.class)
 class XmlReportsWritingListenerTests {
 
@@ -67,12 +70,13 @@ class XmlReportsWritingListenerTests {
 		executeTests(engine, tempDirectory);
 
 		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
+
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
 				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"0\" errors=\"0\"",
 				"<!--Unique ID: [engine:dummy]-->",
-				"<testcase name=\"display&lt;&gt;Name\" classname=\"dummy\"",
+				"<testcase name=\"display&lt;&gt;Name\" classname=\"&lt;unrooted&gt;\"",
 				"<!--Unique ID: [engine:dummy]/[test:succeedingTest]-->",
 				"</testcase>",
 				"</testsuite>")
@@ -200,8 +204,8 @@ class XmlReportsWritingListenerTests {
 		assertThat(content)
 			.containsSequence(
 				"<testsuite", "time=\"1.665\"",
-				"<testcase name=\"firstTest\" classname=\"dummy\" time=\"0.333\"",
-				"<testcase name=\"secondTest\" classname=\"dummy\" time=\"0.333\"");
+				"<testcase name=\"firstTest\" classname=\"&lt;unrooted&gt;\" time=\"0.333\"",
+				"<testcase name=\"secondTest\" classname=\"&lt;unrooted&gt;\" time=\"0.333\"");
 		//@formatter:on
 	}
 
@@ -219,7 +223,7 @@ class XmlReportsWritingListenerTests {
 		assertThat(content)
 			.containsSequence(
 				"<testsuite",
-				"<testcase name=\"test\" classname=\"dummy\" time=\"0\"");
+				"<testcase name=\"test\" classname=\"&lt;unrooted&gt;\" time=\"0\"");
 		//@formatter:on
 	}
 

@@ -17,10 +17,13 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.UniqueId;
 
+/**
+ * @since 5.0
+ */
 class TestIdentifierTests {
 
 	@Test
-	public void inheritsIdAndNamesFromDescriptor() {
+	void inheritsIdAndNamesFromDescriptor() {
 		TestDescriptor testDescriptor = new TestDescriptorStub(UniqueId.root("aType", "uniqueId"), "name",
 			"displayName");
 
@@ -28,6 +31,6 @@ class TestIdentifierTests {
 
 		assertEquals("[aType:uniqueId]", testIdentifier.getUniqueId());
 		assertEquals("displayName", testIdentifier.getDisplayName());
-		assertEquals("name", testIdentifier.getName());
 	}
+
 }

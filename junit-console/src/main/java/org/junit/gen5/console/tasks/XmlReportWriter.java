@@ -34,6 +34,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.reporting.ReportEntry;
+import org.junit.gen5.engine.support.descriptor.JavaClassSource;
 import org.junit.gen5.launcher.TestIdentifier;
 
 class XmlReportWriter {
@@ -111,11 +112,11 @@ class XmlReportWriter {
 
 	private void writeTestcase(TestIdentifier test, NumberFormat numberFormat, XMLStreamWriter writer)
 			throws XMLStreamException {
+
 		writer.writeStartElement("testcase");
 
 		writer.writeAttribute("name", test.getDisplayName());
-		Optional<TestIdentifier> parent = reportData.getTestPlan().getParent(test);
-		writer.writeAttribute("classname", parent.map(TestIdentifier::getName).orElse("<unrooted>"));
+		writer.writeAttribute("classname", getParentClassName(test));
 		writer.writeAttribute("time", getTime(test, numberFormat));
 		writer.writeComment("Unique ID: " + test.getUniqueId());
 
@@ -123,6 +124,17 @@ class XmlReportWriter {
 		writeReportEntriesToSystemOutElement(test, writer);
 
 		writer.writeEndElement();
+	}
+
+	private String getParentClassName(TestIdentifier test) {
+		// @formatter:off
+		return reportData.getTestPlan().getParent(test)
+				.flatMap(TestIdentifier::getSource)
+				.filter(JavaClassSource.class::isInstance)
+				.map(JavaClassSource.class::cast)
+				.map(source -> source.getJavaClass().getName())
+				.orElse("<unrooted>");
+		// @formatter:on
 	}
 
 	private void writeSkippedOrErrorOrFailureElement(TestIdentifier test, XMLStreamWriter writer)
