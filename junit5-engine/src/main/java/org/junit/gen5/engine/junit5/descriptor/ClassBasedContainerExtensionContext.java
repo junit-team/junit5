@@ -39,11 +39,6 @@ public final class ClassBasedContainerExtensionContext extends AbstractExtension
 	}
 
 	@Override
-	public String getName() {
-		return getTestDescriptor().getName();
-	}
-
-	@Override
 	public String getDisplayName() {
 		return getTestDescriptor().getDisplayName();
 	}

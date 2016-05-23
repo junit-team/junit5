@@ -56,11 +56,6 @@ public final class MethodBasedTestExtensionContext extends AbstractExtensionCont
 	}
 
 	@Override
-	public String getName() {
-		return getTestDescriptor().getName();
-	}
-
-	@Override
 	public String getDisplayName() {
 		return getTestDescriptor().getDisplayName();
 	}

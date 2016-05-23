@@ -47,27 +47,18 @@ public interface ExtensionContext {
 	String getUniqueId();
 
 	/**
-	 * Get the name for the current test or container.
-	 *
-	 * <p>The <em>name</em> is typically a technical name of the underlying
-	 * artifact &mdash; for example, the fully qualified name of a Java class,
-	 * the canonical absolute path to a file in the file system, etc.
-	 *
-	 * @see #getDisplayName()
-	 */
-	String getName();
-
-	/**
 	 * Get the display name for the current test or container.
 	 *
-	 * <p>Display names are typically used for test reporting in IDEs and
+	 * <p>Display names should only be used for test reporting in IDEs and
 	 * build tools and may contain spaces, special characters, and even emoji.
 	 */
 	String getDisplayName();
 
 	/**
-	 * Get the set of all tags. Might be declared directly on this element
-	 * or "inherited" from an outer context.
+	 * Get the set of all tags for the current test or container.
+	 *
+	 * <p>Tags may be declared directly on the test element or <em>inherited</em>
+	 * from an outer context.
 	 */
 	Set<String> getTags();
 
