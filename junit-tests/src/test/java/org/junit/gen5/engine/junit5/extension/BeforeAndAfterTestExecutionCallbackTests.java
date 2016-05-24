@@ -23,7 +23,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.AfterTestMethodCallback;
-import org.junit.gen5.api.extension.BeforeTestMethodCallback;
+import org.junit.gen5.api.extension.BeforeTestExecutionCallback;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.ExecutionEventRecorder;
@@ -34,14 +34,14 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.runner.RunWith;
 
 /**
- * Integration tests that verify support for {@link BeforeTestMethodCallback},
+ * Integration tests that verify support for {@link BeforeTestExecutionCallback},
  * {@link AfterTestMethodCallback}, {@link BeforeEach}, and {@link AfterEach}
  * in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
 @RunWith(JUnit5.class)
-public class BeforeAndAfterTestMethodCallbackTests extends AbstractJUnit5TestEngineTests {
+public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJUnit5TestEngineTests {
 
 	@BeforeEach
 	void resetCallSequence() {
@@ -149,11 +149,11 @@ public class BeforeAndAfterTestMethodCallbackTests extends AbstractJUnit5TestEng
 
 	private static List<String> callSequence = new ArrayList<>();
 
-	@ExtendWith(FooTestMethodCallbacks.class)
+	@ExtendWith(FooTestExecutionCallbacks.class)
 	private static class ParentTestCase {
 	}
 
-	@ExtendWith(BarTestMethodCallbacks.class)
+	@ExtendWith(BarTestExecutionCallbacks.class)
 	private static class ChildTestCase extends ParentTestCase {
 
 		@Test
@@ -163,7 +163,7 @@ public class BeforeAndAfterTestMethodCallbackTests extends AbstractJUnit5TestEng
 
 	}
 
-	@ExtendWith(FooTestMethodCallbacks.class)
+	@ExtendWith(FooTestExecutionCallbacks.class)
 	private interface TestInterface {
 
 		@Test
@@ -173,7 +173,7 @@ public class BeforeAndAfterTestMethodCallbackTests extends AbstractJUnit5TestEng
 
 	}
 
-	@ExtendWith(BarTestMethodCallbacks.class)
+	@ExtendWith(BarTestExecutionCallbacks.class)
 	private static class TestInterfaceTestCase implements TestInterface {
 
 		@Test
@@ -182,7 +182,7 @@ public class BeforeAndAfterTestMethodCallbackTests extends AbstractJUnit5TestEng
 		}
 	}
 
-	@ExtendWith({ FooTestMethodCallbacks.class, BarTestMethodCallbacks.class })
+	@ExtendWith({ FooTestExecutionCallbacks.class, BarTestExecutionCallbacks.class })
 	private static class OuterTestCase {
 
 		@BeforeEach
@@ -201,7 +201,7 @@ public class BeforeAndAfterTestMethodCallbackTests extends AbstractJUnit5TestEng
 		}
 
 		@Nested
-		@ExtendWith(FizzTestMethodCallbacks.class)
+		@ExtendWith(FizzTestExecutionCallbacks.class)
 		class InnerTestCase {
 
 			@BeforeEach
@@ -222,10 +222,10 @@ public class BeforeAndAfterTestMethodCallbackTests extends AbstractJUnit5TestEng
 
 	}
 
-	private static class FooTestMethodCallbacks implements BeforeTestMethodCallback, AfterTestMethodCallback {
+	private static class FooTestExecutionCallbacks implements BeforeTestExecutionCallback, AfterTestMethodCallback {
 
 		@Override
-		public void beforeTestMethod(TestExtensionContext context) {
+		public void beforeTestExecution(TestExtensionContext context) {
 			callSequence.add("fooBefore");
 		}
 
@@ -235,10 +235,10 @@ public class BeforeAndAfterTestMethodCallbackTests extends AbstractJUnit5TestEng
 		}
 	}
 
-	private static class BarTestMethodCallbacks implements BeforeTestMethodCallback, AfterTestMethodCallback {
+	private static class BarTestExecutionCallbacks implements BeforeTestExecutionCallback, AfterTestMethodCallback {
 
 		@Override
-		public void beforeTestMethod(TestExtensionContext context) {
+		public void beforeTestExecution(TestExtensionContext context) {
 			callSequence.add("barBefore");
 		}
 
@@ -248,10 +248,10 @@ public class BeforeAndAfterTestMethodCallbackTests extends AbstractJUnit5TestEng
 		}
 	}
 
-	private static class FizzTestMethodCallbacks implements BeforeTestMethodCallback, AfterTestMethodCallback {
+	private static class FizzTestExecutionCallbacks implements BeforeTestExecutionCallback, AfterTestMethodCallback {
 
 		@Override
-		public void beforeTestMethod(TestExtensionContext context) {
+		public void beforeTestExecution(TestExtensionContext context) {
 			callSequence.add("fizzBefore");
 		}
 

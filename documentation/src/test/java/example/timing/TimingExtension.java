@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
 import org.junit.gen5.api.extension.AfterTestMethodCallback;
-import org.junit.gen5.api.extension.BeforeTestMethodCallback;
+import org.junit.gen5.api.extension.BeforeTestExecutionCallback;
 import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 import org.junit.gen5.api.extension.ExtensionContext.Store;
 import org.junit.gen5.api.extension.TestExtensionContext;
@@ -25,12 +25,12 @@ import org.junit.gen5.api.extension.TestExtensionContext;
  *
  * @since 5.0
  */
-public class TimingExtension implements BeforeTestMethodCallback, AfterTestMethodCallback {
+public class TimingExtension implements BeforeTestExecutionCallback, AfterTestMethodCallback {
 
 	private static final Logger LOG = Logger.getLogger(TimingExtension.class.getName());
 
 	@Override
-	public void beforeTestMethod(TestExtensionContext context) throws Exception {
+	public void beforeTestExecution(TestExtensionContext context) throws Exception {
 		getStore(context).put(context.getTestMethod().get(), System.currentTimeMillis());
 	}
 

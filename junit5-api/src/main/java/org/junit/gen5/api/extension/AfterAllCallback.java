@@ -28,7 +28,7 @@ import org.junit.gen5.commons.meta.API;
  * @see BeforeAllCallback
  * @see BeforeEachCallback
  * @see AfterEachCallback
- * @see BeforeTestMethodCallback
+ * @see BeforeTestExecutionCallback
  * @see AfterTestMethodCallback
  */
 @FunctionalInterface

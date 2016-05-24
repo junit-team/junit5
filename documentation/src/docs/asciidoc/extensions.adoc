@@ -146,7 +146,7 @@ test execution lifecycle. Consult the Javadoc for each of these in the
 * `AfterAllCallback`
 * `BeforeEachCallback`
 * `AfterEachCallback`
-* `BeforeTestMethodCallback`
+* `BeforeTestExecutionCallback`
 * `AfterTestMethodCallback`
 
 Note that extension developers may choose to implement any number of these interfaces

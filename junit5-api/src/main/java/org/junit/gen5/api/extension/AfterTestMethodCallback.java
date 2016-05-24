@@ -22,13 +22,13 @@ import org.junit.gen5.commons.meta.API;
  * <p>Such callbacks will be invoked before any user defined teardown methods (e.g.,
  * {@link org.junit.gen5.api.AfterEach @AfterEach} methods).
  *
- * <p>Concrete implementations often implement {@link BeforeTestMethodCallback} as well.
+ * <p>Concrete implementations often implement {@link BeforeTestExecutionCallback} as well.
  *
  * <p>Implementations must provide a no-args constructor.
  *
  * @since 5.0
  * @see org.junit.gen5.api.Test
- * @see BeforeTestMethodCallback
+ * @see BeforeTestExecutionCallback
  * @see BeforeEachCallback
  * @see AfterEachCallback
  * @see BeforeAllCallback

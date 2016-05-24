@@ -22,7 +22,7 @@ import java.util.Set;
 import org.junit.gen5.api.extension.AfterEachCallback;
 import org.junit.gen5.api.extension.AfterTestMethodCallback;
 import org.junit.gen5.api.extension.BeforeEachCallback;
-import org.junit.gen5.api.extension.BeforeTestMethodCallback;
+import org.junit.gen5.api.extension.BeforeTestExecutionCallback;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExecutionExceptionHandler;
@@ -148,7 +148,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		// @formatter:off
 		invokeBeforeEachCallbacks(registry, testExtensionContext);
 			invokeBeforeEachMethods(registry, testExtensionContext);
-				invokeBeforeTestMethodCallbacks(registry, testExtensionContext);
+				invokeBeforeTestExecutionCallbacks(registry, testExtensionContext);
 					invokeTestMethod(context, testExtensionContext, throwableCollector);
 				invokeAfterTestMethodCallbacks(registry, testExtensionContext, throwableCollector);
 			invokeAfterEachMethods(registry, testExtensionContext, throwableCollector);
@@ -170,9 +170,9 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				.forEach(extension -> executeAndMaskThrowable(() -> extension.invoke(context)));
 	}
 
-	private void invokeBeforeTestMethodCallbacks(ExtensionRegistry registry, TestExtensionContext context) {
-		registry.stream(BeforeTestMethodCallback.class)//
-				.forEach(extension -> executeAndMaskThrowable(() -> extension.beforeTestMethod(context)));
+	private void invokeBeforeTestExecutionCallbacks(ExtensionRegistry registry, TestExtensionContext context) {
+		registry.stream(BeforeTestExecutionCallback.class)//
+				.forEach(extension -> executeAndMaskThrowable(() -> extension.beforeTestExecution(context)));
 	}
 
 	protected void invokeTestMethod(JUnit5EngineExecutionContext context, TestExtensionContext testExtensionContext,

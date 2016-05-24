@@ -15,9 +15,9 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code BeforeTestMethodCallback} defines the API for {@link Extension Extensions}
- * that wish to provide additional behavior to tests before each test method is
- * invoked.
+ * {@code BeforeTestExecutionCallback} defines the API for {@link Extension
+ * Extensions} that wish to provide additional behavior to tests immediately
+ * before each test is executed.
  *
  * <p>Such callbacks will be invoked after any user defined setup methods (e.g.,
  * {@link org.junit.gen5.api.BeforeEach @BeforeEach} methods).
@@ -36,13 +36,13 @@ import org.junit.gen5.commons.meta.API;
  */
 @FunctionalInterface
 @API(Experimental)
-public interface BeforeTestMethodCallback extends Extension {
+public interface BeforeTestExecutionCallback extends Extension {
 
 	/**
-	 * Callback that is invoked <em>before</em> each test method is invoked.
+	 * Callback that is invoked <em>immediately before</em> each test is executed.
 	 *
 	 * @param context the current test extension context
 	 */
-	void beforeTestMethod(TestExtensionContext context) throws Exception;
+	void beforeTestExecution(TestExtensionContext context) throws Exception;
 
 }
