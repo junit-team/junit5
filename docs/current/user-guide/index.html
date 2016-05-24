@@ -1066,8 +1066,9 @@ be resolved at runtime by a registered <code>MethodParameterResolver</code>.</p>
 <p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a method parameter is of type <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/TestInfo.java">TestInfo</a></code>, the
 <code>TestInfoParameterResolver</code> will supply an instance of <code>TestInfo</code> corresponding to the
 current test as the value for the parameter. The <code>TestInfo</code> can then be used to retrieve
-information about the current test such as the test&#8217;s name, display name (as
-configured via <code>@DisplayName</code>) or associated tags.</p>
+information about the current test such as the test&#8217;s display name, the test class, the
+test method, or associated tags. The display name is either a technical name, such as
+the name of the test class or test method, or a custom name configured via <code>@DisplayName</code>.</p>
 <div class="paragraph">
 <p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/TestInfo.java">TestInfo</a></code> acts as a drop-in replacement for the <code>TestName</code>
 rule from JUnit 4. Here is an example of its usage:</p>
@@ -1091,7 +1092,7 @@ class TestInfoDemo {
     @BeforeEach
     void init(TestInfo testInfo) {
         String displayName = testInfo.getDisplayName();
-        assertTrue(displayName.equals("TEST 1") || displayName.equals("test2"));
+        assertTrue(displayName.equals("TEST 1") || displayName.equals("test2()"));
     }
 
     @Test
@@ -2235,7 +2236,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-05-24 15:00:33 -04:00
+Last updated 2016-05-24 18:02:05 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
