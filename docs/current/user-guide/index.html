@@ -1797,7 +1797,7 @@ of its subpackages.</p>
 <div class="sect2">
 <h3 id="test-instance-post-processing">5.4. Test Instance Post-processing</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/InstancePostProcessor.java">InstancePostProcessor</a></code> defines the API for <code>Extensions</code> that wish to <em>post
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/TestInstancePostProcessor.java">TestInstancePostProcessor</a></code> defines the API for <code>Extensions</code> that wish to <em>post
 process</em> test instances.</p>
 </div>
 <div class="paragraph">
@@ -1847,10 +1847,10 @@ test execution lifecycle. Consult the Javadoc for each of these in the
 <p><code>AfterEachCallback</code></p>
 </li>
 <li>
-<p><code>BeforeTestMethodCallback</code></p>
+<p><code>BeforeTestExecutionCallback</code></p>
 </li>
 <li>
-<p><code>AfterTestMethodCallback</code></p>
+<p><code>AfterTestExecutionCallback</code></p>
 </li>
 </ul>
 </div>
@@ -1863,8 +1863,8 @@ concrete example.</p>
 <div class="sect2">
 <h3 id="exception-handling">5.7. Exception Handling</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExceptionHandler.java">ExceptionHandler</a></code> defines the API for <code>Extensions</code> that wish to handle exceptions
-thrown from tests.</p>
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/TestExecutionExceptionHandler.java">TestExecutionExceptionHandler</a></code> defines the API for <code>Extensions</code> that wish to handle
+exceptions thrown during test execution.</p>
 </div>
 <div class="paragraph">
 <p>The following example shows an extension which will swallow all instances of <code>IOException</code>
@@ -1873,10 +1873,10 @@ but rethrow any other type of exception:</p>
 <div class="listingblock">
 <div class="title">An exception handling extension</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public class IgnoreIOExceptionExtension implements ExceptionHandler {
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">public class IgnoreIOExceptionExtension implements TestExecutionExceptionHandler {
 
     @Override
-    public void handleException(TestExtensionContext context, Throwable throwable)
+    public void handleTestExecutionException(TestExtensionContext context, Throwable throwable)
             throws Throwable {
 
         if (throwable instanceof IOException) {
@@ -2236,7 +2236,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-05-24 18:02:05 -04:00
+Last updated 2016-05-24 18:40:14 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
