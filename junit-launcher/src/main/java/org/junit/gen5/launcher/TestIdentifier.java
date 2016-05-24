@@ -39,7 +39,6 @@ public final class TestIdentifier implements Serializable {
 
 	private final String uniqueId;
 	private final String parentId;
-	private final String name;
 	private final String displayName;
 	private final Optional<TestSource> source;
 	private final Set<TestTag> tags;
@@ -52,7 +51,6 @@ public final class TestIdentifier implements Serializable {
 	public static TestIdentifier from(TestDescriptor testDescriptor) {
 		// TODO Use Flyweight Pattern for TestIdentifier?
 		String uniqueId = testDescriptor.getUniqueId().toString();
-		String name = testDescriptor.getName();
 		String displayName = testDescriptor.getDisplayName();
 		Optional<TestSource> source = testDescriptor.getSource();
 		Set<TestTag> tags = testDescriptor.getTags();
@@ -60,14 +58,13 @@ public final class TestIdentifier implements Serializable {
 		boolean container = !test || !testDescriptor.getChildren().isEmpty();
 		Optional<String> parentId = testDescriptor.getParent().map(
 			parentDescriptor -> parentDescriptor.getUniqueId().toString());
-		return new TestIdentifier(uniqueId, name, displayName, source, tags, test, container, parentId);
+		return new TestIdentifier(uniqueId, displayName, source, tags, test, container, parentId);
 	}
 
-	private TestIdentifier(String uniqueId, String name, String displayName, Optional<TestSource> source,
-			Set<TestTag> tags, boolean test, boolean container, Optional<String> parentId) {
+	private TestIdentifier(String uniqueId, String displayName, Optional<TestSource> source, Set<TestTag> tags,
+			boolean test, boolean container, Optional<String> parentId) {
 		this.uniqueId = uniqueId;
 		this.parentId = parentId.orElse(null);
-		this.name = name;
 		this.displayName = displayName;
 		this.source = (source != null ? source : Optional.empty());
 		this.tags = unmodifiableSet(new LinkedHashSet<>(tags));
@@ -81,6 +78,8 @@ public final class TestIdentifier implements Serializable {
 	 * <p>Uniqueness must be guaranteed across an entire
 	 * {@linkplain TestPlan test plan}, regardless of how many engines are used
 	 * behind the scenes.
+	 *
+	 * @return the unique ID for this identifier; never {@code null}
 	 */
 	public String getUniqueId() {
 		return this.uniqueId;
@@ -89,28 +88,29 @@ public final class TestIdentifier implements Serializable {
 	/**
 	 * Get the unique ID of this identifier's parent, if available.
 	 *
-	 * <p>An identifier without a parent ID is called a <em>root</em>.
+	 * <p>An identifier without a parent is called a <em>root</em>.
+	 *
+	 * @return a container for the unique ID for this identifier's parent;
+	 * never {@code null} though potentially <em>empty</em>
 	 */
 	public Optional<String> getParentId() {
 		return Optional.ofNullable(this.parentId);
 	}
 
 	/**
-	 * Get the name of the represented test or container.
-	 *
-	 * <p>The <em>name</em> is a technical name for a test or container. It
-	 * must not be parsed or processed besides being displayed to end-users.
-	 */
-	public String getName() {
-		return this.name;
-	}
-
-	/**
 	 * Get the display name of the represented test or container.
 	 *
-	 * <p>The <em>display name</em> is a human-readable name for a test or
-	 * container. It must not be parsed or processed besides being displayed
-	 * to end-users.
+	 * <p>A <em>display name</em> is a human-readable name for a test or
+	 * container that is typically used for test reporting in IDEs and build
+	 * tools. Display names may contain spaces, special characters, and emoji,
+	 * and the format may be customized by {@link org.junit.gen5.engine.TestEngine
+	 * TestEngines} or potentially by end users as well. Consequently, display
+	 * names should never be parsed; rather, they should be used for display
+	 * purposes only.
+	 *
+	 * @return the display name for this identifier; never {@code null} or empty
+	 * @see #getSource()
+	 * @see org.junit.gen5.engine.TestDescriptor#getDisplayName()
 	 */
 	public String getDisplayName() {
 		return this.displayName;
@@ -170,7 +170,6 @@ public final class TestIdentifier implements Serializable {
 		return new ToStringBuilder(this)
 				.append("uniqueId", this.uniqueId)
 				.append("parentId", this.parentId)
-				.append("name", this.name)
 				.append("displayName", this.displayName)
 				.append("source", this.source)
 				.append("tags", this.tags)

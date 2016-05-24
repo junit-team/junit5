@@ -22,8 +22,8 @@ import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.TestFactoryTestDescriptor;
 
 /**
- * {@code TestFactoryMethodResolver} is a special {@link ElementResolver}
- * which is able to resolve test factory methods denoted by
+ * {@code TestFactoryMethodResolver} is an {@link ElementResolver}
+ * that is able to resolve test factory methods annotated with
  * {@link TestFactory @TestFactory}.
  *
  * <p>It will create {@link TestFactoryTestDescriptor} instances.
@@ -44,10 +44,12 @@ public class TestFactoryMethodResolver extends TestMethodResolver {
 		super(SEGMENT_TYPE);
 	}
 
+	@Override
 	protected boolean isTestMethod(Method candidate) {
 		return isTestFactoryMethod.test(candidate);
 	}
 
+	@Override
 	protected TestDescriptor resolveMethod(Method testMethod, ClassTestDescriptor parentClassDescriptor,
 			UniqueId uniqueId) {
 		return new TestFactoryTestDescriptor(uniqueId, parentClassDescriptor.getTestClass(), testMethod);

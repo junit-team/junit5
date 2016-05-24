@@ -31,12 +31,12 @@ public class TimingExtension implements BeforeTestMethodCallback, AfterTestMetho
 
 	@Override
 	public void beforeTestMethod(TestExtensionContext context) throws Exception {
-		getStore(context).put(context.getTestMethod(), System.currentTimeMillis());
+		getStore(context).put(context.getTestMethod().get(), System.currentTimeMillis());
 	}
 
 	@Override
 	public void afterTestMethod(TestExtensionContext context) throws Exception {
-		Method testMethod = context.getTestMethod();
+		Method testMethod = context.getTestMethod().get();
 		long start = (long) getStore(context).remove(testMethod);
 		long duration = System.currentTimeMillis() - start;
 

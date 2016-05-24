@@ -13,6 +13,7 @@ package org.junit.gen5.api.extension;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
@@ -36,7 +37,7 @@ import org.junit.gen5.commons.util.Preconditions;
 public interface ExtensionContext {
 
 	/**
-	 * Get the parent extension context if there is one.
+	 * Get the parent extension context, if available.
 	 */
 	Optional<ExtensionContext> getParent();
 
@@ -46,34 +47,39 @@ public interface ExtensionContext {
 	String getUniqueId();
 
 	/**
-	 * Get the name for the current test or container.
-	 *
-	 * <p>The <em>name</em> is typically a technical name of the underlying
-	 * artifact &mdash; for example, the fully qualified name of a Java class,
-	 * the canonical absolute path to a file in the file system, etc.
-	 *
-	 * @see #getDisplayName()
-	 */
-	String getName();
-
-	/**
 	 * Get the display name for the current test or container.
 	 *
-	 * <p>Display names are typically used for test reporting in IDEs and
-	 * build tools and may contain spaces, special characters, and even emoji.
+	 * <p>The display name is either a default name or a custom name configured
+	 * via {@link org.junit.gen5.api.DisplayName @DisplayName}.
+	 *
+	 * <p>For details on default display names consult the Javadoc for
+	 * {@link org.junit.gen5.api.TestInfo#getDisplayName()}.
+	 *
+	 * <p>Note that display names are typically used for test reporting in IDEs
+	 * and build tools and may contain spaces, special characters, and even emoji.
+	 *
+	 * @return the display name of the test or container; never {@code null} or empty
 	 */
 	String getDisplayName();
 
 	/**
-	 * Get the set of all tags. Might be declared directly on this element
-	 * or "inherited" from an outer context.
+	 * Get the set of all tags for the current test or container.
+	 *
+	 * <p>Tags may be declared directly on the test element or <em>inherited</em>
+	 * from an outer context.
 	 */
 	Set<String> getTags();
 
 	/**
-	 * Get the {@link Class} associated with the current test or container.
+	 * Get the {@link Class} associated with the current test or container,
+	 * if available.
 	 */
-	Class<?> getTestClass();
+	Optional<Class<?>> getTestClass();
+
+	/**
+	 * Get the {@link Method} associated with the current test, if available.
+	 */
+	Optional<Method> getTestMethod();
 
 	/**
 	 * Get the {@link AnnotatedElement} corresponding to the current extension

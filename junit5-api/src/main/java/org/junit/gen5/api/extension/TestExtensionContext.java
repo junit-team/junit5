@@ -12,8 +12,6 @@ package org.junit.gen5.api.extension;
 
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
-import java.lang.reflect.Method;
-
 import org.junit.gen5.commons.meta.API;
 
 /**
@@ -27,5 +25,4 @@ public interface TestExtensionContext extends ExtensionContext {
 
 	Object getTestInstance();
 
-	Method getTestMethod();
 }

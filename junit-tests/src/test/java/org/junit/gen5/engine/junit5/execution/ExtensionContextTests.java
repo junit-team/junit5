@@ -38,6 +38,7 @@ import org.mockito.Mockito;
  * Microtests for implementors of {@linkplain ExtensionContext}:
  * {@linkplain ClassBasedContainerExtensionContext} and
  * {@linkplain MethodBasedTestExtensionContext}
+ *
  * @since 5.0
  */
 public class ExtensionContextTests {
@@ -50,7 +51,7 @@ public class ExtensionContextTests {
 		ClassBasedContainerExtensionContext outerExtensionContext = new ClassBasedContainerExtensionContext(null, null,
 			outerClassDescriptor);
 		Assertions.assertAll("outerContext", //
-			() -> assertEquals(OuterClass.class, outerExtensionContext.getTestClass()), //
+			() -> assertEquals(OuterClass.class, outerExtensionContext.getTestClass().get()), //
 			() -> assertEquals(outerClassDescriptor.getDisplayName(), outerExtensionContext.getDisplayName()), //
 			() -> assertEquals(Optional.empty(), outerExtensionContext.getParent()) //
 		);
@@ -87,7 +88,6 @@ public class ExtensionContextTests {
 			() -> assertEquals(2, testExtensionContext.getTags().size()), //
 			() -> assertTrue(testExtensionContext.getTags().contains("outer-tag"), "outer-tag missing"), //
 			() -> assertTrue(testExtensionContext.getTags().contains("method-tag"), "method-tag missing"));
-
 	}
 
 	@Test
@@ -100,7 +100,7 @@ public class ExtensionContextTests {
 		MethodBasedTestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(
 			classExtensionContext, null, methodTestDescriptor, new OuterClass());
 		Assertions.assertAll("methodContext", //
-			() -> assertEquals(OuterClass.class, testExtensionContext.getTestClass()), //
+			() -> assertEquals(OuterClass.class, testExtensionContext.getTestClass().get()), //
 			() -> assertEquals(methodTestDescriptor.getDisplayName(), testExtensionContext.getDisplayName()), //
 			() -> assertEquals(classExtensionContext, testExtensionContext.getParent().get()), //
 			() -> assertEquals(OuterClass.class, testExtensionContext.getTestInstance().getClass()) //
@@ -188,12 +188,10 @@ public class ExtensionContextTests {
 
 		@Tag("nested-tag")
 		class NestedClass {
-
 		}
 
 		@Tag("method-tag")
 		void aMethod() {
-
 		}
 	}
 

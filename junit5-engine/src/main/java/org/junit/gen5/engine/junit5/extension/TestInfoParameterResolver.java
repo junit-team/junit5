@@ -10,7 +10,9 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.api.TestInfo;
@@ -36,27 +38,23 @@ class TestInfoParameterResolver implements MethodParameterResolver {
 
 	@Override
 	public TestInfo resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
-			final ExtensionContext extensionContext) {
+			ExtensionContext extensionContext) {
 
-		return new DefaultTestInfo(extensionContext.getName(), extensionContext.getDisplayName(),
-			extensionContext.getTags());
+		return new DefaultTestInfo(extensionContext);
 	}
 
 	private static class DefaultTestInfo implements TestInfo {
 
-		private final String name;
 		private final String displayName;
 		private final Set<String> tags;
+		private final Optional<Class<?>> testClass;
+		private final Optional<Method> testMethod;
 
-		DefaultTestInfo(String name, String displayName, Set<String> tags) {
-			this.name = name;
-			this.displayName = displayName;
-			this.tags = tags;
-		}
-
-		@Override
-		public String getName() {
-			return this.name;
+		DefaultTestInfo(ExtensionContext extensionContext) {
+			this.displayName = extensionContext.getDisplayName();
+			this.tags = extensionContext.getTags();
+			this.testClass = extensionContext.getTestClass();
+			this.testMethod = extensionContext.getTestMethod();
 		}
 
 		@Override
@@ -70,12 +68,23 @@ class TestInfoParameterResolver implements MethodParameterResolver {
 		}
 
 		@Override
+		public Optional<Class<?>> getTestClass() {
+			return this.testClass;
+		}
+
+		@Override
+		public Optional<Method> getTestMethod() {
+			return this.testMethod;
+		}
+
+		@Override
 		public String toString() {
 			// @formatter:off
 			return new ToStringBuilder(this)
-				.append("name", this.name)
 				.append("displayName", this.displayName)
 				.append("tags", this.tags)
+				.append("testClass", this.testClass)
+				.append("testMethod", this.testMethod)
 				.toString();
 			// @formatter:on
 		}

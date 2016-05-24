@@ -12,24 +12,16 @@ package org.junit.gen5.engine;
 
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 
+/**
+ * @since 5.0
+ */
 public class TestDescriptorStub extends AbstractTestDescriptor {
 
-	private final String name;
 	private final String displayName;
 
-	public TestDescriptorStub(UniqueId uniqueId, String name) {
-		this(uniqueId, name, name);
-	}
-
-	public TestDescriptorStub(UniqueId uniqueId, String name, String displayName) {
+	public TestDescriptorStub(UniqueId uniqueId, String displayName) {
 		super(uniqueId);
-		this.name = name;
 		this.displayName = displayName;
-	}
-
-	@Override
-	public String getName() {
-		return name;
 	}
 
 	@Override
@@ -46,4 +38,5 @@ public class TestDescriptorStub extends AbstractTestDescriptor {
 	public boolean isContainer() {
 		return !isTest();
 	}
+
 }

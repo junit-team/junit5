@@ -102,13 +102,8 @@ class GroupDescriptor extends AbstractTestDescriptor {
 	}
 
 	@Override
-	public String getName() {
-		return getUniqueId().toString();
-	}
-
-	@Override
 	public String getDisplayName() {
-		return "group: " + getName();
+		return "group: " + getUniqueId();
 	}
 
 	@Override
@@ -129,13 +124,8 @@ class LeafDescriptor extends AbstractTestDescriptor {
 	}
 
 	@Override
-	public String getName() {
-		return getUniqueId().toString();
-	}
-
-	@Override
 	public String getDisplayName() {
-		return "leave: " + getName();
+		return "leaf: " + getUniqueId();
 	}
 
 	@Override

@@ -36,13 +36,8 @@ public class DynamicTestTestDescriptor extends AbstractTestDescriptor {
 	}
 
 	@Override
-	public String getName() {
-		return dynamicTest.getName();
-	}
-
-	@Override
 	public String getDisplayName() {
-		return dynamicTest.getName();
+		return this.dynamicTest.getDisplayName();
 	}
 
 	@Override
@@ -54,4 +49,5 @@ public class DynamicTestTestDescriptor extends AbstractTestDescriptor {
 	public boolean isContainer() {
 		return false;
 	}
+
 }

@@ -55,14 +55,16 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 		// @formatter:on
 	}
 
-	protected String determineDisplayName(AnnotatedElement element, String defaultName) {
+	protected String determineDisplayName(AnnotatedElement element) {
 		// @formatter:off
 		return findAnnotation(element, DisplayName.class)
 				.map(DisplayName::value)
 				.filter(StringUtils::isNotBlank)
-				.orElse(defaultName);
+				.orElse(generateDefaultDisplayName(element));
 		// @formatter:on
 	}
+
+	protected abstract String generateDefaultDisplayName(AnnotatedElement element);
 
 	protected ExtensionRegistry populateNewExtensionRegistryFromExtendWith(AnnotatedElement annotatedElement,
 			ExtensionRegistry existingExtensionRegistry) {

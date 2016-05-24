@@ -37,25 +37,20 @@ public class RunnerTestDescriptor extends JUnit4TestDescriptor {
 	}
 
 	public Runner getRunner() {
-		return runner;
+		return this.runner;
 	}
 
 	public Class<?> getTestClass() {
-		return testClass;
-	}
-
-	@Override
-	public String getName() {
-		return testClass.getName();
+		return this.testClass;
 	}
 
 	@Override
 	public String getDisplayName() {
-		return testClass.getName();
+		return this.testClass.getName();
 	}
 
 	public Request toRequest() {
-		return new RunnerRequest(runner);
+		return new RunnerRequest(this.runner);
 	}
 
 }

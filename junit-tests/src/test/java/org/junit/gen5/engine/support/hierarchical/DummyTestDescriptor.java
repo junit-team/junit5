@@ -19,22 +19,15 @@ import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 public class DummyTestDescriptor extends AbstractTestDescriptor
 		implements Leaf<DummyEngineExecutionContext>, Node<DummyEngineExecutionContext> {
 
-	private final String name;
 	private String displayName;
 	private final Runnable runnable;
 	private String skippedReason;
 	private boolean skipped;
 
-	DummyTestDescriptor(UniqueId uniqueId, String name, Runnable runnable) {
+	DummyTestDescriptor(UniqueId uniqueId, String displayName, Runnable runnable) {
 		super(uniqueId);
-		this.name = name;
-		this.displayName = name;
+		this.displayName = displayName;
 		this.runnable = runnable;
-	}
-
-	@Override
-	public String getName() {
-		return name;
 	}
 
 	@Override

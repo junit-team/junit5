@@ -66,11 +66,6 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 	}
 
 	@Override
-	public String getName() {
-		return description.getDisplayName();
-	}
-
-	@Override
 	public String getDisplayName() {
 		String methodName = description.getMethodName();
 		return methodName != null ? methodName : description.getDisplayName();
@@ -134,4 +129,5 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 			return (methods.size() == 1) ? new JavaMethodSource(getOnlyElement(methods)) : null;
 		}
 	}
+
 }

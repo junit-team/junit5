@@ -10,11 +10,12 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.gen5.api.AfterAll;
@@ -27,28 +28,25 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
 
 /**
- * Microtests for {@link TestInfoParameterResolver}
+ * Integration tests for {@link TestInfoParameterResolver}.
+ *
+ * @since 5.0
  */
 @Tag("class-tag")
 class TestInfoParameterResolverTests {
 
-	private Set<String> allDisplayNames = new HashSet<>(
-		Arrays.asList(new String[] { "getName", "defaultDisplayName", "myName", "getTags" }));
-
-	@Test
-	void getName(TestInfo testInfo) {
-		assertTrue(testInfo.getName().endsWith("getName(org.junit.gen5.api.TestInfo)"));
-	}
+	private static List<String> allDisplayNames = Arrays.asList("defaultDisplayName(TestInfo)", "custom display name",
+		"getTags(TestInfo)");
 
 	@Test
 	void defaultDisplayName(TestInfo testInfo) {
-		assertEquals("defaultDisplayName", testInfo.getDisplayName());
+		assertEquals("defaultDisplayName(TestInfo)", testInfo.getDisplayName());
 	}
 
 	@Test
-	@DisplayName("myName")
+	@DisplayName("custom display name")
 	void providedDisplayName(TestInfo testInfo) {
-		assertEquals("myName", testInfo.getDisplayName());
+		assertEquals("custom display name", testInfo.getDisplayName());
 	}
 
 	@Test
@@ -60,25 +58,22 @@ class TestInfoParameterResolverTests {
 	}
 
 	@BeforeEach
-	void before(TestInfo testInfo) {
-		assertTrue(allDisplayNames.contains(testInfo.getDisplayName()));
-	}
-
 	@AfterEach
-	void after(TestInfo testInfo) {
-		assertTrue(allDisplayNames.contains(testInfo.getDisplayName()));
+	void beforeAndAfter(TestInfo testInfo) {
+		assertThat(allDisplayNames).contains(testInfo.getDisplayName());
 	}
 
 	@BeforeAll
 	static void beforeAll(TestInfo testInfo) {
-		assertEquals(TestInfoParameterResolverTests.class.getName(), testInfo.getDisplayName());
-		assertEquals(TestInfoParameterResolverTests.class.getName(), testInfo.getName());
-		assertEquals(1, testInfo.getTags().size());
-		assertTrue(testInfo.getTags().contains("class-tag"));
+		Set<String> tags = testInfo.getTags();
+		assertEquals(1, tags.size());
+		assertTrue(tags.contains("class-tag"));
 	}
 
+	@BeforeAll
 	@AfterAll
-	static void afterAll(TestInfo testInfo) {
-		assertEquals(TestInfoParameterResolverTests.class.getName(), testInfo.getDisplayName());
+	static void beforeAndAfterAll(TestInfo testInfo) {
+		assertEquals(TestInfoParameterResolverTests.class.getSimpleName(), testInfo.getDisplayName());
 	}
+
 }

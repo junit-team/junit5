@@ -69,7 +69,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor implements L
 
 		throwableCollector.execute(() -> {
 			MethodInvocationContext methodInvocationContext = methodInvocationContext(
-				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod());
+				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod().get());
 
 			MethodInvoker methodInvoker = new MethodInvoker(testExtensionContext, context.getExtensionRegistry());
 			Object testFactoryMethodResult = methodInvoker.invoke(methodInvocationContext);

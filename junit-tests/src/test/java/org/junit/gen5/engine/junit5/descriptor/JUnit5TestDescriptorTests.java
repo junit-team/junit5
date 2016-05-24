@@ -24,37 +24,39 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.api.DisplayName;
+import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.UniqueId;
+import org.junit.gen5.engine.junit5.descriptor.JUnit5TestDescriptorTests.StaticTestCase.StaticTestCaseLevel2;
 
 /**
- * Unit tests for {@link ClassTestDescriptor} and {@link MethodTestDescriptor}.
+ * Unit tests for {@link ClassTestDescriptor}, {@link NestedClassTestDescriptor},
+ * and {@link MethodTestDescriptor}.
  *
  * @since 5.0
  */
 public class JUnit5TestDescriptorTests {
 
+	private static final UniqueId uniqueId = UniqueId.root("enigma", "foo");
+
 	@Test
 	public void constructFromMethod() throws Exception {
 		Class<?> testClass = ASampleTestCase.class;
 		Method testMethod = testClass.getDeclaredMethod("test");
-		MethodTestDescriptor descriptor = new MethodTestDescriptor(UniqueId.root("method", "a method id"), testClass,
-			testMethod);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(uniqueId, testClass, testMethod);
 
-		assertEquals(UniqueId.root("method", "a method id"), descriptor.getUniqueId());
+		assertEquals(uniqueId, descriptor.getUniqueId());
 		assertEquals(testMethod, descriptor.getTestMethod());
-		assertEquals("test", descriptor.getDisplayName(), "display name:");
+		assertEquals("test()", descriptor.getDisplayName(), "display name:");
 	}
 
 	@Test
 	public void constructFromMethodWithAnnotations() throws Exception {
-		JUnit5TestDescriptor classDescriptor = new ClassTestDescriptor(UniqueId.root("class", "class id"),
-			ASampleTestCase.class);
+		JUnit5TestDescriptor classDescriptor = new ClassTestDescriptor(uniqueId, ASampleTestCase.class);
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("foo");
-		MethodTestDescriptor methodDescriptor = new MethodTestDescriptor(UniqueId.root("method", "method id"),
-			ASampleTestCase.class, testMethod);
+		MethodTestDescriptor methodDescriptor = new MethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
 		classDescriptor.addChild(methodDescriptor);
 
 		assertEquals(testMethod, methodDescriptor.getTestMethod());
@@ -72,19 +74,16 @@ public class JUnit5TestDescriptorTests {
 
 	@Test
 	public void constructClassDescriptorWithAnnotations() throws Exception {
-		ClassTestDescriptor descriptor = new ClassTestDescriptor(UniqueId.root("class", "any id"),
-			ASampleTestCase.class);
+		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, ASampleTestCase.class);
 
 		assertEquals(ASampleTestCase.class, descriptor.getTestClass());
-		assertEquals("custom class name", descriptor.getDisplayName(), "display name:");
 		assertThat(descriptor.getTags()).containsExactly(new TestTag("classTag1"), new TestTag("classTag2"));
 	}
 
 	@Test
 	public void constructFromMethodWithCustomTestAnnotation() throws Exception {
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("customTestAnnotation");
-		MethodTestDescriptor descriptor = new MethodTestDescriptor(UniqueId.root("method", "any id"),
-			ASampleTestCase.class, testMethod);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom name", descriptor.getDisplayName(), "display name:");
@@ -94,11 +93,27 @@ public class JUnit5TestDescriptorTests {
 	@Test
 	public void constructFromMethodWithParameters() throws Exception {
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("test", String.class, BigDecimal.class);
-		MethodTestDescriptor descriptor = new MethodTestDescriptor(UniqueId.root("method", "any id"),
-			ASampleTestCase.class, testMethod);
+		MethodTestDescriptor descriptor = new MethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
-		assertEquals("test", descriptor.getDisplayName(), "display name:");
+		assertEquals("test(String, BigDecimal)", descriptor.getDisplayName(), "display name:");
+	}
+
+	@Test
+	void defaultDisplayNamesForTestClasses() {
+		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, getClass());
+		assertEquals(getClass().getSimpleName(), descriptor.getDisplayName());
+
+		descriptor = new NestedClassTestDescriptor(uniqueId, NestedTestCase.class);
+		assertEquals(NestedTestCase.class.getSimpleName(), descriptor.getDisplayName());
+
+		descriptor = new ClassTestDescriptor(uniqueId, StaticTestCase.class);
+		String staticDisplayName = getClass().getSimpleName() + "$" + StaticTestCase.class.getSimpleName();
+		assertEquals(staticDisplayName, descriptor.getDisplayName());
+
+		descriptor = new ClassTestDescriptor(uniqueId, StaticTestCaseLevel2.class);
+		staticDisplayName += "$" + StaticTestCaseLevel2.class.getSimpleName();
+		assertEquals(staticDisplayName, descriptor.getDisplayName());
 	}
 
 	@Tag("classTag1")
@@ -124,13 +139,24 @@ public class JUnit5TestDescriptorTests {
 		void customTestAnnotation() {
 		}
 
-		@Test
-		@DisplayName("custom name")
-		@Tag("custom tag")
-		@Target(ElementType.METHOD)
-		@Retention(RetentionPolicy.RUNTIME)
-		@interface CustomTestAnnotation {
-		}
-
 	}
+
+	@Test
+	@DisplayName("custom name")
+	@Tag("custom tag")
+	@Target(ElementType.METHOD)
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface CustomTestAnnotation {
+	}
+
+	@Nested
+	class NestedTestCase {
+	}
+
+	static class StaticTestCase {
+
+		static class StaticTestCaseLevel2 {
+		}
+	}
+
 }

@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
+import java.lang.reflect.AnnotatedElement;
 import java.util.Set;
 
 import org.junit.gen5.api.extension.ExtensionContext;
@@ -26,6 +27,11 @@ import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 
 /**
  * {@link TestDescriptor} for tests based on nested (but not static) Java classes.
+ *
+ * <h3>Default Display Names</h3>
+ *
+ * <p>The default display name for a non-static nested test class is the simple
+ * name of the class.
  *
  * @since 5.0
  */
@@ -53,6 +59,12 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 		Set<TestTag> localTags = super.getTags();
 		getParent().ifPresent(parentDescriptor -> localTags.addAll(parentDescriptor.getTags()));
 		return localTags;
+	}
+
+	@Override
+	protected String generateDefaultDisplayName(AnnotatedElement element) {
+		Class<?> testClass = (Class<?>) element;
+		return testClass.getSimpleName();
 	}
 
 }

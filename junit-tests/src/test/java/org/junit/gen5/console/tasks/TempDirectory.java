@@ -31,6 +31,9 @@ import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.TestExtensionContext;
 
+/**
+ * @since 5.0
+ */
 public class TempDirectory implements AfterEachCallback, MethodParameterResolver {
 
 	@Target(ElementType.PARAMETER)
@@ -44,12 +47,14 @@ public class TempDirectory implements AfterEachCallback, MethodParameterResolver
 	@Override
 	public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,
 			ExtensionContext extensionContext) throws ParameterResolutionException {
-		return parameter.getAnnotation(Root.class) != null && Path.class.equals(parameter.getType());
+
+		return parameter.isAnnotationPresent(Root.class) && parameter.getType() == Path.class;
 	}
 
 	@Override
 	public Object resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
 			ExtensionContext context) throws ParameterResolutionException {
+
 		return getLocalStore(context).getOrComputeIfAbsent(KEY, key -> createTempDirectory(context));
 	}
 
@@ -71,7 +76,18 @@ public class TempDirectory implements AfterEachCallback, MethodParameterResolver
 
 	private Path createTempDirectory(ExtensionContext context) {
 		try {
-			return Files.createTempDirectory(context.getName());
+			String tempDirName;
+			if (context.getTestMethod().isPresent()) {
+				tempDirName = context.getTestMethod().get().getName();
+			}
+			else if (context.getTestClass().isPresent()) {
+				tempDirName = context.getTestClass().get().getName();
+			}
+			else {
+				tempDirName = context.getDisplayName();
+			}
+
+			return Files.createTempDirectory(tempDirName);
 		}
 		catch (IOException e) {
 			throw new ParameterResolutionException("Could not create temp directory", e);
@@ -97,4 +113,5 @@ public class TempDirectory implements AfterEachCallback, MethodParameterResolver
 			}
 		});
 	}
+
 }
