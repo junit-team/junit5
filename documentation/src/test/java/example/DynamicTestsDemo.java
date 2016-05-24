@@ -10,6 +10,9 @@
 
 package example;
 
+import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -17,21 +20,17 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
-import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.TestFactory;
-import org.junit.gen5.junit4.runner.JUnit5;
-import org.junit.runner.RunWith;
 
-@RunWith(JUnit5.class)
 @Tag("exclude")
-public class DynamicTestsDemo {
+class DynamicTestsDemo {
 
-	//	@TestFactory
+	@TestFactory
 	List<String> dynamicTestsWithWrongReturnType() {
 		List<String> tests = new ArrayList<>();
-		tests.add("Hallo");
+		tests.add("Hello");
 		return tests;
 	}
 
@@ -39,8 +38,8 @@ public class DynamicTestsDemo {
 	List<DynamicTest> dynamicTestsFromList() {
 		List<DynamicTest> tests = new ArrayList<>();
 
-		tests.add(new DynamicTest("succeedingTest", () -> Assertions.assertTrue(true, "succeeding")));
-		tests.add(new DynamicTest("failingTest", () -> Assertions.assertTrue(false, "failing")));
+		tests.add(new DynamicTest("succeedingTest", () -> assertTrue(true, "succeeding")));
+		tests.add(new DynamicTest("failingTest", () -> assertTrue(false, "failing")));
 
 		return tests;
 	}
@@ -55,22 +54,23 @@ public class DynamicTestsDemo {
 	@TestFactory
 	Iterator<DynamicTest> dynamicTestStreamFromIterator() {
 		List<DynamicTest> tests = new ArrayList<>();
-		tests.add(new DynamicTest("succeedingTest", () -> Assertions.assertTrue(true, "succeeding")));
-		tests.add(new DynamicTest("failingTest", () -> Assertions.assertTrue(false, "failing")));
+		tests.add(new DynamicTest("succeedingTest", () -> assertTrue(true, "succeeding")));
+		tests.add(new DynamicTest("failingTest", () -> assertTrue(false, "failing")));
 		return tests.iterator();
 	}
 
 	@TestFactory
 	Iterable<DynamicTest> dynamicTestStreamFromIterable() {
 		List<DynamicTest> tests = new ArrayList<>();
-		tests.add(new DynamicTest("succeedingTest", () -> Assertions.assertTrue(true, "succeeding")));
-		tests.add(new DynamicTest("failingTest", () -> Assertions.assertTrue(false, "failing")));
+		tests.add(new DynamicTest("succeedingTest", () -> assertTrue(true, "succeeding")));
+		tests.add(new DynamicTest("failingTest", () -> assertTrue(false, "failing")));
 		return tests;
 	}
 
 	@TestFactory
 	Iterator<DynamicTest> generatedTestsFromGeneratorFunction() {
 		Iterator<DynamicTest> generator = new Iterator<DynamicTest>() {
+
 			int counter = 0;
 
 			@Override
@@ -81,7 +81,7 @@ public class DynamicTestsDemo {
 			@Override
 			public DynamicTest next() {
 				int index = counter++;
-				return new DynamicTest("test" + index, () -> Assertions.assertTrue(index % 11 != 0));
+				return new DynamicTest("test" + index, () -> assertTrue(index % 11 != 0));
 			}
 		};
 		return generator;
@@ -92,6 +92,7 @@ public class DynamicTestsDemo {
 		final int AVERAGE = 49;
 
 		Iterator<Integer> generator = new Iterator<Integer>() {
+
 			int last = -1;
 			Random random = new Random();
 
@@ -106,8 +107,7 @@ public class DynamicTestsDemo {
 				return last;
 			}
 		};
-		return DynamicTest.streamFrom(generator, index -> "test" + index,
-			index -> Assertions.assertFalse(index % AVERAGE == 0));
+		return DynamicTest.streamFrom(generator, index -> "test" + index, index -> assertFalse(index % AVERAGE == 0));
 	}
 
 }
