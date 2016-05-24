@@ -16,6 +16,7 @@ import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
@@ -34,7 +35,7 @@ import org.junit.gen5.api.TestInfo;
 @Tag("class-tag")
 class TestInfoParameterResolverTests {
 
-	private static List<String> allDisplayNames = Arrays.asList("defaultDisplayName(TestInfo)", "myName",
+	private static List<String> allDisplayNames = Arrays.asList("defaultDisplayName(TestInfo)", "custom display name",
 		"getTags(TestInfo)");
 
 	@Test
@@ -43,9 +44,9 @@ class TestInfoParameterResolverTests {
 	}
 
 	@Test
-	@DisplayName("myName")
+	@DisplayName("custom display name")
 	void providedDisplayName(TestInfo testInfo) {
-		assertEquals("myName", testInfo.getDisplayName());
+		assertEquals("custom display name", testInfo.getDisplayName());
 	}
 
 	@Test
@@ -64,14 +65,15 @@ class TestInfoParameterResolverTests {
 
 	@BeforeAll
 	static void beforeAll(TestInfo testInfo) {
-		assertEquals(TestInfoParameterResolverTests.class.getName(), testInfo.getDisplayName());
-		assertEquals(1, testInfo.getTags().size());
-		assertTrue(testInfo.getTags().contains("class-tag"));
+		Set<String> tags = testInfo.getTags();
+		assertEquals(1, tags.size());
+		assertTrue(tags.contains("class-tag"));
 	}
 
+	@BeforeAll
 	@AfterAll
-	static void afterAll(TestInfo testInfo) {
-		assertEquals(TestInfoParameterResolverTests.class.getName(), testInfo.getDisplayName());
+	static void beforeAndAfterAll(TestInfo testInfo) {
+		assertEquals(TestInfoParameterResolverTests.class.getSimpleName(), testInfo.getDisplayName());
 	}
 
 }

@@ -52,20 +52,8 @@ public interface ExtensionContext {
 	 * <p>The display name is either a default name or a custom name configured
 	 * via {@link org.junit.gen5.api.DisplayName @DisplayName}.
 	 *
-	 * <h3>Default Display Names</h3>
-	 *
-	 * <p>If this context represents a container, the default display name is
-	 * the fully qualified class name for the container class. If this context
-	 * represents a test, the default display name is the name of the test method
-	 * concatenated with a comma-separated list of parameter types in parentheses.
-	 * The names of parameter types are retrieved using {@link Class#getSimpleName()}.
-	 * For example, the default display name for the following test method is
-	 * {@code testUser(TestInfo, User)}.
-	 *
-	 * <pre style="code">
-	 *   {@literal @}Test
-	 *   void testUser(TestInfo testInfo, {@literal @}Mock User user) { ... }
-	 * </pre>
+	 * <p>For details on default display names consult the Javadoc for
+	 * {@link org.junit.gen5.api.TestInfo#getDisplayName()}.
 	 *
 	 * <p>Note that display names are typically used for test reporting in IDEs
 	 * and build tools and may contain spaces, special characters, and even emoji.

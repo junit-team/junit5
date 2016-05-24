@@ -43,17 +43,35 @@ public interface TestInfo {
 	 * <h3>Default Display Names</h3>
 	 *
 	 * <p>If the context in which {@code TestInfo} is used is at the container
-	 * level, the default display name is the fully qualified class name for the
-	 * test class. If the context in which {@code TestInfo} is used is at the
-	 * test level, the default display name is the name of the test method
-	 * concatenated with a comma-separated list of parameter types in parentheses.
-	 * The names of parameter types are retrieved using {@link Class#getSimpleName()}.
-	 * For example, the default display name for the following test method is
-	 * {@code testUser(TestInfo, User)}.
+	 * level, the default display name is generated based on the name of the
+	 * test class. For top-level and {@link Nested @Nested} test classes, the
+	 * default display name is the {@linkplain Class#getSimpleName simple name}
+	 * of the class. For {@code static} nested test classes, the default display
+	 * name is the default display name for the enclosing class concatenated with
+	 * the {@linkplain Class#getSimpleName simple name} of the {@code static}
+	 * nested class, separated by a dollar sign ({@code $}). For example, the
+	 * default display names for the following test classes are
+	 * {@code TopLevelTests}, {@code NestedTests}, and {@code TopLevelTests$StaticTests}.
+	 *
+	 * <pre style="code">
+	 *   class TopLevelTests {
+	 *
+	 *      {@literal @}Nested
+	 *      class NestedTests {}
+	 *
+	 *      static class StaticTests {}
+	 *   }
+	 * </pre>
+	 *
+	 * <p>If the context in which {@code TestInfo} is used is at the test level,
+	 * the default display name is the name of the test method concatenated with
+	 * a comma-separated list of {@linkplain Class#getSimpleName simple names}
+	 * of the parameter types in parentheses. For example, the default display
+	 * name for the following test method is {@code testUser(TestInfo, User)}.
 	 *
 	 * <pre style="code">
 	 *   {@literal @}Test
-	 *   void testUser(TestInfo testInfo, {@literal @}Mock User user) { ... }
+	 *   void testUser(TestInfo testInfo, {@literal @}Mock User user) {}
 	 * </pre>
 	 *
 	 * <p>Note that display names are typically used for test reporting in IDEs

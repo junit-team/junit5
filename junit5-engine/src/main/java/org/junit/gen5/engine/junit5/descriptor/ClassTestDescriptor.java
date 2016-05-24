@@ -17,6 +17,7 @@ import static org.junit.gen5.engine.junit5.descriptor.LifecycleMethodUtils.findB
 import static org.junit.gen5.engine.junit5.descriptor.LifecycleMethodUtils.findBeforeEachMethods;
 import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
@@ -53,8 +54,9 @@ import org.junit.gen5.engine.support.hierarchical.Container;
  *
  * <h3>Default Display Names</h3>
  *
- * <p>The default display name for a test class is the fully qualified name of
- * the class.
+ * <p>The default display name for a top-level or nested static test class is
+ * the fully qualified name of the class with the package name and leading dot
+ * (".") removed.
  *
  * @since 5.0
  */
@@ -79,7 +81,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		super(uniqueId);
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
-		this.displayName = determineDisplayName(testClass, () -> testClass.getName());
+		this.displayName = determineDisplayName(testClass);
 
 		this.beforeAllMethods = findBeforeAllMethods(testClass);
 		this.afterAllMethods = findAfterAllMethods(testClass);
@@ -238,6 +240,14 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 				() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
 
 		new MethodInvoker(context, registry).invoke(methodInvocationContext(instance, method));
+	}
+
+	@Override
+	protected String generateDefaultDisplayName(AnnotatedElement element) {
+		Class<?> testClass = (Class<?>) element;
+		String name = testClass.getName();
+		int index = name.lastIndexOf('.');
+		return name.substring(index + 1);
 	}
 
 }

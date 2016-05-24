@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
@@ -77,7 +78,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
 		this.testMethod = Preconditions.notNull(testMethod, "Method must not be null");
-		this.displayName = determineDisplayName(testMethod, () -> generateDefaultDisplayName(testMethod));
+		this.displayName = determineDisplayName(testMethod);
 
 		setSource(new JavaMethodSource(testMethod));
 	}
@@ -230,7 +231,9 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				.forEach(extension -> throwableCollector.execute(() -> extension.afterEach(context)));
 	}
 
-	private static String generateDefaultDisplayName(Method method) {
+	@Override
+	protected String generateDefaultDisplayName(AnnotatedElement element) {
+		Method method = (Method) element;
 		return String.format("%s(%s)", method.getName(),
 			StringUtils.nullSafeToString(Class::getSimpleName, method.getParameterTypes()));
 	}
