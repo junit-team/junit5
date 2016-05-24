@@ -49,7 +49,7 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 		return () -> {
 			Object outerInstance = parentExecutionContext.getTestInstanceProvider().getTestInstance();
 			Object instance = ReflectionUtils.newInstance(getTestClass(), outerInstance);
-			invokeInstancePostProcessors(instance, registry, extensionContext);
+			invokeTestInstancePostProcessors(instance, registry, extensionContext);
 			return instance;
 		};
 	}

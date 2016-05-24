@@ -23,15 +23,15 @@ import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.api.extension.InstancePostProcessor;
+import org.junit.gen5.api.extension.TestInstancePostProcessor;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.junit5.AbstractJUnit5TestEngineTests;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
- * Integration tests that verify support for {@link InstancePostProcessor}.
+ * Integration tests that verify support for {@link TestInstancePostProcessor}.
  */
-public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
+public class TestInstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 
 	private static final List<String> callSequence = new ArrayList<>();
 
@@ -114,7 +114,7 @@ public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 
 	}
 
-	private static class FooInstancePostProcessor implements InstancePostProcessor {
+	private static class FooInstancePostProcessor implements TestInstancePostProcessor {
 
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
@@ -125,7 +125,7 @@ public class InstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 		}
 	}
 
-	private static class BarInstancePostProcessor implements InstancePostProcessor {
+	private static class BarInstancePostProcessor implements TestInstancePostProcessor {
 
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {

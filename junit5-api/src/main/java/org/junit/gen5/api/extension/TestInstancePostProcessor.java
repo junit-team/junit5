@@ -15,7 +15,7 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code InstancePostProcessor} defines the API for {@link Extension
+ * {@code TestInstancePostProcessor} defines the API for {@link Extension
  * Extensions} that wish to <em>post-process</em> test instances.
  *
  * <p>Common use cases include injecting dependencies into the test
@@ -27,7 +27,7 @@ import org.junit.gen5.commons.meta.API;
  * @since 5.0
  */
 @API(Experimental)
-public interface InstancePostProcessor extends Extension {
+public interface TestInstancePostProcessor extends Extension {
 
 	/**
 	 * Callback for post-processing the supplied test instance.

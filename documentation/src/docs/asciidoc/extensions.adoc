@@ -112,7 +112,7 @@ Examples:
 
 === Test Instance Post-processing
 
-`{InstancePostProcessor}` defines the API for `Extensions` that wish to _post
+`{TestInstancePostProcessor}` defines the API for `Extensions` that wish to _post
 process_ test instances.
 
 Common use cases include injecting dependencies into the test instance, invoking custom

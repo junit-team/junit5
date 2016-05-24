@@ -31,7 +31,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :ExceptionHandler:                  {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/ExceptionHandler.java[ExceptionHandler]
 :ExtendWith:                        {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtendWith.java[@ExtendWith]
 :ExtensionRegistrar:                {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtensionRegistrar.java[ExtensionRegistrar]
-:InstancePostProcessor:             {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/InstancePostProcessor.java[InstancePostProcessor]
+:TestInstancePostProcessor:         {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/TestInstancePostProcessor.java[TestInstancePostProcessor]
 :JUnit5-Runner:                     {master-branch}/junit4-runner/src/main/java/org/junit/gen5/junit4/runner/JUnit5.java[JUnit5]
 :MethodParameterResolver:           {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java[MethodParameterResolver]
 :MockitoExtension:                  {junit5-samples-repo}/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java[MockitoExtension]

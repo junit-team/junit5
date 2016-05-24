@@ -29,8 +29,8 @@ import org.junit.gen5.api.extension.ConditionEvaluationResult;
 import org.junit.gen5.api.extension.ContainerExtensionContext;
 import org.junit.gen5.api.extension.Extension;
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.api.extension.InstancePostProcessor;
 import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.gen5.api.extension.TestInstancePostProcessor;
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
@@ -174,14 +174,16 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
 		return () -> {
 			Object instance = ReflectionUtils.newInstance(this.testClass);
-			invokeInstancePostProcessors(instance, registry, extensionContext);
+			invokeTestInstancePostProcessors(instance, registry, extensionContext);
 			return instance;
 		};
 	}
 
-	protected void invokeInstancePostProcessors(Object instance, ExtensionRegistry registry, ExtensionContext context) {
+	protected void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,
+			ExtensionContext context) {
+
 		// @formatter:off
-		registry.stream(InstancePostProcessor.class)
+		registry.stream(TestInstancePostProcessor.class)
 				.forEach(extension -> executeAndMaskThrowable(() -> extension.postProcessTestInstance(instance, context)));
 		// @formatter:on
 	}
