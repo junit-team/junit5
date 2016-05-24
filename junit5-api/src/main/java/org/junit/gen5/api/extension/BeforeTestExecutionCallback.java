@@ -22,13 +22,14 @@ import org.junit.gen5.commons.meta.API;
  * <p>Such callbacks will be invoked after any user defined setup methods (e.g.,
  * {@link org.junit.gen5.api.BeforeEach @BeforeEach} methods).
  *
- * <p>Concrete implementations often implement {@link AfterTestMethodCallback} as well.
+ * <p>Concrete implementations often implement {@link AfterTestExecutionCallback}
+ * as well.
  *
  * <p>Implementations must provide a no-args constructor.
  *
  * @since 5.0
  * @see org.junit.gen5.api.Test
- * @see AfterTestMethodCallback
+ * @see AfterTestExecutionCallback
  * @see BeforeEachCallback
  * @see AfterEachCallback
  * @see BeforeAllCallback

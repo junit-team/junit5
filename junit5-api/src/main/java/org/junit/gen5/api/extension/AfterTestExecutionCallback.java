@@ -15,14 +15,15 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code AfterTestMethodCallback} defines the API for {@link Extension Extensions}
- * that wish to provide additional behavior to tests after each test method has
- * been invoked.
+ * {@code AfterTestExecutionCallback} defines the API for {@link Extension
+ * Extensions} that wish to provide additional behavior to tests immediately
+ * after each test has been executed.
  *
  * <p>Such callbacks will be invoked before any user defined teardown methods (e.g.,
  * {@link org.junit.gen5.api.AfterEach @AfterEach} methods).
  *
- * <p>Concrete implementations often implement {@link BeforeTestExecutionCallback} as well.
+ * <p>Concrete implementations often implement {@link BeforeTestExecutionCallback}
+ * as well.
  *
  * <p>Implementations must provide a no-args constructor.
  *
@@ -36,13 +37,13 @@ import org.junit.gen5.commons.meta.API;
  */
 @FunctionalInterface
 @API(Experimental)
-public interface AfterTestMethodCallback extends Extension {
+public interface AfterTestExecutionCallback extends Extension {
 
 	/**
-	 * Callback that is invoked <em>after</em> each test method has been invoked.
+	 * Callback that is invoked <em>immediately after</em> each test has been executed.
 	 *
 	 * @param context the current test extension context
 	 */
-	void afterTestMethod(TestExtensionContext context) throws Exception;
+	void afterTestExecution(TestExtensionContext context) throws Exception;
 
 }

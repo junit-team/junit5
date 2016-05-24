@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.gen5.api.extension.AfterEachCallback;
-import org.junit.gen5.api.extension.AfterTestMethodCallback;
+import org.junit.gen5.api.extension.AfterTestExecutionCallback;
 import org.junit.gen5.api.extension.BeforeEachCallback;
 import org.junit.gen5.api.extension.BeforeTestExecutionCallback;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
@@ -150,7 +150,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 			invokeBeforeEachMethods(registry, testExtensionContext);
 				invokeBeforeTestExecutionCallbacks(registry, testExtensionContext);
 					invokeTestMethod(context, testExtensionContext, throwableCollector);
-				invokeAfterTestMethodCallbacks(registry, testExtensionContext, throwableCollector);
+				invokeAfterTestExecutionCallbacks(registry, testExtensionContext, throwableCollector);
 			invokeAfterEachMethods(registry, testExtensionContext, throwableCollector);
 		invokeAfterEachCallbacks(registry, testExtensionContext, throwableCollector);
 		// @formatter:on
@@ -215,11 +215,11 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		}
 	}
 
-	private void invokeAfterTestMethodCallbacks(ExtensionRegistry registry, TestExtensionContext context,
+	private void invokeAfterTestExecutionCallbacks(ExtensionRegistry registry, TestExtensionContext context,
 			ThrowableCollector throwableCollector) {
 
-		registry.reverseStream(AfterTestMethodCallback.class)//
-				.forEach(extension -> throwableCollector.execute(() -> extension.afterTestMethod(context)));
+		registry.reverseStream(AfterTestExecutionCallback.class)//
+				.forEach(extension -> throwableCollector.execute(() -> extension.afterTestExecution(context)));
 	}
 
 	private void invokeAfterEachMethods(ExtensionRegistry registry, TestExtensionContext context,

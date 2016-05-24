@@ -147,7 +147,7 @@ test execution lifecycle. Consult the Javadoc for each of these in the
 * `BeforeEachCallback`
 * `AfterEachCallback`
 * `BeforeTestExecutionCallback`
-* `AfterTestMethodCallback`
+* `AfterTestExecutionCallback`
 
 Note that extension developers may choose to implement any number of these interfaces
 within a single extension. Consult the source code of the `{SpringExtension}` for a

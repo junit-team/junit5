@@ -32,7 +32,7 @@ import org.junit.gen5.commons.meta.API;
  * @see org.junit.gen5.api.AfterEach
  * @see BeforeEachCallback
  * @see BeforeTestExecutionCallback
- * @see AfterTestMethodCallback
+ * @see AfterTestExecutionCallback
  * @see BeforeAllCallback
  * @see AfterAllCallback
  */

@@ -13,7 +13,7 @@ package example.timing;
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
-import org.junit.gen5.api.extension.AfterTestMethodCallback;
+import org.junit.gen5.api.extension.AfterTestExecutionCallback;
 import org.junit.gen5.api.extension.BeforeTestExecutionCallback;
 import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 import org.junit.gen5.api.extension.ExtensionContext.Store;
@@ -25,7 +25,7 @@ import org.junit.gen5.api.extension.TestExtensionContext;
  *
  * @since 5.0
  */
-public class TimingExtension implements BeforeTestExecutionCallback, AfterTestMethodCallback {
+public class TimingExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
 	private static final Logger LOG = Logger.getLogger(TimingExtension.class.getName());
 
@@ -35,7 +35,7 @@ public class TimingExtension implements BeforeTestExecutionCallback, AfterTestMe
 	}
 
 	@Override
-	public void afterTestMethod(TestExtensionContext context) throws Exception {
+	public void afterTestExecution(TestExtensionContext context) throws Exception {
 		Method testMethod = context.getTestMethod().get();
 		long start = (long) getStore(context).remove(testMethod);
 		long duration = System.currentTimeMillis() - start;
