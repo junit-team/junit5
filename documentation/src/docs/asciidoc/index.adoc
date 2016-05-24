@@ -28,7 +28,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :CustomTypeParameterResolver:       {master-branch}/junit-tests/src/test/java/org/junit/gen5/engine/junit5/execution/injection/sample/CustomTypeParameterResolver.java[CustomTypeParameterResolver]
 :Disabled:                          {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/Disabled.java[@Disabled]
 :DisabledCondition:                 {master-branch}/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/DisabledCondition.java[DisabledCondition]
-:ExceptionHandler:                  {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/ExceptionHandler.java[ExceptionHandler]
+:TestExecutionExceptionHandler:     {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/TestExecutionExceptionHandler.java[TestExecutionExceptionHandler]
 :ExtendWith:                        {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtendWith.java[@ExtendWith]
 :ExtensionRegistrar:                {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtensionRegistrar.java[ExtensionRegistrar]
 :TestInstancePostProcessor:         {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/TestInstancePostProcessor.java[TestInstancePostProcessor]

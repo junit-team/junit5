@@ -39,7 +39,7 @@ import org.junit.gen5.commons.meta.API;
  * <li>{@link AfterTestMethodCallback}</li>
  * <li>{@link TestInstancePostProcessor}</li>
  * <li>{@link MethodParameterResolver}</li>
- * <li>{@link ExceptionHandler}</li>
+ * <li>{@link TestExecutionExceptionHandler}</li>
  * </ul>
  *
  * @since 5.0

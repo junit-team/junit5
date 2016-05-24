@@ -156,8 +156,8 @@ concrete example.
 
 === Exception Handling
 
-`{ExceptionHandler}` defines the API for `Extensions` that wish to handle exceptions
-thrown from tests.
+`{TestExecutionExceptionHandler}` defines the API for `Extensions` that wish to handle
+exceptions thrown during test execution.
 
 The following example shows an extension which will swallow all instances of `IOException`
 but rethrow any other type of exception:

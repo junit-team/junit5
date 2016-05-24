@@ -24,8 +24,8 @@ import org.junit.gen5.api.extension.AfterTestMethodCallback;
 import org.junit.gen5.api.extension.BeforeEachCallback;
 import org.junit.gen5.api.extension.BeforeTestMethodCallback;
 import org.junit.gen5.api.extension.ConditionEvaluationResult;
-import org.junit.gen5.api.extension.ExceptionHandler;
 import org.junit.gen5.api.extension.MethodInvocationContext;
+import org.junit.gen5.api.extension.TestExecutionExceptionHandler;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ExceptionUtils;
@@ -185,17 +185,22 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 				new MethodInvoker(testExtensionContext, context.getExtensionRegistry()).invoke(methodInvocationContext);
 			}
 			catch (Throwable throwable) {
-				invokeExceptionHandlers(context.getExtensionRegistry(), testExtensionContext, throwable);
+				invokeTestExecutionExceptionHandlers(context.getExtensionRegistry(), testExtensionContext, throwable);
 			}
 		});
 	}
 
-	private void invokeExceptionHandlers(ExtensionRegistry registry, TestExtensionContext context, Throwable ex) {
-		List<ExceptionHandler> exceptionHandlers = registry.stream(ExceptionHandler.class).collect(toList());
-		invokeExceptionHandlers(ex, exceptionHandlers, context);
+	private void invokeTestExecutionExceptionHandlers(ExtensionRegistry registry, TestExtensionContext context,
+			Throwable ex) {
+
+		List<TestExecutionExceptionHandler> exceptionHandlers = registry.stream(
+			TestExecutionExceptionHandler.class).collect(toList());
+
+		invokeTestExecutionExceptionHandlers(ex, exceptionHandlers, context);
 	}
 
-	private void invokeExceptionHandlers(Throwable ex, List<ExceptionHandler> handlers, TestExtensionContext context) {
+	private void invokeTestExecutionExceptionHandlers(Throwable ex, List<TestExecutionExceptionHandler> handlers,
+			TestExtensionContext context) {
 		// No handlers left?
 		if (handlers.isEmpty()) {
 			ExceptionUtils.throwAsUncheckedException(ex);
@@ -203,10 +208,10 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 		try {
 			// Invoke next available handler
-			handlers.remove(0).handleException(context, ex);
+			handlers.remove(0).handleTestExecutionException(context, ex);
 		}
 		catch (Throwable t) {
-			invokeExceptionHandlers(t, handlers, context);
+			invokeTestExecutionExceptionHandlers(t, handlers, context);
 		}
 	}
 

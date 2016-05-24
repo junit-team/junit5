@@ -34,17 +34,17 @@ import java.util.List;
 
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.ExceptionHandler;
 import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.api.extension.TestExecutionExceptionHandler;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.junit5.AbstractJUnit5TestEngineTests;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
- * Integration tests that verify support for {@link ExceptionHandler}.
+ * Integration tests that verify support for {@link TestExecutionExceptionHandler}.
  */
-class ExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
+class TestExecutionExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
 
 	static List<String> handlerCalls = new ArrayList<>();
 
@@ -63,7 +63,7 @@ class ExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertTrue(RethrowException.handleExceptionCalled, "ExceptionHandler should have been called");
+		assertTrue(RethrowException.handleExceptionCalled, "TestExecutionExceptionHandler should have been called");
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -80,7 +80,7 @@ class ExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertTrue(SwallowException.handleExceptionCalled, "ExceptionHandler should have been called");
+		assertTrue(SwallowException.handleExceptionCalled, "TestExecutionExceptionHandler should have been called");
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -97,7 +97,7 @@ class ExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertTrue(ConvertException.handleExceptionCalled, "ExceptionHandler should have been called");
+		assertTrue(ConvertException.handleExceptionCalled, "TestExecutionExceptionHandler should have been called");
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -162,12 +162,12 @@ class ExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
 		}
 	}
 
-	private static class RethrowException implements ExceptionHandler {
+	private static class RethrowException implements TestExecutionExceptionHandler {
 
 		static boolean handleExceptionCalled = false;
 
 		@Override
-		public void handleException(TestExtensionContext context, Throwable throwable) throws Throwable {
+		public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
 			assertTrue(throwable instanceof IOException);
 			handleExceptionCalled = true;
 			handlerCalls.add("rethrow");
@@ -176,12 +176,12 @@ class ExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
 		}
 	}
 
-	private static class SwallowException implements ExceptionHandler {
+	private static class SwallowException implements TestExecutionExceptionHandler {
 
 		static boolean handleExceptionCalled = false;
 
 		@Override
-		public void handleException(TestExtensionContext context, Throwable throwable) throws Throwable {
+		public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
 			assertTrue(throwable instanceof IOException);
 			handleExceptionCalled = true;
 			handlerCalls.add("swallow");
@@ -189,12 +189,12 @@ class ExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
 		}
 	}
 
-	private static class ConvertException implements ExceptionHandler {
+	private static class ConvertException implements TestExecutionExceptionHandler {
 
 		static boolean handleExceptionCalled = false;
 
 		@Override
-		public void handleException(TestExtensionContext context, Throwable throwable) throws Throwable {
+		public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
 			assertTrue(throwable instanceof RuntimeException);
 			handleExceptionCalled = true;
 			handlerCalls.add("convert");
@@ -202,12 +202,12 @@ class ExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
 		}
 
 	}
-	private static class ShouldNotBeCalled implements ExceptionHandler {
+	private static class ShouldNotBeCalled implements TestExecutionExceptionHandler {
 
 		static boolean handleExceptionCalled = false;
 
 		@Override
-		public void handleException(TestExtensionContext context, Throwable throwable) throws Throwable {
+		public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
 			handleExceptionCalled = true;
 		}
 	}

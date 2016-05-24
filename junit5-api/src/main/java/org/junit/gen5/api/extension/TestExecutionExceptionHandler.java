@@ -15,8 +15,8 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code ExceptionHandler} defines the API for {@link Extension Extensions}
- * that wish to handle exceptions thrown from tests.
+ * {@code TestExecutionExceptionHandler} defines the API for {@link Extension
+ * Extensions} that wish to handle exceptions thrown during test execution.
  *
  * <p>Common use cases include swallowing an exception if it's anticipated
  * or rolling back a transaction in certain error scenarios.
@@ -27,7 +27,7 @@ import org.junit.gen5.commons.meta.API;
  */
 @FunctionalInterface
 @API(Experimental)
-public interface ExceptionHandler extends Extension {
+public interface TestExecutionExceptionHandler extends Extension {
 
 	/**
 	 * Handle the supplied {@link Throwable throwable}.
@@ -40,10 +40,10 @@ public interface ExceptionHandler extends Extension {
 	 * </ol>
 	 *
 	 * <p>If the supplied {@code throwable} is swallowed, subsequent
-	 * {@link ExceptionHandler ExceptionHandlers} will not be invoked; otherwise,
-	 * the next registered {@code ExceptionHandler} (if there is one) will be invoked
-	 * with any {@link Throwable} thrown by this handler.
+	 * {@code TestExecutionExceptionHandlers} will not be invoked; otherwise,
+	 * the next registered {@code TestExecutionExceptionHandler} (if there is
+	 * one) will be invoked with any {@link Throwable} thrown by this handler.
 	 */
-	void handleException(TestExtensionContext context, Throwable throwable) throws Throwable;
+	void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable;
 
 }
