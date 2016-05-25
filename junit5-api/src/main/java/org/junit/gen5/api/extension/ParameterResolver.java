@@ -30,6 +30,10 @@ import org.junit.gen5.commons.meta.API;
  *
  * <p>Implementations must provide a no-args constructor.
  *
+ * <p>Note: as of JUnit 5.0.0-M1, the {@code ParameterResolver} API is only
+ * applied to method invocations. Support for constructor invocations
+ * may come at a later date.
+ *
  * @since 5.0
  */
 @API(Experimental)
