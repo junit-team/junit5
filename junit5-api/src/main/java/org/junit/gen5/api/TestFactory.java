@@ -34,8 +34,8 @@ import org.junit.gen5.commons.meta.API;
  * <p>{@code @TestFactory} methods must not be {@code private} or {@code static}.
  *
  * <p>{@code @TestFactory} methods may optionally declare parameters to be
- * resolved by {@link org.junit.gen5.api.extension.MethodParameterResolver
- * MethodParameterResolvers}.
+ * resolved by {@link org.junit.gen5.api.extension.ParameterResolver
+ * ParameterResolvers}.
  *
  * @since 5.0
  * @see Test

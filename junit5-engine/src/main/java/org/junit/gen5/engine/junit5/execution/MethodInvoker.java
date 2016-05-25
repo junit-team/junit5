@@ -19,12 +19,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.api.extension.MethodInvocationContext;
-import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
+import org.junit.gen5.api.extension.ParameterResolver;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
@@ -32,7 +32,7 @@ import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 /**
  * {@code MethodInvoker} encapsulates the invocation of a method, including
  * support for dynamic resolution of method parameters via
- * {@link MethodParameterResolver MethodParameterResolvers}.
+ * {@link ParameterResolver ParameterResolvers}.
  *
  * @since 5.0
  */
@@ -74,17 +74,18 @@ public class MethodInvoker {
 			throws ParameterResolutionException {
 
 		Method method = methodInvocationContext.getMethod();
+		Optional<Object> target = Optional.ofNullable(methodInvocationContext.getInstance());
 
 		try {
 			// @formatter:off
-			List<MethodParameterResolver> matchingResolvers = this.extensionRegistry.stream(MethodParameterResolver.class)
-					.filter(resolver -> resolver.supports(parameter, methodInvocationContext, this.extensionContext))
+			List<ParameterResolver> matchingResolvers = this.extensionRegistry.stream(ParameterResolver.class)
+					.filter(resolver -> resolver.supports(parameter, target, this.extensionContext))
 					.collect(toList());
 			// @formatter:on
 
 			if (matchingResolvers.size() == 0) {
 				throw new ParameterResolutionException(
-					String.format("No MethodParameterResolver registered for parameter [%s] in method [%s].", parameter,
+					String.format("No ParameterResolver registered for parameter [%s] in method [%s].", parameter,
 						method.toGenericString()));
 			}
 
@@ -95,16 +96,16 @@ public class MethodInvoker {
 						.collect(joining(", "));
 				// @formatter:on
 				throw new ParameterResolutionException(String.format(
-					"Discovered multiple competing MethodParameterResolvers for parameter [%s] in method [%s]: %s",
-					parameter, method.toGenericString(), resolverNames));
+					"Discovered multiple competing ParameterResolvers for parameter [%s] in method [%s]: %s", parameter,
+					method.toGenericString(), resolverNames));
 			}
 
-			MethodParameterResolver resolver = matchingResolvers.get(0);
-			Object value = resolver.resolve(parameter, methodInvocationContext, this.extensionContext);
+			ParameterResolver resolver = matchingResolvers.get(0);
+			Object value = resolver.resolve(parameter, target, this.extensionContext);
 			validateResolvedType(parameter, value, method, resolver);
 
 			LOG.finer(() -> String.format(
-				"MethodParameterResolver [%s] resolved a value of type [%s] for parameter [%s] in method [%s].",
+				"ParameterResolver [%s] resolved a value of type [%s] for parameter [%s] in method [%s].",
 				resolver.getClass().getName(), (value != null ? value.getClass().getName() : null), parameter,
 				method.toGenericString()));
 
@@ -120,23 +121,22 @@ public class MethodInvoker {
 		}
 	}
 
-	private void validateResolvedType(Parameter parameter, Object value, Method method,
-			MethodParameterResolver resolver) {
+	private void validateResolvedType(Parameter parameter, Object value, Method method, ParameterResolver resolver) {
 
-		final Class<?> type = parameter.getType();
+		Class<?> type = parameter.getType();
 
 		// Note: null is permissible as a resolved value but only for non-primitive types.
 		if (!isAssignableTo(value, type)) {
 			String message;
 			if (value == null && type.isPrimitive()) {
 				message = String.format(
-					"MethodParameterResolver [%s] resolved a null value for parameter [%s] "
+					"ParameterResolver [%s] resolved a null value for parameter [%s] "
 							+ "in method [%s], but a primitive of type [%s] is required.",
 					resolver.getClass().getName(), parameter, method.toGenericString(), type.getName());
 			}
 			else {
 				message = String.format(
-					"MethodParameterResolver [%s] resolved a value of type [%s] for parameter [%s] "
+					"ParameterResolver [%s] resolved a value of type [%s] for parameter [%s] "
 							+ "in method [%s], but a value assignment compatible with [%s] is required.",
 					resolver.getClass().getName(), (value != null ? value.getClass().getName() : null), parameter,
 					method.toGenericString(), type.getName());

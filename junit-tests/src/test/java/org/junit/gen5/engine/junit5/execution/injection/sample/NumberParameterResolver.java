@@ -11,13 +11,13 @@
 package org.junit.gen5.engine.junit5.execution.injection.sample;
 
 import java.lang.reflect.Parameter;
+import java.util.Optional;
 
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.api.extension.MethodInvocationContext;
-import org.junit.gen5.api.extension.MethodParameterResolver;
+import org.junit.gen5.api.extension.ParameterResolver;
 
 /**
- * This is a non-realistic {@link MethodParameterResolver} that claims to
+ * This is a non-realistic {@link ParameterResolver} that claims to
  * resolve any {@link Number}, when in fact it always resolves an {@link Integer}.
  *
  * <p>This may appear nonsensical; however, there are use cases for which a
@@ -36,19 +36,15 @@ import org.junit.gen5.api.extension.MethodParameterResolver;
  *
  * @since 5.0
  */
-public class NumberParameterResolver implements MethodParameterResolver {
+public class NumberParameterResolver implements ParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,
-			ExtensionContext extensionContext) {
-
+	public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
 		return Number.class.isAssignableFrom(parameter.getType());
 	}
 
 	@Override
-	public Object resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
-			ExtensionContext extensionContext) {
-
+	public Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
 		return new Integer(42);
 	}
 

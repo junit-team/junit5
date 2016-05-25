@@ -19,13 +19,13 @@ import static org.mockito.Mockito.verify;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.api.extension.MethodInvocationContext;
-import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
+import org.junit.gen5.api.extension.ParameterResolver;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 
 /**
@@ -52,7 +52,7 @@ class MethodInvokerTests {
 	}
 
 	@Test
-	void resolveArgumentsViaMethodParameterResolver() {
+	void resolveArgumentsViaParameterResolver() {
 		testMethodWithASingleStringParameter();
 		thereIsAParameterResolverThatResolvesTheParameterTo("argument");
 
@@ -64,7 +64,7 @@ class MethodInvokerTests {
 	@Test
 	void resolveMultipleArguments() {
 		testMethodWith("multipleParameters", String.class, String.class, String.class);
-		register(ConfigurableMethodParameterResolver.supportsAndResolvesTo(Parameter::getName));
+		register(ConfigurableParameterResolver.supportsAndResolvesTo(Parameter::getName));
 
 		invokeMethod();
 
@@ -72,7 +72,7 @@ class MethodInvokerTests {
 	}
 
 	@Test
-	void onlyConsiderMethodParameterResolversThatSupportAParticularParameter() {
+	void onlyConsiderParameterResolversThatSupportAParticularParameter() {
 		testMethodWithASingleStringParameter();
 		thereIsAParameterResolverThatDoesNotSupportThisParameter();
 		thereIsAParameterResolverThatResolvesTheParameterTo("something");
@@ -83,18 +83,18 @@ class MethodInvokerTests {
 	}
 
 	@Test
-	void passContextInformationToMethodParameterResolverMethods() {
+	void passContextInformationToParameterResolverMethods() {
 		anyTestMethodWithAtLeasOneParameter();
 		this.extensionContext = mock(ExtensionContext.class);
-		ArgumentRecordingMethodParameterResolver extension = new ArgumentRecordingMethodParameterResolver();
+		ArgumentRecordingParameterResolver extension = new ArgumentRecordingParameterResolver();
 		register(extension);
 
 		invokeMethod();
 
 		assertSame(extensionContext, extension.supportsArguments.extensionContext);
-		assertSame(methodInvocationContext, extension.supportsArguments.methodInvocationContext);
+		assertSame(instance, extension.supportsArguments.target.get());
 		assertSame(extensionContext, extension.resolveArguments.extensionContext);
-		assertSame(methodInvocationContext, extension.resolveArguments.methodInvocationContext);
+		assertSame(instance, extension.resolveArguments.target.get());
 	}
 
 	@Test
@@ -132,7 +132,7 @@ class MethodInvokerTests {
 	}
 
 	@Test
-	void reportIfThereIsNoMethodParameterResolverThatSupportsTheParameter() {
+	void reportIfThereIsNoParameterResolverThatSupportsTheParameter() {
 		testMethodWithASingleStringParameter();
 
 		ParameterResolutionException caught = expectThrows(ParameterResolutionException.class, this::invokeMethod);
@@ -141,7 +141,7 @@ class MethodInvokerTests {
 	}
 
 	@Test
-	void reportIfThereAreMultipleMethodParameterResolversThatSupportTheParameter() {
+	void reportIfThereAreMultipleParameterResolversThatSupportTheParameter() {
 		testMethodWithASingleStringParameter();
 		thereIsAParameterResolverThatResolvesTheParameterTo("one");
 		thereIsAParameterResolverThatResolvesTheParameterTo("two");
@@ -151,7 +151,7 @@ class MethodInvokerTests {
 		// @formatter:off
 		assertThat(caught.getMessage())
 				.contains("parameter [java.lang.String arg0]")
-				.contains(ConfigurableMethodParameterResolver.class.getName() + ", " + ConfigurableMethodParameterResolver.class.getName());
+				.contains(ConfigurableParameterResolver.class.getName() + ", " + ConfigurableParameterResolver.class.getName());
 		// @formatter:on
 	}
 
@@ -197,18 +197,18 @@ class MethodInvokerTests {
 	}
 
 	private void throwDuringParameterResolution(RuntimeException parameterResolutionException) {
-		register(ConfigurableMethodParameterResolver.onAnyCallThrow(parameterResolutionException));
+		register(ConfigurableParameterResolver.onAnyCallThrow(parameterResolutionException));
 	}
 
 	private void thereIsAParameterResolverThatResolvesTheParameterTo(Object argument) {
-		register(ConfigurableMethodParameterResolver.supportsAndResolvesTo(parameter -> argument));
+		register(ConfigurableParameterResolver.supportsAndResolvesTo(parameter -> argument));
 	}
 
 	private void thereIsAParameterResolverThatDoesNotSupportThisParameter() {
-		register(ConfigurableMethodParameterResolver.withoutSupport());
+		register(ConfigurableParameterResolver.withoutSupport());
 	}
 
-	private void register(MethodParameterResolver extension) {
+	private void register(ParameterResolver extension) {
 		extensionRegistry.registerExtension(extension, this);
 	}
 
@@ -254,53 +254,51 @@ class MethodInvokerTests {
 
 	// -------------------------------------------------------------------------
 
-	static class ArgumentRecordingMethodParameterResolver implements MethodParameterResolver {
+	static class ArgumentRecordingParameterResolver implements ParameterResolver {
 
 		Arguments supportsArguments;
 		Arguments resolveArguments;
 
 		static class Arguments {
 
-			final MethodInvocationContext methodInvocationContext;
+			final Optional<Object> target;
 			final ExtensionContext extensionContext;
 
-			Arguments(MethodInvocationContext methodInvocationContext, ExtensionContext extensionContext) {
-				this.methodInvocationContext = methodInvocationContext;
+			Arguments(Optional<Object> target, ExtensionContext extensionContext) {
+				this.target = target;
 				this.extensionContext = extensionContext;
 			}
 		}
 
 		@Override
-		public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,
-				ExtensionContext extensionContext) throws ParameterResolutionException {
-			supportsArguments = new Arguments(methodInvocationContext, extensionContext);
+		public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
+			supportsArguments = new Arguments(target, extensionContext);
 			return true;
 		}
 
 		@Override
-		public Object resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
-				ExtensionContext extensionContext) throws ParameterResolutionException {
-			resolveArguments = new Arguments(methodInvocationContext, extensionContext);
+		public Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
+			resolveArguments = new Arguments(target, extensionContext);
 			return null;
 		}
 	}
 
-	static class ConfigurableMethodParameterResolver implements MethodParameterResolver {
+	static class ConfigurableParameterResolver implements ParameterResolver {
 
-		static MethodParameterResolver onAnyCallThrow(RuntimeException runtimeException) {
-			return new ConfigurableMethodParameterResolver(parameter -> {
+		static ParameterResolver onAnyCallThrow(RuntimeException runtimeException) {
+			return new ConfigurableParameterResolver(parameter -> {
 				throw runtimeException;
 			}, parameter -> {
 				throw runtimeException;
 			});
 		}
 
-		static MethodParameterResolver supportsAndResolvesTo(Function<Parameter, Object> resolve) {
-			return new ConfigurableMethodParameterResolver(parameter -> true, resolve);
+		static ParameterResolver supportsAndResolvesTo(Function<Parameter, Object> resolve) {
+			return new ConfigurableParameterResolver(parameter -> true, resolve);
 		}
 
-		static MethodParameterResolver withoutSupport() {
-			return new ConfigurableMethodParameterResolver(parameter -> false, parameter -> {
+		static ParameterResolver withoutSupport() {
+			return new ConfigurableParameterResolver(parameter -> false, parameter -> {
 				throw new UnsupportedOperationException();
 			});
 		}
@@ -308,21 +306,21 @@ class MethodInvokerTests {
 		private final Function<Parameter, Boolean> supports;
 		private final Function<Parameter, Object> resolve;
 
-		private ConfigurableMethodParameterResolver(Function<Parameter, Boolean> supports,
+		private ConfigurableParameterResolver(Function<Parameter, Boolean> supports,
 				Function<Parameter, Object> resolve) {
 			this.supports = supports;
 			this.resolve = resolve;
 		}
 
 		@Override
-		public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,
-				ExtensionContext extensionContext) throws ParameterResolutionException {
+		public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext)
+				throws ParameterResolutionException {
 			return supports.apply(parameter);
 		}
 
 		@Override
-		public Object resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
-				ExtensionContext extensionContext) throws ParameterResolutionException {
+		public Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext)
+				throws ParameterResolutionException {
 			return resolve.apply(parameter);
 		}
 	}

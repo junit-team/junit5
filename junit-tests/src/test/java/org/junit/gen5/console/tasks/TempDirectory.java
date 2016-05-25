@@ -22,19 +22,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Optional;
 
 import org.junit.gen5.api.extension.AfterEachCallback;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.ExtensionContext.Namespace;
-import org.junit.gen5.api.extension.MethodInvocationContext;
-import org.junit.gen5.api.extension.MethodParameterResolver;
 import org.junit.gen5.api.extension.ParameterResolutionException;
+import org.junit.gen5.api.extension.ParameterResolver;
 import org.junit.gen5.api.extension.TestExtensionContext;
 
 /**
  * @since 5.0
  */
-public class TempDirectory implements AfterEachCallback, MethodParameterResolver {
+public class TempDirectory implements AfterEachCallback, ParameterResolver {
 
 	@Target(ElementType.PARAMETER)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -45,16 +45,12 @@ public class TempDirectory implements AfterEachCallback, MethodParameterResolver
 	private static final String KEY = "tempDirectory";
 
 	@Override
-	public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,
-			ExtensionContext extensionContext) throws ParameterResolutionException {
-
+	public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
 		return parameter.isAnnotationPresent(Root.class) && parameter.getType() == Path.class;
 	}
 
 	@Override
-	public Object resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
-			ExtensionContext context) throws ParameterResolutionException {
-
+	public Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext context) {
 		return getLocalStore(context).getOrComputeIfAbsent(KEY, key -> createTempDirectory(context));
 	}
 
