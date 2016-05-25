@@ -13,6 +13,9 @@ package org.junit.gen5.console.tasks;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
+/**
+ * @since 5.0
+ */
 class CustomContextClassLoaderExecutor {
 
 	private final Optional<ClassLoader> customClassLoader;

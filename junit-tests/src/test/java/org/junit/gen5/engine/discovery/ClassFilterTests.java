@@ -18,7 +18,11 @@ import java.util.Collection;
 
 import org.junit.gen5.api.Test;
 
+/**
+ * @since 5.0
+ */
 class ClassFilterTests {
+
 	@Test
 	void classNameMatches() {
 		String regex = "^java\\.lang\\..*";
@@ -29,4 +33,5 @@ class ClassFilterTests {
 		assertTrue(filter.filter(String.class).included());
 		assertFalse(filter.filter(Collection.class).included());
 	}
+
 }

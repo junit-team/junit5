@@ -18,6 +18,9 @@ import java.util.Optional;
 
 import org.junit.gen5.commons.meta.API;
 
+/**
+ * @since 5.0
+ */
 @API(Internal)
 public class CommandLineOptions {
 

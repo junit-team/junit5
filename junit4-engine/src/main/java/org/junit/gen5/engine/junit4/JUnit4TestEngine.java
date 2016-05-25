@@ -28,6 +28,9 @@ import org.junit.gen5.engine.junit4.discovery.JUnit4DiscoveryRequestResolver;
 import org.junit.gen5.engine.junit4.execution.RunnerExecutor;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
+/**
+ * @since 5.0
+ */
 @API(Experimental)
 public class JUnit4TestEngine implements TestEngine {
 

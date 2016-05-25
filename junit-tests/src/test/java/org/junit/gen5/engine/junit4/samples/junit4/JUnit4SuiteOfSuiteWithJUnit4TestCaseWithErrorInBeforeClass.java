@@ -14,6 +14,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+/**
+ * @since 5.0
+ */
 @RunWith(Suite.class)
 @SuiteClasses(JUnit4SuiteWithJUnit4TestCaseWithErrorInBeforeClass.class)
 public class JUnit4SuiteOfSuiteWithJUnit4TestCaseWithErrorInBeforeClass {

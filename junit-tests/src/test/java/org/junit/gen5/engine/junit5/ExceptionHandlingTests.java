@@ -42,6 +42,8 @@ import org.opentest4j.AssertionFailedError;
 
 /**
  * Integration tests that verify correct exception handling in the {@link JUnit5TestEngine}.
+ *
+ * @since 5.0
  */
 public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 

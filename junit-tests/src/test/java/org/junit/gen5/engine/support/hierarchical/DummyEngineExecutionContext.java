@@ -10,5 +10,8 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
+/**
+ * @since 5.0
+ */
 class DummyEngineExecutionContext implements EngineExecutionContext {
 }

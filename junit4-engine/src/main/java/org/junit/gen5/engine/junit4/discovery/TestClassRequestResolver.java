@@ -31,6 +31,9 @@ import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.Filterable;
 import org.junit.runners.model.RunnerBuilder;
 
+/**
+ * @since 5.0
+ */
 class TestClassRequestResolver {
 
 	private final TestDescriptor engineDescriptor;

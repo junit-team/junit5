@@ -21,6 +21,9 @@ import java.util.Base64;
 import java.util.Locale;
 import java.util.function.Function;
 
+/**
+ * @since 5.0
+ */
 class UniqueIdStringifier implements Function<Serializable, String> {
 
 	static final Charset CHARSET = StandardCharsets.UTF_8;

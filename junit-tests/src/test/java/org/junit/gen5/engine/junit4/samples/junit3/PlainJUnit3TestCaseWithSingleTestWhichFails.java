@@ -14,6 +14,9 @@ import junit.framework.TestCase;
 
 import org.junit.Assert;
 
+/**
+ * @since 5.0
+ */
 public class PlainJUnit3TestCaseWithSingleTestWhichFails extends TestCase {
 
 	public void test() {

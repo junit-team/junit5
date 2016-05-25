@@ -24,6 +24,9 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+/**
+ * @since 5.0
+ */
 class TestClassCollector {
 
 	private final Set<Class<?>> completeTestClasses = new LinkedHashSet<>();

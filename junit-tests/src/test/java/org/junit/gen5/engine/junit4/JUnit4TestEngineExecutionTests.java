@@ -43,6 +43,9 @@ import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 
+/**
+ * @since 5.0
+ */
 class JUnit4TestEngineExecutionTests {
 
 	@Test

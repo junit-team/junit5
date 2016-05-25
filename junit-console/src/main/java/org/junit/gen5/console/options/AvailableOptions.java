@@ -16,6 +16,9 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
+/**
+ * @since 5.0
+ */
 class AvailableOptions {
 
 	private final OptionParser parser = new OptionParser();
@@ -92,4 +95,5 @@ class AvailableOptions {
 		result.setArguments(detectedOptions.valuesOf(arguments));
 		return result;
 	}
+
 }

@@ -21,6 +21,9 @@ import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.runner.JUnitCore;
 
+/**
+ * @since 5.0
+ */
 @API(Internal)
 public class RunnerExecutor {
 

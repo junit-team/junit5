@@ -32,6 +32,9 @@ import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithFiveTe
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.internal.builders.IgnoredClassRunner;
 
+/**
+ * @since 5.0
+ */
 class TestClassRequestResolverTests {
 
 	@Test

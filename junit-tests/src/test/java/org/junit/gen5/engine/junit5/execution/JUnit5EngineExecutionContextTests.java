@@ -21,7 +21,9 @@ import org.junit.gen5.engine.junit5.descriptor.ClassBasedContainerExtensionConte
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 
 /**
- * Microtests for {@link JUnit5EngineExecutionContext}
+ * Microtests for {@link JUnit5EngineExecutionContext}.
+ *
+ * @since 5.0
  */
 class JUnit5EngineExecutionContextTests {
 

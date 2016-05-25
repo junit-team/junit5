@@ -26,6 +26,7 @@ import org.junit.runners.model.RunnerBuilder;
  * ignore certain classes that would otherwise be reported as errors or cause
  * infinite recursion.
  *
+ * @since 5.0
  * @see DefensiveAnnotatedBuilder
  * @see DefensiveJUnit4Builder
  */

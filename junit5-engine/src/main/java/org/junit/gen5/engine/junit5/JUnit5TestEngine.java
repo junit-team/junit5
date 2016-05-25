@@ -23,6 +23,9 @@ import org.junit.gen5.engine.junit5.discovery.JUnit5EngineDescriptor;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.support.hierarchical.HierarchicalTestEngine;
 
+/**
+ * @since 5.0
+ */
 @API(Experimental)
 public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecutionContext> {
 

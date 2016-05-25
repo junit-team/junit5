@@ -23,6 +23,8 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
  * Represents the root of all discovered {@link TestEngine} and their {@link TestDescriptor}s.
+ *
+ * @since 5.0
  */
 class Root {
 

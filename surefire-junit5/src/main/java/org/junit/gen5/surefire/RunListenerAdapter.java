@@ -27,9 +27,12 @@ import org.junit.gen5.engine.support.descriptor.JavaMethodSource;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 
+/**
+ * @since 5.0
+ */
 final class RunListenerAdapter implements TestExecutionListener {
 
-	private RunListener runListener;
+	private final RunListener runListener;
 
 	public RunListenerAdapter(RunListener reporter) {
 		this.runListener = reporter;
@@ -96,4 +99,5 @@ final class RunListenerAdapter implements TestExecutionListener {
 			return testIdentifier.getUniqueId();
 		}
 	}
+
 }

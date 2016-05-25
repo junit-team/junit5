@@ -24,6 +24,9 @@ import org.junit.gen5.engine.junit4.samples.junit4.Categories.Plain;
 import org.junit.gen5.engine.junit4.samples.junit4.Categories.Skipped;
 import org.junit.gen5.engine.junit4.samples.junit4.Categories.SkippedWithReason;
 
+/**
+ * @since 5.0
+ */
 @FixMethodOrder(NAME_ASCENDING)
 @Category(Plain.class)
 public class PlainJUnit4TestCaseWithFiveTestMethods {

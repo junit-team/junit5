@@ -19,6 +19,9 @@ import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.Filter;
 import org.junit.gen5.engine.FilterResult;
 
+/**
+ * @since 5.0
+ */
 @API(Internal)
 public class ExclusionReasonConsumingFilter<T> implements Filter<T> {
 

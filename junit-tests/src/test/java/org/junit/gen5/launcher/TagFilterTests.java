@@ -16,6 +16,9 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.TestDescriptorBuilder;
 
+/**
+ * @since 5.0
+ */
 class TagFilterTests {
 
 	ClassTestDescriptor testWithTag1 = (ClassTestDescriptor) TestDescriptorBuilder.classTestDescriptor("test1",

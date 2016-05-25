@@ -14,6 +14,9 @@ import static java.util.Collections.emptyList;
 
 import java.util.List;
 
+/**
+ * @since 5.0
+ */
 class TestClassRequest {
 
 	private final Class<?> testClass;

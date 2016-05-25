@@ -22,6 +22,9 @@ import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 
+/**
+ * @since 5.0
+ */
 public class ExceptionThrowingRunner extends Runner {
 
 	@Retention(RetentionPolicy.RUNTIME)

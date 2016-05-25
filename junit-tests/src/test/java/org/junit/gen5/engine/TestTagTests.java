@@ -15,6 +15,9 @@ import static org.junit.gen5.api.Assertions.assertNotEquals;
 
 import org.junit.gen5.api.Test;
 
+/**
+ * @since 5.0
+ */
 class TestTagTests {
 
 	@Test
@@ -29,4 +32,5 @@ class TestTagTests {
 	void toStringPrintsName() {
 		assertEquals("fast", new TestTag("fast").toString());
 	}
+
 }

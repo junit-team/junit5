@@ -25,6 +25,8 @@ import org.junit.gen5.commons.util.Preconditions;
  * {@link org.junit.gen5.api.extension.ExtensionContext}
  * to store and retrieve attributes with {@link #get}, {@link #put}, or
  * {@link #getOrComputeIfAbsent}.
+ *
+ * @since 5.0
  */
 @API(Internal)
 public class ExtensionValuesStore {

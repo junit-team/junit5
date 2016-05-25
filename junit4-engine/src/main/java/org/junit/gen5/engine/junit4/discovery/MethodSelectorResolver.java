@@ -18,6 +18,9 @@ import java.lang.reflect.Method;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.runner.Description;
 
+/**
+ * @since 5.0
+ */
 class MethodSelectorResolver extends DiscoverySelectorResolver<MethodSelector> {
 
 	MethodSelectorResolver() {

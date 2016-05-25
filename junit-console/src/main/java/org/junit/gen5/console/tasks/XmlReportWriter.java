@@ -37,6 +37,9 @@ import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.engine.support.descriptor.JavaClassSource;
 import org.junit.gen5.launcher.TestIdentifier;
 
+/**
+ * @since 5.0
+ */
 class XmlReportWriter {
 
 	private final XmlReportData reportData;

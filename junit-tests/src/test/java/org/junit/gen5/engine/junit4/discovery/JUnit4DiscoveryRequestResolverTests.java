@@ -27,6 +27,9 @@ import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
+/**
+ * @since 5.0
+ */
 class JUnit4DiscoveryRequestResolverTests {
 
 	@Test

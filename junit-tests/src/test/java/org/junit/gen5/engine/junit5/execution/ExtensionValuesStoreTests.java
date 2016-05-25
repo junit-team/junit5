@@ -19,7 +19,9 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 
 /**
- * Microtests for {@link ExtensionValuesStore}
+ * Microtests for {@link ExtensionValuesStore}.
+ *
+ * @since 5.0
  */
 class ExtensionValuesStoreTests {
 

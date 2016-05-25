@@ -15,6 +15,9 @@ import static org.junit.gen5.api.Assertions.assertTrue;
 
 import org.junit.gen5.api.Test;
 
+/**
+ * @since 5.0
+ */
 public class TestDescriptorTests {
 
 	@Test

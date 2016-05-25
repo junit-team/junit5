@@ -25,6 +25,9 @@ import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.engine.junit4.JUnit4UniqueIdBuilder;
 
+/**
+ * @since 5.0
+ */
 class UniqueIdSelectorResolverTests {
 
 	@Test

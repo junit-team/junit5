@@ -22,6 +22,9 @@ import java.util.Base64;
 
 import org.junit.gen5.api.Test;
 
+/**
+ * @since 5.0
+ */
 class UniqueIdStringifierTests {
 
 	@Test

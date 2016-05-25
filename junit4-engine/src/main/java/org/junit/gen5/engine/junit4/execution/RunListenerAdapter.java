@@ -23,6 +23,9 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
+/**
+ * @since 5.0
+ */
 class RunListenerAdapter extends RunListener {
 
 	private final TestRun testRun;

@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.junit4.samples;
 
+/**
+ * @since 5.0
+ */
 public class PlainOldJavaClassWithoutAnyTest {
 
 	public void doSomething() {

@@ -21,7 +21,10 @@ import javax.xml.validation.Validator;
 import org.opentest4j.AssertionFailedError;
 import org.xml.sax.SAXException;
 
-public class XmlReportAssertions {
+/**
+ * @since 5.0
+ */
+class XmlReportAssertions {
 
 	private static Validator schemaValidator;
 
@@ -43,4 +46,5 @@ public class XmlReportAssertions {
 		}
 		return schemaValidator;
 	}
+
 }

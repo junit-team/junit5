@@ -16,6 +16,9 @@ import org.junit.AssumptionViolatedException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * @since 5.0
+ */
 public class JUnit4TestCaseWithAssumptionFailureInBeforeClass {
 
 	@BeforeClass

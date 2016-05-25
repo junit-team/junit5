@@ -18,6 +18,9 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.discovery.JUnit5EngineDescriptor;
 
+/**
+ * @since 5.0
+ */
 public abstract class TestDescriptorBuilder {
 
 	List<TestDescriptorBuilder> children = new ArrayList<>();

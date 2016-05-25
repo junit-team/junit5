@@ -12,6 +12,9 @@ package org.junit.gen5.engine.junit4.discovery;
 
 import org.junit.gen5.engine.discovery.ClassSelector;
 
+/**
+ * @since 5.0
+ */
 class ClassSelectorResolver extends DiscoverySelectorResolver<ClassSelector> {
 
 	ClassSelectorResolver() {

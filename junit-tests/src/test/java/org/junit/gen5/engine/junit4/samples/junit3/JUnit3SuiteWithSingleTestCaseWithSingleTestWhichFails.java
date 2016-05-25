@@ -13,6 +13,9 @@ package org.junit.gen5.engine.junit4.samples.junit3;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+/**
+ * @since 5.0
+ */
 public class JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails extends TestCase {
 
 	public static junit.framework.Test suite() {

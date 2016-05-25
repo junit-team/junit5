@@ -27,7 +27,9 @@ import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.ClassFilter;
 
 /**
- * Microtests for {@link DiscoveryFilterApplier}
+ * Microtests for {@link DiscoveryFilterApplier}.
+ *
+ * @since 5.0
  */
 class DiscoveryFilterApplierTests {
 

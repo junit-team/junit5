@@ -18,6 +18,9 @@ import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 
+/**
+ * @since 5.0
+ */
 class ExecutionListenerAdapter implements EngineExecutionListener {
 
 	private final TestPlan testPlan;

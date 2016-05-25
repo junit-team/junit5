@@ -18,6 +18,8 @@ import org.junit.gen5.engine.junit5.JUnit5TestEngine;
  * Test data builder for unique IDs for JUnit5TestEngine.
  *
  * Used to decouple tests from concrete unique ID strings.
+ *
+ * @since 5.0
  */
 public class JUnit5UniqueIdBuilder {
 

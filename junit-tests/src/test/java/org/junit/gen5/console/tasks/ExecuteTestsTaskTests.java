@@ -25,6 +25,9 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 
+/**
+ * @since 5.0
+ */
 public class ExecuteTestsTaskTests {
 
 	@Test

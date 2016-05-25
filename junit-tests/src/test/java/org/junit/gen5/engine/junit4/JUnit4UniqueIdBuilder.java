@@ -17,6 +17,8 @@ import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
  * Test data builder for building unique IDs for the JUnit4TestEngine.
  *
  * Used to decouple tests from concrete unique ID strings.
+ *
+ * @since 5.0
  */
 public class JUnit4UniqueIdBuilder {
 

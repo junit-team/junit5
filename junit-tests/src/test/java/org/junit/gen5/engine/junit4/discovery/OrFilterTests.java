@@ -27,6 +27,9 @@ import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 
+/**
+ * @since 5.0
+ */
 class OrFilterTests {
 
 	@Test

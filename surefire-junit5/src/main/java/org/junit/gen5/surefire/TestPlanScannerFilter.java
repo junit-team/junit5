@@ -19,6 +19,9 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 
+/**
+ * @since 5.0
+ */
 final class TestPlanScannerFilter implements ScannerFilter {
 
 	private final Launcher launcher;
@@ -34,4 +37,5 @@ final class TestPlanScannerFilter implements ScannerFilter {
 		TestPlan testPlan = launcher.discover(discoveryRequest);
 		return testPlan.countTestIdentifiers(TestIdentifier::isTest) > 0;
 	}
+
 }

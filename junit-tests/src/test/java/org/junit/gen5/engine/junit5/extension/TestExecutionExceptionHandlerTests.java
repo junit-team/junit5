@@ -43,6 +43,8 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@link TestExecutionExceptionHandler}.
+ *
+ * @since 5.0
  */
 class TestExecutionExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
 

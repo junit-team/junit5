@@ -30,6 +30,8 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@link TestInstancePostProcessor}.
+ *
+ * @since 5.0
  */
 public class TestInstancePostProcessorTests extends AbstractJUnit5TestEngineTests {
 

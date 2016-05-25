@@ -14,6 +14,9 @@ import org.junit.gen5.junit4.runner.Classes;
 import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.runner.RunWith;
 
+/**
+ * @since 5.0
+ */
 @RunWith(JUnit5.class)
 @Classes(PlainJUnit4TestCaseWithSingleTestWhichFails.class)
 public class TestCaseRunWithJUnit5 {

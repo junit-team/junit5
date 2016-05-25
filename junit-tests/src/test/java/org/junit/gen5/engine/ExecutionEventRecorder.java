@@ -34,6 +34,7 @@ import org.junit.gen5.engine.reporting.ReportEntry;
 /**
  * {@link EngineExecutionListener} that records all events and makes them available to tests.
  *
+ * @since 5.0
  * @see ExecutionEvent
  */
 public class ExecutionEventRecorder implements EngineExecutionListener {

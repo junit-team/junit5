@@ -23,6 +23,9 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.logging.RecordCollectingLogger;
 import org.junit.runner.Description;
 
+/**
+ * @since 5.0
+ */
 class UniqueIdReaderTests {
 
 	@Test

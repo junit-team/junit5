@@ -25,6 +25,9 @@ import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.launcher.TestPlan;
 
+/**
+ * @since 5.0
+ */
 class XmlReportWriterTests {
 
 	@Test

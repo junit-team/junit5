@@ -17,6 +17,9 @@ import java.io.PrintWriter;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.console.options.CommandLineOptionsParser;
 
+/**
+ * @since 5.0
+ */
 @API(Internal)
 public class DisplayHelpTask implements ConsoleTask {
 

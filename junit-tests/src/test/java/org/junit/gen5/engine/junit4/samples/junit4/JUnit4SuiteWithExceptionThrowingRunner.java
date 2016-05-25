@@ -13,6 +13,9 @@ package org.junit.gen5.engine.junit4.samples.junit4;
 import org.junit.gen5.engine.junit4.samples.junit4.ExceptionThrowingRunner.ChildCount;
 import org.junit.runner.RunWith;
 
+/**
+ * @since 5.0
+ */
 @RunWith(ExceptionThrowingRunner.class)
 @ChildCount(1)
 public class JUnit4SuiteWithExceptionThrowingRunner {

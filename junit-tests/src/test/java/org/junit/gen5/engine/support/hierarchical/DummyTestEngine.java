@@ -15,6 +15,9 @@ import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 
+/**
+ * @since 5.0
+ */
 public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExecutionContext> {
 
 	private final String engineId;

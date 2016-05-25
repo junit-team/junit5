@@ -20,6 +20,9 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
+/**
+ * @since 5.0
+ */
 public class RunnerWithCustomUniqueIds extends BlockJUnit4ClassRunner {
 
 	public RunnerWithCustomUniqueIds(Class<?> klass) throws InitializationError {

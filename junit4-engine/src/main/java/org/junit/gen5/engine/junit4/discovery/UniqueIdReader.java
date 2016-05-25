@@ -20,6 +20,9 @@ import java.util.logging.Logger;
 
 import org.junit.runner.Description;
 
+/**
+ * @since 5.0
+ */
 class UniqueIdReader implements Function<Description, Serializable> {
 
 	private final Logger logger;

@@ -36,6 +36,8 @@ import org.opentest4j.TestAbortedException;
 
 /**
  * Micro-tests that verify behavior of {@link HierarchicalTestExecutor}.
+ *
+ * @since 5.0
  */
 public class HierarchicalTestExecutorTests {
 

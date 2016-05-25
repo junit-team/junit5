@@ -16,6 +16,9 @@ import static org.junit.gen5.engine.support.hierarchical.Node.SkipResult.skip;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 
+/**
+ * @since 5.0
+ */
 public class DummyTestDescriptor extends AbstractTestDescriptor
 		implements Leaf<DummyEngineExecutionContext>, Node<DummyEngineExecutionContext> {
 

@@ -12,6 +12,9 @@ package org.junit.gen5.engine.junit5.descriptor.subpackage;
 
 import org.junit.gen5.api.Test;
 
+/**
+ * @since 5.0
+ */
 public class Class1WithTestCases {
 
 	@Test

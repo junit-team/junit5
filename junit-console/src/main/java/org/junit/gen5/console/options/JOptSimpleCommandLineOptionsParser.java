@@ -25,6 +25,9 @@ import joptsimple.OptionSet;
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
 
+/**
+ * @since 5.0
+ */
 @API(Internal)
 public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsParser {
 

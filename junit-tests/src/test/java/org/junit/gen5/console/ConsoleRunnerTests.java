@@ -29,6 +29,9 @@ import org.junit.gen5.console.tasks.ConsoleTaskExecutor;
 import org.junit.gen5.console.tasks.DisplayHelpTask;
 import org.junit.gen5.console.tasks.ExecuteTestsTask;
 
+/**
+ * @since 5.0
+ */
 public class ConsoleRunnerTests {
 
 	@Test

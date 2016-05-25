@@ -21,6 +21,9 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
 
+/**
+ * @since 5.0
+ */
 class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelector> {
 
 	private final Logger logger;

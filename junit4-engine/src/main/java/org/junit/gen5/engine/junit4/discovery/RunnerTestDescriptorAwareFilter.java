@@ -14,6 +14,9 @@ import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 
+/**
+ * @since 5.0
+ */
 abstract class RunnerTestDescriptorAwareFilter extends Filter {
 
 	abstract void initialize(RunnerTestDescriptor runnerTestDescriptor);

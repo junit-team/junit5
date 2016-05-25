@@ -10,6 +10,9 @@
 
 package org.junit.gen5.engine.junit4.samples.junit4;
 
+/**
+ * @since 5.0
+ */
 public class Categories {
 
 	public interface Plain {

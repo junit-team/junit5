@@ -20,7 +20,10 @@ import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
 
 /**
- * Class for applying all {@link org.junit.gen5.engine.DiscoveryFilter}s to all children of a TestDescriptor
+ * Class for applying all {@link org.junit.gen5.engine.DiscoveryFilter}s to all
+ * children of a {@link TestDescriptor}.
+ *
+ * @since 5.0
  */
 class DiscoveryFilterApplier {
 

@@ -17,6 +17,9 @@ import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 
+/**
+ * @since 5.0
+ */
 @FixMethodOrder(NAME_ASCENDING)
 public class PlainJUnit4TestCaseWithTwoTestMethods {
 

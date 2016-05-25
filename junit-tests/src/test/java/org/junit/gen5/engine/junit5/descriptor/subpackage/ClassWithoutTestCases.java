@@ -10,5 +10,8 @@
 
 package org.junit.gen5.engine.junit5.descriptor.subpackage;
 
+/**
+ * @since 5.0
+ */
 public class ClassWithoutTestCases {
 }

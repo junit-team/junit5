@@ -26,6 +26,9 @@ import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.launcher.TestIdentifier;
 
+/**
+ * @since 5.0
+ */
 public class ColoredPrintingTestListenerTests {
 
 	@Test

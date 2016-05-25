@@ -64,6 +64,9 @@ import org.junit.runners.model.InitializationError;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 
+/**
+ * @since 5.0
+ */
 class JUnit5Tests {
 
 	@Nested
@@ -372,4 +375,5 @@ class JUnit5Tests {
 
 	private static class TestClass {
 	}
+
 }

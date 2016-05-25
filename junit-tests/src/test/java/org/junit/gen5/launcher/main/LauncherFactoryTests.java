@@ -24,6 +24,9 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 
+/**
+ * @since 5.0
+ */
 class LauncherFactoryTests {
 
 	@Test

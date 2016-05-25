@@ -70,6 +70,9 @@ import org.junit.gen5.engine.support.descriptor.JavaMethodSource;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.runner.manipulation.Filter;
 
+/**
+ * @since 5.0
+ */
 class JUnit4TestEngineDiscoveryTests {
 
 	JUnit4TestEngine engine = new JUnit4TestEngine();

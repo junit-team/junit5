@@ -17,7 +17,9 @@ import java.io.PrintWriter;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * A task to be executed from the console.
+ * A task to be executed from the console,
+ *
+ * @since 5.0
  */
 @API(Internal)
 public interface ConsoleTask {

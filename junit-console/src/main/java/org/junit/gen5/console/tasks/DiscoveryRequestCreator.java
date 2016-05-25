@@ -27,6 +27,9 @@ import org.junit.gen5.launcher.EngineIdFilter;
 import org.junit.gen5.launcher.TagFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
+/**
+ * @since 5.0
+ */
 class DiscoveryRequestCreator {
 
 	TestDiscoveryRequest toDiscoveryRequest(CommandLineOptions options) {

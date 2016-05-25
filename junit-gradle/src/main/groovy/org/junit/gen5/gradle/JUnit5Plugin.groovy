@@ -13,6 +13,9 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.JavaExec
 
+/**
+ * @since 5.0
+ */
 class JUnit5Plugin implements Plugin<Project> {
 	void apply(Project project) {
 		def junit5 = project.extensions.create('junit5', JUnit5Extension)

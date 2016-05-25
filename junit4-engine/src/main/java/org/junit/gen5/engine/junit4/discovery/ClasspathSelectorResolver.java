@@ -14,6 +14,9 @@ import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClassp
 
 import org.junit.gen5.engine.discovery.ClasspathSelector;
 
+/**
+ * @since 5.0
+ */
 class ClasspathSelectorResolver extends DiscoverySelectorResolver<ClasspathSelector> {
 
 	ClasspathSelectorResolver() {

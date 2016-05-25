@@ -15,6 +15,9 @@ import static org.junit.Assert.fail;
 import org.junit.Ignore;
 import org.junit.Test;
 
+/**
+ * @since 5.0
+ */
 @Ignore("complete class is ignored")
 public class IgnoredJUnit4TestCase {
 

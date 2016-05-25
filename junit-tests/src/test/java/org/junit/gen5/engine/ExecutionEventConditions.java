@@ -36,6 +36,8 @@ import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
 /**
  * Collection of AssertJ conditions for {@link ExecutionEvent}.
+ *
+ * @since 5.0
  */
 public class ExecutionEventConditions {
 

@@ -24,6 +24,9 @@ import org.junit.gen5.engine.junit4.descriptor.JUnit4TestDescriptor;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.runner.Description;
 
+/**
+ * @since 5.0
+ */
 class UniqueIdFilter extends RunnerTestDescriptorAwareFilter {
 
 	private final UniqueId uniqueId;

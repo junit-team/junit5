@@ -23,6 +23,9 @@ import java.nio.file.Path;
 
 import org.junit.gen5.api.Test;
 
+/**
+ * @since 5.0
+ */
 public class ClasspathEntriesParserTests {
 
 	@Test

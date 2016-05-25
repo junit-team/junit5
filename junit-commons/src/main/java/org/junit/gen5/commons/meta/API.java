@@ -23,8 +23,10 @@ import java.lang.annotation.Target;
  * and how they are intended to be used.
  *
  * <p>If the annotation is present on a type, it is considered to hold for
- * all public members of this type as well. A member is allowed to declare a
+ * all public members of the type as well. A member is allowed to declare a
  * different {@link Usage} of lower stability.
+ *
+ * @since 5.0
  */
 @Target({ ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR })
 @Retention(RetentionPolicy.CLASS)

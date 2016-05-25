@@ -16,7 +16,11 @@ import java.util.function.Supplier;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
 
+/**
+ * @since 5.0
+ */
 public class PostDiscoveryFilterStub extends FilterStub<TestDescriptor> implements PostDiscoveryFilter {
+
 	public PostDiscoveryFilterStub(String toString) {
 		super(toString);
 	}
@@ -24,4 +28,5 @@ public class PostDiscoveryFilterStub extends FilterStub<TestDescriptor> implemen
 	public PostDiscoveryFilterStub(Function<TestDescriptor, FilterResult> function, Supplier<String> toString) {
 		super(function, toString);
 	}
+
 }

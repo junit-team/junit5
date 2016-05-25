@@ -29,6 +29,9 @@ import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.runner.Description;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
+/**
+ * @since 5.0
+ */
 class RunListenerAdapterTests {
 
 	@Test

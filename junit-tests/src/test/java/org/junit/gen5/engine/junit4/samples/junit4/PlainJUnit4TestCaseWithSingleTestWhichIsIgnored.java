@@ -14,6 +14,9 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+/**
+ * @since 5.0
+ */
 public class PlainJUnit4TestCaseWithSingleTestWhichIsIgnored {
 
 	@Test

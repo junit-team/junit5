@@ -27,6 +27,7 @@ import org.junit.gen5.engine.reporting.ReportEntry;
 /**
  * Represents an event collected by {@link ExecutionEventRecorder}.
  *
+ * @since 5.0
  * @see ExecutionEventConditions
  */
 public class ExecutionEvent {

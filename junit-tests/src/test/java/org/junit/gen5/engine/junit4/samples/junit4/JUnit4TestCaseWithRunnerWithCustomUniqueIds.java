@@ -14,6 +14,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/**
+ * @since 5.0
+ */
 @RunWith(RunnerWithCustomUniqueIds.class)
 public class JUnit4TestCaseWithRunnerWithCustomUniqueIds {
 

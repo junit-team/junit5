@@ -16,6 +16,9 @@ import static org.junit.gen5.engine.support.hierarchical.Node.SkipResult.skip;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 
+/**
+ * @since 5.0
+ */
 public class DummyEngineDescriptor extends EngineDescriptor implements Container<DummyEngineExecutionContext> {
 
 	private String skippedReason;

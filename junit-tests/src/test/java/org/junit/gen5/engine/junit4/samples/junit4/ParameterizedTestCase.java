@@ -19,6 +19,9 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
+/**
+ * @since 5.0
+ */
 @RunWith(Parameterized.class)
 public class ParameterizedTestCase {
 

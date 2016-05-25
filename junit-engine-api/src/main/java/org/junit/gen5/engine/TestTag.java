@@ -17,6 +17,9 @@ import java.util.Objects;
 
 import org.junit.gen5.commons.meta.API;
 
+/**
+ * @since 5.0
+ */
 @API(Experimental)
 public final class TestTag implements Serializable {
 

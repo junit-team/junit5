@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+/**
+ * @since 5.0
+ */
 public class RecordCollectingLogger extends Logger {
 
 	private final List<LogRecord> logRecords = new LinkedList<>();

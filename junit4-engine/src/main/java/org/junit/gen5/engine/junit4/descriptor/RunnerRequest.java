@@ -13,6 +13,9 @@ package org.junit.gen5.engine.junit4.descriptor;
 import org.junit.runner.Request;
 import org.junit.runner.Runner;
 
+/**
+ * @since 5.0
+ */
 class RunnerRequest extends Request {
 
 	private final Runner runner;

@@ -15,6 +15,9 @@ import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
+/**
+ * @since 5.0
+ */
 @RunWith(Theories.class)
 public class SingleFailingTheoryTestCase {
 

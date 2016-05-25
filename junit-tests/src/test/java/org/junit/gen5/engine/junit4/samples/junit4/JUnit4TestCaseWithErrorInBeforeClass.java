@@ -15,6 +15,9 @@ import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * @since 5.0
+ */
 public class JUnit4TestCaseWithErrorInBeforeClass {
 
 	@BeforeClass

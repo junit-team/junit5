@@ -30,6 +30,9 @@ import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 
+/**
+ * @since 5.0
+ */
 class XmlReportData {
 
 	private static final int MILLIS_PER_SECOND = 1000;
