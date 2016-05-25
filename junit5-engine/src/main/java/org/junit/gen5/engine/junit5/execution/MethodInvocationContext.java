@@ -8,9 +8,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.api.extension;
+package org.junit.gen5.engine.junit5.execution;
 
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
 
@@ -22,7 +22,7 @@ import org.junit.gen5.commons.meta.API;
  *
  * @since 5.0
  */
-@API(Experimental)
+@API(Internal)
 public interface MethodInvocationContext {
 
 	Object getInstance();

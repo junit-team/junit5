@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ContainerExecutionCondition;
 import org.junit.gen5.api.extension.Extension;
-import org.junit.gen5.api.extension.MethodParameterResolver;
+import org.junit.gen5.api.extension.ParameterResolver;
 import org.junit.gen5.api.extension.TestExecutionCondition;
 
 /**
@@ -39,7 +39,7 @@ public class ExtensionRegistryTests {
 		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
 		assertExtensionRegistered(registry, TestReporterParameterResolver.class);
 
-		assertEquals(2, countExtensions(registry, MethodParameterResolver.class));
+		assertEquals(2, countExtensions(registry, ParameterResolver.class));
 		assertEquals(1, countExtensions(registry, ContainerExecutionCondition.class));
 		assertEquals(1, countExtensions(registry, TestExecutionCondition.class));
 	}

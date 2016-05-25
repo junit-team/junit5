@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.junit.gen5.api.DynamicTest;
-import org.junit.gen5.api.extension.MethodInvocationContext;
 import org.junit.gen5.api.extension.TestExtensionContext;
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
@@ -32,6 +31,7 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
+import org.junit.gen5.engine.junit5.execution.MethodInvocationContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
 import org.junit.gen5.engine.support.hierarchical.SingleTestExecutor;

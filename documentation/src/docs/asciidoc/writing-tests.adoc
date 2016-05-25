@@ -156,10 +156,10 @@ with the standard `Runner` implementations). As one of the major changes in JUni
 methods are now permitted to have parameters. This allows for greater flexibility and
 enables method-level _Dependency Injection_.
 
-`{MethodParameterResolver}` defines the API for test extensions that wish to
-_dynamically_ resolve method parameters at runtime. If a `@Test`, `@BeforeEach`,
-`@AfterEach`, `@BeforeAll`, or `@AfterAll` method accepts a parameter, the parameter must
-be resolved at runtime by a registered `MethodParameterResolver`.
+`{ParameterResolver}` defines the API for test extensions that wish to _dynamically_
+resolve parameters at runtime. If a `@Test`, `@BeforeEach`, `@AfterEach`, `@BeforeAll`,
+or `@AfterAll` method accepts a parameter, the parameter must be resolved at runtime by
+a registered `ParameterResolver`.
 
 There are currently two built-in resolvers that are registered automatically.
 
@@ -199,7 +199,7 @@ include::{testDir}/example/TestReporterDemo.java[tags=user_guide]
 Other parameter resolvers must be explicitly enabled by registering a <<extension-model,
 test extension>> via `@ExtendWith`.
 
-* Check out the `{MockitoExtension}` for an example of a `{MethodParameterResolver}`. While not
+* Check out the `{MockitoExtension}` for an example of a `{ParameterResolver}`. While not
   intended to be production-ready, it demonstrates the simplicity and expressiveness of
   both the extension model and the parameter resolution process. `MyMockitoTest`
   demonstrates how to inject Mockito mocks into `@BeforeEach` and `@Test` methods.

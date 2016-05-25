@@ -11,31 +11,28 @@
 package org.junit.gen5.engine.junit5.extension;
 
 import java.lang.reflect.Parameter;
+import java.util.Optional;
 
 import org.junit.gen5.api.TestReporter;
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.api.extension.MethodInvocationContext;
-import org.junit.gen5.api.extension.MethodParameterResolver;
+import org.junit.gen5.api.extension.ParameterResolver;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
- * {@link MethodParameterResolver} that injects a {@link TestReporter}.
+ * {@link ParameterResolver} that injects a {@link TestReporter}.
  *
  * @since 5.0
  */
-class TestReporterParameterResolver implements MethodParameterResolver {
+class TestReporterParameterResolver implements ParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,
-			ExtensionContext extensionContext) {
+	public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
 		Preconditions.notNull(parameter, "supplied parameter must not be null");
-
 		return (parameter.getType() == TestReporter.class);
 	}
 
 	@Override
-	public TestReporter resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
-			ExtensionContext extensionContext) {
+	public TestReporter resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
 		return extensionContext::publishReportEntry;
 	}
 

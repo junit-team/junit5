@@ -17,29 +17,24 @@ import java.util.Set;
 
 import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.api.extension.MethodInvocationContext;
-import org.junit.gen5.api.extension.MethodParameterResolver;
+import org.junit.gen5.api.extension.ParameterResolver;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
- * {@link MethodParameterResolver} that resolves the {@link TestInfo} for
+ * {@link ParameterResolver} that resolves the {@link TestInfo} for
  * the currently executing test.
  *
  * @since 5.0
  */
-class TestInfoParameterResolver implements MethodParameterResolver {
+class TestInfoParameterResolver implements ParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter, MethodInvocationContext methodInvocationContext,
-			ExtensionContext extensionContext) {
-
+	public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
 		return (parameter.getType() == TestInfo.class);
 	}
 
 	@Override
-	public TestInfo resolve(Parameter parameter, MethodInvocationContext methodInvocationContext,
-			ExtensionContext extensionContext) {
-
+	public TestInfo resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
 		return new DefaultTestInfo(extensionContext);
 	}
 
