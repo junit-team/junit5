@@ -17,7 +17,6 @@ import static org.junit.gen5.engine.junit5.descriptor.LifecycleMethodUtils.findB
 import static org.junit.gen5.engine.junit5.descriptor.LifecycleMethodUtils.findBeforeEachMethods;
 import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
@@ -245,9 +244,8 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	@Override
-	protected String generateDefaultDisplayName(AnnotatedElement element) {
-		Class<?> testClass = (Class<?>) element;
-		String name = testClass.getName();
+	protected String generateDefaultDisplayName() {
+		String name = this.testClass.getName();
 		int index = name.lastIndexOf('.');
 		return name.substring(index + 1);
 	}

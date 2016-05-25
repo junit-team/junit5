@@ -34,7 +34,6 @@ import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
-import org.junit.gen5.engine.support.hierarchical.Leaf;
 import org.junit.gen5.engine.support.hierarchical.SingleTestExecutor;
 
 /**
@@ -43,9 +42,11 @@ import org.junit.gen5.engine.support.hierarchical.SingleTestExecutor;
  * @since 5.0
  */
 @API(Internal)
-public class TestFactoryTestDescriptor extends MethodTestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
+public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 
 	public static final String DYNAMIC_TEST_SEGMENT_TYPE = "dynamic-test";
+
+	private static final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
 
 	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, testClass, testMethod);
@@ -120,7 +121,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor implements L
 
 		listener.dynamicTestRegistered(dynamicTestTestDescriptor);
 		listener.executionStarted(dynamicTestTestDescriptor);
-		TestExecutionResult result = new SingleTestExecutor().executeSafely(dynamicTest.getExecutable()::execute);
+		TestExecutionResult result = singleTestExecutor.executeSafely(dynamicTest.getExecutable()::execute);
 		listener.executionFinished(dynamicTestTestDescriptor, result);
 	}
 

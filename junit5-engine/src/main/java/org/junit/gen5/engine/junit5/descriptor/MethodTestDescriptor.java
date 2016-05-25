@@ -14,7 +14,6 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
@@ -237,10 +236,9 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 	}
 
 	@Override
-	protected String generateDefaultDisplayName(AnnotatedElement element) {
-		Method method = (Method) element;
-		return String.format("%s(%s)", method.getName(),
-			StringUtils.nullSafeToString(Class::getSimpleName, method.getParameterTypes()));
+	protected String generateDefaultDisplayName() {
+		return String.format("%s(%s)", this.testMethod.getName(),
+			StringUtils.nullSafeToString(Class::getSimpleName, this.testMethod.getParameterTypes()));
 	}
 
 }

@@ -12,7 +12,6 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
-import java.lang.reflect.AnnotatedElement;
 import java.util.Set;
 
 import org.junit.gen5.api.extension.ExtensionContext;
@@ -62,9 +61,8 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 	}
 
 	@Override
-	protected String generateDefaultDisplayName(AnnotatedElement element) {
-		Class<?> testClass = (Class<?>) element;
-		return testClass.getSimpleName();
+	protected String generateDefaultDisplayName() {
+		return getTestClass().getSimpleName();
 	}
 
 }

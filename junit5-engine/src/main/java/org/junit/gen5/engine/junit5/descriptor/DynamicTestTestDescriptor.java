@@ -10,22 +10,18 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
-
 import org.junit.gen5.api.DynamicTest;
-import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 
 /**
- * {@link TestDescriptor} for dynamic tests.
+ * {@link TestDescriptor} for a {@link DynamicTest}.
  *
  * @since 5.0
  */
-@API(Internal)
-public class DynamicTestTestDescriptor extends AbstractTestDescriptor {
+class DynamicTestTestDescriptor extends AbstractTestDescriptor {
 
 	private final DynamicTest dynamicTest;
 
