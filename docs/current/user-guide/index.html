@@ -1052,10 +1052,10 @@ methods are now permitted to have parameters. This allows for greater flexibilit
 enables method-level <em>Dependency Injection</em>.</p>
 </div>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java">MethodParameterResolver</a></code> defines the API for test extensions that wish to
-<em>dynamically</em> resolve method parameters at runtime. If a <code>@Test</code>, <code>@BeforeEach</code>,
-<code>@AfterEach</code>, <code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts a parameter, the parameter must
-be resolved at runtime by a registered <code>MethodParameterResolver</code>.</p>
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ParameterResolver.java">ParameterResolver</a></code> defines the API for test extensions that wish to <em>dynamically</em>
+resolve parameters at runtime. If a <code>@Test</code>, <code>@BeforeEach</code>, <code>@AfterEach</code>, <code>@BeforeAll</code>,
+or <code>@AfterAll</code> method accepts a parameter, the parameter must be resolved at runtime by
+a registered <code>ParameterResolver</code>.</p>
 </div>
 <div class="paragraph">
 <p>There are currently two built-in resolvers that are registered automatically.</p>
@@ -1158,7 +1158,7 @@ class TestReporterDemo {
 <div class="ulist">
 <ul>
 <li>
-<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> for an example of a <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java">MethodParameterResolver</a></code>. While not
+<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> for an example of a <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ParameterResolver.java">ParameterResolver</a></code>. While not
 intended to be production-ready, it demonstrates the simplicity and expressiveness of
 both the extension model and the parameter resolution process. <code>MyMockitoTest</code>
 demonstrates how to inject Mockito mocks into <code>@BeforeEach</code> and <code>@Test</code> methods.</p>
@@ -1812,13 +1812,13 @@ initialization methods on the test instance, etc.</p>
 <div class="sect2">
 <h3 id="parameter-resolution">5.5. Parameter Resolution</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/MethodParameterResolver.java">MethodParameterResolver</a></code> is an <code>Extension</code> strategy for dynamically resolving
-method parameters at runtime.</p>
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ParameterResolver.java">ParameterResolver</a></code> defines the <code>Extension</code> API for dynamically resolving
+parameters at runtime.</p>
 </div>
 <div class="paragraph">
 <p>If a <code>@Test</code>, <code>@BeforeEach</code>, <code>@AfterEach</code> , <code>@BeforeAll</code> or <code>@AfterAll</code> method accepts a
-parameter, the parameter must be <em>resolved</em> at runtime by a <code>MethodParameterResolver</code>. A
-<code>MethodParameterResolver</code> can either be built-in (see <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or
+parameter, the parameter must be <em>resolved</em> at runtime by a <code>ParameterResolver</code>. A
+<code>ParameterResolver</code> can either be built-in (see <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or
 <a href="#extension-registration">registered by the user</a>. Generally speaking, parameters may be
 resolved by <em>name</em>, <em>type</em>, <em>annotation</em>, or any combination thereof. For concrete examples,
 consult the source code for <code><a href="https://github.com/junit-team/junit5/blob/master/junit-tests/src/test/java/org/junit/gen5/engine/junit5/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and
@@ -2236,7 +2236,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-05-25 13:50:47 -04:00
+Last updated 2016-05-25 15:58:54 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
