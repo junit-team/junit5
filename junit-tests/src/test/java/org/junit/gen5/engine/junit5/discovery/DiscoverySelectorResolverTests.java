@@ -407,16 +407,16 @@ public class DiscoverySelectorResolverTests {
 
 		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class)));
 		assertTrue(uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.class, "testA()")));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class)));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.class, "testB()")));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class)));
-		assertTrue(
-			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTestCase.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTestCase.class, "testB()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class)));
+		assertTrue(uniqueIds.contains(
+			uniqueIdForMethod(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class, "testC()")));
 	}
 
 	@Test
 	public void nestedTestResolutionFromNestedTestClass() {
-		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.NestedTest.class);
+		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.NestedTestCase.class);
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
 
@@ -424,17 +424,17 @@ public class DiscoverySelectorResolverTests {
 		assertEquals(5, uniqueIds.size());
 
 		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class)));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class)));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.class, "testB()")));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class)));
-		assertTrue(
-			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTestCase.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTestCase.class, "testB()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class)));
+		assertTrue(uniqueIds.contains(
+			uniqueIdForMethod(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class, "testC()")));
 	}
 
 	@Test
 	public void nestedTestResolutionFromUniqueId() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
-			uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class).toString());
+			uniqueIdForClass(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class).toString());
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
 
@@ -442,15 +442,15 @@ public class DiscoverySelectorResolverTests {
 		assertEquals(4, uniqueIds.size());
 
 		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class)));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class)));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class)));
-		assertTrue(
-			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTestCase.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class)));
+		assertTrue(uniqueIds.contains(
+			uniqueIdForMethod(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class, "testC()")));
 	}
 
 	@Test
 	public void doubleNestedTestResolutionFromClass() {
-		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class);
+		ClassSelector selector = ClassSelector.forClass(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class);
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
 
@@ -458,40 +458,41 @@ public class DiscoverySelectorResolverTests {
 		assertEquals(4, uniqueIds.size());
 
 		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class)));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class)));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class)));
-		assertTrue(
-			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTestCase.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class)));
+		assertTrue(uniqueIds.contains(
+			uniqueIdForMethod(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class, "testC()")));
 	}
 
 	@Test
 	public void methodResolutionInDoubleNestedTestClass() throws NoSuchMethodException {
-		MethodSelector selector = MethodSelector.forMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class,
-			TestCaseWithNesting.NestedTest.DoubleNestedTest.class.getDeclaredMethod("testC"));
+		MethodSelector selector = MethodSelector.forMethod(
+			TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class,
+			TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class.getDeclaredMethod("testC"));
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
 
 		assertEquals(4, engineDescriptor.allDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class)));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class)));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.DoubleNestedTest.class)));
-		assertTrue(
-			uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.DoubleNestedTest.class, "testC()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTestCase.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class)));
+		assertTrue(uniqueIds.contains(
+			uniqueIdForMethod(TestCaseWithNesting.NestedTestCase.DoubleNestedTestCase.class, "testC()")));
 	}
 
 	@Test
 	public void nestedTestResolutionFromUniqueIdToMethod() {
 		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(
-			uniqueIdForMethod(TestCaseWithNesting.NestedTest.class, "testB()").toString());
+			uniqueIdForMethod(TestCaseWithNesting.NestedTestCase.class, "testB()").toString());
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
 
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertEquals(3, uniqueIds.size());
 		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.class)));
-		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTest.class)));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTest.class, "testB()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(TestCaseWithNesting.NestedTestCase.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(TestCaseWithNesting.NestedTestCase.class, "testB()")));
 	}
 
 	private TestDescriptor descriptorByUniqueId(UniqueId uniqueId) {
@@ -509,16 +510,13 @@ class MyTestClass {
 
 	@Test
 	void test1() {
-
 	}
 
 	@Test
 	void test2() {
-
 	}
 
 	void notATest() {
-
 	}
 
 	@TestFactory
@@ -531,21 +529,17 @@ class YourTestClass {
 
 	@Test
 	void test3() {
-
 	}
 
 	@Test
 	void test4() {
-
 	}
-
 }
 
 class HerTestClass extends MyTestClass {
 
 	@Test
 	void test7(String param) {
-
 	}
 }
 
@@ -555,14 +549,11 @@ class OtherTestClass {
 
 		@Test
 		void test5() {
-
 		}
 
 		@Test
 		void test6() {
-
 		}
-
 	}
 }
 
@@ -570,26 +561,21 @@ class TestCaseWithNesting {
 
 	@Test
 	void testA() {
-
 	}
 
 	@Nested
-	class NestedTest {
+	class NestedTestCase {
 
 		@Test
 		void testB() {
-
 		}
 
 		@Nested
-		class DoubleNestedTest {
+		class DoubleNestedTestCase {
 
 			@Test
 			void testC() {
-
 			}
-
 		}
-
 	}
 }
