@@ -13,11 +13,12 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.api.Assertions.assertAll;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -30,117 +31,111 @@ import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
+/**
+ * Integration tests for {@link TestFactory @TestFactory} and {@link DynamicTest}.
+ *
+ * @since 5.0
+ */
 class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
-	public void testFactoryMethodsAreCorrectlyDiscoveredForClassSelector() {
+	void testFactoryMethodsAreCorrectlyDiscoveredForClassSelector() {
 		TestDiscoveryRequest request = request().select(forClass(MyDynamicTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
-	public void testFactoryMethodIsCorrectlyDiscoveredForMethodSelector() {
+	void testFactoryMethodIsCorrectlyDiscoveredForMethodSelector() {
 		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "dynamicStream")).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
-	public void dynamicTestsAreExecutedFromStream() {
+	void dynamicTestsAreExecutedFromStream() {
 		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "dynamicStream")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		//dynamic test methods are counted as both container and test
+		// @TestFactory methods are counted as both container and test
 		assertAll( //
-			() -> assertEquals(3L, eventRecorder.getContainerStartedCount(), "# container started"),
-			() -> assertEquals(2L, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
-			() -> assertEquals(3L, eventRecorder.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(3L, eventRecorder.getContainerFinishedCount(), "# container finished"));
+			() -> assertEquals(3, eventRecorder.getContainerStartedCount(), "# container started"),
+			() -> assertEquals(2, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
+			() -> assertEquals(3, eventRecorder.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed"),
+			() -> assertEquals(3, eventRecorder.getContainerFinishedCount(), "# container finished"));
 	}
 
 	@Test
-	public void dynamicTestsAreExecutedFromCollection() {
+	void dynamicTestsAreExecutedFromCollection() {
 		TestDiscoveryRequest request = request().select(
 			forMethod(MyDynamicTestCase.class, "dynamicCollection")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		//dynamic test methods are counted as both container and test
+		// @TestFactory methods are counted as both container and test
 		assertAll( //
-			() -> assertEquals(3L, eventRecorder.getContainerStartedCount(), "# container started"),
-			() -> assertEquals(2L, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
-			() -> assertEquals(3L, eventRecorder.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(3L, eventRecorder.getContainerFinishedCount(), "# container finished"));
+			() -> assertEquals(3, eventRecorder.getContainerStartedCount(), "# container started"),
+			() -> assertEquals(2, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
+			() -> assertEquals(3, eventRecorder.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed"),
+			() -> assertEquals(3, eventRecorder.getContainerFinishedCount(), "# container finished"));
 	}
 
 	@Test
-	public void dynamicTestsAreExecutedFromIterator() {
+	void dynamicTestsAreExecutedFromIterator() {
 		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "dynamicIterator")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		//dynamic test methods are counted as both container and test
+		// @TestFactory methods are counted as both container and test
 		assertAll( //
-			() -> assertEquals(3L, eventRecorder.getContainerStartedCount(), "# container started"),
-			() -> assertEquals(2L, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
-			() -> assertEquals(3L, eventRecorder.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(3L, eventRecorder.getContainerFinishedCount(), "# container finished"));
+			() -> assertEquals(3, eventRecorder.getContainerStartedCount(), "# container started"),
+			() -> assertEquals(2, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
+			() -> assertEquals(3, eventRecorder.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed"),
+			() -> assertEquals(3, eventRecorder.getContainerFinishedCount(), "# container finished"));
 	}
 
 	@Test
-	public void dynamicTestsAreExecutedFromIterable() {
+	void dynamicTestsAreExecutedFromIterable() {
 		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "dynamicIterable")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		//dynamic test methods are counted as both container and test
+		// @TestFactory methods are counted as both container and test
 		assertAll( //
-			() -> assertEquals(3L, eventRecorder.getContainerStartedCount(), "# container started"),
-			() -> assertEquals(2L, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
-			() -> assertEquals(3L, eventRecorder.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(3L, eventRecorder.getContainerFinishedCount(), "# container finished"));
+			() -> assertEquals(3, eventRecorder.getContainerStartedCount(), "# container started"),
+			() -> assertEquals(2, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
+			() -> assertEquals(3, eventRecorder.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed"),
+			() -> assertEquals(3, eventRecorder.getContainerFinishedCount(), "# container finished"));
 	}
 
 	private static class MyDynamicTestCase {
 
-		@TestFactory
-		Stream<DynamicTest> dynamicStream() {
-			List<DynamicTest> tests = new ArrayList<>();
-
-			tests.add(new DynamicTest("succeedingTest", () -> assertTrue(true, "succeeding")));
-			tests.add(new DynamicTest("failingTest", () -> assertTrue(false, "failing")));
-
-			return tests.stream();
-		}
+		private static final List<DynamicTest> list = Arrays.asList(
+			new DynamicTest("succeedingTest", () -> assertTrue(true, "succeeding")),
+			new DynamicTest("failingTest", () -> fail("failing")));
 
 		@TestFactory
 		Collection<DynamicTest> dynamicCollection() {
-			List<DynamicTest> tests = new ArrayList<>();
+			return list;
+		}
 
-			tests.add(new DynamicTest("succeedingTest", () -> assertTrue(true, "succeeding")));
-			tests.add(new DynamicTest("failingTest", () -> assertTrue(false, "failing")));
-
-			return tests;
+		@TestFactory
+		Stream<DynamicTest> dynamicStream() {
+			return list.stream();
 		}
 
 		@TestFactory
 		Iterator<DynamicTest> dynamicIterator() {
-			List<DynamicTest> tests = new ArrayList<>();
-
-			tests.add(new DynamicTest("succeedingTest", () -> assertTrue(true, "succeeding")));
-			tests.add(new DynamicTest("failingTest", () -> assertTrue(false, "failing")));
-
-			return tests.iterator();
+			return list.iterator();
 		}
 
 		@TestFactory
