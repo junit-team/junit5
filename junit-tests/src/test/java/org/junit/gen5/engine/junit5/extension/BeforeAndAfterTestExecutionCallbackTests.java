@@ -51,11 +51,11 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJUnit5Test
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
 
 		// @formatter:off
 		assertEquals(asList(
@@ -92,11 +92,11 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJUnit5Test
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
 
 		// @formatter:off
 		assertEquals(asList(

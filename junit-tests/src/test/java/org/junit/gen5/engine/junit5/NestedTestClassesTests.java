@@ -43,12 +43,12 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 	public void nestedTestsAreExecuted() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithNesting.class);
 
-		assertEquals(3L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(3, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(3L, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(3L, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(3, eventRecorder.getContainerStartedCount(), "# containers started");
+		assertEquals(3, eventRecorder.getContainerFinishedCount(), "# containers finished");
 	}
 
 	@Test
@@ -62,12 +62,12 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 	public void doublyNestedTestsAreExecuted() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithDoubleNesting.class);
 
-		assertEquals(5L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(3L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(2L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(5, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(3, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(2, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(4L, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(4L, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(4, eventRecorder.getContainerStartedCount(), "# containers started");
+		assertEquals(4, eventRecorder.getContainerFinishedCount(), "# containers finished");
 
 		assertAll("before each counts", //
 			() -> assertEquals(5, TestCaseWithDoubleNesting.beforeTopCount),

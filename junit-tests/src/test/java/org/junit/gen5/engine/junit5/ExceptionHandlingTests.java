@@ -53,8 +53,8 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getFailedTestFinishedEvents(), //
 			event(test("failingTest"),
@@ -69,8 +69,8 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getFailedTestFinishedEvents(), //
 			event(test("testWithUncheckedException"),
@@ -85,8 +85,8 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getFailedTestFinishedEvents(), //
 			event(test("testWithCheckedException"),
@@ -103,8 +103,8 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getFailedTestFinishedEvents(),
 			event(test("succeedingTest"), finishedWithFailure(allOf(isA(IOException.class), message("checked")))));
@@ -120,8 +120,8 @@ public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getFailedTestFinishedEvents(),
 			event(test("succeedingTest"), finishedWithFailure(allOf(isA(IOException.class), message("checked")))));

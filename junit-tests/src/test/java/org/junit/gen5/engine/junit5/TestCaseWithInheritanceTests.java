@@ -23,7 +23,7 @@ import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
- * Testing execution in test case hierarchy {@link JUnit5TestEngine}.
+ * Integration tests for test class hierarchy support in the {@link JUnit5TestEngine}.
  *
  * @since 5.0
  */
@@ -43,11 +43,11 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(LocalTestCase.class);
 
-		assertEquals(6L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(3L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(1L, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(2L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(6, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(3, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(1, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(2, eventRecorder.getTestFailedCount(), "# tests failed");
 
 		assertEquals(6, LocalTestCase.countBeforeInvoked, "# before calls");
 		assertEquals(6, LocalTestCase.countAfterInvoked, "# after calls");
@@ -61,11 +61,11 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
@@ -74,11 +74,11 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
 
 		assertEquals(1, LocalTestCase.countBeforeInvoked, "# after calls");
 		assertEquals(1, LocalTestCase.countAfterInvoked, "# after calls");
@@ -94,11 +94,11 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(0L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0L, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0L, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(1L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(0, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
 	}
 
 	// -------------------------------------------------------------------
@@ -172,4 +172,5 @@ public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests 
 			fail("#fail");
 		}
 	}
+
 }

@@ -38,8 +38,8 @@ class BeforeAllAndAfterAllComposedAnnotationTests extends AbstractJUnit5TestEngi
 	void beforeAllAndAfterAllAsMetaAnnotations() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCase.class);
 
-		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 		assertEquals(asList("beforeAll", "test", "afterAll"), methodsInvoked);
 	}
 

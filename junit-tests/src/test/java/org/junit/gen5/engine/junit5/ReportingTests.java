@@ -36,11 +36,11 @@ public class ReportingTests extends AbstractJUnit5TestEngineTests {
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(2L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0L, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(6L, eventRecorder.getReportingEntryPublishedCount(), "# report entries published");
+		assertEquals(6, eventRecorder.getReportingEntryPublishedCount(), "# report entries published");
 	}
 
 	static class MyReportingTestCase {

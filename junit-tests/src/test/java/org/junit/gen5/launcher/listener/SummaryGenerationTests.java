@@ -29,6 +29,9 @@ import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.gen5.launcher.listeners.SummaryGeneratingListener;
 
+/**
+ * @since 5.0
+ */
 class SummaryGenerationTests {
 
 	SummaryGeneratingListener listener = new SummaryGeneratingListener();
@@ -39,7 +42,7 @@ class SummaryGenerationTests {
 		listener.testPlanExecutionStarted(testPlan);
 		listener.testPlanExecutionFinished(testPlan);
 
-		assertEquals(0L, listener.getSummary().countFailedTests());
+		assertEquals(0, listener.getSummary().countFailedTests());
 
 		String summaryString = summaryAsString();
 		assertAll("summary", //
@@ -103,7 +106,7 @@ class SummaryGenerationTests {
 		listener.testPlanExecutionFinished(testPlan);
 
 		// An aborted test is not a failure
-		assertEquals(1L, listener.getSummary().countFailedTests());
+		assertEquals(1, listener.getSummary().countFailedTests());
 
 		String failuresString = failuresAsString();
 		assertAll("failures", //
@@ -132,4 +135,5 @@ class SummaryGenerationTests {
 		listener.getSummary().printFailuresOn(new PrintWriter(failuresWriter));
 		return failuresWriter.toString();
 	}
+
 }

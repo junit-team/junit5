@@ -32,8 +32,8 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 		TestDiscoveryRequest request = request().select(forClass(DisabledTestClassTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(1L, eventRecorder.getContainerSkippedCount(), "# container skipped");
-		assertEquals(0L, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getContainerSkippedCount(), "# container skipped");
+		assertEquals(0, eventRecorder.getTestStartedCount(), "# tests started");
 	}
 
 	@Test
@@ -41,9 +41,9 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 		TestDiscoveryRequest request = request().select(forClass(DisabledTestMethodsTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(1L, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1L, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1L, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, eventRecorder.getTestSkippedCount(), "# tests skipped");
 	}
 
 	// -------------------------------------------------------------------
