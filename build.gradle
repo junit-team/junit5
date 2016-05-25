@@ -11,7 +11,7 @@ buildscript {
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
 		classpath 'org.ajoberstar:gradle-git:1.4.2'
 		classpath 'org.junit:junit-gradle:5.0.0-SNAPSHOT'
-		classpath 'net.nemerosa:versioning:1.7.1'
+		classpath 'net.nemerosa:versioning:2.0.0'
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
 	}
 }
