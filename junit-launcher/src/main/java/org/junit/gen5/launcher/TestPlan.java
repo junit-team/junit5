@@ -13,6 +13,7 @@ package org.junit.gen5.launcher;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -56,6 +57,11 @@ public final class TestPlan {
 	private final Map<String, LinkedHashSet<TestIdentifier>> children = new LinkedHashMap<>();
 	private final Map<String, TestIdentifier> allIdentifiers = new LinkedHashMap<>();
 
+	/**
+	 * Constructs a new {@code TestPlan} from a collection of
+	 * {@linkplain TestDescriptor test descriptors}.
+	 */
+	@API(Internal)
 	public static TestPlan from(Collection<TestDescriptor> engineDescriptors) {
 		TestPlan testPlan = new TestPlan();
 		Visitor visitor = descriptor -> testPlan.add(TestIdentifier.from(descriptor));

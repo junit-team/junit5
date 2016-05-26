@@ -12,6 +12,7 @@ package org.junit.gen5.launcher;
 
 import static java.util.Collections.unmodifiableSet;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import java.io.Serializable;
 import java.util.LinkedHashSet;
@@ -48,8 +49,8 @@ public final class TestIdentifier implements Serializable {
 	/**
 	 * Factory for creating a new {@link TestIdentifier} from a {@link TestDescriptor}.
 	 */
+	@API(Internal)
 	public static TestIdentifier from(TestDescriptor testDescriptor) {
-		// TODO Use Flyweight Pattern for TestIdentifier?
 		String uniqueId = testDescriptor.getUniqueId().toString();
 		String displayName = testDescriptor.getDisplayName();
 		Optional<TestSource> source = testDescriptor.getSource();
