@@ -70,24 +70,36 @@ public final class TestDiscoveryRequestBuilder {
 	private List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
 	private Map<String, String> configurationParameters = new HashMap<>();
 
+	/**
+	 * Returns a new {@link TestDiscoveryRequestBuilder}.
+	 */
 	public static TestDiscoveryRequestBuilder request() {
 		return new TestDiscoveryRequestBuilder();
 	}
 
-	public TestDiscoveryRequestBuilder select(DiscoverySelector... elements) {
-		if (elements != null) {
-			select(Arrays.asList(elements));
+	/**
+	 * Adds all of the supplied {@code selectors} to the request.
+	 */
+	public TestDiscoveryRequestBuilder select(DiscoverySelector... selectors) {
+		if (selectors != null) {
+			select(Arrays.asList(selectors));
 		}
 		return this;
 	}
 
-	public TestDiscoveryRequestBuilder select(List<DiscoverySelector> elements) {
-		if (elements != null) {
-			this.selectors.addAll(elements);
+	/**
+	 * Adds all of the supplied {@code selectors} to the request.
+	 */
+	public TestDiscoveryRequestBuilder select(List<DiscoverySelector> selectors) {
+		if (selectors != null) {
+			this.selectors.addAll(selectors);
 		}
 		return this;
 	}
 
+	/**
+	 * Adds all of the supplied {@code filters} to the request.
+	 */
 	public TestDiscoveryRequestBuilder filter(Filter<?>... filters) {
 		if (filters != null) {
 			Arrays.stream(filters).forEach(this::storeFilter);
@@ -95,12 +107,18 @@ public final class TestDiscoveryRequestBuilder {
 		return this;
 	}
 
+	/**
+	 * Adds the supplied <em>configuration parameter</em> to the request.
+	 */
 	public TestDiscoveryRequestBuilder configurationParameter(String key, String value) {
 		Preconditions.notBlank(key, "configuration parameter key must not be null or empty");
 		this.configurationParameters.put(key, value);
 		return this;
 	}
 
+	/**
+	 * Adds all of the supplied {@code configurationParameters} to the request.
+	 */
 	public TestDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
 		if (configurationParameters != null) {
 			configurationParameters.forEach(this::configurationParameter);
@@ -125,6 +143,10 @@ public final class TestDiscoveryRequestBuilder {
 		}
 	}
 
+	/**
+	 * Builds and returns the {@link TestDiscoveryRequest} that has previously
+	 * been setup by the methods of this builder.
+	 */
 	public TestDiscoveryRequest build() {
 		DiscoveryRequest discoveryRequest = new DiscoveryRequest();
 		discoveryRequest.addSelectors(this.selectors);
