@@ -14,6 +14,7 @@ import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.data.Index.atIndex;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
+import static org.junit.gen5.engine.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
 import static org.junit.gen5.engine.ExecutionEvent.Type.FINISHED;
 import static org.junit.gen5.engine.ExecutionEvent.Type.SKIPPED;
 import static org.junit.gen5.engine.ExecutionEvent.Type.STARTED;
@@ -65,6 +66,10 @@ public class ExecutionEventConditions {
 		return allOf(test(), uniqueIdSubstring(uniqueIdSubstring));
 	}
 
+	public static Condition<ExecutionEvent> test(String uniqueIdSubstring, String displayName) {
+		return allOf(test(), uniqueIdSubstring(uniqueIdSubstring), displayName(displayName));
+	}
+
 	public static Condition<ExecutionEvent> test() {
 		return new Condition<>(byTestDescriptor(TestDescriptor::isTest), "is a test");
 	}
@@ -81,11 +86,20 @@ public class ExecutionEventConditions {
 		return new Condition<>(byTestDescriptor(TestDescriptor::isContainer), "is a container");
 	}
 
+	public static Condition<ExecutionEvent> dynamicTestRegistered(String uniqueIdSubstring) {
+		return allOf(type(DYNAMIC_TEST_REGISTERED), uniqueIdSubstring(uniqueIdSubstring));
+	}
+
 	public static Condition<ExecutionEvent> uniqueIdSubstring(String uniqueIdSubstring) {
 		return new Condition<>(
 			byTestDescriptor(where(testDescriptor -> testDescriptor.getUniqueId().toString(),
 				uniqueId -> uniqueId.contains(uniqueIdSubstring))),
 			"descriptor with uniqueId substring \"%s\"", uniqueIdSubstring);
+	}
+
+	public static Condition<ExecutionEvent> displayName(String displayName) {
+		return new Condition<>(byTestDescriptor(where(TestDescriptor::getDisplayName, isEqual(displayName))),
+			"descriptor with display name \"%s\"", displayName);
 	}
 
 	public static Condition<ExecutionEvent> skippedWithReason(String expectedReason) {

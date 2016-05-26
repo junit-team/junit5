@@ -14,6 +14,16 @@ import static org.junit.gen5.api.Assertions.assertAll;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.fail;
+import static org.junit.gen5.engine.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.gen5.engine.ExecutionEventConditions.container;
+import static org.junit.gen5.engine.ExecutionEventConditions.dynamicTestRegistered;
+import static org.junit.gen5.engine.ExecutionEventConditions.engine;
+import static org.junit.gen5.engine.ExecutionEventConditions.event;
+import static org.junit.gen5.engine.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.gen5.engine.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.gen5.engine.ExecutionEventConditions.started;
+import static org.junit.gen5.engine.ExecutionEventConditions.test;
+import static org.junit.gen5.engine.TestExecutionResultConditions.message;
 import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
 import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
@@ -58,14 +68,19 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		// @TestFactory methods are counted as both container and test
-		assertAll( //
-			() -> assertEquals(3, eventRecorder.getContainerStartedCount(), "# container started"),
-			() -> assertEquals(2, eventRecorder.getDynamicTestRegisteredCount(), "# dynamic registered"),
-			() -> assertEquals(3, eventRecorder.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(3, eventRecorder.getContainerFinishedCount(), "# container finished"));
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(MyDynamicTestCase.class), started()), //
+			event(container("dynamicStream"), started()), //
+			event(dynamicTestRegistered("dynamic-test:%1")), //
+			event(test("dynamic-test:%1", "succeedingTest"), started()), //
+			event(test("dynamic-test:%1", "succeedingTest"), finishedSuccessfully()), //
+			event(dynamicTestRegistered("dynamic-test:%2")), //
+			event(test("dynamic-test:%2", "failingTest"), started()), //
+			event(test("dynamic-test:%2", "failingTest"), finishedWithFailure(message("failing"))), //
+			event(container("dynamicStream"), finishedSuccessfully()), //
+			event(container(MyDynamicTestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
