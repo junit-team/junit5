@@ -24,9 +24,11 @@ import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 
 /**
+ * Summary of test execution.
+ *
  * @since 5.0
+ * @see SummaryGeneratingListener
  */
-// TODO Design a real interface for TestExecutionSummary and make it threadsafe.
 @API(Experimental)
 public class TestExecutionSummary {
 
@@ -41,52 +43,59 @@ public class TestExecutionSummary {
 	long timeFinished;
 
 	private final TestPlan testPlan;
-	private String message;
-	private List<Failure> failures = new ArrayList<>();
+	private final List<Failure> failures = new ArrayList<>();
 
-	public TestExecutionSummary(TestPlan testPlan) {
+	TestExecutionSummary(TestPlan testPlan) {
 		this.testPlan = testPlan;
 	}
 
-	void finishTestRun(String message) {
-		this.timeFinished = System.currentTimeMillis();
-		this.message = message;
-	}
-
+	/**
+	 * Prints the summary to the supplied {@link PrintWriter}.
+	 *
+	 * This method does not print failure messages.
+	 *
+	 * @see #printFailuresOn
+	 */
 	public void printOn(PrintWriter writer) {
 
 		// @formatter:off
 		writer.println(String.format(
-			"%n%s after %d ms\n"
+			"%nTest run finished after %d ms\n"
 			+ "[%10d tests found     ]\n"
 			+ "[%10d tests skipped   ]\n"
 			+ "[%10d tests started   ]\n"
 			+ "[%10d tests aborted   ]\n"
 			+ "[%10d tests successful]\n"
 			+ "[%10d tests failed    ]\n",
-			this.message, (this.timeFinished - this.timeStarted), this.testsFound.get(), this.testsSkipped.get(),
+			(this.timeFinished - this.timeStarted), this.testsFound.get(), this.testsSkipped.get(),
 			this.testsStarted.get(), this.testsAborted.get(), this.testsSucceeded.get(), this.testsFailed.get()));
 		// @formatter:on
 
 		writer.flush();
 	}
 
+	/**
+	 * Prints failed tests including source and exception message to the
+	 * supplied {@link PrintWriter}.
+	 */
 	public void printFailuresOn(PrintWriter writer) {
-
 		if (countFailedTests() > 0) {
 			writer.println();
 			writer.println(String.format("Test failures (%d):", testsFailed.get()));
 			failures.forEach(failure -> {
-				// TODO Add source description to text
-				writer.println(String.format("  %s", describeTest(failure.getTestIdentifier())));
-				failure.getTestIdentifier().getSource().ifPresent(scource -> {
-					writer.println(String.format("    %s", scource.toString()));
-				});
-				writer.println(String.format("    => Exception: %s", failure.getException().getLocalizedMessage()));
+				writer.println("  " + describeTest(failure.getTestIdentifier()));
+				failure.getTestIdentifier().getSource().ifPresent(source -> writer.println("    " + source));
+				writer.println("    => Exception: " + failure.getException().getLocalizedMessage());
 			});
+			writer.flush();
 		}
+	}
 
-		writer.flush();
+	/**
+	 * Returns the number of failed tests.
+	 */
+	public long countFailedTests() {
+		return testsFailed.get();
 	}
 
 	private String describeTest(TestIdentifier testIdentifier) {
@@ -102,20 +111,16 @@ public class TestExecutionSummary {
 		});
 	}
 
-	public long countFailedTests() {
-		return testsFailed.get();
-	}
-
-	public void addFailure(TestIdentifier testIdentifier, Throwable throwable) {
+	void addFailure(TestIdentifier testIdentifier, Throwable throwable) {
 		failures.add(new Failure(testIdentifier, throwable));
 	}
 
-	static class Failure {
+	private static class Failure {
 
 		private final TestIdentifier testIdentifier;
 		private final Throwable exception;
 
-		public Failure(TestIdentifier testIdentifier, Throwable exception) {
+		Failure(TestIdentifier testIdentifier, Throwable exception) {
 			this.testIdentifier = testIdentifier;
 			this.exception = exception;
 		}

@@ -54,7 +54,7 @@ public class SummaryGeneratingListener implements TestExecutionListener {
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
-		summary.finishTestRun("Test run finished");
+		summary.timeFinished = System.currentTimeMillis();
 	}
 
 	@Override
