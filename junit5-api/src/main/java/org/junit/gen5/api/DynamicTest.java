@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
  * A {@code DynamicTest} is a test case generated at runtime.
@@ -59,8 +60,13 @@ public class DynamicTest {
 		return this.executable;
 	}
 
-	public static <T extends Object> Stream<DynamicTest> streamFrom(Iterator<T> generator,
-			Function<T, String> displayNameSupplier, Consumer<T> assertion) {
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("displayName", displayName).toString();
+	}
+
+	public static <T> Stream<DynamicTest> streamFrom(Iterator<T> generator,
+			Function<? super T, String> displayNameSupplier, Consumer<? super T> assertion) {
 
 		Stream<T> targetStream = StreamSupport.stream(
 			Spliterators.spliteratorUnknownSize(generator, Spliterator.ORDERED), false);
