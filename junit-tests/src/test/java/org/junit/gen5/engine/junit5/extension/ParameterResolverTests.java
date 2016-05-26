@@ -21,13 +21,9 @@ import static org.junit.gen5.engine.ExecutionEventConditions.finishedWithFailure
 import static org.junit.gen5.engine.ExecutionEventConditions.test;
 import static org.junit.gen5.engine.TestExecutionResultConditions.isA;
 import static org.junit.gen5.engine.TestExecutionResultConditions.message;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.AfterEach;
@@ -37,7 +33,6 @@ import org.junit.gen5.api.DisplayName;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.ParameterResolver;
 import org.junit.gen5.engine.ExecutionEventRecorder;
@@ -165,21 +160,6 @@ class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
 		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
 		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
-	}
-
-	@Test
-	void constructorInjectionProofOfConcept() {
-		ExtensionContext extensionContext = mock(ExtensionContext.class);
-		ExtensionRegistry extensionRegistry = mock(ExtensionRegistry.class);
-
-		when(extensionRegistry.stream(ParameterResolver.class)).thenReturn(Stream.of(new TestInfoParameterResolver()));
-
-		Constructor<?> constructor = ConstructorInjectionTestCase.class.getDeclaredConstructors()[0];
-
-		Object instance = new ConstructorInvoker(extensionContext, extensionRegistry).invoke(constructor);
-
-		assertNotNull(instance);
-		assertTrue(instance instanceof ConstructorInjectionTestCase);
 	}
 
 	// -------------------------------------------------------------------
@@ -329,15 +309,6 @@ class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 		void testMethodWithExtensionAnnotation(CustomType customType, @CustomAnnotation String value) {
 			assertNotNull(customType);
 			assertNotNull(value);
-		}
-	}
-
-	private static class ConstructorInjectionTestCase {
-
-		@SuppressWarnings("unused")
-		ConstructorInjectionTestCase(TestInfo testInfo) {
-			// Cannot check the contents of TestInfo since they are not populated in this scenario.
-			assertNotNull(testInfo);
 		}
 	}
 

@@ -15,7 +15,6 @@ import static org.junit.gen5.engine.junit5.descriptor.LifecycleMethodUtils.findA
 import static org.junit.gen5.engine.junit5.descriptor.LifecycleMethodUtils.findAfterEachMethods;
 import static org.junit.gen5.engine.junit5.descriptor.LifecycleMethodUtils.findBeforeAllMethods;
 import static org.junit.gen5.engine.junit5.descriptor.LifecycleMethodUtils.findBeforeEachMethods;
-import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -40,8 +39,8 @@ import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.execution.AfterEachMethodAdapter;
 import org.junit.gen5.engine.junit5.execution.BeforeEachMethodAdapter;
 import org.junit.gen5.engine.junit5.execution.ConditionEvaluator;
+import org.junit.gen5.engine.junit5.execution.ExecutableInvoker;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
-import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
 import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
@@ -193,15 +192,15 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	private void invokeBeforeAllMethods(ExtensionRegistry registry, ContainerExtensionContext context) {
-		this.beforeAllMethods.forEach(method -> executeAndMaskThrowable(
-			() -> new MethodInvoker(context, registry).invoke(methodInvocationContext(null, method))));
+		this.beforeAllMethods.forEach(
+			method -> executeAndMaskThrowable(() -> new ExecutableInvoker(context, registry).invoke(method)));
 	}
 
 	private void invokeAfterAllMethods(ExtensionRegistry registry, ContainerExtensionContext context,
 			ThrowableCollector throwableCollector) {
 
-		this.afterAllMethods.forEach(method -> throwableCollector.execute(
-			() -> new MethodInvoker(context, registry).invoke(methodInvocationContext(null, method))));
+		this.afterAllMethods.forEach(
+			method -> throwableCollector.execute(() -> new ExecutableInvoker(context, registry).invoke(method)));
 	}
 
 	private void invokeAfterAllCallbacks(ExtensionRegistry registry, ContainerExtensionContext context,
@@ -240,7 +239,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			method.getDeclaringClass()).orElseThrow(
 				() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
 
-		new MethodInvoker(context, registry).invoke(methodInvocationContext(instance, method));
+		new ExecutableInvoker(context, registry).invoke(method, instance);
 	}
 
 	@Override

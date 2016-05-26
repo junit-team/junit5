@@ -12,7 +12,6 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
-import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -35,9 +34,8 @@ import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.execution.AfterEachMethodAdapter;
 import org.junit.gen5.engine.junit5.execution.BeforeEachMethodAdapter;
 import org.junit.gen5.engine.junit5.execution.ConditionEvaluator;
+import org.junit.gen5.engine.junit5.execution.ExecutableInvoker;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
-import org.junit.gen5.engine.junit5.execution.MethodInvocationContext;
-import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 import org.junit.gen5.engine.support.descriptor.JavaMethodSource;
@@ -178,10 +176,10 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 			ThrowableCollector throwableCollector) {
 
 		throwableCollector.execute(() -> {
-			MethodInvocationContext methodInvocationContext = methodInvocationContext(
-				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod().get());
 			try {
-				new MethodInvoker(testExtensionContext, context.getExtensionRegistry()).invoke(methodInvocationContext);
+				Method method = testExtensionContext.getTestMethod().get();
+				Object instance = testExtensionContext.getTestInstance();
+				new ExecutableInvoker(testExtensionContext, context.getExtensionRegistry()).invoke(method, instance);
 			}
 			catch (Throwable throwable) {
 				invokeTestExecutionExceptionHandlers(context.getExtensionRegistry(), testExtensionContext, throwable);

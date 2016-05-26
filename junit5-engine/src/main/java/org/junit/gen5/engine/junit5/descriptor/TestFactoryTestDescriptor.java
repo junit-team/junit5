@@ -11,7 +11,6 @@
 package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
-import static org.junit.gen5.engine.junit5.execution.MethodInvocationContextFactory.methodInvocationContext;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -30,9 +29,8 @@ import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.UniqueId;
+import org.junit.gen5.engine.junit5.execution.ExecutableInvoker;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
-import org.junit.gen5.engine.junit5.execution.MethodInvocationContext;
-import org.junit.gen5.engine.junit5.execution.MethodInvoker;
 import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
 import org.junit.gen5.engine.support.hierarchical.SingleTestExecutor;
 
@@ -69,11 +67,12 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 		EngineExecutionListener listener = context.getExecutionListener();
 
 		throwableCollector.execute(() -> {
-			MethodInvocationContext methodInvocationContext = methodInvocationContext(
-				testExtensionContext.getTestInstance(), testExtensionContext.getTestMethod().get());
+			Method method = testExtensionContext.getTestMethod().get();
+			Object instance = testExtensionContext.getTestInstance();
+			ExecutableInvoker methodInvoker = new ExecutableInvoker(testExtensionContext,
+				context.getExtensionRegistry());
+			Object testFactoryMethodResult = methodInvoker.invoke(method, instance);
 
-			MethodInvoker methodInvoker = new MethodInvoker(testExtensionContext, context.getExtensionRegistry());
-			Object testFactoryMethodResult = methodInvoker.invoke(methodInvocationContext);
 			Stream<? extends DynamicTest> dynamicTestStream = toDynamicTestStream(testExtensionContext,
 				testFactoryMethodResult);
 

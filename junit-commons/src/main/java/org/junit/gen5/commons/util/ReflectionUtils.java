@@ -168,6 +168,7 @@ public final class ReflectionUtils {
 	 * @param clazz the class to instantiate; never {@code null}
 	 * @param args the arguments to pass to the constructor none of which may be {@code null}
 	 * @return the new instance
+	 * @see #newInstance(Constructor, Object...)
 	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
 	public static <T> T newInstance(Class<T> clazz, Object... args) {
@@ -176,8 +177,32 @@ public final class ReflectionUtils {
 
 		try {
 			Class<?>[] parameterTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
-			Constructor<T> constructor = makeAccessible(clazz.getDeclaredConstructor(parameterTypes));
-			return constructor.newInstance(args);
+			return newInstance(clazz.getDeclaredConstructor(parameterTypes), args);
+		}
+		catch (Throwable t) {
+			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
+		}
+	}
+
+	/**
+	 * Create a new instance of type {@code T} by invoking the supplied constructor
+	 * with the supplied arguments.
+	 *
+	 * <p>The constructor will be made accessible if necessary, and any checked
+	 * exception will be {@linkplain ExceptionUtils#throwAsUncheckedException masked}
+	 * as an unchecked exception.
+	 *
+	 * @param constructor the constructor to invoke; never {@code null}
+	 * @param args the arguments to pass to the constructor
+	 * @return the new instance; never {@code null}
+	 * @see #newInstance(Class, Object...)
+	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
+	 */
+	public static <T> T newInstance(Constructor<T> constructor, Object... args) {
+		Preconditions.notNull(constructor, "constructor must not be null");
+
+		try {
+			return makeAccessible(constructor).newInstance(args);
 		}
 		catch (Throwable t) {
 			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));

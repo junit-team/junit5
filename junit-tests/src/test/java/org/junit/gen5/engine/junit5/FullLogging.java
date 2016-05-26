@@ -34,7 +34,7 @@ import org.junit.gen5.commons.util.PreconditionViolationException;
  *
  * <h3>Example Usage</h3>
  * <pre style="code">
- * {@literal @}FullLogging(MethodInvoker.class)
+ * {@literal @}FullLogging(ExecutableInvoker.class)
  * class MyTestClass { ... }
  * </pre>
  *

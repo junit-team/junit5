@@ -11,11 +11,14 @@
 package org.junit.gen5.engine.junit5.execution;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.api.Assertions.assertSame;
 import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.math.BigDecimal;
@@ -26,20 +29,36 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.ParameterResolver;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 
 /**
- * Unit tests for {@link MethodInvoker}.
+ * Unit tests for {@link ExecutableInvoker}.
  *
  * @since 5.0
  */
-// @FullLogging(MethodInvoker.class)
-class MethodInvokerTests {
+// @FullLogging(ExecutableInvoker.class)
+class ExecutableInvokerTests {
+
+	private static final String ENIGMA = "enigma";
 
 	private final MethodSource instance = mock(MethodSource.class);
-	private MethodInvocationContext methodInvocationContext;
+	private Method method;
+
+	private final ExtensionContext extensionContext = mock(ExtensionContext.class);
 	private ExtensionRegistry extensionRegistry = ExtensionRegistry.createEmptyRegistry();
-	private ExtensionContext extensionContext = null;
+
+	@Test
+	void constructorInjection() throws Exception {
+		Class<ConstructorInjectionTestCase> testClass = ConstructorInjectionTestCase.class;
+		Constructor<ConstructorInjectionTestCase> constructor = testClass.getDeclaredConstructor(String.class);
+
+		register(new StringParameterResolver());
+		ConstructorInjectionTestCase testCase = newInvoker().invoke(constructor);
+
+		assertNotNull(testCase);
+		assertEquals(ENIGMA, testCase.str);
+	}
 
 	@Test
 	void invokingMethodsWithoutParameterDoesNotDependOnExtensions() throws Exception {
@@ -85,7 +104,6 @@ class MethodInvokerTests {
 	@Test
 	void passContextInformationToParameterResolverMethods() {
 		anyTestMethodWithAtLeasOneParameter();
-		this.extensionContext = mock(ExtensionContext.class);
 		ArgumentRecordingParameterResolver extension = new ArgumentRecordingParameterResolver();
 		register(extension);
 
@@ -208,10 +226,6 @@ class MethodInvokerTests {
 		register(ConfigurableParameterResolver.withoutSupport());
 	}
 
-	private void register(ParameterResolver extension) {
-		extensionRegistry.registerExtension(extension, this);
-	}
-
 	private void anyTestMethodWithAtLeasOneParameter() {
 		testMethodWithASingleStringParameter();
 	}
@@ -228,28 +242,20 @@ class MethodInvokerTests {
 		testMethodWith("primitiveParameterInt", int.class);
 	}
 
-	private void invokeMethod() {
-		new MethodInvoker(extensionContext, extensionRegistry).invoke(methodInvocationContext);
+	private void testMethodWith(String methodName, Class<?>... parameterTypes) {
+		this.method = ReflectionUtils.findMethod(this.instance.getClass(), methodName, parameterTypes).get();
 	}
 
-	private void testMethodWith(final String methodName, Class<?>... parameterTypes) {
-		methodInvocationContext = new MethodInvocationContext() {
+	private void register(ParameterResolver extension) {
+		extensionRegistry.registerExtension(extension, this);
+	}
 
-			@Override
-			public Object getInstance() {
-				return instance;
-			}
+	private ExecutableInvoker newInvoker() {
+		return new ExecutableInvoker(extensionContext, extensionRegistry);
+	}
 
-			@Override
-			public Method getMethod() {
-				try {
-					return instance.getClass().getDeclaredMethod(methodName, parameterTypes);
-				}
-				catch (NoSuchMethodException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		};
+	private void invokeMethod() {
+		newInvoker().invoke(this.method, this.instance);
 	}
 
 	// -------------------------------------------------------------------------
@@ -313,14 +319,12 @@ class MethodInvokerTests {
 		}
 
 		@Override
-		public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext)
-				throws ParameterResolutionException {
+		public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
 			return supports.apply(parameter);
 		}
 
 		@Override
-		public Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext)
-				throws ParameterResolutionException {
+		public Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
 			return resolve.apply(parameter);
 		}
 	}
@@ -334,6 +338,29 @@ class MethodInvokerTests {
 		void primitiveParameterInt(int parameter);
 
 		void multipleParameters(String first, String second, String third);
+	}
+
+	private static class StringParameterResolver implements ParameterResolver {
+
+		@Override
+		public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
+			return parameter.getType() == String.class;
+		}
+
+		@Override
+		public Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
+			return ENIGMA;
+		}
+	}
+
+	private static class ConstructorInjectionTestCase {
+
+		final String str;
+
+		@SuppressWarnings("unused")
+		ConstructorInjectionTestCase(String str) {
+			this.str = str;
+		}
 	}
 
 }
