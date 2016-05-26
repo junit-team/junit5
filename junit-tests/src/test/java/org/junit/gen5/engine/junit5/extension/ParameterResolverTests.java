@@ -30,6 +30,7 @@ import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.DisplayName;
+import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.api.extension.ExtendWith;
@@ -54,6 +55,17 @@ import org.junit.gen5.engine.junit5.execution.injection.sample.PrimitiveIntegerP
  * @since 5.0
  */
 class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
+
+	@Test
+	void constructorInjection() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(ConstructorInjectionTestCase.class);
+
+		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+	}
 
 	@Test
 	void executeTestsForMethodInjectionCases() {
@@ -163,6 +175,46 @@ class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
 	}
 
 	// -------------------------------------------------------------------
+
+	@ExtendWith(CustomTypeParameterResolver.class)
+	private static class ConstructorInjectionTestCase {
+
+		private final TestInfo outerTestInfo;
+		private final CustomType outerCustomType;
+
+		@SuppressWarnings("unused")
+		ConstructorInjectionTestCase(TestInfo testInfo, CustomType customType) {
+			this.outerTestInfo = testInfo;
+			this.outerCustomType = customType;
+		}
+
+		@Test
+		void test() {
+			assertNotNull(this.outerTestInfo);
+			assertNotNull(this.outerCustomType);
+		}
+
+		@Nested
+		class NestedTestCase {
+
+			private final TestInfo innerTestInfo;
+			private final CustomType innerCustomType;
+
+			@SuppressWarnings("unused")
+			NestedTestCase(TestInfo testInfo, CustomType customType) {
+				this.innerTestInfo = testInfo;
+				this.innerCustomType = customType;
+			}
+
+			@Test
+			void test() {
+				assertNotNull(outerTestInfo);
+				assertNotNull(outerCustomType);
+				assertNotNull(this.innerTestInfo);
+				assertNotNull(this.innerCustomType);
+			}
+		}
+	}
 
 	@ExtendWith({ CustomTypeParameterResolver.class, CustomAnnotationParameterResolver.class })
 	private static class MethodInjectionTestCase {

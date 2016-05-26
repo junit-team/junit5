@@ -21,7 +21,8 @@ import org.junit.gen5.commons.meta.API;
  * {@code ParameterResolver} defines the API for {@link Extension Extensions}
  * that wish to dynamically resolve {@linkplain Parameter parameters} at runtime.
  *
- * <p>If a {@link org.junit.gen5.api.Test @Test},
+ * <p>If a constructor for a test class or a
+ * {@link org.junit.gen5.api.Test @Test},
  * {@link org.junit.gen5.api.BeforeEach @BeforeEach},
  * {@link org.junit.gen5.api.AfterEach @AfterEach},
  * {@link org.junit.gen5.api.BeforeAll @BeforeAll}, or
@@ -29,10 +30,6 @@ import org.junit.gen5.commons.meta.API;
  * the parameter must be resolved at runtime by a {@code ParameterResolver}.
  *
  * <p>Implementations must provide a no-args constructor.
- *
- * <p>Note: as of JUnit 5.0.0-M1, the {@code ParameterResolver} API is only
- * applied to method invocations. Support for constructor invocations
- * may come at a later date.
  *
  * @since 5.0
  */

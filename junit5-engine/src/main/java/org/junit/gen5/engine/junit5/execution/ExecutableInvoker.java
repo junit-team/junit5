@@ -19,7 +19,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -53,21 +52,46 @@ public class ExecutableInvoker {
 	}
 
 	/**
-	 * Invoke the supplied constructor.
+	 * Invoke the supplied constructor with dynamic parameter resolution.
+	 *
+	 * @param constructor the constructor to invoke and resolve parameters for
 	 */
 	public <T> T invoke(Constructor<T> constructor) {
 		return ReflectionUtils.newInstance(constructor, resolveParameters(constructor, Optional.empty()));
 	}
 
 	/**
-	 * Invoke the supplied {@code static} method.
+	 * Invoke the supplied constructor with the supplied outer instance and
+	 * dynamic parameter resolution.
+	 *
+	 * <p>This method should only be used to invoke the constructor for
+	 * an inner class.
+	 *
+	 * @param constructor the constructor to invoke and resolve parameters for
+	 * @param outerInstance the outer instance to supply as the first argument
+	 * to the constructor
+	 */
+	public <T> T invoke(Constructor<T> constructor, Object outerInstance) {
+		return ReflectionUtils.newInstance(constructor,
+			resolveParameters(constructor, Optional.empty(), outerInstance));
+	}
+
+	/**
+	 * Invoke the supplied {@code static} method with dynamic parameter resolution.
+	 *
+	 * @param method the method to invoke and resolve parameters for
 	 */
 	public Object invoke(Method method) {
 		return ReflectionUtils.invokeMethod(method, null, resolveParameters(method, Optional.empty()));
 	}
 
 	/**
-	 * Invoke the supplied method on the supplied target object.
+	 * Invoke the supplied method on the supplied target object with dynamic parameter
+	 * resolution.
+	 *
+	 * @param method the method to invoke and resolve parameters for
+	 * @param target the object on which the method will be invoked; should be
+	 * {@code null} for static methods
 	 */
 	public Object invoke(Method method, Object target) {
 		@SuppressWarnings("unchecked")
@@ -79,15 +103,46 @@ public class ExecutableInvoker {
 	/**
 	 * Resolve the array of parameters for the supplied executable and target.
 	 *
+	 * @param executable the executable for which to resolve parameters
+	 * @param target the object on which the executable will be invoked;
+	 * should be {@code null} for static methods and constructors
 	 * @return the array of Objects to be used as parameters in the executable
 	 * invocation; never {@code null} though potentially empty
 	 */
 	private Object[] resolveParameters(Executable executable, Optional<Object> target) {
-		// @formatter:off
-		return Arrays.stream(executable.getParameters())
-				.map(param -> resolveParameter(param, executable, target))
-				.toArray(Object[]::new);
-		// @formatter:on
+		return resolveParameters(executable, target, null);
+	}
+
+	/**
+	 * Resolve the array of parameters for the supplied executable, target, and
+	 * outer instance.
+	 *
+	 * @param executable the executable for which to resolve parameters
+	 * @param target the object on which the executable will be invoked;
+	 * should be {@code null} for static methods and constructors
+	 * @param outerInstance the outer instance that will be supplied as the
+	 * first argument to a constructor for an inner class; should be {@code null}
+	 * for methods and constructors for top-level or static classes
+	 * @return the array of Objects to be used as parameters in the executable
+	 * invocation; never {@code null} though potentially empty
+	 */
+	private Object[] resolveParameters(Executable executable, Optional<Object> target, Object outerInstance) {
+		Parameter[] parameters = executable.getParameters();
+		Object[] values = new Object[parameters.length];
+		int start = 0;
+
+		// Ensure that the outer instance is resolved as the first parameter if
+		// the executable is a constructor for an inner class.
+		if (outerInstance != null) {
+			values[0] = outerInstance;
+			start = 1;
+		}
+
+		// Resolve remaining parameters dynamically
+		for (int i = start; i < parameters.length; i++) {
+			values[i] = resolveParameter(parameters[i], executable, target);
+		}
+		return values;
 	}
 
 	private Object resolveParameter(Parameter parameter, Executable executable, Optional<Object> target) {

@@ -124,16 +124,16 @@ For concrete examples, consult the source code for the `{MockitoExtension}` and 
 
 === Parameter Resolution
 
-`{ParameterResolver}` defines the `Extension` API for dynamically resolving
-parameters at runtime.
+`{ParameterResolver}` defines the `Extension` API for dynamically resolving parameters at
+runtime.
 
-If a `@Test`, `@BeforeEach`, `@AfterEach` , `@BeforeAll` or `@AfterAll` method accepts a
-parameter, the parameter must be _resolved_ at runtime by a `ParameterResolver`. A
-`ParameterResolver` can either be built-in (see `{TestInfoParameterResolver}`) or
-<<extension-registration,registered by the user>>. Generally speaking, parameters may be
-resolved by _name_, _type_, _annotation_, or any combination thereof. For concrete examples,
-consult the source code for `{CustomTypeParameterResolver}` and
-`{CustomAnnotationParameterResolver}`.
+If a test constructor or a `@Test`, `@BeforeEach`, `@AfterEach` , `@BeforeAll` or
+`@AfterAll` method accepts a parameter, the parameter must be _resolved_ at runtime by a
+`ParameterResolver`. A `ParameterResolver` can either be built-in (see
+`{TestInfoParameterResolver}`) or <<extension-registration,registered by the user>>.
+Generally speaking, parameters may be resolved by _name_, _type_, _annotation_, or any
+combination thereof. For concrete examples, consult the source code for
+`{CustomTypeParameterResolver}` and `{CustomAnnotationParameterResolver}`.
 
 
 === Test Lifecycle Callbacks

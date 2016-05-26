@@ -50,14 +50,22 @@ class ExecutableInvokerTests {
 
 	@Test
 	void constructorInjection() throws Exception {
-		Class<ConstructorInjectionTestCase> testClass = ConstructorInjectionTestCase.class;
-		Constructor<ConstructorInjectionTestCase> constructor = testClass.getDeclaredConstructor(String.class);
+		register(new StringParameterResolver(), new NumberParameterResolver());
 
-		register(new StringParameterResolver());
-		ConstructorInjectionTestCase testCase = newInvoker().invoke(constructor);
+		Class<ConstructorInjectionTestCase> outerClass = ConstructorInjectionTestCase.class;
+		Constructor<ConstructorInjectionTestCase> constructor = ReflectionUtils.getDeclaredConstructor(outerClass);
+		ConstructorInjectionTestCase outer = newInvoker().invoke(constructor);
 
-		assertNotNull(testCase);
-		assertEquals(ENIGMA, testCase.str);
+		assertNotNull(outer);
+		assertEquals(ENIGMA, outer.str);
+
+		Class<ConstructorInjectionTestCase.NestedTestCase> innerClass = ConstructorInjectionTestCase.NestedTestCase.class;
+		Constructor<ConstructorInjectionTestCase.NestedTestCase> innerConstructor = ReflectionUtils.getDeclaredConstructor(
+			innerClass);
+		ConstructorInjectionTestCase.NestedTestCase inner = newInvoker().invoke(innerConstructor, outer);
+
+		assertNotNull(inner);
+		assertEquals(42, inner.num);
 	}
 
 	@Test
@@ -246,8 +254,10 @@ class ExecutableInvokerTests {
 		this.method = ReflectionUtils.findMethod(this.instance.getClass(), methodName, parameterTypes).get();
 	}
 
-	private void register(ParameterResolver extension) {
-		extensionRegistry.registerExtension(extension, this);
+	private void register(ParameterResolver... resolvers) {
+		for (ParameterResolver resolver : resolvers) {
+			extensionRegistry.registerExtension(resolver, this);
+		}
 	}
 
 	private ExecutableInvoker newInvoker() {
@@ -353,6 +363,19 @@ class ExecutableInvokerTests {
 		}
 	}
 
+	private static class NumberParameterResolver implements ParameterResolver {
+
+		@Override
+		public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
+			return parameter.getType() == Number.class;
+		}
+
+		@Override
+		public Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
+			return 42;
+		}
+	}
+
 	private static class ConstructorInjectionTestCase {
 
 		final String str;
@@ -360,6 +383,16 @@ class ExecutableInvokerTests {
 		@SuppressWarnings("unused")
 		ConstructorInjectionTestCase(String str) {
 			this.str = str;
+		}
+
+		class NestedTestCase {
+
+			final Number num;
+
+			@SuppressWarnings("unused")
+			NestedTestCase(Number num) {
+				this.num = num;
+			}
 		}
 	}
 

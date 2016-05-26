@@ -12,6 +12,7 @@ package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
+import java.lang.reflect.Constructor;
 import java.util.Set;
 
 import org.junit.gen5.api.extension.ExtensionContext;
@@ -20,6 +21,7 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.UniqueId;
+import org.junit.gen5.engine.junit5.execution.ExecutableInvoker;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
@@ -47,7 +49,8 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 
 		return () -> {
 			Object outerInstance = parentExecutionContext.getTestInstanceProvider().getTestInstance();
-			Object instance = ReflectionUtils.newInstance(getTestClass(), outerInstance);
+			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(getTestClass());
+			Object instance = new ExecutableInvoker(extensionContext, registry).invoke(constructor, outerInstance);
 			invokeTestInstancePostProcessors(instance, registry, extensionContext);
 			return instance;
 		};

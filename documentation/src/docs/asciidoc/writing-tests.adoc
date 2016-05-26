@@ -149,17 +149,18 @@ arbitrarily deep, and those inner classes can be considered as full members of t
 class family with one exception: `@BeforeAll` and `@AfterAll` do not work, because Java
 does not allow static members in non-static inner classes.
 
-=== Method Parameters and Dependency Injection
+=== Dependency Injection for Constructors and Methods
 
-In all prior JUnit versions, methods were not allowed to have parameters (at least not
-with the standard `Runner` implementations). As one of the major changes in JUnit 5,
-methods are now permitted to have parameters. This allows for greater flexibility and
-enables method-level _Dependency Injection_.
+In all prior JUnit versions, test constructors or methods were not allowed to have
+parameters (at least not with the standard `Runner` implementations). As one of the major
+changes in JUnit 5, both test constructors and methods are now permitted to have
+parameters. This allows for greater flexibility and enables _Dependency Injection_ for
+constructors and methods.
 
 `{ParameterResolver}` defines the API for test extensions that wish to _dynamically_
-resolve parameters at runtime. If a `@Test`, `@BeforeEach`, `@AfterEach`, `@BeforeAll`,
-or `@AfterAll` method accepts a parameter, the parameter must be resolved at runtime by
-a registered `ParameterResolver`.
+resolve parameters at runtime. If a test constructor or a `@Test`, `@BeforeEach`,
+`@AfterEach`, `@BeforeAll`, or `@AfterAll` method accepts a parameter, the parameter must
+be resolved at runtime by a registered `ParameterResolver`.
 
 There are currently two built-in resolvers that are registered automatically.
 
@@ -230,7 +231,10 @@ class MyMockitoTest {
 
 === Interface Default Methods
 
-JUnit 5 allows tests to be declared in interface default methods. One possible application of this feature is to write tests for interface contracts. For example, you can write tests for how implementations of `Object.equals` or `Comparable.compareTo` should behave as follows:
+JUnit 5 allows tests to be declared in interface default methods. One possible
+application of this feature is to write tests for interface contracts. For example, you
+can write tests for how implementations of `Object.equals` or `Comparable.compareTo`
+should behave as follows:
 
 [source,java]
 [subs="verbatim"]
@@ -250,7 +254,8 @@ include::{testDir}/example/defaultmethods/EqualsContract.java[tags=user_guide]
 include::{testDir}/example/defaultmethods/ComparableContract.java[tags=user_guide]
 ----
 
-In your test class you can then implement both contract interfaces thereby inheriting the corresponding tests. Of course you'll have to implement the abstract methods:
+In your test class you can then implement both contract interfaces thereby inheriting the
+corresponding tests. Of course you'll have to implement the abstract methods:
 
 [source,java]
 [subs="verbatim"]

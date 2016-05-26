@@ -13,6 +13,7 @@ package org.junit.gen5.commons.util;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.api.Assertions.assertSame;
 import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
@@ -27,6 +28,7 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -337,6 +339,25 @@ class ReflectionUtilsTests {
 		assertThat(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, ReflectionUtils::isStatic))
 			.containsExactly(Nested3.class);
 		// @formatter:on
+	}
+
+	@Test
+	void getDeclaredConstructorPreconditions() {
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getDeclaredConstructor(null));
+		assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.getDeclaredConstructor(ClassWithTwoConstructors.class));
+	}
+
+	@Test
+	void getDeclaredConstructor() {
+		Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(getClass());
+		assertNotNull(constructor);
+		assertEquals(getClass(), constructor.getDeclaringClass());
+
+		constructor = ReflectionUtils.getDeclaredConstructor(ClassWithOneCustomConstructor.class);
+		assertNotNull(constructor);
+		assertEquals(ClassWithOneCustomConstructor.class, constructor.getDeclaringClass());
+		assertEquals(String.class, constructor.getParameterTypes()[0]);
 	}
 
 	@Test
@@ -703,6 +724,23 @@ class ReflectionUtilsTests {
 		}
 
 		public void method5(Long i) {
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private static class ClassWithOneCustomConstructor {
+
+		ClassWithOneCustomConstructor(String str) {
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private static class ClassWithTwoConstructors {
+
+		ClassWithTwoConstructors() {
+		}
+
+		ClassWithTwoConstructors(String str) {
 		}
 	}
 

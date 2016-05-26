@@ -16,6 +16,7 @@ import static org.junit.gen5.engine.junit5.descriptor.LifecycleMethodUtils.findA
 import static org.junit.gen5.engine.junit5.descriptor.LifecycleMethodUtils.findBeforeAllMethods;
 import static org.junit.gen5.engine.junit5.descriptor.LifecycleMethodUtils.findBeforeEachMethods;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
@@ -171,7 +172,8 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	protected TestInstanceProvider testInstanceProvider(JUnit5EngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
 		return () -> {
-			Object instance = ReflectionUtils.newInstance(this.testClass);
+			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
+			Object instance = new ExecutableInvoker(extensionContext, registry).invoke(constructor);
 			invokeTestInstancePostProcessors(instance, registry, extensionContext);
 			return instance;
 		};

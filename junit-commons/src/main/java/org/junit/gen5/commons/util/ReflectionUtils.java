@@ -366,6 +366,31 @@ public final class ReflectionUtils {
 		return Arrays.stream(clazz.getDeclaredClasses()).filter(predicate).collect(toList());
 	}
 
+	/**
+	 * Get the sole declared {@link Constructor} for the supplied class.
+	 *
+	 * <p>Throws a {@link PreconditionViolationException} if the supplied
+	 * class declares more than one constructor.
+	 *
+	 * @param clazz the class to get the constructor for
+	 * @return the sole declared constructor; never {@code null}
+	 * @see Class#getDeclaredConstructors()
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> Constructor<T> getDeclaredConstructor(Class<T> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		try {
+			Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+			Preconditions.condition(constructors.length == 1,
+				() -> String.format("Class [%s] must declare a single constructor", clazz.getName()));
+
+			return (Constructor<T>) constructors[0];
+		}
+		catch (Throwable t) {
+			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
+		}
+	}
+
 	public static Optional<Method> getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "method name must not be null or empty");
