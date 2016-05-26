@@ -14,14 +14,16 @@ import static java.util.Arrays.asList;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.FilterResult;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 
 /**
  * Factory methods for creating {@link PostDiscoveryFilter PostDiscoveryFilters}
- * based on <em>include</em> and <em>exclude</em> tags.
+ * based on <em>require</em> and <em>exclude</em> tags.
  *
  * @since 5.0
  */
@@ -33,29 +35,23 @@ public final class TagFilter {
 	}
 
 	/**
-	 * Create an <em>include</em> filter based on the supplied {@code tags}.
+	 * Create a <em>require</em> filter based on the supplied {@code tags}.
 	 *
 	 * <p>Containers and tests will only be executed if they are tagged with
-	 * at least one of the supplied <em>include</em> tags.
+	 * at least one of the supplied <em>require</em> tags.
 	 */
 	public static PostDiscoveryFilter requireTags(String... tags) {
 		return requireTags(asList(tags));
 	}
 
 	/**
-	 * Create an <em>include</em> filter based on the supplied {@code tags}.
+	 * Create a <em>require</em> filter based on the supplied {@code tags}.
 	 *
 	 * <p>Containers and tests will only be executed if they are tagged with
-	 * at least one of the supplied <em>include</em> tags.
+	 * at least one of the supplied <em>require</em> tags.
 	 */
 	public static PostDiscoveryFilter requireTags(List<String> tags) {
-		// @formatter:off
-        return descriptor -> FilterResult.includedIf(
-				descriptor.getTags().stream()
-					.map(TestTag::getName)
-					.map(String::trim)
-					.anyMatch(tags::contains));
-        // @formatter:on
+		return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).anyMatch(tags::contains));
 	}
 
 	/**
@@ -75,13 +71,15 @@ public final class TagFilter {
 	 * tagged with any of the supplied <em>exclude</em> tags.
 	 */
 	public static PostDiscoveryFilter excludeTags(List<String> tags) {
+		return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).noneMatch(tags::contains));
+	}
+
+	private static Stream<String> trimmedTagsOf(TestDescriptor descriptor) {
 		// @formatter:off
-        return descriptor -> FilterResult.includedIf(
-				descriptor.getTags().stream()
-					.map(TestTag::getName)
-					.map(String::trim)
-					.noneMatch(tags::contains));
-        // @formatter:on
+		return descriptor.getTags().stream()
+				.map(TestTag::getName)
+				.map(String::trim);
+		// @formatter:on
 	}
 
 }
