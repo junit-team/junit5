@@ -454,7 +454,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#disabling-tests">3.6. Disabling Tests</a></li>
 <li><a href="#tagging-and-filtering">3.7. Tagging and Filtering</a></li>
 <li><a href="#nested-tests">3.8. Nested Tests</a></li>
-<li><a href="#method-parameters-and-dependency-injection">3.9. Method Parameters and Dependency Injection</a></li>
+<li><a href="#dependency-injection-for-constructors-and-methods">3.9. Dependency Injection for Constructors and Methods</a></li>
 <li><a href="#interface-default-methods">3.10. Interface Default Methods</a></li>
 </ul>
 </li>
@@ -1044,18 +1044,19 @@ does not allow static members in non-static inner classes.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="method-parameters-and-dependency-injection">3.9. Method Parameters and Dependency Injection</h3>
+<h3 id="dependency-injection-for-constructors-and-methods">3.9. Dependency Injection for Constructors and Methods</h3>
 <div class="paragraph">
-<p>In all prior JUnit versions, methods were not allowed to have parameters (at least not
-with the standard <code>Runner</code> implementations). As one of the major changes in JUnit 5,
-methods are now permitted to have parameters. This allows for greater flexibility and
-enables method-level <em>Dependency Injection</em>.</p>
+<p>In all prior JUnit versions, test constructors or methods were not allowed to have
+parameters (at least not with the standard <code>Runner</code> implementations). As one of the major
+changes in JUnit 5, both test constructors and methods are now permitted to have
+parameters. This allows for greater flexibility and enables <em>Dependency Injection</em> for
+constructors and methods.</p>
 </div>
 <div class="paragraph">
 <p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ParameterResolver.java">ParameterResolver</a></code> defines the API for test extensions that wish to <em>dynamically</em>
-resolve parameters at runtime. If a <code>@Test</code>, <code>@BeforeEach</code>, <code>@AfterEach</code>, <code>@BeforeAll</code>,
-or <code>@AfterAll</code> method accepts a parameter, the parameter must be resolved at runtime by
-a registered <code>ParameterResolver</code>.</p>
+resolve parameters at runtime. If a test constructor or a <code>@Test</code>, <code>@BeforeEach</code>,
+<code>@AfterEach</code>, <code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts a parameter, the parameter must
+be resolved at runtime by a registered <code>ParameterResolver</code>.</p>
 </div>
 <div class="paragraph">
 <p>There are currently two built-in resolvers that are registered automatically.</p>
@@ -1192,7 +1193,10 @@ class MyMockitoTest {
 <div class="sect2">
 <h3 id="interface-default-methods">3.10. Interface Default Methods</h3>
 <div class="paragraph">
-<p>JUnit 5 allows tests to be declared in interface default methods. One possible application of this feature is to write tests for interface contracts. For example, you can write tests for how implementations of <code>Object.equals</code> or <code>Comparable.compareTo</code> should behave as follows:</p>
+<p>JUnit 5 allows tests to be declared in interface default methods. One possible
+application of this feature is to write tests for interface contracts. For example, you
+can write tests for how implementations of <code>Object.equals</code> or <code>Comparable.compareTo</code>
+should behave as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1262,7 +1266,8 @@ class MyMockitoTest {
 </div>
 </div>
 <div class="paragraph">
-<p>In your test class you can then implement both contract interfaces thereby inheriting the corresponding tests. Of course you&#8217;ll have to implement the abstract methods:</p>
+<p>In your test class you can then implement both contract interfaces thereby inheriting the
+corresponding tests. Of course you&#8217;ll have to implement the abstract methods:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1812,17 +1817,17 @@ initialization methods on the test instance, etc.</p>
 <div class="sect2">
 <h3 id="parameter-resolution">5.5. Parameter Resolution</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ParameterResolver.java">ParameterResolver</a></code> defines the <code>Extension</code> API for dynamically resolving
-parameters at runtime.</p>
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ParameterResolver.java">ParameterResolver</a></code> defines the <code>Extension</code> API for dynamically resolving parameters at
+runtime.</p>
 </div>
 <div class="paragraph">
-<p>If a <code>@Test</code>, <code>@BeforeEach</code>, <code>@AfterEach</code> , <code>@BeforeAll</code> or <code>@AfterAll</code> method accepts a
-parameter, the parameter must be <em>resolved</em> at runtime by a <code>ParameterResolver</code>. A
-<code>ParameterResolver</code> can either be built-in (see <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or
-<a href="#extension-registration">registered by the user</a>. Generally speaking, parameters may be
-resolved by <em>name</em>, <em>type</em>, <em>annotation</em>, or any combination thereof. For concrete examples,
-consult the source code for <code><a href="https://github.com/junit-team/junit5/blob/master/junit-tests/src/test/java/org/junit/gen5/engine/junit5/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and
-<code><a href="https://github.com/junit-team/junit5/blob/master/junit-tests/src/test/java/org/junit/gen5/engine/junit5/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
+<p>If a test constructor or a <code>@Test</code>, <code>@BeforeEach</code>, <code>@AfterEach</code> , <code>@BeforeAll</code> or
+<code>@AfterAll</code> method accepts a parameter, the parameter must be <em>resolved</em> at runtime by a
+<code>ParameterResolver</code>. A <code>ParameterResolver</code> can either be built-in (see
+<code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or <a href="#extension-registration">registered by the user</a>.
+Generally speaking, parameters may be resolved by <em>name</em>, <em>type</em>, <em>annotation</em>, or any
+combination thereof. For concrete examples, consult the source code for
+<code><a href="https://github.com/junit-team/junit5/blob/master/junit-tests/src/test/java/org/junit/gen5/engine/junit5/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and <code><a href="https://github.com/junit-team/junit5/blob/master/junit-tests/src/test/java/org/junit/gen5/engine/junit5/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2236,7 +2241,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-05-26 10:20:14 -04:00
+Last updated 2016-05-26 16:24:15 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
