@@ -37,6 +37,6 @@ public interface ConfigurationParameters {
 	 * Get the number of configuration properties stored directly in this
 	 * {@code ConfigurationParameters}.
 	 */
-	int getSize();
+	int size();
 
 }

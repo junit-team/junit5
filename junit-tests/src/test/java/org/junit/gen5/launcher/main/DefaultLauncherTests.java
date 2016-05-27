@@ -157,7 +157,7 @@ class DefaultLauncherTests {
 
 		ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
 		assertThat(configurationParameters.get("key").isPresent()).isFalse();
-		assertThat(configurationParameters.getSize()).isEqualTo(0);
+		assertThat(configurationParameters.size()).isEqualTo(0);
 	}
 
 	@Test
@@ -168,7 +168,7 @@ class DefaultLauncherTests {
 		launcher.execute(request().configurationParameter("key", "value").build());
 
 		ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
-		assertThat(configurationParameters.getSize()).isEqualTo(1);
+		assertThat(configurationParameters.size()).isEqualTo(1);
 		assertThat(configurationParameters.get("key").isPresent()).isTrue();
 		assertThat(configurationParameters.get("key").get()).isEqualTo("value");
 	}
@@ -184,7 +184,7 @@ class DefaultLauncherTests {
 			launcher.execute(request().build());
 
 			ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
-			assertThat(configurationParameters.getSize()).isEqualTo(0);
+			assertThat(configurationParameters.size()).isEqualTo(0);
 			Optional<String> optionalFoo = configurationParameters.get(FOO);
 			assertTrue(optionalFoo.isPresent(), "foo should have been picked up via system property");
 			assertEquals(BAR, optionalFoo.get(), "foo property");

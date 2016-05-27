@@ -45,7 +45,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 	}
 
 	@Override
-	public int getSize() {
+	public int size() {
 		return this.configurationParameters.size();
 	}
 
