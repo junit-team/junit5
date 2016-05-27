@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
@@ -53,7 +52,6 @@ public class JavaElementsResolver {
 	}
 
 	public void resolveClass(Class<?> testClass) {
-
 		Set<TestDescriptor> resolvedDescriptors = resolveContainerWithParents(testClass);
 		resolvedDescriptors.forEach(this::resolveChildren);
 
@@ -67,12 +65,7 @@ public class JavaElementsResolver {
 		Set<TestDescriptor> resolvedDescriptors = resolveForAllParents(testMethod, potentialParents);
 
 		if (resolvedDescriptors.isEmpty()) {
-			LOG.warning(() -> {
-				String methodId = String.format("%s(%s)", testMethod.getName(),
-					StringUtils.nullSafeToString(testMethod.getParameterTypes()));
-				String methodDescription = testMethod.getDeclaringClass().getName() + "#" + methodId;
-				return format("Method '%s' could not be resolved", methodDescription);
-			});
+			LOG.warning(() -> format("Method '%s' could not be resolved", testMethod.toGenericString()));
 		}
 	}
 
@@ -89,6 +82,7 @@ public class JavaElementsResolver {
 	public void resolveUniqueId(UniqueId uniqueId) {
 		List<UniqueId.Segment> segments = uniqueId.getSegments();
 		segments.remove(0); // Ignore engine unique ID
+
 		if (!resolveUniqueId(this.engineDescriptor, segments)) {
 			LOG.warning(() -> format("Unique ID '%s' could not be resolved", uniqueId));
 		}

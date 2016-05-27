@@ -11,15 +11,16 @@
 package org.junit.gen5.engine.junit5.discovery;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
-import static org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 
+import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
 /**
- * Test if a class is a JUnit 5 test class containing executable tests or nested tests.
+ * Test if a class is a JUnit 5 test class containing executable tests,
+ * test factories, or nested tests.
  *
  * @since 5.0
  */
@@ -27,7 +28,10 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 public class IsTestClassWithTests implements Predicate<Class<?>> {
 
 	private static final IsTestMethod isTestMethod = new IsTestMethod();
-	private static final IsTestFactoryMethod IS_TEST_FACTORY_METHOD = new IsTestFactoryMethod();
+
+	private static final IsTestFactoryMethod isTestFactoryMethod = new IsTestFactoryMethod();
+
+	private static final Predicate<Method> isTestOrTestFactoryMethod = isTestMethod.or(isTestFactoryMethod);
 
 	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();
 
@@ -35,18 +39,15 @@ public class IsTestClassWithTests implements Predicate<Class<?>> {
 
 	@Override
 	public boolean test(Class<?> candidate) {
-		//please do not collapse into single return
-		if (!isPotentialTestContainer.test(candidate))
+		// please do not collapse into single return
+		if (!isPotentialTestContainer.test(candidate)) {
 			return false;
-		return hasTestMethods(candidate) || hasDynamicTests(candidate) || hasNestedTests(candidate);
+		}
+		return hasTestOrTestFactoryMethods(candidate) || hasNestedTests(candidate);
 	}
 
-	private boolean hasTestMethods(Class<?> candidate) {
-		return !ReflectionUtils.findMethods(candidate, isTestMethod, HierarchyDown).isEmpty();
-	}
-
-	private boolean hasDynamicTests(Class<?> candidate) {
-		return !ReflectionUtils.findMethods(candidate, IS_TEST_FACTORY_METHOD, HierarchyDown).isEmpty();
+	private boolean hasTestOrTestFactoryMethods(Class<?> candidate) {
+		return !ReflectionUtils.findMethods(candidate, isTestOrTestFactoryMethod).isEmpty();
 	}
 
 	private boolean hasNestedTests(Class<?> candidate) {

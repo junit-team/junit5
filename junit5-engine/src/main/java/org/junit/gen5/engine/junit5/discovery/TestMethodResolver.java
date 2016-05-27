@@ -61,7 +61,7 @@ public class TestMethodResolver implements ElementResolver {
 
 	@Override
 	public Optional<TestDescriptor> resolveUniqueId(UniqueId.Segment segment, TestDescriptor parent) {
-		if (!segment.getType().equals(segmentType))
+		if (!segment.getType().equals(this.segmentType))
 			return Optional.empty();
 
 		if (!(parent instanceof ClassTestDescriptor))
@@ -84,9 +84,9 @@ public class TestMethodResolver implements ElementResolver {
 	}
 
 	private UniqueId createUniqueId(Method testMethod, TestDescriptor parent) {
-		Class<?>[] parameterTypes = testMethod.getParameterTypes();
-		String methodId = String.format("%s(%s)", testMethod.getName(), StringUtils.nullSafeToString(parameterTypes));
-		return parent.getUniqueId().append(segmentType, methodId);
+		String methodId = String.format("%s(%s)", testMethod.getName(),
+			StringUtils.nullSafeToString(testMethod.getParameterTypes()));
+		return parent.getUniqueId().append(this.segmentType, methodId);
 	}
 
 	private Optional<Method> findMethod(UniqueId.Segment segment, ClassTestDescriptor parent) {
