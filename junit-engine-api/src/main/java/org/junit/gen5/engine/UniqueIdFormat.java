@@ -23,16 +23,16 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.UniqueId.Segment;
 
 /**
- * Used to {@link #parse} a {@link UniqueId} from a string representation
- * or to {@link #format} a {@link UniqueId} into a string representation.
+ * Used to {@linkplain #parse parse} an {@link UniqueId} from a string representation
+ * or to {@linkplain #format format} an {@link UniqueId} into a string representation.
  *
  * @since 5.0
  */
-public class UniqueIdFormat {
+class UniqueIdFormat {
 
 	private static final UniqueIdFormat defaultFormat = new UniqueIdFormat('[', ':', ']', '/');
 
-	public static UniqueIdFormat getDefault() {
+	static UniqueIdFormat getDefault() {
 		return defaultFormat;
 	}
 
@@ -42,7 +42,7 @@ public class UniqueIdFormat {
 	private final char typeValueSeparator;
 	private final Pattern segmentPattern;
 
-	public UniqueIdFormat(char openSegment, char typeValueSeparator, char closeSegment, char segmentDelimiter) {
+	UniqueIdFormat(char openSegment, char typeValueSeparator, char closeSegment, char segmentDelimiter) {
 		this.openSegment = openSegment;
 		this.typeValueSeparator = typeValueSeparator;
 		this.closeSegment = closeSegment;
@@ -57,7 +57,7 @@ public class UniqueIdFormat {
 	 * @return a properly constructed {@code UniqueId}
 	 * @throws JUnitException if the string cannot be parsed
 	 */
-	public UniqueId parse(String source) throws JUnitException {
+	UniqueId parse(String source) throws JUnitException {
 		String[] parts = source.split(String.valueOf(this.segmentDelimiter));
 		List<Segment> segments = Arrays.stream(parts).map(this::createSegment).collect(toList());
 		return new UniqueId(this, segments);
@@ -89,7 +89,7 @@ public class UniqueIdFormat {
 	/**
 	 * Format and return the string representation of the supplied {@code UniqueId}.
 	 */
-	public String format(UniqueId uniqueId) {
+	String format(UniqueId uniqueId) {
 		// @formatter:off
 		return uniqueId.getSegments().stream()
 			.map(this::describe)
