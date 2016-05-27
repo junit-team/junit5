@@ -84,5 +84,9 @@ class JUnit5PluginSpec extends Specification {
 			junit5TestTask.args.containsAll('-T', 'slow')
 			junit5TestTask.args.containsAll('-e', 'junit5')
 			junit5TestTask.args.containsAll('-r', new File('/any').getCanonicalFile().toString())
+			junit5TestTask.args.contains(project.file('build/classes/main').absolutePath)
+			junit5TestTask.args.contains(project.file('build/resources/main').absolutePath)
+			junit5TestTask.args.contains(project.file('build/classes/test').absolutePath)
+			junit5TestTask.args.contains(project.file('build/resources/test').absolutePath)
 	}
 }
