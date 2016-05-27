@@ -74,10 +74,8 @@ public class JUnit4DiscoveryRequestResolver {
 			TestClassCollector collector) {
 		List<ClassFilter> allClassFilters = discoveryRequest.getDiscoveryFiltersByType(ClassFilter.class);
 		Filter<Class<?>> classFilter = new ExclusionReasonConsumingFilter<>(composeFilters(allClassFilters),
-			(testClass, reason) -> {
-				logger.info(String.format("Class %s was excluded by a class filter: %s", testClass.getName(),
-					reason.orElse("<unknown reason>")));
-			});
+			(testClass, reason) -> logger.info(() -> String.format("Class %s was excluded by a class filter: %s",
+				testClass.getName(), reason.orElse("<unknown reason>"))));
 		return collector.toRequests(classFilter.toPredicate());
 	}
 
