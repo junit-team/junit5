@@ -25,9 +25,8 @@ import org.junit.gen5.engine.EngineDiscoveryRequest;
  * {@code TestDiscoveryRequest} is an extension of {@link EngineDiscoveryRequest}
  * that provides access to filters which are applied by the {@link Launcher} itself.
  *
- * <p>Moreover, the {@code add*()} methods can be used by external clients that
- * do not want to use the
- * {@link org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder}.
+ * <p>Moreover, the {@code add*()} methods can be used by external clients that do
+ * not want to use the {@link org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder}.
  *
  * @since 5.0
  */
@@ -35,57 +34,57 @@ import org.junit.gen5.engine.EngineDiscoveryRequest;
 public interface TestDiscoveryRequest extends EngineDiscoveryRequest {
 
 	/**
-	 * Adds the supplied {@code selector} to this request.
+	 * Add the supplied {@code selector} to this request.
 	 */
 	void addSelector(DiscoverySelector selector);
 
 	/**
-	 * Adds all of the supplied {@code selectors} to this request.
+	 * Add all of the supplied {@code selectors} to this request.
 	 */
 	void addSelectors(Collection<DiscoverySelector> selectors);
 
 	/**
-	 * Adds the supplied {@code engineIdFilter} to this request.
+	 * Add the supplied {@code engineIdFilter} to this request.
 	 */
 	void addEngineIdFilter(EngineIdFilter engineIdFilter);
 
 	/**
-	 * Adds all of the supplied {@code engineIdFilters} to this request.
+	 * Add all of the supplied {@code engineIdFilters} to this request.
 	 */
 	void addEngineIdFilters(Collection<EngineIdFilter> engineIdFilters);
 
 	/**
-	 * Adds the supplied {@code discoveryFilter} to this request.
+	 * Add the supplied {@code discoveryFilter} to this request.
 	 */
 	void addFilter(DiscoveryFilter<?> discoveryFilter);
 
 	/**
-	 * Adds all of the supplied {@code discoveryFilters} to this request.
+	 * Add all of the supplied {@code discoveryFilters} to this request.
 	 */
 	void addFilters(Collection<DiscoveryFilter<?>> discoveryFilters);
 
 	/**
-	 * Adds the supplied {@code postDiscoveryFilter} to this request.
+	 * Add the supplied {@code postDiscoveryFilter} to this request.
 	 */
 	void addPostFilter(PostDiscoveryFilter postDiscoveryFilter);
 
 	/**
-	 * Adds all of the supplied {@code postDiscoveryFilters} to this request.
+	 * Add all of the supplied {@code postDiscoveryFilters} to this request.
 	 */
 	void addPostFilters(Collection<PostDiscoveryFilter> postDiscoveryFilters);
 
 	/**
-	 * Adds the supplied {@code configurationParameters} to this request.
+	 * Add the supplied {@code configurationParameters} to this request.
 	 */
 	void addConfigurationParameters(Map<String, String> configurationParameters);
 
 	/**
-	 * Returns the {@code engineIdFilters} that have been added to this request.
+	 * Get the {@code engineIdFilters} that have been added to this request.
 	 */
 	List<EngineIdFilter> getEngineIdFilters();
 
 	/**
-	 * Returns the {@code postDiscoveryFilters} that have been added to this request.
+	 * Get the {@code postDiscoveryFilters} that have been added to this request.
 	 */
 	List<PostDiscoveryFilter> getPostDiscoveryFilters();
 

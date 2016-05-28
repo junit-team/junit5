@@ -22,36 +22,38 @@ import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
- * Represents the root of all discovered {@link TestEngine} and their {@link TestDescriptor}s.
+ * Represents the root of all discovered {@link TestEngine TestEngines} and
+ * their {@link TestDescriptor TestDescriptors}.
  *
  * @since 5.0
  */
 class Root {
 
 	private static final TestDescriptor.Visitor REMOVE_DESCRIPTORS_WITHOUT_TESTS = descriptor -> {
-		if (!descriptor.isRoot() && !descriptor.hasTests())
+		if (!descriptor.isRoot() && !descriptor.hasTests()) {
 			descriptor.removeFromHierarchy();
+		}
 	};
 
 	private final Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
 
 	/**
-	 * Add an {@code engine}'s discovered root {@code testDescriptor}.
+	 * Add an {@code engine}'s root {@link TestDescriptor}.
 	 */
 	void add(TestEngine engine, TestDescriptor testDescriptor) {
-		testEngineDescriptors.put(engine, testDescriptor);
+		this.testEngineDescriptors.put(engine, testDescriptor);
 	}
 
 	Iterable<TestEngine> getTestEngines() {
-		return testEngineDescriptors.keySet();
+		return this.testEngineDescriptors.keySet();
 	}
 
 	Collection<TestDescriptor> getEngineDescriptors() {
-		return testEngineDescriptors.values();
+		return this.testEngineDescriptors.values();
 	}
 
 	TestDescriptor getTestDescriptorFor(TestEngine testEngine) {
-		return testEngineDescriptors.get(testEngine);
+		return this.testEngineDescriptors.get(testEngine);
 	}
 
 	void applyPostDiscoveryFilters(TestDiscoveryRequest discoveryRequest) {
@@ -65,8 +67,11 @@ class Root {
 	}
 
 	/**
-	 * Prune all branches in the tree of {@link TestDescriptor} that do not have executable tests.
-	 * If a {@link TestEngine} ends up with no {@link TestDescriptor}s after pruning, it will be removed.
+	 * Prune all branches in the tree of {@link TestDescriptor TestDescriptors}
+	 * that do not have executable tests.
+	 *
+	 * <p>If a {@link TestEngine} ends up with no {@code TestDescriptors} after
+	 * pruning, it will be removed.
 	 */
 	void prune() {
 		acceptInAllTestEngines(REMOVE_DESCRIPTORS_WITHOUT_TESTS);
@@ -78,11 +83,11 @@ class Root {
 	}
 
 	private void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {
-		testEngineDescriptors.values().forEach(descriptor -> descriptor.accept(visitor));
+		this.testEngineDescriptors.values().forEach(descriptor -> descriptor.accept(visitor));
 	}
 
 	private void pruneEmptyTestEngines() {
-		testEngineDescriptors.values().removeIf(descriptor -> descriptor.getChildren().isEmpty());
+		this.testEngineDescriptors.values().removeIf(descriptor -> descriptor.getChildren().isEmpty());
 	}
 
 }

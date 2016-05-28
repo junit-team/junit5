@@ -68,7 +68,7 @@ class DefaultLauncher implements Launcher {
 
 	@Override
 	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
-		listenerRegistry.registerListeners(listeners);
+		this.listenerRegistry.registerListeners(listeners);
 	}
 
 	@Override
@@ -108,7 +108,7 @@ class DefaultLauncher implements Launcher {
 
 	private void execute(Root root, ConfigurationParameters configurationParameters) {
 		TestPlan testPlan = TestPlan.from(root.getEngineDescriptors());
-		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
+		TestExecutionListener testExecutionListener = this.listenerRegistry.getCompositeTestExecutionListener();
 		testExecutionListener.testPlanExecutionStarted(testPlan);
 		ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(testPlan,
 			testExecutionListener);

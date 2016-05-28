@@ -58,11 +58,19 @@ public final class TestPlan {
 	private final Map<String, TestIdentifier> allIdentifiers = new LinkedHashMap<>();
 
 	/**
-	 * Constructs a new {@code TestPlan} from a collection of
-	 * {@linkplain TestDescriptor test descriptors}.
+	 * Construct a new {@code TestPlan} from the supplied collection of
+	 * {@link TestDescriptor TestDescriptors}.
+	 *
+	 * <p>Each supplied {@code TestDescriptor} is expected to be a descriptor
+	 * for a {@link org.junit.gen5.engine.TestEngine TestEngine}.
+	 *
+	 * @param engineDescriptors the engine test descriptors from which the test
+	 * plan should be created; never {@code null}
+	 * @return a new test plan
 	 */
 	@API(Internal)
 	public static TestPlan from(Collection<TestDescriptor> engineDescriptors) {
+		Preconditions.notNull(engineDescriptors, "Cannot create TestPlan from a null collection of TestDescriptors");
 		TestPlan testPlan = new TestPlan();
 		Visitor visitor = descriptor -> testPlan.add(TestIdentifier.from(descriptor));
 		engineDescriptors.forEach(engineDescriptor -> engineDescriptor.accept(visitor));
@@ -70,6 +78,7 @@ public final class TestPlan {
 	}
 
 	private TestPlan() {
+		/* no-op */
 	}
 
 	/**
@@ -90,7 +99,7 @@ public final class TestPlan {
 	}
 
 	/**
-	 * Get the root identifiers of this test plan.
+	 * Get the root {@link TestIdentifier TestIdentifiers} for this test plan.
 	 *
 	 * @return an unmodifiable set of the root identifiers
 	 */
@@ -99,7 +108,7 @@ public final class TestPlan {
 	}
 
 	/**
-	 * Get the parent of supplied {@link TestIdentifier}.
+	 * Get the parent of the supplied {@link TestIdentifier}.
 	 *
 	 * @param child the identifier to look up the parent for
 	 * @return an {@code Optional} containing the parent, if present
@@ -113,7 +122,7 @@ public final class TestPlan {
 	}
 
 	/**
-	 * Get the children of supplied {@link TestIdentifier}.
+	 * Get the children of the supplied {@link TestIdentifier}.
 	 *
 	 * @param parent the identifier to look up the children for
 	 * @return an unmodifiable set of the parent's children, potentially empty
@@ -126,7 +135,7 @@ public final class TestPlan {
 	/**
 	 * Get the children of the supplied unique ID.
 	 *
-	 * @param parentId the ID to look up the children for
+	 * @param parentId the unique ID to look up the children for
 	 * @return an unmodifiable set of the parent's children, potentially empty
 	 * @see #getChildren(TestIdentifier)
 	 */
@@ -149,7 +158,7 @@ public final class TestPlan {
 	}
 
 	/**
-	 * Count all {@linkplain TestIdentifier identifiers} that satisfy the
+	 * Count all {@link TestIdentifier TestIdentifiers} that satisfy the
 	 * given {@linkplain Predicate predicate}.
 	 *
 	 * @param predicate a predicate which returns {@code true} for identifiers

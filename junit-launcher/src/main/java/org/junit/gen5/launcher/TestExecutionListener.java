@@ -128,7 +128,7 @@ public interface TestExecutionListener {
 	 * {@linkplain #executionFinished finished}.
 	 *
 	 * <p>The {@link TestExecutionResult} describes the result of the execution
-	 * for the supplied {@code testIdentifier}. The result does not include or
+	 * for the supplied {@code TestIdentifier}. The result does not include or
 	 * aggregate the results of its children. For example, a container with a
 	 * failing test will be reported as {@link Status#SUCCESSFUL SUCCESSFUL} even
 	 * if one or more of its children are reported as {@link Status#FAILED FAILED}.
@@ -144,10 +144,12 @@ public interface TestExecutionListener {
 
 	/**
 	 * Called when additional test reporting data has been published for
-	 * the supplied {@link TestIdentifier}. Can be called at all times.
+	 * the supplied {@link TestIdentifier}.
+	 *
+	 * <p>Can be called at any time during the execution of a test plan.
 	 *
 	 * @param testIdentifier describes the test or container to which the entry pertains
-	 * @param entry a {@code ReportEntry} instance to be published
+	 * @param entry the published {@code ReportEntry}
 	 */
 	default void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
 	}
