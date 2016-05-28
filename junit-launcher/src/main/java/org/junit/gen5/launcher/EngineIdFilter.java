@@ -44,7 +44,7 @@ public class EngineIdFilter implements Filter<String> {
 	}
 
 	@Override
-	public FilterResult filter(String engineId) {
+	public FilterResult apply(String engineId) {
 		return includedIf(this.engineId.equals(engineId), //
 			() -> "Engine ID matches", //
 			() -> "Engine ID does not match");

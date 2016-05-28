@@ -88,7 +88,7 @@ class DefaultLauncher implements Launcher {
 			final String engineId = testEngine.getId();
 
 			if (discoveryRequest.getEngineIdFilters().stream().map(
-				engineIdFilter -> engineIdFilter.filter(engineId)).anyMatch(FilterResult::excluded)) {
+				engineIdFilter -> engineIdFilter.apply(engineId)).anyMatch(FilterResult::excluded)) {
 				LOG.fine(() -> String.format(
 					"Test discovery for engine '%s' was skipped due to a filter in phase '%s'.", engineId, phase));
 				continue;

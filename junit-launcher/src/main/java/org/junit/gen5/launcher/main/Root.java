@@ -79,7 +79,7 @@ class Root {
 	}
 
 	private boolean isExcludedTest(TestDescriptor descriptor, Filter<TestDescriptor> postDiscoveryFilter) {
-		return descriptor.isTest() && postDiscoveryFilter.filter(descriptor).excluded();
+		return descriptor.isTest() && postDiscoveryFilter.apply(descriptor).excluded();
 	}
 
 	private void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {

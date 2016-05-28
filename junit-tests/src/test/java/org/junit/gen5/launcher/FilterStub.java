@@ -34,7 +34,7 @@ public class FilterStub<T> implements Filter<T> {
 	}
 
 	@Override
-	public FilterResult filter(T object) {
+	public FilterResult apply(T object) {
 		return function.apply(object);
 	}
 

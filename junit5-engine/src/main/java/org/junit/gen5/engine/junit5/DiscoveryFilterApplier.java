@@ -57,7 +57,7 @@ class DiscoveryFilterApplier {
 
 		// @formatter:off
         return (classFilters.stream()
-                .map(filter -> filter.filter(testClass))
+                .map(filter -> filter.apply(testClass))
                 .noneMatch(FilterResult::excluded));
         // @formatter:on
 	}

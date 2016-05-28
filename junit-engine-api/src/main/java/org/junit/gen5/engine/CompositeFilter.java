@@ -40,10 +40,10 @@ class CompositeFilter<T> implements Filter<T> {
 	}
 
 	@Override
-	public FilterResult filter(T element) {
+	public FilterResult apply(T element) {
 		// @formatter:off
 		return filters.stream()
-				.map(filter -> filter.filter(element))
+				.map(filter -> filter.apply(element))
 				.filter(FilterResult::excluded)
 				.findFirst()
 				.orElse(FilterResult.included("Element was included by all filters."));

@@ -36,8 +36,8 @@ class FilterCompositionTests {
 	void composingNoFiltersCreatesFilterThatIncludesEverything() {
 		Filter<Object> composedFilter = Filter.composeFilters();
 
-		assertTrue(composedFilter.filter(String.class).included());
-		assertTrue(composedFilter.filter(Object.class).included());
+		assertTrue(composedFilter.apply(String.class).included());
+		assertTrue(composedFilter.apply(Object.class).included());
 	}
 
 	@Test
@@ -54,8 +54,8 @@ class FilterCompositionTests {
 
 		Filter<Class<?>> composed = Filter.composeFilters(firstFilter, secondFilter);
 
-		assertFalse(composed.filter(String.class).included());
-		assertTrue(composed.filter(StringJoiner.class).included());
+		assertFalse(composed.apply(String.class).included());
+		assertTrue(composed.apply(StringJoiner.class).included());
 	}
 
 	@Test
@@ -65,7 +65,7 @@ class FilterCompositionTests {
 
 		Filter<Object> composed = Filter.composeFilters(firstFilter, secondFilter);
 
-		assertFalse(composed.filter(String.class).included());
+		assertFalse(composed.apply(String.class).included());
 		assertEquals("(1st) and (2nd)", composed.toString());
 	}
 

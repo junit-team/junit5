@@ -79,14 +79,14 @@ public class FilterResult {
 	}
 
 	/**
-	 * @return {@code true} if the filtered object should be included in the test plan
+	 * @return {@code true} if the filtered object should be included
 	 */
 	public boolean included() {
 		return included;
 	}
 
 	/**
-	 * @return {@code true} if the filtered object should be excluded from the test plan
+	 * @return {@code true} if the filtered object should be excluded
 	 */
 	public boolean excluded() {
 		return !included();

@@ -138,9 +138,9 @@ class JUnit5Tests {
 			assertThat(filters).hasSize(1);
 
 			PostDiscoveryFilter filter = filters.get(0);
-			assertTrue(filter.filter(testDescriptorWithTag("foo")).included());
-			assertTrue(filter.filter(testDescriptorWithTag("bar")).included());
-			assertTrue(filter.filter(testDescriptorWithTag("baz")).excluded());
+			assertTrue(filter.apply(testDescriptorWithTag("foo")).included());
+			assertTrue(filter.apply(testDescriptorWithTag("bar")).included());
+			assertTrue(filter.apply(testDescriptorWithTag("baz")).excluded());
 		}
 
 		@Test
@@ -155,9 +155,9 @@ class JUnit5Tests {
 			assertThat(filters).hasSize(1);
 
 			PostDiscoveryFilter filter = filters.get(0);
-			assertTrue(filter.filter(testDescriptorWithTag("foo")).excluded());
-			assertTrue(filter.filter(testDescriptorWithTag("bar")).excluded());
-			assertTrue(filter.filter(testDescriptorWithTag("baz")).included());
+			assertTrue(filter.apply(testDescriptorWithTag("foo")).excluded());
+			assertTrue(filter.apply(testDescriptorWithTag("bar")).excluded());
+			assertTrue(filter.apply(testDescriptorWithTag("baz")).included());
 		}
 
 		@Test
@@ -172,8 +172,8 @@ class JUnit5Tests {
 			assertThat(filters).hasSize(1);
 
 			EngineIdFilter filter = filters.get(0);
-			assertTrue(filter.filter("foo").included());
-			assertTrue(filter.filter("bar").excluded());
+			assertTrue(filter.apply("foo").included());
+			assertTrue(filter.apply("bar").excluded());
 		}
 
 		@Test
@@ -192,8 +192,8 @@ class JUnit5Tests {
 			assertThat(filters).hasSize(1);
 
 			ClassFilter filter = filters.get(0);
-			assertTrue(filter.filter(Foo.class).included());
-			assertTrue(filter.filter(Bar.class).excluded());
+			assertTrue(filter.apply(Foo.class).included());
+			assertTrue(filter.apply(Bar.class).excluded());
 		}
 
 		@Test

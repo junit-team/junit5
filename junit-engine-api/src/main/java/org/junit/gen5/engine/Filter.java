@@ -22,7 +22,11 @@ import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 
 /**
- * Filters particular tests during/after test discovery.
+ * A {@link Filter} can be applied to determine if an object should be
+ * <em>included</em> or <em>excluded</em> in a result set.
+ *
+ * <p>For example, tests may be filtered during or after test discovery
+ * based on certain criteria.
  *
  * <p>Clients should not implement this interface directly but rather one of
  * its subinterfaces.
@@ -35,8 +39,8 @@ import org.junit.gen5.commons.util.Preconditions;
 public interface Filter<T> {
 
 	/**
-	 * Combines an array of {@link Filter filters} into a new composite filter
-	 * that will include elements if and only if all of the filters in the
+	 * Combine the supplied array of {@link Filter filters} into a new composite
+	 * filter that will include elements if and only if all of the filters in the
 	 * specified array include it.
 	 *
 	 * <p>If the array is empty, the returned filter will include all elements
@@ -62,9 +66,9 @@ public interface Filter<T> {
 	}
 
 	/**
-	 * Combines a collection of {@link Filter filters} into a new composite filter
-	 * that will include elements if and only if all of the filters in the specified
-	 * collection include it.
+	 * Combine the supplied collection of {@link Filter filters} into a new
+	 * composite filter that will include elements if and only if all of the
+	 * filters in the specified collection include it.
 	 *
 	 * <p>If the collection is empty, the returned filter will include all
 	 * elements it is asked to filter.
@@ -87,10 +91,18 @@ public interface Filter<T> {
 		return new CompositeFilter<>(filters);
 	}
 
-	FilterResult filter(T object);
+	/**
+	 * Apply this filter to the supplied object.
+	 */
+	FilterResult apply(T object);
 
+	/**
+	 * Return a {@link Predicate} that returns {@code true} if this filter
+	 * <em>includes</em> the object supplied to the predicate's
+	 * {@link Predicate#test test} method.
+	 */
 	default Predicate<T> toPredicate() {
-		return object -> filter(object).included();
+		return object -> apply(object).included();
 	}
 
 }

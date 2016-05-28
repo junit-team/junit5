@@ -34,10 +34,10 @@ public class ExclusionReasonConsumingFilter<T> implements Filter<T> {
 	}
 
 	@Override
-	public FilterResult filter(T object) {
-		FilterResult result = filter.filter(object);
+	public FilterResult apply(T object) {
+		FilterResult result = this.filter.apply(object);
 		if (result.excluded()) {
-			reasonConsumer.accept(object, result.getReason());
+			this.reasonConsumer.accept(object, result.getReason());
 		}
 		return result;
 	}

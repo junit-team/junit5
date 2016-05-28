@@ -37,44 +37,44 @@ class TagFilterTests {
 	void requireSingleTag() throws Exception {
 		PostDiscoveryFilter requireSingleTag = TagFilter.requireTags("tag1");
 
-		Assertions.assertTrue(requireSingleTag.filter(testWithTag1).included());
-		Assertions.assertTrue(requireSingleTag.filter(testWithBothTags).included());
+		Assertions.assertTrue(requireSingleTag.apply(testWithTag1).included());
+		Assertions.assertTrue(requireSingleTag.apply(testWithBothTags).included());
 
-		Assertions.assertTrue(requireSingleTag.filter(testWithTag2).excluded());
-		Assertions.assertTrue(requireSingleTag.filter(testWithNoTags).excluded());
+		Assertions.assertTrue(requireSingleTag.apply(testWithTag2).excluded());
+		Assertions.assertTrue(requireSingleTag.apply(testWithNoTags).excluded());
 	}
 
 	@Test
 	void requireAtLeastOneOfTwoTags() throws Exception {
 		PostDiscoveryFilter requireSingleTag = TagFilter.requireTags("tag1", "tag2");
 
-		Assertions.assertTrue(requireSingleTag.filter(testWithBothTags).included());
-		Assertions.assertTrue(requireSingleTag.filter(testWithTag1).included());
-		Assertions.assertTrue(requireSingleTag.filter(testWithTag2).included());
+		Assertions.assertTrue(requireSingleTag.apply(testWithBothTags).included());
+		Assertions.assertTrue(requireSingleTag.apply(testWithTag1).included());
+		Assertions.assertTrue(requireSingleTag.apply(testWithTag2).included());
 
-		Assertions.assertTrue(requireSingleTag.filter(testWithNoTags).excluded());
+		Assertions.assertTrue(requireSingleTag.apply(testWithNoTags).excluded());
 	}
 
 	@Test
 	void excludeSingleTag() throws Exception {
 		PostDiscoveryFilter requireSingleTag = TagFilter.excludeTags("tag1");
 
-		Assertions.assertTrue(requireSingleTag.filter(testWithTag1).excluded());
-		Assertions.assertTrue(requireSingleTag.filter(testWithBothTags).excluded());
+		Assertions.assertTrue(requireSingleTag.apply(testWithTag1).excluded());
+		Assertions.assertTrue(requireSingleTag.apply(testWithBothTags).excluded());
 
-		Assertions.assertTrue(requireSingleTag.filter(testWithTag2).included());
-		Assertions.assertTrue(requireSingleTag.filter(testWithNoTags).included());
+		Assertions.assertTrue(requireSingleTag.apply(testWithTag2).included());
+		Assertions.assertTrue(requireSingleTag.apply(testWithNoTags).included());
 	}
 
 	@Test
 	void excludeSeveralTags() throws Exception {
 		PostDiscoveryFilter requireSingleTag = TagFilter.excludeTags("tag1", "tag2");
 
-		Assertions.assertTrue(requireSingleTag.filter(testWithTag1).excluded());
-		Assertions.assertTrue(requireSingleTag.filter(testWithBothTags).excluded());
-		Assertions.assertTrue(requireSingleTag.filter(testWithTag2).excluded());
+		Assertions.assertTrue(requireSingleTag.apply(testWithTag1).excluded());
+		Assertions.assertTrue(requireSingleTag.apply(testWithBothTags).excluded());
+		Assertions.assertTrue(requireSingleTag.apply(testWithTag2).excluded());
 
-		Assertions.assertTrue(requireSingleTag.filter(testWithNoTags).included());
+		Assertions.assertTrue(requireSingleTag.apply(testWithNoTags).included());
 	}
 
 	@Tag("tag1")

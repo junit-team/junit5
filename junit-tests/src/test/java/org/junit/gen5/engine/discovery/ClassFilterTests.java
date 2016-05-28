@@ -30,8 +30,8 @@ class ClassFilterTests {
 		ClassFilter filter = ClassFilter.byNamePattern(regex);
 
 		assertEquals("Filter class names with regular expression: " + regex, filter.toString());
-		assertTrue(filter.filter(String.class).included());
-		assertFalse(filter.filter(Collection.class).included());
+		assertTrue(filter.apply(String.class).included());
+		assertFalse(filter.apply(Collection.class).included());
 	}
 
 }

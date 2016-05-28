@@ -28,7 +28,7 @@ class ClassNameFilter implements ClassFilter {
 	}
 
 	@Override
-	public FilterResult filter(Class<?> testClass) {
+	public FilterResult apply(Class<?> testClass) {
 		return includedIf(pattern.matcher(testClass.getName()).matches(), //
 			() -> "Test class matches name pattern: " + pattern, //
 			() -> "Test class does not match name pattern: " + pattern);
