@@ -19,7 +19,7 @@ import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
- * The result of evaluating a {@link Filter}.
+ * The result of applying a {@link Filter}.
  *
  * @since 5.0
  */

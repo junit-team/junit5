@@ -23,8 +23,8 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.UniqueId.Segment;
 
 /**
- * Used to {@linkplain #parse parse} an {@link UniqueId} from a string representation
- * or to {@linkplain #format format} an {@link UniqueId} into a string representation.
+ * Used to {@linkplain #parse parse} a {@link UniqueId} from a string representation
+ * or to {@linkplain #format format} a {@link UniqueId} into a string representation.
  *
  * @since 5.0
  */
