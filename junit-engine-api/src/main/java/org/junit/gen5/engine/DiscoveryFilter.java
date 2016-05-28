@@ -15,10 +15,11 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * Filters particular tests during test discovery.
+ * A {@link DiscoveryFilter} is applied during test discovery to determine if
+ * a given container or test should be included in the test plan.
  *
- * <p>These filters need to be applied by the {@link TestEngine} during test
- * discovery.
+ * <p>{@link TestEngine TestEngines} should apply {@code DiscoveryFilters}
+ * during the test discovery phase.
  *
  * @since 5.0
  * @see EngineDiscoveryRequest
@@ -26,5 +27,4 @@ import org.junit.gen5.commons.meta.API;
  */
 @API(Experimental)
 public interface DiscoveryFilter<T> extends Filter<T> {
-
 }

@@ -16,11 +16,24 @@ import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.DiscoveryFilter;
 
 /**
+ * {@link DiscoveryFilter} that is applied to a {@link Class}.
+ *
  * @since 5.0
+ * @see #byNamePattern(String)
  */
 @API(Experimental)
 public interface ClassFilter extends DiscoveryFilter<Class<?>> {
 
+	/**
+	 * Create a {@link ClassFilter} based on the supplied class name pattern.
+	 *
+	 * <p>If the fully qualified name of a class matches against the pattern,
+	 * the class will be included in the result set.
+	 *
+	 * @param pattern a regular expression to match against fully qualified
+	 * class names; never {@code null} or empty
+	 * @see Class#getName()
+	 */
 	static ClassFilter byNamePattern(String pattern) {
 		return new ClassNameFilter(pattern);
 	}

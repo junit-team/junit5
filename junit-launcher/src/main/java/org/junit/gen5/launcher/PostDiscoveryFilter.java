@@ -21,8 +21,8 @@ import org.junit.gen5.engine.TestEngine;
  * A {@code PostDiscoveryFilter} is applied to {@link TestDescriptor TestDescriptors}
  * after test discovery.
  *
- * <p>A {@code PostDiscoveryFilter} must not be applied by a {@link TestEngine}
- * during test discovery.
+ * <p>{@link TestEngine TestEngines} must <strong>not</strong> apply
+ * {@code PostDiscoveryFilters} during the test discovery phase.
  *
  * @since 5.0
  * @see TestDiscoveryRequest
