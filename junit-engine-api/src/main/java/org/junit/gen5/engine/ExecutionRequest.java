@@ -16,6 +16,15 @@ import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import org.junit.gen5.commons.meta.API;
 
 /**
+ * Provides a single {@link TestEngine} access to the information necessary to
+ * execute its tests.
+ *
+ * <p>A request contains an engine's root {@link TestDescriptor}, the
+ * {@link EngineExecutionListener} to be notified of test execution, and
+ * {@link ConfigurationParameters} that the engine may use to influence test
+ * execution.
+ *
+ * @see TestEngine
  * @since 5.0
  */
 @API(Experimental)
@@ -35,14 +44,25 @@ public class ExecutionRequest {
 		this.configurationParameters = configurationParameters;
 	}
 
+	/**
+	 * Get the root {@link TestDescriptor} of the engine that processes this
+	 * request.
+	 */
 	public TestDescriptor getRootTestDescriptor() {
 		return this.rootTestDescriptor;
 	}
 
+	/**
+	 * Get the {@link EngineExecutionListener} to be notified of test execution.
+	 */
 	public EngineExecutionListener getEngineExecutionListener() {
 		return this.engineExecutionListener;
 	}
 
+	/**
+	 * Get the {@link ConfigurationParameters} that the engine may use to
+	 * influence test execution.
+	 */
 	public ConfigurationParameters getConfigurationParameters() {
 		return this.configurationParameters;
 	}

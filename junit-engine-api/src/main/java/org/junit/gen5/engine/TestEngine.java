@@ -27,6 +27,8 @@ import org.junit.gen5.commons.meta.API;
  * and {@linkplain #execute execute them} according to
  * {@link ExecutionRequest ExecutionRequests}.
  *
+ * @see EngineDiscoveryRequest
+ * @see ExecutionRequest
  * @since 5.0
  */
 @API(Experimental)

@@ -29,6 +29,7 @@ import org.junit.gen5.commons.meta.API;
  * {@linkplain ConfigurationParameters configuration parameters} may be used to
  * influence the discovery process.
  *
+ * @see TestEngine
  * @see DiscoverySelector
  * @see DiscoveryFilter
  * @since 5.0
