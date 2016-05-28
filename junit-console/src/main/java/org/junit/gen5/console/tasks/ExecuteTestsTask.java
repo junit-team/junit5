@@ -94,14 +94,14 @@ public class ExecuteTestsTask implements ConsoleTask {
 
 	private void printSummary(TestExecutionSummary summary, PrintWriter out) {
 		if (options.isHideDetails()) { // Otherwise the failures have already been printed
-			summary.printFailuresOn(out);
+			summary.printFailuresTo(out);
 		}
-		summary.printOn(out);
+		summary.printTo(out);
 	}
 
 	private int computeExitCode(TestExecutionSummary summary) {
 		if (options.isExitCodeEnabled()) {
-			long failedTests = summary.countFailedTests();
+			long failedTests = summary.getTestsFailedCount();
 			return (int) Math.min(Integer.MAX_VALUE, failedTests);
 		}
 		return SUCCESS;

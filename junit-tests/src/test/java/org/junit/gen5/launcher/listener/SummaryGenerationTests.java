@@ -42,7 +42,7 @@ class SummaryGenerationTests {
 		listener.testPlanExecutionStarted(testPlan);
 		listener.testPlanExecutionFinished(testPlan);
 
-		assertEquals(0, listener.getSummary().countFailedTests());
+		assertEquals(0, listener.getSummary().getTestsFailedCount());
 
 		String summaryString = summaryAsString();
 		assertAll("summary", //
@@ -106,7 +106,7 @@ class SummaryGenerationTests {
 		listener.testPlanExecutionFinished(testPlan);
 
 		// An aborted test is not a failure
-		assertEquals(1, listener.getSummary().countFailedTests());
+		assertEquals(1, listener.getSummary().getTestsFailedCount());
 
 		String failuresString = failuresAsString();
 		assertAll("failures", //
@@ -126,13 +126,13 @@ class SummaryGenerationTests {
 
 	private String summaryAsString() {
 		StringWriter summaryWriter = new StringWriter();
-		listener.getSummary().printOn(new PrintWriter(summaryWriter));
+		listener.getSummary().printTo(new PrintWriter(summaryWriter));
 		return summaryWriter.toString();
 	}
 
 	private String failuresAsString() {
 		StringWriter failuresWriter = new StringWriter();
-		listener.getSummary().printFailuresOn(new PrintWriter(failuresWriter));
+		listener.getSummary().printFailuresTo(new PrintWriter(failuresWriter));
 		return failuresWriter.toString();
 	}
 
