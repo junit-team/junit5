@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
@@ -39,8 +40,11 @@ public final class TagFilter {
 	 *
 	 * <p>Containers and tests will only be executed if they are tagged with
 	 * at least one of the supplied <em>require</em> tags.
+	 *
+	 * @param tags the required tags; never {@code null} or empty
 	 */
 	public static PostDiscoveryFilter requireTags(String... tags) {
+		Preconditions.notNull(tags, "tags must not be null");
 		return requireTags(asList(tags));
 	}
 
@@ -49,8 +53,11 @@ public final class TagFilter {
 	 *
 	 * <p>Containers and tests will only be executed if they are tagged with
 	 * at least one of the supplied <em>require</em> tags.
+	 *
+	 * @param tags the require tags; never {@code null} or empty
 	 */
 	public static PostDiscoveryFilter requireTags(List<String> tags) {
+		Preconditions.notEmpty(tags, "tags must not be null or empty");
 		return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).anyMatch(tags::contains));
 	}
 
@@ -59,8 +66,11 @@ public final class TagFilter {
 	 *
 	 * <p>Containers and tests will only be executed if they are <em>not</em>
 	 * tagged with any of the supplied <em>exclude</em> tags.
+	 *
+	 * @param tags the exclude tags; never {@code null} or empty
 	 */
 	public static PostDiscoveryFilter excludeTags(String... tags) {
+		Preconditions.notNull(tags, "tags must not be null");
 		return excludeTags(asList(tags));
 	}
 
@@ -69,8 +79,11 @@ public final class TagFilter {
 	 *
 	 * <p>Containers and tests will only be executed if they are <em>not</em>
 	 * tagged with any of the supplied <em>exclude</em> tags.
+	 *
+	 * @param tags the exclude tags; never {@code null} or empty
 	 */
 	public static PostDiscoveryFilter excludeTags(List<String> tags) {
+		Preconditions.notEmpty(tags, "tags must not be null or empty");
 		return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).noneMatch(tags::contains));
 	}
 
