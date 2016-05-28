@@ -18,7 +18,8 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestEngine;
 
 /**
- * A {@code PostDiscoveryFilter} is applied to tests after test discovery.
+ * A {@code PostDiscoveryFilter} is applied to {@link TestDescriptor TestDescriptors}
+ * after test discovery.
  *
  * <p>A {@code PostDiscoveryFilter} must not be applied by a {@link TestEngine}
  * during test discovery.
