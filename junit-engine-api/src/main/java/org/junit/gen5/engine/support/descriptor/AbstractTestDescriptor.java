@@ -105,13 +105,6 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
-		// Create a copy of the set in order to avoid a ConcurrentModificationException
-		new LinkedHashSet<>(this.children).forEach(child -> child.accept(visitor));
-	}
-
-	@Override
 	public Set<TestTag> getTags() {
 		return emptySet();
 	}

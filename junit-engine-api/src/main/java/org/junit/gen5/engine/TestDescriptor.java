@@ -19,6 +19,10 @@ import java.util.Set;
 import org.junit.gen5.commons.meta.API;
 
 /**
+ * Mutable descriptor of a test or container that has been discovered by a
+ * {@link TestEngine}.
+ *
+ * @see TestEngine
  * @since 5.0
  */
 @API(Experimental)
@@ -49,30 +53,86 @@ public interface TestDescriptor {
 	 */
 	String getDisplayName();
 
+	/**
+	 * Get the {@linkplain TestSource source} of the represented test
+	 * or container, if available.
+	 *
+	 * @see TestSource
+	 */
 	Optional<TestSource> getSource();
 
+	/**
+	 * Get the <em>parent</em> of the represented test or container, if
+	 * available.
+	 */
 	Optional<TestDescriptor> getParent();
 
+	/**
+	 * Set the <em>parent</em> of the represented test or container.
+	 *
+	 * @param parent the new parent of this descriptor; may be {@code null}.
+	 */
 	void setParent(TestDescriptor parent);
 
+	/**
+	 * Determine if this descriptor represents a test.
+	 */
 	boolean isTest();
 
+	/**
+	 * Determine if this descriptor represents a container.
+	 */
 	boolean isContainer();
 
+	/**
+	 * Determine if this descriptor is a <em>root</em> descriptor.
+	 *
+	 * <p>Root descriptor are descriptors without a parent.
+	 */
 	default boolean isRoot() {
 		return !getParent().isPresent();
 	}
 
+	/**
+	 * Get the set of {@linkplain TestTag tags} of this descriptor.
+	 *
+	 * @see TestTag
+	 */
 	Set<TestTag> getTags();
 
+	/**
+	 * Get the set of <em>children</em> of this descriptor.
+	 */
 	Set<? extends TestDescriptor> getChildren();
 
+	/**
+	 * Add a <em>child</em> to this descriptor.
+	 *
+	 * @param descriptor child to added to this descriptor; must not be
+	 *        {@code null}.
+	 */
 	void addChild(TestDescriptor descriptor);
 
+	/**
+	 * Remove a <em>child</em> from this descriptor.
+	 *
+	 * @param descriptor child to removed from this descriptor; must not be
+	 *        {@code null}.
+	 */
 	void removeChild(TestDescriptor descriptor);
 
+	/**
+	 * Remove this descriptor from its parent and removes all the children from
+	 * this descriptor.
+	 */
 	void removeFromHierarchy();
 
+	/**
+	 * Get the set of <em>descendants</em> of this descriptor.
+	 *
+	 * <p>A <em>descendant</em> is a child of this descriptor or child of one of
+	 * its children, recursively.
+	 */
 	default Set<? extends TestDescriptor> allDescendants() {
 		Set<TestDescriptor> all = new LinkedHashSet<>();
 		all.addAll(getChildren());
@@ -82,17 +142,38 @@ public interface TestDescriptor {
 		return all;
 	}
 
+	/**
+	 * Determine if this descriptor or any of its descendants represents a test.
+	 */
 	default boolean hasTests() {
 		return (isTest() || getChildren().stream().anyMatch(TestDescriptor::hasTests));
 	}
 
+	/**
+	 * Find this descriptor or any of its descendants by the supplied unique ID.
+	 */
 	Optional<? extends TestDescriptor> findByUniqueId(UniqueId uniqueId);
 
+	/**
+	 * Visitor for the tree-like {@link TestDescriptor} structure.
+	 *
+	 * @see TestDescriptor#accept
+	 */
 	interface Visitor {
 
+		/**
+		 * Visit a {@link TestDescriptor}.
+		 */
 		void visit(TestDescriptor descriptor);
 	}
 
-	void accept(Visitor visitor);
+	/**
+	 * Accept a visitor to the subtree starting with this descriptor.
+	 */
+	default void accept(Visitor visitor) {
+		visitor.visit(this);
+		// Create a copy of the set in order to avoid a ConcurrentModificationException
+		new LinkedHashSet<>(this.getChildren()).forEach(child -> child.accept(visitor));
+	}
 
 }
