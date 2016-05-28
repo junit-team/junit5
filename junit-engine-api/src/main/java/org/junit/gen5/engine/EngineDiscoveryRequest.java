@@ -17,19 +17,52 @@ import java.util.List;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * An {@code EngineDiscoveryRequest} gives {@link TestEngine}s
- * access to the information necessary to discover {@link TestDescriptor}s.
+ * Provides {@link TestEngine TestEngines} access to the information necessary
+ * to discover {@link TestDescriptor TestDescriptors}.
  *
+ * <p>A request is comprised of {@linkplain DiscoverySelector selectors} and
+ * {@linkplain DiscoveryFilter filters}. While the former describe which tests
+ * are to be <em>selected</em>, the latter specify how they are to be
+ * <em>filtered</em>.
+ *
+ * <p>In addition, the supplied
+ * {@linkplain ConfigurationParameters configuration parameters} may be used to
+ * influence the discovery process.
+ *
+ * @see DiscoverySelector
+ * @see DiscoveryFilter
  * @since 5.0
  */
 @API(Experimental)
 public interface EngineDiscoveryRequest {
 
+	/**
+	 * Get the {@link DiscoverySelector DiscoverySelectors} of this request.
+	 */
 	List<DiscoverySelector> getSelectors();
 
+	/**
+	 * Get the {@link DiscoverySelector DiscoverySelectors} of this request
+	 * filtered by a particular type.
+	 *
+	 * @param selectorType the type of {@link DiscoverySelector} to filter for
+	 * @return all selectors of this request that are instances of
+	 *         {@code selectorType}
+	 */
 	<T extends DiscoverySelector> List<T> getSelectorsByType(Class<T> selectorType);
 
+	/**
+	 * Get the {@link DiscoveryFilter DiscoveryFilters} of this request filtered
+	 * by a particular type.
+	 *
+	 * @param filterType the type of {@link DiscoveryFilter} to filter for
+	 * @return all filters of this request that are instances of
+	 *         {@code filterType}
+	 */
 	<T extends DiscoveryFilter<?>> List<T> getDiscoveryFiltersByType(Class<T> filterType);
 
+	/**
+	 * Get the {@link ConfigurationParameters} of this request.
+	 */
 	ConfigurationParameters getConfigurationParameters();
 }
