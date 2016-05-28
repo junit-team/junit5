@@ -13,13 +13,13 @@ package org.junit.gen5.engine;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
@@ -33,54 +33,67 @@ import org.junit.gen5.commons.util.ToStringBuilder;
 @API(Experimental)
 public class UniqueId implements Cloneable {
 
-	private static final String TYPE_ENGINE = "engine";
+	private static final String ENGINE_SEGMENT_TYPE = "engine";
 
 	/**
 	 * Parse a {@code UniqueId} from the supplied string representation using the
 	 * default format.
 	 *
+	 * @param uniqueId the string representation to parse; never {@code null} or empty
 	 * @return a properly constructed {@code UniqueId}
 	 * @throws JUnitException if the string cannot be parsed
 	 */
-	public static UniqueId parse(String uniqueIdString) throws JUnitException {
-		return UniqueIdFormat.getDefault().parse(uniqueIdString);
+	public static UniqueId parse(String uniqueId) throws JUnitException {
+		Preconditions.notBlank(uniqueId, "Unique ID string must not be null or empty");
+		return UniqueIdFormat.getDefault().parse(uniqueId);
 	}
 
 	/**
 	 * Create an engine's unique ID from its {@code engineId} using the default
 	 * format.
+	 *
+	 * @param engineId the engine ID; never {@code null} or empty
 	 */
 	public static UniqueId forEngine(String engineId) {
-		return root(TYPE_ENGINE, engineId);
+		Preconditions.notBlank(engineId, "engineId must not be null or empty");
+		return root(ENGINE_SEGMENT_TYPE, engineId);
 	}
 
 	/**
 	 * Create a root unique ID from the supplied {@code segmentType} and
 	 * {@code value} using the default format.
+	 *
+	 * @param segmentType the segment type; never {@code null} or empty
+	 * @param value the value; never {@code null} or empty
 	 */
 	public static UniqueId root(String segmentType, String value) {
-		List<Segment> segments = Collections.singletonList(new Segment(segmentType, value));
-		return new UniqueId(UniqueIdFormat.getDefault(), segments);
+		Preconditions.notBlank(segmentType, "segmentType must not be null or empty");
+		Preconditions.notBlank(value, "value must not be null or empty");
+		return new UniqueId(UniqueIdFormat.getDefault(), new Segment(segmentType, value));
 	}
 
 	private final UniqueIdFormat uniqueIdFormat;
-
 	private final List<Segment> segments = new ArrayList<>();
+
+	private UniqueId(UniqueIdFormat uniqueIdFormat, Segment segment) {
+		this.uniqueIdFormat = uniqueIdFormat;
+		this.segments.add(segment);
+	}
 
 	UniqueId(UniqueIdFormat uniqueIdFormat, List<Segment> segments) {
 		this.uniqueIdFormat = uniqueIdFormat;
 		this.segments.addAll(segments);
 	}
 
-	public Optional<Segment> getRoot() {
-		return getSegments().stream().findFirst();
+	final Optional<Segment> getRoot() {
+		return this.segments.size() > 0 ? Optional.of(this.segments.get(0)) : Optional.empty();
 	}
 
-	public Optional<String> getEngineId() {
-		return getRoot().filter(segment -> segment.getType().equals(TYPE_ENGINE)).map(Segment::getValue);
+	public final Optional<String> getEngineId() {
+		return getRoot().filter(segment -> segment.getType().equals(ENGINE_SEGMENT_TYPE)).map(Segment::getValue);
 	}
 
-	public List<Segment> getSegments() {
+	public final List<Segment> getSegments() {
 		return new ArrayList<>(this.segments);
 	}
 
@@ -97,7 +110,7 @@ public class UniqueId implements Cloneable {
 	 *
 	 * @see #append(Segment)
 	 */
-	public UniqueId append(String segmentType, String value) {
+	public final UniqueId append(String segmentType, String value) {
 		Segment segment = new Segment(segmentType, value);
 		return append(segment);
 	}
@@ -110,7 +123,7 @@ public class UniqueId implements Cloneable {
 	 *
 	 * @see #append(String, String)
 	 */
-	public UniqueId append(Segment segment) {
+	public final UniqueId append(Segment segment) {
 		UniqueId clone = new UniqueId(this.uniqueIdFormat, this.segments);
 		clone.segments.add(segment);
 		return clone;
