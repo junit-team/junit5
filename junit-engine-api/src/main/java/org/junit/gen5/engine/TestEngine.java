@@ -15,14 +15,55 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
+ * A {@code TestEngine} facilitates <em>discovery</em> and <em>execution</em> of
+ * tests for a particular programming model.
+ *
+ * <p>For example, JUnit 5 provides a {@code TestEngine} that discovers and
+ * executes tests written using the JUnit 5 programming model.
+ *
+ * <p>Every {@code TestEngine} must provide an {@linkplain #getId ID},
+ * {@linkplain #discover discover tests} from
+ * {@link EngineDiscoveryRequest EngineDiscoveryRequests},
+ * and {@linkplain #execute execute them} according to
+ * {@link ExecutionRequest ExecutionRequests}.
+ *
  * @since 5.0
  */
 @API(Experimental)
 public interface TestEngine {
 
+	/**
+	 * Get the ID that uniquely identifies this test engine.
+	 *
+	 * <p>Each test engine must provide a unique ID. JUnit 4 and 5 use
+	 * {@code "junit4"} and {@code "junit5"}, respectively. When in doubt, you
+	 * may use the fully qualified name of the {@code TestEngine} class.
+	 */
 	String getId();
 
+	/**
+	 * Discover tests according to an {@link EngineDiscoveryRequest}.
+	 *
+	 * <p>The supplied {@code uniqueId} must be used for the returned
+	 * {@link TestDescriptor}. In addition, it is used to create unique IDs for
+	 * its children by calling {@link UniqueId#append}.
+	 *
+	 * @param discoveryRequest the request to discover tests from
+	 * @param uniqueId the unique ID to be used for this test engine's
+	 * 				   {@link TestDescriptor}
+	 * @return the root {@link TestDescriptor} of this engine
+	 */
 	TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId);
 
+	/**
+	 * Execute tests according to an {@link ExecutionRequest}.
+	 *
+	 * <p>The {@code request} passed to this method contains the root
+	 * {@link TestDescriptor} that was previously returned by {@link #discover},
+	 * the {@link EngineExecutionListener} to be notified of test execution,
+	 * and {@link ConfigurationParameters} that may influence test execution.
+	 *
+	 * @param request the request to execute tests for
+	 */
 	void execute(ExecutionRequest request);
 }
