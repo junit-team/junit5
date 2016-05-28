@@ -63,6 +63,7 @@ import org.junit.gen5.engine.support.hierarchical.Leaf;
 public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
+	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	private final String displayName;
 
@@ -179,7 +180,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 			try {
 				Method method = testExtensionContext.getTestMethod().get();
 				Object instance = testExtensionContext.getTestInstance();
-				new ExecutableInvoker(testExtensionContext, context.getExtensionRegistry()).invoke(method, instance);
+				executableInvoker.invoke(method, instance, testExtensionContext, context.getExtensionRegistry());
 			}
 			catch (Throwable throwable) {
 				invokeTestExecutionExceptionHandlers(context.getExtensionRegistry(), testExtensionContext, throwable);

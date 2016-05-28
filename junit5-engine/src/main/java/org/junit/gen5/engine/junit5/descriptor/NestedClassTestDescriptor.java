@@ -39,6 +39,8 @@ import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 @API(Internal)
 public class NestedClassTestDescriptor extends ClassTestDescriptor {
 
+	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
+
 	public NestedClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
 		super(uniqueId, testClass);
 	}
@@ -50,7 +52,7 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 		return () -> {
 			Object outerInstance = parentExecutionContext.getTestInstanceProvider().getTestInstance();
 			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(getTestClass());
-			Object instance = new ExecutableInvoker(extensionContext, registry).invoke(constructor, outerInstance);
+			Object instance = executableInvoker.invoke(constructor, outerInstance, extensionContext, registry);
 			invokeTestInstancePostProcessors(instance, registry, extensionContext);
 			return instance;
 		};

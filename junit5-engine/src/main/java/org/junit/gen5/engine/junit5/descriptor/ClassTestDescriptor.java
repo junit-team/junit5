@@ -63,6 +63,7 @@ import org.junit.gen5.engine.support.hierarchical.Container;
 public class ClassTestDescriptor extends JUnit5TestDescriptor implements Container<JUnit5EngineExecutionContext> {
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
+	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	private final String displayName;
 
@@ -173,7 +174,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
 		return () -> {
 			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
-			Object instance = new ExecutableInvoker(extensionContext, registry).invoke(constructor);
+			Object instance = executableInvoker.invoke(constructor, extensionContext, registry);
 			invokeTestInstancePostProcessors(instance, registry, extensionContext);
 			return instance;
 		};
@@ -195,14 +196,14 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 
 	private void invokeBeforeAllMethods(ExtensionRegistry registry, ContainerExtensionContext context) {
 		this.beforeAllMethods.forEach(
-			method -> executeAndMaskThrowable(() -> new ExecutableInvoker(context, registry).invoke(method)));
+			method -> executeAndMaskThrowable(() -> executableInvoker.invoke(method, context, registry)));
 	}
 
 	private void invokeAfterAllMethods(ExtensionRegistry registry, ContainerExtensionContext context,
 			ThrowableCollector throwableCollector) {
 
 		this.afterAllMethods.forEach(
-			method -> throwableCollector.execute(() -> new ExecutableInvoker(context, registry).invoke(method)));
+			method -> throwableCollector.execute(() -> executableInvoker.invoke(method, context, registry)));
 	}
 
 	private void invokeAfterAllCallbacks(ExtensionRegistry registry, ContainerExtensionContext context,
@@ -241,7 +242,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 			method.getDeclaringClass()).orElseThrow(
 				() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
 
-		new ExecutableInvoker(context, registry).invoke(method, instance);
+		executableInvoker.invoke(method, instance, context, registry);
 	}
 
 	@Override

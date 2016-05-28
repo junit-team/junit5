@@ -45,6 +45,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	public static final String DYNAMIC_TEST_SEGMENT_TYPE = "dynamic-test";
 
 	private static final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
+	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, testClass, testMethod);
@@ -69,9 +70,8 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 		throwableCollector.execute(() -> {
 			Method method = testExtensionContext.getTestMethod().get();
 			Object instance = testExtensionContext.getTestInstance();
-			ExecutableInvoker methodInvoker = new ExecutableInvoker(testExtensionContext,
+			Object testFactoryMethodResult = executableInvoker.invoke(method, instance, testExtensionContext,
 				context.getExtensionRegistry());
-			Object testFactoryMethodResult = methodInvoker.invoke(method, instance);
 
 			Stream<? extends DynamicTest> dynamicTestStream = toDynamicTestStream(testExtensionContext,
 				testFactoryMethodResult);

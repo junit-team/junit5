@@ -54,7 +54,7 @@ class ExecutableInvokerTests {
 
 		Class<ConstructorInjectionTestCase> outerClass = ConstructorInjectionTestCase.class;
 		Constructor<ConstructorInjectionTestCase> constructor = ReflectionUtils.getDeclaredConstructor(outerClass);
-		ConstructorInjectionTestCase outer = newInvoker().invoke(constructor);
+		ConstructorInjectionTestCase outer = newInvoker().invoke(constructor, extensionContext, extensionRegistry);
 
 		assertNotNull(outer);
 		assertEquals(ENIGMA, outer.str);
@@ -62,7 +62,8 @@ class ExecutableInvokerTests {
 		Class<ConstructorInjectionTestCase.NestedTestCase> innerClass = ConstructorInjectionTestCase.NestedTestCase.class;
 		Constructor<ConstructorInjectionTestCase.NestedTestCase> innerConstructor = ReflectionUtils.getDeclaredConstructor(
 			innerClass);
-		ConstructorInjectionTestCase.NestedTestCase inner = newInvoker().invoke(innerConstructor, outer);
+		ConstructorInjectionTestCase.NestedTestCase inner = newInvoker().invoke(innerConstructor, outer,
+			extensionContext, extensionRegistry);
 
 		assertNotNull(inner);
 		assertEquals(42, inner.num);
@@ -261,11 +262,11 @@ class ExecutableInvokerTests {
 	}
 
 	private ExecutableInvoker newInvoker() {
-		return new ExecutableInvoker(extensionContext, extensionRegistry);
+		return new ExecutableInvoker();
 	}
 
 	private void invokeMethod() {
-		newInvoker().invoke(this.method, this.instance);
+		newInvoker().invoke(this.method, this.instance, this.extensionContext, this.extensionRegistry);
 	}
 
 	// -------------------------------------------------------------------------

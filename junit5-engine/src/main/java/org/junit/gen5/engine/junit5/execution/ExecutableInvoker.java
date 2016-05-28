@@ -43,21 +43,19 @@ public class ExecutableInvoker {
 
 	private static final Logger LOG = Logger.getLogger(ExecutableInvoker.class.getName());
 
-	private final ExtensionContext extensionContext;
-	private final ExtensionRegistry extensionRegistry;
-
-	public ExecutableInvoker(ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
-		this.extensionContext = extensionContext;
-		this.extensionRegistry = extensionRegistry;
-	}
-
 	/**
 	 * Invoke the supplied constructor with dynamic parameter resolution.
 	 *
 	 * @param constructor the constructor to invoke and resolve parameters for
+	 * @param extensionContext the current {@code ExtensionContext}
+	 * @param extensionRegistry the {@code ExtensionRegistry} to retrieve
+	 * {@code ParameterResolvers} from
 	 */
-	public <T> T invoke(Constructor<T> constructor) {
-		return ReflectionUtils.newInstance(constructor, resolveParameters(constructor, Optional.empty()));
+	public <T> T invoke(Constructor<T> constructor, ExtensionContext extensionContext,
+			ExtensionRegistry extensionRegistry) {
+
+		return ReflectionUtils.newInstance(constructor,
+			resolveParameters(constructor, Optional.empty(), extensionContext, extensionRegistry));
 	}
 
 	/**
@@ -70,19 +68,28 @@ public class ExecutableInvoker {
 	 * @param constructor the constructor to invoke and resolve parameters for
 	 * @param outerInstance the outer instance to supply as the first argument
 	 * to the constructor
+	 * @param extensionContext the current {@code ExtensionContext}
+	 * @param extensionRegistry the {@code ExtensionRegistry} to retrieve
+	 * {@code ParameterResolvers} from
 	 */
-	public <T> T invoke(Constructor<T> constructor, Object outerInstance) {
+	public <T> T invoke(Constructor<T> constructor, Object outerInstance, ExtensionContext extensionContext,
+			ExtensionRegistry extensionRegistry) {
+
 		return ReflectionUtils.newInstance(constructor,
-			resolveParameters(constructor, Optional.empty(), outerInstance));
+			resolveParameters(constructor, Optional.empty(), outerInstance, extensionContext, extensionRegistry));
 	}
 
 	/**
 	 * Invoke the supplied {@code static} method with dynamic parameter resolution.
 	 *
 	 * @param method the method to invoke and resolve parameters for
+	 * @param extensionContext the current {@code ExtensionContext}
+	 * @param extensionRegistry the {@code ExtensionRegistry} to retrieve
+	 * {@code ParameterResolvers} from
 	 */
-	public Object invoke(Method method) {
-		return ReflectionUtils.invokeMethod(method, null, resolveParameters(method, Optional.empty()));
+	public Object invoke(Method method, ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
+		return ReflectionUtils.invokeMethod(method, null,
+			resolveParameters(method, Optional.empty(), extensionContext, extensionRegistry));
 	}
 
 	/**
@@ -92,12 +99,18 @@ public class ExecutableInvoker {
 	 * @param method the method to invoke and resolve parameters for
 	 * @param target the object on which the method will be invoked; should be
 	 * {@code null} for static methods
+	 * @param extensionContext the current {@code ExtensionContext}
+	 * @param extensionRegistry the {@code ExtensionRegistry} to retrieve
+	 * {@code ParameterResolvers} from
 	 */
-	public Object invoke(Method method, Object target) {
+	public Object invoke(Method method, Object target, ExtensionContext extensionContext,
+			ExtensionRegistry extensionRegistry) {
+
 		@SuppressWarnings("unchecked")
 		Optional<Object> optionalTarget = (target instanceof Optional ? (Optional<Object>) target
 				: Optional.ofNullable(target));
-		return ReflectionUtils.invokeMethod(method, target, resolveParameters(method, optionalTarget));
+		return ReflectionUtils.invokeMethod(method, target,
+			resolveParameters(method, optionalTarget, extensionContext, extensionRegistry));
 	}
 
 	/**
@@ -106,11 +119,16 @@ public class ExecutableInvoker {
 	 * @param executable the executable for which to resolve parameters
 	 * @param target the object on which the executable will be invoked;
 	 * should be {@code null} for static methods and constructors
+	 * @param extensionContext the current {@code ExtensionContext}
+	 * @param extensionRegistry the {@code ExtensionRegistry} to retrieve
+	 * {@code ParameterResolvers} from
 	 * @return the array of Objects to be used as parameters in the executable
 	 * invocation; never {@code null} though potentially empty
 	 */
-	private Object[] resolveParameters(Executable executable, Optional<Object> target) {
-		return resolveParameters(executable, target, null);
+	private Object[] resolveParameters(Executable executable, Optional<Object> target,
+			ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
+
+		return resolveParameters(executable, target, null, extensionContext, extensionRegistry);
 	}
 
 	/**
@@ -123,10 +141,15 @@ public class ExecutableInvoker {
 	 * @param outerInstance the outer instance that will be supplied as the
 	 * first argument to a constructor for an inner class; should be {@code null}
 	 * for methods and constructors for top-level or static classes
+	 * @param extensionContext the current {@code ExtensionContext}
+	 * @param extensionRegistry the {@code ExtensionRegistry} to retrieve
+	 * {@code ParameterResolvers} from
 	 * @return the array of Objects to be used as parameters in the executable
 	 * invocation; never {@code null} though potentially empty
 	 */
-	private Object[] resolveParameters(Executable executable, Optional<Object> target, Object outerInstance) {
+	private Object[] resolveParameters(Executable executable, Optional<Object> target, Object outerInstance,
+			ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
+
 		Parameter[] parameters = executable.getParameters();
 		Object[] values = new Object[parameters.length];
 		int start = 0;
@@ -140,16 +163,18 @@ public class ExecutableInvoker {
 
 		// Resolve remaining parameters dynamically
 		for (int i = start; i < parameters.length; i++) {
-			values[i] = resolveParameter(parameters[i], executable, target);
+			values[i] = resolveParameter(parameters[i], executable, target, extensionContext, extensionRegistry);
 		}
 		return values;
 	}
 
-	private Object resolveParameter(Parameter parameter, Executable executable, Optional<Object> target) {
+	private Object resolveParameter(Parameter parameter, Executable executable, Optional<Object> target,
+			ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
+
 		try {
 			// @formatter:off
-			List<ParameterResolver> matchingResolvers = this.extensionRegistry.stream(ParameterResolver.class)
-					.filter(resolver -> resolver.supports(parameter, target, this.extensionContext))
+			List<ParameterResolver> matchingResolvers = extensionRegistry.stream(ParameterResolver.class)
+					.filter(resolver -> resolver.supports(parameter, target, extensionContext))
 					.collect(toList());
 			// @formatter:on
 
@@ -171,7 +196,7 @@ public class ExecutableInvoker {
 			}
 
 			ParameterResolver resolver = matchingResolvers.get(0);
-			Object value = resolver.resolve(parameter, target, this.extensionContext);
+			Object value = resolver.resolve(parameter, target, extensionContext);
 			validateResolvedType(parameter, value, executable, resolver);
 
 			LOG.finer(() -> String.format(
