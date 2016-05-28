@@ -14,14 +14,17 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import static org.junit.gen5.engine.FilterResult.includedIf;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.Filter;
 import org.junit.gen5.engine.FilterResult;
 import org.junit.gen5.engine.TestEngine;
 
 /**
- * A special filter that is applied before a {@link TestEngine} is executed.
- * It allows to include the given engine id within the test discovery and
- * execution.
+ * An {@code EngineIdFilter} is applied to engine IDs before
+ * {@link TestEngine TestEngines} are executed.
+ *
+ * A {@code TestEngine} with a matching engine ID will be <em>included</em>
+ * within the test discovery and execution.
  *
  * @since 5.0
  * @see TestDiscoveryRequest
@@ -29,18 +32,27 @@ import org.junit.gen5.engine.TestEngine;
 @API(Experimental)
 public class EngineIdFilter implements Filter<String> {
 
-	public static EngineIdFilter byEngineId(String engineId) {
-		return new EngineIdFilter(engineId);
-	}
-
-	public String getEngineId() {
-		return engineId;
+	/**
+	 * Create a new {@code EngineIdFilter} based on the supplied engine ID.
+	 *
+	 * @param engineId the engine ID to match against; never {@code null} or empty
+	 */
+	public static EngineIdFilter from(String engineId) {
+		Preconditions.notBlank(engineId, "engine ID must not be null or empty");
+		return new EngineIdFilter(engineId.trim());
 	}
 
 	private final String engineId;
 
 	private EngineIdFilter(String engineId) {
 		this.engineId = engineId;
+	}
+
+	/**
+	 * Get the engine ID that this filter matches against.
+	 */
+	public final String getEngineId() {
+		return this.engineId;
 	}
 
 	@Override

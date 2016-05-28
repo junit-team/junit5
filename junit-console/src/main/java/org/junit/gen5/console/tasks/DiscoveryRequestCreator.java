@@ -75,6 +75,6 @@ class DiscoveryRequestCreator {
 			discoveryRequest.addPostFilter(TagFilter.excludeTags(options.getExcludedTagsFilter()));
 		}
 		options.getRequiredEngineFilter().ifPresent(
-			engineId -> discoveryRequest.addEngineIdFilter(EngineIdFilter.byEngineId(engineId)));
+			engineId -> discoveryRequest.addEngineIdFilter(EngineIdFilter.from(engineId)));
 	}
 }

@@ -169,8 +169,7 @@ public class JUnit5 extends Runner implements Filterable {
 	private void addEngineIdFilter(TestDiscoveryRequest discoveryRequest) {
 		String engineId = getExplicitEngineId();
 		if (StringUtils.isNotBlank(engineId)) {
-			EngineIdFilter engineFilter = EngineIdFilter.byEngineId(engineId);
-			discoveryRequest.addEngineIdFilter(engineFilter);
+			discoveryRequest.addEngineIdFilter(EngineIdFilter.from(engineId));
 		}
 	}
 

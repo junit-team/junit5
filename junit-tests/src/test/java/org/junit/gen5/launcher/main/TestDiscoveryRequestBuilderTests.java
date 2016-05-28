@@ -180,8 +180,8 @@ public class TestDiscoveryRequestBuilderTests {
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
 					.filter(
-							EngineIdFilter.byEngineId("engine1"),
-							EngineIdFilter.byEngineId("engine2")
+							EngineIdFilter.from("engine1"),
+							EngineIdFilter.from("engine2")
 					).build();
 			// @formatter:on
 
