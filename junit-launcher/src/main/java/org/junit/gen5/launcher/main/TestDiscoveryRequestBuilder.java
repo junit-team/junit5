@@ -71,14 +71,14 @@ public final class TestDiscoveryRequestBuilder {
 	private Map<String, String> configurationParameters = new HashMap<>();
 
 	/**
-	 * Returns a new {@link TestDiscoveryRequestBuilder}.
+	 * Create a new {@code TestDiscoveryRequestBuilder}.
 	 */
 	public static TestDiscoveryRequestBuilder request() {
 		return new TestDiscoveryRequestBuilder();
 	}
 
 	/**
-	 * Adds all of the supplied {@code selectors} to the request.
+	 * Add all of the supplied {@code selectors} to the request.
 	 */
 	public TestDiscoveryRequestBuilder select(DiscoverySelector... selectors) {
 		if (selectors != null) {
@@ -88,7 +88,7 @@ public final class TestDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Adds all of the supplied {@code selectors} to the request.
+	 * Add all of the supplied {@code selectors} to the request.
 	 */
 	public TestDiscoveryRequestBuilder select(List<DiscoverySelector> selectors) {
 		if (selectors != null) {
@@ -98,7 +98,7 @@ public final class TestDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Adds all of the supplied {@code filters} to the request.
+	 * Add all of the supplied {@code filters} to the request.
 	 */
 	public TestDiscoveryRequestBuilder filter(Filter<?>... filters) {
 		if (filters != null) {
@@ -108,7 +108,7 @@ public final class TestDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Adds the supplied <em>configuration parameter</em> to the request.
+	 * Add the supplied <em>configuration parameter</em> to the request.
 	 */
 	public TestDiscoveryRequestBuilder configurationParameter(String key, String value) {
 		Preconditions.notBlank(key, "configuration parameter key must not be null or empty");
@@ -117,7 +117,7 @@ public final class TestDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Adds all of the supplied {@code configurationParameters} to the request.
+	 * Add all of the supplied {@code configurationParameters} to the request.
 	 */
 	public TestDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
 		if (configurationParameters != null) {
@@ -139,13 +139,13 @@ public final class TestDiscoveryRequestBuilder {
 		else {
 			throw new PreconditionViolationException("Filter must implement " + EngineIdFilter.class.getSimpleName()
 					+ ", " + PostDiscoveryFilter.class.getSimpleName() //
-					+ " or " + DiscoveryFilter.class.getSimpleName() + ".");
+					+ ", or " + DiscoveryFilter.class.getSimpleName() + ".");
 		}
 	}
 
 	/**
-	 * Builds and returns the {@link TestDiscoveryRequest} that has previously
-	 * been setup by the methods of this builder.
+	 * Build the {@link TestDiscoveryRequest} that has been configured via
+	 * this builder.
 	 */
 	public TestDiscoveryRequest build() {
 		DiscoveryRequest discoveryRequest = new DiscoveryRequest();

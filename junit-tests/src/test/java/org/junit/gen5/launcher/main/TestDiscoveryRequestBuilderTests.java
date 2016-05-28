@@ -231,7 +231,7 @@ public class TestDiscoveryRequestBuilderTests {
 			PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
 				() -> request().filter(o -> excluded("reason")));
 
-			assertEquals("Filter must implement EngineIdFilter, PostDiscoveryFilter or DiscoveryFilter.",
+			assertEquals("Filter must implement EngineIdFilter, PostDiscoveryFilter, or DiscoveryFilter.",
 				exception.getMessage());
 		}
 	}

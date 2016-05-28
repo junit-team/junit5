@@ -19,6 +19,9 @@ import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 
 /**
+ * An {@code ExecutionListenerAdapter} adapts a {@link TestPlan} and a corresponding
+ * {@link TestExecutionListener} to the {@link EngineExecutionListener} API.
+ *
  * @since 5.0
  */
 class ExecutionListenerAdapter implements EngineExecutionListener {
@@ -26,7 +29,7 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 	private final TestPlan testPlan;
 	private final TestExecutionListener testExecutionListener;
 
-	public ExecutionListenerAdapter(TestPlan testPlan, TestExecutionListener testExecutionListener) {
+	ExecutionListenerAdapter(TestPlan testPlan, TestExecutionListener testExecutionListener) {
 		this.testPlan = testPlan;
 		this.testExecutionListener = testExecutionListener;
 	}
@@ -34,32 +37,32 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 	@Override
 	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
 		TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
-		testPlan.add(testIdentifier);
-		testExecutionListener.dynamicTestRegistered(testIdentifier);
+		this.testPlan.add(testIdentifier);
+		this.testExecutionListener.dynamicTestRegistered(testIdentifier);
 	}
 
 	@Override
 	public void executionStarted(TestDescriptor testDescriptor) {
-		testExecutionListener.executionStarted(getTestIdentifier(testDescriptor));
+		this.testExecutionListener.executionStarted(getTestIdentifier(testDescriptor));
 	}
 
 	@Override
 	public void executionSkipped(TestDescriptor testDescriptor, String reason) {
-		testExecutionListener.executionSkipped(getTestIdentifier(testDescriptor), reason);
+		this.testExecutionListener.executionSkipped(getTestIdentifier(testDescriptor), reason);
 	}
 
 	@Override
 	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
-		testExecutionListener.executionFinished(getTestIdentifier(testDescriptor), testExecutionResult);
+		this.testExecutionListener.executionFinished(getTestIdentifier(testDescriptor), testExecutionResult);
 	}
 
 	@Override
 	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
-		testExecutionListener.reportingEntryPublished(getTestIdentifier(testDescriptor), entry);
+		this.testExecutionListener.reportingEntryPublished(getTestIdentifier(testDescriptor), entry);
 	}
 
 	private TestIdentifier getTestIdentifier(TestDescriptor testDescriptor) {
-		return testPlan.getTestIdentifier(testDescriptor.getUniqueId().toString());
+		return this.testPlan.getTestIdentifier(testDescriptor.getUniqueId().toString());
 	}
 
 }
