@@ -28,6 +28,8 @@ class CompositeFilter<T> implements Filter<T> {
 	@SuppressWarnings("rawtypes")
 	private static final Filter ALWAYS_INCLUDED_FILTER = obj -> included("Always included");
 
+	private static final FilterResult INCLUDED_BY_ALL_FILTERS = included("Element was included by all filters.");
+
 	@SuppressWarnings("unchecked")
 	static <T> Filter<T> alwaysIncluded() {
 		return ALWAYS_INCLUDED_FILTER;
@@ -46,7 +48,7 @@ class CompositeFilter<T> implements Filter<T> {
 				.map(filter -> filter.apply(element))
 				.filter(FilterResult::excluded)
 				.findFirst()
-				.orElse(FilterResult.included("Element was included by all filters."));
+				.orElse(INCLUDED_BY_ALL_FILTERS);
 		// @formatter:on
 	}
 
