@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.support.hierarchical;
 
-import static org.junit.gen5.engine.support.hierarchical.Node.SkipResult.dontSkip;
+import static org.junit.gen5.engine.support.hierarchical.Node.SkipResult.doNotSkip;
 import static org.junit.gen5.engine.support.hierarchical.Node.SkipResult.skip;
 
 import org.junit.gen5.engine.UniqueId;
@@ -59,7 +59,7 @@ public class DummyTestDescriptor extends AbstractTestDescriptor
 
 	@Override
 	public SkipResult shouldBeSkipped(DummyEngineExecutionContext context) throws Exception {
-		return skipped ? skip(skippedReason) : dontSkip();
+		return skipped ? skip(skippedReason) : doNotSkip();
 	}
 
 	@Override

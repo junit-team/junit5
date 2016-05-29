@@ -143,7 +143,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		if (evaluationResult.isDisabled()) {
 			return SkipResult.skip(evaluationResult.getReason().orElse("<unknown>"));
 		}
-		return SkipResult.dontSkip();
+		return SkipResult.doNotSkip();
 	}
 
 	@Override

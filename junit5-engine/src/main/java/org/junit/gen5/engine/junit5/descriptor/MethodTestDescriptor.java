@@ -134,7 +134,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 		if (evaluationResult.isDisabled()) {
 			return SkipResult.skip(evaluationResult.getReason().orElse("<unknown>"));
 		}
-		return SkipResult.dontSkip();
+		return SkipResult.doNotSkip();
 	}
 
 	@Override
