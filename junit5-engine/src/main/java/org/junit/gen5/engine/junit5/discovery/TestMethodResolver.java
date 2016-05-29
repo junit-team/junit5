@@ -31,6 +31,9 @@ import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 @API(Experimental)
 public class TestMethodResolver implements ElementResolver {
 
+	private static final IsTestMethod isTestMethod = new IsTestMethod();
+	private static final MethodFinder methodFinder = new MethodFinder();
+
 	public static final String SEGMENT_TYPE = "method";
 
 	private final String segmentType;
@@ -80,7 +83,7 @@ public class TestMethodResolver implements ElementResolver {
 	}
 
 	protected boolean isTestMethod(Method candidate) {
-		return new IsTestMethod().test(candidate);
+		return isTestMethod.test(candidate);
 	}
 
 	private UniqueId createUniqueId(Method testMethod, TestDescriptor parent) {
@@ -90,7 +93,7 @@ public class TestMethodResolver implements ElementResolver {
 	}
 
 	private Optional<Method> findMethod(UniqueId.Segment segment, ClassTestDescriptor parent) {
-		return new MethodFinder().findMethod(segment.getValue(), parent.getTestClass());
+		return methodFinder.findMethod(segment.getValue(), parent.getTestClass());
 	}
 
 	protected TestDescriptor resolveMethod(Method testMethod, ClassTestDescriptor parentClassDescriptor,

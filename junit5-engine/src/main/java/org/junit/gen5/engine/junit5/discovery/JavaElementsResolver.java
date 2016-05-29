@@ -17,7 +17,6 @@ import static org.junit.gen5.commons.util.ReflectionUtils.findNestedClasses;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -110,7 +109,7 @@ public class JavaElementsResolver {
 				parent.addChild(newDescriptor);
 				return newDescriptor;
 			});
-			return resolveUniqueId(descriptor, new ArrayList<>(remainingSegments));
+			return resolveUniqueId(descriptor, remainingSegments);
 		}
 		return false;
 	}

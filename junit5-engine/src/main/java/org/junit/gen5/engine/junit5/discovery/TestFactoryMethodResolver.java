@@ -36,9 +36,9 @@ import org.junit.gen5.engine.junit5.descriptor.TestFactoryTestDescriptor;
 @API(Experimental)
 public class TestFactoryMethodResolver extends TestMethodResolver {
 
-	public static final String SEGMENT_TYPE = "test-factory";
+	private static final IsTestFactoryMethod isTestFactoryMethod = new IsTestFactoryMethod();
 
-	private final IsTestFactoryMethod isTestFactoryMethod = new IsTestFactoryMethod();
+	public static final String SEGMENT_TYPE = "test-factory";
 
 	public TestFactoryMethodResolver() {
 		super(SEGMENT_TYPE);

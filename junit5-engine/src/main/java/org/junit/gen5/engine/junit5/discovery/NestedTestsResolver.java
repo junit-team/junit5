@@ -24,6 +24,8 @@ import org.junit.gen5.engine.junit5.descriptor.NestedClassTestDescriptor;
 @API(Experimental)
 public class NestedTestsResolver extends TestContainerResolver {
 
+	private static final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
+
 	public static final String SEGMENT_TYPE = "nested-class";
 
 	@Override
@@ -48,7 +50,7 @@ public class NestedTestsResolver extends TestContainerResolver {
 
 	@Override
 	protected boolean isPotentialCandidate(Class<?> element) {
-		return new IsNestedTestClass().test(element);
+		return isNestedTestClass.test(element);
 	}
 
 	@Override

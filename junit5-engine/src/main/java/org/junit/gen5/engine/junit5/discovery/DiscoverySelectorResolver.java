@@ -34,18 +34,19 @@ import org.junit.gen5.engine.discovery.UniqueIdSelector;
 @API(Experimental)
 public class DiscoverySelectorResolver {
 
+	private static final IsScannableTestClass isScannableTestClass = new IsScannableTestClass();
+
 	public void resolveSelectors(EngineDiscoveryRequest request, TestDescriptor engineDescriptor) {
 		JavaElementsResolver javaElementsResolver = createJavaElementsResolver(engineDescriptor);
 
 		request.getSelectorsByType(ClasspathSelector.class).forEach(selector -> {
 			File rootDirectory = selector.getClasspathRoot();
-			findAllClassesInClasspathRoot(rootDirectory, new IsScannableTestClass()).forEach(
+			findAllClassesInClasspathRoot(rootDirectory, isScannableTestClass).forEach(
 				javaElementsResolver::resolveClass);
 		});
 		request.getSelectorsByType(PackageSelector.class).forEach(selector -> {
 			String packageName = selector.getPackageName();
-			findAllClassesInPackage(packageName, new IsScannableTestClass()).forEach(
-				javaElementsResolver::resolveClass);
+			findAllClassesInPackage(packageName, isScannableTestClass).forEach(javaElementsResolver::resolveClass);
 		});
 		request.getSelectorsByType(ClassSelector.class).forEach(selector -> {
 			javaElementsResolver.resolveClass(selector.getTestClass());
@@ -70,8 +71,9 @@ public class DiscoverySelectorResolver {
 
 	private void pruneTree(TestDescriptor root) {
 		TestDescriptor.Visitor removeChildrenWithoutTests = (descriptor) -> {
-			if (!descriptor.isRoot() && !descriptor.hasTests())
+			if (!descriptor.isRoot() && !descriptor.hasTests()) {
 				descriptor.removeFromHierarchy();
+			}
 		};
 		root.accept(removeChildrenWithoutTests);
 	}

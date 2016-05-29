@@ -93,6 +93,12 @@ public class UniqueId implements Cloneable {
 		return getRoot().filter(segment -> segment.getType().equals(ENGINE_SEGMENT_TYPE)).map(Segment::getValue);
 	}
 
+	/**
+	 * Get a copy of the list of {@linkplain Segment segments} that make up this
+	 * {@code UniqueId}.
+	 *
+	 * <p>Clients are free to modify the returned list.
+	 */
 	public final List<Segment> getSegments() {
 		return new ArrayList<>(this.segments);
 	}

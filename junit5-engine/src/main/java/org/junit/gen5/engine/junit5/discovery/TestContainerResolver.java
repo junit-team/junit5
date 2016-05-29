@@ -29,6 +29,8 @@ import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 @API(Experimental)
 public class TestContainerResolver implements ElementResolver {
 
+	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();
+
 	public static final String SEGMENT_TYPE = "class";
 
 	@Override
@@ -84,7 +86,7 @@ public class TestContainerResolver implements ElementResolver {
 	}
 
 	protected boolean isPotentialCandidate(Class<?> element) {
-		return new IsPotentialTestContainer().test(element);
+		return isPotentialTestContainer.test(element);
 	}
 
 	protected UniqueId createUniqueId(Class<?> testClass, TestDescriptor parent) {
