@@ -516,16 +516,14 @@ public final class ReflectionUtils {
 			}
 		}
 		return allInterfaceMethods;
-
 	}
 
 	private static List<Method> getSuperclassMethods(Class<?> clazz, MethodSortOrder sortOrder) {
-		if (clazz != Object.class && clazz.getSuperclass() != Object.class) {
-			return findAllMethodsInHierarchy(clazz.getSuperclass(), sortOrder);
-		}
-		else {
+		Class<?> superclass = clazz.getSuperclass();
+		if (superclass == null || superclass == Object.class) {
 			return Collections.emptyList();
 		}
+		return findAllMethodsInHierarchy(superclass, sortOrder);
 	}
 
 	private static boolean isMethodShadowedByLocalMethods(Method method, List<Method> localMethods) {

@@ -421,6 +421,49 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
+	void findMethodsInInterface() {
+		List<Method> methods = ReflectionUtils.findMethods(InterfaceWithOneDeclaredMethod.class, method -> true);
+		assertNotNull(methods);
+		assertEquals(1, methods.size());
+	}
+
+	@Test
+	void findMethodsInObject() {
+		List<Method> methods = ReflectionUtils.findMethods(Object.class, method -> true);
+		assertNotNull(methods);
+		assertTrue(methods.size() > 10);
+	}
+
+	@Test
+	void findMethodsInVoid() {
+		List<Method> methods = ReflectionUtils.findMethods(void.class, method -> true);
+		assertNotNull(methods);
+		assertEquals(0, methods.size());
+
+		methods = ReflectionUtils.findMethods(Void.class, method -> true);
+		assertNotNull(methods);
+		assertEquals(0, methods.size());
+	}
+
+	@Test
+	void findMethodsInPrimitive() {
+		List<Method> methods = ReflectionUtils.findMethods(int.class, method -> true);
+		assertNotNull(methods);
+		assertEquals(0, methods.size());
+	}
+
+	@Test
+	void findMethodsInArrays() {
+		List<Method> methods = ReflectionUtils.findMethods(int[].class, method -> true);
+		assertNotNull(methods);
+		assertEquals(0, methods.size());
+
+		methods = ReflectionUtils.findMethods(Integer[].class, method -> true);
+		assertNotNull(methods);
+		assertEquals(0, methods.size());
+	}
+
+	@Test
 	void findMethodsUsingHierarchyUpMode() throws Exception {
 		assertThat(ReflectionUtils.findMethods(ChildClass.class, method -> method.getName().contains("method"),
 			HierarchyUp)).containsExactly(ChildClass.class.getMethod("method4"), ParentClass.class.getMethod("method3"),
@@ -535,6 +578,11 @@ class ReflectionUtilsTests {
 		for (Path path : paths) {
 			Files.createDirectory(path);
 		}
+	}
+
+	interface InterfaceWithOneDeclaredMethod {
+
+		void foo();
 	}
 
 	interface InterfaceA {
