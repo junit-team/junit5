@@ -149,7 +149,6 @@ public class UniqueId implements Cloneable {
 
 		UniqueId that = (UniqueId) o;
 		return this.segments.equals(that.segments);
-
 	}
 
 	@Override
@@ -166,20 +165,38 @@ public class UniqueId implements Cloneable {
 		return this.uniqueIdFormat.format(this);
 	}
 
+	/**
+	 * A segment of a {@link UniqueId} comprises a <em>type</em> and a
+	 * <em>value</em>.
+	 */
+	@API(Experimental)
 	public static class Segment {
 
 		private final String type;
 		private final String value;
 
-		Segment(String type, String value) {
+		/**
+		 * Create a new {@code Segment} using the supplied {@code type} and
+		 * {@code value}.
+		 *
+		 * @param type the type of the segment
+		 * @param value the value of this segment
+		 */
+		public Segment(String type, String value) {
 			this.type = type;
 			this.value = value;
 		}
 
+		/**
+		 * Get the type of this segment.
+		 */
 		public String getType() {
 			return this.type;
 		}
 
+		/**
+		 * Get the value of this segment.
+		 */
 		public String getValue() {
 			return this.value;
 		}
@@ -198,7 +215,6 @@ public class UniqueId implements Cloneable {
 
 			Segment that = (Segment) o;
 			return Objects.equals(this.type, that.type) && Objects.equals(this.value, that.value);
-
 		}
 
 		@Override
