@@ -27,6 +27,6 @@ import org.junit.gen5.commons.meta.API;
 @API(Internal)
 public interface AfterEachMethodAdapter extends Extension {
 
-	void invoke(TestExtensionContext context) throws Throwable;
+	void invokeAfterEachMethod(TestExtensionContext context) throws Throwable;
 
 }

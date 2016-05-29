@@ -27,6 +27,6 @@ import org.junit.gen5.commons.meta.API;
 @API(Internal)
 public interface BeforeEachMethodAdapter extends Extension {
 
-	void invoke(TestExtensionContext context) throws Throwable;
+	void invokeBeforeEachMethod(TestExtensionContext context) throws Throwable;
 
 }

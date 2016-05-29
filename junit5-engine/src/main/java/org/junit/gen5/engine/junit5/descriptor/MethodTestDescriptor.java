@@ -165,7 +165,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 
 	private void invokeBeforeEachMethods(ExtensionRegistry registry, TestExtensionContext context) {
 		registry.stream(BeforeEachMethodAdapter.class)//
-				.forEach(extension -> executeAndMaskThrowable(() -> extension.invoke(context)));
+				.forEach(adapter -> executeAndMaskThrowable(() -> adapter.invokeBeforeEachMethod(context)));
 	}
 
 	private void invokeBeforeTestExecutionCallbacks(ExtensionRegistry registry, TestExtensionContext context) {
@@ -224,7 +224,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<J
 			ThrowableCollector throwableCollector) {
 
 		registry.reverseStream(AfterEachMethodAdapter.class)//
-				.forEach(extension -> throwableCollector.execute(() -> extension.invoke(context)));
+				.forEach(adapter -> throwableCollector.execute(() -> adapter.invokeAfterEachMethod(context)));
 	}
 
 	private void invokeAfterEachCallbacks(ExtensionRegistry registry, TestExtensionContext context,
