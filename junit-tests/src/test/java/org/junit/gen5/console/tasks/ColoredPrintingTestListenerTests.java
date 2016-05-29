@@ -14,14 +14,13 @@ import static org.junit.gen5.api.Assertions.assertAll;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.INDENTATION;
-import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
+import static org.junit.gen5.engine.TestExecutionResult.failed;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptorStub;
-import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.launcher.TestIdentifier;
@@ -67,7 +66,8 @@ public class ColoredPrintingTestListenerTests {
 		PrintWriter out = new PrintWriter(stringWriter);
 		ColoredPrintingTestListener listener = new ColoredPrintingTestListener(out, true);
 
-		listener.executionFinished(newTestIdentifier(), newFailureResult("Fail\n\texpected: <foo> but was: <bar>"));
+		listener.executionFinished(newTestIdentifier(),
+			failed(new Throwable("Fail\n\texpected: <foo> but was: <bar>")));
 		String output = stringWriter.toString();
 
 		String expected = "Finished:    failingTest [[engine:junit]]\n" + INDENTATION + "=> Exception: Fail\n"
@@ -81,8 +81,4 @@ public class ColoredPrintingTestListenerTests {
 		return TestIdentifier.from(testDescriptor);
 	}
 
-	private static TestExecutionResult newFailureResult(String message) {
-		Throwable throwable = new Throwable(message);
-		return new TestExecutionResult(FAILED, throwable);
-	}
 }
