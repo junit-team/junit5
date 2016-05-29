@@ -37,7 +37,7 @@ public class JavaPackageSource implements JavaSource {
 	 * Create a new {@code JavaPackageSource} using the supplied
 	 * {@link Package javaPackage}.
 	 *
-	 * @param javaPackage the Java package; must not be null
+	 * @param javaPackage the Java package; must not be {@code null}
 	 */
 	public JavaPackageSource(Package javaPackage) {
 		this(Preconditions.notNull(javaPackage, "package must not be null").getName());
@@ -47,7 +47,7 @@ public class JavaPackageSource implements JavaSource {
 	 * Create a new {@code JavaPackageSource} using the supplied
 	 * {@code packageName}.
 	 *
-	 * @param packageName the Java package name; must not be null or empty
+	 * @param packageName the Java package name; must not be {@code null} or empty
 	 */
 	public JavaPackageSource(String packageName) {
 		this.packageName = Preconditions.notBlank(packageName, "package name must not be null or empty");

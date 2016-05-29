@@ -32,7 +32,7 @@ public class JavaClassSource implements JavaSource {
 	 * Create a new {@code JavaClassSource} using the supplied
 	 * {@link Class javaClass}.
 	 *
-	 * @param javaClass the Java class; must not be null
+	 * @param javaClass the Java class; must not be {@code null}
 	 */
 	public JavaClassSource(Class<?> javaClass) {
 		this.javaClass = Preconditions.notNull(javaClass, "class must not be null");

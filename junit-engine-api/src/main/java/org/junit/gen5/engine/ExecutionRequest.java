@@ -20,7 +20,7 @@ import org.junit.gen5.commons.meta.API;
  * execute its tests.
  *
  * <p>A request contains an engine's root {@link TestDescriptor}, the
- * {@link EngineExecutionListener} to be notified of test execution, and
+ * {@link EngineExecutionListener} to be notified of test execution events, and
  * {@link ConfigurationParameters} that the engine may use to influence test
  * execution.
  *
@@ -53,7 +53,8 @@ public class ExecutionRequest {
 	}
 
 	/**
-	 * Get the {@link EngineExecutionListener} to be notified of test execution.
+	 * Get the {@link EngineExecutionListener} to be notified of test execution
+	 * events.
 	 */
 	public EngineExecutionListener getEngineExecutionListener() {
 		return this.engineExecutionListener;

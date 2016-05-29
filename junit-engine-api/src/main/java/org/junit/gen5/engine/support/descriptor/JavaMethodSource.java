@@ -44,7 +44,7 @@ public class JavaMethodSource implements JavaSource {
 	 * Create a new {@code JavaMethodSource} using the supplied
 	 * {@link Method method}.
 	 *
-	 * @param method the Java method; must not be null
+	 * @param method the Java method; must not be {@code null}
 	 */
 	public JavaMethodSource(Method method) {
 		Preconditions.notNull(method, "method must not be null");
@@ -72,7 +72,7 @@ public class JavaMethodSource implements JavaSource {
 	}
 
 	/**
-	 * Get the method's parameter types of this source.
+	 * Get the method parameter types of this source.
 	 *
 	 * @see Method#getParameterTypes()
 	 */

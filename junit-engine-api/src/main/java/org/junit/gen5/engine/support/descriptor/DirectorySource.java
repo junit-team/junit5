@@ -37,7 +37,7 @@ public class DirectorySource implements FileSystemSource {
 	 * Create a new {@code DirectorySource} using the supplied
 	 * {@linkplain File directory}.
 	 *
-	 * @param directory the source directory; must not be null
+	 * @param directory the source directory; must not be {@code null}
 	 */
 	public DirectorySource(File directory) {
 		Preconditions.notNull(directory, "directory must not be null");
@@ -51,6 +51,8 @@ public class DirectorySource implements FileSystemSource {
 
 	/**
 	 * Get the {@link URI} for the source {@linkplain #getFile directory}.
+	 *
+	 * @return the source {@code URI}; never {@code null}
 	 */
 	@Override
 	public final URI getUri() {
@@ -59,6 +61,8 @@ public class DirectorySource implements FileSystemSource {
 
 	/**
 	 * Get the source {@linkplain File directory}.
+	 *
+	 * @return the source directory; never {@code null}
 	 */
 	@Override
 	public final File getFile() {

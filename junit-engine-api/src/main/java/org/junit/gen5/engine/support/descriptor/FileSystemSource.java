@@ -30,6 +30,8 @@ public interface FileSystemSource extends UriSource {
 
 	/**
 	 * Get the source file or directory.
+	 *
+	 * @return the source file or directory; never {@code null}
 	 */
 	File getFile();
 

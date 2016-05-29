@@ -40,7 +40,7 @@ public class FileSource implements FileSystemSource {
 	/**
 	 * Create a new {@code FileSource} using the supplied {@link File file}.
 	 *
-	 * @param file the source file; must not be null
+	 * @param file the source file; must not be {@code null}
 	 */
 	public FileSource(File file) {
 		this(file, null);
@@ -50,8 +50,8 @@ public class FileSource implements FileSystemSource {
 	 * Create a new {@code FileSource} using the supplied {@link File file} and
 	 * {@link FilePosition position}.
 	 *
-	 * @param file the source file; must not be null
-	 * @param filePosition the source file; may be null
+	 * @param file the source file; must not be {@code null}
+	 * @param filePosition the source file; may be {@code null}
 	 */
 	public FileSource(File file, FilePosition filePosition) {
 		Preconditions.notNull(file, "file must not be null");
@@ -66,6 +66,8 @@ public class FileSource implements FileSystemSource {
 
 	/**
 	 * Get the {@link URI} for the source {@linkplain #getFile file}.
+	 *
+	 * @return the source {@code URI}; never {@code null}
 	 */
 	@Override
 	public final URI getUri() {
@@ -74,6 +76,8 @@ public class FileSource implements FileSystemSource {
 
 	/**
 	 * Get the source {@linkplain File file}.
+	 *
+	 * @return the source file; never {@code null}
 	 */
 	@Override
 	public final File getFile() {

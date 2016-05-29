@@ -108,16 +108,16 @@ public interface TestDescriptor {
 	/**
 	 * Add a <em>child</em> to this descriptor.
 	 *
-	 * @param descriptor child to added to this descriptor; must not be
-	 *        {@code null}.
+	 * @param descriptor the child to add to this descriptor; must not be
+	 * {@code null}.
 	 */
 	void addChild(TestDescriptor descriptor);
 
 	/**
 	 * Remove a <em>child</em> from this descriptor.
 	 *
-	 * @param descriptor child to removed from this descriptor; must not be
-	 *        {@code null}.
+	 * @param descriptor the child to remove from this descriptor; must not be
+	 * {@code null}.
 	 */
 	void removeChild(TestDescriptor descriptor);
 
@@ -130,7 +130,7 @@ public interface TestDescriptor {
 	/**
 	 * Get the set of <em>descendants</em> of this descriptor.
 	 *
-	 * <p>A <em>descendant</em> is a child of this descriptor or child of one of
+	 * <p>A <em>descendant</em> is a child of this descriptor or a child of one of
 	 * its children, recursively.
 	 */
 	default Set<? extends TestDescriptor> allDescendants() {

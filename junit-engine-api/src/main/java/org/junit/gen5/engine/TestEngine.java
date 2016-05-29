@@ -39,7 +39,8 @@ public interface TestEngine {
 	 *
 	 * <p>Each test engine must provide a unique ID. JUnit 4 and 5 use
 	 * {@code "junit4"} and {@code "junit5"}, respectively. When in doubt, you
-	 * may use the fully qualified name of the {@code TestEngine} class.
+	 * may use the fully qualified name of your custom {@code TestEngine}
+	 * implementation class.
 	 */
 	String getId();
 
@@ -52,8 +53,8 @@ public interface TestEngine {
 	 *
 	 * @param discoveryRequest the request to discover tests from
 	 * @param uniqueId the unique ID to be used for this test engine's
-	 * 				   {@link TestDescriptor}
-	 * @return the root {@link TestDescriptor} of this engine
+	 * {@code TestDescriptor}
+	 * @return the root {@code TestDescriptor} of this engine
 	 */
 	TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId);
 
@@ -62,10 +63,11 @@ public interface TestEngine {
 	 *
 	 * <p>The {@code request} passed to this method contains the root
 	 * {@link TestDescriptor} that was previously returned by {@link #discover},
-	 * the {@link EngineExecutionListener} to be notified of test execution,
-	 * and {@link ConfigurationParameters} that may influence test execution.
+	 * the {@link EngineExecutionListener} to be notified of test execution
+	 * events, and {@link ConfigurationParameters} that may influence test execution.
 	 *
 	 * @param request the request to execute tests for
 	 */
 	void execute(ExecutionRequest request);
+
 }
