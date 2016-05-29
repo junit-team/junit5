@@ -358,7 +358,7 @@ class JUnit5Tests {
 
 	private TestDescriptor testDescriptorWithTag(String tag) {
 		TestDescriptor testDescriptor = mock(TestDescriptor.class);
-		when(testDescriptor.getTags()).thenReturn(singleton(new TestTag(tag)));
+		when(testDescriptor.getTags()).thenReturn(singleton(TestTag.of(tag)));
 		return testDescriptor;
 	}
 

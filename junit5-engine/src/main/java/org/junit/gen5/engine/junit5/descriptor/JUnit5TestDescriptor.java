@@ -50,7 +50,7 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
 		return findRepeatableAnnotations(element, Tag.class).stream()
 				.map(Tag::value)
 				.filter(StringUtils::isNotBlank)
-				.map(TestTag::new)
+				.map(TestTag::of)
 				.collect(toCollection(LinkedHashSet::new));
 		// @formatter:on
 	}

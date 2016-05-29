@@ -16,8 +16,12 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.Preconditions;
 
 /**
+ * Immutable value object for a <em>tag</em> that is assigned to a test or
+ * container.
+ *
  * @since 5.0
  */
 @API(Experimental)
@@ -27,10 +31,23 @@ public final class TestTag implements Serializable {
 
 	private final String name;
 
-	public TestTag(String name) {
+	/**
+	 * Obtain a {@code TestTag} with the supplied {@code name}.
+	 *
+	 * @param name the name of the tag; must not be null or empty
+	 */
+	public static TestTag of(String name) {
+		return new TestTag(name);
+	}
+
+	private TestTag(String name) {
+		Preconditions.notBlank(name, "name must not be blank");
 		this.name = name;
 	}
 
+	/**
+	 * Get the name of this tag.
+	 */
 	public String getName() {
 		return name;
 	}

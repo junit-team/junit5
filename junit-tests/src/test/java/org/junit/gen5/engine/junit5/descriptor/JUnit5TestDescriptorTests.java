@@ -77,7 +77,7 @@ public class JUnit5TestDescriptorTests {
 		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, ASampleTestCase.class);
 
 		assertEquals(ASampleTestCase.class, descriptor.getTestClass());
-		assertThat(descriptor.getTags()).containsExactly(new TestTag("classTag1"), new TestTag("classTag2"));
+		assertThat(descriptor.getTags()).containsExactly(TestTag.of("classTag1"), TestTag.of("classTag2"));
 	}
 
 	@Test
@@ -87,7 +87,7 @@ public class JUnit5TestDescriptorTests {
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom name", descriptor.getDisplayName(), "display name:");
-		assertThat(descriptor.getTags()).containsExactly(new TestTag("custom tag"));
+		assertThat(descriptor.getTags()).containsExactly(TestTag.of("custom tag"));
 	}
 
 	@Test

@@ -92,7 +92,7 @@ public class JUnit4TestDescriptor extends AbstractTestDescriptor {
 				.flatMap(Collection::stream)
 				.distinct()
 				.map(Class::getName)
-				.map(TestTag::new)
+				.map(TestTag::of)
 				.forEachOrdered(result::add)
 		);
 		// @formatter:on

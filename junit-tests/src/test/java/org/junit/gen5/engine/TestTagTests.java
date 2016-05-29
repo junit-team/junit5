@@ -22,15 +22,15 @@ class TestTagTests {
 
 	@Test
 	void tagEqualsOtherTagsWithSameName() {
-		assertEquals(new TestTag("fast"), new TestTag("fast"));
-		assertEquals(new TestTag("fast").hashCode(), new TestTag("fast").hashCode());
-		assertNotEquals(null, new TestTag("fast"));
-		assertNotEquals(new TestTag("fast"), null);
+		assertEquals(TestTag.of("fast"), TestTag.of("fast"));
+		assertEquals(TestTag.of("fast").hashCode(), TestTag.of("fast").hashCode());
+		assertNotEquals(null, TestTag.of("fast"));
+		assertNotEquals(TestTag.of("fast"), null);
 	}
 
 	@Test
 	void toStringPrintsName() {
-		assertEquals("fast", new TestTag("fast").toString());
+		assertEquals("fast", TestTag.of("fast").toString());
 	}
 
 }

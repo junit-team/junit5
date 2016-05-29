@@ -44,12 +44,12 @@ class TestIdentifierTests {
 	void serialization() throws Exception {
 		TestIdentifier identifier = serializeAndDeserialize(//
 			new TestIdentifier("uniqueId", "displayName", Optional.of(new JavaClassSource(TestIdentifierTests.class)),
-				singleton(new TestTag("aTag")), true, false, Optional.of("parentId")));
+				singleton(TestTag.of("aTag")), true, false, Optional.of("parentId")));
 
 		assertEquals("uniqueId", identifier.getUniqueId());
 		assertEquals("displayName", identifier.getDisplayName());
 		assertThat(identifier.getSource()).contains(new JavaClassSource(TestIdentifierTests.class));
-		assertEquals(singleton(new TestTag("aTag")), identifier.getTags());
+		assertEquals(singleton(TestTag.of("aTag")), identifier.getTags());
 		assertTrue(identifier.isTest());
 		assertFalse(identifier.isContainer());
 		assertThat(identifier.getParentId()).contains("parentId");

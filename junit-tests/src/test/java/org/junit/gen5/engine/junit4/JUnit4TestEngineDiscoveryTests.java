@@ -297,23 +297,23 @@ class JUnit4TestEngineDiscoveryTests {
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
 		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
-		assertThat(runnerDescriptor.getTags()).containsOnly(new TestTag(Plain.class.getName()));
+		assertThat(runnerDescriptor.getTags()).containsOnly(TestTag.of(Plain.class.getName()));
 
 		TestDescriptor failingTest = findChildByDisplayName(runnerDescriptor, "failingTest");
 		assertThat(failingTest.getTags()).containsOnly(//
-			new TestTag(Plain.class.getName()), //
-			new TestTag(Failing.class.getName()));
+			TestTag.of(Plain.class.getName()), //
+			TestTag.of(Failing.class.getName()));
 
 		TestDescriptor ignoredWithoutReason = findChildByDisplayName(runnerDescriptor, "ignoredTest1_withoutReason");
 		assertThat(ignoredWithoutReason.getTags()).containsOnly(//
-			new TestTag(Plain.class.getName()), //
-			new TestTag(Skipped.class.getName()));
+			TestTag.of(Plain.class.getName()), //
+			TestTag.of(Skipped.class.getName()));
 
 		TestDescriptor ignoredWithReason = findChildByDisplayName(runnerDescriptor, "ignoredTest2_withReason");
 		assertThat(ignoredWithReason.getTags()).containsOnly(//
-			new TestTag(Plain.class.getName()), //
-			new TestTag(Skipped.class.getName()), //
-			new TestTag(SkippedWithReason.class.getName()));
+			TestTag.of(Plain.class.getName()), //
+			TestTag.of(Skipped.class.getName()), //
+			TestTag.of(SkippedWithReason.class.getName()));
 	}
 
 	@Test
