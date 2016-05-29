@@ -29,7 +29,7 @@ public class FilterResult {
 	/**
 	 * Factory for creating <em>included</em> results.
 	 *
-	 * @param reason the reason why the result was included
+	 * @param reason the reason why the filtered object was included
 	 * @return an included {@code FilterResult} with the given reason
 	 */
 	public static FilterResult included(String reason) {
@@ -39,7 +39,7 @@ public class FilterResult {
 	/**
 	 * Factory for creating <em>excluded</em> results.
 	 *
-	 * @param reason the reason why the result was excluded
+	 * @param reason the reason why the filtered object was excluded
 	 * @return an excluded {@code FilterResult} with the given reason
 	 */
 	public static FilterResult excluded(String reason) {
@@ -49,7 +49,7 @@ public class FilterResult {
 	/**
 	 * Factory for creating filter results based on the condition given.
 	 *
-	 * @param included whether or not the returned {@code FilterResult} should be included
+	 * @param included whether or not the filtered object should be included
 	 * @return a valid {@code FilterResult} for the given condition
 	 */
 	public static FilterResult includedIf(boolean included) {
@@ -59,7 +59,7 @@ public class FilterResult {
 	/**
 	 * Factory for creating filter results based on the condition given.
 	 *
-	 * @param included whether or not the returned {@code FilterResult} should be included
+	 * @param included whether or not the filtered object should be included
 	 * @param inclusionReasonSupplier supplier for the reason in case of inclusion
 	 * @param exclusionReasonSupplier supplier for the reason in case of exclusion
 	 * @return a valid {@code FilterResult} for the given condition
@@ -82,7 +82,7 @@ public class FilterResult {
 	 * @return {@code true} if the filtered object should be included
 	 */
 	public boolean included() {
-		return included;
+		return this.included;
 	}
 
 	/**
@@ -92,8 +92,12 @@ public class FilterResult {
 		return !included();
 	}
 
+	/**
+	 * Get the reason why the filtered object should be included or excluded,
+	 * if available.
+	 */
 	public Optional<String> getReason() {
-		return reason;
+		return this.reason;
 	}
 
 	@Override

@@ -28,6 +28,9 @@ public class ConditionEvaluationResult {
 
 	/**
 	 * Factory for creating <em>enabled</em> results.
+	 *
+	 * @param reason the reason why the container or test should be enabled
+	 * @return an enabled {@code ConditionEvaluationResult} with the given reason
 	 */
 	public static ConditionEvaluationResult enabled(String reason) {
 		return new ConditionEvaluationResult(true, reason);
@@ -35,6 +38,9 @@ public class ConditionEvaluationResult {
 
 	/**
 	 * Factory for creating <em>disabled</em> results.
+	 *
+	 * @param reason the reason why the container or test should be disabled
+	 * @return a disabled {@code ConditionEvaluationResult} with the given reason
 	 */
 	public static ConditionEvaluationResult disabled(String reason) {
 		return new ConditionEvaluationResult(false, reason);
@@ -49,12 +55,21 @@ public class ConditionEvaluationResult {
 		this.reason = Optional.ofNullable(reason);
 	}
 
+	/**
+	 * Whether the container or test should be disabled.
+	 *
+	 * @return {@code true} if the container or test should be disabled
+	 */
 	public boolean isDisabled() {
-		return !enabled;
+		return !this.enabled;
 	}
 
+	/**
+	 * Get the reason why the container or test should be enabled or disabled,
+	 * if available.
+	 */
 	public Optional<String> getReason() {
-		return reason;
+		return this.reason;
 	}
 
 	@Override
