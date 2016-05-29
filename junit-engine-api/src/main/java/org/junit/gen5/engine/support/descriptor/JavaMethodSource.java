@@ -10,11 +10,13 @@
 
 package org.junit.gen5.engine.support.descriptor;
 
+import static java.util.Collections.unmodifiableList;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import static org.junit.gen5.commons.util.StringUtils.nullSafeToString;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import org.junit.gen5.commons.meta.API;
@@ -22,6 +24,11 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
+ * Java method based {@link org.junit.gen5.engine.TestSource}.
+ *
+ * <p>This class stores the method name along with its parameter types because
+ * {@link Method} does not implement {@link java.io.Serializable}.
+ *
  * @since 5.0
  */
 @API(Experimental)
@@ -33,6 +40,12 @@ public class JavaMethodSource implements JavaSource {
 	private final String javaMethodName;
 	private final Class<?>[] javaMethodParameterTypes;
 
+	/**
+	 * Create a new {@code JavaMethodSource} using the supplied
+	 * {@link Method method}.
+	 *
+	 * @param method the Java method; must not be null
+	 */
 	public JavaMethodSource(Method method) {
 		Preconditions.notNull(method, "method must not be null");
 		this.javaClass = method.getDeclaringClass();
@@ -40,16 +53,31 @@ public class JavaMethodSource implements JavaSource {
 		this.javaMethodParameterTypes = method.getParameterTypes();
 	}
 
+	/**
+	 * Get the declaring {@linkplain Class class} of this source.
+	 *
+	 * @see Method#getDeclaringClass()
+	 */
 	public final Class<?> getJavaClass() {
 		return this.javaClass;
 	}
 
+	/**
+	 * Get the method name of this source.
+	 *
+	 * @see Method#getName()
+	 */
 	public final String getJavaMethodName() {
 		return this.javaMethodName;
 	}
 
-	public final Class<?>[] getJavaMethodParameterTypes() {
-		return this.javaMethodParameterTypes;
+	/**
+	 * Get the method's parameter types of this source.
+	 *
+	 * @see Method#getParameterTypes()
+	 */
+	public final List<Class<?>> getJavaMethodParameterTypes() {
+		return unmodifiableList(Arrays.asList(this.javaMethodParameterTypes));
 	}
 
 	@Override

@@ -24,6 +24,9 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
+ * File based {@link org.junit.gen5.engine.TestSource} with an optional
+ * {@linkplain FilePosition position}.
+ *
  * @since 5.0
  */
 @API(Experimental)
@@ -34,10 +37,22 @@ public class FileSource implements FileSystemSource {
 	private final File file;
 	private final FilePosition filePosition;
 
+	/**
+	 * Create a new {@code FileSource} using the supplied {@link File file}.
+	 *
+	 * @param file the source file; must not be null
+	 */
 	public FileSource(File file) {
 		this(file, null);
 	}
 
+	/**
+	 * Create a new {@code FileSource} using the supplied {@link File file} and
+	 * {@link FilePosition position}.
+	 *
+	 * @param file the source file; must not be null
+	 * @param filePosition the source file; may be null
+	 */
 	public FileSource(File file, FilePosition filePosition) {
 		Preconditions.notNull(file, "file must not be null");
 		try {

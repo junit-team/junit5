@@ -19,6 +19,9 @@ import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
+ * Position inside a file represented by {@linkplain #getLine line} and
+ * {@linkplain #getColumn column}.
+ *
  * @since 5.0
  */
 @API(Experimental)
@@ -29,15 +32,28 @@ public class FilePosition implements Serializable {
 	private final int line;
 	private final int column;
 
+	/**
+	 * Create a new {@code FilePosition} using the supplied {@code line} and
+	 * {@code column}.
+	 *
+	 * @param line the line (1-based)
+	 * @param column the column (1-based)
+	 */
 	public FilePosition(int line, int column) {
 		this.line = line;
 		this.column = column;
 	}
 
+	/**
+	 * Get the line (1-based) of this position.
+	 */
 	public int getLine() {
 		return this.line;
 	}
 
+	/**
+	 * Get the column (1-based) of this position.
+	 */
 	public int getColumn() {
 		return this.column;
 	}

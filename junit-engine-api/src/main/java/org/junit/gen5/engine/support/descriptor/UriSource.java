@@ -18,11 +18,16 @@ import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.TestSource;
 
 /**
+ * A {@link TestSource} that can be represented as an {@link URI}.
+ *
  * @since 5.0
  */
 @API(Experimental)
 public interface UriSource extends TestSource {
 
+	/**
+	 * Get the {@link URI} that represents this source.
+	 */
 	URI getUri();
 
 }

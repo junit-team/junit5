@@ -19,6 +19,11 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
+ * Java package based {@link org.junit.gen5.engine.TestSource}.
+ *
+ * <p>This class stores the package name because {@link Package} does not
+ * implement {@link java.io.Serializable}.
+ *
  * @since 5.0
  */
 @API(Experimental)
@@ -28,14 +33,29 @@ public class JavaPackageSource implements JavaSource {
 
 	private final String packageName;
 
-	public JavaPackageSource(Package pkg) {
-		this(Preconditions.notNull(pkg, "package must not be null").getName());
+	/**
+	 * Create a new {@code JavaPackageSource} using the supplied
+	 * {@link Package javaPackage}.
+	 *
+	 * @param javaPackage the Java package; must not be null
+	 */
+	public JavaPackageSource(Package javaPackage) {
+		this(Preconditions.notNull(javaPackage, "package must not be null").getName());
 	}
 
+	/**
+	 * Create a new {@code JavaPackageSource} using the supplied
+	 * {@code packageName}.
+	 *
+	 * @param packageName the Java package name; must not be null or empty
+	 */
 	public JavaPackageSource(String packageName) {
 		this.packageName = Preconditions.notBlank(packageName, "package name must not be null or empty");
 	}
 
+	/**
+	 * Get the package name of this test source.
+	 */
 	public final String getPackageName() {
 		return this.packageName;
 	}

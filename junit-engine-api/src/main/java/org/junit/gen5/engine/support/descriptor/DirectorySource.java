@@ -22,6 +22,8 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
+ * Directory based {@link org.junit.gen5.engine.TestSource}.
+ *
  * @since 5.0
  */
 @API(Experimental)
@@ -31,6 +33,12 @@ public class DirectorySource implements FileSystemSource {
 
 	private final File directory;
 
+	/**
+	 * Create a new {@code DirectorySource} using the supplied
+	 * {@linkplain File directory}.
+	 *
+	 * @param directory the source directory; must not be null
+	 */
 	public DirectorySource(File directory) {
 		Preconditions.notNull(directory, "directory must not be null");
 		try {

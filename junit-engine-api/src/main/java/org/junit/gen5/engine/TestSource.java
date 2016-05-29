@@ -17,6 +17,16 @@ import java.io.Serializable;
 import org.junit.gen5.commons.meta.API;
 
 /**
+ * Representation of the source of a test or container used to navigate to
+ * its location by IDEs and build tools.
+ *
+ * <p>This is a marker interface. Clients need to check instances for concrete
+ * subclasses or subinterfaces.
+ *
+ * <p>Implementations of this interface need to ensure that they are
+ * <em>serializable</em> and <em>immutable</em> since they may be used as data
+ * transfer objects.
+ *
  * @since 5.0
  */
 @API(Experimental)

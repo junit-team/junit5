@@ -17,6 +17,8 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
+ * Java class based {@link org.junit.gen5.engine.TestSource}.
+ *
  * @since 5.0
  */
 @API(Experimental)
@@ -26,10 +28,19 @@ public class JavaClassSource implements JavaSource {
 
 	private final Class<?> javaClass;
 
+	/**
+	 * Create a new {@code JavaClassSource} using the supplied
+	 * {@link Class javaClass}.
+	 *
+	 * @param javaClass the Java class; must not be null
+	 */
 	public JavaClassSource(Class<?> javaClass) {
 		this.javaClass = Preconditions.notNull(javaClass, "class must not be null");
 	}
 
+	/**
+	 * Get the {@linkplain Class Java class} of this source.
+	 */
 	public final Class<?> getJavaClass() {
 		return this.javaClass;
 	}
