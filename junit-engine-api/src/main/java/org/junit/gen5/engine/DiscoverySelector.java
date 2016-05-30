@@ -15,7 +15,9 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * A selector defines location(s) a {@link TestEngine} should lookup tests at.
+ * A selector defines what a {@link TestEngine} can use to discover tests
+ * &mdash; for example, the name of a Java class, the path to a file or
+ * directory, etc.
  *
  * @since 5.0
  * @see EngineDiscoveryRequest
