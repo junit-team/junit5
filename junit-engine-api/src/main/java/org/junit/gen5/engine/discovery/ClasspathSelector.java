@@ -10,7 +10,6 @@
 
 package org.junit.gen5.engine.discovery;
 
-import static java.util.Collections.singleton;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.io.File;
@@ -27,10 +26,6 @@ import org.junit.gen5.engine.DiscoverySelector;
  */
 @API(Experimental)
 public class ClasspathSelector implements DiscoverySelector {
-
-	public static List<DiscoverySelector> forPath(String path) {
-		return forPaths(singleton(new File(path)));
-	}
 
 	public static List<DiscoverySelector> forPaths(Set<File> paths) {
 		Preconditions.notNull(paths, "paths must not be null");

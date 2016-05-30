@@ -24,6 +24,7 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class TestDiscoveryRequestBuilderTests {
 
 	@Nested
 	class DiscoverySelectionTests {
+
 		@Test
 		public void packagesAreStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
@@ -125,7 +127,7 @@ public class TestDiscoveryRequestBuilderTests {
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
 					.select(
-							ClasspathSelector.forPath("/some/local/path")
+							ClasspathSelector.forPaths(Collections.singleton(new File("/some/local/path")))
 					).build();
 			// @formatter:on
 
@@ -142,7 +144,7 @@ public class TestDiscoveryRequestBuilderTests {
 				// @formatter:off
 				TestDiscoveryRequest discoveryRequest = request()
 						.select(
-								ClasspathSelector.forPath(temporaryFolder.getAbsolutePath())
+								ClasspathSelector.forPaths(Collections.singleton(temporaryFolder))
 						).build();
 				// @formatter:on
 
@@ -175,6 +177,7 @@ public class TestDiscoveryRequestBuilderTests {
 
 	@Nested
 	class DiscoveryFilterTests {
+
 		@Test
 		public void engineFiltersAreStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
@@ -238,6 +241,7 @@ public class TestDiscoveryRequestBuilderTests {
 
 	@Nested
 	class DiscoveryConfigurationParameterTests {
+
 		@Test
 		void withoutConfigurationParametersSet_NoConfigurationParametersAreStoredInDiscoveryRequest() throws Exception {
 			TestDiscoveryRequest discoveryRequest = request().build();

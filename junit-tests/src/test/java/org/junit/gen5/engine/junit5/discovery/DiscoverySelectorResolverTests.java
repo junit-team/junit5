@@ -24,6 +24,7 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -376,7 +377,7 @@ public class DiscoverySelectorResolverTests {
 		File classpath = new File(
 			DiscoverySelectorResolverTests.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 
-		List<DiscoverySelector> selector = ClasspathSelector.forPath(classpath.getAbsolutePath());
+		List<DiscoverySelector> selector = ClasspathSelector.forPaths(Collections.singleton(classpath));
 
 		resolver.resolveSelectors(request().select(selector).build(), engineDescriptor);
 
