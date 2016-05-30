@@ -26,6 +26,13 @@ import org.junit.gen5.commons.meta.API;
 @API(Experimental)
 public interface Leaf<C extends EngineExecutionContext> extends Node<C> {
 
+	/**
+	 * Execute the <em>behavior</em> of this leaf.
+	 *
+	 * @param context the context to execute in
+	 * @return the new context to be used for children of this container and the
+	 * <em>after-all</em> behavior of the parent container of this leaf, if any.
+	 */
 	C execute(C context) throws Exception;
 
 }

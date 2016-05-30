@@ -35,6 +35,13 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 		new HierarchicalTestExecutor<>(request, createExecutionContext(request)).execute();
 	}
 
+	/**
+	 * Create the initial execution context for executing the supplied
+	 * {@link ExecutionRequest request}.
+	 *
+	 * @param request the request about to be executed
+	 * @return the initial context that will be passed to nodes in the hierarchy
+	 */
 	protected abstract C createExecutionContext(ExecutionRequest request);
 
 }

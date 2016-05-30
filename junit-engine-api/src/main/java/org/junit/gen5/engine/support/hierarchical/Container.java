@@ -26,10 +26,28 @@ import org.junit.gen5.commons.meta.API;
 @API(Experimental)
 public interface Container<C extends EngineExecutionContext> extends Node<C> {
 
+	/**
+	 * Execute the <em>before-all</em> behavior of this container.
+	 *
+	 * <p>This method will be called once <em>before</em> executing the children
+	 * of this container.
+	 *
+	 * @param context the context to execute in
+	 * @return the new context to be used for children of this container
+	 */
 	default C beforeAll(C context) throws Exception {
 		return context;
 	}
 
+	/**
+	 * Execute the <em>after-all</em> behavior of this container.
+	 *
+	 * <p>This method will be called once <em>after</em> executing the children
+	 * of this container.
+	 *
+	 * @param context the context to execute in
+	 * @return the new context to be used for children of this container
+	 */
 	default C afterAll(C context) throws Exception {
 		return context;
 	}
