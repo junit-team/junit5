@@ -122,6 +122,16 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * Determine if the supplied object is an array.
+	 *
+	 * @param obj the object to test; potentially {@code null}
+	 * @return {@code true} if the object is an array
+	 */
+	public static boolean isArray(Object obj) {
+		return (obj != null && obj.getClass().isArray());
+	}
+
+	/**
 	 * Determine if the supplied object can be assigned to the supplied type
 	 * for the purpose of reflective method invocations.
 	 *
