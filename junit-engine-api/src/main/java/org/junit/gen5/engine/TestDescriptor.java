@@ -19,7 +19,7 @@ import java.util.Set;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * Mutable descriptor of a test or container that has been discovered by a
+ * Mutable descriptor for a test or container that has been discovered by a
  * {@link TestEngine}.
  *
  * @see TestEngine
@@ -29,7 +29,7 @@ import org.junit.gen5.commons.meta.API;
 public interface TestDescriptor {
 
 	/**
-	 * Get the unique identifier (UID) for the described test.
+	 * Get the unique identifier (UID) for this descriptor.
 	 *
 	 * <p>Uniqueness must be guaranteed across an entire test plan,
 	 * regardless of how many engines are used behind the scenes.
@@ -39,7 +39,7 @@ public interface TestDescriptor {
 	UniqueId getUniqueId();
 
 	/**
-	 * Get the display name of the represented test or container.
+	 * Get the display name for this descriptor.
 	 *
 	 * <p>A <em>display name</em> is a human-readable name for a test or
 	 * container that is typically used for test reporting in IDEs and build
@@ -54,33 +54,32 @@ public interface TestDescriptor {
 	String getDisplayName();
 
 	/**
-	 * Get the {@linkplain TestSource source} of the represented test
-	 * or container, if available.
+	 * Get the {@linkplain TestSource source} of the test or container described
+	 * by this descriptor, if available.
 	 *
 	 * @see TestSource
 	 */
 	Optional<TestSource> getSource();
 
 	/**
-	 * Get the <em>parent</em> of the represented test or container, if
-	 * available.
+	 * Get the <em>parent</em> of this descriptor, if available.
 	 */
 	Optional<TestDescriptor> getParent();
 
 	/**
-	 * Set the <em>parent</em> of the represented test or container.
+	 * Set the <em>parent</em> of this descriptor.
 	 *
 	 * @param parent the new parent of this descriptor; may be {@code null}.
 	 */
 	void setParent(TestDescriptor parent);
 
 	/**
-	 * Determine if this descriptor represents a test.
+	 * Determine if this descriptor describes a test.
 	 */
 	boolean isTest();
 
 	/**
-	 * Determine if this descriptor represents a container.
+	 * Determine if this descriptor describes a container.
 	 */
 	boolean isContainer();
 
@@ -94,7 +93,7 @@ public interface TestDescriptor {
 	}
 
 	/**
-	 * Get the set of {@linkplain TestTag tags} of this descriptor.
+	 * Get the set of {@linkplain TestTag tags} associated with this descriptor.
 	 *
 	 * @see TestTag
 	 */
@@ -122,7 +121,7 @@ public interface TestDescriptor {
 	void removeChild(TestDescriptor descriptor);
 
 	/**
-	 * Remove this descriptor from its parent and removes all the children from
+	 * Remove this descriptor from its parent and remove all the children from
 	 * this descriptor.
 	 */
 	void removeFromHierarchy();
@@ -143,7 +142,7 @@ public interface TestDescriptor {
 	}
 
 	/**
-	 * Determine if this descriptor or any of its descendants represents a test.
+	 * Determine if this descriptor or any of its descendants describes a test.
 	 */
 	default boolean hasTests() {
 		return (isTest() || getChildren().stream().anyMatch(TestDescriptor::hasTests));
