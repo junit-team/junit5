@@ -36,11 +36,11 @@ public class MethodSelector implements DiscoverySelector {
 	 * is declared; never {@code null} or empty
 	 * @param methodName the name of the method to select; never {@code null} or empty
 	 */
-	public static MethodSelector forMethod(String className, String methodName) {
+	public static MethodSelector selectMethod(String className, String methodName) {
 		Preconditions.notBlank(className, "Class name must not be null or empty");
 		Preconditions.notBlank(methodName, "Method name must not be null or empty");
 		Class<?> clazz = loadClass(className);
-		return forMethod(clazz, findMethod(clazz, methodName));
+		return selectMethod(clazz, findMethod(clazz, methodName));
 	}
 
 	/**
@@ -49,10 +49,10 @@ public class MethodSelector implements DiscoverySelector {
 	 * @param clazz the class in which the method is declared; never {@code null}
 	 * @param methodName the name of the method to select; never {@code null} or empty
 	 */
-	public static MethodSelector forMethod(Class<?> clazz, String methodName) {
+	public static MethodSelector selectMethod(Class<?> clazz, String methodName) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or empty");
-		return forMethod(clazz, findMethod(clazz, methodName));
+		return selectMethod(clazz, findMethod(clazz, methodName));
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class MethodSelector implements DiscoverySelector {
 	 * @param clazz the class in which the method is declared; never {@code null}
 	 * @param method the method to select; never {@code null}
 	 */
-	public static MethodSelector forMethod(Class<?> clazz, Method method) {
+	public static MethodSelector selectMethod(Class<?> clazz, Method method) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(method, "Method must not be null");
 		return new MethodSelector(clazz, method);

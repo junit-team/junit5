@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.fail;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.Disabled;
@@ -29,7 +29,7 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsWithDisabledTestClass() {
-		TestDiscoveryRequest request = request().select(forClass(DisabledTestClassTestCase.class)).build();
+		TestDiscoveryRequest request = request().selectors(selectClass(DisabledTestClassTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(1, eventRecorder.getContainerSkippedCount(), "# container skipped");
@@ -38,7 +38,7 @@ public class DisabledTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void executeTestsWithDisabledTestMethods() {
-		TestDiscoveryRequest request = request().select(forClass(DisabledTestMethodsTestCase.class)).build();
+		TestDiscoveryRequest request = request().selectors(selectClass(DisabledTestMethodsTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");

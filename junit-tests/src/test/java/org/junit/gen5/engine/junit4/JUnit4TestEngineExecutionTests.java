@@ -24,7 +24,7 @@ import static org.junit.gen5.engine.ExecutionEventConditions.test;
 import static org.junit.gen5.engine.ExecutionEventConditions.uniqueIdSubstring;
 import static org.junit.gen5.engine.TestExecutionResultConditions.isA;
 import static org.junit.gen5.engine.TestExecutionResultConditions.message;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 import static org.junit.runner.Description.createSuiteDescription;
 import static org.junit.runner.Description.createTestDescription;
@@ -456,7 +456,7 @@ class JUnit4TestEngineExecutionTests {
 
 	private static List<ExecutionEvent> execute(Class<?> testClass) {
 		JUnit4TestEngine engine = new JUnit4TestEngine();
-		TestDiscoveryRequest discoveryRequest = request().select(forClass(testClass)).build();
+		TestDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
 		return ExecutionEventRecorder.execute(engine, discoveryRequest);
 	}
 }

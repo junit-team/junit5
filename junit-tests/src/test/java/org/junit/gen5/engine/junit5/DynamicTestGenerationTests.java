@@ -24,8 +24,8 @@ import static org.junit.gen5.engine.ExecutionEventConditions.finishedWithFailure
 import static org.junit.gen5.engine.ExecutionEventConditions.started;
 import static org.junit.gen5.engine.ExecutionEventConditions.test;
 import static org.junit.gen5.engine.TestExecutionResultConditions.message;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
-import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
+import static org.junit.gen5.engine.discovery.MethodSelector.selectMethod;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.Arrays;
@@ -50,21 +50,23 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	void testFactoryMethodsAreCorrectlyDiscoveredForClassSelector() {
-		TestDiscoveryRequest request = request().select(forClass(MyDynamicTestCase.class)).build();
+		TestDiscoveryRequest request = request().selectors(selectClass(MyDynamicTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	void testFactoryMethodIsCorrectlyDiscoveredForMethodSelector() {
-		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "dynamicStream")).build();
+		TestDiscoveryRequest request = request().selectors(
+			selectMethod(MyDynamicTestCase.class, "dynamicStream")).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	void dynamicTestsAreExecutedFromStream() {
-		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "dynamicStream")).build();
+		TestDiscoveryRequest request = request().selectors(
+			selectMethod(MyDynamicTestCase.class, "dynamicStream")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -85,8 +87,8 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	void dynamicTestsAreExecutedFromCollection() {
-		TestDiscoveryRequest request = request().select(
-			forMethod(MyDynamicTestCase.class, "dynamicCollection")).build();
+		TestDiscoveryRequest request = request().selectors(
+			selectMethod(MyDynamicTestCase.class, "dynamicCollection")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -102,7 +104,8 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	void dynamicTestsAreExecutedFromIterator() {
-		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "dynamicIterator")).build();
+		TestDiscoveryRequest request = request().selectors(
+			selectMethod(MyDynamicTestCase.class, "dynamicIterator")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -118,7 +121,8 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	void dynamicTestsAreExecutedFromIterable() {
-		TestDiscoveryRequest request = request().select(forMethod(MyDynamicTestCase.class, "dynamicIterable")).build();
+		TestDiscoveryRequest request = request().selectors(
+			selectMethod(MyDynamicTestCase.class, "dynamicIterable")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

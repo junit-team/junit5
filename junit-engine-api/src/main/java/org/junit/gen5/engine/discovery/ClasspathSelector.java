@@ -39,7 +39,7 @@ public class ClasspathSelector implements DiscoverySelector {
 	 * @return a list of selectors for the supplied paths; paths which
 	 * do not exist in the filesystem will be filtered out
 	 */
-	public static List<DiscoverySelector> forPaths(Set<File> paths) {
+	public static List<DiscoverySelector> selectClasspathRoots(Set<File> paths) {
 		Preconditions.notNull(paths, "paths must not be null");
 
 		// @formatter:off

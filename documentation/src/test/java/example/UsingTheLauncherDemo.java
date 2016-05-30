@@ -13,8 +13,8 @@ package example;
 // tag::imports[]
 
 import static org.junit.gen5.engine.discovery.ClassFilter.byNamePattern;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
-import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
+import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.launcher.Launcher;
@@ -37,9 +37,9 @@ class UsingTheLauncherDemo {
 		// @formatter:off
 		// tag::discovery[]
 		TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request()
-			.select(
-				forPackageName("com.mycompany.mytests"),
-				forClass(MyTestClass.class)
+			.selectors(
+				selectPackage("com.mycompany.mytests"),
+				selectClass(MyTestClass.class)
 			)
 			.filter(byNamePattern(".*Test"))
 			.build();
@@ -54,9 +54,9 @@ class UsingTheLauncherDemo {
 		// @formatter:off
 		// tag::execution[]
 		TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request()
-			.select(
-				forPackageName("com.mycompany.mytests"),
-				forClass(MyTestClass.class)
+			.selectors(
+				selectPackage("com.mycompany.mytests"),
+				selectClass(MyTestClass.class)
 			)
 			.filter(byNamePattern(".*Test"))
 			.build();

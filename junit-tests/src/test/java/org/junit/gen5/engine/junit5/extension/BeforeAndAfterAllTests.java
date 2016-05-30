@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit5.extension;
 
 import static java.util.Arrays.asList;
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class BeforeAndAfterAllTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	void beforeAllAndAfterAllCallbacks() {
-		TestDiscoveryRequest request = request().select(forClass(InstancePerMethodTestCase.class)).build();
+		TestDiscoveryRequest request = request().selectors(selectClass(InstancePerMethodTestCase.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");

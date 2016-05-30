@@ -24,7 +24,7 @@ import static org.junit.gen5.engine.ExecutionEventConditions.started;
 import static org.junit.gen5.engine.ExecutionEventConditions.test;
 import static org.junit.gen5.engine.TestExecutionResultConditions.isA;
 import static org.junit.gen5.engine.TestExecutionResultConditions.message;
-import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
+import static org.junit.gen5.engine.discovery.MethodSelector.selectMethod;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.IOException;
@@ -61,7 +61,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	void exceptionHandlerRethrowsException() {
-		TestDiscoveryRequest request = request().select(forMethod(ATestCase.class, "testRethrow")).build();
+		TestDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testRethrow")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -78,7 +78,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	void exceptionHandlerSwallowsException() {
-		TestDiscoveryRequest request = request().select(forMethod(ATestCase.class, "testSwallow")).build();
+		TestDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSwallow")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -95,7 +95,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	void exceptionHandlerConvertsException() {
-		TestDiscoveryRequest request = request().select(forMethod(ATestCase.class, "testConvert")).build();
+		TestDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testConvert")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -112,7 +112,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	void severalHandlersAreCalledInOrder() {
-		TestDiscoveryRequest request = request().select(forMethod(ATestCase.class, "testSeveral")).build();
+		TestDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSeveral")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

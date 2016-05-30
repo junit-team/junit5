@@ -10,7 +10,7 @@
 
 package org.junit.gen5.engine.junit5;
 
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import org.junit.gen5.engine.ExecutionEventRecorder;
@@ -29,7 +29,7 @@ public abstract class AbstractJUnit5TestEngineTests {
 	private final JUnit5TestEngine engine = new JUnit5TestEngine();
 
 	protected ExecutionEventRecorder executeTestsForClass(Class<?> testClass) {
-		return executeTests(request().select(forClass(testClass)).build());
+		return executeTests(request().selectors(selectClass(testClass)).build());
 	}
 
 	protected ExecutionEventRecorder executeTests(TestDiscoveryRequest request) {

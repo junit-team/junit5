@@ -13,9 +13,9 @@ package org.junit.gen5.engine.discovery;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
-import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
-import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
+import static org.junit.gen5.engine.discovery.MethodSelector.selectMethod;
+import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -35,37 +35,37 @@ import org.junit.gen5.engine.DiscoverySelector;
 @API(Experimental)
 public class NameBasedSelector {
 
-	public static DiscoverySelector forName(String name) {
+	public static DiscoverySelector selectName(String name) {
 		Preconditions.notBlank(name, "name must not be null or empty");
 
 		Optional<Class<?>> classOptional = ReflectionUtils.loadClass(name);
 		if (classOptional.isPresent()) {
-			return forClass(classOptional.get());
+			return selectClass(classOptional.get());
 		}
 
 		Optional<Method> methodOptional = ReflectionUtils.loadMethod(name);
 		if (methodOptional.isPresent()) {
 			Method method = methodOptional.get();
-			return forMethod(method.getDeclaringClass(), method);
+			return selectMethod(method.getDeclaringClass(), method);
 		}
 
 		if (ReflectionUtils.isPackage(name)) {
-			return forPackageName(name);
+			return selectPackage(name);
 		}
 
 		throw new PreconditionViolationException(
 			String.format("'%s' specifies neither a class, a method, nor a package.", name));
 	}
 
-	public static List<DiscoverySelector> forNames(String... classNames) {
+	public static List<DiscoverySelector> selectNames(String... classNames) {
 		if (classNames != null) {
-			return forNames(Arrays.asList(classNames));
+			return selectNames(Arrays.asList(classNames));
 		}
 		return emptyList();
 	}
 
-	public static List<DiscoverySelector> forNames(Collection<String> classNames) {
-		return classNames.stream().map(NameBasedSelector::forName).collect(toList());
+	public static List<DiscoverySelector> selectNames(Collection<String> classNames) {
+		return classNames.stream().map(NameBasedSelector::selectName).collect(toList());
 	}
 
 }

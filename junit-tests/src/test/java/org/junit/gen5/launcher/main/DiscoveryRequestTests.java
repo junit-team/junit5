@@ -13,8 +13,8 @@ package org.junit.gen5.launcher.main;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertNotNull;
-import static org.junit.gen5.engine.discovery.NameBasedSelector.forName;
-import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
+import static org.junit.gen5.engine.discovery.NameBasedSelector.selectName;
+import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.Arrays;
@@ -36,36 +36,36 @@ import org.junit.gen5.engine.discovery.UniqueIdSelector;
 public class DiscoveryRequestTests {
 	@Test
 	public void forUniqueIdForMethod() {
-		DiscoverySelector element = forUniqueId("junit5:org.example.UserTests#fullname()");
+		DiscoverySelector element = selectUniqueId("junit5:org.example.UserTests#fullname()");
 		assertEquals(UniqueIdSelector.class, element.getClass());
 	}
 
 	@Test
 	public void forNameWithClass() {
-		DiscoverySelector element = forName(MyTestClass.class.getName());
+		DiscoverySelector element = selectName(MyTestClass.class.getName());
 		assertEquals(ClassSelector.class, element.getClass());
 	}
 
 	@Test
 	public void forNameWithMethod() throws Exception {
-		DiscoverySelector element = forName(fullyQualifiedMethodName());
+		DiscoverySelector element = selectName(fullyQualifiedMethodName());
 		assertEquals(MethodSelector.class, element.getClass());
 	}
 
 	@Test
 	public void forNameWithPackage() {
-		DiscoverySelector element = forName("org.junit.gen5");
+		DiscoverySelector element = selectName("org.junit.gen5");
 		assertEquals(PackageSelector.class, element.getClass());
 	}
 
 	@Test
 	public void buildDiscoveryRequest() throws Exception {
 		// @formatter:off
-		EngineDiscoveryRequest spec = request().select(
-		forUniqueId("junit5:org.example.UserTests#fullname()"),
-			forName(MyTestClass.class.getName()),
-			forName("org.junit.gen5"),
-			forName(fullyQualifiedMethodName())
+		EngineDiscoveryRequest spec = request().selectors(
+			selectUniqueId("junit5:org.example.UserTests#fullname()"),
+			selectName(MyTestClass.class.getName()),
+			selectName("org.junit.gen5"),
+			selectName(fullyQualifiedMethodName())
 		).build();
 		// @formatter:on
 

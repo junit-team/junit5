@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.assertAll;
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.AfterEach;
@@ -34,7 +34,7 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void nestedTestsAreCorrectlyDiscovered() {
-		TestDiscoveryRequest request = request().select(forClass(TestCaseWithNesting.class)).build();
+		TestDiscoveryRequest request = request().selectors(selectClass(TestCaseWithNesting.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
@@ -53,7 +53,7 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void doublyNestedTestsAreCorrectlyDiscovered() {
-		TestDiscoveryRequest request = request().select(forClass(TestCaseWithDoubleNesting.class)).build();
+		TestDiscoveryRequest request = request().selectors(selectClass(TestCaseWithDoubleNesting.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(8, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}

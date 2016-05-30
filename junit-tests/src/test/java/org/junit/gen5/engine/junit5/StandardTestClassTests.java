@@ -13,7 +13,7 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.fail;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import org.junit.gen5.api.AfterEach;
@@ -40,22 +40,22 @@ public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void standardTestClassIsCorrectlyDiscovered() {
-		TestDiscoveryRequest request = request().select(forClass(MyStandardTestCase.class)).build();
+		TestDiscoveryRequest request = request().selectors(selectClass(MyStandardTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsCorrectlyDiscovered() {
-		TestDiscoveryRequest request = request().select(forClass(SecondOfTwoTestCases.class)).build();
+		TestDiscoveryRequest request = request().selectors(selectClass(SecondOfTwoTestCases.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2 + 2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsExecuted() {
-		TestDiscoveryRequest request = request().select(forClass(FirstOfTwoTestCases.class),
-			forClass(SecondOfTwoTestCases.class)).build();
+		TestDiscoveryRequest request = request().selectors(selectClass(FirstOfTwoTestCases.class),
+			selectClass(SecondOfTwoTestCases.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

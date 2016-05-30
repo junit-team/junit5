@@ -33,7 +33,7 @@ public class ClassSelector implements DiscoverySelector {
 	 *
 	 * @param clazz the class to select; never {@code null}
 	 */
-	public static ClassSelector forClass(Class<?> clazz) {
+	public static ClassSelector selectClass(Class<?> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		return new ClassSelector(clazz);
 	}
@@ -44,10 +44,10 @@ public class ClassSelector implements DiscoverySelector {
 	 * @param className the fully qualified name of the class to select;
 	 * never {@code null} or empty
 	 */
-	public static ClassSelector forClassName(String className) {
+	public static ClassSelector selectClass(String className) {
 		Preconditions.notBlank(className, "className must not be null or empty");
 
-		return forClass(ReflectionUtils.loadClass(className).orElseThrow(
+		return selectClass(ReflectionUtils.loadClass(className).orElseThrow(
 			() -> new PreconditionViolationException("Could not resolve class with name: " + className)));
 	}
 

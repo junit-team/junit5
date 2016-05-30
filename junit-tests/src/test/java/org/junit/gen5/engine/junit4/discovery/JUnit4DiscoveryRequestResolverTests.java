@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.engine.FilterResult.includedIf;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.engine.junit4.JUnit4UniqueIdBuilder.engineId;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
@@ -40,7 +40,7 @@ class JUnit4DiscoveryRequestResolverTests {
 		ClassFilter filter = testClass -> includedIf(Foo.class.equals(testClass), () -> "match", () -> "no match");
 		// @formatter:off
 		EngineDiscoveryRequest request = request()
-				.select(forClass(Foo.class), forClass(Bar.class))
+				.selectors(selectClass(Foo.class), selectClass(Bar.class))
 				.filter(filter)
 				.build();
 		// @formatter:on

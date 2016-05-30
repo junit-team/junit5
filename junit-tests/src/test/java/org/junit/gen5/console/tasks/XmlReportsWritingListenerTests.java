@@ -19,7 +19,7 @@ import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.api.Assumptions.assumeFalse;
 import static org.junit.gen5.console.tasks.XmlReportAssertions.ensureValidAccordingToJenkinsSchema;
 import static org.junit.gen5.engine.TestExecutionResult.successful;
-import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
+import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
@@ -395,7 +395,7 @@ class XmlReportsWritingListenerTests {
 		XmlReportsWritingListener reportListener = new XmlReportsWritingListener(tempDirectory.toString(), out, clock);
 		Launcher launcher = createLauncher(engine);
 		launcher.registerTestExecutionListeners(reportListener);
-		launcher.execute(request().select(forUniqueId(engine.getId())).build());
+		launcher.execute(request().selectors(selectUniqueId(engine.getId())).build());
 	}
 
 	private String readValidXmlFile(Path xmlFile) throws Exception {

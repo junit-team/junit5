@@ -34,7 +34,7 @@ class UniqueIdSelectorResolverTests {
 	void logsWarningOnUnloadableTestClass() {
 		UniqueId uniqueId = JUnit4UniqueIdBuilder.uniqueIdForClass("foo.bar.UnknownClass");
 		RecordCollectingLogger logger = new RecordCollectingLogger();
-		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueId);
+		UniqueIdSelector selector = UniqueIdSelector.selectUniqueId(uniqueId);
 		TestClassCollector collector = new TestClassCollector();
 
 		new UniqueIdSelectorResolver(logger).resolve(selector, collector);
@@ -52,7 +52,7 @@ class UniqueIdSelectorResolverTests {
 	void logsWarningForEngineUniqueId() {
 		String uniqueId = engineId().toString();
 		RecordCollectingLogger logger = new RecordCollectingLogger();
-		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueId);
+		UniqueIdSelector selector = UniqueIdSelector.selectUniqueId(uniqueId);
 		TestClassCollector collector = new TestClassCollector();
 
 		new UniqueIdSelectorResolver(logger).resolve(selector, collector);
@@ -70,7 +70,7 @@ class UniqueIdSelectorResolverTests {
 	void ignoresUniqueIdsOfOtherEngines() {
 		UniqueId uniqueId = UniqueId.forEngine("someEngine");
 		RecordCollectingLogger logger = new RecordCollectingLogger();
-		UniqueIdSelector selector = UniqueIdSelector.forUniqueId(uniqueId);
+		UniqueIdSelector selector = UniqueIdSelector.selectUniqueId(uniqueId);
 		TestClassCollector collector = new TestClassCollector();
 
 		new UniqueIdSelectorResolver(logger).resolve(selector, collector);

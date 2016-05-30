@@ -114,10 +114,10 @@ public class JUnit5 extends Runner implements Filterable {
 
 		// Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
 		if (selectors.isEmpty()) {
-			selectors.add(ClassSelector.forClass(this.testClass));
+			selectors.add(ClassSelector.selectClass(this.testClass));
 		}
 
-		TestDiscoveryRequest request = request().select(selectors).build();
+		TestDiscoveryRequest request = request().selectors(selectors).build();
 		addFiltersFromAnnotations(request);
 		return request;
 	}
@@ -132,9 +132,9 @@ public class JUnit5 extends Runner implements Filterable {
 	private List<DiscoverySelector> getSpecElementsFromAnnotations() {
 		List<DiscoverySelector> selectors = new ArrayList<>();
 
-		selectors.addAll(transform(getTestClasses(), ClassSelector::forClass));
-		selectors.addAll(transform(getUniqueIds(), UniqueIdSelector::forUniqueId));
-		selectors.addAll(transform(getPackageNames(), PackageSelector::forPackageName));
+		selectors.addAll(transform(getTestClasses(), ClassSelector::selectClass));
+		selectors.addAll(transform(getUniqueIds(), UniqueIdSelector::selectUniqueId));
+		selectors.addAll(transform(getPackageNames(), PackageSelector::selectPackage));
 
 		return selectors;
 	}
@@ -222,9 +222,9 @@ public class JUnit5 extends Runner implements Filterable {
 		List<DiscoverySelector> selectors = testIdentifiers.stream()
 				.map(TestIdentifier::getUniqueId)
 				.map(Object::toString)
-				.map(UniqueIdSelector::forUniqueId)
+				.map(UniqueIdSelector::selectUniqueId)
 				.collect(toList());
 		// @formatter:on
-		return request().select(selectors).build();
+		return request().selectors(selectors).build();
 	}
 }

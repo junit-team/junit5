@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit5.extension;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.fail;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.engine.junit5.Constants.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
@@ -53,8 +53,8 @@ public class ExecutionConditionTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void conditionWorksOnContainer() {
-		TestDiscoveryRequest request = request().select(
-			forClass(TestCaseWithContainerExecutionCondition.class)).build();
+		TestDiscoveryRequest request = request().selectors(
+			selectClass(TestCaseWithContainerExecutionCondition.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(1, eventRecorder.getContainerSkippedCount(), "# container skipped");
@@ -63,7 +63,8 @@ public class ExecutionConditionTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void conditionWorksOnTest() {
-		TestDiscoveryRequest request = request().select(forClass(TestCaseWithTestExecutionCondition.class)).build();
+		TestDiscoveryRequest request = request().selectors(
+			selectClass(TestCaseWithTestExecutionCondition.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
@@ -114,7 +115,7 @@ public class ExecutionConditionTests extends AbstractJUnit5TestEngineTests {
 			int testFailedCount) {
 		// @formatter:off
 		TestDiscoveryRequest request = request()
-				.select(forClass(TestCaseWithContainerExecutionCondition.class))
+				.selectors(selectClass(TestCaseWithContainerExecutionCondition.class))
 				.configurationParameter(DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME, deactivatePattern)
 				.build();
 		// @formatter:on
@@ -131,7 +132,7 @@ public class ExecutionConditionTests extends AbstractJUnit5TestEngineTests {
 			int failed) {
 		// @formatter:off
 		TestDiscoveryRequest request = request()
-				.select(forClass(TestCaseWithTestExecutionCondition.class))
+				.selectors(selectClass(TestCaseWithTestExecutionCondition.class))
 				.configurationParameter(DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME, deactivatePattern)
 				.build();
 		// @formatter:on

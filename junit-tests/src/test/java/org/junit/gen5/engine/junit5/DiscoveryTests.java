@@ -11,8 +11,8 @@
 package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
-import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
+import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Retention;
@@ -34,22 +34,22 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	public void discoverTestClass() {
-		TestDiscoveryRequest request = request().select(forClass(LocalTestCase.class)).build();
+		TestDiscoveryRequest request = request().selectors(selectClass(LocalTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void doNotDiscoverAbstractTestClass() {
-		TestDiscoveryRequest request = request().select(forClass(AbstractTestCase.class)).build();
+		TestDiscoveryRequest request = request().selectors(selectClass(AbstractTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(0, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void discoverMethodByUniqueId() {
-		TestDiscoveryRequest request = request().select(
-			forUniqueId(JUnit5UniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test1()"))).build();
+		TestDiscoveryRequest request = request().selectors(
+			selectUniqueId(JUnit5UniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test1()"))).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
@@ -58,17 +58,17 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 	public void discoverMethodByMethodReference() throws NoSuchMethodException {
 		Method testMethod = LocalTestCase.class.getDeclaredMethod("test3", new Class[0]);
 
-		TestDiscoveryRequest request = request().select(
-			MethodSelector.forMethod(LocalTestCase.class, testMethod)).build();
+		TestDiscoveryRequest request = request().selectors(
+			MethodSelector.selectMethod(LocalTestCase.class, testMethod)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void discoverCompositeSpec() {
-		TestDiscoveryRequest spec = request().select(
-			forUniqueId(JUnit5UniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test2()")),
-			forClass(LocalTestCase.class)).build();
+		TestDiscoveryRequest spec = request().selectors(
+			selectUniqueId(JUnit5UniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test2()")),
+			selectClass(LocalTestCase.class)).build();
 
 		TestDescriptor engineDescriptor = discoverTests(spec);
 		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");

@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.expectThrows;
-import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
+import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.gen5.launcher.EngineIdFilter.from;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
@@ -67,7 +67,7 @@ class DefaultLauncherTests {
 	void discoverEmptyTestPlanWithEngineWithoutAnyTests() {
 		DefaultLauncher launcher = createLauncher(new DummyTestEngine());
 
-		TestPlan testPlan = launcher.discover(request().select(forUniqueId("foo")).build());
+		TestPlan testPlan = launcher.discover(request().selectors(selectUniqueId("foo")).build());
 
 		assertThat(testPlan.getRoots()).isEmpty();
 	}
@@ -80,7 +80,7 @@ class DefaultLauncherTests {
 
 		DefaultLauncher launcher = createLauncher(engine);
 
-		TestPlan testPlan = launcher.discover(request().select(PackageSelector.forPackageName("any")).build());
+		TestPlan testPlan = launcher.discover(request().selectors(PackageSelector.selectPackage("any")).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
@@ -98,7 +98,7 @@ class DefaultLauncherTests {
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
 
 		TestPlan testPlan = launcher.discover(
-			request().select(forUniqueId(test1.getUniqueId()), forUniqueId(test2.getUniqueId())).build());
+			request().selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId())).build());
 
 		assertThat(testPlan.getRoots()).hasSize(2);
 		assertThat(testPlan.getChildren(UniqueId.forEngine("engine1").toString())).hasSize(1);
@@ -115,7 +115,7 @@ class DefaultLauncherTests {
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
 
 		TestPlan testPlan = launcher.discover(
-			request().select(forUniqueId(test1.getUniqueId()), forUniqueId(test2.getUniqueId())).filter(
+			request().selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId())).filter(
 				from("first")).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
@@ -140,7 +140,7 @@ class DefaultLauncherTests {
 
 		TestPlan testPlan = launcher.discover( //
 			request() //
-					.select(PackageSelector.forPackageName("any")) //
+					.selectors(PackageSelector.selectPackage("any")) //
 					.filter(includeWithUniqueIdContainsTest, includeWithUniqueIdContains1) //
 					.build());
 

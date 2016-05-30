@@ -36,20 +36,18 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  *
  * <pre style="code">
  *   TestDiscoveryRequestBuilder.request()
- *     .select(
- *       forPackageName("org.junit.gen5"),
- *       forPackageName("com.junit.samples"),
- *       forClass(TestDescriptorTests.class),
- *       forClassName("com.junit.samples.SampleTestCase"),
- *       forTestMethod("com.junit.samples.SampleTestCase", "test2"),
- *       forTestMethod(TestDescriptorTests.class, "test1"),
- *       forTestMethod(TestDescriptorTests.class, "test1"),
- *       forTestMethod(TestDescriptorTests.class, "testWithParams", ParameterType.class),
- *       forTestMethod(TestDescriptorTests.class, testMethod),
- *       forPath("/my/local/path1"),
- *       forPath("/my/local/path2"),
- *       forUniqueId("unique-id-1"),
- *       forUniqueId("unique-id-2")
+ *     .selectors(
+ *       selectPackage("org.junit.gen5"),
+ *       selectPackage("com.junit.samples"),
+ *       selectClass("com.junit.samples.SampleTestCase"),
+ *       selectClass(TestDescriptorTests.class),
+ *       selectMethod("com.junit.samples.SampleTestCase", "test2"),
+ *       selectMethod(TestDescriptorTests.class, "test1"),
+ *       selectMethod(TestDescriptorTests.class, testMethod),
+ *       selectClasspathRoots("/my/local/path1"),
+ *       selectClasspathRoots("/my/local/path2"),
+ *       selectUniqueId("unique-id-1"),
+ *       selectUniqueId("unique-id-2")
  *     )
  *     .filter(byEngineIds("junit5"))
  *     .filter(byNamePattern("org\.junit\.gen5\.tests.*"), byNamePattern(".*Test[s]?"))
@@ -80,9 +78,9 @@ public final class TestDiscoveryRequestBuilder {
 	/**
 	 * Add all of the supplied {@code selectors} to the request.
 	 */
-	public TestDiscoveryRequestBuilder select(DiscoverySelector... selectors) {
+	public TestDiscoveryRequestBuilder selectors(DiscoverySelector... selectors) {
 		if (selectors != null) {
-			select(Arrays.asList(selectors));
+			selectors(Arrays.asList(selectors));
 		}
 		return this;
 	}
@@ -90,7 +88,7 @@ public final class TestDiscoveryRequestBuilder {
 	/**
 	 * Add all of the supplied {@code selectors} to the request.
 	 */
-	public TestDiscoveryRequestBuilder select(List<DiscoverySelector> selectors) {
+	public TestDiscoveryRequestBuilder selectors(List<DiscoverySelector> selectors) {
 		if (selectors != null) {
 			this.selectors.addAll(selectors);
 		}

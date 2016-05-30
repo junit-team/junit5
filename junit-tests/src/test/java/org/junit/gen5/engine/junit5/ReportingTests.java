@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit5;
 
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertThrows;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class ReportingTests extends AbstractJUnit5TestEngineTests {
 
 	@Test
 	void threeReportEntriesArePublished() {
-		TestDiscoveryRequest request = request().select(forClass(MyReportingTestCase.class)).build();
+		TestDiscoveryRequest request = request().selectors(selectClass(MyReportingTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

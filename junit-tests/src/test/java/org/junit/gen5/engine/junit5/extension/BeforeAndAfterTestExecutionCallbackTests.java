@@ -12,7 +12,7 @@ package org.junit.gen5.engine.junit5.extension;
 
 import static java.util.Arrays.asList;
 import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJUnit5Test
 
 	@Test
 	public void beforeEachAndAfterEachCallbacks() {
-		TestDiscoveryRequest request = request().select(forClass(OuterTestCase.class)).build();
+		TestDiscoveryRequest request = request().selectors(selectClass(OuterTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -88,7 +88,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJUnit5Test
 
 	@Test
 	public void beforeEachAndAfterEachCallbacksDeclaredOnSuperclassAndSubclass() {
-		TestDiscoveryRequest request = request().select(forClass(ChildTestCase.class)).build();
+		TestDiscoveryRequest request = request().selectors(selectClass(ChildTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -111,7 +111,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJUnit5Test
 
 	@Test
 	public void beforeEachAndAfterEachCallbacksDeclaredOnInterfaceAndClass() {
-		TestDiscoveryRequest request = request().select(forClass(TestInterfaceTestCase.class)).build();
+		TestDiscoveryRequest request = request().selectors(selectClass(TestInterfaceTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

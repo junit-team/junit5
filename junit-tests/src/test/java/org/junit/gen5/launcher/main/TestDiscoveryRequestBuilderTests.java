@@ -15,11 +15,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.FilterResult.excluded;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClassName;
-import static org.junit.gen5.engine.discovery.MethodSelector.forMethod;
-import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
-import static org.junit.gen5.engine.discovery.UniqueIdSelector.forUniqueId;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
+import static org.junit.gen5.engine.discovery.MethodSelector.selectMethod;
+import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
+import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
@@ -57,8 +56,8 @@ public class TestDiscoveryRequestBuilderTests {
 		public void packagesAreStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.select(
-							forPackageName("org.junit.gen5.engine")
+					.selectors(
+							selectPackage("org.junit.gen5.engine")
 					).build();
 			// @formatter:on
 
@@ -71,9 +70,9 @@ public class TestDiscoveryRequestBuilderTests {
 		public void classesAreStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.select(
-							forClassName(TestDiscoveryRequestBuilderTests.class.getName()),
-							forClass(SampleTestClass.class)
+					.selectors(
+							selectClass(TestDiscoveryRequestBuilderTests.class.getName()),
+							selectClass(SampleTestClass.class)
 					)
 				.build();
 			// @formatter:on
@@ -90,7 +89,7 @@ public class TestDiscoveryRequestBuilderTests {
 
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.select(forMethod(SampleTestClass.class.getName(), "test"))
+					.selectors(selectMethod(SampleTestClass.class.getName(), "test"))
 					.build();
 			// @formatter:on
 
@@ -109,8 +108,8 @@ public class TestDiscoveryRequestBuilderTests {
 
 			// @formatter:off
 			DiscoveryRequest discoveryRequest = (DiscoveryRequest) request()
-					.select(
-							MethodSelector.forMethod(SampleTestClass.class, "test")
+					.selectors(
+							MethodSelector.selectMethod(SampleTestClass.class, "test")
 					).build();
 			// @formatter:on
 
@@ -126,8 +125,8 @@ public class TestDiscoveryRequestBuilderTests {
 		public void unavailableFoldersAreNotStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.select(
-							ClasspathSelector.forPaths(Collections.singleton(new File("/some/local/path")))
+					.selectors(
+							ClasspathSelector.selectClasspathRoots(Collections.singleton(new File("/some/local/path")))
 					).build();
 			// @formatter:on
 
@@ -143,8 +142,8 @@ public class TestDiscoveryRequestBuilderTests {
 			try {
 				// @formatter:off
 				TestDiscoveryRequest discoveryRequest = request()
-						.select(
-								ClasspathSelector.forPaths(Collections.singleton(temporaryFolder))
+						.selectors(
+								ClasspathSelector.selectClasspathRoots(Collections.singleton(temporaryFolder))
 						).build();
 				// @formatter:on
 
@@ -162,9 +161,9 @@ public class TestDiscoveryRequestBuilderTests {
 		public void uniqueIdsAreStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.select(
-							forUniqueId("engine:bla:foo:bar:id1"),
-							forUniqueId("engine:bla:foo:bar:id2")
+					.selectors(
+							selectUniqueId("engine:bla:foo:bar:id1"),
+							selectUniqueId("engine:bla:foo:bar:id2")
 					).build();
 			// @formatter:on
 

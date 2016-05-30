@@ -11,8 +11,8 @@
 package org.junit.gen5.console.tasks;
 
 import static java.util.stream.Collectors.toCollection;
-import static org.junit.gen5.engine.discovery.ClasspathSelector.forPaths;
-import static org.junit.gen5.engine.discovery.NameBasedSelector.forNames;
+import static org.junit.gen5.engine.discovery.ClasspathSelector.selectClasspathRoots;
+import static org.junit.gen5.engine.discovery.NameBasedSelector.selectNames;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
@@ -47,7 +47,7 @@ class DiscoveryRequestCreator {
 
 	private TestDiscoveryRequest buildDiscoveryRequestForAllTests(CommandLineOptions options) {
 		Set<File> rootDirectoriesToScan = determineClasspathRootDirectories(options);
-		return request().select(forPaths(rootDirectoriesToScan)).build();
+		return request().selectors(selectClasspathRoots(rootDirectoriesToScan)).build();
 	}
 
 	private Set<File> determineClasspathRootDirectories(CommandLineOptions options) {
@@ -63,7 +63,7 @@ class DiscoveryRequestCreator {
 
 	private TestDiscoveryRequest buildNameBasedDiscoveryRequest(CommandLineOptions options) {
 		Preconditions.notEmpty(options.getArguments(), "No arguments given");
-		return request().select(forNames(options.getArguments())).build();
+		return request().selectors(selectNames(options.getArguments())).build();
 	}
 
 	private void applyFilters(TestDiscoveryRequest discoveryRequest, CommandLineOptions options) {
