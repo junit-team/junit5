@@ -13,6 +13,7 @@ package org.junit.gen5.api;
 import static java.util.stream.Collectors.joining;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import static org.junit.gen5.commons.meta.API.Usage.Maintained;
+import static org.junit.gen5.commons.util.ReflectionUtils.isArray;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -784,7 +785,7 @@ public final class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>Nested float arrays are checked as in {@link #assertEquals(float, float)}.
 	 * <p>Nested double arrays are checked as in {@link #assertEquals(double, double)}.
-	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 * <p>Fails with the supplied failure {@code message}.
 	 *
 	 * @see Objects#equals(Object, Object)
 	 * @see Arrays#deepEquals(Object[], Object[])
@@ -798,7 +799,7 @@ public final class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>Nested float arrays are checked as in {@link #assertEquals(float, float)}.
 	 * <p>Nested double arrays are checked as in {@link #assertEquals(double, double)}.
-	 * <p>Fails with the supplied failure {@code message}.
+	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 *
 	 * @see Objects#equals(Object, Object)
 	 * @see Arrays#deepEquals(Object[], Object[])
@@ -999,6 +1000,7 @@ public final class Assertions {
 
 	private static void assertArrayEquals(boolean[] expected, boolean[] actual, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
+
 		if (expected == actual) {
 			return;
 		}
@@ -1014,6 +1016,7 @@ public final class Assertions {
 
 	private static void assertArrayEquals(char[] expected, char[] actual, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
+
 		if (expected == actual) {
 			return;
 		}
@@ -1029,6 +1032,7 @@ public final class Assertions {
 
 	private static void assertArrayEquals(byte[] expected, byte[] actual, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
+
 		if (expected == actual) {
 			return;
 		}
@@ -1044,6 +1048,7 @@ public final class Assertions {
 
 	private static void assertArrayEquals(short[] expected, short[] actual, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
+
 		if (expected == actual) {
 			return;
 		}
@@ -1059,6 +1064,7 @@ public final class Assertions {
 
 	private static void assertArrayEquals(int[] expected, int[] actual, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
+
 		if (expected == actual) {
 			return;
 		}
@@ -1074,6 +1080,7 @@ public final class Assertions {
 
 	private static void assertArrayEquals(long[] expected, long[] actual, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
+
 		if (expected == actual) {
 			return;
 		}
@@ -1089,6 +1096,7 @@ public final class Assertions {
 
 	private static void assertArrayEquals(float[] expected, float[] actual, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
+
 		if (expected == actual) {
 			return;
 		}
@@ -1104,6 +1112,7 @@ public final class Assertions {
 
 	private static void assertArrayEquals(float[] expected, float[] actual, float delta, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
+
 		assertValidDelta(delta);
 		if (expected == actual) {
 			return;
@@ -1120,6 +1129,7 @@ public final class Assertions {
 
 	private static void assertArrayEquals(double[] expected, double[] actual, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
+
 		if (expected == actual) {
 			return;
 		}
@@ -1135,6 +1145,7 @@ public final class Assertions {
 
 	private static void assertArrayEquals(double[] expected, double[] actual, double delta, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
+
 		assertValidDelta(delta);
 		if (expected == actual) {
 			return;
@@ -1151,6 +1162,7 @@ public final class Assertions {
 
 	private static void assertArrayEquals(Object[] expected, Object[] actual, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
+
 		if (expected == actual) {
 			return;
 		}
@@ -1173,6 +1185,7 @@ public final class Assertions {
 
 	private static void assertArrayElementsEqual(Object expected, Object actual, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
+
 		if (expected instanceof Object[] && actual instanceof Object[]) {
 			assertArrayEquals((Object[]) expected, (Object[]) actual, indexes, messageSupplier);
 		}
@@ -1215,6 +1228,7 @@ public final class Assertions {
 
 	private static void assertArraysNotNull(Object expected, Object actual, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
+
 		if (expected == null) {
 			failExpectedArrayIsNull(indexes, messageSupplier);
 		}
@@ -1224,31 +1238,34 @@ public final class Assertions {
 	}
 
 	private static void failExpectedArrayIsNull(Deque<Integer> indexes, Supplier<String> messageSupplier) {
-		fail(buildPrefix(nullSafeGet(messageSupplier)) + "expected array was null" + formatIndexes(indexes));
+		fail(buildPrefix(nullSafeGet(messageSupplier)) + "expected array was <null>" + formatIndexes(indexes));
 	}
 
 	private static void failActualArrayIsNull(Deque<Integer> indexes, Supplier<String> messageSupplier) {
-		fail(buildPrefix(nullSafeGet(messageSupplier)) + "actual array was null" + formatIndexes(indexes));
+		fail(buildPrefix(nullSafeGet(messageSupplier)) + "actual array was <null>" + formatIndexes(indexes));
 	}
 
 	private static void assertArraysHaveSameLength(int expected, int actual, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
+
 		if (expected != actual) {
 			String prefix = buildPrefix(nullSafeGet(messageSupplier));
-			String message = "array lengths differ, expected: <" + expected + "> but was: <" + actual + ">";
-			fail(prefix + message + formatIndexes(indexes));
+			String message = "array lengths differ" + formatIndexes(indexes) + ", expected: <" + expected
+					+ "> but was: <" + actual + ">";
+			fail(prefix + message);
 		}
 	}
 
 	private static void failArraysNotEqual(Object expected, Object actual, Deque<Integer> indexes,
 			Supplier<String> messageSupplier) {
+
 		String prefix = buildPrefix(nullSafeGet(messageSupplier));
-		String message = "arrays differ, " + formatValues(expected, actual) + formatIndexes(indexes);
+		String message = "array contents differ" + formatIndexes(indexes) + ", " + formatValues(expected, actual);
 		fail(prefix + message);
 	}
 
 	private static Deque<Integer> nullSafeIndexes(Deque<Integer> indexes, int newIndex) {
-		Deque<Integer> result = indexes == null ? new ArrayDeque<>() : indexes;
+		Deque<Integer> result = (indexes != null ? indexes : new ArrayDeque<>());
 		result.addLast(newIndex);
 		return result;
 	}
@@ -1257,12 +1274,8 @@ public final class Assertions {
 		if (indexes == null || indexes.isEmpty()) {
 			return "";
 		}
-		String indexesString = indexes.stream().map(String::valueOf).collect(joining("][", "[", "]"));
-		return " at " + indexesString;
-	}
-
-	private static boolean isArray(Object object) {
-		return object != null && object.getClass().isArray();
+		String indexesString = indexes.stream().map(Object::toString).collect(joining("][", "[", "]"));
+		return " at index " + indexesString;
 	}
 
 	// -------------------------------------------------------------------
@@ -1358,4 +1371,5 @@ public final class Assertions {
 	private static void failIllegalDelta(String delta) {
 		fail("positive delta expected but was: <" + delta + ">");
 	}
+
 }

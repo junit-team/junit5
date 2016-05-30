@@ -828,7 +828,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "expected array was null");
+			assertMessageEquals(ex, "expected array was <null>");
 		}
 
 		try {
@@ -836,7 +836,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "actual array was null");
+			assertMessageEquals(ex, "actual array was <null>");
 		}
 	}
 
@@ -848,7 +848,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -857,7 +857,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -869,7 +869,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -878,7 +878,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -924,7 +924,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <false> but was: <true> at [2]");
+			assertMessageEquals(ex, "array contents differ at index [2], expected: <false> but was: <true>");
 		}
 	}
 
@@ -936,7 +936,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <true> but was: <false> at [0]");
+			assertMessageEndsWith(ex, "array contents differ at index [0], expected: <true> but was: <false>");
 		}
 	}
 
@@ -949,7 +949,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <false> but was: <true> at [1]");
+			assertMessageEndsWith(ex, "array contents differ at index [1], expected: <false> but was: <true>");
 		}
 	}
 
@@ -967,7 +967,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "expected array was null");
+			assertMessageEquals(ex, "expected array was <null>");
 		}
 
 		try {
@@ -975,7 +975,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "actual array was null");
+			assertMessageEquals(ex, "actual array was <null>");
 		}
 	}
 
@@ -987,7 +987,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -996,7 +996,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -1008,7 +1008,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1017,7 +1017,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -1063,7 +1063,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <c> but was: <a> at [2]");
+			assertMessageEquals(ex, "array contents differ at index [2], expected: <c> but was: <a>");
 		}
 	}
 
@@ -1075,7 +1075,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <z> but was: <x> at [0]");
+			assertMessageEndsWith(ex, "array contents differ at index [0], expected: <z> but was: <x>");
 		}
 	}
 
@@ -1087,7 +1087,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <t> but was: <y> at [1]");
+			assertMessageEndsWith(ex, "array contents differ at index [1], expected: <t> but was: <y>");
 		}
 	}
 
@@ -1105,7 +1105,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "expected array was null");
+			assertMessageEquals(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1113,7 +1113,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "actual array was null");
+			assertMessageEquals(ex, "actual array was <null>");
 		}
 	}
 
@@ -1125,7 +1125,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1134,7 +1134,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -1146,7 +1146,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1155,7 +1155,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -1201,7 +1201,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <13> but was: <14> at [3]");
+			assertMessageEquals(ex, "array contents differ at index [3], expected: <13> but was: <14>");
 		}
 	}
 
@@ -1213,7 +1213,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <4> but was: <5> at [3]");
+			assertMessageEndsWith(ex, "array contents differ at index [3], expected: <4> but was: <5>");
 		}
 	}
 
@@ -1226,7 +1226,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <127> but was: <-127> at [3]");
+			assertMessageEndsWith(ex, "array contents differ at index [3], expected: <127> but was: <-127>");
 		}
 	}
 
@@ -1244,7 +1244,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "expected array was null");
+			assertMessageEquals(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1252,7 +1252,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "actual array was null");
+			assertMessageEquals(ex, "actual array was <null>");
 		}
 	}
 
@@ -1264,7 +1264,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1273,7 +1273,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -1285,7 +1285,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1294,7 +1294,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -1340,7 +1340,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <10> but was: <1> at [0]");
+			assertMessageEquals(ex, "array contents differ at index [0], expected: <10> but was: <1>");
 		}
 	}
 
@@ -1352,7 +1352,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <-200> but was: <-500> at [3]");
+			assertMessageEndsWith(ex, "array contents differ at index [3], expected: <-200> but was: <-500>");
 		}
 	}
 
@@ -1365,7 +1365,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <3000> but was: <-3000> at [2]");
+			assertMessageEndsWith(ex, "array contents differ at index [2], expected: <3000> but was: <-3000>");
 		}
 	}
 
@@ -1383,7 +1383,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "expected array was null");
+			assertMessageEquals(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1391,7 +1391,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "actual array was null");
+			assertMessageEquals(ex, "actual array was <null>");
 		}
 	}
 
@@ -1403,7 +1403,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1412,7 +1412,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -1424,7 +1424,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1433,7 +1433,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -1480,7 +1480,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <2> but was: <10> at [2]");
+			assertMessageEquals(ex, "array contents differ at index [2], expected: <2> but was: <10>");
 		}
 	}
 
@@ -1493,7 +1493,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <7> but was: <200000> at [4]");
+			assertMessageEndsWith(ex, "array contents differ at index [4], expected: <7> but was: <200000>");
 		}
 	}
 
@@ -1506,7 +1506,8 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <-2147483648> but was: <2147483647> at [1]");
+			assertMessageEndsWith(ex,
+				"array contents differ at index [1], expected: <-2147483648> but was: <2147483647>");
 		}
 	}
 
@@ -1524,7 +1525,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "expected array was null");
+			assertMessageEquals(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1532,7 +1533,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "actual array was null");
+			assertMessageEquals(ex, "actual array was <null>");
 		}
 	}
 
@@ -1544,7 +1545,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1553,7 +1554,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -1565,7 +1566,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1574,7 +1575,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -1621,7 +1622,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <19> but was: <20> at [3]");
+			assertMessageEquals(ex, "array contents differ at index [3], expected: <19> but was: <20>");
 		}
 	}
 
@@ -1633,7 +1634,8 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <-9223372036854775808> but was: <1> at [5]");
+			assertMessageEndsWith(ex,
+				"array contents differ at index [5], expected: <-9223372036854775808> but was: <1>");
 		}
 	}
 
@@ -1645,7 +1647,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <-9999> but was: <9999> at [1]");
+			assertMessageEndsWith(ex, "array contents differ at index [1], expected: <-9999> but was: <9999>");
 		}
 	}
 
@@ -1667,7 +1669,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "expected array was null");
+			assertMessageEquals(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1675,7 +1677,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "actual array was null");
+			assertMessageEquals(ex, "actual array was <null>");
 		}
 	}
 
@@ -1687,7 +1689,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1696,7 +1698,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -1708,7 +1710,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1717,7 +1719,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -1764,7 +1766,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <7.5> but was: <7.4> at [2]");
+			assertMessageEquals(ex, "array contents differ at index [2], expected: <7.5> but was: <7.4>");
 		}
 
 		try {
@@ -1772,7 +1774,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <NaN> but was: <4.0> at [3]");
+			assertMessageEquals(ex, "array contents differ at index [3], expected: <NaN> but was: <4.0>");
 		}
 	}
 
@@ -1785,7 +1787,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <0.3> but was: <-0.333> at [3]");
+			assertMessageEndsWith(ex, "array contents differ at index [3], expected: <0.3> but was: <-0.333>");
 		}
 	}
 
@@ -1798,7 +1800,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <0.9> but was: <1.4E-45> at [1]");
+			assertMessageEndsWith(ex, "array contents differ at index [1], expected: <0.9> but was: <1.4E-45>");
 		}
 	}
 
@@ -1853,7 +1855,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "expected array was null");
+			assertMessageEquals(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1861,7 +1863,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "actual array was null");
+			assertMessageEquals(ex, "actual array was <null>");
 		}
 	}
 
@@ -1873,7 +1875,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1882,7 +1884,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -1894,7 +1896,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -1903,7 +1905,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -1949,7 +1951,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <9.1> but was: <9.201> at [2]");
+			assertMessageEquals(ex, "array contents differ at index [2], expected: <9.1> but was: <9.201>");
 		}
 
 		try {
@@ -1958,7 +1960,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <NaN> but was: <4.0> at [3]");
+			assertMessageEquals(ex, "array contents differ at index [3], expected: <NaN> but was: <4.0>");
 		}
 	}
 
@@ -1971,7 +1973,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <0.3> but was: <-0.333> at [3]");
+			assertMessageEndsWith(ex, "array contents differ at index [3], expected: <0.3> but was: <-0.333>");
 		}
 	}
 
@@ -1984,7 +1986,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <0.9> but was: <1.4E-45> at [1]");
+			assertMessageEndsWith(ex, "array contents differ at index [1], expected: <0.9> but was: <1.4E-45>");
 		}
 	}
 
@@ -2006,7 +2008,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "expected array was null");
+			assertMessageEquals(ex, "expected array was <null>");
 		}
 
 		try {
@@ -2014,7 +2016,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "actual array was null");
+			assertMessageEquals(ex, "actual array was <null>");
 		}
 	}
 
@@ -2026,7 +2028,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -2035,7 +2037,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -2047,7 +2049,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -2056,7 +2058,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -2103,7 +2105,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <1.19> but was: <1.00019> at [1]");
+			assertMessageEquals(ex, "array contents differ at index [1], expected: <1.19> but was: <1.00019>");
 		}
 
 		try {
@@ -2112,7 +2114,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <0.5> but was: <NaN> at [4]");
+			assertMessageEquals(ex, "array contents differ at index [4], expected: <0.5> but was: <NaN>");
 		}
 	}
 
@@ -2125,7 +2127,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <9.031> but was: <9.099> at [1]");
+			assertMessageEndsWith(ex, "array contents differ at index [1], expected: <9.031> but was: <9.099>");
 		}
 	}
 
@@ -2137,7 +2139,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <0.1> but was: <4.9E-324> at [1]");
+			assertMessageEndsWith(ex, "array contents differ at index [1], expected: <0.1> but was: <4.9E-324>");
 		}
 	}
 
@@ -2192,7 +2194,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "expected array was null");
+			assertMessageEquals(ex, "expected array was <null>");
 		}
 
 		try {
@@ -2200,7 +2202,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "actual array was null");
+			assertMessageEquals(ex, "actual array was <null>");
 		}
 	}
 
@@ -2212,7 +2214,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -2221,7 +2223,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -2233,7 +2235,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -2242,7 +2244,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -2289,7 +2291,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <2.92> but was: <2.94> at [1]");
+			assertMessageEquals(ex, "array contents differ at index [1], expected: <2.92> but was: <2.94>");
 		}
 
 		try {
@@ -2297,7 +2299,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <5.5> but was: <NaN> at [3]");
+			assertMessageEquals(ex, "array contents differ at index [3], expected: <5.5> but was: <NaN>");
 		}
 	}
 
@@ -2310,7 +2312,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <9.031> but was: <9.231> at [1]");
+			assertMessageEndsWith(ex, "array contents differ at index [1], expected: <9.031> but was: <9.231>");
 		}
 	}
 
@@ -2322,7 +2324,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <0.3001> but was: <0.4002> at [1]");
+			assertMessageEndsWith(ex, "array contents differ at index [1], expected: <0.3001> but was: <0.4002>");
 		}
 	}
 
@@ -2390,7 +2392,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "expected array was null");
+			assertMessageEquals(ex, "expected array was <null>");
 		}
 
 		try {
@@ -2398,19 +2400,20 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "actual array was null");
+			assertMessageEquals(ex, "actual array was <null>");
 		}
 	}
 
 	@Test
 	void assertArrayEqualsNestedObjectArrayVsNull() {
 		try {
-			assertArrayEquals(new Object[] { new Object[] {}, 1, "2", new Object[] { '3', new Object[] { null } } },
+			assertArrayEquals(//
+				new Object[] { new Object[] {}, 1, "2", new Object[] { '3', new Object[] { null } } }, //
 				new Object[] { new Object[] {}, 1, "2", new Object[] { '3', new Object[] { new Object[] { "4" } } } });
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "expected array was null at [3][1][0]");
+			assertMessageEquals(ex, "expected array was <null> at index [3][1][0]");
 		}
 
 		try {
@@ -2421,7 +2424,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "actual array was null at [2][1][1][1]");
+			assertMessageEquals(ex, "actual array was <null> at index [2][1][1][1]");
 		}
 	}
 
@@ -2433,7 +2436,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -2442,7 +2445,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -2456,7 +2459,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null at [1][2][2][0]");
+			assertMessageEndsWith(ex, "expected array was <null> at index [1][2][2][0]");
 		}
 
 		try {
@@ -2467,7 +2470,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null at [1][1][1][0]");
+			assertMessageEndsWith(ex, "actual array was <null> at index [1][1][1][0]");
 		}
 	}
 
@@ -2479,7 +2482,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null");
+			assertMessageEndsWith(ex, "expected array was <null>");
 		}
 
 		try {
@@ -2488,7 +2491,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null");
+			assertMessageEndsWith(ex, "actual array was <null>");
 		}
 	}
 
@@ -2502,7 +2505,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "expected array was null at [3][1][0]");
+			assertMessageEndsWith(ex, "expected array was <null> at index [3][1][0]");
 		}
 
 		try {
@@ -2514,7 +2517,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "actual array was null at [2][1][1][2]");
+			assertMessageEndsWith(ex, "actual array was <null> at index [2][1][1][2]");
 		}
 	}
 
@@ -2539,7 +2542,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "array lengths differ, expected: <4> but was: <6> at [1][1][2]");
+			assertMessageEquals(ex, "array lengths differ at index [1][1][2], expected: <4> but was: <6>");
 		}
 
 		try {
@@ -2551,7 +2554,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "array lengths differ, expected: <1> but was: <2> at [0][0][0][0][0][0]");
+			assertMessageEquals(ex, "array lengths differ at index [0][0][0][0][0][0], expected: <1> but was: <2>");
 		}
 	}
 
@@ -2570,13 +2573,15 @@ public class AssertionsTests {
 	@Test
 	void assertArrayEqualsNestedObjectArraysOfDifferentLengthAndMessage() {
 		try {
-			assertArrayEquals(new Object[] { 'a', 1, new Object[] { 2, 3 } },
-				new Object[] { 'a', 1, new Object[] { 2, 3, 4, 5 } }, "message");
+			assertArrayEquals(//
+				new Object[] { 'a', 1, new Object[] { 2, 3 } }, //
+				new Object[] { 'a', 1, new Object[] { 2, 3, 4, 5 } }, //
+				"message");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "array lengths differ, expected: <2> but was: <4> at [2]");
+			assertMessageEndsWith(ex, "array lengths differ at index [2], expected: <2> but was: <4>");
 		}
 	}
 
@@ -2596,14 +2601,15 @@ public class AssertionsTests {
 	@Test
 	void assertArrayEqualsNestedObjectArraysOfDifferentLengthAndMessageSupplier() {
 		try {
-			assertArrayEquals(new Object[] { "a", new Object[] { 1, 2, 3, new double[] { 4.0, 5.1, 6.1 }, 7 } },
-				new Object[] { "a", new Object[] { 1, 2, 3, new double[] { 4.0, 5.1, 6.1, 7.0 }, 8 } },
+			assertArrayEquals(//
+				new Object[] { "a", new Object[] { 1, 2, 3, new double[] { 4.0, 5.1, 6.1 }, 7 } }, //
+				new Object[] { "a", new Object[] { 1, 2, 3, new double[] { 4.0, 5.1, 6.1, 7.0 }, 8 } }, //
 				() -> "message");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "array lengths differ, expected: <3> but was: <4> at [1][3]");
+			assertMessageEndsWith(ex, "array lengths differ at index [1][3], expected: <3> but was: <4>");
 		}
 	}
 
@@ -2614,7 +2620,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <3> but was: <9> at [2]");
+			assertMessageEquals(ex, "array contents differ at index [2], expected: <3> but was: <9>");
 		}
 
 		try {
@@ -2622,7 +2628,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <NaN> but was: <13.55> at [4]");
+			assertMessageEquals(ex, "array contents differ at index [4], expected: <NaN> but was: <13.55>");
 		}
 	}
 
@@ -2635,7 +2641,7 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <false> but was: <true> at [2][1][1][0]");
+			assertMessageEquals(ex, "array contents differ at index [2][1][1][0], expected: <false> but was: <true>");
 		}
 
 		Object[] differentElement = new Object[] {};
@@ -2645,7 +2651,8 @@ public class AssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertMessageEquals(ex, "arrays differ, expected: <5> but was: <" + differentElement + "> at [3][0][1][0]");
+			assertMessageEquals(ex,
+				"array contents differ at index [3][0][1][0], expected: <5> but was: <" + differentElement + ">");
 		}
 	}
 
@@ -2657,7 +2664,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <1.1> but was: <1.0> at [0]");
+			assertMessageEndsWith(ex, "array contents differ at index [0], expected: <1.1> but was: <1.0>");
 		}
 	}
 
@@ -2670,7 +2677,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <2> but was: <99> at [3][3][0]");
+			assertMessageEndsWith(ex, "array contents differ at index [3][3][0], expected: <2> but was: <99>");
 		}
 
 		try {
@@ -2680,7 +2687,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <2> but was: <99> at [3][3][0]");
+			assertMessageEndsWith(ex, "array contents differ at index [3][3][0], expected: <2> but was: <99>");
 		}
 	}
 
@@ -2693,7 +2700,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <4.9E-324> but was: <42.42> at [2]");
+			assertMessageEndsWith(ex, "array contents differ at index [2], expected: <4.9E-324> but was: <42.42>");
 		}
 	}
 
@@ -2708,7 +2715,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <3> but was: <4> at [2][2][1][1]");
+			assertMessageEndsWith(ex, "array contents differ at index [2][2][1][1], expected: <3> but was: <4>");
 		}
 
 		try {
@@ -2720,7 +2727,7 @@ public class AssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageStartsWith(ex, "message");
-			assertMessageEndsWith(ex, "arrays differ, expected: <3> but was: <5> at [4][1][0]");
+			assertMessageEndsWith(ex, "array contents differ at index [4][1][0], expected: <3> but was: <5>");
 		}
 	}
 
