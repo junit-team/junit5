@@ -36,14 +36,14 @@ public class ClassSelector implements DiscoverySelector {
 			() -> new PreconditionViolationException("Could not resolve class with name: " + className)));
 	}
 
-	private final Class<?> testClass;
+	private final Class<?> javaClass;
 
-	private ClassSelector(Class<?> testClass) {
-		this.testClass = testClass;
+	private ClassSelector(Class<?> javaClass) {
+		this.javaClass = javaClass;
 	}
 
-	public Class<?> getTestClass() {
-		return this.testClass;
+	public Class<?> getJavaClass() {
+		return this.javaClass;
 	}
 
 }

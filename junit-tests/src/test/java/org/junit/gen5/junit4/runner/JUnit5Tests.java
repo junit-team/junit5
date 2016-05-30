@@ -81,7 +81,7 @@ class JUnit5Tests {
 
 			assertThat(request.getSelectors()).hasSize(1);
 			ClassSelector classSelector = getOnlyElement(request.getSelectorsByType(ClassSelector.class));
-			assertEquals(TestCase.class, classSelector.getTestClass());
+			assertEquals(TestCase.class, classSelector.getJavaClass());
 		}
 
 		@Test
@@ -94,8 +94,8 @@ class JUnit5Tests {
 
 			assertThat(request.getSelectors()).hasSize(2);
 			List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
-			assertEquals(Short.class, selectors.get(0).getTestClass());
-			assertEquals(Byte.class, selectors.get(1).getTestClass());
+			assertEquals(Short.class, selectors.get(0).getJavaClass());
+			assertEquals(Byte.class, selectors.get(1).getJavaClass());
 		}
 
 		@Test

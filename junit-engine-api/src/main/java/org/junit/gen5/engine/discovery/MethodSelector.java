@@ -28,13 +28,14 @@ public class MethodSelector implements DiscoverySelector {
 	public static MethodSelector forMethod(String className, String methodName) {
 		Preconditions.notBlank(className, "Class name must not be null or empty");
 		Preconditions.notBlank(methodName, "Method name must not be null or empty");
-		return forMethod(getTestClass(className), getTestMethod(getTestClass(className), methodName));
+		Class<?> clazz = loadClass(className);
+		return forMethod(clazz, findMethod(clazz, methodName));
 	}
 
 	public static MethodSelector forMethod(Class<?> clazz, String methodName) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or empty");
-		return forMethod(clazz, getTestMethod(clazz, methodName));
+		return forMethod(clazz, findMethod(clazz, methodName));
 	}
 
 	public static MethodSelector forMethod(Class<?> clazz, Method method) {
@@ -51,19 +52,19 @@ public class MethodSelector implements DiscoverySelector {
 		this.method = method;
 	}
 
-	public Class<?> getTestClass() {
+	public Class<?> getJavaClass() {
 		return this.clazz;
 	}
 
-	public Method getTestMethod() {
+	public Method getJavaMethod() {
 		return this.method;
 	}
 
-	private static Class<?> getTestClass(String clazzName) {
+	private static Class<?> loadClass(String clazzName) {
 		return ReflectionUtils.loadClass(clazzName).get();
 	}
 
-	private static Method getTestMethod(Class<?> clazz, String methodName) {
+	private static Method findMethod(Class<?> clazz, String methodName) {
 		return ReflectionUtils.findMethod(clazz, methodName).get();
 	}
 

@@ -49,10 +49,10 @@ public class DiscoverySelectorResolver {
 			findAllClassesInPackage(packageName, isScannableTestClass).forEach(javaElementsResolver::resolveClass);
 		});
 		request.getSelectorsByType(ClassSelector.class).forEach(selector -> {
-			javaElementsResolver.resolveClass(selector.getTestClass());
+			javaElementsResolver.resolveClass(selector.getJavaClass());
 		});
 		request.getSelectorsByType(MethodSelector.class).forEach(selector -> {
-			javaElementsResolver.resolveMethod(selector.getTestClass(), selector.getTestMethod());
+			javaElementsResolver.resolveMethod(selector.getJavaClass(), selector.getJavaMethod());
 		});
 		request.getSelectorsByType(UniqueIdSelector.class).forEach(selector -> {
 			javaElementsResolver.resolveUniqueId(UniqueId.parse(selector.getUniqueId()));

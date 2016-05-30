@@ -23,7 +23,7 @@ class ClassSelectorResolver extends DiscoverySelectorResolver<ClassSelector> {
 
 	@Override
 	void resolve(ClassSelector selector, TestClassCollector collector) {
-		collector.addCompletely(selector.getTestClass());
+		collector.addCompletely(selector.getJavaClass());
 	}
 
 }

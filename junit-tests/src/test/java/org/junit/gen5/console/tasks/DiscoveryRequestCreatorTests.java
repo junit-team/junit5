@@ -47,7 +47,7 @@ public class DiscoveryRequestCreatorTests {
 
 		List<ClassSelector> classSelectors = request.getSelectorsByType(ClassSelector.class);
 		assertThat(classSelectors).hasSize(1);
-		assertEquals(testClass, getOnlyElement(classSelectors).getTestClass());
+		assertEquals(testClass, getOnlyElement(classSelectors).getJavaClass());
 	}
 
 	@Test
@@ -60,8 +60,8 @@ public class DiscoveryRequestCreatorTests {
 
 		List<MethodSelector> methodSelectors = request.getSelectorsByType(MethodSelector.class);
 		assertThat(methodSelectors).hasSize(1);
-		assertEquals(testClass, getOnlyElement(methodSelectors).getTestClass());
-		assertEquals(testMethod, getOnlyElement(methodSelectors).getTestMethod());
+		assertEquals(testClass, getOnlyElement(methodSelectors).getJavaClass());
+		assertEquals(testMethod, getOnlyElement(methodSelectors).getJavaMethod());
 	}
 
 	@Test

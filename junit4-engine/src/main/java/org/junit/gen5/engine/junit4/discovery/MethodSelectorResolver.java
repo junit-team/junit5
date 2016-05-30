@@ -29,8 +29,8 @@ class MethodSelectorResolver extends DiscoverySelectorResolver<MethodSelector> {
 
 	@Override
 	void resolve(MethodSelector selector, TestClassCollector collector) {
-		Class<?> testClass = selector.getTestClass();
-		Method testMethod = selector.getTestMethod();
+		Class<?> testClass = selector.getJavaClass();
+		Method testMethod = selector.getJavaMethod();
 		Description methodDescription = Description.createTestDescription(testClass, testMethod.getName());
 		collector.addFiltered(testClass, adapter(matchMethodDescription(methodDescription)));
 	}

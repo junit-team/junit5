@@ -79,7 +79,7 @@ public class TestDiscoveryRequestBuilderTests {
 			// @formatter:on
 
 			List<Class<?>> classes = discoveryRequest.getSelectorsByType(ClassSelector.class).stream().map(
-				ClassSelector::getTestClass).collect(toList());
+				ClassSelector::getJavaClass).collect(toList());
 			assertThat(classes).contains(SampleTestClass.class, TestDiscoveryRequestBuilderTests.class);
 		}
 
@@ -98,8 +98,8 @@ public class TestDiscoveryRequestBuilderTests {
 			assertThat(methodSelectors).hasSize(1);
 
 			MethodSelector methodSelector = methodSelectors.get(0);
-			assertThat(methodSelector.getTestClass()).isEqualTo(testClass);
-			assertThat(methodSelector.getTestMethod()).isEqualTo(testMethod);
+			assertThat(methodSelector.getJavaClass()).isEqualTo(testClass);
+			assertThat(methodSelector.getJavaMethod()).isEqualTo(testMethod);
 		}
 
 		@Test
@@ -118,8 +118,8 @@ public class TestDiscoveryRequestBuilderTests {
 			assertThat(methodSelectors).hasSize(1);
 
 			MethodSelector methodSelector = methodSelectors.get(0);
-			assertThat(methodSelector.getTestClass()).isEqualTo(testClass);
-			assertThat(methodSelector.getTestMethod()).isEqualTo(testMethod);
+			assertThat(methodSelector.getJavaClass()).isEqualTo(testClass);
+			assertThat(methodSelector.getJavaMethod()).isEqualTo(testMethod);
 		}
 
 		@Test
