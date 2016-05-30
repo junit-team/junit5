@@ -2023,8 +2023,8 @@ test classes and test methods in the past.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.engine.discovery.ClassFilter.byNamePattern;
-import static org.junit.gen5.engine.discovery.ClassSelector.forClass;
-import static org.junit.gen5.engine.discovery.PackageSelector.forPackageName;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
+import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.launcher.Launcher;
@@ -2039,9 +2039,9 @@ import org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder;</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request()
-    .select(
-        forPackageName("com.mycompany.mytests"),
-        forClass(MyTestClass.class)
+    .selectors(
+        selectPackage("com.mycompany.mytests"),
+        selectClass(MyTestClass.class)
     )
     .filter(byNamePattern(".*Test"))
     .build();
@@ -2073,9 +2073,9 @@ be achieved through a <code><a href="https://github.com/junit-team/junit5/blob/m
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request()
-    .select(
-        forPackageName("com.mycompany.mytests"),
-        forClass(MyTestClass.class)
+    .selectors(
+        selectPackage("com.mycompany.mytests"),
+        selectClass(MyTestClass.class)
     )
     .filter(byNamePattern(".*Test"))
     .build();
@@ -2241,7 +2241,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-05-30 17:06:13 -04:00
+Last updated 2016-05-30 18:00:45 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
