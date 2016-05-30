@@ -17,11 +17,20 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.DiscoverySelector;
 
 /**
+ * A {@link DiscoverySelector} that selects a Java package name so that
+ * {@link org.junit.gen5.engine.TestEngine TestEngines} can discover
+ * tests or containers based on packages.
+ *
  * @since 5.0
  */
 @API(Experimental)
 public class PackageSelector implements DiscoverySelector {
 
+	/**
+	 * Create a {@code PackageSelector} for the supplied package name.
+	 *
+	 * @param packageName the package name to select; never {@code null} or empty
+	 */
 	public static PackageSelector forPackageName(String packageName) {
 		Preconditions.notBlank(packageName, "Package name must not be null or empty");
 		return new PackageSelector(packageName);
@@ -33,6 +42,9 @@ public class PackageSelector implements DiscoverySelector {
 		this.packageName = packageName;
 	}
 
+	/**
+	 * Get the selected package name.
+	 */
 	public String getPackageName() {
 		return this.packageName;
 	}

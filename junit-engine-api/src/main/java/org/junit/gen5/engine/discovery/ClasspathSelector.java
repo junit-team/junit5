@@ -24,7 +24,8 @@ import org.junit.gen5.engine.DiscoverySelector;
 /**
  * A {@link DiscoverySelector} that selects classpath <em>roots</em> so that
  * {@link org.junit.gen5.engine.TestEngine TestEngines} can search for class
- * files or resources within the physical classpath.
+ * files or resources within the physical classpath &mdash; for example, to
+ * scan for test classes.
  *
  * @since 5.0
  */
@@ -56,7 +57,7 @@ public class ClasspathSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the classpath root stored in this selector.
+	 * Get the selected classpath root.
 	 */
 	public File getClasspathRoot() {
 		return this.classpathRoot;

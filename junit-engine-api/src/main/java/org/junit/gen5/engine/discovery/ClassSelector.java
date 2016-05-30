@@ -19,16 +19,31 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.DiscoverySelector;
 
 /**
+ * A {@link DiscoverySelector} that selects a {@link Class} so that
+ * {@link org.junit.gen5.engine.TestEngine TestEngines} can discover
+ * tests or containers based on Java classes.
+ *
  * @since 5.0
  */
 @API(Experimental)
 public class ClassSelector implements DiscoverySelector {
 
+	/**
+	 * Create a {@code ClassSelector} for the supplied {@link Class}.
+	 *
+	 * @param clazz the class to select; never {@code null}
+	 */
 	public static ClassSelector forClass(Class<?> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		return new ClassSelector(clazz);
 	}
 
+	/**
+	 * Create a {@code ClassSelector} for the supplied class name.
+	 *
+	 * @param className the fully qualified name of the class to select;
+	 * never {@code null} or empty
+	 */
 	public static ClassSelector forClassName(String className) {
 		Preconditions.notBlank(className, "className must not be null or empty");
 
@@ -42,6 +57,9 @@ public class ClassSelector implements DiscoverySelector {
 		this.javaClass = javaClass;
 	}
 
+	/**
+	 * Get the selected Java {@link Class}.
+	 */
 	public Class<?> getJavaClass() {
 		return this.javaClass;
 	}

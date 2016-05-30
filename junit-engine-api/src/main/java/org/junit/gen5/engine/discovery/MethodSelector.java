@@ -20,11 +20,22 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.DiscoverySelector;
 
 /**
+ * A {@link DiscoverySelector} that selects a {@link Method} so that
+ * {@link org.junit.gen5.engine.TestEngine TestEngines} can discover
+ * tests or containers based on Java methods.
+ *
  * @since 5.0
  */
 @API(Experimental)
 public class MethodSelector implements DiscoverySelector {
 
+	/**
+	 * Create a {@code MethodSelector} for the supplied class name and method name.
+	 *
+	 * @param className the fully qualified name of the class in which the method
+	 * is declared; never {@code null} or empty
+	 * @param methodName the name of the method to select; never {@code null} or empty
+	 */
 	public static MethodSelector forMethod(String className, String methodName) {
 		Preconditions.notBlank(className, "Class name must not be null or empty");
 		Preconditions.notBlank(methodName, "Method name must not be null or empty");
@@ -32,12 +43,24 @@ public class MethodSelector implements DiscoverySelector {
 		return forMethod(clazz, findMethod(clazz, methodName));
 	}
 
+	/**
+	 * Create a {@code MethodSelector} for the supplied {@link Class} and method name.
+	 *
+	 * @param clazz the class in which the method is declared; never {@code null}
+	 * @param methodName the name of the method to select; never {@code null} or empty
+	 */
 	public static MethodSelector forMethod(Class<?> clazz, String methodName) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or empty");
 		return forMethod(clazz, findMethod(clazz, methodName));
 	}
 
+	/**
+	 * Create a {@code MethodSelector} for the supplied {@link Class} and {@link Method}.
+	 *
+	 * @param clazz the class in which the method is declared; never {@code null}
+	 * @param method the method to select; never {@code null}
+	 */
 	public static MethodSelector forMethod(Class<?> clazz, Method method) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(method, "Method must not be null");
@@ -52,10 +75,17 @@ public class MethodSelector implements DiscoverySelector {
 		this.method = method;
 	}
 
+	/**
+	 * Get the Java {@link Class} in which the selected {@linkplain #getJavaMethod
+	 * method} is declared.
+	 */
 	public Class<?> getJavaClass() {
 		return this.clazz;
 	}
 
+	/**
+	 * Get the selected Java {@link Method}.
+	 */
 	public Method getJavaMethod() {
 		return this.method;
 	}
