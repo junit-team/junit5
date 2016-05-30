@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.DiscoverySelector;
 
 /**
@@ -32,6 +33,8 @@ public class ClasspathSelector implements DiscoverySelector {
 	}
 
 	public static List<DiscoverySelector> forPaths(Set<File> paths) {
+		Preconditions.notNull(paths, "paths must not be null");
+
 		// @formatter:off
 		return paths.stream()
 				.filter(File::exists)

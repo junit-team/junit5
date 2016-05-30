@@ -13,6 +13,7 @@ package org.junit.gen5.engine.discovery;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.DiscoverySelector;
 
 /**
@@ -22,6 +23,7 @@ import org.junit.gen5.engine.DiscoverySelector;
 public class PackageSelector implements DiscoverySelector {
 
 	public static PackageSelector forPackageName(String packageName) {
+		Preconditions.notBlank(packageName, "Package name must not be null or empty");
 		return new PackageSelector(packageName);
 	}
 
@@ -32,7 +34,7 @@ public class PackageSelector implements DiscoverySelector {
 	}
 
 	public String getPackageName() {
-		return packageName;
+		return this.packageName;
 	}
 
 }

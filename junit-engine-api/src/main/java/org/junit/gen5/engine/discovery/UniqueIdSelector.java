@@ -13,6 +13,7 @@ package org.junit.gen5.engine.discovery;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.UniqueId;
 
@@ -23,10 +24,12 @@ import org.junit.gen5.engine.UniqueId;
 public class UniqueIdSelector implements DiscoverySelector {
 
 	public static UniqueIdSelector forUniqueId(UniqueId uniqueId) {
+		Preconditions.notNull(uniqueId, "UniqueId must not be null");
 		return forUniqueId(uniqueId.toString());
 	}
 
 	public static UniqueIdSelector forUniqueId(String uniqueId) {
+		Preconditions.notBlank(uniqueId, "Unique ID must not be null or empty");
 		return new UniqueIdSelector(uniqueId);
 	}
 

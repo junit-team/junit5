@@ -36,17 +36,17 @@ import org.junit.gen5.engine.DiscoverySelector;
 public class NameBasedSelector {
 
 	public static DiscoverySelector forName(String name) {
-		Preconditions.notBlank(name, "name must not be blank or empty");
+		Preconditions.notBlank(name, "name must not be null or empty");
 
-		Optional<Class<?>> testClassOptional = ReflectionUtils.loadClass(name);
-		if (testClassOptional.isPresent()) {
-			return forClass(testClassOptional.get());
+		Optional<Class<?>> classOptional = ReflectionUtils.loadClass(name);
+		if (classOptional.isPresent()) {
+			return forClass(classOptional.get());
 		}
 
-		Optional<Method> testMethodOptional = ReflectionUtils.loadMethod(name);
-		if (testMethodOptional.isPresent()) {
-			Method testMethod = testMethodOptional.get();
-			return forMethod(testMethod.getDeclaringClass(), testMethod);
+		Optional<Method> methodOptional = ReflectionUtils.loadMethod(name);
+		if (methodOptional.isPresent()) {
+			Method method = methodOptional.get();
+			return forMethod(method.getDeclaringClass(), method);
 		}
 
 		if (ReflectionUtils.isPackage(name)) {
