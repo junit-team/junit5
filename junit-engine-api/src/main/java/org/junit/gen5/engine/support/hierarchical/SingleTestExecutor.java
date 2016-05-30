@@ -21,20 +21,44 @@ import org.junit.gen5.engine.TestExecutionResult;
 import org.opentest4j.TestAbortedException;
 
 /**
- * Executes a single test wrapped in an {@link Executable} and returns a
- * {@link TestExecutionResult} by converting exceptions.
+ * Encapsulates execution of a single test wrapped in an {@link Executable} and
+ * returns a {@link TestExecutionResult} by converting exceptions.
  *
  * @since 5.0
  */
 @API(Experimental)
 public class SingleTestExecutor {
 
+	/**
+	 * Functional interface of a single test to be executed by
+	 * {@link SingleTestExecutor}.
+	 */
 	public interface Executable {
 
-		void execute() throws Throwable;
+		/**
+		 * Execute the test.
+		 *
+		 * @throws TestAbortedException to signal abortion
+		 * @throws Throwable to signal failure
+		 */
+		void execute() throws TestAbortedException, Throwable;
 
 	}
 
+	/**
+	 * Executes the supplied {@link Executable executable} and returns a
+	 * {@link TestExecutionResult} based on its outcome.
+	 *
+	 * <p>In case {@code executable} throws a <em>blacklisted</em> exception,
+	 * e.g. an {@link OutOfMemoryError}, this method will rethrow it.
+	 *
+	 * @param executable the test to be executed
+	 * @return {@linkplain TestExecutionResult#aborted aborted}, when
+	 * {@code executable} throws a {@link TestAbortedException};
+	 * {@linkplain TestExecutionResult#failed failed}, on a different
+	 * {@link Throwable}; {@linkplain TestExecutionResult#successful
+	 * successful}, otherwise.
+	 */
 	public TestExecutionResult executeSafely(Executable executable) {
 		try {
 			executable.execute();
