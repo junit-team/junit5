@@ -52,7 +52,11 @@ public class UniqueId implements Cloneable {
 	 * Create an engine's unique ID from its {@code engineId} using the default
 	 * format.
 	 *
+	 * <p>The engine ID will be stored in a {@link Segment} with
+	 * {@link Segment#getType type} {@code "engine"}.
+	 *
 	 * @param engineId the engine ID; never {@code null} or empty
+	 * @see #root(String, String)
 	 */
 	public static UniqueId forEngine(String engineId) {
 		Preconditions.notBlank(engineId, "engineId must not be null or empty");
@@ -65,6 +69,7 @@ public class UniqueId implements Cloneable {
 	 *
 	 * @param segmentType the segment type; never {@code null} or empty
 	 * @param value the value; never {@code null} or empty
+	 * @see #forEngine(String)
 	 */
 	public static UniqueId root(String segmentType, String value) {
 		Preconditions.notBlank(segmentType, "segmentType must not be null or empty");
@@ -89,6 +94,11 @@ public class UniqueId implements Cloneable {
 		return this.segments.size() > 0 ? Optional.of(this.segments.get(0)) : Optional.empty();
 	}
 
+	/**
+	 * Get the engine ID stored in this {@code UniqueId}, if available.
+	 *
+	 * @see #forEngine(String)
+	 */
 	public final Optional<String> getEngineId() {
 		return getRoot().filter(segment -> segment.getType().equals(ENGINE_SEGMENT_TYPE)).map(Segment::getValue);
 	}
