@@ -10,12 +10,14 @@
 
 package org.junit.gen5.launcher.main;
 
+import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.FilterResult.excluded;
 import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
+import static org.junit.gen5.engine.discovery.ClasspathSelector.selectClasspathRoots;
 import static org.junit.gen5.engine.discovery.MethodSelector.selectMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
@@ -24,7 +26,6 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -128,14 +129,11 @@ public class TestDiscoveryRequestBuilderTests {
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
 					.selectors(
-							ClasspathSelector.selectClasspathRoots(Collections.singleton(new File("/some/local/path")))
+							selectClasspathRoots(singleton(new File("/some/local/path")))
 					).build();
 			// @formatter:on
 
-			List<String> folders = discoveryRequest.getSelectorsByType(ClasspathSelector.class).stream().map(
-				ClasspathSelector::getClasspathRoot).map(File::getAbsolutePath).collect(toList());
-
-			assertThat(folders).isEmpty();
+			assertThat(discoveryRequest.getSelectorsByType(ClasspathSelector.class).size()).isEqualTo(0);
 		}
 
 		@Test
@@ -145,7 +143,7 @@ public class TestDiscoveryRequestBuilderTests {
 				// @formatter:off
 				TestDiscoveryRequest discoveryRequest = request()
 						.selectors(
-								ClasspathSelector.selectClasspathRoots(Collections.singleton(temporaryFolder))
+								selectClasspathRoots(singleton(temporaryFolder))
 						).build();
 				// @formatter:on
 

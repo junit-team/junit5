@@ -10,11 +10,13 @@
 
 package org.junit.gen5.engine.junit5.discovery;
 
+import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertSame;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.expectThrows;
+import static org.junit.gen5.engine.discovery.ClasspathSelector.selectClasspathRoots;
 import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.engineId;
 import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.uniqueIdForClass;
 import static org.junit.gen5.engine.junit5.discovery.JUnit5UniqueIdBuilder.uniqueIdForMethod;
@@ -24,7 +26,6 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,7 +41,6 @@ import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.ClassSelector;
-import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
@@ -53,7 +53,7 @@ import org.junit.gen5.engine.junit5.descriptor.TestFactoryTestDescriptor;
 public class DiscoverySelectorResolverTests {
 
 	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(engineId());
-	private DiscoverySelectorResolver resolver = new DiscoverySelectorResolver();
+	private final DiscoverySelectorResolver resolver = new DiscoverySelectorResolver();
 
 	@Test
 	public void singleClassResolution() {
@@ -366,9 +366,9 @@ public class DiscoverySelectorResolverTests {
 		File classpath = new File(
 			DiscoverySelectorResolverTests.class.getProtectionDomain().getCodeSource().getLocation().getPath());
 
-		List<DiscoverySelector> selector = ClasspathSelector.selectClasspathRoots(Collections.singleton(classpath));
+		List<DiscoverySelector> selectors = selectClasspathRoots(singleton(classpath));
 
-		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
+		resolver.resolveSelectors(request().selectors(selectors).build(), engineDescriptor);
 
 		assertTrue(engineDescriptor.allDescendants().size() > 500, "Too few test descriptors in classpath");
 

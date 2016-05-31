@@ -10,12 +10,12 @@
 
 package org.junit.gen5.engine.discovery;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.io.File;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
@@ -33,20 +33,21 @@ import org.junit.gen5.engine.DiscoverySelector;
 public class ClasspathSelector implements DiscoverySelector {
 
 	/**
-	 * Create a list of {@code ClasspathSelectors} for the supplied {@code paths}.
+	 * Create a list of {@code ClasspathSelectors} for the supplied {@code directories}.
 	 *
-	 * @param paths the paths to classpath roots in the filesystem; never {@code null}
-	 * @return a list of selectors for the supplied paths; paths which
-	 * do not exist in the filesystem will be filtered out
+	 * @param directories set of directories in the filesystem that represent classpath roots;
+	 * never {@code null}
+	 * @return a list of selectors for the supplied directories; directories which
+	 * do not physically exist in the filesystem will be filtered out
 	 */
-	public static List<DiscoverySelector> selectClasspathRoots(Set<File> paths) {
-		Preconditions.notNull(paths, "paths must not be null");
+	public static List<DiscoverySelector> selectClasspathRoots(Set<File> directories) {
+		Preconditions.notNull(directories, "directories must not be null");
 
 		// @formatter:off
-		return paths.stream()
-				.filter(File::exists)
+		return directories.stream()
+				.filter(File::isDirectory)
 				.map(ClasspathSelector::new)
-				.collect(Collectors.toList());
+				.collect(toList());
 		// @formatter:on
 	}
 
@@ -57,7 +58,7 @@ public class ClasspathSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the selected classpath root.
+	 * Get the selected classpath root directory.
 	 */
 	public File getClasspathRoot() {
 		return this.classpathRoot;
