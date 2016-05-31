@@ -23,6 +23,7 @@ import java.util.List;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
@@ -34,26 +35,21 @@ import org.junit.gen5.engine.discovery.UniqueIdSelector;
  * @since 5.0
  */
 public class DiscoveryRequestTests {
-	@Test
-	public void forUniqueIdForMethod() {
-		DiscoverySelector element = selectUniqueId("junit5:org.example.UserTests#fullname()");
-		assertEquals(UniqueIdSelector.class, element.getClass());
-	}
 
 	@Test
-	public void forNameWithClass() {
+	public void selectNameWithClass() {
 		DiscoverySelector element = selectName(MyTestClass.class.getName());
 		assertEquals(ClassSelector.class, element.getClass());
 	}
 
 	@Test
-	public void forNameWithMethod() throws Exception {
+	public void selectNameWithMethod() throws Exception {
 		DiscoverySelector element = selectName(fullyQualifiedMethodName());
 		assertEquals(MethodSelector.class, element.getClass());
 	}
 
 	@Test
-	public void forNameWithPackage() {
+	public void selectNameWithPackage() {
 		DiscoverySelector element = selectName("org.junit.gen5");
 		assertEquals(PackageSelector.class, element.getClass());
 	}
@@ -62,7 +58,7 @@ public class DiscoveryRequestTests {
 	public void buildDiscoveryRequest() throws Exception {
 		// @formatter:off
 		EngineDiscoveryRequest spec = request().selectors(
-			selectUniqueId("junit5:org.example.UserTests#fullname()"),
+			selectUniqueId(UniqueId.forEngine("fooEngine")),
 			selectName(MyTestClass.class.getName()),
 			selectName("org.junit.gen5"),
 			selectName(fullyQualifiedMethodName())
@@ -84,4 +80,5 @@ public class DiscoveryRequestTests {
 		void myTest() {
 		}
 	}
+
 }

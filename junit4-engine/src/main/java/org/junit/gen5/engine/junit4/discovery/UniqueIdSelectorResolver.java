@@ -35,7 +35,7 @@ class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelecto
 
 	@Override
 	void resolve(UniqueIdSelector selector, TestClassCollector collector) {
-		UniqueId uniqueId = UniqueId.parse(selector.getUniqueId());
+		UniqueId uniqueId = selector.getUniqueId();
 		if (UniqueId.forEngine(ENGINE_ID).equals(uniqueId)) {
 			logger.warning(
 				() -> format("Unresolvable Unique ID (%s): Cannot resolve the engine's unique ID", uniqueId));

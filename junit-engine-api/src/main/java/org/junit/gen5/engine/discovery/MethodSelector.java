@@ -15,6 +15,7 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import java.lang.reflect.Method;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.DiscoverySelector;
@@ -90,12 +91,14 @@ public class MethodSelector implements DiscoverySelector {
 		return this.method;
 	}
 
-	private static Class<?> loadClass(String clazzName) {
-		return ReflectionUtils.loadClass(clazzName).get();
+	private static Class<?> loadClass(String className) {
+		return ReflectionUtils.loadClass(className).orElseThrow(
+			() -> new PreconditionViolationException("Could not load class with name: " + className));
 	}
 
 	private static Method findMethod(Class<?> clazz, String methodName) {
-		return ReflectionUtils.findMethod(clazz, methodName).get();
+		return ReflectionUtils.findMethod(clazz, methodName).orElseThrow(() -> new PreconditionViolationException(
+			String.format("Could not find method with name [%s] in class [%s].", methodName, clazz.getName())));
 	}
 
 }

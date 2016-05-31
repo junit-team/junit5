@@ -210,18 +210,6 @@ public class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	public void methodResolutionByUniqueIdWithNullInput() {
-		UniqueIdSelector selector = UniqueIdSelector.selectUniqueId(uniqueIdForMethod(getClass(), null));
-		assertMethodDoesNotMatchPattern(selector);
-	}
-
-	@Test
-	public void methodResolutionByUniqueIdWithEmptyInput() {
-		UniqueIdSelector selector = UniqueIdSelector.selectUniqueId(uniqueIdForMethod(getClass(), "  "));
-		assertMethodDoesNotMatchPattern(selector);
-	}
-
-	@Test
 	public void methodResolutionByUniqueIdWithMissingMethodName() {
 		UniqueIdSelector selector = UniqueIdSelector.selectUniqueId(uniqueIdForMethod(getClass(), "()"));
 		assertMethodDoesNotMatchPattern(selector);

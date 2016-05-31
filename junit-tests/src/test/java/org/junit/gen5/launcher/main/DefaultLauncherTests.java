@@ -67,7 +67,7 @@ class DefaultLauncherTests {
 	void discoverEmptyTestPlanWithEngineWithoutAnyTests() {
 		DefaultLauncher launcher = createLauncher(new DummyTestEngine());
 
-		TestPlan testPlan = launcher.discover(request().selectors(selectUniqueId("foo")).build());
+		TestPlan testPlan = launcher.discover(request().build());
 
 		assertThat(testPlan.getRoots()).isEmpty();
 	}

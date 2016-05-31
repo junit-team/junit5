@@ -48,7 +48,7 @@ public class ClassSelector implements DiscoverySelector {
 		Preconditions.notBlank(className, "className must not be null or empty");
 
 		return selectClass(ReflectionUtils.loadClass(className).orElseThrow(
-			() -> new PreconditionViolationException("Could not resolve class with name: " + className)));
+			() -> new PreconditionViolationException("Could not load class with name: " + className)));
 	}
 
 	private final Class<?> javaClass;

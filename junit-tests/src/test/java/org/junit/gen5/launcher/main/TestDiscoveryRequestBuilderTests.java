@@ -34,6 +34,7 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.gen5.engine.DiscoveryFilter;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
@@ -160,18 +161,21 @@ public class TestDiscoveryRequestBuilderTests {
 
 		@Test
 		public void uniqueIdsAreStoredInDiscoveryRequest() throws Exception {
+			UniqueId id1 = UniqueId.forEngine("engine").append("foo", "id1");
+			UniqueId id2 = UniqueId.forEngine("engine").append("foo", "id2");
+
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
 					.selectors(
-							selectUniqueId("engine:bla:foo:bar:id1"),
-							selectUniqueId("engine:bla:foo:bar:id2")
+							selectUniqueId(id1),
+							selectUniqueId(id2)
 					).build();
 			// @formatter:on
 
 			List<String> uniqueIds = discoveryRequest.getSelectorsByType(UniqueIdSelector.class).stream().map(
-				UniqueIdSelector::getUniqueId).collect(toList());
+				UniqueIdSelector::getUniqueId).map(Object::toString).collect(toList());
 
-			assertThat(uniqueIds).contains("engine:bla:foo:bar:id1", "engine:bla:foo:bar:id2");
+			assertThat(uniqueIds).contains(id1.toString(), id2.toString());
 		}
 	}
 

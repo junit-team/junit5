@@ -21,7 +21,6 @@ import java.util.Set;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
@@ -55,7 +54,7 @@ public class DiscoverySelectorResolver {
 			javaElementsResolver.resolveMethod(selector.getJavaClass(), selector.getJavaMethod());
 		});
 		request.getSelectorsByType(UniqueIdSelector.class).forEach(selector -> {
-			javaElementsResolver.resolveUniqueId(UniqueId.parse(selector.getUniqueId()));
+			javaElementsResolver.resolveUniqueId(selector.getUniqueId());
 		});
 		pruneTree(engineDescriptor);
 	}

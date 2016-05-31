@@ -127,6 +127,8 @@ public class UniqueId implements Cloneable {
 	 * @see #append(Segment)
 	 */
 	public final UniqueId append(String segmentType, String value) {
+		Preconditions.notBlank(segmentType, "segmentType must not be null or empty");
+		Preconditions.notBlank(value, "value must not be null or empty");
 		Segment segment = new Segment(segmentType, value);
 		return append(segment);
 	}

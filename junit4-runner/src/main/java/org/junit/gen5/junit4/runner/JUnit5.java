@@ -221,10 +221,10 @@ public class JUnit5 extends Runner implements Filterable {
 		// @formatter:off
 		List<DiscoverySelector> selectors = testIdentifiers.stream()
 				.map(TestIdentifier::getUniqueId)
-				.map(Object::toString)
 				.map(UniqueIdSelector::selectUniqueId)
 				.collect(toList());
 		// @formatter:on
 		return request().selectors(selectors).build();
 	}
+
 }

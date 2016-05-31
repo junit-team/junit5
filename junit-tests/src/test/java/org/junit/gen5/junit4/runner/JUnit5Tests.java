@@ -100,7 +100,7 @@ class JUnit5Tests {
 
 		@Test
 		void requestsUniqueIdSelectorsWhenUniqueIdsAnnotationIsPresent() throws Exception {
-			@UniqueIds({ "foo", "bar" })
+			@UniqueIds({ "[foo:bar]", "[baz:quux]" })
 			class TestCase {
 			}
 
@@ -108,8 +108,8 @@ class JUnit5Tests {
 
 			assertThat(request.getSelectors()).hasSize(2);
 			List<UniqueIdSelector> selectors = request.getSelectorsByType(UniqueIdSelector.class);
-			assertEquals("foo", selectors.get(0).getUniqueId());
-			assertEquals("bar", selectors.get(1).getUniqueId());
+			assertEquals("[foo:bar]", selectors.get(0).getUniqueId().toString());
+			assertEquals("[baz:quux]", selectors.get(1).getUniqueId().toString());
 		}
 
 		@Test
@@ -256,7 +256,7 @@ class JUnit5Tests {
 
 			TestDiscoveryRequest lastDiscoveryRequest = captor.getValue();
 			List<UniqueIdSelector> uniqueIdSelectors = lastDiscoveryRequest.getSelectorsByType(UniqueIdSelector.class);
-			assertEquals("[root:leaf2b]", getOnlyElement(uniqueIdSelectors).getUniqueId());
+			assertEquals("[root:leaf2b]", getOnlyElement(uniqueIdSelectors).getUniqueId().toString());
 
 			Description parentDescription = getOnlyElement(runner.getDescription().getChildren());
 			assertEquals(suiteDescription("[root:parent2]"), parentDescription);

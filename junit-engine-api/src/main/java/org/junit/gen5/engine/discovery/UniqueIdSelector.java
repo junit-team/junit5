@@ -34,7 +34,7 @@ public class UniqueIdSelector implements DiscoverySelector {
 	 */
 	public static UniqueIdSelector selectUniqueId(UniqueId uniqueId) {
 		Preconditions.notNull(uniqueId, "UniqueId must not be null");
-		return selectUniqueId(uniqueId.toString());
+		return new UniqueIdSelector(uniqueId);
 	}
 
 	/**
@@ -44,19 +44,19 @@ public class UniqueIdSelector implements DiscoverySelector {
 	 */
 	public static UniqueIdSelector selectUniqueId(String uniqueId) {
 		Preconditions.notBlank(uniqueId, "Unique ID must not be null or empty");
-		return new UniqueIdSelector(uniqueId);
+		return new UniqueIdSelector(UniqueId.parse(uniqueId));
 	}
 
-	private final String uniqueId;
+	private final UniqueId uniqueId;
 
-	private UniqueIdSelector(String uniqueId) {
+	private UniqueIdSelector(UniqueId uniqueId) {
 		this.uniqueId = uniqueId;
 	}
 
 	/**
-	 * Get the selected unique ID.
+	 * Get the selected {@link UniqueId}.
 	 */
-	public String getUniqueId() {
+	public UniqueId getUniqueId() {
 		return this.uniqueId;
 	}
 

@@ -395,7 +395,7 @@ class XmlReportsWritingListenerTests {
 		XmlReportsWritingListener reportListener = new XmlReportsWritingListener(tempDirectory.toString(), out, clock);
 		Launcher launcher = createLauncher(engine);
 		launcher.registerTestExecutionListeners(reportListener);
-		launcher.execute(request().selectors(selectUniqueId(engine.getId())).build());
+		launcher.execute(request().selectors(selectUniqueId(UniqueId.forEngine(engine.getId()))).build());
 	}
 
 	private String readValidXmlFile(Path xmlFile) throws Exception {
