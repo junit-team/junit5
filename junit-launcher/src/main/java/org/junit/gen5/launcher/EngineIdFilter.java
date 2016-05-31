@@ -30,15 +30,15 @@ import org.junit.gen5.engine.TestEngine;
 public class EngineIdFilter implements Filter<String> {
 
 	/**
-	 * Create a new <em>include</em> {@code EngineIdFilter} based on the
+	 * Create a new <em>require</em> {@code EngineIdFilter} based on the
 	 * supplied engine ID.
 	 *
 	 * <p>A {@code TestEngine} with a matching engine ID will be
-	 * <em>included</em> within the test discovery and execution.
+	 * <em>required</em> within the test discovery and execution.
 	 *
 	 * @param engineId the engine ID to match against; never {@code null} or empty
 	 */
-	public static EngineIdFilter includeEngineId(String engineId) {
+	public static EngineIdFilter requireEngineId(String engineId) {
 		Preconditions.notBlank(engineId, "engine ID must not be null or empty");
 		return new EngineIdFilter(engineId.trim());
 	}
@@ -65,7 +65,7 @@ public class EngineIdFilter implements Filter<String> {
 
 	@Override
 	public String toString() {
-		return "Include engines with ID: " + engineId;
+		return "Include engine with ID: " + engineId;
 	}
 
 }

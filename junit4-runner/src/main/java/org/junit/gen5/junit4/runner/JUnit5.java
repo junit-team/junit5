@@ -13,7 +13,7 @@ package org.junit.gen5.junit4.runner;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.meta.API.Usage.Maintained;
-import static org.junit.gen5.launcher.EngineIdFilter.includeEngineId;
+import static org.junit.gen5.launcher.EngineIdFilter.requireEngineId;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Annotation;
@@ -169,7 +169,7 @@ public class JUnit5 extends Runner implements Filterable {
 	private void addEngineIdFilter(TestDiscoveryRequest discoveryRequest) {
 		String engineId = getExplicitEngineId();
 		if (StringUtils.isNotBlank(engineId)) {
-			discoveryRequest.addEngineIdFilter(includeEngineId(engineId));
+			discoveryRequest.addEngineIdFilter(requireEngineId(engineId));
 		}
 	}
 

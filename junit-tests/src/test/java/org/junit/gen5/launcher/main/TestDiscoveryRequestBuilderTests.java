@@ -19,7 +19,7 @@ import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.engine.discovery.MethodSelector.selectMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
-import static org.junit.gen5.launcher.EngineIdFilter.includeEngineId;
+import static org.junit.gen5.launcher.EngineIdFilter.requireEngineId;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
@@ -187,8 +187,8 @@ public class TestDiscoveryRequestBuilderTests {
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
 					.filters(
-							includeEngineId("engine1"),
-							includeEngineId("engine2")
+							requireEngineId("engine1"),
+							requireEngineId("engine2")
 					).build();
 			// @formatter:on
 

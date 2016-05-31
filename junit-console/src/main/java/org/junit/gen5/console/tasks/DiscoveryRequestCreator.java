@@ -13,7 +13,7 @@ package org.junit.gen5.console.tasks;
 import static java.util.stream.Collectors.toCollection;
 import static org.junit.gen5.engine.discovery.ClasspathSelector.selectClasspathRoots;
 import static org.junit.gen5.engine.discovery.NameBasedSelector.selectNames;
-import static org.junit.gen5.launcher.EngineIdFilter.includeEngineId;
+import static org.junit.gen5.launcher.EngineIdFilter.requireEngineId;
 import static org.junit.gen5.launcher.TagFilter.excludeTags;
 import static org.junit.gen5.launcher.TagFilter.requireTags;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
@@ -77,7 +77,7 @@ class DiscoveryRequestCreator {
 			discoveryRequest.addPostFilter(excludeTags(options.getExcludedTagsFilter()));
 		}
 		options.getRequiredEngineFilter().ifPresent(
-			engineId -> discoveryRequest.addEngineIdFilter(includeEngineId(engineId)));
+			engineId -> discoveryRequest.addEngineIdFilter(requireEngineId(engineId)));
 	}
 
 }
