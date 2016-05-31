@@ -49,9 +49,12 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  *       selectUniqueId("unique-id-1"),
  *       selectUniqueId("unique-id-2")
  *     )
- *     .filter(byEngineIds("junit5"))
- *     .filter(byNamePattern("org\.junit\.gen5\.tests.*"), byNamePattern(".*Test[s]?"))
- *     .filter(requireTags("fast"), excludeTags("flow"))
+ *     .filters(
+ *       includeEngineId("junit5"),
+ *       byClassNamePattern("org\.junit\.gen5\.tests.*"),
+ *       byClassNamePattern(".*Test[s]?"),
+ *       requireTags("fast"),
+ *       excludeTags("slow"))
  *     .configurationParameter("key1", "value1")
  *     .configurationParameters(configParameterMap)
  *   ).build();
@@ -98,7 +101,7 @@ public final class TestDiscoveryRequestBuilder {
 	/**
 	 * Add all of the supplied {@code filters} to the request.
 	 */
-	public TestDiscoveryRequestBuilder filter(Filter<?>... filters) {
+	public TestDiscoveryRequestBuilder filters(Filter<?>... filters) {
 		if (filters != null) {
 			Arrays.stream(filters).forEach(this::storeFilter);
 		}

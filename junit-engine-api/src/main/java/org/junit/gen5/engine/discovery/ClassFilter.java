@@ -19,7 +19,7 @@ import org.junit.gen5.engine.DiscoveryFilter;
  * {@link DiscoveryFilter} that is applied to a {@link Class}.
  *
  * @since 5.0
- * @see #byNamePattern(String)
+ * @see #byClassNamePattern(String)
  */
 @API(Experimental)
 public interface ClassFilter extends DiscoveryFilter<Class<?>> {
@@ -34,7 +34,7 @@ public interface ClassFilter extends DiscoveryFilter<Class<?>> {
 	 * class names; never {@code null} or empty
 	 * @see Class#getName()
 	 */
-	static ClassFilter byNamePattern(String pattern) {
+	static ClassFilter byClassNamePattern(String pattern) {
 		return new ClassNameFilter(pattern);
 	}
 

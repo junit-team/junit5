@@ -13,6 +13,7 @@ package org.junit.gen5.junit4.runner;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.meta.API.Usage.Maintained;
+import static org.junit.gen5.launcher.EngineIdFilter.includeEngineId;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Annotation;
@@ -29,7 +30,6 @@ import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
-import org.junit.gen5.launcher.EngineIdFilter;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.TagFilter;
@@ -146,7 +146,7 @@ public class JUnit5 extends Runner implements Filterable {
 	private void addClassNameMatchesFilter(TestDiscoveryRequest discoveryRequest) {
 		String regex = getClassNameRegExPattern();
 		if (!regex.isEmpty()) {
-			discoveryRequest.addFilter(ClassFilter.byNamePattern(regex));
+			discoveryRequest.addFilter(ClassFilter.byClassNamePattern(regex));
 		}
 	}
 
@@ -169,7 +169,7 @@ public class JUnit5 extends Runner implements Filterable {
 	private void addEngineIdFilter(TestDiscoveryRequest discoveryRequest) {
 		String engineId = getExplicitEngineId();
 		if (StringUtils.isNotBlank(engineId)) {
-			discoveryRequest.addEngineIdFilter(EngineIdFilter.from(engineId));
+			discoveryRequest.addEngineIdFilter(includeEngineId(engineId));
 		}
 	}
 

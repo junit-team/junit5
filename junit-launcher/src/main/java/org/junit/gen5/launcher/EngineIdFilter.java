@@ -23,9 +23,6 @@ import org.junit.gen5.engine.TestEngine;
  * An {@code EngineIdFilter} is applied to engine IDs before
  * {@link TestEngine TestEngines} are executed.
  *
- * A {@code TestEngine} with a matching engine ID will be <em>included</em>
- * within the test discovery and execution.
- *
  * @since 5.0
  * @see TestDiscoveryRequest
  */
@@ -33,11 +30,15 @@ import org.junit.gen5.engine.TestEngine;
 public class EngineIdFilter implements Filter<String> {
 
 	/**
-	 * Create a new {@code EngineIdFilter} based on the supplied engine ID.
+	 * Create a new <em>include</em> {@code EngineIdFilter} based on the
+	 * supplied engine ID.
+	 *
+	 * <p>A {@code TestEngine} with a matching engine ID will be
+	 * <em>included</em> within the test discovery and execution.
 	 *
 	 * @param engineId the engine ID to match against; never {@code null} or empty
 	 */
-	public static EngineIdFilter from(String engineId) {
+	public static EngineIdFilter includeEngineId(String engineId) {
 		Preconditions.notBlank(engineId, "engine ID must not be null or empty");
 		return new EngineIdFilter(engineId.trim());
 	}

@@ -13,6 +13,9 @@ package org.junit.gen5.console.tasks;
 import static java.util.stream.Collectors.toCollection;
 import static org.junit.gen5.engine.discovery.ClasspathSelector.selectClasspathRoots;
 import static org.junit.gen5.engine.discovery.NameBasedSelector.selectNames;
+import static org.junit.gen5.launcher.EngineIdFilter.includeEngineId;
+import static org.junit.gen5.launcher.TagFilter.excludeTags;
+import static org.junit.gen5.launcher.TagFilter.requireTags;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
@@ -23,8 +26,6 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.discovery.ClassFilter;
-import org.junit.gen5.launcher.EngineIdFilter;
-import org.junit.gen5.launcher.TagFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
@@ -67,14 +68,16 @@ class DiscoveryRequestCreator {
 	}
 
 	private void applyFilters(TestDiscoveryRequest discoveryRequest, CommandLineOptions options) {
-		options.getClassnameFilter().ifPresent(regex -> discoveryRequest.addFilter(ClassFilter.byNamePattern(regex)));
+		options.getClassnameFilter().ifPresent(
+			regex -> discoveryRequest.addFilter(ClassFilter.byClassNamePattern(regex)));
 		if (!options.getRequiredTagsFilter().isEmpty()) {
-			discoveryRequest.addPostFilter(TagFilter.requireTags(options.getRequiredTagsFilter()));
+			discoveryRequest.addPostFilter(requireTags(options.getRequiredTagsFilter()));
 		}
 		if (!options.getExcludedTagsFilter().isEmpty()) {
-			discoveryRequest.addPostFilter(TagFilter.excludeTags(options.getExcludedTagsFilter()));
+			discoveryRequest.addPostFilter(excludeTags(options.getExcludedTagsFilter()));
 		}
 		options.getRequiredEngineFilter().ifPresent(
-			engineId -> discoveryRequest.addEngineIdFilter(EngineIdFilter.from(engineId)));
+			engineId -> discoveryRequest.addEngineIdFilter(includeEngineId(engineId)));
 	}
+
 }

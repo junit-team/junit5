@@ -19,6 +19,7 @@ import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.engine.discovery.MethodSelector.selectMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
+import static org.junit.gen5.launcher.EngineIdFilter.includeEngineId;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
@@ -181,9 +182,9 @@ public class TestDiscoveryRequestBuilderTests {
 		public void engineFiltersAreStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.filter(
-							EngineIdFilter.from("engine1"),
-							EngineIdFilter.from("engine2")
+					.filters(
+							includeEngineId("engine1"),
+							includeEngineId("engine2")
 					).build();
 			// @formatter:on
 
@@ -199,7 +200,7 @@ public class TestDiscoveryRequestBuilderTests {
 
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.filter(
+					.filters(
 							new DiscoveryFilterStub("filter1"),
 							new DiscoveryFilterStub("filter2")
 					).build();
@@ -216,7 +217,7 @@ public class TestDiscoveryRequestBuilderTests {
 
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.filter(
+					.filters(
 							new PostDiscoveryFilterStub("postFilter1"),
 							new PostDiscoveryFilterStub("postFilter2")
 					).build();
@@ -231,7 +232,7 @@ public class TestDiscoveryRequestBuilderTests {
 		@Test
 		public void exceptionForIllegalFilterClass() throws Exception {
 			PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
-				() -> request().filter(o -> excluded("reason")));
+				() -> request().filters(o -> excluded("reason")));
 
 			assertEquals("Filter must implement EngineIdFilter, PostDiscoveryFilter, or DiscoveryFilter.",
 				exception.getMessage());

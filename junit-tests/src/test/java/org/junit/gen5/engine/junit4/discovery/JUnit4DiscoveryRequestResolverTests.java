@@ -41,7 +41,7 @@ class JUnit4DiscoveryRequestResolverTests {
 		// @formatter:off
 		EngineDiscoveryRequest request = request()
 				.selectors(selectClass(Foo.class), selectClass(Bar.class))
-				.filter(filter)
+				.filters(filter)
 				.build();
 		// @formatter:on
 

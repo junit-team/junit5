@@ -12,7 +12,7 @@ package example;
 
 // tag::imports[]
 
-import static org.junit.gen5.engine.discovery.ClassFilter.byNamePattern;
+import static org.junit.gen5.engine.discovery.ClassFilter.byClassNamePattern;
 import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
 
@@ -41,7 +41,7 @@ class UsingTheLauncherDemo {
 				selectPackage("com.mycompany.mytests"),
 				selectClass(MyTestClass.class)
 			)
-			.filter(byNamePattern(".*Test"))
+			.filters(byClassNamePattern(".*Test"))
 			.build();
 
 		TestPlan plan = LauncherFactory.create().discover(specification);
@@ -58,7 +58,7 @@ class UsingTheLauncherDemo {
 				selectPackage("com.mycompany.mytests"),
 				selectClass(MyTestClass.class)
 			)
-			.filter(byNamePattern(".*Test"))
+			.filters(byClassNamePattern(".*Test"))
 			.build();
 
 		Launcher launcher = LauncherFactory.create();

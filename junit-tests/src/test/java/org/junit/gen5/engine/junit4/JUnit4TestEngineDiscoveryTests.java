@@ -224,8 +224,8 @@ class JUnit4TestEngineDiscoveryTests {
 	void resolvesApplyingClassFilters() throws Exception {
 		File root = getClasspathRoot(PlainJUnit4TestCaseWithSingleTestWhichFails.class);
 
-		TestDiscoveryRequest discoveryRequest = request().selectors(selectClasspathRoots(singleton(root))).filter(
-			ClassFilter.byNamePattern(".*JUnit4.*"), ClassFilter.byNamePattern(".*Plain.*")).build();
+		TestDiscoveryRequest discoveryRequest = request().selectors(selectClasspathRoots(singleton(root))).filters(
+			ClassFilter.byClassNamePattern(".*JUnit4.*"), ClassFilter.byClassNamePattern(".*Plain.*")).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -514,7 +514,7 @@ class JUnit4TestEngineDiscoveryTests {
 		// @formatter:off
 		TestDiscoveryRequest request = request()
 				.selectors(MethodSelector.selectMethod(testClass, testClass.getMethod("failingTest")))
-				.filter(ClassFilter.byNamePattern("Foo"))
+				.filters(ClassFilter.byClassNamePattern("Foo"))
 				.build();
 		// @formatter:on
 
