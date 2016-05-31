@@ -34,9 +34,4 @@ public class JUnit5EngineDescriptor extends EngineDescriptor implements Node<JUn
 		return context.extend().withExtensionRegistry(createRegistryWithDefaultExtensions()).build();
 	}
 
-	@Override
-	public boolean isLeaf() {
-		return false;
-	}
-
 }

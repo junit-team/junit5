@@ -78,11 +78,15 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 			C context = node.before(preparedContext);
 			context = node.execute(context);
 
-			if (!node.isLeaf()) { // Prevent execution of dynamically added children
+			// If a node is not a leaf, execute its children recursively.
+			// Note: executing children for a leaf would result in accidental
+			// execution of dynamically added children.
+			if (!node.isLeaf()) {
 				for (TestDescriptor child : testDescriptor.getChildren()) {
 					execute(child, context);
 				}
 			}
+
 			node.after(context);
 		});
 
@@ -96,11 +100,6 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
 	@SuppressWarnings("rawtypes")
 	private static final Node noOpNode = new Node() {
-
-		@Override
-		public boolean isLeaf() {
-			return true;
-		}
 	};
 
 }

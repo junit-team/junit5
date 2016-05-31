@@ -29,8 +29,12 @@ public interface Node<C extends EngineExecutionContext> {
 
 	/**
 	 * Determine if this {@code Node} is a leaf in the hierarchy.
+	 *
+	 * <p>The default implementation returns {@code false}.
 	 */
-	boolean isLeaf();
+	default boolean isLeaf() {
+		return false;
+	}
 
 	/**
 	 * Prepare the supplied {@code context} prior to execution.
@@ -54,10 +58,14 @@ public interface Node<C extends EngineExecutionContext> {
 	/**
 	 * Execute the <em>before</em> behavior of this node.
 	 *
-	 * <p>This method will be called once <em>before</em> executing this node.
+	 * <p>This method will be called once <em>before</em> {@linkplain #execute
+	 * execution} of this node.
 	 *
 	 * @param context the context to execute in
 	 * @return the new context to be used for children of this node
+	 *
+	 * @see #execute
+	 * @see #after
 	 */
 	default C before(C context) throws Exception {
 		return context;
@@ -69,6 +77,9 @@ public interface Node<C extends EngineExecutionContext> {
 	 * @param context the context to execute in
 	 * @return the new context to be used for children of this node and for the
 	 * <em>after</em> behavior of the parent of this node, if any
+	 *
+	 * @see #before
+	 * @see #after
 	 */
 	default C execute(C context) throws Exception {
 		return context;
@@ -77,9 +88,13 @@ public interface Node<C extends EngineExecutionContext> {
 	/**
 	 * Execute the <em>after</em> behavior of this node.
 	 *
-	 * <p>This method will be called once <em>after</em> executing this node.
+	 * <p>This method will be called once <em>after</em> {@linkplain #execute
+	 * execution} of this node.
 	 *
 	 * @param context the context to execute in
+	 *
+	 * @see #before
+	 * @see #execute
 	 */
 	default void after(C context) throws Exception {
 	}
