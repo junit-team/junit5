@@ -39,7 +39,6 @@ import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 import org.junit.gen5.engine.support.descriptor.JavaMethodSource;
-import org.junit.gen5.engine.support.hierarchical.Leaf;
 
 /**
  * {@link TestDescriptor} for tests based on Java methods.
@@ -60,7 +59,7 @@ import org.junit.gen5.engine.support.hierarchical.Leaf;
  * @since 5.0
  */
 @API(Internal)
-public class MethodTestDescriptor extends JUnit5TestDescriptor implements Leaf<JUnit5EngineExecutionContext> {
+public class MethodTestDescriptor extends JUnit5TestDescriptor {
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();

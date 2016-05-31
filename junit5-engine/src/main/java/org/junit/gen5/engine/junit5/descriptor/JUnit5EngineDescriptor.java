@@ -8,30 +8,35 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.discovery;
+package org.junit.gen5.engine.junit5.descriptor;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.gen5.engine.junit5.extension.ExtensionRegistry.createRegistryWithDefaultExtensions;
 
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
-import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
-import org.junit.gen5.engine.support.hierarchical.Container;
+import org.junit.gen5.engine.support.hierarchical.Node;
 
 /**
  * @since 5.0
  */
 @API(Internal)
-public class JUnit5EngineDescriptor extends EngineDescriptor implements Container<JUnit5EngineExecutionContext> {
+public class JUnit5EngineDescriptor extends EngineDescriptor implements Node<JUnit5EngineExecutionContext> {
 
 	public JUnit5EngineDescriptor(UniqueId uniqueId) {
 		super(uniqueId, "JUnit 5");
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext beforeAll(JUnit5EngineExecutionContext context) {
-		return context.extend().withExtensionRegistry(ExtensionRegistry.createRegistryWithDefaultExtensions()).build();
+	public JUnit5EngineExecutionContext before(JUnit5EngineExecutionContext context) {
+		return context.extend().withExtensionRegistry(createRegistryWithDefaultExtensions()).build();
+	}
+
+	@Override
+	public boolean isLeaf() {
+		return false;
 	}
 
 }

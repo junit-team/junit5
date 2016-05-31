@@ -15,7 +15,9 @@ import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.stub;
@@ -31,7 +33,6 @@ import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
-import org.mockito.Mockito;
 import org.opentest4j.TestAbortedException;
 
 /**
@@ -49,7 +50,7 @@ public class HierarchicalTestExecutorTests {
 	@BeforeEach
 	public void init() {
 		root = spy(new MyContainer(UniqueId.root("container", "root")));
-		listener = Mockito.mock(EngineExecutionListener.class);
+		listener = mock(EngineExecutionListener.class);
 		rootContext = new MyEngineExecutionContext();
 		ExecutionRequest request = new ExecutionRequest(root, listener, null);
 		executor = new MyExecutor(request, rootContext);
@@ -66,8 +67,8 @@ public class HierarchicalTestExecutorTests {
 		inOrder.verify(root).prepare(rootContext);
 		inOrder.verify(root).shouldBeSkipped(rootContext);
 		inOrder.verify(listener).executionStarted(root);
-		inOrder.verify(root).beforeAll(rootContext);
-		inOrder.verify(root).afterAll(rootContext);
+		inOrder.verify(root).before(rootContext);
+		inOrder.verify(root).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
 
 		assertTrue(rootExecutionResult.getValue().getStatus() == TestExecutionResult.Status.SUCCESSFUL,
@@ -89,8 +90,8 @@ public class HierarchicalTestExecutorTests {
 		inOrder.verify(child).prepare(rootContext);
 		inOrder.verify(child).shouldBeSkipped(rootContext);
 		inOrder.verify(listener).executionStarted(child);
-		inOrder.verify(child).beforeAll(rootContext);
-		inOrder.verify(child).afterAll(rootContext);
+		inOrder.verify(child).before(rootContext);
+		inOrder.verify(child).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(child), childExecutionResult.capture());
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
@@ -196,7 +197,7 @@ public class HierarchicalTestExecutorTests {
 		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		root.addChild(child);
 		RuntimeException anException = new RuntimeException("in test");
-		stub(root.beforeAll(rootContext)).toThrow(anException);
+		stub(root.before(rootContext)).toThrow(anException);
 
 		InOrder inOrder = inOrder(listener, root, child);
 
@@ -206,8 +207,8 @@ public class HierarchicalTestExecutorTests {
 		inOrder.verify(root).prepare(rootContext);
 		inOrder.verify(root).shouldBeSkipped(rootContext);
 		inOrder.verify(listener).executionStarted(root);
-		inOrder.verify(root).beforeAll(rootContext);
-		inOrder.verify(root, never()).afterAll(rootContext);
+		inOrder.verify(root).before(rootContext);
+		inOrder.verify(root, never()).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
 
 		assertTrue(rootExecutionResult.getValue().getStatus() == TestExecutionResult.Status.FAILED,
@@ -223,7 +224,7 @@ public class HierarchicalTestExecutorTests {
 		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "child container")));
 		root.addChild(child);
 		RuntimeException anException = new RuntimeException("in test");
-		stub(root.afterAll(rootContext)).toThrow(anException);
+		doThrow(anException).when(root).after(rootContext);
 
 		InOrder inOrder = inOrder(listener, root, child);
 
@@ -233,11 +234,11 @@ public class HierarchicalTestExecutorTests {
 		inOrder.verify(root).prepare(rootContext);
 		inOrder.verify(root).shouldBeSkipped(rootContext);
 		inOrder.verify(listener).executionStarted(root);
-		inOrder.verify(root).beforeAll(rootContext);
+		inOrder.verify(root).before(rootContext);
 		inOrder.verify(listener).executionStarted(child);
 		inOrder.verify(child).execute(rootContext);
 		inOrder.verify(listener).executionFinished(eq(child), any(TestExecutionResult.class));
-		inOrder.verify(root).afterAll(rootContext);
+		inOrder.verify(root).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
 
 		assertTrue(rootExecutionResult.getValue().getStatus() == TestExecutionResult.Status.FAILED,
@@ -259,11 +260,11 @@ public class HierarchicalTestExecutorTests {
 
 		ArgumentCaptor<TestExecutionResult> childExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
 		inOrder.verify(listener).executionStarted(root);
-		inOrder.verify(root).beforeAll(rootContext);
+		inOrder.verify(root).before(rootContext);
 		inOrder.verify(listener).executionStarted(child);
 		inOrder.verify(child).execute(rootContext);
 		inOrder.verify(listener).executionFinished(eq(child), childExecutionResult.capture());
-		inOrder.verify(root).afterAll(rootContext);
+		inOrder.verify(root).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
 		assertTrue(childExecutionResult.getValue().getStatus() == TestExecutionResult.Status.FAILED,
@@ -277,7 +278,7 @@ public class HierarchicalTestExecutorTests {
 		MyContainer child = spy(new MyContainer(UniqueId.root("container", "child container")));
 		root.addChild(child);
 		TestAbortedException anAbortedException = new TestAbortedException("in BeforeAll");
-		stub(root.beforeAll(rootContext)).toThrow(anAbortedException);
+		stub(root.before(rootContext)).toThrow(anAbortedException);
 
 		InOrder inOrder = inOrder(listener, root, child);
 
@@ -287,8 +288,8 @@ public class HierarchicalTestExecutorTests {
 		inOrder.verify(root).prepare(rootContext);
 		inOrder.verify(root).shouldBeSkipped(rootContext);
 		inOrder.verify(listener).executionStarted(root);
-		inOrder.verify(root).beforeAll(rootContext);
-		inOrder.verify(root, never()).afterAll(rootContext);
+		inOrder.verify(root).before(rootContext);
+		inOrder.verify(root, never()).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
 
 		assertTrue(rootExecutionResult.getValue().getStatus() == TestExecutionResult.Status.ABORTED,
@@ -312,11 +313,11 @@ public class HierarchicalTestExecutorTests {
 
 		ArgumentCaptor<TestExecutionResult> childExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
 		inOrder.verify(listener).executionStarted(root);
-		inOrder.verify(root).beforeAll(rootContext);
+		inOrder.verify(root).before(rootContext);
 		inOrder.verify(listener).executionStarted(child);
 		inOrder.verify(child).execute(rootContext);
 		inOrder.verify(listener).executionFinished(eq(child), childExecutionResult.capture());
-		inOrder.verify(root).afterAll(rootContext);
+		inOrder.verify(root).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
 		assertTrue(childExecutionResult.getValue().getStatus() == TestExecutionResult.Status.ABORTED,
@@ -357,7 +358,7 @@ public class HierarchicalTestExecutorTests {
 	private static class MyEngineExecutionContext implements EngineExecutionContext {
 	}
 
-	private static class MyContainer extends AbstractTestDescriptor implements Container<MyEngineExecutionContext> {
+	private static class MyContainer extends AbstractTestDescriptor implements Node<MyEngineExecutionContext> {
 
 		protected MyContainer(UniqueId uniqueId) {
 			super(uniqueId);
@@ -378,9 +379,14 @@ public class HierarchicalTestExecutorTests {
 			return true;
 		}
 
+		@Override
+		public boolean isLeaf() {
+			return !isContainer();
+		}
+
 	}
 
-	private static class MyLeaf extends AbstractTestDescriptor implements Leaf<MyEngineExecutionContext> {
+	private static class MyLeaf extends AbstractTestDescriptor implements Node<MyEngineExecutionContext> {
 
 		protected MyLeaf(UniqueId uniqueId) {
 			super(uniqueId);
@@ -404,6 +410,11 @@ public class HierarchicalTestExecutorTests {
 		@Override
 		public boolean isContainer() {
 			return false;
+		}
+
+		@Override
+		public boolean isLeaf() {
+			return !isContainer();
 		}
 	}
 

@@ -19,8 +19,7 @@ import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 /**
  * @since 5.0
  */
-public class DummyTestDescriptor extends AbstractTestDescriptor
-		implements Leaf<DummyEngineExecutionContext>, Node<DummyEngineExecutionContext> {
+public class DummyTestDescriptor extends AbstractTestDescriptor implements Node<DummyEngineExecutionContext> {
 
 	private String displayName;
 	private final Runnable runnable;
@@ -50,6 +49,11 @@ public class DummyTestDescriptor extends AbstractTestDescriptor
 	@Override
 	public boolean isContainer() {
 		return false;
+	}
+
+	@Override
+	public boolean isLeaf() {
+		return !isContainer();
 	}
 
 	public void markSkipped(String reason) {

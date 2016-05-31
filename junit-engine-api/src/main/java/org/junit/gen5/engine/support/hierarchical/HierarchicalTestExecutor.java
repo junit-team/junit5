@@ -21,27 +21,24 @@ import org.junit.gen5.engine.support.hierarchical.Node.SkipResult;
 
 /**
  * Implementation core of all {@link TestEngine TestEngines} that wish to
- * use the {@link Node}, {@link Container}, and {@link Leaf} abstractions
- * as the driving principles for structuring and executing test suites.
+ * use the {@link Node} abstraction as the driving principle for structuring
+ * and executing test suites.
  *
  * <p>A {@code HierarchicalTestExecutor} is instantiated by a concrete
  * implementation of {@link HierarchicalTestEngine} and takes care of
- * calling containers and leaves in the appropriate order as well as
+ * executing nodes in the hierarchy in the appropriate order as well as
  * firing the necessary events in the {@link EngineExecutionListener}.
  *
- * @param <C> the type of {@code EngineExecutionContext} used by the {@code HierarchicalTestEngine}
+ * @param <C> the type of {@code EngineExecutionContext} used by the
+ * {@code HierarchicalTestEngine}
  * @since 5.0
  */
 class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
-	private final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
-
-	private final MixinAdapter<C> adapter = new MixinAdapter<>();
+	private static final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
 
 	private final TestDescriptor rootTestDescriptor;
-
 	private final EngineExecutionListener listener;
-
 	private final C rootContext;
 
 	HierarchicalTestExecutor(ExecutionRequest request, C rootContext) {
@@ -51,17 +48,18 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	}
 
 	void execute() {
-		executeAll(rootTestDescriptor, rootContext);
+		execute(this.rootTestDescriptor, this.rootContext);
 	}
 
-	private void executeAll(TestDescriptor testDescriptor, C parentContext) {
+	private void execute(TestDescriptor testDescriptor, C parentContext) {
+		Node<C> node = asNode(testDescriptor);
 
 		C preparedContext;
 		try {
-			preparedContext = adapter.asNode(testDescriptor).prepare(parentContext);
-			SkipResult skipResult = adapter.asNode(testDescriptor).shouldBeSkipped(preparedContext);
+			preparedContext = node.prepare(parentContext);
+			SkipResult skipResult = node.shouldBeSkipped(preparedContext);
 			if (skipResult.isSkipped()) {
-				listener.executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
+				this.listener.executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
 				return;
 			}
 		}
@@ -69,49 +67,40 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 			rethrowIfBlacklisted(throwable);
 
 			// TODO Decide if exceptions thrown during preparation should result in the node being marked as "started".
-			listener.executionStarted(testDescriptor);
-			listener.executionFinished(testDescriptor, TestExecutionResult.failed(throwable));
+			this.listener.executionStarted(testDescriptor);
+			this.listener.executionFinished(testDescriptor, TestExecutionResult.failed(throwable));
 			return;
 		}
 
-		listener.executionStarted(testDescriptor);
+		this.listener.executionStarted(testDescriptor);
 
 		TestExecutionResult result = singleTestExecutor.executeSafely(() -> {
-			C context = adapter.asContainer(testDescriptor).beforeAll(preparedContext);
-			context = adapter.asLeaf(testDescriptor).execute(context);
+			C context = node.before(preparedContext);
+			context = node.execute(context);
 
-			if (testDescriptor instanceof Container) { // to prevent execution of dynamically added children
+			if (!node.isLeaf()) { // Prevent execution of dynamically added children
 				for (TestDescriptor child : testDescriptor.getChildren()) {
-					executeAll(child, context);
+					execute(child, context);
 				}
 			}
-			context = adapter.asContainer(testDescriptor).afterAll(context);
+			node.after(context);
 		});
-		listener.executionFinished(testDescriptor, result);
+
+		this.listener.executionFinished(testDescriptor, result);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static class MixinAdapter<C extends EngineExecutionContext> {
-
-		private static final Container nullContainer = new Container() {
-		};
-
-		private static final Leaf nullLeaf = context -> context;
-
-		private static final Node nullNode = new Node() {
-		};
-
-		Container<C> asContainer(TestDescriptor testDescriptor) {
-			return (Container<C>) (testDescriptor instanceof Container ? testDescriptor : nullContainer);
-		}
-
-		Leaf<C> asLeaf(TestDescriptor testDescriptor) {
-			return (Leaf<C>) (testDescriptor instanceof Leaf ? testDescriptor : nullLeaf);
-		}
-
-		Node<C> asNode(TestDescriptor testDescriptor) {
-			return (Node<C>) (testDescriptor instanceof Node ? testDescriptor : nullNode);
-		}
+	@SuppressWarnings("unchecked")
+	private Node<C> asNode(TestDescriptor testDescriptor) {
+		return (testDescriptor instanceof Node ? (Node<C>) testDescriptor : noOpNode);
 	}
+
+	@SuppressWarnings("rawtypes")
+	private static final Node noOpNode = new Node() {
+
+		@Override
+		public boolean isLeaf() {
+			return true;
+		}
+	};
 
 }

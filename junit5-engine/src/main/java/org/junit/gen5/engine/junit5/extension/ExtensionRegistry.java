@@ -30,8 +30,7 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 /**
  * An {@code ExtensionRegistry} holds all registered extensions (i.e.
  * instances of {@link Extension}) for a given
- * {@link org.junit.gen5.engine.support.hierarchical.Container} or
- * {@link org.junit.gen5.engine.support.hierarchical.Leaf}.
+ * {@link org.junit.gen5.engine.support.hierarchical.Node}.
  *
  * <p>A registry has a reference to its parent registry, and all lookups are
  * performed first in the current registry itself and then recursively in its

@@ -32,17 +32,25 @@ import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.UniqueId;
+import org.junit.gen5.engine.junit5.execution.JUnit5EngineExecutionContext;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
+import org.junit.gen5.engine.support.hierarchical.Node;
 
 /**
  * @since 5.0
  */
 @API(Internal)
-public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor {
+public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor
+		implements Node<JUnit5EngineExecutionContext> {
 
-	protected JUnit5TestDescriptor(UniqueId uniqueId) {
+	JUnit5TestDescriptor(UniqueId uniqueId) {
 		super(uniqueId);
+	}
+
+	@Override
+	public boolean isLeaf() {
+		return !isContainer();
 	}
 
 	protected Set<TestTag> getTags(AnnotatedElement element) {

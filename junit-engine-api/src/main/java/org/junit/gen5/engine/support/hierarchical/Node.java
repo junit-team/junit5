@@ -19,14 +19,18 @@ import org.junit.gen5.commons.meta.API;
 /**
  * A <em>node</em> within the execution hierarchy.
  *
- * @param <C> the type of {@code EngineExecutionContext} used by the {@code HierarchicalTestEngine}
+ * @param <C> the type of {@code EngineExecutionContext} used by the
+ * {@code HierarchicalTestEngine}
  * @since 5.0
  * @see HierarchicalTestEngine
- * @see Container
- * @see Leaf
  */
 @API(Experimental)
 public interface Node<C extends EngineExecutionContext> {
+
+	/**
+	 * Determine if this {@code Node} is a leaf in the hierarchy.
+	 */
+	boolean isLeaf();
 
 	/**
 	 * Prepare the supplied {@code context} prior to execution.
@@ -45,6 +49,39 @@ public interface Node<C extends EngineExecutionContext> {
 	 */
 	default SkipResult shouldBeSkipped(C context) throws Exception {
 		return SkipResult.doNotSkip();
+	}
+
+	/**
+	 * Execute the <em>before</em> behavior of this node.
+	 *
+	 * <p>This method will be called once <em>before</em> executing this node.
+	 *
+	 * @param context the context to execute in
+	 * @return the new context to be used for children of this node
+	 */
+	default C before(C context) throws Exception {
+		return context;
+	}
+
+	/**
+	 * Execute the <em>behavior</em> of this node.
+	 *
+	 * @param context the context to execute in
+	 * @return the new context to be used for children of this node and for the
+	 * <em>after</em> behavior of the parent of this node, if any
+	 */
+	default C execute(C context) throws Exception {
+		return context;
+	}
+
+	/**
+	 * Execute the <em>after</em> behavior of this node.
+	 *
+	 * <p>This method will be called once <em>after</em> executing this node.
+	 *
+	 * @param context the context to execute in
+	 */
+	default void after(C context) throws Exception {
 	}
 
 	/**

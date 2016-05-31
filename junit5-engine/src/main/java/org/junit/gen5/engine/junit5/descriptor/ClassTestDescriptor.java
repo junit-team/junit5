@@ -46,7 +46,6 @@ import org.junit.gen5.engine.junit5.execution.TestInstanceProvider;
 import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 import org.junit.gen5.engine.support.descriptor.JavaClassSource;
-import org.junit.gen5.engine.support.hierarchical.Container;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.
@@ -60,7 +59,7 @@ import org.junit.gen5.engine.support.hierarchical.Container;
  * @since 5.0
  */
 @API(Internal)
-public class ClassTestDescriptor extends JUnit5TestDescriptor implements Container<JUnit5EngineExecutionContext> {
+public class ClassTestDescriptor extends JUnit5TestDescriptor {
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
@@ -147,7 +146,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext beforeAll(JUnit5EngineExecutionContext context) throws Exception {
+	public JUnit5EngineExecutionContext before(JUnit5EngineExecutionContext context) throws Exception {
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
 
@@ -158,7 +157,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext afterAll(JUnit5EngineExecutionContext context) throws Exception {
+	public void after(JUnit5EngineExecutionContext context) throws Exception {
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = new ThrowableCollector();
@@ -166,8 +165,6 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor implements Contain
 		invokeAfterAllMethods(registry, extensionContext, throwableCollector);
 		invokeAfterAllCallbacks(registry, extensionContext, throwableCollector);
 		throwableCollector.assertEmpty();
-
-		return context;
 	}
 
 	protected TestInstanceProvider testInstanceProvider(JUnit5EngineExecutionContext parentExecutionContext,

@@ -62,6 +62,11 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	}
 
 	@Override
+	public boolean isLeaf() {
+		return true;
+	}
+
+	@Override
 	protected void invokeTestMethod(JUnit5EngineExecutionContext context, TestExtensionContext testExtensionContext,
 			ThrowableCollector throwableCollector) {
 

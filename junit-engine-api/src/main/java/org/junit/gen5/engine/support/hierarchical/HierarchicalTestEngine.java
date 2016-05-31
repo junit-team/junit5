@@ -18,14 +18,11 @@ import org.junit.gen5.engine.TestEngine;
 
 /**
  * Abstract base class for all {@link TestEngine} implementations that wish
- * to organize test suites hierarchically based on the {@link Node},
- * {@link Container}, and {@link Leaf} abstractions.
+ * to organize test suites hierarchically based on the {@link Node} abstraction.
  *
  * @param <C> the type of {@code EngineExecutionContext} used by this engine
  * @since 5.0
  * @see Node
- * @see Container
- * @see Leaf
  */
 @API(Experimental)
 public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> implements TestEngine {

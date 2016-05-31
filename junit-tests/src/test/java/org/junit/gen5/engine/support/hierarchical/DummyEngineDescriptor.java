@@ -19,7 +19,7 @@ import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 /**
  * @since 5.0
  */
-public class DummyEngineDescriptor extends EngineDescriptor implements Container<DummyEngineExecutionContext> {
+public class DummyEngineDescriptor extends EngineDescriptor implements Node<DummyEngineExecutionContext> {
 
 	private String skippedReason;
 	private boolean skipped;
@@ -45,9 +45,14 @@ public class DummyEngineDescriptor extends EngineDescriptor implements Container
 	}
 
 	@Override
-	public DummyEngineExecutionContext beforeAll(DummyEngineExecutionContext context) throws Exception {
+	public DummyEngineExecutionContext before(DummyEngineExecutionContext context) throws Exception {
 		beforeAllBehavior.run();
 		return context;
+	}
+
+	@Override
+	public boolean isLeaf() {
+		return false;
 	}
 
 }
