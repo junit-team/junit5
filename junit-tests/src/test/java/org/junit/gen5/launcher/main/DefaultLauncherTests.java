@@ -125,6 +125,22 @@ class DefaultLauncherTests {
 	}
 
 	@Test
+	void launcherWillNotExecuteAnyEnginesWithMultipleEngineIdFilters() {
+		DummyTestEngine firstEngine = new DummyTestEngine("first");
+		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
+		DummyTestEngine secondEngine = new DummyTestEngine("second");
+		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
+
+		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
+
+		TestPlan testPlan = launcher.discover(
+			request().selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId())).filters(
+				includeEngineId("first"), includeEngineId("second")).build());
+
+		assertThat(testPlan.getRoots()).isEmpty();
+	}
+
+	@Test
 	void launcherAppliesPostDiscoveryFilters() {
 		DummyTestEngine engine = new DummyTestEngine("myEngine");
 		DummyTestDescriptor test1 = engine.addTest("test1", noOp);
