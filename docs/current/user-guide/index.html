@@ -2022,7 +2022,7 @@ test classes and test methods in the past.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.engine.discovery.ClassFilter.byNamePattern;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.engine.discovery.ClassFilter.byClassNamePattern;
 import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
 
@@ -2043,7 +2043,7 @@ import org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder;</code></pre>
         selectPackage("com.mycompany.mytests"),
         selectClass(MyTestClass.class)
     )
-    .filter(byNamePattern(".*Test"))
+    .filters(byClassNamePattern(".*Test"))
     .build();
 
 TestPlan plan = LauncherFactory.create().discover(specification);</code></pre>
@@ -2077,7 +2077,7 @@ be achieved through a <code><a href="https://github.com/junit-team/junit5/blob/m
         selectPackage("com.mycompany.mytests"),
         selectClass(MyTestClass.class)
     )
-    .filter(byNamePattern(".*Test"))
+    .filters(byClassNamePattern(".*Test"))
     .build();
 
 Launcher launcher = LauncherFactory.create();
@@ -2241,7 +2241,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-05-30 18:00:45 -04:00
+Last updated 2016-05-30 22:22:42 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
