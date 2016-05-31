@@ -10,6 +10,7 @@
 
 package example;
 
+// tag::user_guide[]
 import static org.junit.gen5.api.Assertions.assertFalse;
 import static org.junit.gen5.api.Assertions.assertTrue;
 
@@ -111,3 +112,4 @@ class DynamicTestsDemo {
 	}
 
 }
+// end::user_guide[]
