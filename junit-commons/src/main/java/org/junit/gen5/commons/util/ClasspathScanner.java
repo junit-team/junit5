@@ -80,10 +80,9 @@ class ClasspathScanner {
 	}
 
 	List<Class<?>> scanForClassesInClasspathRoot(File root, Predicate<Class<?>> classFilter) {
-		Preconditions.notNull(root, () -> "root must not be null");
-		Preconditions.condition(root.exists(),
-			() -> "root must exist, but could not be found: " + root.getAbsolutePath());
-		Preconditions.condition(root.isDirectory(), "root must be a directory, but is not: " + root.getAbsolutePath());
+		Preconditions.notNull(root, "root must not be null");
+		Preconditions.condition(root.isDirectory(),
+			() -> "root must be an existing directory: " + root.getAbsolutePath());
 
 		return findClassesInSourceDirRecursively(root, "", classFilter);
 	}
