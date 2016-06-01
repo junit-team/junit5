@@ -10,16 +10,16 @@
 
 package org.junit.gen5.engine.junit5.descriptor;
 
+import static java.util.Spliterator.ORDERED;
+import static java.util.Spliterators.spliteratorUnknownSize;
+import static java.util.stream.StreamSupport.stream;
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Spliterator;
-import java.util.Spliterators;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.api.extension.TestExtensionContext;
@@ -58,11 +58,6 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	}
 
 	@Override
-	public boolean isTest() {
-		return true;
-	}
-
-	@Override
 	public boolean isLeaf() {
 		return true;
 	}
@@ -79,55 +74,51 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 			Object testFactoryMethodResult = executableInvoker.invoke(method, instance, testExtensionContext,
 				context.getExtensionRegistry());
 
-			Stream<? extends DynamicTest> dynamicTestStream = toDynamicTestStream(testExtensionContext,
-				testFactoryMethodResult);
-
-			AtomicInteger index = new AtomicInteger();
 			try {
-				dynamicTestStream.forEach(
+				AtomicInteger index = new AtomicInteger();
+				toDynamicTestStream(testExtensionContext, testFactoryMethodResult).forEach(
 					dynamicTest -> registerAndExecute(dynamicTest, index.incrementAndGet(), listener));
 			}
-			catch (ClassCastException cce) {
+			catch (ClassCastException ex) {
 				throw invalidReturnTypeException(testExtensionContext);
 			}
 		});
 	}
 
 	@SuppressWarnings("unchecked")
-	private Stream<? extends DynamicTest> toDynamicTestStream(TestExtensionContext testExtensionContext,
+	private Stream<DynamicTest> toDynamicTestStream(TestExtensionContext testExtensionContext,
 			Object testFactoryMethodResult) {
 
 		if (testFactoryMethodResult instanceof Stream) {
-			return (Stream<? extends DynamicTest>) testFactoryMethodResult;
+			return (Stream<DynamicTest>) testFactoryMethodResult;
 		}
-		// use Collection's stream() implementation even though it implements Iterable
 		if (testFactoryMethodResult instanceof Collection) {
-			Collection<? extends DynamicTest> dynamicTestCollection = (Collection<? extends DynamicTest>) testFactoryMethodResult;
-			return dynamicTestCollection.stream();
+			// Use Collection's stream() implementation even though Collection implements Iterable
+			Collection<DynamicTest> collection = (Collection<DynamicTest>) testFactoryMethodResult;
+			return collection.stream();
 		}
 		if (testFactoryMethodResult instanceof Iterable) {
-			Iterable<? extends DynamicTest> dynamicTestIterable = (Iterable<? extends DynamicTest>) testFactoryMethodResult;
-			return StreamSupport.stream(dynamicTestIterable.spliterator(), false);
+			Iterable<DynamicTest> iterable = (Iterable<DynamicTest>) testFactoryMethodResult;
+			return stream(iterable.spliterator(), false);
 		}
 		if (testFactoryMethodResult instanceof Iterator) {
-			Iterator<? extends DynamicTest> dynamicTestIterator = (Iterator<? extends DynamicTest>) testFactoryMethodResult;
-			return StreamSupport.stream(Spliterators.spliteratorUnknownSize(dynamicTestIterator, Spliterator.ORDERED),
-				false);
+			Iterator<DynamicTest> iterator = (Iterator<DynamicTest>) testFactoryMethodResult;
+			return stream(spliteratorUnknownSize(iterator, ORDERED), false);
 		}
 
 		throw invalidReturnTypeException(testExtensionContext);
 	}
 
 	private void registerAndExecute(DynamicTest dynamicTest, int index, EngineExecutionListener listener) {
-		UniqueId uniqueId = getUniqueId().append(DYNAMIC_TEST_SEGMENT_TYPE, "%" + index);
-		DynamicTestTestDescriptor dynamicTestTestDescriptor = new DynamicTestTestDescriptor(uniqueId, dynamicTest,
-			getSource().get());
-		addChild(dynamicTestTestDescriptor);
+		UniqueId uniqueId = getUniqueId().append(DYNAMIC_TEST_SEGMENT_TYPE, "#" + index);
+		TestDescriptor descriptor = new DynamicTestTestDescriptor(uniqueId, dynamicTest, getSource().get());
 
-		listener.dynamicTestRegistered(dynamicTestTestDescriptor);
-		listener.executionStarted(dynamicTestTestDescriptor);
+		addChild(descriptor);
+		listener.dynamicTestRegistered(descriptor);
+
+		listener.executionStarted(descriptor);
 		TestExecutionResult result = singleTestExecutor.executeSafely(dynamicTest.getExecutable()::execute);
-		listener.executionFinished(dynamicTestTestDescriptor, result);
+		listener.executionFinished(descriptor, result);
 	}
 
 	private JUnitException invalidReturnTypeException(TestExtensionContext testExtensionContext) {
