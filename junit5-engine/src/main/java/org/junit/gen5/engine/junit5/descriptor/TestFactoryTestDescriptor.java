@@ -35,7 +35,8 @@ import org.junit.gen5.engine.junit5.execution.ThrowableCollector;
 import org.junit.gen5.engine.support.hierarchical.SingleTestExecutor;
 
 /**
- * {@link TestDescriptor} for test factory methods.
+ * {@link TestDescriptor} for {@link org.junit.gen5.api.TestFactory @TestFactory}
+ * methods.
  *
  * @since 5.0
  */

@@ -22,7 +22,7 @@ class IsPotentialJUnit4TestMethod implements Predicate<Method> {
 
 	@Override
 	public boolean test(Method method) {
-		// Don't use AnnotationUtils.hasAnnotation since JUnit 4 does not support
+		// Don't use AnnotationUtils.isAnnotated since JUnit 4 does not support
 		// meta-annotations
 		return method.isAnnotationPresent(Test.class);
 	}

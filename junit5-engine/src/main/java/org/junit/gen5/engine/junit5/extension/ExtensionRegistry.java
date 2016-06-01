@@ -56,7 +56,8 @@ public class ExtensionRegistry {
 	}
 
 	/**
-	 * Factory for creating and populating a new root registry with the default extension types.
+	 * Factory for creating and populating a new root registry with the default
+	 * extensions.
 	 *
 	 * @return a new {@code ExtensionRegistry}
 	 */

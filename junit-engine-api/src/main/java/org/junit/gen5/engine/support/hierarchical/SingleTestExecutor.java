@@ -21,16 +21,17 @@ import org.junit.gen5.engine.TestExecutionResult;
 import org.opentest4j.TestAbortedException;
 
 /**
- * Encapsulates execution of a single test wrapped in an {@link Executable} and
- * returns a {@link TestExecutionResult} by converting exceptions.
+ * {@code SingleTestExecutor} encapsulates the execution of a single test
+ * wrapped in an {@link Executable}.
  *
  * @since 5.0
+ * @see #executeSafely(Executable)
  */
 @API(Experimental)
 public class SingleTestExecutor {
 
 	/**
-	 * Functional interface of a single test to be executed by
+	 * Functional interface for a single test to be executed by
 	 * {@link SingleTestExecutor}.
 	 */
 	public interface Executable {
@@ -46,18 +47,19 @@ public class SingleTestExecutor {
 	}
 
 	/**
-	 * Executes the supplied {@link Executable executable} and returns a
-	 * {@link TestExecutionResult} based on its outcome.
+	 * Execute the supplied {@link Executable} and return a
+	 * {@link TestExecutionResult} based on the outcome.
 	 *
-	 * <p>In case {@code executable} throws a <em>blacklisted</em> exception,
-	 * e.g. an {@link OutOfMemoryError}, this method will rethrow it.
+	 * <p>If the {@code Executable} throws a <em>blacklisted</em> exception
+	 * &mdash; for example, an {@link OutOfMemoryError} &mdash; this method will
+	 * rethrow it.
 	 *
 	 * @param executable the test to be executed
-	 * @return {@linkplain TestExecutionResult#aborted aborted}, when
-	 * {@code executable} throws a {@link TestAbortedException};
-	 * {@linkplain TestExecutionResult#failed failed}, on a different
-	 * {@link Throwable}; {@linkplain TestExecutionResult#successful
-	 * successful}, otherwise.
+	 * @return {@linkplain TestExecutionResult#aborted aborted} if the
+	 * {@code Executable} throws a {@link TestAbortedException};
+	 * {@linkplain TestExecutionResult#failed failed} if any other
+	 * {@link Throwable} is thrown; and {@linkplain TestExecutionResult#successful
+	 * successful} otherwise
 	 */
 	public TestExecutionResult executeSafely(Executable executable) {
 		try {
@@ -72,4 +74,5 @@ public class SingleTestExecutor {
 			return failed(t);
 		}
 	}
+
 }

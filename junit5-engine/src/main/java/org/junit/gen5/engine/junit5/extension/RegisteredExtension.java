@@ -37,7 +37,6 @@ class RegisteredExtension<E extends Extension> {
 	 * never {@code null}
 	 * @param source the <em>source</em> of the extension; used solely for
 	 * error reporting and logging; never {@code null}
-	 * never {@code null}
 	 */
 	RegisteredExtension(E extension, Object source) {
 		this.extension = Preconditions.notNull(extension, "extension must not be null");
