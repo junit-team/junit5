@@ -11,7 +11,6 @@
 package org.junit.gen5.engine.junit4.discovery;
 
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.ReflectionUtils;
@@ -77,7 +76,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 	 */
 	private static class DefensiveJUnit4Builder extends JUnit4Builder {
 
-		private final Predicate<Method> hasTestAnnotation = new IsPotentialJUnit4TestMethod();
+		private static final Predicate<Method> hasTestAnnotation = new IsPotentialJUnit4TestMethod();
 
 		@Override
 		public Runner runnerForClass(Class<?> testClass) throws Throwable {
@@ -88,8 +87,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 		}
 
 		private boolean containsTestMethods(Class<?> testClass) {
-			List<Method> testMethods = ReflectionUtils.findMethods(testClass, hasTestAnnotation);
-			return !testMethods.isEmpty();
+			return !ReflectionUtils.findMethods(testClass, hasTestAnnotation).isEmpty();
 		}
 	}
 

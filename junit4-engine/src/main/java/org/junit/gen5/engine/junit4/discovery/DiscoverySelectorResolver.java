@@ -17,7 +17,8 @@ import org.junit.gen5.engine.DiscoverySelector;
  */
 abstract class DiscoverySelectorResolver<T extends DiscoverySelector> {
 
-	protected final IsPotentialJUnit4TestClass classTester = new IsPotentialJUnit4TestClass();
+	protected static final IsPotentialJUnit4TestClass classTester = new IsPotentialJUnit4TestClass();
+
 	private final Class<T> selectorClass;
 
 	DiscoverySelectorResolver(Class<T> selectorClass) {
