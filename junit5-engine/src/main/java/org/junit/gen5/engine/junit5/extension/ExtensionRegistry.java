@@ -43,8 +43,11 @@ public class ExtensionRegistry {
 
 	private static final Logger LOG = Logger.getLogger(ExtensionRegistry.class.getName());
 
-	private static final List<Class<? extends Extension>> DEFAULT_EXTENSIONS = Collections.unmodifiableList(
-		Arrays.asList(DisabledCondition.class, TestInfoParameterResolver.class, TestReporterParameterResolver.class));
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static final List<RegisteredExtension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(
+		Arrays.asList(new RegisteredExtension(new DisabledCondition(), ExtensionRegistry.class),
+			new RegisteredExtension(new TestInfoParameterResolver(), ExtensionRegistry.class),
+			new RegisteredExtension(new TestReporterParameterResolver(), ExtensionRegistry.class)));
 
 	/**
 	 * Factory for creating a new empty root registry.
@@ -63,7 +66,7 @@ public class ExtensionRegistry {
 	 */
 	public static ExtensionRegistry createRegistryWithDefaultExtensions() {
 		ExtensionRegistry extensionRegistry = new ExtensionRegistry(Optional.empty());
-		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerExtension);
+		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
 		return extensionRegistry;
 	}
 
@@ -180,6 +183,12 @@ public class ExtensionRegistry {
 			registerExtension(ReflectionUtils.newInstance(extensionType));
 			this.registeredExtensionTypes.add(extensionType);
 		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	private void registerDefaultExtension(RegisteredExtension registeredExtension) {
+		this.registeredExtensions.add(registeredExtension);
+		this.registeredExtensionTypes.add(registeredExtension.getExtension().getClass());
 	}
 
 	private void registerExtension(Extension extension) {
