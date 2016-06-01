@@ -10,11 +10,11 @@
 
 package org.junit.gen5.api;
 
+import static java.util.Spliterators.spliteratorUnknownSize;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.util.Iterator;
 import java.util.Spliterator;
-import java.util.Spliterators;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -44,6 +44,14 @@ import org.junit.gen5.commons.util.ToStringBuilder;
 @API(Experimental)
 public class DynamicTest {
 
+	public static <T> Stream<DynamicTest> stream(Iterator<T> generator, Function<? super T, String> displayNameSupplier,
+			Consumer<? super T> test) {
+
+		return StreamSupport.stream(spliteratorUnknownSize(generator, Spliterator.ORDERED), false).map(element -> {
+			return new DynamicTest(displayNameSupplier.apply(element), () -> test.accept(element));
+		});
+	}
+
 	private final String displayName;
 	private final Executable executable;
 
@@ -63,19 +71,6 @@ public class DynamicTest {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("displayName", displayName).toString();
-	}
-
-	public static <T> Stream<DynamicTest> streamFrom(Iterator<T> generator,
-			Function<? super T, String> displayNameSupplier, Consumer<? super T> assertion) {
-
-		Stream<T> targetStream = StreamSupport.stream(
-			Spliterators.spliteratorUnknownSize(generator, Spliterator.ORDERED), false);
-
-		return targetStream.map(element -> {
-			String displayName = displayNameSupplier.apply(element);
-			Executable testExecutable = () -> assertion.accept(element);
-			return new DynamicTest(displayName, testExecutable);
-		});
 	}
 
 }

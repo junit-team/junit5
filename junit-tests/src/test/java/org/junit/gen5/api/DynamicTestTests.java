@@ -24,7 +24,7 @@ class DynamicTestTests {
 	void streamFromIterator() throws Throwable {
 		List<String> assertedValues = new LinkedList<>();
 
-		Stream<DynamicTest> stream = DynamicTest.streamFrom(Arrays.asList("foo", "bar").iterator(), String::toUpperCase,
+		Stream<DynamicTest> stream = DynamicTest.stream(Arrays.asList("foo", "bar").iterator(), String::toUpperCase,
 			assertedValues::add);
 		List<DynamicTest> dynamicTests = stream.collect(Collectors.toList());
 

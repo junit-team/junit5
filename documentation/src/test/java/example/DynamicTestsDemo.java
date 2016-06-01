@@ -107,7 +107,7 @@ class DynamicTestsDemo {
 				return last;
 			}
 		};
-		return DynamicTest.streamFrom(generator, index -> "test" + index, index -> assertFalse(index % AVERAGE == 0));
+		return DynamicTest.stream(generator, index -> "test" + index, index -> assertFalse(index % AVERAGE == 0));
 	}
 
 }
