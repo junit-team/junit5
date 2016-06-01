@@ -12,7 +12,7 @@ package org.junit.gen5.console.tasks;
 
 import static java.util.stream.Collectors.toCollection;
 import static org.junit.gen5.engine.discovery.ClasspathSelector.selectClasspathRoots;
-import static org.junit.gen5.engine.discovery.NameBasedSelector.selectNames;
+import static org.junit.gen5.engine.discovery.NameBasedSelectors.selectNames;
 import static org.junit.gen5.launcher.EngineIdFilter.requireEngineId;
 import static org.junit.gen5.launcher.TagFilter.excludeTags;
 import static org.junit.gen5.launcher.TagFilter.requireTags;

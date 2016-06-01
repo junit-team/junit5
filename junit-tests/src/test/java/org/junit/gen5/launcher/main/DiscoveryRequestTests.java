@@ -13,7 +13,7 @@ package org.junit.gen5.launcher.main;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertNotNull;
-import static org.junit.gen5.engine.discovery.NameBasedSelector.selectName;
+import static org.junit.gen5.engine.discovery.NameBasedSelectors.selectName;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
