@@ -456,6 +456,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#nested-tests">3.8. Nested Tests</a></li>
 <li><a href="#dependency-injection-for-constructors-and-methods">3.9. Dependency Injection for Constructors and Methods</a></li>
 <li><a href="#interface-default-methods">3.10. Interface Default Methods</a></li>
+<li><a href="#dynamic-tests">3.11. Dynamic Tests</a></li>
 </ul>
 </li>
 <li><a href="#running-tests">4. Running Tests</a>
@@ -1293,6 +1294,172 @@ corresponding tests. Of course you&#8217;ll have to implement the abstract metho
 </div>
 <div class="paragraph">
 <p>The above tests are merely meant as examples and therefore not complete.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="dynamic-tests">3.11. Dynamic Tests</h3>
+<div class="paragraph">
+<p>The standard <code>@Test</code> annotation of JUnit 5 is described in <a href="#annotations">Annotations</a>.
+It is very similar to the <code>@Test</code> annotation of JUnit 4.
+Both describe methods implementing test cases.
+These test cases are static in the sense that they are fully specified at compile-time
+and their behavior cannot be changed by anything happening at run-time.
+(Assumptions do provide a basic form of dynamic behavior but are intentionally rather limited in their expressiveness.)</p>
+</div>
+<div class="paragraph">
+<p>In addition to these standard tests a completely new kind of test programming model is introduced in JUnit 5.
+This new kind of test is a dynamic test which is generated at run-time by a test factory method.
+Such a factory method must be annotated with <code>@TestFactory</code>.</p>
+</div>
+<div class="paragraph">
+<p>In contrast to <code>@Test</code> such a factory is not itself a test case but creates test cases.
+Thus, dynamic tests are the products of the factory.
+More technically, a  <code>@TestFactory</code> method must return a <code>Stream</code> or <code>Iterable</code> of <code>DynamicTest</code> instances.
+These <code>DynamicTest</code> instances will then be executed lazily
+enabling dynamic and even non-deterministic generation of test cases.</p>
+</div>
+<div class="paragraph">
+<p>As with @Test methods, <code>@TestFactory</code> methods must not be <code>private</code> or <code>static</code>
+and may optionally declare parameters to be resolved by <code>ParameterResolvers</code>.</p>
+</div>
+<div class="paragraph">
+<p>A <code>DynamicTest</code> is a test case generated at runtime.
+It is composed of a display name and an <code>Executable</code> which is a <code>@FunctionalInterface</code>.
+Note that dynamic tests are quite different from standard <code>@Test</code> cases
+since callbacks such as <code>@BeforeEach</code> and <code>@AfterEach</code> methods are not executed for dynamic tests.
+The execution of those callbacks would not be useful in most scenarios
+as variables used in lambdas are bound to instance variables at execution time of the factory method
+rather than execution time of the lambda itself.</p>
+</div>
+<div class="paragraph">
+<p>The following demo test class shows a few examples of test factories and dynamic tests.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertFalse;
+import static org.junit.gen5.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Stream;
+
+import org.junit.gen5.api.DynamicTest;
+import org.junit.gen5.api.Tag;
+import org.junit.gen5.api.TestFactory;
+
+@Tag("exclude")
+class DynamicTestsDemo {
+
+    @TestFactory
+    List&lt;String&gt; dynamicTestsWithWrongReturnType() {
+        List&lt;String&gt; tests = new ArrayList&lt;&gt;();
+        tests.add("Hello");
+        return tests;
+    }
+
+    @TestFactory
+    List&lt;DynamicTest&gt; dynamicTestsFromList() {
+        List&lt;DynamicTest&gt; tests = new ArrayList&lt;&gt;();
+
+        tests.add(new DynamicTest("succeedingTest", () -&gt; assertTrue(true, "succeeding")));
+        tests.add(new DynamicTest("failingTest", () -&gt; assertTrue(false, "failing")));
+
+        return tests;
+    }
+
+    @TestFactory
+    Stream&lt;DynamicTest&gt; dynamicTestsFromStream() {
+        String[] testNames = new String[] { "test1", "test2" };
+        return Arrays.stream(testNames).map(name -&gt; new DynamicTest(name, () -&gt; {
+        }));
+    }
+
+    @TestFactory
+    Iterator&lt;DynamicTest&gt; dynamicTestStreamFromIterator() {
+        List&lt;DynamicTest&gt; tests = new ArrayList&lt;&gt;();
+        tests.add(new DynamicTest("succeedingTest", () -&gt; assertTrue(true, "succeeding")));
+        tests.add(new DynamicTest("failingTest", () -&gt; assertTrue(false, "failing")));
+        return tests.iterator();
+    }
+
+    @TestFactory
+    Iterable&lt;DynamicTest&gt; dynamicTestStreamFromIterable() {
+        List&lt;DynamicTest&gt; tests = new ArrayList&lt;&gt;();
+        tests.add(new DynamicTest("succeedingTest", () -&gt; assertTrue(true, "succeeding")));
+        tests.add(new DynamicTest("failingTest", () -&gt; assertTrue(false, "failing")));
+        return tests;
+    }
+
+    @TestFactory
+    Iterator&lt;DynamicTest&gt; generatedTestsFromGeneratorFunction() {
+        Iterator&lt;DynamicTest&gt; generator = new Iterator&lt;DynamicTest&gt;() {
+
+            int counter = 0;
+
+            @Override
+            public boolean hasNext() {
+                return counter &lt; 100;
+            }
+
+            @Override
+            public DynamicTest next() {
+                int index = counter++;
+                return new DynamicTest("test" + index, () -&gt; assertTrue(index % 11 != 0));
+            }
+        };
+        return generator;
+    }
+
+    @TestFactory
+    Stream&lt;DynamicTest&gt; generatedRandomNumberOfTests() {
+        final int AVERAGE = 49;
+
+        Iterator&lt;Integer&gt; generator = new Iterator&lt;Integer&gt;() {
+
+            int last = -1;
+            Random random = new Random();
+
+            @Override
+            public boolean hasNext() {
+                return last % AVERAGE != 0;
+            }
+
+            @Override
+            public Integer next() {
+                last = random.nextInt();
+                return last;
+            }
+        };
+        return DynamicTest.stream(generator, index -&gt; "test" + index, index -&gt; assertFalse(index % AVERAGE == 0));
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first method shows an illegal return type.
+As such bad return types cannot be detected at compile-time
+a <code>JUnitException</code> is thrown when it is detected at run-time.</p>
+</div>
+<div class="paragraph">
+<p>The following four methods are very simple examples to demonstrate
+the generation of a <code>List</code>, a <code>Stream</code>, an <code>Iterator</code> and an <code>Iterable</code> of <code>DynamicTest</code> instances, respectively.
+These examples do not really exhibit dynamic behavior
+but merely demonstrate the allowed syntaxes in principle.</p>
+</div>
+<div class="paragraph">
+<p>The last two methods are truely dynamic in nature.
+They use generator functions to create an <code>Iterator</code> or a <code>Stream</code> of <code>DynamicTest</code> instances.
+The last method demonstrates non-deterministic behavior.
+While this is of course in conflict with test repeatability and should thus be used with care
+it serves to demonstrate the expressiveness of dynamic tests.</p>
+</div>
+<div class="paragraph">
+<p>As of M1, dynamic tests must always be created by factory methods.
+This might be complemented by a registration facility in one of the upcoming releases.</p>
 </div>
 </div>
 </div>
@@ -2241,7 +2408,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-02 17:00:47 -04:00
+Last updated 2016-06-02 17:51:30 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
