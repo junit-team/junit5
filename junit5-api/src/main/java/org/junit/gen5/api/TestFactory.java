@@ -24,14 +24,14 @@ import org.junit.gen5.commons.meta.API;
  * {@code @TestFactory} is used to signal that the annotated method is a
  * <em>test factory</em> method.
  *
- * <p>In contrast to {@link Test @Test} it is not itself a test case but
- * creates test cases. Such a {@link TestFactory @TestFactory} method must
- * return a {@code Stream} or {@code Iterable} of {@link DynamicTest}
- * instances.
- * These {@link DynamicTest DynamicTests} will then be executed lazily
- * enabling dynamic and even non-deterministic generation of test cases.
+ * <p>In contrast to {@link Test @Test} methods, a test factory is not itself
+ * a test case but rather a factory for test cases.
  *
- * <p>{@code @TestFactory} methods must not be {@code private} or {@code static}.
+ * <p>{@code @TestFactory} methods must not be {@code private} or {@code static}
+ * and must return a {@code Stream}, {@code Collection}, {@code Iterable}, or
+ * {@code Iterator} of {@link DynamicTest} instances. These {@code DynamicTests}
+ * will then be executed lazily, enabling dynamic and even non-deterministic
+ * generation of test cases.
  *
  * <p>{@code @TestFactory} methods may optionally declare parameters to be
  * resolved by {@link org.junit.gen5.api.extension.ParameterResolver
