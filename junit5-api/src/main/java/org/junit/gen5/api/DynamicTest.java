@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
@@ -46,6 +47,10 @@ public class DynamicTest {
 
 	public static <T> Stream<DynamicTest> stream(Iterator<T> inputGenerator,
 			Function<? super T, String> displayNameGenerator, Consumer<? super T> testGenerator) {
+
+		Preconditions.notNull(inputGenerator, "inputGenerator must not be null");
+		Preconditions.notNull(displayNameGenerator, "displayNameGenerator must not be null");
+		Preconditions.notNull(testGenerator, "testGenerator must not be null");
 
 		// @formatter:off
 		return StreamSupport.stream(spliteratorUnknownSize(inputGenerator, ORDERED), false)
