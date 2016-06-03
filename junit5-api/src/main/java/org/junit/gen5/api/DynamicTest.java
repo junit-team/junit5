@@ -61,15 +61,30 @@ public class DynamicTest {
 	private final String displayName;
 	private final Executable executable;
 
+	/**
+	 * Create a new {@code DynamicTest} for the supplied display name and
+	 * executable code block.
+	 *
+	 * @param displayName the display name of this dynamic test; never
+	 * {@code null} or empty
+	 * @param executable the executable code block for this dynamic test;
+	 * never {@code null}
+	 */
 	public DynamicTest(String displayName, Executable executable) {
 		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or empty");
 		this.executable = Preconditions.notNull(executable, "executable must not be null");
 	}
 
+	/**
+	 * Get the display name of this {@code DynamicTest}.
+	 */
 	public String getDisplayName() {
 		return this.displayName;
 	}
 
+	/**
+	 * Get the {@code executable} code block associated with this {@code DynamicTest}.
+	 */
 	public Executable getExecutable() {
 		return this.executable;
 	}
