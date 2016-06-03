@@ -270,18 +270,18 @@ The above tests are merely meant as examples and therefore not complete.
 [[dynamic-tests]]
 === Dynamic Tests
 
-The standard `@Test` annotation of JUnit 5 described in <<annotations>>
-is very similar to the `@Test` annotation of JUnit 4.
-Both describe methods implementing test cases.
+The standard `@Test` annotation in JUnit 5 described in <<annotations>>
+is very similar to the `@Test` annotation in JUnit 4.
+Both describe methods that implement test cases.
 These test cases are static in the sense that they are fully specified at compile-time,
 and their behavior cannot be changed by anything happening at run-time.
 _Assumptions provide a basic form of dynamic behavior but are intentionally rather limited in their expressiveness._
 
-In addition to these standard tests a completely new kind of test programming model is introduced in JUnit 5.
-This new kind of test is a _dynamic test_ which is generated at run-time by a test factory method
-which must be annotated with `@TestFactory`.
+In addition to these standard tests a completely new kind of test programming model has been introduced in JUnit 5.
+This new kind of test is a _dynamic test_ which is generated at run-time by a factory method
+that is annotated with `@TestFactory`.
 
-In contrast to `@Test` such a factory is not itself a test case but rather creates test cases.
+In contrast to `@Test` methods, a `@TestFactory` method is not itself a test case but rather a factory for test cases.
 Thus, dynamic tests are the products of a factory.
 Technically speaking, a `@TestFactory` method must return a `Stream`,
 `Collection`, `Iterable`, or `Iterator` of `DynamicTest` instances.
@@ -292,13 +292,19 @@ As with `@Test` methods, `@TestFactory` methods must not be `private` or `static
 and may optionally declare parameters to be resolved by `ParameterResolvers`.
 
 A `DynamicTest` is a test case generated at runtime.
-It is composed of a _display name_ and an `Executable` which is a `@FunctionalInterface`.
+It is composed of a _display name_ and an `Executable`. `Executable` is a `@FunctionalInterface`
+which means that the implementations of dynamic tests can be provided as _lambda expressions_
+or _method references_.
 Note that the execution lifecycle of dynamic tests is quite different than it is for standard `@Test` cases.
 Specifically, `@BeforeEach` and `@AfterEach` methods and their corresponding extension callbacks
 are not executed for dynamic tests.
 The execution of those callbacks would not be useful in most dynamic testing scenarios
 since variables used in lambdas are bound to instance variables at execution time of the factory method
 rather than execution time of the lambda itself.
+
+As of JUnit {junit-version}, dynamic tests must always be created by factory methods;
+however, this might be complemented by a registration facility in a later release.
+
 
 ==== Dynamic Test Examples
 
@@ -308,20 +314,19 @@ The first method returns an invalid return type.
 Since invalid return types cannot be detected at compile-time
 a `JUnitException` is thrown when it is detected at run-time.
 
-The next four methods are very simple examples that demonstrate the generation of a
-`Stream`, a `Collection`, an `Iterable`, and an `Iterator` of `DynamicTest` instances, respectively.
-These examples do not really exhibit dynamic behavior
+The next five methods are very simple examples that demonstrate the generation of a
+`Collection`, `Iterable`, `Iterator`, or `Stream` of `DynamicTest` instances.
+Most of these examples do not really exhibit dynamic behavior
 but merely demonstrate the supported return types in principle.
+However, `dynamicTestsFromStream()` and `dynamicTestsFromIntStream()` demonstrate how
+easy it is to generate dynamic tests for a given set of strings or a range of input numbers.
 
-The last two methods are truly dynamic in nature.
-`dynamicTestsFromCustomIterator()` implements a custom `Iterator` that generates `DynamicTest` instances;
-whereas, `generateRandomNumberOfTests()` implements an `Iterator` that generates random numbers, a custom
-display name generator, and a test generator and provides all three to `DynamicTest.stream()`.
+The last method is truly dynamic in nature.
+`generateRandomNumberOfTests()` implements an `Iterator` that generates random numbers, a custom
+display name generator, and a test executor and then provides all three to `DynamicTest.stream()`.
 Although the non-deterministic behavior of `generateRandomNumberOfTests()` is of course in conflict with
-test repeatability and should thus be used with care, it serves to demonstrate the expressiveness of dynamic tests.
-
-As of M1, dynamic tests must always be created by factory methods.
-This might be complemented by a registration facility in one of the upcoming releases.
+test repeatability and should thus be used with care, it serves to demonstrate the expressiveness
+and power of dynamic tests.
 
 [source,java]
 [subs="verbatim"]

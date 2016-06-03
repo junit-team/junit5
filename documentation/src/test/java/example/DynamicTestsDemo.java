@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.gen5.api.DynamicTest;
@@ -36,18 +37,6 @@ class DynamicTestsDemo {
 	@TestFactory
 	List<String> dynamicTestsWithInvalidReturnType() {
 		return Arrays.asList("Hello");
-	}
-
-	@TestFactory
-	Stream<DynamicTest> dynamicTestsFromStream() {
-		// end::user_guide[]
-		// @formatter:off
-		// tag::user_guide[]
-		return Stream.of("test1", "test2", "test3")
-				.map(displayName -> new DynamicTest(displayName, () -> { /* ... */ }));
-		// end::user_guide[]
-		// @formatter:on
-		// tag::user_guide[]
 	}
 
 	@TestFactory
@@ -93,22 +82,27 @@ class DynamicTestsDemo {
 	}
 
 	@TestFactory
-	Iterator<DynamicTest> dynamicTestsFromCustomIterator() {
-		return new Iterator<DynamicTest>() {
+	Stream<DynamicTest> dynamicTestsFromStream() {
+		// end::user_guide[]
+		// @formatter:off
+		// tag::user_guide[]
+		return Stream.of("test1", "test2", "test3")
+			.map(displayName -> new DynamicTest(displayName, () -> { /* ... */ }));
+		// end::user_guide[]
+		// @formatter:on
+		// tag::user_guide[]
+	}
 
-			int counter = 0;
-
-			@Override
-			public boolean hasNext() {
-				return counter < 100;
-			}
-
-			@Override
-			public DynamicTest next() {
-				int index = counter++;
-				return new DynamicTest("test" + index, () -> assertTrue(index % 11 != 0));
-			}
-		};
+	@TestFactory
+	Stream<DynamicTest> dynamicTestsFromIntStream() {
+		// end::user_guide[]
+		// @formatter:off
+		// tag::user_guide[]
+		return IntStream.range(1, 100).mapToObj(n ->
+			new DynamicTest("test" + n, () -> assertTrue(n % 11 != 0)));
+		// end::user_guide[]
+		// @formatter:on
+		// tag::user_guide[]
 	}
 
 	@TestFactory
@@ -136,11 +130,11 @@ class DynamicTestsDemo {
 		// Generates display names like: input:5, input:37, input:85, etc.
 		Function<? super Integer, String> displayNameGenerator = (input) -> "input:" + input;
 
-		// Generates tests based on the current input value.
-		Consumer<? super Integer> testGenerator = (input) -> assertTrue(input % 3 == 0);
+		// Executes tests based on the current input value.
+		Consumer<? super Integer> testExecutor = (input) -> assertTrue(input % 3 == 0);
 
 		// Creates a stream of dynamic tests.
-		return DynamicTest.stream(inputGenerator, displayNameGenerator, testGenerator);
+		return DynamicTest.stream(inputGenerator, displayNameGenerator, testExecutor);
 	}
 
 }
