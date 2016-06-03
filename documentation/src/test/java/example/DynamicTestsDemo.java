@@ -10,6 +10,7 @@
 
 package example;
 
+//tag::user_guide[]
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.fail;
 
