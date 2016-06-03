@@ -47,6 +47,19 @@ import org.junit.gen5.commons.util.ToStringBuilder;
 public class DynamicTest {
 
 	/**
+	 * Factory for creating a new {@code DynamicTest} for the supplied display
+	 * name and executable code block.
+	 *
+	 * @param displayName the display name for the dynamic test; never
+	 * {@code null} or empty
+	 * @param executable the executable code block for the dynamic test;
+	 * never {@code null}
+	 */
+	public static DynamicTest dynamicTest(String displayName, Executable executable) {
+		return new DynamicTest(displayName, executable);
+	}
+
+	/**
 	 * Generate a stream of dynamic tests based on the supplied generators
 	 * and test executor.
 	 *
@@ -85,16 +98,7 @@ public class DynamicTest {
 	private final String displayName;
 	private final Executable executable;
 
-	/**
-	 * Create a new {@code DynamicTest} for the supplied display name and
-	 * executable code block.
-	 *
-	 * @param displayName the display name of this dynamic test; never
-	 * {@code null} or empty
-	 * @param executable the executable code block for this dynamic test;
-	 * never {@code null}
-	 */
-	public DynamicTest(String displayName, Executable executable) {
+	private DynamicTest(String displayName, Executable executable) {
 		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or empty");
 		this.executable = Preconditions.notNull(executable, "executable must not be null");
 	}

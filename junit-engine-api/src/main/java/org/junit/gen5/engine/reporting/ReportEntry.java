@@ -87,7 +87,7 @@ public final class ReportEntry {
 	 *
 	 * <p>Can be used, for example, to order entries.
 	 *
-	 * @return the timestamp when this entry was created; never {@code null}
+	 * @return when this entry was created; never {@code null}
 	 */
 	public final LocalDateTime getCreationTimestamp() {
 		return this.creationTimestamp;

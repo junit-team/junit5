@@ -14,6 +14,7 @@ import static org.junit.gen5.api.Assertions.assertAll;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.fail;
+import static org.junit.gen5.api.DynamicTest.dynamicTest;
 import static org.junit.gen5.engine.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.gen5.engine.ExecutionEventConditions.container;
 import static org.junit.gen5.engine.ExecutionEventConditions.dynamicTestRegistered;
@@ -139,8 +140,8 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 	private static class MyDynamicTestCase {
 
 		private static final List<DynamicTest> list = Arrays.asList(
-			new DynamicTest("succeedingTest", () -> assertTrue(true, "succeeding")),
-			new DynamicTest("failingTest", () -> fail("failing")));
+			dynamicTest("succeedingTest", () -> assertTrue(true, "succeeding")),
+			dynamicTest("failingTest", () -> fail("failing")));
 
 		@TestFactory
 		Collection<DynamicTest> dynamicCollection() {

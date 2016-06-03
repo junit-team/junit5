@@ -13,6 +13,7 @@ package example;
 //tag::user_guide[]
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.fail;
+import static org.junit.gen5.api.DynamicTest.dynamicTest;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,8 +46,8 @@ class DynamicTestsDemo {
 		// @formatter:off
 		// tag::user_guide[]
 		return Arrays.asList(
-			new DynamicTest("succeedingTest", () -> assertTrue(true)),
-			new DynamicTest("failingTest", () -> fail("failing"))
+			dynamicTest("succeedingTest", () -> assertTrue(true)),
+			dynamicTest("failingTest", () -> fail("failing"))
 		);
 		// end::user_guide[]
 		// @formatter:on
@@ -59,8 +60,8 @@ class DynamicTestsDemo {
 		// @formatter:off
 		// tag::user_guide[]
 		return Arrays.asList(
-			new DynamicTest("succeedingTest", () -> assertTrue(true)),
-			new DynamicTest("failingTest", () -> fail("failing"))
+			dynamicTest("succeedingTest", () -> assertTrue(true)),
+			dynamicTest("failingTest", () -> fail("failing"))
 		);
 		// end::user_guide[]
 		// @formatter:on
@@ -73,8 +74,8 @@ class DynamicTestsDemo {
 		// @formatter:off
 		// tag::user_guide[]
 		return Arrays.asList(
-			new DynamicTest("succeedingTest", () -> assertTrue(true)),
-			new DynamicTest("failingTest", () -> fail("failing"))
+			dynamicTest("succeedingTest", () -> assertTrue(true)),
+			dynamicTest("failingTest", () -> fail("failing"))
 		).iterator();
 		// end::user_guide[]
 		// @formatter:on
@@ -87,7 +88,7 @@ class DynamicTestsDemo {
 		// @formatter:off
 		// tag::user_guide[]
 		return Stream.of("test1", "test2", "test3")
-			.map(displayName -> new DynamicTest(displayName, () -> { /* ... */ }));
+			.map(displayName -> dynamicTest(displayName, () -> { /* ... */ }));
 		// end::user_guide[]
 		// @formatter:on
 		// tag::user_guide[]
@@ -99,7 +100,7 @@ class DynamicTestsDemo {
 		// @formatter:off
 		// tag::user_guide[]
 		return IntStream.range(1, 100).mapToObj(n ->
-			new DynamicTest("test" + n, () -> assertTrue(n % 11 != 0)));
+			dynamicTest("test" + n, () -> assertTrue(n % 11 != 0)));
 		// end::user_guide[]
 		// @formatter:on
 		// tag::user_guide[]
