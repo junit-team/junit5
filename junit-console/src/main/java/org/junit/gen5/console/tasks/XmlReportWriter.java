@@ -193,7 +193,7 @@ class XmlReportWriter {
 			for (int i = 0; i < entries.size(); i++) {
 				ReportEntry reportEntry = entries.get(i);
 				StringBuilder stringBuilder = new StringBuilder();
-				reportEntry.appendDescription(stringBuilder, " #" + String.valueOf(i + 1));
+				reportEntry.appendDescription(stringBuilder, "#" + (i + 1));
 				writer.writeCharacters(stringBuilder.toString());
 			}
 			writer.writeEndElement();

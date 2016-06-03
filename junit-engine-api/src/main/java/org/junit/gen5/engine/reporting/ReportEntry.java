@@ -17,91 +17,131 @@ import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.ExceptionUtils;
 import org.junit.gen5.commons.util.Preconditions;
+import org.junit.gen5.commons.util.ToStringBuilder;
 
 /**
- * This class represents a {@code ReportEntry} &mdash;
- * that is a time-stamped map of {@code String}-based key-value pairs
- * to be published to the reporting infrastructure.
+ * {@code ReportEntry} encapsulates a time-stamped map of {@code String}-based
+ * key-value pairs to be published to the reporting infrastructure.
  *
  * @since 5.0
+ * @see #from(Map)
+ * @see #from(String, String)
  */
 @API(Experimental)
-public class ReportEntry {
+public final class ReportEntry {
 
 	private final LocalDateTime creationTimestamp = LocalDateTime.now();
-	private final Map<String, String> values;
+	private final Map<String, String> keyValuePairs = new LinkedHashMap<>();
 
 	/**
-	 * Provide a new {@code ReportEntry} with the supplied values.
+	 * Factory for creating a new {@code ReportEntry} from a map of key-value pairs.
 	 *
-	 * @param values the values to be published
+	 * @param keyValuePairs the map of key-value pairs to be published; never
+	 * {@code null}; keys and values within entries in the map also must not be
+	 * {@code null} or empty
 	 */
-	public static ReportEntry from(Map<String, String> values) {
-		return new ReportEntry(values);
+	public static ReportEntry from(Map<String, String> keyValuePairs) {
+		Preconditions.notNull(keyValuePairs, "keyValuePairs must not be null");
+
+		ReportEntry reportEntry = new ReportEntry();
+		keyValuePairs.forEach(reportEntry::add);
+		return reportEntry;
 	}
 
 	/**
-	 * Provide a new {@code ReportEntry} with the supplied values.
+	 * Factory for creating a new {@code ReportEntry} from a key-value pair.
 	 *
-	 * @param key the key of the value to be published
-	 * @param value the value to be published
+	 * @param key the key under which the value should published; never
+	 * {@code null} or empty
+	 * @param value the value to publish; never {@code null} or empty
 	 */
 	public static ReportEntry from(String key, String value) {
-		return new ReportEntry(key, value);
+		ReportEntry reportEntry = new ReportEntry();
+		reportEntry.add(key, value);
+		return reportEntry;
 	}
 
-	private ReportEntry(Map<String, String> values) {
-		Preconditions.notNull(values, "values to be reported must not be null");
-		this.values = values;
-	}
-
-	private ReportEntry(String key, String value) {
-		this(Collections.singletonMap(key, value));
+	private void add(String key, String value) {
+		Preconditions.notBlank(key, "key must not be null or empty");
+		Preconditions.notBlank(value, "value must not be null or empty");
+		this.keyValuePairs.put(key, value);
 	}
 
 	/**
-	 * Get the values to be published.
+	 * Get an unmodifiable copy of the map of key-value pairs to be published.
 	 *
-	 * @return the map of values to be published
+	 * @return a copy of the map of key-value pairs; never {@code null}
 	 */
-	public Map<String, String> getValues() {
-		return values;
+	public final Map<String, String> getKeyValuePairs() {
+		return Collections.unmodifiableMap(this.keyValuePairs);
 	}
 
 	/**
-	 * Get the creation date of this {@code ReportEntry}.
+	 * Get the creation timestamp of this {@code ReportEntry}.
 	 *
 	 * <p>Can be used, for example, to order entries.
 	 *
-	 * @return the date at which this entry was created
+	 * @return the timestamp when this entry was created; never {@code null}
 	 */
-	public LocalDateTime getCreationTimestamp() {
-		return creationTimestamp;
+	public final LocalDateTime getCreationTimestamp() {
+		return this.creationTimestamp;
 	}
 
-	@Override
-	public String toString() {
-		//migrate to org.junit.gen5.commons.util.ToStringBuilder?
-		return this.values.toString() + " @ " + this.creationTimestamp;
+	/**
+	 * {@linkplain #appendDescription(Appendable, String) Append} a description
+	 * of this {@code ReportEntry} to the supplied {@link Appendable}.
+	 *
+	 * @param appendable the {@code Appendable} to append to; never {@code null}
+	 * @see #appendDescription(Appendable, String)
+	 */
+	public void appendDescription(Appendable appendable) {
+		Preconditions.notNull(appendable, "appendable must not be null");
+		appendDescription(appendable, "");
 	}
 
+	/**
+	 * Append a description of this {@code ReportEntry} with an optional title
+	 * to the supplied {@link Appendable}.
+	 *
+	 * <p>TODO Document semantics of appendDescription(Appendable, String).
+	 *
+	 * @param appendable the {@code Appendable} to append to; never {@code null}
+	 * @param entryTitle an optional title for this {@code ReportEntry}; never
+	 * {@code null} but potentially empty
+	 * @see #appendDescription(Appendable)
+	 */
 	public void appendDescription(Appendable appendable, String entryTitle) {
+		Preconditions.notNull(appendable, "appendable must not be null");
+		Preconditions.notNull(entryTitle, "entryTitle must not be null");
+
+		// Add left padding
+		entryTitle = (entryTitle.length() > 0 ? " " + entryTitle : entryTitle);
+
 		try {
 			appendable.append(format("Report Entry{0} (creation timestamp: {1})\n", entryTitle,
-				ISO_LOCAL_DATE_TIME.format(this.getCreationTimestamp())));
-			for (Map.Entry<String, String> entry : this.getValues().entrySet()) {
+				ISO_LOCAL_DATE_TIME.format(this.creationTimestamp)));
+
+			for (Map.Entry<String, String> entry : this.keyValuePairs.entrySet()) {
 				appendable.append(format("\t- {0}: {1}\n", entry.getKey(), entry.getValue()));
 			}
 		}
 		catch (IOException cannotHappen) {
 			ExceptionUtils.throwAsUncheckedException(cannotHappen);
 		}
+	}
 
+	@Override
+	public String toString() {
+		ToStringBuilder builder = new ToStringBuilder(this);
+		builder.append("creationTimestamp", this.creationTimestamp);
+		this.keyValuePairs.forEach(builder::append);
+		return builder.toString();
 	}
 
 }

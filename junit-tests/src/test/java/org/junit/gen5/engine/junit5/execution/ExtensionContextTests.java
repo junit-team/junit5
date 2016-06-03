@@ -114,11 +114,11 @@ public class ExtensionContextTests {
 		ExtensionContext extensionContext = new ClassBasedContainerExtensionContext(null, engineExecutionListener,
 			classTestDescriptor);
 
-		Map<String, String> entry1 = Collections.singletonMap("key", "value");
-		Map<String, String> entry2 = Collections.singletonMap("other key", "other value");
+		Map<String, String> map1 = Collections.singletonMap("key", "value");
+		Map<String, String> map2 = Collections.singletonMap("other key", "other value");
 
-		extensionContext.publishReportEntry(entry1);
-		extensionContext.publishReportEntry(entry2);
+		extensionContext.publishReportEntry(map1);
+		extensionContext.publishReportEntry(map2);
 
 		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
 		Mockito.verify(engineExecutionListener, Mockito.times(2)).reportingEntryPublished(
@@ -127,8 +127,8 @@ public class ExtensionContextTests {
 		ReportEntry reportEntry1 = entryCaptor.getAllValues().get(0);
 		ReportEntry reportEntry2 = entryCaptor.getAllValues().get(1);
 
-		assertEquals(entry1, reportEntry1.getValues());
-		assertEquals(entry2, reportEntry2.getValues());
+		assertEquals(map1, reportEntry1.getKeyValuePairs());
+		assertEquals(map2, reportEntry2.getKeyValuePairs());
 	}
 
 	@Test

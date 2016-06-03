@@ -82,7 +82,7 @@ class ColoredPrintingTestListener implements TestExecutionListener {
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
 		printlnTestDescriptor(PURPLE, "Reported:", testIdentifier);
 		StringBuilder stringBuilder = new StringBuilder();
-		entry.appendDescription(stringBuilder, "");
+		entry.appendDescription(stringBuilder);
 		printlnMessage(PURPLE, "Reported values", stringBuilder.toString());
 	}
 
