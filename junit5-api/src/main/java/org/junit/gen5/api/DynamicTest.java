@@ -54,6 +54,7 @@ public class DynamicTest {
 	 * {@code null} or empty
 	 * @param executable the executable code block for the dynamic test;
 	 * never {@code null}
+	 * @see #stream(Iterator, Function, Consumer)
 	 */
 	public static DynamicTest dynamicTest(String displayName, Executable executable) {
 		return new DynamicTest(displayName, executable);
@@ -81,6 +82,7 @@ public class DynamicTest {
 	 * and used by the {@code displayNameGenerator} and {@code testExecutor}
 	 * @return a stream of dynamic tests based on the supplied generators and
 	 * executor; never {@code null}
+	 * @see #dynamicTest(String, Executable)
 	 */
 	public static <T> Stream<DynamicTest> stream(Iterator<T> inputGenerator,
 			Function<? super T, String> displayNameGenerator, Consumer<? super T> testExecutor) {
@@ -91,7 +93,7 @@ public class DynamicTest {
 
 		// @formatter:off
 		return StreamSupport.stream(spliteratorUnknownSize(inputGenerator, ORDERED), false)
-				.map(input -> new DynamicTest(displayNameGenerator.apply(input), () -> testExecutor.accept(input)));
+				.map(input -> dynamicTest(displayNameGenerator.apply(input), () -> testExecutor.accept(input)));
 		// @formatter:on
 	}
 
