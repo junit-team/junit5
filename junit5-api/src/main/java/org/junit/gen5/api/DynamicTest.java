@@ -10,11 +10,11 @@
 
 package org.junit.gen5.api;
 
+import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.util.Iterator;
-import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -44,12 +44,13 @@ import org.junit.gen5.commons.util.ToStringBuilder;
 @API(Experimental)
 public class DynamicTest {
 
-	public static <T> Stream<DynamicTest> stream(Iterator<T> generator, Function<? super T, String> displayNameSupplier,
-			Consumer<? super T> test) {
+	public static <T> Stream<DynamicTest> stream(Iterator<T> inputGenerator,
+			Function<? super T, String> displayNameGenerator, Consumer<? super T> testGenerator) {
 
-		return StreamSupport.stream(spliteratorUnknownSize(generator, Spliterator.ORDERED), false).map(element -> {
-			return new DynamicTest(displayNameSupplier.apply(element), () -> test.accept(element));
-		});
+		// @formatter:off
+		return StreamSupport.stream(spliteratorUnknownSize(inputGenerator, ORDERED), false)
+				.map(input -> new DynamicTest(displayNameGenerator.apply(input), () -> testGenerator.accept(input)));
+		// @formatter:on
 	}
 
 	private final String displayName;
