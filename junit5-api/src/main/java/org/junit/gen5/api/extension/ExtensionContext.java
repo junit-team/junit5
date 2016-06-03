@@ -87,27 +87,28 @@ public interface ExtensionContext {
 	 *
 	 * <p>For example, if the current extension context encapsulates a test
 	 * class or test method, the annotated element will be the corresponding
-	 * {@link #getTestClass() Class} or {@link java.lang.reflect.Method Method}
+	 * {@link #getTestClass() Class} or {@link #getTestMethod() Method}
 	 * reference.
 	 *
 	 * <p>Favor this method over more specific methods whenever the
-	 * {@link AnnotatedElement} API suits the task at hand (e.g., when
-	 * looking up annotations regardless of concrete element type).
+	 * {@link AnnotatedElement} API suits the task at hand &mdash; for example,
+	 * when looking up annotations regardless of concrete element type.
 	 *
 	 * @see #getTestClass()
+	 * @see #getTestMethod()
 	 */
 	AnnotatedElement getElement();
 
 	/**
-	 * Publish a map of values to be consumed by an
+	 * Publish a map of key-value pairs to be consumed by an
 	 * {@code org.junit.gen5.engine.EngineExecutionListener}.
 	 *
-	 * @param values the map of values to be reported for this entry
+	 * @param map the key-value pairs to be reported; never {@code null}
 	 */
-	void publishReportEntry(Map<String, String> values);
+	void publishReportEntry(Map<String, String> map);
 
 	/**
-	 * Get a {@link Store} with the default {@link Namespace}.
+	 * Get the {@link Store} with the default {@link Namespace}.
 	 *
 	 * @see #getStore(Namespace)
 	 */
@@ -116,10 +117,11 @@ public interface ExtensionContext {
 	}
 
 	/**
-	 * Get a {@link Store} for a self constructed {@link Namespace}.
+	 * Get the {@link Store} for the supplied {@link Namespace}.
 	 *
+	 * @param namespace the {@code Namespace} to get the store for; never {@code null}
 	 * @return the store in which to put and get objects for other invocations
-	 * of the same extension or different ones
+	 * working in the same namespace
 	 */
 	Store getStore(Namespace namespace);
 
