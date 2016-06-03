@@ -38,6 +38,7 @@ import org.junit.gen5.commons.util.ToStringBuilder;
  * {@link AfterEach @AfterEach} methods are not executed for dynamic tests.
  *
  * @since 5.0
+ * @see #stream
  * @see Test
  * @see TestFactory
  * @see Executable
