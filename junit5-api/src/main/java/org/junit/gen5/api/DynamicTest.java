@@ -62,8 +62,8 @@ public class DynamicTest {
 	private final Executable executable;
 
 	public DynamicTest(String displayName, Executable executable) {
-		this.displayName = displayName;
-		this.executable = executable;
+		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or empty");
+		this.executable = Preconditions.notNull(executable, "executable must not be null");
 	}
 
 	public String getDisplayName() {
