@@ -21,6 +21,7 @@ module.
 | Annotation         | Description
 
 | `@Test`            | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit 5 operate based on their own dedicated annotations.
+| `@TestFactory`     | Denotes that a method is a test factory for <<dynamic-tests, dynamic tests>>
 | `@DisplayName`     | Declares a custom display name for the test class or test method
 | `@BeforeEach`      | Denotes that the annotated method should be executed _before_ *each* `@Test` method in the current class or class hierarchy
 | `@AfterEach`       | Denotes that the annotated method should be executed _after_ *each* `@Test` method in the current class or class hierarchy
@@ -29,7 +30,7 @@ module.
 | `@Nested`          | Denotes that the annotated class is a nested, non-static test class. Due to restrictions of the Java language, `@BeforeAll` and `@AfterAll` methods cannot be used in a `@Nested` test class.
 | `@Tag` and `@Tags` | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4
 | `@Disabled`        | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore`
-| `@ExtendWith`      | Used to register custom <<extension-model, extensions>> to the framework.
+| `@ExtendWith`      | Used to register custom <<extension-model, extensions>>
 |===
 
 [[meta-annotations]]
@@ -266,6 +267,7 @@ include::{testDir}/example/defaultmethods/StringTests.java[tags=user_guide]
 The above tests are merely meant as examples and therefore not complete.
 
 
+[[dynamic-tests]]
 === Dynamic Tests
 
 The standard `@Test` annotation of JUnit 5 described in <<annotations>>
