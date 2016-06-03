@@ -1303,20 +1303,20 @@ corresponding tests. Of course you&#8217;ll have to implement the abstract metho
 <div class="sect2">
 <h3 id="dynamic-tests">3.11. Dynamic Tests</h3>
 <div class="paragraph">
-<p>The standard <code>@Test</code> annotation of JUnit 5 described in <a href="#annotations">Annotations</a>
-is very similar to the <code>@Test</code> annotation of JUnit 4.
-Both describe methods implementing test cases.
+<p>The standard <code>@Test</code> annotation in JUnit 5 described in <a href="#annotations">Annotations</a>
+is very similar to the <code>@Test</code> annotation in JUnit 4.
+Both describe methods that implement test cases.
 These test cases are static in the sense that they are fully specified at compile-time,
 and their behavior cannot be changed by anything happening at run-time.
 <em>Assumptions provide a basic form of dynamic behavior but are intentionally rather limited in their expressiveness.</em></p>
 </div>
 <div class="paragraph">
-<p>In addition to these standard tests a completely new kind of test programming model is introduced in JUnit 5.
-This new kind of test is a <em>dynamic test</em> which is generated at run-time by a test factory method
-which must be annotated with <code>@TestFactory</code>.</p>
+<p>In addition to these standard tests a completely new kind of test programming model has been introduced in JUnit 5.
+This new kind of test is a <em>dynamic test</em> which is generated at run-time by a factory method
+that is annotated with <code>@TestFactory</code>.</p>
 </div>
 <div class="paragraph">
-<p>In contrast to <code>@Test</code> such a factory is not itself a test case but rather creates test cases.
+<p>In contrast to <code>@Test</code> methods, a <code>@TestFactory</code> method is not itself a test case but rather a factory for test cases.
 Thus, dynamic tests are the products of a factory.
 Technically speaking, a <code>@TestFactory</code> method must return a <code>Stream</code>,
 <code>Collection</code>, <code>Iterable</code>, or <code>Iterator</code> of <code>DynamicTest</code> instances.
@@ -1329,13 +1329,19 @@ and may optionally declare parameters to be resolved by <code>ParameterResolvers
 </div>
 <div class="paragraph">
 <p>A <code>DynamicTest</code> is a test case generated at runtime.
-It is composed of a <em>display name</em> and an <code>Executable</code> which is a <code>@FunctionalInterface</code>.
+It is composed of a <em>display name</em> and an <code>Executable</code>. <code>Executable</code> is a <code>@FunctionalInterface</code>
+which means that the implementations of dynamic tests can be provided as <em>lambda expressions</em>
+or <em>method references</em>.
 Note that the execution lifecycle of dynamic tests is quite different than it is for standard <code>@Test</code> cases.
 Specifically, <code>@BeforeEach</code> and <code>@AfterEach</code> methods and their corresponding extension callbacks
 are not executed for dynamic tests.
 The execution of those callbacks would not be useful in most dynamic testing scenarios
 since variables used in lambdas are bound to instance variables at execution time of the factory method
 rather than execution time of the lambda itself.</p>
+</div>
+<div class="paragraph">
+<p>As of JUnit 5.0.0-SNAPSHOT, dynamic tests must always be created by factory methods;
+however, this might be complemented by a registration facility in a later release.</p>
 </div>
 <div class="sect3">
 <h4 id="dynamic-test-examples">3.11.1. Dynamic Test Examples</h4>
@@ -1348,22 +1354,20 @@ Since invalid return types cannot be detected at compile-time
 a <code>JUnitException</code> is thrown when it is detected at run-time.</p>
 </div>
 <div class="paragraph">
-<p>The next four methods are very simple examples that demonstrate the generation of a
-<code>Stream</code>, a <code>Collection</code>, an <code>Iterable</code>, and an <code>Iterator</code> of <code>DynamicTest</code> instances, respectively.
-These examples do not really exhibit dynamic behavior
-but merely demonstrate the supported return types in principle.</p>
+<p>The next five methods are very simple examples that demonstrate the generation of a
+<code>Collection</code>, <code>Iterable</code>, <code>Iterator</code>, or <code>Stream</code> of <code>DynamicTest</code> instances.
+Most of these examples do not really exhibit dynamic behavior
+but merely demonstrate the supported return types in principle.
+However, <code>dynamicTestsFromStream()</code> and <code>dynamicTestsFromIntStream()</code> demonstrate how
+easy it is to generate dynamic tests for a given set of strings or a range of input numbers.</p>
 </div>
 <div class="paragraph">
-<p>The last two methods are truly dynamic in nature.
-<code>dynamicTestsFromCustomIterator()</code> implements a custom <code>Iterator</code> that generates <code>DynamicTest</code> instances;
-whereas, <code>generateRandomNumberOfTests()</code> implements an <code>Iterator</code> that generates random numbers, a custom
-display name generator, and a test generator and provides all three to <code>DynamicTest.stream()</code>.
+<p>The last method is truly dynamic in nature.
+<code>generateRandomNumberOfTests()</code> implements an <code>Iterator</code> that generates random numbers, a custom
+display name generator, and a test executor and then provides all three to <code>DynamicTest.stream()</code>.
 Although the non-deterministic behavior of <code>generateRandomNumberOfTests()</code> is of course in conflict with
-test repeatability and should thus be used with care, it serves to demonstrate the expressiveness of dynamic tests.</p>
-</div>
-<div class="paragraph">
-<p>As of M1, dynamic tests must always be created by factory methods.
-This might be complemented by a registration facility in one of the upcoming releases.</p>
+test repeatability and should thus be used with care, it serves to demonstrate the expressiveness
+and power of dynamic tests.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1377,6 +1381,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.gen5.api.DynamicTest;
@@ -1389,12 +1394,6 @@ class DynamicTestsDemo {
     @TestFactory
     List&lt;String&gt; dynamicTestsWithInvalidReturnType() {
         return Arrays.asList("Hello");
-    }
-
-    @TestFactory
-    Stream&lt;DynamicTest&gt; dynamicTestsFromStream() {
-        return Stream.of("test1", "test2", "test3")
-                .map(displayName -&gt; new DynamicTest(displayName, () -&gt; { /* ... */ }));
     }
 
     @TestFactory
@@ -1422,22 +1421,15 @@ class DynamicTestsDemo {
     }
 
     @TestFactory
-    Iterator&lt;DynamicTest&gt; dynamicTestsFromCustomIterator() {
-        return new Iterator&lt;DynamicTest&gt;() {
+    Stream&lt;DynamicTest&gt; dynamicTestsFromStream() {
+        return Stream.of("test1", "test2", "test3")
+            .map(displayName -&gt; new DynamicTest(displayName, () -&gt; { /* ... */ }));
+    }
 
-            int counter = 0;
-
-            @Override
-            public boolean hasNext() {
-                return counter &lt; 100;
-            }
-
-            @Override
-            public DynamicTest next() {
-                int index = counter++;
-                return new DynamicTest("test" + index, () -&gt; assertTrue(index % 11 != 0));
-            }
-        };
+    @TestFactory
+    Stream&lt;DynamicTest&gt; dynamicTestsFromIntStream() {
+        return IntStream.range(1, 100).mapToObj(n -&gt;
+            new DynamicTest("test" + n, () -&gt; assertTrue(n % 11 != 0)));
     }
 
     @TestFactory
@@ -1465,11 +1457,11 @@ class DynamicTestsDemo {
         // Generates display names like: input:5, input:37, input:85, etc.
         Function&lt;? super Integer, String&gt; displayNameGenerator = (input) -&gt; "input:" + input;
 
-        // Generates tests based on the current input value.
-        Consumer&lt;? super Integer&gt; testGenerator = (input) -&gt; assertTrue(input % 3 == 0);
+        // Executes tests based on the current input value.
+        Consumer&lt;? super Integer&gt; testExecutor = (input) -&gt; assertTrue(input % 3 == 0);
 
         // Creates a stream of dynamic tests.
-        return DynamicTest.stream(inputGenerator, displayNameGenerator, testGenerator);
+        return DynamicTest.stream(inputGenerator, displayNameGenerator, testExecutor);
     }
 
 }</code></pre>
@@ -2423,7 +2415,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-03 11:40:53 -04:00
+Last updated 2016-06-03 12:58:54 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
