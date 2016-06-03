@@ -651,6 +651,10 @@ module.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test method. Unlike JUnit 4&#8217;s <code>@Test</code> annotation, this annotation does not declare any attributes, since test extensions in JUnit 5 operate based on their own dedicated annotations.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TestFactory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test factory for <a href="#dynamic-tests">dynamic tests</a></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@DisplayName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Declares a custom display name for the test class or test method</p></td>
 </tr>
@@ -684,7 +688,7 @@ module.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ExtendWith</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used to register custom <a href="#extension-model">extensions</a> to the framework.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to register custom <a href="#extension-model">extensions</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -2419,7 +2423,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-03 11:25:29 -04:00
+Last updated 2016-06-03 11:40:53 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
