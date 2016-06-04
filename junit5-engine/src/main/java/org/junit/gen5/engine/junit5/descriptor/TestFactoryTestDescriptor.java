@@ -53,7 +53,17 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	}
 
 	@Override
+	public boolean isTest() {
+		return false;
+	}
+
+	@Override
 	public boolean isContainer() {
+		return true;
+	}
+
+	@Override
+	public boolean hasTests() {
 		return true;
 	}
 

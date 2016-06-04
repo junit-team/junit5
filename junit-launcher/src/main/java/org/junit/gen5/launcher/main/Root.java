@@ -58,12 +58,12 @@ class Root {
 
 	void applyPostDiscoveryFilters(TestDiscoveryRequest discoveryRequest) {
 		Filter<TestDescriptor> postDiscoveryFilter = composeFilters(discoveryRequest.getPostDiscoveryFilters());
-		TestDescriptor.Visitor removeExcludedTests = descriptor -> {
-			if (isExcludedTest(descriptor, postDiscoveryFilter)) {
+		TestDescriptor.Visitor removeExcludedTestDescriptors = descriptor -> {
+			if (isExcluded(descriptor, postDiscoveryFilter)) {
 				descriptor.removeFromHierarchy();
 			}
 		};
-		acceptInAllTestEngines(removeExcludedTests);
+		acceptInAllTestEngines(removeExcludedTestDescriptors);
 	}
 
 	/**
@@ -78,8 +78,8 @@ class Root {
 		pruneEmptyTestEngines();
 	}
 
-	private boolean isExcludedTest(TestDescriptor descriptor, Filter<TestDescriptor> postDiscoveryFilter) {
-		return descriptor.isTest() && postDiscoveryFilter.apply(descriptor).excluded();
+	private boolean isExcluded(TestDescriptor descriptor, Filter<TestDescriptor> postDiscoveryFilter) {
+		return descriptor.getChildren().isEmpty() && postDiscoveryFilter.apply(descriptor).excluded();
 	}
 
 	private void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {
