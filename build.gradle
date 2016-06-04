@@ -344,6 +344,7 @@ configure(rootProject) {
 		options.header = rootProject.description
 		options.splitIndex = true
 		options.addStringOption('Xdoclint:none', '-quiet')
+		options.jFlags '-Xmx1g'
 		exclude '**/com/example/**'
 
 		source subprojects.collect { project ->
