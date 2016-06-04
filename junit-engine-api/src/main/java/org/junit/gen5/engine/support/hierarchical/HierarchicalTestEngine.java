@@ -27,6 +27,17 @@ import org.junit.gen5.engine.TestEngine;
 @API(Experimental)
 public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> implements TestEngine {
 
+	/**
+	 * Create an initial {@linkplain #createExecutionContext execution
+	 * context}, execute the behavior of all {@linkplain Node nodes} in the
+	 * hierarchy starting with the supplied {@code request}'s
+	 * {@linkplain ExecutionRequest#getRootTestDescriptor() root} and notify
+	 * its {@linkplain ExecutionRequest#getEngineExecutionListener() execution
+	 * listener} of test execution events.
+	 *
+	 * @see Node
+	 * @see #createExecutionContext
+	 */
 	@Override
 	public final void execute(ExecutionRequest request) {
 		new HierarchicalTestExecutor<>(request, createExecutionContext(request)).execute();
