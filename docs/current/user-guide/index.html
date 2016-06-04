@@ -1373,6 +1373,7 @@ and power of dynamic tests.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.fail;
+import static org.junit.gen5.api.DynamicTest.dynamicTest;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -1399,37 +1400,37 @@ class DynamicTestsDemo {
     @TestFactory
     Collection&lt;DynamicTest&gt; dynamicTestsFromCollection() {
         return Arrays.asList(
-            new DynamicTest("succeedingTest", () -&gt; assertTrue(true)),
-            new DynamicTest("failingTest", () -&gt; fail("failing"))
+            dynamicTest("succeedingTest", () -&gt; assertTrue(true)),
+            dynamicTest("failingTest", () -&gt; fail("failing"))
         );
     }
 
     @TestFactory
     Iterable&lt;DynamicTest&gt; dynamicTestsFromIterable() {
         return Arrays.asList(
-            new DynamicTest("succeedingTest", () -&gt; assertTrue(true)),
-            new DynamicTest("failingTest", () -&gt; fail("failing"))
+            dynamicTest("succeedingTest", () -&gt; assertTrue(true)),
+            dynamicTest("failingTest", () -&gt; fail("failing"))
         );
     }
 
     @TestFactory
     Iterator&lt;DynamicTest&gt; dynamicTestsFromIterator() {
         return Arrays.asList(
-            new DynamicTest("succeedingTest", () -&gt; assertTrue(true)),
-            new DynamicTest("failingTest", () -&gt; fail("failing"))
+            dynamicTest("succeedingTest", () -&gt; assertTrue(true)),
+            dynamicTest("failingTest", () -&gt; fail("failing"))
         ).iterator();
     }
 
     @TestFactory
     Stream&lt;DynamicTest&gt; dynamicTestsFromStream() {
         return Stream.of("test1", "test2", "test3")
-            .map(displayName -&gt; new DynamicTest(displayName, () -&gt; { /* ... */ }));
+            .map(displayName -&gt; dynamicTest(displayName, () -&gt; { /* ... */ }));
     }
 
     @TestFactory
     Stream&lt;DynamicTest&gt; dynamicTestsFromIntStream() {
         return IntStream.range(1, 100).mapToObj(n -&gt;
-            new DynamicTest("test" + n, () -&gt; assertTrue(n % 11 != 0)));
+            dynamicTest("test" + n, () -&gt; assertTrue(n % 11 != 0)));
     }
 
     @TestFactory
@@ -2415,7 +2416,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-03 14:36:37 -04:00
+Last updated 2016-06-04 01:31:23 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
