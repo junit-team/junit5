@@ -27,6 +27,12 @@ import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.UniqueId;
 
 /**
+ * Abstract base implementation of {@link TestDescriptor} that may be used by
+ * custom {@link org.junit.gen5.engine.TestEngine TestEngines}.
+ *
+ * <p>Subclasses should call {@link #setSource} in their constructor, if
+ * possible, and override {@link #getTags}, if appropriate.
+ *
  * @since 5.0
  */
 @API(Experimental)
@@ -40,6 +46,13 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final Set<TestDescriptor> children = new LinkedHashSet<>();
 
+	/**
+	 * Create a new {@code AbstractTestDescriptor} with the supplied
+	 * {@link UniqueId}.
+	 *
+	 * @param uniqueId unique ID of this {@link TestDescriptor}; must not be
+	 * {@code null}.
+	 */
 	protected AbstractTestDescriptor(UniqueId uniqueId) {
 		this.uniqueId = Preconditions.notNull(uniqueId, "UniqueId must not be null");
 	}
