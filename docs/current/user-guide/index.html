@@ -1349,9 +1349,8 @@ however, this might be complemented by a registration facility in a later releas
 <p>The following <code>DynamicTestsDemo</code> class demonstrates several examples of test factories and dynamic tests.</p>
 </div>
 <div class="paragraph">
-<p>The first method returns an invalid return type.
-Since invalid return types cannot be detected at compile-time
-a <code>JUnitException</code> is thrown when it is detected at run-time.</p>
+<p>The first method returns an invalid return type. Since an invalid return type cannot be
+detected at compile-time, a <code>JUnitException</code> is thrown when it is detected at run-time.</p>
 </div>
 <div class="paragraph">
 <p>The next five methods are very simple examples that demonstrate the generation of a
@@ -1363,7 +1362,7 @@ easy it is to generate dynamic tests for a given set of strings or a range of in
 </div>
 <div class="paragraph">
 <p>The last method is truly dynamic in nature.
-<code>generateRandomNumberOfTests()</code> implements an <code>Iterator</code> that generates random numbers, a custom
+<code>generateRandomNumberOfTests()</code> implements an <code>Iterator</code> that generates random numbers, a
 display name generator, and a test executor and then provides all three to <code>DynamicTest.stream()</code>.
 Although the non-deterministic behavior of <code>generateRandomNumberOfTests()</code> is of course in conflict with
 test repeatability and should thus be used with care, it serves to demonstrate the expressiveness
@@ -1423,14 +1422,14 @@ class DynamicTestsDemo {
 
     @TestFactory
     Stream&lt;DynamicTest&gt; dynamicTestsFromStream() {
-        return Stream.of("test1", "test2", "test3")
-            .map(displayName -&gt; dynamicTest(displayName, () -&gt; { /* ... */ }));
+        return Stream.of("A", "B", "C").map(
+            str -&gt; dynamicTest("test" + str, () -&gt; { /* ... */ }));
     }
 
     @TestFactory
     Stream&lt;DynamicTest&gt; dynamicTestsFromIntStream() {
-        return IntStream.range(1, 100).mapToObj(n -&gt;
-            dynamicTest("test" + n, () -&gt; assertTrue(n % 11 != 0)));
+        return IntStream.range(1, 100).mapToObj(
+            n -&gt; dynamicTest("test" + n, () -&gt; assertTrue(n % 11 != 0)));
     }
 
     @TestFactory
@@ -1456,12 +1455,12 @@ class DynamicTestsDemo {
         };
 
         // Generates display names like: input:5, input:37, input:85, etc.
-        Function&lt;? super Integer, String&gt; displayNameGenerator = (input) -&gt; "input:" + input;
+        Function&lt;Integer, String&gt; displayNameGenerator = (input) -&gt; "input:" + input;
 
         // Executes tests based on the current input value.
-        Consumer&lt;? super Integer&gt; testExecutor = (input) -&gt; assertTrue(input % 3 == 0);
+        Consumer&lt;Integer&gt; testExecutor = (input) -&gt; assertTrue(input % 3 == 0);
 
-        // Creates a stream of dynamic tests.
+        // Returns a stream of dynamic tests.
         return DynamicTest.stream(inputGenerator, displayNameGenerator, testExecutor);
     }
 
@@ -2416,7 +2415,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-04 14:42:47 -04:00
+Last updated 2016-06-04 19:22:28 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
