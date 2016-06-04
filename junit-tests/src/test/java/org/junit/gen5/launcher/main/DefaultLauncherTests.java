@@ -15,7 +15,8 @@ import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
-import static org.junit.gen5.launcher.EngineIdFilter.requireEngineId;
+import static org.junit.gen5.launcher.EngineFilter.excludeEngines;
+import static org.junit.gen5.launcher.EngineFilter.requireEngines;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
@@ -106,7 +107,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void launcherWillNotCallEnginesThatAreFilteredByAnEngineIdFilter() {
+	void launcherWillNotCallEnginesIfNotRequiredByAnEngineFilter() {
 		DummyTestEngine firstEngine = new DummyTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
 		DummyTestEngine secondEngine = new DummyTestEngine("second");
@@ -114,9 +115,13 @@ class DefaultLauncherTests {
 
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
 
+		// @formatter:off
 		TestPlan testPlan = launcher.discover(
-			request().selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId())).filters(
-				requireEngineId("first")).build());
+			request()
+				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
+				.filters(requireEngines("first"))
+				.build());
+		// @formatter:on
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
@@ -125,7 +130,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void launcherWillNotExecuteAnyEnginesWithMultipleEngineIdFilters() {
+	void launcherWillExecuteAllEnginesExplicitlyRequiredViaSingleEngineFilter() {
 		DummyTestEngine firstEngine = new DummyTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
 		DummyTestEngine secondEngine = new DummyTestEngine("second");
@@ -133,11 +138,83 @@ class DefaultLauncherTests {
 
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
 
+		// @formatter:off
 		TestPlan testPlan = launcher.discover(
-			request().selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId())).filters(
-				requireEngineId("first"), requireEngineId("second")).build());
+			request()
+				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
+				.filters(requireEngines("first", "second"))
+				.build());
+		// @formatter:on
+
+		assertThat(testPlan.getRoots()).hasSize(2);
+	}
+
+	@Test
+	void launcherWillNotExecuteEnginesExplicitlyRequiredViaMultipleCompetingEngineFilters() {
+		DummyTestEngine firstEngine = new DummyTestEngine("first");
+		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
+		DummyTestEngine secondEngine = new DummyTestEngine("second");
+		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
+
+		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
+
+		// @formatter:off
+		TestPlan testPlan = launcher.discover(
+			request()
+				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
+				.filters(requireEngines("first"), requireEngines("second"))
+				.build());
+		// @formatter:on
 
 		assertThat(testPlan.getRoots()).isEmpty();
+	}
+
+	@Test
+	void launcherWillNotCallEnginesExplicitlyExcludedByAnEngineFilter() {
+		DummyTestEngine firstEngine = new DummyTestEngine("first");
+		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
+		DummyTestEngine secondEngine = new DummyTestEngine("second");
+		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
+
+		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
+
+		// @formatter:off
+		TestPlan testPlan = launcher.discover(
+			request()
+				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
+				.filters(excludeEngines("second"))
+				.build());
+		// @formatter:on
+
+		assertThat(testPlan.getRoots()).hasSize(1);
+		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
+		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(1);
+		assertThat(testPlan.getChildren(UniqueId.forEngine("first").toString())).hasSize(1);
+	}
+
+	@Test
+	void launcherWillCallEnginesHonoringBothRequireAndExcludEngineFilters() {
+		DummyTestEngine firstEngine = new DummyTestEngine("first");
+		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
+		DummyTestEngine secondEngine = new DummyTestEngine("second");
+		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
+		DummyTestEngine thirdEngine = new DummyTestEngine("third");
+		TestDescriptor test3 = thirdEngine.addTest("test3", noOp);
+
+		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine, thirdEngine);
+
+		// @formatter:off
+		TestPlan testPlan = launcher.discover(
+			request()
+				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()), selectUniqueId(test3.getUniqueId()))
+				.filters(requireEngines("first", "second"), excludeEngines("second"))
+				.build());
+		// @formatter:on
+
+		assertThat(testPlan.getRoots()).hasSize(1);
+		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
+		assertThat(testPlan.getChildren(rootIdentifier.getUniqueId())).hasSize(1);
+		assertThat(testPlan.getChildren(UniqueId.forEngine("first").toString())).hasSize(1);
 	}
 
 	@Test

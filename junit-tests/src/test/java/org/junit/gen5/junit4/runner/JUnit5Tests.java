@@ -51,7 +51,7 @@ import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
-import org.junit.gen5.launcher.EngineIdFilter;
+import org.junit.gen5.launcher.EngineFilter;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
@@ -161,19 +161,26 @@ class JUnit5Tests {
 		}
 
 		@Test
-		void addsEngineIdFilterToRequestWhenOnlyEngineAnnotationIsPresent() throws Exception {
+		void addsEngineFilterToRequestWhenOnlyEngineAnnotationIsPresent() throws Exception {
+
 			@RequireEngine("foo")
 			class TestCase {
 			}
 
 			TestDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			List<EngineIdFilter> filters = request.getEngineIdFilters();
+			List<EngineFilter> filters = request.getEngineFilters();
 			assertThat(filters).hasSize(1);
 
-			EngineIdFilter filter = filters.get(0);
-			assertTrue(filter.apply("foo").included());
-			assertTrue(filter.apply("bar").excluded());
+			TestEngine fooEngine = mock(TestEngine.class);
+			when(fooEngine.getId()).thenReturn("foo");
+
+			TestEngine barEngine = mock(TestEngine.class);
+			when(barEngine.getId()).thenReturn("bar");
+
+			EngineFilter filter = filters.get(0);
+			assertTrue(filter.apply(fooEngine).included());
+			assertTrue(filter.apply(barEngine).excluded());
 		}
 
 		@Test

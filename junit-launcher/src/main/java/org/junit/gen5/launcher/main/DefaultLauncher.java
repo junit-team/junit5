@@ -85,17 +85,21 @@ class DefaultLauncher implements Launcher {
 		Root root = new Root();
 
 		for (TestEngine testEngine : this.testEngines) {
-			final String engineId = testEngine.getId();
+			// @formatter:off
+			boolean engineIsExcluded = discoveryRequest.getEngineFilters().stream()
+					.map(engineFilter -> engineFilter.apply(testEngine))
+					.anyMatch(FilterResult::excluded);
+			// @formatter:on
 
-			if (discoveryRequest.getEngineIdFilters().stream().map(
-				engineIdFilter -> engineIdFilter.apply(engineId)).anyMatch(FilterResult::excluded)) {
+			if (engineIsExcluded) {
 				LOG.fine(() -> String.format(
-					"Test discovery for engine '%s' was skipped due to a filter in phase '%s'.", engineId, phase));
+					"Test discovery for engine '%s' was skipped due to an EngineFilter in phase '%s'.",
+					testEngine.getId(), phase));
 				continue;
 			}
 
-			LOG.fine(
-				() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase, engineId));
+			LOG.fine(() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase,
+				testEngine.getId()));
 
 			UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
 			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);

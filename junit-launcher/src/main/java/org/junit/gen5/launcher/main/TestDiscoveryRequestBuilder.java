@@ -24,7 +24,7 @@ import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.Filter;
-import org.junit.gen5.launcher.EngineIdFilter;
+import org.junit.gen5.launcher.EngineFilter;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
@@ -50,7 +50,8 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  *       selectUniqueId("unique-id-2")
  *     )
  *     .filters(
- *       includeEngineId("junit5"),
+ *       requireEngines("junit5", "kotlin"),
+ *       excludeEngines("junit4"),
  *       byClassNamePattern("org\.junit\.gen5\.tests.*"),
  *       byClassNamePattern(".*Test[s]?"),
  *       requireTags("fast"),
@@ -66,7 +67,7 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
 public final class TestDiscoveryRequestBuilder {
 
 	private List<DiscoverySelector> selectors = new LinkedList<>();
-	private List<EngineIdFilter> engineIdFilters = new LinkedList<>();
+	private List<EngineFilter> engineFilters = new LinkedList<>();
 	private List<DiscoveryFilter<?>> discoveryFilters = new LinkedList<>();
 	private List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
 	private Map<String, String> configurationParameters = new HashMap<>();
@@ -128,8 +129,8 @@ public final class TestDiscoveryRequestBuilder {
 	}
 
 	private void storeFilter(Filter<?> filter) {
-		if (filter instanceof EngineIdFilter) {
-			this.engineIdFilters.add((EngineIdFilter) filter);
+		if (filter instanceof EngineFilter) {
+			this.engineFilters.add((EngineFilter) filter);
 		}
 		else if (filter instanceof PostDiscoveryFilter) {
 			this.postDiscoveryFilters.add((PostDiscoveryFilter) filter);
@@ -138,9 +139,9 @@ public final class TestDiscoveryRequestBuilder {
 			this.discoveryFilters.add((DiscoveryFilter<?>) filter);
 		}
 		else {
-			throw new PreconditionViolationException("Filter must implement " + EngineIdFilter.class.getSimpleName()
-					+ ", " + PostDiscoveryFilter.class.getSimpleName() //
-					+ ", or " + DiscoveryFilter.class.getSimpleName() + ".");
+			throw new PreconditionViolationException(
+				String.format("Filter [%s] must implement %s, %s, or %s.", filter, EngineFilter.class.getSimpleName(),
+					PostDiscoveryFilter.class.getSimpleName(), DiscoveryFilter.class.getSimpleName()));
 		}
 	}
 
@@ -151,7 +152,7 @@ public final class TestDiscoveryRequestBuilder {
 	public TestDiscoveryRequest build() {
 		DiscoveryRequest discoveryRequest = new DiscoveryRequest();
 		discoveryRequest.addSelectors(this.selectors);
-		discoveryRequest.addEngineIdFilters(this.engineIdFilters);
+		discoveryRequest.addEngineFilters(this.engineFilters);
 		discoveryRequest.addFilters(this.discoveryFilters);
 		discoveryRequest.addPostFilters(this.postDiscoveryFilters);
 		discoveryRequest.addConfigurationParameters(this.configurationParameters);

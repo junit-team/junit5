@@ -22,7 +22,7 @@ import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.launcher.EngineIdFilter;
+import org.junit.gen5.launcher.EngineFilter;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
@@ -34,29 +34,29 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  * <p>A {@code DiscoveryRequest} contains different configuration options.
  *
  * <ul>
- * <li>{@link DiscoverySelector}: A selector defines where a {@code TestEngine}
+ * <li>{@link DiscoverySelector}: a selector defines where a {@code TestEngine}
  * should look up tests</li>
- * <li>{@link EngineIdFilter}: A special filter that is applied before each
+ * <li>{@link EngineFilter}: a filter that is applied before each
  * {@code TestEngine} is executed</li>
- * <li>{@link DiscoveryFilter}: A filter that should be applied by
+ * <li>{@link DiscoveryFilter}: a filter that should be applied by
  * {@code TestEngines} during test discovery</li>
- * <li>{@link PostDiscoveryFilter}: A filter that will be applied by the
+ * <li>{@link PostDiscoveryFilter}: a filter that will be applied by the
  * launcher after {@code TestEngines} have performed test discovery</li>
  * </ul>
  *
  * @since 5.0
  * @see DiscoverySelector
- * @see EngineIdFilter
+ * @see EngineFilter
  * @see DiscoveryFilter
  * @see PostDiscoveryFilter
  */
 final class DiscoveryRequest implements TestDiscoveryRequest {
 
-	// Selectors provided to the engines to be used for finding tests
+	// Selectors provided to the engines to be used for discovering tests
 	private final List<DiscoverySelector> selectors = new LinkedList<>();
 
-	// Filter based on the engine id
-	private final List<EngineIdFilter> engineIdFilters = new LinkedList<>();
+	// Filters based on engines
+	private final List<EngineFilter> engineFilters = new LinkedList<>();
 
 	// Discovery filters are handed through to all engines to be applied during discovery.
 	private final List<DiscoveryFilter<?>> discoveryFilters = new LinkedList<>();
@@ -78,13 +78,13 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 	}
 
 	@Override
-	public void addEngineIdFilter(EngineIdFilter engineIdFilter) {
-		this.engineIdFilters.add(engineIdFilter);
+	public void addEngineFilter(EngineFilter engineFilter) {
+		this.engineFilters.add(engineFilter);
 	}
 
 	@Override
-	public void addEngineIdFilters(Collection<EngineIdFilter> engineIdFilters) {
-		this.engineIdFilters.addAll(engineIdFilters);
+	public void addEngineFilters(Collection<EngineFilter> engineFilters) {
+		this.engineFilters.addAll(engineFilters);
 	}
 
 	@Override
@@ -118,8 +118,8 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 	}
 
 	@Override
-	public List<EngineIdFilter> getEngineIdFilters() {
-		return unmodifiableList(this.engineIdFilters);
+	public List<EngineFilter> getEngineFilters() {
+		return unmodifiableList(this.engineFilters);
 	}
 
 	@Override

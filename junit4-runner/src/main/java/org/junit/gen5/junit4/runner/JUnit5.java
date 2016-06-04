@@ -13,7 +13,9 @@ package org.junit.gen5.junit4.runner;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.meta.API.Usage.Maintained;
-import static org.junit.gen5.launcher.EngineIdFilter.requireEngineId;
+import static org.junit.gen5.launcher.EngineFilter.requireEngines;
+import static org.junit.gen5.launcher.TagFilter.excludeTags;
+import static org.junit.gen5.launcher.TagFilter.requireTags;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Annotation;
@@ -31,8 +33,6 @@ import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.launcher.Launcher;
-import org.junit.gen5.launcher.PostDiscoveryFilter;
-import org.junit.gen5.launcher.TagFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -126,7 +126,7 @@ public class JUnit5 extends Runner implements Filterable {
 		addClassNameMatchesFilter(request);
 		addRequiredTagsFilter(request);
 		addExcludedTagsFilter(request);
-		addEngineIdFilter(request);
+		addEngineFilter(request);
 	}
 
 	private List<DiscoverySelector> getSpecElementsFromAnnotations() {
@@ -153,23 +153,21 @@ public class JUnit5 extends Runner implements Filterable {
 	private void addRequiredTagsFilter(TestDiscoveryRequest discoveryRequest) {
 		String[] requiredTags = getRequiredTags();
 		if (requiredTags.length > 0) {
-			PostDiscoveryFilter tagNamesFilter = TagFilter.requireTags(requiredTags);
-			discoveryRequest.addPostFilter(tagNamesFilter);
+			discoveryRequest.addPostFilter(requireTags(requiredTags));
 		}
 	}
 
 	private void addExcludedTagsFilter(TestDiscoveryRequest discoveryRequest) {
 		String[] excludedTags = getExcludedTags();
 		if (excludedTags.length > 0) {
-			PostDiscoveryFilter excludeTagsFilter = TagFilter.excludeTags(excludedTags);
-			discoveryRequest.addPostFilter(excludeTagsFilter);
+			discoveryRequest.addPostFilter(excludeTags(excludedTags));
 		}
 	}
 
-	private void addEngineIdFilter(TestDiscoveryRequest discoveryRequest) {
+	private void addEngineFilter(TestDiscoveryRequest discoveryRequest) {
 		String engineId = getExplicitEngineId();
 		if (StringUtils.isNotBlank(engineId)) {
-			discoveryRequest.addEngineIdFilter(requireEngineId(engineId));
+			discoveryRequest.addEngineFilter(requireEngines(engineId));
 		}
 	}
 

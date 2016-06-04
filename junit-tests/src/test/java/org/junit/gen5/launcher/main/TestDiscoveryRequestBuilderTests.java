@@ -13,7 +13,6 @@ package org.junit.gen5.launcher.main;
 import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.FilterResult.excluded;
 import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
@@ -21,11 +20,12 @@ import static org.junit.gen5.engine.discovery.ClasspathSelector.selectClasspathR
 import static org.junit.gen5.engine.discovery.MethodSelector.selectMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
-import static org.junit.gen5.launcher.EngineIdFilter.requireEngineId;
+import static org.junit.gen5.launcher.EngineFilter.requireEngines;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,7 +42,7 @@ import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.launcher.DiscoveryFilterStub;
-import org.junit.gen5.launcher.EngineIdFilter;
+import org.junit.gen5.launcher.EngineFilter;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.PostDiscoveryFilterStub;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
@@ -184,14 +184,12 @@ public class TestDiscoveryRequestBuilderTests {
 		public void engineFiltersAreStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.filters(
-							requireEngineId("engine1"),
-							requireEngineId("engine2")
-					).build();
+					.filters(requireEngines("engine1", "engine2"))
+					.build();
 			// @formatter:on
 
-			List<String> engineIds = discoveryRequest.getEngineIdFilters().stream().map(
-				EngineIdFilter::getEngineId).collect(toList());
+			List<String> engineIds = discoveryRequest.getEngineFilters().stream().map(
+				EngineFilter::getEngineIds).flatMap(Collection::stream).distinct().collect(toList());
 			assertThat(engineIds).hasSize(2);
 			assertThat(engineIds).contains("engine1", "engine2");
 		}
@@ -233,11 +231,12 @@ public class TestDiscoveryRequestBuilderTests {
 
 		@Test
 		public void exceptionForIllegalFilterClass() throws Exception {
-			PreconditionViolationException exception = expectThrows(PreconditionViolationException.class,
+			Exception exception = expectThrows(PreconditionViolationException.class,
 				() -> request().filters(o -> excluded("reason")));
 
-			assertEquals("Filter must implement EngineIdFilter, PostDiscoveryFilter, or DiscoveryFilter.",
-				exception.getMessage());
+			assertThat(exception).hasMessageStartingWith("Filter");
+			assertThat(exception).hasMessageEndingWith(
+				"must implement EngineFilter, PostDiscoveryFilter, or DiscoveryFilter.");
 		}
 	}
 

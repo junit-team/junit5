@@ -44,14 +44,26 @@ public interface TestDiscoveryRequest extends EngineDiscoveryRequest {
 	void addSelectors(Collection<DiscoverySelector> selectors);
 
 	/**
-	 * Add the supplied {@code engineIdFilter} to this request.
+	 * Add the supplied {@code engineFilter} to this request.
+	 *
+	 * <p><strong>Warning</strong>: be cautious when registering multiple competing
+	 * {@link EngineFilter#requireEngines require} {@code EngineFilters} or multiple
+	 * competing {@link EngineFilter#excludeEngines exclude} {@code EngineFilters}
+	 * for the same discovery request since doing so will likely lead to
+	 * undesirable results (i.e., zero engines being active).
 	 */
-	void addEngineIdFilter(EngineIdFilter engineIdFilter);
+	void addEngineFilter(EngineFilter engineFilter);
 
 	/**
-	 * Add all of the supplied {@code engineIdFilters} to this request.
+	 * Add all of the supplied {@code engineFilters} to this request.
+	 *
+	 * <p><strong>Warning</strong>: be cautious when registering multiple competing
+	 * {@link EngineFilter#requireEngines require} {@code EngineFilters} or multiple
+	 * competing {@link EngineFilter#excludeEngines exclude} {@code EngineFilters}
+	 * for the same discovery request since doing so will likely lead to
+	 * undesirable results (i.e., zero engines being active).
 	 */
-	void addEngineIdFilters(Collection<EngineIdFilter> engineIdFilters);
+	void addEngineFilters(Collection<EngineFilter> engineFilters);
 
 	/**
 	 * Add the supplied {@code discoveryFilter} to this request.
@@ -79,9 +91,9 @@ public interface TestDiscoveryRequest extends EngineDiscoveryRequest {
 	void addConfigurationParameters(Map<String, String> configurationParameters);
 
 	/**
-	 * Get the {@code engineIdFilters} that have been added to this request.
+	 * Get the {@code engineFilters} that have been added to this request.
 	 */
-	List<EngineIdFilter> getEngineIdFilters();
+	List<EngineFilter> getEngineFilters();
 
 	/**
 	 * Get the {@code postDiscoveryFilters} that have been added to this request.

@@ -27,7 +27,7 @@ import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
-import org.junit.gen5.launcher.EngineIdFilter;
+import org.junit.gen5.launcher.EngineFilter;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
@@ -149,10 +149,10 @@ public class DiscoveryRequestCreatorTests {
 		options.setRequiredEngineFilter("junit5");
 
 		TestDiscoveryRequest request = convert();
-		List<EngineIdFilter> engineIdFilters = request.getEngineIdFilters();
+		List<EngineFilter> engineFilters = request.getEngineFilters();
 
-		assertThat(engineIdFilters).hasSize(1);
-		assertThat(engineIdFilters.get(0).toString()).contains("junit5");
+		assertThat(engineFilters).hasSize(1);
+		assertThat(engineFilters.get(0).toString()).contains("junit5");
 	}
 
 	private TestDiscoveryRequest convert() {
