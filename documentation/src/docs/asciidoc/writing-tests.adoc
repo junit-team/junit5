@@ -310,9 +310,8 @@ however, this might be complemented by a registration facility in a later releas
 
 The following `DynamicTestsDemo` class demonstrates several examples of test factories and dynamic tests.
 
-The first method returns an invalid return type.
-Since invalid return types cannot be detected at compile-time
-a `JUnitException` is thrown when it is detected at run-time.
+The first method returns an invalid return type. Since an invalid return type cannot be
+detected at compile-time, a `JUnitException` is thrown when it is detected at run-time.
 
 The next five methods are very simple examples that demonstrate the generation of a
 `Collection`, `Iterable`, `Iterator`, or `Stream` of `DynamicTest` instances.
@@ -322,7 +321,7 @@ However, `dynamicTestsFromStream()` and `dynamicTestsFromIntStream()` demonstrat
 easy it is to generate dynamic tests for a given set of strings or a range of input numbers.
 
 The last method is truly dynamic in nature.
-`generateRandomNumberOfTests()` implements an `Iterator` that generates random numbers, a custom
+`generateRandomNumberOfTests()` implements an `Iterator` that generates random numbers, a
 display name generator, and a test executor and then provides all three to `DynamicTest.stream()`.
 Although the non-deterministic behavior of `generateRandomNumberOfTests()` is of course in conflict with
 test repeatability and should thus be used with care, it serves to demonstrate the expressiveness

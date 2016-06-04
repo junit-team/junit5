@@ -87,8 +87,8 @@ class DynamicTestsDemo {
 		// end::user_guide[]
 		// @formatter:off
 		// tag::user_guide[]
-		return Stream.of("test1", "test2", "test3")
-			.map(displayName -> dynamicTest(displayName, () -> { /* ... */ }));
+		return Stream.of("A", "B", "C").map(
+			str -> dynamicTest("test" + str, () -> { /* ... */ }));
 		// end::user_guide[]
 		// @formatter:on
 		// tag::user_guide[]
@@ -99,8 +99,8 @@ class DynamicTestsDemo {
 		// end::user_guide[]
 		// @formatter:off
 		// tag::user_guide[]
-		return IntStream.range(1, 100).mapToObj(n ->
-			dynamicTest("test" + n, () -> assertTrue(n % 11 != 0)));
+		return IntStream.range(1, 100).mapToObj(
+			n -> dynamicTest("test" + n, () -> assertTrue(n % 11 != 0)));
 		// end::user_guide[]
 		// @formatter:on
 		// tag::user_guide[]
@@ -129,12 +129,12 @@ class DynamicTestsDemo {
 		};
 
 		// Generates display names like: input:5, input:37, input:85, etc.
-		Function<? super Integer, String> displayNameGenerator = (input) -> "input:" + input;
+		Function<Integer, String> displayNameGenerator = (input) -> "input:" + input;
 
 		// Executes tests based on the current input value.
-		Consumer<? super Integer> testExecutor = (input) -> assertTrue(input % 3 == 0);
+		Consumer<Integer> testExecutor = (input) -> assertTrue(input % 3 == 0);
 
-		// Creates a stream of dynamic tests.
+		// Returns a stream of dynamic tests.
 		return DynamicTest.stream(inputGenerator, displayNameGenerator, testExecutor);
 	}
 
