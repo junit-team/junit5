@@ -74,6 +74,9 @@ public interface Node<C extends EngineExecutionContext> {
 	/**
 	 * Execute the <em>behavior</em> of this node.
 	 *
+	 * <p>Containers typically do not implement this method since the
+	 * {@link HierarchicalTestEngine} handles execution of their children.
+	 *
 	 * @param context the context to execute in
 	 * @return the new context to be used for children of this node and for the
 	 * <em>after</em> behavior of the parent of this node, if any
