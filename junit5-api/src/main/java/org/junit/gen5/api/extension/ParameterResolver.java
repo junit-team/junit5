@@ -32,6 +32,8 @@ import org.junit.gen5.commons.meta.API;
  * <p>Implementations must provide a no-args constructor.
  *
  * @since 5.0
+ * @see #supports(Parameter, Optional, ExtensionContext)
+ * @see #resolve(Parameter, Optional, ExtensionContext)
  */
 @API(Experimental)
 public interface ParameterResolver extends Extension {
@@ -46,7 +48,7 @@ public interface ParameterResolver extends Extension {
 	 *
 	 * @param parameter the parameter to be resolved
 	 * @param target the container for the target on which the {@code java.lang.reflect.Executable}
-	 * will be invoked; may be <em>empty</em> if the {@code Executable} is a constructor
+	 * will be invoked; will be <em>empty</em> if the {@code Executable} is a constructor
 	 * or {@code static} method
 	 * @param extensionContext the extension context for the {@code Executable}
 	 * about to be invoked
@@ -70,11 +72,12 @@ public interface ParameterResolver extends Extension {
 	 *
 	 * @param parameter the parameter to be resolved
 	 * @param target the container for the target on which the {@code java.lang.reflect.Executable}
-	 * will be invoked; may be <em>empty</em> if the {@code Executable} is a constructor
+	 * will be invoked; will be <em>empty</em> if the {@code Executable} is a constructor
 	 * or {@code static} method
 	 * @param extensionContext the extension context for the {@code Executable}
 	 * about to be invoked
-	 * @return the resolved parameter object
+	 * @return the resolved parameter object; may only be {@code null} if the
+	 * parameter type is not a primitive
 	 * @see #supports
 	 * @see java.lang.reflect.Parameter
 	 * @see java.lang.reflect.Executable
