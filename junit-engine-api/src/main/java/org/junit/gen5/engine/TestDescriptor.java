@@ -95,28 +95,32 @@ public interface TestDescriptor {
 	/**
 	 * Get the set of {@linkplain TestTag tags} associated with this descriptor.
 	 *
+	 * @return the set of tags associated with this descriptor; never {@code null}
+	 * but potentially empty
 	 * @see TestTag
 	 */
 	Set<TestTag> getTags();
 
 	/**
 	 * Get the set of <em>children</em> of this descriptor.
+	 *
+	 * @return the set of children of this descriptor; never {@code null}
+	 * but potentially empty
 	 */
 	Set<? extends TestDescriptor> getChildren();
 
 	/**
 	 * Add a <em>child</em> to this descriptor.
 	 *
-	 * @param descriptor the child to add to this descriptor; must not be
-	 * {@code null}.
+	 * @param descriptor the child to add to this descriptor; never {@code null}
 	 */
 	void addChild(TestDescriptor descriptor);
 
 	/**
 	 * Remove a <em>child</em> from this descriptor.
 	 *
-	 * @param descriptor the child to remove from this descriptor; must not be
-	 * {@code null}.
+	 * @param descriptor the child to remove from this descriptor; never
+	 * {@code null}
 	 */
 	void removeChild(TestDescriptor descriptor);
 
@@ -149,9 +153,25 @@ public interface TestDescriptor {
 	}
 
 	/**
-	 * Find this descriptor or any of its descendants by the supplied unique ID.
+	 * Find the descriptor with the supplied unique ID.
+	 *
+	 * <p>The search algorithm begins with this descriptor and then searches
+	 * through its descendants.
+	 *
+	 * @param uniqueId the {@code UniqueId} to search for; never {@code null}
 	 */
 	Optional<? extends TestDescriptor> findByUniqueId(UniqueId uniqueId);
+
+	/**
+	 * Accept a visitor to the subtree starting with this descriptor.
+	 *
+	 * @param visitor the {@code Visitor} to accept; never {@code null}
+	 */
+	default void accept(Visitor visitor) {
+		visitor.visit(this);
+		// Create a copy of the set in order to avoid a ConcurrentModificationException
+		new LinkedHashSet<>(this.getChildren()).forEach(child -> child.accept(visitor));
+	}
 
 	/**
 	 * Visitor for the tree-like {@link TestDescriptor} structure.
@@ -162,17 +182,10 @@ public interface TestDescriptor {
 
 		/**
 		 * Visit a {@link TestDescriptor}.
+		 *
+		 * @param descriptor the {@code TestDescriptor} to visit; never {@code null}
 		 */
 		void visit(TestDescriptor descriptor);
-	}
-
-	/**
-	 * Accept a visitor to the subtree starting with this descriptor.
-	 */
-	default void accept(Visitor visitor) {
-		visitor.visit(this);
-		// Create a copy of the set in order to avoid a ConcurrentModificationException
-		new LinkedHashSet<>(this.getChildren()).forEach(child -> child.accept(visitor));
 	}
 
 }

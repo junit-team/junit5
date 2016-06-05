@@ -74,6 +74,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public void removeChild(TestDescriptor child) {
+		Preconditions.notNull(child, "child must not be null");
 		this.children.remove(child);
 		child.setParent(null);
 	}
@@ -89,6 +90,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public Optional<? extends TestDescriptor> findByUniqueId(UniqueId uniqueId) {
+		Preconditions.notNull(uniqueId, "UniqueId must not be null");
 		if (getUniqueId().equals(uniqueId)) {
 			return Optional.of(this);
 		}
