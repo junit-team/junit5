@@ -53,7 +53,7 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 	void testFactoryMethodsAreCorrectlyDiscoveredForClassSelector() {
 		TestDiscoveryRequest request = request().selectors(selectClass(MyDynamicTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(5, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
@@ -61,7 +61,7 @@ class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
 		TestDiscoveryRequest request = request().selectors(
 			selectMethod(MyDynamicTestCase.class, "dynamicStream")).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(2, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test

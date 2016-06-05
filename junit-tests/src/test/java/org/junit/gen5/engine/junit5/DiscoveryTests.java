@@ -36,14 +36,14 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 	public void discoverTestClass() {
 		TestDiscoveryRequest request = request().selectors(selectClass(LocalTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(5, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void doNotDiscoverAbstractTestClass() {
 		TestDiscoveryRequest request = request().selectors(selectClass(AbstractTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(0, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(0, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
@@ -51,7 +51,7 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 		TestDiscoveryRequest request = request().selectors(
 			selectUniqueId(JUnit5UniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test1()"))).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(2, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
@@ -61,7 +61,7 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 		TestDiscoveryRequest request = request().selectors(
 			MethodSelector.selectMethod(LocalTestCase.class, testMethod)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(2, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(2, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
@@ -71,7 +71,7 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 			selectClass(LocalTestCase.class)).build();
 
 		TestDescriptor engineDescriptor = discoverTests(spec);
-		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(5, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
 
 	// -------------------------------------------------------------------

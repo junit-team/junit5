@@ -48,7 +48,7 @@ class TestRun {
 	TestRun(RunnerTestDescriptor runnerTestDescriptor, Logger logger) {
 		this.runnerTestDescriptor = runnerTestDescriptor;
 		this.logger = logger;
-		runnerDescendants = runnerTestDescriptor.allDescendants();
+		runnerDescendants = runnerTestDescriptor.getAllDescendants();
 		// @formatter:off
 		descriptionToDescriptors = concat(Stream.of(runnerTestDescriptor), runnerDescendants.stream())
 			.map(JUnit4TestDescriptor.class::cast)

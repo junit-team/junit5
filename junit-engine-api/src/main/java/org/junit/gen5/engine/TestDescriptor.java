@@ -54,6 +54,15 @@ public interface TestDescriptor {
 	String getDisplayName();
 
 	/**
+	 * Get the set of {@linkplain TestTag tags} associated with this descriptor.
+	 *
+	 * @return the set of tags associated with this descriptor; never {@code null}
+	 * but potentially empty
+	 * @see TestTag
+	 */
+	Set<TestTag> getTags();
+
+	/**
 	 * Get the {@linkplain TestSource source} of the test or container described
 	 * by this descriptor, if available.
 	 *
@@ -74,40 +83,30 @@ public interface TestDescriptor {
 	void setParent(TestDescriptor parent);
 
 	/**
-	 * Determine if this descriptor describes a test.
-	 */
-	boolean isTest();
-
-	/**
-	 * Determine if this descriptor describes a container.
-	 */
-	boolean isContainer();
-
-	/**
-	 * Determine if this descriptor is a <em>root</em> descriptor.
-	 *
-	 * <p>Root descriptor are descriptors without a parent.
-	 */
-	default boolean isRoot() {
-		return !getParent().isPresent();
-	}
-
-	/**
-	 * Get the set of {@linkplain TestTag tags} associated with this descriptor.
-	 *
-	 * @return the set of tags associated with this descriptor; never {@code null}
-	 * but potentially empty
-	 * @see TestTag
-	 */
-	Set<TestTag> getTags();
-
-	/**
 	 * Get the set of <em>children</em> of this descriptor.
 	 *
 	 * @return the set of children of this descriptor; never {@code null}
 	 * but potentially empty
+	 * @see #getAllDescendants()
 	 */
 	Set<? extends TestDescriptor> getChildren();
+
+	/**
+	 * Get the set of all <em>descendants</em> of this descriptor.
+	 *
+	 * <p>A <em>descendant</em> is a child of this descriptor or a child of one of
+	 * its children, recursively.
+	 *
+	 * @see #getChildren()
+	 */
+	default Set<? extends TestDescriptor> getAllDescendants() {
+		Set<TestDescriptor> all = new LinkedHashSet<>();
+		all.addAll(getChildren());
+		for (TestDescriptor child : getChildren()) {
+			all.addAll(child.getAllDescendants());
+		}
+		return all;
+	}
 
 	/**
 	 * Add a <em>child</em> to this descriptor.
@@ -131,19 +130,23 @@ public interface TestDescriptor {
 	void removeFromHierarchy();
 
 	/**
-	 * Get the set of <em>descendants</em> of this descriptor.
+	 * Determine if this descriptor is a <em>root</em> descriptor.
 	 *
-	 * <p>A <em>descendant</em> is a child of this descriptor or a child of one of
-	 * its children, recursively.
+	 * <p>A <em>root</em> descriptor is a descriptor without a parent.
 	 */
-	default Set<? extends TestDescriptor> allDescendants() {
-		Set<TestDescriptor> all = new LinkedHashSet<>();
-		all.addAll(getChildren());
-		for (TestDescriptor child : getChildren()) {
-			all.addAll(child.allDescendants());
-		}
-		return all;
+	default boolean isRoot() {
+		return !getParent().isPresent();
 	}
+
+	/**
+	 * Determine if this descriptor describes a container.
+	 */
+	boolean isContainer();
+
+	/**
+	 * Determine if this descriptor describes a test.
+	 */
+	boolean isTest();
 
 	/**
 	 * Determine if this descriptor or any of its descendants describes a test.

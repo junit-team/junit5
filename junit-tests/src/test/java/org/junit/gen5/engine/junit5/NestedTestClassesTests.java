@@ -36,7 +36,7 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 	public void nestedTestsAreCorrectlyDiscovered() {
 		TestDiscoveryRequest request = request().selectors(selectClass(TestCaseWithNesting.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(5, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(5, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
@@ -55,7 +55,7 @@ public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
 	public void doublyNestedTestsAreCorrectlyDiscovered() {
 		TestDiscoveryRequest request = request().selectors(selectClass(TestCaseWithDoubleNesting.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertEquals(8, engineDescriptor.allDescendants().size(), "# resolved test descriptors");
+		assertEquals(8, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test

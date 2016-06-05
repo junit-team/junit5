@@ -60,7 +60,7 @@ class UniqueIdFilter extends RunnerTestDescriptorAwareFilter {
 		if (identifiedTestDescriptor.isPresent()) {
 			// @formatter:off
 			return identifiedTestDescriptor.get()
-					.allDescendants()
+					.getAllDescendants()
 					.stream()
 					.map(JUnit4TestDescriptor.class::cast)
 					.map(JUnit4TestDescriptor::getDescription)
