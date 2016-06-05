@@ -48,7 +48,7 @@ public class ToStringBuilder {
 	}
 
 	public ToStringBuilder append(String name, Object value) {
-		Preconditions.notBlank(name, "Name must not be null or empty");
+		Preconditions.notBlank(name, "Name must not be null or blank");
 		this.values.add(name + " = " + toString(value));
 		return this;
 	}

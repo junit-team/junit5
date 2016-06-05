@@ -47,10 +47,10 @@ public class JavaPackageSource implements JavaSource {
 	 * Create a new {@code JavaPackageSource} using the supplied
 	 * {@code packageName}.
 	 *
-	 * @param packageName the Java package name; must not be {@code null} or empty
+	 * @param packageName the Java package name; must not be {@code null} or blank
 	 */
 	public JavaPackageSource(String packageName) {
-		this.packageName = Preconditions.notBlank(packageName, "package name must not be null or empty");
+		this.packageName = Preconditions.notBlank(packageName, "package name must not be null or blank");
 	}
 
 	/**

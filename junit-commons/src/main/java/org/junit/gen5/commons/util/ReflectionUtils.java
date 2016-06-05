@@ -248,7 +248,7 @@ public final class ReflectionUtils {
 	/**
 	 * Load a class by its <em>fully qualified name</em>.
 	 * @param name the fully qualified name of the class to load; never
-	 * {@code null} or empty
+	 * {@code null} or blank
 	 * @see #loadClass(String, ClassLoader)
 	 */
 	public static Optional<Class<?>> loadClass(String name) {
@@ -259,12 +259,12 @@ public final class ReflectionUtils {
 	 * Load a class by its <em>fully qualified name</em>, using the supplied
 	 * {@link ClassLoader}.
 	 * @param name the fully qualified name of the class to load; never
-	 * {@code null} or empty
+	 * {@code null} or blank
 	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
 	 * @see #loadClass(String)
 	 */
 	public static Optional<Class<?>> loadClass(String name, ClassLoader classLoader) {
-		Preconditions.notBlank(name, "class name must not be null or empty");
+		Preconditions.notBlank(name, "class name must not be null or blank");
 		Preconditions.notNull(classLoader, "ClassLoader must not be null");
 
 		// TODO Add support for primitive types and arrays.
@@ -283,11 +283,11 @@ public final class ReflectionUtils {
 	 * For example, the fully qualified name for the {@code chars()} method in
 	 * {@code java.lang.String} is {@code java.lang.String#chars}.
 	 * @param fullyQualifiedMethodName the fully qualified name of the method to load;
-	 * never {@code null} or empty
+	 * never {@code null} or blank
 	 * @return Optional of Method
 	 */
 	public static Optional<Method> loadMethod(String fullyQualifiedMethodName) {
-		Preconditions.notBlank(fullyQualifiedMethodName, "fully qualified method name must not be null or empty");
+		Preconditions.notBlank(fullyQualifiedMethodName, "fully qualified method name must not be null or blank");
 		fullyQualifiedMethodName = fullyQualifiedMethodName.trim();
 
 		// TODO Handle overloaded and inherited methods

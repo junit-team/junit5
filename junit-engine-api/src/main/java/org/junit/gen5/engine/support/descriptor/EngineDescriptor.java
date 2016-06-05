@@ -36,13 +36,13 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 	 * @param uniqueId the {@code UniqueId} for the described {@code TestEngine};
 	 * never {@code null}
 	 * @param displayName the display name for the  described {@code TestEngine};
-	 * never {@code null} or empty
+	 * never {@code null} or blank
 	 * @see TestEngine#getId()
 	 * @see TestDescriptor#getDisplayName()
 	 */
 	public EngineDescriptor(UniqueId uniqueId, String displayName) {
 		super(uniqueId);
-		this.displayName = Preconditions.notBlank(displayName, "display name must not be null or empty");
+		this.displayName = Preconditions.notBlank(displayName, "display name must not be null or blank");
 	}
 
 	@Override

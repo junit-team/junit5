@@ -31,7 +31,7 @@ public interface ClassFilter extends DiscoveryFilter<Class<?>> {
 	 * the class will be included in the result set.
 	 *
 	 * @param pattern a regular expression to match against fully qualified
-	 * class names; never {@code null} or empty
+	 * class names; never {@code null} or blank
 	 * @see Class#getName()
 	 */
 	static ClassFilter byClassNamePattern(String pattern) {

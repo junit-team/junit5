@@ -77,7 +77,7 @@ public interface TestInfo {
 	 * <p>Note that display names are typically used for test reporting in IDEs
 	 * and build tools and may contain spaces, special characters, and even emoji.
 	 *
-	 * @return the display name of the test or container; never {@code null} or empty
+	 * @return the display name of the test or container; never {@code null} or blank
 	 */
 	String getDisplayName();
 

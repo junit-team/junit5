@@ -39,12 +39,12 @@ public class UniqueId implements Cloneable {
 	 * Parse a {@code UniqueId} from the supplied string representation using the
 	 * default format.
 	 *
-	 * @param uniqueId the string representation to parse; never {@code null} or empty
+	 * @param uniqueId the string representation to parse; never {@code null} or blank
 	 * @return a properly constructed {@code UniqueId}
 	 * @throws JUnitException if the string cannot be parsed
 	 */
 	public static UniqueId parse(String uniqueId) throws JUnitException {
-		Preconditions.notBlank(uniqueId, "Unique ID string must not be null or empty");
+		Preconditions.notBlank(uniqueId, "Unique ID string must not be null or blank");
 		return UniqueIdFormat.getDefault().parse(uniqueId);
 	}
 
@@ -55,11 +55,11 @@ public class UniqueId implements Cloneable {
 	 * <p>The engine ID will be stored in a {@link Segment} with
 	 * {@link Segment#getType type} {@code "engine"}.
 	 *
-	 * @param engineId the engine ID; never {@code null} or empty
+	 * @param engineId the engine ID; never {@code null} or blank
 	 * @see #root(String, String)
 	 */
 	public static UniqueId forEngine(String engineId) {
-		Preconditions.notBlank(engineId, "engineId must not be null or empty");
+		Preconditions.notBlank(engineId, "engineId must not be null or blank");
 		return root(ENGINE_SEGMENT_TYPE, engineId);
 	}
 
@@ -67,13 +67,13 @@ public class UniqueId implements Cloneable {
 	 * Create a root unique ID from the supplied {@code segmentType} and
 	 * {@code value} using the default format.
 	 *
-	 * @param segmentType the segment type; never {@code null} or empty
-	 * @param value the value; never {@code null} or empty
+	 * @param segmentType the segment type; never {@code null} or blank
+	 * @param value the value; never {@code null} or blank
 	 * @see #forEngine(String)
 	 */
 	public static UniqueId root(String segmentType, String value) {
-		Preconditions.notBlank(segmentType, "segmentType must not be null or empty");
-		Preconditions.notBlank(value, "value must not be null or empty");
+		Preconditions.notBlank(segmentType, "segmentType must not be null or blank");
+		Preconditions.notBlank(value, "value must not be null or blank");
 		return new UniqueId(UniqueIdFormat.getDefault(), new Segment(segmentType, value));
 	}
 
@@ -124,11 +124,13 @@ public class UniqueId implements Cloneable {
 	 * of the special characters used for constructing the string representation
 	 * of this {@code UniqueId}.
 	 *
+	 * @param segmentType the type of the segment; never {@code null} or blank
+	 * @param value the value of the segment; never {@code null} or blank
 	 * @see #append(Segment)
 	 */
 	public final UniqueId append(String segmentType, String value) {
-		Preconditions.notBlank(segmentType, "segmentType must not be null or empty");
-		Preconditions.notBlank(value, "value must not be null or empty");
+		Preconditions.notBlank(segmentType, "segmentType must not be null or blank");
+		Preconditions.notBlank(value, "value must not be null or blank");
 		Segment segment = new Segment(segmentType, value);
 		return append(segment);
 	}

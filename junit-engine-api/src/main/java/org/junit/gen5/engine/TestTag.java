@@ -34,14 +34,14 @@ public final class TestTag implements Serializable {
 	/**
 	 * Obtain a {@code TestTag} with the supplied {@code name}.
 	 *
-	 * @param name the name of the tag; must not be null or empty
+	 * @param name the name of the tag; must not be null or blank
 	 */
 	public static TestTag of(String name) {
 		return new TestTag(name);
 	}
 
 	private TestTag(String name) {
-		Preconditions.notBlank(name, "name must not be blank");
+		Preconditions.notBlank(name, "name must not be null or blank");
 		this.name = name;
 	}
 

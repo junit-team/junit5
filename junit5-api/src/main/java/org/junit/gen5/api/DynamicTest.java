@@ -52,7 +52,7 @@ public class DynamicTest {
 	 * name and executable code block.
 	 *
 	 * @param displayName the display name for the dynamic test; never
-	 * {@code null} or empty
+	 * {@code null} or blank
 	 * @param executable the executable code block for the dynamic test;
 	 * never {@code null}
 	 * @see #stream(Iterator, Function, Consumer)
@@ -102,7 +102,7 @@ public class DynamicTest {
 	private final Executable executable;
 
 	private DynamicTest(String displayName, Executable executable) {
-		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or empty");
+		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or blank");
 		this.executable = Preconditions.notNull(executable, "executable must not be null");
 	}
 

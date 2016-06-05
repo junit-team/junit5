@@ -37,7 +37,7 @@ public interface ConfigurationParameters {
 	 * <p>If no such key is present in this {@code ConfigurationParameters},
 	 * an attempt will be made to look up the value as a Java system property.
 	 *
-	 * @param key the key to look up; never {@code null} or empty
+	 * @param key the key to look up; never {@code null} or blank
 	 * @return an {@code Optional} containing the potential value
 	 */
 	Optional<String> get(String key);

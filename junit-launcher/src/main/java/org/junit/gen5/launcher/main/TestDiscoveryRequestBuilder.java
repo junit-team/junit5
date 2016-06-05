@@ -114,7 +114,7 @@ public final class TestDiscoveryRequestBuilder {
 	 * Add the supplied <em>configuration parameter</em> to the request.
 	 */
 	public TestDiscoveryRequestBuilder configurationParameter(String key, String value) {
-		Preconditions.notBlank(key, "configuration parameter key must not be null or empty");
+		Preconditions.notBlank(key, "configuration parameter key must not be null or blank");
 		this.configurationParameters.put(key, value);
 		return this;
 	}

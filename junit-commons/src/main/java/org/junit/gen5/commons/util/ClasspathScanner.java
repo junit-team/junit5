@@ -51,7 +51,7 @@ class ClasspathScanner {
 	}
 
 	boolean isPackage(String packageName) {
-		Preconditions.notBlank(packageName, "package name must not be null or empty");
+		Preconditions.notBlank(packageName, "package name must not be null or blank");
 
 		String path = packagePath(packageName);
 		try {

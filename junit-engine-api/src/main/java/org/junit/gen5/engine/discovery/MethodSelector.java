@@ -34,12 +34,12 @@ public class MethodSelector implements DiscoverySelector {
 	 * Create a {@code MethodSelector} for the supplied class name and method name.
 	 *
 	 * @param className the fully qualified name of the class in which the method
-	 * is declared; never {@code null} or empty
-	 * @param methodName the name of the method to select; never {@code null} or empty
+	 * is declared; never {@code null} or blank
+	 * @param methodName the name of the method to select; never {@code null} or blank
 	 */
 	public static MethodSelector selectMethod(String className, String methodName) {
-		Preconditions.notBlank(className, "Class name must not be null or empty");
-		Preconditions.notBlank(methodName, "Method name must not be null or empty");
+		Preconditions.notBlank(className, "Class name must not be null or blank");
+		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Class<?> clazz = loadClass(className);
 		return selectMethod(clazz, findMethod(clazz, methodName));
 	}
@@ -48,11 +48,11 @@ public class MethodSelector implements DiscoverySelector {
 	 * Create a {@code MethodSelector} for the supplied {@link Class} and method name.
 	 *
 	 * @param clazz the class in which the method is declared; never {@code null}
-	 * @param methodName the name of the method to select; never {@code null} or empty
+	 * @param methodName the name of the method to select; never {@code null} or blank
 	 */
 	public static MethodSelector selectMethod(Class<?> clazz, String methodName) {
 		Preconditions.notNull(clazz, "Class must not be null");
-		Preconditions.notBlank(methodName, "Method name must not be null or empty");
+		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		return selectMethod(clazz, findMethod(clazz, methodName));
 	}
 

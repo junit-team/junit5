@@ -49,7 +49,7 @@ public class EngineFilter implements Filter<TestEngine> {
 	 * <em>included</em> within the test discovery and execution.
 	 *
 	 * @param engineIds the list of engine IDs to match against; never {@code null}
-	 * or empty; individual IDs must also not be null or empty
+	 * or empty; individual IDs must also not be null or blank
 	 */
 	public static EngineFilter requireEngines(String... engineIds) {
 		return new EngineFilter(validateAndConvertToList(engineIds), Type.REQUIRE);
@@ -63,7 +63,7 @@ public class EngineFilter implements Filter<TestEngine> {
 	 * <em>excluded</em> from test discovery and execution.
 	 *
 	 * @param engineIds the list of engine IDs to match against; never {@code null}
-	 * or empty; individual IDs must also not be null or empty
+	 * or empty; individual IDs must also not be null or blank
 	 */
 	public static EngineFilter excludeEngines(String... engineIds) {
 		return new EngineFilter(validateAndConvertToList(engineIds), Type.EXCLUDE);
@@ -88,7 +88,7 @@ public class EngineFilter implements Filter<TestEngine> {
 	public FilterResult apply(TestEngine testEngine) {
 		Preconditions.notNull(testEngine, "TestEngine must not be null");
 		String engineId = testEngine.getId();
-		Preconditions.notBlank(engineId, "TestEngine ID must not be null or empty");
+		Preconditions.notBlank(engineId, "TestEngine ID must not be null or blank");
 
 		if (this.type == Type.REQUIRE) {
 			return includedIf(this.engineIds.stream().anyMatch(engineId::equals), //
@@ -112,9 +112,7 @@ public class EngineFilter implements Filter<TestEngine> {
 		Preconditions.notNull(engineIds, "engine ID array must not be null");
 		List<String> list = Arrays.asList(engineIds);
 		Preconditions.notEmpty(list, "engine ID array must not be empty");
-		list.forEach(id -> {
-			Preconditions.notBlank(id, "engine ID must not be null or empty");
-		});
+		list.forEach(id -> Preconditions.notBlank(id, "engine ID must not be null or blank"));
 
 		return list;
 	}

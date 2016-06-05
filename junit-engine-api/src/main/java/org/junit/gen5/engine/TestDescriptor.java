@@ -48,7 +48,7 @@ public interface TestDescriptor {
 	 * potentially by end users as well. Consequently, display names should
 	 * never be parsed; rather, they should be used for display purposes only.
 	 *
-	 * @return the display name for this descriptor; never {@code null} or empty
+	 * @return the display name for this descriptor; never {@code null} or blank
 	 * @see #getSource()
 	 */
 	String getDisplayName();

@@ -40,10 +40,10 @@ public class UniqueIdSelector implements DiscoverySelector {
 	/**
 	 * Create a {@code UniqueIdSelector} for the supplied unique ID.
 	 *
-	 * @param uniqueId the unique ID to select; never {@code null} or empty
+	 * @param uniqueId the unique ID to select; never {@code null} or blank
 	 */
 	public static UniqueIdSelector selectUniqueId(String uniqueId) {
-		Preconditions.notBlank(uniqueId, "Unique ID must not be null or empty");
+		Preconditions.notBlank(uniqueId, "Unique ID must not be null or blank");
 		return new UniqueIdSelector(UniqueId.parse(uniqueId));
 	}
 

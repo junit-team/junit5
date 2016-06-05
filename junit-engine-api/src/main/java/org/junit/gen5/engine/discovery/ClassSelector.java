@@ -42,10 +42,10 @@ public class ClassSelector implements DiscoverySelector {
 	 * Create a {@code ClassSelector} for the supplied class name.
 	 *
 	 * @param className the fully qualified name of the class to select;
-	 * never {@code null} or empty
+	 * never {@code null} or blank
 	 */
 	public static ClassSelector selectClass(String className) {
-		Preconditions.notBlank(className, "className must not be null or empty");
+		Preconditions.notBlank(className, "className must not be null or blank");
 
 		return selectClass(ReflectionUtils.loadClass(className).orElseThrow(
 			() -> new PreconditionViolationException("Could not load class with name: " + className)));

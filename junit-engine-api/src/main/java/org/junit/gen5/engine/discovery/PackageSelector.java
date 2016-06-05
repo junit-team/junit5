@@ -29,10 +29,10 @@ public class PackageSelector implements DiscoverySelector {
 	/**
 	 * Create a {@code PackageSelector} for the supplied package name.
 	 *
-	 * @param packageName the package name to select; never {@code null} or empty
+	 * @param packageName the package name to select; never {@code null} or blank
 	 */
 	public static PackageSelector selectPackage(String packageName) {
-		Preconditions.notBlank(packageName, "Package name must not be null or empty");
+		Preconditions.notBlank(packageName, "Package name must not be null or blank");
 		return new PackageSelector(packageName);
 	}
 

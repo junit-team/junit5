@@ -44,7 +44,7 @@ public final class ReportEntry {
 	 *
 	 * @param keyValuePairs the map of key-value pairs to be published; never
 	 * {@code null}; keys and values within entries in the map also must not be
-	 * {@code null} or empty
+	 * {@code null} or blank
 	 */
 	public static ReportEntry from(Map<String, String> keyValuePairs) {
 		Preconditions.notNull(keyValuePairs, "keyValuePairs must not be null");
@@ -58,8 +58,8 @@ public final class ReportEntry {
 	 * Factory for creating a new {@code ReportEntry} from a key-value pair.
 	 *
 	 * @param key the key under which the value should published; never
-	 * {@code null} or empty
-	 * @param value the value to publish; never {@code null} or empty
+	 * {@code null} or blank
+	 * @param value the value to publish; never {@code null} or blank
 	 */
 	public static ReportEntry from(String key, String value) {
 		ReportEntry reportEntry = new ReportEntry();
@@ -68,8 +68,8 @@ public final class ReportEntry {
 	}
 
 	private void add(String key, String value) {
-		Preconditions.notBlank(key, "key must not be null or empty");
-		Preconditions.notBlank(value, "value must not be null or empty");
+		Preconditions.notBlank(key, "key must not be null or blank");
+		Preconditions.notBlank(value, "value must not be null or blank");
 		this.keyValuePairs.put(key, value);
 	}
 

@@ -27,7 +27,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 
 	@Override
 	public Optional<String> get(String key) {
-		Preconditions.notBlank(key, "key must not be null or empty");
+		Preconditions.notBlank(key, "key must not be null or blank");
 		String value = this.configurationParameters.get(key);
 		if (value == null) {
 			try {

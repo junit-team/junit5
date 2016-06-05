@@ -28,7 +28,7 @@ class ClassNameFilter implements ClassFilter {
 	private final Pattern pattern;
 
 	ClassNameFilter(String pattern) {
-		Preconditions.notBlank(pattern, "pattern must not be null or empty");
+		Preconditions.notBlank(pattern, "pattern must not be null or blank");
 		this.pattern = Pattern.compile(pattern);
 	}
 

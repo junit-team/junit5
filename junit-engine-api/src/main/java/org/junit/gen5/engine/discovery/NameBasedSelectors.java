@@ -66,16 +66,16 @@ public final class NameBasedSelectors {
 	 * {@code java.lang.String} is {@code java.lang.String#chars}. Names for
 	 * overloaded methods are not supported.
 	 *
-	 * @param name the name to select; never {@code null} or empty
+	 * @param name the name to select; never {@code null} or blank
 	 * @return an instance of {@link ClassSelector}, {@link MethodSelector}, or
 	 * {@link PackageSelector}
 	 * @throws PreconditionViolationException if the supplied name is {@code null},
-	 * empty, or does not specify a class, method, or package
+	 * blank, or does not specify a class, method, or package
 	 * @see #selectNames(String...)
 	 * @see #selectNames(Collection)
 	 */
 	public static DiscoverySelector selectName(String name) throws PreconditionViolationException {
-		Preconditions.notBlank(name, "name must not be null or empty");
+		Preconditions.notBlank(name, "name must not be null or blank");
 
 		Optional<Class<?>> classOptional = ReflectionUtils.loadClass(name);
 		if (classOptional.isPresent()) {

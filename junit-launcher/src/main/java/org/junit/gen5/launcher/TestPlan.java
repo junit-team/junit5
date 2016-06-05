@@ -139,12 +139,12 @@ public final class TestPlan {
 	 * Get the children of the supplied unique ID.
 	 *
 	 * @param parentId the unique ID to look up the children for; never
-	 * {@code null} or empty
+	 * {@code null} or blank
 	 * @return an unmodifiable set of the parent's children, potentially empty
 	 * @see #getChildren(TestIdentifier)
 	 */
 	public Set<TestIdentifier> getChildren(String parentId) {
-		Preconditions.notBlank(parentId, "parent ID must not be null or empty");
+		Preconditions.notBlank(parentId, "parent ID must not be null or blank");
 		return children.containsKey(parentId) ? unmodifiableSet(children.get(parentId)) : emptySet();
 	}
 
@@ -152,13 +152,13 @@ public final class TestPlan {
 	 * Get the {@link TestIdentifier} with the supplied unique ID.
 	 *
 	 * @param uniqueId the unique ID to look up the identifier for; never
-	 * {@code null} or empty
+	 * {@code null} or blank
 	 * @return the identifier with the supplied unique ID; never {@code null}
 	 * @throws PreconditionViolationException if no {@code TestIdentifier}
 	 * with the supplied unique ID is present in this test plan
 	 */
 	public TestIdentifier getTestIdentifier(String uniqueId) throws PreconditionViolationException {
-		Preconditions.notBlank(uniqueId, "unique ID must not be null or empty");
+		Preconditions.notBlank(uniqueId, "unique ID must not be null or blank");
 		Preconditions.condition(allIdentifiers.containsKey(uniqueId),
 			() -> "No TestIdentifier with unique ID [" + uniqueId + "] has been added to this TestPlan.");
 		return allIdentifiers.get(uniqueId);

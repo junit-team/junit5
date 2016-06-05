@@ -111,7 +111,7 @@ public final class TestIdentifier implements Serializable {
 	 * names should never be parsed; rather, they should be used for display
 	 * purposes only.
 	 *
-	 * @return the display name for this identifier; never {@code null} or empty
+	 * @return the display name for this identifier; never {@code null} or blank
 	 * @see #getSource()
 	 * @see org.junit.gen5.engine.TestDescriptor#getDisplayName()
 	 */
