@@ -49,77 +49,46 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 		this.failures.add(new Failure(testIdentifier, throwable));
 	}
 
-	/**
-	 * Get the number of tests started.
-	 */
 	@Override
 	public long getTestsStartedCount() {
 		return this.testsStarted.get();
 	}
 
-	/**
-	 * Get the number of tests started.
-	 */
 	@Override
 	public long getTestsFoundCount() {
 		return this.testsFound.get();
 	}
 
-	/**
-	 * Get the number of tests started.
-	 */
 	@Override
 	public long getTestsSkippedCount() {
 		return this.testsSkipped.get();
 	}
 
-	/**
-	 * Get the number of tests started.
-	 */
 	@Override
 	public long getTestsAbortedCount() {
 		return this.testsAborted.get();
 	}
 
-	/**
-	 * Get the number of tests started.
-	 */
 	@Override
 	public long getTestsSucceededCount() {
 		return this.testsSucceeded.get();
 	}
 
-	/**
-	 * Get the number of tests started.
-	 */
 	@Override
 	public long getTestsFailedCount() {
 		return this.testsFailed.get();
 	}
 
-	/**
-	 * Get the number of tests started.
-	 */
 	@Override
 	public long getTimeStarted() {
 		return this.timeStarted;
 	}
 
-	/**
-	 * Get the number of tests started.
-	 */
 	@Override
 	public long getTimeFinished() {
 		return this.timeFinished;
 	}
 
-	/**
-	 * Print the summary to the supplied {@link PrintWriter}.
-	 *
-	 * <p>This method does not print failure messages.
-	 *
-	 * @see #printFailuresTo(PrintWriter)
-	 */
 	@Override
 	public void printTo(PrintWriter writer) {
 		// @formatter:off
@@ -138,12 +107,6 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 		writer.flush();
 	}
 
-	/**
-	 * Print failed tests including sources and exception messages to the
-	 * supplied {@link PrintWriter}.
-	 *
-	 * @see #printTo(PrintWriter)
-	 */
 	@Override
 	public void printFailuresTo(PrintWriter writer) {
 		if (getTestsFailedCount() > 0) {
