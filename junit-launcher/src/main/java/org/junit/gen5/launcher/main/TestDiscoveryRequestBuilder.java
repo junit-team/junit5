@@ -55,10 +55,11 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  *       byClassNamePattern("org\.junit\.gen5\.tests.*"),
  *       byClassNamePattern(".*Test[s]?"),
  *       requireTags("fast"),
- *       excludeTags("slow"))
+ *       excludeTags("slow")
+ *     )
  *     .configurationParameter("key1", "value1")
  *     .configurationParameters(configParameterMap)
- *   ).build();
+ *     .build();
  * </pre>
  *
  * @since 5.0

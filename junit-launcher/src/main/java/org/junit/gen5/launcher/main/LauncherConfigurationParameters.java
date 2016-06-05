@@ -10,13 +10,10 @@
 
 package org.junit.gen5.launcher.main;
 
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
 import org.junit.gen5.engine.ConfigurationParameters;
@@ -24,7 +21,6 @@ import org.junit.gen5.engine.ConfigurationParameters;
 /**
  * @since 5.0
  */
-@API(Experimental)
 class LauncherConfigurationParameters implements ConfigurationParameters {
 
 	private final Map<String, String> configurationParameters = new HashMap<>();
