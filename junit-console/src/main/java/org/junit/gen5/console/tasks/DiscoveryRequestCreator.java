@@ -63,7 +63,7 @@ class DiscoveryRequestCreator {
 	}
 
 	private TestDiscoveryRequest buildNameBasedDiscoveryRequest(CommandLineOptions options) {
-		Preconditions.notEmpty(options.getArguments(), "No arguments given");
+		Preconditions.notEmpty(options.getArguments(), "No arguments were supplied to the ConsoleRunner");
 		return request().selectors(selectNames(options.getArguments())).build();
 	}
 

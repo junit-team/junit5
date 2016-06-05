@@ -12,7 +12,6 @@ package org.junit.gen5.engine.junit5.extension;
 
 import static org.junit.gen5.api.Assertions.assertFalse;
 import static org.junit.gen5.api.Assertions.assertNotNull;
-import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.api.Assertions.assertTrue;
 
 import java.lang.reflect.Method;
@@ -21,7 +20,6 @@ import java.lang.reflect.Parameter;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestReporter;
 import org.junit.gen5.api.extension.ExtensionContext;
-import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.mockito.Mockito;
 
@@ -39,13 +37,6 @@ class TestReporterParameterResolverTests {
 
 		Parameter parameter2 = findParameterOfMethod("methodWithoutTestReporterParameter", String.class);
 		assertFalse(this.resolver.supports(parameter2, null, null));
-	}
-
-	@Test
-	void testSupports_NullSafe() {
-		assertThrows(PreconditionViolationException.class, () -> {
-			this.resolver.supports(null, null, null);
-		});
 	}
 
 	@Test

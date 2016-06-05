@@ -16,7 +16,6 @@ import java.util.Optional;
 import org.junit.gen5.api.TestReporter;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.ParameterResolver;
-import org.junit.gen5.commons.util.Preconditions;
 
 /**
  * {@link ParameterResolver} that injects a {@link TestReporter}.
@@ -27,7 +26,6 @@ class TestReporterParameterResolver implements ParameterResolver {
 
 	@Override
 	public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
-		Preconditions.notNull(parameter, "supplied parameter must not be null");
 		return (parameter.getType() == TestReporter.class);
 	}
 
