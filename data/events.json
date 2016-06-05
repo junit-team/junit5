@@ -90,5 +90,14 @@
     "speakers": [
       "nicolaiparlog"
     ]
+  },
+  {
+    "title": "JAX London 2016",
+    "date": "2016-10-10",
+    "location": "London, UK",
+    "link": "https://jaxlondon.com/session/junit-5-next-generation-testing-on-the-jvm/",
+    "speakers": [
+      "nicolaiparlog"
+    ]
   }
 ]
