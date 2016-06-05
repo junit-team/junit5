@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
@@ -51,10 +52,11 @@ public class LoggingListener implements TestExecutionListener {
 	 * {@link java.util.logging.Logger} using the supplied
 	 * {@linkplain Level log level}.
 	 *
-	 * @param logLevel the log level to use
+	 * @param logLevel the log level to use; never {@code null}
 	 * @see #forJavaUtilLogging()
 	 */
 	public static LoggingListener forJavaUtilLogging(Level logLevel) {
+		Preconditions.notNull(logLevel, "logLevel must not be null");
 		Logger logger = Logger.getLogger(LoggingListener.class.getName());
 		return new LoggingListener((t, messageSupplier) -> logger.log(logLevel, t, messageSupplier));
 	}
@@ -64,13 +66,15 @@ public class LoggingListener implements TestExecutionListener {
 	/**
 	 * Create a {@code LoggingListener} which delegates to the supplied
 	 * {@link BiConsumer} for consumption of logging messages.
-	 * @param logger a logger implemented as a {@code BiConsumer}
+	 *
+	 * @param logger a logger implemented as a {@code BiConsumer};
+	 * never {@code null}
 	 *
 	 * @see #forJavaUtilLogging()
 	 * @see #forJavaUtilLogging(Level)
 	 */
 	public LoggingListener(BiConsumer<Throwable, Supplier<String>> logger) {
-		this.logger = logger;
+		this.logger = Preconditions.notNull(logger, "logger must not be null");
 	}
 
 	@Override

@@ -84,9 +84,10 @@ public final class TestPlan {
 	/**
 	 * Add the supplied {@link TestIdentifier} to this test plan.
 	 *
-	 * @param testIdentifier the identifier to add
+	 * @param testIdentifier the identifier to add; never {@code null}
 	 */
 	public void add(TestIdentifier testIdentifier) {
+		Preconditions.notNull(testIdentifier, "testIdentifier must not be null");
 		allIdentifiers.put(testIdentifier.getUniqueId(), testIdentifier);
 		if (testIdentifier.getParentId().isPresent()) {
 			String parentId = testIdentifier.getParentId().get();
@@ -110,10 +111,11 @@ public final class TestPlan {
 	/**
 	 * Get the parent of the supplied {@link TestIdentifier}.
 	 *
-	 * @param child the identifier to look up the parent for
+	 * @param child the identifier to look up the parent for; never {@code null}
 	 * @return an {@code Optional} containing the parent, if present
 	 */
 	public Optional<TestIdentifier> getParent(TestIdentifier child) {
+		Preconditions.notNull(child, "child must not be null");
 		Optional<String> optionalParentId = child.getParentId();
 		if (optionalParentId.isPresent()) {
 			return Optional.of(getTestIdentifier(optionalParentId.get()));
@@ -124,36 +126,41 @@ public final class TestPlan {
 	/**
 	 * Get the children of the supplied {@link TestIdentifier}.
 	 *
-	 * @param parent the identifier to look up the children for
+	 * @param parent the identifier to look up the children for; never {@code null}
 	 * @return an unmodifiable set of the parent's children, potentially empty
 	 * @see #getChildren(String)
 	 */
 	public Set<TestIdentifier> getChildren(TestIdentifier parent) {
+		Preconditions.notNull(parent, "parent must not be null");
 		return getChildren(parent.getUniqueId());
 	}
 
 	/**
 	 * Get the children of the supplied unique ID.
 	 *
-	 * @param parentId the unique ID to look up the children for
+	 * @param parentId the unique ID to look up the children for; never
+	 * {@code null} or empty
 	 * @return an unmodifiable set of the parent's children, potentially empty
 	 * @see #getChildren(TestIdentifier)
 	 */
 	public Set<TestIdentifier> getChildren(String parentId) {
+		Preconditions.notBlank(parentId, "parent ID must not be null or empty");
 		return children.containsKey(parentId) ? unmodifiableSet(children.get(parentId)) : emptySet();
 	}
 
 	/**
 	 * Get the {@link TestIdentifier} with the supplied unique ID.
 	 *
-	 * @param uniqueId the unique ID to look up the identifier for
-	 * @return the identifier with the supplied unique ID
+	 * @param uniqueId the unique ID to look up the identifier for; never
+	 * {@code null} or empty
+	 * @return the identifier with the supplied unique ID; never {@code null}
 	 * @throws PreconditionViolationException if no {@code TestIdentifier}
 	 * with the supplied unique ID is present in this test plan
 	 */
 	public TestIdentifier getTestIdentifier(String uniqueId) throws PreconditionViolationException {
+		Preconditions.notBlank(uniqueId, "unique ID must not be null or empty");
 		Preconditions.condition(allIdentifiers.containsKey(uniqueId),
-			() -> "No TestIdentifier with this unique ID has been added to this TestPlan: " + uniqueId);
+			() -> "No TestIdentifier with unique ID [" + uniqueId + "] has been added to this TestPlan.");
 		return allIdentifiers.get(uniqueId);
 	}
 
@@ -162,10 +169,11 @@ public final class TestPlan {
 	 * given {@linkplain Predicate predicate}.
 	 *
 	 * @param predicate a predicate which returns {@code true} for identifiers
-	 * to be counted
+	 * to be counted; never {@code null}
 	 * @return the number of identifiers that satisfy the supplied predicate
 	 */
 	public long countTestIdentifiers(Predicate<? super TestIdentifier> predicate) {
+		Preconditions.notNull(predicate, "Predicate must not be null");
 		return allIdentifiers.values().stream().filter(predicate).count();
 	}
 
@@ -173,10 +181,11 @@ public final class TestPlan {
 	 * Get all descendants of the supplied {@link TestIdentifier} (i.e.,
 	 * all of its children and their children, recursively).
 	 *
-	 * @param parent the identifier to look up the descendants for
+	 * @param parent the identifier to look up the descendants for; never {@code null}
 	 * @return an unmodifiable set of the parent's descendants, potentially empty
 	 */
 	public Set<TestIdentifier> getDescendants(TestIdentifier parent) {
+		Preconditions.notNull(parent, "parent must not be null");
 		Set<TestIdentifier> result = new LinkedHashSet<>();
 		Set<TestIdentifier> children = getChildren(parent);
 		result.addAll(children);

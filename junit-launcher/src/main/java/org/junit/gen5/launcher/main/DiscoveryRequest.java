@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.gen5.engine.DiscoveryFilter;
 import org.junit.gen5.engine.DiscoverySelector;
@@ -74,36 +75,43 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 
 	@Override
 	public void addSelectors(Collection<DiscoverySelector> selectors) {
+		Preconditions.notNull(selectors, "selectors must not be null");
 		selectors.forEach(this::addSelector);
 	}
 
 	@Override
 	public void addEngineFilter(EngineFilter engineFilter) {
+		Preconditions.notNull(engineFilter, "engineFilter must not be null");
 		this.engineFilters.add(engineFilter);
 	}
 
 	@Override
 	public void addEngineFilters(Collection<EngineFilter> engineFilters) {
+		Preconditions.notNull(engineFilters, "engineFilters must not be null");
 		this.engineFilters.addAll(engineFilters);
 	}
 
 	@Override
 	public void addFilter(DiscoveryFilter<?> discoveryFilter) {
+		Preconditions.notNull(discoveryFilter, "discoveryFilter must not be null");
 		this.discoveryFilters.add(discoveryFilter);
 	}
 
 	@Override
 	public void addFilters(Collection<DiscoveryFilter<?>> discoveryFilters) {
+		Preconditions.notNull(discoveryFilters, "discoveryFilters must not be null");
 		this.discoveryFilters.addAll(discoveryFilters);
 	}
 
 	@Override
 	public void addPostFilter(PostDiscoveryFilter postDiscoveryFilter) {
+		Preconditions.notNull(postDiscoveryFilter, "postDiscoveryFilter must not be null");
 		this.postDiscoveryFilters.add(postDiscoveryFilter);
 	}
 
 	@Override
 	public void addPostFilters(Collection<PostDiscoveryFilter> postDiscoveryFilters) {
+		Preconditions.notNull(postDiscoveryFilters, "postDiscoveryFilters must not be null");
 		this.postDiscoveryFilters.addAll(postDiscoveryFilters);
 	}
 
@@ -114,6 +122,7 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 
 	@Override
 	public <T extends DiscoverySelector> List<T> getSelectorsByType(Class<T> selectorType) {
+		Preconditions.notNull(selectorType, "selectorType must not be null");
 		return this.selectors.stream().filter(selectorType::isInstance).map(selectorType::cast).collect(toList());
 	}
 
@@ -124,6 +133,7 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 
 	@Override
 	public <T extends DiscoveryFilter<?>> List<T> getDiscoveryFiltersByType(Class<T> filterType) {
+		Preconditions.notNull(filterType, "filterType must not be null");
 		return this.discoveryFilters.stream().filter(filterType::isInstance).map(filterType::cast).collect(toList());
 	}
 
@@ -134,6 +144,7 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 
 	@Override
 	public void addConfigurationParameters(Map<String, String> configurationParameters) {
+		Preconditions.notNull(configurationParameters, "configurationParameters must not be null");
 		this.configurationParameters.addAll(configurationParameters);
 	}
 

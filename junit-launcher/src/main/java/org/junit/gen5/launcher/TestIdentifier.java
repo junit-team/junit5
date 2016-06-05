@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ToStringBuilder;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestSource;
@@ -51,6 +52,7 @@ public final class TestIdentifier implements Serializable {
 	 */
 	@API(Internal)
 	public static TestIdentifier from(TestDescriptor testDescriptor) {
+		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
 		String uniqueId = testDescriptor.getUniqueId().toString();
 		String displayName = testDescriptor.getDisplayName();
 		Optional<TestSource> source = testDescriptor.getSource();

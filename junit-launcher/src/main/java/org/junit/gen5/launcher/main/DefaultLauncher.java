@@ -68,16 +68,19 @@ class DefaultLauncher implements Launcher {
 
 	@Override
 	public void registerTestExecutionListeners(TestExecutionListener... listeners) {
+		Preconditions.notNull(listeners, "listeners must not be null");
 		this.listenerRegistry.registerListeners(listeners);
 	}
 
 	@Override
 	public TestPlan discover(TestDiscoveryRequest discoveryRequest) {
+		Preconditions.notNull(discoveryRequest, "TestDiscoveryRequest must not be null");
 		return TestPlan.from(discoverRoot(discoveryRequest, "discovery").getEngineDescriptors());
 	}
 
 	@Override
 	public void execute(TestDiscoveryRequest discoveryRequest) {
+		Preconditions.notNull(discoveryRequest, "TestDiscoveryRequest must not be null");
 		execute(discoverRoot(discoveryRequest, "execution"), discoveryRequest.getConfigurationParameters());
 	}
 

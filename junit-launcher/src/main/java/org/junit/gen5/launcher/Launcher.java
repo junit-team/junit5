@@ -55,7 +55,8 @@ public interface Launcher {
 	/**
 	 * Register one or more listeners for test execution.
 	 *
-	 * @param listeners the listeners to be notified of test execution events
+	 * @param listeners the listeners to be notified of test execution events;
+	 * never {@code null}
 	 */
 	void registerTestExecutionListeners(TestExecutionListener... listeners);
 
@@ -64,7 +65,7 @@ public interface Launcher {
 	 * {@link TestDiscoveryRequest} by querying all registered engines and
 	 * collecting their results.
 	 *
-	 * @param testDiscoveryRequest the test discovery request
+	 * @param testDiscoveryRequest the test discovery request; never {@code null}
 	 * @return a {@code TestPlan} that contains all resolved {@linkplain
 	 * TestIdentifier identifiers} from all registered engines
 	 */
@@ -76,7 +77,7 @@ public interface Launcher {
 	 * collecting their results, and notify {@linkplain #registerTestExecutionListeners
 	 * registered listeners} about the progress and results of the execution.
 	 *
-	 * @param testDiscoveryRequest the test discovery request
+	 * @param testDiscoveryRequest the test discovery request; never {@code null}
 	 */
 	void execute(TestDiscoveryRequest testDiscoveryRequest);
 
