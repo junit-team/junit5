@@ -56,22 +56,6 @@ public final class Preconditions {
 	}
 
 	/**
-	 * Assert that none of the supplied {@link Object}s are {@code null}.
-	 *
-	 * @param objects the objects to check
-	 * @param message precondition violation message
-	 * @return the supplied objects as a convenience
-	 * @throws PreconditionViolationException if any of the supplied objects are {@code null}
-	 * @see #notNull(Object, Supplier)
-	 */
-	public static Object[] notNull(Object[] objects, String message) throws PreconditionViolationException {
-		notNull(objects, () -> "objects array must not be null");
-		Arrays.stream(objects).forEach(object -> notNull(object, () -> message));
-
-		return objects;
-	}
-
-	/**
 	 * Assert that the supplied {@link Object} is not {@code null}.
 	 *
 	 * @param object the object to check
@@ -83,6 +67,24 @@ public final class Preconditions {
 	public static <T> T notNull(T object, Supplier<String> messageSupplier) throws PreconditionViolationException {
 		condition(object != null, messageSupplier);
 		return object;
+	}
+
+	/**
+	 * Assert that the supplied array and none of the objects it contains are
+	 * {@code null}.
+	 *
+	 * @param objects the array to check
+	 * @param message precondition violation message
+	 * @return the supplied array as a convenience
+	 * @throws PreconditionViolationException if the supplied array or any of
+	 * the objects its contains is {@code null}
+	 * @see #notNull(Object, Supplier)
+	 */
+	public static Object[] notNull(Object[] objects, String message) throws PreconditionViolationException {
+		notNull(objects, () -> "objects array must not be null");
+		Arrays.stream(objects).forEach(object -> notNull(object, () -> message));
+
+		return objects;
 	}
 
 	/**
@@ -101,12 +103,15 @@ public final class Preconditions {
 	}
 
 	/**
-	 * Assert that the supplied {@link String} is not {@code null} or blank.
+	 * Assert that the supplied {@link String} is not blank.
+	 *
+	 * <p>A {@code String} is <em>blank</em> if it is {@code null} or consists
+	 * only of whitespace characters.
 	 *
 	 * @param str the string to check
 	 * @param message precondition violation message
 	 * @return the supplied string as a convenience
-	 * @throws PreconditionViolationException if the supplied string is {@code null} or blank
+	 * @throws PreconditionViolationException if the supplied string is blank
 	 * @see #notBlank(String, Supplier)
 	 */
 	public static String notBlank(String str, String message) throws PreconditionViolationException {
@@ -114,12 +119,15 @@ public final class Preconditions {
 	}
 
 	/**
-	 * Assert that the supplied {@link String} is not {@code null} or blank.
+	 * Assert that the supplied {@link String} is not blank.
+	 *
+	 * <p>A {@code String} is <em>blank</em> if it is {@code null} or consists
+	 * only of whitespace characters.
 	 *
 	 * @param str the string to check
 	 * @param messageSupplier precondition violation message supplier
 	 * @return the supplied string as a convenience
-	 * @throws PreconditionViolationException if the supplied string is {@code null} or blank
+	 * @throws PreconditionViolationException if the supplied string is blank
 	 * @see StringUtils#isNotBlank(String)
 	 * @see #condition(boolean, Supplier)
 	 */
