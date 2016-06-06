@@ -54,10 +54,10 @@ public class ColoredPrintingTestListenerTests {
 		listener.reportingEntryPublished(newTestIdentifier(), ReportEntry.from("foo", "bar"));
 		String[] split = stringWriter.toString().split(System.lineSeparator());
 
-		assertEquals(3, split.length);
+		assertEquals(2, split.length);
 		assertAll("lines in the message", () -> assertEquals("Reported:    failingTest [[engine:junit]]", split[0]),
-			() -> assertTrue(split[1].startsWith(INDENTATION + "=> Reported values: Report Entry")),
-			() -> assertEquals(INDENTATION + "\t- foo: bar", split[2]));
+			() -> assertTrue(split[1].startsWith(INDENTATION + "=> Reported values: ReportEntry [creationTimestamp =")),
+			() -> assertTrue(split[1].endsWith(", foo = 'bar']")));
 	}
 
 	@Test

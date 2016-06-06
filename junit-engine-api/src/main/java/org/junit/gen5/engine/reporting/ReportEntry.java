@@ -94,18 +94,6 @@ public final class ReportEntry {
 	}
 
 	/**
-	 * {@linkplain #appendDescription(Appendable, String) Append} a description
-	 * of this {@code ReportEntry} to the supplied {@link Appendable}.
-	 *
-	 * @param appendable the {@code Appendable} to append to; never {@code null}
-	 * @see #appendDescription(Appendable, String)
-	 */
-	public void appendDescription(Appendable appendable) {
-		Preconditions.notNull(appendable, "appendable must not be null");
-		appendDescription(appendable, "");
-	}
-
-	/**
 	 * Append a description of this {@code ReportEntry} with an optional title
 	 * to the supplied {@link Appendable}.
 	 *
@@ -114,7 +102,6 @@ public final class ReportEntry {
 	 * @param appendable the {@code Appendable} to append to; never {@code null}
 	 * @param entryTitle an optional title for this {@code ReportEntry}; never
 	 * {@code null} but potentially empty
-	 * @see #appendDescription(Appendable)
 	 */
 	public void appendDescription(Appendable appendable, String entryTitle) {
 		Preconditions.notNull(appendable, "appendable must not be null");

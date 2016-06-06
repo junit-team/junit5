@@ -81,7 +81,7 @@ class JUnit5RunnerListener implements TestExecutionListener {
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
-		entry.appendDescription(System.out);
+		System.out.println(entry.toString());
 	}
 
 	private Failure toFailure(TestExecutionResult testExecutionResult, Description description) {
