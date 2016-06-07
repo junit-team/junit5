@@ -99,8 +99,9 @@ class DynamicTestsDemo {
 		// end::user_guide[]
 		// @formatter:off
 		// tag::user_guide[]
-		return IntStream.range(1, 100).mapToObj(
-			n -> dynamicTest("test" + n, () -> assertTrue(n % 11 != 0)));
+		// Generates tests for all even integers between 0 and 20.
+		return IntStream.iterate(0, n -> n + 2).limit(11).mapToObj(
+			n -> dynamicTest("test" + n, () -> assertTrue(n % 2 == 0)));
 		// end::user_guide[]
 		// @formatter:on
 		// tag::user_guide[]
