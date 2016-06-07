@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.console.tasks.XmlReportAssertions.ensureValidAccordingToJenkinsSchema;
 import static org.junit.gen5.engine.TestExecutionResult.failed;
+import static org.junit.gen5.engine.TestExecutionResult.successful;
 
 import java.io.StringWriter;
 import java.time.Clock;
@@ -22,7 +23,9 @@ import java.time.Clock;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.UniqueId;
+import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
+import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 
 /**
@@ -46,6 +49,33 @@ class XmlReportWriterTests {
 				"<testsuite name=\"Empty Engine\" tests=\"0\"",
 				"</testsuite>")
 			.doesNotContain("<testcase");
+		//@formatter:on
+	}
+
+	@Test
+	void writesReportEntry() throws Exception {
+		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
+		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("test", "successfulTest"),
+			"successfulTest");
+
+		engineDescriptor.addChild(testDescriptor);
+		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+
+		reportData.addReportEntry(TestIdentifier.from(testDescriptor), ReportEntry.from("myKey", "myValue"));
+		reportData.markFinished(testPlan.getTestIdentifier("[test:successfulTest]"), successful());
+
+		StringWriter out = new StringWriter();
+		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
+
+		String content = ensureValidAccordingToJenkinsSchema(out.toString());
+
+		//@formatter:off
+		assertThat(content)
+			.containsSequence(
+				"<system-out>Report Entry #1 (creation timestamp: ",
+				"- myKey: myValue",
+				"</system-out>");
 		//@formatter:on
 	}
 
