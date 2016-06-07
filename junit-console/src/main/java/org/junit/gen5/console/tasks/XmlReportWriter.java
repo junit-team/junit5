@@ -10,6 +10,7 @@
 
 package org.junit.gen5.console.tasks;
 
+import static java.text.MessageFormat.format;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.ExceptionUtils.readStackTrace;
@@ -17,6 +18,7 @@ import static org.junit.gen5.commons.util.StringUtils.isNotBlank;
 import static org.junit.gen5.console.tasks.XmlReportData.isFailure;
 import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -24,6 +26,7 @@ import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.TreeSet;
@@ -32,6 +35,8 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.junit.gen5.commons.util.ExceptionUtils;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.engine.support.descriptor.JavaClassSource;
@@ -193,10 +198,30 @@ class XmlReportWriter {
 			for (int i = 0; i < entries.size(); i++) {
 				ReportEntry reportEntry = entries.get(i);
 				StringBuilder stringBuilder = new StringBuilder();
-				reportEntry.appendDescription(stringBuilder, "#" + (i + 1));
+				this.appendDescriptionOfReportEntry(stringBuilder, reportEntry, "#" + (i + 1));
 				writer.writeCharacters(stringBuilder.toString());
 			}
 			writer.writeEndElement();
+		}
+	}
+
+	private void appendDescriptionOfReportEntry(Appendable appendable, ReportEntry reportEntry, String entryTitle) {
+		Preconditions.notNull(appendable, "appendable must not be null");
+		Preconditions.notNull(entryTitle, "entryTitle must not be null");
+
+		// Add left padding
+		entryTitle = (entryTitle.length() > 0 ? " " + entryTitle : entryTitle);
+
+		try {
+			appendable.append(format("Report Entry{0} (creation timestamp: {1})\n", entryTitle,
+				ISO_LOCAL_DATE_TIME.format(reportEntry.getCreationTimestamp())));
+
+			for (Map.Entry<String, String> entry : reportEntry.getKeyValuePairs().entrySet()) {
+				appendable.append(format("\t- {0}: {1}\n", entry.getKey(), entry.getValue()));
+			}
+		}
+		catch (IOException cannotHappen) {
+			ExceptionUtils.throwAsUncheckedException(cannotHappen);
 		}
 	}
 
