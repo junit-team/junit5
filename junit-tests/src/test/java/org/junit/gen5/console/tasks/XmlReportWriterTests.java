@@ -73,7 +73,7 @@ class XmlReportWriterTests {
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
-				"<system-out>Report Entry #1 (creation timestamp: ",
+				"<system-out>Report Entry #1 (timestamp: ",
 				"- myKey: myValue",
 				"</system-out>");
 		//@formatter:on

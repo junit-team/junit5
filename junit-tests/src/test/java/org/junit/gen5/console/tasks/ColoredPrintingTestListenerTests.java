@@ -56,7 +56,7 @@ public class ColoredPrintingTestListenerTests {
 
 		assertEquals(2, split.length);
 		assertAll("lines in the message", () -> assertEquals("Reported:    failingTest [[engine:junit]]", split[0]),
-			() -> assertTrue(split[1].startsWith(INDENTATION + "=> Reported values: ReportEntry [creationTimestamp =")),
+			() -> assertTrue(split[1].startsWith(INDENTATION + "=> Reported values: ReportEntry [timestamp =")),
 			() -> assertTrue(split[1].endsWith(", foo = 'bar']")));
 	}
 

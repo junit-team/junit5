@@ -18,7 +18,6 @@ import static org.junit.gen5.commons.util.StringUtils.isNotBlank;
 import static org.junit.gen5.console.tasks.XmlReportData.isFailure;
 import static org.junit.gen5.engine.TestExecutionResult.Status.FAILED;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -26,7 +25,6 @@ import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.TreeSet;
@@ -35,8 +33,6 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.junit.gen5.commons.util.ExceptionUtils;
-import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.engine.support.descriptor.JavaClassSource;
@@ -190,39 +186,26 @@ class XmlReportWriter {
 		writer.writeCharacters(readStackTrace(throwable));
 	}
 
-	private void writeReportEntriesToSystemOutElement(TestIdentifier test, XMLStreamWriter writer)
+	private void writeReportEntriesToSystemOutElement(TestIdentifier testIdentifier, XMLStreamWriter writer)
 			throws XMLStreamException {
-		List<ReportEntry> entries = reportData.getReportEntries(test);
+		List<ReportEntry> entries = reportData.getReportEntries(testIdentifier);
 		if (!entries.isEmpty()) {
 			writer.writeStartElement("system-out");
 			for (int i = 0; i < entries.size(); i++) {
-				ReportEntry reportEntry = entries.get(i);
-				StringBuilder stringBuilder = new StringBuilder();
-				this.appendDescriptionOfReportEntry(stringBuilder, reportEntry, "#" + (i + 1));
-				writer.writeCharacters(stringBuilder.toString());
+				writer.writeCharacters(buildReportEntryDescription(entries.get(i), i + 1));
 			}
 			writer.writeEndElement();
 		}
 	}
 
-	private void appendDescriptionOfReportEntry(Appendable appendable, ReportEntry reportEntry, String entryTitle) {
-		Preconditions.notNull(appendable, "appendable must not be null");
-		Preconditions.notNull(entryTitle, "entryTitle must not be null");
+	private String buildReportEntryDescription(ReportEntry reportEntry, int entryNumber) {
+		StringBuilder builder = new StringBuilder((format("Report Entry #{0} (timestamp: {1})\n", entryNumber,
+			ISO_LOCAL_DATE_TIME.format(reportEntry.getTimestamp()))));
 
-		// Add left padding
-		entryTitle = (entryTitle.length() > 0 ? " " + entryTitle : entryTitle);
+		reportEntry.getKeyValuePairs().entrySet().forEach(
+			entry -> builder.append(format("\t- {0}: {1}\n", entry.getKey(), entry.getValue())));
 
-		try {
-			appendable.append(format("Report Entry{0} (creation timestamp: {1})\n", entryTitle,
-				ISO_LOCAL_DATE_TIME.format(reportEntry.getCreationTimestamp())));
-
-			for (Map.Entry<String, String> entry : reportEntry.getKeyValuePairs().entrySet()) {
-				appendable.append(format("\t- {0}: {1}\n", entry.getKey(), entry.getValue()));
-			}
-		}
-		catch (IOException cannotHappen) {
-			ExceptionUtils.throwAsUncheckedException(cannotHappen);
-		}
+		return builder.toString();
 	}
 
 	private String getTime(TestIdentifier testIdentifier, NumberFormat numberFormat) {

@@ -32,7 +32,7 @@ import org.junit.gen5.commons.util.ToStringBuilder;
 @API(Experimental)
 public final class ReportEntry {
 
-	private final LocalDateTime creationTimestamp = LocalDateTime.now();
+	private final LocalDateTime timestamp = LocalDateTime.now();
 	private final Map<String, String> keyValuePairs = new LinkedHashMap<>();
 
 	/**
@@ -79,20 +79,20 @@ public final class ReportEntry {
 	}
 
 	/**
-	 * Get the creation timestamp of this {@code ReportEntry}.
+	 * Get the timestamp for when this {@code ReportEntry} was created.
 	 *
 	 * <p>Can be used, for example, to order entries.
 	 *
 	 * @return when this entry was created; never {@code null}
 	 */
-	public final LocalDateTime getCreationTimestamp() {
-		return this.creationTimestamp;
+	public final LocalDateTime getTimestamp() {
+		return this.timestamp;
 	}
 
 	@Override
 	public String toString() {
 		ToStringBuilder builder = new ToStringBuilder(this);
-		builder.append("creationTimestamp", this.creationTimestamp);
+		builder.append("timestamp", this.timestamp);
 		this.keyValuePairs.forEach(builder::append);
 		return builder.toString();
 	}
