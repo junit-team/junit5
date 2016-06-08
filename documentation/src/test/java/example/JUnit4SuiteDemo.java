@@ -10,13 +10,16 @@
 
 package example;
 
-// tag::user_guide[]
+//tag::user_guide[]
 import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.gen5.junit4.runner.Packages;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnit5.class)
 @Packages("example")
+//end::user_guide[]
+@org.junit.gen5.junit4.runner.ExcludeTags("exclude")
+//tag::user_guide[]
 public class JUnit4SuiteDemo {
 }
-// end::user_guide[]
+//end::user_guide[]

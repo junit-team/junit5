@@ -11,8 +11,8 @@
 package example;
 
 //tag::user_guide[]
+import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.api.DynamicTest.dynamicTest;
 
 import java.util.Arrays;
@@ -29,11 +29,11 @@ import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.TestFactory;
 
-// end::user_guide[]
-@Tag("exclude")
-// tag::user_guide[]
 class DynamicTestsDemo {
 
+	// end::user_guide[]
+	@Tag("exclude")
+	// tag::user_guide[]
 	// This will result in a JUnitException!
 	@TestFactory
 	List<String> dynamicTestsWithInvalidReturnType() {
@@ -46,8 +46,8 @@ class DynamicTestsDemo {
 		// @formatter:off
 		// tag::user_guide[]
 		return Arrays.asList(
-			dynamicTest("succeedingTest", () -> assertTrue(true)),
-			dynamicTest("failingTest", () -> fail("failing"))
+			dynamicTest("1st dynamic test", () -> assertTrue(true)),
+			dynamicTest("2nd dynamic test", () -> assertEquals(4, 2 * 2))
 		);
 		// end::user_guide[]
 		// @formatter:on
@@ -60,8 +60,8 @@ class DynamicTestsDemo {
 		// @formatter:off
 		// tag::user_guide[]
 		return Arrays.asList(
-			dynamicTest("succeedingTest", () -> assertTrue(true)),
-			dynamicTest("failingTest", () -> fail("failing"))
+			dynamicTest("3rd dynamic test", () -> assertTrue(true)),
+			dynamicTest("4th dynamic test", () -> assertEquals(4, 2 * 2))
 		);
 		// end::user_guide[]
 		// @formatter:on
@@ -74,8 +74,8 @@ class DynamicTestsDemo {
 		// @formatter:off
 		// tag::user_guide[]
 		return Arrays.asList(
-			dynamicTest("succeedingTest", () -> assertTrue(true)),
-			dynamicTest("failingTest", () -> fail("failing"))
+			dynamicTest("5th dynamic test", () -> assertTrue(true)),
+			dynamicTest("6th dynamic test", () -> assertEquals(4, 2 * 2))
 		).iterator();
 		// end::user_guide[]
 		// @formatter:on
@@ -115,17 +115,17 @@ class DynamicTestsDemo {
 		Iterator<Integer> inputGenerator = new Iterator<Integer>() {
 
 			final Random random = new Random();
-			int last = -1;
+			int current;
 
 			@Override
 			public boolean hasNext() {
-				return last % 7 != 0;
+				current = random.nextInt(100);
+				return current % 7 != 0;
 			}
 
 			@Override
 			public Integer next() {
-				last = random.nextInt(100);
-				return last;
+				return current;
 			}
 		};
 
@@ -133,7 +133,7 @@ class DynamicTestsDemo {
 		Function<Integer, String> displayNameGenerator = (input) -> "input:" + input;
 
 		// Executes tests based on the current input value.
-		Consumer<Integer> testExecutor = (input) -> assertTrue(input % 3 == 0);
+		Consumer<Integer> testExecutor = (input) -> assertTrue(input % 7 != 0);
 
 		// Returns a stream of dynamic tests.
 		return DynamicTest.stream(inputGenerator, displayNameGenerator, testExecutor);
