@@ -1370,8 +1370,8 @@ and power of dynamic tests.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.api.Assertions.fail;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.DynamicTest.dynamicTest;
 
 import java.util.Arrays;
@@ -1399,24 +1399,24 @@ class DynamicTestsDemo {
     @TestFactory
     Collection&lt;DynamicTest&gt; dynamicTestsFromCollection() {
         return Arrays.asList(
-            dynamicTest("succeedingTest", () -&gt; assertTrue(true)),
-            dynamicTest("failingTest", () -&gt; fail("failing"))
+            dynamicTest("1st dynamic test", () -&gt; assertTrue(true)),
+            dynamicTest("2nd dynamic test", () -&gt; assertEquals(4, 2 * 2))
         );
     }
 
     @TestFactory
     Iterable&lt;DynamicTest&gt; dynamicTestsFromIterable() {
         return Arrays.asList(
-            dynamicTest("succeedingTest", () -&gt; assertTrue(true)),
-            dynamicTest("failingTest", () -&gt; fail("failing"))
+            dynamicTest("3rd dynamic test", () -&gt; assertTrue(true)),
+            dynamicTest("4th dynamic test", () -&gt; assertEquals(4, 2 * 2))
         );
     }
 
     @TestFactory
     Iterator&lt;DynamicTest&gt; dynamicTestsFromIterator() {
         return Arrays.asList(
-            dynamicTest("succeedingTest", () -&gt; assertTrue(true)),
-            dynamicTest("failingTest", () -&gt; fail("failing"))
+            dynamicTest("5th dynamic test", () -&gt; assertTrue(true)),
+            dynamicTest("6th dynamic test", () -&gt; assertEquals(4, 2 * 2))
         ).iterator();
     }
 
@@ -1441,17 +1441,17 @@ class DynamicTestsDemo {
         Iterator&lt;Integer&gt; inputGenerator = new Iterator&lt;Integer&gt;() {
 
             final Random random = new Random();
-            int last = -1;
+            int current;
 
             @Override
             public boolean hasNext() {
-                return last % 7 != 0;
+                current = random.nextInt(100);
+                return current % 7 != 0;
             }
 
             @Override
             public Integer next() {
-                last = random.nextInt(100);
-                return last;
+                return current;
             }
         };
 
@@ -1459,7 +1459,7 @@ class DynamicTestsDemo {
         Function&lt;Integer, String&gt; displayNameGenerator = (input) -&gt; "input:" + input;
 
         // Executes tests based on the current input value.
-        Consumer&lt;Integer&gt; testExecutor = (input) -&gt; assertTrue(input % 3 == 0);
+        Consumer&lt;Integer&gt; testExecutor = (input) -&gt; assertTrue(input % 7 != 0);
 
         // Returns a stream of dynamic tests.
         return DynamicTest.stream(inputGenerator, displayNameGenerator, testExecutor);
@@ -2416,7 +2416,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-08 10:00:44 -04:00
+Last updated 2016-06-08 17:29:43 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
