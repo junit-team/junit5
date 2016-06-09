@@ -124,8 +124,13 @@ public interface TestDescriptor {
 	void removeChild(TestDescriptor descriptor);
 
 	/**
-	 * Remove this descriptor from its parent and remove all the children from
-	 * this descriptor.
+	 * Remove this non-root descriptor from its parent and remove all the
+	 * children from this descriptor.
+	 *
+	 * <p>If this method is invoked on a {@linkplain #isRoot root} descriptor,
+	 * this method must throw a {@link org.junit.gen5.commons.JUnitException
+	 * JUnitException} explaining that a root cannot be removed from the
+	 * hierarchy.
 	 */
 	void removeFromHierarchy();
 
