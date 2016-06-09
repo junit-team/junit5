@@ -27,6 +27,7 @@ import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.ParameterResolver;
 import org.junit.gen5.commons.meta.API;
+import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.junit5.extension.ExtensionRegistry;
 
@@ -117,8 +118,9 @@ public class ExecutableInvoker {
 	 * Resolve the array of parameters for the supplied executable and target.
 	 *
 	 * @param executable the executable for which to resolve parameters
-	 * @param target the object on which the executable will be invoked;
-	 * should be {@code null} for static methods and constructors
+	 * @param target an {@code Optional} containing the target on which the
+	 * executable will be invoked; never {@code null} but should be empty for
+	 * static methods and constructors
 	 * @param extensionContext the current {@code ExtensionContext}
 	 * @param extensionRegistry the {@code ExtensionRegistry} to retrieve
 	 * {@code ParameterResolvers} from
@@ -136,8 +138,9 @@ public class ExecutableInvoker {
 	 * outer instance.
 	 *
 	 * @param executable the executable for which to resolve parameters
-	 * @param target the object on which the executable will be invoked;
-	 * should be {@code null} for static methods and constructors
+	 * @param target an {@code Optional} containing the target on which the
+	 * executable will be invoked; never {@code null} but should be empty for
+	 * static methods and constructors
 	 * @param outerInstance the outer instance that will be supplied as the
 	 * first argument to a constructor for an inner class; should be {@code null}
 	 * for methods and constructors for top-level or static classes
@@ -149,6 +152,8 @@ public class ExecutableInvoker {
 	 */
 	private Object[] resolveParameters(Executable executable, Optional<Object> target, Object outerInstance,
 			ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
+
+		Preconditions.notNull(target, "target must not be null");
 
 		Parameter[] parameters = executable.getParameters();
 		Object[] values = new Object[parameters.length];
