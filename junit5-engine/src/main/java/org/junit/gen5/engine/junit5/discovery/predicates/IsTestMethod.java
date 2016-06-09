@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.discovery;
+package org.junit.gen5.engine.junit5.discovery.predicates;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
@@ -19,16 +19,16 @@ import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
-import org.junit.gen5.api.TestFactory;
+import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * Test if a method is a JUnit 5 test factory method.
+ * Test if a method is a JUnit 5 test method.
  *
  * @since 5.0
  */
 @API(Internal)
-public class IsTestFactoryMethod implements Predicate<Method> {
+public class IsTestMethod implements Predicate<Method> {
 
 	@Override
 	public boolean test(Method candidate) {
@@ -39,8 +39,7 @@ public class IsTestFactoryMethod implements Predicate<Method> {
 			return false;
 		if (isAbstract(candidate))
 			return false;
-
-		return isAnnotated(candidate, TestFactory.class);
+		return isAnnotated(candidate, Test.class);
 	}
 
 }

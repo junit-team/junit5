@@ -8,33 +8,39 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.discovery;
+package org.junit.gen5.engine.junit5.discovery.predicates;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
 import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.gen5.commons.util.ReflectionUtils.isPrivate;
 import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
 
+import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
+import org.junit.gen5.api.TestFactory;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * Test if a class is a potential top-level JUnit 5 test container, even if
- * it does not contain tests.
+ * Test if a method is a JUnit 5 test factory method.
  *
  * @since 5.0
  */
 @API(Internal)
-public class IsPotentialTestContainer implements Predicate<Class<?>> {
+public class IsTestFactoryMethod implements Predicate<Method> {
 
 	@Override
-	public boolean test(Class<?> candidate) {
+	public boolean test(Method candidate) {
 		//please do not collapse into single return
+		if (isStatic(candidate))
+			return false;
+		if (isPrivate(candidate))
+			return false;
 		if (isAbstract(candidate))
 			return false;
-		if (candidate.isLocalClass())
-			return false;
-		return (isStatic(candidate) || !candidate.isMemberClass());
+
+		return isAnnotated(candidate, TestFactory.class);
 	}
 
 }

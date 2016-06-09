@@ -8,38 +8,32 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.discovery;
+package org.junit.gen5.engine.junit5.discovery.predicates;
 
 import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.gen5.commons.util.AnnotationUtils.isAnnotated;
-import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
-import static org.junit.gen5.commons.util.ReflectionUtils.isPrivate;
-import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
 
-import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
-import org.junit.gen5.api.Test;
+import org.junit.gen5.api.Nested;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * Test if a method is a JUnit 5 test method.
+ * Test if a class is a JUnit 5 {@link Nested @Nested} test class.
  *
  * @since 5.0
  */
 @API(Internal)
-public class IsTestMethod implements Predicate<Method> {
+public class IsNestedTestClass implements Predicate<Class<?>> {
+
+	private static final IsInnerClass isInnerClass = new IsInnerClass();
 
 	@Override
-	public boolean test(Method candidate) {
+	public boolean test(Class<?> candidate) {
 		//please do not collapse into single return
-		if (isStatic(candidate))
+		if (!isInnerClass.test(candidate))
 			return false;
-		if (isPrivate(candidate))
-			return false;
-		if (isAbstract(candidate))
-			return false;
-		return isAnnotated(candidate, Test.class);
+		return isAnnotated(candidate, Nested.class);
 	}
 
 }

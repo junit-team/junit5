@@ -20,6 +20,7 @@ import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 import org.junit.gen5.engine.junit5.descriptor.TestFactoryTestDescriptor;
+import org.junit.gen5.engine.junit5.discovery.predicates.IsTestFactoryMethod;
 
 /**
  * {@code TestFactoryMethodResolver} is an {@link ElementResolver}
