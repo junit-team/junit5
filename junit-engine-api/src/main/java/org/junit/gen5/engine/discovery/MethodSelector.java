@@ -34,7 +34,7 @@ public class MethodSelector implements DiscoverySelector {
 	 * Create a {@code MethodSelector} for the supplied class name and method name.
 	 *
 	 * @param className the fully qualified name of the class in which the method
-	 * is declared; never {@code null} or blank
+	 * is declared, or a subclass thereof; never {@code null} or blank
 	 * @param methodName the name of the method to select; never {@code null} or blank
 	 */
 	public static MethodSelector selectMethod(String className, String methodName) {
@@ -47,7 +47,8 @@ public class MethodSelector implements DiscoverySelector {
 	/**
 	 * Create a {@code MethodSelector} for the supplied {@link Class} and method name.
 	 *
-	 * @param clazz the class in which the method is declared; never {@code null}
+	 * @param clazz the class in which the method is declared, or a subclass thereof;
+	 * never {@code null}
 	 * @param methodName the name of the method to select; never {@code null} or blank
 	 */
 	public static MethodSelector selectMethod(Class<?> clazz, String methodName) {
@@ -59,7 +60,8 @@ public class MethodSelector implements DiscoverySelector {
 	/**
 	 * Create a {@code MethodSelector} for the supplied {@link Class} and {@link Method}.
 	 *
-	 * @param clazz the class in which the method is declared; never {@code null}
+	 * @param clazz the class in which the method is declared, or a subclass thereof;
+	 * never {@code null}
 	 * @param method the method to select; never {@code null}
 	 */
 	public static MethodSelector selectMethod(Class<?> clazz, Method method) {
@@ -78,7 +80,9 @@ public class MethodSelector implements DiscoverySelector {
 
 	/**
 	 * Get the Java {@link Class} in which the selected {@linkplain #getJavaMethod
-	 * method} is declared.
+	 * method} is declared, or a subclass thereof.
+	 *
+	 * @see #getJavaMethod()
 	 */
 	public Class<?> getJavaClass() {
 		return this.clazz;
@@ -86,6 +90,8 @@ public class MethodSelector implements DiscoverySelector {
 
 	/**
 	 * Get the selected Java {@link Method}.
+	 *
+	 * @see #getJavaClass()
 	 */
 	public Method getJavaMethod() {
 		return this.method;
