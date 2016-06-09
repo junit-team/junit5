@@ -59,7 +59,7 @@ class Root {
 	void applyPostDiscoveryFilters(TestDiscoveryRequest discoveryRequest) {
 		Filter<TestDescriptor> postDiscoveryFilter = composeFilters(discoveryRequest.getPostDiscoveryFilters());
 		TestDescriptor.Visitor removeExcludedTestDescriptors = descriptor -> {
-			if (isExcluded(descriptor, postDiscoveryFilter)) {
+			if (!descriptor.isRoot() && isExcluded(descriptor, postDiscoveryFilter)) {
 				descriptor.removeFromHierarchy();
 			}
 		};
