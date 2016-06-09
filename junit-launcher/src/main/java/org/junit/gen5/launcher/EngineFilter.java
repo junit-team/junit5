@@ -77,13 +77,6 @@ public class EngineFilter implements Filter<TestEngine> {
 		this.type = type;
 	}
 
-	/**
-	 * Get the engine IDs that this filter matches against.
-	 */
-	public final List<String> getEngineIds() {
-		return this.engineIds;
-	}
-
 	@Override
 	public FilterResult apply(TestEngine testEngine) {
 		Preconditions.notNull(testEngine, "TestEngine must not be null");

@@ -24,9 +24,19 @@ public class TestEngineStub implements TestEngine {
 
 	public static final String TEST_ENGINE_DUMMY_ID = "TestEngineDummyID";
 
+	private final String id;
+
+	public TestEngineStub() {
+		this(TEST_ENGINE_DUMMY_ID);
+	}
+
+	public TestEngineStub(String id) {
+		this.id = id;
+	}
+
 	@Override
 	public String getId() {
-		return TEST_ENGINE_DUMMY_ID;
+		return this.id;
 	}
 
 	@Override

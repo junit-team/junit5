@@ -13,6 +13,7 @@ package org.junit.gen5.launcher.main;
 import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.FilterResult.excluded;
 import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
@@ -25,7 +26,6 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,12 +35,14 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.gen5.engine.DiscoveryFilter;
+import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
+import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
 import org.junit.gen5.launcher.DiscoveryFilterStub;
 import org.junit.gen5.launcher.EngineFilter;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
@@ -182,16 +184,23 @@ public class TestDiscoveryRequestBuilderTests {
 
 		@Test
 		public void engineFiltersAreStoredInDiscoveryRequest() throws Exception {
+
+			TestEngine engine1 = new TestEngineStub("engine1");
+			TestEngine engine2 = new TestEngineStub("engine2");
+			TestEngine engine3 = new TestEngineStub("engine3");
+
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.filters(requireEngines("engine1", "engine2"))
+					.filters(requireEngines(engine1.getId(), engine2.getId()))
 					.build();
 			// @formatter:on
 
-			List<String> engineIds = discoveryRequest.getEngineFilters().stream().map(
-				EngineFilter::getEngineIds).flatMap(Collection::stream).distinct().collect(toList());
-			assertThat(engineIds).hasSize(2);
-			assertThat(engineIds).contains("engine1", "engine2");
+			List<EngineFilter> filters = discoveryRequest.getEngineFilters();
+			assertThat(filters).hasSize(1);
+			EngineFilter engineFilter = filters.get(0);
+			assertTrue(engineFilter.apply(engine1).included());
+			assertTrue(engineFilter.apply(engine2).included());
+			assertTrue(engineFilter.apply(engine3).excluded());
 		}
 
 		@Test
