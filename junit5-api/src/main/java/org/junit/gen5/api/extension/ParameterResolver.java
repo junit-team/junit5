@@ -46,12 +46,13 @@ public interface ParameterResolver extends Extension {
 	 * in which the {@code parameter} is declared can be retrieved via
 	 * {@link Parameter#getDeclaringExecutable()}.
 	 *
-	 * @param parameter the parameter to be resolved
-	 * @param target the container for the target on which the {@code java.lang.reflect.Executable}
-	 * will be invoked; will be <em>empty</em> if the {@code Executable} is a constructor
+	 * @param parameter the parameter to be resolved; never {@code null}
+	 * @param target an {@code Optional} containing the target on which the
+	 * {@code java.lang.reflect.Executable} will be invoked; never {@code null}
+	 * but potentially <em>empty</em> if the {@code Executable} is a constructor
 	 * or {@code static} method
 	 * @param extensionContext the extension context for the {@code Executable}
-	 * about to be invoked
+	 * about to be invoked; never {@code null}
 	 * @return {@code true} if this resolver can resolve the parameter
 	 * @see #resolve
 	 * @see java.lang.reflect.Parameter
@@ -70,12 +71,13 @@ public interface ParameterResolver extends Extension {
 	 * in which the {@code parameter} is declared can be retrieved via
 	 * {@link Parameter#getDeclaringExecutable()}.
 	 *
-	 * @param parameter the parameter to be resolved
-	 * @param target the container for the target on which the {@code java.lang.reflect.Executable}
-	 * will be invoked; will be <em>empty</em> if the {@code Executable} is a constructor
+	 * @param parameter the parameter to be resolved; never {@code null}
+	 * @param target an {@code Optional} containing the target on which the
+	 * {@code java.lang.reflect.Executable} will be invoked; never {@code null}
+	 * but potentially <em>empty</em> if the {@code Executable} is a constructor
 	 * or {@code static} method
 	 * @param extensionContext the extension context for the {@code Executable}
-	 * about to be invoked
+	 * about to be invoked; never {@code null}
 	 * @return the resolved parameter object; may only be {@code null} if the
 	 * parameter type is not a primitive
 	 * @see #supports
