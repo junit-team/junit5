@@ -35,13 +35,13 @@ import org.junit.gen5.engine.junit5.discovery.predicates.IsTestFactoryMethod;
  * @see TestFactoryTestDescriptor
  */
 @API(Experimental)
-public class TestFactoryMethodResolver extends TestMethodResolver {
+class TestFactoryMethodResolver extends TestMethodResolver {
 
 	private static final IsTestFactoryMethod isTestFactoryMethod = new IsTestFactoryMethod();
 
-	public static final String SEGMENT_TYPE = "test-factory";
+	static final String SEGMENT_TYPE = "test-factory";
 
-	public TestFactoryMethodResolver() {
+	TestFactoryMethodResolver() {
 		super(SEGMENT_TYPE);
 	}
 

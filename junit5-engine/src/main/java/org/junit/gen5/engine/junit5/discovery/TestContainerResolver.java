@@ -28,11 +28,11 @@ import org.junit.gen5.engine.junit5.discovery.predicates.IsPotentialTestContaine
  * @since 5.0
  */
 @API(Experimental)
-public class TestContainerResolver implements ElementResolver {
+class TestContainerResolver implements ElementResolver {
 
 	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();
 
-	public static final String SEGMENT_TYPE = "class";
+	static final String SEGMENT_TYPE = "class";
 
 	@Override
 	public Set<TestDescriptor> resolveElement(AnnotatedElement element, TestDescriptor parent) {

@@ -30,20 +30,20 @@ import org.junit.gen5.engine.junit5.discovery.predicates.IsTestMethod;
  * @since 5.0
  */
 @API(Experimental)
-public class TestMethodResolver implements ElementResolver {
+class TestMethodResolver implements ElementResolver {
 
 	private static final IsTestMethod isTestMethod = new IsTestMethod();
 	private static final MethodFinder methodFinder = new MethodFinder();
 
-	public static final String SEGMENT_TYPE = "method";
+	static final String SEGMENT_TYPE = "method";
 
 	private final String segmentType;
 
-	public TestMethodResolver() {
+	TestMethodResolver() {
 		this(SEGMENT_TYPE);
 	}
 
-	protected TestMethodResolver(String segmentType) {
+	TestMethodResolver(String segmentType) {
 		this.segmentType = segmentType;
 	}
 

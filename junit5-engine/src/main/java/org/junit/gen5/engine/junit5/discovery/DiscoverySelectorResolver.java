@@ -28,7 +28,13 @@ import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.gen5.engine.junit5.discovery.predicates.IsScannableTestClass;
 
 /**
+ * A {@code DiscoverySelectorResolver} resolves selectors with the help of the {@code JavaElementResolver} instances.
+ * This class is the only public entry point to the discovery package.
+ *
  * @since 5.0
+ *
+ * @see JavaElementsResolver
+ *
  */
 @API(Experimental)
 public class DiscoverySelectorResolver {

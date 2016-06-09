@@ -37,7 +37,7 @@ import org.junit.gen5.engine.junit5.discovery.predicates.IsInnerClass;
  * @since 5.0
  */
 @API(Experimental)
-public class JavaElementsResolver {
+class JavaElementsResolver {
 
 	private static final Logger LOG = Logger.getLogger(JavaElementsResolver.class.getName());
 
@@ -46,12 +46,12 @@ public class JavaElementsResolver {
 	private final TestDescriptor engineDescriptor;
 	private final Set<ElementResolver> resolvers;
 
-	public JavaElementsResolver(TestDescriptor engineDescriptor, Set<ElementResolver> resolvers) {
+	JavaElementsResolver(TestDescriptor engineDescriptor, Set<ElementResolver> resolvers) {
 		this.engineDescriptor = engineDescriptor;
 		this.resolvers = resolvers;
 	}
 
-	public void resolveClass(Class<?> testClass) {
+	void resolveClass(Class<?> testClass) {
 		Set<TestDescriptor> resolvedDescriptors = resolveContainerWithParents(testClass);
 		resolvedDescriptors.forEach(this::resolveChildren);
 
@@ -60,7 +60,7 @@ public class JavaElementsResolver {
 		}
 	}
 
-	public void resolveMethod(Class<?> testClass, Method testMethod) {
+	void resolveMethod(Class<?> testClass, Method testMethod) {
 		Set<TestDescriptor> potentialParents = resolveContainerWithParents(testClass);
 		Set<TestDescriptor> resolvedDescriptors = resolveForAllParents(testMethod, potentialParents);
 
@@ -79,7 +79,7 @@ public class JavaElementsResolver {
 		}
 	}
 
-	public void resolveUniqueId(UniqueId uniqueId) {
+	void resolveUniqueId(UniqueId uniqueId) {
 		List<UniqueId.Segment> segments = uniqueId.getSegments();
 		segments.remove(0); // Ignore engine unique ID
 

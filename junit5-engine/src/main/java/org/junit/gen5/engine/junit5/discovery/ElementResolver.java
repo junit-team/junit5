@@ -24,7 +24,7 @@ import org.junit.gen5.engine.UniqueId;
  * @since 5.0
  */
 @API(Experimental)
-public interface ElementResolver {
+interface ElementResolver {
 
 	/**
 	 * Return a set of {@link TestDescriptor TestDescriptors} that can be

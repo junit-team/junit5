@@ -23,11 +23,11 @@ import org.junit.gen5.engine.junit5.discovery.predicates.IsNestedTestClass;
  * @since 5.0
  */
 @API(Experimental)
-public class NestedTestsResolver extends TestContainerResolver {
+class NestedTestsResolver extends TestContainerResolver {
 
 	private static final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
 
-	public static final String SEGMENT_TYPE = "nested-class";
+	static final String SEGMENT_TYPE = "nested-class";
 
 	@Override
 	protected Class<? extends TestDescriptor> requiredParentType() {
