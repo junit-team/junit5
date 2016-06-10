@@ -43,7 +43,7 @@ public interface AfterEachCallback extends Extension {
 	/**
 	 * Callback that is invoked <em>after</em> each test has been invoked.
 	 *
-	 * @param context the current test extension context
+	 * @param context the current extension context; never {@code null}
 	 */
 	void afterEach(TestExtensionContext context) throws Exception;
 

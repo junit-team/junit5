@@ -23,6 +23,11 @@ import org.junit.gen5.commons.meta.API;
 @API(Experimental)
 public interface TestExtensionContext extends ExtensionContext {
 
+	/**
+	 * Get the test instance associated with this {@code TestExtensionContext}.
+	 *
+	 * @return the test instance; never {@code null}
+	 */
 	Object getTestInstance();
 
 }

@@ -42,7 +42,7 @@ public interface BeforeTestExecutionCallback extends Extension {
 	/**
 	 * Callback that is invoked <em>immediately before</em> each test is executed.
 	 *
-	 * @param context the current test extension context
+	 * @param context the current extension context; never {@code null}
 	 */
 	void beforeTestExecution(TestExtensionContext context) throws Exception;
 

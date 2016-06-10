@@ -40,7 +40,8 @@ public interface TestExecutionCondition extends Extension {
 	 * {@linkplain ConditionEvaluationResult#disabled disabled} result
 	 * indicates that the test should not be executed.
 	 *
-	 * @param context the current {@code TestExtensionContext}
+	 * @param context the current extension context; never {@code null}
+	 * @return the result of evaluating this condition; never {@code null}
 	 */
 	ConditionEvaluationResult evaluate(TestExtensionContext context);
 

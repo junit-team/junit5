@@ -42,7 +42,7 @@ public interface AfterTestExecutionCallback extends Extension {
 	/**
 	 * Callback that is invoked <em>immediately after</em> each test has been executed.
 	 *
-	 * @param context the current test extension context
+	 * @param context the current extension context; never {@code null}
 	 */
 	void afterTestExecution(TestExtensionContext context) throws Exception;
 

@@ -39,7 +39,7 @@ public interface AfterAllCallback extends Extension {
 	 * Callback that is invoked once <em>after</em> all tests in the current
 	 * container.
 	 *
-	 * @param context the current container extension context
+	 * @param context the current extension context; never {@code null}
 	 */
 	void afterAll(ContainerExtensionContext context) throws Exception;
 

@@ -41,7 +41,7 @@ public interface BeforeEachCallback extends Extension {
 	/**
 	 * Callback that is invoked <em>before</em> each test is invoked.
 	 *
-	 * @param context the current test extension context
+	 * @param context the current extension context; never {@code null}
 	 */
 	void beforeEach(TestExtensionContext context) throws Exception;
 

@@ -39,7 +39,7 @@ public interface BeforeAllCallback extends Extension {
 	 * Callback that is invoked once <em>before</em> all tests in the current
 	 * container.
 	 *
-	 * @param context the current container extension context
+	 * @param context the current extension context; never {@code null}
 	 */
 	void beforeAll(ContainerExtensionContext context) throws Exception;
 

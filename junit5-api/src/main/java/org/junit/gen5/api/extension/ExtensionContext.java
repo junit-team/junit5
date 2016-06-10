@@ -38,11 +38,16 @@ public interface ExtensionContext {
 
 	/**
 	 * Get the parent extension context, if available.
+	 *
+	 * @return an {@code Optional} containing the parent; never {@code null} but
+	 * potentially empty
 	 */
 	Optional<ExtensionContext> getParent();
 
 	/**
-	 * Get the unique id of the current test or container.
+	 * Get the unique ID of the current test or container.
+	 *
+	 * @return the unique ID of the test or container; never {@code null} or blank
 	 */
 	String getUniqueId();
 
@@ -67,17 +72,26 @@ public interface ExtensionContext {
 	 *
 	 * <p>Tags may be declared directly on the test element or <em>inherited</em>
 	 * from an outer context.
+	 *
+	 * @return the set of tags for the test or container; never {@code null} but
+	 * potentially empty
 	 */
 	Set<String> getTags();
 
 	/**
 	 * Get the {@link Class} associated with the current test or container,
 	 * if available.
+	 *
+	 * @return an {@code Optional} containing the class; never {@code null} but
+	 * potentially empty
 	 */
 	Optional<Class<?>> getTestClass();
 
 	/**
 	 * Get the {@link Method} associated with the current test, if available.
+	 *
+	 * @return an {@code Optional} containing the method; never {@code null} but
+	 * potentially empty
 	 */
 	Optional<Method> getTestMethod();
 
@@ -94,6 +108,7 @@ public interface ExtensionContext {
 	 * {@link AnnotatedElement} API suits the task at hand &mdash; for example,
 	 * when looking up annotations regardless of concrete element type.
 	 *
+	 * @return the {@code AnnotatedElement}; never {@code null}
 	 * @see #getTestClass()
 	 * @see #getTestMethod()
 	 */
@@ -103,13 +118,16 @@ public interface ExtensionContext {
 	 * Publish a map of key-value pairs to be consumed by an
 	 * {@code org.junit.gen5.engine.EngineExecutionListener}.
 	 *
-	 * @param map the key-value pairs to be reported; never {@code null}
+	 * @param map the key-value pairs to be published; never {@code null};
+	 * keys and values within entries in the map also must not be
+	 * {@code null} or blank
 	 */
 	void publishReportEntry(Map<String, String> map);
 
 	/**
 	 * Get the {@link Store} with the default {@link Namespace}.
 	 *
+	 * @return the default, global {@code Store}; never {@code null}
 	 * @see #getStore(Namespace)
 	 */
 	default Store getStore() {
@@ -121,7 +139,7 @@ public interface ExtensionContext {
 	 *
 	 * @param namespace the {@code Namespace} to get the store for; never {@code null}
 	 * @return the store in which to put and get objects for other invocations
-	 * working in the same namespace
+	 * working in the same namespace; never {@code null}
 	 */
 	Store getStore(Namespace namespace);
 
@@ -136,8 +154,8 @@ public interface ExtensionContext {
 		 * <p>If no value has been saved in the current {@link ExtensionContext} for this {@code key},
 		 * the ancestors are asked for a value with the same {@code key} in the store's {@code Namespace}.
 		 *
-		 * @param key the key
-		 * @return the value
+		 * @param key the key; never {@code null}
+		 * @return the value; potentially {@code null}
 		 */
 		Object get(Object key);
 
@@ -147,8 +165,9 @@ public interface ExtensionContext {
 		 * <p>A stored {@code value} is visible in offspring {@link ExtensionContext}s
 		 * for the store's {@code Namespace} unless they overwrite it.
 		 *
-		 * @param key the key
-		 * @param value the value
+		 * @param key the key under which the value should be stored; never
+		 * {@code null}
+		 * @param value the value to store; may be {@code null}
 		 */
 		void put(Object key, Object value);
 
@@ -159,9 +178,10 @@ public interface ExtensionContext {
 		 * a new value will be computed by the {@code defaultCreator} (given
 		 * the {@code key} as input parameter), stored, and returned.
 		 *
-		 * @param key the key
-		 * @param defaultCreator the function called with the supplied {@code key} to create new values
-		 * @return the value
+		 * @param key the key; never {@code null}
+		 * @param defaultCreator the function called with the supplied {@code key}
+		 * to create a new value
+		 * @return the value; potentially {@code null}
 		 */
 		Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator);
 
@@ -170,7 +190,7 @@ public interface ExtensionContext {
 		 *
 		 * <p>The key will only be removed in the current {@link ExtensionContext} not in ancestors.
 		 *
-		 * @param key the key
+		 * @param key the key; never {@code null}
 		 * @return the previous value or {@code null} if no value was present
 		 * for the specified key
 		 */

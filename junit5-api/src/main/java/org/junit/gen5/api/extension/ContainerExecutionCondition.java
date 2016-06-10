@@ -40,7 +40,8 @@ public interface ContainerExecutionCondition extends Extension {
 	 * {@linkplain ConditionEvaluationResult#disabled disabled} result indicates
 	 * that the container should not be executed.
 	 *
-	 * @param context the current {@code ContainerExtensionContext}
+	 * @param context the current extension context; never {@code null}
+	 * @return the result of evaluating this condition; never {@code null}
 	 */
 	ConditionEvaluationResult evaluate(ContainerExtensionContext context);
 

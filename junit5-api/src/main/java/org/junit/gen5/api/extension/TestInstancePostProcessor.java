@@ -32,8 +32,8 @@ public interface TestInstancePostProcessor extends Extension {
 	/**
 	 * Callback for post-processing the supplied test instance.
 	 *
-	 * @param testInstance the instance to post-process
-	 * @param context the current extension context
+	 * @param testInstance the instance to post-process; never {@code null}
+	 * @param context the current extension context; never {@code null}
 	 */
 	void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception;
 
