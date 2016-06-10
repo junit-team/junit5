@@ -125,10 +125,11 @@ public interface ExtensionContext {
 	void publishReportEntry(Map<String, String> map);
 
 	/**
-	 * Get the {@link Store} with the default {@link Namespace}.
+	 * Get the {@link Store} for the default, global {@link Namespace}.
 	 *
 	 * @return the default, global {@code Store}; never {@code null}
 	 * @see #getStore(Namespace)
+	 * @see Namespace#DEFAULT
 	 */
 	default Store getStore() {
 		return getStore(Namespace.DEFAULT);
@@ -149,10 +150,11 @@ public interface ExtensionContext {
 	interface Store {
 
 		/**
-		 * Get an object that has been stored using a {@code key}.
+		 * Get a value that has been stored under the supplied {@code key}.
 		 *
-		 * <p>If no value has been saved in the current {@link ExtensionContext} for this {@code key},
-		 * the ancestors are asked for a value with the same {@code key} in the store's {@code Namespace}.
+		 * <p>If no value has been saved in the current {@link ExtensionContext}
+		 * for the supplied {@code key}, ancestors of the context will be queried
+		 * for a value with the same {@code key} in the store's {@code Namespace}.
 		 *
 		 * @param key the key; never {@code null}
 		 * @return the value; potentially {@code null}
@@ -160,10 +162,11 @@ public interface ExtensionContext {
 		Object get(Object key);
 
 		/**
-		 * Store a {@code value} for later retrieval using a {@code key}. {@code null} is a valid value.
+		 * Store a {@code value} for later retrieval using the supplied {@code key}.
 		 *
-		 * <p>A stored {@code value} is visible in offspring {@link ExtensionContext}s
-		 * for the store's {@code Namespace} unless they overwrite it.
+		 * <p>A stored {@code value} is visible in child {@link ExtensionContext
+		 * ExtensionContexts} for the store's {@code Namespace} unless they
+		 * overwrite it.
 		 *
 		 * @param key the key under which the value should be stored; never
 		 * {@code null}
@@ -172,7 +175,7 @@ public interface ExtensionContext {
 		void put(Object key, Object value);
 
 		/**
-		 * Get the object that is stored under the supplied {@code key}.
+		 * Get the value that is stored under the supplied {@code key}.
 		 *
 		 * <p>If no value is currently stored under the supplied {@code key},
 		 * a new value will be computed by the {@code defaultCreator} (given
@@ -186,9 +189,10 @@ public interface ExtensionContext {
 		Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator);
 
 		/**
-		 * Remove a value that was previously stored using {@code key} so that {@code key} can be used anew.
+		 * Remove the value that was previously stored under the supplied {@code key}.
 		 *
-		 * <p>The key will only be removed in the current {@link ExtensionContext} not in ancestors.
+		 * <p>The value will only be removed in the current {@link ExtensionContext},
+		 * not in ancestors.
 		 *
 		 * @param key the key; never {@code null}
 		 * @return the previous value or {@code null} if no value was present
@@ -198,20 +202,26 @@ public interface ExtensionContext {
 	}
 
 	/**
-	 * Instances of this class are used to give saved data in extensions a scope, so that
-	 * extensions won't accidentally mix up data across each other or across different invocations
-	 * within their lifecycle.
+	 * A {@code Namespace} is used to provide a <em>scope</em> for data saved by
+	 * extensions within a {@link Store}.
+	 *
+	 * <p>Storing data in custom namespaces allows extensions to avoid accidentally
+	 * mixing data between extensions or across different invocations within the
+	 * lifecycle of a single extension.
 	 */
 	class Namespace {
 
 		/**
-		 * The default namespace which allows access to stored data from all extensions.
+		 * The default, global namespace which allows access to stored data from
+		 * all extensions.
 		 */
 		public static final Namespace DEFAULT = Namespace.of(new Object());
 
 		/**
-		 * Create a namespace which restricts access to data to all users which use the same
-		 * {@code parts} for creating a namespace. The order of the  {@code parts} is not significant.
+		 * Create a namespace which restricts access to data to all extensions
+		 * which use the same {@code parts} for creating a namespace.
+		 *
+		 * <p>The order of the {@code parts} is not significant.
 		 *
 		 * <p>Internally the {@code parts} are compared using {@code Object.equals(Object)}.
 		 */
@@ -241,6 +251,7 @@ public interface ExtensionContext {
 		public int hashCode() {
 			return parts.hashCode();
 		}
+
 	}
 
 }
