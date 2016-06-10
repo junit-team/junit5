@@ -49,7 +49,7 @@ public interface ParameterResolver extends Extension {
 	 * @param parameter the parameter to be resolved; never {@code null}
 	 * @param target an {@code Optional} containing the target on which the
 	 * {@code java.lang.reflect.Executable} will be invoked; never {@code null}
-	 * but potentially <em>empty</em> if the {@code Executable} is a constructor
+	 * but will be <em>empty</em> if the {@code Executable} is a constructor
 	 * or {@code static} method
 	 * @param extensionContext the extension context for the {@code Executable}
 	 * about to be invoked; never {@code null}
@@ -74,7 +74,7 @@ public interface ParameterResolver extends Extension {
 	 * @param parameter the parameter to be resolved; never {@code null}
 	 * @param target an {@code Optional} containing the target on which the
 	 * {@code java.lang.reflect.Executable} will be invoked; never {@code null}
-	 * but potentially <em>empty</em> if the {@code Executable} is a constructor
+	 * but will be <em>empty</em> if the {@code Executable} is a constructor
 	 * or {@code static} method
 	 * @param extensionContext the extension context for the {@code Executable}
 	 * about to be invoked; never {@code null}
