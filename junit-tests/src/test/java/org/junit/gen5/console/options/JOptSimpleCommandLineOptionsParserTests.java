@@ -28,6 +28,8 @@ import java.io.Writer;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import joptsimple.OptionException;
+
 import org.junit.gen5.api.Test;
 
 /**
@@ -48,7 +50,7 @@ public class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertFalse(options.isHideDetails()),
 			() -> assertFalse(options.isRunAllTests()),
 			() -> assertEquals(Optional.empty(), options.getClassnameFilter()),
-			() -> assertEquals(emptyList(), options.getRequiredTagsFilter()),
+			() -> assertEquals(emptyList(), options.getRequiredTags()),
 			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
 			() -> assertEquals(Optional.empty(), options.getXmlReportsDir()),
 			() -> assertEquals(emptyList(), options.getArguments())
@@ -86,41 +88,58 @@ public class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseInvalidClassnameFilter() throws Exception {
-		assertOptionWithRequiredArgumentThrowsExceptionWithoutArgument("-n", "--filter-classname");
+	public void parseInvalidClassnameFilters() throws Exception {
+		assertOptionWithMissingRequiredArgumentThrowsException("-n", "--filter-classname");
 	}
 
 	@Test
-	public void parseValidTagFilters() {
+	public void parseValidRequiredTags() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("fast"), parseArgLine("-t fast").getRequiredTagsFilter()),
-			() -> assertEquals(asList("fast"), parseArgLine("--require-tag fast").getRequiredTagsFilter()),
-			() -> assertEquals(asList("fast"), parseArgLine("--require-tag=fast").getRequiredTagsFilter()),
-			() -> assertEquals(asList("fast", "slow"), parseArgLine("-t fast -t slow").getRequiredTagsFilter())
+			() -> assertEquals(asList("fast"), parseArgLine("-t fast").getRequiredTags()),
+			() -> assertEquals(asList("fast"), parseArgLine("--require-tag fast").getRequiredTags()),
+			() -> assertEquals(asList("fast"), parseArgLine("--require-tag=fast").getRequiredTags()),
+			() -> assertEquals(asList("fast", "slow"), parseArgLine("-t fast -t slow").getRequiredTags())
 		);
 		// @formatter:on
 	}
 
 	@Test
-	public void parseInvalidTagFilter() {
-		assertOptionWithRequiredArgumentThrowsExceptionWithoutArgument("-t", "--filter-tags");
+	public void parseInvalidRequiredTags() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-t", "--require-tag");
 	}
 
 	@Test
-	public void parseValidEngineFilter() {
+	public void parseValidExcludedTags() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(Optional.of("junit5"), parseArgLine("-e junit5").getRequiredEngineFilter()),
-			() -> assertEquals(Optional.of("junit4"), parseArgLine("--require-engine junit4").getRequiredEngineFilter()),
-			() -> assertEquals(Optional.empty(), parseArgLine("").getRequiredEngineFilter())
+			() -> assertEquals(asList("fast"), parseArgLine("-T fast").getExcludedTags()),
+			() -> assertEquals(asList("fast"), parseArgLine("--exclude-tag fast").getExcludedTags()),
+			() -> assertEquals(asList("fast"), parseArgLine("--exclude-tag=fast").getExcludedTags()),
+			() -> assertEquals(asList("fast", "slow"), parseArgLine("-T fast -T slow").getExcludedTags())
 		);
 		// @formatter:on
 	}
 
 	@Test
-	public void parseInvalidEngineFilter() throws Exception {
-		assertOptionWithRequiredArgumentThrowsExceptionWithoutArgument("-e", "--require-engine");
+	public void parseInvalidExcludedTags() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-T", "--exclude-tag");
+	}
+
+	@Test
+	public void parseValidRequiredEngine() {
+		// @formatter:off
+		assertAll(
+			() -> assertEquals(Optional.of("junit5"), parseArgLine("-e junit5").getRequiredEngine()),
+			() -> assertEquals(Optional.of("junit4"), parseArgLine("--require-engine junit4").getRequiredEngine()),
+			() -> assertEquals(Optional.empty(), parseArgLine("").getRequiredEngine())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidRequiredEngine() throws Exception {
+		assertOptionWithMissingRequiredArgumentThrowsException("-e", "--require-engine");
 	}
 
 	@Test
@@ -138,7 +157,7 @@ public class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseInvalidAdditionalClasspathEntries() {
-		assertOptionWithRequiredArgumentThrowsExceptionWithoutArgument("-p", "--classpath");
+		assertOptionWithMissingRequiredArgumentThrowsException("-p", "--classpath");
 	}
 
 	@Test
@@ -154,7 +173,7 @@ public class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseInvalidXmlReportsDirs() throws Exception {
-		assertOptionWithRequiredArgumentThrowsExceptionWithoutArgument("-r", "--xml-reports-dir");
+		assertOptionWithMissingRequiredArgumentThrowsException("-r", "--xml-reports-dir");
 	}
 
 	@Test
@@ -202,11 +221,11 @@ public class JOptSimpleCommandLineOptionsParserTests {
 		assertThat(exception.getCause()).hasMessage("Something went wrong");
 	}
 
-	private void assertOptionWithRequiredArgumentThrowsExceptionWithoutArgument(String shortOption, String longOption) {
+	private void assertOptionWithMissingRequiredArgumentThrowsException(String shortOption, String longOption) {
 		// @formatter:off
 		assertAll(
-			() -> assertThrows(Exception.class, () -> parseArgLine(shortOption)),
-			() -> assertThrows(Exception.class, () -> parseArgLine(longOption))
+			() -> assertThrows(OptionException.class, () -> parseArgLine(shortOption)),
+			() -> assertThrows(OptionException.class, () -> parseArgLine(longOption))
 		);
 		// @formatter:on
 	}
@@ -226,4 +245,5 @@ public class JOptSimpleCommandLineOptionsParserTests {
 	private CommandLineOptionsParser createParser() {
 		return new JOptSimpleCommandLineOptionsParser();
 	}
+
 }

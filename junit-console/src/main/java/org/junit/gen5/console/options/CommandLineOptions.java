@@ -30,11 +30,11 @@ public class CommandLineOptions {
 	private boolean runAllTests;
 	private boolean hideDetails;
 	private String classnameFilter;
-	private List<String> requiredTagsFilter = emptyList();
+	private String requiredEngine;
+	private List<String> requiredTags = emptyList();
+	private List<String> excludedTags = emptyList();
 	private List<String> additionalClasspathEntries = emptyList();
 	private List<String> arguments = emptyList();
-	private List<String> excludedTagsFilter = emptyList();
-	private String requiredEngineFilter;
 	private String xmlReportsDir;
 
 	public boolean isDisplayHelp() {
@@ -85,28 +85,28 @@ public class CommandLineOptions {
 		this.classnameFilter = classnameFilter;
 	}
 
-	public List<String> getRequiredTagsFilter() {
-		return requiredTagsFilter;
+	public List<String> getRequiredTags() {
+		return requiredTags;
 	}
 
-	public void setRequiredTagsFilter(List<String> requiredTagsFilter) {
-		this.requiredTagsFilter = requiredTagsFilter;
+	public void setRequiredTags(List<String> requiredTags) {
+		this.requiredTags = requiredTags;
 	}
 
-	public List<String> getExcludedTagsFilter() {
-		return excludedTagsFilter;
+	public Optional<String> getRequiredEngine() {
+		return Optional.ofNullable(requiredEngine);
 	}
 
-	public void setExcludedTagsFilter(List<String> excludedTagsFilter) {
-		this.excludedTagsFilter = excludedTagsFilter;
+	public void setRequiredEngine(String requiredEngine) {
+		this.requiredEngine = requiredEngine;
 	}
 
-	public Optional<String> getRequiredEngineFilter() {
-		return Optional.ofNullable(requiredEngineFilter);
+	public List<String> getExcludedTags() {
+		return excludedTags;
 	}
 
-	public void setRequiredEngineFilter(String requiredEngineFilter) {
-		this.requiredEngineFilter = requiredEngineFilter;
+	public void setExcludedTags(List<String> excludedTags) {
+		this.excludedTags = excludedTags;
 	}
 
 	public List<String> getAdditionalClasspathEntries() {

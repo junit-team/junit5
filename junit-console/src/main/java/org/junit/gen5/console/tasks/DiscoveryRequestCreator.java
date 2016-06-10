@@ -70,14 +70,13 @@ class DiscoveryRequestCreator {
 	private void applyFilters(TestDiscoveryRequest discoveryRequest, CommandLineOptions options) {
 		options.getClassnameFilter().ifPresent(
 			regex -> discoveryRequest.addFilter(ClassFilter.byClassNamePattern(regex)));
-		if (!options.getRequiredTagsFilter().isEmpty()) {
-			discoveryRequest.addPostFilter(requireTags(options.getRequiredTagsFilter()));
+		if (!options.getRequiredTags().isEmpty()) {
+			discoveryRequest.addPostFilter(requireTags(options.getRequiredTags()));
 		}
-		if (!options.getExcludedTagsFilter().isEmpty()) {
-			discoveryRequest.addPostFilter(excludeTags(options.getExcludedTagsFilter()));
+		if (!options.getExcludedTags().isEmpty()) {
+			discoveryRequest.addPostFilter(excludeTags(options.getExcludedTags()));
 		}
-		options.getRequiredEngineFilter().ifPresent(
-			engineId -> discoveryRequest.addEngineFilter(requireEngines(engineId)));
+		options.getRequiredEngine().ifPresent(engineId -> discoveryRequest.addEngineFilter(requireEngines(engineId)));
 	}
 
 }

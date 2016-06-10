@@ -132,8 +132,8 @@ public class DiscoveryRequestCreatorTests {
 	@Test
 	public void convertsTagFilterOption() {
 		options.setRunAllTests(true);
-		options.setRequiredTagsFilter(asList("fast", "medium", "slow"));
-		options.setExcludedTagsFilter(asList("slow"));
+		options.setRequiredTags(asList("fast", "medium", "slow"));
+		options.setExcludedTags(asList("slow"));
 
 		TestDiscoveryRequest request = convert();
 		List<PostDiscoveryFilter> postDiscoveryFilters = request.getPostDiscoveryFilters();
@@ -146,7 +146,7 @@ public class DiscoveryRequestCreatorTests {
 	@Test
 	public void convertsEngineFilterOption() {
 		options.setRunAllTests(true);
-		options.setRequiredEngineFilter("junit5");
+		options.setRequiredEngine("junit5");
 
 		TestDiscoveryRequest request = convert();
 		List<EngineFilter> engineFilters = request.getEngineFilters();
