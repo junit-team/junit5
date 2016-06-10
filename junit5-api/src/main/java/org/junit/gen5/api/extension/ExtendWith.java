@@ -53,6 +53,9 @@ import org.junit.gen5.commons.meta.API;
 @API(Experimental)
 public @interface ExtendWith {
 
+	/**
+	 * An array of one or more {@link Extension} classes to register.
+	 */
 	Class<? extends Extension>[] value();
 
 }

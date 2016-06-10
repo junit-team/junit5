@@ -22,5 +22,4 @@ import org.junit.gen5.commons.meta.API;
  */
 @API(Experimental)
 public interface ContainerExtensionContext extends ExtensionContext {
-
 }
