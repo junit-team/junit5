@@ -497,7 +497,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#api-annotations">8.1. API Annotations</a></li>
 <li><a href="#semantic-versioning">8.2. Semantic Versioning</a></li>
-<li><a href="#tool-support">8.3. Tool Support</a></li>
+<li><a href="#tooling-support">8.3. Tooling Support</a></li>
 </ul>
 </li>
 <li><a href="#contributors">9. Contributors</a></li>
@@ -2310,19 +2310,20 @@ registers its <code>JUnit5TestEngine</code>
 <h2 id="api-evolution">8. API Evolution</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>One of the major goal of JUnit 5 is to improve maintainers' capabilities to evolve JUnit
-despite its being used in many projects. With JUnit 4 a lot of stuff that was originally added as an internal
-construct only got used by external extension writers and tool builders. That made changing JUnit 4
-especially difficult and sometimes impossible.</p>
+<p>One of the major goals of JUnit 5 is to improve maintainers' capabilities to evolve JUnit
+despite its being used in many projects. With JUnit 4 a lot of stuff that was originally
+added as an internal construct only got used by external extension writers and tool
+builders. That made changing JUnit 4 especially difficult and sometimes impossible.</p>
 </div>
 <div class="paragraph">
-<p>That&#8217;s why JUnit 5 introduces a defined lifecycle for all publicly available interfaces, classes and methods.</p>
+<p>That&#8217;s why JUnit 5 introduces a defined lifecycle for all publicly available interfaces,
+classes, and methods.</p>
 </div>
 <div class="sect2">
 <h3 id="api-annotations">8.1. API Annotations</h3>
 <div class="paragraph">
-<p>All publicly available interfaces, classes and methods are marked with <a href="https://github.com/junit-team/junit5/blob/master/junit-commons/src/main/java/org/junit/gen5/commons/meta/API.java">@API</a>.
-The annotation&#8217;s <code>Usage</code> value can have one of five values:</p>
+<p>All publicly available interfaces, classes, and methods are annotated with <a href="https://github.com/junit-team/junit5/blob/master/junit-commons/src/main/java/org/junit/gen5/commons/meta/API.java">@API</a>. The
+annotation&#8217;s <code>Usage</code> value can be assigned one of the following five values:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -2342,7 +2343,7 @@ The annotation&#8217;s <code>Usage</code> value can have one of five values:</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Deprecated</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Should no longer be used, might disappear in the next minor release.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Should no longer be used; might disappear in the next minor release.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Experimental</code></p></td>
@@ -2364,8 +2365,9 @@ The annotation&#8217;s <code>Usage</code> value can have one of five values:</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>If the annotation is present on a type, it is considered to hold for all public members of this type as well.
-A member is allowed to declare a different <code>Usage</code> value of lower stability.</p>
+<p>If the <code>@API</code> annotation is present on a type, it is considered to be applicable for all
+public members of that type as well. A member is allowed to declare a different <code>Usage</code>
+value of lower stability.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2375,11 +2377,11 @@ A member is allowed to declare a different <code>Usage</code> value of lower sta
 </div>
 </div>
 <div class="sect2">
-<h3 id="tool-support">8.3. Tool Support</h3>
+<h3 id="tooling-support">8.3. Tooling Support</h3>
 <div class="paragraph">
-<p>We are planning to provide native tool support for all JUnit 5 users, extenders and tool builders.
-Those tools will provide them with means to check if they are using the JUnit 5 API in accordance with
-the API annotations.</p>
+<p>The JUnit team plans to provide native tooling support for all JUnit 5 users, extenders,
+and tool builders. The tooling support will provide a means to check if the JUnit 5 APIs
+are being used in accordance with <code>@API</code> annotation declarations.</p>
 </div>
 </div>
 </div>
@@ -2416,7 +2418,7 @@ the API annotations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-10 15:01:27 -04:00
+Last updated 2016-06-11 06:14:47 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
