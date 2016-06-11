@@ -11,12 +11,12 @@
 package org.junit.gen5.engine.junit5.extension;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.Optional;
 import java.util.Set;
 
 import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ParameterContext;
 import org.junit.gen5.api.extension.ParameterResolver;
 import org.junit.gen5.commons.util.ToStringBuilder;
 
@@ -29,12 +29,12 @@ import org.junit.gen5.commons.util.ToStringBuilder;
 class TestInfoParameterResolver implements ParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
-		return (parameter.getType() == TestInfo.class);
+	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		return (parameterContext.getParameter().getType() == TestInfo.class);
 	}
 
 	@Override
-	public TestInfo resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
+	public TestInfo resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return new DefaultTestInfo(extensionContext);
 	}
 

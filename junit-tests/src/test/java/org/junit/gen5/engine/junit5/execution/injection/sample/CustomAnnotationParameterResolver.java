@@ -10,10 +10,8 @@
 
 package org.junit.gen5.engine.junit5.execution.injection.sample;
 
-import java.lang.reflect.Parameter;
-import java.util.Optional;
-
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ParameterContext;
 import org.junit.gen5.api.extension.ParameterResolver;
 import org.junit.gen5.commons.util.ReflectionUtils;
 
@@ -23,13 +21,13 @@ import org.junit.gen5.commons.util.ReflectionUtils;
 public class CustomAnnotationParameterResolver implements ParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
-		return parameter.isAnnotationPresent(CustomAnnotation.class);
+	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		return parameterContext.getParameter().isAnnotationPresent(CustomAnnotation.class);
 	}
 
 	@Override
-	public Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
-		return ReflectionUtils.newInstance(parameter.getType());
+	public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		return ReflectionUtils.newInstance(parameterContext.getParameter().getType());
 	}
 
 }

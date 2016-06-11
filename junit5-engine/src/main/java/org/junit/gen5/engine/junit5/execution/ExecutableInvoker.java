@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ParameterContext;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.ParameterResolver;
 import org.junit.gen5.commons.meta.API;
@@ -168,25 +169,26 @@ public class ExecutableInvoker {
 
 		// Resolve remaining parameters dynamically
 		for (int i = start; i < parameters.length; i++) {
-			values[i] = resolveParameter(parameters[i], executable, target, extensionContext, extensionRegistry);
+			ParameterContext parameterContext = new DefaultParameterContext(parameters[i], target);
+			values[i] = resolveParameter(parameterContext, executable, extensionContext, extensionRegistry);
 		}
 		return values;
 	}
 
-	private Object resolveParameter(Parameter parameter, Executable executable, Optional<Object> target,
+	private Object resolveParameter(ParameterContext parameterContext, Executable executable,
 			ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
 
 		try {
 			// @formatter:off
 			List<ParameterResolver> matchingResolvers = extensionRegistry.stream(ParameterResolver.class)
-					.filter(resolver -> resolver.supports(parameter, target, extensionContext))
+					.filter(resolver -> resolver.supports(parameterContext, extensionContext))
 					.collect(toList());
 			// @formatter:on
 
 			if (matchingResolvers.size() == 0) {
 				throw new ParameterResolutionException(
-					String.format("No ParameterResolver registered for parameter [%s] in executable [%s].", parameter,
-						executable.toGenericString()));
+					String.format("No ParameterResolver registered for parameter [%s] in executable [%s].",
+						parameterContext.getParameter(), executable.toGenericString()));
 			}
 
 			if (matchingResolvers.size() > 1) {
@@ -197,17 +199,17 @@ public class ExecutableInvoker {
 				// @formatter:on
 				throw new ParameterResolutionException(String.format(
 					"Discovered multiple competing ParameterResolvers for parameter [%s] in executable [%s]: %s",
-					parameter, executable.toGenericString(), resolverNames));
+					parameterContext.getParameter(), executable.toGenericString(), resolverNames));
 			}
 
 			ParameterResolver resolver = matchingResolvers.get(0);
-			Object value = resolver.resolve(parameter, target, extensionContext);
-			validateResolvedType(parameter, value, executable, resolver);
+			Object value = resolver.resolve(parameterContext, extensionContext);
+			validateResolvedType(parameterContext.getParameter(), value, executable, resolver);
 
 			LOG.finer(() -> String.format(
 				"ParameterResolver [%s] resolved a value of type [%s] for parameter [%s] in executable [%s].",
-				resolver.getClass().getName(), (value != null ? value.getClass().getName() : null), parameter,
-				executable.toGenericString()));
+				resolver.getClass().getName(), (value != null ? value.getClass().getName() : null),
+				parameterContext.getParameter(), executable.toGenericString()));
 
 			return value;
 		}
@@ -216,7 +218,7 @@ public class ExecutableInvoker {
 				throw (ParameterResolutionException) ex;
 			}
 			throw new ParameterResolutionException(String.format("Failed to resolve parameter [%s] in executable [%s]",
-				parameter, executable.toGenericString()), ex);
+				parameterContext.getParameter(), executable.toGenericString()), ex);
 		}
 	}
 

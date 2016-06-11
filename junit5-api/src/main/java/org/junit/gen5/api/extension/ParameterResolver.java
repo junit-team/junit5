@@ -13,7 +13,6 @@ package org.junit.gen5.api.extension;
 import static org.junit.gen5.commons.meta.API.Usage.Experimental;
 
 import java.lang.reflect.Parameter;
-import java.util.Optional;
 
 import org.junit.gen5.commons.meta.API;
 
@@ -32,61 +31,55 @@ import org.junit.gen5.commons.meta.API;
  * <p>Implementations must provide a no-args constructor.
  *
  * @since 5.0
- * @see #supports(Parameter, Optional, ExtensionContext)
- * @see #resolve(Parameter, Optional, ExtensionContext)
+ * @see #supports(ParameterContext, ExtensionContext)
+ * @see #resolve(ParameterContext, ExtensionContext)
+ * @see ParameterContext
  */
 @API(Experimental)
 public interface ParameterResolver extends Extension {
 
 	/**
-	 * Determine if this resolver supports resolution of the given {@link Parameter}
-	 * for the supplied {@code target} and {@link ExtensionContext}.
+	 * Determine if this resolver supports resolution of the {@link Parameter}
+	 * in the supplied {@link ParameterContext} for the supplied
+	 * {@link ExtensionContext}.
 	 *
 	 * <p>The {@link java.lang.reflect.Method} or {@link java.lang.reflect.Constructor}
-	 * in which the {@code parameter} is declared can be retrieved via
-	 * {@link Parameter#getDeclaringExecutable()}.
+	 * in which the parameter is declared can be retrieved via
+	 * {@link ParameterContext#getDeclaringExecutable()}.
 	 *
-	 * @param parameter the parameter to be resolved; never {@code null}
-	 * @param target an {@code Optional} containing the target on which the
-	 * {@code java.lang.reflect.Executable} will be invoked; never {@code null}
-	 * but will be <em>empty</em> if the {@code Executable} is a constructor
-	 * or {@code static} method
+	 * @param parameterContext the parameter context to be resolved; never
+	 * {@code null}
 	 * @param extensionContext the extension context for the {@code Executable}
 	 * about to be invoked; never {@code null}
 	 * @return {@code true} if this resolver can resolve the parameter
 	 * @see #resolve
-	 * @see java.lang.reflect.Parameter
-	 * @see java.lang.reflect.Executable
-	 * @see java.lang.reflect.Method
-	 * @see java.lang.reflect.Constructor
+	 * @see ParameterContext
 	 */
-	boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext)
+	boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException;
 
 	/**
-	 * Resolve the given {@link Parameter} for the supplied {@code target} and
-	 * {@link ExtensionContext}.
+	 * Resolve the {@link Parameter} in the supplied {@link ParameterContext}
+	 * for the supplied {@link ExtensionContext}.
+	 *
+	 * <p>This method is only called by the framework if {@link #supports} has
+	 * previously returned {@code true} for the same {@link ParameterContext}
+	 * and {@link ExtensionContext}.
 	 *
 	 * <p>The {@link java.lang.reflect.Method} or {@link java.lang.reflect.Constructor}
-	 * in which the {@code parameter} is declared can be retrieved via
-	 * {@link Parameter#getDeclaringExecutable()}.
+	 * in which the parameter is declared can be retrieved via
+	 * {@link ParameterContext#getDeclaringExecutable()}.
 	 *
-	 * @param parameter the parameter to be resolved; never {@code null}
-	 * @param target an {@code Optional} containing the target on which the
-	 * {@code java.lang.reflect.Executable} will be invoked; never {@code null}
-	 * but will be <em>empty</em> if the {@code Executable} is a constructor
-	 * or {@code static} method
+	 * @param parameterContext the parameter context to be resolved; never
+	 * {@code null}
 	 * @param extensionContext the extension context for the {@code Executable}
 	 * about to be invoked; never {@code null}
 	 * @return the resolved parameter object; may only be {@code null} if the
 	 * parameter type is not a primitive
 	 * @see #supports
-	 * @see java.lang.reflect.Parameter
-	 * @see java.lang.reflect.Executable
-	 * @see java.lang.reflect.Method
-	 * @see java.lang.reflect.Constructor
+	 * @see ParameterContext
 	 */
-	Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext)
+	Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException;
 
 }

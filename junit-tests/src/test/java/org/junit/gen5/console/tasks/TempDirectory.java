@@ -16,17 +16,16 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.Parameter;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Optional;
 
 import org.junit.gen5.api.extension.AfterEachCallback;
 import org.junit.gen5.api.extension.ExtensionContext;
 import org.junit.gen5.api.extension.ExtensionContext.Namespace;
+import org.junit.gen5.api.extension.ParameterContext;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.ParameterResolver;
 import org.junit.gen5.api.extension.TestExtensionContext;
@@ -45,12 +44,13 @@ public class TempDirectory implements AfterEachCallback, ParameterResolver {
 	private static final String KEY = "tempDirectory";
 
 	@Override
-	public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
-		return parameter.isAnnotationPresent(Root.class) && parameter.getType() == Path.class;
+	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		return parameterContext.getParameter().isAnnotationPresent(Root.class)
+				&& parameterContext.getParameter().getType() == Path.class;
 	}
 
 	@Override
-	public Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext context) {
+	public Object resolve(ParameterContext parameterContext, ExtensionContext context) {
 		return getLocalStore(context).getOrComputeIfAbsent(KEY, key -> createTempDirectory(context));
 	}
 

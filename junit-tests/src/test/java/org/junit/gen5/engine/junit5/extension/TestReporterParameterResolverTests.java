@@ -13,6 +13,7 @@ package org.junit.gen5.engine.junit5.extension;
 import static org.junit.gen5.api.Assertions.assertFalse;
 import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -20,6 +21,7 @@ import java.lang.reflect.Parameter;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestReporter;
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ParameterContext;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.mockito.Mockito;
 
@@ -33,23 +35,30 @@ class TestReporterParameterResolverTests {
 	@Test
 	void testSupports() {
 		Parameter parameter1 = findParameterOfMethod("methodWithTestReporterParameter", TestReporter.class);
-		assertTrue(this.resolver.supports(parameter1, null, null));
+		assertTrue(this.resolver.supports(parameterContext(parameter1), null));
 
 		Parameter parameter2 = findParameterOfMethod("methodWithoutTestReporterParameter", String.class);
-		assertFalse(this.resolver.supports(parameter2, null, null));
+		assertFalse(this.resolver.supports(parameterContext(parameter2), null));
 	}
 
 	@Test
 	void testResolve() {
 		Parameter parameter = findParameterOfMethod("methodWithTestReporterParameter", TestReporter.class);
 
-		TestReporter testReporter = this.resolver.resolve(parameter, null, Mockito.mock(ExtensionContext.class));
+		TestReporter testReporter = this.resolver.resolve(parameterContext(parameter),
+			Mockito.mock(ExtensionContext.class));
 		assertNotNull(testReporter);
 	}
 
 	private Parameter findParameterOfMethod(String methodName, Class<?>... parameterTypes) {
 		Method method = ReflectionUtils.findMethod(Sample.class, methodName, parameterTypes).get();
 		return method.getParameters()[0];
+	}
+
+	private static ParameterContext parameterContext(Parameter parameter) {
+		ParameterContext parameterContext = Mockito.mock(ParameterContext.class);
+		when(parameterContext.getParameter()).thenReturn(parameter);
+		return parameterContext;
 	}
 
 	static class Sample {
