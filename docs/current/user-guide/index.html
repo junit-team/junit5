@@ -1776,7 +1776,7 @@ versions.</p>
 <h4 id="single-test-class">4.4.2. Single Test Class</h4>
 <div class="paragraph">
 <p>One way to use the <code>JUnit5</code> runner is to annotate a JUnit 5 test class with
-<code>@RunWith(JUnit5.class)</code> directly. Please note that the tests are annotated with
+<code>@RunWith(JUnit5.class)</code> directly. Please note that the test methods are annotated with
 <code>org.junit.gen5.api.Test</code> (JUnit 5), not <code>org.junit.Test</code> (JUnit 4). Moreover, in this
 case the test class must be <code>public</code> because; otherwise, the IDEs won&#8217;t recognize it as a
 test class.</p>
@@ -1811,7 +1811,7 @@ public class JUnit4ClassDemo {
 <div class="sect3">
 <h4 id="test-suite">4.4.3. Test Suite</h4>
 <div class="paragraph">
-<p>If you have multiple JUnit 5 tests you can create a test suite.</p>
+<p>If you have multiple JUnit 5 test classes you can create a test suite.</p>
 </div>
 <div class="listingblock">
 <div class="content">
