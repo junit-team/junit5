@@ -21,7 +21,7 @@ import static org.junit.gen5.engine.discovery.ClasspathSelector.selectClasspathR
 import static org.junit.gen5.engine.discovery.MethodSelector.selectMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
-import static org.junit.gen5.launcher.EngineFilter.requireEngines;
+import static org.junit.gen5.launcher.EngineFilter.includeEngines;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
@@ -191,7 +191,7 @@ public class TestDiscoveryRequestBuilderTests {
 
 			// @formatter:off
 			TestDiscoveryRequest discoveryRequest = request()
-					.filters(requireEngines(engine1.getId(), engine2.getId()))
+					.filters(includeEngines(engine1.getId(), engine2.getId()))
 					.build();
 			// @formatter:on
 

@@ -53,7 +53,7 @@ public class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertFalse(options.isHideDetails()),
 			() -> assertFalse(options.isRunAllTests()),
 			() -> assertEquals(Optional.empty(), options.getClassnameFilter()),
-			() -> assertEquals(emptyList(), options.getRequiredTags()),
+			() -> assertEquals(emptyList(), options.getIncludedTags()),
 			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
 			() -> assertEquals(Optional.empty(), options.getXmlReportsDir()),
 			() -> assertEquals(emptyList(), options.getArguments())
@@ -96,20 +96,20 @@ public class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseValidRequiredTags() {
+	public void parseValidIncludedTags() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("fast"), parseArgLine("-t fast").getRequiredTags()),
-			() -> assertEquals(asList("fast"), parseArgLine("--require-tag fast").getRequiredTags()),
-			() -> assertEquals(asList("fast"), parseArgLine("--require-tag=fast").getRequiredTags()),
-			() -> assertEquals(asList("fast", "slow"), parseArgLine("-t fast -t slow").getRequiredTags())
+			() -> assertEquals(asList("fast"), parseArgLine("-t fast").getIncludedTags()),
+			() -> assertEquals(asList("fast"), parseArgLine("--include-tag fast").getIncludedTags()),
+			() -> assertEquals(asList("fast"), parseArgLine("--include-tag=fast").getIncludedTags()),
+			() -> assertEquals(asList("fast", "slow"), parseArgLine("-t fast -t slow").getIncludedTags())
 		);
 		// @formatter:on
 	}
 
 	@Test
-	public void parseInvalidRequiredTags() {
-		assertOptionWithMissingRequiredArgumentThrowsException("-t", "--require-tag");
+	public void parseInvalidIncludedTags() {
+		assertOptionWithMissingRequiredArgumentThrowsException("-t", "--include-tag");
 	}
 
 	@Test
@@ -130,19 +130,19 @@ public class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseValidRequiredEngines() {
+	public void parseValidIncludedEngines() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("junit5"), parseArgLine("-e junit5").getRequiredEngines()),
-			() -> assertEquals(asList("junit4"), parseArgLine("--require-engine junit4").getRequiredEngines()),
-			() -> assertEquals(emptyList(), parseArgLine("").getRequiredEngines())
+			() -> assertEquals(asList("junit5"), parseArgLine("-e junit5").getIncludedEngines()),
+			() -> assertEquals(asList("junit4"), parseArgLine("--include-engine junit4").getIncludedEngines()),
+			() -> assertEquals(emptyList(), parseArgLine("").getIncludedEngines())
 		);
 		// @formatter:on
 	}
 
 	@Test
-	public void parseInvalidRequiredEngines() throws Exception {
-		assertOptionWithMissingRequiredArgumentThrowsException("-e", "--require-engine");
+	public void parseInvalidIncludedEngines() throws Exception {
+		assertOptionWithMissingRequiredArgumentThrowsException("-e", "--include-engine");
 	}
 
 	@Test

@@ -134,9 +134,9 @@ class JUnit5Tests {
 		}
 
 		@Test
-		void addsTagFilterToRequestWhenRequireTagsAnnotationIsPresent() throws Exception {
+		void addsTagFilterToRequestWhenIncludeTagsAnnotationIsPresent() throws Exception {
 
-			@RequireTags({ "foo", "bar" })
+			@IncludeTags({ "foo", "bar" })
 			class TestCase {
 			}
 
@@ -170,9 +170,9 @@ class JUnit5Tests {
 		}
 
 		@Test
-		void addsEngineFiltersToRequestWhenRequireEnginesOrExcludeEnginesAnnotationsArePresent() throws Exception {
+		void addsEngineFiltersToRequestWhenIncludeEnginesOrExcludeEnginesAnnotationsArePresent() throws Exception {
 
-			@RequireEngines({ "foo", "bar", "baz" })
+			@IncludeEngines({ "foo", "bar", "baz" })
 			@ExcludeEngines({ "bar", "quux" })
 			class TestCase {
 			}

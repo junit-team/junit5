@@ -22,10 +22,12 @@ import java.lang.annotation.Target;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code @ExcludeTags} specifies tags to be filtered out when a class
- * annotated with {@code @RunWith(JUnit5.class)} is run.
+ * {@code @ExcludeTags} specifies the {@linkplain #value tags} to be excluded
+ * from the test plan when a class annotated with {@code @RunWith(JUnit5.class)}
+ * is run.
  *
  * @since 5.0
+ * @see IncludeTags
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

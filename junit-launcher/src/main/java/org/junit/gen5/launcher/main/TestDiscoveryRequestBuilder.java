@@ -37,25 +37,25 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  * <pre style="code">
  *   TestDiscoveryRequestBuilder.request()
  *     .selectors(
- *       selectPackage("org.junit.gen5"),
- *       selectPackage("com.junit.samples"),
- *       selectClass("com.junit.samples.SampleTestCase"),
- *       selectClass(TestDescriptorTests.class),
- *       selectMethod("com.junit.samples.SampleTestCase", "test2"),
- *       selectMethod(TestDescriptorTests.class, "test1"),
- *       selectMethod(TestDescriptorTests.class, testMethod),
- *       selectClasspathRoots("/my/local/path1"),
- *       selectClasspathRoots("/my/local/path2"),
- *       selectUniqueId("unique-id-1"),
- *       selectUniqueId("unique-id-2")
+ *        selectPackage("org.junit.gen5"),
+ *        selectPackage("com.junit.samples"),
+ *        selectClass("com.junit.samples.SampleTestCase"),
+ *        selectClass(TestDescriptorTests.class),
+ *        selectMethod("com.junit.samples.SampleTestCase", "test2"),
+ *        selectMethod(TestDescriptorTests.class, "test1"),
+ *        selectMethod(TestDescriptorTests.class, testMethod),
+ *        selectClasspathRoots("/my/local/path1"),
+ *        selectClasspathRoots("/my/local/path2"),
+ *        selectUniqueId("unique-id-1"),
+ *        selectUniqueId("unique-id-2")
  *     )
  *     .filters(
- *       requireEngines("junit5", "kotlin"),
- *       excludeEngines("junit4"),
- *       byClassNamePattern("org\.junit\.gen5\.tests.*"),
- *       byClassNamePattern(".*Test[s]?"),
- *       requireTags("fast"),
- *       excludeTags("slow")
+ *        includeEngines("junit5", "kotlin"),
+ *        excludeEngines("junit4"),
+ *        byClassNamePattern("org\.junit\.gen5\.tests.*"),
+ *        byClassNamePattern(".*Test[s]?"),
+ *        includeTags("fast"),
+ *        excludeTags("slow")
  *     )
  *     .configurationParameter("key1", "value1")
  *     .configurationParameters(configParameterMap)

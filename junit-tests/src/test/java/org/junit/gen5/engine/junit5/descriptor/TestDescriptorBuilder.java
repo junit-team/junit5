@@ -20,44 +20,44 @@ import org.junit.gen5.engine.UniqueId;
 /**
  * @since 5.0
  */
-public abstract class TestDescriptorBuilder {
+public abstract class TestDescriptorBuilder<T extends TestDescriptor> {
 
-	List<TestDescriptorBuilder> children = new ArrayList<>();
+	final List<TestDescriptorBuilder<?>> children = new ArrayList<>();
 
-	public static TestDescriptorBuilder engineDescriptor() {
+	public static JUnit5EngineDescriptorBuilder engineDescriptor() {
 		return new JUnit5EngineDescriptorBuilder();
 	}
 
-	public static TestDescriptorBuilder classTestDescriptor(String uniqueId, Class<?> testClass) {
+	public static ClassTestDescriptorBuilder classTestDescriptor(String uniqueId, Class<?> testClass) {
 		return new ClassTestDescriptorBuilder(uniqueId, testClass);
 	}
 
-	public static TestDescriptorBuilder nestedClassTestDescriptor(String uniqueId, Class<?> testClass) {
+	public static NestedClassTestDescriptorBuilder nestedClassTestDescriptor(String uniqueId, Class<?> testClass) {
 		return new NestedClassTestDescriptorBuilder(uniqueId, testClass);
 	}
 
-	public TestDescriptor build() {
-		TestDescriptor testDescriptor = buildDescriptor();
+	public T build() {
+		T testDescriptor = buildDescriptor();
 		children.forEach(builder -> testDescriptor.addChild(builder.build()));
 		return testDescriptor;
 	}
 
-	public TestDescriptorBuilder with(TestDescriptorBuilder... children) {
+	public TestDescriptorBuilder<?> with(TestDescriptorBuilder<?>... children) {
 		this.children.addAll(Arrays.asList(children));
 		return this;
 	}
 
-	abstract TestDescriptor buildDescriptor();
+	abstract T buildDescriptor();
 
-	static class JUnit5EngineDescriptorBuilder extends TestDescriptorBuilder {
+	public static class JUnit5EngineDescriptorBuilder extends TestDescriptorBuilder<JUnit5EngineDescriptor> {
 
 		@Override
-		TestDescriptor buildDescriptor() {
+		JUnit5EngineDescriptor buildDescriptor() {
 			return new JUnit5EngineDescriptor(UniqueId.forEngine("junit5"));
 		}
 	}
 
-	static class ClassTestDescriptorBuilder extends TestDescriptorBuilder {
+	public static class ClassTestDescriptorBuilder extends TestDescriptorBuilder<ClassTestDescriptor> {
 
 		protected final String uniqueId;
 		protected final Class<?> testClass;
@@ -68,20 +68,21 @@ public abstract class TestDescriptorBuilder {
 		}
 
 		@Override
-		TestDescriptor buildDescriptor() {
+		ClassTestDescriptor buildDescriptor() {
 			return new ClassTestDescriptor(UniqueId.root("class", uniqueId), testClass);
 		}
 	}
 
-	static class NestedClassTestDescriptorBuilder extends ClassTestDescriptorBuilder {
+	public static class NestedClassTestDescriptorBuilder extends ClassTestDescriptorBuilder {
 
 		public NestedClassTestDescriptorBuilder(String uniqueId, Class<?> testClass) {
 			super(uniqueId, testClass);
 		}
 
 		@Override
-		TestDescriptor buildDescriptor() {
+		NestedClassTestDescriptor buildDescriptor() {
 			return new NestedClassTestDescriptor(UniqueId.root("nested-class", uniqueId), testClass);
 		}
 	}
+
 }

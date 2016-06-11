@@ -220,11 +220,11 @@ Option                       Description
                                classes whose fully qualified names match.
                                By default any class name is accepted, and
                                thus all classes with tests are included.
--t, --require-tag            Provide a tag to be required in the test run. This
+-t, --include-tag            Provide a tag to be included in the test run. This
                                option can be repeated.
 -T, --exclude-tag            Provide a tag to be excluded from the test run. This
                                option can be repeated.
--e, --require-engine         Provide the ID of an engine to be required in the test
+-e, --include-engine         Provide the ID of an engine to be included in the test
                                run. This option can be repeated.
 -E, --exclude-engine         Provide the ID of an engine to be excluded from the
                                test run. This option can be repeated.

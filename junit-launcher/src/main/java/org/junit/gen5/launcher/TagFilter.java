@@ -24,7 +24,7 @@ import org.junit.gen5.engine.TestTag;
 
 /**
  * Factory methods for creating {@link PostDiscoveryFilter PostDiscoveryFilters}
- * based on <em>require</em> and <em>exclude</em> tags.
+ * based on <em>included</em> and <em>excluded</em> tags.
  *
  * @since 5.0
  */
@@ -36,27 +36,27 @@ public final class TagFilter {
 	}
 
 	/**
-	 * Create a <em>require</em> filter based on the supplied {@code tags}.
+	 * Create an <em>include</em> filter based on the supplied {@code tags}.
 	 *
 	 * <p>Containers and tests will only be executed if they are tagged with
-	 * at least one of the supplied <em>require</em> tags.
+	 * at least one of the supplied <em>included</em> tags.
 	 *
-	 * @param tags the required tags; never {@code null} or empty
+	 * @param tags the included tags; never {@code null} or empty
 	 */
-	public static PostDiscoveryFilter requireTags(String... tags) {
+	public static PostDiscoveryFilter includeTags(String... tags) {
 		Preconditions.notNull(tags, "tags must not be null");
-		return requireTags(asList(tags));
+		return includeTags(asList(tags));
 	}
 
 	/**
-	 * Create a <em>require</em> filter based on the supplied {@code tags}.
+	 * Create an <em>include</em> filter based on the supplied {@code tags}.
 	 *
 	 * <p>Containers and tests will only be executed if they are tagged with
-	 * at least one of the supplied <em>require</em> tags.
+	 * at least one of the supplied <em>included</em> tags.
 	 *
-	 * @param tags the require tags; never {@code null} or empty
+	 * @param tags the included tags; never {@code null} or empty
 	 */
-	public static PostDiscoveryFilter requireTags(List<String> tags) {
+	public static PostDiscoveryFilter includeTags(List<String> tags) {
 		Preconditions.notEmpty(tags, "tags must not be null or empty");
 		return descriptor -> FilterResult.includedIf(trimmedTagsOf(descriptor).anyMatch(tags::contains));
 	}
@@ -65,9 +65,9 @@ public final class TagFilter {
 	 * Create an <em>exclude</em> filter based on the supplied {@code tags}.
 	 *
 	 * <p>Containers and tests will only be executed if they are <em>not</em>
-	 * tagged with any of the supplied <em>exclude</em> tags.
+	 * tagged with any of the supplied <em>excluded</em> tags.
 	 *
-	 * @param tags the exclude tags; never {@code null} or empty
+	 * @param tags the excluded tags; never {@code null} or empty
 	 */
 	public static PostDiscoveryFilter excludeTags(String... tags) {
 		Preconditions.notNull(tags, "tags must not be null");
@@ -78,9 +78,9 @@ public final class TagFilter {
 	 * Create an <em>exclude</em> filter based on the supplied {@code tags}.
 	 *
 	 * <p>Containers and tests will only be executed if they are <em>not</em>
-	 * tagged with any of the supplied <em>exclude</em> tags.
+	 * tagged with any of the supplied <em>excluded</em> tags.
 	 *
-	 * @param tags the exclude tags; never {@code null} or empty
+	 * @param tags the excluded tags; never {@code null} or empty
 	 */
 	public static PostDiscoveryFilter excludeTags(List<String> tags) {
 		Preconditions.notEmpty(tags, "tags must not be null or empty");

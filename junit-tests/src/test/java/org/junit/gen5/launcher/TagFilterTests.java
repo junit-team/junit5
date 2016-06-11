@@ -10,71 +10,69 @@
 
 package org.junit.gen5.launcher;
 
-import org.junit.gen5.api.Assertions;
+import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.gen5.engine.junit5.descriptor.TestDescriptorBuilder.classTestDescriptor;
+import static org.junit.gen5.launcher.TagFilter.excludeTags;
+import static org.junit.gen5.launcher.TagFilter.includeTags;
+
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
-import org.junit.gen5.engine.junit5.descriptor.TestDescriptorBuilder;
 
 /**
+ * Unit tests for {@link TagFilter}.
+ *
  * @since 5.0
  */
 class TagFilterTests {
 
-	ClassTestDescriptor testWithTag1 = (ClassTestDescriptor) TestDescriptorBuilder.classTestDescriptor("test1",
-		ATestWithATag1.class).build();
-
-	ClassTestDescriptor testWithTag2 = (ClassTestDescriptor) TestDescriptorBuilder.classTestDescriptor("test2",
-		ATestWithATag2.class).build();
-
-	ClassTestDescriptor testWithBothTags = (ClassTestDescriptor) TestDescriptorBuilder.classTestDescriptor("test12",
-		ATestWithBothTags.class).build();
-
-	ClassTestDescriptor testWithNoTags = (ClassTestDescriptor) TestDescriptorBuilder.classTestDescriptor("test",
-		ATestWithNoTags.class).build();
+	ClassTestDescriptor testWithTag1 = classTestDescriptor("test1", ATestWithATag1.class).build();
+	ClassTestDescriptor testWithTag2 = classTestDescriptor("test2", ATestWithATag2.class).build();
+	ClassTestDescriptor testWithBothTags = classTestDescriptor("test12", ATestWithBothTags.class).build();
+	ClassTestDescriptor testWithNoTags = classTestDescriptor("test", ATestWithNoTags.class).build();
 
 	@Test
-	void requireSingleTag() throws Exception {
-		PostDiscoveryFilter requireSingleTag = TagFilter.requireTags("tag1");
+	void includeSingleTag() throws Exception {
+		PostDiscoveryFilter filter = includeTags("tag1");
 
-		Assertions.assertTrue(requireSingleTag.apply(testWithTag1).included());
-		Assertions.assertTrue(requireSingleTag.apply(testWithBothTags).included());
+		assertTrue(filter.apply(testWithTag1).included());
+		assertTrue(filter.apply(testWithBothTags).included());
 
-		Assertions.assertTrue(requireSingleTag.apply(testWithTag2).excluded());
-		Assertions.assertTrue(requireSingleTag.apply(testWithNoTags).excluded());
+		assertTrue(filter.apply(testWithTag2).excluded());
+		assertTrue(filter.apply(testWithNoTags).excluded());
 	}
 
 	@Test
-	void requireAtLeastOneOfTwoTags() throws Exception {
-		PostDiscoveryFilter requireSingleTag = TagFilter.requireTags("tag1", "tag2");
+	void includeMultipleTags() throws Exception {
+		PostDiscoveryFilter filter = includeTags("tag1", "tag2");
 
-		Assertions.assertTrue(requireSingleTag.apply(testWithBothTags).included());
-		Assertions.assertTrue(requireSingleTag.apply(testWithTag1).included());
-		Assertions.assertTrue(requireSingleTag.apply(testWithTag2).included());
+		assertTrue(filter.apply(testWithBothTags).included());
+		assertTrue(filter.apply(testWithTag1).included());
+		assertTrue(filter.apply(testWithTag2).included());
 
-		Assertions.assertTrue(requireSingleTag.apply(testWithNoTags).excluded());
+		assertTrue(filter.apply(testWithNoTags).excluded());
 	}
 
 	@Test
 	void excludeSingleTag() throws Exception {
-		PostDiscoveryFilter requireSingleTag = TagFilter.excludeTags("tag1");
+		PostDiscoveryFilter filter = excludeTags("tag1");
 
-		Assertions.assertTrue(requireSingleTag.apply(testWithTag1).excluded());
-		Assertions.assertTrue(requireSingleTag.apply(testWithBothTags).excluded());
+		assertTrue(filter.apply(testWithTag1).excluded());
+		assertTrue(filter.apply(testWithBothTags).excluded());
 
-		Assertions.assertTrue(requireSingleTag.apply(testWithTag2).included());
-		Assertions.assertTrue(requireSingleTag.apply(testWithNoTags).included());
+		assertTrue(filter.apply(testWithTag2).included());
+		assertTrue(filter.apply(testWithNoTags).included());
 	}
 
 	@Test
-	void excludeSeveralTags() throws Exception {
-		PostDiscoveryFilter requireSingleTag = TagFilter.excludeTags("tag1", "tag2");
+	void excludeMultipleTags() throws Exception {
+		PostDiscoveryFilter filter = excludeTags("tag1", "tag2");
 
-		Assertions.assertTrue(requireSingleTag.apply(testWithTag1).excluded());
-		Assertions.assertTrue(requireSingleTag.apply(testWithBothTags).excluded());
-		Assertions.assertTrue(requireSingleTag.apply(testWithTag2).excluded());
+		assertTrue(filter.apply(testWithTag1).excluded());
+		assertTrue(filter.apply(testWithBothTags).excluded());
+		assertTrue(filter.apply(testWithTag2).excluded());
 
-		Assertions.assertTrue(requireSingleTag.apply(testWithNoTags).included());
+		assertTrue(filter.apply(testWithNoTags).included());
 	}
 
 	@Tag("tag1")

@@ -29,9 +29,9 @@ class AvailableOptions {
 	private final OptionSpec<Void> runAllTests;
 	private final OptionSpec<Void> hideDetails;
 	private final OptionSpec<String> classnameFilter;
-	private final OptionSpec<String> requireTag;
+	private final OptionSpec<String> includeTag;
 	private final OptionSpec<String> excludeTag;
-	private final OptionSpec<String> requireEngine;
+	private final OptionSpec<String> includeEngine;
 	private final OptionSpec<String> excludeEngine;
 	private final OptionSpec<String> additionalClasspathEntries;
 	private final OptionSpec<String> xmlReportsDir;
@@ -51,15 +51,15 @@ class AvailableOptions {
 					+ "By default any class name is accepted, and thus all classes with tests are included.") //
 				.withRequiredArg();
 
-		requireTag = parser.acceptsAll(asList("t", "require-tag"),
-			"Provide a tag to be required in the test run. This option can be repeated.") //
+		includeTag = parser.acceptsAll(asList("t", "include-tag"),
+			"Provide a tag to be included in the test run. This option can be repeated.") //
 				.withRequiredArg();
 		excludeTag = parser.acceptsAll(asList("T", "exclude-tag"),
 			"Provide a tag to be excluded from the test run. This option can be repeated.") //
 				.withRequiredArg();
 
-		requireEngine = parser.acceptsAll(asList("e", "require-engine"),
-			"Provide the ID of an engine to be required in the test run. This option can be repeated.") //
+		includeEngine = parser.acceptsAll(asList("e", "include-engine"),
+			"Provide the ID of an engine to be included in the test run. This option can be repeated.") //
 				.withRequiredArg();
 		excludeEngine = parser.acceptsAll(asList("E", "exclude-engine"),
 			"Provide the ID of an engine to be excluded from the test run. This option can be repeated.") //
@@ -95,9 +95,9 @@ class AvailableOptions {
 		result.setRunAllTests(detectedOptions.has(this.runAllTests));
 		result.setHideDetails(detectedOptions.has(this.hideDetails));
 		result.setClassnameFilter(detectedOptions.valueOf(this.classnameFilter));
-		result.setRequiredTags(detectedOptions.valuesOf(this.requireTag));
+		result.setIncludedTags(detectedOptions.valuesOf(this.includeTag));
 		result.setExcludedTags(detectedOptions.valuesOf(this.excludeTag));
-		result.setRequiredEngines(detectedOptions.valuesOf(this.requireEngine));
+		result.setIncludedEngines(detectedOptions.valuesOf(this.includeEngine));
 		result.setExcludedEngines(detectedOptions.valuesOf(this.excludeEngine));
 		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(this.additionalClasspathEntries));
 		result.setXmlReportsDir(detectedOptions.valueOf(this.xmlReportsDir));

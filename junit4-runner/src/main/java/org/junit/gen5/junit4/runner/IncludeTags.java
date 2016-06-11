@@ -22,20 +22,22 @@ import java.lang.annotation.Target;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code @RequireTags} specifies tags to be considered when a class
- * annotated with {@code @RunWith(JUnit5.class)} is run.
+ * {@code @IncludeTags} specifies the {@linkplain #value tags} to be included
+ * in the test plan when a class annotated with {@code @RunWith(JUnit5.class)}
+ * is run.
  *
  * @since 5.0
+ * @see ExcludeTags
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
 @API(Maintained)
-public @interface RequireTags {
+public @interface IncludeTags {
 
 	/**
-	 * One or more tags to be required.
+	 * One or more tags to include.
 	 */
 	String[] value();
 

@@ -32,10 +32,10 @@ public class CommandLineOptions {
 
 	private String classnameFilter;
 
-	private List<String> requiredEngines = emptyList();
+	private List<String> includedEngines = emptyList();
 	private List<String> excludedEngines = emptyList();
 
-	private List<String> requiredTags = emptyList();
+	private List<String> includedTags = emptyList();
 	private List<String> excludedTags = emptyList();
 
 	private List<String> additionalClasspathEntries = emptyList();
@@ -92,12 +92,12 @@ public class CommandLineOptions {
 		this.classnameFilter = classnameFilter;
 	}
 
-	public List<String> getRequiredEngines() {
-		return this.requiredEngines;
+	public List<String> getIncludedEngines() {
+		return this.includedEngines;
 	}
 
-	public void setRequiredEngines(List<String> requiredEngines) {
-		this.requiredEngines = requiredEngines;
+	public void setIncludedEngines(List<String> includedEngines) {
+		this.includedEngines = includedEngines;
 	}
 
 	public List<String> getExcludedEngines() {
@@ -108,12 +108,12 @@ public class CommandLineOptions {
 		this.excludedEngines = excludedEngines;
 	}
 
-	public List<String> getRequiredTags() {
-		return this.requiredTags;
+	public List<String> getIncludedTags() {
+		return this.includedTags;
 	}
 
-	public void setRequiredTags(List<String> requiredTags) {
-		this.requiredTags = requiredTags;
+	public void setIncludedTags(List<String> includedTags) {
+		this.includedTags = includedTags;
 	}
 
 	public List<String> getExcludedTags() {

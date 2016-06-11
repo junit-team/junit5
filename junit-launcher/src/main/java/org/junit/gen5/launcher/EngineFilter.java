@@ -28,13 +28,13 @@ import org.junit.gen5.engine.TestEngine;
  * before they are used.
  *
  * <p><strong>Warning</strong>: be cautious when registering multiple competing
- * {@link #requireEngines require} {@code EngineFilters} or multiple competing
+ * {@link #includeEngines include} {@code EngineFilters} or multiple competing
  * {@link #excludeEngines exclude} {@code EngineFilters} for the same discovery
  * request since doing so will likely lead to undesirable results (i.e., zero
  * engines being active).
  *
  * @since 5.0
- * @see #requireEngines(String...)
+ * @see #includeEngines(String...)
  * @see #excludeEngines(String...)
  * @see TestDiscoveryRequest
  */
@@ -42,7 +42,7 @@ import org.junit.gen5.engine.TestEngine;
 public class EngineFilter implements Filter<TestEngine> {
 
 	/**
-	 * Create a new <em>require</em> {@code EngineFilter} based on the
+	 * Create a new <em>include</em> {@code EngineFilter} based on the
 	 * supplied engine IDs.
 	 *
 	 * <p>Only {@code TestEngines} with matching engine IDs will be
@@ -50,14 +50,14 @@ public class EngineFilter implements Filter<TestEngine> {
 	 *
 	 * @param engineIds the list of engine IDs to match against; never {@code null}
 	 * or empty; individual IDs must also not be null or blank
-	 * @see #requireEngines(String...)
+	 * @see #includeEngines(String...)
 	 */
-	public static EngineFilter requireEngines(String... engineIds) {
-		return requireEngines(Arrays.asList(engineIds));
+	public static EngineFilter includeEngines(String... engineIds) {
+		return includeEngines(Arrays.asList(engineIds));
 	}
 
 	/**
-	 * Create a new <em>require</em> {@code EngineFilter} based on the
+	 * Create a new <em>include</em> {@code EngineFilter} based on the
 	 * supplied engine IDs.
 	 *
 	 * <p>Only {@code TestEngines} with matching engine IDs will be
@@ -65,10 +65,10 @@ public class EngineFilter implements Filter<TestEngine> {
 	 *
 	 * @param engineIds the list of engine IDs to match against; never {@code null}
 	 * or empty; individual IDs must also not be null or blank
-	 * @see #requireEngines(String...)
+	 * @see #includeEngines(String...)
 	 */
-	public static EngineFilter requireEngines(List<String> engineIds) {
-		return new EngineFilter(engineIds, Type.REQUIRE);
+	public static EngineFilter includeEngines(List<String> engineIds) {
+		return new EngineFilter(engineIds, Type.INCLUDE);
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class EngineFilter implements Filter<TestEngine> {
 	 *
 	 * @param engineIds the list of engine IDs to match against; never {@code null}
 	 * or empty; individual IDs must also not be null or blank
-	 * @see #excludeEngines(String...)
+	 * @see #includeEngines(String...)
 	 */
 	public static EngineFilter excludeEngines(List<String> engineIds) {
 		return new EngineFilter(engineIds, Type.EXCLUDE);
@@ -115,10 +115,10 @@ public class EngineFilter implements Filter<TestEngine> {
 		String engineId = testEngine.getId();
 		Preconditions.notBlank(engineId, "TestEngine ID must not be null or blank");
 
-		if (this.type == Type.REQUIRE) {
+		if (this.type == Type.INCLUDE) {
 			return includedIf(this.engineIds.stream().anyMatch(engineId::equals), //
-				() -> String.format("Engine ID [%s] is in required list [%s]", engineId, this.engineIds), //
-				() -> String.format("Engine ID [%s] is not in required list [%s]", engineId, this.engineIds));
+				() -> String.format("Engine ID [%s] is in included list [%s]", engineId, this.engineIds), //
+				() -> String.format("Engine ID [%s] is not in included list [%s]", engineId, this.engineIds));
 		}
 		else {
 			return includedIf(this.engineIds.stream().noneMatch(engineId::equals), //
@@ -147,7 +147,7 @@ public class EngineFilter implements Filter<TestEngine> {
 
 	private enum Type {
 
-		REQUIRE("includes"),
+		INCLUDE("includes"),
 
 		EXCLUDE("excludes");
 

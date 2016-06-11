@@ -16,7 +16,7 @@ import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.gen5.launcher.EngineFilter.excludeEngines;
-import static org.junit.gen5.launcher.EngineFilter.requireEngines;
+import static org.junit.gen5.launcher.EngineFilter.includeEngines;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
@@ -108,7 +108,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void launcherWillNotCallEnginesIfNotRequiredByAnEngineFilter() {
+	void launcherWillNotExecuteEnginesIfNotIncludedByAnEngineFilter() {
 		DummyTestEngine firstEngine = new DummyTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
 		DummyTestEngine secondEngine = new DummyTestEngine("second");
@@ -120,7 +120,7 @@ class DefaultLauncherTests {
 		TestPlan testPlan = launcher.discover(
 			request()
 				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
-				.filters(requireEngines("first"))
+				.filters(includeEngines("first"))
 				.build());
 		// @formatter:on
 
@@ -131,7 +131,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void launcherWillExecuteAllEnginesExplicitlyRequiredViaSingleEngineFilter() {
+	void launcherWillExecuteAllEnginesExplicitlyIncludedViaSingleEngineFilter() {
 		DummyTestEngine firstEngine = new DummyTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
 		DummyTestEngine secondEngine = new DummyTestEngine("second");
@@ -143,7 +143,7 @@ class DefaultLauncherTests {
 		TestPlan testPlan = launcher.discover(
 			request()
 				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
-				.filters(requireEngines("first", "second"))
+				.filters(includeEngines("first", "second"))
 				.build());
 		// @formatter:on
 
@@ -151,7 +151,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void launcherWillNotExecuteEnginesExplicitlyRequiredViaMultipleCompetingEngineFilters() {
+	void launcherWillNotExecuteEnginesExplicitlyIncludedViaMultipleCompetingEngineFilters() {
 		DummyTestEngine firstEngine = new DummyTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
 		DummyTestEngine secondEngine = new DummyTestEngine("second");
@@ -163,7 +163,7 @@ class DefaultLauncherTests {
 		TestPlan testPlan = launcher.discover(
 			request()
 				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
-				.filters(requireEngines("first"), requireEngines("second"))
+				.filters(includeEngines("first"), includeEngines("second"))
 				.build());
 		// @formatter:on
 
@@ -171,7 +171,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void launcherWillNotCallEnginesExplicitlyExcludedByAnEngineFilter() {
+	void launcherWillNotExecuteEnginesExplicitlyExcludedByAnEngineFilter() {
 		DummyTestEngine firstEngine = new DummyTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
 		DummyTestEngine secondEngine = new DummyTestEngine("second");
@@ -194,7 +194,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void launcherWillCallEnginesHonoringBothRequireAndExcludEngineFilters() {
+	void launcherWillExecuteEnginesHonoringBothIncludeAndExcludeEngineFilters() {
 		DummyTestEngine firstEngine = new DummyTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
 		DummyTestEngine secondEngine = new DummyTestEngine("second");
@@ -208,7 +208,7 @@ class DefaultLauncherTests {
 		TestPlan testPlan = launcher.discover(
 			request()
 				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()), selectUniqueId(test3.getUniqueId()))
-				.filters(requireEngines("first", "second"), excludeEngines("second"))
+				.filters(includeEngines("first", "second"), excludeEngines("second"))
 				.build());
 		// @formatter:on
 
@@ -296,7 +296,7 @@ class DefaultLauncherTests {
 		TestPlan testPlan = launcher.discover(
 				request()
 						.selectors(PackageSelector.selectPackage("any"))
-						.filters(TagFilter.requireTags("foo"))
+						.filters(TagFilter.includeTags("foo"))
 						.build());
 		// @formatter:on
 

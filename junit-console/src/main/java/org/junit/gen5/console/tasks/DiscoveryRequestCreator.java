@@ -14,9 +14,9 @@ import static java.util.stream.Collectors.toCollection;
 import static org.junit.gen5.engine.discovery.ClasspathSelector.selectClasspathRoots;
 import static org.junit.gen5.engine.discovery.NameBasedSelectors.selectNames;
 import static org.junit.gen5.launcher.EngineFilter.excludeEngines;
-import static org.junit.gen5.launcher.EngineFilter.requireEngines;
+import static org.junit.gen5.launcher.EngineFilter.includeEngines;
 import static org.junit.gen5.launcher.TagFilter.excludeTags;
-import static org.junit.gen5.launcher.TagFilter.requireTags;
+import static org.junit.gen5.launcher.TagFilter.includeTags;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
@@ -72,16 +72,16 @@ class DiscoveryRequestCreator {
 		options.getClassnameFilter().ifPresent(
 			regex -> discoveryRequest.addFilter(ClassFilter.byClassNamePattern(regex)));
 
-		if (!options.getRequiredTags().isEmpty()) {
-			discoveryRequest.addPostFilter(requireTags(options.getRequiredTags()));
+		if (!options.getIncludedTags().isEmpty()) {
+			discoveryRequest.addPostFilter(includeTags(options.getIncludedTags()));
 		}
 
 		if (!options.getExcludedTags().isEmpty()) {
 			discoveryRequest.addPostFilter(excludeTags(options.getExcludedTags()));
 		}
 
-		if (!options.getRequiredEngines().isEmpty()) {
-			discoveryRequest.addEngineFilter(requireEngines(options.getRequiredEngines()));
+		if (!options.getIncludedEngines().isEmpty()) {
+			discoveryRequest.addEngineFilter(includeEngines(options.getIncludedEngines()));
 		}
 
 		if (!options.getExcludedEngines().isEmpty()) {

@@ -27,7 +27,7 @@ import org.junit.gen5.commons.meta.API;
  * test plan when a class annotated with {@code @RunWith(JUnit5.class)} is run.
  *
  * @since 5.0
- * @see RequireEngines
+ * @see IncludeEngines
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

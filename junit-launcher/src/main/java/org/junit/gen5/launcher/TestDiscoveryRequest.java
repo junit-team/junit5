@@ -51,7 +51,7 @@ public interface TestDiscoveryRequest extends EngineDiscoveryRequest {
 	 * Add the supplied {@code engineFilter} to this request.
 	 *
 	 * <p><strong>Warning</strong>: be cautious when registering multiple competing
-	 * {@link EngineFilter#requireEngines require} {@code EngineFilters} or multiple
+	 * {@link EngineFilter#includeEngines include} {@code EngineFilters} or multiple
 	 * competing {@link EngineFilter#excludeEngines exclude} {@code EngineFilters}
 	 * for the same discovery request since doing so will likely lead to
 	 * undesirable results (i.e., zero engines being active).
@@ -64,7 +64,7 @@ public interface TestDiscoveryRequest extends EngineDiscoveryRequest {
 	 * Add all of the supplied {@code engineFilters} to this request.
 	 *
 	 * <p><strong>Warning</strong>: be cautious when registering multiple competing
-	 * {@link EngineFilter#requireEngines require} {@code EngineFilters} or multiple
+	 * {@link EngineFilter#includeEngines include} {@code EngineFilters} or multiple
 	 * competing {@link EngineFilter#excludeEngines exclude} {@code EngineFilters}
 	 * for the same discovery request since doing so will likely lead to
 	 * undesirable results (i.e., zero engines being active).

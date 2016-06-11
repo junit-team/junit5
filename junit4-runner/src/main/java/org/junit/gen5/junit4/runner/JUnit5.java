@@ -14,9 +14,9 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.meta.API.Usage.Maintained;
 import static org.junit.gen5.launcher.EngineFilter.excludeEngines;
-import static org.junit.gen5.launcher.EngineFilter.requireEngines;
+import static org.junit.gen5.launcher.EngineFilter.includeEngines;
 import static org.junit.gen5.launcher.TagFilter.excludeTags;
-import static org.junit.gen5.launcher.TagFilter.requireTags;
+import static org.junit.gen5.launcher.TagFilter.includeTags;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Annotation;
@@ -65,9 +65,9 @@ import org.junit.runners.model.InitializationError;
  * @see FilterClassName
  * @see Packages
  * @see UniqueIds
- * @see RequireTags
+ * @see IncludeTags
  * @see ExcludeTags
- * @see RequireEngines
+ * @see IncludeEngines
  * @see ExcludeEngines
  */
 @API(Maintained)
@@ -129,10 +129,10 @@ public class JUnit5 extends Runner implements Filterable {
 	private void addFiltersFromAnnotations(TestDiscoveryRequest request) {
 		addClassNameMatchesFilter(request);
 
-		addRequiredTagsFilter(request);
+		addIncludedTagsFilter(request);
 		addExcludedTagsFilter(request);
 
-		addRequiredEnginesFilter(request);
+		addIncludedEnginesFilter(request);
 		addExcludedEnginesFilter(request);
 	}
 
@@ -157,10 +157,10 @@ public class JUnit5 extends Runner implements Filterable {
 		}
 	}
 
-	private void addRequiredTagsFilter(TestDiscoveryRequest discoveryRequest) {
-		String[] requiredTags = getRequiredTags();
-		if (requiredTags.length > 0) {
-			discoveryRequest.addPostFilter(requireTags(requiredTags));
+	private void addIncludedTagsFilter(TestDiscoveryRequest discoveryRequest) {
+		String[] includedTags = getIncludedTags();
+		if (includedTags.length > 0) {
+			discoveryRequest.addPostFilter(includeTags(includedTags));
 		}
 	}
 
@@ -171,10 +171,10 @@ public class JUnit5 extends Runner implements Filterable {
 		}
 	}
 
-	private void addRequiredEnginesFilter(TestDiscoveryRequest discoveryRequest) {
-		String[] engineIds = getRequiredEngineIds();
+	private void addIncludedEnginesFilter(TestDiscoveryRequest discoveryRequest) {
+		String[] engineIds = getIncludedEngineIds();
 		if (engineIds.length > 0) {
-			discoveryRequest.addEngineFilter(requireEngines(engineIds));
+			discoveryRequest.addEngineFilter(includeEngines(engineIds));
 		}
 	}
 
@@ -197,16 +197,16 @@ public class JUnit5 extends Runner implements Filterable {
 		return getValueFromAnnotation(Packages.class, Packages::value, EMPTY_STRING_ARRAY);
 	}
 
-	private String[] getRequiredTags() {
-		return getValueFromAnnotation(RequireTags.class, RequireTags::value, EMPTY_STRING_ARRAY);
+	private String[] getIncludedTags() {
+		return getValueFromAnnotation(IncludeTags.class, IncludeTags::value, EMPTY_STRING_ARRAY);
 	}
 
 	private String[] getExcludedTags() {
 		return getValueFromAnnotation(ExcludeTags.class, ExcludeTags::value, EMPTY_STRING_ARRAY);
 	}
 
-	private String[] getRequiredEngineIds() {
-		return getValueFromAnnotation(RequireEngines.class, RequireEngines::value, EMPTY_STRING_ARRAY);
+	private String[] getIncludedEngineIds() {
+		return getValueFromAnnotation(IncludeEngines.class, IncludeEngines::value, EMPTY_STRING_ARRAY);
 	}
 
 	private String[] getExcludedEngineIds() {

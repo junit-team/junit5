@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code @RequireEngines} specifies the {@linkplain #value IDs} of
+ * {@code @IncludeEngines} specifies the {@linkplain #value IDs} of
  * {@link org.junit.gen5.engine.TestEngine TestEngines} to be included in the
  * test plan when a class annotated with {@code @RunWith(JUnit5.class)} is run.
  *
@@ -34,7 +34,7 @@ import org.junit.gen5.commons.meta.API;
 @Inherited
 @Documented
 @API(Maintained)
-public @interface RequireEngines {
+public @interface IncludeEngines {
 
 	/**
 	 * One or more Engine IDs to be included in the test plan.

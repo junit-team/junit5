@@ -132,7 +132,7 @@ public class DiscoveryRequestCreatorTests {
 	@Test
 	public void convertsTagOptions() {
 		options.setRunAllTests(true);
-		options.setRequiredTags(asList("fast", "medium", "slow"));
+		options.setIncludedTags(asList("fast", "medium", "slow"));
 		options.setExcludedTags(asList("slow"));
 
 		TestDiscoveryRequest request = convert();
@@ -146,7 +146,7 @@ public class DiscoveryRequestCreatorTests {
 	@Test
 	public void convertsEngineOptions() {
 		options.setRunAllTests(true);
-		options.setRequiredEngines(asList("engine1", "engine2", "engine3"));
+		options.setIncludedEngines(asList("engine1", "engine2", "engine3"));
 		options.setExcludedEngines(asList("engine2"));
 
 		TestDiscoveryRequest request = convert();
