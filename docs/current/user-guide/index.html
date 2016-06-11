@@ -463,8 +463,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#ide-support">4.1. IDE Support</a></li>
 <li><a href="#build-support">4.2. Build Support</a></li>
-<li><a href="#console-runner">4.3. Console Runner</a></li>
-<li><a href="#using-junit-4-to-run-junit-5-tests">4.4. Using JUnit 4 to Run JUnit 5 Tests</a></li>
+<li><a href="#running-tests-console-runner">4.3. Console Runner</a></li>
+<li><a href="#running-tests-junit4-runner">4.4. Using JUnit 4 to Run JUnit 5 Tests</a></li>
 </ul>
 </li>
 <li><a href="#extension-model">5. Extension Model</a>
@@ -1478,10 +1478,10 @@ class DynamicTestsDemo {
 <div class="sect2">
 <h3 id="ide-support">4.1. IDE Support</h3>
 <div class="paragraph">
-<p>At this stage there is no direct support for running JUnit 5 tests in IDEs. However, we
-provide two intermediate solutions so that you can go ahead and try out the current
-snapshot today. You can use the <a href="#console-runner"><code>ConsoleRunner</code></a> or execute JUnit 5
-tests with a <a href="#using-junit-4-to-run-junit-5-tests">JUnit 4 style runner</a>.</p>
+<p>At this stage there is no direct support for running JUnit 5 tests in IDEs. However, the
+JUnit team provides two intermediate solutions so that you can go ahead and try out the
+current snapshot today. You can use the <a href="#running-tests-console-runner">Console Runner</a> or execute JUnit
+5 tests with a <a href="#running-tests-junit4-runner">JUnit 4 based Runner</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1670,7 +1670,7 @@ point.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="console-runner">4.3. Console Runner</h3>
+<h3 id="running-tests-console-runner">4.3. Console Runner</h3>
 <div class="paragraph">
 <p>The <code><a href="https://github.com/junit-team/junit5/blob/master/junit-console/src/main/java/org/junit/gen5/console/ConsoleRunner.java">ConsoleRunner</a></code> is a command-line Java application that lets you run JUnit 4 and
 JUnit 5 tests and prints test execution results to the console.</p>
@@ -1707,41 +1707,43 @@ final release.</p>
 <div class="listingblock">
 <div class="content">
 <pre>Non-option arguments:
-Test classes, methods or packages to execute. If --all|-a has been chosen, arguments can list all
-  classpath roots that should be considered for test scanning, or none if the full classpath shall
-  be scanned.
+Test classes, methods, or packages to execute. If --all|-a has been provided,
+  arguments can list all classpath roots that should be considered for test
+  scanning, or none if the full classpath should be scanned.
 
 Option                       Description
 ------                       -----------
 -a, --all                    Run all tests
--p, --classpath              Additional classpath entries, e.g. for adding
-                               engines and their dependencies
--n, --filter-classname       Give a regular expression to include only
+-p, --classpath              Provide additional classpath entries -- for example,
+                               for adding engines and their dependencies.
+-n, --filter-classname       Provide a regular expression to include only
                                classes whose fully qualified names match.
-                               By default any class name is accepted and
+                               By default any class name is accepted, and
                                thus all classes with tests are included.
--t, --require-tag            Give a tag to be required in the test run. This
+-t, --require-tag            Provide a tag to be required in the test run. This
                                option can be repeated.
--T, --exclude-tag            Give a tag to exclude from the test run. This
+-T, --exclude-tag            Provide a tag to be excluded from the test run. This
                                option can be repeated.
--e, --require-engine         Give the engine id of the only engine to be used in
-                               the test run.
+-e, --require-engine         Provide the ID of an engine to be required in the test
+                               run. This option can be repeated.
+-E, --exclude-engine         Provide the ID of an engine to be excluded from the
+                               test run. This option can be repeated.
 -r, --xml-reports-dir        Enable XML report output into a specified local
                                directory (will be created if it does not
-                               exist)
+                               exist).
 -x, --enable-exit-code       Exit process with number of failing tests as
-                               exit code
+                               exit code.
 -C, --disable-ansi-colors    Disable colored output (not supported by all
-                               terminals)
+                               terminals).
 -D, --hide-details           Hide details while tests are being executed.
                                Only show the summary and test failures.
--h, --help                   Display help information</pre>
+-h, --help                   Display help information.</pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="using-junit-4-to-run-junit-5-tests">4.4. Using JUnit 4 to Run JUnit 5 Tests</h3>
+<h3 id="running-tests-junit4-runner">4.4. Using JUnit 4 to Run JUnit 5 Tests</h3>
 <div class="paragraph">
 <p>The <code>JUnit5</code> runner lets you run JUnit 5 tests with JUnit 4. This way you can run JUnit 5
 tests in IDEs and build tools that only know about JUnit 4. As soon as we add reporting
@@ -2418,7 +2420,7 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-11 06:14:47 -04:00
+Last updated 2016-06-11 11:54:56 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
