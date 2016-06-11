@@ -29,9 +29,10 @@ class AvailableOptions {
 	private final OptionSpec<Void> runAllTests;
 	private final OptionSpec<Void> hideDetails;
 	private final OptionSpec<String> classnameFilter;
-	private final OptionSpec<String> requiredTags;
-	private final OptionSpec<String> excludedTags;
-	private final OptionSpec<String> requiredEngine;
+	private final OptionSpec<String> requireTag;
+	private final OptionSpec<String> excludeTag;
+	private final OptionSpec<String> requireEngine;
+	private final OptionSpec<String> excludeEngine;
 	private final OptionSpec<String> additionalClasspathEntries;
 	private final OptionSpec<String> xmlReportsDir;
 	private final OptionSpec<String> arguments;
@@ -42,39 +43,42 @@ class AvailableOptions {
 			"Run all tests");
 
 		additionalClasspathEntries = parser.acceptsAll(asList("p", "classpath"), //
-			"Additional classpath entries, e.g. for adding engines and their dependencies") //
+			"Provide additional classpath entries -- for example, for adding engines and their dependencies.") //
 				.withRequiredArg();
 
 		classnameFilter = parser.acceptsAll(asList("n", "filter-classname"),
-			"Give a regular expression to include only classes whose fully qualified names match. " //
-					+ "By default any class name is accepted and thus all classes with tests are included.") //
+			"Provide a regular expression to include only classes whose fully qualified names match. " //
+					+ "By default any class name is accepted, and thus all classes with tests are included.") //
 				.withRequiredArg();
 
-		requiredTags = parser.acceptsAll(asList("t", "require-tag"),
-			"Give a tag to be required in the test run. This option can be repeated.") //
+		requireTag = parser.acceptsAll(asList("t", "require-tag"),
+			"Provide a tag to be required in the test run. This option can be repeated.") //
 				.withRequiredArg();
-		excludedTags = parser.acceptsAll(asList("T", "exclude-tag"),
-			"Give a tag to exclude from the test run. This option can be repeated.") //
+		excludeTag = parser.acceptsAll(asList("T", "exclude-tag"),
+			"Provide a tag to be excluded from the test run. This option can be repeated.") //
 				.withRequiredArg();
 
-		requiredEngine = parser.acceptsAll(asList("e", "require-engine"),
-			"Give the engine id of the only engine to be used in the test run.") //
+		requireEngine = parser.acceptsAll(asList("e", "require-engine"),
+			"Provide the ID of an engine to be required in the test run. This option can be repeated.") //
+				.withRequiredArg();
+		excludeEngine = parser.acceptsAll(asList("E", "exclude-engine"),
+			"Provide the ID of an engine to be excluded from the test run. This option can be repeated.") //
 				.withRequiredArg();
 
 		xmlReportsDir = parser.acceptsAll(asList("r", "xml-reports-dir"), //
-			"Enable XML report output into a specified local directory (will be created if it does not exist)") //
+			"Enable XML report output into a specified local directory (will be created if it does not exist).") //
 				.withRequiredArg();
 
 		enableExitCode = parser.acceptsAll(asList("x", "enable-exit-code"), //
-			"Exit process with number of failing tests as exit code");
+			"Exit process with number of failing tests as exit code.");
 		disableAnsiColors = parser.acceptsAll(asList("C", "disable-ansi-colors"),
-			"Disable colored output (not supported by all terminals)");
+			"Disable colored output (not supported by all terminals).");
 		hideDetails = parser.acceptsAll(asList("D", "hide-details"),
 			"Hide details while tests are being executed. Only show the summary and test failures.");
 		help = parser.acceptsAll(asList("h", "help"), //
-			"Display help information");
+			"Display help information.");
 
-		arguments = parser.nonOptions("Test classes, methods, or packages to execute. If --all|-a has been chosen, "
+		arguments = parser.nonOptions("Test classes, methods, or packages to execute. If --all|-a has been provided, "
 				+ "arguments can list all classpath roots that should be considered for test scanning, "
 				+ "or none if the full classpath should be scanned.");
 	}
@@ -85,18 +89,19 @@ class AvailableOptions {
 
 	CommandLineOptions toCommandLineOptions(OptionSet detectedOptions) {
 		CommandLineOptions result = new CommandLineOptions();
-		result.setDisplayHelp(detectedOptions.has(help));
-		result.setExitCodeEnabled(detectedOptions.has(enableExitCode));
-		result.setAnsiColorOutputDisabled(detectedOptions.has(disableAnsiColors));
-		result.setRunAllTests(detectedOptions.has(runAllTests));
-		result.setHideDetails(detectedOptions.has(hideDetails));
-		result.setClassnameFilter(detectedOptions.valueOf(classnameFilter));
-		result.setRequiredTags(detectedOptions.valuesOf(requiredTags));
-		result.setExcludedTags(detectedOptions.valuesOf(excludedTags));
-		result.setRequiredEngine(detectedOptions.valueOf(requiredEngine));
-		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(additionalClasspathEntries));
-		result.setXmlReportsDir(detectedOptions.valueOf(xmlReportsDir));
-		result.setArguments(detectedOptions.valuesOf(arguments));
+		result.setDisplayHelp(detectedOptions.has(this.help));
+		result.setExitCodeEnabled(detectedOptions.has(this.enableExitCode));
+		result.setAnsiColorOutputDisabled(detectedOptions.has(this.disableAnsiColors));
+		result.setRunAllTests(detectedOptions.has(this.runAllTests));
+		result.setHideDetails(detectedOptions.has(this.hideDetails));
+		result.setClassnameFilter(detectedOptions.valueOf(this.classnameFilter));
+		result.setRequiredTags(detectedOptions.valuesOf(this.requireTag));
+		result.setExcludedTags(detectedOptions.valuesOf(this.excludeTag));
+		result.setRequiredEngines(detectedOptions.valuesOf(this.requireEngine));
+		result.setExcludedEngines(detectedOptions.valuesOf(this.excludeEngine));
+		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(this.additionalClasspathEntries));
+		result.setXmlReportsDir(detectedOptions.valueOf(this.xmlReportsDir));
+		result.setArguments(detectedOptions.valuesOf(this.arguments));
 		return result;
 	}
 

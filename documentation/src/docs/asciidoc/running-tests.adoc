@@ -3,10 +3,10 @@
 
 === IDE Support
 
-At this stage there is no direct support for running JUnit 5 tests in IDEs. However, we
-provide two intermediate solutions so that you can go ahead and try out the current
-snapshot today. You can use the link:#console-runner[`ConsoleRunner`] or execute JUnit 5
-tests with a link:#using-junit-4-to-run-junit-5-tests[JUnit 4 style runner].
+At this stage there is no direct support for running JUnit 5 tests in IDEs. However, the
+JUnit team provides two intermediate solutions so that you can go ahead and try out the
+current snapshot today. You can use the <<running-tests-console-runner>> or execute JUnit
+5 tests with a <<running-tests-junit4-runner,JUnit 4 based Runner>>.
 
 === Build Support
 
@@ -171,6 +171,7 @@ point.
 	...
 ----
 
+[[running-tests-console-runner]]
 === Console Runner
 
 The `{ConsoleRunner}` is a command-line Java application that lets you run JUnit 4 and
@@ -206,38 +207,41 @@ final release.
 [subs="none"]
 ----
 Non-option arguments:
-Test classes, methods or packages to execute. If --all|-a has been chosen, arguments can list all
-  classpath roots that should be considered for test scanning, or none if the full classpath shall
-  be scanned.
+Test classes, methods, or packages to execute. If --all|-a has been provided,
+  arguments can list all classpath roots that should be considered for test
+  scanning, or none if the full classpath should be scanned.
 
 Option                       Description
 ------                       -----------
 -a, --all                    Run all tests
--p, --classpath              Additional classpath entries, e.g. for adding
-                               engines and their dependencies
--n, --filter-classname       Give a regular expression to include only
+-p, --classpath              Provide additional classpath entries -- for example,
+                               for adding engines and their dependencies.
+-n, --filter-classname       Provide a regular expression to include only
                                classes whose fully qualified names match.
-                               By default any class name is accepted and
+                               By default any class name is accepted, and
                                thus all classes with tests are included.
--t, --require-tag            Give a tag to be required in the test run. This
+-t, --require-tag            Provide a tag to be required in the test run. This
                                option can be repeated.
--T, --exclude-tag            Give a tag to exclude from the test run. This
+-T, --exclude-tag            Provide a tag to be excluded from the test run. This
                                option can be repeated.
--e, --require-engine         Give the engine id of the only engine to be used in
-                               the test run.
+-e, --require-engine         Provide the ID of an engine to be required in the test
+                               run. This option can be repeated.
+-E, --exclude-engine         Provide the ID of an engine to be excluded from the
+                               test run. This option can be repeated.
 -r, --xml-reports-dir        Enable XML report output into a specified local
                                directory (will be created if it does not
-                               exist)
+                               exist).
 -x, --enable-exit-code       Exit process with number of failing tests as
-                               exit code
+                               exit code.
 -C, --disable-ansi-colors    Disable colored output (not supported by all
-                               terminals)
+                               terminals).
 -D, --hide-details           Hide details while tests are being executed.
                                Only show the summary and test failures.
--h, --help                   Display help information
+-h, --help                   Display help information.
 ----
 
 
+[[running-tests-junit4-runner]]
 === Using JUnit 4 to Run JUnit 5 Tests
 
 The `JUnit5` runner lets you run JUnit 5 tests with JUnit 4. This way you can run JUnit 5

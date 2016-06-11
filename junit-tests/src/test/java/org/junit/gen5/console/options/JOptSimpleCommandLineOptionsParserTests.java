@@ -31,10 +31,13 @@ import java.util.function.Predicate;
 import joptsimple.OptionException;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.runner.RunWith;
 
 /**
  * @since 5.0
  */
+@RunWith(JUnit5.class)
 public class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
@@ -127,19 +130,35 @@ public class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseValidRequiredEngine() {
+	public void parseValidRequiredEngines() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(Optional.of("junit5"), parseArgLine("-e junit5").getRequiredEngine()),
-			() -> assertEquals(Optional.of("junit4"), parseArgLine("--require-engine junit4").getRequiredEngine()),
-			() -> assertEquals(Optional.empty(), parseArgLine("").getRequiredEngine())
+			() -> assertEquals(asList("junit5"), parseArgLine("-e junit5").getRequiredEngines()),
+			() -> assertEquals(asList("junit4"), parseArgLine("--require-engine junit4").getRequiredEngines()),
+			() -> assertEquals(emptyList(), parseArgLine("").getRequiredEngines())
 		);
 		// @formatter:on
 	}
 
 	@Test
-	public void parseInvalidRequiredEngine() throws Exception {
+	public void parseInvalidRequiredEngines() throws Exception {
 		assertOptionWithMissingRequiredArgumentThrowsException("-e", "--require-engine");
+	}
+
+	@Test
+	public void parseValidExcludedEngines() {
+		// @formatter:off
+		assertAll(
+			() -> assertEquals(asList("junit5"), parseArgLine("-E junit5").getExcludedEngines()),
+			() -> assertEquals(asList("junit4"), parseArgLine("--exclude-engine junit4").getExcludedEngines()),
+			() -> assertEquals(emptyList(), parseArgLine("").getExcludedEngines())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	public void parseInvalidExcludedEngines() throws Exception {
+		assertOptionWithMissingRequiredArgumentThrowsException("-E", "--exclude-engine");
 	}
 
 	@Test

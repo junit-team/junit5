@@ -50,9 +50,25 @@ public class EngineFilter implements Filter<TestEngine> {
 	 *
 	 * @param engineIds the list of engine IDs to match against; never {@code null}
 	 * or empty; individual IDs must also not be null or blank
+	 * @see #requireEngines(String...)
 	 */
 	public static EngineFilter requireEngines(String... engineIds) {
-		return new EngineFilter(validateAndConvertToList(engineIds), Type.REQUIRE);
+		return requireEngines(Arrays.asList(engineIds));
+	}
+
+	/**
+	 * Create a new <em>require</em> {@code EngineFilter} based on the
+	 * supplied engine IDs.
+	 *
+	 * <p>Only {@code TestEngines} with matching engine IDs will be
+	 * <em>included</em> within the test discovery and execution.
+	 *
+	 * @param engineIds the list of engine IDs to match against; never {@code null}
+	 * or empty; individual IDs must also not be null or blank
+	 * @see #requireEngines(String...)
+	 */
+	public static EngineFilter requireEngines(List<String> engineIds) {
+		return new EngineFilter(engineIds, Type.REQUIRE);
 	}
 
 	/**
@@ -64,16 +80,32 @@ public class EngineFilter implements Filter<TestEngine> {
 	 *
 	 * @param engineIds the list of engine IDs to match against; never {@code null}
 	 * or empty; individual IDs must also not be null or blank
+	 * @see #excludeEngines(List)
 	 */
 	public static EngineFilter excludeEngines(String... engineIds) {
-		return new EngineFilter(validateAndConvertToList(engineIds), Type.EXCLUDE);
+		return excludeEngines(Arrays.asList(engineIds));
+	}
+
+	/**
+	 * Create a new <em>exclude</em> {@code EngineFilter} based on the
+	 * supplied engine IDs.
+	 *
+	 * <p>{@code TestEngines} with matching engine IDs will be
+	 * <em>excluded</em> from test discovery and execution.
+	 *
+	 * @param engineIds the list of engine IDs to match against; never {@code null}
+	 * or empty; individual IDs must also not be null or blank
+	 * @see #excludeEngines(String...)
+	 */
+	public static EngineFilter excludeEngines(List<String> engineIds) {
+		return new EngineFilter(engineIds, Type.EXCLUDE);
 	}
 
 	private final List<String> engineIds;
 	private final Type type;
 
 	private EngineFilter(List<String> engineIds, Type type) {
-		this.engineIds = trimmedEngineIds(engineIds);
+		this.engineIds = validateAndTrim(engineIds);
 		this.type = type;
 	}
 
@@ -101,22 +133,21 @@ public class EngineFilter implements Filter<TestEngine> {
 			this.engineIds);
 	}
 
-	private static List<String> validateAndConvertToList(String... engineIds) {
-		Preconditions.notNull(engineIds, "engine ID array must not be null");
-		List<String> list = Arrays.asList(engineIds);
-		Preconditions.notEmpty(list, "engine ID array must not be empty");
-		list.forEach(id -> Preconditions.notBlank(id, "engine ID must not be null or blank"));
+	private static List<String> validateAndTrim(List<String> engineIds) {
+		Preconditions.notEmpty(engineIds, "engine ID list must not be null or empty");
 
-		return list;
-	}
-
-	private static List<String> trimmedEngineIds(List<String> engineIds) {
-		return engineIds.stream().distinct().map(String::trim).collect(toList());
+		// @formatter:off
+		return engineIds.stream()
+				.distinct()
+				.peek(id -> Preconditions.notBlank(id, "engine ID must not be null or blank"))
+				.map(String::trim)
+				.collect(toList());
+		// @formatter:on
 	}
 
 	private enum Type {
 
-		REQUIRE("requires"),
+		REQUIRE("includes"),
 
 		EXCLUDE("excludes");
 

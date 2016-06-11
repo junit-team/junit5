@@ -29,16 +29,23 @@ public class CommandLineOptions {
 	private boolean ansiColorOutputDisabled;
 	private boolean runAllTests;
 	private boolean hideDetails;
+
 	private String classnameFilter;
-	private String requiredEngine;
+
+	private List<String> requiredEngines = emptyList();
+	private List<String> excludedEngines = emptyList();
+
 	private List<String> requiredTags = emptyList();
 	private List<String> excludedTags = emptyList();
+
 	private List<String> additionalClasspathEntries = emptyList();
-	private List<String> arguments = emptyList();
+
 	private String xmlReportsDir;
 
+	private List<String> arguments = emptyList();
+
 	public boolean isDisplayHelp() {
-		return displayHelp;
+		return this.displayHelp;
 	}
 
 	public void setDisplayHelp(boolean displayHelp) {
@@ -46,7 +53,7 @@ public class CommandLineOptions {
 	}
 
 	public boolean isExitCodeEnabled() {
-		return exitCodeEnabled;
+		return this.exitCodeEnabled;
 	}
 
 	public void setExitCodeEnabled(boolean exitCodeEnabled) {
@@ -54,7 +61,7 @@ public class CommandLineOptions {
 	}
 
 	public boolean isAnsiColorOutputDisabled() {
-		return ansiColorOutputDisabled;
+		return this.ansiColorOutputDisabled;
 	}
 
 	public void setAnsiColorOutputDisabled(boolean ansiColorOutputDisabled) {
@@ -62,7 +69,7 @@ public class CommandLineOptions {
 	}
 
 	public boolean isRunAllTests() {
-		return runAllTests;
+		return this.runAllTests;
 	}
 
 	public void setRunAllTests(boolean runAllTests) {
@@ -70,7 +77,7 @@ public class CommandLineOptions {
 	}
 
 	public boolean isHideDetails() {
-		return hideDetails;
+		return this.hideDetails;
 	}
 
 	public void setHideDetails(boolean hideDetails) {
@@ -78,31 +85,39 @@ public class CommandLineOptions {
 	}
 
 	public Optional<String> getClassnameFilter() {
-		return Optional.ofNullable(classnameFilter);
+		return Optional.ofNullable(this.classnameFilter);
 	}
 
 	public void setClassnameFilter(String classnameFilter) {
 		this.classnameFilter = classnameFilter;
 	}
 
+	public List<String> getRequiredEngines() {
+		return this.requiredEngines;
+	}
+
+	public void setRequiredEngines(List<String> requiredEngines) {
+		this.requiredEngines = requiredEngines;
+	}
+
+	public List<String> getExcludedEngines() {
+		return this.excludedEngines;
+	}
+
+	public void setExcludedEngines(List<String> excludedEngines) {
+		this.excludedEngines = excludedEngines;
+	}
+
 	public List<String> getRequiredTags() {
-		return requiredTags;
+		return this.requiredTags;
 	}
 
 	public void setRequiredTags(List<String> requiredTags) {
 		this.requiredTags = requiredTags;
 	}
 
-	public Optional<String> getRequiredEngine() {
-		return Optional.ofNullable(requiredEngine);
-	}
-
-	public void setRequiredEngine(String requiredEngine) {
-		this.requiredEngine = requiredEngine;
-	}
-
 	public List<String> getExcludedTags() {
-		return excludedTags;
+		return this.excludedTags;
 	}
 
 	public void setExcludedTags(List<String> excludedTags) {
@@ -110,7 +125,7 @@ public class CommandLineOptions {
 	}
 
 	public List<String> getAdditionalClasspathEntries() {
-		return additionalClasspathEntries;
+		return this.additionalClasspathEntries;
 	}
 
 	public void setAdditionalClasspathEntries(List<String> additionalClasspathEntries) {
@@ -118,7 +133,7 @@ public class CommandLineOptions {
 	}
 
 	public Optional<String> getXmlReportsDir() {
-		return Optional.ofNullable(xmlReportsDir);
+		return Optional.ofNullable(this.xmlReportsDir);
 	}
 
 	public void setXmlReportsDir(String xmlReportsDir) {
@@ -126,7 +141,7 @@ public class CommandLineOptions {
 	}
 
 	public List<String> getArguments() {
-		return arguments;
+		return this.arguments;
 	}
 
 	public void setArguments(List<String> arguments) {
