@@ -27,6 +27,7 @@ import java.util.function.Function;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ParameterContext;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.ParameterResolver;
 import org.junit.gen5.commons.util.ReflectionUtils;
@@ -288,14 +289,14 @@ class ExecutableInvokerTests {
 		}
 
 		@Override
-		public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
-			supportsArguments = new Arguments(target, extensionContext);
+		public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+			supportsArguments = new Arguments(parameterContext.getTarget(), extensionContext);
 			return true;
 		}
 
 		@Override
-		public Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
-			resolveArguments = new Arguments(target, extensionContext);
+		public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
+			resolveArguments = new Arguments(parameterContext.getTarget(), extensionContext);
 			return null;
 		}
 	}
@@ -330,13 +331,13 @@ class ExecutableInvokerTests {
 		}
 
 		@Override
-		public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
-			return supports.apply(parameter);
+		public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+			return supports.apply(parameterContext.getParameter());
 		}
 
 		@Override
-		public Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
-			return resolve.apply(parameter);
+		public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
+			return resolve.apply(parameterContext.getParameter());
 		}
 	}
 
@@ -354,12 +355,12 @@ class ExecutableInvokerTests {
 	private static class StringParameterResolver implements ParameterResolver {
 
 		@Override
-		public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
-			return parameter.getType() == String.class;
+		public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+			return parameterContext.getParameter().getType() == String.class;
 		}
 
 		@Override
-		public Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
+		public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return ENIGMA;
 		}
 	}
@@ -367,12 +368,12 @@ class ExecutableInvokerTests {
 	private static class NumberParameterResolver implements ParameterResolver {
 
 		@Override
-		public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
-			return parameter.getType() == Number.class;
+		public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+			return parameterContext.getParameter().getType() == Number.class;
 		}
 
 		@Override
-		public Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
+		public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return 42;
 		}
 	}

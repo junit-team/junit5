@@ -10,10 +10,8 @@
 
 package org.junit.gen5.engine.junit5.execution.injection.sample;
 
-import java.lang.reflect.Parameter;
-import java.util.Optional;
-
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ParameterContext;
 import org.junit.gen5.api.extension.ParameterResolver;
 
 /**
@@ -24,12 +22,12 @@ import org.junit.gen5.api.extension.ParameterResolver;
 public class PrimitiveArrayParameterResolver implements ParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
-		return int[].class == parameter.getType();
+	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		return int[].class == parameterContext.getParameter().getType();
 	}
 
 	@Override
-	public Object resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
+	public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return new int[] { 1, 2, 3 };
 	}
 

@@ -10,11 +10,9 @@
 
 package org.junit.gen5.engine.junit5.extension;
 
-import java.lang.reflect.Parameter;
-import java.util.Optional;
-
 import org.junit.gen5.api.TestReporter;
 import org.junit.gen5.api.extension.ExtensionContext;
+import org.junit.gen5.api.extension.ParameterContext;
 import org.junit.gen5.api.extension.ParameterResolver;
 
 /**
@@ -25,12 +23,12 @@ import org.junit.gen5.api.extension.ParameterResolver;
 class TestReporterParameterResolver implements ParameterResolver {
 
 	@Override
-	public boolean supports(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
-		return (parameter.getType() == TestReporter.class);
+	public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		return (parameterContext.getParameter().getType() == TestReporter.class);
 	}
 
 	@Override
-	public TestReporter resolve(Parameter parameter, Optional<Object> target, ExtensionContext extensionContext) {
+	public TestReporter resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return extensionContext::publishReportEntry;
 	}
 
