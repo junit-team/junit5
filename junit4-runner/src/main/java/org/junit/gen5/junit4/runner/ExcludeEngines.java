@@ -22,22 +22,23 @@ import java.lang.annotation.Target;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code @RequireEngine} specifies the engine ID (e.g., {@code "junit5"}) of
- * the sole {@link org.junit.gen5.engine.TestEngine TestEngine} to be used
- * when a class annotated with {@code @RunWith(JUnit5.class)} is run.
+ * {@code @ExcludeEngines} specifies the {@linkplain #value IDs} of
+ * {@link org.junit.gen5.engine.TestEngine TestEngines} to be excluded from the
+ * test plan when a class annotated with {@code @RunWith(JUnit5.class)} is run.
  *
  * @since 5.0
+ * @see RequireEngines
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
 @API(Maintained)
-public @interface RequireEngine {
+public @interface ExcludeEngines {
 
 	/**
-	 * The Engine ID to be required
+	 * One or more Engine IDs to be excluded from the test plan.
 	 */
-	String value();
+	String[] value();
 
 }

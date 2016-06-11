@@ -13,6 +13,7 @@ package org.junit.gen5.junit4.runner;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.meta.API.Usage.Maintained;
+import static org.junit.gen5.launcher.EngineFilter.excludeEngines;
 import static org.junit.gen5.launcher.EngineFilter.requireEngines;
 import static org.junit.gen5.launcher.TagFilter.excludeTags;
 import static org.junit.gen5.launcher.TagFilter.requireTags;
@@ -26,7 +27,6 @@ import java.util.function.Function;
 
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.discovery.ClassSelector;
@@ -46,15 +46,18 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
 /**
- * JUnit 4 based {@link Runner} which runs tests that use the JUnit 5 programming and extension models.
+ * JUnit 4 based {@link Runner} which runs tests that use the JUnit 5
+ * programming and extension models.
  *
- * <p>Annotating a class with {@code @RunWith(JUnit5.class)} allows it to be run with IDEs and build systems that
- * support JUnit 4 but do not yet support the JUnit 5 APIs directly.
+ * <p>Annotating a class with {@code @RunWith(JUnit5.class)} allows it to be
+ * run with IDEs and build systems that support JUnit 4 but do not yet support
+ * the JUnit 5 APIs directly.
  *
  * <p>Consult the various annotations in this package for configuration options.
  *
- * <p>If you don't use any annotations, you can simply use this runner on a JUnit 5 test class.
- * Contrary to standard JUnit 5 test classes, the test class must be {@code public} in order
+ * <p>If you do not use any configuration annotations from this package, you
+ * can simply use this runner on a JUnit 5 test class. Contrary to standard
+ * JUnit 5 test classes, the test class must be {@code public} in order
  * to be picked up by IDEs and build tools.
  *
  * @since 5.0
@@ -64,7 +67,8 @@ import org.junit.runners.model.InitializationError;
  * @see UniqueIds
  * @see RequireTags
  * @see ExcludeTags
- * @see RequireEngine
+ * @see RequireEngines
+ * @see ExcludeEngines
  */
 @API(Maintained)
 public class JUnit5 extends Runner implements Filterable {
@@ -124,9 +128,12 @@ public class JUnit5 extends Runner implements Filterable {
 
 	private void addFiltersFromAnnotations(TestDiscoveryRequest request) {
 		addClassNameMatchesFilter(request);
+
 		addRequiredTagsFilter(request);
 		addExcludedTagsFilter(request);
-		addEngineFilter(request);
+
+		addRequiredEnginesFilter(request);
+		addExcludedEnginesFilter(request);
 	}
 
 	private List<DiscoverySelector> getSpecElementsFromAnnotations() {
@@ -164,10 +171,17 @@ public class JUnit5 extends Runner implements Filterable {
 		}
 	}
 
-	private void addEngineFilter(TestDiscoveryRequest discoveryRequest) {
-		String engineId = getExplicitEngineId();
-		if (StringUtils.isNotBlank(engineId)) {
-			discoveryRequest.addEngineFilter(requireEngines(engineId));
+	private void addRequiredEnginesFilter(TestDiscoveryRequest discoveryRequest) {
+		String[] engineIds = getRequiredEngineIds();
+		if (engineIds.length > 0) {
+			discoveryRequest.addEngineFilter(requireEngines(engineIds));
+		}
+	}
+
+	private void addExcludedEnginesFilter(TestDiscoveryRequest discoveryRequest) {
+		String[] engineIds = getExcludedEngineIds();
+		if (engineIds.length > 0) {
+			discoveryRequest.addEngineFilter(excludeEngines(engineIds));
 		}
 	}
 
@@ -191,8 +205,12 @@ public class JUnit5 extends Runner implements Filterable {
 		return getValueFromAnnotation(ExcludeTags.class, ExcludeTags::value, EMPTY_STRING_ARRAY);
 	}
 
-	private String getExplicitEngineId() {
-		return getValueFromAnnotation(RequireEngine.class, RequireEngine::value, EMPTY_STRING).trim();
+	private String[] getRequiredEngineIds() {
+		return getValueFromAnnotation(RequireEngines.class, RequireEngines::value, EMPTY_STRING_ARRAY);
+	}
+
+	private String[] getExcludedEngineIds() {
+		return getValueFromAnnotation(ExcludeEngines.class, ExcludeEngines::value, EMPTY_STRING_ARRAY);
 	}
 
 	private String getClassNameRegExPattern() {

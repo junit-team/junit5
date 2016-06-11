@@ -263,7 +263,7 @@ versions.
 ==== Single Test Class
 
 One way to use the `JUnit5` runner is to annotate a JUnit 5 test class with
-`@RunWith(JUnit5.class)` directly. Please note that the tests are annotated with
+`@RunWith(JUnit5.class)` directly. Please note that the test methods are annotated with
 `org.junit.gen5.api.Test` (JUnit 5), not `org.junit.Test` (JUnit 4). Moreover, in this
 case the test class must be `public` because; otherwise, the IDEs won't recognize it as a
 test class.
@@ -276,7 +276,7 @@ include::{testDir}/example/JUnit4ClassDemo.java[tags=user_guide]
 
 ==== Test Suite
 
-If you have multiple JUnit 5 tests you can create a test suite.
+If you have multiple JUnit 5 test classes you can create a test suite.
 
 [source,java,indent=0]
 [subs="verbatim"]

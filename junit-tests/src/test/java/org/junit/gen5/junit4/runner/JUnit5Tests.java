@@ -49,6 +49,7 @@ import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
+import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.gen5.engine.support.hierarchical.DummyTestEngine;
 import org.junit.gen5.launcher.EngineFilter;
@@ -65,6 +66,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 
 /**
+ * Tests for the {@link JUnit5} runner.
+ *
  * @since 5.0
  */
 class JUnit5Tests {
@@ -74,6 +77,7 @@ class JUnit5Tests {
 
 		@Test
 		void requestsClassSelectorForAnnotatedClassWhenNoAdditionalAnnotationsArePresent() throws Exception {
+
 			class TestCase {
 			}
 
@@ -86,6 +90,7 @@ class JUnit5Tests {
 
 		@Test
 		void requestsClassSelectorsWhenClassesAnnotationIsPresent() throws Exception {
+
 			@Classes({ Short.class, Byte.class })
 			class TestCase {
 			}
@@ -100,6 +105,7 @@ class JUnit5Tests {
 
 		@Test
 		void requestsUniqueIdSelectorsWhenUniqueIdsAnnotationIsPresent() throws Exception {
+
 			@UniqueIds({ "[foo:bar]", "[baz:quux]" })
 			class TestCase {
 			}
@@ -114,6 +120,7 @@ class JUnit5Tests {
 
 		@Test
 		void requestsPackageSelectorsWhenPackagesAnnotationIsPresent() throws Exception {
+
 			@Packages({ "foo", "bar" })
 			class TestCase {
 			}
@@ -127,7 +134,8 @@ class JUnit5Tests {
 		}
 
 		@Test
-		void addsTagFilterToRequestWhenOnlyIncludeTagsAnnotationIsPresent() throws Exception {
+		void addsTagFilterToRequestWhenRequireTagsAnnotationIsPresent() throws Exception {
+
 			@RequireTags({ "foo", "bar" })
 			class TestCase {
 			}
@@ -145,6 +153,7 @@ class JUnit5Tests {
 
 		@Test
 		void addsTagFilterToRequestWhenExcludeTagsAnnotationIsPresent() throws Exception {
+
 			@ExcludeTags({ "foo", "bar" })
 			class TestCase {
 			}
@@ -161,30 +170,39 @@ class JUnit5Tests {
 		}
 
 		@Test
-		void addsEngineFilterToRequestWhenOnlyEngineAnnotationIsPresent() throws Exception {
+		void addsEngineFiltersToRequestWhenRequireEnginesOrExcludeEnginesAnnotationsArePresent() throws Exception {
 
-			@RequireEngine("foo")
+			@RequireEngines({ "foo", "bar", "baz" })
+			@ExcludeEngines({ "bar", "quux" })
 			class TestCase {
 			}
+
+			TestEngine fooEngine = new TestEngineStub("foo");
+			TestEngine barEngine = new TestEngineStub("bar");
+			TestEngine bazEngine = new TestEngineStub("baz");
+			TestEngine quuxEngine = new TestEngineStub("quux");
 
 			TestDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
 			List<EngineFilter> filters = request.getEngineFilters();
-			assertThat(filters).hasSize(1);
+			assertThat(filters).hasSize(2);
 
-			TestEngine fooEngine = mock(TestEngine.class);
-			when(fooEngine.getId()).thenReturn("foo");
+			EngineFilter includeFilter = filters.get(0);
+			assertTrue(includeFilter.apply(fooEngine).included());
+			assertTrue(includeFilter.apply(barEngine).included());
+			assertTrue(includeFilter.apply(bazEngine).included());
+			assertTrue(includeFilter.apply(quuxEngine).excluded());
 
-			TestEngine barEngine = mock(TestEngine.class);
-			when(barEngine.getId()).thenReturn("bar");
-
-			EngineFilter filter = filters.get(0);
-			assertTrue(filter.apply(fooEngine).included());
-			assertTrue(filter.apply(barEngine).excluded());
+			EngineFilter excludeFilter = filters.get(1);
+			assertTrue(excludeFilter.apply(fooEngine).included());
+			assertTrue(excludeFilter.apply(barEngine).excluded());
+			assertTrue(excludeFilter.apply(bazEngine).included());
+			assertTrue(excludeFilter.apply(quuxEngine).excluded());
 		}
 
 		@Test
-		void addsClassFilterToRequestWhenClassNamePatternAnnotationIsPresent() throws Exception {
+		void addsClassFilterToRequestWhenFilterClassNameAnnotationIsPresent() throws Exception {
+
 			@FilterClassName(".*Foo")
 			class TestCase {
 			}

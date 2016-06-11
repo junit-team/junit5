@@ -14,7 +14,7 @@ import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.junit4.runner.FilterClassName;
 import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.gen5.junit4.runner.Packages;
-import org.junit.gen5.junit4.runner.RequireEngine;
+import org.junit.gen5.junit4.runner.RequireEngines;
 import org.junit.runner.RunWith;
 
 /**
@@ -33,6 +33,6 @@ import org.junit.runner.RunWith;
 @RunWith(JUnit5.class)
 @Packages("org.junit.gen5")
 @FilterClassName(".*Tests?")
-@RequireEngine(JUnit5TestEngine.ENGINE_ID)
+@RequireEngines(JUnit5TestEngine.ENGINE_ID)
 public class AllJUnit5Tests {
 }
