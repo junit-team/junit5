@@ -54,7 +54,7 @@ class JUnit5Extension {
 	String classNameFilter
 
 	/**
-	 * The engine ID of the test engine to be used.
+	 * The ID of the test engine to be used.
 	 *
 	 * <p>If this property is set, only a single engine will be used
 	 * for discovering and running tests.
@@ -62,35 +62,31 @@ class JUnit5Extension {
 	String requiredEngine
 
 	/**
-	 * A list of <em>tags</em> to be required when building the test plan
-	 * specification.
+	 * A list of <em>tags</em> to be included when building the test plan.
 	 */
-	List requireTags = []
+	List includeTags = []
 
 	/**
-	 * A list of <em>tags</em> to include when building the test plan
-	 * specification.
+	 * A list of <em>tags</em> to be excluded when building the test plan.
 	 */
 	List excludeTags = []
 
 	/**
-	 * Add a <em>tag</em> to be included when building the test plan
-	 * specification.
+	 * Add a <em>tag</em> to be included when building the test plan.
 	 */
-	void requireTag(tag) {
-		requireTags.add tag
+	void includeTag(tag) {
+		includeTags.add tag
 	}
 
 	/**
-	 * Add a <em>tag</em> to be excluded when building the test plan
-	 * specification.
+	 * Add a <em>tag</em> to be excluded when building the test plan.
 	 */
 	void excludeTag(tag) {
 		excludeTags.add tag
 	}
 
 	/**
-	 * Set the engine ID of the required engine.
+	 * Set the ID of the required engine.
 	 */
 	void requireEngine(engineId) {
 		requiredEngine = engineId

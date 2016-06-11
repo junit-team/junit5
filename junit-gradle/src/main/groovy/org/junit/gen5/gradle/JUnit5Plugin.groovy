@@ -17,6 +17,7 @@ import org.gradle.api.tasks.JavaExec
  * @since 5.0
  */
 class JUnit5Plugin implements Plugin<Project> {
+
 	void apply(Project project) {
 		def junit5 = project.extensions.create('junit5', JUnit5Extension)
 
@@ -44,7 +45,7 @@ class JUnit5Plugin implements Plugin<Project> {
 			task.inputs.property('version', junit5.version)
 			task.inputs.property('runJunit4', junit5.runJunit4)
 			task.inputs.property('classNameFilter', junit5.classNameFilter)
-			task.inputs.property('requireTags', junit5.requireTags)
+			task.inputs.property('includeTags', junit5.includeTags)
 			task.inputs.property('excludeTags', junit5.excludeTags)
 			task.inputs.property('requiredEngine', junit5.requiredEngine)
 
@@ -84,7 +85,7 @@ class JUnit5Plugin implements Plugin<Project> {
 			args.add(junit5.classNameFilter)
 		}
 
-		junit5.requireTags.each { String tag ->
+		junit5.includeTags.each { String tag ->
 			args.add('-t')
 			args.add(tag)
 		}

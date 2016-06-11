@@ -44,7 +44,7 @@ class JUnit5PluginSpec extends Specification {
 				runJunit4 true
 				matchClassName '.*Tests?'
 				logManager 'org.apache.logging.log4j.jul.LogManager'
-				requireTag 'fast'
+				includeTag 'fast'
 				excludeTag 'slow'
 				requireEngine 'junit5'
 				reportsDir new File("any")
@@ -64,7 +64,7 @@ class JUnit5PluginSpec extends Specification {
 				//runJunit4 true // cannot be set in micro test
 				matchClassName '.*Tests?'
 				logManager 'org.apache.logging.log4j.jul.LogManager'
-				requireTag 'fast'
+				includeTag 'fast'
 				excludeTag 'slow'
 				requireEngine 'junit5'
 				reportsDir new File("/any")
