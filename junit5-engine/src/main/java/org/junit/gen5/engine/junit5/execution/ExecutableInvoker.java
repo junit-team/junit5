@@ -169,7 +169,7 @@ public class ExecutableInvoker {
 
 		// Resolve remaining parameters dynamically
 		for (int i = start; i < parameters.length; i++) {
-			ParameterContext parameterContext = new DefaultParameterContext(parameters[i], target);
+			ParameterContext parameterContext = new DefaultParameterContext(parameters[i], i, target);
 			values[i] = resolveParameter(parameterContext, executable, extensionContext, extensionRegistry);
 		}
 		return values;
