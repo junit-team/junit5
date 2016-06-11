@@ -20,10 +20,9 @@ import static org.mockito.Mockito.verify;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.math.BigDecimal;
-import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtensionContext;
@@ -92,12 +91,21 @@ class ExecutableInvokerTests {
 
 	@Test
 	void resolveMultipleArguments() {
-		testMethodWith("multipleParameters", String.class, String.class, String.class);
-		register(ConfigurableParameterResolver.supportsAndResolvesTo(Parameter::getName));
+		testMethodWith("multipleParameters", String.class, Integer.class, Double.class);
+		register(ConfigurableParameterResolver.supportsAndResolvesTo(parameterContext -> {
+			switch (parameterContext.getIndex()) {
+				case 0:
+					return "0";
+				case 1:
+					return 1;
+				default:
+					return 2.0;
+			}
+		}));
 
 		invokeMethod();
 
-		verify(instance).multipleParameters("arg0", "arg1", "arg2");
+		verify(instance).multipleParameters("0", 1, 2.0);
 	}
 
 	@Test
@@ -113,16 +121,18 @@ class ExecutableInvokerTests {
 
 	@Test
 	void passContextInformationToParameterResolverMethods() {
-		anyTestMethodWithAtLeasOneParameter();
+		anyTestMethodWithAtLeastOneParameter();
 		ArgumentRecordingParameterResolver extension = new ArgumentRecordingParameterResolver();
 		register(extension);
 
 		invokeMethod();
 
 		assertSame(extensionContext, extension.supportsArguments.extensionContext);
-		assertSame(instance, extension.supportsArguments.target.get());
+		assertEquals(0, extension.supportsArguments.parameterContext.getIndex());
+		assertSame(instance, extension.supportsArguments.parameterContext.getTarget().get());
 		assertSame(extensionContext, extension.resolveArguments.extensionContext);
-		assertSame(instance, extension.resolveArguments.target.get());
+		assertEquals(0, extension.resolveArguments.parameterContext.getIndex());
+		assertSame(instance, extension.resolveArguments.parameterContext.getTarget().get());
 	}
 
 	@Test
@@ -199,7 +209,7 @@ class ExecutableInvokerTests {
 
 	@Test
 	void wrapAllExceptionsThrownDuringParameterResolutionIntoAParameterResolutionException() {
-		anyTestMethodWithAtLeasOneParameter();
+		anyTestMethodWithAtLeastOneParameter();
 		IllegalArgumentException cause = anyExceptionButParameterResolutionException();
 		throwDuringParameterResolution(cause);
 
@@ -211,7 +221,7 @@ class ExecutableInvokerTests {
 
 	@Test
 	void doNotWrapThrownExceptionIfItIsAlreadyAParameterResolutionException() {
-		anyTestMethodWithAtLeasOneParameter();
+		anyTestMethodWithAtLeastOneParameter();
 		ParameterResolutionException cause = new ParameterResolutionException("custom message");
 		throwDuringParameterResolution(cause);
 
@@ -229,14 +239,14 @@ class ExecutableInvokerTests {
 	}
 
 	private void thereIsAParameterResolverThatResolvesTheParameterTo(Object argument) {
-		register(ConfigurableParameterResolver.supportsAndResolvesTo(parameter -> argument));
+		register(ConfigurableParameterResolver.supportsAndResolvesTo(parameterContext -> argument));
 	}
 
 	private void thereIsAParameterResolverThatDoesNotSupportThisParameter() {
 		register(ConfigurableParameterResolver.withoutSupport());
 	}
 
-	private void anyTestMethodWithAtLeasOneParameter() {
+	private void anyTestMethodWithAtLeastOneParameter() {
 		testMethodWithASingleStringParameter();
 	}
 
@@ -279,24 +289,24 @@ class ExecutableInvokerTests {
 
 		static class Arguments {
 
-			final Optional<Object> target;
+			final ParameterContext parameterContext;
 			final ExtensionContext extensionContext;
 
-			Arguments(Optional<Object> target, ExtensionContext extensionContext) {
-				this.target = target;
+			Arguments(ParameterContext parameterContext, ExtensionContext extensionContext) {
+				this.parameterContext = parameterContext;
 				this.extensionContext = extensionContext;
 			}
 		}
 
 		@Override
 		public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			supportsArguments = new Arguments(parameterContext.getTarget(), extensionContext);
+			supportsArguments = new Arguments(parameterContext, extensionContext);
 			return true;
 		}
 
 		@Override
 		public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			resolveArguments = new Arguments(parameterContext.getTarget(), extensionContext);
+			resolveArguments = new Arguments(parameterContext, extensionContext);
 			return null;
 		}
 	}
@@ -304,40 +314,40 @@ class ExecutableInvokerTests {
 	static class ConfigurableParameterResolver implements ParameterResolver {
 
 		static ParameterResolver onAnyCallThrow(RuntimeException runtimeException) {
-			return new ConfigurableParameterResolver(parameter -> {
+			return new ConfigurableParameterResolver(parameterContext -> {
 				throw runtimeException;
-			}, parameter -> {
+			}, parameterContext -> {
 				throw runtimeException;
 			});
 		}
 
-		static ParameterResolver supportsAndResolvesTo(Function<Parameter, Object> resolve) {
-			return new ConfigurableParameterResolver(parameter -> true, resolve);
+		static ParameterResolver supportsAndResolvesTo(Function<ParameterContext, Object> resolve) {
+			return new ConfigurableParameterResolver(parameterContext -> true, resolve);
 		}
 
 		static ParameterResolver withoutSupport() {
-			return new ConfigurableParameterResolver(parameter -> false, parameter -> {
+			return new ConfigurableParameterResolver(parameterContext -> false, parameter -> {
 				throw new UnsupportedOperationException();
 			});
 		}
 
-		private final Function<Parameter, Boolean> supports;
-		private final Function<Parameter, Object> resolve;
+		private final Predicate<ParameterContext> supports;
+		private final Function<ParameterContext, Object> resolve;
 
-		private ConfigurableParameterResolver(Function<Parameter, Boolean> supports,
-				Function<Parameter, Object> resolve) {
+		private ConfigurableParameterResolver(Predicate<ParameterContext> supports,
+				Function<ParameterContext, Object> resolve) {
 			this.supports = supports;
 			this.resolve = resolve;
 		}
 
 		@Override
 		public boolean supports(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			return supports.apply(parameterContext.getParameter());
+			return supports.test(parameterContext);
 		}
 
 		@Override
 		public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			return resolve.apply(parameterContext.getParameter());
+			return resolve.apply(parameterContext);
 		}
 	}
 
@@ -349,7 +359,7 @@ class ExecutableInvokerTests {
 
 		void primitiveParameterInt(int parameter);
 
-		void multipleParameters(String first, String second, String third);
+		void multipleParameters(String first, Integer second, Double third);
 	}
 
 	private static class StringParameterResolver implements ParameterResolver {

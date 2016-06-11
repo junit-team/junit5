@@ -37,7 +37,15 @@ public interface ParameterContext {
 	Parameter getParameter();
 
 	/**
-	 * Get the {@code Executable} that declares the parameter of this context.
+	 * Get the index of the parameter of this context within the parameter list
+	 * of the {@link Executable} that declares it.
+	 *
+	 * @see Executable#getParameters()
+	 */
+	int getIndex();
+
+	/**
+	 * Get the {@link Executable} that declares the parameter of this context.
 	 *
 	 * @see Parameter#getDeclaringExecutable()
 	 */

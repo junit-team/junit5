@@ -20,16 +20,24 @@ import org.junit.gen5.commons.util.ToStringBuilder;
 class DefaultParameterContext implements ParameterContext {
 
 	private final Parameter parameter;
+	private final int index;
 	private final Optional<Object> target;
 
-	DefaultParameterContext(Parameter parameter, Optional<Object> target) {
+	DefaultParameterContext(Parameter parameter, int index, Optional<Object> target) {
+		Preconditions.condition(index >= 0, "index must be greater than or equal to zero");
 		this.parameter = Preconditions.notNull(parameter, "parameter must not be null");
+		this.index = index;
 		this.target = Preconditions.notNull(target, "target must not be null");
 	}
 
 	@Override
 	public Parameter getParameter() {
 		return parameter;
+	}
+
+	@Override
+	public int getIndex() {
+		return index;
 	}
 
 	@Override
@@ -42,6 +50,7 @@ class DefaultParameterContext implements ParameterContext {
 		// @formatter:off
 		return new ToStringBuilder(this)
 				.append("parameter", parameter)
+				.append("index", index)
 				.append("target", target)
 				.toString();
 		// @formatter:on
