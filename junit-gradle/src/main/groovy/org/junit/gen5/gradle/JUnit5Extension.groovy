@@ -54,45 +54,6 @@ class JUnit5Extension {
 	String classNameFilter
 
 	/**
-	 * The ID of the test engine to be used.
-	 *
-	 * <p>If this property is set, only a single engine will be used
-	 * for discovering and running tests.
-	 */
-	String requiredEngine
-
-	/**
-	 * A list of <em>tags</em> to be included when building the test plan.
-	 */
-	List includeTags = []
-
-	/**
-	 * A list of <em>tags</em> to be excluded when building the test plan.
-	 */
-	List excludeTags = []
-
-	/**
-	 * Add a <em>tag</em> to be included when building the test plan.
-	 */
-	void includeTag(tag) {
-		includeTags.add tag
-	}
-
-	/**
-	 * Add a <em>tag</em> to be excluded when building the test plan.
-	 */
-	void excludeTag(tag) {
-		excludeTags.add tag
-	}
-
-	/**
-	 * Set the ID of the required engine.
-	 */
-	void requireEngine(engineId) {
-		requiredEngine = engineId
-	}
-
-	/**
 	 * Set the regular expression to be used to match against test class names.
 	 *
 	 * <p>If the supplied regular expression does not match against a
