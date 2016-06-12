@@ -10,7 +10,7 @@
 package org.junit.gen5.gradle
 
 /**
- * Configuration options for the {@link org.junit.gen5.gradle.JUnit5Plugin}.
+ * Core configuration options for the JUnit Platform Gradle plugin.
  *
  * @since 5.0
  */

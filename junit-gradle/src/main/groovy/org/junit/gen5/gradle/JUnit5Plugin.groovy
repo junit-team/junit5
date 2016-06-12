@@ -47,10 +47,11 @@ class JUnit5Plugin implements Plugin<Project> {
 
 			task.inputs.property('version', junit5.version)
 			task.inputs.property('runJunit4', junit5.runJunit4)
-			task.inputs.property('classNameFilter', junit5.classNameFilter)
+			task.inputs.property('includedEngines', junit5.engines.include)
+			task.inputs.property('excludedEngines', junit5.engines.exclude)
 			task.inputs.property('includeTags', junit5.tags.include)
 			task.inputs.property('excludeTags', junit5.tags.exclude)
-			task.inputs.property('requiredEngine', junit5.requiredEngine)
+			task.inputs.property('classNameFilter', junit5.classNameFilter)
 
 			def reportsDir = junit5.reportsDir ?: project.file("build/test-results/junit5")
 			task.outputs.dir reportsDir
@@ -88,20 +89,6 @@ class JUnit5Plugin implements Plugin<Project> {
 			args.add(junit5.classNameFilter)
 		}
 
-		// BEGIN: DELETE
-		junit5.includeTags.each { String tag ->
-			args.add('-t')
-			args.add(tag)
-		}
-		// END: DELETE
-
-		// BEGIN: DELETE
-		junit5.excludeTags.each { String tag ->
-			args.add('-T')
-			args.add(tag)
-		}
-		// END: DELETE
-
 		junit5.tags.include.each { String tag ->
 			args.add('-t')
 			args.add(tag)
@@ -111,13 +98,6 @@ class JUnit5Plugin implements Plugin<Project> {
 			args.add('-T')
 			args.add(tag)
 		}
-
-		// BEGIN: DELETE
-		if (junit5.requiredEngine) {
-			args.add('-e')
-			args.add(junit5.requiredEngine)
-		}
-		// END: DELETE
 
 		junit5.engines.include.each { String engineId ->
 			args.add('-e')

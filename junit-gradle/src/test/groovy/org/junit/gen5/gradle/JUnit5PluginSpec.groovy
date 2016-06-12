@@ -15,6 +15,9 @@ import org.gradle.api.tasks.JavaExec
 import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification
 
+/**
+ * @since 5.0
+ */
 class JUnit5PluginSpec extends Specification {
 
 	Project project
@@ -40,13 +43,21 @@ class JUnit5PluginSpec extends Specification {
 
 		when:
 			project.junit5 {
-				version '5.0.0-Alpha'
+				version '5.0.0'
 				runJunit4 true
 				matchClassName '.*Tests?'
 				logManager 'org.apache.logging.log4j.jul.LogManager'
-				includeTag 'fast'
-				excludeTag 'slow'
-				requireEngine 'junit5'
+
+				engines {
+					include 'foo'
+					exclude 'bar'
+				}
+
+				tags {
+					include 'fast'
+					exclude 'slow'
+				}
+
 				reportsDir new File("any")
 			}
 		then:
@@ -60,13 +71,21 @@ class JUnit5PluginSpec extends Specification {
 
 		when:
 			project.junit5 {
-				//version '5.0.0-Alpha' // cannot be set in micro test
-				//runJunit4 true // cannot be set in micro test
+				//version '5.0.0-Alpha' // cannot be set in test
+				//runJunit4 true // cannot be set in test
 				matchClassName '.*Tests?'
 				logManager 'org.apache.logging.log4j.jul.LogManager'
-				includeTag 'fast'
-				excludeTag 'slow'
-				requireEngine 'junit5'
+
+				engines {
+					include 'foo'
+					exclude 'bar'
+				}
+
+				tags {
+					include 'fast'
+					exclude 'slow'
+				}
+
 				reportsDir new File("/any")
 			}
 			project.evaluate()
@@ -82,11 +101,13 @@ class JUnit5PluginSpec extends Specification {
 			junit5TestTask.args.containsAll('-n', '.*Tests?')
 			junit5TestTask.args.containsAll('-t', 'fast')
 			junit5TestTask.args.containsAll('-T', 'slow')
-			junit5TestTask.args.containsAll('-e', 'junit5')
+			junit5TestTask.args.containsAll('-e', 'foo')
+			junit5TestTask.args.containsAll('-E', 'bar')
 			junit5TestTask.args.containsAll('-r', new File('/any').getCanonicalFile().toString())
 			junit5TestTask.args.contains(project.file('build/classes/main').absolutePath)
 			junit5TestTask.args.contains(project.file('build/resources/main').absolutePath)
 			junit5TestTask.args.contains(project.file('build/classes/test').absolutePath)
 			junit5TestTask.args.contains(project.file('build/resources/test').absolutePath)
 	}
+
 }

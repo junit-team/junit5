@@ -4,8 +4,17 @@ apply plugin: 'org.junit.gen5.gradle'
 
 junit5 {
 	runJunit4 true
-	excludeTag 'exclude'
 	matchClassName '.+(Testing.+|Tests?|Demo)$'
+
+	engines {
+		include 'junit5'
+		exclude 'junit4'
+	}
+
+	tags {
+		exclude 'exclude'
+	}
+
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 }
 
