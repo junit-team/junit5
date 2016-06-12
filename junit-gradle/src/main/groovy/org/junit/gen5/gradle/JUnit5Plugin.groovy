@@ -19,92 +19,92 @@ import org.gradle.api.tasks.JavaExec
 class JUnit5Plugin implements Plugin<Project> {
 
 	void apply(Project project) {
-		def junit5 = project.extensions.create('junit5', JUnit5Extension)
-		junit5.extensions.create('tags', TagsExtension)
-		junit5.extensions.create('engines', EnginesExtension)
+		def junitExtension = project.extensions.create('junit5', JUnit5Extension)
+		junitExtension.extensions.create('tags', TagsExtension)
+		junitExtension.extensions.create('engines', EnginesExtension)
 
 		project.afterEvaluate {
-			configure(project, junit5)
+			configure(project, junitExtension)
 		}
 	}
 
-	private void configure(Project project, junit5) {
+	private void configure(Project project, junitExtension) {
 
-		if (junit5.version) {
-			def junit5Version = junit5.version
-			project.dependencies.add("testRuntime", "org.junit:junit-console:${junit5Version}")
-			project.dependencies.add("testCompile", "org.junit:junit5-api:${junit5Version}")
-			project.dependencies.add("testRuntime", "org.junit:junit5-engine:${junit5Version}")
+		if (junitExtension.version) {
+			def version = junitExtension.version
+			project.dependencies.add("testRuntime", "org.junit:junit-console:${version}")
+			project.dependencies.add("testCompile", "org.junit:junit5-api:${version}")
+			project.dependencies.add("testRuntime", "org.junit:junit5-engine:${version}")
 
-			if (junit5.runJunit4) {
-				project.dependencies.add("testRuntime", "org.junit:junit4-engine:${junit5Version}")
+			if (junitExtension.runJunit4) {
+				project.dependencies.add("testRuntime", "org.junit:junit4-engine:${version}")
 			}
 		}
 
 		project.task('junit5Test', group: 'verification', type: JavaExec) { task ->
 
-			task.description = 'Runs JUnit 5 tests.'
+			task.description = 'Runs tests on the JUnit Platform.'
 
-			task.inputs.property('version', junit5.version)
-			task.inputs.property('runJunit4', junit5.runJunit4)
-			task.inputs.property('includedEngines', junit5.engines.include)
-			task.inputs.property('excludedEngines', junit5.engines.exclude)
-			task.inputs.property('includeTags', junit5.tags.include)
-			task.inputs.property('excludeTags', junit5.tags.exclude)
-			task.inputs.property('classNameFilter', junit5.classNameFilter)
+			task.inputs.property('version', junitExtension.version)
+			task.inputs.property('runJunit4', junitExtension.runJunit4)
+			task.inputs.property('includedEngines', junitExtension.engines.include)
+			task.inputs.property('excludedEngines', junitExtension.engines.exclude)
+			task.inputs.property('includeTags', junitExtension.tags.include)
+			task.inputs.property('excludeTags', junitExtension.tags.exclude)
+			task.inputs.property('classNameFilter', junitExtension.classNameFilter)
 
-			def reportsDir = junit5.reportsDir ?: project.file("build/test-results/junit5")
+			def reportsDir = junitExtension.reportsDir ?: project.file("build/test-results/junit5")
 			task.outputs.dir reportsDir
 
-			if (junit5.logManager) {
-				systemProperty 'java.util.logging.manager', junit5.logManager
+			if (junitExtension.logManager) {
+				systemProperty 'java.util.logging.manager', junitExtension.logManager
 			}
 
-			defineTaskDependencies(project, task, junit5)
+			defineTaskDependencies(project, task, junitExtension)
 
 			task.classpath = project.sourceSets.test.runtimeClasspath
 			task.main = 'org.junit.gen5.console.ConsoleRunner'
 
-			task.args buildArgs(project, junit5, reportsDir)
+			task.args buildArgs(project, junitExtension, reportsDir)
 		}
 	}
 
-	private void defineTaskDependencies(project, task, junit5) {
+	private void defineTaskDependencies(project, task, junitExtension) {
 		def test = project.tasks.getByName('test')
 		def testClasses = project.tasks.getByName('testClasses')
 
 		task.dependsOn testClasses
 		test.dependsOn task
-		if (junit5.runJunit4) {
+		if (junitExtension.runJunit4) {
 			test.enabled = false
 		}
 	}
 
-	private ArrayList<String> buildArgs(project, junit5, reportsDir) {
+	private ArrayList<String> buildArgs(project, junitExtension, reportsDir) {
 
 		def args = ['--enable-exit-code', '--hide-details', '--all']
 
-		if (junit5.classNameFilter) {
+		if (junitExtension.classNameFilter) {
 			args.add('-n')
-			args.add(junit5.classNameFilter)
+			args.add(junitExtension.classNameFilter)
 		}
 
-		junit5.tags.include.each { String tag ->
+		junitExtension.tags.include.each { tag ->
 			args.add('-t')
 			args.add(tag)
 		}
 
-		junit5.tags.exclude.each { String tag ->
+		junitExtension.tags.exclude.each { tag ->
 			args.add('-T')
 			args.add(tag)
 		}
 
-		junit5.engines.include.each { String engineId ->
+		junitExtension.engines.include.each { engineId ->
 			args.add('-e')
 			args.add(engineId)
 		}
 
-		junit5.engines.exclude.each { String engineId ->
+		junitExtension.engines.exclude.each { engineId ->
 			args.add('-E')
 			args.add(engineId)
 		}
