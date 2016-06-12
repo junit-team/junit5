@@ -18,6 +18,8 @@ import org.junit.gen5.api.extension.ExtendWith;
  *
  * @since 5.0
  */
+// @formatter:off
+// tag::user_guide[]
 @ExtendWith(TimingExtension.class)
 class TimingExtensionTests {
 
@@ -30,5 +32,6 @@ class TimingExtensionTests {
 	void sleep50ms() throws Exception {
 		Thread.sleep(50);
 	}
-
 }
+// end::user_guide[]
+// @formatter:on

@@ -25,6 +25,8 @@ import org.junit.gen5.api.extension.TestExtensionContext;
  *
  * @since 5.0
  */
+// @formatter:off
+// tag::user_guide[]
 public class TimingExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
 	private static final Logger LOG = Logger.getLogger(TimingExtension.class.getName());
@@ -46,5 +48,6 @@ public class TimingExtension implements BeforeTestExecutionCallback, AfterTestEx
 	private Store getStore(TestExtensionContext context) {
 		return context.getStore(Namespace.of(getClass(), context));
 	}
-
 }
+// end::user_guide[]
+// @formatter:on
