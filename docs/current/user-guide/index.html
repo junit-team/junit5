@@ -2025,8 +2025,8 @@ combination thereof. For concrete examples, consult the source code for
 <h3 id="test-lifecycle-callbacks">5.6. Test Lifecycle Callbacks</h3>
 <div class="paragraph">
 <p>The following interfaces define the APIs for extending tests at various points in the
-test execution lifecycle. Consult the Javadoc for each of these in the
-<code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension">org.junit.gen5.api.extension</a></code> package for further details.</p>
+test execution lifecycle. Consult the following sections for examples and the Javadoc for
+each of these interfaces in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension">org.junit.gen5.api.extension</a></code> package for further details.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2062,6 +2062,91 @@ test execution lifecycle. Consult the Javadoc for each of these in the
 <p>Note that extension developers may choose to implement any number of these interfaces
 within a single extension. Consult the source code of the <code><a href="https://github.com/sbrannen/spring-test-junit5/blob/master/src/main/java/org/springframework/test/context/junit5/SpringExtension.java">SpringExtension</a></code> for a
 concrete example.</p>
+</div>
+<div class="sect3">
+<h4 id="before-and-after-test-execution-callbacks">5.6.1. Before and After Test Execution Callbacks</h4>
+<div class="paragraph">
+<p><code>BeforeTestExecutionCallback</code> and <code>AfterTestExecutionCallback</code> define the APIs for
+<code>Extensions</code> that wish to add behavior that will be executed <em>immediately before</em> and
+<em>immediately after</em> a test method is executed, respectively. As such, these callbacks are
+well suited for timing, tracing, and similar use cases. If you need to implement
+callbacks that are invoked <em>around</em> <code>@BeforeEach</code> and <code>@AfterEach</code> methods, implement
+<code>BeforeEachCallback</code> and <code>AfterEachCallback</code> instead.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows how to use these callbacks to calculate and log the execution
+time of a test method. <code>TimingExtension</code> implements both <code>BeforeTestExecutionCallback</code>
+and <code>AfterTestExecutionCallback</code> in order to time and log the test execution.</p>
+</div>
+<div class="listingblock">
+<div class="title">An extension that times and logs the execution of test methods</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import java.lang.reflect.Method;
+import java.util.logging.Logger;
+
+import org.junit.gen5.api.extension.AfterTestExecutionCallback;
+import org.junit.gen5.api.extension.BeforeTestExecutionCallback;
+import org.junit.gen5.api.extension.ExtensionContext.Namespace;
+import org.junit.gen5.api.extension.ExtensionContext.Store;
+import org.junit.gen5.api.extension.TestExtensionContext;
+
+public class TimingExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
+
+    private static final Logger LOG = Logger.getLogger(TimingExtension.class.getName());
+
+    @Override
+    public void beforeTestExecution(TestExtensionContext context) throws Exception {
+        getStore(context).put(context.getTestMethod().get(), System.currentTimeMillis());
+    }
+
+    @Override
+    public void afterTestExecution(TestExtensionContext context) throws Exception {
+        Method testMethod = context.getTestMethod().get();
+        long start = (long) getStore(context).remove(testMethod);
+        long duration = System.currentTimeMillis() - start;
+
+        LOG.info(() -&gt; String.format("Method [%s] took %s ms.", testMethod.getName(), duration));
+    }
+
+    private Store getStore(TestExtensionContext context) {
+        return context.getStore(Namespace.of(getClass(), context));
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since the <code>TimingExtensionTests</code> class registers the <code>TimingExtension</code> via <code>@ExtendWith</code>,
+its tests will have this timing applied when they execute.</p>
+</div>
+<div class="listingblock">
+<div class="title">A test class that uses the example TimingExtension</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">@ExtendWith(TimingExtension.class)
+class TimingExtensionTests {
+
+    @Test
+    void sleep20ms() throws Exception {
+        Thread.sleep(20);
+    }
+
+    @Test
+    void sleep50ms() throws Exception {
+        Thread.sleep(50);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following is an example of the logging produced when <code>TimingExtensionTests</code> is run.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>INFO: Method [sleep20ms] took 24 ms.
+INFO: Method [sleep50ms] took 53 ms.</pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect2">
