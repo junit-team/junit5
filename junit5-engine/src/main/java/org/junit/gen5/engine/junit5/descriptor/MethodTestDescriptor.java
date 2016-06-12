@@ -65,9 +65,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor {
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	private final String displayName;
-
 	private final Class<?> testClass;
-
 	private final Method testMethod;
 
 	public MethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
@@ -79,6 +77,8 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor {
 
 		setSource(new JavaMethodSource(testMethod));
 	}
+
+	// --- TestDescriptor ------------------------------------------------------
 
 	@Override
 	public final Set<TestTag> getTags() {
@@ -109,6 +109,14 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor {
 	public boolean isContainer() {
 		return false;
 	}
+
+	@Override
+	protected String generateDefaultDisplayName() {
+		return String.format("%s(%s)", this.testMethod.getName(),
+			StringUtils.nullSafeToString(Class::getSimpleName, this.testMethod.getParameterTypes()));
+	}
+
+	// --- Node ----------------------------------------------------------------
 
 	@Override
 	public JUnit5EngineExecutionContext prepare(JUnit5EngineExecutionContext context) throws Exception {
@@ -231,12 +239,6 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor {
 
 		registry.reverseStream(AfterEachCallback.class)//
 				.forEach(extension -> throwableCollector.execute(() -> extension.afterEach(context)));
-	}
-
-	@Override
-	protected String generateDefaultDisplayName() {
-		return String.format("%s(%s)", this.testMethod.getName(),
-			StringUtils.nullSafeToString(Class::getSimpleName, this.testMethod.getParameterTypes()));
 	}
 
 }

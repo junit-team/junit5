@@ -48,10 +48,7 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor
 		super(uniqueId);
 	}
 
-	@Override
-	public boolean isLeaf() {
-		return !isContainer();
-	}
+	// --- TestDescriptor ------------------------------------------------------
 
 	protected Set<TestTag> getTags(AnnotatedElement element) {
 		// @formatter:off
@@ -73,6 +70,13 @@ public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor
 	}
 
 	protected abstract String generateDefaultDisplayName();
+
+	// --- Node ----------------------------------------------------------------
+
+	@Override
+	public boolean isLeaf() {
+		return !isContainer();
+	}
 
 	protected ExtensionRegistry populateNewExtensionRegistryFromExtendWith(AnnotatedElement annotatedElement,
 			ExtensionRegistry existingExtensionRegistry) {

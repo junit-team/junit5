@@ -45,18 +45,7 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 		super(uniqueId, testClass);
 	}
 
-	@Override
-	protected TestInstanceProvider testInstanceProvider(JUnit5EngineExecutionContext parentExecutionContext,
-			ExtensionRegistry registry, ExtensionContext extensionContext) {
-
-		return () -> {
-			Object outerInstance = parentExecutionContext.getTestInstanceProvider().getTestInstance();
-			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(getTestClass());
-			Object instance = executableInvoker.invoke(constructor, outerInstance, extensionContext, registry);
-			invokeTestInstancePostProcessors(instance, registry, extensionContext);
-			return instance;
-		};
-	}
+	// --- TestDescriptor ------------------------------------------------------
 
 	@Override
 	public final Set<TestTag> getTags() {
@@ -68,6 +57,21 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 	@Override
 	protected String generateDefaultDisplayName() {
 		return getTestClass().getSimpleName();
+	}
+
+	// --- Node ----------------------------------------------------------------
+
+	@Override
+	protected TestInstanceProvider testInstanceProvider(JUnit5EngineExecutionContext parentExecutionContext,
+			ExtensionRegistry registry, ExtensionContext extensionContext) {
+
+		return () -> {
+			Object outerInstance = parentExecutionContext.getTestInstanceProvider().getTestInstance();
+			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(getTestClass());
+			Object instance = executableInvoker.invoke(constructor, outerInstance, extensionContext, registry);
+			invokeTestInstancePostProcessors(instance, registry, extensionContext);
+			return instance;
+		};
 	}
 
 }

@@ -52,6 +52,8 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 		super(uniqueId, testClass, testMethod);
 	}
 
+	// --- TestDescriptor ------------------------------------------------------
+
 	@Override
 	public boolean isTest() {
 		return false;
@@ -66,6 +68,8 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	public boolean hasTests() {
 		return true;
 	}
+
+	// --- Node ----------------------------------------------------------------
 
 	@Override
 	public boolean isLeaf() {

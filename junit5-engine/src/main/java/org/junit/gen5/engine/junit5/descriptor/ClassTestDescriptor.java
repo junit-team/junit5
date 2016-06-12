@@ -65,15 +65,11 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor {
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	private final String displayName;
-
 	private final Class<?> testClass;
 
 	private final List<Method> beforeAllMethods;
-
 	private final List<Method> afterAllMethods;
-
 	private final List<Method> beforeEachMethods;
-
 	private final List<Method> afterEachMethods;
 
 	public ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
@@ -90,8 +86,11 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor {
 		setSource(new JavaClassSource(testClass));
 	}
 
-	public final Class<?> getTestClass() {
-		return this.testClass;
+	// --- TestDescriptor ------------------------------------------------------
+
+	@Override
+	public Set<TestTag> getTags() {
+		return getTags(this.testClass);
 	}
 
 	@Override
@@ -99,9 +98,8 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor {
 		return this.displayName;
 	}
 
-	@Override
-	public Set<TestTag> getTags() {
-		return getTags(this.testClass);
+	public final Class<?> getTestClass() {
+		return this.testClass;
 	}
 
 	@Override
@@ -113,6 +111,15 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor {
 	public final boolean isContainer() {
 		return true;
 	}
+
+	@Override
+	protected String generateDefaultDisplayName() {
+		String name = this.testClass.getName();
+		int index = name.lastIndexOf('.');
+		return name.substring(index + 1);
+	}
+
+	// --- Node ----------------------------------------------------------------
 
 	@Override
 	public JUnit5EngineExecutionContext prepare(JUnit5EngineExecutionContext context) {
@@ -240,13 +247,6 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor {
 				() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
 
 		executableInvoker.invoke(method, instance, context, registry);
-	}
-
-	@Override
-	protected String generateDefaultDisplayName() {
-		String name = this.testClass.getName();
-		int index = name.lastIndexOf('.');
-		return name.substring(index + 1);
 	}
 
 }
