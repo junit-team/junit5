@@ -154,6 +154,33 @@ within a single extension. Consult the source code of the `{SpringExtension}` fo
 concrete example.
 
 
+==== Before and After Test Execution Callbacks
+
+The `BeforeTestExecutionCallback` and `AfterTestExecutionCallback` `Extensions` define APIs
+for adding behavior that will be executed immediately before and after a test is
+run respectively.
+
+The following example shows how to use these methods to calculate and log the
+execution time of a test method. `TimingExtension` implements both `BeforeTestExecutionCallback`
+and `AfterTestExecutionCallback` so as to time and log the test execution.
+As `TimingExtensionTests` extends with `TimingExtension`, its tests will have this behavior
+applied when they execute.
+
+[source,java,indent=0]
+[subs="verbatim"]
+.An extension that times and logs the execution of test methods
+----
+include::{testDir}/example/timing/TimingExtension.java[tags=user_guide]
+----
+
+[source,java,indent=0]
+[subs="verbatim"]
+.A test class that logs its test execution times
+----
+include::{testDir}/example/timing/TimingExtensionTests.java[tags=user_guide]
+----
+
+
 === Exception Handling
 
 `{TestExecutionExceptionHandler}` defines the API for `Extensions` that wish to handle
