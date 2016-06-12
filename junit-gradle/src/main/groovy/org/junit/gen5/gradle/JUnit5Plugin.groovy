@@ -20,6 +20,8 @@ class JUnit5Plugin implements Plugin<Project> {
 
 	void apply(Project project) {
 		def junit5 = project.extensions.create('junit5', JUnit5Extension)
+		junit5.extensions.create('tags', TagsExtension)
+		junit5.extensions.create('engines', EnginesExtension)
 
 		project.afterEvaluate {
 			configure(project, junit5)
@@ -27,6 +29,7 @@ class JUnit5Plugin implements Plugin<Project> {
 	}
 
 	private void configure(Project project, junit5) {
+
 		if (junit5.version) {
 			def junit5Version = junit5.version
 			project.dependencies.add("testRuntime", "org.junit:junit-console:${junit5Version}")
@@ -45,8 +48,8 @@ class JUnit5Plugin implements Plugin<Project> {
 			task.inputs.property('version', junit5.version)
 			task.inputs.property('runJunit4', junit5.runJunit4)
 			task.inputs.property('classNameFilter', junit5.classNameFilter)
-			task.inputs.property('includeTags', junit5.includeTags)
-			task.inputs.property('excludeTags', junit5.excludeTags)
+			task.inputs.property('includeTags', junit5.tags.include)
+			task.inputs.property('excludeTags', junit5.tags.exclude)
 			task.inputs.property('requiredEngine', junit5.requiredEngine)
 
 			def reportsDir = junit5.reportsDir ?: project.file("build/test-results/junit5")
@@ -85,19 +88,45 @@ class JUnit5Plugin implements Plugin<Project> {
 			args.add(junit5.classNameFilter)
 		}
 
+		// BEGIN: DELETE
 		junit5.includeTags.each { String tag ->
 			args.add('-t')
 			args.add(tag)
 		}
+		// END: DELETE
 
+		// BEGIN: DELETE
 		junit5.excludeTags.each { String tag ->
 			args.add('-T')
 			args.add(tag)
 		}
+		// END: DELETE
 
+		junit5.tags.include.each { String tag ->
+			args.add('-t')
+			args.add(tag)
+		}
+
+		junit5.tags.exclude.each { String tag ->
+			args.add('-T')
+			args.add(tag)
+		}
+
+		// BEGIN: DELETE
 		if (junit5.requiredEngine) {
 			args.add('-e')
 			args.add(junit5.requiredEngine)
+		}
+		// END: DELETE
+
+		junit5.engines.include.each { String engineId ->
+			args.add('-e')
+			args.add(engineId)
+		}
+
+		junit5.engines.exclude.each { String engineId ->
+			args.add('-E')
+			args.add(engineId)
 		}
 
 		args.add('-r')
@@ -116,4 +145,5 @@ class JUnit5Plugin implements Plugin<Project> {
 
 		return args
 	}
+
 }
