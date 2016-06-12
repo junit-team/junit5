@@ -28,7 +28,7 @@ module.
 | `@BeforeAll`       | Denotes that the annotated method should be executed _before_ *all* `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@BeforeClass`. Such methods must be `static`.
 | `@AfterAll`        | Denotes that the annotated method should be executed _after_ *all* `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@AfterClass`. Such methods must be `static`.
 | `@Nested`          | Denotes that the annotated class is a nested, non-static test class. Due to restrictions of the Java language, `@BeforeAll` and `@AfterAll` methods cannot be used in a `@Nested` test class.
-| `@Tag` and `@Tags` | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4
+| `@Tag`             | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4
 | `@Disabled`        | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore`
 | `@ExtendWith`      | Used to register custom <<extension-model, extensions>>
 |===
@@ -60,13 +60,13 @@ include::{testDir}/example/Fast.java[tags=user_guide]
 include::{testDir}/example/StandardTests.java[tags=user_guide]
 ----
 
-Notice that neither the test class nor the test method need to be `public`.
+Notice that neither test classes nor test methods need to be `public`.
 
 
-=== Custom Names
+=== Display Names
 
-Test classes and test methods can declare a custom name -- with spaces, special
-characters, and even emojis -- that will be displayed by test runners and test reporting:
+Test classes and test methods can declare custom display names -- with spaces, special
+characters, and even emojis -- that will be displayed by test runners and test reporting.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -103,7 +103,7 @@ include::{testDir}/example/AssumptionsDemo.java[tags=user_guide]
 
 === Disabling Tests
 
-Here's a disabled test case:
+Here's a disabled test case.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -111,7 +111,7 @@ Here's a disabled test case:
 include::{testDir}/example/DisabledClassDemo.java[tags=user_guide]
 ----
 
-And here's a test case with a disabled test method:
+And here's a test case with a disabled test method.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -123,7 +123,7 @@ include::{testDir}/example/DisabledTestsDemo.java[tags=user_guide]
 === Tagging and Filtering
 
 Test classes and methods can be tagged. Those tags can later be used to filter
-<<running-tests,test discovery and execution>>:
+<<running-tests,test discovery and execution>>.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -136,7 +136,7 @@ include::{testDir}/example/TaggingDemo.java[tags=user_guide]
 === Nested Tests
 
 Nested tests give the test writer more capabilities to express the relationship among
-several group of tests. Here's an elaborate example:
+several group of tests. Here's an elaborate example.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -145,10 +145,10 @@ several group of tests. Here's an elaborate example:
 include::{testDir}/example/TestingAStackDemo.java[tags=user_guide]
 ----
 
-Notice that _only non-static inner classes_ can serve as nested tests. Nesting can be
-arbitrarily deep, and those inner classes can be considered as full members of the test
-class family with one exception: `@BeforeAll` and `@AfterAll` do not work, because Java
-does not allow static members in non-static inner classes.
+Notice that _only non-static nested classes_ (i.e. _inner classes_) can serve as
+`@Nested`tests. Nesting can be arbitrarily deep, and those inner classes are considered
+to be full members of the test class family with one exception: `@BeforeAll` and
+`@AfterAll` do not work, because Java does not allow static members in inner classes.
 
 === Dependency Injection for Constructors and Methods
 
@@ -159,9 +159,9 @@ parameters. This allows for greater flexibility and enables _Dependency Injectio
 constructors and methods.
 
 `{ParameterResolver}` defines the API for test extensions that wish to _dynamically_
-resolve parameters at runtime. If a test constructor or a `@Test`, `@BeforeEach`,
-`@AfterEach`, `@BeforeAll`, or `@AfterAll` method accepts a parameter, the parameter must
-be resolved at runtime by a registered `ParameterResolver`.
+resolve parameters at runtime. If a test constructor or a `@Test`, `@TestFactory`,
+`@BeforeEach`, `@AfterEach`, `@BeforeAll`, or `@AfterAll` method accepts a parameter, the
+parameter must be resolved at runtime by a registered `ParameterResolver`.
 
 There are currently two built-in resolvers that are registered automatically.
 
@@ -173,7 +173,7 @@ There are currently two built-in resolvers that are registered automatically.
   the name of the test class or test method, or a custom name configured via `@DisplayName`.
 +
 `{TestInfo}` acts as a drop-in replacement for the `TestName`
-rule from JUnit 4. Here is an example of its usage:
+rule from JUnit 4. Here is an example of its usage.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -197,9 +197,8 @@ Using `@RunWith(JUnit5.class)` will even output all reported entries to `stdout`
 include::{testDir}/example/TestReporterDemo.java[tags=user_guide]
 ----
 
-
-Other parameter resolvers must be explicitly enabled by registering a <<extension-model,
-test extension>> via `@ExtendWith`.
+Other parameter resolvers must be explicitly enabled by registering an appropriate
+<<extension-model,extension>> via `@ExtendWith`.
 
 * Check out the `{MockitoExtension}` for an example of a `{ParameterResolver}`. While not
   intended to be production-ready, it demonstrates the simplicity and expressiveness of
@@ -232,10 +231,10 @@ class MyMockitoTest {
 
 === Interface Default Methods
 
-JUnit 5 allows tests to be declared in interface default methods. One possible
-application of this feature is to write tests for interface contracts. For example, you
-can write tests for how implementations of `Object.equals` or `Comparable.compareTo`
-should behave as follows:
+JUnit 5 allows `@Test`, `@TestFactory`, `@BeforeEach`, and `@AfterEach` to be declared on
+interface default methods. One possible application of this feature is to write tests for
+interface contracts. For example, you can write tests for how implementations of
+`Object.equals` or `Comparable.compareTo` should behave as follows.
 
 [source,java]
 [subs="verbatim"]
@@ -256,7 +255,7 @@ include::{testDir}/example/defaultmethods/ComparableContract.java[tags=user_guid
 ----
 
 In your test class you can then implement both contract interfaces thereby inheriting the
-corresponding tests. Of course you'll have to implement the abstract methods:
+corresponding tests. Of course you'll have to implement the abstract methods.
 
 [source,java]
 [subs="verbatim"]
@@ -282,7 +281,7 @@ This new kind of test is a _dynamic test_ which is generated at run-time by a fa
 that is annotated with `@TestFactory`.
 
 In contrast to `@Test` methods, a `@TestFactory` method is not itself a test case but rather a factory for test cases.
-Thus, dynamic tests are the products of a factory.
+Thus, a dynamic test is the product of a factory.
 Technically speaking, a `@TestFactory` method must return a `Stream`,
 `Collection`, `Iterable`, or `Iterator` of `DynamicTest` instances.
 These `DynamicTest` instances will then be executed lazily,

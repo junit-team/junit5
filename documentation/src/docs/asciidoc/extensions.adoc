@@ -84,7 +84,7 @@ as a JVM system property or as a _configuration parameter_ in the `TestDiscovery
 that is passed to the `Launcher`.
 
 For example, to deactivate JUnit's `@Disabled` condition, you can start your JVM with
-the following system property:
+the following system property.
 
 `-Djunit.conditions.deactivate=org.junit.*DisabledCondition`
 
@@ -127,9 +127,9 @@ For concrete examples, consult the source code for the `{MockitoExtension}` and 
 `{ParameterResolver}` defines the `Extension` API for dynamically resolving parameters at
 runtime.
 
-If a test constructor or a `@Test`, `@BeforeEach`, `@AfterEach` , `@BeforeAll` or
-`@AfterAll` method accepts a parameter, the parameter must be _resolved_ at runtime by a
-`ParameterResolver`. A `ParameterResolver` can either be built-in (see
+If a test constructor or a `@Test`, `@TestFactory`, `@BeforeEach`, `@AfterEach`,
+`@BeforeAll`, or `@AfterAll` method accepts a parameter, the parameter must be _resolved_
+at runtime by a `ParameterResolver`. A `ParameterResolver` can either be built-in (see
 `{TestInfoParameterResolver}`) or <<extension-registration,registered by the user>>.
 Generally speaking, parameters may be resolved by _name_, _type_, _annotation_, or any
 combination thereof. For concrete examples, consult the source code for
@@ -143,11 +143,11 @@ test execution lifecycle. Consult the Javadoc for each of these in the
 `{extension-api-package}` package for further details.
 
 * `BeforeAllCallback`
+** `BeforeEachCallback`
+*** `BeforeTestExecutionCallback`
+*** `AfterTestExecutionCallback`
+** `AfterEachCallback`
 * `AfterAllCallback`
-* `BeforeEachCallback`
-* `AfterEachCallback`
-* `BeforeTestExecutionCallback`
-* `AfterTestExecutionCallback`
 
 Note that extension developers may choose to implement any number of these interfaces
 within a single extension. Consult the source code of the `{SpringExtension}` for a
@@ -160,7 +160,7 @@ concrete example.
 exceptions thrown during test execution.
 
 The following example shows an extension which will swallow all instances of `IOException`
-but rethrow any other type of exception:
+but rethrow any other type of exception.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -172,12 +172,8 @@ include::{testDir}/example/exception/IgnoreIOExceptionExtension.java[tags=user_g
 
 === Keeping State in Extensions
 
-Usually, an extension is instantiated only once. So the question becomes relevant: How do you keep the state
-from one invocation of an extension point to the next? ...
+Usually, an extension is instantiated only once. So the question becomes relevant: How do
+you keep the state from one invocation of an extension to the next? The
+`ExtensionContext` API provides a `Store` exactly for this purpose. Consult the
+corresponding Javadoc for details.
 
-
-=== Additional Planned Extensions
-
-Several additional extensions are planned, including but not limited to the following:
-
-* Dynamic test registration – for example, for computing parameterized tests at runtime
