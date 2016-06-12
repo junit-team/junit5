@@ -28,15 +28,15 @@ import org.junit.gen5.engine.reporting.ReportEntry;
 /**
  * @since 5.0
  */
-abstract class AbstractExtensionContext implements ExtensionContext {
+abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContext {
 
 	private final ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
-	private final TestDescriptor testDescriptor;
+	private final T testDescriptor;
 	private final ExtensionValuesStore valuesStore;
 
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			TestDescriptor testDescriptor) {
+			T testDescriptor) {
 		this.parent = parent;
 		this.engineExecutionListener = engineExecutionListener;
 		this.testDescriptor = testDescriptor;
@@ -46,7 +46,7 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 	private ExtensionValuesStore createStore(ExtensionContext parent) {
 		ExtensionValuesStore parentStore = null;
 		if (parent != null) {
-			parentStore = ((AbstractExtensionContext) parent).valuesStore;
+			parentStore = ((AbstractExtensionContext<?>) parent).valuesStore;
 		}
 		return new ExtensionValuesStore(parentStore);
 	}
@@ -61,7 +61,7 @@ abstract class AbstractExtensionContext implements ExtensionContext {
 		return Optional.ofNullable(parent);
 	}
 
-	protected TestDescriptor getTestDescriptor() {
+	protected T getTestDescriptor() {
 		return testDescriptor;
 	}
 

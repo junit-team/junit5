@@ -25,7 +25,8 @@ import org.junit.gen5.engine.EngineExecutionListener;
  * @since 5.0
  */
 @API(Internal)
-public final class MethodBasedTestExtensionContext extends AbstractExtensionContext implements TestExtensionContext {
+public final class MethodBasedTestExtensionContext extends AbstractExtensionContext<MethodTestDescriptor>
+		implements TestExtensionContext {
 
 	private final Object testInstance;
 
@@ -33,21 +34,6 @@ public final class MethodBasedTestExtensionContext extends AbstractExtensionCont
 			MethodTestDescriptor testDescriptor, Object testInstance) {
 		super(parent, engineExecutionListener, testDescriptor);
 		this.testInstance = testInstance;
-	}
-
-	@Override
-	public Optional<Method> getTestMethod() {
-		return Optional.of(((MethodTestDescriptor) getTestDescriptor()).getTestMethod());
-	}
-
-	@Override
-	public Object getTestInstance() {
-		return this.testInstance;
-	}
-
-	@Override
-	public Optional<Class<?>> getTestClass() {
-		return Optional.of(((MethodTestDescriptor) getTestDescriptor()).getTestClass());
 	}
 
 	@Override
@@ -63,6 +49,21 @@ public final class MethodBasedTestExtensionContext extends AbstractExtensionCont
 	@Override
 	public AnnotatedElement getElement() {
 		return getTestMethod().get();
+	}
+
+	@Override
+	public Optional<Class<?>> getTestClass() {
+		return Optional.of(getTestDescriptor().getTestClass());
+	}
+
+	@Override
+	public Optional<Method> getTestMethod() {
+		return Optional.of(getTestDescriptor().getTestMethod());
+	}
+
+	@Override
+	public Object getTestInstance() {
+		return this.testInstance;
 	}
 
 }
