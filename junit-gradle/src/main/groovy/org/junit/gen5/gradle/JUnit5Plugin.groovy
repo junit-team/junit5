@@ -69,14 +69,20 @@ class JUnit5Plugin implements Plugin<Project> {
 		}
 	}
 
-	private void defineTaskDependencies(project, task, junitExtension) {
-		def test = project.tasks.getByName('test')
+	private void defineTaskDependencies(project, junitTask, junitExtension) {
+		def testTask = project.tasks.getByName('test')
 		def testClasses = project.tasks.getByName('testClasses')
 
-		task.dependsOn testClasses
-		test.dependsOn task
-		if (junitExtension.runJunit4) {
-			test.enabled = false
+		junitTask.dependsOn testClasses
+		testTask.dependsOn junitTask
+
+		// Disable execution of JUnit 3 and JUnit 4 tests by the standard Gradle
+		// 'test' task if the 'test' task is configured to run JUnit instead
+		// of TestNG.
+		if (junitExtension.runJunit4 &&
+				'JUnitTestFramework' == testTask.getTestFramework().getClass().getSimpleName()) {
+
+			testTask.enabled = false
 		}
 	}
 
