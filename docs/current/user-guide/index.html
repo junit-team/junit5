@@ -727,7 +727,16 @@ public @interface Fast {
 <div class="listingblock">
 <div class="title">A standard test case</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">class StandardTests {
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.fail;
+
+import org.junit.gen5.api.AfterAll;
+import org.junit.gen5.api.AfterEach;
+import org.junit.gen5.api.BeforeAll;
+import org.junit.gen5.api.BeforeEach;
+import org.junit.gen5.api.Disabled;
+import org.junit.gen5.api.Test;
+
+class StandardTests {
 
     @BeforeAll
     static void initAll() {
@@ -743,7 +752,7 @@ public @interface Fast {
 
     @Test
     void failingTest() {
-        Assertions.fail("a failing test");
+        fail("a failing test");
     }
 
     @Test
@@ -968,7 +977,7 @@ several group of tests. Here&#8217;s an elaborate example:</p>
 <div class="title">Nested test suite for testing a stack</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">@DisplayName("A stack")
-class TestingAStack {
+class TestingAStackDemo {
 
     Stack&lt;Object&gt; stack;
     boolean isRun = false;
@@ -1785,8 +1794,6 @@ test class.</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.fail;
 
-import extensions.ExpectToFail;
-
 import org.junit.gen5.api.Test;
 import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.runner.RunWith;
@@ -1795,12 +1802,12 @@ import org.junit.runner.RunWith;
 public class JUnit4ClassDemo {
 
     @Test
-    void aSucceedingTest() {
+    void succeedingTest() {
         /* no-op */
     }
 
     @Test
-    void aFailingTest() {
+    void failingTest() {
         fail("Failing for failing's sake.");
     }
 
