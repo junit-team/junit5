@@ -5,6 +5,7 @@ apply plugin: 'org.junit.gen5.gradle'
 junit5 {
 	runJunit4 true
 	excludeTag 'exclude'
+	matchClassName '.+(Testing.+|Tests?|Demo)$'
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 }
 

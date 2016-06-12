@@ -11,6 +11,7 @@
 package example;
 
 import org.junit.gen5.junit4.runner.ExcludeTags;
+import org.junit.gen5.junit4.runner.FilterClassName;
 import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.gen5.junit4.runner.Packages;
 import org.junit.runner.RunWith;
@@ -30,6 +31,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnit5.class)
 @Packages("example")
+@FilterClassName(".+(Testing.+|Tests?|Demo)$")
 @ExcludeTags("exclude")
 public class DocumentationTestSuite {
 }
