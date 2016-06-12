@@ -18,6 +18,7 @@ import org.junit.gen5.api.extension.ExtendWith;
  *
  * @since 5.0
  */
+// tag::user_guide[]
 @ExtendWith(TimingExtension.class)
 class TimingExtensionTests {
 
@@ -32,3 +33,4 @@ class TimingExtensionTests {
 	}
 
 }
+// end::user_guide[]

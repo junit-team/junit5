@@ -10,6 +10,7 @@
 
 package example.timing;
 
+// tag::user_guide[]
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
@@ -19,12 +20,14 @@ import org.junit.gen5.api.extension.ExtensionContext.Namespace;
 import org.junit.gen5.api.extension.ExtensionContext.Store;
 import org.junit.gen5.api.extension.TestExtensionContext;
 
+// end::user_guide[]
 /**
  * Simple extension that <em>times</em> the execution of test methods and
  * logs the results at {@code INFO} level.
  *
  * @since 5.0
  */
+// tag::user_guide[]
 public class TimingExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
 	private static final Logger LOG = Logger.getLogger(TimingExtension.class.getName());
@@ -48,3 +51,4 @@ public class TimingExtension implements BeforeTestExecutionCallback, AfterTestEx
 	}
 
 }
+// end::user_guide[]
