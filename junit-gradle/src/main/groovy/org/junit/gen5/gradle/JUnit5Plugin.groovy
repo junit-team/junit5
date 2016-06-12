@@ -17,7 +17,7 @@ import org.gradle.api.tasks.JavaExec
  * @since 5.0
  */
 class JUnit5Plugin implements Plugin<Project> {
-	
+
 	private static final String EXTENSION_NAME = 'junit5';
 	private static final String TASK_NAME      = 'junit5Test';
 
