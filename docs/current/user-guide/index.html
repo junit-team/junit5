@@ -448,7 +448,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#annotations">3.1. Annotations</a></li>
 <li><a href="#standard-test-class">3.2. Standard Test Class</a></li>
-<li><a href="#custom-names">3.3. Custom Names</a></li>
+<li><a href="#display-names">3.3. Display Names</a></li>
 <li><a href="#assertions">3.4. Assertions</a></li>
 <li><a href="#assumptions">3.5. Assumptions</a></li>
 <li><a href="#disabling-tests">3.6. Disabling Tests</a></li>
@@ -477,7 +477,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#test-lifecycle-callbacks">5.6. Test Lifecycle Callbacks</a></li>
 <li><a href="#exception-handling">5.7. Exception Handling</a></li>
 <li><a href="#keeping-state-in-extensions">5.8. Keeping State in Extensions</a></li>
-<li><a href="#additional-planned-extensions">5.9. Additional Planned Extensions</a></li>
 </ul>
 </li>
 <li><a href="#migrating-from-junit4">6. Migrating from JUnit 4</a>
@@ -679,7 +678,7 @@ module.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated class is a nested, non-static test class. Due to restrictions of the Java language, <code>@BeforeAll</code> and <code>@AfterAll</code> methods cannot be used in a <code>@Nested</code> test class.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Tag</code> and <code>@Tags</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Tag</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Used to declare <em>tags</em> for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4</p></td>
 </tr>
 <tr>
@@ -773,14 +772,14 @@ class StandardTests {
 </div>
 </div>
 <div class="paragraph">
-<p>Notice that neither the test class nor the test method need to be <code>public</code>.</p>
+<p>Notice that neither test classes nor test methods need to be <code>public</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="custom-names">3.3. Custom Names</h3>
+<h3 id="display-names">3.3. Display Names</h3>
 <div class="paragraph">
-<p>Test classes and test methods can declare a custom name&#8201;&#8212;&#8201;with spaces, special
-characters, and even emojis&#8201;&#8212;&#8201;that will be displayed by test runners and test reporting:</p>
+<p>Test classes and test methods can declare custom display names&#8201;&#8212;&#8201;with spaces, special
+characters, and even emojis&#8201;&#8212;&#8201;that will be displayed by test runners and test reporting.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -906,7 +905,7 @@ public class AssumptionsDemo {
 <div class="sect2">
 <h3 id="disabling-tests">3.6. Disabling Tests</h3>
 <div class="paragraph">
-<p>Here&#8217;s a disabled test case:</p>
+<p>Here&#8217;s a disabled test case.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -922,7 +921,7 @@ class DisabledClassDemo {
 </div>
 </div>
 <div class="paragraph">
-<p>And here&#8217;s a test case with a disabled test method:</p>
+<p>And here&#8217;s a test case with a disabled test method.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -947,7 +946,7 @@ class DisabledTestsDemo {
 <h3 id="tagging-and-filtering">3.7. Tagging and Filtering</h3>
 <div class="paragraph">
 <p>Test classes and methods can be tagged. Those tags can later be used to filter
-<a href="#running-tests">test discovery and execution</a>:</p>
+<a href="#running-tests">test discovery and execution</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -971,7 +970,7 @@ class TaggingDemo {
 <h3 id="nested-tests">3.8. Nested Tests</h3>
 <div class="paragraph">
 <p>Nested tests give the test writer more capabilities to express the relationship among
-several group of tests. Here&#8217;s an elaborate example:</p>
+several group of tests. Here&#8217;s an elaborate example.</p>
 </div>
 <div class="listingblock">
 <div class="title">Nested test suite for testing a stack</div>
@@ -1051,10 +1050,10 @@ class TestingAStackDemo {
 </div>
 </div>
 <div class="paragraph">
-<p>Notice that <em>only non-static inner classes</em> can serve as nested tests. Nesting can be
-arbitrarily deep, and those inner classes can be considered as full members of the test
-class family with one exception: <code>@BeforeAll</code> and <code>@AfterAll</code> do not work, because Java
-does not allow static members in non-static inner classes.</p>
+<p>Notice that <em>only non-static nested classes</em> (i.e. <em>inner classes</em>) can serve as
+<code>@Nested`tests. Nesting can be arbitrarily deep, and those inner classes are considered
+to be full members of the test class family with one exception: `@BeforeAll</code> and
+<code>@AfterAll</code> do not work, because Java does not allow static members in inner classes.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1068,9 +1067,9 @@ constructors and methods.</p>
 </div>
 <div class="paragraph">
 <p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ParameterResolver.java">ParameterResolver</a></code> defines the API for test extensions that wish to <em>dynamically</em>
-resolve parameters at runtime. If a test constructor or a <code>@Test</code>, <code>@BeforeEach</code>,
-<code>@AfterEach</code>, <code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts a parameter, the parameter must
-be resolved at runtime by a registered <code>ParameterResolver</code>.</p>
+resolve parameters at runtime. If a test constructor or a <code>@Test</code>, <code>@TestFactory</code>,
+<code>@BeforeEach</code>, <code>@AfterEach</code>, <code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts a parameter, the
+parameter must be resolved at runtime by a registered <code>ParameterResolver</code>.</p>
 </div>
 <div class="paragraph">
 <p>There are currently two built-in resolvers that are registered automatically.</p>
@@ -1086,7 +1085,7 @@ test method, or associated tags. The display name is either a technical name, su
 the name of the test class or test method, or a custom name configured via <code>@DisplayName</code>.</p>
 <div class="paragraph">
 <p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/TestInfo.java">TestInfo</a></code> acts as a drop-in replacement for the <code>TestName</code>
-rule from JUnit 4. Here is an example of its usage:</p>
+rule from JUnit 4. Here is an example of its usage.</p>
 </div>
 </li>
 </ul>
@@ -1168,7 +1167,8 @@ class TestReporterDemo {
 </div>
 </div>
 <div class="paragraph">
-<p>Other parameter resolvers must be explicitly enabled by registering a <a href="#extension-model">test extension</a> via <code>@ExtendWith</code>.</p>
+<p>Other parameter resolvers must be explicitly enabled by registering an appropriate
+<a href="#extension-model">extension</a> via <code>@ExtendWith</code>.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1207,10 +1207,10 @@ class MyMockitoTest {
 <div class="sect2">
 <h3 id="interface-default-methods">3.10. Interface Default Methods</h3>
 <div class="paragraph">
-<p>JUnit 5 allows tests to be declared in interface default methods. One possible
-application of this feature is to write tests for interface contracts. For example, you
-can write tests for how implementations of <code>Object.equals</code> or <code>Comparable.compareTo</code>
-should behave as follows:</p>
+<p>JUnit 5 allows <code>@Test</code>, <code>@TestFactory</code>, <code>@BeforeEach</code>, and <code>@AfterEach</code> to be declared on
+interface default methods. One possible application of this feature is to write tests for
+interface contracts. For example, you can write tests for how implementations of
+<code>Object.equals</code> or <code>Comparable.compareTo</code> should behave as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1281,7 +1281,7 @@ should behave as follows:</p>
 </div>
 <div class="paragraph">
 <p>In your test class you can then implement both contract interfaces thereby inheriting the
-corresponding tests. Of course you&#8217;ll have to implement the abstract methods:</p>
+corresponding tests. Of course you&#8217;ll have to implement the abstract methods.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1326,7 +1326,7 @@ that is annotated with <code>@TestFactory</code>.</p>
 </div>
 <div class="paragraph">
 <p>In contrast to <code>@Test</code> methods, a <code>@TestFactory</code> method is not itself a test case but rather a factory for test cases.
-Thus, dynamic tests are the products of a factory.
+Thus, a dynamic test is the product of a factory.
 Technically speaking, a <code>@TestFactory</code> method must return a <code>Stream</code>,
 <code>Collection</code>, <code>Iterable</code>, or <code>Iterator</code> of <code>DynamicTest</code> instances.
 These <code>DynamicTest</code> instances will then be executed lazily,
@@ -1487,10 +1487,10 @@ class DynamicTestsDemo {
 <div class="sect2">
 <h3 id="ide-support">4.1. IDE Support</h3>
 <div class="paragraph">
-<p>At this stage there is no direct support for running JUnit 5 tests in IDEs. However, the
-JUnit team provides two intermediate solutions so that you can go ahead and try out the
-current snapshot today. You can use the <a href="#running-tests-console-runner">Console Runner</a> or execute JUnit
-5 tests with a <a href="#running-tests-junit4-runner">JUnit 4 based Runner</a>.</p>
+<p>At the time of this writing there is no direct support for running JUnit 5 tests in IDEs.
+However, the JUnit team provides two intermediate solutions so that you can go ahead and
+try out JUnit 5 within your IDE today. You can use the <a href="#running-tests-console-runner">Console Runner</a>
+or execute JUnit 5 tests with a <a href="#running-tests-junit4-runner">JUnit 4 based Runner</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1498,14 +1498,14 @@ current snapshot today. You can use the <a href="#running-tests-console-runner">
 <div class="sect3">
 <h4 id="gradle">4.2.1. Gradle</h4>
 <div class="paragraph">
-<p>The JUnit team has developed a very basic <code>JUnit5Plugin</code> that lets you run JUnit 4 and
-JUnit 5 tests in Gradle builds. See <code>build.gradle</code> in the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code>
-project for an example of the plugin in action.</p>
+<p>The JUnit team has developed a very basic Gradle plugin that lets you run JUnit 3, JUnit
+4, and JUnit 5 tests in Gradle builds. See <code>build.gradle</code> in the
+<code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project for an example of the plugin in action.</p>
 </div>
 <div class="sect4">
-<h5 id="enabling-the-code-junit5plugin-code">Enabling the <code>JUnit5Plugin</code></h5>
+<h5 id="enabling-the-junit-gradle-plugin">Enabling the JUnit Gradle Plugin</h5>
 <div class="paragraph">
-<p>To use the <code>JUnit5Plugin</code>, you first need to configure <code>build.gradle</code> as follows.</p>
+<p>To use the JUnit Gradle plugin, you first need to configure <code>build.gradle</code> as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1523,9 +1523,9 @@ apply plugin: 'org.junit.gen5.gradle'</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="configuring-the-code-junit5plugin-code">Configuring the <code>JUnit5Plugin</code></h5>
+<h5 id="configuring-the-junit-gradle-plugin">Configuring the JUnit Gradle Plugin</h5>
 <div class="paragraph">
-<p>Once the <code>JUnit5Plugin</code> has been applied, you can configure it as follows.</p>
+<p>Once the JUnit Gradle plugin has been applied, you can configure it as follows.</p>
 </div>
 <div class="paragraph">
 <p><em>Caution:</em> These options are very likely to change as we continue to work towards the
@@ -1538,20 +1538,27 @@ final release.</p>
     logManager 'org.apache.logging.log4j.jul.LogManager'
     runJunit4 true
     matchClassName '.*Test'
-    includeTag 'fast'
+    engines {
+        include 'junit5'
+        exclude 'junit4'
+    }
+    tags {
+        include 'fast', 'smoke'
+        exclude 'slow', 'ci'
+    }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Setting <code>logManager</code> instructs the <code>JUnit5Plugin</code> to set the <code>java.util.logging.manager</code>
-system property to the supplied fully qualified class name of the <code>java.util.logging.LogManager</code>
-implementation to use. The above example demonstrates how to configure log4j as the
-<code>LogManager</code>.</p>
+<p>Setting <code>logManager</code> instructs the JUnit Gradle plugin to set the
+<code>java.util.logging.manager</code> system property to the supplied fully qualified class name of
+the <code>java.util.logging.LogManager</code> implementation to use. The above example demonstrates
+how to configure log4j as the <code>LogManager</code>.</p>
 </div>
 <div class="paragraph">
-<p>Setting <code>runJunit4</code> to <code>true</code> instructs the <code>JUnit5Plugin</code> to run JUnit 4 based tests as
-well. However, you will still need to configure a <code>testCompile</code> dependency on JUnit 4 in
-your project similar to the following.</p>
+<p>Setting <code>runJunit4</code> to <code>true</code> instructs the JUnit Gradle plugin to run JUnit 4 based
+tests as well. However, you will still need to configure a <code>testCompile</code> dependency on
+JUnit 4 in your project similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1561,15 +1568,15 @@ your project similar to the following.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>If you supply a <em>tag</em> to the <code>includeTag</code> configuration method, the <code>JUnit5Plugin</code> will
-only run JUnit 5 based tests that are <em>tagged</em> accordingly via the <code>@Tag</code> annotation.</p>
+<p>If you supply a <em>tag</em> via <code>tags{ include &#8230;&#8203; }</code>, the JUnit Gradle plugin will only run
+JUnit 5 based tests that are <em>tagged</em> accordingly via the <code>@Tag</code> annotation.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="using-the-code-junit5plugin-code">Using the <code>JUnit5Plugin</code></h5>
+<h5 id="using-the-junit-gradle-plugin">Using the JUnit Gradle Plugin</h5>
 <div class="paragraph">
-<p>Once the <code>JUnit5Plugin</code> has been applied and configured, you have a new <code>junit5Test</code> task
-at your disposal.</p>
+<p>Once the JUnit Gradle plugin has been applied and configured, you have a new <code>junit5Test</code>
+task at your disposal.</p>
 </div>
 <div class="paragraph">
 <p>Invoking <code>gradlew clean junit5Test</code> (or <code>gradlew clean check</code>) from the command line will
@@ -1629,7 +1636,7 @@ Execution failed for task ':junit5Test'.
 </div>
 </div>
 <div class="sect4">
-<h5 id="current-limitations-of-the-code-junit5plugin-code">Current Limitations of the <code>JUnit5Plugin</code></h5>
+<h5 id="current-limitations-of-the-junit-gradle-plugin">Current Limitations of the JUnit Gradle Plugin</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -1637,10 +1644,10 @@ Execution failed for task ':junit5Test'.
 the test report generated by Gradle.</p>
 </li>
 <li>
-<p>With <code>runJunit4</code> set to <code>true</code>, the <code>JUnit5Plugin</code> takes over the responsibility of
-running JUnit 4 tests, and the <code>check</code> Gradle task will no longer depend on the Gradle
-<code>test</code> task. Consequently, the results for JUnit 4 tests will not be included in the
-test report generated by Gradle.</p>
+<p>With <code>runJunit4</code> set to <code>true</code>, the JUnit Gradle plugin takes over the responsibility
+of running JUnit 4 tests, and the standard Gradle <code>test</code> task will no longer execute
+JUnit 3 or JUnit 4 tests. Consequently, the results for JUnit 4 tests will not be
+included in the standard test report generated by Gradle.</p>
 </li>
 </ul>
 </div>
@@ -1940,7 +1947,7 @@ that is passed to the <code>Launcher</code>.</p>
 </div>
 <div class="paragraph">
 <p>For example, to deactivate JUnit&#8217;s <code>@Disabled</code> condition, you can start your JVM with
-the following system property:</p>
+the following system property.</p>
 </div>
 <div class="paragraph">
 <p><code>-Djunit.conditions.deactivate=org.junit.*DisabledCondition</code></p>
@@ -2005,9 +2012,9 @@ initialization methods on the test instance, etc.</p>
 runtime.</p>
 </div>
 <div class="paragraph">
-<p>If a test constructor or a <code>@Test</code>, <code>@BeforeEach</code>, <code>@AfterEach</code> , <code>@BeforeAll</code> or
-<code>@AfterAll</code> method accepts a parameter, the parameter must be <em>resolved</em> at runtime by a
-<code>ParameterResolver</code>. A <code>ParameterResolver</code> can either be built-in (see
+<p>If a test constructor or a <code>@Test</code>, <code>@TestFactory</code>, <code>@BeforeEach</code>, <code>@AfterEach</code>,
+<code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts a parameter, the parameter must be <em>resolved</em>
+at runtime by a <code>ParameterResolver</code>. A <code>ParameterResolver</code> can either be built-in (see
 <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or <a href="#extension-registration">registered by the user</a>.
 Generally speaking, parameters may be resolved by <em>name</em>, <em>type</em>, <em>annotation</em>, or any
 combination thereof. For concrete examples, consult the source code for
@@ -2025,21 +2032,29 @@ test execution lifecycle. Consult the Javadoc for each of these in the
 <ul>
 <li>
 <p><code>BeforeAllCallback</code></p>
-</li>
-<li>
-<p><code>AfterAllCallback</code></p>
-</li>
+<div class="ulist">
+<ul>
 <li>
 <p><code>BeforeEachCallback</code></p>
-</li>
-<li>
-<p><code>AfterEachCallback</code></p>
-</li>
+<div class="ulist">
+<ul>
 <li>
 <p><code>BeforeTestExecutionCallback</code></p>
 </li>
 <li>
 <p><code>AfterTestExecutionCallback</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>AfterEachCallback</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>AfterAllCallback</code></p>
 </li>
 </ul>
 </div>
@@ -2057,7 +2072,7 @@ exceptions thrown during test execution.</p>
 </div>
 <div class="paragraph">
 <p>The following example shows an extension which will swallow all instances of <code>IOException</code>
-but rethrow any other type of exception:</p>
+but rethrow any other type of exception.</p>
 </div>
 <div class="listingblock">
 <div class="title">An exception handling extension</div>
@@ -2080,21 +2095,10 @@ but rethrow any other type of exception:</p>
 <div class="sect2">
 <h3 id="keeping-state-in-extensions">5.8. Keeping State in Extensions</h3>
 <div class="paragraph">
-<p>Usually, an extension is instantiated only once. So the question becomes relevant: How do you keep the state
-from one invocation of an extension point to the next? &#8230;&#8203;</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="additional-planned-extensions">5.9. Additional Planned Extensions</h3>
-<div class="paragraph">
-<p>Several additional extensions are planned, including but not limited to the following:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Dynamic test registration – for example, for computing parameterized tests at runtime</p>
-</li>
-</ul>
+<p>Usually, an extension is instantiated only once. So the question becomes relevant: How do
+you keep the state from one invocation of an extension to the next? The
+<code>ExtensionContext</code> API provides a <code>Store</code> exactly for this purpose. Consult the
+corresponding Javadoc for details.</p>
 </div>
 </div>
 </div>
@@ -2427,7 +2431,7 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-12 08:23:45 -04:00
+Last updated 2016-06-12 11:29:18 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
