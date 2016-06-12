@@ -13,8 +13,6 @@ package example;
 // tag::user_guide[]
 import static org.junit.gen5.api.Assertions.fail;
 
-import extensions.ExpectToFail;
-
 import org.junit.gen5.api.Test;
 import org.junit.gen5.junit4.runner.JUnit5;
 import org.junit.runner.RunWith;
@@ -23,15 +21,15 @@ import org.junit.runner.RunWith;
 public class JUnit4ClassDemo {
 
 	@Test
-	void aSucceedingTest() {
+	void succeedingTest() {
 		/* no-op */
 	}
 
 	// end::user_guide[]
-	@ExpectToFail
+	@extensions.ExpectToFail
 	// tag::user_guide[]
 	@Test
-	void aFailingTest() {
+	void failingTest() {
 		fail("Failing for failing's sake.");
 	}
 

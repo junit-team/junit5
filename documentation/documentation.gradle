@@ -3,8 +3,8 @@ apply plugin: "org.ajoberstar.github-pages"
 apply plugin: 'org.junit.gen5.gradle'
 
 junit5 {
-	runJunit4 true
-	matchClassName '.+(Testing.+|Tests?|Demo)$'
+	runJunit4 true // just in order to 'disable' the standard Gradle 'test' task
+	matchClassName '.+(Tests|Demo)$'
 
 	engines {
 		include 'junit5'

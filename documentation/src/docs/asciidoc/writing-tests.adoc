@@ -142,7 +142,7 @@ several group of tests. Here's an elaborate example:
 [subs="verbatim"]
 .Nested test suite for testing a stack
 ----
-include::{testDir}/example/TestingAStack.java[tags=user_guide]
+include::{testDir}/example/TestingAStackDemo.java[tags=user_guide]
 ----
 
 Notice that _only non-static inner classes_ can serve as nested tests. Nesting can be

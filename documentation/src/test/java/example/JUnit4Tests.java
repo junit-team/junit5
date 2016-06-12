@@ -12,10 +12,10 @@ package example;
 
 import org.junit.Test;
 
-public class AJUnit4Test {
+public class JUnit4Tests {
 
 	@Test
-	public void aTest() throws Exception {
-
+	public void standardJUnit4Test() throws Exception {
+		/* no-op */
 	}
 }

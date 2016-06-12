@@ -21,7 +21,7 @@ import org.junit.gen5.api.Test;
 
 // tag::user_guide[]
 @DisplayName("A stack")
-class TestingAStack {
+class TestingAStackDemo {
 
 	Stack<Object> stack;
 	boolean isRun = false;

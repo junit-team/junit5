@@ -10,15 +10,40 @@
 
 package extensions;
 
+import static org.junit.gen5.api.Assertions.assertNotNull;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.junit.gen5.api.extension.AfterEachCallback;
 import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.gen5.api.extension.ExtensionContext.Namespace;
+import org.junit.gen5.api.extension.ExtensionContext.Store;
+import org.junit.gen5.api.extension.TestExecutionExceptionHandler;
+import org.junit.gen5.api.extension.TestExtensionContext;
 
-@Target({ ElementType.TYPE, ElementType.METHOD })
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(ExpectToFailExtension.class)
+@ExtendWith(ExpectToFail.Extension.class)
 public @interface ExpectToFail {
+
+	static class Extension implements TestExecutionExceptionHandler, AfterEachCallback {
+
+		@Override
+		public void handleTestExecutionException(TestExtensionContext context, Throwable throwable) throws Throwable {
+			getExceptionStore(context).put("exception", throwable);
+		}
+
+		@Override
+		public void afterEach(TestExtensionContext context) throws Exception {
+			assertNotNull(getExceptionStore(context).get("exception"), "Test should have failed");
+		}
+
+		private Store getExceptionStore(TestExtensionContext context) {
+			return context.getStore(Namespace.of(context));
+		}
+	}
+
 }

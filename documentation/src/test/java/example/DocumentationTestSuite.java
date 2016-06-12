@@ -31,7 +31,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnit5.class)
 @Packages("example")
-@FilterClassName(".+(Testing.+|Tests?|Demo)$")
+@FilterClassName(".+(Tests|Demo)$")
 @ExcludeTags("exclude")
 public class DocumentationTestSuite {
 }
