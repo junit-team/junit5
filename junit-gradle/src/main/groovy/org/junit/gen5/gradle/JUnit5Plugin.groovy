@@ -17,9 +17,12 @@ import org.gradle.api.tasks.JavaExec
  * @since 5.0
  */
 class JUnit5Plugin implements Plugin<Project> {
+	
+	private static final String EXTENSION_NAME = 'junit5';
+	private static final String TASK_NAME      = 'junit5Test';
 
 	void apply(Project project) {
-		def junitExtension = project.extensions.create('junit5', JUnit5Extension)
+		def junitExtension = project.extensions.create(EXTENSION_NAME, JUnit5Extension)
 		junitExtension.extensions.create('tags', TagsExtension)
 		junitExtension.extensions.create('engines', EnginesExtension)
 
@@ -41,31 +44,31 @@ class JUnit5Plugin implements Plugin<Project> {
 			}
 		}
 
-		project.task('junit5Test', group: 'verification', type: JavaExec) { task ->
+		project.task(TASK_NAME, group: 'verification', type: JavaExec) { junitTask ->
 
-			task.description = 'Runs tests on the JUnit Platform.'
+			junitTask.description = 'Runs tests on the JUnit Platform.'
 
-			task.inputs.property('version', junitExtension.version)
-			task.inputs.property('runJunit4', junitExtension.runJunit4)
-			task.inputs.property('includedEngines', junitExtension.engines.include)
-			task.inputs.property('excludedEngines', junitExtension.engines.exclude)
-			task.inputs.property('includeTags', junitExtension.tags.include)
-			task.inputs.property('excludeTags', junitExtension.tags.exclude)
-			task.inputs.property('classNameFilter', junitExtension.classNameFilter)
+			junitTask.inputs.property('version', junitExtension.version)
+			junitTask.inputs.property('runJUnitVintage', junitExtension.runJunit4)
+			junitTask.inputs.property('includedEngines', junitExtension.engines.include)
+			junitTask.inputs.property('excludedEngines', junitExtension.engines.exclude)
+			junitTask.inputs.property('includeTags', junitExtension.tags.include)
+			junitTask.inputs.property('excludeTags', junitExtension.tags.exclude)
+			junitTask.inputs.property('classNameFilter', junitExtension.classNameFilter)
 
 			def reportsDir = junitExtension.reportsDir ?: project.file("build/test-results/junit5")
-			task.outputs.dir reportsDir
+			junitTask.outputs.dir reportsDir
 
 			if (junitExtension.logManager) {
 				systemProperty 'java.util.logging.manager', junitExtension.logManager
 			}
 
-			defineTaskDependencies(project, task, junitExtension)
+			defineTaskDependencies(project, junitTask, junitExtension)
 
-			task.classpath = project.sourceSets.test.runtimeClasspath
-			task.main = 'org.junit.gen5.console.ConsoleRunner'
+			junitTask.classpath = project.sourceSets.test.runtimeClasspath
+			junitTask.main = 'org.junit.gen5.console.ConsoleRunner'
 
-			task.args buildArgs(project, junitExtension, reportsDir)
+			junitTask.args buildArgs(project, junitExtension, reportsDir)
 		}
 	}
 
