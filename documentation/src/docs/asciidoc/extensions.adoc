@@ -176,4 +176,3 @@ Usually, an extension is instantiated only once. So the question becomes relevan
 you keep the state from one invocation of an extension to the next? The
 `ExtensionContext` API provides a `Store` exactly for this purpose. Consult the
 corresponding Javadoc for details.
-
