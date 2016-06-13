@@ -33,14 +33,6 @@ class JUnit5Plugin implements Plugin<Project> {
 	}
 
 	private void configure(Project project, junitExtension) {
-
-		if (junitExtension.version) {
-			def version = junitExtension.version
-			project.dependencies.add("testRuntime", "org.junit:junit-console:${version}")
-			project.dependencies.add("testCompile", "org.junit:junit5-api:${version}")
-			project.dependencies.add("testRuntime", "org.junit:junit5-engine:${version}")
-		}
-
 		project.task(TASK_NAME, group: 'verification', type: JavaExec) { junitTask ->
 			junitTask.description = 'Runs tests on the JUnit Platform.'
 
@@ -48,8 +40,8 @@ class JUnit5Plugin implements Plugin<Project> {
 			junitTask.inputs.property('disableStandardTestTask', junitExtension.disableStandardTestTask)
 			junitTask.inputs.property('includedEngines', junitExtension.engines.include)
 			junitTask.inputs.property('excludedEngines', junitExtension.engines.exclude)
-			junitTask.inputs.property('includeTags', junitExtension.tags.include)
-			junitTask.inputs.property('excludeTags', junitExtension.tags.exclude)
+			junitTask.inputs.property('includedTags', junitExtension.tags.include)
+			junitTask.inputs.property('excludedTags', junitExtension.tags.exclude)
 			junitTask.inputs.property('classNameFilter', junitExtension.classNameFilter)
 
 			def reportsDir = junitExtension.reportsDir ?: project.file("build/test-results/junit5")
