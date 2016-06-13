@@ -33,6 +33,10 @@ class JUnit5Plugin implements Plugin<Project> {
 	}
 
 	private void configure(Project project, junitExtension) {
+
+		// Ensure that the ConsoleRunner is on the classpath
+		project.dependencies.add("testRuntime", "org.junit:junit-console:5.+")
+
 		project.task(TASK_NAME, group: 'verification', type: JavaExec) { junitTask ->
 			junitTask.description = 'Runs tests on the JUnit Platform.'
 
