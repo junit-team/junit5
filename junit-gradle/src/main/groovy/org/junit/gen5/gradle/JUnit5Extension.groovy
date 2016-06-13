@@ -48,13 +48,6 @@ class JUnit5Extension {
 	boolean disableStandardTestTask = true
 
 	/**
-	 * Whether or not to execute JUnit 4 tests alongside JUnit 5 tests.
-	 *
-	 * <p>Defaults to {@code false}.
-	 */
-	boolean runJunit4
-
-	/**
 	 * A regular expression used to match against test class names.
 	 *
 	 * <p>If the supplied regular expression does not match against a

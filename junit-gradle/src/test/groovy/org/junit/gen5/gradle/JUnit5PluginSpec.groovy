@@ -46,7 +46,6 @@ class JUnit5PluginSpec extends Specification {
 		when:
 			project.junit5 {
 				version '5.0.0'
-				runJunit4 true
 				disableStandardTestTask false
 				matchClassName '.*Tests?'
 				logManager 'org.apache.logging.log4j.jul.LogManager'
@@ -112,23 +111,6 @@ class JUnit5PluginSpec extends Specification {
 			junitTask.args.contains(project.file('build/classes/test').absolutePath)
 			junitTask.args.contains(project.file('build/resources/test').absolutePath)
 
-			Task testTask = project.tasks.findByName('test')
-			testTask instanceof Test
-			testTask.enabled == false
-	}
-
-	def "runJunit4 set to true"() {
-
-		project.apply plugin: 'java'
-		project.apply plugin: 'org.junit.gen5.gradle'
-
-		when:
-			project.junit5 {
-				runJunit4 true
-			}
-			project.evaluate()
-
-		then:
 			Task testTask = project.tasks.findByName('test')
 			testTask instanceof Test
 			testTask.enabled == false

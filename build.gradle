@@ -322,11 +322,10 @@ configure(rootProject) {
 	}
 
 	junit5 {
-		runJunit4 true // just in order to 'disable' the standard Gradle 'test' task
 		engines {
-			include 'junit5' // we actually only want to run JUnit 5 tests...
+			include 'junit5'
 		}
-		matchClassName 'org.junit.gen5.meta.DependencyTests' // and in fact just this one.
+		matchClassName 'org.junit.gen5.meta.DependencyTests'
 		logManager 'org.apache.logging.log4j.jul.LogManager'
 	}
 

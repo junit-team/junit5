@@ -39,18 +39,12 @@ class JUnit5Plugin implements Plugin<Project> {
 			project.dependencies.add("testRuntime", "org.junit:junit-console:${version}")
 			project.dependencies.add("testCompile", "org.junit:junit5-api:${version}")
 			project.dependencies.add("testRuntime", "org.junit:junit5-engine:${version}")
-
-			if (junitExtension.runJunit4) {
-				project.dependencies.add("testRuntime", "org.junit:junit4-engine:${version}")
-			}
 		}
 
 		project.task(TASK_NAME, group: 'verification', type: JavaExec) { junitTask ->
-
 			junitTask.description = 'Runs tests on the JUnit Platform.'
 
 			junitTask.inputs.property('version', junitExtension.version)
-			junitTask.inputs.property('runJUnitVintage', junitExtension.runJunit4)
 			junitTask.inputs.property('disableStandardTestTask', junitExtension.disableStandardTestTask)
 			junitTask.inputs.property('includedEngines', junitExtension.engines.include)
 			junitTask.inputs.property('excludedEngines', junitExtension.engines.exclude)
@@ -81,10 +75,7 @@ class JUnit5Plugin implements Plugin<Project> {
 		junitTask.dependsOn testClasses
 		testTask.dependsOn junitTask
 
-			if (junitExtension.disableStandardTestTask ||
-				(junitExtension.runJunit4 &&
-					'JUnitTestFramework' == testTask.getTestFramework().getClass().getSimpleName())) {
-
+		if (junitExtension.disableStandardTestTask) {
 			testTask.enabled = false
 		}
 	}

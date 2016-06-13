@@ -2,9 +2,8 @@ apply plugin: 'org.junit.gen5.gradle'
 
 junit5 {
 	// version '5.0.0-SNAPSHOT' // not needed: all dependencies are declared explicitly
-	runJunit4 true // just in order to 'disable' the standard Gradle 'test' task
 	engines {
-		include 'junit5' // we actually only want to run JUnit 5 tests...
+		include 'junit5'
 	}
 	matchClassName '.*Tests?'
 	logManager 'org.apache.logging.log4j.jul.LogManager'
