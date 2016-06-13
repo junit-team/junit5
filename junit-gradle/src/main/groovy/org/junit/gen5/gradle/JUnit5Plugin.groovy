@@ -12,6 +12,7 @@ package org.junit.gen5.gradle
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.JavaExec
+import org.junit.gen5.console.ConsoleRunner
 
 /**
  * @since 5.0
@@ -66,7 +67,7 @@ class JUnit5Plugin implements Plugin<Project> {
 			defineTaskDependencies(project, junitTask, junitExtension)
 
 			junitTask.classpath = project.sourceSets.test.runtimeClasspath
-			junitTask.main = 'org.junit.gen5.console.ConsoleRunner'
+			junitTask.main = ConsoleRunner.class.getName()
 
 			junitTask.args buildArgs(project, junitExtension, reportsDir)
 		}
