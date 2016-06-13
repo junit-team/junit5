@@ -17,10 +17,17 @@ package org.junit.gen5.gradle
 class JUnitExtension {
 
 	/**
+	 * The version of the JUnit Platform to use.
+	 *
+	 * <p>Defaults to {@code '5.+'}.
+	 */
+	String platformVersion = '5.+'
+
+	/**
 	 * The fully qualified class name of the {@link java.util.logging.LogManager}
 	 * to use.
 	 *
-	 * <p>The {@code JUnit5Plugin} will set the {@code java.util.logging.manager}
+	 * <p>The JUnit plugin will set the {@code java.util.logging.manager}
 	 * system property to this value.
 	 */
 	String logManager

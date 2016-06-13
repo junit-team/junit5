@@ -27,18 +27,27 @@ class JUnit5Plugin implements Plugin<Project> {
 		junitExtension.extensions.create('tags', TagsExtension)
 		junitExtension.extensions.create('engines', EnginesExtension)
 
+		// Add required JUnit Platform dependencies to a custom configuration that
+		// will later be used to create the classpath for the custom task created
+		// by this plugin.
+		def configuration = project.configurations.maybeCreate('junitPlatform')
+		configuration.defaultDependencies { deps ->
+			def version = junitExtension.platformVersion
+			deps.add(project.dependencies.create("org.junit:junit-launcher:${version}"))
+			deps.add(project.dependencies.create("org.junit:junit-console:${version}", { transitive = false }))
+		}
+
 		project.afterEvaluate {
 			configure(project, junitExtension)
 		}
 	}
 
 	private void configure(Project project, junitExtension) {
-
-		// Ensure that the ConsoleRunner is on the classpath
-		project.dependencies.add("testRuntime", "org.junit:junit-console:5.+")
-
-		project.task(TASK_NAME, group: 'verification', type: JavaExec) { junitTask ->
-			junitTask.description = 'Runs tests on the JUnit Platform.'
+		project.task(
+				TASK_NAME,
+				type: JavaExec,
+				group: 'verification',
+				description: 'Runs tests on the JUnit Platform.') { junitTask ->
 
 			junitTask.inputs.property('disableStandardTestTask', junitExtension.disableStandardTestTask)
 			junitTask.inputs.property('includedEngines', junitExtension.engines.include)
@@ -54,20 +63,21 @@ class JUnit5Plugin implements Plugin<Project> {
 				systemProperty 'java.util.logging.manager', junitExtension.logManager
 			}
 
-			defineTaskDependencies(project, junitTask, junitExtension)
+			configureTaskDependencies(project, junitTask, junitExtension)
 
-			junitTask.classpath = project.sourceSets.test.runtimeClasspath
+			// Build the classpath from the JUnit Platform modules and whatever the
+			// user added to the 'test' run-time classpath.
+			junitTask.classpath = project.configurations.junitPlatform + project.sourceSets.test.runtimeClasspath
 			junitTask.main = ConsoleRunner.class.getName()
-
 			junitTask.args buildArgs(project, junitExtension, reportsDir)
 		}
 	}
 
-	private void defineTaskDependencies(project, junitTask, junitExtension) {
+	private void configureTaskDependencies(project, junitTask, junitExtension) {
 		def testTask = project.tasks.getByName('test')
-		def testClasses = project.tasks.getByName('testClasses')
+		def testClassesTask = project.tasks.getByName('testClasses')
 
-		junitTask.dependsOn testClasses
+		junitTask.dependsOn testClassesTask
 		testTask.dependsOn junitTask
 
 		if (junitExtension.disableStandardTestTask) {

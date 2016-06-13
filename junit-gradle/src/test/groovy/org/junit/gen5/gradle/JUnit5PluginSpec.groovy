@@ -45,6 +45,7 @@ class JUnit5PluginSpec extends Specification {
 
 		when:
 			project.junit5 {
+				platformVersion '5.0.0-M1'
 				disableStandardTestTask false
 				matchClassName '.*Tests?'
 				logManager 'org.apache.logging.log4j.jul.LogManager'
