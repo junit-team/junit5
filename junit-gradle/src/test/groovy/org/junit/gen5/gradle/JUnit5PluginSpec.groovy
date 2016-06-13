@@ -12,7 +12,9 @@ package org.junit.gen5.gradle
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.tasks.JavaExec
+import org.gradle.api.tasks.testing.Test
 import org.gradle.testfixtures.ProjectBuilder
+import org.junit.gen5.console.ConsoleRunner
 import spock.lang.Specification
 
 /**
@@ -45,6 +47,7 @@ class JUnit5PluginSpec extends Specification {
 			project.junit5 {
 				version '5.0.0'
 				runJunit4 true
+				disableStandardTestTask false
 				matchClassName '.*Tests?'
 				logManager 'org.apache.logging.log4j.jul.LogManager'
 
@@ -71,8 +74,8 @@ class JUnit5PluginSpec extends Specification {
 
 		when:
 			project.junit5 {
-				//version '5.0.0-Alpha' // cannot be set in test
-				//runJunit4 true // cannot be set in test
+				// version '5.0.0' // cannot be set in test
+				// disableStandardTestTask // defaults to true
 				matchClassName '.*Tests?'
 				logManager 'org.apache.logging.log4j.jul.LogManager'
 
@@ -91,23 +94,61 @@ class JUnit5PluginSpec extends Specification {
 			project.evaluate()
 
 		then:
-			Task junit5TestTask = project.tasks.findByName('junit5Test')
-			junit5TestTask instanceof JavaExec
-			junit5TestTask.main == 'org.junit.gen5.console.ConsoleRunner'
+			Task junitTask = project.tasks.findByName('junit5Test')
+			junitTask instanceof JavaExec
+			junitTask.main == ConsoleRunner.class.getName()
 
-			junit5TestTask.args.contains('--enable-exit-code')
-			junit5TestTask.args.contains('--hide-details')
-			junit5TestTask.args.contains('--all')
-			junit5TestTask.args.containsAll('-n', '.*Tests?')
-			junit5TestTask.args.containsAll('-t', 'fast')
-			junit5TestTask.args.containsAll('-T', 'slow')
-			junit5TestTask.args.containsAll('-e', 'foo')
-			junit5TestTask.args.containsAll('-E', 'bar')
-			junit5TestTask.args.containsAll('-r', new File('/any').getCanonicalFile().toString())
-			junit5TestTask.args.contains(project.file('build/classes/main').absolutePath)
-			junit5TestTask.args.contains(project.file('build/resources/main').absolutePath)
-			junit5TestTask.args.contains(project.file('build/classes/test').absolutePath)
-			junit5TestTask.args.contains(project.file('build/resources/test').absolutePath)
+			junitTask.args.contains('--enable-exit-code')
+			junitTask.args.contains('--hide-details')
+			junitTask.args.contains('--all')
+			junitTask.args.containsAll('-n', '.*Tests?')
+			junitTask.args.containsAll('-t', 'fast')
+			junitTask.args.containsAll('-T', 'slow')
+			junitTask.args.containsAll('-e', 'foo')
+			junitTask.args.containsAll('-E', 'bar')
+			junitTask.args.containsAll('-r', new File('/any').getCanonicalFile().toString())
+			junitTask.args.contains(project.file('build/classes/main').absolutePath)
+			junitTask.args.contains(project.file('build/resources/main').absolutePath)
+			junitTask.args.contains(project.file('build/classes/test').absolutePath)
+			junitTask.args.contains(project.file('build/resources/test').absolutePath)
+
+			Task testTask = project.tasks.findByName('test')
+			testTask instanceof Test
+			testTask.enabled == false
+	}
+
+	def "runJunit4 set to true"() {
+
+		project.apply plugin: 'java'
+		project.apply plugin: 'org.junit.gen5.gradle'
+
+		when:
+			project.junit5 {
+				runJunit4 true
+			}
+			project.evaluate()
+
+		then:
+			Task testTask = project.tasks.findByName('test')
+			testTask instanceof Test
+			testTask.enabled == false
+	}
+
+	def "disableStandardTestTask set to false"() {
+
+		project.apply plugin: 'java'
+		project.apply plugin: 'org.junit.gen5.gradle'
+
+		when:
+			project.junit5 {
+				disableStandardTestTask false
+			}
+			project.evaluate()
+
+		then:
+			Task testTask = project.tasks.findByName('test')
+			testTask instanceof Test
+			testTask.enabled == true
 	}
 
 }

@@ -51,6 +51,7 @@ class JUnit5Plugin implements Plugin<Project> {
 
 			junitTask.inputs.property('version', junitExtension.version)
 			junitTask.inputs.property('runJUnitVintage', junitExtension.runJunit4)
+			junitTask.inputs.property('disableStandardTestTask', junitExtension.disableStandardTestTask)
 			junitTask.inputs.property('includedEngines', junitExtension.engines.include)
 			junitTask.inputs.property('excludedEngines', junitExtension.engines.exclude)
 			junitTask.inputs.property('includeTags', junitExtension.tags.include)
@@ -80,11 +81,9 @@ class JUnit5Plugin implements Plugin<Project> {
 		junitTask.dependsOn testClasses
 		testTask.dependsOn junitTask
 
-		// Disable execution of JUnit 3 and JUnit 4 tests by the standard Gradle
-		// 'test' task if the 'test' task is configured to run JUnit instead
-		// of TestNG.
-		if (junitExtension.runJunit4 &&
-				'JUnitTestFramework' == testTask.getTestFramework().getClass().getSimpleName()) {
+			if (junitExtension.disableStandardTestTask ||
+				(junitExtension.runJunit4 &&
+					'JUnitTestFramework' == testTask.getTestFramework().getClass().getSimpleName())) {
 
 			testTask.enabled = false
 		}

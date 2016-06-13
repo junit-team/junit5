@@ -38,6 +38,16 @@ class JUnit5Extension {
 	File reportsDir
 
 	/**
+	 * Whether or not the standard Gradle {@code test} task should be disabled.
+	 *
+	 * <p>Set this to {@code false} to have the standard {@code test} task enabled
+	 * &mdash; for example, to run TestNG tests via the standard {@code test} task.
+	 *
+	 * <p>Defaults to {@code true}.
+	 */
+	boolean disableStandardTestTask = true
+
+	/**
 	 * Whether or not to execute JUnit 4 tests alongside JUnit 5 tests.
 	 *
 	 * <p>Defaults to {@code false}.
