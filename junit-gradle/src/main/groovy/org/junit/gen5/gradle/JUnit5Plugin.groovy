@@ -36,7 +36,6 @@ class JUnit5Plugin implements Plugin<Project> {
 		project.task(TASK_NAME, group: 'verification', type: JavaExec) { junitTask ->
 			junitTask.description = 'Runs tests on the JUnit Platform.'
 
-			junitTask.inputs.property('version', junitExtension.version)
 			junitTask.inputs.property('disableStandardTestTask', junitExtension.disableStandardTestTask)
 			junitTask.inputs.property('includedEngines', junitExtension.engines.include)
 			junitTask.inputs.property('excludedEngines', junitExtension.engines.exclude)

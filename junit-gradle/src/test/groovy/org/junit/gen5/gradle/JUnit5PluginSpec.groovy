@@ -45,7 +45,6 @@ class JUnit5PluginSpec extends Specification {
 
 		when:
 			project.junit5 {
-				version '5.0.0'
 				disableStandardTestTask false
 				matchClassName '.*Tests?'
 				logManager 'org.apache.logging.log4j.jul.LogManager'
@@ -73,7 +72,6 @@ class JUnit5PluginSpec extends Specification {
 
 		when:
 			project.junit5 {
-				// version '5.0.0' // cannot be set in test
 				// disableStandardTestTask // defaults to true
 				matchClassName '.*Tests?'
 				logManager 'org.apache.logging.log4j.jul.LogManager'

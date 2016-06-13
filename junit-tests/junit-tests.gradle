@@ -1,7 +1,6 @@
 apply plugin: 'org.junit.gen5.gradle'
 
 junit5 {
-	// version '5.0.0-SNAPSHOT' // not needed: all dependencies are declared explicitly
 	engines {
 		include 'junit5'
 	}

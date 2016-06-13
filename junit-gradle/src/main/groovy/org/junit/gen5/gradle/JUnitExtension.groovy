@@ -17,11 +17,6 @@ package org.junit.gen5.gradle
 class JUnitExtension {
 
 	/**
-	 * The JUnit 5 version to use.
-	 */
-	String version
-
-	/**
 	 * The fully qualified class name of the {@link java.util.logging.LogManager}
 	 * to use.
 	 *
