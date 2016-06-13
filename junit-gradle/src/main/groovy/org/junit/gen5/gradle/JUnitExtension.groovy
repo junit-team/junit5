@@ -14,7 +14,7 @@ package org.junit.gen5.gradle
  *
  * @since 5.0
  */
-class JUnit5Extension {
+class JUnitExtension {
 
 	/**
 	 * The JUnit 5 version to use.

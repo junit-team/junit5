@@ -35,7 +35,7 @@ class JUnit5PluginSpec extends Specification {
 		then:
 			project.plugins.hasPlugin(JUnit5Plugin)
 			project.plugins.getPlugin(JUnit5Plugin) instanceof JUnit5Plugin
-			project.extensions.findByName('junit5') instanceof JUnit5Extension
+			project.extensions.findByName('junit5') instanceof JUnitExtension
 	}
 
 	def "setting junit5 properties"() {

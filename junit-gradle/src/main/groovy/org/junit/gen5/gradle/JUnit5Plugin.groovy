@@ -23,7 +23,7 @@ class JUnit5Plugin implements Plugin<Project> {
 	private static final String TASK_NAME      = 'junit5Test';
 
 	void apply(Project project) {
-		def junitExtension = project.extensions.create(EXTENSION_NAME, JUnit5Extension)
+		def junitExtension = project.extensions.create(EXTENSION_NAME, JUnitExtension)
 		junitExtension.extensions.create('tags', TagsExtension)
 		junitExtension.extensions.create('engines', EnginesExtension)
 
