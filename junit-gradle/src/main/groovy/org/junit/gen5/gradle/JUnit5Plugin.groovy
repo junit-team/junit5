@@ -35,6 +35,7 @@ class JUnit5Plugin implements Plugin<Project> {
 			def version = junitExtension.platformVersion
 			deps.add(project.dependencies.create("org.junit:junit-launcher:${version}"))
 			deps.add(project.dependencies.create("org.junit:junit-console:${version}", { transitive = false }))
+			deps.add(project.dependencies.create('net.sf.jopt-simple:jopt-simple:5.+'))
 		}
 
 		project.afterEvaluate {
