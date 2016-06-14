@@ -374,6 +374,11 @@ configure(rootProject) {
 	}
 
 	task wrapper(type: Wrapper) {
+		// To build against Gradle 3.0 nightly builds, obtain the latest
+		// build version here: http://gradle.org/gradle-nightly-build/
+		//
+		// distributionUrl = 'https://services.gradle.org/distributions-snapshots/gradle-3.0-20160614000026+0000-bin.zip'
+
 		distributionUrl = 'https://services.gradle.org/distributions/gradle-2.14-all.zip'
 	}
 
