@@ -69,9 +69,15 @@ class JUnit5Plugin implements Plugin<Project> {
 
 			configureTaskDependencies(project, junitTask, junitExtension)
 
-			// Build the classpath from the JUnit Platform modules and whatever the
-			// user added to the 'test' run-time classpath.
-			junitTask.classpath = project.configurations.junitPlatform + project.sourceSets.test.runtimeClasspath
+			// Build the classpath from the user's test runtime classpath and the JUnit
+			// Platform modules.
+			//
+			// Note: the user's test runtime classpath must come first; otherwise, code
+			// instrumented by Clover in JUnit's build will be shadowed by JARs pulled in
+			// via the junitPlatform configuration... leading to zero code coverage for
+			// the respective modules.
+			junitTask.classpath = project.sourceSets.test.runtimeClasspath + project.configurations.junitPlatform
+
 			junitTask.main = ConsoleRunner.class.getName()
 			junitTask.args buildArgs(project, junitExtension, reportsDir)
 		}
