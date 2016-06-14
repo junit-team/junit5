@@ -34,8 +34,11 @@ class JUnit5Plugin implements Plugin<Project> {
 		configuration.defaultDependencies { deps ->
 			def version = junitExtension.platformVersion
 			deps.add(project.dependencies.create("org.junit:junit-launcher:${version}"))
-			deps.add(project.dependencies.create("org.junit:junit-console:${version}", { transitive = false }))
-			deps.add(project.dependencies.create('net.sf.jopt-simple:jopt-simple:5.0.1'))
+			deps.add(project.dependencies.create("org.junit:junit-console:${version}", {
+				exclude(group: 'org.junit', module: 'junit4-engine')
+				exclude(group: 'org.junit', module: 'junit5-engine')
+				exclude(group: 'org.junit', module: 'junit4-runner')
+			}))
 		}
 
 		project.afterEvaluate {
