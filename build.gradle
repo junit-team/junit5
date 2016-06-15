@@ -152,7 +152,6 @@ subprojects { subproj ->
 			options.author = true
 			options.header = project.name
 			options.addStringOption('Xdoclint:html,syntax,reference', '-quiet')
-			exclude '**/com/example/**'
 		}
 
 		task sourcesJar(type: Jar, dependsOn: classes) {
