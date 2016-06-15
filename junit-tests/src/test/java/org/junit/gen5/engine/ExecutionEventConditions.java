@@ -29,6 +29,7 @@ import static org.junit.gen5.engine.TestExecutionResultConditions.status;
 
 import java.util.List;
 
+import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.gen5.engine.ExecutionEvent.Type;
@@ -55,7 +56,7 @@ public class ExecutionEventConditions {
 
 	@SafeVarargs
 	public static Condition<ExecutionEvent> event(Condition<? super ExecutionEvent>... conditions) {
-		return allOf(conditions);
+		return Assertions.<ExecutionEvent> allOf(conditions);
 	}
 
 	public static Condition<ExecutionEvent> engine() {
