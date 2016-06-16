@@ -21,12 +21,10 @@ import org.junit.gen5.engine.UniqueId;
  */
 public class TestEngineStub implements TestEngine {
 
-	public static final String TEST_ENGINE_DUMMY_ID = "TestEngineDummyID";
-
 	private final String id;
 
 	public TestEngineStub() {
-		this(TEST_ENGINE_DUMMY_ID);
+		this(TestEngineStub.class.getSimpleName());
 	}
 
 	public TestEngineStub(String id) {

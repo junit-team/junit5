@@ -20,7 +20,8 @@ import org.junit.gen5.engine.UniqueId;
  * @since 5.0
  */
 public class TestEngineSpy implements TestEngine {
-	public static final String TEST_ENGINE_SPY_ID = "TestEngineSpyID";
+
+	private static final String ID = TestEngineSpy.class.getSimpleName();
 
 	public EngineDiscoveryRequest discoveryRequestForDiscovery;
 	public UniqueId uniqueIdForDiscovery;
@@ -28,7 +29,7 @@ public class TestEngineSpy implements TestEngine {
 
 	@Override
 	public String getId() {
-		return TestEngineStub.TEST_ENGINE_DUMMY_ID;
+		return ID;
 	}
 
 	@Override
@@ -36,8 +37,8 @@ public class TestEngineSpy implements TestEngine {
 		this.discoveryRequestForDiscovery = discoveryRequest;
 		this.uniqueIdForDiscovery = uniqueId;
 
-		UniqueId engineUniqueId = UniqueId.forEngine(TEST_ENGINE_SPY_ID);
-		TestDescriptorStub engineDescriptor = new TestDescriptorStub(engineUniqueId, TEST_ENGINE_SPY_ID);
+		UniqueId engineUniqueId = UniqueId.forEngine(ID);
+		TestDescriptorStub engineDescriptor = new TestDescriptorStub(engineUniqueId, ID);
 		TestDescriptorStub testDescriptor = new TestDescriptorStub(engineUniqueId.append("test", "test"), "test");
 		engineDescriptor.addChild(testDescriptor);
 		return engineDescriptor;
