@@ -19,10 +19,10 @@ import java.time.Clock;
 import java.util.Optional;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
+import org.junit.gen5.engine.test.TestDescriptorStub;
 import org.junit.gen5.launcher.TestPlan;
 
 /**

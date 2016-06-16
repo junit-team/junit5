@@ -8,12 +8,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5.stubs;
+package org.junit.gen5.engine.test;
 
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.UniqueId;
 

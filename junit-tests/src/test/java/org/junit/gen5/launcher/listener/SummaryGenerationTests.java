@@ -20,11 +20,11 @@ import java.util.Collections;
 import java.util.Optional;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.JavaClassSource;
+import org.junit.gen5.engine.test.TestDescriptorStub;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.gen5.launcher.listeners.SummaryGeneratingListener;

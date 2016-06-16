@@ -21,10 +21,10 @@ import java.util.Optional;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.JavaClassSource;
+import org.junit.gen5.engine.test.TestDescriptorStub;
 
 /**
  * @since 5.0

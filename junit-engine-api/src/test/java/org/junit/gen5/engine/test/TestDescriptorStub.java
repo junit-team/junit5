@@ -8,8 +8,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.test;
 
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 
 /**

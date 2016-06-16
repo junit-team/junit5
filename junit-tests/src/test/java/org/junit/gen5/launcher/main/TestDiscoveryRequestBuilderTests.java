@@ -42,7 +42,7 @@ import org.junit.gen5.engine.discovery.ClasspathSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
-import org.junit.gen5.engine.junit5.stubs.TestEngineStub;
+import org.junit.gen5.engine.test.TestEngineStub;
 import org.junit.gen5.launcher.DiscoveryFilterStub;
 import org.junit.gen5.launcher.EngineFilter;
 import org.junit.gen5.launcher.PostDiscoveryFilter;

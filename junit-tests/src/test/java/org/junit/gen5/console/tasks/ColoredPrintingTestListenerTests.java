@@ -20,9 +20,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.TestDescriptorStub;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.reporting.ReportEntry;
+import org.junit.gen5.engine.test.TestDescriptorStub;
 import org.junit.gen5.launcher.TestIdentifier;
 
 /**
