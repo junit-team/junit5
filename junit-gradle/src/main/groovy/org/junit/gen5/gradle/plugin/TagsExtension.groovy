@@ -7,7 +7,7 @@
  *
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.junit.gen5.gradle
+package org.junit.gen5.gradle.plugin
 
 /**
  * Tag configuration options for the JUnit Platform Gradle plugin.

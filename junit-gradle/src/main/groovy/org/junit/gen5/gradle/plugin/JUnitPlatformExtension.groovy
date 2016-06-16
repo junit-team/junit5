@@ -7,14 +7,14 @@
  *
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.junit.gen5.gradle
+package org.junit.gen5.gradle.plugin
 
 /**
  * Core configuration options for the JUnit Platform Gradle plugin.
  *
  * @since 5.0
  */
-class JUnitExtension {
+class JUnitPlatformExtension {
 
 	/**
 	 * The version of the JUnit Platform to use.
@@ -35,7 +35,7 @@ class JUnitExtension {
 	/**
 	 * The directory for the XML test report files.
 	 *
-	 * <p>Defaults to {@code "build/test-results/junit5"}.
+	 * <p>Defaults to {@code "build/test-results/junit-platform"}.
 	 */
 	File reportsDir
 

@@ -7,7 +7,7 @@
  *
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.junit.gen5.gradle
+package org.junit.gen5.gradle.plugin
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -17,13 +17,13 @@ import org.junit.gen5.console.ConsoleRunner
 /**
  * @since 5.0
  */
-class JUnit5Plugin implements Plugin<Project> {
+class JUnitPlatformPlugin implements Plugin<Project> {
 
-	private static final String EXTENSION_NAME = 'junit5';
-	private static final String TASK_NAME      = 'junit5Test';
+	private static final String EXTENSION_NAME = 'junitPlatform';
+	private static final String TASK_NAME      = 'junitPlatformTest';
 
 	void apply(Project project) {
-		def junitExtension = project.extensions.create(EXTENSION_NAME, JUnitExtension)
+		def junitExtension = project.extensions.create(EXTENSION_NAME, JUnitPlatformExtension)
 		junitExtension.extensions.create('tags', TagsExtension)
 		junitExtension.extensions.create('engines', EnginesExtension)
 
@@ -60,7 +60,7 @@ class JUnit5Plugin implements Plugin<Project> {
 			junitTask.inputs.property('excludedTags', junitExtension.tags.exclude)
 			junitTask.inputs.property('classNameFilter', junitExtension.classNameFilter)
 
-			def reportsDir = junitExtension.reportsDir ?: project.file("build/test-results/junit5")
+			def reportsDir = junitExtension.reportsDir ?: project.file("build/test-results/junit-platform")
 			junitTask.outputs.dir reportsDir
 
 			if (junitExtension.logManager) {

@@ -302,7 +302,7 @@ subprojects { subproj ->
 configure(rootProject) {
 	description = 'JUnit 5'
 
-	// apply plugin: 'org.junit.gen5.gradle'
+	// apply plugin: 'org.junit.platform.gradle.plugin'
 
 	jar.enabled = false
 	uploadArchives.enabled = false
@@ -321,7 +321,7 @@ configure(rootProject) {
 	}
 
 	/*
-	junit5 {
+	junitPlatform {
 		engines {
 			include 'junit5'
 		}

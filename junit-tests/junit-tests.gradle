@@ -1,7 +1,7 @@
 /*
-apply plugin: 'org.junit.gen5.gradle'
+apply plugin: 'org.junit.platform.gradle.plugin'
 
-junit5 {
+junitPlatform {
 	engines {
 		include 'junit5'
 	}
@@ -79,7 +79,7 @@ if (project.hasProperty('enableClover')) {
 	}
 
 	afterEvaluate {
-		// cloverAggregateDatabases.dependsOn junit5Test
+		// cloverAggregateDatabases.dependsOn junitPlatformTest
 		cloverAggregateDatabases.dependsOn test
 	}
 

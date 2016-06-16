@@ -7,7 +7,7 @@
  *
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.junit.gen5.gradle
+package org.junit.gen5.gradle.plugin
 
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -20,7 +20,7 @@ import spock.lang.Specification
 /**
  * @since 5.0
  */
-class JUnit5PluginSpec extends Specification {
+class JUnitPlatformPluginSpec extends Specification {
 
 	Project project
 
@@ -31,20 +31,20 @@ class JUnit5PluginSpec extends Specification {
 
 	def "applying the plugin"() {
 		when:
-			project.apply plugin: 'org.junit.gen5.gradle'
+			project.apply plugin: 'org.junit.platform.gradle.plugin'
 		then:
-			project.plugins.hasPlugin(JUnit5Plugin)
-			project.plugins.getPlugin(JUnit5Plugin) instanceof JUnit5Plugin
-			project.extensions.findByName('junit5') instanceof JUnitExtension
+			project.plugins.hasPlugin(JUnitPlatformPlugin)
+			project.plugins.getPlugin(JUnitPlatformPlugin) instanceof JUnitPlatformPlugin
+			project.extensions.findByName('junitPlatform') instanceof JUnitPlatformExtension
 	}
 
-	def "setting junit5 properties"() {
+	def "setting junitPlatform properties"() {
 
 		project.apply plugin: 'java'
-		project.apply plugin: 'org.junit.gen5.gradle'
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
-			project.junit5 {
+			project.junitPlatform {
 				platformVersion '5.0.0-M1'
 				disableStandardTestTask false
 				matchClassName '.*Tests?'
@@ -66,13 +66,13 @@ class JUnit5PluginSpec extends Specification {
 			true == true
 	}
 
-	def "creating junit5Test task"() {
+	def "creating junitPlatformTest task"() {
 
 		project.apply plugin: 'java'
-		project.apply plugin: 'org.junit.gen5.gradle'
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
-			project.junit5 {
+			project.junitPlatform {
 				// disableStandardTestTask // defaults to true
 				matchClassName '.*Tests?'
 				logManager 'org.apache.logging.log4j.jul.LogManager'
@@ -92,7 +92,7 @@ class JUnit5PluginSpec extends Specification {
 			project.evaluate()
 
 		then:
-			Task junitTask = project.tasks.findByName('junit5Test')
+			Task junitTask = project.tasks.findByName('junitPlatformTest')
 			junitTask instanceof JavaExec
 			junitTask.main == ConsoleRunner.class.getName()
 
@@ -118,10 +118,10 @@ class JUnit5PluginSpec extends Specification {
 	def "disableStandardTestTask set to false"() {
 
 		project.apply plugin: 'java'
-		project.apply plugin: 'org.junit.gen5.gradle'
+		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
-			project.junit5 {
+			project.junitPlatform {
 				disableStandardTestTask false
 			}
 			project.evaluate()
