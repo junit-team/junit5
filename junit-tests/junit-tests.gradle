@@ -31,6 +31,8 @@ dependencies {
 		testCompile(project)
 	}
 
+	testCompile(project(path: ':junit-engine-api', configuration: 'testArtifacts'))
+
 	testCompile("org.assertj:assertj-core:${assertJVersion}")
 	testCompile("org.mockito:mockito-core:${mockitoVersion}")
 

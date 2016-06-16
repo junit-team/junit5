@@ -1,3 +1,16 @@
+configurations {
+	testArtifacts.extendsFrom testRuntime
+}
+
+task testJar(type: Jar) {
+	classifier 'test'
+	from sourceSets.test.output
+}
+
+artifacts {
+	testArtifacts testJar
+}
+
 dependencies {
 	compile(project(':junit-commons'))
 	compile("org.opentest4j:opentest4j:${ota4jVersion}")
