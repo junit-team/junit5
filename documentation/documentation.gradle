@@ -1,5 +1,7 @@
 apply plugin: 'org.asciidoctor.convert'
 apply plugin: "org.ajoberstar.github-pages"
+
+/*
 apply plugin: 'org.junit.gen5.gradle'
 
 junit5 {
@@ -14,6 +16,12 @@ junit5 {
 	}
 
 	logManager 'org.apache.logging.log4j.jul.LogManager'
+}
+*/
+
+test {
+	scanForTestClasses = false
+	include(['**/DocumentationTestSuite.class'])
 }
 
 dependencies {

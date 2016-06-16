@@ -18,6 +18,8 @@ import static org.hamcrest.Matchers.is;
 import de.schauderhaft.degraph.configuration.NamedPattern;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.runner.RunWith;
 
 /**
  * {@code DependencyTests} check against dependency cycles at the package
@@ -28,7 +30,8 @@ import org.junit.gen5.api.Test;
  * {@code org.junit.gen5.console.ConsoleRunner} belongs to the {@code console}
  * module.
  */
-class DependencyTests {
+@RunWith(JUnit5.class)
+public class DependencyTests {
 
 	@Test
 	void noCycles() {

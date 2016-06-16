@@ -1,3 +1,4 @@
+/*
 apply plugin: 'org.junit.gen5.gradle'
 
 junit5 {
@@ -6,6 +7,12 @@ junit5 {
 	}
 	matchClassName '.*Tests?'
 	logManager 'org.apache.logging.log4j.jul.LogManager'
+}
+*/
+
+test {
+	scanForTestClasses = false
+	include(['**/AllJUnit5TestsTestSuite.class'])
 }
 
 def testedProjects = [

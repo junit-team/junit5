@@ -70,7 +70,7 @@ import org.mockito.InOrder;
  *
  * @since 5.0
  */
-class JUnit5Tests {
+class JUnit5RunnerTests {
 
 	@Nested
 	class Discovery {

@@ -302,7 +302,7 @@ subprojects { subproj ->
 configure(rootProject) {
 	description = 'JUnit 5'
 
-	apply plugin: 'org.junit.gen5.gradle'
+	// apply plugin: 'org.junit.gen5.gradle'
 
 	jar.enabled = false
 	uploadArchives.enabled = false
@@ -320,12 +320,19 @@ configure(rootProject) {
 		testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 	}
 
+	/*
 	junit5 {
 		engines {
 			include 'junit5'
 		}
 		matchClassName 'org.junit.gen5.meta.DependencyTests'
 		logManager 'org.apache.logging.log4j.jul.LogManager'
+	}
+	*/
+
+	test {
+		scanForTestClasses = false
+		include(['**/DependencyTests.class'])
 	}
 
 	task aggregateJavadocs(type: Javadoc) {

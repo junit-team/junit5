@@ -18,6 +18,8 @@ import org.junit.gen5.junit4.runner.Packages;
 import org.junit.runner.RunWith;
 
 /**
+ * Test suite for all JUnit 5 tests.
+ *
  * <h3>Logging Configuration</h3>
  *
  * <p>In order for our log4j2 configuration to be used in an IDE, you must
@@ -34,5 +36,5 @@ import org.junit.runner.RunWith;
 @Packages("org.junit.gen5")
 @FilterClassName(".*Tests?")
 @IncludeEngines(JUnit5TestEngine.ENGINE_ID)
-public class AllJUnit5Tests {
+public class AllJUnit5TestsTestSuite {
 }
