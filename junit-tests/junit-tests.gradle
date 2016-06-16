@@ -79,6 +79,8 @@ if (project.hasProperty('enableClover')) {
 	}
 
 	afterEvaluate {
-		cloverAggregateDatabases.dependsOn junit5Test
+		// cloverAggregateDatabases.dependsOn junit5Test
+		cloverAggregateDatabases.dependsOn test
 	}
+
 }
