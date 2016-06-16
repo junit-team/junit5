@@ -26,11 +26,14 @@ Code formatting is enforced using the [Spotless](https://github.com/diffplug/spo
 
 ### Javadoc
 
-- Prefer putting `<p>` on same line as text with preceding blank line.
-- Blank line before at-clauses/tags.
-- Prefer to use `{@code foo}` over `<code>foo</code>` (better escaping).
+- Javadoc comments should be wrapped after 80 characters whenever possible.
+- This first paragraph must be a single, concise sentence that ends with a period (".").
+- Place `<p>` on the same line as the first line in a new paragraph and precede `<p>` with a blank line.
+- Insert a blank line before at-clauses/tags.
+- Favor `{@code foo}` over `<code>foo</code>`.
+- Favor literals (e.g., `{@literal @}`) over HTML entities.
 - Use `@since 5.0` instead of `@since 5.0.0`.
-- Do _not_ use `@author`tags. Instead, we will list contributors on the website and in release notes.
+- Do not use `@author`tags. Instead, contributors will be listed on the website and in release notes.
 
 ### Tests
 
