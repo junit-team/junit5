@@ -26,9 +26,9 @@ import org.junit.gen5.api.extension.AfterTestExecutionCallback;
 import org.junit.gen5.api.extension.BeforeTestExecutionCallback;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExtensionContext;
-import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.junit5.AbstractJUnit5TestEngineTests;
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
+import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**

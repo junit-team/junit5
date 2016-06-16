@@ -13,10 +13,10 @@ package org.junit.gen5.engine.junit5;
 import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
-import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.ExecutionRequest;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
+import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**

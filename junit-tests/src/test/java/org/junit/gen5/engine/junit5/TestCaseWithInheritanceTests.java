@@ -19,7 +19,7 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 import org.junit.gen5.api.AfterEach;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.ExecutionEventRecorder;
+import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**

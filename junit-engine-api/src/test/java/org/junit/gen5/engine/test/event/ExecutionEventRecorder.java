@@ -8,28 +8,35 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.test.event;
 
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
-import static org.junit.gen5.engine.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
-import static org.junit.gen5.engine.ExecutionEvent.Type.FINISHED;
-import static org.junit.gen5.engine.ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED;
-import static org.junit.gen5.engine.ExecutionEvent.Type.SKIPPED;
-import static org.junit.gen5.engine.ExecutionEvent.Type.STARTED;
-import static org.junit.gen5.engine.ExecutionEvent.byPayload;
-import static org.junit.gen5.engine.ExecutionEvent.byTestDescriptor;
-import static org.junit.gen5.engine.ExecutionEvent.byType;
+import static org.junit.gen5.engine.test.event.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
+import static org.junit.gen5.engine.test.event.ExecutionEvent.Type.FINISHED;
+import static org.junit.gen5.engine.test.event.ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED;
+import static org.junit.gen5.engine.test.event.ExecutionEvent.Type.SKIPPED;
+import static org.junit.gen5.engine.test.event.ExecutionEvent.Type.STARTED;
+import static org.junit.gen5.engine.test.event.ExecutionEvent.byPayload;
+import static org.junit.gen5.engine.test.event.ExecutionEvent.byTestDescriptor;
+import static org.junit.gen5.engine.test.event.ExecutionEvent.byType;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import org.junit.gen5.engine.ExecutionEvent.Type;
+import org.junit.gen5.engine.EngineDiscoveryRequest;
+import org.junit.gen5.engine.EngineExecutionListener;
+import org.junit.gen5.engine.ExecutionRequest;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestEngine;
+import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestExecutionResult.Status;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.reporting.ReportEntry;
+import org.junit.gen5.engine.test.event.ExecutionEvent.Type;
 
 /**
  * {@link EngineExecutionListener} that records all events and makes them available to tests.

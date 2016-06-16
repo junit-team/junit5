@@ -20,8 +20,8 @@ import org.junit.gen5.api.Assertions;
 import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Nested;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**

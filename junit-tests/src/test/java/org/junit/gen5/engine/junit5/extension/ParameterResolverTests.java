@@ -15,12 +15,12 @@ import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.api.Assertions.assertNull;
 import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.engine.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
-import static org.junit.gen5.engine.ExecutionEventConditions.event;
-import static org.junit.gen5.engine.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.gen5.engine.ExecutionEventConditions.test;
-import static org.junit.gen5.engine.TestExecutionResultConditions.isA;
-import static org.junit.gen5.engine.TestExecutionResultConditions.message;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.event;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.test;
+import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.isA;
+import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.message;
 
 import java.util.Arrays;
 import java.util.function.Predicate;
@@ -36,7 +36,6 @@ import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.ParameterResolutionException;
 import org.junit.gen5.api.extension.ParameterResolver;
-import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.junit5.AbstractJUnit5TestEngineTests;
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.engine.junit5.execution.injection.sample.CustomAnnotation;
@@ -47,6 +46,7 @@ import org.junit.gen5.engine.junit5.execution.injection.sample.NullIntegerParame
 import org.junit.gen5.engine.junit5.execution.injection.sample.NumberParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.PrimitiveArrayParameterResolver;
 import org.junit.gen5.engine.junit5.execution.injection.sample.PrimitiveIntegerParameterResolver;
+import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
 
 /**
  * Integration tests that verify support for {@link ParameterResolver}

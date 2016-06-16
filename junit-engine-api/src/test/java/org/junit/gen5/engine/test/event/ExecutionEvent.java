@@ -8,20 +8,22 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.test.event;
 
 import static java.util.function.Predicate.isEqual;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
-import static org.junit.gen5.engine.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
-import static org.junit.gen5.engine.ExecutionEvent.Type.FINISHED;
-import static org.junit.gen5.engine.ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED;
-import static org.junit.gen5.engine.ExecutionEvent.Type.SKIPPED;
-import static org.junit.gen5.engine.ExecutionEvent.Type.STARTED;
+import static org.junit.gen5.engine.test.event.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
+import static org.junit.gen5.engine.test.event.ExecutionEvent.Type.FINISHED;
+import static org.junit.gen5.engine.test.event.ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED;
+import static org.junit.gen5.engine.test.event.ExecutionEvent.Type.SKIPPED;
+import static org.junit.gen5.engine.test.event.ExecutionEvent.Type.STARTED;
 
 import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.junit.gen5.commons.util.ToStringBuilder;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.reporting.ReportEntry;
 
 /**

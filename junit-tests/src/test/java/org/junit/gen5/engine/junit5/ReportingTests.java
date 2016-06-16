@@ -22,7 +22,7 @@ import org.junit.gen5.api.BeforeEach;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestReporter;
 import org.junit.gen5.commons.util.PreconditionViolationException;
-import org.junit.gen5.engine.ExecutionEventRecorder;
+import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**

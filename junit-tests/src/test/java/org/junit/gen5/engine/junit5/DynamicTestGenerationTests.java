@@ -15,18 +15,18 @@ import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.api.Assertions.fail;
 import static org.junit.gen5.api.DynamicTest.dynamicTest;
-import static org.junit.gen5.engine.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
-import static org.junit.gen5.engine.ExecutionEventConditions.container;
-import static org.junit.gen5.engine.ExecutionEventConditions.dynamicTestRegistered;
-import static org.junit.gen5.engine.ExecutionEventConditions.engine;
-import static org.junit.gen5.engine.ExecutionEventConditions.event;
-import static org.junit.gen5.engine.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.gen5.engine.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.gen5.engine.ExecutionEventConditions.started;
-import static org.junit.gen5.engine.ExecutionEventConditions.test;
-import static org.junit.gen5.engine.TestExecutionResultConditions.message;
 import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.engine.discovery.MethodSelector.selectMethod;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.container;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.dynamicTestRegistered;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.engine;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.event;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.started;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.test;
+import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.util.Arrays;
@@ -38,8 +38,8 @@ import java.util.stream.Stream;
 import org.junit.gen5.api.DynamicTest;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.api.TestFactory;
-import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**

@@ -21,7 +21,7 @@ import java.util.List;
 import org.junit.gen5.api.AfterAll;
 import org.junit.gen5.api.BeforeAll;
 import org.junit.gen5.api.Test;
-import org.junit.gen5.engine.ExecutionEventRecorder;
+import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
 
 /**
  * Integration tests that verify support for {@link BeforeAll} and {@link AfterAll}

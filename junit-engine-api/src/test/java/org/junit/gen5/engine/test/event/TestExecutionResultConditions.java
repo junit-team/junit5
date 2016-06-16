@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine;
+package org.junit.gen5.engine.test.event;
 
 import static java.util.function.Predicate.isEqual;
 import static org.junit.gen5.commons.util.FunctionUtils.where;
@@ -16,6 +16,7 @@ import static org.junit.gen5.commons.util.FunctionUtils.where;
 import java.util.function.Predicate;
 
 import org.assertj.core.api.Condition;
+import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestExecutionResult.Status;
 
 /**

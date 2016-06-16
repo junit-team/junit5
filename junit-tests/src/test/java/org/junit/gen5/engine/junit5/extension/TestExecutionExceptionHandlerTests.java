@@ -14,17 +14,17 @@ import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.api.Assertions.assertFalse;
 import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.engine.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
-import static org.junit.gen5.engine.ExecutionEventConditions.container;
-import static org.junit.gen5.engine.ExecutionEventConditions.engine;
-import static org.junit.gen5.engine.ExecutionEventConditions.event;
-import static org.junit.gen5.engine.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.gen5.engine.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.gen5.engine.ExecutionEventConditions.started;
-import static org.junit.gen5.engine.ExecutionEventConditions.test;
-import static org.junit.gen5.engine.TestExecutionResultConditions.isA;
-import static org.junit.gen5.engine.TestExecutionResultConditions.message;
 import static org.junit.gen5.engine.discovery.MethodSelector.selectMethod;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.container;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.engine;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.event;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.started;
+import static org.junit.gen5.engine.test.event.ExecutionEventConditions.test;
+import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.isA;
+import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 
 import java.io.IOException;
@@ -37,8 +37,8 @@ import org.junit.gen5.api.Test;
 import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.api.extension.TestExecutionExceptionHandler;
 import org.junit.gen5.api.extension.TestExtensionContext;
-import org.junit.gen5.engine.ExecutionEventRecorder;
 import org.junit.gen5.engine.junit5.AbstractJUnit5TestEngineTests;
+import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
