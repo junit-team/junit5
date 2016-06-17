@@ -97,7 +97,7 @@ allprojects {
 		ext.cloverDir = file("$buildDir/clover")
 		ext.cloverInitstring = "$cloverDir/clover.db"
 
-		def instrumentedSourcesDir = file("$cloverDir/instrumentedSources")
+		def instrumentedJavaSourcesDir = file("$cloverDir/instrumentedSources/java")
 
 		task cloverTaskdef {
 			def cloverLicensePath = project.hasProperty('clover.license.path')
@@ -106,24 +106,25 @@ allprojects {
 			ant.property(name: 'clover.license.path', value: cloverLicensePath)
 		}
 
-		task cloverInstrument(dependsOn: cloverTaskdef) {
+		task cloverInstrumentJava(dependsOn: cloverTaskdef) {
 			outputs.dir cloverDir
 			onlyIf { sourceSets.main.allJava.any { it.exists() } }
 			doLast {
 				ant.'clover-instr'(
 					initstring: cloverInitstring,
 					recordTestResults: false,
-					destdir: instrumentedSourcesDir,
+					destdir: instrumentedJavaSourcesDir,
 					source: compileJava.sourceCompatibility) {
 					sourceSets.main.allJava.addToAntBuilder(ant, 'fileset', FileCollection.AntType.FileSet)
 				}
 			}
 		}
 
-		compileJava.source = instrumentedSourcesDir
+		compileJava.source = instrumentedJavaSourcesDir
 		sourceSets.main.compileClasspath += configurations.clover
+		sourceSets.test.compileClasspath += configurations.clover
 		sourceSets.test.runtimeClasspath += configurations.clover
-		compileJava.dependsOn cloverInstrument
+		compileJava.dependsOn cloverInstrumentJava
 	}
 }
 
@@ -376,6 +377,59 @@ configure(rootProject) {
 			target '**/*.adoc', '**/*.md'
 			trimTrailingWhitespace()
 			endWithNewline()
+		}
+	}
+
+
+	if (project.hasProperty('enableClover')) {
+
+		def cloverAggregationFile = "$cloverDir/coverage.db"
+
+		task cloverAggregateDatabases(dependsOn: cloverTaskdef) {
+			outputs.file cloverAggregationFile
+			doLast {
+				ant.'clover-merge'(initString: cloverAggregationFile) {
+					subprojects.each { project ->
+						def cloverDbFile = project.file(project.cloverInitstring)
+						if(cloverDbFile.exists()) {
+							cloverDb(initString: project.cloverInitstring)
+						}
+					}
+				}
+			}
+		}
+
+		task cloverHtmlReport(dependsOn: cloverAggregateDatabases) {
+			outputs.dir "$buildDir/reports/clover/html"
+			doLast {
+				ant."clover-report"(initString: cloverAggregationFile) {
+					current(outfile: "$buildDir/reports/clover/html", title: rootProject.description, homepage: 'overview') {
+						format(type: 'html')
+					}
+				}
+			}
+		}
+
+		task cloverXmlReport(dependsOn: cloverAggregateDatabases) {
+			outputs.file "$buildDir/reports/clover/clover.xml"
+			doLast {
+				ant."clover-report"(initString: cloverAggregationFile) {
+					current(outfile: "$buildDir/reports/clover/clover.xml") {
+						format(type: 'xml')
+					}
+				}
+			}
+		}
+
+		afterEvaluate {
+			// def testTaskName = 'junitPlatformTest'
+			def testTaskName = 'test'
+			subprojects.each { project ->
+				def testTask = project.tasks.findByPath(testTaskName)
+				if (testTask != null) {
+					cloverAggregateDatabases.dependsOn testTask
+				}
+			}
 		}
 	}
 
