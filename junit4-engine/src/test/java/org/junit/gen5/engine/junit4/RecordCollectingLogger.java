@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.commons.logging;
+package org.junit.gen5.engine.junit4;
 
 import java.util.LinkedList;
 import java.util.List;

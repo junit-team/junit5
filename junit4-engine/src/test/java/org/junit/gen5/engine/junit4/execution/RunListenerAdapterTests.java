@@ -21,8 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.commons.logging.RecordCollectingLogger;
 import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.junit4.RecordCollectingLogger;
 import org.junit.gen5.engine.junit4.descriptor.RunnerTestDescriptor;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
 import org.junit.gen5.engine.support.descriptor.EngineDescriptor;

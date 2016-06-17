@@ -1,4 +1,32 @@
+/*
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+junitPlatform {
+	engines {
+		include 'junit5'
+	}
+	matchClassName '.*Tests?'
+	logManager 'org.apache.logging.log4j.jul.LogManager'
+}
+*/
+
+test {
+	scanForTestClasses = false
+	include(['**/JUnit4TestEngineTestSuite.class'])
+}
+
 dependencies {
 	compile(project(':junit-engine-api'))
 	compile("junit:junit:${junit4Version}")
+
+	testCompile(project(':junit-launcher'))
+	testCompile(project(':junit5-api'))
+	testCompile(project(':junit4-runner'))
+	testCompile(project(path: ':junit-engine-api', configuration: 'testArtifacts'))
+	testCompile("org.assertj:assertj-core:${assertJVersion}")
+	testCompile("org.mockito:mockito-core:${mockitoVersion}")
+
+	testRuntime(project(':junit5-engine'))
+	testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
+	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 }
