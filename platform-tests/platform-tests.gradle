@@ -15,18 +15,12 @@ test {
 	include(['**/AllJUnit5TestsTestSuite.class'])
 }
 
-def testedProjects = [
-	project(':junit-commons'),
-	project(':junit-console'),
-	project(':junit-engine-api'),
-	project(':junit-launcher'),
-	project(':junit4-runner'),
-]
-
 dependencies {
-	testedProjects.each { project ->
-		testCompile(project)
-	}
+	testCompile(project(':junit-commons'))
+	testCompile(project(':junit-console'))
+	testCompile(project(':junit-engine-api'))
+	testCompile(project(':junit-launcher'))
+	testCompile(project(':junit4-runner'))
 
 	testCompile(project(path: ':junit-engine-api', configuration: 'testArtifacts'))
 
