@@ -104,21 +104,6 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void requestsUniqueIdSelectorsWhenUniqueIdsAnnotationIsPresent() throws Exception {
-
-			@UniqueIds({ "[foo:bar]", "[baz:quux]" })
-			class TestCase {
-			}
-
-			TestDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
-
-			assertThat(request.getSelectors()).hasSize(2);
-			List<UniqueIdSelector> selectors = request.getSelectorsByType(UniqueIdSelector.class);
-			assertEquals("[foo:bar]", selectors.get(0).getUniqueId().toString());
-			assertEquals("[baz:quux]", selectors.get(1).getUniqueId().toString());
-		}
-
-		@Test
 		void requestsPackageSelectorsWhenPackagesAnnotationIsPresent() throws Exception {
 
 			@Packages({ "foo", "bar" })

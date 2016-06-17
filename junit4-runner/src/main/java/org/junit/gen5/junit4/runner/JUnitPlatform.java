@@ -65,7 +65,6 @@ import org.junit.runners.model.InitializationError;
  * @see Classes
  * @see FilterClassName
  * @see Packages
- * @see UniqueIds
  * @see IncludeTags
  * @see ExcludeTags
  * @see IncludeEngines
@@ -141,7 +140,6 @@ public class JUnitPlatform extends Runner implements Filterable {
 		List<DiscoverySelector> selectors = new ArrayList<>();
 
 		selectors.addAll(transform(getTestClasses(), ClassSelector::selectClass));
-		selectors.addAll(transform(getUniqueIds(), UniqueIdSelector::selectUniqueId));
 		selectors.addAll(transform(getPackageNames(), PackageSelector::selectPackage));
 
 		return selectors;
@@ -188,10 +186,6 @@ public class JUnitPlatform extends Runner implements Filterable {
 
 	private Class<?>[] getTestClasses() {
 		return getValueFromAnnotation(Classes.class, Classes::value, EMPTY_CLASS_ARRAY);
-	}
-
-	private String[] getUniqueIds() {
-		return getValueFromAnnotation(UniqueIds.class, UniqueIds::value, EMPTY_STRING_ARRAY);
 	}
 
 	private String[] getPackageNames() {
