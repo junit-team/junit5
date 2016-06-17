@@ -1,18 +1,17 @@
-rootProject.name = "junit5"
+rootProject.name = 'junit5'
 
-include "documentation"
-include "junit-commons"
-include "junit-console"
-include "junit-engine-api"
-include "junit-gradle"
-include "junit-launcher"
-include "junit-tests"
-include "junit4-engine"
-include "junit4-runner"
-include "junit5-api"
-include "junit5-engine"
-
-include "surefire-junit5"
+include 'documentation'
+include 'junit-commons'
+include 'junit-console'
+include 'junit-engine-api'
+include 'junit-gradle'
+include 'junit-launcher'
+include 'junit4-engine'
+include 'junit4-runner'
+include 'junit5-api'
+include 'junit5-engine'
+include 'platform-tests'
+include 'surefire-junit5'
 
 // check that every subproject has a custom build file
 // based on the project name

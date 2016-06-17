@@ -309,8 +309,8 @@ configure(rootProject) {
 
 	dependencies {
 
-		// No need to detect cycles for: junit-tests, sample-project, documentation, surefire-junit5
-		rootProject.subprojects.findAll {it.name.startsWith('junit') && it.name != 'junit-tests'}.each { project ->
+		// No need to detect cycles for: platform-tests, documentation, surefire-junit5
+		rootProject.subprojects.findAll {it.name.startsWith('junit')}.each { project ->
 			testCompile(project)
 		}
 
