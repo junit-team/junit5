@@ -75,3 +75,5 @@ Browse the https://github.com/junit-team/junit5/graphs/contributors[current list
 [[release-notes]]
 
 include::release-notes-5.0.0-ALPHA.adoc[]
+
+include::release-notes-5.0.0-M1.adoc[]

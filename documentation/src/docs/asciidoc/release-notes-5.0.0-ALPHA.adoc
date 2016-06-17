@@ -1,9 +1,5 @@
-=== Release Notes 5.0.0-ALPHA
+=== 5.0.0-ALPHA
 
 *Date of Release:* February 1, 2016
 
-*Scope:* First public release of JUnit 5
-
-==== Summary of Changes
-
-Since this is the first public release, the set of changes is the set of features as described in this user guide.
+*Scope:* Alpha release of JUnit 5

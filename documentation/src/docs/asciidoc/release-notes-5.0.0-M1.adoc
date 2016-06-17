@@ -1,0 +1,9 @@
+=== 5.0.0-M1
+
+*Date of Release:* June 30, 2016
+
+*Scope:* First milestone release of JUnit 5
+
+==== Summary of Changes
+
+*TODO*
