@@ -23,7 +23,7 @@ import org.junit.gen5.commons.meta.API;
 
 /**
  * {@code @UniqueIds} specifies the unique IDs of test classes or methods to be
- * run when a class annotated with {@code @RunWith(JUnit5.class)} is run.
+ * run when a class annotated with {@code @RunWith(JUnitPlatform.class)} is run.
  *
  * @since 5.0
  */

@@ -31,13 +31,13 @@ import java.util.function.Predicate;
 import joptsimple.OptionException;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.gen5.junit4.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 /**
  * @since 5.0
  */
-@RunWith(JUnit5.class)
+@RunWith(JUnitPlatform.class)
 public class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test

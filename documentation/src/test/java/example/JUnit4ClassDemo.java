@@ -14,10 +14,10 @@ package example;
 import static org.junit.gen5.api.Assertions.fail;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.gen5.junit4.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-@RunWith(JUnit5.class)
+@RunWith(JUnitPlatform.class)
 public class JUnit4ClassDemo {
 
 	@Test

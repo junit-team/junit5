@@ -28,13 +28,13 @@ import org.junit.runner.manipulation.Filter;
 /**
  * @since 5.0
  */
-class JUnit5TestTree {
+class JUnitPlatformTestTree {
 
 	private final Map<TestIdentifier, Description> descriptions = new HashMap<>();
 	private final TestPlan plan;
 	private final Description suiteDescription;
 
-	JUnit5TestTree(TestPlan plan, Class<?> testClass) {
+	JUnitPlatformTestTree(TestPlan plan, Class<?> testClass) {
 		this.plan = plan;
 		this.suiteDescription = generateDescription(plan, testClass);
 	}

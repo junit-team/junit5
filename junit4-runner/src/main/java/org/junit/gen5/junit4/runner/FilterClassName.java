@@ -22,9 +22,9 @@ import java.lang.annotation.Target;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code @FilterClassName} specifies a regular expression that is used
- * to match against fully qualified class names
- * when a test class annotated with {@code @RunWith(JUnit5.class)} is executed.
+ * {@code @FilterClassName} specifies a regular expression that is used to
+ * match against fully qualified class names when a test class annotated with
+ * {@code @RunWith(JUnitPlatform.class)} is run.
  *
  * @since 5.0
  */

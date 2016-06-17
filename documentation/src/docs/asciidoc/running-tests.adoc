@@ -272,11 +272,17 @@ Option                       Description
 [[running-tests-junit4-runner]]
 === Using JUnit 4 to Run JUnit 5 Tests
 
-The `JUnit5` runner lets you run JUnit 5 tests with JUnit 4. This way you can run JUnit 5
-tests in IDEs and build tools that only know about JUnit 4. As soon as we add reporting
-features to JUnit 5 that JUnit 4 does not have, the runner will only be able to support a
-subset of the JUnit 5 functionality. But for the time being the `JUnit5` runner is an
-easy way to get started.
+The `JUnitPlatform` runner is a JUnit 4 based `Runner` which enables you to run any test
+whose programming model is supported on the JUnit Platform in a JUnit 4 environment --
+for example, a JUnit 5 test class.
+
+Annotating a class with `@RunWith(JUnitPlatform.class)` allows it to be run with IDEs and
+build systems that support JUnit 4 but do not yet support the JUnit Platform directly.
+
+Since the JUnit Platform has features that JUnit 4 does not have, the runner is only able
+to support a subset of the JUnit Platform functionality, especially with regard to
+reporting. But for the time being the `JUnitPlatform` runner is an easy way to get
+started.
 
 ==== Setup
 
@@ -285,16 +291,16 @@ You need the following artifacts and their dependencies on the classpath. See
 versions.
 
 * `junit5-api` in _test_ scope: API for writing tests, including `@Test`, etc.
-* `junit4-runner` in _test_ scope: location of the `JUnit5` runner
+* `junit4-runner` in _test_ scope: location of the `JUnitPlatform` runner
 * `junit5-engine` in _test runtime_ scope: implementation of the Engine API for JUnit 5
 
 ==== Single Test Class
 
-One way to use the `JUnit5` runner is to annotate a JUnit 5 test class with
-`@RunWith(JUnit5.class)` directly. Please note that the test methods are annotated with
-`org.junit.gen5.api.Test` (JUnit 5), not `org.junit.Test` (JUnit 4). Moreover, in this
-case the test class must be `public` because; otherwise, the IDEs won't recognize it as a
-test class.
+One way to use the `JUnitPlatform` runner is to annotate a test class with
+`@RunWith(JUnitPlatform.class)` directly. Please note that the test methods in the
+following example are annotated with `org.junit.gen5.api.Test` (JUnit 5), not
+`org.junit.Test` (JUnit 4). Moreover, in this case the test class must be `public`;
+otherwise, IDEs won't recognize it as a test class.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -304,7 +310,8 @@ include::{testDir}/example/JUnit4ClassDemo.java[tags=user_guide]
 
 ==== Test Suite
 
-If you have multiple JUnit 5 test classes you can create a test suite.
+If you have multiple test classes you can create a test suite as can be seen in the
+following example.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -318,4 +325,4 @@ and its subpackages.
 There are more configuration options for discovering and filtering tests than just
 `@Packages`. Please consult the
 {javadoc-root}/org/junit/gen5/junit4/runner/package-summary.html[Javadoc] or the source
-code for the `{JUnit5-Runner}` runner for further details.
+code for the `{JUnitPlatform-Runner}` runner for further details.

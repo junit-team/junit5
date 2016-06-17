@@ -32,7 +32,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :ExtendWith:                        {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtendWith.java[@ExtendWith]
 :ExtensionRegistrar:                {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtensionRegistrar.java[ExtensionRegistrar]
 :TestInstancePostProcessor:         {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/TestInstancePostProcessor.java[TestInstancePostProcessor]
-:JUnit5-Runner:                     {master-branch}/junit4-runner/src/main/java/org/junit/gen5/junit4/runner/JUnit5.java[JUnit5]
+:JUnitPlatform-Runner:              {master-branch}/junit4-runner/src/main/java/org/junit/gen5/junit4/runner/JUnitPlatform.java[JUnitPlatform]
 :ParameterResolver:                 {master-branch}/junit5-api/src/main/java/org/junit/gen5/api/extension/ParameterResolver.java[ParameterResolver]
 :MockitoExtension:                  {junit5-samples-repo}/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java[MockitoExtension]
 :SpringExtension:                   https://github.com/sbrannen/spring-test-junit5/blob/master/src/main/java/org/springframework/test/context/junit5/SpringExtension.java[SpringExtension]

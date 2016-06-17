@@ -25,12 +25,12 @@ import org.junit.runner.notification.RunNotifier;
 /**
  * @since 5.0
  */
-class JUnit5RunnerListener implements TestExecutionListener {
+class JUnitPlatformRunnerListener implements TestExecutionListener {
 
-	private final JUnit5TestTree testTree;
+	private final JUnitPlatformTestTree testTree;
 	private final RunNotifier notifier;
 
-	JUnit5RunnerListener(JUnit5TestTree testTree, RunNotifier notifier) {
+	JUnitPlatformRunnerListener(JUnitPlatformTestTree testTree, RunNotifier notifier) {
 		this.testTree = testTree;
 		this.notifier = notifier;
 	}
@@ -81,7 +81,7 @@ class JUnit5RunnerListener implements TestExecutionListener {
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
-		System.out.println(entry.toString());
+		System.out.println(entry);
 	}
 
 	private Failure toFailure(TestExecutionResult testExecutionResult, Description description) {

@@ -52,7 +52,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 
 	/**
 	 * Customization of {@link AnnotatedBuilder} that ignores classes annotated
-	 * with {@code @RunWith(JUnit5.class)} to avoid infinite recursion.
+	 * with {@code @RunWith(JUnitPlatform.class)} to avoid infinite recursion.
 	 */
 	private static class DefensiveAnnotatedBuilder extends AnnotatedBuilder {
 
@@ -63,7 +63,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 		@Override
 		public Runner buildRunner(Class<? extends Runner> runnerClass, Class<?> testClass) throws Exception {
 			// Referenced by name because it might not be available at runtime.
-			if ("org.junit.gen5.junit4.runner.JUnit5".equals(runnerClass.getName())) {
+			if ("org.junit.gen5.junit4.runner.JUnitPlatform".equals(runnerClass.getName())) {
 				return null;
 			}
 			return super.buildRunner(runnerClass, testClass);

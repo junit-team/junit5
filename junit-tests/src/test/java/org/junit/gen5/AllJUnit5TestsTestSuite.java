@@ -13,7 +13,7 @@ package org.junit.gen5;
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.junit4.runner.FilterClassName;
 import org.junit.gen5.junit4.runner.IncludeEngines;
-import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.gen5.junit4.runner.JUnitPlatform;
 import org.junit.gen5.junit4.runner.Packages;
 import org.junit.runner.RunWith;
 
@@ -32,7 +32,7 @@ import org.junit.runner.RunWith;
  *
  * @since 5.0
  */
-@RunWith(JUnit5.class)
+@RunWith(JUnitPlatform.class)
 @Packages("org.junit.gen5")
 @FilterClassName(".*Tests?")
 @IncludeEngines(JUnit5TestEngine.ENGINE_ID)

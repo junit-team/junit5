@@ -64,7 +64,7 @@ import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingle
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
 import org.junit.gen5.engine.junit4.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods;
 import org.junit.gen5.engine.junit4.samples.junit4.SingleFailingTheoryTestCase;
-import org.junit.gen5.engine.junit4.samples.junit4.TestCaseRunWithJUnit5;
+import org.junit.gen5.engine.junit4.samples.junit4.TestCaseRunWithJUnitPlatformRunner;
 import org.junit.gen5.engine.support.descriptor.JavaClassSource;
 import org.junit.gen5.engine.support.descriptor.JavaMethodSource;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
@@ -201,8 +201,8 @@ class JUnit4TestEngineDiscoveryTests {
 	}
 
 	@Test
-	void doesNotResolveClassRunWithJUnit5() {
-		assertYieldsNoDescriptors(TestCaseRunWithJUnit5.class);
+	void doesNotResolveClassRunWithJUnitPlatform() {
+		assertYieldsNoDescriptors(TestCaseRunWithJUnitPlatformRunner.class);
 	}
 
 	@Test

@@ -11,11 +11,11 @@
 package example;
 
 //tag::user_guide[]
-import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.gen5.junit4.runner.JUnitPlatform;
 import org.junit.gen5.junit4.runner.Packages;
 import org.junit.runner.RunWith;
 
-@RunWith(JUnit5.class)
+@RunWith(JUnitPlatform.class)
 @Packages("example")
 //end::user_guide[]
 @org.junit.gen5.junit4.runner.ExcludeTags("exclude")

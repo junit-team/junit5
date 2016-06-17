@@ -189,7 +189,7 @@ include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
 +
 In JUnit 5 you should use `TestReporter` where
 you used to print information to `stdout` or `stderr` in JUnit 4.
-Using `@RunWith(JUnit5.class)` will even output all reported entries to `stdout`.
+Using `@RunWith(JUnitPlatform.class)` will even output all reported entries to `stdout`.
 
 [source,java,indent=0]
 [subs="verbatim"]

@@ -23,7 +23,7 @@ import org.junit.gen5.commons.meta.API;
 
 /**
  * {@code @Packages} specifies the names of packages to be run when a class
- * annotated with {@code @RunWith(JUnit5.class)} is run.
+ * annotated with {@code @RunWith(JUnitPlatform.class)} is run.
  *
  * @since 5.0
  */

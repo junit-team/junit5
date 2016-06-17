@@ -66,11 +66,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 
 /**
- * Tests for the {@link JUnit5} runner.
+ * Tests for the {@link JUnitPlatform} runner.
  *
  * @since 5.0
  */
-class JUnit5RunnerTests {
+class JUnitPlatformRunnerTests {
 
 	@Nested
 	class Discovery {
@@ -234,7 +234,7 @@ class JUnit5RunnerTests {
 			Launcher launcher = mock(Launcher.class);
 			when(launcher.discover(any())).thenReturn(testPlan);
 
-			JUnit5 runner = new JUnit5(TestClass.class, launcher);
+			JUnitPlatform runner = new JUnitPlatform(TestClass.class, launcher);
 
 			Description runnerDescription = runner.getDescription();
 			assertEquals(createSuiteDescription(TestClass.class), runnerDescription);
@@ -276,7 +276,7 @@ class JUnit5RunnerTests {
 			ArgumentCaptor<TestDiscoveryRequest> captor = ArgumentCaptor.forClass(TestDiscoveryRequest.class);
 			when(launcher.discover(captor.capture())).thenReturn(fullTestPlan).thenReturn(filteredTestPlan);
 
-			JUnit5 runner = new JUnit5(TestClass.class, launcher);
+			JUnitPlatform runner = new JUnitPlatform(TestClass.class, launcher);
 			runner.filter(matchMethodDescription(testDescription("[root:leaf2b]")));
 
 			TestDiscoveryRequest lastDiscoveryRequest = captor.getValue();
@@ -297,7 +297,7 @@ class JUnit5RunnerTests {
 			Launcher launcher = mock(Launcher.class);
 			when(launcher.discover(any())).thenReturn(testPlan);
 
-			JUnit5 runner = new JUnit5(TestClass.class, launcher);
+			JUnitPlatform runner = new JUnitPlatform(TestClass.class, launcher);
 
 			assertThrows(NoTestsRemainException.class,
 				() -> runner.filter(matchMethodDescription(suiteDescription("[root:doesNotExist]"))));
@@ -321,7 +321,7 @@ class JUnit5RunnerTests {
 
 			RunNotifier notifier = new RunNotifier();
 			notifier.addListener(runListener);
-			new JUnit5(TestClass.class, createLauncher(engine)).run(notifier);
+			new JUnitPlatform(TestClass.class, createLauncher(engine)).run(notifier);
 
 			InOrder inOrder = inOrder(runListener);
 
@@ -365,7 +365,7 @@ class JUnit5RunnerTests {
 
 			RunNotifier notifier = new RunNotifier();
 			notifier.addListener(runListener);
-			new JUnit5(TestClass.class, createLauncher(engine)).run(notifier);
+			new JUnitPlatform(TestClass.class, createLauncher(engine)).run(notifier);
 
 			verify(runListener).testIgnored(testDescription("[root:leaf]"));
 			verifyNoMoreInteractions(runListener);
@@ -393,7 +393,7 @@ class JUnit5RunnerTests {
 		ArgumentCaptor<TestDiscoveryRequest> captor = ArgumentCaptor.forClass(TestDiscoveryRequest.class);
 		when(launcher.discover(captor.capture())).thenReturn(TestPlan.from(emptySet()));
 
-		new JUnit5(testClass, launcher);
+		new JUnitPlatform(testClass, launcher);
 
 		return captor.getValue();
 	}

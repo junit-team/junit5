@@ -46,19 +46,20 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
 /**
- * JUnit 4 based {@link Runner} which runs tests that use the JUnit 5
- * programming and extension models.
+ * JUnit 4 based {@link Runner} which runs tests on the JUnit Platform in a
+ * JUnit 4 environment.
  *
- * <p>Annotating a class with {@code @RunWith(JUnit5.class)} allows it to be
- * run with IDEs and build systems that support JUnit 4 but do not yet support
- * the JUnit 5 APIs directly.
+ * <p>Annotating a class with {@code @RunWith(JUnitPlatform.class)} allows it
+ * to be run with IDEs and build systems that support JUnit 4 but do not yet
+ * support the JUnit Platform directly.
  *
  * <p>Consult the various annotations in this package for configuration options.
  *
  * <p>If you do not use any configuration annotations from this package, you
- * can simply use this runner on a JUnit 5 test class. Contrary to standard
- * JUnit 5 test classes, the test class must be {@code public} in order
- * to be picked up by IDEs and build tools.
+ * can simply use this runner on a test class whose programming model is
+ * supported on the JUnit Platform &mdash; for example, a JUnit 5 test class.
+ * Note, however, that any test class run with this runner must be {@code public}
+ * in order to be picked up by IDEs and build tools.
  *
  * @since 5.0
  * @see Classes
@@ -71,7 +72,7 @@ import org.junit.runners.model.InitializationError;
  * @see ExcludeEngines
  */
 @API(Maintained)
-public class JUnit5 extends Runner implements Filterable {
+public class JUnitPlatform extends Runner implements Filterable {
 
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
@@ -81,14 +82,14 @@ public class JUnit5 extends Runner implements Filterable {
 	private final Launcher launcher;
 
 	private TestDiscoveryRequest discoveryRequest;
-	private JUnit5TestTree testTree;
+	private JUnitPlatformTestTree testTree;
 
-	public JUnit5(Class<?> testClass) throws InitializationError {
+	public JUnitPlatform(Class<?> testClass) throws InitializationError {
 		this(testClass, LauncherFactory.create());
 	}
 
 	// For testing only
-	JUnit5(Class<?> testClass, Launcher launcher) throws InitializationError {
+	JUnitPlatform(Class<?> testClass, Launcher launcher) throws InitializationError {
 		this.launcher = launcher;
 		this.testClass = testClass;
 		this.discoveryRequest = createDiscoveryRequest();
@@ -102,21 +103,21 @@ public class JUnit5 extends Runner implements Filterable {
 
 	@Override
 	public void run(RunNotifier notifier) {
-		JUnit5RunnerListener listener = new JUnit5RunnerListener(this.testTree, notifier);
+		JUnitPlatformRunnerListener listener = new JUnitPlatformRunnerListener(this.testTree, notifier);
 		this.launcher.registerTestExecutionListeners(listener);
 		this.launcher.execute(this.discoveryRequest);
 	}
 
-	private JUnit5TestTree generateTestTree() {
+	private JUnitPlatformTestTree generateTestTree() {
 		Preconditions.notNull(this.discoveryRequest, "DiscoveryRequest must not be null");
 		TestPlan plan = this.launcher.discover(this.discoveryRequest);
-		return new JUnit5TestTree(plan, testClass);
+		return new JUnitPlatformTestTree(plan, testClass);
 	}
 
 	private TestDiscoveryRequest createDiscoveryRequest() {
 		List<DiscoverySelector> selectors = getSpecElementsFromAnnotations();
 
-		// Allows to simply add @RunWith(JUnit5.class) to any JUnit5 test case
+		// Allows to simply add @RunWith(JUnitPlatform.class) to any test case
 		if (selectors.isEmpty()) {
 			selectors.add(ClassSelector.selectClass(this.testClass));
 		}
