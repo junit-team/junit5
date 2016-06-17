@@ -11,12 +11,13 @@
 package org.junit.gen5.launcher;
 
 import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.engine.junit5.descriptor.TestDescriptorBuilder.classTestDescriptor;
 import static org.junit.gen5.launcher.TagFilter.excludeTags;
 import static org.junit.gen5.launcher.TagFilter.includeTags;
 
 import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
+import org.junit.gen5.engine.TestDescriptor;
+import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
 
 /**
@@ -26,10 +27,10 @@ import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
  */
 class TagFilterTests {
 
-	ClassTestDescriptor testWithTag1 = classTestDescriptor("test1", ATestWithATag1.class).build();
-	ClassTestDescriptor testWithTag2 = classTestDescriptor("test2", ATestWithATag2.class).build();
-	ClassTestDescriptor testWithBothTags = classTestDescriptor("test12", ATestWithBothTags.class).build();
-	ClassTestDescriptor testWithNoTags = classTestDescriptor("test", ATestWithNoTags.class).build();
+	TestDescriptor testWithTag1 = classTestDescriptor("test1", ATestWithATag1.class);
+	TestDescriptor testWithTag2 = classTestDescriptor("test2", ATestWithATag2.class);
+	TestDescriptor testWithBothTags = classTestDescriptor("test12", ATestWithBothTags.class);
+	TestDescriptor testWithNoTags = classTestDescriptor("test", ATestWithNoTags.class);
 
 	@Test
 	void includeSingleTag() throws Exception {
@@ -89,6 +90,10 @@ class TagFilterTests {
 	}
 
 	private static class ATestWithNoTags {
+	}
+
+	private static TestDescriptor classTestDescriptor(String uniqueId, Class<?> testClass) {
+		return new ClassTestDescriptor(UniqueId.root("class", uniqueId), testClass);
 	}
 
 }

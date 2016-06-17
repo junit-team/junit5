@@ -370,7 +370,9 @@ public class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request().selectors(selectors).build(), engineDescriptor);
 
-		assertTrue(engineDescriptor.getAllDescendants().size() > 500, "Too few test descriptors in classpath");
+		// 150 is completely arbitrary. At this very second in time, the number is actually 213.
+		assertThat(engineDescriptor.getAllDescendants().size()).isGreaterThan(150).as(
+			"Too few test descriptors in classpath");
 
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertTrue(uniqueIds.contains(

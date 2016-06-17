@@ -8,9 +8,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5;
+package org.junit.gen5.engine.junit5;
 
-import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.junit4.runner.FilterClassName;
 import org.junit.gen5.junit4.runner.IncludeEngines;
 import org.junit.gen5.junit4.runner.JUnitPlatform;
@@ -18,7 +17,7 @@ import org.junit.gen5.junit4.runner.Packages;
 import org.junit.runner.RunWith;
 
 /**
- * Test suite for all JUnit 5 tests.
+ * Test suite for the {@link JUnit5TestEngine}.
  *
  * <h3>Logging Configuration</h3>
  *
@@ -33,17 +32,8 @@ import org.junit.runner.RunWith;
  * @since 5.0
  */
 @RunWith(JUnitPlatform.class)
-//@formatter:off
-@Packages({
-	"org.junit.gen5.api",
-	"org.junit.gen5.commons",
-	"org.junit.gen5.console",
-	"org.junit.gen5.engine", // This actually picks up test classes in other modules within the IDE!
-	"org.junit.gen5.junit4.runner",
-	"org.junit.gen5.launcher"
-})
-//@formatter:on
+@Packages("org.junit.gen5.engine.junit5")
 @FilterClassName(".*Tests?")
-@IncludeEngines(JUnit5TestEngine.ENGINE_ID)
-public class AllJUnit5TestsTestSuite {
+@IncludeEngines("junit5")
+public class JUnit5TestEngineTestSuite {
 }
