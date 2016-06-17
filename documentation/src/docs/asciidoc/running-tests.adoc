@@ -27,14 +27,15 @@ To use the JUnit Gradle plugin, you first need to configure `build.gradle` as fo
 buildscript {
 	repositories {
 		mavenCentral()
-		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+		// The following is only necessary if you want to use SNAPSHOT releases.
+		// maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 	dependencies {
 		classpath 'org.junit:junit-gradle:{junit-version}'
 	}
 }
 
-apply plugin: 'org.junit.gen5.gradle'
+apply plugin: 'org.junit.platform.gradle.plugin'
 ----
 
 ===== Configuring the JUnit Gradle Plugin
@@ -47,10 +48,10 @@ final release.
 [source,java,indent=0]
 [subs="verbatim,attributes"]
 ----
-junit5 {
-	version '{junit-version}'
+junitPlatform {
+	platformVersion 1.0
 	logManager 'org.apache.logging.log4j.jul.LogManager'
-	reportsDir "build/test-results/junit5" // this is the default
+	reportsDir "build/test-results/junit-platform" // this is the default
 	// disableStandardTestTask false
 	engines {
 		include 'junit5'
@@ -108,24 +109,24 @@ dependencies {
 
 ===== Using the JUnit Gradle Plugin
 
-Once the JUnit Gradle plugin has been applied and configured, you have a new `junit5Test`
-task at your disposal.
+Once the JUnit Gradle plugin has been applied and configured, you have a new
+`junitPlatformTest` task at your disposal.
 
-Invoking `gradlew clean junit5Test` (or `gradlew clean check`) from the command line will
-execute all tests within the project whose class names match the regular expression
-supplied via `matchClassName`.
+Invoking `gradlew clean junitPlatformTest` (or `gradlew clean test`) from the command
+line will execute all tests within the project whose class names match the regular
+expression supplied via `matchClassName`.
 
-Executing the `junit5Test` task in the `{junit5-gradle-consumer}` project results in
-output similar to the following:
+Executing the `junitPlatformTest` task in the `{junit5-gradle-consumer}` project results
+in output similar to the following:
 
 [subs="none"]
 ----
-:junit5Test
+:junitPlatformTest
 
-Test run finished after 50 ms
+Test run finished after 93 ms
 [         3 tests found     ]
-[         2 tests started   ]
 [         1 tests skipped   ]
+[         2 tests started   ]
 [         0 tests aborted   ]
 [         2 tests successful]
 [         0 tests failed    ]
@@ -137,28 +138,28 @@ If a test fails, the build will fail with output similar to the following:
 
 [subs="none"]
 ----
-:junit5Test
+:junitPlatformTest
 
 Test failures (1):
-  junit5:com.example.project.SecondTest:mySecondTest
-    com.example.project.SecondTest#mySecondTest
-    => Exception: 2 is not equal to 1 ==> expected:<2> but was:<1>
+  JUnit 5:SecondTest:mySecondTest()
+    JavaMethodSource [javaClass = 'com.example.project.SecondTest', javaMethodName = 'mySecondTest', javaMethodParameterTypes = '']
+    => Exception: 2 is not equal to 1 ==> expected: <2> but was: <1>
 
-Test run finished after 50 ms
+Test run finished after 99 ms
 [         3 tests found     ]
-[         3 tests started   ]
 [         0 tests skipped   ]
+[         3 tests started   ]
 [         0 tests aborted   ]
 [         2 tests successful]
 [         1 tests failed    ]
 
-:junit5Test FAILED
+:junitPlatformTest FAILED
 
 FAILURE: Build failed with an exception.
 
 * What went wrong:
-Execution failed for task ':junit5Test'.
-> Process 'command '/Library/Java/JavaVirtualMachines/jdk1.8.0_66.jdk/Contents/Home/bin/java'' finished with non-zero exit value 1
+Execution failed for task ':junitPlatformTest'.
+> Process 'command '/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home/bin/java'' finished with non-zero exit value 1
 ----
 
 *Note*: the _exit value_ corresponds to the number of _tests failed_.
