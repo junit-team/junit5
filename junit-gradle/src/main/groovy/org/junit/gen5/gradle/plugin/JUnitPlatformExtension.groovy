@@ -40,14 +40,14 @@ class JUnitPlatformExtension {
 	File reportsDir
 
 	/**
-	 * Whether or not the standard Gradle {@code test} task should be disabled.
+	 * Whether or not the standard Gradle {@code test} task should be enabled.
 	 *
-	 * <p>Set this to {@code false} to have the standard {@code test} task enabled
+	 * <p>Set this to {@code true} to have the standard {@code test} task enabled
 	 * &mdash; for example, to run TestNG tests via the standard {@code test} task.
 	 *
-	 * <p>Defaults to {@code true}.
+	 * <p>Defaults to {@code false}.
 	 */
-	boolean disableStandardTestTask = true
+	boolean enableStandardTestTask = false
 
 	/**
 	 * A regular expression used to match against test class names.

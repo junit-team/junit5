@@ -46,7 +46,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		when:
 			project.junitPlatform {
 				platformVersion '5.0.0-M1'
-				disableStandardTestTask false
+				enableStandardTestTask true
 				matchClassName '.*Tests?'
 				logManager 'org.apache.logging.log4j.jul.LogManager'
 
@@ -73,7 +73,7 @@ class JUnitPlatformPluginSpec extends Specification {
 
 		when:
 			project.junitPlatform {
-				// disableStandardTestTask // defaults to true
+				// enableStandardTestTask // defaults to false
 				matchClassName '.*Tests?'
 				logManager 'org.apache.logging.log4j.jul.LogManager'
 
@@ -115,14 +115,14 @@ class JUnitPlatformPluginSpec extends Specification {
 			testTask.enabled == false
 	}
 
-	def "disableStandardTestTask set to false"() {
+	def "enableStandardTestTask set to true"() {
 
 		project.apply plugin: 'java'
 		project.apply plugin: 'org.junit.platform.gradle.plugin'
 
 		when:
 			project.junitPlatform {
-				disableStandardTestTask false
+				enableStandardTestTask true
 			}
 			project.evaluate()
 

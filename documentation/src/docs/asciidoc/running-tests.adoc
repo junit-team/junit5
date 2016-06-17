@@ -52,7 +52,7 @@ junitPlatform {
 	platformVersion 1.0
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 	reportsDir "build/test-results/junit-platform" // this is the default
-	// disableStandardTestTask false
+	// enableStandardTestTask true
 	engines {
 		include 'junit5'
 		// exclude 'junit4'
@@ -71,7 +71,7 @@ the `java.util.logging.LogManager` implementation to use. The above example demo
 how to configure log4j as the `LogManager`.
 
 By default, the JUnit Gradle plugin disables the standard Gradle `test` task, but this be
-overridden via the `disableStandardTestTask` flag.
+overridden via the `enableStandardTestTask` flag.
 
 By default all engines and tags are included in the test plan. If you supply a _Test
 Engine ID_ via `engines {include ...}` or `engines {exclude ...}`, the JUnit Gradle

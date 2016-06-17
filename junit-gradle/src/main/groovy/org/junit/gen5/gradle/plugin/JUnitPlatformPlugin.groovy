@@ -53,7 +53,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 				group: 'verification',
 				description: 'Runs tests on the JUnit Platform.') { junitTask ->
 
-			junitTask.inputs.property('disableStandardTestTask', junitExtension.disableStandardTestTask)
+			junitTask.inputs.property('enableStandardTestTask', junitExtension.enableStandardTestTask)
 			junitTask.inputs.property('includedEngines', junitExtension.engines.include)
 			junitTask.inputs.property('excludedEngines', junitExtension.engines.exclude)
 			junitTask.inputs.property('includedTags', junitExtension.tags.include)
@@ -84,15 +84,12 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 	}
 
 	private void configureTaskDependencies(project, junitTask, junitExtension) {
-		def testTask = project.tasks.getByName('test')
 		def testClassesTask = project.tasks.getByName('testClasses')
-
 		junitTask.dependsOn testClassesTask
-		testTask.dependsOn junitTask
 
-		if (junitExtension.disableStandardTestTask) {
-			testTask.enabled = false
-		}
+		def testTask = project.tasks.getByName('test')
+		testTask.dependsOn junitTask
+		testTask.enabled = junitExtension.enableStandardTestTask
 	}
 
 	private ArrayList<String> buildArgs(project, junitExtension, reportsDir) {
