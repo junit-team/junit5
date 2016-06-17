@@ -35,7 +35,6 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.reporting.ReportEntry;
-import org.junit.gen5.engine.support.descriptor.JavaClassSource;
 import org.junit.gen5.launcher.TestIdentifier;
 
 /**
@@ -133,10 +132,7 @@ class XmlReportWriter {
 	private String getParentClassName(TestIdentifier test) {
 		// @formatter:off
 		return reportData.getTestPlan().getParent(test)
-				.flatMap(TestIdentifier::getSource)
-				.filter(JavaClassSource.class::isInstance)
-				.map(JavaClassSource.class::cast)
-				.map(source -> source.getJavaClass().getName())
+				.map(TestIdentifier::getDisplayName)
 				.orElse("<unrooted>");
 		// @formatter:on
 	}
