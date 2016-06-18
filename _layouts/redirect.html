@@ -1,17 +1,17 @@
-<!DOCTYPE html>
+{% assign target_url = page.target_url | replace: '${baseurl}', site.baseurl | replace: '${current_version}', site.current_version %}<!DOCTYPE html>
 <html lang="en-us">
 <head>
 	<meta charset="UTF-8">
 	<title>JUnit</title>
-	<link rel="canonical" href="{{ page.target_url }}"/>
+	<link rel="canonical" href="{{ target_url }}"/>
 </head>
 <body>
 	<noscript>
-		<meta http-equiv="refresh" content="0;URL={{ page.target_url }}">
+		<meta http-equiv="refresh" content="0;URL={{ target_url }}">
 	</noscript>
 	<!--[if lt IE 9]><script type="text/javascript">var IE_fix=true;</script><![endif]-->
 	<script type="text/javascript">
-	var url = "{{ page.target_url }}";
+	var url = "{{ target_url }}";
 	if(typeof IE_fix != "undefined") // IE8 and lower fix to pass the http referer
 	{
 		document.write("redirecting..."); // Don't remove this line or appendChild() will fail because it is called before document.onload to make the redirect as fast as possible. Nobody will see this text, it is only a tech fix.
