@@ -46,6 +46,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.engine.descriptor.JUnit5EngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
+import org.junit.jupiter.engine.descriptor.subpackage.Class1WithTestCases;
+import org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases;
+import org.junit.jupiter.engine.descriptor.subpackage.ClassWithStaticInnerTestCases;
 
 /**
  * @since 5.0
@@ -348,17 +351,12 @@ public class DiscoverySelectorResolverTests {
 
 		assertEquals(6, engineDescriptor.getAllDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains(
-			uniqueIdForClass(org.junit.jupiter.engine.descriptor.subpackage.Class1WithTestCases.class)));
-		assertTrue(uniqueIds.contains(
-			uniqueIdForMethod(org.junit.jupiter.engine.descriptor.subpackage.Class1WithTestCases.class, "test1()")));
-		assertTrue(uniqueIds.contains(
-			uniqueIdForClass(org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases.class)));
-		assertTrue(uniqueIds.contains(
-			uniqueIdForMethod(org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases.class, "test2()")));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(
-			org.junit.jupiter.engine.descriptor.subpackage.ClassWithStaticInnerTestCases.ShouldBeDiscovered.class,
-			"test1()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(Class1WithTestCases.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(Class1WithTestCases.class, "test1()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(Class2WithTestCases.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(Class2WithTestCases.class, "test2()")));
+		assertTrue(
+			uniqueIds.contains(uniqueIdForMethod(ClassWithStaticInnerTestCases.ShouldBeDiscovered.class, "test1()")));
 	}
 
 	@Test
@@ -375,17 +373,12 @@ public class DiscoverySelectorResolverTests {
 			"Too few test descriptors in classpath");
 
 		List<UniqueId> uniqueIds = uniqueIds();
-		assertTrue(uniqueIds.contains(
-			uniqueIdForClass(org.junit.jupiter.engine.descriptor.subpackage.Class1WithTestCases.class)));
-		assertTrue(uniqueIds.contains(
-			uniqueIdForMethod(org.junit.jupiter.engine.descriptor.subpackage.Class1WithTestCases.class, "test1()")));
-		assertTrue(uniqueIds.contains(
-			uniqueIdForClass(org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases.class)));
-		assertTrue(uniqueIds.contains(
-			uniqueIdForMethod(org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases.class, "test2()")));
-		assertTrue(uniqueIds.contains(uniqueIdForMethod(
-			org.junit.jupiter.engine.descriptor.subpackage.ClassWithStaticInnerTestCases.ShouldBeDiscovered.class,
-			"test1()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(Class1WithTestCases.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(Class1WithTestCases.class, "test1()")));
+		assertTrue(uniqueIds.contains(uniqueIdForClass(Class2WithTestCases.class)));
+		assertTrue(uniqueIds.contains(uniqueIdForMethod(Class2WithTestCases.class, "test2()")));
+		assertTrue(
+			uniqueIds.contains(uniqueIdForMethod(ClassWithStaticInnerTestCases.ShouldBeDiscovered.class, "test1()")));
 	}
 
 	@Test

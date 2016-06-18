@@ -17,7 +17,7 @@ import org.junit.gen5.junit4.runner.SelectPackages;
 import org.junit.runner.RunWith;
 
 /**
- * Test suite for all JUnit 5 tests.
+ * Test suite for the JUnit Platform.
  *
  * <h3>Logging Configuration</h3>
  *
@@ -35,13 +35,13 @@ import org.junit.runner.RunWith;
 //@formatter:off
 @SelectPackages({
 	"org.junit.gen5.commons",
+	"org.junit.gen5.launcher",
+	"org.junit.gen5.engine",
 	"org.junit.gen5.console",
-	"org.junit.gen5.engine", // This actually picks up test classes in other modules within Eclipse!
-	"org.junit.gen5.junit4.runner",
-	"org.junit.gen5.launcher"
+	"org.junit.gen5.junit4.runner"
 })
 //@formatter:on
 @IncludeClassNamePattern(".*Tests?")
 @IncludeEngines("junit5")
-public class AllJUnitPlatformTestsTestSuite {
+public class JUnitPlatformTestSuite {
 }
