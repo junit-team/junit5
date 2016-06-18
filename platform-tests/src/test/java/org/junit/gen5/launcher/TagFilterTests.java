@@ -10,15 +10,15 @@
 
 package org.junit.gen5.launcher;
 
-import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.launcher.TagFilter.excludeTags;
 import static org.junit.gen5.launcher.TagFilter.includeTags;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.gen5.api.Tag;
-import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.DemoClassTestDescriptor;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link TagFilter}.

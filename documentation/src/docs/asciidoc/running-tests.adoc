@@ -299,8 +299,8 @@ versions.
 
 One way to use the `JUnitPlatform` runner is to annotate a test class with
 `@RunWith(JUnitPlatform.class)` directly. Please note that the test methods in the
-following example are annotated with `org.junit.gen5.api.Test` (JUnit 5), not
-`org.junit.Test` (JUnit 4). Moreover, in this case the test class must be `public`;
+following example are annotated with `org.junit.jupiter.api.Test` (JUnit Jupiter), not
+`org.junit.Test` (JUnit Vintage). Moreover, in this case the test class must be `public`;
 otherwise, IDEs won't recognize it as a test class.
 
 [source,java,indent=0]

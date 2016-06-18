@@ -10,16 +10,15 @@
 
 package org.junit.gen5.launcher.listener;
 
-import static org.junit.gen5.api.Assertions.assertAll;
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Collections;
 import java.util.Optional;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestExecutionResult;
 import org.junit.gen5.engine.TestSource;
 import org.junit.gen5.engine.UniqueId;
@@ -28,6 +27,7 @@ import org.junit.gen5.engine.test.TestDescriptorStub;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
 import org.junit.gen5.launcher.listeners.SummaryGeneratingListener;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 5.0

@@ -10,15 +10,15 @@
 
 package org.junit.gen5.commons.util;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertSame;
-import static org.junit.gen5.api.Assertions.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.expectThrows;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.junit.gen5.api.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link Preconditions}.

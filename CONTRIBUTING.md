@@ -44,7 +44,7 @@ Code formatting is enforced using the [Spotless](https://github.com/diffplug/spo
 
 #### Assertions
 
-- Use `org.junit.gen5.api.Assertions` wherever possible.
+- Use `org.junit.jupiter.api.Assertions` wherever possible.
 - Use AssertJ when richer assertions are needed.
 - Do not use `org.junit.Assert` or `junit.framework.Assert`.
 

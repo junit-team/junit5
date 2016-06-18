@@ -11,14 +11,14 @@
 package example;
 
 // tag::user_guide[]
-import static org.junit.gen5.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.gen5.api.AfterAll;
-import org.junit.gen5.api.AfterEach;
-import org.junit.gen5.api.BeforeAll;
-import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.Disabled;
-import org.junit.gen5.api.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 class StandardTests {
 

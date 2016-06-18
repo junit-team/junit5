@@ -11,12 +11,12 @@
 package org.junit.gen5.engine.support.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.File;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.PreconditionViolationException;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link FileSource} and {@link DirectorySource}.

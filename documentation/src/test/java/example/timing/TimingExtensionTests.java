@@ -10,8 +10,8 @@
 
 package example.timing;
 
-import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Tests that demonstrate the example {@link TimingExtension}.

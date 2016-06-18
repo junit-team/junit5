@@ -10,18 +10,18 @@
 
 package org.junit.gen5.engine;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertFalse;
-import static org.junit.gen5.api.Assertions.assertSame;
-import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.engine.FilterResult.excluded;
 import static org.junit.gen5.engine.FilterResult.included;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.StringJoiner;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.launcher.FilterStub;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link Filter#composeFilters}.

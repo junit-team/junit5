@@ -12,8 +12,8 @@ package example.exception;
 
 import java.io.IOException;
 
-import org.junit.gen5.api.extension.TestExecutionExceptionHandler;
-import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.jupiter.api.extension.TestExtensionContext;
 
 // @formatter:off
 // tag::user_guide[]

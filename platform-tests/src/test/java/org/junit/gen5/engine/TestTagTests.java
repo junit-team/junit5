@@ -11,9 +11,9 @@
 package org.junit.gen5.engine;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.gen5.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import org.junit.gen5.api.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 5.0

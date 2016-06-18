@@ -208,7 +208,7 @@ Other parameter resolvers must be explicitly enabled by registering an appropria
 [source,java,indent=0]
 [subs="verbatim"]
 ----
-import org.junit.gen5.api.*;
+import org.junit.jupiter.api.*;
 
 import static org.mockito.Mockito.when;
 import com.example.mockito.MockitoExtension;

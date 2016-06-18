@@ -12,19 +12,19 @@ package org.junit.gen5.launcher;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertFalse;
-import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.commons.util.SerializationUtils.serializeAndDeserialize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.support.descriptor.JavaClassSource;
 import org.junit.gen5.engine.test.TestDescriptorStub;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 5.0

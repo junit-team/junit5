@@ -17,8 +17,8 @@ import static org.hamcrest.Matchers.is;
 
 import de.schauderhaft.degraph.configuration.NamedPattern;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.junit4.runner.JUnitPlatform;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 
 /**
@@ -43,10 +43,11 @@ public class DependencyTests {
 				.printTo("dependencies.graphml")
 				.including("org.junit.gen5.**")
 				.including("org.junit.vintage.**")
+				.including("org.junit.jupiter.**")
 				.withSlicing("module",
 					new NamedPattern("org.junit.vintage.engine.**", "junit-vintage-engine"),
-					new NamedPattern("org.junit.gen5.engine.junit5.**", "junit5-engine"),
-					new NamedPattern("org.junit.gen5.engine.**", "engine-api"),
+					new NamedPattern("org.junit.jupiter.api.**", "junit-jupiter-api"),
+					new NamedPattern("org.junit.jupiter.engine.**", "junit-jupiter-engine"),
 					"org.junit.gen5.(*).**"),
 			is(violationFree()));
 		//@formatter:on

@@ -10,14 +10,14 @@
 
 package org.junit.gen5.engine;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Optional;
 
-import org.junit.gen5.api.Assertions;
-import org.junit.gen5.api.Nested;
-import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.UniqueId.Segment;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 /**
  * Microtests for class {@link UniqueId}

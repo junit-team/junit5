@@ -10,19 +10,19 @@
 
 package extensions;
 
-import static org.junit.gen5.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.junit.gen5.api.extension.AfterEachCallback;
-import org.junit.gen5.api.extension.ExtendWith;
-import org.junit.gen5.api.extension.ExtensionContext.Namespace;
-import org.junit.gen5.api.extension.ExtensionContext.Store;
-import org.junit.gen5.api.extension.TestExecutionExceptionHandler;
-import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
+import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.jupiter.api.extension.TestExtensionContext;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

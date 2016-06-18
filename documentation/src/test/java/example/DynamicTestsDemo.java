@@ -11,9 +11,9 @@
 package example;
 
 //tag::user_guide[]
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.api.DynamicTest.dynamicTest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,9 +25,9 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.junit.gen5.api.DynamicTest;
-import org.junit.gen5.api.Tag;
-import org.junit.gen5.api.TestFactory;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.TestFactory;
 
 class DynamicTestsDemo {
 

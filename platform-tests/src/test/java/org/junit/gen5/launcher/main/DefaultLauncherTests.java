@@ -11,18 +11,17 @@
 package org.junit.gen5.launcher.main;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.gen5.launcher.EngineFilter.excludeEngines;
 import static org.junit.gen5.launcher.EngineFilter.includeEngines;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.expectThrows;
 
 import java.util.Optional;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.ConfigurationParameters;
@@ -38,6 +37,7 @@ import org.junit.gen5.launcher.PostDiscoveryFilterStub;
 import org.junit.gen5.launcher.TagFilter;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 5.0

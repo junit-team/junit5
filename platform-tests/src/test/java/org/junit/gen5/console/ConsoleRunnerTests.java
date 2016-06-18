@@ -11,7 +11,7 @@
 package org.junit.gen5.console;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doAnswer;
@@ -22,12 +22,12 @@ import static org.mockito.Mockito.when;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.console.options.CommandLineOptionsParser;
 import org.junit.gen5.console.tasks.ConsoleTaskExecutor;
 import org.junit.gen5.console.tasks.DisplayHelpTask;
 import org.junit.gen5.console.tasks.ExecuteTestsTask;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 5.0

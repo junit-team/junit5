@@ -11,16 +11,15 @@
 package org.junit.gen5.launcher.main;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertNotNull;
 import static org.junit.gen5.engine.discovery.NameBasedSelectors.selectName;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.DiscoverySelector;
 import org.junit.gen5.engine.EngineDiscoveryRequest;
 import org.junit.gen5.engine.UniqueId;
@@ -28,6 +27,7 @@ import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.MethodSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link DiscoveryRequest}.

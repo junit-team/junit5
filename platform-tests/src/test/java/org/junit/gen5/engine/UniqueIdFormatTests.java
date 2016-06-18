@@ -10,14 +10,14 @@
 
 package org.junit.gen5.engine;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.api.Assertions.expectThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.expectThrows;
 
-import org.junit.gen5.api.Nested;
-import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.JUnitException;
 import org.junit.gen5.engine.UniqueId.Segment;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 5.0

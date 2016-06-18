@@ -10,14 +10,14 @@
 
 package org.junit.gen5.console.tasks;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Optional;
 
-import org.junit.gen5.api.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 5.0

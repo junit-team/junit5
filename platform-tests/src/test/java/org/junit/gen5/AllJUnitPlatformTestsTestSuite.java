@@ -34,7 +34,6 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 //@formatter:off
 @SelectPackages({
-	"org.junit.gen5.api",
 	"org.junit.gen5.commons",
 	"org.junit.gen5.console",
 	"org.junit.gen5.engine", // This actually picks up test classes in other modules within Eclipse!

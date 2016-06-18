@@ -14,11 +14,11 @@ package example.timing;
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
-import org.junit.gen5.api.extension.AfterTestExecutionCallback;
-import org.junit.gen5.api.extension.BeforeTestExecutionCallback;
-import org.junit.gen5.api.extension.ExtensionContext.Namespace;
-import org.junit.gen5.api.extension.ExtensionContext.Store;
-import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
+import org.junit.jupiter.api.extension.TestExtensionContext;
 
 // end::user_guide[]
 /**

@@ -11,13 +11,13 @@
 package org.junit.gen5.engine.support.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.reflect.Method;
 
-import org.junit.gen5.api.Test;
-import org.junit.gen5.api.TestInfo;
 import org.junit.gen5.commons.util.PreconditionViolationException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
 /**
  * Unit tests for {@link JavaPackageSource}, {@link JavaClassSource}, and

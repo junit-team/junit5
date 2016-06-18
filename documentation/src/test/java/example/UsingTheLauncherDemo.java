@@ -15,7 +15,6 @@ import static org.junit.gen5.engine.discovery.ClassFilter.includeClassNamePatter
 import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.gen5.launcher.TestExecutionListener;
@@ -23,6 +22,7 @@ import org.junit.gen5.launcher.TestPlan;
 import org.junit.gen5.launcher.listeners.SummaryGeneratingListener;
 import org.junit.gen5.launcher.main.LauncherFactory;
 import org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder;
+import org.junit.jupiter.api.Test;
 // end::imports[]
 
 /**

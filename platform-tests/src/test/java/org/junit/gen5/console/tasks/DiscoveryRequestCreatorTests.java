@@ -13,14 +13,13 @@ package org.junit.gen5.console.tasks;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.console.options.CommandLineOptions;
 import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.discovery.ClassSelector;
@@ -30,6 +29,7 @@ import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.launcher.EngineFilter;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 5.0

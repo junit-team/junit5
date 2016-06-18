@@ -29,9 +29,9 @@ this is done with Gradle and Maven.
 The following are things you have to watch out for when migrating existing JUnit 4 tests
 to JUnit 5.
 
-* Annotations reside in the `org.junit.gen5.api` package.
-* Assertions reside in `org.junit.gen5.api.Assertions`.
-* Assumptions reside in `org.junit.gen5.api.Assumptions`.
+* Annotations reside in the `org.junit.jupiter.api` package.
+* Assertions reside in `org.junit.jupiter.api.Assertions`.
+* Assumptions reside in `org.junit.jupiter.api.Assumptions`.
 * `@Before` and `@After` no longer exist; use `@BeforeEach` and `@AfterEach` instead.
 * `@BeforeClass` and `@AfterClass` no longer exist; use `@BeforeAll` and `@AfterAll` instead.
 * `@Ignore` no longer exists: use `@Disabled` instead.

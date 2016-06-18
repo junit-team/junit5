@@ -14,14 +14,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.api.Assertions.fail;
-import static org.junit.gen5.api.Assumptions.assumeFalse;
 import static org.junit.gen5.console.tasks.XmlReportAssertions.ensureValidAccordingToJenkinsSchema;
 import static org.junit.gen5.engine.TestExecutionResult.successful;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -39,9 +39,6 @@ import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.gen5.api.Test;
-import org.junit.gen5.api.TestReporter;
-import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.console.tasks.TempDirectory.Root;
 import org.junit.gen5.engine.TestEngine;
 import org.junit.gen5.engine.UniqueId;
@@ -53,6 +50,9 @@ import org.junit.gen5.engine.test.TestDescriptorStub;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.opentest4j.AssertionFailedError;
 
 /**

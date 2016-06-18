@@ -14,8 +14,8 @@ import java.io.IOException;
 
 import extensions.ExpectToFail;
 
-import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.ExtendWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(IgnoreIOExceptionExtension.class)
 class IgnoreIOExceptionTests {

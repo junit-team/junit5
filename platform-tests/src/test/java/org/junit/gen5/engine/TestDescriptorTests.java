@@ -10,11 +10,11 @@
 
 package org.junit.gen5.engine;
 
-import static org.junit.gen5.api.Assertions.assertFalse;
-import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.test.TestDescriptorStub;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 5.0

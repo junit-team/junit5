@@ -10,10 +10,10 @@
 
 package example.defaultmethods;
 
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.gen5.api.Test;
+import org.junit.jupiter.api.Test;
 
 // tag::user_guide[]
 public interface ComparableContract<T extends Comparable<T>> extends Testable<T> {

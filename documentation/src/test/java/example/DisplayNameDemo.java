@@ -11,8 +11,8 @@
 package example;
 
 // tag::user_guide[]
-import org.junit.gen5.api.DisplayName;
-import org.junit.gen5.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 @DisplayName("A special test case")
 class DisplayNameDemo {

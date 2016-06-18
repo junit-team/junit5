@@ -11,7 +11,7 @@
 package org.junit.vintage.engine.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.InvalidObjectException;
@@ -20,7 +20,7 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Base64;
 
-import org.junit.gen5.api.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 5.0

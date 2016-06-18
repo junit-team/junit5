@@ -13,8 +13,6 @@ package org.junit.gen5.launcher.main;
 import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.engine.FilterResult.excluded;
 import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.engine.discovery.ClasspathSelector.selectClasspathRoots;
@@ -23,6 +21,8 @@ import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.gen5.launcher.EngineFilter.includeEngines;
 import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.expectThrows;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -30,8 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.assertj.core.util.Files;
-import org.junit.gen5.api.Nested;
-import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.gen5.engine.DiscoveryFilter;
@@ -48,6 +46,8 @@ import org.junit.gen5.launcher.EngineFilter;
 import org.junit.gen5.launcher.PostDiscoveryFilter;
 import org.junit.gen5.launcher.PostDiscoveryFilterStub;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 5.0

@@ -10,20 +10,20 @@
 
 package org.junit.gen5.console.tasks;
 
-import static org.junit.gen5.api.Assertions.assertAll;
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertTrue;
 import static org.junit.gen5.console.tasks.ColoredPrintingTestListener.INDENTATION;
 import static org.junit.gen5.engine.TestExecutionResult.failed;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.reporting.ReportEntry;
 import org.junit.gen5.engine.test.TestDescriptorStub;
 import org.junit.gen5.launcher.TestIdentifier;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 5.0

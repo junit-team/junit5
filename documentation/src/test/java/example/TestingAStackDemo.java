@@ -13,11 +13,11 @@ package example;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
-import org.junit.gen5.api.Assertions;
-import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.DisplayName;
-import org.junit.gen5.api.Nested;
-import org.junit.gen5.api.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 // tag::user_guide[]
 @DisplayName("A stack")

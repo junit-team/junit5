@@ -32,10 +32,10 @@ import static org.junit.runner.Description.createTestDescription;
 import java.util.List;
 
 import org.junit.AssumptionViolatedException;
-import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.test.event.ExecutionEvent;
 import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;

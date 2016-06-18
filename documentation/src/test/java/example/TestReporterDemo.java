@@ -13,8 +13,8 @@ package example;
 // tag::user_guide[]
 import java.util.HashMap;
 
-import org.junit.gen5.api.Test;
-import org.junit.gen5.api.TestReporter;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestReporter;
 
 class TestReporterDemo {
 

@@ -18,12 +18,12 @@ import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 5.0

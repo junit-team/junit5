@@ -11,14 +11,14 @@
 package org.junit.gen5.commons.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertThrows;
 import static org.junit.gen5.commons.util.ExceptionUtils.readStackTrace;
 import static org.junit.gen5.commons.util.ExceptionUtils.throwAsUncheckedException;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.JUnitException;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link ExceptionUtils}.

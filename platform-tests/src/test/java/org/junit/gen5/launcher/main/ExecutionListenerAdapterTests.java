@@ -15,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.lang.reflect.Method;
 import java.util.Collections;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
@@ -24,6 +23,7 @@ import org.junit.gen5.engine.support.descriptor.DemoMethodTestDescriptor;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 5.0

@@ -11,15 +11,15 @@
 package org.junit.gen5.commons.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertFalse;
-import static org.junit.gen5.api.Assertions.assertNotNull;
-import static org.junit.gen5.api.Assertions.assertSame;
-import static org.junit.gen5.api.Assertions.assertThrows;
-import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.api.Assertions.expectThrows;
 import static org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder.HierarchyDown;
 import static org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder.HierarchyUp;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -36,13 +36,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.gen5.api.Test;
-import org.junit.gen5.api.extension.ExtendWith;
 import org.junit.gen5.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested1;
 import org.junit.gen5.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested2;
 import org.junit.gen5.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested3;
 import org.junit.gen5.console.tasks.TempDirectory;
 import org.junit.gen5.console.tasks.TempDirectory.Root;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * Unit tests for {@link ReflectionUtils}.

@@ -11,17 +11,17 @@
 package org.junit.vintage.engine.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.vintage.engine.JUnit4UniqueIdBuilder.engineId;
 
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.UniqueId;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
+import org.junit.jupiter.api.Test;
 import org.junit.vintage.engine.JUnit4UniqueIdBuilder;
 import org.junit.vintage.engine.RecordCollectingLogger;
 

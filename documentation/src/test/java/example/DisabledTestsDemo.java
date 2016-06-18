@@ -11,8 +11,8 @@
 package example;
 
 // tag::user_guide[]
-import org.junit.gen5.api.Disabled;
-import org.junit.gen5.api.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 class DisabledTestsDemo {
 

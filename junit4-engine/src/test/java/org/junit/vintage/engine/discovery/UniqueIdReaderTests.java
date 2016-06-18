@@ -11,15 +11,15 @@
 package org.junit.vintage.engine.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.api.Assertions.assertEquals;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.runner.Description.createTestDescription;
 
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import org.junit.gen5.api.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.Description;
 import org.junit.vintage.engine.RecordCollectingLogger;
 

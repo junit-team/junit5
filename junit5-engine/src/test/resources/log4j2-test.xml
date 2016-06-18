@@ -7,7 +7,7 @@
 	</Appenders>
 	<Loggers>
 		<Logger name="org.junit" level="warn" />
-		<Logger name="org.junit.gen5.engine.junit5" level="warn" />
+		<Logger name="org.junit.jupiter.engine" level="warn" />
 		<Root level="error">
 			<AppenderRef ref="Console" />
 		</Root>

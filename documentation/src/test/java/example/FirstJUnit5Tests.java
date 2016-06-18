@@ -11,9 +11,9 @@
 package example;
 
 // tag::user_guide[]
-import static org.junit.gen5.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.gen5.api.Test;
+import org.junit.jupiter.api.Test;
 
 class FirstJUnit5Tests {
 

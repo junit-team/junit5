@@ -16,11 +16,11 @@ import static org.junit.gen5.commons.util.AnnotationUtils.findRepeatableAnnotati
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.junit.gen5.api.Tag;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.StringUtils;
 import org.junit.gen5.engine.TestTag;
 import org.junit.gen5.engine.UniqueId;
+import org.junit.jupiter.api.Tag;
 
 /**
  * @since 5.0
