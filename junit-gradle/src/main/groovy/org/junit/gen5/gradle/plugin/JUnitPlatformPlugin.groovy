@@ -34,11 +34,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		configuration.defaultDependencies { deps ->
 			def version = junitExtension.platformVersion
 			deps.add(project.dependencies.create("org.junit:junit-launcher:${version}"))
-			deps.add(project.dependencies.create("org.junit:junit-console:${version}", {
-				exclude(group: 'org.junit', module: 'junit4-engine')
-				exclude(group: 'org.junit', module: 'junit5-engine')
-				exclude(group: 'org.junit', module: 'junit4-runner')
-			}))
+			deps.add(project.dependencies.create("org.junit:junit-console:${version}"))
 		}
 
 		project.afterEvaluate {

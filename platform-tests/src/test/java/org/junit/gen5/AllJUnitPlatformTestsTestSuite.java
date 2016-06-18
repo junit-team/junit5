@@ -10,7 +10,6 @@
 
 package org.junit.gen5;
 
-import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.junit4.runner.IncludeClassNamePattern;
 import org.junit.gen5.junit4.runner.IncludeEngines;
 import org.junit.gen5.junit4.runner.JUnitPlatform;
@@ -38,12 +37,12 @@ import org.junit.runner.RunWith;
 	"org.junit.gen5.api",
 	"org.junit.gen5.commons",
 	"org.junit.gen5.console",
-	"org.junit.gen5.engine", // This actually picks up test classes in other modules within the IDE!
+	"org.junit.gen5.engine", // This actually picks up test classes in other modules within Eclipse!
 	"org.junit.gen5.junit4.runner",
 	"org.junit.gen5.launcher"
 })
 //@formatter:on
 @IncludeClassNamePattern(".*Tests?")
-@IncludeEngines(JUnit5TestEngine.ENGINE_ID)
+@IncludeEngines("junit5")
 public class AllJUnitPlatformTestsTestSuite {
 }

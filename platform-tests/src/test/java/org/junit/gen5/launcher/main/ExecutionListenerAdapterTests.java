@@ -17,9 +17,10 @@ import java.util.Collections;
 
 import org.junit.gen5.api.Test;
 import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.junit5.descriptor.MethodTestDescriptor;
 import org.junit.gen5.engine.reporting.ReportEntry;
+import org.junit.gen5.engine.support.descriptor.DemoMethodTestDescriptor;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestIdentifier;
 import org.junit.gen5.launcher.TestPlan;
@@ -32,7 +33,7 @@ class ExecutionListenerAdapterTests {
 
 	@Test
 	void testReportingEntryPublished() {
-		MethodTestDescriptor testDescriptor = getSampleMethodTestDescriptor();
+		TestDescriptor testDescriptor = getSampleMethodTestDescriptor();
 
 		//cannot mock final classes with mockito
 		TestPlan testPlan = TestPlan.from(Collections.singleton(testDescriptor));
@@ -50,9 +51,10 @@ class ExecutionListenerAdapterTests {
 		assertThat(testExecutionListener.testIdentifier).isEqualTo(testIdentifier);
 	}
 
-	private MethodTestDescriptor getSampleMethodTestDescriptor() {
+	private TestDescriptor getSampleMethodTestDescriptor() {
 		Method localMethodNamedNothing = ReflectionUtils.findMethod(this.getClass(), "nothing", new Class[] {}).get();
-		return new MethodTestDescriptor(UniqueId.root("method", "unique_id"), this.getClass(), localMethodNamedNothing);
+		return new DemoMethodTestDescriptor(UniqueId.root("method", "unique_id"), this.getClass(),
+			localMethodNamedNothing);
 	}
 
 	//for reflection purposes only

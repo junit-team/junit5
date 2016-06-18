@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.gen5.api.Test;
+import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.gen5.launcher.TestIdentifier;
@@ -36,7 +37,7 @@ class LauncherFactoryTests {
 
 		TestPlan testPlan = launcher.discover(discoveryRequest);
 		Set<TestIdentifier> roots = testPlan.getRoots();
-		assertThat(roots).hasSize(2);
+		assertThat(roots).hasSize(junitVintageEngineIsPresent() ? 2 : 1);
 
 		// @formatter:off
 		List<String> ids = roots.stream()
@@ -44,7 +45,12 @@ class LauncherFactoryTests {
 				.collect(toList());
 		// @formatter:on
 
-		assertThat(ids).containsOnly("[engine:junit4]", "[engine:junit5]");
+		if (junitVintageEngineIsPresent()) {
+			assertThat(ids).containsOnly("[engine:junit4]", "[engine:junit5]");
+		}
+		else {
+			assertThat(ids).containsOnly("[engine:junit5]");
+		}
 	}
 
 	private TestDiscoveryRequest createTestDiscoveryRequestForBothStandardEngineExampleClasses() {
@@ -70,6 +76,10 @@ class LauncherFactoryTests {
 		void testJ5() {
 		}
 
+	}
+
+	private static boolean junitVintageEngineIsPresent() {
+		return ReflectionUtils.loadClass("org.junit.gen5.engine.junit4.JUnit4TestEngine").isPresent();
 	}
 
 }

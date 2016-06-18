@@ -18,7 +18,7 @@ import org.junit.gen5.api.Tag;
 import org.junit.gen5.api.Test;
 import org.junit.gen5.engine.TestDescriptor;
 import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.junit5.descriptor.ClassTestDescriptor;
+import org.junit.gen5.engine.support.descriptor.DemoClassTestDescriptor;
 
 /**
  * Unit tests for {@link TagFilter}.
@@ -93,7 +93,8 @@ class TagFilterTests {
 	}
 
 	private static TestDescriptor classTestDescriptor(String uniqueId, Class<?> testClass) {
-		return new ClassTestDescriptor(UniqueId.root("class", uniqueId), testClass);
+		UniqueId rootUniqueId = UniqueId.root("class", uniqueId);
+		return new DemoClassTestDescriptor(rootUniqueId, testClass);
 	}
 
 }
