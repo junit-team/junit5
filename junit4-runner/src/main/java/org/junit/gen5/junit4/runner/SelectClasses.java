@@ -22,20 +22,22 @@ import java.lang.annotation.Target;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code @Classes} specifies the test classes to be run when a class
- * annotated with {@code @RunWith(JUnitPlatform.class)} is run.
+ * {@code @SelectClasses} specifies the classes to <em>select</em> when running
+ * a test suite via {@code @RunWith(JUnitPlatform.class)}.
  *
  * @since 5.0
+ * @see org.junit.gen5.engine.discovery.ClassSelector
+ * @see SelectPackages
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
 @API(Maintained)
-public @interface Classes {
+public @interface SelectClasses {
 
 	/**
-	 * One or more test classes.
+	 * One or more classes to select.
 	 */
 	Class<?>[] value();
 

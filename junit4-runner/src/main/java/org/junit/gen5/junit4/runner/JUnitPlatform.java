@@ -62,7 +62,7 @@ import org.junit.runners.model.InitializationError;
  * in order to be picked up by IDEs and build tools.
  *
  * @since 5.0
- * @see Classes
+ * @see SelectClasses
  * @see FilterClassName
  * @see SelectPackages
  * @see IncludeTags
@@ -185,7 +185,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 	}
 
 	private Class<?>[] getSelectedClasses() {
-		return getValueFromAnnotation(Classes.class, Classes::value, EMPTY_CLASS_ARRAY);
+		return getValueFromAnnotation(SelectClasses.class, SelectClasses::value, EMPTY_CLASS_ARRAY);
 	}
 
 	private String[] getSelectedPackageNames() {

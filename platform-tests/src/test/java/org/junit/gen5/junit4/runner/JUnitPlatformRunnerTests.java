@@ -89,9 +89,9 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void requestsClassSelectorsWhenClassesAnnotationIsPresent() throws Exception {
+		void requestsClassSelectorsWhenSelectClassesAnnotationIsPresent() throws Exception {
 
-			@Classes({ Short.class, Byte.class })
+			@SelectClasses({ Short.class, Byte.class })
 			class TestCase {
 			}
 

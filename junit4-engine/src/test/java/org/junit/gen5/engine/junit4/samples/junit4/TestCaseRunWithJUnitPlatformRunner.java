@@ -10,14 +10,14 @@
 
 package org.junit.gen5.engine.junit4.samples.junit4;
 
-import org.junit.gen5.junit4.runner.Classes;
 import org.junit.gen5.junit4.runner.JUnitPlatform;
+import org.junit.gen5.junit4.runner.SelectClasses;
 import org.junit.runner.RunWith;
 
 /**
  * @since 5.0
  */
 @RunWith(JUnitPlatform.class)
-@Classes(PlainJUnit4TestCaseWithSingleTestWhichFails.class)
+@SelectClasses(PlainJUnit4TestCaseWithSingleTestWhichFails.class)
 public class TestCaseRunWithJUnitPlatformRunner {
 }
