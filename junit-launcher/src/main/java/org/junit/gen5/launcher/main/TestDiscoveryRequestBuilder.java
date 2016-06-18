@@ -37,25 +37,24 @@ import org.junit.gen5.launcher.TestDiscoveryRequest;
  * <pre style="code">
  *   TestDiscoveryRequestBuilder.request()
  *     .selectors(
- *        selectPackage("org.junit.gen5"),
- *        selectPackage("com.junit.samples"),
- *        selectClass("com.junit.samples.SampleTestCase"),
- *        selectClass(TestDescriptorTests.class),
- *        selectMethod("com.junit.samples.SampleTestCase", "test2"),
- *        selectMethod(TestDescriptorTests.class, "test1"),
- *        selectMethod(TestDescriptorTests.class, testMethod),
+ *        selectPackage("org.example.user"),
+ *        selectClass("org.example.payment.PaymentTests"),
+ *        selectClass(ShippingTests.class),
+ *        selectMethod("org.example.order.OrderTests", "test1"),
+ *        selectMethod(OrderTests.class, "test2"),
+ *        selectMethod(OrderTests.class, testMethod),
  *        selectClasspathRoots("/my/local/path1"),
  *        selectClasspathRoots("/my/local/path2"),
  *        selectUniqueId("unique-id-1"),
  *        selectUniqueId("unique-id-2")
  *     )
  *     .filters(
- *        includeEngines("junit5", "kotlin"),
- *        excludeEngines("junit4"),
- *        byClassNamePattern("org\.junit\.gen5\.tests.*"),
- *        byClassNamePattern(".*Test[s]?"),
+ *        includeEngines("junit-jupiter", "kotlin"),
+ *        // excludeEngines("junit-vintage"),
  *        includeTags("fast"),
- *        excludeTags("slow")
+ *        // excludeTags("slow"),
+ *        includeClassNamePattern(".*Test[s]?")
+ *        // includeClassNamePattern("org\.example\.tests.*")
  *     )
  *     .configurationParameter("key1", "value1")
  *     .configurationParameters(configParameterMap)

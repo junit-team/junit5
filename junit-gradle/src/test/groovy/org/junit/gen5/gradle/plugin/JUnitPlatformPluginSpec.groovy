@@ -47,8 +47,9 @@ class JUnitPlatformPluginSpec extends Specification {
 			project.junitPlatform {
 				platformVersion '5.0.0-M1'
 				enableStandardTestTask true
-				matchClassName '.*Tests?'
 				logManager 'org.apache.logging.log4j.jul.LogManager'
+
+				includeClassNamePattern '.*Tests?'
 
 				engines {
 					include 'foo'
@@ -74,8 +75,9 @@ class JUnitPlatformPluginSpec extends Specification {
 		when:
 			project.junitPlatform {
 				// enableStandardTestTask // defaults to false
-				matchClassName '.*Tests?'
 				logManager 'org.apache.logging.log4j.jul.LogManager'
+
+				includeClassNamePattern '.*Tests?'
 
 				engines {
 					include 'foo'

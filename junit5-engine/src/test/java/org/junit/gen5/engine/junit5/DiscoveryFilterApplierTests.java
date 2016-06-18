@@ -39,7 +39,7 @@ class DiscoveryFilterApplierTests {
 	void nonMatchingClassesAreExcluded() {
 
 		EngineDiscoveryRequest request = request().filters(
-			ClassFilter.byClassNamePattern(".*\\$MatchingClass")).build();
+			ClassFilter.includeClassNamePattern(".*\\$MatchingClass")).build();
 
 		// @formatter:off
 		TestDescriptor engineDescriptor = engineDescriptor()
@@ -61,7 +61,7 @@ class DiscoveryFilterApplierTests {
 	@Test
 	void nestedTestClassesAreAlwaysIncludedWhenTheirParentIs() {
 		EngineDiscoveryRequest request = request().filters(
-			ClassFilter.byClassNamePattern(".*\\$MatchingClass")).build();
+			ClassFilter.includeClassNamePattern(".*\\$MatchingClass")).build();
 
 		// @formatter:off
 		TestDescriptor engineDescriptor = engineDescriptor()

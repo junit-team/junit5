@@ -188,7 +188,7 @@ class JUnitPlatformRunnerTests {
 		@Test
 		void addsClassFilterToRequestWhenFilterClassNameAnnotationIsPresent() throws Exception {
 
-			@FilterClassName(".*Foo")
+			@IncludeClassNamePattern(".*Foo")
 			class TestCase {
 			}
 			class Foo {

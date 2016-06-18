@@ -28,7 +28,7 @@ class AvailableOptions {
 	private final OptionSpec<Void> disableAnsiColors;
 	private final OptionSpec<Void> runAllTests;
 	private final OptionSpec<Void> hideDetails;
-	private final OptionSpec<String> classnameFilter;
+	private final OptionSpec<String> includeClassNamePattern;
 	private final OptionSpec<String> includeTag;
 	private final OptionSpec<String> excludeTag;
 	private final OptionSpec<String> includeEngine;
@@ -46,7 +46,7 @@ class AvailableOptions {
 			"Provide additional classpath entries -- for example, for adding engines and their dependencies.") //
 				.withRequiredArg();
 
-		classnameFilter = parser.acceptsAll(asList("n", "filter-classname"),
+		includeClassNamePattern = parser.acceptsAll(asList("n", "include-classname"),
 			"Provide a regular expression to include only classes whose fully qualified names match. " //
 					+ "By default any class name is accepted, and thus all classes with tests are included.") //
 				.withRequiredArg();
@@ -89,19 +89,23 @@ class AvailableOptions {
 
 	CommandLineOptions toCommandLineOptions(OptionSet detectedOptions) {
 		CommandLineOptions result = new CommandLineOptions();
+
 		result.setDisplayHelp(detectedOptions.has(this.help));
 		result.setExitCodeEnabled(detectedOptions.has(this.enableExitCode));
 		result.setAnsiColorOutputDisabled(detectedOptions.has(this.disableAnsiColors));
 		result.setRunAllTests(detectedOptions.has(this.runAllTests));
 		result.setHideDetails(detectedOptions.has(this.hideDetails));
-		result.setClassnameFilter(detectedOptions.valueOf(this.classnameFilter));
+
+		result.setIncludeClassNamePattern(detectedOptions.valueOf(this.includeClassNamePattern));
 		result.setIncludedTags(detectedOptions.valuesOf(this.includeTag));
 		result.setExcludedTags(detectedOptions.valuesOf(this.excludeTag));
 		result.setIncludedEngines(detectedOptions.valuesOf(this.includeEngine));
 		result.setExcludedEngines(detectedOptions.valuesOf(this.excludeEngine));
+
 		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(this.additionalClasspathEntries));
 		result.setXmlReportsDir(detectedOptions.valueOf(this.xmlReportsDir));
 		result.setArguments(detectedOptions.valuesOf(this.arguments));
+
 		return result;
 	}
 

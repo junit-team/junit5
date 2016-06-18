@@ -118,9 +118,9 @@ public class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
-	public void convertsClassnameFilterOption() {
+	public void convertsIncludeClassNamePatternOption() {
 		options.setRunAllTests(true);
-		options.setClassnameFilter(".*Test");
+		options.setIncludeClassNamePattern(".*Test");
 
 		TestDiscoveryRequest request = convert();
 

@@ -5,7 +5,7 @@ apply plugin: "org.ajoberstar.github-pages"
 apply plugin: 'org.junit.platform.gradle.plugin'
 
 junitPlatform {
-	matchClassName '.+(Tests|Demo)$'
+	includeClassNamePattern '.+(Tests|Demo)$'
 
 	engines {
 		include 'junit5'

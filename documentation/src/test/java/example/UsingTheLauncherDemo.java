@@ -11,8 +11,7 @@
 package example;
 
 // tag::imports[]
-
-import static org.junit.gen5.engine.discovery.ClassFilter.byClassNamePattern;
+import static org.junit.gen5.engine.discovery.ClassFilter.includeClassNamePattern;
 import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
 
@@ -38,10 +37,10 @@ class UsingTheLauncherDemo {
 		// tag::discovery[]
 		TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request()
 			.selectors(
-				selectPackage("com.mycompany.mytests"),
+				selectPackage("com.example.mytests"),
 				selectClass(MyTestClass.class)
 			)
-			.filters(byClassNamePattern(".*Test"))
+			.filters(includeClassNamePattern(".*Test"))
 			.build();
 
 		TestPlan plan = LauncherFactory.create().discover(specification);
@@ -55,10 +54,10 @@ class UsingTheLauncherDemo {
 		// tag::execution[]
 		TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request()
 			.selectors(
-				selectPackage("com.mycompany.mytests"),
+				selectPackage("com.example.mytests"),
 				selectClass(MyTestClass.class)
 			)
-			.filters(byClassNamePattern(".*Test"))
+			.filters(includeClassNamePattern(".*Test"))
 			.build();
 
 		Launcher launcher = LauncherFactory.create();

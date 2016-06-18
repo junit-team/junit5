@@ -31,14 +31,11 @@ import java.util.function.Predicate;
 import joptsimple.OptionException;
 
 import org.junit.gen5.api.Test;
-import org.junit.gen5.junit4.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @since 5.0
  */
-@RunWith(JUnitPlatform.class)
-public class JOptSimpleCommandLineOptionsParserTests {
+class JOptSimpleCommandLineOptionsParserTests {
 
 	@Test
 	public void parseNoArguments() {
@@ -52,7 +49,7 @@ public class JOptSimpleCommandLineOptionsParserTests {
 			() -> assertFalse(options.isExitCodeEnabled()),
 			() -> assertFalse(options.isHideDetails()),
 			() -> assertFalse(options.isRunAllTests()),
-			() -> assertEquals(Optional.empty(), options.getClassnameFilter()),
+			() -> assertEquals(Optional.empty(), options.getIncludeClassNamePattern()),
 			() -> assertEquals(emptyList(), options.getIncludedTags()),
 			() -> assertEquals(emptyList(), options.getAdditionalClasspathEntries()),
 			() -> assertEquals(Optional.empty(), options.getXmlReportsDir()),
@@ -75,24 +72,24 @@ public class JOptSimpleCommandLineOptionsParserTests {
 	}
 
 	@Test
-	public void parseValidClassnameFilters() {
+	public void parseValidIncludeClassNamePatterns() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(Optional.of(".*Test"), parseArgLine("-n .*Test").getClassnameFilter()),
-			() -> assertEquals(Optional.of(".*Test"), parseArgLine("--filter-classname .*Test").getClassnameFilter()),
-			() -> assertEquals(Optional.of(".*Test"), parseArgLine("--filter-classname=.*Test").getClassnameFilter())
+			() -> assertEquals(Optional.of(".*Test"), parseArgLine("-n .*Test").getIncludeClassNamePattern()),
+			() -> assertEquals(Optional.of(".*Test"), parseArgLine("--include-classname .*Test").getIncludeClassNamePattern()),
+			() -> assertEquals(Optional.of(".*Test"), parseArgLine("--include-classname=.*Test").getIncludeClassNamePattern())
 		);
 		// @formatter:on
 	}
 
 	@Test
-	public void defaultIsNoClassnameFilters() {
-		assertEquals(Optional.empty(), parseArgLine("").getClassnameFilter());
+	public void defaultIsNoIncludeClassNamePattern() {
+		assertEquals(Optional.empty(), parseArgLine("").getIncludeClassNamePattern());
 	}
 
 	@Test
-	public void parseInvalidClassnameFilters() throws Exception {
-		assertOptionWithMissingRequiredArgumentThrowsException("-n", "--filter-classname");
+	public void parseInvalidIncludeClassNamePatterns() throws Exception {
+		assertOptionWithMissingRequiredArgumentThrowsException("-n", "--include-classname");
 	}
 
 	@Test

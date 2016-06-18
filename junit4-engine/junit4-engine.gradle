@@ -5,7 +5,7 @@ junitPlatform {
 	engines {
 		include 'junit5'
 	}
-	matchClassName '.*Tests?'
+	includeClassNamePattern '.*Tests?'
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 }
 */

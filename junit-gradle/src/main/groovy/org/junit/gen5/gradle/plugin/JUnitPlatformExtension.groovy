@@ -50,23 +50,13 @@ class JUnitPlatformExtension {
 	boolean enableStandardTestTask = false
 
 	/**
-	 * A regular expression used to match against test class names.
+	 * A pattern in the form of a regular expression that is used to match against
+	 * fully qualified class names.
 	 *
-	 * <p>If the supplied regular expression does not match against a
-	 * particular class name, that class will be filtered out of the test
-	 * plan (i.e., excluded).
+	 * <p>If the fully qualified name of a class matches against the pattern, the
+	 * class will be included in the test plan; otherwise, the class will be
+	 * excluded.
 	 */
-	String classNameFilter
-
-	/**
-	 * Set the regular expression to be used to match against test class names.
-	 *
-	 * <p>If the supplied regular expression does not match against a
-	 * particular class name, that class will be filtered out of the test
-	 * plan (i.e., excluded).
-	 */
-	void matchClassName(regex) {
-		classNameFilter = regex
-	}
+	String includeClassNamePattern
 
 }

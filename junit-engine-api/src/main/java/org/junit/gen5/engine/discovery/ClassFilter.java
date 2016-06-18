@@ -19,13 +19,14 @@ import org.junit.gen5.engine.DiscoveryFilter;
  * {@link DiscoveryFilter} that is applied to a {@link Class}.
  *
  * @since 5.0
- * @see #byClassNamePattern(String)
+ * @see #includeClassNamePattern(String)
  */
 @API(Experimental)
 public interface ClassFilter extends DiscoveryFilter<Class<?>> {
 
 	/**
-	 * Create a {@link ClassFilter} based on the supplied class name pattern.
+	 * Create a new <em>include</em> {@link ClassFilter} based on the supplied
+	 * class name pattern.
 	 *
 	 * <p>If the fully qualified name of a class matches against the pattern,
 	 * the class will be included in the result set.
@@ -34,8 +35,8 @@ public interface ClassFilter extends DiscoveryFilter<Class<?>> {
 	 * class names; never {@code null} or blank
 	 * @see Class#getName()
 	 */
-	static ClassFilter byClassNamePattern(String pattern) {
-		return new ClassNameFilter(pattern);
+	static ClassFilter includeClassNamePattern(String pattern) {
+		return new IncludeClassNameFilter(pattern);
 	}
 
 }

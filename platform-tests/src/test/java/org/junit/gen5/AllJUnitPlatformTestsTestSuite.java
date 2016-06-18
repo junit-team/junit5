@@ -11,7 +11,7 @@
 package org.junit.gen5;
 
 import org.junit.gen5.engine.junit5.JUnit5TestEngine;
-import org.junit.gen5.junit4.runner.FilterClassName;
+import org.junit.gen5.junit4.runner.IncludeClassNamePattern;
 import org.junit.gen5.junit4.runner.IncludeEngines;
 import org.junit.gen5.junit4.runner.JUnitPlatform;
 import org.junit.gen5.junit4.runner.SelectPackages;
@@ -43,7 +43,7 @@ import org.junit.runner.RunWith;
 	"org.junit.gen5.launcher"
 })
 //@formatter:on
-@FilterClassName(".*Tests?")
+@IncludeClassNamePattern(".*Tests?")
 @IncludeEngines(JUnit5TestEngine.ENGINE_ID)
 public class AllJUnitPlatformTestsTestSuite {
 }

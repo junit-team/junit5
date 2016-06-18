@@ -22,20 +22,23 @@ import java.lang.annotation.Target;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code @FilterClassName} specifies a regular expression that is used to
- * match against fully qualified class names when running a test suite via
+ * {@code @IncludeClassNamePattern} specifies a regular expression that is used
+ * to match against fully qualified class names when running a test suite via
  * {@code @RunWith(JUnitPlatform.class)}.
+ *
+ * <p>If the fully qualified name of a class matches against the pattern, the
+ * class will be included in the test plan.
  *
  * @since 5.0
  * @see JUnitPlatform
- * @see org.junit.gen5.engine.discovery.ClassFilter#byClassNamePattern
+ * @see org.junit.gen5.engine.discovery.ClassFilter#includeClassNamePattern
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
 @API(Maintained)
-public @interface FilterClassName {
+public @interface IncludeClassNamePattern {
 
 	/**
 	 * Regular expression used to match against fully qualified class names.

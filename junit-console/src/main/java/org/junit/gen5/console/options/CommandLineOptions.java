@@ -30,7 +30,7 @@ public class CommandLineOptions {
 	private boolean runAllTests;
 	private boolean hideDetails;
 
-	private String classnameFilter;
+	private String includeClassNamePattern;
 
 	private List<String> includedEngines = emptyList();
 	private List<String> excludedEngines = emptyList();
@@ -84,12 +84,12 @@ public class CommandLineOptions {
 		this.hideDetails = hideDetails;
 	}
 
-	public Optional<String> getClassnameFilter() {
-		return Optional.ofNullable(this.classnameFilter);
+	public Optional<String> getIncludeClassNamePattern() {
+		return Optional.ofNullable(this.includeClassNamePattern);
 	}
 
-	public void setClassnameFilter(String classnameFilter) {
-		this.classnameFilter = classnameFilter;
+	public void setIncludeClassNamePattern(String includeClassNamePattern) {
+		this.includeClassNamePattern = includeClassNamePattern;
 	}
 
 	public List<String> getIncludedEngines() {

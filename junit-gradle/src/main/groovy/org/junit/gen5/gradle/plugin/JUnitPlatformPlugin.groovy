@@ -58,7 +58,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			junitTask.inputs.property('excludedEngines', junitExtension.engines.exclude)
 			junitTask.inputs.property('includedTags', junitExtension.tags.include)
 			junitTask.inputs.property('excludedTags', junitExtension.tags.exclude)
-			junitTask.inputs.property('classNameFilter', junitExtension.classNameFilter)
+			junitTask.inputs.property('includeClassNamePattern', junitExtension.includeClassNamePattern)
 
 			def reportsDir = junitExtension.reportsDir ?: project.file("build/test-results/junit-platform")
 			junitTask.outputs.dir reportsDir
@@ -96,9 +96,9 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 		def args = ['--enable-exit-code', '--hide-details', '--all']
 
-		if (junitExtension.classNameFilter) {
+		if (junitExtension.includeClassNamePattern) {
 			args.add('-n')
-			args.add(junitExtension.classNameFilter)
+			args.add(junitExtension.includeClassNamePattern)
 		}
 
 		junitExtension.tags.include.each { tag ->

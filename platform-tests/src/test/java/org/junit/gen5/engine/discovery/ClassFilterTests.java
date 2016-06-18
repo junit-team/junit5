@@ -27,9 +27,9 @@ class ClassFilterTests {
 	void classNameMatches() {
 		String regex = "^java\\.lang\\..*";
 
-		ClassFilter filter = ClassFilter.byClassNamePattern(regex);
+		ClassFilter filter = ClassFilter.includeClassNamePattern(regex);
 
-		assertEquals("Filter class names with regular expression: " + regex, filter.toString());
+		assertEquals("Includes class names with regular expression: " + regex, filter.toString());
 		assertTrue(filter.apply(String.class).included());
 		assertFalse(filter.apply(Collection.class).included());
 	}

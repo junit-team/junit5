@@ -61,7 +61,7 @@ junitPlatform {
 		include 'fast', 'smoke'
 		// exclude 'slow', 'ci'
 	}
-	matchClassName '.*Tests'
+	includeClassNamePattern '.*Tests'
 }
 ----
 
@@ -114,7 +114,7 @@ Once the JUnit Gradle plugin has been applied and configured, you have a new
 
 Invoking `gradlew clean junitPlatformTest` (or `gradlew clean test`) from the command
 line will execute all tests within the project whose class names match the regular
-expression supplied via `matchClassName`.
+expression supplied via `includeClassNamePattern`.
 
 Executing the `junitPlatformTest` task in the `{junit5-gradle-consumer}` project results
 in output similar to the following:
@@ -245,7 +245,7 @@ Option                       Description
 -a, --all                    Run all tests
 -p, --classpath              Provide additional classpath entries -- for example,
                                for adding engines and their dependencies.
--n, --filter-classname       Provide a regular expression to include only
+-n, --include-classname      Provide a regular expression to include only
                                classes whose fully qualified names match.
                                By default any class name is accepted, and
                                thus all classes with tests are included.

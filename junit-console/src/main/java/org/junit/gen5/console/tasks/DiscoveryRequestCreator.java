@@ -11,6 +11,7 @@
 package org.junit.gen5.console.tasks;
 
 import static java.util.stream.Collectors.toCollection;
+import static org.junit.gen5.engine.discovery.ClassFilter.includeClassNamePattern;
 import static org.junit.gen5.engine.discovery.ClasspathSelector.selectClasspathRoots;
 import static org.junit.gen5.engine.discovery.NameBasedSelectors.selectNames;
 import static org.junit.gen5.launcher.EngineFilter.excludeEngines;
@@ -26,7 +27,6 @@ import java.util.Set;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.gen5.console.options.CommandLineOptions;
-import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 
 /**
@@ -69,8 +69,8 @@ class DiscoveryRequestCreator {
 	}
 
 	private void applyFilters(TestDiscoveryRequest discoveryRequest, CommandLineOptions options) {
-		options.getClassnameFilter().ifPresent(
-			regex -> discoveryRequest.addFilter(ClassFilter.byClassNamePattern(regex)));
+		options.getIncludeClassNamePattern().ifPresent(
+			pattern -> discoveryRequest.addFilter(includeClassNamePattern(pattern)));
 
 		if (!options.getIncludedTags().isEmpty()) {
 			discoveryRequest.addPostFilter(includeTags(options.getIncludedTags()));

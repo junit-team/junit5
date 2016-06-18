@@ -326,7 +326,7 @@ configure(rootProject) {
 		engines {
 			include 'junit5'
 		}
-		matchClassName 'org.junit.gen5.meta.DependencyTests'
+		includeClassNamePattern 'org.junit.gen5.meta.DependencyTests'
 		logManager 'org.apache.logging.log4j.jul.LogManager'
 	}
 	*/

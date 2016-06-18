@@ -13,6 +13,8 @@ package org.junit.gen5.junit4.runner;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.commons.meta.API.Usage.Maintained;
+import static org.junit.gen5.engine.discovery.ClassFilter.includeClassNamePattern;
+import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
 import static org.junit.gen5.launcher.EngineFilter.excludeEngines;
 import static org.junit.gen5.launcher.EngineFilter.includeEngines;
 import static org.junit.gen5.launcher.TagFilter.excludeTags;
@@ -28,7 +30,6 @@ import java.util.function.Function;
 import org.junit.gen5.commons.meta.API;
 import org.junit.gen5.commons.util.Preconditions;
 import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.gen5.engine.discovery.ClassSelector;
 import org.junit.gen5.engine.discovery.PackageSelector;
 import org.junit.gen5.engine.discovery.UniqueIdSelector;
@@ -64,7 +65,7 @@ import org.junit.runners.model.InitializationError;
  * @since 5.0
  * @see SelectPackages
  * @see SelectClasses
- * @see FilterClassName
+ * @see IncludeClassNamePattern
  * @see IncludeTags
  * @see ExcludeTags
  * @see IncludeEngines
@@ -118,7 +119,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 
 		// Allows to simply add @RunWith(JUnitPlatform.class) to any test case
 		if (selectors.isEmpty()) {
-			selectors.add(ClassSelector.selectClass(this.testClass));
+			selectors.add(selectClass(this.testClass));
 		}
 
 		TestDiscoveryRequest request = request().selectors(selectors).build();
@@ -127,7 +128,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 	}
 
 	private void addFiltersFromAnnotations(TestDiscoveryRequest request) {
-		addClassNameMatchesFilter(request);
+		addIncludeClassNamePatternFilter(request);
 
 		addIncludedTagsFilter(request);
 		addExcludedTagsFilter(request);
@@ -149,10 +150,10 @@ public class JUnitPlatform extends Runner implements Filterable {
 		return stream(sourceElements).map(transformer).collect(toList());
 	}
 
-	private void addClassNameMatchesFilter(TestDiscoveryRequest discoveryRequest) {
-		String regex = getClassNameRegExPattern();
-		if (!regex.isEmpty()) {
-			discoveryRequest.addFilter(ClassFilter.byClassNamePattern(regex));
+	private void addIncludeClassNamePatternFilter(TestDiscoveryRequest discoveryRequest) {
+		String pattern = getIncludeClassNamePattern();
+		if (!pattern.isEmpty()) {
+			discoveryRequest.addFilter(includeClassNamePattern(pattern));
 		}
 	}
 
@@ -208,8 +209,9 @@ public class JUnitPlatform extends Runner implements Filterable {
 		return getValueFromAnnotation(ExcludeEngines.class, ExcludeEngines::value, EMPTY_STRING_ARRAY);
 	}
 
-	private String getClassNameRegExPattern() {
-		return getValueFromAnnotation(FilterClassName.class, FilterClassName::value, EMPTY_STRING).trim();
+	private String getIncludeClassNamePattern() {
+		return getValueFromAnnotation(IncludeClassNamePattern.class, IncludeClassNamePattern::value,
+			EMPTY_STRING).trim();
 	}
 
 	private <A extends Annotation, V> V getValueFromAnnotation(Class<A> annotationClass, Function<A, V> extractor,

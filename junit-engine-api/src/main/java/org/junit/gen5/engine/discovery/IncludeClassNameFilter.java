@@ -21,13 +21,16 @@ import org.junit.gen5.engine.FilterResult;
  * {@link ClassFilter} that matches fully qualified class names against a
  * pattern in the form of a regular expression.
  *
+ * <p>If the fully qualified name of a class matches against the pattern, the
+ * class will be included.
+ *
  * @since 5.0
  */
-class ClassNameFilter implements ClassFilter {
+class IncludeClassNameFilter implements ClassFilter {
 
 	private final Pattern pattern;
 
-	ClassNameFilter(String pattern) {
+	IncludeClassNameFilter(String pattern) {
 		Preconditions.notBlank(pattern, "pattern must not be null or blank");
 		this.pattern = Pattern.compile(pattern);
 	}
@@ -35,14 +38,14 @@ class ClassNameFilter implements ClassFilter {
 	@Override
 	public FilterResult apply(Class<?> clazz) {
 		String name = clazz.getName();
-		return includedIf(pattern.matcher(name).matches(), //
-			() -> String.format("Class name [%s] matches pattern: %s", name, pattern), //
-			() -> String.format("Class name [%s] does not match pattern: %s", name, pattern));
+		return includedIf(this.pattern.matcher(name).matches(), //
+			() -> String.format("Class name [%s] matches pattern: %s", name, this.pattern), //
+			() -> String.format("Class name [%s] does not match pattern: %s", name, this.pattern));
 	}
 
 	@Override
 	public String toString() {
-		return "Filter class names with regular expression: " + pattern;
+		return "Includes class names with regular expression: " + this.pattern;
 	}
 
 }
