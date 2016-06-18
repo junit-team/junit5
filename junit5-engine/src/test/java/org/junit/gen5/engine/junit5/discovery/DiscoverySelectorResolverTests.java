@@ -193,7 +193,7 @@ public class DiscoverySelectorResolverTests {
 
 	@Test
 	public void resolvingUniqueIdWithUnknownSegmentTypeResolvesNothing() {
-		UniqueIdSelector selector = UniqueIdSelector.selectUniqueId(engineId().append("poops", "machine").toString());
+		UniqueIdSelector selector = UniqueIdSelector.selectUniqueId(engineId().append("bogus", "enigma").toString());
 		EngineDiscoveryRequest request = request().selectors(selector).build();
 
 		resolver.resolveSelectors(request, engineDescriptor);

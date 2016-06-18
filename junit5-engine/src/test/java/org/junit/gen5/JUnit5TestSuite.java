@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.engine.junit5;
+package org.junit.gen5;
 
 import org.junit.gen5.junit4.runner.IncludeClassNamePattern;
 import org.junit.gen5.junit4.runner.IncludeEngines;
@@ -17,7 +17,8 @@ import org.junit.gen5.junit4.runner.SelectPackages;
 import org.junit.runner.RunWith;
 
 /**
- * Test suite for the {@link JUnit5TestEngine}.
+ * Test suite for the JUnit 5 programming model, extension model, and
+ * {@code TestEngine} implementation.
  *
  * <h3>Logging Configuration</h3>
  *
@@ -32,8 +33,8 @@ import org.junit.runner.RunWith;
  * @since 5.0
  */
 @RunWith(JUnitPlatform.class)
-@SelectPackages("org.junit.gen5.engine.junit5")
+@SelectPackages({ "org.junit.gen5.api", "org.junit.gen5.engine.junit5" })
 @IncludeClassNamePattern(".*Tests?")
 @IncludeEngines("junit5")
-public class JUnit5TestEngineTestSuite {
+public class JUnit5TestSuite {
 }
