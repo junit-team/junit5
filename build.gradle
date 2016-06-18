@@ -445,14 +445,27 @@ configure(rootProject) {
 		}
 
 		pages {
-			from project(':documentation').buildDir.absolutePath + "/asciidoc"
-			into "docs/${docVersion}/user-guide"
+			from(project(':documentation').buildDir) {
+				include 'asciidoc/**'
+			}
+			from("$buildDir/docs") {
+				include 'javadoc/**'
+			}
+			into "docs/${docVersion}"
+			filesMatching('asciidoc/**') { fileCopyDetails ->
+				fileCopyDetails.path = fileCopyDetails.path.replace('asciidoc/', 'user-guide/')
+			}
+			filesMatching('javadoc/**') { fileCopyDetails ->
+				fileCopyDetails.path = fileCopyDetails.path.replace('javadoc/', 'api/')
+			}
+			includeEmptyDirs = false
 		}
 
 		deleteExistingFiles = false
 	}
 
 	prepareGhPages.dependsOn(":documentation:asciidoctor")
+	prepareGhPages.dependsOn(aggregateJavadocs)
 
 	task wrapper(type: Wrapper) {
 		// To build against Gradle 3.0 nightly builds, obtain the latest
