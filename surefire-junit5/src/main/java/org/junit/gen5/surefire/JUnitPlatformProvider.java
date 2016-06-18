@@ -33,18 +33,18 @@ import org.junit.gen5.launcher.main.LauncherFactory;
 /**
  * @since 5.0
  */
-public class JUnitGen5Provider extends AbstractProvider {
+public class JUnitPlatformProvider extends AbstractProvider {
 
 	private final ProviderParameters parameters;
 
-	public JUnitGen5Provider(ProviderParameters parameters) {
+	public JUnitPlatformProvider(ProviderParameters parameters) {
 		this.parameters = parameters;
 		Logger.getLogger("org.junit").setLevel(Level.WARNING);
 	}
 
 	@Override
 	public Iterable<Class<?>> getSuites() {
-		// TODO Implement this.
+		// TODO Implement suite support in the JUnitPlatformProvider.
 		throw new UnsupportedOperationException("Forking is not yet supported.");
 	}
 
@@ -52,7 +52,7 @@ public class JUnitGen5Provider extends AbstractProvider {
 	public RunResult invoke(Object forkTestSet)
 			throws TestSetFailedException, ReporterException, InvocationTargetException {
 		if (forkTestSet != null) {
-			// TODO Implement forking support.
+			// TODO Implement forking support in the JUnitPlatformProvider.
 			throw new UnsupportedOperationException("Forking is not yet supported.");
 		}
 

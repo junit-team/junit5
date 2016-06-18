@@ -1,1 +1,1 @@
-org.junit.gen5.surefire.JUnitGen5Provider
+org.junit.gen5.surefire.JUnitPlatformProvider
