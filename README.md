@@ -92,7 +92,7 @@ See also: <https://oss.sonatype.org/content/repositories/snapshots/org/junit/>
 [Clover]: https://www.atlassian.com/software/clover/
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
 [Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/lastSuccessfulBuild/clover-report/
-[JUnit 5 Javadoc]: https://junit.ci.cloudbees.com/job/JUnit5/javadoc/
-[JUnit 5 User Guide]: http://junit-team.github.io/junit5/
+[JUnit 5 Javadoc]: http://junit.org/junit5/docs/current/api/
+[JUnit 5 User Guide]: http://junit.org/junit5/docs/current/user-guide/
 [Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
 [Twitter]: https://twitter.com/junitlambda

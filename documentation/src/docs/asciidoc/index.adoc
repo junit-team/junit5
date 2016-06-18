@@ -3,7 +3,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 
 :sectnums:
 
-:javadoc-root:                      https://junit.ci.cloudbees.com/job/JUnit5/javadoc
+:javadoc-root:                      http://junit.org/junit5/docs/current/api
 :snapshot-repo:                     https://oss.sonatype.org/content/repositories/snapshots
 :junit-team:                        https://github.com/junit-team
 
