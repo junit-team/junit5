@@ -42,8 +42,9 @@ public class DependencyTests {
 			classpath()
 				.printTo("dependencies.graphml")
 				.including("org.junit.gen5.**")
+				.including("org.junit.vintage.**")
 				.withSlicing("module",
-					new NamedPattern("org.junit.gen5.engine.junit4.**", "junit4-engine"),
+					new NamedPattern("org.junit.vintage.engine.**", "junit-vintage-engine"),
 					new NamedPattern("org.junit.gen5.engine.junit5.**", "junit5-engine"),
 					new NamedPattern("org.junit.gen5.engine.**", "engine-api"),
 					"org.junit.gen5.(*).**"),

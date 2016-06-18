@@ -79,7 +79,7 @@ class LauncherFactoryTests {
 	}
 
 	private static boolean junitVintageEngineIsPresent() {
-		return ReflectionUtils.loadClass("org.junit.gen5.engine.junit4.JUnit4TestEngine").isPresent();
+		return ReflectionUtils.loadClass("org.junit.vintage.engine.JUnit4TestEngine").isPresent();
 	}
 
 }

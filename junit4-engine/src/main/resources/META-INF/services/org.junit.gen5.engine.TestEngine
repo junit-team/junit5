@@ -1,1 +1,1 @@
-org.junit.gen5.engine.junit4.JUnit4TestEngine
+org.junit.vintage.engine.JUnit4TestEngine
