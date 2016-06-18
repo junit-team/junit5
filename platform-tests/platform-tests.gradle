@@ -12,7 +12,7 @@ junitPlatform {
 
 test {
 	scanForTestClasses = false
-	include(['**/AllJUnit5TestsTestSuite.class'])
+	include(['**/AllJUnitPlatformTestsTestSuite.class'])
 }
 
 dependencies {

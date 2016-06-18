@@ -45,5 +45,5 @@ import org.junit.runner.RunWith;
 //@formatter:on
 @FilterClassName(".*Tests?")
 @IncludeEngines(JUnit5TestEngine.ENGINE_ID)
-public class AllJUnit5TestsTestSuite {
+public class AllJUnitPlatformTestsTestSuite {
 }
