@@ -434,6 +434,8 @@ configure(rootProject) {
 		}
 	}
 
+	def docVersion = project.version.contains('SNAPSHOT') ? 'snapshot' : project.version
+
 	githubPages {
 		repoUri = 'https://github.com/junit-team/junit5.git'
 
@@ -444,7 +446,7 @@ configure(rootProject) {
 
 		pages {
 			from project(':documentation').buildDir.absolutePath + "/asciidoc"
-			into "docs/current/user-guide"
+			into "docs/${docVersion}/user-guide"
 		}
 
 		deleteExistingFiles = false
