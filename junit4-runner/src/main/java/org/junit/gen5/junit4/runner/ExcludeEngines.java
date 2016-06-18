@@ -23,12 +23,13 @@ import org.junit.gen5.commons.meta.API;
 
 /**
  * {@code @ExcludeEngines} specifies the {@linkplain #value IDs} of
- * {@link org.junit.gen5.engine.TestEngine TestEngines} to be excluded from the
- * test plan when a class annotated with {@code @RunWith(JUnitPlatform.class)}
- * is run.
+ * {@link org.junit.gen5.engine.TestEngine TestEngines} to be excluded
+ * when running a test suite via {@code @RunWith(JUnitPlatform.class)}.
  *
  * @since 5.0
+ * @see JUnitPlatform
  * @see IncludeEngines
+ * @see org.junit.gen5.launcher.EngineFilter#excludeEngines
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

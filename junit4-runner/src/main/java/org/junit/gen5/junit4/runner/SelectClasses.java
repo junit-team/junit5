@@ -26,8 +26,9 @@ import org.junit.gen5.commons.meta.API;
  * a test suite via {@code @RunWith(JUnitPlatform.class)}.
  *
  * @since 5.0
- * @see org.junit.gen5.engine.discovery.ClassSelector
+ * @see JUnitPlatform
  * @see SelectPackages
+ * @see org.junit.gen5.engine.discovery.ClassSelector
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

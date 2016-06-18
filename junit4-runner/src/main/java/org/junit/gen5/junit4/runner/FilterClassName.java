@@ -23,10 +23,12 @@ import org.junit.gen5.commons.meta.API;
 
 /**
  * {@code @FilterClassName} specifies a regular expression that is used to
- * match against fully qualified class names when a test class annotated with
- * {@code @RunWith(JUnitPlatform.class)} is run.
+ * match against fully qualified class names when running a test suite via
+ * {@code @RunWith(JUnitPlatform.class)}.
  *
  * @since 5.0
+ * @see JUnitPlatform
+ * @see org.junit.gen5.engine.discovery.ClassFilter#byClassNamePattern
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

@@ -23,12 +23,13 @@ import org.junit.gen5.commons.meta.API;
 
 /**
  * {@code @IncludeEngines} specifies the {@linkplain #value IDs} of
- * {@link org.junit.gen5.engine.TestEngine TestEngines} to be included in the
- * test plan when a class annotated with {@code @RunWith(JUnitPlatform.class)}
- * is run.
+ * {@link org.junit.gen5.engine.TestEngine TestEngines} to be included
+ * when running a test suite via {@code @RunWith(JUnitPlatform.class)}.
  *
  * @since 5.0
+ * @see JUnitPlatform
  * @see ExcludeEngines
+ * @see org.junit.gen5.launcher.EngineFilter#includeEngines
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

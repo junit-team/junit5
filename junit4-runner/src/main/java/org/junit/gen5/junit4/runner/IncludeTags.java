@@ -23,11 +23,12 @@ import org.junit.gen5.commons.meta.API;
 
 /**
  * {@code @IncludeTags} specifies the {@linkplain #value tags} to be included
- * in the test plan when a class annotated with {@code @RunWith(JUnitPlatform.class)}
- * is run.
+ * when running a test suite via {@code @RunWith(JUnitPlatform.class)}.
  *
  * @since 5.0
+ * @see JUnitPlatform
  * @see ExcludeTags
+ * @see org.junit.gen5.launcher.TagFilter#includeTags
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

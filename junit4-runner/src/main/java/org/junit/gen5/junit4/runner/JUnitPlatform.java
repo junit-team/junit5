@@ -62,9 +62,9 @@ import org.junit.runners.model.InitializationError;
  * in order to be picked up by IDEs and build tools.
  *
  * @since 5.0
+ * @see SelectPackages
  * @see SelectClasses
  * @see FilterClassName
- * @see SelectPackages
  * @see IncludeTags
  * @see ExcludeTags
  * @see IncludeEngines
