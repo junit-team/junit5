@@ -64,7 +64,7 @@ import org.junit.runners.model.InitializationError;
  * @since 5.0
  * @see Classes
  * @see FilterClassName
- * @see Packages
+ * @see SelectPackages
  * @see IncludeTags
  * @see ExcludeTags
  * @see IncludeEngines
@@ -114,7 +114,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 	}
 
 	private TestDiscoveryRequest createDiscoveryRequest() {
-		List<DiscoverySelector> selectors = getSpecElementsFromAnnotations();
+		List<DiscoverySelector> selectors = getSelectorsFromAnnotations();
 
 		// Allows to simply add @RunWith(JUnitPlatform.class) to any test case
 		if (selectors.isEmpty()) {
@@ -136,11 +136,11 @@ public class JUnitPlatform extends Runner implements Filterable {
 		addExcludedEnginesFilter(request);
 	}
 
-	private List<DiscoverySelector> getSpecElementsFromAnnotations() {
+	private List<DiscoverySelector> getSelectorsFromAnnotations() {
 		List<DiscoverySelector> selectors = new ArrayList<>();
 
-		selectors.addAll(transform(getTestClasses(), ClassSelector::selectClass));
-		selectors.addAll(transform(getPackageNames(), PackageSelector::selectPackage));
+		selectors.addAll(transform(getSelectedClasses(), ClassSelector::selectClass));
+		selectors.addAll(transform(getSelectedPackageNames(), PackageSelector::selectPackage));
 
 		return selectors;
 	}
@@ -184,12 +184,12 @@ public class JUnitPlatform extends Runner implements Filterable {
 		}
 	}
 
-	private Class<?>[] getTestClasses() {
+	private Class<?>[] getSelectedClasses() {
 		return getValueFromAnnotation(Classes.class, Classes::value, EMPTY_CLASS_ARRAY);
 	}
 
-	private String[] getPackageNames() {
-		return getValueFromAnnotation(Packages.class, Packages::value, EMPTY_STRING_ARRAY);
+	private String[] getSelectedPackageNames() {
+		return getValueFromAnnotation(SelectPackages.class, SelectPackages::value, EMPTY_STRING_ARRAY);
 	}
 
 	private String[] getIncludedTags() {

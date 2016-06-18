@@ -22,20 +22,21 @@ import java.lang.annotation.Target;
 import org.junit.gen5.commons.meta.API;
 
 /**
- * {@code @Packages} specifies the names of packages to be run when a class
- * annotated with {@code @RunWith(JUnitPlatform.class)} is run.
+ * {@code @SelectPackages} specifies the names of packages to <em>select</em>
+ * when running a test suite via {@code @RunWith(JUnitPlatform.class)}.
  *
  * @since 5.0
+ * @see org.junit.gen5.engine.discovery.PackageSelector
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
 @API(Maintained)
-public @interface Packages {
+public @interface SelectPackages {
 
 	/**
-	 * One or more package names.
+	 * One or more fully qualified package names to select.
 	 */
 	String[] value();
 

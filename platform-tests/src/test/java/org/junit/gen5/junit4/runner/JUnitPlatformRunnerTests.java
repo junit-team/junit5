@@ -106,7 +106,7 @@ class JUnitPlatformRunnerTests {
 		@Test
 		void requestsPackageSelectorsWhenPackagesAnnotationIsPresent() throws Exception {
 
-			@Packages({ "foo", "bar" })
+			@SelectPackages({ "foo", "bar" })
 			class TestCase {
 			}
 

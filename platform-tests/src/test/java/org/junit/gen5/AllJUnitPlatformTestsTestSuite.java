@@ -14,7 +14,7 @@ import org.junit.gen5.engine.junit5.JUnit5TestEngine;
 import org.junit.gen5.junit4.runner.FilterClassName;
 import org.junit.gen5.junit4.runner.IncludeEngines;
 import org.junit.gen5.junit4.runner.JUnitPlatform;
-import org.junit.gen5.junit4.runner.Packages;
+import org.junit.gen5.junit4.runner.SelectPackages;
 import org.junit.runner.RunWith;
 
 /**
@@ -34,7 +34,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JUnitPlatform.class)
 //@formatter:off
-@Packages({
+@SelectPackages({
 	"org.junit.gen5.api",
 	"org.junit.gen5.commons",
 	"org.junit.gen5.console",

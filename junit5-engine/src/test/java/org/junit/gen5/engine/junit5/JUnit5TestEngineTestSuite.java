@@ -13,7 +13,7 @@ package org.junit.gen5.engine.junit5;
 import org.junit.gen5.junit4.runner.FilterClassName;
 import org.junit.gen5.junit4.runner.IncludeEngines;
 import org.junit.gen5.junit4.runner.JUnitPlatform;
-import org.junit.gen5.junit4.runner.Packages;
+import org.junit.gen5.junit4.runner.SelectPackages;
 import org.junit.runner.RunWith;
 
 /**
@@ -32,7 +32,7 @@ import org.junit.runner.RunWith;
  * @since 5.0
  */
 @RunWith(JUnitPlatform.class)
-@Packages("org.junit.gen5.engine.junit5")
+@SelectPackages("org.junit.gen5.engine.junit5")
 @FilterClassName(".*Tests?")
 @IncludeEngines("junit5")
 public class JUnit5TestEngineTestSuite {

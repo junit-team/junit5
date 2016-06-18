@@ -324,6 +324,6 @@ The `JUnit4SuiteDemo` will discover and run all tests in the `example` package
 and its subpackages.
 
 There are more configuration options for discovering and filtering tests than just
-`@Packages`. Please consult the
+`@SelectPackages`. Please consult the
 {javadoc-root}/org/junit/gen5/junit4/runner/package-summary.html[Javadoc] or the source
 code for the `{JUnitPlatform-Runner}` runner for further details.
