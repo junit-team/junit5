@@ -8,12 +8,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.launcher.main;
+package org.junit.gen5.launcher.core;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.gen5.engine.discovery.NameBasedSelectors.selectName;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
-import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

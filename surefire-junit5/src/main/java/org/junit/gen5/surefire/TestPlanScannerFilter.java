@@ -11,7 +11,7 @@
 package org.junit.gen5.surefire;
 
 import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
-import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import org.apache.maven.surefire.util.ScannerFilter;
 import org.junit.gen5.launcher.Launcher;

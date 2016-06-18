@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.gen5.engine.TestExecutionResult.successful;
-import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
+import static org.junit.gen5.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;

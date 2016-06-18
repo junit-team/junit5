@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.launcher.main;
+package org.junit.gen5.launcher.core;
 
 import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toList;
@@ -20,7 +20,7 @@ import static org.junit.gen5.engine.discovery.MethodSelector.selectMethod;
 import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
 import static org.junit.gen5.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.gen5.launcher.EngineFilter.includeEngines;
-import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.expectThrows;
 

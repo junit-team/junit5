@@ -18,7 +18,7 @@ import static org.junit.gen5.launcher.EngineFilter.excludeEngines;
 import static org.junit.gen5.launcher.EngineFilter.includeEngines;
 import static org.junit.gen5.launcher.TagFilter.excludeTags;
 import static org.junit.gen5.launcher.TagFilter.includeTags;
-import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.util.LinkedHashSet;

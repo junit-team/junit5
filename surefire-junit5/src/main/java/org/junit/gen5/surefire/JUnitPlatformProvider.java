@@ -11,7 +11,7 @@
 package org.junit.gen5.surefire;
 
 import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
-import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -28,7 +28,7 @@ import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.TestsToRun;
 import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
-import org.junit.gen5.launcher.main.LauncherFactory;
+import org.junit.gen5.launcher.core.LauncherFactory;
 
 /**
  * @since 5.0

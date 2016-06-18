@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.gen5.launcher.main;
+package org.junit.gen5.launcher.core;
 
 import static org.junit.gen5.engine.Filter.composeFilters;
 

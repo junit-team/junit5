@@ -12,7 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static java.util.Arrays.asList;
 import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
-import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;

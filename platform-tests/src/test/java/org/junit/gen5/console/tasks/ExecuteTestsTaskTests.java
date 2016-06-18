@@ -12,7 +12,7 @@ package org.junit.gen5.console.tasks;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.launcher.main.LauncherFactoryForTestingPurposesOnly.createLauncher;
+import static org.junit.gen5.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.fail;

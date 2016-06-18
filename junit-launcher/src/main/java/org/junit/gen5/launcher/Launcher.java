@@ -24,7 +24,7 @@ import org.junit.gen5.commons.meta.API;
  * each test engine has an {@linkplain org.junit.gen5.engine.TestEngine#getId ID}
  * that is unique among the registered test engines. For example, the
  * default implementation returned by
- * {@link org.junit.gen5.launcher.main.LauncherFactory#create LauncherFactory.create()}
+ * {@link org.junit.gen5.launcher.core.LauncherFactory#create LauncherFactory.create()}
  * dynamically discovers test engines via Java's
  * {@link java.util.ServiceLoader ServiceLoader} mechanism.
  *
@@ -46,7 +46,7 @@ import org.junit.gen5.commons.meta.API;
  * @see TestDiscoveryRequest
  * @see TestPlan
  * @see TestExecutionListener
- * @see org.junit.gen5.launcher.main.LauncherFactory
+ * @see org.junit.gen5.launcher.core.LauncherFactory
  * @see org.junit.gen5.engine.TestEngine
  */
 @API(Experimental)

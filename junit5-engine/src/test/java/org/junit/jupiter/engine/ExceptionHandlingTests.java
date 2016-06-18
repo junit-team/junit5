@@ -22,7 +22,7 @@ import static org.junit.gen5.engine.test.event.ExecutionEventConditions.test;
 import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.isA;
 import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.suppressed;
-import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;

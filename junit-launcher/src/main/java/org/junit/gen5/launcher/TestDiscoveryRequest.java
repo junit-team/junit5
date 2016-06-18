@@ -26,7 +26,7 @@ import org.junit.gen5.engine.EngineDiscoveryRequest;
  * that provides access to filters which are applied by the {@link Launcher} itself.
  *
  * <p>Moreover, the {@code add*()} methods can be used by external clients that do
- * not want to use the {@link org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder}.
+ * not want to use the {@link org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder}.
  *
  * @since 5.0
  */

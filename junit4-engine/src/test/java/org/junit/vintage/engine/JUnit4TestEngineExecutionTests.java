@@ -25,7 +25,7 @@ import static org.junit.gen5.engine.test.event.ExecutionEventConditions.test;
 import static org.junit.gen5.engine.test.event.ExecutionEventConditions.uniqueIdSubstring;
 import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.isA;
 import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.message;
-import static org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder.request;
+import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 import static org.junit.runner.Description.createSuiteDescription;
 import static org.junit.runner.Description.createTestDescription;
 
@@ -41,29 +41,7 @@ import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.vintage.engine.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
-import org.junit.vintage.engine.samples.junit4.EnclosedJUnit4TestCase;
-import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;
-import org.junit.vintage.engine.samples.junit4.JUnit4SuiteOfSuiteWithIgnoredJUnit4TestCase;
-import org.junit.vintage.engine.samples.junit4.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
-import org.junit.vintage.engine.samples.junit4.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithErrorInBeforeClass;
-import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithExceptionThrowingRunner;
-import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithIgnoredJUnit4TestCase;
-import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
-import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
-import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithJUnit4TestCaseWithErrorInBeforeClass;
-import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
-import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithAssumptionFailureInBeforeClass;
-import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithErrorInAfterClass;
-import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithErrorInBeforeClass;
-import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithExceptionThrowingRunner;
-import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithOverloadedMethod;
-import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithRunnerWithCustomUniqueIds;
-import org.junit.vintage.engine.samples.junit4.MalformedJUnit4TestCase;
-import org.junit.vintage.engine.samples.junit4.ParameterizedTestCase;
-import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
-import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
-import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
-import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithTwoTestMethods;
+import org.junit.vintage.engine.samples.junit4.*;
 
 /**
  * @since 5.0

@@ -19,9 +19,9 @@ import org.junit.gen5.launcher.Launcher;
 import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.gen5.launcher.TestExecutionListener;
 import org.junit.gen5.launcher.TestPlan;
+import org.junit.gen5.launcher.core.LauncherFactory;
+import org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder;
 import org.junit.gen5.launcher.listeners.SummaryGeneratingListener;
-import org.junit.gen5.launcher.main.LauncherFactory;
-import org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder;
 import org.junit.jupiter.api.Test;
 // end::imports[]
 
