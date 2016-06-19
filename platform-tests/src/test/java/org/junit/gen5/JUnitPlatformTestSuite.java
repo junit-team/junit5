@@ -32,15 +32,7 @@ import org.junit.runner.RunWith;
  * @since 5.0
  */
 @RunWith(JUnitPlatform.class)
-//@formatter:off
-@SelectPackages({
-	"org.junit.gen5.commons",
-	"org.junit.gen5.launcher",
-	"org.junit.gen5.engine",
-	"org.junit.gen5.console",
-	"org.junit.gen5.junit4.runner"
-})
-//@formatter:on
+@SelectPackages("org.junit.gen5")
 @IncludeClassNamePattern(".*Tests?")
 @IncludeEngines("junit5")
 public class JUnitPlatformTestSuite {
