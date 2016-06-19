@@ -10,20 +10,20 @@
 
 package org.junit.vintage.engine;
 
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
-import static org.junit.gen5.engine.TestExecutionResult.successful;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.vintage.engine.descriptor.JUnit4TestDescriptor.ENGINE_ID;
 
 import java.util.logging.Logger;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.engine.EngineDiscoveryRequest;
-import org.junit.gen5.engine.EngineExecutionListener;
-import org.junit.gen5.engine.ExecutionRequest;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestEngine;
-import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.ExecutionRequest;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestEngine;
+import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 import org.junit.vintage.engine.discovery.JUnit4DiscoveryRequestResolver;
 import org.junit.vintage.engine.execution.RunnerExecutor;

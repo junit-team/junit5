@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.gen5.commons.meta.API;
+import org.junit.platform.commons.meta.API;
 
 /**
  * {@code TestInfo} is used to inject information about the current test or

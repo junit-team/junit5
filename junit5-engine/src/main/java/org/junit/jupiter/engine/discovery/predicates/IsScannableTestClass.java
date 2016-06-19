@@ -10,12 +10,12 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.function.Predicate;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.ReflectionUtils;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Test if a class is a JUnit 5 test class which should be included in package and classpath scanning.

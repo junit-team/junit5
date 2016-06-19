@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
-import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
-import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 
 import java.util.function.Predicate;
 
-import org.junit.gen5.commons.meta.API;
+import org.junit.platform.commons.meta.API;
 
 /**
  * Test if a class is a potential top-level JUnit 5 test container, even if

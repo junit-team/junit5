@@ -10,7 +10,7 @@
 
 package org.junit.vintage.engine;
 
-import org.junit.gen5.engine.UniqueId;
+import org.junit.platform.engine.UniqueId;
 import org.junit.vintage.engine.descriptor.JUnit4TestDescriptor;
 
 /**

@@ -10,22 +10,22 @@
 
 package org.junit.jupiter.engine.discovery;
 
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
-import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
-import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackage;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
+import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPackage;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.engine.EngineDiscoveryRequest;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.discovery.ClassSelector;
-import org.junit.gen5.engine.discovery.ClasspathSelector;
-import org.junit.gen5.engine.discovery.MethodSelector;
-import org.junit.gen5.engine.discovery.PackageSelector;
-import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.jupiter.engine.discovery.predicates.IsScannableTestClass;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.ClasspathSelector;
+import org.junit.platform.engine.discovery.MethodSelector;
+import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.UniqueIdSelector;
 
 /**
  * A {@code DiscoverySelectorResolver} resolves selectors with the help of the {@code JavaElementResolver} instances.

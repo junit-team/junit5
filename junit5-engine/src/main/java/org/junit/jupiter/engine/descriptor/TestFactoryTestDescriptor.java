@@ -13,7 +13,7 @@ package org.junit.jupiter.engine.descriptor;
 import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.StreamSupport.stream;
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -21,18 +21,18 @@ import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-import org.junit.gen5.commons.JUnitException;
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.engine.EngineExecutionListener;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestExecutionResult;
-import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.support.hierarchical.SingleTestExecutor;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JUnit5EngineExecutionContext;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
+import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.hierarchical.SingleTestExecutor;
 
 /**
  * {@link TestDescriptor} for {@link org.junit.jupiter.api.TestFactory @TestFactory}

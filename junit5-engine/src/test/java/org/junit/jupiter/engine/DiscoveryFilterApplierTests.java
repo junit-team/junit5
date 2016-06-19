@@ -10,21 +10,21 @@
 
 package org.junit.jupiter.engine;
 
-import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 import static org.junit.jupiter.engine.descriptor.TestDescriptorBuilder.classTestDescriptor;
 import static org.junit.jupiter.engine.descriptor.TestDescriptorBuilder.engineDescriptor;
 import static org.junit.jupiter.engine.descriptor.TestDescriptorBuilder.nestedClassTestDescriptor;
+import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.gen5.engine.EngineDiscoveryRequest;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.discovery.ClassFilter;
 
 /**
  * Microtests for {@link DiscoveryFilterApplier}.

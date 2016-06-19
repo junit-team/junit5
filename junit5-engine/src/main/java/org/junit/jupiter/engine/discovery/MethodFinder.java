@@ -16,10 +16,10 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.gen5.commons.JUnitException;
-import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.commons.util.StringUtils;
+import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.StringUtils;
 
 /**
  * @since 5.0

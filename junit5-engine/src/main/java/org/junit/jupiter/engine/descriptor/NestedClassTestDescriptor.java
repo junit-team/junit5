@@ -10,21 +10,21 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Constructor;
 import java.util.Set;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestTag;
-import org.junit.gen5.engine.UniqueId;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JUnit5EngineExecutionContext;
 import org.junit.jupiter.engine.execution.TestInstanceProvider;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestTag;
+import org.junit.platform.engine.UniqueId;
 
 /**
  * {@link TestDescriptor} for tests based on nested (but not static) Java classes.

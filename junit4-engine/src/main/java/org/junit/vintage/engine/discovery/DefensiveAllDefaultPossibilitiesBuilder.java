@@ -13,10 +13,10 @@ package org.junit.vintage.engine.discovery;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
-import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
 import org.junit.internal.builders.AnnotatedBuilder;
 import org.junit.internal.builders.JUnit4Builder;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.runner.Runner;
 import org.junit.runners.model.RunnerBuilder;
 
@@ -63,7 +63,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 		@Override
 		public Runner buildRunner(Class<? extends Runner> runnerClass, Class<?> testClass) throws Exception {
 			// Referenced by name because it might not be available at runtime.
-			if ("org.junit.gen5.junit4.runner.JUnitPlatform".equals(runnerClass.getName())) {
+			if ("org.junit.platform.runner.JUnitPlatform".equals(runnerClass.getName())) {
 				return null;
 			}
 			return super.buildRunner(runnerClass, testClass);

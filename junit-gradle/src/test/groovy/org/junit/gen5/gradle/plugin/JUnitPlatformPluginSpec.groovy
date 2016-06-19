@@ -7,14 +7,14 @@
  *
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.junit.gen5.gradle.plugin
+package org.junit.platform.gradle.plugin
 
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testfixtures.ProjectBuilder
-import org.junit.gen5.console.ConsoleRunner
+import org.junit.platform.console.ConsoleRunner
 import spock.lang.Specification
 
 /**

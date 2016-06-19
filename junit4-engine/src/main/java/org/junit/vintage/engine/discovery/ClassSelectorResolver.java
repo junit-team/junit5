@@ -10,7 +10,7 @@
 
 package org.junit.vintage.engine.discovery;
 
-import org.junit.gen5.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.ClassSelector;
 
 /**
  * @since 5.0

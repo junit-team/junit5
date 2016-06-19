@@ -11,18 +11,18 @@
 package example;
 
 // tag::imports[]
-import static org.junit.gen5.engine.discovery.ClassFilter.includeClassNamePattern;
-import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
-import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
+import static org.junit.platform.engine.discovery.ClassFilter.includeClassNamePattern;
+import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
+import static org.junit.platform.engine.discovery.PackageSelector.selectPackage;
 
-import org.junit.gen5.launcher.Launcher;
-import org.junit.gen5.launcher.TestDiscoveryRequest;
-import org.junit.gen5.launcher.TestExecutionListener;
-import org.junit.gen5.launcher.TestPlan;
-import org.junit.gen5.launcher.core.LauncherFactory;
-import org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder;
-import org.junit.gen5.launcher.listeners.SummaryGeneratingListener;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.core.LauncherFactory;
+import org.junit.platform.launcher.core.TestDiscoveryRequestBuilder;
+import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 // end::imports[]
 
 /**

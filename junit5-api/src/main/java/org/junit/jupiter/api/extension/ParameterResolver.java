@@ -10,11 +10,11 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.lang.reflect.Parameter;
 
-import org.junit.gen5.commons.meta.API;
+import org.junit.platform.commons.meta.API;
 
 /**
  * {@code ParameterResolver} defines the API for {@link Extension Extensions}

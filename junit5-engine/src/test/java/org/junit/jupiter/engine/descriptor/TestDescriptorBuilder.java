@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.UniqueId;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
 
 /**
  * @since 5.0

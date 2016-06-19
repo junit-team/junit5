@@ -11,33 +11,33 @@
 package org.junit.jupiter.engine;
 
 import static org.assertj.core.api.Assertions.allOf;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.container;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.engine;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.event;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.started;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.test;
-import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.isA;
-import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.message;
-import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.suppressed;
-import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.engine;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.started;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
+import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
+import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
+import static org.junit.platform.engine.test.event.TestExecutionResultConditions.suppressed;
+import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import org.junit.gen5.engine.discovery.MethodSelector;
-import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
-import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.discovery.MethodSelector;
+import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.launcher.TestDiscoveryRequest;
 import org.opentest4j.AssertionFailedError;
 
 /**

@@ -18,8 +18,8 @@ import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.UniqueId;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
 import org.junit.runner.Description;
 import org.junit.vintage.engine.descriptor.JUnit4TestDescriptor;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;

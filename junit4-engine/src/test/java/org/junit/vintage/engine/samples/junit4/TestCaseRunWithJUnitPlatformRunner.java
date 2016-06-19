@@ -10,8 +10,8 @@
 
 package org.junit.vintage.engine.samples.junit4;
 
-import org.junit.gen5.junit4.runner.JUnitPlatform;
-import org.junit.gen5.junit4.runner.SelectClasses;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.platform.runner.SelectClasses;
 import org.junit.runner.RunWith;
 
 /**

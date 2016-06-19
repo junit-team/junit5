@@ -10,16 +10,16 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.ExceptionUtils;
-import org.junit.gen5.commons.util.Preconditions;
 import org.junit.jupiter.api.Executable;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * Simple component that can be used to collect one or more instances of

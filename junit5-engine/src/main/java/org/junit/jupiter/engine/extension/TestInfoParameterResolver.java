@@ -14,11 +14,11 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.gen5.commons.util.ToStringBuilder;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * {@link ParameterResolver} that resolves the {@link TestInfo} for

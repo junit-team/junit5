@@ -8,7 +8,7 @@ infrastructure to migrate to JUnit 5.
 
 Instead, JUnit 5 provides a gentle migration path via a _JUnit 4 test engine_ which
 allows existing tests based on JUnit 4 to be executed using the JUnit 5 infrastructure.
-Since all classes and annotations specific to JUnit 5 reside under a new `org.junit.gen5`
+Since all classes and annotations specific to JUnit 5 reside under a new `org.junit.jupiter`
 base package, having both JUnit 4 and JUnit 5 in the classpath does not lead to any
 conflicts. It is therefore safe to maintain existing JUnit 4 tests alongside JUnit 5
 tests. Furthermore, since the JUnit team will continue to provide maintenance and bug fix

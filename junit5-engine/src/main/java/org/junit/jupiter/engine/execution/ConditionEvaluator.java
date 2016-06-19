@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.jupiter.engine.Constants.DEACTIVATE_ALL_CONDITIONS_PATTERN;
 import static org.junit.jupiter.engine.Constants.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
@@ -20,9 +20,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.StringUtils;
-import org.junit.gen5.engine.ConfigurationParameters;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ContainerExecutionCondition;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
@@ -32,6 +29,9 @@ import org.junit.jupiter.api.extension.TestExecutionCondition;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 
 /**
  * {@code ConditionEvaluator} evaluates {@link ContainerExecutionCondition}

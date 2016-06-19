@@ -10,8 +10,8 @@
 
 package org.junit.vintage.engine.discovery;
 
-import static org.junit.gen5.commons.util.ReflectionUtils.isAbstract;
-import static org.junit.gen5.commons.util.ReflectionUtils.isPublic;
+import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.platform.commons.util.ReflectionUtils.isPublic;
 
 import java.util.function.Predicate;
 

@@ -10,11 +10,11 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterAllMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterEachMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeAllMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeEachMethods;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -22,14 +22,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
 
-import org.junit.gen5.commons.JUnitException;
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestTag;
-import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.support.descriptor.JavaClassSource;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
@@ -46,6 +38,14 @@ import org.junit.jupiter.engine.execution.JUnit5EngineExecutionContext;
 import org.junit.jupiter.engine.execution.TestInstanceProvider;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestTag;
+import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.JavaClassSource;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.

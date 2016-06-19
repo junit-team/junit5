@@ -12,7 +12,7 @@ package org.junit.vintage.engine.discovery;
 
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Stream.concat;
-import static org.junit.gen5.commons.util.FunctionUtils.where;
+import static org.junit.platform.commons.util.FunctionUtils.where;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

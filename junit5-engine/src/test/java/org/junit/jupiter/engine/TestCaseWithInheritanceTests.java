@@ -10,17 +10,17 @@
 
 package org.junit.jupiter.engine;
 
-import static org.junit.gen5.engine.discovery.MethodSelector.selectMethod;
-import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.platform.engine.discovery.MethodSelector.selectMethod;
+import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
-import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
-import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests for test class hierarchy support in the {@link JUnit5TestEngine}.

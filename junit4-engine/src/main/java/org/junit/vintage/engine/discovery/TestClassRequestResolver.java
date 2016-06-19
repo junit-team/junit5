@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.function.IntFunction;
 import java.util.logging.Logger;
 
-import org.junit.gen5.engine.TestDescriptor;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;

@@ -10,10 +10,10 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
-import org.junit.gen5.commons.JUnitException;
-import org.junit.gen5.commons.meta.API;
+import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.meta.API;
 
 /**
  * Thrown if an error is encountered regarding the configuration of an

@@ -10,14 +10,14 @@
 
 package org.junit.vintage.engine.execution;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
-import static org.junit.gen5.engine.TestExecutionResult.failed;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.engine.TestExecutionResult.failed;
 
 import java.util.logging.Logger;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.engine.EngineExecutionListener;
-import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.runner.JUnitCore;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 

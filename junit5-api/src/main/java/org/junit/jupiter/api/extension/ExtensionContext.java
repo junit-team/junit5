@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -21,8 +21,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.Preconditions;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@code ExtensionContext} encapsulates the <em>context</em> in which the
@@ -116,7 +116,7 @@ public interface ExtensionContext {
 
 	/**
 	 * Publish a map of key-value pairs to be consumed by an
-	 * {@code org.junit.gen5.engine.EngineExecutionListener}.
+	 * {@code org.junit.platform.engine.EngineExecutionListener}.
 	 *
 	 * @param map the key-value pairs to be published; never {@code null};
 	 * keys and values within entries in the map also must not be

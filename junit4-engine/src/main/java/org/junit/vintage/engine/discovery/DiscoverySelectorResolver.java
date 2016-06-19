@@ -10,7 +10,7 @@
 
 package org.junit.vintage.engine.discovery;
 
-import org.junit.gen5.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelector;
 
 /**
  * @since 5.0

@@ -11,9 +11,9 @@
 package org.junit.jupiter.engine.discovery;
 
 import static java.lang.String.format;
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
-import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
-import static org.junit.gen5.commons.util.ReflectionUtils.findNestedClasses;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
+import static org.junit.platform.commons.util.ReflectionUtils.findNestedClasses;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -26,12 +26,12 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.UniqueId;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsInnerClass;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
 
 /**
  * @since 5.0

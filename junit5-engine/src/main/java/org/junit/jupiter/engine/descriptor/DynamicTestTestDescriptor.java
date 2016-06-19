@@ -10,11 +10,11 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestSource;
-import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 
 /**
  * {@link TestDescriptor} for a {@link DynamicTest}.

@@ -11,20 +11,12 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.ExceptionUtils;
-import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.StringUtils;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestTag;
-import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.support.descriptor.JavaMethodSource;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -39,6 +31,14 @@ import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JUnit5EngineExecutionContext;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestTag;
+import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.JavaMethodSource;
 
 /**
  * {@link TestDescriptor} for tests based on Java methods.

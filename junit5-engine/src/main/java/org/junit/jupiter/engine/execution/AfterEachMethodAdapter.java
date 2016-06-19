@@ -10,12 +10,12 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import org.junit.gen5.commons.meta.API;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.platform.commons.meta.API;
 
 /**
  * Functional interface for registering an {@link AfterEach @AfterEach} method

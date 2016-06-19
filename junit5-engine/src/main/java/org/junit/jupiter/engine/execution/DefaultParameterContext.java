@@ -13,9 +13,9 @@ package org.junit.jupiter.engine.execution;
 import java.lang.reflect.Parameter;
 import java.util.Optional;
 
-import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.ToStringBuilder;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ToStringBuilder;
 
 class DefaultParameterContext implements ParameterContext {
 

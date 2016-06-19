@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.discovery.UniqueIdSelector;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.discovery.UniqueIdSelector;
 
 /**
  * @since 5.0

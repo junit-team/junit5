@@ -10,19 +10,19 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotatedMethods;
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedMethods;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.junit.gen5.commons.JUnitException;
-import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.commons.util.ReflectionUtils.MethodSortOrder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder;
 
 /**
  * Collection of utilities for working with test lifecycle methods.

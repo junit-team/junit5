@@ -10,20 +10,20 @@
 
 package org.junit.jupiter.engine;
 
-import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
-import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
+import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import java.util.HashMap;
 
-import org.junit.gen5.commons.util.PreconditionViolationException;
-import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
-import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
+import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
  * @since 5.0

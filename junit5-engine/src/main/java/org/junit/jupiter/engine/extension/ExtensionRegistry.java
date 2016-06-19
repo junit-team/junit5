@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,15 +22,15 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * An {@code ExtensionRegistry} holds all registered extensions (i.e.
  * instances of {@link Extension}) for a given
- * {@link org.junit.gen5.engine.support.hierarchical.Node}.
+ * {@link org.junit.platform.engine.support.hierarchical.Node}.
  *
  * <p>A registry has a reference to its parent registry, and all lookups are
  * performed first in the current registry itself and then recursively in its

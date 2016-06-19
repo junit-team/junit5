@@ -10,18 +10,18 @@
 
 package org.junit.jupiter.engine;
 
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.engine.EngineDiscoveryRequest;
-import org.junit.gen5.engine.ExecutionRequest;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.support.hierarchical.HierarchicalTestEngine;
 import org.junit.jupiter.engine.descriptor.JUnit5EngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
 import org.junit.jupiter.engine.execution.JUnit5EngineExecutionContext;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.ExecutionRequest;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
 
 /**
  * @since 5.0

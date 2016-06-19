@@ -10,15 +10,15 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import org.junit.gen5.commons.JUnitException;
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.engine.ConfigurationParameters;
-import org.junit.gen5.engine.EngineExecutionListener;
-import org.junit.gen5.engine.support.hierarchical.EngineExecutionContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.support.hierarchical.EngineExecutionContext;
 
 /**
  * @since 5.0

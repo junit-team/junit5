@@ -11,7 +11,7 @@
 package org.junit.vintage.engine.discovery;
 
 import static java.lang.String.format;
-import static org.junit.gen5.commons.util.ReflectionUtils.readFieldValue;
+import static org.junit.platform.commons.util.ReflectionUtils.readFieldValue;
 
 import java.io.Serializable;
 import java.util.Optional;

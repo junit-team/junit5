@@ -23,13 +23,13 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.gen5.engine.TestTag;
-import org.junit.gen5.engine.UniqueId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.JUnit5TestDescriptorTests.StaticTestCase.StaticTestCaseLevel2;
+import org.junit.platform.engine.TestTag;
+import org.junit.platform.engine.UniqueId;
 
 /**
  * Unit tests for {@link ClassTestDescriptor}, {@link NestedClassTestDescriptor},

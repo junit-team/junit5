@@ -11,8 +11,8 @@
 package org.junit.vintage.engine.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.runner.Description.createTestDescription;
 
 import java.io.Serializable;

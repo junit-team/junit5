@@ -15,7 +15,7 @@ import static org.junit.vintage.engine.discovery.RunnerTestDescriptorAwareFilter
 
 import java.lang.reflect.Method;
 
-import org.junit.gen5.engine.discovery.MethodSelector;
+import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.runner.Description;
 
 /**

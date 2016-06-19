@@ -10,13 +10,13 @@
 
 package org.junit.vintage.engine.descriptor;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.Optional;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.support.descriptor.JavaClassSource;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.support.descriptor.JavaClassSource;
 import org.junit.runner.Request;
 import org.junit.runner.Runner;
 

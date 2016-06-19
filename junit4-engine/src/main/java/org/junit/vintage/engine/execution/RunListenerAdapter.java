@@ -14,9 +14,9 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import org.junit.Ignore;
-import org.junit.gen5.engine.EngineExecutionListener;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;

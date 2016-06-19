@@ -10,10 +10,10 @@
 
 package org.junit.jupiter.engine.execution.injection.sample;
 
-import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * @since 5.0

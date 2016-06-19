@@ -12,8 +12,6 @@ package org.junit.jupiter.engine.discovery;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.gen5.engine.discovery.ClasspathSelector.selectClasspathRoots;
-import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,6 +20,8 @@ import static org.junit.jupiter.engine.discovery.JUnit5UniqueIdBuilder.engineId;
 import static org.junit.jupiter.engine.discovery.JUnit5UniqueIdBuilder.uniqueIdForClass;
 import static org.junit.jupiter.engine.discovery.JUnit5UniqueIdBuilder.uniqueIdForMethod;
 import static org.junit.jupiter.engine.discovery.JUnit5UniqueIdBuilder.uniqueIdForTestFactoryMethod;
+import static org.junit.platform.engine.discovery.ClasspathSelector.selectClasspathRoots;
+import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -30,16 +30,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.gen5.commons.JUnitException;
-import org.junit.gen5.commons.util.PreconditionViolationException;
-import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.EngineDiscoveryRequest;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.discovery.ClassSelector;
-import org.junit.gen5.engine.discovery.MethodSelector;
-import org.junit.gen5.engine.discovery.PackageSelector;
-import org.junit.gen5.engine.discovery.UniqueIdSelector;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -49,6 +39,16 @@ import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
 import org.junit.jupiter.engine.descriptor.subpackage.Class1WithTestCases;
 import org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases;
 import org.junit.jupiter.engine.descriptor.subpackage.ClassWithStaticInnerTestCases;
+import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.MethodSelector;
+import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.UniqueIdSelector;
 
 /**
  * @since 5.0

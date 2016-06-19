@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.gen5.commons.meta.API.Usage.Maintained;
+import static org.junit.platform.commons.meta.API.Usage.Maintained;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -18,7 +18,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.junit.gen5.commons.meta.API;
+import org.junit.platform.commons.meta.API;
 
 /**
  * {@code @Tags} is a container for one or more {@code @Tag} declarations.

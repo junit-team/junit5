@@ -10,9 +10,9 @@
 
 package org.junit.vintage.engine.discovery;
 
-import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInPackage;
+import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPackage;
 
-import org.junit.gen5.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.PackageSelector;
 
 /**
  * @since 5.0

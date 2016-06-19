@@ -11,21 +11,20 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.allOf;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.event;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.test;
-import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.isA;
-import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
+import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
+import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -47,6 +46,7 @@ import org.junit.jupiter.engine.execution.injection.sample.NullIntegerParameterR
 import org.junit.jupiter.engine.execution.injection.sample.NumberParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveArrayParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveIntegerParameterResolver;
+import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
 /**
  * Integration tests that verify support for {@link ParameterResolver}

@@ -13,8 +13,8 @@ package org.junit.vintage.engine.execution;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Stream.concat;
-import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
-import static org.junit.gen5.engine.TestExecutionResult.successful;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.engine.TestExecutionResult.successful;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -25,8 +25,8 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestExecutionResult;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.runner.Description;
 import org.junit.vintage.engine.descriptor.JUnit4TestDescriptor;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;

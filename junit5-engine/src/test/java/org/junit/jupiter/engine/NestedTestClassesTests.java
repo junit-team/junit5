@@ -10,19 +10,19 @@
 
 package org.junit.jupiter.engine;
 
-import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
-import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
+import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
-import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@linkplain Nested nested contexts}

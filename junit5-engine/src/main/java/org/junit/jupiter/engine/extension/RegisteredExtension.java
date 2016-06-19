@@ -10,10 +10,10 @@
 
 package org.junit.jupiter.engine.extension;
 
-import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.ToStringBuilder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * Represents an {@link Extension} registered in an {@link ExtensionRegistry}.

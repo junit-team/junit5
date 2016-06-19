@@ -10,24 +10,24 @@
 
 package org.junit.jupiter.engine;
 
-import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
-import static org.junit.gen5.engine.discovery.MethodSelector.selectMethod;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.container;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.dynamicTestRegistered;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.engine;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.event;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.started;
-import static org.junit.gen5.engine.test.event.ExecutionEventConditions.test;
-import static org.junit.gen5.engine.test.event.TestExecutionResultConditions.message;
-import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
+import static org.junit.platform.engine.discovery.MethodSelector.selectMethod;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.dynamicTestRegistered;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.engine;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.started;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
+import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
+import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,12 +35,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
-import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests for {@link TestFactory @TestFactory} and {@link DynamicTest}.

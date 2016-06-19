@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -22,11 +22,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.junit.gen5.commons.util.PreconditionViolationException;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**
  * Class-level extension that turns on full logging (i.e., {@link Level#ALL})

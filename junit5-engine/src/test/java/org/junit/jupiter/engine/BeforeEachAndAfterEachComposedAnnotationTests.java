@@ -18,10 +18,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
 /**
  * Integration tests that verify support for {@link BeforeEach} and {@link AfterEach}

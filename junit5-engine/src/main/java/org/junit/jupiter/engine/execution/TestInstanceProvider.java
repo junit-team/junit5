@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import org.junit.gen5.commons.meta.API;
+import org.junit.platform.commons.meta.API;
 
 /**
  * @since 5.0

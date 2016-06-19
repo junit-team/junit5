@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.engine.discovery;
 
-import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.UniqueId;
 import org.junit.jupiter.engine.JUnit5TestEngine;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.UniqueId;
 
 /**
  * Test data builder for unique IDs for JUnit5TestEngine.

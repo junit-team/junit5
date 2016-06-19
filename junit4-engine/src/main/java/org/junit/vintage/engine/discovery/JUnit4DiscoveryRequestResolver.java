@@ -11,20 +11,20 @@
 package org.junit.vintage.engine.discovery;
 
 import static java.util.Arrays.asList;
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
-import static org.junit.gen5.engine.Filter.composeFilters;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.engine.Filter.composeFilters;
 
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.engine.DiscoverySelector;
-import org.junit.gen5.engine.EngineDiscoveryRequest;
-import org.junit.gen5.engine.Filter;
-import org.junit.gen5.engine.discovery.ClassFilter;
-import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
-import org.junit.gen5.engine.support.filter.ExclusionReasonConsumingFilter;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.Filter;
+import org.junit.platform.engine.discovery.ClassFilter;
+import org.junit.platform.engine.support.descriptor.EngineDescriptor;
+import org.junit.platform.engine.support.filter.ExclusionReasonConsumingFilter;
 
 /**
  * @since 5.0

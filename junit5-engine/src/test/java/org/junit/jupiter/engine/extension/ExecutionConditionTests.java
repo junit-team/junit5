@@ -10,14 +10,12 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
-import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.engine.Constants.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME;
+import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
+import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
-import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
-import org.junit.gen5.launcher.TestDiscoveryRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -28,6 +26,8 @@ import org.junit.jupiter.engine.AbstractJUnit5TestEngineTests;
 import org.junit.jupiter.engine.JUnit5TestEngine;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition.SystemProperty;
+import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@link TestExecutionCondition} and

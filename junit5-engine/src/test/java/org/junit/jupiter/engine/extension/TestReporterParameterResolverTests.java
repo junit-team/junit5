@@ -18,11 +18,11 @@ import static org.mockito.Mockito.when;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
-import org.junit.gen5.commons.util.ReflectionUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.mockito.Mockito;
 
 /**

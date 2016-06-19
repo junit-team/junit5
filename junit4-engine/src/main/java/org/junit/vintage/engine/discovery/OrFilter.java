@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.Collection;
 
-import org.junit.gen5.commons.util.Preconditions;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 

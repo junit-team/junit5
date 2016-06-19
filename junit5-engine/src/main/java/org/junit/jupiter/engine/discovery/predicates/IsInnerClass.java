@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
-import static org.junit.gen5.commons.util.ReflectionUtils.isPrivate;
-import static org.junit.gen5.commons.util.ReflectionUtils.isStatic;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
+import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 
 import java.util.function.Predicate;
 
-import org.junit.gen5.commons.meta.API;
+import org.junit.platform.commons.meta.API;
 
 /**
  * Test if a class is a non-private inner class (i.e., a non-static nested class).

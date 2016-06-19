@@ -10,18 +10,18 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.junit.gen5.commons.util.AnnotationUtils.findAnnotation;
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.reflect.AnnotatedElement;
 import java.util.Optional;
 
-import org.junit.gen5.commons.util.StringUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ContainerExecutionCondition;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionCondition;
 import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.platform.commons.util.StringUtils;
 
 /**
  * Composite {@link ContainerExecutionCondition} and {@link TestExecutionCondition}

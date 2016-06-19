@@ -10,12 +10,12 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.util.Optional;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.ToStringBuilder;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * The result of evaluating a {@link ContainerExecutionCondition} or

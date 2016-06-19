@@ -77,4 +77,4 @@ https://github.com/junit-team/junit5/tree/master/junit-engine-api[junit-engine-a
 project and _registering_ their engine. Engine registration is currently supported via
 Java's `java.util.ServiceLoader` mechanism. For example, the `junit5-engine` project
 registers its `JUnit5TestEngine`
-https://github.com/junit-team/junit5/tree/master/junit5-engine/src/main/resources/META-INF/services/org.junit.gen5.engine.TestEngine[here].
+https://github.com/junit-team/junit5/tree/master/junit5-engine/src/main/resources/META-INF/services/org.junit.platform.engine.TestEngine[here].

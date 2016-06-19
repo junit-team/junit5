@@ -13,12 +13,12 @@ package org.junit.jupiter.engine.execution;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 
-import org.junit.gen5.engine.ConfigurationParameters;
-import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.ClassBasedContainerExtensionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.EngineExecutionListener;
 
 /**
  * Microtests for {@link JUnit5EngineExecutionContext}.

@@ -12,7 +12,7 @@ package org.junit.jupiter.api;
 
 import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.util.Iterator;
 import java.util.function.Consumer;
@@ -20,9 +20,9 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.Preconditions;
-import org.junit.gen5.commons.util.ToStringBuilder;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * A {@code DynamicTest} is a test case generated at runtime.

@@ -10,17 +10,17 @@
 
 package org.junit.jupiter.engine.discovery;
 
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.lang.reflect.Method;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.UniqueId;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsTestFactoryMethod;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
 
 /**
  * {@code TestFactoryMethodResolver} is an {@link ElementResolver}

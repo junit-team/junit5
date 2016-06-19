@@ -23,10 +23,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.support.descriptor.EngineDescriptor;
 import org.junit.internal.builders.IgnoredClassRunner;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.vintage.engine.JUnit4UniqueIdBuilder;
 import org.junit.vintage.engine.RecordCollectingLogger;
 import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;

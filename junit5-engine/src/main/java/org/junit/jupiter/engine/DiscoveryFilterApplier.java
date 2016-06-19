@@ -12,15 +12,15 @@ package org.junit.jupiter.engine;
 
 import java.util.List;
 
-import org.junit.gen5.engine.EngineDiscoveryRequest;
-import org.junit.gen5.engine.FilterResult;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.discovery.ClassFilter;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
+import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.FilterResult;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.discovery.ClassFilter;
 
 /**
- * Class for applying all {@link org.junit.gen5.engine.DiscoveryFilter}s to all
+ * Class for applying all {@link org.junit.platform.engine.DiscoveryFilter}s to all
  * children of a {@link TestDescriptor}.
  *
  * @since 5.0

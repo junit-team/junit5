@@ -10,16 +10,16 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.Preconditions;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@code ExtensionValuesStore} is used inside implementations of

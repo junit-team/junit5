@@ -11,14 +11,14 @@
 package example;
 
 //tag::user_guide[]
-import org.junit.gen5.junit4.runner.JUnitPlatform;
-import org.junit.gen5.junit4.runner.SelectPackages;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.platform.runner.SelectPackages;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
 @SelectPackages("example")
 //end::user_guide[]
-@org.junit.gen5.junit4.runner.ExcludeTags("exclude")
+@org.junit.platform.runner.ExcludeTags("exclude")
 //tag::user_guide[]
 public class JUnit4SuiteDemo {
 }

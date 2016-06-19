@@ -10,15 +10,15 @@
 
 package org.junit.jupiter.engine.discovery;
 
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.lang.reflect.AnnotatedElement;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.UniqueId;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
 
 /**
  * @since 5.0

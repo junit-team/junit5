@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
-import org.junit.gen5.commons.meta.API;
+import org.junit.platform.commons.meta.API;
 
 /**
  * {@code TestInstancePostProcessor} defines the API for {@link Extension

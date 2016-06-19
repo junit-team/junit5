@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.engine.execution;
 
-import org.junit.gen5.commons.JUnitException;
 import org.junit.jupiter.api.extension.ContainerExecutionCondition;
 import org.junit.jupiter.api.extension.TestExecutionCondition;
+import org.junit.platform.commons.JUnitException;
 
 /**
  * Thrown if an error is encountered while evaluating a {@link ContainerExecutionCondition}

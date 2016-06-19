@@ -10,16 +10,16 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.engine.EngineExecutionListener;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.engine.EngineExecutionListener;
 
 /**
  * @since 5.0

@@ -10,14 +10,14 @@
 
 package org.junit.jupiter.engine;
 
-import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
-import static org.junit.gen5.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
+import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
-import org.junit.gen5.engine.ExecutionRequest;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.UniqueId;
-import org.junit.gen5.engine.test.event.ExecutionEventRecorder;
-import org.junit.gen5.launcher.TestDiscoveryRequest;
+import org.junit.platform.engine.ExecutionRequest;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
  * Abstract base class for tests involving the {@link JUnit5TestEngine}.

@@ -10,9 +10,9 @@
 
 package org.junit.vintage.engine.discovery;
 
-import static org.junit.gen5.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
+import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
 
-import org.junit.gen5.engine.discovery.ClasspathSelector;
+import org.junit.platform.engine.discovery.ClasspathSelector;
 
 /**
  * @since 5.0

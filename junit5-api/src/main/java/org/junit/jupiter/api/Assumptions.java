@@ -10,15 +10,15 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.gen5.commons.meta.API.Usage.Experimental;
-import static org.junit.gen5.commons.meta.API.Usage.Maintained;
+import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.meta.API.Usage.Maintained;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.ExceptionUtils;
-import org.junit.gen5.commons.util.StringUtils;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.StringUtils;
 import org.opentest4j.TestAbortedException;
 
 /**

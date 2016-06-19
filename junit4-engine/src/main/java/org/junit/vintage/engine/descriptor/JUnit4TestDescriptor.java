@@ -12,10 +12,10 @@ package org.junit.vintage.engine.descriptor;
 
 import static java.util.Arrays.stream;
 import static java.util.function.Predicate.isEqual;
-import static org.junit.gen5.commons.meta.API.Usage.Internal;
-import static org.junit.gen5.commons.util.CollectionUtils.getOnlyElement;
-import static org.junit.gen5.commons.util.FunctionUtils.where;
-import static org.junit.gen5.commons.util.ReflectionUtils.findMethods;
+import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.commons.util.FunctionUtils.where;
+import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -25,15 +25,15 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.experimental.categories.Category;
-import org.junit.gen5.commons.meta.API;
-import org.junit.gen5.commons.util.ReflectionUtils;
-import org.junit.gen5.engine.TestDescriptor;
-import org.junit.gen5.engine.TestSource;
-import org.junit.gen5.engine.TestTag;
-import org.junit.gen5.engine.support.descriptor.AbstractTestDescriptor;
-import org.junit.gen5.engine.support.descriptor.JavaClassSource;
-import org.junit.gen5.engine.support.descriptor.JavaMethodSource;
-import org.junit.gen5.engine.support.descriptor.JavaSource;
+import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.TestTag;
+import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
+import org.junit.platform.engine.support.descriptor.JavaClassSource;
+import org.junit.platform.engine.support.descriptor.JavaMethodSource;
+import org.junit.platform.engine.support.descriptor.JavaSource;
 import org.junit.runner.Description;
 
 /**
