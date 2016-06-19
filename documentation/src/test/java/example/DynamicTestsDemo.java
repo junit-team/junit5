@@ -114,7 +114,13 @@ class DynamicTestsDemo {
 		// a number evenly divisible by 7 is encountered.
 		Iterator<Integer> inputGenerator = new Iterator<Integer>() {
 
-			final Random random = new Random();
+			Random random = new Random();
+			// end::user_guide[]
+			{
+				// Use fixed seed to always product the same number of tests for execution on the CI server
+				random = new Random(23);
+			}
+			// tag::user_guide[]
 			int current;
 
 			@Override
