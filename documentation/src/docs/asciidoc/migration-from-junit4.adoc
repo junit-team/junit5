@@ -20,9 +20,8 @@ on their own schedule.
 Just make sure that the `junit4-engine` artifact is in your test runtime path. In that
 case JUnit 4 tests will automatically be picked up by JUnit 5 test runners.
 
-See the example projects in the
-https://github.com/junit-team/junit5-samples[junit5-samples] repository to find out how
-this is done with Gradle and Maven.
+See the example projects in the {junit5-samples-repo}[`junit5-samples`] repository to
+find out how this is done with Gradle and Maven.
 
 === Migration Tips
 

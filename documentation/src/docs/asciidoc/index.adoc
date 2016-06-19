@@ -15,6 +15,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :junit5-maven-consumer:             {junit5-samples-repo}/blob/master/junit5-maven-consumer[junit5-maven-consumer]
 :junit-console:                     {master-branch}/junit-console[junit-console]
 :junit-launcher:                    {master-branch}/junit-launcher[junit-launcher]
+:junit-engine-api:                  {master-branch}/junit-engine-api[junit-engine-api]
 :junit4-engine:                     {master-branch}/junit4-engine[junit4-engine]
 :junit5-engine:                     {master-branch}/junit5-engine[junit5-engine]
 :api-package:                       {master-branch}/junit5-api/src/main/java/org/junit/jupiter/api[org.junit.jupiter.api]
@@ -30,7 +31,6 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :DisabledCondition:                 {master-branch}/junit5-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java[DisabledCondition]
 :TestExecutionExceptionHandler:     {master-branch}/junit5-api/src/main/java/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.java[TestExecutionExceptionHandler]
 :ExtendWith:                        {master-branch}/junit5-api/src/main/java/org/junit/jupiter/api/extension/ExtendWith.java[@ExtendWith]
-:ExtensionRegistrar:                {master-branch}/junit5-api/src/main/java/org/junit/jupiter/api/extension/ExtensionRegistrar.java[ExtensionRegistrar]
 :TestInstancePostProcessor:         {master-branch}/junit5-api/src/main/java/org/junit/jupiter/api/extension/TestInstancePostProcessor.java[TestInstancePostProcessor]
 :JUnitPlatform-Runner:              {master-branch}/junit4-runner/src/main/java/org/junit/platform/runner/JUnitPlatform.java[JUnitPlatform]
 :ParameterResolver:                 {master-branch}/junit5-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java[ParameterResolver]
@@ -68,7 +68,7 @@ include::api-evolution.adoc[]
 
 [[contributors]]
 
-Browse the https://github.com/junit-team/junit5/graphs/contributors[current list of contributors] directly on github.
+Browse the {junit5-repo}/graphs/contributors[current list of contributors] directly on GitHub.
 
 == Release Notes
 
