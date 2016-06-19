@@ -117,7 +117,7 @@ class DynamicTestsDemo {
 			Random random = new Random();
 			// end::user_guide[]
 			{
-				// Use fixed seed to always product the same number of tests for execution on the CI server
+				// Use fixed seed to always produce the same number of tests for execution on the CI server
 				random = new Random(23);
 			}
 			// tag::user_guide[]
