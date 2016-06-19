@@ -362,7 +362,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(float expected, float actual, Supplier<String> messageSupplier) {
-		if (!floatsEqual(expected, actual)) {
+		if (!floatsAreEqual(expected, actual)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
@@ -392,7 +392,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(float expected, float actual, float delta, Supplier<String> messageSupplier) {
-		if (!floatsEqual(expected, actual, delta)) {
+		if (!floatsAreEqual(expected, actual, delta)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
@@ -422,7 +422,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(double expected, double actual, Supplier<String> messageSupplier) {
-		if (!doublesEqual(expected, actual)) {
+		if (!doublesAreEqual(expected, actual)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
@@ -452,7 +452,7 @@ public final class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(double expected, double actual, double delta, Supplier<String> messageSupplier) {
-		if (!doublesEqual(expected, actual, delta)) {
+		if (!doublesAreEqual(expected, actual, delta)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
@@ -461,7 +461,7 @@ public final class Assertions {
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If both are {@code null}, they are considered equal.
 	 *
-	 * @see Objects#equals(Object, Object)
+	 * @see Object#equals(Object)
 	 */
 	public static void assertEquals(Object expected, Object actual) {
 		assertEquals(expected, actual, () -> null);
@@ -472,7 +472,7 @@ public final class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 *
-	 * @see Objects#equals(Object, Object)
+	 * @see Object#equals(Object)
 	 */
 	public static void assertEquals(Object expected, Object actual, String message) {
 		assertEquals(expected, actual, () -> message);
@@ -483,10 +483,10 @@ public final class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 *
-	 * @see Objects#equals(Object, Object)
+	 * @see Object#equals(Object)
 	 */
 	public static void assertEquals(Object expected, Object actual, Supplier<String> messageSupplier) {
-		if (!Objects.equals(expected, actual)) {
+		if (!objectsAreEqual(expected, actual)) {
 			failNotEqual(expected, actual, nullSafeGet(messageSupplier));
 		}
 	}
@@ -814,7 +814,7 @@ public final class Assertions {
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
 	 * <p>Fails if both are {@code null}.
 	 *
-	 * @see Objects#equals(Object, Object)
+	 * @see Object#equals(Object)
 	 */
 	public static void assertNotEquals(Object unexpected, Object actual) {
 		assertNotEquals(unexpected, actual, () -> null);
@@ -825,7 +825,7 @@ public final class Assertions {
 	 * <p>Fails if both are {@code null}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 *
-	 * @see Objects#equals(Object, Object)
+	 * @see Object#equals(Object)
 	 */
 	public static void assertNotEquals(Object unexpected, Object actual, String message) {
 		assertNotEquals(unexpected, actual, () -> message);
@@ -836,10 +836,10 @@ public final class Assertions {
 	 * <p>Fails if both are {@code null}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 *
-	 * @see Objects#equals(Object, Object)
+	 * @see Object#equals(Object)
 	 */
 	public static void assertNotEquals(Object unexpected, Object actual, Supplier<String> messageSupplier) {
-		if (Objects.equals(unexpected, actual)) {
+		if (objectsAreEqual(unexpected, actual)) {
 			failEqual(actual, nullSafeGet(messageSupplier));
 		}
 	}
@@ -1104,7 +1104,7 @@ public final class Assertions {
 		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
-			if (!floatsEqual(expected[i], actual[i])) {
+			if (!floatsAreEqual(expected[i], actual[i])) {
 				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
 			}
 		}
@@ -1121,7 +1121,7 @@ public final class Assertions {
 		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
-			if (!floatsEqual(expected[i], actual[i], delta)) {
+			if (!floatsAreEqual(expected[i], actual[i], delta)) {
 				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
 			}
 		}
@@ -1137,7 +1137,7 @@ public final class Assertions {
 		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
-			if (!doublesEqual(expected[i], actual[i])) {
+			if (!doublesAreEqual(expected[i], actual[i])) {
 				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
 			}
 		}
@@ -1154,7 +1154,7 @@ public final class Assertions {
 		assertArraysHaveSameLength(expected.length, actual.length, indexes, messageSupplier);
 
 		for (int i = 0; i < expected.length; i++) {
-			if (!doublesEqual(expected[i], actual[i], delta)) {
+			if (!doublesAreEqual(expected[i], actual[i], delta)) {
 				failArraysNotEqual(expected[i], actual[i], nullSafeIndexes(indexes, i), messageSupplier);
 			}
 		}
@@ -1338,13 +1338,22 @@ public final class Assertions {
 		return (messageSupplier != null ? messageSupplier.get() : null);
 	}
 
-	private static boolean floatsEqual(float value1, float value2) {
+	private static boolean objectsAreEqual(Object obj1, Object obj2) {
+		if (obj1 == null) {
+			return (obj2 == null);
+		}
+		else {
+			return obj1.equals(obj2);
+		}
+	}
+
+	private static boolean floatsAreEqual(float value1, float value2) {
 		return Float.floatToIntBits(value1) == Float.floatToIntBits(value2);
 	}
 
-	private static boolean floatsEqual(float value1, float value2, float delta) {
+	private static boolean floatsAreEqual(float value1, float value2, float delta) {
 		assertValidDelta(delta);
-		return floatsEqual(value1, value2) || Math.abs(value1 - value2) <= delta;
+		return floatsAreEqual(value1, value2) || Math.abs(value1 - value2) <= delta;
 	}
 
 	private static void assertValidDelta(float delta) {
@@ -1353,13 +1362,13 @@ public final class Assertions {
 		}
 	}
 
-	private static boolean doublesEqual(double value1, double value2) {
+	private static boolean doublesAreEqual(double value1, double value2) {
 		return Double.doubleToLongBits(value1) == Double.doubleToLongBits(value2);
 	}
 
-	private static boolean doublesEqual(double value1, double value2, double delta) {
+	private static boolean doublesAreEqual(double value1, double value2, double delta) {
 		assertValidDelta(delta);
-		return doublesEqual(value1, value2) || Math.abs(value1 - value2) <= delta;
+		return doublesAreEqual(value1, value2) || Math.abs(value1 - value2) <= delta;
 	}
 
 	private static void assertValidDelta(double delta) {

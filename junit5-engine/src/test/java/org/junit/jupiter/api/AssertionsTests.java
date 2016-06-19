@@ -800,6 +800,12 @@ public class AssertionsTests {
 		}
 	}
 
+	@Test
+	void assertEqualsInvokesEqualsMethodForIdenticalObjects() {
+		Object obj = new EqualsThrowsExceptionClass();
+		assertThrows(NumberFormatException.class, () -> assertEquals(obj, obj));
+	}
+
 	// --- assertArrayEquals -------------------------------------------------
 
 	@Test
@@ -2772,6 +2778,12 @@ public class AssertionsTests {
 		}
 	}
 
+	@Test
+	void assertNotEqualsInvokesEqualsMethodForIdenticalObjects() {
+		Object obj = new EqualsThrowsExceptionClass();
+		assertThrows(NumberFormatException.class, () -> assertNotEquals(obj, obj));
+	}
+
 	// --- assertSame ----------------------------------------------------
 
 	@Test
@@ -3096,6 +3108,14 @@ public class AssertionsTests {
 
 	@SuppressWarnings("serial")
 	private static class EnigmaThrowable extends Throwable {
+	}
+
+	private static class EqualsThrowsExceptionClass {
+
+		@Override
+		public boolean equals(Object obj) {
+			throw new NumberFormatException();
+		}
 	}
 
 }
