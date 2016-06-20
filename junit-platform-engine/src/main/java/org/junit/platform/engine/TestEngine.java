@@ -21,7 +21,7 @@ import org.junit.platform.commons.meta.API;
  * <p>For example, JUnit 5 provides a {@code TestEngine} that discovers and
  * executes tests written using the JUnit 5 programming model.
  *
- * <p>Every {@code TestEngine} must provide an {@linkplain #getId ID},
+ * <p>Every {@code TestEngine} must {@linkplain #getId provide an ID},
  * {@linkplain #discover discover tests} from
  * {@link EngineDiscoveryRequest EngineDiscoveryRequests},
  * and {@linkplain #execute execute them} according to
