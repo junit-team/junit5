@@ -21,11 +21,11 @@ import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
- * Integration tests that verify support for {@link Disabled @Disabled} in the {@link JUnit5TestEngine}.
+ * Integration tests that verify support for {@link Disabled @Disabled} in the {@link JupiterTestEngine}.
  *
  * @since 5.0
  */
-public class DisabledTests extends AbstractJUnit5TestEngineTests {
+public class DisabledTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void executeTestsWithDisabledTestClass() {

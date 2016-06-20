@@ -46,10 +46,10 @@ class LauncherFactoryTests {
 		// @formatter:on
 
 		if (junitVintageEngineIsPresent()) {
-			assertThat(ids).containsOnly("[engine:junit4]", "[engine:junit5]");
+			assertThat(ids).containsOnly("[engine:junit4]", "[engine:junit-jupiter]");
 		}
 		else {
-			assertThat(ids).containsOnly("[engine:junit5]");
+			assertThat(ids).containsOnly("[engine:junit-jupiter]");
 		}
 	}
 

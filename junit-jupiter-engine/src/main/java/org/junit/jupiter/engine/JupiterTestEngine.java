@@ -12,9 +12,9 @@ package org.junit.jupiter.engine;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
-import org.junit.jupiter.engine.descriptor.JUnit5EngineDescriptor;
+import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
-import org.junit.jupiter.engine.execution.JUnit5EngineExecutionContext;
+import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -27,9 +27,9 @@ import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
  * @since 5.0
  */
 @API(Experimental)
-public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecutionContext> {
+public class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngineExecutionContext> {
 
-	public static final String ENGINE_ID = "junit5";
+	public static final String ENGINE_ID = "junit-jupiter";
 
 	@Override
 	public String getId() {
@@ -39,26 +39,26 @@ public class JUnit5TestEngine extends HierarchicalTestEngine<JUnit5EngineExecuti
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 		Preconditions.notNull(discoveryRequest, "discovery request must not be null");
-		JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(uniqueId);
+		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(uniqueId);
 		resolveDiscoveryRequest(discoveryRequest, engineDescriptor);
 		return engineDescriptor;
 	}
 
 	private void resolveDiscoveryRequest(EngineDiscoveryRequest discoveryRequest,
-			JUnit5EngineDescriptor engineDescriptor) {
+			JupiterEngineDescriptor engineDescriptor) {
 		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver();
 		resolver.resolveSelectors(discoveryRequest, engineDescriptor);
 		applyDiscoveryFilters(discoveryRequest, engineDescriptor);
 	}
 
 	private void applyDiscoveryFilters(EngineDiscoveryRequest discoveryRequest,
-			JUnit5EngineDescriptor engineDescriptor) {
+			JupiterEngineDescriptor engineDescriptor) {
 		new DiscoveryFilterApplier().applyAllFilters(discoveryRequest, engineDescriptor);
 	}
 
 	@Override
-	protected JUnit5EngineExecutionContext createExecutionContext(ExecutionRequest request) {
-		return new JUnit5EngineExecutionContext(request.getEngineExecutionListener(),
+	protected JupiterEngineExecutionContext createExecutionContext(ExecutionRequest request) {
+		return new JupiterEngineExecutionContext(request.getEngineExecutionListener(),
 			request.getConfigurationParameters());
 	}
 

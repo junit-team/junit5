@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
-import org.junit.jupiter.engine.execution.JUnit5EngineExecutionContext;
+import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.TestInstanceProvider;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
@@ -62,7 +62,7 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 	// --- Node ----------------------------------------------------------------
 
 	@Override
-	protected TestInstanceProvider testInstanceProvider(JUnit5EngineExecutionContext parentExecutionContext,
+	protected TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
 
 		return () -> {

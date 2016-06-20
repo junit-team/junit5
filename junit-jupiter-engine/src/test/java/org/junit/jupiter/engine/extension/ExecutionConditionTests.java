@@ -22,8 +22,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ContainerExecutionCondition;
 import org.junit.jupiter.api.extension.TestExecutionCondition;
-import org.junit.jupiter.engine.AbstractJUnit5TestEngineTests;
-import org.junit.jupiter.engine.JUnit5TestEngine;
+import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition.SystemProperty;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
@@ -31,11 +31,11 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@link TestExecutionCondition} and
- * {@link ContainerExecutionCondition} extension points in the {@link JUnit5TestEngine}.
+ * {@link ContainerExecutionCondition} extension points in the {@link JupiterTestEngine}.
  *
  * @since 5.0
  */
-public class ExecutionConditionTests extends AbstractJUnit5TestEngineTests {
+public class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 	private static final String FOO = "DisabledTests.foo";
 	private static final String BAR = "DisabledTests.bar";

@@ -34,6 +34,6 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 @SelectPackages("org.junit.vintage.engine")
 @IncludeClassNamePattern(".*Tests?")
-@IncludeEngines("junit5")
+@IncludeEngines("junit-jupiter")
 public class JUnit4TestEngineTestSuite {
 }

@@ -20,13 +20,13 @@ import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
- * Abstract base class for tests involving the {@link JUnit5TestEngine}.
+ * Abstract base class for tests involving the {@link JupiterTestEngine}.
  *
  * @since 5.0
  */
-public abstract class AbstractJUnit5TestEngineTests {
+public abstract class AbstractJupiterTestEngineTests {
 
-	private final JUnit5TestEngine engine = new JUnit5TestEngine();
+	private final JupiterTestEngine engine = new JupiterTestEngine();
 
 	protected ExecutionEventRecorder executeTestsForClass(Class<?> testClass) {
 		return executeTests(request().selectors(selectClass(testClass)).build());

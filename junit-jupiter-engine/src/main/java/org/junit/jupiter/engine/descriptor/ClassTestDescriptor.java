@@ -34,7 +34,7 @@ import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
-import org.junit.jupiter.engine.execution.JUnit5EngineExecutionContext;
+import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.TestInstanceProvider;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
@@ -59,7 +59,7 @@ import org.junit.platform.engine.support.descriptor.JavaClassSource;
  * @since 5.0
  */
 @API(Internal)
-public class ClassTestDescriptor extends JUnit5TestDescriptor {
+public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
@@ -122,7 +122,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor {
 	// --- Node ----------------------------------------------------------------
 
 	@Override
-	public JUnit5EngineExecutionContext prepare(JUnit5EngineExecutionContext context) {
+	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
 		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWith(this.testClass,
 			context.getExtensionRegistry());
 
@@ -142,7 +142,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor {
 	}
 
 	@Override
-	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Exception {
+	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
 		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForContainer(
 			context.getExtensionRegistry(), context.getConfigurationParameters(),
 			(ContainerExtensionContext) context.getExtensionContext());
@@ -153,7 +153,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor {
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext before(JUnit5EngineExecutionContext context) throws Exception {
+	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) throws Exception {
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
 
@@ -164,7 +164,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor {
 	}
 
 	@Override
-	public void after(JUnit5EngineExecutionContext context) throws Exception {
+	public void after(JupiterEngineExecutionContext context) throws Exception {
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = new ThrowableCollector();
@@ -174,7 +174,7 @@ public class ClassTestDescriptor extends JUnit5TestDescriptor {
 		throwableCollector.assertEmpty();
 	}
 
-	protected TestInstanceProvider testInstanceProvider(JUnit5EngineExecutionContext parentExecutionContext,
+	protected TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
 		return () -> {
 			Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);

@@ -41,11 +41,11 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
 import org.opentest4j.AssertionFailedError;
 
 /**
- * Integration tests that verify correct exception handling in the {@link JUnit5TestEngine}.
+ * Integration tests that verify correct exception handling in the {@link JupiterTestEngine}.
  *
  * @since 5.0
  */
-public class ExceptionHandlingTests extends AbstractJUnit5TestEngineTests {
+public class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void failureInTestMethodIsRegistered() throws NoSuchMethodException {

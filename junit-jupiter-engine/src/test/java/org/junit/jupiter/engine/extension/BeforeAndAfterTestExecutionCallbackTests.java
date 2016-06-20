@@ -26,19 +26,19 @@ import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.TestExtensionContext;
-import org.junit.jupiter.engine.AbstractJUnit5TestEngineTests;
-import org.junit.jupiter.engine.JUnit5TestEngine;
+import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@link BeforeTestExecutionCallback},
  * {@link AfterTestExecutionCallback}, {@link BeforeEach}, and {@link AfterEach}
- * in the {@link JUnit5TestEngine}.
+ * in the {@link JupiterTestEngine}.
  *
  * @since 5.0
  */
-public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJUnit5TestEngineTests {
+public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngineTests {
 
 	@BeforeEach
 	void resetCallSequence() {

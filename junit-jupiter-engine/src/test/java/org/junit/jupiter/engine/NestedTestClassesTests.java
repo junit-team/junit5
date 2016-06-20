@@ -26,11 +26,11 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@linkplain Nested nested contexts}
- * in the {@link JUnit5TestEngine}.
+ * in the {@link JupiterTestEngine}.
  *
  * @since 5.0
  */
-public class NestedTestClassesTests extends AbstractJUnit5TestEngineTests {
+public class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void nestedTestsAreCorrectlyDiscovered() {

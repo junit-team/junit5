@@ -20,17 +20,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.engine.discovery.JUnit5UniqueIdBuilder;
+import org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
- * Test correct test discovery in simple test classes for the {@link JUnit5TestEngine}.
+ * Test correct test discovery in simple test classes for the {@link JupiterTestEngine}.
  *
  * @since 5.0
  */
-public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
+public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void discoverTestClass() {
@@ -49,7 +49,7 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void discoverMethodByUniqueId() {
 		TestDiscoveryRequest request = request().selectors(
-			selectUniqueId(JUnit5UniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test1()"))).build();
+			selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test1()"))).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
@@ -67,7 +67,7 @@ public class DiscoveryTests extends AbstractJUnit5TestEngineTests {
 	@Test
 	public void discoverCompositeSpec() {
 		TestDiscoveryRequest spec = request().selectors(
-			selectUniqueId(JUnit5UniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test2()")),
+			selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test2()")),
 			selectClass(LocalTestCase.class)).build();
 
 		TestDescriptor engineDescriptor = discoverTests(spec);

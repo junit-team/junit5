@@ -19,7 +19,7 @@ buildscript {
 Date buildTimeAndDate = new Date()
 ext {
 	// Generate JAR manifest only if code was compiled or recompiled;
-	// otherwise the junit5Test task will always be executed even if
+	// otherwise the junitPlatformTest task will always be executed even if
 	// no code changes were made. The reason is that the generation of
 	// the buildDate and buildTime causes JAR manifests to be modified
 	// which triggers unnecessary rebuilding of the dependent JARs.
@@ -341,7 +341,7 @@ configure(rootProject) {
 	/*
 	junitPlatform {
 		engines {
-			include 'junit5'
+			include 'junit-jupiter'
 		}
 		includeClassNamePattern 'org.junit.platform.meta.DependencyTests'
 		logManager 'org.apache.logging.log4j.jul.LogManager'

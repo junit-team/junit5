@@ -24,8 +24,8 @@ public abstract class TestDescriptorBuilder<T extends TestDescriptor> {
 
 	final List<TestDescriptorBuilder<?>> children = new ArrayList<>();
 
-	public static JUnit5EngineDescriptorBuilder engineDescriptor() {
-		return new JUnit5EngineDescriptorBuilder();
+	public static JupiterEngineDescriptorBuilder engineDescriptor() {
+		return new JupiterEngineDescriptorBuilder();
 	}
 
 	public static ClassTestDescriptorBuilder classTestDescriptor(String uniqueId, Class<?> testClass) {
@@ -49,11 +49,11 @@ public abstract class TestDescriptorBuilder<T extends TestDescriptor> {
 
 	abstract T buildDescriptor();
 
-	public static class JUnit5EngineDescriptorBuilder extends TestDescriptorBuilder<JUnit5EngineDescriptor> {
+	public static class JupiterEngineDescriptorBuilder extends TestDescriptorBuilder<JupiterEngineDescriptor> {
 
 		@Override
-		JUnit5EngineDescriptor buildDescriptor() {
-			return new JUnit5EngineDescriptor(UniqueId.forEngine("junit5"));
+		JupiterEngineDescriptor buildDescriptor() {
+			return new JupiterEngineDescriptor(UniqueId.forEngine("junit-jupiter"));
 		}
 	}
 

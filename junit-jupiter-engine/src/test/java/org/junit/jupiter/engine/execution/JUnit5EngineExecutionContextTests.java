@@ -21,26 +21,26 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 
 /**
- * Microtests for {@link JUnit5EngineExecutionContext}.
+ * Microtests for {@link JupiterEngineExecutionContext}.
  *
  * @since 5.0
  */
-class JUnit5EngineExecutionContextTests {
+class JupiterEngineExecutionContextTests {
 
-	private JUnit5EngineExecutionContext originalContext;
+	private JupiterEngineExecutionContext originalContext;
 	private EngineExecutionListener engineExecutionListener;
 
 	@BeforeEach
 	void initOriginalContext() {
 		engineExecutionListener = mock(EngineExecutionListener.class);
-		originalContext = new JUnit5EngineExecutionContext(engineExecutionListener,
+		originalContext = new JupiterEngineExecutionContext(engineExecutionListener,
 			mock(ConfigurationParameters.class));
 	}
 
 	@Test
 	void executionListenerIsHandedOnWhenContextIsExtended() {
 		assertSame(engineExecutionListener, originalContext.getExecutionListener());
-		JUnit5EngineExecutionContext newContext = originalContext.extend().build();
+		JupiterEngineExecutionContext newContext = originalContext.extend().build();
 		assertSame(engineExecutionListener, newContext.getExecutionListener());
 	}
 
@@ -50,7 +50,7 @@ class JUnit5EngineExecutionContextTests {
 			null);
 		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions();
 		TestInstanceProvider testInstanceProvider = mock(TestInstanceProvider.class);
-		JUnit5EngineExecutionContext newContext = originalContext.extend() //
+		JupiterEngineExecutionContext newContext = originalContext.extend() //
 				.withExtensionContext(extensionContext) //
 				.withExtensionRegistry(extensionRegistry) //
 				.withTestInstanceProvider(testInstanceProvider) //
@@ -70,7 +70,7 @@ class JUnit5EngineExecutionContextTests {
 		ClassBasedContainerExtensionContext newExtensionContext = new ClassBasedContainerExtensionContext(
 			extensionContext, null, null);
 
-		JUnit5EngineExecutionContext newContext = originalContext.extend() //
+		JupiterEngineExecutionContext newContext = originalContext.extend() //
 				.withExtensionContext(extensionContext) //
 				.withExtensionRegistry(extensionRegistry) //
 				.withTestInstanceProvider(testInstanceProvider) //

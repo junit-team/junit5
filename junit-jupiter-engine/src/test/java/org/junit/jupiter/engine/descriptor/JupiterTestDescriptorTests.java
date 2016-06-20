@@ -27,7 +27,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.engine.descriptor.JUnit5TestDescriptorTests.StaticTestCase.StaticTestCaseLevel2;
+import org.junit.jupiter.engine.descriptor.JupiterTestDescriptorTests.StaticTestCase.StaticTestCaseLevel2;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 
@@ -37,7 +37,7 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 5.0
  */
-public class JUnit5TestDescriptorTests {
+public class JupiterTestDescriptorTests {
 
 	private static final UniqueId uniqueId = UniqueId.root("enigma", "foo");
 
@@ -54,7 +54,7 @@ public class JUnit5TestDescriptorTests {
 
 	@Test
 	public void constructFromMethodWithAnnotations() throws Exception {
-		JUnit5TestDescriptor classDescriptor = new ClassTestDescriptor(uniqueId, ASampleTestCase.class);
+		JupiterTestDescriptor classDescriptor = new ClassTestDescriptor(uniqueId, ASampleTestCase.class);
 		Method testMethod = ASampleTestCase.class.getDeclaredMethod("foo");
 		MethodTestDescriptor methodDescriptor = new MethodTestDescriptor(uniqueId, ASampleTestCase.class, testMethod);
 		classDescriptor.addChild(methodDescriptor);

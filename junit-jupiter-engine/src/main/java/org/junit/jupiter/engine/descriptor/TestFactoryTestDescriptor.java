@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
-import org.junit.jupiter.engine.execution.JUnit5EngineExecutionContext;
+import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.meta.API;
@@ -77,7 +77,7 @@ public class TestFactoryTestDescriptor extends MethodTestDescriptor {
 	}
 
 	@Override
-	protected void invokeTestMethod(JUnit5EngineExecutionContext context, TestExtensionContext testExtensionContext,
+	protected void invokeTestMethod(JupiterEngineExecutionContext context, TestExtensionContext testExtensionContext,
 			ThrowableCollector throwableCollector) {
 
 		EngineExecutionListener listener = context.getExecutionListener();

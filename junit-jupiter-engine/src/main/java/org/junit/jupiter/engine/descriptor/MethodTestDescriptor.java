@@ -28,7 +28,7 @@ import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
-import org.junit.jupiter.engine.execution.JUnit5EngineExecutionContext;
+import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
@@ -59,7 +59,7 @@ import org.junit.platform.engine.support.descriptor.JavaMethodSource;
  * @since 5.0
  */
 @API(Internal)
-public class MethodTestDescriptor extends JUnit5TestDescriptor {
+public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
@@ -119,7 +119,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor {
 	// --- Node ----------------------------------------------------------------
 
 	@Override
-	public JUnit5EngineExecutionContext prepare(JUnit5EngineExecutionContext context) throws Exception {
+	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
 		ExtensionRegistry extensionRegistry = populateNewExtensionRegistryFromExtendWith(this.testMethod,
 			context.getExtensionRegistry());
 		Object testInstance = context.getTestInstanceProvider().getTestInstance();
@@ -135,7 +135,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor {
 	}
 
 	@Override
-	public SkipResult shouldBeSkipped(JUnit5EngineExecutionContext context) throws Exception {
+	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
 		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluateForTest(context.getExtensionRegistry(),
 			context.getConfigurationParameters(), (TestExtensionContext) context.getExtensionContext());
 		if (evaluationResult.isDisabled()) {
@@ -145,7 +145,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor {
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext execute(JUnit5EngineExecutionContext context) throws Exception {
+	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context) throws Exception {
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = new ThrowableCollector();
@@ -180,7 +180,7 @@ public class MethodTestDescriptor extends JUnit5TestDescriptor {
 				.forEach(extension -> executeAndMaskThrowable(() -> extension.beforeTestExecution(context)));
 	}
 
-	protected void invokeTestMethod(JUnit5EngineExecutionContext context, TestExtensionContext testExtensionContext,
+	protected void invokeTestMethod(JupiterEngineExecutionContext context, TestExtensionContext testExtensionContext,
 			ThrowableCollector throwableCollector) {
 
 		throwableCollector.execute(() -> {

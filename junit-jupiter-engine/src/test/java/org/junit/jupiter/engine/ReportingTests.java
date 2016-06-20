@@ -28,7 +28,7 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
 /**
  * @since 5.0
  */
-public class ReportingTests extends AbstractJUnit5TestEngineTests {
+public class ReportingTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void threeReportEntriesArePublished() {

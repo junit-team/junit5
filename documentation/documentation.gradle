@@ -7,7 +7,7 @@ junitPlatform {
 	includeClassNamePattern '.+(Tests|Demo)$'
 
 	engines {
-		include 'junit5'
+		include 'junit-jupiter'
 	}
 
 	tags {

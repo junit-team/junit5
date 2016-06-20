@@ -25,12 +25,12 @@ import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
 /**
  * Integration tests that verify support for {@link BeforeAll} and {@link AfterAll}
- * when used as meta-annotations in the {@link JUnit5TestEngine}.
+ * when used as meta-annotations in the {@link JupiterTestEngine}.
  *
  * @since 5.0
  * @see BeforeEachAndAfterEachComposedAnnotationTests
  */
-class BeforeAllAndAfterAllComposedAnnotationTests extends AbstractJUnit5TestEngineTests {
+class BeforeAllAndAfterAllComposedAnnotationTests extends AbstractJupiterTestEngineTests {
 
 	private static final List<String> methodsInvoked = new ArrayList<>();
 

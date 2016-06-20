@@ -36,8 +36,8 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.jupiter.engine.AbstractJUnit5TestEngineTests;
-import org.junit.jupiter.engine.JUnit5TestEngine;
+import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.execution.injection.sample.CustomAnnotation;
 import org.junit.jupiter.engine.execution.injection.sample.CustomAnnotationParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.CustomType;
@@ -50,11 +50,11 @@ import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
 /**
  * Integration tests that verify support for {@link ParameterResolver}
- * extensions in the {@link JUnit5TestEngine}.
+ * extensions in the {@link JupiterTestEngine}.
  *
  * @since 5.0
  */
-class ParameterResolverTests extends AbstractJUnit5TestEngineTests {
+class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void constructorInjection() {

@@ -11,7 +11,7 @@
 package org.junit.jupiter.engine;
 
 /**
- * Collection of constants related to the {@link JUnit5TestEngine}.
+ * Collection of constants related to the {@link JupiterTestEngine}.
  *
  * @since 5.0
  */

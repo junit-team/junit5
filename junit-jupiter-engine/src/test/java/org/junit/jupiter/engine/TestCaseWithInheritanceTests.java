@@ -23,11 +23,11 @@ import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
- * Integration tests for test class hierarchy support in the {@link JUnit5TestEngine}.
+ * Integration tests for test class hierarchy support in the {@link JupiterTestEngine}.
  *
  * @since 5.0
  */
-public class TestCaseWithInheritanceTests extends AbstractJUnit5TestEngineTests {
+public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	@BeforeEach
 	void initStatics() {

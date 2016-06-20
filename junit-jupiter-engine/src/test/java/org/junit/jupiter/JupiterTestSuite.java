@@ -17,7 +17,7 @@ import org.junit.platform.runner.SelectPackages;
 import org.junit.runner.RunWith;
 
 /**
- * Test suite for the JUnit 5 programming model, extension model, and
+ * Test suite for the JUnit Jupiter programming model, extension model, and
  * {@code TestEngine} implementation.
  *
  * <h3>Logging Configuration</h3>
@@ -35,6 +35,6 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 @SelectPackages("org.junit.jupiter")
 @IncludeClassNamePattern(".*Tests?")
-@IncludeEngines("junit5")
-public class JUnit5TestSuite {
+@IncludeEngines("junit-jupiter")
+public class JupiterTestSuite {
 }

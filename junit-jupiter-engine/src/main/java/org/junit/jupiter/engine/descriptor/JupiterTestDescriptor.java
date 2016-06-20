@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Executable;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
-import org.junit.jupiter.engine.execution.JUnit5EngineExecutionContext;
+import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -41,10 +41,10 @@ import org.junit.platform.engine.support.hierarchical.Node;
  * @since 5.0
  */
 @API(Internal)
-public abstract class JUnit5TestDescriptor extends AbstractTestDescriptor
-		implements Node<JUnit5EngineExecutionContext> {
+public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
+		implements Node<JupiterEngineExecutionContext> {
 
-	JUnit5TestDescriptor(UniqueId uniqueId) {
+	JupiterTestDescriptor(UniqueId uniqueId) {
 		super(uniqueId);
 	}
 

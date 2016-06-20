@@ -25,18 +25,18 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.engine.AbstractJUnit5TestEngineTests;
-import org.junit.jupiter.engine.JUnit5TestEngine;
+import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@link BeforeAll}, {@link AfterAll},
- * {@link BeforeAllCallback}, and {@link AfterAllCallback} in the {@link JUnit5TestEngine}.
+ * {@link BeforeAllCallback}, and {@link AfterAllCallback} in the {@link JupiterTestEngine}.
  *
  * @since 5.0
  */
-public class BeforeAndAfterAllTests extends AbstractJUnit5TestEngineTests {
+public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 
 	private static final List<String> callSequence = new ArrayList<>();
 

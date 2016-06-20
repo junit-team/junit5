@@ -54,7 +54,7 @@ junitPlatform {
 	reportsDir "build/test-results/junit-platform" // this is the default
 	// enableStandardTestTask true
 	engines {
-		include 'junit5'
+		include 'junit-jupiter'
 		// exclude 'junit4'
 	}
 	tags {
@@ -215,12 +215,12 @@ Here's an example of its output:
 [subs="none"]
 ----
 Test execution started. Number of static tests: 2
-Engine started: junit5
-Test started:     My 1st JUnit 5 test! 😎 [junit5:com.example.project.FirstTest#myFirstTest(java.lang.String)]
-Test succeeded:   My 1st JUnit 5 test! 😎 [junit5:com.example.project.FirstTest#myFirstTest(java.lang.String)]
-Test skipped:     mySecondTest [junit5:com.example.project.SecondTest#mySecondTest()]
+Engine started: junit-jupiter
+Test started:     My 1st JUnit 5 test! 😎 [junit-jupiter:com.example.project.FirstTest#myFirstTest(java.lang.String)]
+Test succeeded:   My 1st JUnit 5 test! 😎 [junit-jupiter:com.example.project.FirstTest#myFirstTest(java.lang.String)]
+Test skipped:     mySecondTest [junit-jupiter:com.example.project.SecondTest#mySecondTest()]
                   => Exception:   Skipped test method [void com.example.project.SecondTest.mySecondTest()] due to failed condition
-Engine finished: junit5
+Engine finished: junit-jupiter
 Test execution finished.
 
 Test run finished after 29 ms

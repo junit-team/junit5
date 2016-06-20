@@ -24,16 +24,16 @@ import org.junit.platform.engine.support.hierarchical.EngineExecutionContext;
  * @since 5.0
  */
 @API(Internal)
-public class JUnit5EngineExecutionContext implements EngineExecutionContext {
+public class JupiterEngineExecutionContext implements EngineExecutionContext {
 
 	private final State state;
 
-	public JUnit5EngineExecutionContext(EngineExecutionListener executionListener,
+	public JupiterEngineExecutionContext(EngineExecutionListener executionListener,
 			ConfigurationParameters configurationParameters) {
 		this(new State(executionListener, configurationParameters));
 	}
 
-	private JUnit5EngineExecutionContext(State state) {
+	private JupiterEngineExecutionContext(State state) {
 		this.state = state;
 	}
 
@@ -61,7 +61,7 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 		return builder(this);
 	}
 
-	public static Builder builder(JUnit5EngineExecutionContext context) {
+	public static Builder builder(JupiterEngineExecutionContext context) {
 		return new Builder(context.state, null);
 	}
 
@@ -115,12 +115,12 @@ public class JUnit5EngineExecutionContext implements EngineExecutionContext {
 			return this;
 		}
 
-		public JUnit5EngineExecutionContext build() {
+		public JupiterEngineExecutionContext build() {
 			if (newState != null) {
 				originalState = newState;
 				newState = null;
 			}
-			return new JUnit5EngineExecutionContext(originalState);
+			return new JupiterEngineExecutionContext(originalState);
 		}
 
 		private State newState() {

@@ -130,7 +130,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 	public void parseValidIncludedEngines() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("junit5"), parseArgLine("-e junit5").getIncludedEngines()),
+			() -> assertEquals(asList("junit-jupiter"), parseArgLine("-e junit-jupiter").getIncludedEngines()),
 			() -> assertEquals(asList("junit4"), parseArgLine("--include-engine junit4").getIncludedEngines()),
 			() -> assertEquals(emptyList(), parseArgLine("").getIncludedEngines())
 		);
@@ -146,7 +146,7 @@ class JOptSimpleCommandLineOptionsParserTests {
 	public void parseValidExcludedEngines() {
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(asList("junit5"), parseArgLine("-E junit5").getExcludedEngines()),
+			() -> assertEquals(asList("junit-jupiter"), parseArgLine("-E junit-jupiter").getExcludedEngines()),
 			() -> assertEquals(asList("junit4"), parseArgLine("--exclude-engine junit4").getExcludedEngines()),
 			() -> assertEquals(emptyList(), parseArgLine("").getExcludedEngines())
 		);

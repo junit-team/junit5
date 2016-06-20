@@ -16,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.expectThrows;
-import static org.junit.jupiter.engine.discovery.JUnit5UniqueIdBuilder.engineId;
-import static org.junit.jupiter.engine.discovery.JUnit5UniqueIdBuilder.uniqueIdForClass;
-import static org.junit.jupiter.engine.discovery.JUnit5UniqueIdBuilder.uniqueIdForMethod;
-import static org.junit.jupiter.engine.discovery.JUnit5UniqueIdBuilder.uniqueIdForTestFactoryMethod;
+import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.engineId;
+import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForClass;
+import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForMethod;
+import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestFactoryMethod;
 import static org.junit.platform.engine.discovery.ClasspathSelector.selectClasspathRoots;
 import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
@@ -34,7 +34,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.engine.descriptor.JUnit5EngineDescriptor;
+import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
 import org.junit.jupiter.engine.descriptor.subpackage.Class1WithTestCases;
 import org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases;
@@ -55,7 +55,7 @@ import org.junit.platform.engine.discovery.UniqueIdSelector;
  */
 public class DiscoverySelectorResolverTests {
 
-	private final JUnit5EngineDescriptor engineDescriptor = new JUnit5EngineDescriptor(engineId());
+	private final JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(engineId());
 	private final DiscoverySelectorResolver resolver = new DiscoverySelectorResolver();
 
 	@Test

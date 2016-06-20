@@ -37,10 +37,10 @@ public interface TestEngine {
 	/**
 	 * Get the ID that uniquely identifies this test engine.
 	 *
-	 * <p>Each test engine must provide a unique ID. JUnit 4 and 5 use
-	 * {@code "junit4"} and {@code "junit5"}, respectively. When in doubt, you
-	 * may use the fully qualified name of your custom {@code TestEngine}
-	 * implementation class.
+	 * <p>Each test engine must provide a unique ID. JUnit Vintage and Jupiter
+	 * use {@code "junit-vintage"} and {@code "junit-jupiter"}, respectively.
+	 * When in doubt, you may use the fully qualified name of your custom
+	 * {@code TestEngine} implementation class.
 	 */
 	String getId();
 

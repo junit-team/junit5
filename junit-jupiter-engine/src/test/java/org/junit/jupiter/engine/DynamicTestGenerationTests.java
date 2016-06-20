@@ -47,7 +47,7 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
  *
  * @since 5.0
  */
-class DynamicTestGenerationTests extends AbstractJUnit5TestEngineTests {
+class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testFactoryMethodsAreCorrectlyDiscoveredForClassSelector() {

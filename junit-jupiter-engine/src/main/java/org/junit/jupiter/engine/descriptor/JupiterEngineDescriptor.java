@@ -13,7 +13,7 @@ package org.junit.jupiter.engine.descriptor;
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryWithDefaultExtensions;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import org.junit.jupiter.engine.execution.JUnit5EngineExecutionContext;
+import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
@@ -23,14 +23,14 @@ import org.junit.platform.engine.support.hierarchical.Node;
  * @since 5.0
  */
 @API(Internal)
-public class JUnit5EngineDescriptor extends EngineDescriptor implements Node<JUnit5EngineExecutionContext> {
+public class JupiterEngineDescriptor extends EngineDescriptor implements Node<JupiterEngineExecutionContext> {
 
-	public JUnit5EngineDescriptor(UniqueId uniqueId) {
-		super(uniqueId, "JUnit 5");
+	public JupiterEngineDescriptor(UniqueId uniqueId) {
+		super(uniqueId, "JUnit Jupiter");
 	}
 
 	@Override
-	public JUnit5EngineExecutionContext before(JUnit5EngineExecutionContext context) {
+	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) {
 		return context.extend().withExtensionRegistry(createRegistryWithDefaultExtensions()).build();
 	}
 

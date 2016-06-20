@@ -26,7 +26,7 @@ import org.junit.platform.engine.UniqueId.Segment;
  */
 class UniqueIdTests {
 
-	static final String ENGINE_ID = "junit5";
+	static final String ENGINE_ID = "junit-jupiter";
 
 	@Nested
 	class Creation {
@@ -35,14 +35,14 @@ class UniqueIdTests {
 		void uniqueIdCanBeCreatedFromEngineId() {
 			UniqueId uniqueId = UniqueId.forEngine(ENGINE_ID);
 
-			assertEquals("[engine:junit5]", uniqueId.toString());
-			assertSegment(uniqueId.getSegments().get(0), "engine", "junit5");
+			assertEquals("[engine:junit-jupiter]", uniqueId.toString());
+			assertSegment(uniqueId.getSegments().get(0), "engine", "junit-jupiter");
 		}
 
 		@Test
 		void retrievingOptionalEngineId() {
 			UniqueId uniqueIdWithEngine = UniqueId.forEngine(ENGINE_ID);
-			assertEquals("junit5", uniqueIdWithEngine.getEngineId().get());
+			assertEquals("junit-jupiter", uniqueIdWithEngine.getEngineId().get());
 
 			UniqueId uniqueIdWithoutEngine = UniqueId.root("root", "avalue");
 			assertEquals(Optional.empty(), uniqueIdWithoutEngine.getEngineId());
@@ -99,7 +99,7 @@ class UniqueIdTests {
 	@Nested
 	class ParsingAndFormatting {
 
-		private final String uniqueIdString = "[engine:junit5]/[class:MyClass]/[method:myMethod]";
+		private final String uniqueIdString = "[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]";
 
 		@Test
 		void ensureDefaultUniqueIdFormatIsUsedForParsing() {
@@ -110,8 +110,8 @@ class UniqueIdTests {
 
 		@Test
 		void ensureDefaultUniqueIdFormatIsUsedForFormatting() {
-			UniqueId parsedDirectly = UniqueId.parse("[engine:junit5]/[class:MyClass]/[method:myMethod]");
-			assertEquals("[engine:junit5]/[class:MyClass]/[method:myMethod]", parsedDirectly.toString());
+			UniqueId parsedDirectly = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]");
+			assertEquals("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]", parsedDirectly.toString());
 		}
 	}
 
@@ -120,8 +120,8 @@ class UniqueIdTests {
 
 		@Test
 		void sameEnginesAreEqual() {
-			UniqueId id1 = UniqueId.root("engine", "junit5");
-			UniqueId id2 = UniqueId.root("engine", "junit5");
+			UniqueId id1 = UniqueId.root("engine", "junit-jupiter");
+			UniqueId id2 = UniqueId.root("engine", "junit-jupiter");
 
 			Assertions.assertTrue(id1.equals(id2));
 			Assertions.assertTrue(id2.equals(id1));
@@ -131,7 +131,7 @@ class UniqueIdTests {
 		@Test
 		void differentEnginesAreNotEqual() {
 			UniqueId id1 = UniqueId.root("engine", "junit4");
-			UniqueId id2 = UniqueId.root("engine", "junit5");
+			UniqueId id2 = UniqueId.root("engine", "junit-jupiter");
 
 			Assertions.assertFalse(id1.equals(id2));
 			Assertions.assertFalse(id2.equals(id1));
@@ -139,8 +139,8 @@ class UniqueIdTests {
 
 		@Test
 		void uniqueIdWithSameSegmentsAreEqual() {
-			UniqueId id1 = UniqueId.root("engine", "junit5").append("t1", "v1").append("t2", "v2");
-			UniqueId id2 = UniqueId.root("engine", "junit5").append("t1", "v1").append("t2", "v2");
+			UniqueId id1 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1").append("t2", "v2");
+			UniqueId id2 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1").append("t2", "v2");
 
 			Assertions.assertTrue(id1.equals(id2));
 			Assertions.assertTrue(id2.equals(id1));
@@ -149,8 +149,8 @@ class UniqueIdTests {
 
 		@Test
 		void differentOrderOfSegmentsAreNotEqual() {
-			UniqueId id1 = UniqueId.root("engine", "junit5").append("t2", "v2").append("t1", "v1");
-			UniqueId id2 = UniqueId.root("engine", "junit5").append("t1", "v1").append("t2", "v2");
+			UniqueId id1 = UniqueId.root("engine", "junit-jupiter").append("t2", "v2").append("t1", "v1");
+			UniqueId id2 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1").append("t2", "v2");
 
 			Assertions.assertFalse(id1.equals(id2));
 			Assertions.assertFalse(id2.equals(id1));
@@ -158,7 +158,7 @@ class UniqueIdTests {
 
 		@Test
 		void additionalSegmentMakesItNotEqual() {
-			UniqueId id1 = UniqueId.root("engine", "junit5").append("t1", "v1");
+			UniqueId id1 = UniqueId.root("engine", "junit-jupiter").append("t1", "v1");
 			UniqueId id2 = id1.append("t2", "v2");
 
 			Assertions.assertFalse(id1.equals(id2));

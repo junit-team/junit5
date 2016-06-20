@@ -10,18 +10,18 @@
 
 package org.junit.jupiter.engine.discovery;
 
-import org.junit.jupiter.engine.JUnit5TestEngine;
+import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.UniqueId;
 
 /**
- * Test data builder for unique IDs for JUnit5TestEngine.
+ * Test data builder for unique IDs for JupiterTestEngine.
  *
  * Used to decouple tests from concrete unique ID strings.
  *
  * @since 5.0
  */
-public class JUnit5UniqueIdBuilder {
+public class JupiterUniqueIdBuilder {
 
 	public static UniqueId uniqueIdForClass(Class<?> clazz) {
 		UniqueId containerId = engineId();
@@ -41,7 +41,7 @@ public class JUnit5UniqueIdBuilder {
 	}
 
 	public static UniqueId engineId() {
-		return UniqueId.forEngine(JUnit5TestEngine.ENGINE_ID);
+		return UniqueId.forEngine(JupiterTestEngine.ENGINE_ID);
 	}
 
 }

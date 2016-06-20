@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestExtensionContext;
-import org.junit.jupiter.engine.AbstractJUnit5TestEngineTests;
+import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.TestDiscoveryRequest;
 
@@ -46,7 +46,7 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
  *
  * @since 5.0
  */
-class TestExecutionExceptionHandlerTests extends AbstractJUnit5TestEngineTests {
+class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests {
 
 	static List<String> handlerCalls = new ArrayList<>();
 

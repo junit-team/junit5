@@ -25,11 +25,11 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
 import org.opentest4j.TestAbortedException;
 
 /**
- * Testing execution in standard test cases {@link JUnit5TestEngine}.
+ * Testing execution in standard test cases {@link JupiterTestEngine}.
  *
  * @since 5.0
  */
-public class StandardTestClassTests extends AbstractJUnit5TestEngineTests {
+public class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	@BeforeEach
 	public void init() {
