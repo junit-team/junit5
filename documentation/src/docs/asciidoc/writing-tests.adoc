@@ -11,7 +11,7 @@ include::{testDir}/example/FirstJUnit5Tests.java[tags=user_guide]
 [[annotations]]
 === Annotations
 
-JUnit 5 supports the following annotations for configuring tests and extending the framework.
+JUnit Jupiter supports the following annotations for configuring tests and extending the framework.
 
 All core annotations are located in the `{api-package}` package in the `junit-jupiter-api`
 module.
@@ -20,7 +20,7 @@ module.
 |===
 | Annotation         | Description
 
-| `@Test`            | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit 5 operate based on their own dedicated annotations.
+| `@Test`            | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit Jupiter operate based on their own dedicated annotations.
 | `@TestFactory`     | Denotes that a method is a test factory for <<dynamic-tests, dynamic tests>>
 | `@DisplayName`     | Declares a custom display name for the test class or test method
 | `@BeforeEach`      | Denotes that the annotated method should be executed _before_ *each* `@Test` method in the current class or class hierarchy
@@ -36,7 +36,7 @@ module.
 [[meta-annotations]]
 ==== Meta-Annotations and Composed Annotations
 
-JUnit 5 annotations can be used as _meta-annotations_. That means that you can define
+JUnit Jupiter annotations can be used as _meta-annotations_. That means that you can define
 your own _composed annotation_ that will automatically _inherit_ the semantics of its
 meta-annotations.
 
@@ -77,8 +77,8 @@ include::{testDir}/example/DisplayNameDemo.java[tags=user_guide]
 
 === Assertions
 
-JUnit 5 comes with many of the assertion methods that JUnit 4 has and adds a few that
-lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions are static
+JUnit Jupiter comes with many of the assertion methods that JUnit 4 has and adds a few that
+lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter assertions are static
 methods in the `{Assertions}` class.
 
 [source,java,indent=0]
@@ -90,8 +90,8 @@ include::{testDir}/example/AssertionsDemo.java[tags=user_guide]
 
 === Assumptions
 
-JUnit 5 comes with a subset of the assumption methods that JUnit 4 provides and adds a
-few that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assumptions
+JUnit Jupiter comes with a subset of the assumption methods that JUnit 4 provides and adds a
+few that lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter assumptions
 are static methods in the `{Assumptions}` class.
 
 [source,java,indent=0]
@@ -154,7 +154,7 @@ to be full members of the test class family with one exception: `@BeforeAll` and
 
 In all prior JUnit versions, test constructors or methods were not allowed to have
 parameters (at least not with the standard `Runner` implementations). As one of the major
-changes in JUnit 5, both test constructors and methods are now permitted to have
+changes in JUnit Jupiter, both test constructors and methods are now permitted to have
 parameters. This allows for greater flexibility and enables _Dependency Injection_ for
 constructors and methods.
 
@@ -187,7 +187,7 @@ include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
   The data can be consumed through `{TestExecutionListener}.reportingEntryPublished()` and thus
   be viewed by IDEs or included in reports.
 +
-In JUnit 5 you should use `TestReporter` where
+In JUnit Jupiter you should use `TestReporter` where
 you used to print information to `stdout` or `stderr` in JUnit 4.
 Using `@RunWith(JUnitPlatform.class)` will even output all reported entries to `stdout`.
 
@@ -231,7 +231,7 @@ class MyMockitoTest {
 
 === Interface Default Methods
 
-JUnit 5 allows `@Test`, `@TestFactory`, `@BeforeEach`, and `@AfterEach` to be declared on
+JUnit Jupiter allows `@Test`, `@TestFactory`, `@BeforeEach`, and `@AfterEach` to be declared on
 interface default methods. One possible application of this feature is to write tests for
 interface contracts. For example, you can write tests for how implementations of
 `Object.equals` or `Comparable.compareTo` should behave as follows.
@@ -269,14 +269,14 @@ The above tests are merely meant as examples and therefore not complete.
 [[dynamic-tests]]
 === Dynamic Tests
 
-The standard `@Test` annotation in JUnit 5 described in <<annotations>>
+The standard `@Test` annotation in JUnit Jupiter described in <<annotations>>
 is very similar to the `@Test` annotation in JUnit 4.
 Both describe methods that implement test cases.
 These test cases are static in the sense that they are fully specified at compile-time,
 and their behavior cannot be changed by anything happening at run-time.
 _Assumptions provide a basic form of dynamic behavior but are intentionally rather limited in their expressiveness._
 
-In addition to these standard tests a completely new kind of test programming model has been introduced in JUnit 5.
+In addition to these standard tests a completely new kind of test programming model has been introduced in JUnit Jupiter.
 This new kind of test is a _dynamic test_ which is generated at run-time by a factory method
 that is annotated with `@TestFactory`.
 

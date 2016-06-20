@@ -1,24 +1,24 @@
 [[migrating-from-junit4]]
 == Migrating from JUnit 4
 
-Although the JUnit 5 programming model and extension model will not support JUnit 4
+Although the JUnit Jupiter programming model and extension model will not support JUnit 4
 features such as `Rules` and `Runners`, it is not expected that source code maintainers
 will need to update all of their existing tests, test extensions, and custom build test
-infrastructure to migrate to JUnit 5.
+infrastructure to migrate to JUnit Jupiter.
 
-Instead, JUnit 5 provides a gentle migration path via a _JUnit 4 test engine_ which
-allows existing tests based on JUnit 4 to be executed using the JUnit 5 infrastructure.
-Since all classes and annotations specific to JUnit 5 reside under a new `org.junit.jupiter`
-base package, having both JUnit 4 and JUnit 5 in the classpath does not lead to any
-conflicts. It is therefore safe to maintain existing JUnit 4 tests alongside JUnit 5
+Instead, JUnit provides a gentle migration path via a _JUnit 4 test engine_ which
+allows existing tests based on JUnit 4 to be executed using the JUnit Platform infrastructure.
+Since all classes and annotations specific to JUnit Jupiter reside under a new `org.junit.jupiter`
+base package, having both JUnit 4 and JUnit Jupiter in the classpath does not lead to any
+conflicts. It is therefore safe to maintain existing JUnit 4 tests alongside JUnit Jupiter
 tests. Furthermore, since the JUnit team will continue to provide maintenance and bug fix
-releases for the JUnit 4.x baseline, developers have plenty of time to migrate to JUnit 5
+releases for the JUnit 4.x baseline, developers have plenty of time to migrate to JUnit Jupiter
 on their own schedule.
 
-=== Running JUnit 4 Tests with JUnit 5
+=== Running JUnit 4 Tests with the JUnit Platform
 
 Just make sure that the `junit-vintage-engine` artifact is in your test runtime path. In that
-case JUnit 4 tests will automatically be picked up by JUnit 5 test runners.
+case JUnit 4 tests will automatically be picked up by the JUnit Platform launcher.
 
 See the example projects in the {junit5-samples-repo}[`junit5-samples`] repository to
 find out how this is done with Gradle and Maven.
@@ -26,7 +26,7 @@ find out how this is done with Gradle and Maven.
 === Migration Tips
 
 The following are things you have to watch out for when migrating existing JUnit 4 tests
-to JUnit 5.
+to JUnit Jupiter.
 
 * Annotations reside in the `org.junit.jupiter.api` package.
 * Assertions reside in `org.junit.jupiter.api.Assertions`.

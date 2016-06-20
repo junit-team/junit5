@@ -40,6 +40,6 @@ JUnit 5 version numbers are used in a semantic way: `<major>.<minor>.<patch>`
 
 === Tooling Support
 
-The JUnit team plans to provide native tooling support for all JUnit 5 users, extenders,
-and tool builders. The tooling support will provide a means to check if the JUnit 5 APIs
+The JUnit team plans to provide native tooling support for all JUnit users, extenders,
+and tool builders. The tooling support will provide a means to check if the JUnit APIs
 are being used in accordance with `@API` annotation declarations.

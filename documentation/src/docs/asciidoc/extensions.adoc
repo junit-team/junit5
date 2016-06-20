@@ -5,7 +5,7 @@
 === Overview
 
 In contrast to the competing `Runner`, `@Rule`, and `@ClassRule` extension points in
-JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
+JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concept: the
 `Extension` API. Note, however, that `Extension` itself is just a marker interface.
 
 [[extension-registration]]

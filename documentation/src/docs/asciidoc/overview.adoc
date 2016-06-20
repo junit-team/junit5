@@ -45,10 +45,10 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
 * *Version*: `{vintage-version}`
 * *Artifact ID*: `junit-vintage-engine`
 
-=== JUnit 5 Sample Projects
+=== JUnit Jupiter Sample Projects
 
 The {junit5-samples-repo}[`junit5-samples`] repository hosts a collection of sample
-projects based on JUnit 5. You'll find the respective `build.gradle` and `pom.xml` in
+projects based on JUnit Jupiter. You'll find the respective `build.gradle` and `pom.xml` in
 the projects below.
 
 * For Gradle, check out the `{junit5-gradle-consumer}` project.

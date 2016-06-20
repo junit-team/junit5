@@ -1,5 +1,5 @@
 [[launcher-api]]
-=== The JUnit 5 Launcher API
+=== JUnit Platform Launcher API
 
 One of the prominent goals of JUnit 5 is to make the interface between JUnit and its
 programmatic clients – build tools and IDEs – more powerful and stable. The purpose is to
@@ -8,7 +8,7 @@ configuration that's necessary from the outside.
 
 For JUnit 5 we came up with the concept of a `Launcher` that can be used to discover,
 filter, and execute JUnit tests. Moreover, we added a mechanism to allow third party test
-libraries – like Spock, Cucumber, and FitNesse – to plug into JUnit 5's launching
+libraries – like Spock, Cucumber, and FitNesse – to plug into the JUnit Platform's launching
 infrastructure.
 
 The launching API is in the `{junit-platform-launcher}` module.
@@ -68,7 +68,7 @@ final results in an object of your own. For an example see the
 
 The current snapshot provides two `TestEngine` implementations out of the box:
 
-* `{junit-jupiter-engine}`: The core of JUnit 5.
+* `{junit-jupiter-engine}`: The core of JUnit Jupiter.
 * `{junit-vintage-engine}`: A thin layer on top of JUnit 4 to allow running "old" tests with the
   launcher infrastructure.
 

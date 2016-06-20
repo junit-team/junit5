@@ -3,17 +3,17 @@
 
 === IDE Support
 
-At the time of this writing there is no direct support for running JUnit 5 tests in IDEs.
+At the time of this writing there is no direct support for running JUnit Jupiter tests in IDEs.
 However, the JUnit team provides two intermediate solutions so that you can go ahead and
 try out JUnit 5 within your IDE today. You can use the <<running-tests-console-runner>>
-or execute JUnit 5 tests with a <<running-tests-junit-platform-runner,JUnit 4 based Runner>>.
+or execute JUnit Jupiter tests with a <<running-tests-junit-platform-runner,JUnit 4 based Runner>>.
 
 === Build Support
 
 ==== Gradle
 
 The JUnit team has developed a very basic Gradle plugin that allows you to run any kind
-of test that is supported by a `TestEngine` (e.g., JUnit 3, JUnit 4, JUnit 5, Specsy,
+of test that is supported by a `TestEngine` (e.g., JUnit 3, JUnit 4, JUnit Jupiter, Specsy,
 etc.). See `build.gradle` in the `{junit5-gradle-consumer}` project for an example of the
 plugin in action.
 
@@ -77,7 +77,7 @@ By default all engines and tags are included in the test plan. If you supply a _
 Engine ID_ via `engines {include ...}` or `engines {exclude ...}`, the JUnit Gradle
 plugin will only run tests for the desired test engines. Similarly, if you supply a _tag_
 via `tags {include ...}` or `tags {exclude ...}`, the JUnit Gradle plugin will only run
-tests that are _tagged_ accordingly (e.g., via the `@Tag` annotation for JUnit 5 based
+tests that are _tagged_ accordingly (e.g., via the `@Tag` annotation for JUnit Jupiter based
 tests).
 
 ===== Configuring Test Engines
@@ -85,8 +85,8 @@ tests).
 In order to have the JUnit Gradle plugin run any tests at all, a `TestEngine`
 implementation must be on the classpath.
 
-To configure support for JUnit 5 based tests, configure a `testCompile` dependency on the
-JUnit 5 API and a `testRuntime` dependency on the JUnit 5 `TestEngine` implementation
+To configure support for JUnit Jupiter based tests, configure a `testCompile` dependency on the
+JUnit Jupiter API and a `testRuntime` dependency on the JUnit Jupiter `TestEngine` implementation
 similar to the following.
 
 [source,java,indent=0]
@@ -145,7 +145,7 @@ If a test fails, the build will fail with output similar to the following:
 :junitPlatformTest
 
 Test failures (1):
-  JUnit 5:SecondTest:mySecondTest()
+  JUnit Jupiter:SecondTest:mySecondTest()
     JavaMethodSource [javaClass = 'com.example.project.SecondTest', javaMethodName = 'mySecondTest', javaMethodParameterTypes = '']
     => Exception: 2 is not equal to 1 ==> expected: <2> but was: <1>
 
@@ -177,7 +177,7 @@ Execution failed for task ':junitPlatformTest'.
 ==== Maven
 
 The JUnit team has developed a very basic provider for Maven Surefire that lets you run
-JUnit 4 and JUnit 5 tests via `mvn test`. The `pom.xml` file in the
+JUnit 4 and JUnit Jupiter tests via `mvn test`. The `pom.xml` file in the
 `{junit5-maven-consumer}` project demonstrates how to use it and can serve as a starting
 point.
 
@@ -208,7 +208,7 @@ point.
 === Console Runner
 
 The `{ConsoleRunner}` is a command-line Java application that lets you run JUnit 4 and
-JUnit 5 tests and prints test execution results to the console.
+JUnit Jupiter tests and prints test execution results to the console.
 
 Here's an example of its output:
 
@@ -275,11 +275,11 @@ Option                       Description
 
 
 [[running-tests-junit-platform-runner]]
-=== Using JUnit 4 to Run JUnit 5 Tests
+=== Using JUnit 4 to Run the JUnit Platform
 
 The `JUnitPlatform` runner is a JUnit 4 based `Runner` which enables you to run any test
 whose programming model is supported on the JUnit Platform in a JUnit 4 environment --
-for example, a JUnit 5 test class.
+for example, a JUnit Jupiter test class.
 
 Annotating a class with `@RunWith(JUnitPlatform.class)` allows it to be run with IDEs and
 build systems that support JUnit 4 but do not yet support the JUnit Platform directly.
@@ -297,7 +297,7 @@ versions.
 
 * `junit-jupiter-api` in _test_ scope: API for writing tests, including `@Test`, etc.
 * `junit-platform-runner` in _test_ scope: location of the `JUnitPlatform` runner
-* `junit-jupiter-engine` in _test runtime_ scope: implementation of the Engine API for JUnit 5
+* `junit-jupiter-engine` in _test runtime_ scope: implementation of the Engine API for JUnit Jupiter
 
 ==== Single Test Class
 
