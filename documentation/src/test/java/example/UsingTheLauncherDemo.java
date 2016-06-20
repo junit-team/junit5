@@ -35,7 +35,7 @@ class UsingTheLauncherDemo {
 	void discovery() {
 		// @formatter:off
 		// tag::discovery[]
-		TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request()
+		TestDiscoveryRequest request = TestDiscoveryRequestBuilder.request()
 			.selectors(
 				selectPackage("com.example.mytests"),
 				selectClass(MyTestClass.class)
@@ -43,7 +43,7 @@ class UsingTheLauncherDemo {
 			.filters(includeClassNamePattern(".*Test"))
 			.build();
 
-		TestPlan plan = LauncherFactory.create().discover(specification);
+		TestPlan plan = LauncherFactory.create().discover(request);
 		// end::discovery[]
 		// @formatter:on
 	}
@@ -52,7 +52,7 @@ class UsingTheLauncherDemo {
 	void execution() {
 		// @formatter:off
 		// tag::execution[]
-		TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request()
+		TestDiscoveryRequest request = TestDiscoveryRequestBuilder.request()
 			.selectors(
 				selectPackage("com.example.mytests"),
 				selectClass(MyTestClass.class)
@@ -66,7 +66,7 @@ class UsingTheLauncherDemo {
 		TestExecutionListener listener = new SummaryGeneratingListener();
 		launcher.registerTestExecutionListeners(listener);
 
-		launcher.execute(specification);
+		launcher.execute(request);
 		// end::execution[]
 		// @formatter:on
 	}
