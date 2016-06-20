@@ -10,15 +10,11 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.stream.Collectors.toList;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.platform.engine.discovery.NameBasedSelectors.selectName;
 import static org.junit.platform.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
-
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.DiscoverySelector;
@@ -65,10 +61,10 @@ public class DiscoveryRequestTests {
 		).build();
 		// @formatter:on
 
-		assertNotNull(spec);
-		List<Class<? extends DiscoverySelector>> expected = Arrays.asList(UniqueIdSelector.class, ClassSelector.class,
-			PackageSelector.class, MethodSelector.class);
-		assertEquals(expected, spec.getSelectors().stream().map(Object::getClass).collect(toList()));
+		assertAll(() -> assertEquals(1, spec.getSelectorsByType(ClassSelector.class).size()),
+			() -> assertEquals(1, spec.getSelectorsByType(MethodSelector.class).size()),
+			() -> assertEquals(1, spec.getSelectorsByType(PackageSelector.class).size()),
+			() -> assertEquals(1, spec.getSelectorsByType(UniqueIdSelector.class).size()));
 	}
 
 	private String fullyQualifiedMethodName() throws Exception {

@@ -37,11 +37,6 @@ import org.junit.platform.commons.meta.API;
 public interface EngineDiscoveryRequest {
 
 	/**
-	 * Get the {@link DiscoverySelector DiscoverySelectors} of this request.
-	 */
-	List<DiscoverySelector> getSelectors();
-
-	/**
 	 * Get the {@link DiscoverySelector DiscoverySelectors} of this request,
 	 * filtered by a particular type.
 	 *
