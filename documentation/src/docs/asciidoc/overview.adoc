@@ -21,7 +21,7 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
 ==== JUnit Jupiter
 
 * *Group ID*: `org.junit.jupiter`
-* *Version*: `{junit-version}`
+* *Version*: `{jupiter-version}`
 * *Artifact IDs*:
 ** `junit-jupiter-api`
 ** `junit-jupiter-engine`

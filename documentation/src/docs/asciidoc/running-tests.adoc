@@ -93,8 +93,8 @@ similar to the following.
 [subs="verbatim,attributes"]
 ----
 dependencies {
-	testCompile("org.junit.jupiter:junit-jupiter-api:{junit-version}")
-	testRuntime("org.junit.jupiter:junit-jupiter-engine:{junit-version}")
+	testCompile("org.junit.jupiter:junit-jupiter-api:{jupiter-version}")
+	testRuntime("org.junit.jupiter:junit-jupiter-engine:{jupiter-version}")
 }
 ----
 

@@ -37,7 +37,7 @@ dependencies {
 asciidoctor {
 	separateOutputDirs = false
 	sources { include 'index.adoc' }
-	attributes	'junit-version': project.version,
+	attributes	'jupiter-version': project.property('version'),
 				'platform-version': project.property('platformVersion'),
 				'vintage-version': project.property('vintageVersion'),
 				'revnumber' : project.version,

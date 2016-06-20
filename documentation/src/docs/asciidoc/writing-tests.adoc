@@ -301,8 +301,9 @@ The execution of those callbacks would not be useful in most dynamic testing sce
 since variables used in lambdas are bound to instance variables at execution time of the factory method
 rather than execution time of the lambda itself.
 
-As of JUnit {junit-version}, dynamic tests must always be created by factory methods;
-however, this might be complemented by a registration facility in a later release.
+As of JUnit Jupiter {jupiter-version}, dynamic tests must always be created by factory
+methods; however, this might be complemented by a registration facility in a later
+release.
 
 
 ==== Dynamic Test Examples
