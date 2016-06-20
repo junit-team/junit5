@@ -26,7 +26,7 @@ import org.junit.vintage.engine.JUnit4UniqueIdBuilder;
 import org.junit.vintage.engine.RecordCollectingLogger;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class UniqueIdSelectorResolverTests {
 

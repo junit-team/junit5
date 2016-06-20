@@ -31,7 +31,7 @@ import org.junit.platform.commons.util.Preconditions;
  * <p>Clients should not implement this interface directly but rather one of
  * its subinterfaces.
  *
- * @since 5.0
+ * @since 1.0
  * @see DiscoveryFilter
  */
 @FunctionalInterface

@@ -21,7 +21,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
 /**
  * The result of applying a {@link Filter}.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public class FilterResult {

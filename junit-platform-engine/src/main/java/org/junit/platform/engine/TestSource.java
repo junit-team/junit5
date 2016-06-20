@@ -27,7 +27,7 @@ import org.junit.platform.commons.meta.API;
  * <em>serializable</em> and <em>immutable</em> since they may be used as data
  * transfer objects.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public interface TestSource extends Serializable {

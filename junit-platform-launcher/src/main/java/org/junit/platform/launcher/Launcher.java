@@ -42,7 +42,7 @@ import org.junit.platform.commons.meta.API;
  * progress and results of test execution. Listeners will be notified of events
  * in the order in which they were registered.
  *
- * @since 5.0
+ * @since 1.0
  * @see TestDiscoveryRequest
  * @see TestPlan
  * @see TestExecutionListener

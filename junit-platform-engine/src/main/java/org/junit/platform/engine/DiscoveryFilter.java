@@ -21,7 +21,7 @@ import org.junit.platform.commons.meta.API;
  * <p>{@link TestEngine TestEngines} should apply {@code DiscoveryFilters}
  * during the test discovery phase.
  *
- * @since 5.0
+ * @since 1.0
  * @see EngineDiscoveryRequest
  * @see TestEngine
  */

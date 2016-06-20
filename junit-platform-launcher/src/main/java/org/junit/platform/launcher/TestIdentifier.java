@@ -31,7 +31,7 @@ import org.junit.platform.engine.TestTag;
  * Immutable data transfer object that represents a test or container which is
  * usually part of a {@link TestPlan}.
  *
- * @since 5.0
+ * @since 1.0
  * @see TestPlan
  */
 @API(Experimental)

@@ -41,7 +41,7 @@ import org.junit.platform.engine.test.event.ExecutionEvent.Type;
 /**
  * Collection of AssertJ conditions for {@link ExecutionEvent}.
  *
- * @since 5.0
+ * @since 1.0
  */
 public class ExecutionEventConditions {
 

@@ -41,7 +41,7 @@ import org.junit.platform.engine.test.event.ExecutionEvent.Type;
 /**
  * {@link EngineExecutionListener} that records all events and makes them available to tests.
  *
- * @since 5.0
+ * @since 1.0
  * @see ExecutionEvent
  */
 public class ExecutionEventRecorder implements EngineExecutionListener {

@@ -16,7 +16,7 @@ import java.util.function.Predicate;
 import org.junit.Test;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class IsPotentialJUnit4TestMethod implements Predicate<Method> {
 

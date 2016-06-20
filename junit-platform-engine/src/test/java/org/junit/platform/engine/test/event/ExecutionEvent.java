@@ -29,7 +29,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
 /**
  * Represents an event collected by {@link ExecutionEventRecorder}.
  *
- * @since 5.0
+ * @since 1.0
  * @see ExecutionEventConditions
  */
 public class ExecutionEvent {

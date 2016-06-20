@@ -19,7 +19,7 @@ import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class OrFilter extends Filter {
 

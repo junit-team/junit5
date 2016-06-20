@@ -31,7 +31,7 @@ import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
  *
  * @param <C> the type of {@code EngineExecutionContext} used by the
  * {@code HierarchicalTestEngine}
- * @since 5.0
+ * @since 1.0
  */
 class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 

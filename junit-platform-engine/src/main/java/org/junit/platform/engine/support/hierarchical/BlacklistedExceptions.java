@@ -26,7 +26,7 @@ import org.junit.platform.commons.util.ExceptionUtils;
  * <li>{@link OutOfMemoryError}</li>
  * </ul>
  *
- * @since 5.0
+ * @since 1.0
  */
 final class BlacklistedExceptions {
 

@@ -12,7 +12,7 @@ package org.junit.platform.gradle.plugin
 /**
  * Tag configuration options for the JUnit Platform Gradle plugin.
  *
- * @since 5.0
+ * @since 1.0
  */
 class TagsExtension {
 

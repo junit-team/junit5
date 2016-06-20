@@ -37,7 +37,7 @@ import org.junit.platform.engine.support.descriptor.JavaSource;
 import org.junit.runner.Description;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 @API(Internal)
 public class JUnit4TestDescriptor extends AbstractTestDescriptor {

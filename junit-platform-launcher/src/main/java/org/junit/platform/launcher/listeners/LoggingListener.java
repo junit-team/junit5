@@ -29,7 +29,7 @@ import org.junit.platform.launcher.TestPlan;
  * for all events via a {@link BiConsumer} that consumes {@code Throwable}
  * and {@code Supplier<String>}.
  *
- * @since 5.0
+ * @since 1.0
  * @see #forJavaUtilLogging()
  * @see #forJavaUtilLogging(Level)
  * @see LoggingListener#LoggingListener(BiConsumer)

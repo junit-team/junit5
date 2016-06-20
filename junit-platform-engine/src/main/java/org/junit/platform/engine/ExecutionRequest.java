@@ -25,7 +25,7 @@ import org.junit.platform.commons.meta.API;
  * execution.
  *
  * @see TestEngine
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public class ExecutionRequest {

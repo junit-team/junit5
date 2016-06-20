@@ -27,7 +27,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * File based {@link org.junit.platform.engine.TestSource} with an optional
  * {@linkplain FilePosition position}.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public class FileSource implements FileSystemSource {

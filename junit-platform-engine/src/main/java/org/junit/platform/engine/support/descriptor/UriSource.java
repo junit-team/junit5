@@ -20,7 +20,7 @@ import org.junit.platform.engine.TestSource;
 /**
  * A {@link TestSource} that can be represented as a {@link URI}.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public interface UriSource extends TestSource {

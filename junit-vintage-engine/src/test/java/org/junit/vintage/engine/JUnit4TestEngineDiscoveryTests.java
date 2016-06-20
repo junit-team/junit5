@@ -69,7 +69,7 @@ import org.junit.vintage.engine.samples.junit4.SingleFailingTheoryTestCase;
 import org.junit.vintage.engine.samples.junit4.TestCaseRunWithJUnitPlatformRunner;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class JUnit4TestEngineDiscoveryTests {
 

@@ -18,7 +18,7 @@ import org.junit.vintage.engine.descriptor.JUnit4TestDescriptor;
  *
  * Used to decouple tests from concrete unique ID strings.
  *
- * @since 5.0
+ * @since 4.12
  */
 public class JUnit4UniqueIdBuilder {
 

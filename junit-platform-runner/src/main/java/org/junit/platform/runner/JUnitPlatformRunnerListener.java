@@ -23,7 +23,7 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class JUnitPlatformRunnerListener implements TestExecutionListener {
 

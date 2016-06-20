@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class TestClassCollector {
 

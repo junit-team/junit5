@@ -27,7 +27,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * <p>A {@code TestExecutionResult} consists of a mandatory {@link Status} and
  * an optional {@link Throwable}.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public class TestExecutionResult {

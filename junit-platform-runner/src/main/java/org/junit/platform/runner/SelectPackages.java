@@ -25,7 +25,7 @@ import org.junit.platform.commons.meta.API;
  * {@code @SelectPackages} specifies the names of packages to <em>select</em>
  * when running a test suite via {@code @RunWith(JUnitPlatform.class)}.
  *
- * @since 5.0
+ * @since 1.0
  * @see JUnitPlatform
  * @see SelectClasses
  * @see org.junit.platform.engine.discovery.PackageSelector

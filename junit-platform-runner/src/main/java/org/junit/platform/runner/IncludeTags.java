@@ -25,7 +25,7 @@ import org.junit.platform.commons.meta.API;
  * {@code @IncludeTags} specifies the {@linkplain #value tags} to be included
  * when running a test suite via {@code @RunWith(JUnitPlatform.class)}.
  *
- * @since 5.0
+ * @since 1.0
  * @see JUnitPlatform
  * @see ExcludeTags
  * @see org.junit.platform.launcher.TagFilter#includeTags

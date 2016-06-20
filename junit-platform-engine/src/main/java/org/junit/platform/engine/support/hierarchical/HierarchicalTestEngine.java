@@ -21,7 +21,7 @@ import org.junit.platform.engine.TestEngine;
  * to organize test suites hierarchically based on the {@link Node} abstraction.
  *
  * @param <C> the type of {@code EngineExecutionContext} used by this engine
- * @since 5.0
+ * @since 1.0
  * @see Node
  */
 @API(Experimental)

@@ -25,7 +25,7 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
  * Represents the root of all discovered {@link TestEngine TestEngines} and
  * their {@link TestDescriptor TestDescriptors}.
  *
- * @since 5.0
+ * @since 1.0
  */
 class Root {
 

@@ -16,7 +16,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 public class RecordCollectingLogger extends Logger {
 

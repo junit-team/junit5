@@ -25,7 +25,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * {@code ReportEntry} encapsulates a time-stamped map of {@code String}-based
  * key-value pairs to be published to the reporting infrastructure.
  *
- * @since 5.0
+ * @since 1.0
  * @see #from(Map)
  * @see #from(String, String)
  */

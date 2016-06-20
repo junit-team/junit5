@@ -25,7 +25,7 @@ import org.junit.platform.commons.meta.API;
  * {@code @SelectClasses} specifies the classes to <em>select</em> when running
  * a test suite via {@code @RunWith(JUnitPlatform.class)}.
  *
- * @since 5.0
+ * @since 1.0
  * @see JUnitPlatform
  * @see SelectPackages
  * @see org.junit.platform.engine.discovery.ClassSelector

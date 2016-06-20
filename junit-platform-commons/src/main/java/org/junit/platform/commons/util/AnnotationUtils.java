@@ -43,7 +43,7 @@ import org.junit.platform.commons.util.ReflectionUtils.MethodSortOrder;
  * itself. <strong>Any usage by external parties is not supported.</strong>
  * Use at your own risk!
  *
- * @since 5.0
+ * @since 1.0
  * @see Annotation
  * @see AnnotatedElement
  */

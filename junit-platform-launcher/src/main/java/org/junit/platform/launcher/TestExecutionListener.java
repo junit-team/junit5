@@ -38,7 +38,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * comply with this contract, there is no way to guarantee this for third-party
  * engines.
  *
- * @since 5.0
+ * @since 1.0
  * @see Launcher
  * @see TestPlan
  * @see TestIdentifier

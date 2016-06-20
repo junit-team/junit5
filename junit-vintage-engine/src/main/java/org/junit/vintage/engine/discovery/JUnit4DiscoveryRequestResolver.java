@@ -27,7 +27,7 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.support.filter.ExclusionReasonConsumingFilter;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 @API(Internal)
 public class JUnit4DiscoveryRequestResolver {

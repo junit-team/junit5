@@ -22,7 +22,7 @@ import org.junit.platform.engine.UniqueId;
  * An {@code EngineDescriptor} is a {@link TestDescriptor} for a specific
  * {@link TestEngine}.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public class EngineDescriptor extends AbstractTestDescriptor {

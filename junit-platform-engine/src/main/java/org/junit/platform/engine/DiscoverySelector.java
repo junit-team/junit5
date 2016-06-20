@@ -19,7 +19,7 @@ import org.junit.platform.commons.meta.API;
  * &mdash; for example, the name of a Java class, the path to a file or
  * directory, etc.
  *
- * @since 5.0
+ * @since 1.0
  * @see EngineDiscoveryRequest
  */
 @API(Experimental)

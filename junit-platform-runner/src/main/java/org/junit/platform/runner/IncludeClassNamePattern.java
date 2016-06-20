@@ -29,7 +29,7 @@ import org.junit.platform.commons.meta.API;
  * <p>If the fully qualified name of a class matches against the pattern, the
  * class will be included in the test plan.
  *
- * @since 5.0
+ * @since 1.0
  * @see JUnitPlatform
  * @see org.junit.platform.engine.discovery.ClassFilter#includeClassNamePattern
  */

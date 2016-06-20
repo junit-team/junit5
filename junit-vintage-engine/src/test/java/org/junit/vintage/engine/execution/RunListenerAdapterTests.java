@@ -30,7 +30,7 @@ import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithSingleTestWhichFails;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class RunListenerAdapterTests {
 

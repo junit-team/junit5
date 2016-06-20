@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 public class JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails extends TestCase {
 

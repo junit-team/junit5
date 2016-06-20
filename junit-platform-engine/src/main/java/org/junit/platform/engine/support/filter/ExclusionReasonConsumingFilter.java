@@ -24,7 +24,7 @@ import org.junit.platform.engine.FilterResult;
  * Decorator for a {@link Filter} that passes the <em>object</em> and the
  * <em>reason</em> to a {@link BiConsumer} in case it is <em>excluded</em>.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Internal)
 public class ExclusionReasonConsumingFilter<T> implements Filter<T> {

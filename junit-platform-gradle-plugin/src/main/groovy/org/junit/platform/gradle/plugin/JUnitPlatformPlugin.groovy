@@ -15,7 +15,7 @@ import org.gradle.api.tasks.JavaExec
 import org.junit.platform.console.ConsoleRunner
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class JUnitPlatformPlugin implements Plugin<Project> {
 

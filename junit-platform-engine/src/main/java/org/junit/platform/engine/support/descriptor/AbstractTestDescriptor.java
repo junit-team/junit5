@@ -33,7 +33,7 @@ import org.junit.platform.engine.UniqueId;
  * <p>Subclasses should call {@link #setSource} in their constructor, if
  * possible, and override {@link #getTags}, if appropriate.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public abstract class AbstractTestDescriptor implements TestDescriptor {

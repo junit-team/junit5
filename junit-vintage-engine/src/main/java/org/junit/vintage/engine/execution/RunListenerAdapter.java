@@ -24,7 +24,7 @@ import org.junit.runner.notification.RunListener;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class RunListenerAdapter extends RunListener {
 

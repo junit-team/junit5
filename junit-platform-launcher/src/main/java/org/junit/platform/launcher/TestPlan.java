@@ -46,7 +46,7 @@ import org.junit.platform.engine.TestDescriptor.Visitor;
  * test is registered at runtime, it is added to the original test plan and
  * reported to {@link TestExecutionListener} implementations.
  *
- * @since 5.0
+ * @since 1.0
  * @see Launcher
  * @see TestExecutionListener
  */

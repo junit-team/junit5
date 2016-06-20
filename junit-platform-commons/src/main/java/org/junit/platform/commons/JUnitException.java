@@ -18,7 +18,7 @@ import org.junit.platform.commons.meta.API;
  * Base class for all {@link RuntimeException RuntimeExceptions} thrown
  * by JUnit.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Internal)
 public class JUnitException extends RuntimeException {

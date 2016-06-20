@@ -22,7 +22,7 @@ import org.junit.platform.launcher.TestPlan;
  * An {@code ExecutionListenerAdapter} adapts a {@link TestPlan} and a corresponding
  * {@link TestExecutionListener} to the {@link EngineExecutionListener} API.
  *
- * @since 5.0
+ * @since 1.0
  */
 class ExecutionListenerAdapter implements EngineExecutionListener {
 

@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * all public members of the type as well. A member is allowed to declare a
  * different {@link Usage} of lower stability.
  *
- * @since 5.0
+ * @since 1.0
  */
 @Target({ ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR })
 @Retention(RetentionPolicy.CLASS)

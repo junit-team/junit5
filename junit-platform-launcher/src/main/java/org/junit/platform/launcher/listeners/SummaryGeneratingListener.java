@@ -28,7 +28,7 @@ import org.junit.platform.launcher.TestPlan;
  * Simple {@link TestExecutionListener} that generates a
  * {@linkplain TestExecutionSummary summary} of the test execution.
  *
- * @since 5.0
+ * @since 1.0
  * @see #getSummary()
  */
 @API(Experimental)

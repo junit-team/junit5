@@ -61,7 +61,7 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
  *     .build();
  * </pre>
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public final class TestDiscoveryRequestBuilder {

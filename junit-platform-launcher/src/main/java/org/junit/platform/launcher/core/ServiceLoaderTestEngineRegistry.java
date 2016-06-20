@@ -20,7 +20,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestEngine;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class ServiceLoaderTestEngineRegistry {
 

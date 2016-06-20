@@ -22,7 +22,7 @@ import java.util.Locale;
 import java.util.function.Function;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class UniqueIdStringifier implements Function<Serializable, String> {
 

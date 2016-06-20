@@ -17,7 +17,7 @@ import java.io.Writer;
 import org.junit.platform.commons.meta.API;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 @API(Internal)
 public interface CommandLineOptionsParser {

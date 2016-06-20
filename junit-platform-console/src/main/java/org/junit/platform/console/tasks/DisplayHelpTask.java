@@ -18,7 +18,7 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.console.options.CommandLineOptionsParser;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 @API(Internal)
 public class DisplayHelpTask implements ConsoleTask {

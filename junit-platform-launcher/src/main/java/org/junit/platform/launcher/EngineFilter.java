@@ -33,7 +33,7 @@ import org.junit.platform.engine.TestEngine;
  * request since doing so will likely lead to undesirable results (i.e., zero
  * engines being active).
  *
- * @since 5.0
+ * @since 1.0
  * @see #includeEngines(String...)
  * @see #excludeEngines(String...)
  * @see TestDiscoveryRequest

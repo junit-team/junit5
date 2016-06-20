@@ -24,7 +24,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * <p>This class stores the package name because {@link Package} does not
  * implement {@link java.io.Serializable}.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public class JavaPackageSource implements JavaSource {

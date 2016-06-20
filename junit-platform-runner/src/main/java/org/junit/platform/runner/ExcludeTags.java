@@ -25,7 +25,7 @@ import org.junit.platform.commons.meta.API;
  * {@code @ExcludeTags} specifies the {@linkplain #value tags} to be excluded
  * when running a test suite via {@code @RunWith(JUnitPlatform.class)}.
  *
- * @since 5.0
+ * @since 1.0
  * @see JUnitPlatform
  * @see IncludeTags
  * @see org.junit.platform.launcher.TagFilter#excludeTags

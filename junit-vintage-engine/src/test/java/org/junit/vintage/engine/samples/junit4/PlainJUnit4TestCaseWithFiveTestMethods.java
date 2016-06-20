@@ -25,7 +25,7 @@ import org.junit.vintage.engine.samples.junit4.Categories.Skipped;
 import org.junit.vintage.engine.samples.junit4.Categories.SkippedWithReason;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 @FixMethodOrder(NAME_ASCENDING)
 @Category(Plain.class)

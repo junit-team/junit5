@@ -26,7 +26,7 @@ import org.junit.platform.engine.TestTag;
  * Factory methods for creating {@link PostDiscoveryFilter PostDiscoveryFilters}
  * based on <em>included</em> and <em>excluded</em> tags.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public final class TagFilter {

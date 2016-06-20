@@ -21,7 +21,7 @@ import org.junit.runner.Request;
 import org.junit.runner.Runner;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 @API(Internal)
 public class RunnerTestDescriptor extends JUnit4TestDescriptor {

@@ -22,7 +22,7 @@ import org.junit.platform.commons.util.Preconditions;
  * Immutable value object for a <em>tag</em> that is assigned to a test or
  * container.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public final class TestTag implements Serializable {

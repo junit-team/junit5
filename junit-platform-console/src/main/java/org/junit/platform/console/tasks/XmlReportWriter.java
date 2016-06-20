@@ -38,7 +38,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class XmlReportWriter {
 

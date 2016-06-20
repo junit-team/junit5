@@ -17,7 +17,7 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 @RunWith(Enclosed.class)
 public class EnclosedJUnit4TestCase {

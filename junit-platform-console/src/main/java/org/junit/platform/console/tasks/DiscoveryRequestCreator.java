@@ -30,7 +30,7 @@ import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class DiscoveryRequestCreator {
 

@@ -16,7 +16,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 @Ignore("complete class is ignored")
 public class IgnoredJUnit4TestCase {

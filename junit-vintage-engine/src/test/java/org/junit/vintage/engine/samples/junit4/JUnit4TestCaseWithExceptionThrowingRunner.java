@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 import org.junit.vintage.engine.samples.junit4.ExceptionThrowingRunner.ChildCount;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 @RunWith(ExceptionThrowingRunner.class)
 @ChildCount(0)

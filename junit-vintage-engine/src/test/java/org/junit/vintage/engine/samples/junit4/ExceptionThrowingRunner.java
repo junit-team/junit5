@@ -23,7 +23,7 @@ import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 public class ExceptionThrowingRunner extends Runner {
 

@@ -19,7 +19,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.ConfigurationParameters;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class LauncherConfigurationParameters implements ConfigurationParameters {
 

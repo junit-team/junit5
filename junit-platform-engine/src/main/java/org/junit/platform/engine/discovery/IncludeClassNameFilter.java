@@ -24,7 +24,7 @@ import org.junit.platform.engine.FilterResult;
  * <p>If the fully qualified name of a class matches against the pattern, the
  * class will be included.
  *
- * @since 5.0
+ * @since 1.0
  */
 class IncludeClassNameFilter implements ClassFilter {
 

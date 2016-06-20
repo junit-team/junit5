@@ -24,7 +24,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
 /**
  * Directory based {@link org.junit.platform.engine.TestSource}.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public class DirectorySource implements FileSystemSource {

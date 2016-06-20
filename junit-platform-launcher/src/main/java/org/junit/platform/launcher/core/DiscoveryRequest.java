@@ -45,7 +45,7 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
  * launcher after {@code TestEngines} have performed test discovery</li>
  * </ul>
  *
- * @since 5.0
+ * @since 1.0
  * @see DiscoverySelector
  * @see EngineFilter
  * @see DiscoveryFilter

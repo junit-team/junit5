@@ -24,7 +24,7 @@ import org.junit.runner.Description;
 import org.junit.vintage.engine.RecordCollectingLogger;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class UniqueIdReaderTests {
 

@@ -23,7 +23,7 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * Mutable, internal implementation of the {@link TestExecutionSummary} API.
  *
- * @since 5.0
+ * @since 1.0
  */
 class MutableTestExecutionSummary implements TestExecutionSummary {
 

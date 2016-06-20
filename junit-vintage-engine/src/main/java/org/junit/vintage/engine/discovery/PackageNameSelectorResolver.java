@@ -15,7 +15,7 @@ import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInPa
 import org.junit.platform.engine.discovery.PackageSelector;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class PackageNameSelectorResolver extends DiscoverySelectorResolver<PackageSelector> {
 

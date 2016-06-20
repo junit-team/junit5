@@ -21,7 +21,7 @@ import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class TestExecutionListenerRegistry {
 

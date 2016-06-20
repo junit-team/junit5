@@ -23,7 +23,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
  * tests or containers based on Java classes.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public class ClassSelector implements DiscoverySelector {

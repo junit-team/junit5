@@ -29,7 +29,7 @@ import org.junit.vintage.engine.discovery.JUnit4DiscoveryRequestResolver;
 import org.junit.vintage.engine.execution.RunnerExecutor;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 @API(Experimental)
 public class JUnit4TestEngine implements TestEngine {

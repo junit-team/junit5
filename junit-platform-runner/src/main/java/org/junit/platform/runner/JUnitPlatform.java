@@ -62,7 +62,7 @@ import org.junit.runners.model.InitializationError;
  * Note, however, that any test class run with this runner must be {@code public}
  * in order to be picked up by IDEs and build tools.
  *
- * @since 5.0
+ * @since 1.0
  * @see SelectPackages
  * @see SelectClasses
  * @see IncludeClassNamePattern

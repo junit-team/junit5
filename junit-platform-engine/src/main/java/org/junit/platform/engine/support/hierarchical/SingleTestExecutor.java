@@ -24,7 +24,7 @@ import org.opentest4j.TestAbortedException;
  * {@code SingleTestExecutor} encapsulates the execution of a single test
  * wrapped in an {@link Executable}.
  *
- * @since 5.0
+ * @since 1.0
  * @see #executeSafely(Executable)
  */
 @API(Experimental)

@@ -15,7 +15,7 @@ import org.junit.platform.runner.SelectClasses;
 import org.junit.runner.RunWith;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 @RunWith(JUnitPlatform.class)
 @SelectClasses(PlainJUnit4TestCaseWithSingleTestWhichFails.class)

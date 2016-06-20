@@ -25,7 +25,7 @@ import org.junit.vintage.engine.descriptor.JUnit4TestDescriptor;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class UniqueIdFilter extends RunnerTestDescriptorAwareFilter {
 

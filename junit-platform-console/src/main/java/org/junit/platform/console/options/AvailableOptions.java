@@ -17,7 +17,7 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class AvailableOptions {
 

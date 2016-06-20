@@ -15,7 +15,7 @@ import org.junit.runner.manipulation.Filter;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 abstract class RunnerTestDescriptorAwareFilter extends Filter {
 

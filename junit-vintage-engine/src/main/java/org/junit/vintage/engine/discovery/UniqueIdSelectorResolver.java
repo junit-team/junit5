@@ -22,7 +22,7 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelector> {
 

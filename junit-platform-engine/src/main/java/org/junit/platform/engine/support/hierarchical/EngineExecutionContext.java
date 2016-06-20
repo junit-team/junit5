@@ -18,7 +18,7 @@ import org.junit.platform.commons.meta.API;
  * Marker interface for an execution context used by a concrete implementation
  * of {@link HierarchicalTestEngine} and its collaborators.
  *
- * @since 5.0
+ * @since 1.0
  * @see HierarchicalTestEngine
  */
 @API(Experimental)

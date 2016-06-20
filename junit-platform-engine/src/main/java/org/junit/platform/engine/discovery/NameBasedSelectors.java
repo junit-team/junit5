@@ -36,7 +36,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * <p>Consult the documentation for {@link #selectName(String)} for details
  * on what types of names are supported.
  *
- * @since 5.0
+ * @since 1.0
  * @see ClassSelector
  * @see MethodSelector
  * @see PackageSelector

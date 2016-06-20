@@ -22,7 +22,7 @@ import org.junit.runner.JUnitCore;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 @API(Internal)
 public class RunnerExecutor {

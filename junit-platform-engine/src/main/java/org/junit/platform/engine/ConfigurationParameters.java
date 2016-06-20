@@ -26,7 +26,7 @@ import org.junit.platform.commons.meta.API;
  * @see TestEngine
  * @see EngineDiscoveryRequest
  * @see ExecutionRequest
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public interface ConfigurationParameters {

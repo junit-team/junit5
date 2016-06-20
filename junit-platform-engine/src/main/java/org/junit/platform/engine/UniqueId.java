@@ -28,7 +28,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * <p>Instances of this class have value semantics and are immutable.</p>
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public class UniqueId implements Cloneable {

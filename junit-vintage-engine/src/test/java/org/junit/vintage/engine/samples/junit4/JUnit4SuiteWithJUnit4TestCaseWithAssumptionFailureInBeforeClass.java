@@ -15,7 +15,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 @RunWith(Suite.class)
 @SuiteClasses(JUnit4TestCaseWithAssumptionFailureInBeforeClass.class)

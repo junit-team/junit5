@@ -26,7 +26,7 @@ import org.junit.platform.launcher.Launcher;
  * of the implementation class of the {@link org.junit.platform.engine.TestEngine}
  * interface is declared.
  *
- * @since 5.0
+ * @since 1.0
  * @see Launcher
  */
 @API(Experimental)

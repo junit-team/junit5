@@ -21,7 +21,7 @@ import org.junit.platform.commons.meta.API;
  *
  * @param <C> the type of {@code EngineExecutionContext} used by the
  * {@code HierarchicalTestEngine}
- * @since 5.0
+ * @since 1.0
  * @see HierarchicalTestEngine
  */
 @API(Experimental)

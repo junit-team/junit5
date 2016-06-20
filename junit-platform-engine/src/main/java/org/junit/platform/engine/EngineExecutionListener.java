@@ -24,7 +24,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * must report events not only for {@linkplain TestDescriptor test descriptors}
  * that represent executable leaves but also for all intermediate containers.
  *
- * @since 5.0
+ * @since 1.0
  * @see TestEngine
  * @see ExecutionRequest
  */

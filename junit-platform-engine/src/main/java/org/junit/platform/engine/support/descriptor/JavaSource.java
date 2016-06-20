@@ -19,7 +19,7 @@ import org.junit.platform.engine.TestSource;
  * Marker interface for {@link TestSource TestSources} that are based on
  * elements of the Java language.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public interface JavaSource extends TestSource {

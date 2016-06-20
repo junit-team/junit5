@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 import org.junit.platform.commons.JUnitException;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class ClasspathEntriesParser {
 

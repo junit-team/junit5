@@ -15,7 +15,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 public class MalformedJUnit4TestCase {
 

@@ -23,7 +23,7 @@ import org.junit.platform.engine.TestSource;
  * <p>This interface uses {@link File} instead of {@link java.nio.file.Path}
  * because the latter does not implement {@link java.io.Serializable}.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public interface FileSystemSource extends UriSource {

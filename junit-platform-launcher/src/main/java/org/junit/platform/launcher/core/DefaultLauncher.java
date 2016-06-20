@@ -32,7 +32,7 @@ import org.junit.platform.launcher.TestPlan;
  *
  * <p>External clients can obtain an instance by invoking {@link LauncherFactory#create()}.
  *
- * @since 5.0
+ * @since 1.0
  * @see Launcher
  * @see LauncherFactory
  */

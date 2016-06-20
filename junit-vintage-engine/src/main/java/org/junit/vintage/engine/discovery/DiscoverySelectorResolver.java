@@ -13,7 +13,7 @@ package org.junit.vintage.engine.discovery;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 abstract class DiscoverySelectorResolver<T extends DiscoverySelector> {
 

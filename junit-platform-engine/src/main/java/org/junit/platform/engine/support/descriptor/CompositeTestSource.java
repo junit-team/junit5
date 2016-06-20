@@ -27,7 +27,7 @@ import org.junit.platform.engine.TestSource;
  *
  * <p>{@code CompositeTestSource} and its {@link #getSources sources} are immutable.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public class CompositeTestSource implements TestSource {

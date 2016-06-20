@@ -26,7 +26,7 @@ import org.junit.platform.commons.meta.API;
  * {@link org.junit.platform.engine.TestEngine TestEngines} to be included
  * when running a test suite via {@code @RunWith(JUnitPlatform.class)}.
  *
- * @since 5.0
+ * @since 1.0
  * @see JUnitPlatform
  * @see ExcludeEngines
  * @see org.junit.platform.launcher.EngineFilter#includeEngines

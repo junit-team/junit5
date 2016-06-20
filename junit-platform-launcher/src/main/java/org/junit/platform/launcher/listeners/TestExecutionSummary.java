@@ -19,7 +19,7 @@ import org.junit.platform.commons.meta.API;
 /**
  * Summary of test plan execution.
  *
- * @since 5.0
+ * @since 1.0
  * @see SummaryGeneratingListener
  */
 @API(Experimental)

@@ -19,7 +19,7 @@ import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.runner.Description;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class MethodSelectorResolver extends DiscoverySelectorResolver<MethodSelector> {
 

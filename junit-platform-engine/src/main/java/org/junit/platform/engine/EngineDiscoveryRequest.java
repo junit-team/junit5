@@ -31,7 +31,7 @@ import org.junit.platform.commons.meta.API;
  * @see TestEngine
  * @see DiscoverySelector
  * @see DiscoveryFilter
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public interface EngineDiscoveryRequest {

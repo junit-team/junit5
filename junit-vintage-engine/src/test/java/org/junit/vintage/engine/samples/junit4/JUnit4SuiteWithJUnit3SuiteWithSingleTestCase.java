@@ -16,7 +16,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import org.junit.vintage.engine.samples.junit3.JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 @RunWith(Suite.class)
 @SuiteClasses(JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails.class)

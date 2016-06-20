@@ -21,7 +21,7 @@ import java.util.Collection;
  * include elements if and only if all of the filters in the specified collection
  * include it.
  *
- * @since 5.0
+ * @since 1.0
  */
 class CompositeFilter<T> implements Filter<T> {
 

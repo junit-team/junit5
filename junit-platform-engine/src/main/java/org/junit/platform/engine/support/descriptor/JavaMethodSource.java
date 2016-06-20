@@ -29,7 +29,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * <p>This class stores the method name along with its parameter types because
  * {@link Method} does not implement {@link java.io.Serializable}.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public class JavaMethodSource implements JavaSource {

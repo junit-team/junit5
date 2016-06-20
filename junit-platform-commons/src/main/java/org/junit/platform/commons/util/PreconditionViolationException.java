@@ -18,7 +18,7 @@ import org.junit.platform.commons.meta.API;
 /**
  * Thrown if a <em>precondition</em> is violated.
  *
- * @since 5.0
+ * @since 1.0
  * @see Preconditions
  */
 @API(Internal)

@@ -23,7 +23,7 @@ import java.util.Base64;
 import org.junit.jupiter.api.Test;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class UniqueIdStringifierTests {
 

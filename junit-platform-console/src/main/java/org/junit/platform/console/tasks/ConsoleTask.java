@@ -19,7 +19,7 @@ import org.junit.platform.commons.meta.API;
 /**
  * A task to be executed from the console,
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Internal)
 public interface ConsoleTask {

@@ -27,7 +27,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * files or resources within the physical classpath &mdash; for example, to
  * scan for test classes.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public class ClasspathSelector implements DiscoverySelector {

@@ -33,7 +33,7 @@ import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class TestClassRequestResolverTests {
 

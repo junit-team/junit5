@@ -14,7 +14,7 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 public class TestDescriptorStub extends AbstractTestDescriptor {
 

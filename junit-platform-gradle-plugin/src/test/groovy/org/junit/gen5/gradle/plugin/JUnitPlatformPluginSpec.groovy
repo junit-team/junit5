@@ -18,7 +18,7 @@ import org.junit.platform.console.ConsoleRunner
 import spock.lang.Specification
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class JUnitPlatformPluginSpec extends Specification {
 

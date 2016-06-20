@@ -11,7 +11,7 @@
 package org.junit.vintage.engine.samples.junit4;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 public class Categories {
 

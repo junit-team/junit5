@@ -28,7 +28,7 @@ import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 final class RunListenerAdapter implements TestExecutionListener {
 

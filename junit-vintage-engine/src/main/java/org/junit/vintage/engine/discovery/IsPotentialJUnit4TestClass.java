@@ -16,7 +16,7 @@ import static org.junit.platform.commons.util.ReflectionUtils.isPublic;
 import java.util.function.Predicate;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 class IsPotentialJUnit4TestClass implements Predicate<Class<?>> {
 

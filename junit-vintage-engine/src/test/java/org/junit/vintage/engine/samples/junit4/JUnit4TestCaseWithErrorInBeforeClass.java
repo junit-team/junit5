@@ -16,7 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * @since 5.0
+ * @since 4.12
  */
 public class JUnit4TestCaseWithErrorInBeforeClass {
 

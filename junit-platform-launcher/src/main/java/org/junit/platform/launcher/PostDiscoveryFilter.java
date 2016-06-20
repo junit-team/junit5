@@ -24,7 +24,7 @@ import org.junit.platform.engine.TestEngine;
  * <p>{@link TestEngine TestEngines} must <strong>not</strong> apply
  * {@code PostDiscoveryFilters} during the test discovery phase.
  *
- * @since 5.0
+ * @since 1.0
  * @see TestDiscoveryRequest
  * @see TestEngine
  */

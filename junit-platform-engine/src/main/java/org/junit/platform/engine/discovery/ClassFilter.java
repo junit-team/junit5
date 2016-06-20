@@ -18,7 +18,7 @@ import org.junit.platform.engine.DiscoveryFilter;
 /**
  * {@link DiscoveryFilter} that is applied to a {@link Class}.
  *
- * @since 5.0
+ * @since 1.0
  * @see #includeClassNamePattern(String)
  */
 @API(Experimental)

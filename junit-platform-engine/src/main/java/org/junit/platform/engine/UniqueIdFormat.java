@@ -26,7 +26,7 @@ import org.junit.platform.engine.UniqueId.Segment;
  * Used to {@linkplain #parse parse} a {@link UniqueId} from a string representation
  * or to {@linkplain #format format} a {@link UniqueId} into a string representation.
  *
- * @since 5.0
+ * @since 1.0
  */
 class UniqueIdFormat {
 

@@ -22,7 +22,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * Position inside a file represented by {@linkplain #getLine line} and
  * {@linkplain #getColumn column}.
  *
- * @since 5.0
+ * @since 1.0
  */
 @API(Experimental)
 public class FilePosition implements Serializable {

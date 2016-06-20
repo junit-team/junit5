@@ -29,7 +29,7 @@ import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 @API(Internal)
 public class ExecuteTestsTask implements ConsoleTask {
