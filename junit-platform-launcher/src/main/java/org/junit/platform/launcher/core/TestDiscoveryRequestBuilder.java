@@ -81,6 +81,8 @@ public final class TestDiscoveryRequestBuilder {
 
 	/**
 	 * Add all of the supplied {@code selectors} to the request.
+	 *
+	 * @param selectors the {@code DiscoverySelectors} to add
 	 */
 	public TestDiscoveryRequestBuilder selectors(DiscoverySelector... selectors) {
 		if (selectors != null) {
@@ -91,6 +93,8 @@ public final class TestDiscoveryRequestBuilder {
 
 	/**
 	 * Add all of the supplied {@code selectors} to the request.
+	 *
+	 * @param selectors the {@code DiscoverySelectors} to add
 	 */
 	public TestDiscoveryRequestBuilder selectors(List<DiscoverySelector> selectors) {
 		if (selectors != null) {
@@ -101,6 +105,14 @@ public final class TestDiscoveryRequestBuilder {
 
 	/**
 	 * Add all of the supplied {@code filters} to the request.
+	 *
+	 * <p><strong>Warning</strong>: be cautious when registering multiple competing
+	 * {@link EngineFilter#includeEngines include} {@code EngineFilters} or multiple
+	 * competing {@link EngineFilter#excludeEngines exclude} {@code EngineFilters}
+	 * for the same discovery request since doing so will likely lead to
+	 * undesirable results (i.e., zero engines being active).
+	 *
+	 * @param filters the {@code Filter}s to add
 	 */
 	public TestDiscoveryRequestBuilder filters(Filter<?>... filters) {
 		if (filters != null) {
@@ -120,6 +132,8 @@ public final class TestDiscoveryRequestBuilder {
 
 	/**
 	 * Add all of the supplied {@code configurationParameters} to the request.
+	 *
+	 * @param configurationParameters the map of configuration parameters to add
 	 */
 	public TestDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
 		if (configurationParameters != null) {
@@ -150,13 +164,10 @@ public final class TestDiscoveryRequestBuilder {
 	 * this builder.
 	 */
 	public TestDiscoveryRequest build() {
-		DiscoveryRequest discoveryRequest = new DiscoveryRequest();
-		discoveryRequest.addSelectors(this.selectors);
-		discoveryRequest.addEngineFilters(this.engineFilters);
-		discoveryRequest.addFilters(this.discoveryFilters);
-		discoveryRequest.addPostFilters(this.postDiscoveryFilters);
-		discoveryRequest.addConfigurationParameters(this.configurationParameters);
-		return discoveryRequest;
+		LauncherConfigurationParameters launcherConfigurationParameters = new LauncherConfigurationParameters(
+			this.configurationParameters);
+		return new DiscoveryRequest(this.selectors, this.engineFilters, this.discoveryFilters,
+			this.postDiscoveryFilters, launcherConfigurationParameters);
 	}
 
 }

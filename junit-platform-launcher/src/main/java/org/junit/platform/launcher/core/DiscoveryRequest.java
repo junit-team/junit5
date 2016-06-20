@@ -13,10 +13,7 @@ package org.junit.platform.launcher.core;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -54,65 +51,28 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
 final class DiscoveryRequest implements TestDiscoveryRequest {
 
 	// Selectors provided to the engines to be used for discovering tests
-	private final List<DiscoverySelector> selectors = new LinkedList<>();
+	private final List<DiscoverySelector> selectors;
 
 	// Filters based on engines
-	private final List<EngineFilter> engineFilters = new LinkedList<>();
+	private final List<EngineFilter> engineFilters;
 
 	// Discovery filters are handed through to all engines to be applied during discovery.
-	private final List<DiscoveryFilter<?>> discoveryFilters = new LinkedList<>();
+	private final List<DiscoveryFilter<?>> discoveryFilters;
 
 	// Descriptor filters are applied by the launcher itself after engines have performed discovery.
-	private final List<PostDiscoveryFilter> postDiscoveryFilters = new LinkedList<>();
+	private final List<PostDiscoveryFilter> postDiscoveryFilters;
 
 	// Configuration parameters can be used to provide custom configuration to engines, e.g. for extensions
-	private final LauncherConfigurationParameters configurationParameters = new LauncherConfigurationParameters();
+	private final LauncherConfigurationParameters configurationParameters;
 
-	@Override
-	public void addSelector(DiscoverySelector selector) {
-		this.selectors.add(selector);
-	}
-
-	@Override
-	public void addSelectors(Collection<DiscoverySelector> selectors) {
-		Preconditions.notNull(selectors, "selectors must not be null");
-		selectors.forEach(this::addSelector);
-	}
-
-	@Override
-	public void addEngineFilter(EngineFilter engineFilter) {
-		Preconditions.notNull(engineFilter, "engineFilter must not be null");
-		this.engineFilters.add(engineFilter);
-	}
-
-	@Override
-	public void addEngineFilters(Collection<EngineFilter> engineFilters) {
-		Preconditions.notNull(engineFilters, "engineFilters must not be null");
-		this.engineFilters.addAll(engineFilters);
-	}
-
-	@Override
-	public void addFilter(DiscoveryFilter<?> discoveryFilter) {
-		Preconditions.notNull(discoveryFilter, "discoveryFilter must not be null");
-		this.discoveryFilters.add(discoveryFilter);
-	}
-
-	@Override
-	public void addFilters(Collection<DiscoveryFilter<?>> discoveryFilters) {
-		Preconditions.notNull(discoveryFilters, "discoveryFilters must not be null");
-		this.discoveryFilters.addAll(discoveryFilters);
-	}
-
-	@Override
-	public void addPostFilter(PostDiscoveryFilter postDiscoveryFilter) {
-		Preconditions.notNull(postDiscoveryFilter, "postDiscoveryFilter must not be null");
-		this.postDiscoveryFilters.add(postDiscoveryFilter);
-	}
-
-	@Override
-	public void addPostFilters(Collection<PostDiscoveryFilter> postDiscoveryFilters) {
-		Preconditions.notNull(postDiscoveryFilters, "postDiscoveryFilters must not be null");
-		this.postDiscoveryFilters.addAll(postDiscoveryFilters);
+	DiscoveryRequest(List<DiscoverySelector> selectors, List<EngineFilter> engineFilters,
+			List<DiscoveryFilter<?>> discoveryFilters, List<PostDiscoveryFilter> postDiscoveryFilters,
+			LauncherConfigurationParameters configurationParameters) {
+		this.selectors = selectors;
+		this.engineFilters = engineFilters;
+		this.discoveryFilters = discoveryFilters;
+		this.postDiscoveryFilters = postDiscoveryFilters;
+		this.configurationParameters = configurationParameters;
 	}
 
 	@Override
@@ -140,12 +100,6 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 	@Override
 	public List<PostDiscoveryFilter> getPostDiscoveryFilters() {
 		return unmodifiableList(this.postDiscoveryFilters);
-	}
-
-	@Override
-	public void addConfigurationParameters(Map<String, String> configurationParameters) {
-		Preconditions.notNull(configurationParameters, "configurationParameters must not be null");
-		this.configurationParameters.addAll(configurationParameters);
 	}
 
 	@Override

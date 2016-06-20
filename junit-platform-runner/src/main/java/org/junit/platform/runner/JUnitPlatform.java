@@ -38,6 +38,7 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherFactory;
+import org.junit.platform.launcher.core.TestDiscoveryRequestBuilder;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -122,19 +123,19 @@ public class JUnitPlatform extends Runner implements Filterable {
 			selectors.add(selectClass(this.testClass));
 		}
 
-		TestDiscoveryRequest request = request().selectors(selectors).build();
-		addFiltersFromAnnotations(request);
-		return request;
+		TestDiscoveryRequestBuilder requestBuilder = request().selectors(selectors);
+		addFiltersFromAnnotations(requestBuilder);
+		return requestBuilder.build();
 	}
 
-	private void addFiltersFromAnnotations(TestDiscoveryRequest request) {
-		addIncludeClassNamePatternFilter(request);
+	private void addFiltersFromAnnotations(TestDiscoveryRequestBuilder requestBuilder) {
+		addIncludeClassNamePatternFilter(requestBuilder);
 
-		addIncludedTagsFilter(request);
-		addExcludedTagsFilter(request);
+		addIncludedTagsFilter(requestBuilder);
+		addExcludedTagsFilter(requestBuilder);
 
-		addIncludedEnginesFilter(request);
-		addExcludedEnginesFilter(request);
+		addIncludedEnginesFilter(requestBuilder);
+		addExcludedEnginesFilter(requestBuilder);
 	}
 
 	private List<DiscoverySelector> getSelectorsFromAnnotations() {
@@ -150,38 +151,38 @@ public class JUnitPlatform extends Runner implements Filterable {
 		return stream(sourceElements).map(transformer).collect(toList());
 	}
 
-	private void addIncludeClassNamePatternFilter(TestDiscoveryRequest discoveryRequest) {
+	private void addIncludeClassNamePatternFilter(TestDiscoveryRequestBuilder requestBuilder) {
 		String pattern = getIncludeClassNamePattern();
 		if (!pattern.isEmpty()) {
-			discoveryRequest.addFilter(includeClassNamePattern(pattern));
+			requestBuilder.filters(includeClassNamePattern(pattern));
 		}
 	}
 
-	private void addIncludedTagsFilter(TestDiscoveryRequest discoveryRequest) {
+	private void addIncludedTagsFilter(TestDiscoveryRequestBuilder requestBuilder) {
 		String[] includedTags = getIncludedTags();
 		if (includedTags.length > 0) {
-			discoveryRequest.addPostFilter(includeTags(includedTags));
+			requestBuilder.filters(includeTags(includedTags));
 		}
 	}
 
-	private void addExcludedTagsFilter(TestDiscoveryRequest discoveryRequest) {
+	private void addExcludedTagsFilter(TestDiscoveryRequestBuilder requestBuilder) {
 		String[] excludedTags = getExcludedTags();
 		if (excludedTags.length > 0) {
-			discoveryRequest.addPostFilter(excludeTags(excludedTags));
+			requestBuilder.filters(excludeTags(excludedTags));
 		}
 	}
 
-	private void addIncludedEnginesFilter(TestDiscoveryRequest discoveryRequest) {
+	private void addIncludedEnginesFilter(TestDiscoveryRequestBuilder requestBuilder) {
 		String[] engineIds = getIncludedEngineIds();
 		if (engineIds.length > 0) {
-			discoveryRequest.addEngineFilter(includeEngines(engineIds));
+			requestBuilder.filters(includeEngines(engineIds));
 		}
 	}
 
-	private void addExcludedEnginesFilter(TestDiscoveryRequest discoveryRequest) {
+	private void addExcludedEnginesFilter(TestDiscoveryRequestBuilder requestBuilder) {
 		String[] engineIds = getExcludedEngineIds();
 		if (engineIds.length > 0) {
-			discoveryRequest.addEngineFilter(excludeEngines(engineIds));
+			requestBuilder.filters(excludeEngines(engineIds));
 		}
 	}
 
