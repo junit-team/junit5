@@ -83,8 +83,9 @@ class JUnitPlatformRunnerTests {
 
 			TestDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			assertThat(request.getSelectors()).hasSize(1);
-			ClassSelector classSelector = getOnlyElement(request.getSelectorsByType(ClassSelector.class));
+			List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
+			assertThat(selectors).hasSize(1);
+			ClassSelector classSelector = getOnlyElement(selectors);
 			assertEquals(TestCase.class, classSelector.getJavaClass());
 		}
 
@@ -97,8 +98,8 @@ class JUnitPlatformRunnerTests {
 
 			TestDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			assertThat(request.getSelectors()).hasSize(2);
 			List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
+			assertThat(selectors).hasSize(2);
 			assertEquals(Short.class, selectors.get(0).getJavaClass());
 			assertEquals(Byte.class, selectors.get(1).getJavaClass());
 		}
@@ -112,8 +113,8 @@ class JUnitPlatformRunnerTests {
 
 			TestDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
-			assertThat(request.getSelectors()).hasSize(2);
 			List<PackageSelector> selectors = request.getSelectorsByType(PackageSelector.class);
+			assertThat(selectors).hasSize(2);
 			assertEquals("foo", selectors.get(0).getPackageName());
 			assertEquals("bar", selectors.get(1).getPackageName());
 		}

@@ -116,11 +116,6 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 	}
 
 	@Override
-	public List<DiscoverySelector> getSelectors() {
-		return unmodifiableList(this.selectors);
-	}
-
-	@Override
 	public <T extends DiscoverySelector> List<T> getSelectorsByType(Class<T> selectorType) {
 		Preconditions.notNull(selectorType, "selectorType must not be null");
 		return this.selectors.stream().filter(selectorType::isInstance).map(selectorType::cast).collect(toList());
