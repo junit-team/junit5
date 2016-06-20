@@ -39,15 +39,11 @@ import org.junit.platform.commons.util.Preconditions;
 public interface Filter<T> {
 
 	/**
-	 * Combine the supplied array of {@link Filter filters} into a new composite
-	 * filter that will include elements if and only if all of the filters in the
-	 * specified array include it.
+	 * Return a filter that will include elements if and only if all of the
+	 * filters in the supplied array of {@link Filter filters} include it.
 	 *
 	 * <p>If the array is empty, the returned filter will include all elements
 	 * it is asked to filter.
-	 *
-	 * <p>If the length of the array is 1, this method will return the single
-	 * filter contained in the array.
 	 *
 	 * @param filters the array of filters to compose; never {@code null}
 	 * @see #composeFilters(Collection)
@@ -66,15 +62,11 @@ public interface Filter<T> {
 	}
 
 	/**
-	 * Combine the supplied collection of {@link Filter filters} into a new
-	 * composite filter that will include elements if and only if all of the
-	 * filters in the specified collection include it.
+	 * Return a filter that will include elements if and only if all of the
+	 * filters in the supplied collection of {@link Filter filters} include it.
 	 *
 	 * <p>If the collection is empty, the returned filter will include all
 	 * elements it is asked to filter.
-	 *
-	 * <p>If the size of the collection is 1, this method will return the single
-	 * filter contained in the collection.
 	 *
 	 * @param filters the collection of filters to compose; never {@code null}
 	 * @see #composeFilters(Filter...)
