@@ -48,6 +48,12 @@ ext {
 	]
 
 	mavenizedProjects = platformProjects + jupiterProjects + vintageProjects
+
+	cloverTestProjects = [
+		'junit-jupiter-engine',
+		'junit-vintage-engine',
+		'platform-tests'
+	]
 }
 
 allprojects {
@@ -314,6 +320,13 @@ subprojects { subproj ->
 			)
 		}
 	}
+
+	afterEvaluate {
+		if (project.hasProperty('enableClover') && subproj.name in cloverTestProjects) {
+			cloverAggregateDatabases.dependsOn subproj.tasks.test
+		}
+	}
+
 }
 
 configure(rootProject) {
@@ -390,7 +403,6 @@ configure(rootProject) {
 		}
 	}
 
-
 	if (project.hasProperty('enableClover')) {
 
 		def cloverAggregationFile = "$cloverDir/coverage.db"
@@ -427,17 +439,6 @@ configure(rootProject) {
 					current(outfile: "$buildDir/reports/clover/clover.xml") {
 						format(type: 'xml')
 					}
-				}
-			}
-		}
-
-		afterEvaluate {
-			def testTaskName = 'junitPlatformTest'
-			// def testTaskName = 'test'
-			subprojects.each { project ->
-				def testTask = project.tasks.findByPath(testTaskName)
-				if (testTask != null) {
-					cloverAggregateDatabases.dependsOn testTask
 				}
 			}
 		}
