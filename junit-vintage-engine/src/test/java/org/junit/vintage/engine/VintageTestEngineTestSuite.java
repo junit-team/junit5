@@ -17,7 +17,7 @@ import org.junit.platform.runner.SelectPackages;
 import org.junit.runner.RunWith;
 
 /**
- * Test suite for the {@link JUnit4TestEngine}.
+ * Test suite for the {@link VintageTestEngine}.
  *
  * <h3>Logging Configuration</h3>
  *
@@ -35,5 +35,5 @@ import org.junit.runner.RunWith;
 @SelectPackages("org.junit.vintage.engine")
 @IncludeClassNamePattern(".*Tests?")
 @IncludeEngines("junit-jupiter")
-public class JUnit4TestEngineTestSuite {
+public class VintageTestEngineTestSuite {
 }

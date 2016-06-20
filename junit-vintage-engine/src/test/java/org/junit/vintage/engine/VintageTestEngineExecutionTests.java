@@ -46,7 +46,7 @@ import org.junit.vintage.engine.samples.junit4.*;
 /**
  * @since 4.12
  */
-class JUnit4TestEngineExecutionTests {
+class VintageTestEngineExecutionTests {
 
 	@Test
 	void executesPlainJUnit4TestCaseWithSingleTestWhichFails() {
@@ -455,7 +455,7 @@ class JUnit4TestEngineExecutionTests {
 	}
 
 	private static List<ExecutionEvent> execute(Class<?> testClass) {
-		JUnit4TestEngine engine = new JUnit4TestEngine();
+		VintageTestEngine engine = new VintageTestEngine();
 		TestDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
 		return ExecutionEventRecorder.execute(engine, discoveryRequest);
 	}

@@ -130,7 +130,7 @@ class UniqueIdTests {
 
 		@Test
 		void differentEnginesAreNotEqual() {
-			UniqueId id1 = UniqueId.root("engine", "junit4");
+			UniqueId id1 = UniqueId.root("engine", "junit-vintage");
 			UniqueId id2 = UniqueId.root("engine", "junit-jupiter");
 
 			Assertions.assertFalse(id1.equals(id2));

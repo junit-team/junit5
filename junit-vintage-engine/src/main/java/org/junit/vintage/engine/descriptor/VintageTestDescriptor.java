@@ -40,20 +40,20 @@ import org.junit.runner.Description;
  * @since 4.12
  */
 @API(Internal)
-public class JUnit4TestDescriptor extends AbstractTestDescriptor {
+public class VintageTestDescriptor extends AbstractTestDescriptor {
 
-	public static final String ENGINE_ID = "junit4";
+	public static final String ENGINE_ID = "junit-vintage";
 	public static final String SEGMENT_TYPE_RUNNER = "runner";
 	public static final String SEGMENT_TYPE_TEST = "test";
 
 	private final Description description;
 
-	public JUnit4TestDescriptor(TestDescriptor parent, String segmentType, String segmentValue,
+	public VintageTestDescriptor(TestDescriptor parent, String segmentType, String segmentValue,
 			Description description) {
 		this(parent, segmentType, segmentValue, description, toJavaSource(description));
 	}
 
-	JUnit4TestDescriptor(TestDescriptor parent, String segmentType, String segmentValue, Description description,
+	VintageTestDescriptor(TestDescriptor parent, String segmentType, String segmentValue, Description description,
 			Optional<? extends TestSource> source) {
 		super(parent.getUniqueId().append(segmentType, segmentValue));
 

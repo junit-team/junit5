@@ -21,8 +21,8 @@ import java.util.Set;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.runner.Description;
-import org.junit.vintage.engine.descriptor.JUnit4TestDescriptor;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
+import org.junit.vintage.engine.descriptor.VintageTestDescriptor;
 
 /**
  * @since 4.12
@@ -50,7 +50,7 @@ class UniqueIdFilter extends RunnerTestDescriptorAwareFilter {
 		Deque<Description> path = new LinkedList<>();
 		Optional<? extends TestDescriptor> current = identifiedTestDescriptor;
 		while (current.isPresent() && !current.get().equals(runnerTestDescriptor)) {
-			path.addFirst(((JUnit4TestDescriptor) current.get()).getDescription());
+			path.addFirst(((VintageTestDescriptor) current.get()).getDescription());
 			current = current.get().getParent();
 		}
 		return path;
@@ -62,8 +62,8 @@ class UniqueIdFilter extends RunnerTestDescriptorAwareFilter {
 			return identifiedTestDescriptor.get()
 					.getAllDescendants()
 					.stream()
-					.map(JUnit4TestDescriptor.class::cast)
-					.map(JUnit4TestDescriptor::getDescription)
+					.map(VintageTestDescriptor.class::cast)
+					.map(VintageTestDescriptor::getDescription)
 					.collect(toSet());
 			// @formatter:on
 		}

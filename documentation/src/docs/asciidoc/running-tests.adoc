@@ -55,7 +55,7 @@ junitPlatform {
 	// enableStandardTestTask true
 	engines {
 		include 'junit-jupiter'
-		// exclude 'junit4'
+		// exclude 'junit-vintage'
 	}
 	tags {
 		include 'fast', 'smoke'

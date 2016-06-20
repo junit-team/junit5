@@ -28,8 +28,8 @@ import java.util.stream.Stream;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.runner.Description;
-import org.junit.vintage.engine.descriptor.JUnit4TestDescriptor;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
+import org.junit.vintage.engine.descriptor.VintageTestDescriptor;
 
 /**
  * @since 4.12
@@ -39,7 +39,7 @@ class TestRun {
 	private final RunnerTestDescriptor runnerTestDescriptor;
 	private final Logger logger;
 	private final Set<? extends TestDescriptor> runnerDescendants;
-	private final Map<Description, List<JUnit4TestDescriptor>> descriptionToDescriptors;
+	private final Map<Description, List<VintageTestDescriptor>> descriptionToDescriptors;
 	private final Map<TestDescriptor, TestExecutionResult> executionResults = new LinkedHashMap<>();
 	private final Set<TestDescriptor> skippedDescriptors = new LinkedHashSet<>();
 	private final Set<TestDescriptor> startedDescriptors = new LinkedHashSet<>();
@@ -51,8 +51,8 @@ class TestRun {
 		runnerDescendants = runnerTestDescriptor.getAllDescendants();
 		// @formatter:off
 		descriptionToDescriptors = concat(Stream.of(runnerTestDescriptor), runnerDescendants.stream())
-			.map(JUnit4TestDescriptor.class::cast)
-			.collect(groupingBy(JUnit4TestDescriptor::getDescription));
+			.map(VintageTestDescriptor.class::cast)
+			.collect(groupingBy(VintageTestDescriptor::getDescription));
 		// @formatter:on
 	}
 
@@ -89,7 +89,7 @@ class TestRun {
 	}
 
 	private Optional<? extends TestDescriptor> lookupInternal(Description description) {
-		List<JUnit4TestDescriptor> descriptors = descriptionToDescriptors.get(description);
+		List<VintageTestDescriptor> descriptors = descriptionToDescriptors.get(description);
 		if (descriptors == null) {
 			return Optional.empty();
 		}

@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.runner.Description.createTestDescription;
-import static org.junit.vintage.engine.JUnit4UniqueIdBuilder.engineId;
+import static org.junit.vintage.engine.VintageUniqueIdBuilder.engineId;
 
 import java.util.Optional;
 import java.util.logging.Level;

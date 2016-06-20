@@ -24,7 +24,7 @@ import org.junit.runner.Runner;
  * @since 4.12
  */
 @API(Internal)
-public class RunnerTestDescriptor extends JUnit4TestDescriptor {
+public class RunnerTestDescriptor extends VintageTestDescriptor {
 
 	private final Runner runner;
 	private final Class<?> testClass;

@@ -46,7 +46,7 @@ class LauncherFactoryTests {
 		// @formatter:on
 
 		if (junitVintageEngineIsPresent()) {
-			assertThat(ids).containsOnly("[engine:junit4]", "[engine:junit-jupiter]");
+			assertThat(ids).containsOnly("[engine:junit-vintage]", "[engine:junit-jupiter]");
 		}
 		else {
 			assertThat(ids).containsOnly("[engine:junit-jupiter]");
@@ -79,7 +79,7 @@ class LauncherFactoryTests {
 	}
 
 	private static boolean junitVintageEngineIsPresent() {
-		return ReflectionUtils.loadClass("org.junit.vintage.engine.JUnit4TestEngine").isPresent();
+		return ReflectionUtils.loadClass("org.junit.vintage.engine.VintageTestEngine").isPresent();
 	}
 
 }

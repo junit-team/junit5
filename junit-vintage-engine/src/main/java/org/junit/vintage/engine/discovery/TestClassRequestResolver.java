@@ -28,8 +28,8 @@ import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.Filterable;
 import org.junit.runners.model.RunnerBuilder;
-import org.junit.vintage.engine.descriptor.JUnit4TestDescriptor;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
+import org.junit.vintage.engine.descriptor.VintageTestDescriptor;
 
 /**
  * @since 4.12
@@ -95,7 +95,7 @@ class TestClassRequestResolver {
 		return runnerTestDescriptor;
 	}
 
-	private void addChildrenRecursively(JUnit4TestDescriptor parent) {
+	private void addChildrenRecursively(VintageTestDescriptor parent) {
 		List<Description> children = parent.getDescription().getChildren();
 		// Use LinkedHashMap to preserve order, ArrayList for fast access by index
 		Map<String, List<Description>> childrenByUniqueId = children.stream().collect(
@@ -107,7 +107,7 @@ class TestClassRequestResolver {
 			for (int index = 0; index < childrenWithSameUniqueId.size(); index++) {
 				String reallyUniqueId = uniqueIdGenerator.apply(index);
 				Description description = childrenWithSameUniqueId.get(index);
-				JUnit4TestDescriptor child = new JUnit4TestDescriptor(parent, JUnit4TestDescriptor.SEGMENT_TYPE_TEST,
+				VintageTestDescriptor child = new VintageTestDescriptor(parent, VintageTestDescriptor.SEGMENT_TYPE_TEST,
 					reallyUniqueId, description);
 				parent.addChild(child);
 				addChildrenRecursively(child);

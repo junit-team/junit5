@@ -16,7 +16,7 @@ import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.FilterResult.includedIf;
 import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
 import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
-import static org.junit.vintage.engine.JUnit4UniqueIdBuilder.engineId;
+import static org.junit.vintage.engine.VintageUniqueIdBuilder.engineId;
 
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -30,11 +30,11 @@ import org.junit.vintage.engine.RecordCollectingLogger;
 /**
  * @since 4.12
  */
-class JUnit4DiscoveryRequestResolverTests {
+class VintageDiscoveryRequestResolverTests {
 
 	@Test
 	void logsWarningWhenFilterExcludesClass() {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(engineId(), "JUnit 4");
+		EngineDescriptor engineDescriptor = new EngineDescriptor(engineId(), "JUnit Vintage");
 		RecordCollectingLogger logger = new RecordCollectingLogger();
 
 		ClassFilter filter = testClass -> includedIf(Foo.class.equals(testClass), () -> "match", () -> "no match");

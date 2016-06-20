@@ -27,8 +27,8 @@ import org.junit.internal.builders.IgnoredClassRunner;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
-import org.junit.vintage.engine.JUnit4UniqueIdBuilder;
 import org.junit.vintage.engine.RecordCollectingLogger;
+import org.junit.vintage.engine.VintageUniqueIdBuilder;
 import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.PlainJUnit4TestCaseWithFiveTestMethods;
 
@@ -77,7 +77,7 @@ class TestClassRequestResolverTests {
 	}
 
 	private List<LogRecord> resolve(TestClassRequest request) {
-		TestDescriptor engineDescriptor = new EngineDescriptor(JUnit4UniqueIdBuilder.engineId(), "JUnit 4");
+		TestDescriptor engineDescriptor = new EngineDescriptor(VintageUniqueIdBuilder.engineId(), "JUnit 4");
 		RecordCollectingLogger logger = new RecordCollectingLogger();
 
 		TestClassRequestResolver resolver = new TestClassRequestResolver(engineDescriptor, logger);

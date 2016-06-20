@@ -11,7 +11,7 @@
 package org.junit.vintage.engine.discovery;
 
 import static java.lang.String.format;
-import static org.junit.vintage.engine.descriptor.JUnit4TestDescriptor.ENGINE_ID;
+import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
 
 import java.util.List;
 import java.util.Optional;

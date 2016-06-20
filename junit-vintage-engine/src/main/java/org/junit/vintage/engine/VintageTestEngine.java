@@ -12,7 +12,7 @@ package org.junit.vintage.engine;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import static org.junit.platform.engine.TestExecutionResult.successful;
-import static org.junit.vintage.engine.descriptor.JUnit4TestDescriptor.ENGINE_ID;
+import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
 
 import java.util.logging.Logger;
 
@@ -32,9 +32,9 @@ import org.junit.vintage.engine.execution.RunnerExecutor;
  * @since 4.12
  */
 @API(Experimental)
-public class JUnit4TestEngine implements TestEngine {
+public class VintageTestEngine implements TestEngine {
 
-	private static final Logger LOG = Logger.getLogger(JUnit4TestEngine.class.getName());
+	private static final Logger LOG = Logger.getLogger(VintageTestEngine.class.getName());
 
 	@Override
 	public String getId() {
@@ -43,7 +43,7 @@ public class JUnit4TestEngine implements TestEngine {
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "JUnit 4");
+		EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "JUnit Vintage");
 		new JUnit4DiscoveryRequestResolver(engineDescriptor, LOG).resolve(discoveryRequest);
 		return engineDescriptor;
 	}
