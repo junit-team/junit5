@@ -464,7 +464,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#ide-support">4.1. IDE Support</a></li>
 <li><a href="#build-support">4.2. Build Support</a></li>
 <li><a href="#running-tests-console-runner">4.3. Console Runner</a></li>
-<li><a href="#running-tests-junit4-runner">4.4. Using JUnit 4 to Run JUnit 5 Tests</a></li>
+<li><a href="#running-tests-junit-platform-runner">4.4. Using JUnit 4 to Run JUnit 5 Tests</a></li>
 </ul>
 </li>
 <li><a href="#extension-model">5. Extension Model</a>
@@ -502,7 +502,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#contributors">9. Contributors</a></li>
 <li><a href="#release-notes">10. Release Notes</a>
 <ul class="sectlevel2">
-<li><a href="#release-notes">10.1. Release Notes 5.0.0-ALPHA</a></li>
+<li><a href="#release-notes">10.1. 5.0.0-ALPHA</a></li>
+<li><a href="#5-0-0-m1">10.2. 5.0.0-M1</a></li>
 </ul>
 </li>
 </ul>
@@ -529,14 +530,17 @@ lower versions.</p>
 <h2 id="installation">2. Installation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Snapshot artifacts are deployed to Sonatype&#8217;s <a href="https://oss.sonatype.org/content/repositories/snapshots">snapshots repository</a>.</p>
+<p>Snapshot artifacts are deployed to Sonatype&#8217;s <a href="https://oss.sonatype.org/content/repositories/snapshots">snapshots repository</a> under
+<a href="https://oss.sonatype.org/content/repositories/snapshots/org/junit/">/org/junit</a>.</p>
 </div>
 <div class="sect2">
 <h3 id="dependency-metadata">2.1. Dependency Metadata</h3>
+<div class="sect3">
+<h4 id="junit-jupiter">2.1.1. JUnit Jupiter</h4>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Group ID</strong>: <code>org.junit</code></p>
+<p><strong>Group ID</strong>: <code>org.junit.jupiter</code></p>
 </li>
 <li>
 <p><strong>Version</strong>: <code>5.0.0-SNAPSHOT</code></p>
@@ -546,42 +550,73 @@ lower versions.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>junit-commons</code></p>
+<p><code>junit-jupiter-api</code></p>
 </li>
 <li>
-<p><code>junit-console</code></p>
-</li>
-<li>
-<p><code>junit-engine-api</code></p>
-</li>
-<li>
-<p><code>junit-gradle</code></p>
-</li>
-<li>
-<p><code>junit-launcher</code></p>
-</li>
-<li>
-<p><code>junit4-engine</code></p>
-</li>
-<li>
-<p><code>junit4-runner</code></p>
-</li>
-<li>
-<p><code>junit5-api</code></p>
-</li>
-<li>
-<p><code>junit5-engine</code></p>
-</li>
-<li>
-<p><code>surefire-junit5</code></p>
+<p><code>junit-jupiter-engine</code></p>
 </li>
 </ul>
 </div>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>See also: <a href="https://oss.sonatype.org/content/repositories/snapshots/org/junit/" class="bare">https://oss.sonatype.org/content/repositories/snapshots/org/junit/</a></p>
+</div>
+<div class="sect3">
+<h4 id="junit-platform">2.1.2. JUnit Platform</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Group ID</strong>: <code>org.junit.platform</code></p>
+</li>
+<li>
+<p><strong>Version</strong>: <code>1.0.0-SNAPSHOT</code></p>
+</li>
+<li>
+<p><strong>Artifact IDs</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>junit-platform-commons</code></p>
+</li>
+<li>
+<p><code>junit-platform-console</code></p>
+</li>
+<li>
+<p><code>junit-platform-engine</code></p>
+</li>
+<li>
+<p><code>junit-platform-gradle-plugin</code></p>
+</li>
+<li>
+<p><code>junit-platform-launcher</code></p>
+</li>
+<li>
+<p><code>junit-platform-runner</code></p>
+</li>
+<li>
+<p><code>junit-platform-surefire-provider</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="junit-vintage">2.1.3. JUnit Vintage</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Group ID</strong>: <code>org.junit.vintage</code></p>
+</li>
+<li>
+<p><strong>Version</strong>: <code>4.12.0-SNAPSHOT</code></p>
+</li>
+<li>
+<p><strong>Artifact ID</strong>: <code>junit-vintage-engine</code></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -610,9 +645,9 @@ the projects below.</p>
 <div class="listingblock">
 <div class="title">A first test case</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertEquals;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.gen5.api.Test;
+import org.junit.jupiter.api.Test;
 
 class FirstJUnit5Tests {
 
@@ -630,7 +665,7 @@ class FirstJUnit5Tests {
 <p>JUnit 5 supports the following annotations for configuring tests and extending the framework.</p>
 </div>
 <div class="paragraph">
-<p>All core annotations are located in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api">org.junit.gen5.api</a></code> package in the <code>junit5-api</code>
+<p>All core annotations are located in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api">org.junit.jupiter.api</a></code> package in the <code>junit-jupiter-api</code>
 module.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
@@ -710,7 +745,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.junit.gen5.api.Tag;
+import org.junit.jupiter.api.Tag;
 
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
@@ -726,14 +761,14 @@ public @interface Fast {
 <div class="listingblock">
 <div class="title">A standard test case</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.fail;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.gen5.api.AfterAll;
-import org.junit.gen5.api.AfterEach;
-import org.junit.gen5.api.BeforeAll;
-import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.Disabled;
-import org.junit.gen5.api.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 class StandardTests {
 
@@ -783,8 +818,8 @@ characters, and even emojis&#8201;&#8212;&#8201;that will be displayed by test r
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.DisplayName;
-import org.junit.gen5.api.Test;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 @DisplayName("A special test case")
 class DisplayNameDemo {
@@ -813,16 +848,16 @@ class DisplayNameDemo {
 <div class="paragraph">
 <p>JUnit 5 comes with many of the assertion methods that JUnit 4 has and adds a few that
 lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions are static
-methods in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Assertions.java">org.junit.gen5.Assertions</a></code> class.</p>
+methods in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java">org.junit.jupiter.Assertions</a></code> class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertAll;
-import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.api.Assertions.expectThrows;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.expectThrows;
 
-import org.junit.gen5.api.Test;
+import org.junit.jupiter.api.Test;
 
 class AssertionsDemo {
 
@@ -861,15 +896,15 @@ class AssertionsDemo {
 <div class="paragraph">
 <p>JUnit 5 comes with a subset of the assumption methods that JUnit 4 provides and adds a
 few that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assumptions
-are static methods in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Assumptions.java">org.junit.gen5.Assumptions</a></code> class.</p>
+are static methods in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assumptions.java">org.junit.jupiter.Assumptions</a></code> class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assumptions.assumeTrue;
-import static org.junit.gen5.api.Assumptions.assumingThat;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumingThat;
 
-import org.junit.gen5.api.Test;
+import org.junit.jupiter.api.Test;
 
 public class AssumptionsDemo {
 
@@ -909,8 +944,8 @@ public class AssumptionsDemo {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.Disabled;
-import org.junit.gen5.api.Test;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 @Disabled
 class DisabledClassDemo {
@@ -925,8 +960,8 @@ class DisabledClassDemo {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.Disabled;
-import org.junit.gen5.api.Test;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 class DisabledTestsDemo {
 
@@ -950,8 +985,8 @@ class DisabledTestsDemo {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.Tag;
-import org.junit.gen5.api.Test;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 @Tag("fast")
 @Tag("model")
@@ -1066,7 +1101,7 @@ parameters. This allows for greater flexibility and enables <em>Dependency Injec
 constructors and methods.</p>
 </div>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ParameterResolver.java">ParameterResolver</a></code> defines the API for test extensions that wish to <em>dynamically</em>
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java">ParameterResolver</a></code> defines the API for test extensions that wish to <em>dynamically</em>
 resolve parameters at runtime. If a test constructor or a <code>@Test</code>, <code>@TestFactory</code>,
 <code>@BeforeEach</code>, <code>@AfterEach</code>, <code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts a parameter, the
 parameter must be resolved at runtime by a registered <code>ParameterResolver</code>.</p>
@@ -1077,14 +1112,14 @@ parameter must be resolved at runtime by a registered <code>ParameterResolver</c
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a method parameter is of type <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/TestInfo.java">TestInfo</a></code>, the
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a method parameter is of type <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestInfo.java">TestInfo</a></code>, the
 <code>TestInfoParameterResolver</code> will supply an instance of <code>TestInfo</code> corresponding to the
 current test as the value for the parameter. The <code>TestInfo</code> can then be used to retrieve
 information about the current test such as the test&#8217;s display name, the test class, the
 test method, or associated tags. The display name is either a technical name, such as
 the name of the test class or test method, or a custom name configured via <code>@DisplayName</code>.</p>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/TestInfo.java">TestInfo</a></code> acts as a drop-in replacement for the <code>TestName</code>
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestInfo.java">TestInfo</a></code> acts as a drop-in replacement for the <code>TestName</code>
 rule from JUnit 4. Here is an example of its usage.</p>
 </div>
 </li>
@@ -1092,14 +1127,14 @@ rule from JUnit 4. Here is an example of its usage.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertTrue;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.gen5.api.BeforeEach;
-import org.junit.gen5.api.DisplayName;
-import org.junit.gen5.api.Tag;
-import org.junit.gen5.api.Test;
-import org.junit.gen5.api.TestInfo;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
 class TestInfoDemo {
 
@@ -1127,15 +1162,15 @@ class TestInfoDemo {
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a method parameter is of type <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/TestReporter.java">TestReporter</a></code>, the
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a method parameter is of type <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestReporter.java">TestReporter</a></code>, the
 <code>TestReporterParameterResolver</code> will supply an instance of <code>TestReporter</code>.
 The <code>TestReporter</code> can be used to publish additional data about the current test run.
-The data can be consumed through <code><a href="https://github.com/junit-team/junit5/blob/master/junit-launcher/src/main/java/org/junit/gen5/launcher/TestExecutionListener.java">TestExecutionListener</a>.reportingEntryPublished()</code> and thus
+The data can be consumed through <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestExecutionListener.java">TestExecutionListener</a>.reportingEntryPublished()</code> and thus
 be viewed by IDEs or included in reports.</p>
 <div class="paragraph">
 <p>In JUnit 5 you should use <code>TestReporter</code> where
 you used to print information to <code>stdout</code> or <code>stderr</code> in JUnit 4.
-Using <code>@RunWith(JUnit5.class)</code> will even output all reported entries to <code>stdout</code>.</p>
+Using <code>@RunWith(JUnitPlatform.class)</code> will even output all reported entries to <code>stdout</code>.</p>
 </div>
 </li>
 </ul>
@@ -1144,8 +1179,8 @@ Using <code>@RunWith(JUnit5.class)</code> will even output all reported entries 
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import java.util.HashMap;
 
-import org.junit.gen5.api.Test;
-import org.junit.gen5.api.TestReporter;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestReporter;
 
 class TestReporterDemo {
 
@@ -1173,7 +1208,7 @@ class TestReporterDemo {
 <div class="ulist">
 <ul>
 <li>
-<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> for an example of a <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ParameterResolver.java">ParameterResolver</a></code>. While not
+<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> for an example of a <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java">ParameterResolver</a></code>. While not
 intended to be production-ready, it demonstrates the simplicity and expressiveness of
 both the extension model and the parameter resolution process. <code>MyMockitoTest</code>
 demonstrates how to inject Mockito mocks into <code>@BeforeEach</code> and <code>@Test</code> methods.</p>
@@ -1182,7 +1217,7 @@ demonstrates how to inject Mockito mocks into <code>@BeforeEach</code> and <code
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.api.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.jupiter.api.*;
 
 import static org.mockito.Mockito.when;
 import com.example.mockito.MockitoExtension;
@@ -1349,8 +1384,9 @@ since variables used in lambdas are bound to instance variables at execution tim
 rather than execution time of the lambda itself.</p>
 </div>
 <div class="paragraph">
-<p>As of JUnit 5.0.0-SNAPSHOT, dynamic tests must always be created by factory methods;
-however, this might be complemented by a registration facility in a later release.</p>
+<p>As of JUnit Jupiter 5.0.0-SNAPSHOT, dynamic tests must always be created by factory
+methods; however, this might be complemented by a registration facility in a later
+release.</p>
 </div>
 <div class="sect3">
 <h4 id="dynamic-test-examples">3.11.1. Dynamic Test Examples</h4>
@@ -1379,9 +1415,9 @@ and power of dynamic tests.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.assertEquals;
-import static org.junit.gen5.api.Assertions.assertTrue;
-import static org.junit.gen5.api.DynamicTest.dynamicTest;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -1393,9 +1429,9 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.junit.gen5.api.DynamicTest;
-import org.junit.gen5.api.Tag;
-import org.junit.gen5.api.TestFactory;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.TestFactory;
 
 class DynamicTestsDemo {
 
@@ -1449,7 +1485,7 @@ class DynamicTestsDemo {
         // a number evenly divisible by 7 is encountered.
         Iterator&lt;Integer&gt; inputGenerator = new Iterator&lt;Integer&gt;() {
 
-            final Random random = new Random();
+            Random random = new Random();
             int current;
 
             @Override
@@ -1490,7 +1526,7 @@ class DynamicTestsDemo {
 <p>At the time of this writing there is no direct support for running JUnit 5 tests in IDEs.
 However, the JUnit team provides two intermediate solutions so that you can go ahead and
 try out JUnit 5 within your IDE today. You can use the <a href="#running-tests-console-runner">Console Runner</a>
-or execute JUnit 5 tests with a <a href="#running-tests-junit4-runner">JUnit 4 based Runner</a>.</p>
+or execute JUnit 5 tests with a <a href="#running-tests-junit-platform-runner">JUnit 4 based Runner</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1513,14 +1549,15 @@ plugin in action.</p>
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">buildscript {
     repositories {
         mavenCentral()
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        // The following is only necessary if you want to use SNAPSHOT releases.
+        // maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
     dependencies {
-        classpath 'org.junit:junit-gradle:5.0.0-SNAPSHOT'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-SNAPSHOT'
     }
 }
 
-apply plugin: 'org.junit.gen5.gradle'</code></pre>
+apply plugin: 'org.junit.platform.gradle.plugin'</code></pre>
 </div>
 </div>
 </div>
@@ -1535,20 +1572,20 @@ final release.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">junit5 {
-    version '5.0.0-SNAPSHOT'
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">junitPlatform {
+    platformVersion 1.0
     logManager 'org.apache.logging.log4j.jul.LogManager'
-    reportsDir "build/test-results/junit5" // this is the default
-    // disableStandardTestTask false
+    reportsDir "build/test-results/junit-platform" // this is the default
+    // enableStandardTestTask true
     engines {
-        include 'junit5'
-        // exclude 'junit4'
+        include 'junit-jupiter'
+        // exclude 'junit-vintage'
     }
     tags {
         include 'fast', 'smoke'
         // exclude 'slow', 'ci'
     }
-    matchClassName '.*Tests'
+    includeClassNamePattern '.*Tests'
 }</code></pre>
 </div>
 </div>
@@ -1560,7 +1597,7 @@ how to configure log4j as the <code>LogManager</code>.</p>
 </div>
 <div class="paragraph">
 <p>By default, the JUnit Gradle plugin disables the standard Gradle <code>test</code> task, but this be
-overridden via the <code>disableStandardTestTask</code> flag.</p>
+overridden via the <code>enableStandardTestTask</code> flag.</p>
 </div>
 <div class="paragraph">
 <p>By default all engines and tags are included in the test plan. If you supply a <em>Test
@@ -1584,9 +1621,9 @@ similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy" data-lang="groovy">dependencies {
-    testCompile("org.junit:junit5-api:5.0.0-SNAPSHOT")
-    testRuntime("org.junit:junit5-engine:5.0.0-SNAPSHOT")
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">dependencies {
+    testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-SNAPSHOT")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-SNAPSHOT")
 }</code></pre>
 </div>
 </div>
@@ -1597,9 +1634,9 @@ TestEngine implementation similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy" data-lang="groovy">dependencies {
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">dependencies {
     testCompile("junit:junit:4.12")
-    testRuntime("org.junit:junit4-engine:5.0.0-SNAPSHOT")
+    testRuntime("org.junit.vintage:junit-vintage-engine:4.12.0-SNAPSHOT")
 }</code></pre>
 </div>
 </div>
@@ -1607,26 +1644,26 @@ TestEngine implementation similar to the following.</p>
 <div class="sect4">
 <h5 id="using-the-junit-gradle-plugin">Using the JUnit Gradle Plugin</h5>
 <div class="paragraph">
-<p>Once the JUnit Gradle plugin has been applied and configured, you have a new <code>junit5Test</code>
-task at your disposal.</p>
+<p>Once the JUnit Gradle plugin has been applied and configured, you have a new
+<code>junitPlatformTest</code> task at your disposal.</p>
 </div>
 <div class="paragraph">
-<p>Invoking <code>gradlew clean junit5Test</code> (or <code>gradlew clean check</code>) from the command line will
-execute all tests within the project whose class names match the regular expression
-supplied via <code>matchClassName</code>.</p>
+<p>Invoking <code>gradlew clean junitPlatformTest</code> (or <code>gradlew clean test</code>) from the command
+line will execute all tests within the project whose class names match the regular
+expression supplied via <code>includeClassNamePattern</code>.</p>
 </div>
 <div class="paragraph">
-<p>Executing the <code>junit5Test</code> task in the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project results in
-output similar to the following:</p>
+<p>Executing the <code>junitPlatformTest</code> task in the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project results
+in output similar to the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>:junit5Test
+<pre>:junitPlatformTest
 
-Test run finished after 50 ms
+Test run finished after 93 ms
 [         3 tests found     ]
-[         2 tests started   ]
 [         1 tests skipped   ]
+[         2 tests started   ]
 [         0 tests aborted   ]
 [         2 tests successful]
 [         0 tests failed    ]
@@ -1639,28 +1676,28 @@ BUILD SUCCESSFUL</pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>:junit5Test
+<pre>:junitPlatformTest
 
 Test failures (1):
-  junit5:com.example.project.SecondTest:mySecondTest
-    com.example.project.SecondTest#mySecondTest
-    => Exception: 2 is not equal to 1 ==> expected:<2> but was:<1>
+  JUnit 5:SecondTest:mySecondTest()
+    JavaMethodSource [javaClass = 'com.example.project.SecondTest', javaMethodName = 'mySecondTest', javaMethodParameterTypes = '']
+    => Exception: 2 is not equal to 1 ==> expected: <2> but was: <1>
 
-Test run finished after 50 ms
+Test run finished after 99 ms
 [         3 tests found     ]
-[         3 tests started   ]
 [         0 tests skipped   ]
+[         3 tests started   ]
 [         0 tests aborted   ]
 [         2 tests successful]
 [         1 tests failed    ]
 
-:junit5Test FAILED
+:junitPlatformTest FAILED
 
 FAILURE: Build failed with an exception.
 
 * What went wrong:
-Execution failed for task ':junit5Test'.
-> Process 'command '/Library/Java/JavaVirtualMachines/jdk1.8.0_66.jdk/Contents/Home/bin/java'' finished with non-zero exit value 1</pre>
+Execution failed for task ':junitPlatformTest'.
+> Process 'command '/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home/bin/java'' finished with non-zero exit value 1</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1700,8 +1737,8 @@ point.</p>
             &lt;dependencies&gt;
                 &lt;dependency&gt;
                     &lt;groupId&gt;org.junit&lt;/groupId&gt;
-                    &lt;artifactId&gt;surefire-junit5&lt;/artifactId&gt;
-                    &lt;version&gt;5.0.0-SNAPSHOT&lt;/version&gt;
+                    &lt;artifactId&gt;junit-platform-surefire-provider&lt;/artifactId&gt;
+                    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
                 &lt;/dependency&gt;
             &lt;/dependencies&gt;
         &lt;/plugin&gt;
@@ -1715,7 +1752,7 @@ point.</p>
 <div class="sect2">
 <h3 id="running-tests-console-runner">4.3. Console Runner</h3>
 <div class="paragraph">
-<p>The <code><a href="https://github.com/junit-team/junit5/blob/master/junit-console/src/main/java/org/junit/gen5/console/ConsoleRunner.java">ConsoleRunner</a></code> is a command-line Java application that lets you run JUnit 4 and
+<p>The <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleRunner.java">ConsoleRunner</a></code> is a command-line Java application that lets you run JUnit 4 and
 JUnit 5 tests and prints test execution results to the console.</p>
 </div>
 <div class="paragraph">
@@ -1724,12 +1761,12 @@ JUnit 5 tests and prints test execution results to the console.</p>
 <div class="listingblock">
 <div class="content">
 <pre>Test execution started. Number of static tests: 2
-Engine started: junit5
-Test started:     My 1st JUnit 5 test! 😎 [junit5:com.example.project.FirstTest#myFirstTest(java.lang.String)]
-Test succeeded:   My 1st JUnit 5 test! 😎 [junit5:com.example.project.FirstTest#myFirstTest(java.lang.String)]
-Test skipped:     mySecondTest [junit5:com.example.project.SecondTest#mySecondTest()]
+Engine started: junit-jupiter
+Test started:     My 1st JUnit 5 test! 😎 [junit-jupiter:com.example.project.FirstTest#myFirstTest(java.lang.String)]
+Test succeeded:   My 1st JUnit 5 test! 😎 [junit-jupiter:com.example.project.FirstTest#myFirstTest(java.lang.String)]
+Test skipped:     mySecondTest [junit-jupiter:com.example.project.SecondTest#mySecondTest()]
                   => Exception:   Skipped test method [void com.example.project.SecondTest.mySecondTest()] due to failed condition
-Engine finished: junit5
+Engine finished: junit-jupiter
 Test execution finished.
 
 Test run finished after 29 ms
@@ -1759,7 +1796,7 @@ Option                       Description
 -a, --all                    Run all tests
 -p, --classpath              Provide additional classpath entries -- for example,
                                for adding engines and their dependencies.
--n, --filter-classname       Provide a regular expression to include only
+-n, --include-classname      Provide a regular expression to include only
                                classes whose fully qualified names match.
                                By default any class name is accepted, and
                                thus all classes with tests are included.
@@ -1786,13 +1823,20 @@ Option                       Description
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-junit4-runner">4.4. Using JUnit 4 to Run JUnit 5 Tests</h3>
+<h3 id="running-tests-junit-platform-runner">4.4. Using JUnit 4 to Run JUnit 5 Tests</h3>
 <div class="paragraph">
-<p>The <code>JUnit5</code> runner lets you run JUnit 5 tests with JUnit 4. This way you can run JUnit 5
-tests in IDEs and build tools that only know about JUnit 4. As soon as we add reporting
-features to JUnit 5 that JUnit 4 does not have, the runner will only be able to support a
-subset of the JUnit 5 functionality. But for the time being the <code>JUnit5</code> runner is an
-easy way to get started.</p>
+<p>The <code>JUnitPlatform</code> runner is a JUnit 4 based <code>Runner</code> which enables you to run any test
+whose programming model is supported on the JUnit Platform in a JUnit 4 environment&#8201;&#8212;&#8201;for example, a JUnit 5 test class.</p>
+</div>
+<div class="paragraph">
+<p>Annotating a class with <code>@RunWith(JUnitPlatform.class)</code> allows it to be run with IDEs and
+build systems that support JUnit 4 but do not yet support the JUnit Platform directly.</p>
+</div>
+<div class="paragraph">
+<p>Since the JUnit Platform has features that JUnit 4 does not have, the runner is only able
+to support a subset of the JUnit Platform functionality, especially with regard to
+reporting. But for the time being the <code>JUnitPlatform</code> runner is an easy way to get
+started.</p>
 </div>
 <div class="sect3">
 <h4 id="setup">4.4.1. Setup</h4>
@@ -1804,13 +1848,13 @@ versions.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>junit5-api</code> in <em>test</em> scope: API for writing tests, including <code>@Test</code>, etc.</p>
+<p><code>junit-jupiter-api</code> in <em>test</em> scope: API for writing tests, including <code>@Test</code>, etc.</p>
 </li>
 <li>
-<p><code>junit4-runner</code> in <em>test</em> scope: location of the <code>JUnit5</code> runner</p>
+<p><code>junit-platform-runner</code> in <em>test</em> scope: location of the <code>JUnitPlatform</code> runner</p>
 </li>
 <li>
-<p><code>junit5-engine</code> in <em>test runtime</em> scope: implementation of the Engine API for JUnit 5</p>
+<p><code>junit-jupiter-engine</code> in <em>test runtime</em> scope: implementation of the Engine API for JUnit 5</p>
 </li>
 </ul>
 </div>
@@ -1818,21 +1862,21 @@ versions.</p>
 <div class="sect3">
 <h4 id="single-test-class">4.4.2. Single Test Class</h4>
 <div class="paragraph">
-<p>One way to use the <code>JUnit5</code> runner is to annotate a JUnit 5 test class with
-<code>@RunWith(JUnit5.class)</code> directly. Please note that the test methods are annotated with
-<code>org.junit.gen5.api.Test</code> (JUnit 5), not <code>org.junit.Test</code> (JUnit 4). Moreover, in this
-case the test class must be <code>public</code> because; otherwise, the IDEs won&#8217;t recognize it as a
-test class.</p>
+<p>One way to use the <code>JUnitPlatform</code> runner is to annotate a test class with
+<code>@RunWith(JUnitPlatform.class)</code> directly. Please note that the test methods in the
+following example are annotated with <code>org.junit.jupiter.api.Test</code> (JUnit Jupiter), not
+<code>org.junit.Test</code> (JUnit Vintage). Moreover, in this case the test class must be <code>public</code>;
+otherwise, IDEs won&#8217;t recognize it as a test class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.api.Assertions.fail;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.gen5.api.Test;
-import org.junit.gen5.junit4.runner.JUnit5;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-@RunWith(JUnit5.class)
+@RunWith(JUnitPlatform.class)
 public class JUnit4ClassDemo {
 
     @Test
@@ -1852,16 +1896,17 @@ public class JUnit4ClassDemo {
 <div class="sect3">
 <h4 id="test-suite">4.4.3. Test Suite</h4>
 <div class="paragraph">
-<p>If you have multiple JUnit 5 test classes you can create a test suite.</p>
+<p>If you have multiple test classes you can create a test suite as can be seen in the
+following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.gen5.junit4.runner.JUnit5;
-import org.junit.gen5.junit4.runner.Packages;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.platform.runner.JUnitPlatform;
+import org.junit.platform.runner.SelectPackages;
 import org.junit.runner.RunWith;
 
-@RunWith(JUnit5.class)
-@Packages("example")
+@RunWith(JUnitPlatform.class)
+@SelectPackages("example")
 public class JUnit4SuiteDemo {
 }</code></pre>
 </div>
@@ -1872,9 +1917,9 @@ and its subpackages.</p>
 </div>
 <div class="paragraph">
 <p>There are more configuration options for discovering and filtering tests than just
-<code>@Packages</code>. Please consult the
-<a href="https://junit.ci.cloudbees.com/job/JUnit5/javadoc/org/junit/gen5/junit4/runner/package-summary.html">Javadoc</a> or the source
-code for the <code><a href="https://github.com/junit-team/junit5/blob/master/junit4-runner/src/main/java/org/junit/gen5/junit4/runner/JUnit5.java">JUnit5</a></code> runner for further details.</p>
+<code>@SelectPackages</code>. Please consult the
+<a href="http://junit.org/junit5/docs/current/api/org/junit/platform/runner/package-summary.html">Javadoc</a> or the source
+code for the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatform.java">JUnitPlatform</a></code> runner for further details.</p>
 </div>
 </div>
 </div>
@@ -1894,7 +1939,7 @@ JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
 <div class="sect2">
 <h3 id="extension-registration">5.2. Registering Extensions</h3>
 <div class="paragraph">
-<p>Extensions can be registered declaratively via <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ExtendWith.java">@ExtendWith</a></code>.</p>
+<p>Extensions can be registered declaratively via <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtendWith.java">@ExtendWith</a></code>.</p>
 </div>
 <div class="paragraph">
 <p>Note that registered extensions are inherited within test class hierarchies.</p>
@@ -1948,7 +1993,7 @@ class MyTestsV2 {
 <div class="sect2">
 <h3 id="conditional-test-execution">5.3. Conditional Test Execution</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ContainerExecutionCondition.java">ContainerExecutionCondition</a></code> and <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/TestExecutionCondition.java">TestExecutionCondition</a></code> define the <code>Extension</code>
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ContainerExecutionCondition.java">ContainerExecutionCondition</a></code> and <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestExecutionCondition.java">TestExecutionCondition</a></code> define the <code>Extension</code>
 APIs for programmatic, <em>conditional test execution</em>.</p>
 </div>
 <div class="paragraph">
@@ -1959,7 +2004,7 @@ determine if a given test method should be executed based on the supplied
 <code>TestExtensionContext</code>.</p>
 </div>
 <div class="paragraph">
-<p>See the source code of <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/Disabled.java">@Disabled</a></code> for concrete examples.</p>
+<p>See the source code of <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/Disabled.java">@Disabled</a></code> for concrete examples.</p>
 </div>
 <div class="sect3">
 <h4 id="deactivating-conditions">5.3.1. Deactivating Conditions</h4>
@@ -2020,7 +2065,7 @@ of its subpackages.</p>
 <div class="sect2">
 <h3 id="test-instance-post-processing">5.4. Test Instance Post-processing</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/TestInstancePostProcessor.java">TestInstancePostProcessor</a></code> defines the API for <code>Extensions</code> that wish to <em>post
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstancePostProcessor.java">TestInstancePostProcessor</a></code> defines the API for <code>Extensions</code> that wish to <em>post
 process</em> test instances.</p>
 </div>
 <div class="paragraph">
@@ -2035,17 +2080,17 @@ initialization methods on the test instance, etc.</p>
 <div class="sect2">
 <h3 id="parameter-resolution">5.5. Parameter Resolution</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/ParameterResolver.java">ParameterResolver</a></code> defines the <code>Extension</code> API for dynamically resolving parameters at
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java">ParameterResolver</a></code> defines the <code>Extension</code> API for dynamically resolving parameters at
 runtime.</p>
 </div>
 <div class="paragraph">
 <p>If a test constructor or a <code>@Test</code>, <code>@TestFactory</code>, <code>@BeforeEach</code>, <code>@AfterEach</code>,
 <code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts a parameter, the parameter must be <em>resolved</em>
 at runtime by a <code>ParameterResolver</code>. A <code>ParameterResolver</code> can either be built-in (see
-<code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine/src/main/java/org/junit/gen5/engine/junit5/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or <a href="#extension-registration">registered by the user</a>.
+<code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or <a href="#extension-registration">registered by the user</a>.
 Generally speaking, parameters may be resolved by <em>name</em>, <em>type</em>, <em>annotation</em>, or any
 combination thereof. For concrete examples, consult the source code for
-<code><a href="https://github.com/junit-team/junit5/blob/master/junit-tests/src/test/java/org/junit/gen5/engine/junit5/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and <code><a href="https://github.com/junit-team/junit5/blob/master/junit-tests/src/test/java/org/junit/gen5/engine/junit5/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
+<code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2053,7 +2098,7 @@ combination thereof. For concrete examples, consult the source code for
 <div class="paragraph">
 <p>The following interfaces define the APIs for extending tests at various points in the
 test execution lifecycle. Consult the following sections for examples and the Javadoc for
-each of these interfaces in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension">org.junit.gen5.api.extension</a></code> package for further details.</p>
+each of these interfaces in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension">org.junit.jupiter.api.extension</a></code> package for further details.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2111,11 +2156,11 @@ and <code>AfterTestExecutionCallback</code> in order to time and log the test ex
 <pre class="highlightjs highlight"><code class="language-java" data-lang="java">import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
-import org.junit.gen5.api.extension.AfterTestExecutionCallback;
-import org.junit.gen5.api.extension.BeforeTestExecutionCallback;
-import org.junit.gen5.api.extension.ExtensionContext.Namespace;
-import org.junit.gen5.api.extension.ExtensionContext.Store;
-import org.junit.gen5.api.extension.TestExtensionContext;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
+import org.junit.jupiter.api.extension.TestExtensionContext;
 
 public class TimingExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
@@ -2179,7 +2224,7 @@ INFO: Method [sleep50ms] took 53 ms.</pre>
 <div class="sect2">
 <h3 id="exception-handling">5.7. Exception Handling</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-api/src/main/java/org/junit/gen5/api/extension/TestExecutionExceptionHandler.java">TestExecutionExceptionHandler</a></code> defines the API for <code>Extensions</code> that wish to handle
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.java">TestExecutionExceptionHandler</a></code> defines the API for <code>Extensions</code> that wish to handle
 exceptions thrown during test execution.</p>
 </div>
 <div class="paragraph">
@@ -2227,7 +2272,7 @@ infrastructure to migrate to JUnit 5.</p>
 <div class="paragraph">
 <p>Instead, JUnit 5 provides a gentle migration path via a <em>JUnit 4 test engine</em> which
 allows existing tests based on JUnit 4 to be executed using the JUnit 5 infrastructure.
-Since all classes and annotations specific to JUnit 5 reside under a new <code>org.junit.gen5</code>
+Since all classes and annotations specific to JUnit 5 reside under a new <code>org.junit.jupiter</code>
 base package, having both JUnit 4 and JUnit 5 in the classpath does not lead to any
 conflicts. It is therefore safe to maintain existing JUnit 4 tests alongside JUnit 5
 tests. Furthermore, since the JUnit team will continue to provide maintenance and bug fix
@@ -2237,13 +2282,12 @@ on their own schedule.</p>
 <div class="sect2">
 <h3 id="running-junit-4-tests-with-junit-5">6.1. Running JUnit 4 Tests with JUnit 5</h3>
 <div class="paragraph">
-<p>Just make sure that the <code>junit4-engine</code> artifact is in your test runtime path. In that
+<p>Just make sure that the <code>junit-vintage-engine</code> artifact is in your test runtime path. In that
 case JUnit 4 tests will automatically be picked up by JUnit 5 test runners.</p>
 </div>
 <div class="paragraph">
-<p>See the example projects in the
-<a href="https://github.com/junit-team/junit5-samples">junit5-samples</a> repository to find out how
-this is done with Gradle and Maven.</p>
+<p>See the example projects in the <a href="https://github.com/junit-team/junit5-samples"><code>junit5-samples</code></a> repository to
+find out how this is done with Gradle and Maven.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2255,13 +2299,13 @@ to JUnit 5.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Annotations reside in the <code>org.junit.gen5.api</code> package.</p>
+<p>Annotations reside in the <code>org.junit.jupiter.api</code> package.</p>
 </li>
 <li>
-<p>Assertions reside in <code>org.junit.gen5.api.Assertions</code>.</p>
+<p>Assertions reside in <code>org.junit.jupiter.api.Assertions</code>.</p>
 </li>
 <li>
-<p>Assumptions reside in <code>org.junit.gen5.api.Assumptions</code>.</p>
+<p>Assumptions reside in <code>org.junit.jupiter.api.Assumptions</code>.</p>
 </li>
 <li>
 <p><code>@Before</code> and <code>@After</code> no longer exist; use <code>@BeforeEach</code> and <code>@AfterEach</code> instead.</p>
@@ -2304,11 +2348,11 @@ libraries – like Spock, Cucumber, and FitNesse – to plug into JUnit 5&#8217;
 infrastructure.</p>
 </div>
 <div class="paragraph">
-<p>The launching API is in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-launcher">junit-launcher</a></code> module.</p>
+<p>The launching API is in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-launcher">junit-platform-launcher</a></code> module.</p>
 </div>
 <div class="paragraph">
-<p>An example consumer of the launching API is the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-console/src/main/java/org/junit/gen5/console/ConsoleRunner.java">ConsoleRunner</a></code> in the
-<code><a href="https://github.com/junit-team/junit5/blob/master/junit-console">junit-console</a></code> project.</p>
+<p>An example consumer of the launching API is the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleRunner.java">ConsoleRunner</a></code> in the
+<code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console">junit-platform-console</a></code> project.</p>
 </div>
 <div class="sect3">
 <h4 id="discovering-tests">7.1.1. Discovering Tests</h4>
@@ -2322,31 +2366,31 @@ test classes and test methods in the past.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.gen5.engine.discovery.ClassFilter.byClassNamePattern;
-import static org.junit.gen5.engine.discovery.ClassSelector.selectClass;
-import static org.junit.gen5.engine.discovery.PackageSelector.selectPackage;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.platform.engine.discovery.ClassFilter.includeClassNamePattern;
+import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
+import static org.junit.platform.engine.discovery.PackageSelector.selectPackage;
 
-import org.junit.gen5.api.Test;
-import org.junit.gen5.launcher.Launcher;
-import org.junit.gen5.launcher.TestDiscoveryRequest;
-import org.junit.gen5.launcher.TestExecutionListener;
-import org.junit.gen5.launcher.TestPlan;
-import org.junit.gen5.launcher.listeners.SummaryGeneratingListener;
-import org.junit.gen5.launcher.main.LauncherFactory;
-import org.junit.gen5.launcher.main.TestDiscoveryRequestBuilder;</code></pre>
+import org.junit.jupiter.api.Test;
+import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.core.LauncherFactory;
+import org.junit.platform.launcher.core.TestDiscoveryRequestBuilder;
+import org.junit.platform.launcher.listeners.SummaryGeneratingListener;</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request()
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest request = TestDiscoveryRequestBuilder.request()
     .selectors(
-        selectPackage("com.mycompany.mytests"),
+        selectPackage("com.example.mytests"),
         selectClass(MyTestClass.class)
     )
-    .filters(byClassNamePattern(".*Test"))
+    .filters(includeClassNamePattern(".*Test"))
     .build();
 
-TestPlan plan = LauncherFactory.create().discover(specification);</code></pre>
+TestPlan plan = LauncherFactory.create().discover(request);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2368,16 +2412,16 @@ ID</em> that can be used to invoke a particular test or group of tests.</p>
 <p>There are two ways to execute tests. Clients can either use the same test specification
 object as in the discovery phase, or – to speed things up a bit – pass in the prepared
 <code>TestPlan</code> object from a previous discovery step. Test progress and result reporting can
-be achieved through a <code><a href="https://github.com/junit-team/junit5/blob/master/junit-launcher/src/main/java/org/junit/gen5/launcher/TestExecutionListener.java">TestExecutionListener</a></code>:</p>
+be achieved through a <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestExecutionListener.java">TestExecutionListener</a></code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest specification = TestDiscoveryRequestBuilder.request()
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest request = TestDiscoveryRequestBuilder.request()
     .selectors(
-        selectPackage("com.mycompany.mytests"),
+        selectPackage("com.example.mytests"),
         selectClass(MyTestClass.class)
     )
-    .filters(byClassNamePattern(".*Test"))
+    .filters(includeClassNamePattern(".*Test"))
     .build();
 
 Launcher launcher = LauncherFactory.create();
@@ -2386,13 +2430,13 @@ Launcher launcher = LauncherFactory.create();
 TestExecutionListener listener = new SummaryGeneratingListener();
 launcher.registerTestExecutionListeners(listener);
 
-launcher.execute(specification);</code></pre>
+launcher.execute(request);</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>There&#8217;s currently no result object, but you can easily use a listener to aggregate the
 final results in an object of your own. For an example see the
-<code><a href="https://github.com/junit-team/junit5/blob/master/junit-launcher/src/main/java/org/junit/gen5/launcher/listeners/SummaryGeneratingListener.java">SummaryGeneratingListener</a></code>.</p>
+<code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/SummaryGeneratingListener.java">SummaryGeneratingListener</a></code>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -2403,21 +2447,20 @@ final results in an object of your own. For an example see the
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit5-engine">junit5-engine</a></code>: The core of JUnit 5.</p>
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine">junit-jupiter-engine</a></code>: The core of JUnit 5.</p>
 </li>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit4-engine">junit4-engine</a></code>: A thin layer on top of JUnit 4 to allow running "old" tests with the
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-vintage-engine">junit-vintage-engine</a></code>: A thin layer on top of JUnit 4 to allow running "old" tests with the
 launcher infrastructure.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Third parties may also contribute their own <code>TestEngine</code> by implementing the interfaces in the
-<a href="https://github.com/junit-team/junit5/tree/master/junit-engine-api">junit-engine-api</a>
-project and <em>registering</em> their engine. Engine registration is currently supported via
-Java&#8217;s <code>java.util.ServiceLoader</code> mechanism. For example, the <code>junit5-engine</code> project
-registers its <code>JUnit5TestEngine</code>
-<a href="https://github.com/junit-team/junit5/tree/master/junit5-engine/src/main/resources/META-INF/services/org.junit.gen5.engine.TestEngine">here</a>.</p>
+<p>Third parties may also contribute their own <code>TestEngine</code> by implementing the interfaces
+in the <a href="https://github.com/junit-team/junit5/blob/master/junit-platform-engine">junit-platform-engine</a> module and <em>registering</em> their engine. Engine registration is
+currently supported via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism. For example, the
+<code>junit-jupiter-engine</code> module registers its <code>JupiterTestEngine</code>
+<a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/resources/META-INF/services/org.junit.platform.engine.TestEngine">here</a>.</p>
 </div>
 </div>
 </div>
@@ -2447,7 +2490,7 @@ classes, and methods.</p>
 <div class="sect2">
 <h3 id="api-annotations">8.1. API Annotations</h3>
 <div class="paragraph">
-<p>All publicly available interfaces, classes, and methods are annotated with <a href="https://github.com/junit-team/junit5/blob/master/junit-commons/src/main/java/org/junit/gen5/commons/meta/API.java">@API</a>. The
+<p>All publicly available interfaces, classes, and methods are annotated with <a href="https://github.com/junit-team/junit5/blob/master/junit-platform-commons/src/main/java/org/junit/platform/commons/meta/API.java">@API</a>. The
 annotation&#8217;s <code>Usage</code> value can be assigned one of the following five values:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
@@ -2515,7 +2558,7 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 <h2 id="contributors">9. Contributors</h2>
 <div class="sectionbody">
 <div id="contributors" class="paragraph">
-<p>Browse the <a href="https://github.com/junit-team/junit5/graphs/contributors">current list of contributors</a> directly on github.</p>
+<p>Browse the <a href="https://github.com/junit-team/junit5/graphs/contributors">current list of contributors</a> directly on GitHub.</p>
 </div>
 </div>
 </div>
@@ -2523,17 +2566,26 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 <h2 id="release-notes">10. Release Notes</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="release-notes">10.1. Release Notes 5.0.0-ALPHA</h3>
+<h3 id="release-notes">10.1. 5.0.0-ALPHA</h3>
 <div class="paragraph">
 <p><strong>Date of Release:</strong> February 1, 2016</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> First public release of JUnit 5</p>
+<p><strong>Scope:</strong> Alpha release of JUnit 5</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="5-0-0-m1">10.2. 5.0.0-M1</h3>
+<div class="paragraph">
+<p><strong>Date of Release:</strong> June 30, 2016</p>
+</div>
+<div class="paragraph">
+<p><strong>Scope:</strong> First milestone release of JUnit 5</p>
 </div>
 <div class="sect3">
-<h4 id="summary-of-changes">10.1.1. Summary of Changes</h4>
+<h4 id="summary-of-changes">10.2.1. Summary of Changes</h4>
 <div class="paragraph">
-<p>Since this is the first public release, the set of changes is the set of features as described in this user guide.</p>
+<p><strong>TODO</strong></p>
 </div>
 </div>
 </div>
@@ -2543,7 +2595,7 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-18 16:08:36 +02:00
+Last updated 2016-06-20 11:32:00 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
