@@ -1,4 +1,4 @@
 dependencies {
-	compile(project(':junit-launcher'))
+	compile(project(':junit-platform-launcher'))
 	compile("junit:junit:${junit4Version}")
 }

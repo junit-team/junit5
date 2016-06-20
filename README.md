@@ -74,16 +74,16 @@ gradlew clean install
 - **Group ID**: `org.junit`
 - **Version**: `5.0.0-ALPHA` OR `5.0.0-SNAPSHOT`
 - **Artifact IDs**:
-	- `junit-commons`
-	- `junit-console`
-	- `junit-engine-api`
-	- `junit-gradle`
-	- `junit-launcher`
-	- `junit4-engine`
-	- `junit4-runner`
-	- `junit5-api`
-	- `junit5-engine`
-	- `surefire-junit5`
+	- `junit-jupiter-api`
+	- `junit-jupiter-engine`
+	- `junit-platform-commons`
+	- `junit-platform-console`
+	- `junit-platform-engine`
+	- `junit-platform-gradle-plugin`
+	- `junit-platform-launcher`
+	- `junit-platform-runner`
+	- `junit-platform-surefire-provider`
+	- `junit-vintage-engine`
 
 See also: <https://oss.sonatype.org/content/repositories/snapshots/org/junit/>
 

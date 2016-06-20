@@ -11,10 +11,10 @@ filter, and execute JUnit tests. Moreover, we added a mechanism to allow third p
 libraries – like Spock, Cucumber, and FitNesse – to plug into JUnit 5's launching
 infrastructure.
 
-The launching API is in the `{junit-launcher}` module.
+The launching API is in the `{junit-platform-launcher}` module.
 
 An example consumer of the launching API is the `{ConsoleRunner}` in the
-`{junit-console}` project.
+`{junit-platform-console}` project.
 
 ==== Discovering Tests
 
@@ -68,12 +68,12 @@ final results in an object of your own. For an example see the
 
 The current snapshot provides two `TestEngine` implementations out of the box:
 
-* `{junit5-engine}`: The core of JUnit 5.
-* `{junit4-engine}`: A thin layer on top of JUnit 4 to allow running "old" tests with the
+* `{junit-jupiter-engine}`: The core of JUnit 5.
+* `{junit-vintage-engine}`: A thin layer on top of JUnit 4 to allow running "old" tests with the
   launcher infrastructure.
 
 Third parties may also contribute their own `TestEngine` by implementing the interfaces
-in the {junit-engine-api} module and _registering_ their engine. Engine registration is
+in the {junit-platform-engine} module and _registering_ their engine. Engine registration is
 currently supported via Java's `java.util.ServiceLoader` mechanism. For example, the
-`junit5-engine` module registers its `JUnit5TestEngine`
-https://github.com/junit-team/junit5/tree/master/junit5-engine/src/main/resources/META-INF/services/org.junit.platform.engine.TestEngine[here].
+`junit-jupiter-engine` module registers its `JUnit5TestEngine`
+https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/resources/META-INF/services/org.junit.platform.engine.TestEngine[here].

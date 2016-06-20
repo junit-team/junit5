@@ -12,7 +12,7 @@ artifacts {
 }
 
 dependencies {
-	compile(project(':junit-commons'))
+	compile(project(':junit-platform-commons'))
 	compile("org.opentest4j:opentest4j:${ota4jVersion}")
 
 	testCompile("org.assertj:assertj-core:${assertJVersion}")

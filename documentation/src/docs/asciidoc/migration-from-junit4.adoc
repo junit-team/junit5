@@ -17,7 +17,7 @@ on their own schedule.
 
 === Running JUnit 4 Tests with JUnit 5
 
-Just make sure that the `junit4-engine` artifact is in your test runtime path. In that
+Just make sure that the `junit-vintage-engine` artifact is in your test runtime path. In that
 case JUnit 4 tests will automatically be picked up by JUnit 5 test runners.
 
 See the example projects in the {junit5-samples-repo}[`junit5-samples`] repository to

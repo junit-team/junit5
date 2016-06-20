@@ -55,7 +55,7 @@ Code formatting is enforced using the [Spotless](https://github.com/diffplug/spo
 ### Logging
 
 - Use sparingly
-- Do not log in utility classes (junit-commons)
+- Do not log in utility classes (junit-platform-commons)
 - Levels
   - `SEVERE` (Log4J: `ERROR`): extra information (in addition to an Exception) about errors that will halt execution
   - `WARNING` (Log4J: `WARN`): potential usage errors that should not halt execution

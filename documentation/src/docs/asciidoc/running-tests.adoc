@@ -6,7 +6,7 @@
 At the time of this writing there is no direct support for running JUnit 5 tests in IDEs.
 However, the JUnit team provides two intermediate solutions so that you can go ahead and
 try out JUnit 5 within your IDE today. You can use the <<running-tests-console-runner>>
-or execute JUnit 5 tests with a <<running-tests-junit4-runner,JUnit 4 based Runner>>.
+or execute JUnit 5 tests with a <<running-tests-junit-platform-runner,JUnit 4 based Runner>>.
 
 === Build Support
 
@@ -31,7 +31,7 @@ buildscript {
 		// maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 	dependencies {
-		classpath 'org.junit:junit-gradle:{junit-version}'
+		classpath 'org.junit:junit-platform-gradle-plugin:{junit-version}'
 	}
 }
 
@@ -91,8 +91,8 @@ similar to the following.
 
 ```groovy
 dependencies {
-	testCompile("org.junit:junit5-api:5.0.0-SNAPSHOT")
-	testRuntime("org.junit:junit5-engine:5.0.0-SNAPSHOT")
+	testCompile("org.junit:junit-jupiter-api:5.0.0-SNAPSHOT")
+	testRuntime("org.junit:junit-jupiter-engine:5.0.0-SNAPSHOT")
 }
 ```
 
@@ -103,7 +103,7 @@ TestEngine implementation similar to the following.
 ```groovy
 dependencies {
 	testCompile("junit:junit:4.12")
-	testRuntime("org.junit:junit4-engine:5.0.0-SNAPSHOT")
+	testRuntime("org.junit:junit-vintage-engine:5.0.0-SNAPSHOT")
 }
 ```
 
@@ -190,7 +190,7 @@ point.
 				<dependencies>
 					<dependency>
 						<groupId>org.junit</groupId>
-						<artifactId>surefire-junit5</artifactId>
+						<artifactId>junit-platform-surefire-provider</artifactId>
 						<version>{junit-version}</version>
 					</dependency>
 				</dependencies>
@@ -270,7 +270,7 @@ Option                       Description
 ----
 
 
-[[running-tests-junit4-runner]]
+[[running-tests-junit-platform-runner]]
 === Using JUnit 4 to Run JUnit 5 Tests
 
 The `JUnitPlatform` runner is a JUnit 4 based `Runner` which enables you to run any test
@@ -291,9 +291,9 @@ You need the following artifacts and their dependencies on the classpath. See
 <<dependency-metadata>> for details regarding group IDs, artifact IDs, and
 versions.
 
-* `junit5-api` in _test_ scope: API for writing tests, including `@Test`, etc.
-* `junit4-runner` in _test_ scope: location of the `JUnitPlatform` runner
-* `junit5-engine` in _test runtime_ scope: implementation of the Engine API for JUnit 5
+* `junit-jupiter-api` in _test_ scope: API for writing tests, including `@Test`, etc.
+* `junit-platform-runner` in _test_ scope: location of the `JUnitPlatform` runner
+* `junit-jupiter-engine` in _test runtime_ scope: implementation of the Engine API for JUnit 5
 
 ==== Single Test Class
 

@@ -12,21 +12,19 @@ junitPlatform {
 
 test {
 	scanForTestClasses = false
-	include(['**/JUnit4TestEngineTestSuite.class'])
+	include(['**/JUnit5TestSuite.class'])
 }
 
 dependencies {
-	compile(project(':junit-engine-api'))
-	compile("junit:junit:${junit4Version}")
+	compile(project(':junit-platform-engine'))
+	compile(project(':junit-jupiter-api'))
 
-	testCompile(project(':junit-launcher'))
-	testCompile(project(':junit5-api'))
-	testCompile(project(':junit4-runner'))
-	testCompile(project(path: ':junit-engine-api', configuration: 'testArtifacts'))
+	testCompile(project(':junit-platform-launcher'))
+	testCompile(project(':junit-platform-runner'))
+	testCompile(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
 	testCompile("org.assertj:assertj-core:${assertJVersion}")
 	testCompile("org.mockito:mockito-core:${mockitoVersion}")
 
-	testRuntime(project(':junit5-engine'))
 	testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 }

@@ -10,7 +10,7 @@ buildscript {
 		classpath 'com.diffplug.gradle.spotless:spotless:1.3.3'
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
 		classpath 'org.ajoberstar:gradle-git:1.4.2'
-		classpath 'org.junit:junit-gradle:5.0.0-SNAPSHOT'
+		// classpath 'org.junit:junit-platform-gradle-plugin:5.0.0-SNAPSHOT'
 		classpath 'net.nemerosa:versioning:2.0.0'
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
 	}
@@ -131,16 +131,16 @@ allprojects {
 
 ext {
 	mavenizedProjects = [
-		'junit-commons',
-		'junit-console',
-		'junit-engine-api',
-		'junit-gradle',
-		'junit-launcher',
-		'junit4-engine',
-		'junit4-runner',
-		'junit5-api',
-		'junit5-engine',
-		'surefire-junit5'
+		'junit-jupiter-api',
+		'junit-jupiter-engine',
+		'junit-platform-commons',
+		'junit-platform-console',
+		'junit-platform-engine',
+		'junit-platform-gradle-plugin',
+		'junit-platform-launcher',
+		'junit-platform-runner',
+		'junit-platform-surefire-provider',
+		'junit-vintage-engine'
 	]
 }
 
@@ -312,8 +312,8 @@ configure(rootProject) {
 
 	dependencies {
 
-		// No need to detect cycles for: platform-tests, documentation, surefire-junit5
-		rootProject.subprojects.findAll {it.name.startsWith('junit')}.each { project ->
+		// No need to detect cycles for: platform-tests, documentation
+		rootProject.subprojects.findAll {it.name.startsWith('junit-')}.each { project ->
 			testCompile(project)
 		}
 

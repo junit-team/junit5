@@ -13,7 +13,7 @@ include::{testDir}/example/FirstJUnit5Tests.java[tags=user_guide]
 
 JUnit 5 supports the following annotations for configuring tests and extending the framework.
 
-All core annotations are located in the `{api-package}` package in the `junit5-api`
+All core annotations are located in the `{api-package}` package in the `junit-jupiter-api`
 module.
 
 [cols="20,80"]

@@ -24,12 +24,12 @@ test {
 }
 
 dependencies {
-	testCompile(project(':junit5-api'))
-	testCompile(project(':junit4-runner'))
-	testCompile(project(':junit-launcher'))
+	testCompile(project(':junit-jupiter-api'))
+	testCompile(project(':junit-platform-runner'))
+	testCompile(project(':junit-platform-launcher'))
 
-	testRuntime(project(':junit4-engine'))
-	testRuntime(project(':junit5-engine'))
+	testRuntime(project(':junit-vintage-engine'))
+	testRuntime(project(':junit-jupiter-engine'))
 	testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 }

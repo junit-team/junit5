@@ -1,5 +1,5 @@
 dependencies {
 	compile('org.apache.maven.surefire:surefire-api:2.19.1')
 	compile('org.apache.maven.surefire:common-java5:2.19.1')
-	compile(project(':junit-launcher'))
+	compile(project(':junit-platform-launcher'))
 }
