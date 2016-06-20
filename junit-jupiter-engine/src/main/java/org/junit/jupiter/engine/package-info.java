@@ -1,5 +1,5 @@
 /**
- * Core package for the JUnit 5 test engine.
+ * Core package for the JUnit Jupiter test engine.
  */
 
 package org.junit.jupiter.engine;

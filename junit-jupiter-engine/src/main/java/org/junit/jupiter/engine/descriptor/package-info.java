@@ -1,5 +1,5 @@
 /**
- * Test descriptors used within the JUnit 5 test engine.
+ * Test descriptors used within the JUnit Jupiter test engine.
  */
 
 package org.junit.jupiter.engine.descriptor;

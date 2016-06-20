@@ -1,5 +1,5 @@
 /**
- * Test extensions specific to the JUnit 5 test engine.
+ * Test extensions specific to the JUnit Jupiter test engine.
  */
 
 package org.junit.jupiter.engine.extension;

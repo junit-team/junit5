@@ -1,5 +1,5 @@
 /**
- * Internal classes for test discovery within the JUnit 5 test engine.
+ * Internal classes for test discovery within the JUnit Jupiter test engine.
  * Contains resolvers for Java Elements.
  */
 
