@@ -56,7 +56,7 @@ import org.junit.platform.launcher.TestPlan;
 import org.opentest4j.AssertionFailedError;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 @ExtendWith(TempDirectory.class)
 class XmlReportsWritingListenerTests {

@@ -23,7 +23,7 @@ import org.junit.platform.commons.util.PreconditionViolationException;
  * Unit tests for {@link JavaPackageSource}, {@link JavaClassSource}, and
  * {@link JavaMethodSource}.
  *
- * @since 5.0
+ * @since 1.0
  */
 class JavaSourceTests extends AbstractTestSourceTests {
 

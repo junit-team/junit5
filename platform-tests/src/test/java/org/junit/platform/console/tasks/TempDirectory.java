@@ -31,7 +31,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 public class TempDirectory implements AfterEachCallback, ParameterResolver {
 

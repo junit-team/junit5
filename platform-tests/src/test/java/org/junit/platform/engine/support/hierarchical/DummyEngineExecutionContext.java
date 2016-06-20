@@ -11,7 +11,7 @@
 package org.junit.platform.engine.support.hierarchical;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class DummyEngineExecutionContext implements EngineExecutionContext {
 }

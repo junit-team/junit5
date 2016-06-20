@@ -32,7 +32,7 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 public class DiscoveryRequestCreatorTests {
 

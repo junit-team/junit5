@@ -20,7 +20,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.UniqueId.Segment;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class UniqueIdFormatTests {
 

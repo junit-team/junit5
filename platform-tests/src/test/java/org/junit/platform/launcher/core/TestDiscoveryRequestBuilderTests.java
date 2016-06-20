@@ -50,7 +50,7 @@ import org.junit.platform.launcher.PostDiscoveryFilterStub;
 import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 public class TestDiscoveryRequestBuilderTests {
 

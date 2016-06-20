@@ -30,7 +30,7 @@ import org.junit.platform.console.tasks.DisplayHelpTask;
 import org.junit.platform.console.tasks.ExecuteTestsTask;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 public class ConsoleRunnerTests {
 

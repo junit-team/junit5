@@ -28,7 +28,7 @@ import org.junit.platform.launcher.FilterStub;
  *
  * {@link Filter#composeFilters} will delegate to {@linkplain CompositeFilter} under the hood.
  *
- * @since 5.0
+ * @since 1.0
  */
 class FilterCompositionTests {
 

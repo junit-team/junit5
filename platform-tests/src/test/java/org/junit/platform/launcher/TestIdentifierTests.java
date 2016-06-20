@@ -27,7 +27,7 @@ import org.junit.platform.engine.support.descriptor.JavaClassSource;
 import org.junit.platform.engine.test.TestDescriptorStub;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class TestIdentifierTests {
 

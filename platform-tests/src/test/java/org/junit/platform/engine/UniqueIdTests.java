@@ -22,7 +22,7 @@ import org.junit.platform.engine.UniqueId.Segment;
 /**
  * Microtests for class {@link UniqueId}
  *
- * @since 5.0
+ * @since 1.0
  */
 class UniqueIdTests {
 

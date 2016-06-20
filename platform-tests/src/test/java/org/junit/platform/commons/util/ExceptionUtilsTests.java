@@ -23,7 +23,7 @@ import org.junit.platform.commons.JUnitException;
 /**
  * Unit tests for {@link ExceptionUtils}.
  *
- * @since 5.0
+ * @since 1.0
  */
 class ExceptionUtilsTests {
 

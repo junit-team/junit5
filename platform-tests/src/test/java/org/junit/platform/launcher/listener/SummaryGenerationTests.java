@@ -30,7 +30,7 @@ import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class SummaryGenerationTests {
 

@@ -16,7 +16,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 final class IncrementingClock extends Clock {
 

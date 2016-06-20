@@ -47,7 +47,7 @@ import org.junit.platform.console.tasks.TempDirectory.Root;
 /**
  * Unit tests for {@link ReflectionUtils}.
  *
- * @since 5.0
+ * @since 1.0
  */
 class ReflectionUtilsTests {
 

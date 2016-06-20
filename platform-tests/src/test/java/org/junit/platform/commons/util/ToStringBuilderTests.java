@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link ToStringBuilder}.
  *
- * @since 5.0
+ * @since 1.0
  */
 class ToStringBuilderTests {
 

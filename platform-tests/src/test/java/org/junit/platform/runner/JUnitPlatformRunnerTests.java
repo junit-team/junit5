@@ -68,7 +68,7 @@ import org.mockito.InOrder;
 /**
  * Tests for the {@link JUnitPlatform} runner.
  *
- * @since 5.0
+ * @since 1.0
  */
 class JUnitPlatformRunnerTests {
 

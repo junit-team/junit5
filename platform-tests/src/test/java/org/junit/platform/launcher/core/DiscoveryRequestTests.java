@@ -32,7 +32,7 @@ import org.junit.platform.engine.discovery.UniqueIdSelector;
 /**
  * Unit tests for {@link DiscoveryRequest}.
  *
- * @since 5.0
+ * @since 1.0
  */
 public class DiscoveryRequestTests {
 

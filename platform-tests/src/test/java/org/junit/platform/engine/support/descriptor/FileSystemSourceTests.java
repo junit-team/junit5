@@ -21,7 +21,7 @@ import org.junit.platform.commons.util.PreconditionViolationException;
 /**
  * Unit tests for {@link FileSource} and {@link DirectorySource}.
  *
- * @since 5.0
+ * @since 1.0
  */
 class FileSystemSourceTests extends AbstractTestSourceTests {
 

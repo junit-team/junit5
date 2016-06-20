@@ -26,7 +26,7 @@ import org.junit.platform.engine.TestSource;
 /**
  * Unit tests for {@link CompositeTestSource}.
  *
- * @since 5.0
+ * @since 1.0
  */
 class CompositeTestSourceTests extends AbstractTestSourceTests {
 

@@ -17,7 +17,7 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 public class DummyEngineDescriptor extends EngineDescriptor implements Node<DummyEngineExecutionContext> {
 

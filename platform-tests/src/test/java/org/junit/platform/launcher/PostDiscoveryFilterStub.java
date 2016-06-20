@@ -17,7 +17,7 @@ import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 public class PostDiscoveryFilterStub extends FilterStub<TestDescriptor> implements PostDiscoveryFilter {
 

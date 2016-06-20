@@ -17,7 +17,7 @@ import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.FilterResult;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 public class DiscoveryFilterStub<T> extends FilterStub<T> implements DiscoveryFilter<T> {
 

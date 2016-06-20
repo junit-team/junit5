@@ -26,7 +26,7 @@ import org.junit.platform.engine.test.TestDescriptorStub;
 import org.junit.platform.launcher.TestIdentifier;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 public class ColoredPrintingTestListenerTests {
 

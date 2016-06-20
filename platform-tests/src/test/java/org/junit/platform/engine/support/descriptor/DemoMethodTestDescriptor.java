@@ -24,7 +24,7 @@ import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 public class DemoMethodTestDescriptor extends AbstractTestDescriptor {
 

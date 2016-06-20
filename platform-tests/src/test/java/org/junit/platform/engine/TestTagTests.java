@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import org.junit.jupiter.api.Test;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class TestTagTests {
 

@@ -22,7 +22,7 @@ import org.junit.platform.engine.TestSource;
 /**
  * Abstract base class for unit tests involving {@link TestSource TestSources}.
  *
- * @since 5.0
+ * @since 1.0
  */
 abstract class AbstractTestSourceTests {
 

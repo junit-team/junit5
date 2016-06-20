@@ -26,7 +26,7 @@ import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.support.hierarchical.DummyTestEngine;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 public class ExecuteTestsTaskTests {
 

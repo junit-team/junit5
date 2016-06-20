@@ -29,7 +29,7 @@ import org.junit.runner.RunWith;
  * -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
  * </pre>
  *
- * @since 5.0
+ * @since 1.0
  */
 @RunWith(JUnitPlatform.class)
 @SelectPackages("org.junit.platform")

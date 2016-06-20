@@ -33,7 +33,7 @@ import joptsimple.OptionException;
 import org.junit.jupiter.api.Test;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 class JOptSimpleCommandLineOptionsParserTests {
 

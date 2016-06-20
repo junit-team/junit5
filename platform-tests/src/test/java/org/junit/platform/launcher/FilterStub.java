@@ -17,7 +17,7 @@ import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.FilterResult;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 public class FilterStub<T> implements Filter<T> {
 

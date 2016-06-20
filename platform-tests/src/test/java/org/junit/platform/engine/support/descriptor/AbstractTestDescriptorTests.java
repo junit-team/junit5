@@ -26,7 +26,7 @@ import org.junit.platform.engine.UniqueId;
 /**
  * Unit tests for {@link AbstractTestDescriptor} and {@link EngineDescriptor}.
  *
- * @since 5.0
+ * @since 1.0
  */
 public class AbstractTestDescriptorTests {
 

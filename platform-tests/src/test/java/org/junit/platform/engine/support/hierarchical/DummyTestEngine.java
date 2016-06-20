@@ -16,7 +16,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExecutionContext> {
 

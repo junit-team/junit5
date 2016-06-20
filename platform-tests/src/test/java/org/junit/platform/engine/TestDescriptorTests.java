@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.test.TestDescriptorStub;
 
 /**
- * @since 5.0
+ * @since 1.0
  */
 public class TestDescriptorTests {
 
