@@ -38,6 +38,8 @@ asciidoctor {
 	separateOutputDirs = false
 	sources { include 'index.adoc' }
 	attributes	'junit-version': project.version,
+				'platform-version': project.property('platformVersion'),
+				'vintage-version': project.property('vintageVersion'),
 				'revnumber' : project.version,
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
 				'testDir': project.sourceSets.test.java.srcDirs[0],

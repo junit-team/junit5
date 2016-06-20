@@ -31,7 +31,7 @@ buildscript {
 		// maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 	}
 	dependencies {
-		classpath 'org.junit:junit-platform-gradle-plugin:{junit-version}'
+		classpath 'org.junit.platform:junit-platform-gradle-plugin:{platform-version}'
 	}
 }
 
@@ -89,23 +89,27 @@ To configure support for JUnit 5 based tests, configure a `testCompile` dependen
 JUnit 5 API and a `testRuntime` dependency on the JUnit 5 `TestEngine` implementation
 similar to the following.
 
-```groovy
+[source,java,indent=0]
+[subs="verbatim,attributes"]
+----
 dependencies {
-	testCompile("org.junit:junit-jupiter-api:5.0.0-SNAPSHOT")
-	testRuntime("org.junit:junit-jupiter-engine:5.0.0-SNAPSHOT")
+	testCompile("org.junit.jupiter:junit-jupiter-api:{junit-version}")
+	testRuntime("org.junit.jupiter:junit-jupiter-engine:{junit-version}")
 }
-```
+----
 
 The JUnit Gradle plugin can run JUnit 4 based tests as long as you configure a
 `testCompile` dependency on JUnit 4 and a `testRuntime` dependency on the JUnit 4
 TestEngine implementation similar to the following.
 
-```groovy
+[source,java,indent=0]
+[subs="verbatim,attributes"]
+----
 dependencies {
 	testCompile("junit:junit:4.12")
-	testRuntime("org.junit:junit-vintage-engine:5.0.0-SNAPSHOT")
+	testRuntime("org.junit.vintage:junit-vintage-engine:{vintage-version}")
 }
-```
+----
 
 ===== Using the JUnit Gradle Plugin
 
@@ -191,7 +195,7 @@ point.
 					<dependency>
 						<groupId>org.junit</groupId>
 						<artifactId>junit-platform-surefire-provider</artifactId>
-						<version>{junit-version}</version>
+						<version>{platform-version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>

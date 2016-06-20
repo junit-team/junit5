@@ -12,16 +12,25 @@ lower versions.
 
 == Installation
 
-Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository].
+Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
+{snapshot-repo}/org/junit/[/org/junit].
 
 [[dependency-metadata]]
 === Dependency Metadata
 
-* *Group ID*: `org.junit`
+==== JUnit Jupiter
+
+* *Group ID*: `org.junit.jupiter`
 * *Version*: `{junit-version}`
 * *Artifact IDs*:
 ** `junit-jupiter-api`
 ** `junit-jupiter-engine`
+
+==== JUnit Platform
+
+* *Group ID*: `org.junit.platform`
+* *Version*: `{platform-version}`
+* *Artifact IDs*:
 ** `junit-platform-commons`
 ** `junit-platform-console`
 ** `junit-platform-engine`
@@ -29,9 +38,12 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
 ** `junit-platform-launcher`
 ** `junit-platform-runner`
 ** `junit-platform-surefire-provider`
-** `junit-vintage-engine`
 
-See also: {snapshot-repo}/org/junit/
+==== JUnit Vintage
+
+* *Group ID*: `org.junit.vintage`
+* *Version*: `{vintage-version}`
+* *Artifact ID*: `junit-vintage-engine`
 
 === JUnit 5 Sample Projects
 

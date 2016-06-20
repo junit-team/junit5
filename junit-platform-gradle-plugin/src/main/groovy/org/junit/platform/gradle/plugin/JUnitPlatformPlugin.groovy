@@ -33,8 +33,8 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		def configuration = project.configurations.maybeCreate('junitPlatform')
 		configuration.defaultDependencies { deps ->
 			def version = junitExtension.platformVersion
-			deps.add(project.dependencies.create("org.junit:junit-platform-launcher:${version}"))
-			deps.add(project.dependencies.create("org.junit:junit-platform-console:${version}"))
+			deps.add(project.dependencies.create("org.junit.platform:junit-platform-launcher:${version}"))
+			deps.add(project.dependencies.create("org.junit.platform:junit-platform-console:${version}"))
 		}
 
 		project.afterEvaluate {
