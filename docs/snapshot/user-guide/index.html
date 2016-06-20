@@ -441,7 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#installation">2. Installation</a>
 <ul class="sectlevel2">
 <li><a href="#dependency-metadata">2.1. Dependency Metadata</a></li>
-<li><a href="#junit-5-sample-projects">2.2. JUnit 5 Sample Projects</a></li>
+<li><a href="#junit-jupiter-sample-projects">2.2. JUnit Jupiter Sample Projects</a></li>
 </ul>
 </li>
 <li><a href="#writing-tests">3. Writing Tests</a>
@@ -464,7 +464,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#ide-support">4.1. IDE Support</a></li>
 <li><a href="#build-support">4.2. Build Support</a></li>
 <li><a href="#running-tests-console-runner">4.3. Console Runner</a></li>
-<li><a href="#running-tests-junit-platform-runner">4.4. Using JUnit 4 to Run JUnit 5 Tests</a></li>
+<li><a href="#running-tests-junit-platform-runner">4.4. Using JUnit 4 to Run the JUnit Platform</a></li>
 </ul>
 </li>
 <li><a href="#extension-model">5. Extension Model</a>
@@ -481,13 +481,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#migrating-from-junit4">6. Migrating from JUnit 4</a>
 <ul class="sectlevel2">
-<li><a href="#running-junit-4-tests-with-junit-5">6.1. Running JUnit 4 Tests with JUnit 5</a></li>
+<li><a href="#running-junit-4-tests-with-the-junit-platform">6.1. Running JUnit 4 Tests with the JUnit Platform</a></li>
 <li><a href="#migration-tips">6.2. Migration Tips</a></li>
 </ul>
 </li>
 <li><a href="#advanced-topics">7. Advanced Topics</a>
 <ul class="sectlevel2">
-<li><a href="#launcher-api">7.1. The JUnit 5 Launcher API</a></li>
+<li><a href="#launcher-api">7.1. JUnit Platform Launcher API</a></li>
 <li><a href="#modules">7.2. Modules</a></li>
 <li><a href="#engines">7.3. Engines</a></li>
 </ul>
@@ -620,10 +620,10 @@ lower versions.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="junit-5-sample-projects">2.2. JUnit 5 Sample Projects</h3>
+<h3 id="junit-jupiter-sample-projects">2.2. JUnit Jupiter Sample Projects</h3>
 <div class="paragraph">
 <p>The <a href="https://github.com/junit-team/junit5-samples"><code>junit5-samples</code></a> repository hosts a collection of sample
-projects based on JUnit 5. You&#8217;ll find the respective <code>build.gradle</code> and <code>pom.xml</code> in
+projects based on JUnit Jupiter. You&#8217;ll find the respective <code>build.gradle</code> and <code>pom.xml</code> in
 the projects below.</p>
 </div>
 <div class="ulist">
@@ -662,7 +662,7 @@ class FirstJUnit5Tests {
 <div class="sect2">
 <h3 id="annotations">3.1. Annotations</h3>
 <div class="paragraph">
-<p>JUnit 5 supports the following annotations for configuring tests and extending the framework.</p>
+<p>JUnit Jupiter supports the following annotations for configuring tests and extending the framework.</p>
 </div>
 <div class="paragraph">
 <p>All core annotations are located in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api">org.junit.jupiter.api</a></code> package in the <code>junit-jupiter-api</code>
@@ -682,7 +682,7 @@ module.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Test</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test method. Unlike JUnit 4&#8217;s <code>@Test</code> annotation, this annotation does not declare any attributes, since test extensions in JUnit 5 operate based on their own dedicated annotations.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test method. Unlike JUnit 4&#8217;s <code>@Test</code> annotation, this annotation does not declare any attributes, since test extensions in JUnit Jupiter operate based on their own dedicated annotations.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TestFactory</code></p></td>
@@ -729,7 +729,7 @@ module.</p>
 <div class="sect3">
 <h4 id="meta-annotations">3.1.1. Meta-Annotations and Composed Annotations</h4>
 <div class="paragraph">
-<p>JUnit 5 annotations can be used as <em>meta-annotations</em>. That means that you can define
+<p>JUnit Jupiter annotations can be used as <em>meta-annotations</em>. That means that you can define
 your own <em>composed annotation</em> that will automatically <em>inherit</em> the semantics of its
 meta-annotations.</p>
 </div>
@@ -846,8 +846,8 @@ class DisplayNameDemo {
 <div class="sect2">
 <h3 id="assertions">3.4. Assertions</h3>
 <div class="paragraph">
-<p>JUnit 5 comes with many of the assertion methods that JUnit 4 has and adds a few that
-lend themselves well to being used with Java 8 lambdas. All JUnit 5 assertions are static
+<p>JUnit Jupiter comes with many of the assertion methods that JUnit 4 has and adds a few that
+lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter assertions are static
 methods in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java">org.junit.jupiter.Assertions</a></code> class.</p>
 </div>
 <div class="listingblock">
@@ -894,8 +894,8 @@ class AssertionsDemo {
 <div class="sect2">
 <h3 id="assumptions">3.5. Assumptions</h3>
 <div class="paragraph">
-<p>JUnit 5 comes with a subset of the assumption methods that JUnit 4 provides and adds a
-few that lend themselves well to being used with Java 8 lambdas. All JUnit 5 assumptions
+<p>JUnit Jupiter comes with a subset of the assumption methods that JUnit 4 provides and adds a
+few that lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter assumptions
 are static methods in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assumptions.java">org.junit.jupiter.Assumptions</a></code> class.</p>
 </div>
 <div class="listingblock">
@@ -1096,7 +1096,7 @@ to be full members of the test class family with one exception: `@BeforeAll</cod
 <div class="paragraph">
 <p>In all prior JUnit versions, test constructors or methods were not allowed to have
 parameters (at least not with the standard <code>Runner</code> implementations). As one of the major
-changes in JUnit 5, both test constructors and methods are now permitted to have
+changes in JUnit Jupiter, both test constructors and methods are now permitted to have
 parameters. This allows for greater flexibility and enables <em>Dependency Injection</em> for
 constructors and methods.</p>
 </div>
@@ -1168,7 +1168,7 @@ The <code>TestReporter</code> can be used to publish additional data about the c
 The data can be consumed through <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestExecutionListener.java">TestExecutionListener</a>.reportingEntryPublished()</code> and thus
 be viewed by IDEs or included in reports.</p>
 <div class="paragraph">
-<p>In JUnit 5 you should use <code>TestReporter</code> where
+<p>In JUnit Jupiter you should use <code>TestReporter</code> where
 you used to print information to <code>stdout</code> or <code>stderr</code> in JUnit 4.
 Using <code>@RunWith(JUnitPlatform.class)</code> will even output all reported entries to <code>stdout</code>.</p>
 </div>
@@ -1242,7 +1242,7 @@ class MyMockitoTest {
 <div class="sect2">
 <h3 id="interface-default-methods">3.10. Interface Default Methods</h3>
 <div class="paragraph">
-<p>JUnit 5 allows <code>@Test</code>, <code>@TestFactory</code>, <code>@BeforeEach</code>, and <code>@AfterEach</code> to be declared on
+<p>JUnit Jupiter allows <code>@Test</code>, <code>@TestFactory</code>, <code>@BeforeEach</code>, and <code>@AfterEach</code> to be declared on
 interface default methods. One possible application of this feature is to write tests for
 interface contracts. For example, you can write tests for how implementations of
 <code>Object.equals</code> or <code>Comparable.compareTo</code> should behave as follows.</p>
@@ -1347,7 +1347,7 @@ corresponding tests. Of course you&#8217;ll have to implement the abstract metho
 <div class="sect2">
 <h3 id="dynamic-tests">3.11. Dynamic Tests</h3>
 <div class="paragraph">
-<p>The standard <code>@Test</code> annotation in JUnit 5 described in <a href="#annotations">Annotations</a>
+<p>The standard <code>@Test</code> annotation in JUnit Jupiter described in <a href="#annotations">Annotations</a>
 is very similar to the <code>@Test</code> annotation in JUnit 4.
 Both describe methods that implement test cases.
 These test cases are static in the sense that they are fully specified at compile-time,
@@ -1355,7 +1355,7 @@ and their behavior cannot be changed by anything happening at run-time.
 <em>Assumptions provide a basic form of dynamic behavior but are intentionally rather limited in their expressiveness.</em></p>
 </div>
 <div class="paragraph">
-<p>In addition to these standard tests a completely new kind of test programming model has been introduced in JUnit 5.
+<p>In addition to these standard tests a completely new kind of test programming model has been introduced in JUnit Jupiter.
 This new kind of test is a <em>dynamic test</em> which is generated at run-time by a factory method
 that is annotated with <code>@TestFactory</code>.</p>
 </div>
@@ -1523,10 +1523,10 @@ class DynamicTestsDemo {
 <div class="sect2">
 <h3 id="ide-support">4.1. IDE Support</h3>
 <div class="paragraph">
-<p>At the time of this writing there is no direct support for running JUnit 5 tests in IDEs.
+<p>At the time of this writing there is no direct support for running JUnit Jupiter tests in IDEs.
 However, the JUnit team provides two intermediate solutions so that you can go ahead and
 try out JUnit 5 within your IDE today. You can use the <a href="#running-tests-console-runner">Console Runner</a>
-or execute JUnit 5 tests with a <a href="#running-tests-junit-platform-runner">JUnit 4 based Runner</a>.</p>
+or execute JUnit Jupiter tests with a <a href="#running-tests-junit-platform-runner">JUnit 4 based Runner</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1535,7 +1535,7 @@ or execute JUnit 5 tests with a <a href="#running-tests-junit-platform-runner">J
 <h4 id="gradle">4.2.1. Gradle</h4>
 <div class="paragraph">
 <p>The JUnit team has developed a very basic Gradle plugin that allows you to run any kind
-of test that is supported by a <code>TestEngine</code> (e.g., JUnit 3, JUnit 4, JUnit 5, Specsy,
+of test that is supported by a <code>TestEngine</code> (e.g., JUnit 3, JUnit 4, JUnit Jupiter, Specsy,
 etc.). See <code>build.gradle</code> in the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project for an example of the
 plugin in action.</p>
 </div>
@@ -1604,7 +1604,7 @@ overridden via the <code>enableStandardTestTask</code> flag.</p>
 Engine ID</em> via <code>engines {include &#8230;&#8203;}</code> or <code>engines {exclude &#8230;&#8203;}</code>, the JUnit Gradle
 plugin will only run tests for the desired test engines. Similarly, if you supply a <em>tag</em>
 via <code>tags {include &#8230;&#8203;}</code> or <code>tags {exclude &#8230;&#8203;}</code>, the JUnit Gradle plugin will only run
-tests that are <em>tagged</em> accordingly (e.g., via the <code>@Tag</code> annotation for JUnit 5 based
+tests that are <em>tagged</em> accordingly (e.g., via the <code>@Tag</code> annotation for JUnit Jupiter based
 tests).</p>
 </div>
 </div>
@@ -1615,8 +1615,8 @@ tests).</p>
 implementation must be on the classpath.</p>
 </div>
 <div class="paragraph">
-<p>To configure support for JUnit 5 based tests, configure a <code>testCompile</code> dependency on the
-JUnit 5 API and a <code>testRuntime</code> dependency on the JUnit 5 <code>TestEngine</code> implementation
+<p>To configure support for JUnit Jupiter based tests, configure a <code>testCompile</code> dependency on the
+JUnit Jupiter API and a <code>testRuntime</code> dependency on the JUnit Jupiter <code>TestEngine</code> implementation
 similar to the following.</p>
 </div>
 <div class="listingblock">
@@ -1679,7 +1679,7 @@ BUILD SUCCESSFUL</pre>
 <pre>:junitPlatformTest
 
 Test failures (1):
-  JUnit 5:SecondTest:mySecondTest()
+  JUnit Jupiter:SecondTest:mySecondTest()
     JavaMethodSource [javaClass = 'com.example.project.SecondTest', javaMethodName = 'mySecondTest', javaMethodParameterTypes = '']
     => Exception: 2 is not equal to 1 ==> expected: <2> but was: <1>
 
@@ -1721,7 +1721,7 @@ See the <code>reportsDir</code> property of the plugin.</p>
 <h4 id="maven">4.2.2. Maven</h4>
 <div class="paragraph">
 <p>The JUnit team has developed a very basic provider for Maven Surefire that lets you run
-JUnit 4 and JUnit 5 tests via <code>mvn test</code>. The <code>pom.xml</code> file in the
+JUnit 4 and JUnit Jupiter tests via <code>mvn test</code>. The <code>pom.xml</code> file in the
 <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-maven-consumer">junit5-maven-consumer</a></code> project demonstrates how to use it and can serve as a starting
 point.</p>
 </div>
@@ -1753,7 +1753,7 @@ point.</p>
 <h3 id="running-tests-console-runner">4.3. Console Runner</h3>
 <div class="paragraph">
 <p>The <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleRunner.java">ConsoleRunner</a></code> is a command-line Java application that lets you run JUnit 4 and
-JUnit 5 tests and prints test execution results to the console.</p>
+JUnit Jupiter tests and prints test execution results to the console.</p>
 </div>
 <div class="paragraph">
 <p>Here&#8217;s an example of its output:</p>
@@ -1823,10 +1823,10 @@ Option                       Description
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-junit-platform-runner">4.4. Using JUnit 4 to Run JUnit 5 Tests</h3>
+<h3 id="running-tests-junit-platform-runner">4.4. Using JUnit 4 to Run the JUnit Platform</h3>
 <div class="paragraph">
 <p>The <code>JUnitPlatform</code> runner is a JUnit 4 based <code>Runner</code> which enables you to run any test
-whose programming model is supported on the JUnit Platform in a JUnit 4 environment&#8201;&#8212;&#8201;for example, a JUnit 5 test class.</p>
+whose programming model is supported on the JUnit Platform in a JUnit 4 environment&#8201;&#8212;&#8201;for example, a JUnit Jupiter test class.</p>
 </div>
 <div class="paragraph">
 <p>Annotating a class with <code>@RunWith(JUnitPlatform.class)</code> allows it to be run with IDEs and
@@ -1854,7 +1854,7 @@ versions.</p>
 <p><code>junit-platform-runner</code> in <em>test</em> scope: location of the <code>JUnitPlatform</code> runner</p>
 </li>
 <li>
-<p><code>junit-jupiter-engine</code> in <em>test runtime</em> scope: implementation of the Engine API for JUnit 5</p>
+<p><code>junit-jupiter-engine</code> in <em>test runtime</em> scope: implementation of the Engine API for JUnit Jupiter</p>
 </li>
 </ul>
 </div>
@@ -1932,7 +1932,7 @@ code for the <code><a href="https://github.com/junit-team/junit5/blob/master/jun
 <h3 id="overview-2">5.1. Overview</h3>
 <div class="paragraph">
 <p>In contrast to the competing <code>Runner</code>, <code>@Rule</code>, and <code>@ClassRule</code> extension points in
-JUnit 4, the JUnit 5 extension model consists of a single, coherent concept: the
+JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concept: the
 <code>Extension</code> API. Note, however, that <code>Extension</code> itself is just a marker interface.</p>
 </div>
 </div>
@@ -2264,26 +2264,26 @@ corresponding Javadoc for details.</p>
 <h2 id="migrating-from-junit4">6. Migrating from JUnit 4</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Although the JUnit 5 programming model and extension model will not support JUnit 4
+<p>Although the JUnit Jupiter programming model and extension model will not support JUnit 4
 features such as <code>Rules</code> and <code>Runners</code>, it is not expected that source code maintainers
 will need to update all of their existing tests, test extensions, and custom build test
-infrastructure to migrate to JUnit 5.</p>
+infrastructure to migrate to JUnit Jupiter.</p>
 </div>
 <div class="paragraph">
-<p>Instead, JUnit 5 provides a gentle migration path via a <em>JUnit 4 test engine</em> which
-allows existing tests based on JUnit 4 to be executed using the JUnit 5 infrastructure.
-Since all classes and annotations specific to JUnit 5 reside under a new <code>org.junit.jupiter</code>
-base package, having both JUnit 4 and JUnit 5 in the classpath does not lead to any
-conflicts. It is therefore safe to maintain existing JUnit 4 tests alongside JUnit 5
+<p>Instead, JUnit provides a gentle migration path via a <em>JUnit 4 test engine</em> which
+allows existing tests based on JUnit 4 to be executed using the JUnit Platform infrastructure.
+Since all classes and annotations specific to JUnit Jupiter reside under a new <code>org.junit.jupiter</code>
+base package, having both JUnit 4 and JUnit Jupiter in the classpath does not lead to any
+conflicts. It is therefore safe to maintain existing JUnit 4 tests alongside JUnit Jupiter
 tests. Furthermore, since the JUnit team will continue to provide maintenance and bug fix
-releases for the JUnit 4.x baseline, developers have plenty of time to migrate to JUnit 5
+releases for the JUnit 4.x baseline, developers have plenty of time to migrate to JUnit Jupiter
 on their own schedule.</p>
 </div>
 <div class="sect2">
-<h3 id="running-junit-4-tests-with-junit-5">6.1. Running JUnit 4 Tests with JUnit 5</h3>
+<h3 id="running-junit-4-tests-with-the-junit-platform">6.1. Running JUnit 4 Tests with the JUnit Platform</h3>
 <div class="paragraph">
 <p>Just make sure that the <code>junit-vintage-engine</code> artifact is in your test runtime path. In that
-case JUnit 4 tests will automatically be picked up by JUnit 5 test runners.</p>
+case JUnit 4 tests will automatically be picked up by the JUnit Platform launcher.</p>
 </div>
 <div class="paragraph">
 <p>See the example projects in the <a href="https://github.com/junit-team/junit5-samples"><code>junit5-samples</code></a> repository to
@@ -2294,7 +2294,7 @@ find out how this is done with Gradle and Maven.</p>
 <h3 id="migration-tips">6.2. Migration Tips</h3>
 <div class="paragraph">
 <p>The following are things you have to watch out for when migrating existing JUnit 4 tests
-to JUnit 5.</p>
+to JUnit Jupiter.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2334,7 +2334,7 @@ to JUnit 5.</p>
 <h2 id="advanced-topics">7. Advanced Topics</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="launcher-api">7.1. The JUnit 5 Launcher API</h3>
+<h3 id="launcher-api">7.1. JUnit Platform Launcher API</h3>
 <div class="paragraph">
 <p>One of the prominent goals of JUnit 5 is to make the interface between JUnit and its
 programmatic clients – build tools and IDEs – more powerful and stable. The purpose is to
@@ -2344,7 +2344,7 @@ configuration that&#8217;s necessary from the outside.</p>
 <div class="paragraph">
 <p>For JUnit 5 we came up with the concept of a <code>Launcher</code> that can be used to discover,
 filter, and execute JUnit tests. Moreover, we added a mechanism to allow third party test
-libraries – like Spock, Cucumber, and FitNesse – to plug into JUnit 5&#8217;s launching
+libraries – like Spock, Cucumber, and FitNesse – to plug into the JUnit Platform&#8217;s launching
 infrastructure.</p>
 </div>
 <div class="paragraph">
@@ -2447,7 +2447,7 @@ final results in an object of your own. For an example see the
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine">junit-jupiter-engine</a></code>: The core of JUnit 5.</p>
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine">junit-jupiter-engine</a></code>: The core of JUnit Jupiter.</p>
 </li>
 <li>
 <p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-vintage-engine">junit-vintage-engine</a></code>: A thin layer on top of JUnit 4 to allow running "old" tests with the
@@ -2547,8 +2547,8 @@ value of lower stability.</p>
 <div class="sect2">
 <h3 id="tooling-support">8.3. Tooling Support</h3>
 <div class="paragraph">
-<p>The JUnit team plans to provide native tooling support for all JUnit 5 users, extenders,
-and tool builders. The tooling support will provide a means to check if the JUnit 5 APIs
+<p>The JUnit team plans to provide native tooling support for all JUnit users, extenders,
+and tool builders. The tooling support will provide a means to check if the JUnit APIs
 are being used in accordance with <code>@API</code> annotation declarations.</p>
 </div>
 </div>
