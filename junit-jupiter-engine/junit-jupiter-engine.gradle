@@ -1,4 +1,3 @@
-/*
 apply plugin: 'org.junit.platform.gradle.plugin'
 
 junitPlatform {
@@ -7,12 +6,6 @@ junitPlatform {
 	}
 	includeClassNamePattern '.*Tests?'
 	logManager 'org.apache.logging.log4j.jul.LogManager'
-}
-*/
-
-test {
-	scanForTestClasses = false
-	include(['**/JupiterTestSuite.class'])
 }
 
 dependencies {

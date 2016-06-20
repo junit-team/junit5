@@ -10,7 +10,7 @@ buildscript {
 		classpath 'com.diffplug.gradle.spotless:spotless:1.3.3'
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
 		classpath 'org.ajoberstar:gradle-git:1.4.2'
-		// classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-SNAPSHOT'
+		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-SNAPSHOT'
 		classpath 'net.nemerosa:versioning:2.0.0'
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
 	}
@@ -320,7 +320,7 @@ configure(rootProject) {
 	description = 'JUnit 5'
 
 	apply plugin: "org.ajoberstar.github-pages"
-	// apply plugin: 'org.junit.platform.gradle.plugin'
+	apply plugin: 'org.junit.platform.gradle.plugin'
 
 	jar.enabled = false
 	uploadArchives.enabled = false
@@ -338,19 +338,12 @@ configure(rootProject) {
 		testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 	}
 
-	/*
 	junitPlatform {
 		engines {
 			include 'junit-jupiter'
 		}
 		includeClassNamePattern 'org.junit.platform.meta.DependencyTests'
 		logManager 'org.apache.logging.log4j.jul.LogManager'
-	}
-	*/
-
-	test {
-		scanForTestClasses = false
-		include(['**/DependencyTests.class'])
 	}
 
 	task aggregateJavadocs(type: Javadoc) {
@@ -439,8 +432,8 @@ configure(rootProject) {
 		}
 
 		afterEvaluate {
-			// def testTaskName = 'junitPlatformTest'
-			def testTaskName = 'test'
+			def testTaskName = 'junitPlatformTest'
+			// def testTaskName = 'test'
 			subprojects.each { project ->
 				def testTask = project.tasks.findByPath(testTaskName)
 				if (testTask != null) {
