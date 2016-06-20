@@ -18,8 +18,8 @@ import org.junit.platform.commons.meta.API;
  * A {@code TestEngine} facilitates <em>discovery</em> and <em>execution</em> of
  * tests for a particular programming model.
  *
- * <p>For example, JUnit 5 provides a {@code TestEngine} that discovers and
- * executes tests written using the JUnit 5 programming model.
+ * <p>For example, JUnit provides a {@code TestEngine} that discovers and
+ * executes tests written using the JUnit Jupiter programming model.
  *
  * <p>Every {@code TestEngine} must {@linkplain #getId provide an ID},
  * {@linkplain #discover discover tests} from

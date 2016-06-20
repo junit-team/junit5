@@ -35,7 +35,7 @@ import org.opentest4j.MultipleFailuresError;
 import org.opentest4j.ValueWrapper;
 
 /**
- * Unit tests for JUnit 5 {@link Assertions}.
+ * Unit tests for JUnit Jupiter {@link Assertions}.
  *
  * @since 5.0
  */

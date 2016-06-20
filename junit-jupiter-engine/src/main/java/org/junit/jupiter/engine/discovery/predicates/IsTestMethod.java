@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.meta.API;
 
 /**
- * Test if a method is a JUnit 5 test method.
+ * Test if a method is a JUnit Jupiter test method.
  *
  * @since 5.0
  */

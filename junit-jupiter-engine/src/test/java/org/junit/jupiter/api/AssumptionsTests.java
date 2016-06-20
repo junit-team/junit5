@@ -23,7 +23,7 @@ import java.util.List;
 import org.opentest4j.TestAbortedException;
 
 /**
- * Unit tests for JUnit 5 {@link Assumptions}.
+ * Unit tests for JUnit Jupiter {@link Assumptions}.
  *
  * @since 5.0
  */

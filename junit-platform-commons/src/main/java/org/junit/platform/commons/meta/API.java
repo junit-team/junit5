@@ -19,7 +19,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotates public types within JUnit 5 to indicate their level of stability
+ * Annotates public types within JUnit to indicate their level of stability
  * and how they are intended to be used.
  *
  * <p>If the annotation is present on a type, it is considered to hold for

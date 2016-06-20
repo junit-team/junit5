@@ -20,8 +20,8 @@ import org.junit.platform.commons.meta.API;
  * Configuration parameters that {@link TestEngine TestEngines} may use to
  * influence test discovery and execution.
  *
- * <p>For example, the JUnit 5 engine uses a configuration parameter to enable
- * IDEs and build tools to deactivate conditional test execution.
+ * <p>For example, the JUnit Jupiter engine uses a configuration parameter to
+ * enable IDEs and build tools to deactivate conditional test execution.
  *
  * @see TestEngine
  * @see EngineDiscoveryRequest

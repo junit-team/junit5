@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 import org.junit.platform.commons.meta.API;
 
 /**
- * Test if a class is a potential top-level JUnit 5 test container, even if
+ * Test if a class is a potential top-level JUnit Jupiter test container, even if
  * it does not contain tests.
  *
  * @since 5.0

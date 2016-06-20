@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.platform.commons.meta.API;
 
 /**
- * Test if a class is a JUnit 5 {@link Nested @Nested} test class.
+ * Test if a class is a JUnit Jupiter {@link Nested @Nested} test class.
  *
  * @since 5.0
  */

@@ -23,7 +23,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.commons.meta.API;
 
 /**
- * Test if a method is a JUnit 5 test factory method.
+ * Test if a method is a JUnit Jupiter test factory method.
  *
  * @since 5.0
  */

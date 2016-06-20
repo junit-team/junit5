@@ -34,9 +34,9 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * <p>Contrary to JUnit 4, {@linkplain org.junit.platform.engine.TestEngine test engines}
  * are supposed to report events not only for {@linkplain TestIdentifier identifiers}
  * that represent executable leaves in the {@linkplain TestPlan test plan} but also
- * for all intermediate containers. However, while both the JUnit 4 and JUnit 5 engines
- * comply with this contract, there is no way to guarantee this for third-party
- * engines.
+ * for all intermediate containers. However, while both the JUnit Vintage and JUnit
+ * Jupiter engines comply with this contract, there is no way to guarantee this for
+ * third-party engines.
  *
  * @since 1.0
  * @see Launcher

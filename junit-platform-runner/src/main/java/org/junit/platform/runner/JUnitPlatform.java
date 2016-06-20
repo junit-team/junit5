@@ -58,7 +58,7 @@ import org.junit.runners.model.InitializationError;
  *
  * <p>If you do not use any configuration annotations from this package, you
  * can simply use this runner on a test class whose programming model is
- * supported on the JUnit Platform &mdash; for example, a JUnit 5 test class.
+ * supported on the JUnit Platform &mdash; for example, a JUnit Jupiter test class.
  * Note, however, that any test class run with this runner must be {@code public}
  * in order to be picked up by IDEs and build tools.
  *

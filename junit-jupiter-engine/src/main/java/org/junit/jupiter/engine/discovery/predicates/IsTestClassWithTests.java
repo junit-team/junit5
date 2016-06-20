@@ -19,7 +19,7 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
- * Test if a class is a JUnit 5 test class containing executable tests,
+ * Test if a class is a JUnit Jupiter test class containing executable tests,
  * test factories, or nested tests.
  *
  * @since 5.0

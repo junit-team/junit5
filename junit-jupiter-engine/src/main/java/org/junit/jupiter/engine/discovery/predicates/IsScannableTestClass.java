@@ -18,7 +18,8 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
- * Test if a class is a JUnit 5 test class which should be included in package and classpath scanning.
+ * Test if a class is a JUnit Jupiter test class which should be included in
+ * package and classpath scanning.
  *
  * @since 5.0
  */
