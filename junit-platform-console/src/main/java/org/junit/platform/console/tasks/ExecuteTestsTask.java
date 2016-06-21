@@ -98,10 +98,9 @@ public class ExecuteTestsTask implements ConsoleTask {
 	}
 
 	private int computeExitCode(TestExecutionSummary summary) {
-		if (options.isExitCodeEnabled()) {
-			long failedTests = summary.getTestsFailedCount();
-			return (int) Math.min(Integer.MAX_VALUE, failedTests);
+		if (summary.getTestsFailedCount() == 0) {
+			return SUCCESS;
 		}
-		return SUCCESS;
+		return TESTS_FAILED;
 	}
 }

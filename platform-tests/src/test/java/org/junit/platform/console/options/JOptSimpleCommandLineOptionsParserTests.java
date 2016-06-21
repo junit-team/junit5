@@ -46,7 +46,6 @@ class JOptSimpleCommandLineOptionsParserTests {
 		assertAll(
 			() -> assertFalse(options.isAnsiColorOutputDisabled()),
 			() -> assertFalse(options.isDisplayHelp()),
-			() -> assertFalse(options.isExitCodeEnabled()),
 			() -> assertFalse(options.isHideDetails()),
 			() -> assertFalse(options.isRunAllTests()),
 			() -> assertEquals(Optional.empty(), options.getIncludeClassNamePattern()),
@@ -64,7 +63,6 @@ class JOptSimpleCommandLineOptionsParserTests {
 		assertAll(
 			() -> assertParses("disable ansi", CommandLineOptions::isAnsiColorOutputDisabled, "-C", "--disable-ansi-colors"),
 			() -> assertParses("help", CommandLineOptions::isDisplayHelp, "-h", "--help"),
-			() -> assertParses("exit code", CommandLineOptions::isExitCodeEnabled, "-x", "--enable-exit-code"),
 			() -> assertParses("hide details", CommandLineOptions::isHideDetails, "-D", "--hide-details"),
 			() -> assertParses("run all tests", CommandLineOptions::isRunAllTests, "-a", "--all")
 		);

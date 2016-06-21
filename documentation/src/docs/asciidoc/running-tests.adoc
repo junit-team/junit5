@@ -232,6 +232,9 @@ Test run finished after 29 ms
 [         0 tests failed    ]
 ----
 
+The `{ConsoleRunner}` exits with status code 0 if no test failed. In case of at
+least one failing test the status code is 1.
+
 ==== Options
 
 _Caution:_ These options are very likely to change as we continue to work towards the
@@ -264,8 +267,6 @@ Option                       Description
 -r, --xml-reports-dir        Enable XML report output into a specified local
                                directory (will be created if it does not
                                exist).
--x, --enable-exit-code       Exit process with number of failing tests as
-                               exit code.
 -C, --disable-ansi-colors    Disable colored output (not supported by all
                                terminals).
 -D, --hide-details           Hide details while tests are being executed.

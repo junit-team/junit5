@@ -30,6 +30,11 @@ public interface ConsoleTask {
 	int SUCCESS = 0;
 
 	/**
+	 * Exit code indicating test failure(s)
+	 */
+	int TESTS_FAILED = 1;
+
+	/**
 	 * Execute this task and return an exit code.
 	 *
 	 * @param out writer for console output

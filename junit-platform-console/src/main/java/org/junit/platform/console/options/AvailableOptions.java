@@ -24,7 +24,6 @@ class AvailableOptions {
 	private final OptionParser parser = new OptionParser();
 
 	private final OptionSpec<Void> help;
-	private final OptionSpec<Void> enableExitCode;
 	private final OptionSpec<Void> disableAnsiColors;
 	private final OptionSpec<Void> runAllTests;
 	private final OptionSpec<Void> hideDetails;
@@ -69,7 +68,7 @@ class AvailableOptions {
 			"Enable XML report output into a specified local directory (will be created if it does not exist).") //
 				.withRequiredArg();
 
-		enableExitCode = parser.acceptsAll(asList("x", "enable-exit-code"), //
+		parser.acceptsAll(asList("x", "enable-exit-code"), //
 			"Exit process with number of failing tests as exit code.");
 		disableAnsiColors = parser.acceptsAll(asList("C", "disable-ansi-colors"),
 			"Disable colored output (not supported by all terminals).");
@@ -91,7 +90,6 @@ class AvailableOptions {
 		CommandLineOptions result = new CommandLineOptions();
 
 		result.setDisplayHelp(detectedOptions.has(this.help));
-		result.setExitCodeEnabled(detectedOptions.has(this.enableExitCode));
 		result.setAnsiColorOutputDisabled(detectedOptions.has(this.disableAnsiColors));
 		result.setRunAllTests(detectedOptions.has(this.runAllTests));
 		result.setHideDetails(detectedOptions.has(this.hideDetails));
