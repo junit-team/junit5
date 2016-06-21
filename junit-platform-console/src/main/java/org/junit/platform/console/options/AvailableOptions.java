@@ -68,8 +68,6 @@ class AvailableOptions {
 			"Enable XML report output into a specified local directory (will be created if it does not exist).") //
 				.withRequiredArg();
 
-		parser.acceptsAll(asList("x", "enable-exit-code"), //
-			"Exit process with number of failing tests as exit code.");
 		disableAnsiColors = parser.acceptsAll(asList("C", "disable-ansi-colors"),
 			"Disable colored output (not supported by all terminals).");
 		hideDetails = parser.acceptsAll(asList("D", "hide-details"),
