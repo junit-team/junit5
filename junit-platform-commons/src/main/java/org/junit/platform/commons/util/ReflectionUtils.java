@@ -267,7 +267,7 @@ public final class ReflectionUtils {
 		Preconditions.notBlank(name, "class name must not be null or blank");
 		Preconditions.notNull(classLoader, "ClassLoader must not be null");
 
-		// TODO Add support for primitive types and arrays.
+		// TODO [#332] Support primitive types and arrays.
 
 		try {
 			return Optional.of(classLoader.loadClass(name.trim()));
@@ -290,7 +290,7 @@ public final class ReflectionUtils {
 		Preconditions.notBlank(fullyQualifiedMethodName, "fully qualified method name must not be null or blank");
 		fullyQualifiedMethodName = fullyQualifiedMethodName.trim();
 
-		// TODO Handle overloaded and inherited methods
+		// TODO [#331] Support overloaded and inherited methods.
 
 		int hashPosition = fullyQualifiedMethodName.lastIndexOf('#');
 		if (hashPosition >= 0 && hashPosition < fullyQualifiedMethodName.length()) {
@@ -350,7 +350,7 @@ public final class ReflectionUtils {
 	}
 
 	public static Set<File> getAllClasspathRootDirectories() {
-		// TODO This is quite a hack, since sometimes the classpath is quite different
+		// This is quite a hack, since sometimes the classpath is quite different
 		String fullClassPath = System.getProperty("java.class.path");
 		// @formatter:off
 		return Arrays.stream(fullClassPath.split(File.pathSeparator))
@@ -447,7 +447,7 @@ public final class ReflectionUtils {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(sortOrder, "MethodSortOrder must not be null");
 
-		// TODO Determine if we need to support bridged methods.
+		// TODO [#333] Determine if we need to support bridged methods.
 
 		List<Method> localMethods = Arrays.asList(clazz.getDeclaredMethods());
 

@@ -64,7 +64,7 @@ class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelecto
 		List<UniqueId.Segment> segments = uniqueId.getSegments();
 		segments.remove(0); // drop engine node
 		UniqueId.Segment runnerSegment = segments.remove(0);
-		//TODO Check that it really is a runner segment
+		// TODO [#337] Check that it really is a runner segment
 		return runnerSegment.getValue();
 	}
 
