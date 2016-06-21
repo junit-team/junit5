@@ -30,7 +30,8 @@ import org.junit.platform.commons.meta.API;
  * of {@code @BeforeAll}.
  *
  * <p>In contrast to {@link BeforeEach @BeforeEach} methods, {@code @BeforeAll}
- * methods are only executed once for a given test class.
+ * methods are only executed once for a given test class or test class
+ * hierarchy.
  *
  * <p>{@code @BeforeAll} methods must not be {@code private} and must be
  * {@code static}. Consequently, {@code @BeforeAll} methods are not
