@@ -54,8 +54,6 @@ public class ExecuteTestsTask implements ConsoleTask {
 
 	private int executeTests(PrintWriter out) {
 		Launcher launcher = launcherSupplier.get();
-		// TODO Configure launcher?
-
 		SummaryGeneratingListener summaryListener = registerListeners(out, launcher);
 
 		TestDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(options);
