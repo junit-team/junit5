@@ -1778,6 +1778,10 @@ Test run finished after 29 ms
 [         0 tests failed    ]</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleRunner.java">ConsoleRunner</a></code> exits with status code 0 if no test failed. In case of at
+least one failing test the status code is 1.</p>
+</div>
 <div class="sect3">
 <h4 id="options">4.3.1. Options</h4>
 <div class="paragraph">
@@ -1811,8 +1815,6 @@ Option                       Description
 -r, --xml-reports-dir        Enable XML report output into a specified local
                                directory (will be created if it does not
                                exist).
--x, --enable-exit-code       Exit process with number of failing tests as
-                               exit code.
 -C, --disable-ansi-colors    Disable colored output (not supported by all
                                terminals).
 -D, --hide-details           Hide details while tests are being executed.
@@ -2595,7 +2597,7 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-21 06:27:38 -04:00
+Last updated 2016-06-21 10:02:09 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
