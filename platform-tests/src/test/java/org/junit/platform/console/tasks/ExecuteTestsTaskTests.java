@@ -10,18 +10,19 @@
 
 package org.junit.platform.console.tasks;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.platform.commons.util.ReflectionUtils.getDefaultClassLoader;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.support.hierarchical.DummyTestEngine;
 
@@ -29,53 +30,136 @@ import org.junit.platform.engine.support.hierarchical.DummyTestEngine;
  * @since 1.0
  */
 public class ExecuteTestsTaskTests {
+	private static final Runnable FAILING_TEST = () -> fail("should fail");
+	private static final Runnable SUCCEEDING_TEST = () -> {
+	};
 
 	@Test
-	public void executeWithoutExitCode() throws Exception {
+	public void printsSummary() throws Exception {
 		StringWriter stringWriter = new StringWriter();
 
 		CommandLineOptions options = new CommandLineOptions();
 		options.setRunAllTests(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("succeedingTest", success());
-		dummyTestEngine.addTest("failingTest", () -> fail("should fail"));
+		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
+		dummyTestEngine.addTest("failingTest", FAILING_TEST);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
-		int exitCode = task.execute(new PrintWriter(stringWriter));
+		task.execute(new PrintWriter(stringWriter));
 
-		assertEquals(0, exitCode);
-		assertThat(stringWriter.toString()).contains("1 tests successful", "1 tests failed");
+		assertThat(stringWriter.toString()).contains("Test run finished after", "2 tests found", "0 tests skipped",
+			"2 tests started", "0 tests aborted", "1 tests successful", "1 tests failed");
 	}
 
 	@Test
-	public void executeWithExitCode() throws Exception {
+	public void printsDetailsIfTheyAreNotHidden() throws Exception {
+		StringWriter stringWriter = new StringWriter();
+
+		CommandLineOptions options = new CommandLineOptions();
+		options.setHideDetails(false);
+		options.setRunAllTests(true);
+
+		DummyTestEngine dummyTestEngine = new DummyTestEngine();
+		dummyTestEngine.addTest("failingTest", FAILING_TEST);
+
+		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
+		task.execute(new PrintWriter(stringWriter));
+
+		assertThat(stringWriter.toString()).contains("Test execution started.");
+	}
+
+	@Test
+	public void printsNoDetailsIfTheyAreHidden() throws Exception {
+		StringWriter stringWriter = new StringWriter();
+
+		CommandLineOptions options = new CommandLineOptions();
+		options.setHideDetails(true);
+		options.setRunAllTests(true);
+
+		DummyTestEngine dummyTestEngine = new DummyTestEngine();
+		dummyTestEngine.addTest("failingTest", FAILING_TEST);
+
+		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
+		task.execute(new PrintWriter(stringWriter));
+
+		assertThat(stringWriter.toString()).doesNotContain("Test execution started.");
+	}
+
+	@Test
+	public void printsFailuresEvenIfDetailsAreHidden() throws Exception {
+		StringWriter stringWriter = new StringWriter();
+
+		CommandLineOptions options = new CommandLineOptions();
+		options.setHideDetails(true);
+		options.setRunAllTests(true);
+
+		DummyTestEngine dummyTestEngine = new DummyTestEngine();
+		dummyTestEngine.addTest("failingTest", FAILING_TEST);
+
+		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
+		task.execute(new PrintWriter(stringWriter));
+
+		assertThat(stringWriter.toString()).contains("Test failures (1)", "failingTest");
+	}
+
+	@Test
+	public void hasStatusCode0EvenForFailingTestIfExitCodeIsNotEnabled() throws Exception {
+		CommandLineOptions options = new CommandLineOptions();
+		options.setRunAllTests(true);
+		options.setExitCodeEnabled(false);
+
+		DummyTestEngine dummyTestEngine = new DummyTestEngine();
+		dummyTestEngine.addTest("failingTest", FAILING_TEST);
+
+		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
+		int exitCode = task.execute(dummyWriter());
+
+		assertThat(exitCode).isEqualTo(0);
+	}
+
+	@Test
+	public void hasStatusCode0ForSucceedingTestIfExitCodeIsEnabled() throws Exception {
 		CommandLineOptions options = new CommandLineOptions();
 		options.setRunAllTests(true);
 		options.setExitCodeEnabled(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("succeedingTest", success());
-		dummyTestEngine.addTest("failingTest", () -> fail("should fail"));
+		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
-		int exitCode = task.execute(new PrintWriter(new StringWriter()));
+		int exitCode = task.execute(dummyWriter());
 
-		assertEquals(1, exitCode);
+		assertThat(exitCode).isEqualTo(0);
 	}
 
 	@Test
-	public void executeWithCustomClassLoader() throws Exception {
+	public void hasStatusCodeEqualToNumberOfFailingTestsIfExitCodeIsEnabled() throws Exception {
+		CommandLineOptions options = new CommandLineOptions();
+		options.setRunAllTests(true);
+		options.setExitCodeEnabled(true);
+
+		DummyTestEngine dummyTestEngine = new DummyTestEngine();
+		dummyTestEngine.addTest("firstFailingTest", FAILING_TEST);
+		dummyTestEngine.addTest("secondFailingTest", FAILING_TEST);
+
+		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
+		int exitCode = task.execute(dummyWriter());
+
+		assertThat(exitCode).isEqualTo(2);
+	}
+
+	@Test
+	public void usesCustomClassLoaderIfAdditionalClassPathEntriesArePresent() throws Exception {
 		StringWriter stringWriter = new StringWriter();
 		CommandLineOptions options = new CommandLineOptions();
 		options.setRunAllTests(true);
 		options.setAdditionalClasspathEntries(singletonList("."));
 
-		ClassLoader oldClassLoader = ReflectionUtils.getDefaultClassLoader();
+		ClassLoader oldClassLoader = getDefaultClassLoader();
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("failingTest", () -> {
-			assertSame(oldClassLoader, ReflectionUtils.getDefaultClassLoader(), "should fail");
-		});
+		dummyTestEngine.addTest("failingTest",
+			() -> assertSame(oldClassLoader, getDefaultClassLoader(), "should fail"));
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter));
@@ -84,29 +168,24 @@ public class ExecuteTestsTaskTests {
 	}
 
 	@Test
-	public void executeWithHiddenDetails() throws Exception {
+	public void usesSameClassLoaderIfNoAdditionalClassPathEntriesArePresent() throws Exception {
 		StringWriter stringWriter = new StringWriter();
-
 		CommandLineOptions options = new CommandLineOptions();
 		options.setRunAllTests(true);
-		options.setHideDetails(true);
+		options.setAdditionalClasspathEntries(emptyList());
 
+		ClassLoader oldClassLoader = getDefaultClassLoader();
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("failingTest", () -> fail("should fail"));
+		dummyTestEngine.addTest("failingTest",
+			() -> assertNotSame(oldClassLoader, getDefaultClassLoader(), "should fail"));
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter));
 
-		// @formatter:off
-		assertThat(stringWriter.toString())
-				.doesNotContain("Test started")
-				.contains("Test failures (1)", "failingTest");
-		// @formatter:on
+		assertThat(stringWriter.toString()).contains("failingTest", "should fail", "1 tests failed");
 	}
 
-	private static Runnable success() {
-		return () -> {
-		};
+	private PrintWriter dummyWriter() {
+		return new PrintWriter(new StringWriter());
 	}
-
 }
