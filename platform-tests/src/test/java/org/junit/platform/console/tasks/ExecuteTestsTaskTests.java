@@ -29,6 +29,9 @@ import org.junit.platform.engine.support.hierarchical.DummyTestEngine;
  * @since 1.0
  */
 public class ExecuteTestsTaskTests {
+	private static final Runnable FAILING_TEST = () -> fail("should fail");
+	private static final Runnable SUCCEEDING_TEST = () -> {
+	};
 
 	@Test
 	public void executeWithoutExitCode() throws Exception {
@@ -38,8 +41,8 @@ public class ExecuteTestsTaskTests {
 		options.setRunAllTests(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("succeedingTest", success());
-		dummyTestEngine.addTest("failingTest", () -> fail("should fail"));
+		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
+		dummyTestEngine.addTest("failingTest", FAILING_TEST);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
 		int exitCode = task.execute(new PrintWriter(stringWriter));
@@ -55,11 +58,11 @@ public class ExecuteTestsTaskTests {
 		options.setExitCodeEnabled(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("succeedingTest", success());
-		dummyTestEngine.addTest("failingTest", () -> fail("should fail"));
+		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
+		dummyTestEngine.addTest("failingTest", FAILING_TEST);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
-		int exitCode = task.execute(new PrintWriter(new StringWriter()));
+		int exitCode = task.execute(dummyWriter());
 
 		assertEquals(1, exitCode);
 	}
@@ -73,9 +76,8 @@ public class ExecuteTestsTaskTests {
 
 		ClassLoader oldClassLoader = ReflectionUtils.getDefaultClassLoader();
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("failingTest", () -> {
-			assertSame(oldClassLoader, ReflectionUtils.getDefaultClassLoader(), "should fail");
-		});
+		dummyTestEngine.addTest("failingTest",
+			() -> assertSame(oldClassLoader, ReflectionUtils.getDefaultClassLoader(), "should fail"));
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter));
@@ -92,7 +94,7 @@ public class ExecuteTestsTaskTests {
 		options.setHideDetails(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("failingTest", () -> fail("should fail"));
+		dummyTestEngine.addTest("failingTest", FAILING_TEST);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter));
@@ -104,9 +106,7 @@ public class ExecuteTestsTaskTests {
 		// @formatter:on
 	}
 
-	private static Runnable success() {
-		return () -> {
-		};
+	private PrintWriter dummyWriter() {
+		return new PrintWriter(new StringWriter());
 	}
-
 }
