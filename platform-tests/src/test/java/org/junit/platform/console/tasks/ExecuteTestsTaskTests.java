@@ -104,25 +104,9 @@ public class ExecuteTestsTaskTests {
 	}
 
 	@Test
-	public void hasStatusCode0EvenForFailingTestIfExitCodeIsNotEnabled() throws Exception {
+	public void hasStatusCode0ForSucceedingTest() throws Exception {
 		CommandLineOptions options = new CommandLineOptions();
 		options.setRunAllTests(true);
-		options.setExitCodeEnabled(false);
-
-		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("failingTest", FAILING_TEST);
-
-		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
-		int exitCode = task.execute(dummyWriter());
-
-		assertThat(exitCode).isEqualTo(0);
-	}
-
-	@Test
-	public void hasStatusCode0ForSucceedingTestIfExitCodeIsEnabled() throws Exception {
-		CommandLineOptions options = new CommandLineOptions();
-		options.setRunAllTests(true);
-		options.setExitCodeEnabled(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
 		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
@@ -134,19 +118,17 @@ public class ExecuteTestsTaskTests {
 	}
 
 	@Test
-	public void hasStatusCodeEqualToNumberOfFailingTestsIfExitCodeIsEnabled() throws Exception {
+	public void hasStatusCode1ForFailingTests() throws Exception {
 		CommandLineOptions options = new CommandLineOptions();
 		options.setRunAllTests(true);
-		options.setExitCodeEnabled(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("firstFailingTest", FAILING_TEST);
-		dummyTestEngine.addTest("secondFailingTest", FAILING_TEST);
+		dummyTestEngine.addTest("failingTest", FAILING_TEST);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
 		int exitCode = task.execute(dummyWriter());
 
-		assertThat(exitCode).isEqualTo(2);
+		assertThat(exitCode).isEqualTo(1);
 	}
 
 	@Test

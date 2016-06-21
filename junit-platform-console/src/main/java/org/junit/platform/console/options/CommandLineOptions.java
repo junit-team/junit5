@@ -25,7 +25,6 @@ import org.junit.platform.commons.meta.API;
 public class CommandLineOptions {
 
 	private boolean displayHelp;
-	private boolean exitCodeEnabled;
 	private boolean ansiColorOutputDisabled;
 	private boolean runAllTests;
 	private boolean hideDetails;
@@ -50,14 +49,6 @@ public class CommandLineOptions {
 
 	public void setDisplayHelp(boolean displayHelp) {
 		this.displayHelp = displayHelp;
-	}
-
-	public boolean isExitCodeEnabled() {
-		return this.exitCodeEnabled;
-	}
-
-	public void setExitCodeEnabled(boolean exitCodeEnabled) {
-		this.exitCodeEnabled = exitCodeEnabled;
 	}
 
 	public boolean isAnsiColorOutputDisabled() {

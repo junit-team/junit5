@@ -98,7 +98,6 @@ class JUnitPlatformPluginSpec extends Specification {
 			junitTask instanceof JavaExec
 			junitTask.main == ConsoleRunner.class.getName()
 
-			junitTask.args.contains('--enable-exit-code')
 			junitTask.args.contains('--hide-details')
 			junitTask.args.contains('--all')
 			junitTask.args.containsAll('-n', '.*Tests?')

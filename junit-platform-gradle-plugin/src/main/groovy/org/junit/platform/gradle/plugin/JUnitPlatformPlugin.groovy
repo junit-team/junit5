@@ -90,7 +90,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 
 	private ArrayList<String> buildArgs(project, junitExtension, reportsDir) {
 
-		def args = ['--enable-exit-code', '--hide-details', '--all']
+		def args = ['--hide-details', '--all']
 
 		if (junitExtension.includeClassNamePattern) {
 			args.add('-n')
