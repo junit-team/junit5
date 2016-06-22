@@ -99,5 +99,14 @@
     "speakers": [
       "nicolaiparlog"
     ]
+  },
+  {
+    "title": "Santa Barbara Java Meetup",
+    "date": "2016-06-28",
+    "location": "Santa Barbara, CA",
+    "link": "http://www.meetup.com/Santa-Barbara-Java-Meetup/events/231183261/",
+    "speakers": [
+      "marcphilipp"
+    ]
   }
 ]
