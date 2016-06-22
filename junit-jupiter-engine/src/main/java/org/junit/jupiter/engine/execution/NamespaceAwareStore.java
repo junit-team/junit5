@@ -17,6 +17,7 @@ import java.util.function.Function;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.platform.commons.meta.API;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * @since 5.0
@@ -34,22 +35,49 @@ public class NamespaceAwareStore implements Store {
 
 	@Override
 	public Object get(Object key) {
-		return valuesStore.get(namespace, key);
+		Preconditions.notNull(key, "key must not be null");
+		return this.valuesStore.get(this.namespace, key);
+	}
+
+	@Override
+	public <T> T get(Object key, Class<T> requiredType) {
+		Preconditions.notNull(key, "key must not be null");
+		Preconditions.notNull(requiredType, "requiredType must not be null");
+		return this.valuesStore.get(this.namespace, key, requiredType);
+	}
+
+	@Override
+	public <K, V> Object getOrComputeIfAbsent(K key, Function<K, V> defaultCreator) {
+		Preconditions.notNull(key, "key must not be null");
+		Preconditions.notNull(defaultCreator, "defaultCreator function must not be null");
+		return this.valuesStore.getOrComputeIfAbsent(this.namespace, key, defaultCreator);
+	}
+
+	@Override
+	public <K, V> V getOrComputeIfAbsent(K key, Function<K, V> defaultCreator, Class<V> requiredType) {
+		Preconditions.notNull(key, "key must not be null");
+		Preconditions.notNull(defaultCreator, "defaultCreator function must not be null");
+		Preconditions.notNull(requiredType, "requiredType must not be null");
+		return this.valuesStore.getOrComputeIfAbsent(this.namespace, key, defaultCreator, requiredType);
 	}
 
 	@Override
 	public void put(Object key, Object value) {
-		valuesStore.put(namespace, key, value);
-	}
-
-	@Override
-	public Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator) {
-		return valuesStore.getOrComputeIfAbsent(namespace, key, defaultCreator);
+		Preconditions.notNull(key, "key must not be null");
+		this.valuesStore.put(this.namespace, key, value);
 	}
 
 	@Override
 	public Object remove(Object key) {
-		return valuesStore.remove(namespace, key);
+		Preconditions.notNull(key, "key must not be null");
+		return this.valuesStore.remove(this.namespace, key);
+	}
+
+	@Override
+	public <T> T remove(Object key, Class<T> requiredType) {
+		Preconditions.notNull(key, "key must not be null");
+		Preconditions.notNull(requiredType, "requiredType must not be null");
+		return this.valuesStore.remove(this.namespace, key, requiredType);
 	}
 
 }

@@ -40,7 +40,7 @@ public class TimingExtension implements BeforeTestExecutionCallback, AfterTestEx
 	@Override
 	public void afterTestExecution(TestExtensionContext context) throws Exception {
 		Method testMethod = context.getTestMethod().get();
-		long start = (long) getStore(context).remove(testMethod);
+		long start = getStore(context).remove(testMethod, long.class);
 		long duration = System.currentTimeMillis() - start;
 
 		LOG.info(() -> String.format("Method [%s] took %s ms.", testMethod.getName(), duration));

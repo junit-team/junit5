@@ -20,6 +20,7 @@ import java.util.Set;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
@@ -67,6 +68,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 
 	@Override
 	public Store getStore(Namespace namespace) {
+		Preconditions.notNull(namespace, "Namespace must not be null");
 		return new NamespaceAwareStore(valuesStore, namespace);
 	}
 

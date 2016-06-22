@@ -11,6 +11,8 @@
 package org.junit.jupiter.engine.execution;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
+import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
+import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,14 +21,13 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContextException;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@code ExtensionValuesStore} is used inside implementations of
- * {@link ExtensionContext}
- * to store and retrieve attributes with {@link #get}, {@link #put}, or
- * {@link #getOrComputeIfAbsent}.
+ * {@link ExtensionContext} to store and retrieve attributes.
  *
  * @since 5.0
  */
@@ -46,17 +47,34 @@ public class ExtensionValuesStore {
 
 	Object get(Namespace namespace, Object key) {
 		StoredValue storedValue = getStoredValue(namespace, key);
-		if (storedValue != null)
+		if (storedValue != null) {
 			return storedValue.value;
-		else if (parentStore != null)
+		}
+		else if (parentStore != null) {
 			return parentStore.get(namespace, key);
-		else
+		}
+		else {
 			return null;
+		}
 	}
 
-	private StoredValue getStoredValue(Namespace namespace, Object key) {
-		CompositeKey compositeKey = new CompositeKey(namespace, key);
-		return storedValues.get(compositeKey);
+	<T> T get(Namespace namespace, Object key, Class<T> requiredType) {
+		Object value = get(namespace, key);
+		return castToRequiredType(key, value, requiredType);
+	}
+
+	<K, V> Object getOrComputeIfAbsent(Namespace namespace, K key, Function<K, V> defaultCreator) {
+		StoredValue storedValue = getStoredValue(namespace, key);
+		if (storedValue == null) {
+			storedValue = new StoredValue(defaultCreator.apply(key));
+			putStoredValue(namespace, key, storedValue);
+		}
+		return storedValue.value;
+	}
+
+	<K, V> V getOrComputeIfAbsent(Namespace namespace, K key, Function<K, V> defaultCreator, Class<V> requiredType) {
+		Object value = getOrComputeIfAbsent(namespace, key, defaultCreator);
+		return castToRequiredType(key, value, requiredType);
 	}
 
 	void put(Namespace namespace, Object key, Object value) {
@@ -66,24 +84,41 @@ public class ExtensionValuesStore {
 		putStoredValue(namespace, key, new StoredValue(value));
 	}
 
+	Object remove(Namespace namespace, Object key) {
+		CompositeKey compositeKey = new CompositeKey(namespace, key);
+		StoredValue previous = storedValues.remove(compositeKey);
+		return (previous != null ? previous.value : null);
+	}
+
+	<T> T remove(Namespace namespace, Object key, Class<T> requiredType) {
+		Object value = remove(namespace, key);
+		return castToRequiredType(key, value, requiredType);
+	}
+
+	private StoredValue getStoredValue(Namespace namespace, Object key) {
+		CompositeKey compositeKey = new CompositeKey(namespace, key);
+		return storedValues.get(compositeKey);
+	}
+
 	private void putStoredValue(Namespace namespace, Object key, StoredValue storedValue) {
 		CompositeKey compositeKey = new CompositeKey(namespace, key);
 		storedValues.put(compositeKey, storedValue);
 	}
 
-	Object getOrComputeIfAbsent(Namespace namespace, Object key, Function<Object, Object> defaultCreator) {
-		StoredValue storedValue = getStoredValue(namespace, key);
-		if (storedValue == null) {
-			storedValue = new StoredValue(defaultCreator.apply(key));
-			putStoredValue(namespace, key, storedValue);
+	@SuppressWarnings("unchecked")
+	private <T> T castToRequiredType(Object key, Object value, Class<T> requiredType) {
+		if (value == null) {
+			return null;
 		}
-		return storedValue.value;
-	}
-
-	Object remove(Namespace namespace, Object key) {
-		CompositeKey compositeKey = new CompositeKey(namespace, key);
-		StoredValue previous = storedValues.remove(compositeKey);
-		return (previous != null ? previous.value : null);
+		if (isAssignableTo(value, requiredType)) {
+			if (requiredType.isPrimitive()) {
+				return (T) getWrapperType(requiredType).cast(value);
+			}
+			return requiredType.cast(value);
+		}
+		// else
+		throw new ExtensionContextException(
+			String.format("Object stored under key [%s] is not of required type [%s]", key, requiredType.getName()));
 	}
 
 	private static class CompositeKey {

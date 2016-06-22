@@ -32,6 +32,8 @@ import org.junit.platform.commons.util.Preconditions;
  * {@code ExtensionContext} to perform their work.
  *
  * @since 5.0
+ * @see Store
+ * @see Namespace
  */
 @API(Experimental)
 public interface ExtensionContext {
@@ -150,19 +152,77 @@ public interface ExtensionContext {
 	interface Store {
 
 		/**
-		 * Get a value that has been stored under the supplied {@code key}.
+		 * Get the value that has been stored under the supplied {@code key}.
+		 *
+		 * <p>If no value has been saved in the current {@link ExtensionContext}
+		 * for the supplied {@code key}, ancestors of the context will be queried
+		 * for a value with the same {@code key} in the store's {@code Namespace}.
+		 *
+		 * <p>For greater type safety, consider using {@link #get(Object, Class)}
+		 * instead.
+		 *
+		 * @param key the key; never {@code null}
+		 * @return the value; potentially {@code null}
+		 * @see #get(Object, Class)
+		 */
+		Object get(Object key);
+
+		/**
+		 * Get the value of the specified required type that has been stored under
+		 * the supplied {@code key}.
 		 *
 		 * <p>If no value has been saved in the current {@link ExtensionContext}
 		 * for the supplied {@code key}, ancestors of the context will be queried
 		 * for a value with the same {@code key} in the store's {@code Namespace}.
 		 *
 		 * @param key the key; never {@code null}
+		 * @param requiredType the required type of the value; never {@code null}
 		 * @return the value; potentially {@code null}
+		 * @see #get(Object)
 		 */
-		Object get(Object key);
+		<T> T get(Object key, Class<T> requiredType);
 
 		/**
-		 * Store a {@code value} for later retrieval using the supplied {@code key}.
+		 * Get the value that is stored under the supplied {@code key}.
+		 *
+		 * <p>If no value is currently stored under the supplied {@code key},
+		 * a new value will be computed by the {@code defaultCreator} (given
+		 * the {@code key} as input), stored, and returned.
+		 *
+		 * <p>For greater type safety, consider using
+		 * {@link #getOrComputeIfAbsent(Object, Function, Class)} instead.
+		 *
+		 * @param key the key; never {@code null}
+		 * @param defaultCreator the function called with the supplied {@code key}
+		 * to create a new value; never {@code null}
+		 * @param <K> the type of the key
+		 * @param <V> the type of the value
+		 * @return the value; potentially {@code null}
+		 * @see #getOrComputeIfAbsent(Object, Function, Class)
+		 */
+		<K, V> Object getOrComputeIfAbsent(K key, Function<K, V> defaultCreator);
+
+		/**
+		 * Get the value of the specified required type that is stored under the
+		 * supplied {@code key}.
+		 *
+		 * <p>If no value is currently stored under the supplied {@code key},
+		 * a new value will be computed by the {@code defaultCreator} (given
+		 * the {@code key} as input), stored, and returned.
+		 *
+		 * @param key the key; never {@code null}
+		 * @param defaultCreator the function called with the supplied {@code key}
+		 * to create a new value; never {@code null}
+		 * @param requiredType the required type of the value; never {@code null}
+		 * @param <K> the type of the key
+		 * @param <V> the type of the value
+		 * @return the value; potentially {@code null}
+		 * @see #getOrComputeIfAbsent(Object, Function)
+		 */
+		<K, V> V getOrComputeIfAbsent(K key, Function<K, V> defaultCreator, Class<V> requiredType);
+
+		/**
+		 * Store a {@code value} for later retrieval under the supplied {@code key}.
 		 *
 		 * <p>A stored {@code value} is visible in child {@link ExtensionContext
 		 * ExtensionContexts} for the store's {@code Namespace} unless they
@@ -175,30 +235,36 @@ public interface ExtensionContext {
 		void put(Object key, Object value);
 
 		/**
-		 * Get the value that is stored under the supplied {@code key}.
-		 *
-		 * <p>If no value is currently stored under the supplied {@code key},
-		 * a new value will be computed by the {@code defaultCreator} (given
-		 * the {@code key} as input parameter), stored, and returned.
-		 *
-		 * @param key the key; never {@code null}
-		 * @param defaultCreator the function called with the supplied {@code key}
-		 * to create a new value
-		 * @return the value; potentially {@code null}
-		 */
-		Object getOrComputeIfAbsent(Object key, Function<Object, Object> defaultCreator);
-
-		/**
 		 * Remove the value that was previously stored under the supplied {@code key}.
 		 *
 		 * <p>The value will only be removed in the current {@link ExtensionContext},
 		 * not in ancestors.
 		 *
+		 * <p>For greater type safety, consider using {@link #remove(Object, Class)}
+		 * instead.
+		 *
 		 * @param key the key; never {@code null}
 		 * @return the previous value or {@code null} if no value was present
 		 * for the specified key
+		 * @see #remove(Object, Class)
 		 */
 		Object remove(Object key);
+
+		/**
+		 * Remove the value of the specified required type that was previously stored
+		 * under the supplied {@code key}.
+		 *
+		 * <p>The value will only be removed in the current {@link ExtensionContext},
+		 * not in ancestors.
+		 *
+		 * @param key the key; never {@code null}
+		 * @param requiredType the required type of the value; never {@code null}
+		 * @return the previous value or {@code null} if no value was present
+		 * for the specified key
+		 * @see #remove(Object)
+		 */
+		<T> T remove(Object key, Class<T> requiredType);
+
 	}
 
 	/**
@@ -227,7 +293,6 @@ public interface ExtensionContext {
 		 */
 		public static Namespace of(Object... parts) {
 			Preconditions.notNull(parts, "There must be at least one reference object to create a namespace");
-
 			return new Namespace(parts);
 		}
 
@@ -243,8 +308,8 @@ public interface ExtensionContext {
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			Namespace namespace = (Namespace) o;
-			return parts.equals(namespace.parts);
+			Namespace that = (Namespace) o;
+			return this.parts.equals(that.parts);
 		}
 
 		@Override

@@ -12,11 +12,15 @@ package org.junit.jupiter.engine.execution;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.expectThrows;
+
+import java.util.function.Function;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContextException;
 
 /**
  * Microtests for {@link ExtensionValuesStore}.
@@ -25,14 +29,13 @@ import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
  */
 class ExtensionValuesStoreTests {
 
+	private final Object key = "key";
+	private final Object value = "value";
+
+	private final Namespace namespace = Namespace.of("ns");
+
 	private ExtensionValuesStore store;
 	private ExtensionValuesStore parentStore;
-
-	private Object key = createObject("key");
-
-	private Object value = createObject("value");
-
-	private Namespace namespace = Namespace.of("ns");
 
 	@BeforeEach
 	void initializeStore() {
@@ -50,7 +53,6 @@ class ExtensionValuesStoreTests {
 
 		@Test
 		void putAndGetWithSameKey() {
-
 			store.put(namespace, key, value);
 			assertEquals(value, store.get(namespace, key));
 		}
@@ -139,6 +141,141 @@ class ExtensionValuesStoreTests {
 			assertEquals(value2, store.get(namespace2, key));
 		}
 
+		@Test
+		void getWithTypeSafetyAndInvalidRequiredTypeThrowsException() {
+			Integer key = new Integer(42);
+			String value = "enigma";
+			store.put(namespace, key, value);
+
+			Exception exception = expectThrows(ExtensionContextException.class,
+				() -> store.get(namespace, key, Number.class));
+			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
+				exception.getMessage());
+		}
+
+		@Test
+		void getWithTypeSafety() {
+			Integer key = new Integer(42);
+			String value = "enigma";
+			store.put(namespace, key, value);
+
+			// The fact that we can declare this as a String suffices for testing the required type.
+			String requiredTypeValue = store.get(namespace, key, String.class);
+			assertEquals(value, requiredTypeValue);
+		}
+
+		@Test
+		void getWithTypeSafetyAndPrimitiveValueType() {
+			String key = "enigma";
+			int value = 42;
+			store.put(namespace, key, value);
+
+			// The fact that we can declare this as an int/Integer suffices for testing the required type.
+			int requiredInt = store.get(namespace, key, int.class);
+			Integer requiredInteger = store.get(namespace, key, Integer.class);
+			assertEquals(value, requiredInt);
+			assertEquals(value, requiredInteger.intValue());
+		}
+
+		@Test
+		void getNullValueWithTypeSafety() {
+			store.put(namespace, key, null);
+
+			// The fact that we can declare this as a String suffices for testing the required type.
+			String requiredTypeValue = store.get(namespace, key, String.class);
+			assertNull(requiredTypeValue);
+		}
+
+		@Test
+		void getOrComputeIfAbsentWithTypeSafetyAndInvalidRequiredTypeThrowsException() {
+			String key = "pi";
+			Float value = new Float(3.14);
+
+			// Store a Float...
+			store.put(namespace, key, value);
+
+			// But declare that our function creates a String...
+			Function<String, String> defaultCreator = k -> "enigma";
+
+			Exception exception = expectThrows(ExtensionContextException.class,
+				() -> store.getOrComputeIfAbsent(namespace, key, defaultCreator, String.class));
+			assertEquals("Object stored under key [pi] is not of required type [java.lang.String]",
+				exception.getMessage());
+		}
+
+		@Test
+		void getOrComputeIfAbsentWithTypeSafety() {
+			Integer key = new Integer(42);
+			String value = "enigma";
+
+			// The fact that we can declare this as a String suffices for testing the required type.
+			String computedValue = store.getOrComputeIfAbsent(namespace, key, k -> value, String.class);
+			assertEquals(value, computedValue);
+		}
+
+		@Test
+		void getOrComputeIfAbsentWithTypeSafetyAndPrimitiveValueType() {
+			String key = "enigma";
+			int value = 42;
+
+			// The fact that we can declare this as an int/Integer suffices for testing the required type.
+			int computedInt = store.getOrComputeIfAbsent(namespace, key, k -> value, int.class);
+			Integer computedInteger = store.getOrComputeIfAbsent(namespace, key, k -> value, Integer.class);
+			assertEquals(value, computedInt);
+			assertEquals(value, computedInteger.intValue());
+		}
+
+		@Test
+		void removeWithTypeSafetyAndInvalidRequiredTypeThrowsException() {
+			Integer key = new Integer(42);
+			String value = "enigma";
+			store.put(namespace, key, value);
+
+			Exception exception = expectThrows(ExtensionContextException.class,
+				() -> store.remove(namespace, key, Number.class));
+			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
+				exception.getMessage());
+		}
+
+		@Test
+		void removeWithTypeSafety() {
+			Integer key = new Integer(42);
+			String value = "enigma";
+			store.put(namespace, key, value);
+
+			// The fact that we can declare this as a String suffices for testing the required type.
+			String removedValue = store.remove(namespace, key, String.class);
+			assertEquals(value, removedValue);
+			assertNull(store.get(namespace, key));
+		}
+
+		@Test
+		void removeWithTypeSafetyAndPrimitiveValueType() {
+			String key = "enigma";
+			int value = 42;
+			store.put(namespace, key, value);
+
+			// The fact that we can declare this as an int suffices for testing the required type.
+			int requiredInt = store.remove(namespace, key, int.class);
+			assertEquals(value, requiredInt);
+
+			store.put(namespace, key, value);
+			// The fact that we can declare this as an Integer suffices for testing the required type.
+			Integer requiredInteger = store.get(namespace, key, Integer.class);
+			assertEquals(value, requiredInteger.intValue());
+		}
+
+		@Test
+		void removeNullValueWithTypeSafety() {
+			Integer key = new Integer(42);
+			store.put(namespace, key, null);
+
+			// The fact that we can declare this as a String suffices for testing the required type.
+			String removedValue = store.remove(namespace, key, String.class);
+			assertNull(removedValue);
+			assertNull(store.get(namespace, key));
+		}
+
 	}
 
 	@Nested
@@ -163,7 +300,7 @@ class ExtensionValuesStoreTests {
 	}
 
 	@Nested
-	class CompositNamespaceTests {
+	class CompositeNamespaceTests {
 
 		@Test
 		void additionNamespacePartMakesADifferenc() {
@@ -198,6 +335,7 @@ class ExtensionValuesStoreTests {
 
 	private Object createObject(final String display) {
 		return new Object() {
+
 			@Override
 			public String toString() {
 				return display;

@@ -167,6 +167,17 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * Get the wrapper type for the supplied primitive type.
+	 *
+	 * @param type the primitive type for which to retrieve the wrapper type
+	 * @return the corresponding wrapper type or {@code null} if the
+	 * supplied type is {@code null} or not a primitive type
+	 */
+	public static Class<?> getWrapperType(Class<?> type) {
+		return primitiveToWrapperMap.get(type);
+	}
+
+	/**
 	 * Create a new instance of the specified {@link Class} by invoking
 	 * the constructor whose argument list matches the types of the supplied
 	 * arguments.
