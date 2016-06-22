@@ -108,5 +108,14 @@
     "speakers": [
       "marcphilipp"
     ]
+  },
+  {
+    "title": "SpringOne Platform",
+    "date": "2016-08-02",
+    "location": "Las Vegas, NV",
+    "link": "https://2016.event.springoneplatform.io/schedule/sessions/testing_with_spring_4_3_junit_5_and_beyond.html",
+    "speakers": [
+      "sbrannen"
+    ]
   }
 ]
