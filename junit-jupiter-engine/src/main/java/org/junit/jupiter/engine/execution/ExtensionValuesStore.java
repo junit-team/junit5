@@ -14,6 +14,7 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -54,8 +55,8 @@ public class ExtensionValuesStore {
 	}
 
 	private StoredValue getStoredValue(Namespace namespace, Object key) {
-		ComposedKey composedKey = new ComposedKey(namespace, key);
-		return storedValues.get(composedKey);
+		CompositeKey compositeKey = new CompositeKey(namespace, key);
+		return storedValues.get(compositeKey);
 	}
 
 	void put(Namespace namespace, Object key, Object value) {
@@ -66,8 +67,8 @@ public class ExtensionValuesStore {
 	}
 
 	private void putStoredValue(Namespace namespace, Object key, StoredValue storedValue) {
-		ComposedKey composedKey = new ComposedKey(namespace, key);
-		storedValues.put(composedKey, storedValue);
+		CompositeKey compositeKey = new CompositeKey(namespace, key);
+		storedValues.put(compositeKey, storedValue);
 	}
 
 	Object getOrComputeIfAbsent(Namespace namespace, Object key, Function<Object, Object> defaultCreator) {
@@ -80,19 +81,19 @@ public class ExtensionValuesStore {
 	}
 
 	Object remove(Namespace namespace, Object key) {
-		ComposedKey composedKey = new ComposedKey(namespace, key);
-		StoredValue previous = storedValues.remove(composedKey);
+		CompositeKey compositeKey = new CompositeKey(namespace, key);
+		StoredValue previous = storedValues.remove(compositeKey);
 		return (previous != null ? previous.value : null);
 	}
 
-	private static class ComposedKey {
+	private static class CompositeKey {
 
-		private final Object key;
 		private final Namespace namespace;
+		private final Object key;
 
-		private ComposedKey(Namespace namespace, Object key) {
-			this.key = key;
+		private CompositeKey(Namespace namespace, Object key) {
 			this.namespace = namespace;
+			this.key = key;
 		}
 
 		@Override
@@ -101,13 +102,13 @@ public class ExtensionValuesStore {
 				return true;
 			if (o == null || getClass() != o.getClass())
 				return false;
-			ComposedKey composedKey = (ComposedKey) o;
-			return namespace.equals(composedKey.namespace) && key.equals(composedKey.key);
+			CompositeKey that = (CompositeKey) o;
+			return this.namespace.equals(that.namespace) && this.key.equals(that.key);
 		}
 
 		@Override
 		public int hashCode() {
-			return 31 * key.hashCode() + namespace.hashCode();
+			return Objects.hash(this.namespace, this.key);
 		}
 	}
 
