@@ -34,6 +34,8 @@ public class IsPotentialTestContainer implements Predicate<Class<?>> {
 			return false;
 		if (candidate.isLocalClass())
 			return false;
+		if (candidate.isAnonymousClass())
+			return false;
 		return (isStatic(candidate) || !candidate.isMemberClass());
 	}
 
