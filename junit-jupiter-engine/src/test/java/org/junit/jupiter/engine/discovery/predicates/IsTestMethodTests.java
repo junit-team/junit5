@@ -1,21 +1,30 @@
+/*
+ * Copyright 2015-2016 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 
 package org.junit.jupiter.engine.discovery.predicates;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.lang.reflect.Method;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.platform.commons.util.ReflectionUtils;
 
-import java.lang.reflect.Method;
-import java.util.function.Predicate;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 public class IsTestMethodTests {
 
 	private final Predicate<Method> isTestMethod = new IsTestMethod();
 
-    @Test
+	@Test
 	void publicTestMethodsEvaluatesToTrue() throws NoSuchMethodException {
 		Method publicTestMethod = this.findMethod("publicTestMethod");
 		assertTrue(isTestMethod.test(publicTestMethod));
