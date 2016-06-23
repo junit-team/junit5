@@ -42,7 +42,7 @@ public @interface ExpectToFail {
 		}
 
 		private Store getExceptionStore(TestExtensionContext context) {
-			return context.getStore(Namespace.of(context));
+			return context.getStore(Namespace.create(context));
 		}
 	}
 

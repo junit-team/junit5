@@ -33,7 +33,7 @@ public class ExtensionValuesStoreTests {
 	private final Object key = "key";
 	private final Object value = "value";
 
-	private final Namespace namespace = Namespace.of("ns");
+	private final Namespace namespace = Namespace.create("ns");
 
 	private ExtensionValuesStore store;
 	private ExtensionValuesStore parentStore;
@@ -112,10 +112,10 @@ public class ExtensionValuesStoreTests {
 		@Test
 		void sameKeyWithDifferentNamespaces() {
 			Object value1 = createObject("value1");
-			Namespace namespace1 = Namespace.of("ns1");
+			Namespace namespace1 = Namespace.create("ns1");
 
 			Object value2 = createObject("value2");
-			Namespace namespace2 = Namespace.of("ns2");
+			Namespace namespace2 = Namespace.create("ns2");
 
 			store.put(namespace1, key, value1);
 			store.put(namespace2, key, value2);
@@ -126,8 +126,8 @@ public class ExtensionValuesStoreTests {
 
 		@Test
 		void valueIsComputedIfAbsentInDifferentNamespace() {
-			Namespace namespace1 = Namespace.of("ns1");
-			Namespace namespace2 = Namespace.of("ns2");
+			Namespace namespace1 = Namespace.create("ns1");
+			Namespace namespace2 = Namespace.create("ns2");
 
 			assertEquals(value, store.getOrComputeIfAbsent(namespace1, key, innerKey -> value));
 			assertEquals(value, store.get(namespace1, key));
@@ -137,8 +137,8 @@ public class ExtensionValuesStoreTests {
 
 		@Test
 		void keyIsOnlyRemovedInGivenNamespace() {
-			Namespace namespace1 = Namespace.of("ns1");
-			Namespace namespace2 = Namespace.of("ns2");
+			Namespace namespace1 = Namespace.create("ns1");
+			Namespace namespace2 = Namespace.create("ns2");
 
 			Object value1 = createObject("value1");
 			Object value2 = createObject("value2");
@@ -315,9 +315,9 @@ public class ExtensionValuesStoreTests {
 		@Test
 		void additionNamespacePartMakesADifferenc() {
 
-			Namespace ns1 = Namespace.of("part1", "part2");
-			Namespace ns2 = Namespace.of("part1");
-			Namespace ns3 = Namespace.of("part1", "part2");
+			Namespace ns1 = Namespace.create("part1", "part2");
+			Namespace ns2 = Namespace.create("part1");
+			Namespace ns3 = Namespace.create("part1", "part2");
 
 			Object value2 = createObject("value2");
 
@@ -332,8 +332,8 @@ public class ExtensionValuesStoreTests {
 		@Test
 		void orderOfNamespacePartsDoesNotMatter() {
 
-			Namespace ns1 = Namespace.of("part1", "part2");
-			Namespace ns2 = Namespace.of("part2", "part1");
+			Namespace ns1 = Namespace.create("part1", "part2");
+			Namespace ns2 = Namespace.create("part2", "part1");
 
 			parentStore.put(ns1, key, value);
 

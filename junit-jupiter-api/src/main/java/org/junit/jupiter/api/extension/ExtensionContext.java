@@ -289,7 +289,7 @@ public interface ExtensionContext {
 		 * The default, global namespace which allows access to stored data from
 		 * all extensions.
 		 */
-		public static final Namespace DEFAULT = Namespace.of(new Object());
+		public static final Namespace DEFAULT = Namespace.create(new Object());
 
 		/**
 		 * Create a namespace which restricts access to data to all extensions
@@ -299,7 +299,7 @@ public interface ExtensionContext {
 		 *
 		 * <p>Internally the {@code parts} are compared using {@code Object.equals(Object)}.
 		 */
-		public static Namespace of(Object... parts) {
+		public static Namespace create(Object... parts) {
 			Preconditions.notNull(parts, "There must be at least one reference object to create a namespace");
 			return new Namespace(parts);
 		}

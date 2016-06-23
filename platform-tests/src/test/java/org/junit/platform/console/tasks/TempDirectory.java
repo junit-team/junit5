@@ -67,7 +67,7 @@ public class TempDirectory implements AfterEachCallback, ParameterResolver {
 	}
 
 	private Namespace localNamespace(ExtensionContext context) {
-		return Namespace.of(TempDirectory.class, context);
+		return Namespace.create(TempDirectory.class, context);
 	}
 
 	private Path createTempDirectory(ExtensionContext context) {
