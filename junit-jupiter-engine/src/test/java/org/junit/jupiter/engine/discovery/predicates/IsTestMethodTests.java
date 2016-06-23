@@ -20,6 +20,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.platform.commons.util.ReflectionUtils;
 
+/**
+ * @since 5.0
+ */
 public class IsTestMethodTests {
 
 	private final Predicate<Method> isTestMethod = new IsTestMethod();

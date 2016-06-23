@@ -18,6 +18,9 @@ import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * @since 5.0
+ */
 public class IsInnerClassTests {
 
 	private final Predicate<Class<?>> isInnerClass = new IsInnerClass();
@@ -54,6 +57,7 @@ class ClassWithInnerClasses {
 	static class StaticInnerClass {
 	}
 
+	@SuppressWarnings("unused")
 	private class PrivateInnerClass {
 	}
 
