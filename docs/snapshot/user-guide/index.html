@@ -2183,7 +2183,7 @@ public class TimingExtension implements BeforeTestExecutionCallback, AfterTestEx
     }
 
     private Store getStore(TestExtensionContext context) {
-        return context.getStore(Namespace.of(getClass(), context));
+        return context.getStore(Namespace.create(getClass(), context));
     }
 
 }</code></pre>
