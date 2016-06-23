@@ -152,11 +152,12 @@ public interface ExtensionContext {
 	interface Store {
 
 		/**
-		 * Get the value that has been stored under the supplied {@code key}.
+		 * Get the value that is stored under the supplied {@code key}.
 		 *
-		 * <p>If no value has been saved in the current {@link ExtensionContext}
+		 * <p>If no value is stored in the current {@link ExtensionContext}
 		 * for the supplied {@code key}, ancestors of the context will be queried
-		 * for a value with the same {@code key} in the store's {@code Namespace}.
+		 * for a value with the same {@code key} in the {@code Namespace} used
+		 * to create this store.
 		 *
 		 * <p>For greater type safety, consider using {@link #get(Object, Class)}
 		 * instead.
@@ -168,12 +169,13 @@ public interface ExtensionContext {
 		Object get(Object key);
 
 		/**
-		 * Get the value of the specified required type that has been stored under
+		 * Get the value of the specified required type that is stored under
 		 * the supplied {@code key}.
 		 *
-		 * <p>If no value has been saved in the current {@link ExtensionContext}
+		 * <p>If no value is stored in the current {@link ExtensionContext}
 		 * for the supplied {@code key}, ancestors of the context will be queried
-		 * for a value with the same {@code key} in the store's {@code Namespace}.
+		 * for a value with the same {@code key} in the {@code Namespace} used
+		 * to create this store.
 		 *
 		 * @param key the key; never {@code null}
 		 * @param requiredType the required type of the value; never {@code null}
@@ -185,7 +187,10 @@ public interface ExtensionContext {
 		/**
 		 * Get the value that is stored under the supplied {@code key}.
 		 *
-		 * <p>If no value is currently stored under the supplied {@code key},
+		 * <p>If no value is stored in the current {@link ExtensionContext}
+		 * for the supplied {@code key}, ancestors of the context will be queried
+		 * for a value with the same {@code key} in the {@code Namespace} used
+		 * to create this store. If no value is found for the supplied {@code key},
 		 * a new value will be computed by the {@code defaultCreator} (given
 		 * the {@code key} as input), stored, and returned.
 		 *
@@ -206,7 +211,10 @@ public interface ExtensionContext {
 		 * Get the value of the specified required type that is stored under the
 		 * supplied {@code key}.
 		 *
-		 * <p>If no value is currently stored under the supplied {@code key},
+		 * <p>If no value is stored in the current {@link ExtensionContext}
+		 * for the supplied {@code key}, ancestors of the context will be queried
+		 * for a value with the same {@code key} in the {@code Namespace} used
+		 * to create this store. If no value is found for the supplied {@code key},
 		 * a new value will be computed by the {@code defaultCreator} (given
 		 * the {@code key} as input), stored, and returned.
 		 *

@@ -26,8 +26,9 @@ import org.junit.jupiter.api.extension.ExtensionContextException;
  * Microtests for {@link ExtensionValuesStore}.
  *
  * @since 5.0
+ * @see ExtensionContextTests
  */
-class ExtensionValuesStoreTests {
+public class ExtensionValuesStoreTests {
 
 	private final Object key = "key";
 	private final Object value = "value";
@@ -69,12 +70,13 @@ class ExtensionValuesStoreTests {
 
 		@Test
 		void valueIsComputedIfAbsent() {
+			assertNull(store.get(namespace, key));
 			assertEquals(value, store.getOrComputeIfAbsent(namespace, key, innerKey -> value));
 			assertEquals(value, store.get(namespace, key));
 		}
 
 		@Test
-		void valueIsNotComputedIfPresent() {
+		void valueIsNotComputedIfPresentLocally() {
 			store.put(namespace, key, value);
 
 			assertEquals(value, store.getOrComputeIfAbsent(namespace, key, innerKey -> "a different value"));
@@ -82,11 +84,19 @@ class ExtensionValuesStoreTests {
 		}
 
 		@Test
+		void valueIsNotComputedIfPresentInParent() {
+			parentStore.put(namespace, key, value);
+
+			assertEquals(value, store.getOrComputeIfAbsent(namespace, key, k -> "a different value"));
+			assertEquals(value, store.get(namespace, key));
+		}
+
+		@Test
 		void nullIsAValidValueToPut() {
 			store.put(namespace, key, null);
 
-			assertEquals(null, store.getOrComputeIfAbsent(namespace, key, innerKey -> "a different value"));
-			assertEquals(null, store.get(namespace, key));
+			assertNull(store.getOrComputeIfAbsent(namespace, key, innerKey -> "a different value"));
+			assertNull(store.get(namespace, key));
 		}
 
 		@Test

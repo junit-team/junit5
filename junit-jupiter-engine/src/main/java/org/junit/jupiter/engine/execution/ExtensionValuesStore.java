@@ -66,8 +66,13 @@ public class ExtensionValuesStore {
 	<K, V> Object getOrComputeIfAbsent(Namespace namespace, K key, Function<K, V> defaultCreator) {
 		StoredValue storedValue = getStoredValue(namespace, key);
 		if (storedValue == null) {
-			storedValue = new StoredValue(defaultCreator.apply(key));
-			putStoredValue(namespace, key, storedValue);
+			if (parentStore != null) {
+				storedValue = parentStore.getStoredValue(namespace, key);
+			}
+			if (storedValue == null) {
+				storedValue = new StoredValue(defaultCreator.apply(key));
+				putStoredValue(namespace, key, storedValue);
+			}
 		}
 		return storedValue.value;
 	}

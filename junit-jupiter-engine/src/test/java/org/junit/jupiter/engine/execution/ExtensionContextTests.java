@@ -40,6 +40,7 @@ import org.mockito.Mockito;
  * {@linkplain MethodBasedTestExtensionContext}
  *
  * @since 5.0
+ * @see ExtensionValuesStoreTests
  */
 public class ExtensionContextTests {
 
@@ -164,6 +165,7 @@ public class ExtensionContextTests {
 		final Object parentKey = "parent key";
 		final String parentValue = "parent value";
 		parentStore.put(parentKey, parentValue);
+		assertEquals(parentValue, childStore.getOrComputeIfAbsent(parentKey, k -> "a different value"));
 		assertEquals(parentValue, childStore.get(parentKey));
 	}
 
