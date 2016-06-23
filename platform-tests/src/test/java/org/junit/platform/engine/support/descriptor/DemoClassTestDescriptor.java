@@ -43,7 +43,7 @@ public class DemoClassTestDescriptor extends AbstractTestDescriptor {
 		return findRepeatableAnnotations(this.testClass, Tag.class).stream()
 				.map(Tag::value)
 				.filter(StringUtils::isNotBlank)
-				.map(TestTag::of)
+				.map(TestTag::create)
 				.collect(toCollection(LinkedHashSet::new));
 		// @formatter:on
 	}

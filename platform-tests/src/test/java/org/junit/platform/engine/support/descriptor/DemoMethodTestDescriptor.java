@@ -49,7 +49,7 @@ public class DemoMethodTestDescriptor extends AbstractTestDescriptor {
 		Set<TestTag> methodTags =  findRepeatableAnnotations(this.testClass, Tag.class).stream()
 				.map(Tag::value)
 				.filter(StringUtils::isNotBlank)
-				.map(TestTag::of)
+				.map(TestTag::create)
 				.collect(toCollection(LinkedHashSet::new));
 		// @formatter:on
 

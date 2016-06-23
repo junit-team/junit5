@@ -369,7 +369,7 @@ class JUnitPlatformRunnerTests {
 
 	private TestDescriptor testDescriptorWithTag(String tag) {
 		TestDescriptor testDescriptor = mock(TestDescriptor.class);
-		when(testDescriptor.getTags()).thenReturn(singleton(TestTag.of(tag)));
+		when(testDescriptor.getTags()).thenReturn(singleton(TestTag.create(tag)));
 		return testDescriptor;
 	}
 

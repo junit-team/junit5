@@ -92,7 +92,7 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 				.flatMap(Collection::stream)
 				.distinct()
 				.map(Class::getName)
-				.map(TestTag::of)
+				.map(TestTag::create)
 				.forEachOrdered(result::add)
 		);
 		// @formatter:on

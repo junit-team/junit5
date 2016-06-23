@@ -77,7 +77,7 @@ public class JupiterTestDescriptorTests {
 		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, ASampleTestCase.class);
 
 		assertEquals(ASampleTestCase.class, descriptor.getTestClass());
-		assertThat(descriptor.getTags()).containsExactly(TestTag.of("classTag1"), TestTag.of("classTag2"));
+		assertThat(descriptor.getTags()).containsExactly(TestTag.create("classTag1"), TestTag.create("classTag2"));
 	}
 
 	@Test
@@ -87,7 +87,7 @@ public class JupiterTestDescriptorTests {
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom name", descriptor.getDisplayName(), "display name:");
-		assertThat(descriptor.getTags()).containsExactly(TestTag.of("custom tag"));
+		assertThat(descriptor.getTags()).containsExactly(TestTag.create("custom tag"));
 	}
 
 	@Test

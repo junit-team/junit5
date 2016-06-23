@@ -301,23 +301,23 @@ class VintageTestEngineDiscoveryTests {
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
 		TestDescriptor runnerDescriptor = getOnlyElement(engineDescriptor.getChildren());
-		assertThat(runnerDescriptor.getTags()).containsOnly(TestTag.of(Plain.class.getName()));
+		assertThat(runnerDescriptor.getTags()).containsOnly(TestTag.create(Plain.class.getName()));
 
 		TestDescriptor failingTest = findChildByDisplayName(runnerDescriptor, "failingTest");
 		assertThat(failingTest.getTags()).containsOnly(//
-			TestTag.of(Plain.class.getName()), //
-			TestTag.of(Failing.class.getName()));
+			TestTag.create(Plain.class.getName()), //
+			TestTag.create(Failing.class.getName()));
 
 		TestDescriptor ignoredWithoutReason = findChildByDisplayName(runnerDescriptor, "ignoredTest1_withoutReason");
 		assertThat(ignoredWithoutReason.getTags()).containsOnly(//
-			TestTag.of(Plain.class.getName()), //
-			TestTag.of(Skipped.class.getName()));
+			TestTag.create(Plain.class.getName()), //
+			TestTag.create(Skipped.class.getName()));
 
 		TestDescriptor ignoredWithReason = findChildByDisplayName(runnerDescriptor, "ignoredTest2_withReason");
 		assertThat(ignoredWithReason.getTags()).containsOnly(//
-			TestTag.of(Plain.class.getName()), //
-			TestTag.of(Skipped.class.getName()), //
-			TestTag.of(SkippedWithReason.class.getName()));
+			TestTag.create(Plain.class.getName()), //
+			TestTag.create(Skipped.class.getName()), //
+			TestTag.create(SkippedWithReason.class.getName()));
 	}
 
 	@Test

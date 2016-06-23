@@ -32,11 +32,11 @@ public final class TestTag implements Serializable {
 	private final String name;
 
 	/**
-	 * Obtain a {@code TestTag} with the supplied {@code name}.
+	 * Create a {@code TestTag} from the supplied {@code name}.
 	 *
 	 * @param name the name of the tag; must not be null or blank
 	 */
-	public static TestTag of(String name) {
+	public static TestTag create(String name) {
 		return new TestTag(name);
 	}
 
