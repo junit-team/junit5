@@ -11,7 +11,8 @@ classes, and methods.
 
 === API Annotations
 
-All publicly available interfaces, classes, and methods are annotated with {API}. The
+Every published artifact has a version number `<major>.<minor>.<patch>` and all
+publicly available interfaces, classes, and methods are annotated with {API}. The
 annotation's `Usage` value can be assigned one of the following five values:
 
 [cols="20,80"]
@@ -33,10 +34,6 @@ annotation's `Usage` value can be assigned one of the following five values:
 If the `@API` annotation is present on a type, it is considered to be applicable for all
 public members of that type as well. A member is allowed to declare a different `Usage`
 value of lower stability.
-
-=== Semantic Versioning
-
-JUnit 5 version numbers are used in a semantic way: `<major>.<minor>.<patch>`
 
 === Tooling Support
 
