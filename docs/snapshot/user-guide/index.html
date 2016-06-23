@@ -495,8 +495,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#api-evolution">8. API Evolution</a>
 <ul class="sectlevel2">
 <li><a href="#api-annotations">8.1. API Annotations</a></li>
-<li><a href="#semantic-versioning">8.2. Semantic Versioning</a></li>
-<li><a href="#tooling-support">8.3. Tooling Support</a></li>
+<li><a href="#tooling-support">8.2. Tooling Support</a></li>
 </ul>
 </li>
 <li><a href="#contributors">9. Contributors</a></li>
@@ -2492,7 +2491,8 @@ classes, and methods.</p>
 <div class="sect2">
 <h3 id="api-annotations">8.1. API Annotations</h3>
 <div class="paragraph">
-<p>All publicly available interfaces, classes, and methods are annotated with <a href="https://github.com/junit-team/junit5/blob/master/junit-platform-commons/src/main/java/org/junit/platform/commons/meta/API.java">@API</a>. The
+<p>Every published artifact has a version number <code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code> and all
+publicly available interfaces, classes, and methods are annotated with <a href="https://github.com/junit-team/junit5/blob/master/junit-platform-commons/src/main/java/org/junit/platform/commons/meta/API.java">@API</a>. The
 annotation&#8217;s <code>Usage</code> value can be assigned one of the following five values:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
@@ -2541,13 +2541,7 @@ value of lower stability.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="semantic-versioning">8.2. Semantic Versioning</h3>
-<div class="paragraph">
-<p>JUnit 5 version numbers are used in a semantic way: <code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="tooling-support">8.3. Tooling Support</h3>
+<h3 id="tooling-support">8.2. Tooling Support</h3>
 <div class="paragraph">
 <p>The JUnit team plans to provide native tooling support for all JUnit users, extenders,
 and tool builders. The tooling support will provide a means to check if the JUnit APIs
@@ -2597,7 +2591,7 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-23 11:30:31 -04:00
+Last updated 2016-06-23 14:57:29 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
