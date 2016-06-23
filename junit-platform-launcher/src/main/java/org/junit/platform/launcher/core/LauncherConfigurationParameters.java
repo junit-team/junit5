@@ -10,7 +10,6 @@
 
 package org.junit.platform.launcher.core;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -23,7 +22,12 @@ import org.junit.platform.engine.ConfigurationParameters;
  */
 class LauncherConfigurationParameters implements ConfigurationParameters {
 
-	private final Map<String, String> configurationParameters = new HashMap<>();
+	private final Map<String, String> configurationParameters;
+
+	LauncherConfigurationParameters(Map<String, String> configurationParameters) {
+		Preconditions.notNull(configurationParameters, "configuration parameters must not be null");
+		this.configurationParameters = configurationParameters;
+	}
 
 	@Override
 	public Optional<String> get(String key) {
@@ -43,10 +47,6 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 	@Override
 	public int size() {
 		return this.configurationParameters.size();
-	}
-
-	void addAll(Map<String, String> configurationParameters) {
-		this.configurationParameters.putAll(configurationParameters);
 	}
 
 	@Override

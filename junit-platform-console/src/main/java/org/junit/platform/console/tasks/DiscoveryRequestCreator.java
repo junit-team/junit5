@@ -28,6 +28,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.core.TestDiscoveryRequestBuilder;
 
 /**
  * @since 1.0
@@ -35,21 +36,21 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
 class DiscoveryRequestCreator {
 
 	TestDiscoveryRequest toDiscoveryRequest(CommandLineOptions options) {
-		TestDiscoveryRequest discoveryRequest = buildDiscoveryRequest(options);
-		applyFilters(discoveryRequest, options);
-		return discoveryRequest;
+		TestDiscoveryRequestBuilder requestBuilder = createRequestBuilder(options);
+		addFilters(requestBuilder, options);
+		return requestBuilder.build();
 	}
 
-	private TestDiscoveryRequest buildDiscoveryRequest(CommandLineOptions options) {
+	private TestDiscoveryRequestBuilder createRequestBuilder(CommandLineOptions options) {
 		if (options.isRunAllTests()) {
-			return buildDiscoveryRequestForAllTests(options);
+			return createBuilderForAllTests(options);
 		}
-		return buildNameBasedDiscoveryRequest(options);
+		return createNameBasedBuilder(options);
 	}
 
-	private TestDiscoveryRequest buildDiscoveryRequestForAllTests(CommandLineOptions options) {
+	private TestDiscoveryRequestBuilder createBuilderForAllTests(CommandLineOptions options) {
 		Set<File> rootDirectoriesToScan = determineClasspathRootDirectories(options);
-		return request().selectors(selectClasspathRoots(rootDirectoriesToScan)).build();
+		return request().selectors(selectClasspathRoots(rootDirectoriesToScan));
 	}
 
 	private Set<File> determineClasspathRootDirectories(CommandLineOptions options) {
@@ -63,29 +64,29 @@ class DiscoveryRequestCreator {
 		return options.getArguments().stream().map(File::new).collect(toCollection(LinkedHashSet::new));
 	}
 
-	private TestDiscoveryRequest buildNameBasedDiscoveryRequest(CommandLineOptions options) {
+	private TestDiscoveryRequestBuilder createNameBasedBuilder(CommandLineOptions options) {
 		Preconditions.notEmpty(options.getArguments(), "No arguments were supplied to the ConsoleRunner");
-		return request().selectors(selectNames(options.getArguments())).build();
+		return request().selectors(selectNames(options.getArguments()));
 	}
 
-	private void applyFilters(TestDiscoveryRequest discoveryRequest, CommandLineOptions options) {
+	private void addFilters(TestDiscoveryRequestBuilder requestBuilder, CommandLineOptions options) {
 		options.getIncludeClassNamePattern().ifPresent(
-			pattern -> discoveryRequest.addFilter(includeClassNamePattern(pattern)));
+			pattern -> requestBuilder.filters(includeClassNamePattern(pattern)));
 
 		if (!options.getIncludedTags().isEmpty()) {
-			discoveryRequest.addPostFilter(includeTags(options.getIncludedTags()));
+			requestBuilder.filters(includeTags(options.getIncludedTags()));
 		}
 
 		if (!options.getExcludedTags().isEmpty()) {
-			discoveryRequest.addPostFilter(excludeTags(options.getExcludedTags()));
+			requestBuilder.filters(excludeTags(options.getExcludedTags()));
 		}
 
 		if (!options.getIncludedEngines().isEmpty()) {
-			discoveryRequest.addEngineFilter(includeEngines(options.getIncludedEngines()));
+			requestBuilder.filters(includeEngines(options.getIncludedEngines()));
 		}
 
 		if (!options.getExcludedEngines().isEmpty()) {
-			discoveryRequest.addEngineFilter(excludeEngines(options.getExcludedEngines()));
+			requestBuilder.filters(excludeEngines(options.getExcludedEngines()));
 		}
 	}
 
