@@ -79,7 +79,7 @@ public class IsTestMethodTests {
 
 }
 
-//name must not end with 'Tests', otherwise it would be picked up by the suite
+//class name must not end with 'Tests', otherwise it would be picked up by the suite
 class ClassWithTestMethods {
 
 	@Test
@@ -108,7 +108,6 @@ class ClassWithTestMethods {
 
 }
 
-//name must not end with 'Tests', otherwise it would be picked up by the suite
 abstract class AbstractClassWithTestMethod {
 
 	@Test

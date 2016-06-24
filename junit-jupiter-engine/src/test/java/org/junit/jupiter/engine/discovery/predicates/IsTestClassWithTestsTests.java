@@ -42,6 +42,7 @@ public class IsTestClassWithTestsTests {
 
 }
 
+//class name must not end with 'Tests', otherwise it would be picked up by the suite
 class ClassWithTestFactory {
 
 	@TestFactory
@@ -51,6 +52,7 @@ class ClassWithTestFactory {
 
 }
 
+//class name must not end with 'Tests', otherwise it would be picked up by the suite
 class ClassWithTestCases {
 
 	@Test
@@ -63,6 +65,7 @@ class ClassWithTestCases {
 
 }
 
+//class name must not end with 'Tests', otherwise it would be picked up by the suite
 class ClassWithNestedTestCases {
 
 	@Nested

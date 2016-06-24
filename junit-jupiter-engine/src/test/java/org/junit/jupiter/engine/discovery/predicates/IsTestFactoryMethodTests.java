@@ -38,6 +38,7 @@ public class IsTestFactoryMethodTests {
 
 }
 
+//class name must not end with 'Tests', otherwise it would be picked up by the suite
 class AnotherClassWithTestFactory {
 
 	@TestFactory

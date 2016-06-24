@@ -49,6 +49,7 @@ public class IsInnerClassTests {
 
 }
 
+//class name must not end with 'Tests', otherwise it would be picked up by the suite
 class ClassWithInnerClasses {
 
 	class InnerClass {
