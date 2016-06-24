@@ -49,11 +49,16 @@ public class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngineExecu
 		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver();
 		resolver.resolveSelectors(discoveryRequest, engineDescriptor);
 		applyDiscoveryFilters(discoveryRequest, engineDescriptor);
+		executeDiscoveryCallbacks(engineDescriptor);
 	}
 
 	private void applyDiscoveryFilters(EngineDiscoveryRequest discoveryRequest,
 			JupiterEngineDescriptor engineDescriptor) {
 		new DiscoveryFilterApplier().applyAllFilters(discoveryRequest, engineDescriptor);
+	}
+
+	private void executeDiscoveryCallbacks(JupiterEngineDescriptor engineDescriptor) {
+		new DiscoveryCallbackExecuter().executeAllCallbacks(engineDescriptor);
 	}
 
 	@Override
