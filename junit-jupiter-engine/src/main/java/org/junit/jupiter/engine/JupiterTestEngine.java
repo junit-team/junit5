@@ -49,7 +49,7 @@ public class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngineExecu
 		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver();
 		resolver.resolveSelectors(discoveryRequest, engineDescriptor);
 		applyDiscoveryFilters(discoveryRequest, engineDescriptor);
-		executeDiscoveryCallbacks(engineDescriptor);
+		invokeAfterDiscoveryCallbacks(engineDescriptor);
 	}
 
 	private void applyDiscoveryFilters(EngineDiscoveryRequest discoveryRequest,
@@ -57,8 +57,8 @@ public class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngineExecu
 		new DiscoveryFilterApplier().applyAllFilters(discoveryRequest, engineDescriptor);
 	}
 
-	private void executeDiscoveryCallbacks(JupiterEngineDescriptor engineDescriptor) {
-		new DiscoveryCallbackExecuter().executeAllCallbacks(engineDescriptor);
+	private void invokeAfterDiscoveryCallbacks(JupiterEngineDescriptor engineDescriptor) {
+		new AfterDiscoveryCallbackInvoker().invokeAfterDiscoveryCallbacks(engineDescriptor);
 	}
 
 	@Override
