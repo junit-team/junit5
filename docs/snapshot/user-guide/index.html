@@ -693,19 +693,19 @@ module.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@BeforeEach</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>each</strong> <code>@Test</code> method in the current class or class hierarchy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>each</strong> <code>@Test</code> method in the current class; analogous to JUnit 4&#8217;s <code>@Before</code>. Such methods are <em>inherited</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AfterEach</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>each</strong> <code>@Test</code> method in the current class or class hierarchy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>each</strong> <code>@Test</code> method in the current class; analogous to JUnit 4&#8217;s <code>@After</code>. Such methods are <em>inherited</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@BeforeAll</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>all</strong> <code>@Test</code> methods in the current class or class hierarchy; analogous to JUnit 4&#8217;s <code>@BeforeClass</code>. Such methods must be <code>static</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>before</em> <strong>all</strong> <code>@Test</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@BeforeClass</code>. Such methods must be <code>static</code> and are <em>inherited</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AfterAll</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>all</strong> <code>@Test</code> methods in the current class or class hierarchy; analogous to JUnit 4&#8217;s <code>@AfterClass</code>. Such methods must be <code>static</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that the annotated method should be executed <em>after</em> <strong>all</strong> <code>@Test</code> methods in the current class; analogous to JUnit 4&#8217;s <code>@AfterClass</code>. Such methods must be <code>static</code> and are <em>inherited</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Nested</code></p></td>
@@ -1085,9 +1085,9 @@ class TestingAStackDemo {
 </div>
 <div class="paragraph">
 <p>Notice that <em>only non-static nested classes</em> (i.e. <em>inner classes</em>) can serve as
-<code>@Nested`tests. Nesting can be arbitrarily deep, and those inner classes are considered
-to be full members of the test class family with one exception: `@BeforeAll</code> and
-<code>@AfterAll</code> do not work, because Java does not allow static members in inner classes.</p>
+<code>@Nested</code> tests. Nesting can be arbitrarily deep, and those inner classes are considered
+to be full members of the test class family with one exception: <code>@BeforeAll</code> and
+<code>@AfterAll</code> do not work, because Java does not allow <code>static</code> members in inner classes.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2591,7 +2591,7 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-24 13:36:24 -04:00
+Last updated 2016-06-24 15:18:23 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
