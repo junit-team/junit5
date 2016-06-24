@@ -22,19 +22,30 @@ import org.junit.platform.commons.meta.API;
 
 /**
  * {@code @AfterAll} is used to signal that the annotated method should be
- * executed <em>after</em> <strong>all</strong> tests in the current test
- * class or test class hierarchy.
- *
- * <p>{@code @AfterAll} may also be used as a meta-annotation in order to
- * create a custom <em>composed annotation</em> that inherits the semantics
- * of {@code @AfterAll}.
+ * executed <em>after</em> <strong>all</strong> tests in the current test class.
  *
  * <p>In contrast to {@link AfterEach @AfterEach} methods, {@code @AfterAll}
  * methods are only executed once for a given test class.
  *
+ * <h3>Method Signatures</h3>
+ *
  * <p>{@code @AfterAll} methods must not be {@code private} and must be
- * {@code static}. Consequently, {@code @AfterAll} methods are not
- * supported in {@link Nested @Nested} test classes.
+ * {@code static}. Consequently, {@code @AfterAll} methods are not supported
+ * in {@link Nested @Nested} test classes or as <em>interface default methods</em>.
+ * {@code @AfterAll} methods may optionally declare parameters to be resolved by
+ * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
+ *
+ * <h3>Inheritance</h3>
+ *
+ * <p>{@code @AfterAll} methods are inherited from superclasses as long as
+ * they are not shadowed. Furthermore, {@code @AfterAll} methods from
+ * superclasses will be executed after {@code @AfterAll} methods in subclasses.
+ *
+ * <h3>Composition</h3>
+ *
+ * <p>{@code @AfterAll} may be used as a meta-annotation in order to create
+ * a custom <em>composed annotation</em> that inherits the semantics of
+ * {@code @AfterAll}.
  *
  * @since 5.0
  * @see BeforeAll

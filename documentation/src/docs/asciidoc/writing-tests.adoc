@@ -23,10 +23,10 @@ module.
 | `@Test`            | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit Jupiter operate based on their own dedicated annotations.
 | `@TestFactory`     | Denotes that a method is a test factory for <<dynamic-tests, dynamic tests>>
 | `@DisplayName`     | Declares a custom display name for the test class or test method
-| `@BeforeEach`      | Denotes that the annotated method should be executed _before_ *each* `@Test` method in the current class or class hierarchy
-| `@AfterEach`       | Denotes that the annotated method should be executed _after_ *each* `@Test` method in the current class or class hierarchy
-| `@BeforeAll`       | Denotes that the annotated method should be executed _before_ *all* `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@BeforeClass`. Such methods must be `static`.
-| `@AfterAll`        | Denotes that the annotated method should be executed _after_ *all* `@Test` methods in the current class or class hierarchy; analogous to JUnit 4's `@AfterClass`. Such methods must be `static`.
+| `@BeforeEach`      | Denotes that the annotated method should be executed _before_ *each* `@Test` method in the current class; analogous to JUnit 4's `@Before`. Such methods are _inherited_.
+| `@AfterEach`       | Denotes that the annotated method should be executed _after_ *each* `@Test` method in the current class; analogous to JUnit 4's `@After`. Such methods are _inherited_.
+| `@BeforeAll`       | Denotes that the annotated method should be executed _before_ *all* `@Test` methods in the current class; analogous to JUnit 4's `@BeforeClass`. Such methods must be `static` and are _inherited_.
+| `@AfterAll`        | Denotes that the annotated method should be executed _after_ *all* `@Test` methods in the current class; analogous to JUnit 4's `@AfterClass`. Such methods must be `static` and are _inherited_.
 | `@Nested`          | Denotes that the annotated class is a nested, non-static test class. Due to restrictions of the Java language, `@BeforeAll` and `@AfterAll` methods cannot be used in a `@Nested` test class.
 | `@Tag`             | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4
 | `@Disabled`        | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore`
@@ -146,9 +146,9 @@ include::{testDir}/example/TestingAStackDemo.java[tags=user_guide]
 ----
 
 Notice that _only non-static nested classes_ (i.e. _inner classes_) can serve as
-`@Nested`tests. Nesting can be arbitrarily deep, and those inner classes are considered
+`@Nested` tests. Nesting can be arbitrarily deep, and those inner classes are considered
 to be full members of the test class family with one exception: `@BeforeAll` and
-`@AfterAll` do not work, because Java does not allow static members in inner classes.
+`@AfterAll` do not work, because Java does not allow `static` members in inner classes.
 
 === Dependency Injection for Constructors and Methods
 
