@@ -57,7 +57,6 @@ class ClassWithNestedInnerClasses {
 	class InnerClass {
 	}
 
-	@SuppressWarnings("unused")
 	@Nested
 	private class PrivateInnerClass {
 	}
