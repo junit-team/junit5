@@ -42,43 +42,132 @@ public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void beforeAllAndAfterAllCallbacks() {
-		TestDiscoveryRequest request = request().selectors(selectClass(InstancePerMethodTestCase.class)).build();
+		// @formatter:off
+		assertBeforeAllAndAfterAllCallbacks(TopLevelTestCase.class,
+			"fooBeforeAll",
+			"barBeforeAll",
+				"beforeAllMethod-1",
+					"test-1",
+				"afterAllMethod-1",
+			"barAfterAll",
+			"fooAfterAll"
+		);
+		// @formatter:on
+	}
+
+	@Test
+	void beforeAllAndAfterAllCallbacksInSubclass() {
+		// @formatter:off
+		assertBeforeAllAndAfterAllCallbacks(SecondLevelTestCase.class,
+			"fooBeforeAll",
+			"barBeforeAll",
+				"bazBeforeAll",
+					"beforeAllMethod-1",
+						"beforeAllMethod-2",
+							"test-2",
+						"afterAllMethod-2",
+					"afterAllMethod-1",
+				"bazAfterAll",
+			"barAfterAll",
+			"fooAfterAll"
+		);
+		// @formatter:on
+	}
+
+	@Test
+	void beforeAllAndAfterAllCallbacksInSubSubclass() {
+		// @formatter:off
+		assertBeforeAllAndAfterAllCallbacks(ThirdLevelTestCase.class,
+			"fooBeforeAll",
+			"barBeforeAll",
+				"bazBeforeAll",
+					"quuxBeforeAll",
+						"beforeAllMethod-1",
+							"beforeAllMethod-2",
+								"beforeAllMethod-3",
+									"test-3",
+								"afterAllMethod-3",
+							"afterAllMethod-2",
+						"afterAllMethod-1",
+					"quuxAfterAll",
+				"bazAfterAll",
+			"barAfterAll",
+			"fooAfterAll"
+		);
+		// @formatter:on
+	}
+
+	private void assertBeforeAllAndAfterAllCallbacks(Class<?> testClass, String... expectedCalls) {
+		callSequence.clear();
+		TestDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 
-		// @formatter:off
-		assertEquals(asList(
-			"fooBeforeAll",
-			"barBeforeAll",
-				"beforeAllMethod",
-					"firstTest",
-				"afterAllMethod",
-			"barAfterAll",
-			"fooAfterAll"
-		), callSequence, "wrong call sequence");
-		// @formatter:on
+		assertEquals(asList(expectedCalls), callSequence, () -> "wrong call sequence for " + testClass.getName());
 	}
 
 	// -------------------------------------------------------------------------
 
+	// Must NOT be private; otherwise, the @Test method gets discovered but never executed.
 	@ExtendWith({ FooClassLevelCallbacks.class, BarClassLevelCallbacks.class })
-	private static class InstancePerMethodTestCase {
+	static class TopLevelTestCase {
 
 		@BeforeAll
-		static void beforeAll() {
-			callSequence.add("beforeAllMethod");
+		static void beforeAll1() {
+			callSequence.add("beforeAllMethod-1");
 		}
 
 		@AfterAll
-		static void afterAll() {
-			callSequence.add("afterAllMethod");
+		static void afterAll1() {
+			callSequence.add("afterAllMethod-1");
 		}
 
 		@Test
-		void firstTest() {
-			callSequence.add("firstTest");
+		void test() {
+			callSequence.add("test-1");
+		}
+	}
+
+	// Must NOT be private; otherwise, the @Test method gets discovered but never executed.
+	@ExtendWith(BazClassLevelCallbacks.class)
+	static class SecondLevelTestCase extends TopLevelTestCase {
+
+		@BeforeAll
+		static void beforeAll2() {
+			callSequence.add("beforeAllMethod-2");
+		}
+
+		@AfterAll
+		static void afterAll2() {
+			callSequence.add("afterAllMethod-2");
+		}
+
+		@Test
+		@Override
+		void test() {
+			callSequence.add("test-2");
+		}
+	}
+
+	@ExtendWith(QuuxClassLevelCallbacks.class)
+	private static class ThirdLevelTestCase extends SecondLevelTestCase {
+
+		@BeforeAll
+		static void beforeAll3() {
+			callSequence.add("beforeAllMethod-3");
+		}
+
+		@AfterAll
+		static void afterAll3() {
+			callSequence.add("afterAllMethod-3");
+		}
+
+		@Test
+		@Override
+		void test() {
+			callSequence.add("test-3");
 		}
 	}
 
@@ -105,6 +194,32 @@ public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public void afterAll(ContainerExtensionContext testExecutionContext) {
 			callSequence.add("barAfterAll");
+		}
+	}
+
+	private static class BazClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
+
+		@Override
+		public void beforeAll(ContainerExtensionContext testExecutionContext) {
+			callSequence.add("bazBeforeAll");
+		}
+
+		@Override
+		public void afterAll(ContainerExtensionContext testExecutionContext) {
+			callSequence.add("bazAfterAll");
+		}
+	}
+
+	private static class QuuxClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
+
+		@Override
+		public void beforeAll(ContainerExtensionContext testExecutionContext) {
+			callSequence.add("quuxBeforeAll");
+		}
+
+		@Override
+		public void afterAll(ContainerExtensionContext testExecutionContext) {
+			callSequence.add("quuxAfterAll");
 		}
 	}
 
