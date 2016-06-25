@@ -97,13 +97,46 @@ public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		// @formatter:on
 	}
 
+	@Test
+	void beforeAllMethodThrowsAnException() {
+		// @formatter:off
+		assertBeforeAllAndAfterAllCallbacks(ExceptionInBeforeAllMethodTestCase.class, 0, 0,
+			"fooBeforeAllCallback",
+				"beforeAllMethod", // throws an exception.
+					// test should not get invoked.
+				"afterAllMethod",
+			"fooAfterAllCallback"
+		);
+		// @formatter:on
+	}
+
+	@Test
+	void beforeAllCallbackThrowsAnException() {
+		// @formatter:off
+		assertBeforeAllAndAfterAllCallbacks(ExceptionInBeforeAllCallbackTestCase.class, 0, 0,
+			"fooBeforeAllCallback",
+			"exceptionThrowingBeforeAllCallback", // throws an exception.
+				// beforeAllMethod should not get invoked.
+					// test should not get invoked.
+				// afterAllMethod should not get invoked.
+			"fooAfterAllCallback"
+		);
+		// @formatter:on
+	}
+
 	private void assertBeforeAllAndAfterAllCallbacks(Class<?> testClass, String... expectedCalls) {
+		assertBeforeAllAndAfterAllCallbacks(testClass, 1, 1, expectedCalls);
+	}
+
+	private void assertBeforeAllAndAfterAllCallbacks(Class<?> testClass, int testsStarted, int testsSuccessful,
+			String... expectedCalls) {
+
 		callSequence.clear();
 		TestDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(testsStarted, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(testsSuccessful, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 
 		assertEquals(asList(expectedCalls), callSequence, () -> "wrong call sequence for " + testClass.getName());
 	}
@@ -171,6 +204,47 @@ public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@ExtendWith(FooClassLevelCallbacks.class)
+	private static class ExceptionInBeforeAllMethodTestCase {
+
+		@BeforeAll
+		static void beforeAll() {
+			callSequence.add("beforeAllMethod");
+			throw new RuntimeException("@BeforeAll");
+		}
+
+		@Test
+		void test() {
+			callSequence.add("test");
+		}
+
+		@AfterAll
+		static void afterAll() {
+			callSequence.add("afterAllMethod");
+		}
+	}
+
+	@ExtendWith({ FooClassLevelCallbacks.class, ExceptionThrowingBeforeAllCallback.class })
+	private static class ExceptionInBeforeAllCallbackTestCase {
+
+		@BeforeAll
+		static void beforeAll() {
+			callSequence.add("beforeAllMethod");
+		}
+
+		@Test
+		void test() {
+			callSequence.add("test");
+		}
+
+		@AfterAll
+		static void afterAll() {
+			callSequence.add("afterAllMethod");
+		}
+	}
+
+	// -------------------------------------------------------------------------
+
 	private static class FooClassLevelCallbacks implements BeforeAllCallback, AfterAllCallback {
 
 		@Override
@@ -220,6 +294,15 @@ public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public void afterAll(ContainerExtensionContext testExecutionContext) {
 			callSequence.add("quuxAfterAllCallback");
+		}
+	}
+
+	private static class ExceptionThrowingBeforeAllCallback implements BeforeAllCallback {
+
+		@Override
+		public void beforeAll(ContainerExtensionContext context) {
+			callSequence.add("exceptionThrowingBeforeAllCallback");
+			throw new RuntimeException("BeforeAllCallback");
 		}
 	}
 

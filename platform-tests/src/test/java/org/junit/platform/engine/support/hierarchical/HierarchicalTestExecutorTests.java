@@ -208,7 +208,7 @@ public class HierarchicalTestExecutorTests {
 		inOrder.verify(root).shouldBeSkipped(rootContext);
 		inOrder.verify(listener).executionStarted(root);
 		inOrder.verify(root).before(rootContext);
-		inOrder.verify(root, never()).after(rootContext);
+		inOrder.verify(root).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
 
 		assertTrue(rootExecutionResult.getValue().getStatus() == TestExecutionResult.Status.FAILED,
@@ -289,7 +289,7 @@ public class HierarchicalTestExecutorTests {
 		inOrder.verify(root).shouldBeSkipped(rootContext);
 		inOrder.verify(listener).executionStarted(root);
 		inOrder.verify(root).before(rootContext);
-		inOrder.verify(root, never()).after(rootContext);
+		inOrder.verify(root).after(rootContext);
 		inOrder.verify(listener).executionFinished(eq(root), rootExecutionResult.capture());
 
 		assertTrue(rootExecutionResult.getValue().getStatus() == TestExecutionResult.Status.ABORTED,

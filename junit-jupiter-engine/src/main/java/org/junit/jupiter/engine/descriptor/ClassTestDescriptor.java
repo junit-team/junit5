@@ -156,9 +156,14 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) throws Exception {
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		invokeBeforeAllCallbacks(registry, extensionContext);
-		invokeBeforeAllMethods(registry, extensionContext);
+		invokeBeforeAllCallbacks(registry, extensionContext, throwableCollector);
+		if (throwableCollector.isEmpty()) {
+			context.beforeAllMethodsExecuted(true);
+			invokeBeforeAllMethods(registry, extensionContext, throwableCollector);
+		}
+		throwableCollector.assertEmpty();
 
 		return context;
 	}
@@ -167,9 +172,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	public void after(JupiterEngineExecutionContext context) throws Exception {
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
-		ThrowableCollector throwableCollector = new ThrowableCollector();
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		invokeAfterAllMethods(registry, extensionContext, throwableCollector);
+		if (context.beforeAllMethodsExecuted()) {
+			invokeAfterAllMethods(registry, extensionContext, throwableCollector);
+		}
 		invokeAfterAllCallbacks(registry, extensionContext, throwableCollector);
 		throwableCollector.assertEmpty();
 	}
@@ -193,14 +200,26 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		// @formatter:on
 	}
 
-	private void invokeBeforeAllCallbacks(ExtensionRegistry registry, ContainerExtensionContext context) {
-		registry.stream(BeforeAllCallback.class)//
-				.forEach(extension -> executeAndMaskThrowable(() -> extension.beforeAll(context)));
+	private void invokeBeforeAllCallbacks(ExtensionRegistry registry, ContainerExtensionContext context,
+			ThrowableCollector throwableCollector) {
+
+		for (BeforeAllCallback callback : registry.toList(BeforeAllCallback.class)) {
+			throwableCollector.execute(() -> callback.beforeAll(context));
+			if (throwableCollector.isNotEmpty()) {
+				break;
+			}
+		}
 	}
 
-	private void invokeBeforeAllMethods(ExtensionRegistry registry, ContainerExtensionContext context) {
-		this.beforeAllMethods.forEach(
-			method -> executeAndMaskThrowable(() -> executableInvoker.invoke(method, context, registry)));
+	private void invokeBeforeAllMethods(ExtensionRegistry registry, ContainerExtensionContext context,
+			ThrowableCollector throwableCollector) {
+
+		for (Method method : this.beforeAllMethods) {
+			throwableCollector.execute(() -> executableInvoker.invoke(method, context, registry));
+			if (throwableCollector.isNotEmpty()) {
+				break;
+			}
+		}
 	}
 
 	private void invokeAfterAllMethods(ExtensionRegistry registry, ContainerExtensionContext context,

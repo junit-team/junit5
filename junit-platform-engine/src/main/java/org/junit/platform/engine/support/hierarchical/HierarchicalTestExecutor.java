@@ -75,19 +75,23 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		this.listener.executionStarted(testDescriptor);
 
 		TestExecutionResult result = singleTestExecutor.executeSafely(() -> {
-			C context = node.before(preparedContext);
-			context = node.execute(context);
+			C context = preparedContext;
+			try {
+				context = node.before(context);
+				context = node.execute(context);
 
-			// If a node is not a leaf, execute its children recursively.
-			// Note: executing children for a leaf would result in accidental
-			// execution of dynamically added children.
-			if (!node.isLeaf()) {
-				for (TestDescriptor child : testDescriptor.getChildren()) {
-					execute(child, context);
+				// If a node is NOT a leaf, execute its children recursively.
+				// Note: executing children for a leaf could result in accidental
+				// execution of dynamically added children.
+				if (!node.isLeaf()) {
+					for (TestDescriptor child : testDescriptor.getChildren()) {
+						execute(child, context);
+					}
 				}
 			}
-
-			node.after(context);
+			finally {
+				node.after(context);
+			}
 		});
 
 		this.listener.executionFinished(testDescriptor, result);

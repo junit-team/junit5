@@ -162,7 +162,7 @@ public class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 			"exceptionThrowingBeforeEachCallback", // throws an exception.
 			// barBeforeCallback should not get invoked.
 				// beforeMethod should not get invoked.
-					// test() should not get invoked.
+					// test should not get invoked.
 				// afterMethod should not get invoked.
 			"barAfterCallback",
 			"fooAfterCallback"
@@ -187,7 +187,7 @@ public class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 		assertEquals(asList(
 			"fooBeforeCallback",
 				"beforeMethod", // throws an exception.
-					// test() should not get invoked.
+					// test should not get invoked.
 				"afterMethod",
 			"fooAfterCallback"
 		), callSequence, "wrong call sequence");
