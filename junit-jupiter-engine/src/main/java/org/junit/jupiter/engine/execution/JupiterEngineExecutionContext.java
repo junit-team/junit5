@@ -28,6 +28,9 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 
 	private final State state;
 
+	// The ThrowableCollector must not be tied to the State object.
+	private final ThrowableCollector throwableCollector = new ThrowableCollector();
+
 	public JupiterEngineExecutionContext(EngineExecutionListener executionListener,
 			ConfigurationParameters configurationParameters) {
 		this(new State(executionListener, configurationParameters));
@@ -58,7 +61,7 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 	}
 
 	public ThrowableCollector getThrowableCollector() {
-		return this.state.throwableCollector;
+		return this.throwableCollector;
 	}
 
 	public void beforeAllMethodsExecuted(boolean beforeAllMethodsExecuted) {
@@ -81,7 +84,6 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 
 		final EngineExecutionListener executionListener;
 		final ConfigurationParameters configurationParameters;
-		final ThrowableCollector throwableCollector = new ThrowableCollector();
 		TestInstanceProvider testInstanceProvider;
 		ExtensionRegistry extensionRegistry;
 		ExtensionContext extensionContext;

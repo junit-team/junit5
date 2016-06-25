@@ -145,24 +145,22 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context) throws Exception {
-		ExtensionRegistry registry = context.getExtensionRegistry();
-		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
-		ThrowableCollector throwableCollector = new ThrowableCollector();
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		// @formatter:off
-		invokeBeforeEachCallbacks(registry, testExtensionContext, throwableCollector);
+		invokeBeforeEachCallbacks(context);
 			if (throwableCollector.isEmpty()) {
-				invokeBeforeEachMethods(registry, testExtensionContext, throwableCollector);
+				invokeBeforeEachMethods(context);
 				if (throwableCollector.isEmpty()) {
-					invokeBeforeTestExecutionCallbacks(registry, testExtensionContext, throwableCollector);
+					invokeBeforeTestExecutionCallbacks(context);
 					if (throwableCollector.isEmpty()) {
-						invokeTestMethod(context, testExtensionContext, throwableCollector);
+						invokeTestMethod(context);
 					}
-					invokeAfterTestExecutionCallbacks(registry, testExtensionContext, throwableCollector);
+					invokeAfterTestExecutionCallbacks(context);
 				}
-				invokeAfterEachMethods(registry, testExtensionContext, throwableCollector);
+				invokeAfterEachMethods(context);
 			}
-		invokeAfterEachCallbacks(registry, testExtensionContext, throwableCollector);
+		invokeAfterEachCallbacks(context);
 		// @formatter:on
 
 		throwableCollector.assertEmpty();
@@ -170,41 +168,48 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		return context;
 	}
 
-	private void invokeBeforeEachCallbacks(ExtensionRegistry registry, TestExtensionContext context,
-			ThrowableCollector throwableCollector) {
+	private void invokeBeforeEachCallbacks(JupiterEngineExecutionContext context) {
+		ExtensionRegistry registry = context.getExtensionRegistry();
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		for (BeforeEachCallback callback : registry.toList(BeforeEachCallback.class)) {
-			throwableCollector.execute(() -> callback.beforeEach(context));
+			throwableCollector.execute(() -> callback.beforeEach(testExtensionContext));
 			if (throwableCollector.isNotEmpty()) {
 				break;
 			}
 		}
 	}
 
-	private void invokeBeforeEachMethods(ExtensionRegistry registry, TestExtensionContext context,
-			ThrowableCollector throwableCollector) {
+	private void invokeBeforeEachMethods(JupiterEngineExecutionContext context) {
+		ExtensionRegistry registry = context.getExtensionRegistry();
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		for (BeforeEachMethodAdapter adapter : registry.toList(BeforeEachMethodAdapter.class)) {
-			throwableCollector.execute(() -> adapter.invokeBeforeEachMethod(context));
+			throwableCollector.execute(() -> adapter.invokeBeforeEachMethod(testExtensionContext));
 			if (throwableCollector.isNotEmpty()) {
 				break;
 			}
 		}
 	}
 
-	private void invokeBeforeTestExecutionCallbacks(ExtensionRegistry registry, TestExtensionContext context,
-			ThrowableCollector throwableCollector) {
+	private void invokeBeforeTestExecutionCallbacks(JupiterEngineExecutionContext context) {
+		ExtensionRegistry registry = context.getExtensionRegistry();
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		for (BeforeTestExecutionCallback callback : registry.toList(BeforeTestExecutionCallback.class)) {
-			throwableCollector.execute(() -> callback.beforeTestExecution(context));
+			throwableCollector.execute(() -> callback.beforeTestExecution(testExtensionContext));
 			if (throwableCollector.isNotEmpty()) {
 				break;
 			}
 		}
 	}
 
-	protected void invokeTestMethod(JupiterEngineExecutionContext context, TestExtensionContext testExtensionContext,
-			ThrowableCollector throwableCollector) {
+	protected void invokeTestMethod(JupiterEngineExecutionContext context) {
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		throwableCollector.execute(() -> {
 			try {
@@ -241,25 +246,31 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		}
 	}
 
-	private void invokeAfterTestExecutionCallbacks(ExtensionRegistry registry, TestExtensionContext context,
-			ThrowableCollector throwableCollector) {
+	private void invokeAfterTestExecutionCallbacks(JupiterEngineExecutionContext context) {
+		ExtensionRegistry registry = context.getExtensionRegistry();
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		registry.reverseStream(AfterTestExecutionCallback.class)//
-				.forEach(extension -> throwableCollector.execute(() -> extension.afterTestExecution(context)));
+		registry.reverseStream(AfterTestExecutionCallback.class).forEach(
+			extension -> throwableCollector.execute(() -> extension.afterTestExecution(testExtensionContext)));
 	}
 
-	private void invokeAfterEachMethods(ExtensionRegistry registry, TestExtensionContext context,
-			ThrowableCollector throwableCollector) {
+	private void invokeAfterEachMethods(JupiterEngineExecutionContext context) {
+		ExtensionRegistry registry = context.getExtensionRegistry();
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		registry.reverseStream(AfterEachMethodAdapter.class)//
-				.forEach(adapter -> throwableCollector.execute(() -> adapter.invokeAfterEachMethod(context)));
+		registry.reverseStream(AfterEachMethodAdapter.class).forEach(
+			adapter -> throwableCollector.execute(() -> adapter.invokeAfterEachMethod(testExtensionContext)));
 	}
 
-	private void invokeAfterEachCallbacks(ExtensionRegistry registry, TestExtensionContext context,
-			ThrowableCollector throwableCollector) {
+	private void invokeAfterEachCallbacks(JupiterEngineExecutionContext context) {
+		ExtensionRegistry registry = context.getExtensionRegistry();
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		registry.reverseStream(AfterEachCallback.class)//
-				.forEach(extension -> throwableCollector.execute(() -> extension.afterEach(context)));
+		registry.reverseStream(AfterEachCallback.class).forEach(
+			extension -> throwableCollector.execute(() -> extension.afterEach(testExtensionContext)));
 	}
 
 }
