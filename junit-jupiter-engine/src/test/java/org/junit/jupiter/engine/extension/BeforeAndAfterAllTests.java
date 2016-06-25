@@ -44,13 +44,13 @@ public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	void beforeAllAndAfterAllCallbacks() {
 		// @formatter:off
 		assertBeforeAllAndAfterAllCallbacks(TopLevelTestCase.class,
-			"fooBeforeAll",
-			"barBeforeAll",
+			"fooBeforeAllCallback",
+			"barBeforeAllCallback",
 				"beforeAllMethod-1",
 					"test-1",
 				"afterAllMethod-1",
-			"barAfterAll",
-			"fooAfterAll"
+			"barAfterAllCallback",
+			"fooAfterAllCallback"
 		);
 		// @formatter:on
 	}
@@ -59,17 +59,17 @@ public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	void beforeAllAndAfterAllCallbacksInSubclass() {
 		// @formatter:off
 		assertBeforeAllAndAfterAllCallbacks(SecondLevelTestCase.class,
-			"fooBeforeAll",
-			"barBeforeAll",
-				"bazBeforeAll",
+			"fooBeforeAllCallback",
+			"barBeforeAllCallback",
+				"bazBeforeAllCallback",
 					"beforeAllMethod-1",
 						"beforeAllMethod-2",
 							"test-2",
 						"afterAllMethod-2",
 					"afterAllMethod-1",
-				"bazAfterAll",
-			"barAfterAll",
-			"fooAfterAll"
+				"bazAfterAllCallback",
+			"barAfterAllCallback",
+			"fooAfterAllCallback"
 		);
 		// @formatter:on
 	}
@@ -78,10 +78,10 @@ public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	void beforeAllAndAfterAllCallbacksInSubSubclass() {
 		// @formatter:off
 		assertBeforeAllAndAfterAllCallbacks(ThirdLevelTestCase.class,
-			"fooBeforeAll",
-			"barBeforeAll",
-				"bazBeforeAll",
-					"quuxBeforeAll",
+			"fooBeforeAllCallback",
+			"barBeforeAllCallback",
+				"bazBeforeAllCallback",
+					"quuxBeforeAllCallback",
 						"beforeAllMethod-1",
 							"beforeAllMethod-2",
 								"beforeAllMethod-3",
@@ -89,10 +89,10 @@ public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 								"afterAllMethod-3",
 							"afterAllMethod-2",
 						"afterAllMethod-1",
-					"quuxAfterAll",
-				"bazAfterAll",
-			"barAfterAll",
-			"fooAfterAll"
+					"quuxAfterAllCallback",
+				"bazAfterAllCallback",
+			"barAfterAllCallback",
+			"fooAfterAllCallback"
 		);
 		// @formatter:on
 	}
@@ -175,12 +175,12 @@ public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public void beforeAll(ContainerExtensionContext testExecutionContext) {
-			callSequence.add("fooBeforeAll");
+			callSequence.add("fooBeforeAllCallback");
 		}
 
 		@Override
 		public void afterAll(ContainerExtensionContext testExecutionContext) {
-			callSequence.add("fooAfterAll");
+			callSequence.add("fooAfterAllCallback");
 		}
 	}
 
@@ -188,12 +188,12 @@ public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public void beforeAll(ContainerExtensionContext testExecutionContext) {
-			callSequence.add("barBeforeAll");
+			callSequence.add("barBeforeAllCallback");
 		}
 
 		@Override
 		public void afterAll(ContainerExtensionContext testExecutionContext) {
-			callSequence.add("barAfterAll");
+			callSequence.add("barAfterAllCallback");
 		}
 	}
 
@@ -201,12 +201,12 @@ public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public void beforeAll(ContainerExtensionContext testExecutionContext) {
-			callSequence.add("bazBeforeAll");
+			callSequence.add("bazBeforeAllCallback");
 		}
 
 		@Override
 		public void afterAll(ContainerExtensionContext testExecutionContext) {
-			callSequence.add("bazAfterAll");
+			callSequence.add("bazAfterAllCallback");
 		}
 	}
 
@@ -214,12 +214,12 @@ public class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public void beforeAll(ContainerExtensionContext testExecutionContext) {
-			callSequence.add("quuxBeforeAll");
+			callSequence.add("quuxBeforeAllCallback");
 		}
 
 		@Override
 		public void afterAll(ContainerExtensionContext testExecutionContext) {
-			callSequence.add("quuxAfterAll");
+			callSequence.add("quuxAfterAllCallback");
 		}
 	}
 
