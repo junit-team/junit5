@@ -6,4 +6,15 @@
 
 ==== Summary of Changes
 
-*TODO*
+===== JUnit Platform
+
+- *TODO*
+- `ConsoleRunner` has been renamed to `ConsoleLauncher`
+
+===== JUnit Jupiter
+
+- *TODO*
+
+===== JUnit Vintage
+
+- *TODO*
