@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.Extension;
@@ -127,6 +128,16 @@ public class ExtensionRegistry {
 		// @formatter:on
 
 		return extensions;
+	}
+
+	/**
+	 * Generate a list of all registered extensions of the specified type.
+	 *
+	 * @param extensionType the type of {@link Extension} to generate a list from
+	 * @see #stream(Class)
+	 */
+	public <E extends Extension> List<E> toList(Class<E> extensionType) {
+		return stream(extensionType).collect(Collectors.toList());
 	}
 
 	/**

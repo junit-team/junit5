@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.lang.reflect.Method;
@@ -151,12 +150,18 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		ThrowableCollector throwableCollector = new ThrowableCollector();
 
 		// @formatter:off
-		invokeBeforeEachCallbacks(registry, testExtensionContext);
-			invokeBeforeEachMethods(registry, testExtensionContext);
-				invokeBeforeTestExecutionCallbacks(registry, testExtensionContext);
-					invokeTestMethod(context, testExtensionContext, throwableCollector);
-				invokeAfterTestExecutionCallbacks(registry, testExtensionContext, throwableCollector);
-			invokeAfterEachMethods(registry, testExtensionContext, throwableCollector);
+		invokeBeforeEachCallbacks(registry, testExtensionContext, throwableCollector);
+			if (throwableCollector.isEmpty()) {
+				invokeBeforeEachMethods(registry, testExtensionContext, throwableCollector);
+				if (throwableCollector.isEmpty()) {
+					invokeBeforeTestExecutionCallbacks(registry, testExtensionContext, throwableCollector);
+					if (throwableCollector.isEmpty()) {
+						invokeTestMethod(context, testExtensionContext, throwableCollector);
+					}
+					invokeAfterTestExecutionCallbacks(registry, testExtensionContext, throwableCollector);
+				}
+				invokeAfterEachMethods(registry, testExtensionContext, throwableCollector);
+			}
 		invokeAfterEachCallbacks(registry, testExtensionContext, throwableCollector);
 		// @formatter:on
 
@@ -165,19 +170,37 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		return context;
 	}
 
-	private void invokeBeforeEachCallbacks(ExtensionRegistry registry, TestExtensionContext context) {
-		registry.stream(BeforeEachCallback.class)//
-				.forEach(extension -> executeAndMaskThrowable(() -> extension.beforeEach(context)));
+	private void invokeBeforeEachCallbacks(ExtensionRegistry registry, TestExtensionContext context,
+			ThrowableCollector throwableCollector) {
+
+		for (BeforeEachCallback callback : registry.toList(BeforeEachCallback.class)) {
+			throwableCollector.execute(() -> callback.beforeEach(context));
+			if (!throwableCollector.isEmpty()) {
+				break;
+			}
+		}
 	}
 
-	private void invokeBeforeEachMethods(ExtensionRegistry registry, TestExtensionContext context) {
-		registry.stream(BeforeEachMethodAdapter.class)//
-				.forEach(adapter -> executeAndMaskThrowable(() -> adapter.invokeBeforeEachMethod(context)));
+	private void invokeBeforeEachMethods(ExtensionRegistry registry, TestExtensionContext context,
+			ThrowableCollector throwableCollector) {
+
+		for (BeforeEachMethodAdapter adapter : registry.toList(BeforeEachMethodAdapter.class)) {
+			throwableCollector.execute(() -> adapter.invokeBeforeEachMethod(context));
+			if (!throwableCollector.isEmpty()) {
+				break;
+			}
+		}
 	}
 
-	private void invokeBeforeTestExecutionCallbacks(ExtensionRegistry registry, TestExtensionContext context) {
-		registry.stream(BeforeTestExecutionCallback.class)//
-				.forEach(extension -> executeAndMaskThrowable(() -> extension.beforeTestExecution(context)));
+	private void invokeBeforeTestExecutionCallbacks(ExtensionRegistry registry, TestExtensionContext context,
+			ThrowableCollector throwableCollector) {
+
+		for (BeforeTestExecutionCallback callback : registry.toList(BeforeTestExecutionCallback.class)) {
+			throwableCollector.execute(() -> callback.beforeTestExecution(context));
+			if (!throwableCollector.isEmpty()) {
+				break;
+			}
+		}
 	}
 
 	protected void invokeTestMethod(JupiterEngineExecutionContext context, TestExtensionContext testExtensionContext,
@@ -198,14 +221,12 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 	private void invokeTestExecutionExceptionHandlers(ExtensionRegistry registry, TestExtensionContext context,
 			Throwable ex) {
 
-		List<TestExecutionExceptionHandler> exceptionHandlers = registry.stream(
-			TestExecutionExceptionHandler.class).collect(toList());
-
-		invokeTestExecutionExceptionHandlers(ex, exceptionHandlers, context);
+		invokeTestExecutionExceptionHandlers(ex, registry.toList(TestExecutionExceptionHandler.class), context);
 	}
 
 	private void invokeTestExecutionExceptionHandlers(Throwable ex, List<TestExecutionExceptionHandler> handlers,
 			TestExtensionContext context) {
+
 		// No handlers left?
 		if (handlers.isEmpty()) {
 			ExceptionUtils.throwAsUncheckedException(ex);

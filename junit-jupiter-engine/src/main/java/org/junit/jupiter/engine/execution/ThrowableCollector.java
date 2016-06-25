@@ -75,6 +75,14 @@ public class ThrowableCollector {
 	}
 
 	/**
+	 * Determine if this {@code ThrowableCollector} is <em>empty</em> (i.e.,
+	 * has not collected any {@link #getThrowables() Throwables}).
+	 */
+	public boolean isEmpty() {
+		return this.throwables.isEmpty();
+	}
+
+	/**
 	 * Assert that this {@code ThrowableCollector} is <em>empty</em> (i.e.,
 	 * has not collected any {@link #getThrowables() Throwables}).
 	 *
