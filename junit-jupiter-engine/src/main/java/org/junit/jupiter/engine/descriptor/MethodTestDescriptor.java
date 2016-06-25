@@ -175,7 +175,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 		for (BeforeEachCallback callback : registry.toList(BeforeEachCallback.class)) {
 			throwableCollector.execute(() -> callback.beforeEach(context));
-			if (!throwableCollector.isEmpty()) {
+			if (throwableCollector.isNotEmpty()) {
 				break;
 			}
 		}
@@ -186,7 +186,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 		for (BeforeEachMethodAdapter adapter : registry.toList(BeforeEachMethodAdapter.class)) {
 			throwableCollector.execute(() -> adapter.invokeBeforeEachMethod(context));
-			if (!throwableCollector.isEmpty()) {
+			if (throwableCollector.isNotEmpty()) {
 				break;
 			}
 		}
@@ -197,7 +197,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 		for (BeforeTestExecutionCallback callback : registry.toList(BeforeTestExecutionCallback.class)) {
 			throwableCollector.execute(() -> callback.beforeTestExecution(context));
-			if (!throwableCollector.isEmpty()) {
+			if (throwableCollector.isNotEmpty()) {
 				break;
 			}
 		}

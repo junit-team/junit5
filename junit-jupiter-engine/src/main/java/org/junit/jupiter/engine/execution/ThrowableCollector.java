@@ -12,10 +12,6 @@ package org.junit.jupiter.engine.execution;
 
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.junit.jupiter.api.Executable;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -30,15 +26,13 @@ import org.junit.platform.commons.util.Preconditions;
 @API(Internal)
 public class ThrowableCollector {
 
-	private final List<Throwable> throwables = new ArrayList<>();
+	private Throwable throwable;
 
 	/**
-	 * Execute the supplied {@link Executable} and {@link #add collect} any
-	 * {@link Throwable} thrown during the execution.
+	 * Execute the supplied {@link Executable} and collect any {@link Throwable}
+	 * thrown during the execution.
 	 *
 	 * @param executable the {@code Executable} to execute
-	 * @see #add(Throwable)
-	 * @see #getThrowables()
 	 * @see #assertEmpty()
 	 */
 	public void execute(Executable executable) {
@@ -55,36 +49,38 @@ public class ThrowableCollector {
 	 *
 	 * @param t the {@code Throwable} to add
 	 * @see #execute(Executable)
-	 * @see #getThrowables()
 	 * @see #assertEmpty()
 	 */
-	void add(Throwable t) {
+	private void add(Throwable t) {
 		Preconditions.notNull(t, "Throwable must not be null");
-		this.throwables.add(t);
-	}
 
-	/**
-	 * Get the list of {@link Throwable Throwables} collected by this
-	 * {@code ThrowableCollector}.
-	 *
-	 * @return an unmodifiable list of the throwables collected by this
-	 * {@code ThrowableCollector}
-	 */
-	List<Throwable> getThrowables() {
-		return Collections.unmodifiableList(this.throwables);
+		if (this.throwable == null) {
+			this.throwable = t;
+		}
+		else {
+			this.throwable.addSuppressed(t);
+		}
 	}
 
 	/**
 	 * Determine if this {@code ThrowableCollector} is <em>empty</em> (i.e.,
-	 * has not collected any {@link #getThrowables() Throwables}).
+	 * has not collected any {@code Throwables}).
 	 */
 	public boolean isEmpty() {
-		return this.throwables.isEmpty();
+		return (this.throwable == null);
+	}
+
+	/**
+	 * Determine if this {@code ThrowableCollector} is <em>not empty</em> (i.e.,
+	 * has collected at least one {@code Throwable}).
+	 */
+	public boolean isNotEmpty() {
+		return (this.throwable != null);
 	}
 
 	/**
 	 * Assert that this {@code ThrowableCollector} is <em>empty</em> (i.e.,
-	 * has not collected any {@link #getThrowables() Throwables}).
+	 * has not collected any {@code Throwables}).
 	 *
 	 * <p>If this collector is not empty, the first collected {@code Throwable}
 	 * will be thrown with any additional throwables
@@ -97,10 +93,8 @@ public class ThrowableCollector {
 	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
 	public void assertEmpty() {
-		if (!this.throwables.isEmpty()) {
-			Throwable t = this.throwables.get(0);
-			this.throwables.stream().skip(1).forEach(t::addSuppressed);
-			ExceptionUtils.throwAsUncheckedException(t);
+		if (!isEmpty()) {
+			ExceptionUtils.throwAsUncheckedException(this.throwable);
 		}
 	}
 
