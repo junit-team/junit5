@@ -50,7 +50,7 @@ as follows. `@Fast` can then be used as a drop-in replacement for `@Tag("fast")`
 include::{testDir}/example/Fast.java[tags=user_guide]
 ----
 
-
+[[tests-standard]]
 === Standard Test Class
 
 [source,java,indent=0]
@@ -62,7 +62,7 @@ include::{testDir}/example/StandardTests.java[tags=user_guide]
 
 Notice that neither test classes nor test methods need to be `public`.
 
-
+[[tests-display]]
 === Display Names
 
 Test classes and test methods can declare custom display names -- with spaces, special
@@ -74,7 +74,7 @@ characters, and even emojis -- that will be displayed by test runners and test r
 include::{testDir}/example/DisplayNameDemo.java[tags=user_guide]
 ----
 
-
+[[tests-assertions]]
 === Assertions
 
 JUnit Jupiter comes with many of the assertion methods that JUnit 4 has and adds a few that
@@ -87,7 +87,7 @@ methods in the `{Assertions}` class.
 include::{testDir}/example/AssertionsDemo.java[tags=user_guide]
 ----
 
-
+[[tests-assumptions]]
 === Assumptions
 
 JUnit Jupiter comes with a subset of the assumption methods that JUnit 4 provides and adds a
@@ -100,7 +100,7 @@ are static methods in the `{Assumptions}` class.
 include::{testDir}/example/AssumptionsDemo.java[tags=user_guide]
 ----
 
-
+[[tests-disabling]]
 === Disabling Tests
 
 Here's a disabled test case.
@@ -132,7 +132,7 @@ include::{testDir}/example/TaggingDemo.java[tags=user_guide]
 ----
 
 
-
+[[tests-nested]]
 === Nested Tests
 
 Nested tests give the test writer more capabilities to express the relationship among
@@ -150,6 +150,7 @@ Notice that _only non-static nested classes_ (i.e. _inner classes_) can serve as
 to be full members of the test class family with one exception: `@BeforeAll` and
 `@AfterAll` do not work, because Java does not allow `static` members in inner classes.
 
+[[tests-dependency-insection]]
 === Dependency Injection for Constructors and Methods
 
 In all prior JUnit versions, test constructors or methods were not allowed to have
@@ -229,6 +230,7 @@ class MyMockitoTest {
 }
 ----
 
+[[tests-interface-default]]
 === Interface Default Methods
 
 JUnit Jupiter allows `@Test`, `@TestFactory`, `@BeforeEach`, and `@AfterEach` to be declared on
@@ -305,7 +307,7 @@ As of JUnit Jupiter {jupiter-version}, dynamic tests must always be created by f
 methods; however, this might be complemented by a registration facility in a later
 release.
 
-
+[[dynamic-tests-examples]]
 ==== Dynamic Test Examples
 
 The following `DynamicTestsDemo` class demonstrates several examples of test factories and dynamic tests.

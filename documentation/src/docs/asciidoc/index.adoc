@@ -1,3 +1,4 @@
+[[user-guide]]
 = JUnit 5 User Guide
 Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 
@@ -54,25 +55,26 @@ include::extensions.adoc[]
 
 include::migration-from-junit4.adoc[]
 
+[[advanced-topics]]
 == Advanced Topics
 
 include::launcher-api.adoc[]
 
+[[modules]]
 === Modules
 
+[[engines]]
 === Engines
 
 include::api-evolution.adoc[]
 
-== Contributors
-
 [[contributors]]
+== Contributors
 
 Browse the {junit5-repo}/graphs/contributors[current list of contributors] directly on GitHub.
 
-== Release Notes
-
 [[release-notes]]
+== Release Notes
 
 include::release-notes-5.0.0-ALPHA.adoc[]
 

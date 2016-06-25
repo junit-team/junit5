@@ -9,6 +9,7 @@ builders. That made changing JUnit 4 especially difficult and sometimes impossib
 That's why JUnit 5 introduces a defined lifecycle for all publicly available interfaces,
 classes, and methods.
 
+[[api-evolution-annotations]]
 === API Annotations
 
 Every published artifact has a version number `<major>.<minor>.<patch>` and all
@@ -35,6 +36,7 @@ If the `@API` annotation is present on a type, it is considered to be applicable
 public members of that type as well. A member is allowed to declare a different `Usage`
 value of lower stability.
 
+[[api-evolution-tooling]]
 === Tooling Support
 
 The JUnit team plans to provide native tooling support for all JUnit users, extenders,
