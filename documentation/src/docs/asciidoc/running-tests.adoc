@@ -5,7 +5,7 @@
 
 At the time of this writing there is no direct support for running JUnit Jupiter tests in IDEs.
 However, the JUnit team provides two intermediate solutions so that you can go ahead and
-try out JUnit 5 within your IDE today. You can use the <<running-tests-console-runner>>
+try out JUnit 5 within your IDE today. You can use the <<running-tests-console-launcher>>
 or execute JUnit Jupiter tests with a <<running-tests-junit-platform-runner,JUnit 4 based Runner>>.
 
 === Build Support
@@ -204,11 +204,12 @@ point.
 	...
 ----
 
-[[running-tests-console-runner]]
-=== Console Runner
+[[running-tests-console-launcher]]
+=== Console Launcher
 
-The `{ConsoleRunner}` is a command-line Java application that lets you run JUnit 4 and
-JUnit Jupiter tests and prints test execution results to the console.
+The `{ConsoleLauncher}` is a command-line Java application that lets you launch
+the JUnit Platform from the console. For example, it can be used to run JUnit
+Vintage and JUnit Jupiter tests and print test execution results to the console.
 
 Here's an example of its output:
 
@@ -232,7 +233,7 @@ Test run finished after 29 ms
 [         0 tests failed    ]
 ----
 
-The `{ConsoleRunner}` exits with status code 0 if no test failed. In case of at
+The `{ConsoleLauncher}` exits with status code 0 if no test failed. In case of at
 least one failing test the status code is 1.
 
 ==== Options

@@ -12,7 +12,7 @@ package org.junit.platform.gradle.plugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.JavaExec
-import org.junit.platform.console.ConsoleRunner
+import org.junit.platform.console.ConsoleLauncher
 
 /**
  * @since 1.0
@@ -74,7 +74,7 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 			// the respective modules.
 			junitTask.classpath = project.sourceSets.test.runtimeClasspath + project.configurations.junitPlatform
 
-			junitTask.main = ConsoleRunner.class.getName()
+			junitTask.main = ConsoleLauncher.class.getName()
 			junitTask.args buildArgs(project, junitExtension, reportsDir)
 		}
 	}

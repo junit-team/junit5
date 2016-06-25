@@ -32,7 +32,7 @@ import org.junit.platform.console.tasks.ExecuteTestsTask;
 /**
  * @since 1.0
  */
-public class ConsoleRunnerTests {
+public class ConsoleLauncherTests {
 
 	@Test
 	public void executeDisplayHelpTask() {
@@ -45,8 +45,8 @@ public class ConsoleRunnerTests {
 		ConsoleTaskExecutor consoleTaskExecutor = mock(ConsoleTaskExecutor.class);
 		when(consoleTaskExecutor.executeTask(any(), any())).thenReturn(42);
 
-		ConsoleRunner consoleRunner = new ConsoleRunner(commandLineOptionsParser, consoleTaskExecutor);
-		int exitCode = consoleRunner.execute("--help");
+		ConsoleLauncher consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, consoleTaskExecutor);
+		int exitCode = consoleLauncher.execute("--help");
 
 		assertEquals(42, exitCode);
 		verify(commandLineOptionsParser).parse("--help");
@@ -61,8 +61,8 @@ public class ConsoleRunnerTests {
 		ConsoleTaskExecutor consoleTaskExecutor = mock(ConsoleTaskExecutor.class);
 		when(consoleTaskExecutor.executeTask(any(), any())).thenReturn(23);
 
-		ConsoleRunner consoleRunner = new ConsoleRunner(commandLineOptionsParser, consoleTaskExecutor);
-		int exitCode = consoleRunner.execute("--all");
+		ConsoleLauncher consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, consoleTaskExecutor);
+		int exitCode = consoleLauncher.execute("--all");
 
 		assertEquals(23, exitCode);
 		verify(commandLineOptionsParser).parse("--all");
@@ -80,8 +80,9 @@ public class ConsoleRunnerTests {
 
 		StringWriter stringWriter = new StringWriter();
 
-		ConsoleRunner consoleRunner = new ConsoleRunner(commandLineOptionsParser, mock(ConsoleTaskExecutor.class));
-		consoleRunner.displayHelp(new PrintWriter(stringWriter));
+		ConsoleLauncher consoleLauncher = new ConsoleLauncher(commandLineOptionsParser,
+			mock(ConsoleTaskExecutor.class));
+		consoleLauncher.displayHelp(new PrintWriter(stringWriter));
 
 		assertThat(stringWriter.toString()).contains("Keep Calm and Carry On");
 	}

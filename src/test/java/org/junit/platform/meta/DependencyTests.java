@@ -27,8 +27,8 @@ import org.junit.runner.RunWith;
  *
  * <p><em>Modules</em> are defined by the package name element immediately
  * following the {@code org.junit.platform} base package. For example,
- * {@code org.junit.platform.console.ConsoleRunner} belongs to the {@code console}
- * module.
+ * {@code org.junit.platform.console.ConsoleLauncher} belongs to the
+ * {@code console} module.
  */
 @RunWith(JUnitPlatform.class)
 public class DependencyTests {

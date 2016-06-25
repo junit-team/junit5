@@ -23,7 +23,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :API:                               {master-branch}/junit-platform-commons/src/main/java/org/junit/platform/commons/meta/API.java[@API]
 :Assertions:                        {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java[org.junit.jupiter.Assertions]
 :Assumptions:                       {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assumptions.java[org.junit.jupiter.Assumptions]
-:ConsoleRunner:                     {master-branch}/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleRunner.java[ConsoleRunner]
+:ConsoleLauncher:                   {master-branch}/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncher.java[ConsoleLauncher]
 :ContainerExecutionCondition:       {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ContainerExecutionCondition.java[ContainerExecutionCondition]
 :CustomAnnotationParameterResolver: {master-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java[CustomAnnotationParameterResolver]
 :CustomTypeParameterResolver:       {master-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java[CustomTypeParameterResolver]

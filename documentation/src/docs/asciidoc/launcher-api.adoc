@@ -13,7 +13,7 @@ infrastructure.
 
 The launching API is in the `{junit-platform-launcher}` module.
 
-An example consumer of the launching API is the `{ConsoleRunner}` in the
+An example consumer of the launching API is the `{ConsoleLauncher}` in the
 `{junit-platform-console}` project.
 
 ==== Discovering Tests

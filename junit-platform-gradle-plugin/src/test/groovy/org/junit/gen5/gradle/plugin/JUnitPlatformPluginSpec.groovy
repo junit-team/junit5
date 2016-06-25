@@ -14,7 +14,7 @@ import org.gradle.api.Task
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testfixtures.ProjectBuilder
-import org.junit.platform.console.ConsoleRunner
+import org.junit.platform.console.ConsoleLauncher
 import spock.lang.Specification
 
 /**
@@ -96,7 +96,7 @@ class JUnitPlatformPluginSpec extends Specification {
 		then:
 			Task junitTask = project.tasks.findByName('junitPlatformTest')
 			junitTask instanceof JavaExec
-			junitTask.main == ConsoleRunner.class.getName()
+			junitTask.main == ConsoleLauncher.class.getName()
 
 			junitTask.args.contains('--hide-details')
 			junitTask.args.contains('--all')

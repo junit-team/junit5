@@ -24,23 +24,26 @@ import org.junit.platform.console.tasks.DisplayHelpTask;
 import org.junit.platform.console.tasks.ExecuteTestsTask;
 
 /**
+ * The {@code ConsoleLauncher} is a stand-alone application for launching the
+ * JUnit Platform from the console.
+ *
  * @since 1.0
  */
 @API(Maintained)
-public class ConsoleRunner {
+public class ConsoleLauncher {
 
 	@API(Maintained)
 	public static void main(String... args) {
-		ConsoleRunner consoleRunner = new ConsoleRunner(new JOptSimpleCommandLineOptionsParser(),
+		ConsoleLauncher consoleLauncher = new ConsoleLauncher(new JOptSimpleCommandLineOptionsParser(),
 			new ConsoleTaskExecutor(System.out, System.err));
-		int exitCode = consoleRunner.execute(args);
+		int exitCode = consoleLauncher.execute(args);
 		System.exit(exitCode);
 	}
 
 	private final CommandLineOptionsParser commandLineOptionsParser;
 	private final ConsoleTaskExecutor consoleTaskExecutor;
 
-	ConsoleRunner(CommandLineOptionsParser commandLineOptionsParser, ConsoleTaskExecutor consoleTaskExecutor) {
+	ConsoleLauncher(CommandLineOptionsParser commandLineOptionsParser, ConsoleTaskExecutor consoleTaskExecutor) {
 		this.commandLineOptionsParser = commandLineOptionsParser;
 		this.consoleTaskExecutor = consoleTaskExecutor;
 	}
