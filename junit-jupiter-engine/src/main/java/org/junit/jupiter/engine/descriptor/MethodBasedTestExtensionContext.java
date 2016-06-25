@@ -47,8 +47,8 @@ public final class MethodBasedTestExtensionContext extends AbstractExtensionCont
 	}
 
 	@Override
-	public AnnotatedElement getElement() {
-		return getTestMethod().get();
+	public Optional<AnnotatedElement> getElement() {
+		return Optional.of(getTestDescriptor().getTestMethod());
 	}
 
 	@Override

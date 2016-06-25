@@ -70,6 +70,22 @@ public final class AnnotationUtils {
 
 	/**
 	 * Find the first annotation of {@code annotationType} that is either <em>present</em> or <em>meta-present</em> on
+	 * the supplied optional {@code element}.
+	 *
+	 * @see #findAnnotation(AnnotatedElement, Class)
+	 */
+	public static <A extends Annotation> Optional<A> findAnnotation(Optional<? extends AnnotatedElement> element,
+			Class<A> annotationType) {
+
+		if (element == null || !element.isPresent()) {
+			return Optional.empty();
+		}
+
+		return findAnnotation(element.get(), annotationType, new HashSet<Annotation>());
+	}
+
+	/**
+	 * Find the first annotation of {@code annotationType} that is either <em>present</em> or <em>meta-present</em> on
 	 * the supplied {@code element}.
 	 */
 	public static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType) {

@@ -81,6 +81,25 @@ public interface ExtensionContext {
 	Set<String> getTags();
 
 	/**
+	 * Get the {@link AnnotatedElement} corresponding to the current extension
+	 * context, if available.
+	 *
+	 * <p>For example, if the current extension context encapsulates a test
+	 * class or test method, the annotated element will be the corresponding
+	 * {@link Class} or {@link Method} reference.
+	 *
+	 * <p>Favor this method over more specific methods whenever the
+	 * {@code AnnotatedElement} API suits the task at hand &mdash; for example,
+	 * when looking up annotations regardless of concrete element type.
+	 *
+	 * @return an {@code Optional} containing the {@code AnnotatedElement};
+	 * never {@code null} but potentially empty
+	 * @see #getTestClass()
+	 * @see #getTestMethod()
+	 */
+	Optional<AnnotatedElement> getElement();
+
+	/**
 	 * Get the {@link Class} associated with the current test or container,
 	 * if available.
 	 *
@@ -96,25 +115,6 @@ public interface ExtensionContext {
 	 * potentially empty
 	 */
 	Optional<Method> getTestMethod();
-
-	/**
-	 * Get the {@link AnnotatedElement} corresponding to the current extension
-	 * context.
-	 *
-	 * <p>For example, if the current extension context encapsulates a test
-	 * class or test method, the annotated element will be the corresponding
-	 * {@link #getTestClass() Class} or {@link #getTestMethod() Method}
-	 * reference.
-	 *
-	 * <p>Favor this method over more specific methods whenever the
-	 * {@link AnnotatedElement} API suits the task at hand &mdash; for example,
-	 * when looking up annotations regardless of concrete element type.
-	 *
-	 * @return the {@code AnnotatedElement}; never {@code null}
-	 * @see #getTestClass()
-	 * @see #getTestMethod()
-	 */
-	AnnotatedElement getElement();
 
 	/**
 	 * Publish a map of key-value pairs to be consumed by an

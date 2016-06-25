@@ -44,8 +44,8 @@ public final class ClassBasedContainerExtensionContext extends AbstractExtension
 	}
 
 	@Override
-	public AnnotatedElement getElement() {
-		return getTestClass().get();
+	public Optional<AnnotatedElement> getElement() {
+		return Optional.of(getTestDescriptor().getTestClass());
 	}
 
 	@Override

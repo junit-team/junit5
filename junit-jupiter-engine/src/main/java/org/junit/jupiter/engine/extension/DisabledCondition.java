@@ -53,7 +53,7 @@ class DisabledCondition implements ContainerExecutionCondition, TestExecutionCon
 		return evaluate(context.getElement());
 	}
 
-	private ConditionEvaluationResult evaluate(AnnotatedElement element) {
+	private ConditionEvaluationResult evaluate(Optional<AnnotatedElement> element) {
 		Optional<Disabled> disabled = findAnnotation(element, Disabled.class);
 		if (disabled.isPresent()) {
 			String reason = disabled.map(Disabled::value).filter(StringUtils::isNotBlank).orElseGet(

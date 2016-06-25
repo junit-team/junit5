@@ -31,6 +31,7 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
@@ -45,8 +46,18 @@ import org.junit.jupiter.api.Test;
 class AnnotationUtilsTests {
 
 	@Test
+	void findAnnotationForNullOptional() {
+		assertThat(findAnnotation((Optional<AnnotatedElement>) null, Annotation1.class)).isEmpty();
+	}
+
+	@Test
+	void findAnnotationForEmptyOptional() {
+		assertThat(findAnnotation(Optional.empty(), Annotation1.class)).isEmpty();
+	}
+
+	@Test
 	void findAnnotationForNullAnnotatedElement() {
-		assertThat(findAnnotation(null, Annotation1.class)).isEmpty();
+		assertThat(findAnnotation((AnnotatedElement) null, Annotation1.class)).isEmpty();
 	}
 
 	@Test
@@ -54,6 +65,14 @@ class AnnotationUtilsTests {
 		Optional<Annotation2> optionalAnnotation = findAnnotation(Annotation1Class.class, Annotation2.class);
 		assertNotNull(optionalAnnotation);
 		assertFalse(optionalAnnotation.isPresent());
+	}
+
+	@Test
+	void findAnnotationIndirectlyPresentOnOptionalClass() {
+		Optional<InheritedAnnotation> optionalAnnotation = findAnnotation(
+			Optional.of(SubInheritedAnnotationClass.class), InheritedAnnotation.class);
+		assertNotNull(optionalAnnotation);
+		assertTrue(optionalAnnotation.isPresent());
 	}
 
 	@Test
@@ -101,6 +120,14 @@ class AnnotationUtilsTests {
 	void findAnnotationMetaPresentOnMethod() throws Exception {
 		Optional<Annotation1> optionalAnnotation = findAnnotation(
 			ComposedAnnotationClass.class.getDeclaredMethod("method"), Annotation1.class);
+		assertNotNull(optionalAnnotation);
+		assertTrue(optionalAnnotation.isPresent());
+	}
+
+	@Test
+	void findAnnotationMetaPresentOnOptionalMethod() throws Exception {
+		Optional<Annotation1> optionalAnnotation = findAnnotation(
+			Optional.of(ComposedAnnotationClass.class.getDeclaredMethod("method")), Annotation1.class);
 		assertNotNull(optionalAnnotation);
 		assertTrue(optionalAnnotation.isPresent());
 	}

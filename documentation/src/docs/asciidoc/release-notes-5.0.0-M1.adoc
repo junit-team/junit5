@@ -8,13 +8,12 @@
 
 ===== JUnit Platform
 
-- *TODO*
-- `ConsoleRunner` has been renamed to `ConsoleLauncher`
+- `org.junit.platform.console.ConsoleRunner` has been renamed to `ConsoleLauncher`
 
 ===== JUnit Jupiter
 
-- *TODO*
+- `ExtensionContext.getElement()` now returns `Optional<AnnotatedElement>`.
 
 ===== JUnit Vintage
 
-- *TODO*
+- ???
