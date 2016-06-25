@@ -6,13 +6,33 @@
 
 ==== Summary of Changes
 
+The following is a list of global changes. For details regarding changes specific to the
+Platform, Jupiter, and Vintage, consult the dedicated subsections.
+
+.Package Migration
+[cols="20,80"]
+|===
+| Old Base Package                 | New Base Package
+
+| `org.junit.gen5.api`           | `org.junit.jupiter.api`
+| `org.junit.gen5.commons`       | `org.junit.platform.commons`
+| `org.junit.gen5.console`       | `org.junit.platform.console`
+| `org.junit.gen5.engine.junit4` | `org.junit.vintage.engine`
+| `org.junit.gen5.engine.junit5` | `org.junit.jupiter.engine`
+| `org.junit.gen5.engine`        | `org.junit.platform.engine`
+| `org.junit.gen5.gradle`        | `org.junit.platform.gradle.plugin`
+| `org.junit.gen5.junit4.runner` | `org.junit.platform.runner`
+| `org.junit.gen5.launcher`      | `org.junit.platform.launcher`
+| `org.junit.gen5.surefire`      | `org.junit.platform.surefire.provider`
+|===
+
 ===== JUnit Platform
 
-- `org.junit.platform.console.ConsoleRunner` has been renamed to `ConsoleLauncher`
+- `org.junit.platform.console.ConsoleRunner` renamed to `ConsoleLauncher`
 
 ===== JUnit Jupiter
 
-- `ExtensionContext.getElement()` now returns `Optional<AnnotatedElement>`.
+- `ExtensionContext.getElement()` now returns `Optional<AnnotatedElement>`
 
 ===== JUnit Vintage
 
