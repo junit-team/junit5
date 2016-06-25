@@ -463,7 +463,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#ide-support">4.1. IDE Support</a></li>
 <li><a href="#build-support">4.2. Build Support</a></li>
-<li><a href="#running-tests-console-runner">4.3. Console Runner</a></li>
+<li><a href="#running-tests-console-launcher">4.3. Console Launcher</a></li>
 <li><a href="#running-tests-junit-platform-runner">4.4. Using JUnit 4 to Run the JUnit Platform</a></li>
 </ul>
 </li>
@@ -1524,7 +1524,7 @@ class DynamicTestsDemo {
 <div class="paragraph">
 <p>At the time of this writing there is no direct support for running JUnit Jupiter tests in IDEs.
 However, the JUnit team provides two intermediate solutions so that you can go ahead and
-try out JUnit 5 within your IDE today. You can use the <a href="#running-tests-console-runner">Console Runner</a>
+try out JUnit 5 within your IDE today. You can use the <a href="#running-tests-console-launcher">Console Launcher</a>
 or execute JUnit Jupiter tests with a <a href="#running-tests-junit-platform-runner">JUnit 4 based Runner</a>.</p>
 </div>
 </div>
@@ -1749,10 +1749,11 @@ point.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-console-runner">4.3. Console Runner</h3>
+<h3 id="running-tests-console-launcher">4.3. Console Launcher</h3>
 <div class="paragraph">
-<p>The <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleRunner.java">ConsoleRunner</a></code> is a command-line Java application that lets you run JUnit 4 and
-JUnit Jupiter tests and prints test execution results to the console.</p>
+<p>The <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncher.java">ConsoleLauncher</a></code> is a command-line Java application that lets you launch
+the JUnit Platform from the console. For example, it can be used to run JUnit
+Vintage and JUnit Jupiter tests and print test execution results to the console.</p>
 </div>
 <div class="paragraph">
 <p>Here&#8217;s an example of its output:</p>
@@ -1778,7 +1779,7 @@ Test run finished after 29 ms
 </div>
 </div>
 <div class="paragraph">
-<p>The <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleRunner.java">ConsoleRunner</a></code> exits with status code 0 if no test failed. In case of at
+<p>The <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncher.java">ConsoleLauncher</a></code> exits with status code 0 if no test failed. In case of at
 least one failing test the status code is 1.</p>
 </div>
 <div class="sect3">
@@ -2352,7 +2353,7 @@ infrastructure.</p>
 <p>The launching API is in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-launcher">junit-platform-launcher</a></code> module.</p>
 </div>
 <div class="paragraph">
-<p>An example consumer of the launching API is the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleRunner.java">ConsoleRunner</a></code> in the
+<p>An example consumer of the launching API is the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncher.java">ConsoleLauncher</a></code> in the
 <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console">junit-platform-console</a></code> project.</p>
 </div>
 <div class="sect3">
@@ -2591,7 +2592,7 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-25 06:20:12 -04:00
+Last updated 2016-06-25 07:44:27 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
