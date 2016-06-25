@@ -245,7 +245,7 @@ Test run finished after 29 ms
 The `{ConsoleLauncher}` exits with status code 0 if no test failed. In case of at
 least one failing test the status code is 1.
 
-[[running-tests-options]]
+[[running-tests-console-launcher-options]]
 ==== Options
 
 _Caution:_ These options are very likely to change as we continue to work towards the
@@ -301,7 +301,7 @@ to support a subset of the JUnit Platform functionality, especially with regard 
 reporting. But for the time being the `JUnitPlatform` runner is an easy way to get
 started.
 
-[[running-tests-console-setup]]
+[[running-tests-junit-platform-runner-setup]]
 ==== Setup
 
 You need the following artifacts and their dependencies on the classpath. See
@@ -312,7 +312,7 @@ versions.
 * `junit-platform-runner` in _test_ scope: location of the `JUnitPlatform` runner
 * `junit-jupiter-engine` in _test runtime_ scope: implementation of the Engine API for JUnit Jupiter
 
-[[running-tests-console-single-test]]
+[[running-tests-junit-platform-runner-single-test]]
 ==== Single Test Class
 
 One way to use the `JUnitPlatform` runner is to annotate a test class with
@@ -327,7 +327,7 @@ otherwise, IDEs won't recognize it as a test class.
 include::{testDir}/example/JUnit4ClassDemo.java[tags=user_guide]
 ----
 
-[[running-tests-console-test-suite]]
+[[running-tests-junit-platform-runner-test-suite]]
 ==== Test Suite
 
 If you have multiple test classes you can create a test suite as can be seen in the

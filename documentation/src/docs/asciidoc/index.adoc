@@ -36,7 +36,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :JUnitPlatform-Runner:              {master-branch}/junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatform.java[JUnitPlatform]
 :ParameterResolver:                 {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java[ParameterResolver]
 :MockitoExtension:                  {junit5-samples-repo}/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java[MockitoExtension]
-:SpringExtension:                   https://github.com/sbrannen/spring-test-junit5/blob/master/src/main/java/org/springframework/test/context/junit5/SpringExtension.java[SpringExtension]
+:SpringExtension:                   https://github.com/sbrannen/spring-test-junit5/blob/master/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java[SpringExtension]
 :SummaryGeneratingListener:         {master-branch}/junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/SummaryGeneratingListener.java[SummaryGeneratingListener]
 :TestExecutionCondition:            {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestExecutionCondition.java[TestExecutionCondition]
 :TestExecutionListener:             {master-branch}/junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestExecutionListener.java[TestExecutionListener]

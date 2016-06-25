@@ -1,25 +1,25 @@
-[[extension-model]]
+[[extensions]]
 == Extension Model
 
-[[extension-model-overview]]
+[[extensions-overview]]
 === Overview
 
 In contrast to the competing `Runner`, `@Rule`, and `@ClassRule` extension points in
 JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concept: the
 `Extension` API. Note, however, that `Extension` itself is just a marker interface.
 
-[[extension-registration]]
+[[extensions-registration]]
 === Registering Extensions
 
 Extensions can be registered declaratively via `{ExtendWith}`.
 
 Note that registered extensions are inherited within test class hierarchies.
 
-[[extension-registration-declarative]]
+[[extensions-registration-declarative]]
 ==== Declarative Extension Registration
 
 Developers can register one or more extensions _declaratively_ by annotating a test
-class, test method, or custom _<<meta-annotations,composed annotation>>_ with
+class, test method, or custom _<<writing-tests-meta-annotations,composed annotation>>_ with
 `@ExtendWith(...)` and supplying class references for the extensions to register. For
 example, to register a custom `MockitoExtension` for all tests in a particular class and
 its subclasses, you would annotate the test class as follows.
@@ -59,7 +59,7 @@ class MyTestsV2 {
 The execution of tests in both `MyTestsV1` and `MyTestsV2` will be extended by the
 `FooExtension` and `BarExtension`, in exactly that order.
 
-[[extension-conditional]]
+[[extensions-conditions]]
 === Conditional Test Execution
 
 `{ContainerExecutionCondition}` and `{TestExecutionCondition}` define the `Extension`
@@ -73,7 +73,7 @@ determine if a given test method should be executed based on the supplied
 
 See the source code of `{DisabledCondition}` and `{Disabled}` for concrete examples.
 
-[[extension-conditional-deactivating]]
+[[extensions-conditions-deactivation]]
 ==== Deactivating Conditions
 
 Sometimes it can be useful to run a test suite _without_ certain conditions being active.
@@ -89,7 +89,7 @@ the following system property.
 
 `-Djunit.conditions.deactivate=org.junit.*DisabledCondition`
 
-[[extension-conditional-deactivating-patterns]]
+[[extensions-conditions-deactivation-patterns]]
 ===== Pattern Matching Syntax
 
 If the `junit.conditions.deactivate` pattern consists solely of an asterisk (`+*+`), all
@@ -110,7 +110,7 @@ Examples:
 - `org.example.MyCondition`: deactivates the condition whose FQCN is exactly
   `org.example.MyCondition`.
 
-[[extension-post-processing]]
+[[extensions-test-instance-post-processing]]
 === Test Instance Post-processing
 
 `{TestInstancePostProcessor}` defines the API for `Extensions` that wish to _post
@@ -122,7 +122,7 @@ initialization methods on the test instance, etc.
 For concrete examples, consult the source code for the `{MockitoExtension}` and the
 `{SpringExtension}`.
 
-[[extension-parameter-resolution]]
+[[extensions-parameter-resolution]]
 === Parameter Resolution
 
 `{ParameterResolver}` defines the `Extension` API for dynamically resolving parameters at
@@ -131,12 +131,12 @@ runtime.
 If a test constructor or a `@Test`, `@TestFactory`, `@BeforeEach`, `@AfterEach`,
 `@BeforeAll`, or `@AfterAll` method accepts a parameter, the parameter must be _resolved_
 at runtime by a `ParameterResolver`. A `ParameterResolver` can either be built-in (see
-`{TestInfoParameterResolver}`) or <<extension-registration,registered by the user>>.
+`{TestInfoParameterResolver}`) or <<extensions-registration,registered by the user>>.
 Generally speaking, parameters may be resolved by _name_, _type_, _annotation_, or any
 combination thereof. For concrete examples, consult the source code for
 `{CustomTypeParameterResolver}` and `{CustomAnnotationParameterResolver}`.
 
-[[extension-callbacks]]
+[[extensions-lifecycle-callbacks]]
 === Test Lifecycle Callbacks
 
 The following interfaces define the APIs for extending tests at various points in the
@@ -154,7 +154,7 @@ Note that extension developers may choose to implement any number of these inter
 within a single extension. Consult the source code of the `{SpringExtension}` for a
 concrete example.
 
-[[extension-callbacks-before-after]]
+[[extensions-lifecycle-callbacks-before-after-execution]]
 ==== Before and After Test Execution Callbacks
 
 `BeforeTestExecutionCallback` and `AfterTestExecutionCallback` define the APIs for
@@ -193,7 +193,7 @@ INFO: Method [sleep20ms] took 24 ms.
 INFO: Method [sleep50ms] took 53 ms.
 ----
 
-[[extension-exception-handling]]
+[[extensions-exception-handling]]
 === Exception Handling
 
 `{TestExecutionExceptionHandler}` defines the API for `Extensions` that wish to handle
@@ -209,7 +209,7 @@ but rethrow any other type of exception.
 include::{testDir}/example/exception/IgnoreIOExceptionExtension.java[tags=user_guide]
 ----
 
-[[extension-keeping-state]]
+[[extensions-keeping-state]]
 === Keeping State in Extensions
 
 Usually, an extension is instantiated only once. So the question becomes relevant: How do

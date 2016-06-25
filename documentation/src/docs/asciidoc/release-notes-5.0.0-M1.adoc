@@ -1,16 +1,17 @@
-[[release-5.0.0-m1]]
+[[release-notes-5.0.0-m1]]
 === 5.0.0-M1
 
 *Date of Release:* June 30, 2016
 
 *Scope:* First milestone release of JUnit 5
 
-[[release-5.0.0-m1-summary]]
+[[release-notes-5.0.0-m1-summary]]
 ==== Summary of Changes
 
 The following is a list of global changes. For details regarding changes specific to the
 Platform, Jupiter, and Vintage, consult the dedicated subsections.
 
+[[release-notes-5.0.0-m1-migration-packages]]
 .Package Migration
 [cols="20,80"]
 |===
@@ -28,14 +29,17 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.
 | `org.junit.gen5.surefire`      | `org.junit.platform.surefire.provider`
 |===
 
+[[release-notes-5.0.0-m1-junit-platform]]
 ===== JUnit Platform
 
 - `org.junit.platform.console.ConsoleRunner` renamed to `ConsoleLauncher`
 
+[[release-notes-5.0.0-m1-junit-jupiter]]
 ===== JUnit Jupiter
 
 - `ExtensionContext.getElement()` now returns `Optional<AnnotatedElement>`
 
+[[release-notes-5.0.0-m1-junit-vintage]]
 ===== JUnit Vintage
 
 - ???

@@ -24,7 +24,7 @@ case JUnit 4 tests will automatically be picked up by the JUnit Platform launche
 See the example projects in the {junit5-samples-repo}[`junit5-samples`] repository to
 find out how this is done with Gradle and Maven.
 
-[[migrating-from-junit4-tip]]
+[[migrating-from-junit4-tips]]
 === Migration Tips
 
 The following are things you have to watch out for when migrating existing JUnit 4 tests

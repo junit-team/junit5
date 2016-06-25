@@ -8,7 +8,7 @@
 include::{testDir}/example/FirstJUnit5Tests.java[tags=user_guide]
 ----
 
-[[annotations]]
+[[writing-tests-annotations]]
 === Annotations
 
 JUnit Jupiter supports the following annotations for configuring tests and extending the framework.
@@ -21,7 +21,7 @@ module.
 | Annotation         | Description
 
 | `@Test`            | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit Jupiter operate based on their own dedicated annotations.
-| `@TestFactory`     | Denotes that a method is a test factory for <<dynamic-tests, dynamic tests>>
+| `@TestFactory`     | Denotes that a method is a test factory for <<writing-tests-dynamic-tests, dynamic tests>>
 | `@DisplayName`     | Declares a custom display name for the test class or test method
 | `@BeforeEach`      | Denotes that the annotated method should be executed _before_ *each* `@Test` method in the current class; analogous to JUnit 4's `@Before`. Such methods are _inherited_.
 | `@AfterEach`       | Denotes that the annotated method should be executed _after_ *each* `@Test` method in the current class; analogous to JUnit 4's `@After`. Such methods are _inherited_.
@@ -30,10 +30,10 @@ module.
 | `@Nested`          | Denotes that the annotated class is a nested, non-static test class. Due to restrictions of the Java language, `@BeforeAll` and `@AfterAll` methods cannot be used in a `@Nested` test class.
 | `@Tag`             | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4
 | `@Disabled`        | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore`
-| `@ExtendWith`      | Used to register custom <<extension-model, extensions>>
+| `@ExtendWith`      | Used to register custom <<extensions,extensions>>
 |===
 
-[[meta-annotations]]
+[[writing-tests-meta-annotations]]
 ==== Meta-Annotations and Composed Annotations
 
 JUnit Jupiter annotations can be used as _meta-annotations_. That means that you can define
@@ -41,7 +41,7 @@ your own _composed annotation_ that will automatically _inherit_ the semantics o
 meta-annotations.
 
 For example, instead of copying and pasting `@Tag("fast")` throughout your code base (see
-<<tagging-and-filtering>>), you can create a custom _composed annotation_ named `@Fast`
+<<writing-tests-tagging-and-filtering>>), you can create a custom _composed annotation_ named `@Fast`
 as follows. `@Fast` can then be used as a drop-in replacement for `@Tag("fast")`.
 
 [source,java,indent=0]
@@ -50,7 +50,7 @@ as follows. `@Fast` can then be used as a drop-in replacement for `@Tag("fast")`
 include::{testDir}/example/Fast.java[tags=user_guide]
 ----
 
-[[tests-standard]]
+[[writing-tests-standard]]
 === Standard Test Class
 
 [source,java,indent=0]
@@ -62,7 +62,7 @@ include::{testDir}/example/StandardTests.java[tags=user_guide]
 
 Notice that neither test classes nor test methods need to be `public`.
 
-[[tests-display]]
+[[writing-tests-display-names]]
 === Display Names
 
 Test classes and test methods can declare custom display names -- with spaces, special
@@ -74,7 +74,7 @@ characters, and even emojis -- that will be displayed by test runners and test r
 include::{testDir}/example/DisplayNameDemo.java[tags=user_guide]
 ----
 
-[[tests-assertions]]
+[[writing-tests-assertions]]
 === Assertions
 
 JUnit Jupiter comes with many of the assertion methods that JUnit 4 has and adds a few that
@@ -87,7 +87,7 @@ methods in the `{Assertions}` class.
 include::{testDir}/example/AssertionsDemo.java[tags=user_guide]
 ----
 
-[[tests-assumptions]]
+[[writing-tests-assumptions]]
 === Assumptions
 
 JUnit Jupiter comes with a subset of the assumption methods that JUnit 4 provides and adds a
@@ -100,7 +100,7 @@ are static methods in the `{Assumptions}` class.
 include::{testDir}/example/AssumptionsDemo.java[tags=user_guide]
 ----
 
-[[tests-disabling]]
+[[writing-tests-disabling]]
 === Disabling Tests
 
 Here's a disabled test case.
@@ -119,7 +119,7 @@ And here's a test case with a disabled test method.
 include::{testDir}/example/DisabledTestsDemo.java[tags=user_guide]
 ----
 
-[[tagging-and-filtering]]
+[[writing-tests-tagging-and-filtering]]
 === Tagging and Filtering
 
 Test classes and methods can be tagged. Those tags can later be used to filter
@@ -132,7 +132,7 @@ include::{testDir}/example/TaggingDemo.java[tags=user_guide]
 ----
 
 
-[[tests-nested]]
+[[writing-tests-nested]]
 === Nested Tests
 
 Nested tests give the test writer more capabilities to express the relationship among
@@ -150,7 +150,7 @@ Notice that _only non-static nested classes_ (i.e. _inner classes_) can serve as
 to be full members of the test class family with one exception: `@BeforeAll` and
 `@AfterAll` do not work, because Java does not allow `static` members in inner classes.
 
-[[tests-dependency-insection]]
+[[writing-tests-dependency-injection]]
 === Dependency Injection for Constructors and Methods
 
 In all prior JUnit versions, test constructors or methods were not allowed to have
@@ -198,8 +198,8 @@ Using `@RunWith(JUnitPlatform.class)` will even output all reported entries to `
 include::{testDir}/example/TestReporterDemo.java[tags=user_guide]
 ----
 
-Other parameter resolvers must be explicitly enabled by registering an appropriate
-<<extension-model,extension>> via `@ExtendWith`.
+Other parameter resolvers must be explicitly enabled by registering appropriate
+<<extensions,extensions>> via `@ExtendWith`.
 
 * Check out the `{MockitoExtension}` for an example of a `{ParameterResolver}`. While not
   intended to be production-ready, it demonstrates the simplicity and expressiveness of
@@ -230,7 +230,7 @@ class MyMockitoTest {
 }
 ----
 
-[[tests-interface-default]]
+[[writing-tests-interface-default-methods]]
 === Interface Default Methods
 
 JUnit Jupiter allows `@Test`, `@TestFactory`, `@BeforeEach`, and `@AfterEach` to be declared on
@@ -268,10 +268,10 @@ include::{testDir}/example/defaultmethods/StringTests.java[tags=user_guide]
 The above tests are merely meant as examples and therefore not complete.
 
 
-[[dynamic-tests]]
+[[writing-tests-dynamic-tests]]
 === Dynamic Tests
 
-The standard `@Test` annotation in JUnit Jupiter described in <<annotations>>
+The standard `@Test` annotation in JUnit Jupiter described in <<writing-tests-annotations>>
 is very similar to the `@Test` annotation in JUnit 4.
 Both describe methods that implement test cases.
 These test cases are static in the sense that they are fully specified at compile-time,
@@ -307,7 +307,7 @@ As of JUnit Jupiter {jupiter-version}, dynamic tests must always be created by f
 methods; however, this might be complemented by a registration facility in a later
 release.
 
-[[dynamic-tests-examples]]
+[[writing-tests-dynamic-tests-examples]]
 ==== Dynamic Test Examples
 
 The following `DynamicTestsDemo` class demonstrates several examples of test factories and dynamic tests.
