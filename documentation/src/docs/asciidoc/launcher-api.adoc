@@ -16,6 +16,7 @@ The launching API is in the `{junit-platform-launcher}` module.
 An example consumer of the launching API is the `{ConsoleRunner}` in the
 `{junit-platform-console}` project.
 
+[[launcher-api-discovering]]
 ==== Discovering Tests
 
 Introducing _test discovery_ as a dedicated feature of JUnit itself will (hopefully) free
@@ -46,6 +47,7 @@ traverse the tree, retrieve details about a node, and get a link to the original
 (like class, method, or file position). Every node in the test plan tree has a _unique
 ID_ that can be used to invoke a particular test or group of tests.
 
+[[launcher-api-running]]
 ==== Running Tests
 
 There are two ways to execute tests. Clients can either use the same test specification
@@ -63,7 +65,7 @@ There's currently no result object, but you can easily use a listener to aggrega
 final results in an object of your own. For an example see the
 `{SummaryGeneratingListener}`.
 
-
+[[launcher-api-plugging-in]]
 ==== Plugging in Your Own Test Engine
 
 The current snapshot provides two `TestEngine` implementations out of the box:

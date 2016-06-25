@@ -4,12 +4,13 @@
 The goal of this document is to provide comprehensive reference documentation for both
 programmers writing tests and extension authors.
 
+[[overview-supported]]
 === Supported Java Versions
 
 JUnit 5 only supports Java 8 and above. However, you can still test classes compiled with
 lower versions.
 
-
+[[installation]]
 == Installation
 
 Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
@@ -18,6 +19,7 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
 [[dependency-metadata]]
 === Dependency Metadata
 
+[[dependency-metadata-junit-jupiter]]
 ==== JUnit Jupiter
 
 * *Group ID*: `org.junit.jupiter`
@@ -26,6 +28,7 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
 ** `junit-jupiter-api`
 ** `junit-jupiter-engine`
 
+[[dependency-metadata-junit-platform]]
 ==== JUnit Platform
 
 * *Group ID*: `org.junit.platform`
@@ -39,12 +42,14 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
 ** `junit-platform-runner`
 ** `junit-platform-surefire-provider`
 
+[[dependency-metadata-junit-vintage]]
 ==== JUnit Vintage
 
 * *Group ID*: `org.junit.vintage`
 * *Version*: `{vintage-version}`
 * *Artifact ID*: `junit-vintage-engine`
 
+[[dependency-metadata-junit-jupiter-samples]]
 === JUnit Jupiter Sample Projects
 
 The {junit5-samples-repo}[`junit5-samples`] repository hosts a collection of sample
