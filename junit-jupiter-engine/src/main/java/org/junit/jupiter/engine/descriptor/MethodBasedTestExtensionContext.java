@@ -30,6 +30,8 @@ public final class MethodBasedTestExtensionContext extends AbstractExtensionCont
 
 	private final Object testInstance;
 
+	private Throwable testException;
+
 	public MethodBasedTestExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			MethodTestDescriptor testDescriptor, Object testInstance) {
 		super(parent, engineExecutionListener, testDescriptor);
@@ -64,6 +66,15 @@ public final class MethodBasedTestExtensionContext extends AbstractExtensionCont
 	@Override
 	public Object getTestInstance() {
 		return this.testInstance;
+	}
+
+	@Override
+	public Optional<Throwable> getTestException() {
+		return Optional.ofNullable(this.testException);
+	}
+
+	void setTestException(Throwable testException) {
+		this.testException = testException;
 	}
 
 }

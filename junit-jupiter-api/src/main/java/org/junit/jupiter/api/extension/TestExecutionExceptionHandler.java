@@ -18,6 +18,10 @@ import org.junit.platform.commons.meta.API;
  * {@code TestExecutionExceptionHandler} defines the API for {@link Extension
  * Extensions} that wish to handle exceptions thrown during test execution.
  *
+ * <p>In this context, <em>test execution</em> refers to the physical
+ * invocation of a {@code @Test} method and not to any test-level extensions
+ * or callbacks.
+ *
  * <p>Common use cases include swallowing an exception if it's anticipated
  * or rolling back a transaction in certain error scenarios.
  *

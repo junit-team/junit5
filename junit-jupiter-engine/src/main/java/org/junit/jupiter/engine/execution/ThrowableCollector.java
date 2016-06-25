@@ -63,6 +63,24 @@ public class ThrowableCollector {
 	}
 
 	/**
+	 * Get the first {@link Throwable} collected by this
+	 * {@code ThrowableCollector}.
+	 *
+	 * <p>If this collector is not empty, the first collected {@code Throwable}
+	 * will be returned with any additional throwables
+	 * {@linkplain Throwable#addSuppressed(Throwable) suppressed} in the
+	 * first {@code Throwable}.
+	 *
+	 * @return the first collected {@code Throwable} or {@code null} if this
+	 * {@code ThrowableCollector} is empty
+	 * @see #isEmpty()
+	 * @see #assertEmpty()
+	 */
+	public Throwable getThrowable() {
+		return this.throwable;
+	}
+
+	/**
 	 * Determine if this {@code ThrowableCollector} is <em>empty</em> (i.e.,
 	 * has not collected any {@code Throwables}).
 	 */

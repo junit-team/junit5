@@ -12,11 +12,15 @@ package org.junit.jupiter.engine.extension;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
 import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,14 +41,18 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
  * in the {@link JupiterTestEngine}.
  *
  * @since 5.0
+ * @see BeforeAndAfterEachTests
  */
 public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngineTests {
 
 	private static List<String> callSequence = new ArrayList<>();
 
+	private static Optional<Throwable> actualExceptionInAfterTestExecution;
+
 	@BeforeEach
 	void resetCallSequence() {
 		callSequence.clear();
+		actualExceptionInAfterTestExecution = null;
 	}
 
 	@Test
@@ -145,6 +153,33 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 	}
 
 	@Test
+	public void beforeEachMethodThrowsAnException() {
+		TestDiscoveryRequest request = request().selectors(
+			selectClass(ExceptionInBeforeEachMethodTestCase.class)).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(0, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+
+		// @formatter:off
+		assertEquals(asList(
+			"beforeEachMethod", // throws an exception.
+				// fooBeforeCallback should not get invoked.
+					// test should not get invoked.
+				// fooAfterCallback should not get invoked.
+			"afterEachMethod"
+		), callSequence, "wrong call sequence");
+		// @formatter:on
+
+		assertNull(actualExceptionInAfterTestExecution,
+			"test exception (fooAfterCallback should not have been called)");
+	}
+
+	@Test
 	public void beforeTestExecutionCallbackThrowsAnException() {
 		TestDiscoveryRequest request = request().selectors(
 			selectClass(ExceptionInBeforeTestExecutionCallbackTestCase.class)).build();
@@ -169,12 +204,16 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 			"afterEachMethod"
 		), callSequence, "wrong call sequence");
 		// @formatter:on
+
+		assertNotNull(actualExceptionInAfterTestExecution, "test exception");
+		assertTrue(actualExceptionInAfterTestExecution.isPresent(), "test exception should be present");
+		assertEquals(EnigmaException.class, actualExceptionInAfterTestExecution.get().getClass());
 	}
 
 	@Test
-	public void beforeEachMethodThrowsAnException() {
+	public void afterTestExecutionCallbackThrowsAnException() {
 		TestDiscoveryRequest request = request().selectors(
-			selectClass(ExceptionInBeforeEachMethodTestCase.class)).build();
+			selectClass(ExceptionInAfterTestExecutionCallbackTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -186,13 +225,47 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 		// @formatter:off
 		assertEquals(asList(
-			"beforeEachMethod", // throws an exception.
-				// fooBeforeCallback should not get invoked.
-					// test should not get invoked.
-				// fooAfterCallback should not get invoked.
+			"beforeEachMethod",
+				"fooBeforeCallback",
+				"barBeforeCallback",
+					"test",
+				"barAfterCallback",
+				"exceptionThrowingAfterTestExecutionCallback", // throws an exception.
+				"fooAfterCallback",
 			"afterEachMethod"
 		), callSequence, "wrong call sequence");
 		// @formatter:on
+
+		assertNotNull(actualExceptionInAfterTestExecution, "test exception");
+		assertTrue(actualExceptionInAfterTestExecution.isPresent(), "test exception should be present");
+		assertEquals(EnigmaException.class, actualExceptionInAfterTestExecution.get().getClass());
+	}
+
+	@Test
+	public void testMethodThrowsAnException() {
+		TestDiscoveryRequest request = request().selectors(selectClass(ExceptionInTestMethodTestCase.class)).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(0, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+
+		// @formatter:off
+		assertEquals(asList(
+			"beforeEachMethod",
+				"fooBeforeCallback",
+					"test", // throws an exception.
+				"fooAfterCallback",
+			"afterEachMethod"
+		), callSequence, "wrong call sequence");
+		// @formatter:on
+
+		assertNotNull(actualExceptionInAfterTestExecution, "test exception");
+		assertTrue(actualExceptionInAfterTestExecution.isPresent(), "test exception should be present");
+		assertEquals(EnigmaException.class, actualExceptionInAfterTestExecution.get().getClass());
 	}
 
 	// -------------------------------------------------------------------------
@@ -287,18 +360,58 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 		}
 	}
 
+	@ExtendWith({ FooTestExecutionCallbacks.class, ExceptionThrowingAfterTestExecutionCallback.class,
+			BarTestExecutionCallbacks.class })
+	private static class ExceptionInAfterTestExecutionCallbackTestCase {
+
+		@BeforeEach
+		void beforeEach() {
+			callSequence.add("beforeEachMethod");
+		}
+
+		@Test
+		void test() {
+			callSequence.add("test");
+		}
+
+		@AfterEach
+		void afterEach() {
+			callSequence.add("afterEachMethod");
+		}
+	}
+
 	@ExtendWith(FooTestExecutionCallbacks.class)
 	private static class ExceptionInBeforeEachMethodTestCase {
 
 		@BeforeEach
 		void beforeEach() {
 			callSequence.add("beforeEachMethod");
-			throw new RuntimeException("@BeforeEach");
+			throw new EnigmaException("@BeforeEach");
 		}
 
 		@Test
 		void test() {
 			callSequence.add("test");
+		}
+
+		@AfterEach
+		void afterEach() {
+			callSequence.add("afterEachMethod");
+		}
+	}
+
+	@ExtendWith(FooTestExecutionCallbacks.class)
+	private static class ExceptionInTestMethodTestCase {
+
+		@BeforeEach
+		void beforeEach() {
+			callSequence.add("beforeEachMethod");
+		}
+
+		@Test
+		void test() {
+			callSequence.add("test");
+			throw new EnigmaException("@Test");
 		}
 
 		@AfterEach
@@ -319,6 +432,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 		@Override
 		public void afterTestExecution(TestExtensionContext context) {
 			callSequence.add("fooAfterCallback");
+			actualExceptionInAfterTestExecution = context.getTestException();
 		}
 	}
 
@@ -353,7 +467,24 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 		@Override
 		public void beforeTestExecution(TestExtensionContext context) {
 			callSequence.add("exceptionThrowingBeforeTestExecutionCallback");
-			throw new RuntimeException("BeforeTestExecutionCallback");
+			throw new EnigmaException("BeforeTestExecutionCallback");
+		}
+	}
+
+	private static class ExceptionThrowingAfterTestExecutionCallback implements AfterTestExecutionCallback {
+
+		@Override
+		public void afterTestExecution(TestExtensionContext context) {
+			callSequence.add("exceptionThrowingAfterTestExecutionCallback");
+			throw new EnigmaException("AfterTestExecutionCallback");
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private static class EnigmaException extends RuntimeException {
+
+		EnigmaException(String message) {
+			super(message);
 		}
 	}
 
