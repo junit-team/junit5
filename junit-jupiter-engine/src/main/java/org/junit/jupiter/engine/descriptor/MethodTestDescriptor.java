@@ -172,7 +172,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 	private void invokeBeforeEachCallbacks(JupiterEngineExecutionContext context) {
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		for (BeforeEachCallback callback : registry.getExtensions(BeforeEachCallback.class)) {
@@ -185,7 +185,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 	private void invokeBeforeEachMethods(JupiterEngineExecutionContext context) {
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		for (BeforeEachMethodAdapter adapter : registry.getExtensions(BeforeEachMethodAdapter.class)) {
@@ -198,7 +198,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 	private void invokeBeforeTestExecutionCallbacks(JupiterEngineExecutionContext context) {
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		for (BeforeTestExecutionCallback callback : registry.getExtensions(BeforeTestExecutionCallback.class)) {
@@ -210,7 +210,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	protected void invokeTestMethod(JupiterEngineExecutionContext context) {
-		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		throwableCollector.execute(() -> {
@@ -250,7 +250,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 	private void invokeAfterTestExecutionCallbacks(JupiterEngineExecutionContext context) {
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		registry.getReversedExtensions(AfterTestExecutionCallback.class).forEach(
@@ -259,7 +259,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 	private void invokeAfterEachMethods(JupiterEngineExecutionContext context) {
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		registry.getReversedExtensions(AfterEachMethodAdapter.class).forEach(
@@ -268,7 +268,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 
 	private void invokeAfterEachCallbacks(JupiterEngineExecutionContext context) {
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
+		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
 		registry.getReversedExtensions(AfterEachCallback.class).forEach(
