@@ -28,8 +28,8 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 
 	private final State state;
 
-	// The ThrowableCollector must not be tied to the State object.
-	private final ThrowableCollector throwableCollector = new ThrowableCollector();
+	// The following is not "cloneable" State.
+	private boolean beforeAllMethodsExecuted = false;
 
 	public JupiterEngineExecutionContext(EngineExecutionListener executionListener,
 			ConfigurationParameters configurationParameters) {
@@ -61,23 +61,19 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 	}
 
 	public ThrowableCollector getThrowableCollector() {
-		return this.throwableCollector;
+		return this.state.throwableCollector;
 	}
 
 	public void beforeAllMethodsExecuted(boolean beforeAllMethodsExecuted) {
-		this.state.beforeAllMethodsExecuted = beforeAllMethodsExecuted;
+		this.beforeAllMethodsExecuted = beforeAllMethodsExecuted;
 	}
 
 	public boolean beforeAllMethodsExecuted() {
-		return this.state.beforeAllMethodsExecuted;
+		return this.beforeAllMethodsExecuted;
 	}
 
 	public Builder extend() {
-		return builder(this);
-	}
-
-	private static Builder builder(JupiterEngineExecutionContext context) {
-		return new Builder(context.state, null);
+		return new Builder(this.state);
 	}
 
 	private static final class State implements Cloneable {
@@ -87,7 +83,7 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 		TestInstanceProvider testInstanceProvider;
 		ExtensionRegistry extensionRegistry;
 		ExtensionContext extensionContext;
-		boolean beforeAllMethodsExecuted = false;
+		ThrowableCollector throwableCollector;
 
 		State(EngineExecutionListener executionListener, ConfigurationParameters configurationParameters) {
 			this.executionListener = executionListener;
@@ -109,11 +105,10 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 	public static class Builder {
 
 		private State originalState;
-		private State newState;
+		private State newState = null;
 
-		private Builder(State originalState, State state) {
+		private Builder(State originalState) {
 			this.originalState = originalState;
-			this.newState = state;
 		}
 
 		public Builder withTestInstanceProvider(TestInstanceProvider testInstanceProvider) {
@@ -128,6 +123,11 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 
 		public Builder withExtensionContext(ExtensionContext extensionContext) {
 			newState().extensionContext = extensionContext;
+			return this;
+		}
+
+		public Builder withThrowableCollector(ThrowableCollector throwableCollector) {
+			newState().throwableCollector = throwableCollector;
 			return this;
 		}
 

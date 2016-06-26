@@ -122,13 +122,15 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		ExtensionRegistry extensionRegistry = populateNewExtensionRegistryFromExtendWith(this.testMethod,
 			context.getExtensionRegistry());
 		Object testInstance = context.getTestInstanceProvider().getTestInstance();
+		ThrowableCollector throwableCollector = new ThrowableCollector();
 		TestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, testInstance);
+			context.getExecutionListener(), this, testInstance, throwableCollector);
 
 		// @formatter:off
 		return context.extend()
 				.withExtensionRegistry(extensionRegistry)
 				.withExtensionContext(testExtensionContext)
+				.withThrowableCollector(throwableCollector)
 				.build();
 		// @formatter:on
 	}
@@ -176,7 +178,6 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		for (BeforeEachCallback callback : registry.getExtensions(BeforeEachCallback.class)) {
 			throwableCollector.execute(() -> callback.beforeEach(testExtensionContext));
 			if (throwableCollector.isNotEmpty()) {
-				testExtensionContext.setTestException(throwableCollector.getThrowable());
 				break;
 			}
 		}
@@ -190,7 +191,6 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		for (BeforeEachMethodAdapter adapter : registry.getExtensions(BeforeEachMethodAdapter.class)) {
 			throwableCollector.execute(() -> adapter.invokeBeforeEachMethod(testExtensionContext));
 			if (throwableCollector.isNotEmpty()) {
-				testExtensionContext.setTestException(throwableCollector.getThrowable());
 				break;
 			}
 		}
@@ -204,7 +204,6 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		for (BeforeTestExecutionCallback callback : registry.getExtensions(BeforeTestExecutionCallback.class)) {
 			throwableCollector.execute(() -> callback.beforeTestExecution(testExtensionContext));
 			if (throwableCollector.isNotEmpty()) {
-				testExtensionContext.setTestException(throwableCollector.getThrowable());
 				break;
 			}
 		}
@@ -224,7 +223,6 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 				invokeTestExecutionExceptionHandlers(context.getExtensionRegistry(), testExtensionContext, throwable);
 			}
 		});
-		testExtensionContext.setTestException(throwableCollector.getThrowable());
 	}
 
 	private void invokeTestExecutionExceptionHandlers(ExtensionRegistry registry, TestExtensionContext context,
@@ -255,10 +253,8 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		registry.getReversedExtensions(AfterTestExecutionCallback.class).forEach(callback -> {
-			throwableCollector.execute(() -> callback.afterTestExecution(testExtensionContext));
-			testExtensionContext.setTestException(throwableCollector.getThrowable());
-		});
+		registry.getReversedExtensions(AfterTestExecutionCallback.class).forEach(
+			callback -> throwableCollector.execute(() -> callback.afterTestExecution(testExtensionContext)));
 	}
 
 	private void invokeAfterEachMethods(JupiterEngineExecutionContext context) {
@@ -266,10 +262,8 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		registry.getReversedExtensions(AfterEachMethodAdapter.class).forEach(adapter -> {
-			throwableCollector.execute(() -> adapter.invokeAfterEachMethod(testExtensionContext));
-			testExtensionContext.setTestException(throwableCollector.getThrowable());
-		});
+		registry.getReversedExtensions(AfterEachMethodAdapter.class).forEach(
+			adapter -> throwableCollector.execute(() -> adapter.invokeAfterEachMethod(testExtensionContext)));
 	}
 
 	private void invokeAfterEachCallbacks(JupiterEngineExecutionContext context) {
@@ -277,10 +271,8 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		registry.getReversedExtensions(AfterEachCallback.class).forEach(callback -> {
-			throwableCollector.execute(() -> callback.afterEach(testExtensionContext));
-			testExtensionContext.setTestException(throwableCollector.getThrowable());
-		});
+		registry.getReversedExtensions(AfterEachCallback.class).forEach(
+			callback -> throwableCollector.execute(() -> callback.afterEach(testExtensionContext)));
 	}
 
 }

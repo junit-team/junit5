@@ -84,7 +84,7 @@ public class ExtensionContextTests {
 			() -> assertTrue(nestedExtensionContext.getTags().contains("nested-tag"), "nested-tag missing"));
 
 		MethodBasedTestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(
-			outerExtensionContext, null, methodTestDescriptor, new OuterClass());
+			outerExtensionContext, null, methodTestDescriptor, new OuterClass(), new ThrowableCollector());
 		Assertions.assertAll("tags in method", //
 			() -> assertEquals(2, testExtensionContext.getTags().size()), //
 			() -> assertTrue(testExtensionContext.getTags().contains("outer-tag"), "outer-tag missing"), //
@@ -99,7 +99,7 @@ public class ExtensionContextTests {
 		ClassBasedContainerExtensionContext classExtensionContext = new ClassBasedContainerExtensionContext(null, null,
 			classTestDescriptor);
 		MethodBasedTestExtensionContext testExtensionContext = new MethodBasedTestExtensionContext(
-			classExtensionContext, null, methodTestDescriptor, new OuterClass());
+			classExtensionContext, null, methodTestDescriptor, new OuterClass(), new ThrowableCollector());
 		Assertions.assertAll("methodContext", //
 			() -> assertEquals(OuterClass.class, testExtensionContext.getTestClass().get()), //
 			() -> assertEquals(methodTestDescriptor.getDisplayName(), testExtensionContext.getDisplayName()), //
@@ -138,7 +138,7 @@ public class ExtensionContextTests {
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
 		ExtensionContext parentContext = new ClassBasedContainerExtensionContext(null, null, classTestDescriptor);
 		MethodBasedTestExtensionContext childContext = new MethodBasedTestExtensionContext(parentContext, null,
-			methodTestDescriptor, new OuterClass());
+			methodTestDescriptor, new OuterClass(), new ThrowableCollector());
 
 		ExtensionContext.Store childStore = childContext.getStore();
 		ExtensionContext.Store parentStore = parentContext.getStore();

@@ -137,6 +137,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 				.withTestInstanceProvider(testInstanceProvider(context, registry, containerExtensionContext))
 				.withExtensionRegistry(registry)
 				.withExtensionContext(containerExtensionContext)
+				.withThrowableCollector(new ThrowableCollector())
 				.build();
 		// @formatter:on
 	}

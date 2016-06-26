@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.EngineExecutionListener;
 
@@ -30,12 +31,13 @@ public final class MethodBasedTestExtensionContext extends AbstractExtensionCont
 
 	private final Object testInstance;
 
-	private Throwable testException;
+	private final ThrowableCollector throwableCollector;
 
 	public MethodBasedTestExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			MethodTestDescriptor testDescriptor, Object testInstance) {
+			MethodTestDescriptor testDescriptor, Object testInstance, ThrowableCollector throwableCollector) {
 		super(parent, engineExecutionListener, testDescriptor);
 		this.testInstance = testInstance;
+		this.throwableCollector = throwableCollector;
 	}
 
 	@Override
@@ -70,11 +72,7 @@ public final class MethodBasedTestExtensionContext extends AbstractExtensionCont
 
 	@Override
 	public Optional<Throwable> getTestException() {
-		return Optional.ofNullable(this.testException);
-	}
-
-	void setTestException(Throwable testException) {
-		this.testException = testException;
+		return Optional.ofNullable(this.throwableCollector.getThrowable());
 	}
 
 }
