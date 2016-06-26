@@ -199,7 +199,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		for (BeforeAllCallback callback : registry.toList(BeforeAllCallback.class)) {
+		for (BeforeAllCallback callback : registry.getExtensions(BeforeAllCallback.class)) {
 			throwableCollector.execute(() -> callback.beforeAll(extensionContext));
 			if (throwableCollector.isNotEmpty()) {
 				break;
@@ -234,7 +234,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		ContainerExtensionContext extensionContext = (ContainerExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		registry.reverseStream(AfterAllCallback.class)//
+		registry.getReversedExtensions(AfterAllCallback.class)//
 				.forEach(extension -> throwableCollector.execute(() -> extension.afterAll(extensionContext)));
 	}
 

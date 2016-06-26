@@ -173,7 +173,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		for (BeforeEachCallback callback : registry.toList(BeforeEachCallback.class)) {
+		for (BeforeEachCallback callback : registry.getExtensions(BeforeEachCallback.class)) {
 			throwableCollector.execute(() -> callback.beforeEach(testExtensionContext));
 			if (throwableCollector.isNotEmpty()) {
 				testExtensionContext.setTestException(throwableCollector.getThrowable());
@@ -187,7 +187,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		for (BeforeEachMethodAdapter adapter : registry.toList(BeforeEachMethodAdapter.class)) {
+		for (BeforeEachMethodAdapter adapter : registry.getExtensions(BeforeEachMethodAdapter.class)) {
 			throwableCollector.execute(() -> adapter.invokeBeforeEachMethod(testExtensionContext));
 			if (throwableCollector.isNotEmpty()) {
 				testExtensionContext.setTestException(throwableCollector.getThrowable());
@@ -201,7 +201,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		for (BeforeTestExecutionCallback callback : registry.toList(BeforeTestExecutionCallback.class)) {
+		for (BeforeTestExecutionCallback callback : registry.getExtensions(BeforeTestExecutionCallback.class)) {
 			throwableCollector.execute(() -> callback.beforeTestExecution(testExtensionContext));
 			if (throwableCollector.isNotEmpty()) {
 				testExtensionContext.setTestException(throwableCollector.getThrowable());
@@ -230,7 +230,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 	private void invokeTestExecutionExceptionHandlers(ExtensionRegistry registry, TestExtensionContext context,
 			Throwable ex) {
 
-		invokeTestExecutionExceptionHandlers(ex, registry.toList(TestExecutionExceptionHandler.class), context);
+		invokeTestExecutionExceptionHandlers(ex, registry.getExtensions(TestExecutionExceptionHandler.class), context);
 	}
 
 	private void invokeTestExecutionExceptionHandlers(Throwable ex, List<TestExecutionExceptionHandler> handlers,
@@ -255,7 +255,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		registry.reverseStream(AfterTestExecutionCallback.class).forEach(callback -> {
+		registry.getReversedExtensions(AfterTestExecutionCallback.class).forEach(callback -> {
 			throwableCollector.execute(() -> callback.afterTestExecution(testExtensionContext));
 			testExtensionContext.setTestException(throwableCollector.getThrowable());
 		});
@@ -266,7 +266,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		registry.reverseStream(AfterEachMethodAdapter.class).forEach(adapter -> {
+		registry.getReversedExtensions(AfterEachMethodAdapter.class).forEach(adapter -> {
 			throwableCollector.execute(() -> adapter.invokeAfterEachMethod(testExtensionContext));
 			testExtensionContext.setTestException(throwableCollector.getThrowable());
 		});
@@ -277,7 +277,7 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		MethodBasedTestExtensionContext testExtensionContext = (MethodBasedTestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		registry.reverseStream(AfterEachCallback.class).forEach(callback -> {
+		registry.getReversedExtensions(AfterEachCallback.class).forEach(callback -> {
 			throwableCollector.execute(() -> callback.afterEach(testExtensionContext));
 			testExtensionContext.setTestException(throwableCollector.getThrowable());
 		});

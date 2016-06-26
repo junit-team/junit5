@@ -98,8 +98,8 @@ public class ExtensionRegistryTests {
 
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
-		registry.getRegisteredExtensions(MyExtensionApi.class).forEach(registeredExtension -> {
-			assertEquals(MyExtension.class.getName(), registeredExtension.getSource().getClass().getName());
+		registry.getExtensions(MyExtensionApi.class).forEach(extension -> {
+			assertEquals(MyExtension.class.getName(), extension.getClass().getName());
 			hasRun.set(true);
 		});
 
