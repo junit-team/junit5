@@ -18,7 +18,7 @@ Consult the wiki for details on the current [JUnit 5 roadmap](https://github.com
 
 The [JUnit 5 User Guide] is available online.
 
-### Javadoc
+### API
 
 The [JUnit 5 Javadoc] is available online.
 
@@ -71,21 +71,37 @@ gradlew clean install
 
 ## Dependency Metadata
 
-- **Group ID**: `org.junit`
-- **Version**: `5.0.0-ALPHA` OR `5.0.0-SNAPSHOT`
-- **Artifact IDs**:
-	- `junit-jupiter-api`
-	- `junit-jupiter-engine`
-	- `junit-platform-commons`
-	- `junit-platform-console`
-	- `junit-platform-engine`
-	- `junit-platform-gradle-plugin`
-	- `junit-platform-launcher`
-	- `junit-platform-runner`
-	- `junit-platform-surefire-provider`
-	- `junit-vintage-engine`
+The following sections list the dependency metadata for the JUnit Platform, JUnit
+Jupiter, and JUnit Vintage.
 
 See also: <https://oss.sonatype.org/content/repositories/snapshots/org/junit/>
+
+### JUnit Platform
+
+- **Group ID**: `org.junit.platform`
+- **Version**: `1.0.0-SNAPSHOT`
+- **Artifact IDs**:
+  - `junit-platform-commons`
+  - `junit-platform-console`
+  - `junit-platform-engine`
+  - `junit-platform-gradle-plugin`
+  - `junit-platform-launcher`
+  - `junit-platform-runner`
+  - `junit-platform-surefire-provider`
+
+### JUnit Jupiter
+
+- **Group ID**: `org.junit.jupiter`
+- **Version**: `5.0.0-SNAPSHOT`
+- **Artifact IDs**:
+  - `junit-jupiter-api`
+  - `junit-jupiter-engine`
+
+### JUnit Vintage
+
+- **Group ID**: `org.junit.vintage`
+- **Version**: `4.12.0-SNAPSHOT`
+- **Artifact ID**: `junit-vintage-engine`
 
 
 [Atlassian]: https://www.atlassian.com/
