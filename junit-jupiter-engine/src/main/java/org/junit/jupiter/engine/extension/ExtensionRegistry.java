@@ -17,11 +17,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
@@ -43,20 +43,8 @@ public class ExtensionRegistry {
 
 	private static final Logger LOG = Logger.getLogger(ExtensionRegistry.class.getName());
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static final List<RegisteredExtension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(
-		Arrays.asList(new RegisteredExtension(new DisabledCondition(), ExtensionRegistry.class),
-			new RegisteredExtension(new TestInfoParameterResolver(), ExtensionRegistry.class),
-			new RegisteredExtension(new TestReporterParameterResolver(), ExtensionRegistry.class)));
-
-	/**
-	 * Factory for creating a new empty root registry.
-	 *
-	 * @return a new {@code ExtensionRegistry}
-	 */
-	public static ExtensionRegistry createEmptyRegistry() {
-		return new ExtensionRegistry(Optional.empty());
-	}
+	private static final List<Extension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(
+		Arrays.asList(new DisabledCondition(), new TestInfoParameterResolver(), new TestReporterParameterResolver()));
 
 	/**
 	 * Factory for creating and populating a new root registry with the default
@@ -65,7 +53,7 @@ public class ExtensionRegistry {
 	 * @return a new {@code ExtensionRegistry}
 	 */
 	public static ExtensionRegistry createRegistryWithDefaultExtensions() {
-		ExtensionRegistry extensionRegistry = new ExtensionRegistry(Optional.empty());
+		ExtensionRegistry extensionRegistry = new ExtensionRegistry(null);
 		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
 		return extensionRegistry;
 	}
@@ -84,49 +72,19 @@ public class ExtensionRegistry {
 
 		Preconditions.notNull(parentRegistry, "parentRegistry must not be null");
 
-		ExtensionRegistry registry = new ExtensionRegistry(Optional.of(parentRegistry));
+		ExtensionRegistry registry = new ExtensionRegistry(parentRegistry);
 		extensionTypes.forEach(registry::registerExtension);
 		return registry;
 	}
 
-	private final Optional<ExtensionRegistry> parent;
+	private final ExtensionRegistry parent;
 
 	private final Set<Class<? extends Extension>> registeredExtensionTypes = new LinkedHashSet<>();
 
-	private final List<RegisteredExtension<?>> registeredExtensions = new ArrayList<>();
+	private final List<Extension> registeredExtensions = new ArrayList<>();
 
-	ExtensionRegistry(Optional<ExtensionRegistry> parent) {
+	private ExtensionRegistry(ExtensionRegistry parent) {
 		this.parent = parent;
-	}
-
-	/**
-	 * @return all extension types registered in this registry or one of its ancestors
-	 */
-	Set<Class<? extends Extension>> getRegisteredExtensionTypes() {
-		Set<Class<? extends Extension>> allRegisteredExtensionTypes = new LinkedHashSet<>();
-		this.parent.ifPresent(
-			parentRegistry -> allRegisteredExtensionTypes.addAll(parentRegistry.getRegisteredExtensionTypes()));
-		allRegisteredExtensionTypes.addAll(this.registeredExtensionTypes);
-		return Collections.unmodifiableSet(allRegisteredExtensionTypes);
-	}
-
-	/**
-	 * @return all {@code RegisteredExtensions} in this registry or one of its ancestors
-	 */
-	@SuppressWarnings("unchecked")
-	<E extends Extension> List<RegisteredExtension<E>> getRegisteredExtensions(Class<E> extensionType) {
-
-		List<RegisteredExtension<E>> extensions = new ArrayList<>();
-		this.parent.ifPresent(
-			parentRegistry -> extensions.addAll(parentRegistry.getRegisteredExtensions(extensionType)));
-
-		// @formatter:off
-		this.registeredExtensions.stream()
-				.filter(registeredExtension -> extensionType.isAssignableFrom(registeredExtension.getExtension().getClass()))
-				.forEach(extension -> extensions.add((RegisteredExtension<E>) extension));
-		// @formatter:on
-
-		return extensions;
 	}
 
 	/**
@@ -138,13 +96,14 @@ public class ExtensionRegistry {
 	 * @see #stream(Class)
 	 */
 	public <E extends Extension> List<E> getExtensions(Class<E> extensionType) {
-
 		List<E> extensions = new ArrayList<>();
-		this.parent.ifPresent(parent -> extensions.addAll(parent.getExtensions(extensionType)));
+
+		if (this.parent != null) {
+			extensions.addAll(this.parent.getExtensions(extensionType));
+		}
 
 		// @formatter:off
 		this.registeredExtensions.stream()
-				.map(RegisteredExtension::getExtension)
 				.filter(extension -> extensionType.isAssignableFrom(extension.getClass()))
 				.map(extensionType::cast)
 				.forEach(extensions::add);
@@ -158,6 +117,7 @@ public class ExtensionRegistry {
 	 * the specified type, in reverse order.
 	 *
 	 * @param extensionType the type of {@link Extension} to get
+	 * @see #getExtensions(Class)
 	 * @see #stream(Class)
 	 */
 	public <E extends Extension> List<E> getReversedExtensions(Class<E> extensionType) {
@@ -188,29 +148,40 @@ public class ExtensionRegistry {
 	 * @param extensionType the type of extension to register
 	 */
 	void registerExtension(Class<? extends Extension> extensionType) {
-
-		boolean extensionAlreadyRegistered = getRegisteredExtensionTypes().stream().anyMatch(
-			registeredType -> registeredType.equals(extensionType));
-
+		boolean extensionAlreadyRegistered = this.registeredExtensionTypes.contains(extensionType);
 		if (!extensionAlreadyRegistered) {
 			registerExtension(ReflectionUtils.newInstance(extensionType));
 			this.registeredExtensionTypes.add(extensionType);
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
-	private void registerDefaultExtension(RegisteredExtension registeredExtension) {
-		this.registeredExtensions.add(registeredExtension);
-		this.registeredExtensionTypes.add(registeredExtension.getExtension().getClass());
+	private void registerDefaultExtension(Extension extension) {
+		this.registeredExtensions.add(extension);
+		this.registeredExtensionTypes.add(extension.getClass());
 	}
 
 	private void registerExtension(Extension extension) {
 		registerExtension(extension, extension);
 	}
 
+	/**
+	 * Register the supplied {@link Extension} in this registry, without checking
+	 * if an extension of that type already exists in this registry.
+	 *
+	 * <h4>Semantics for Source</h4>
+	 * <p>If an extension is registered declaratively via {@link ExtendWith @ExtendWith},
+	 * the {@code source} and the {@code extension} should be the same object. However,
+	 * if an extension is registered programmatically &mdash; for example, as a lambda
+	 * expression or method reference &mdash; the {@code source} object should be the
+	 * underlying {@link java.lang.reflect.Method} that implements the extension
+	 * API, or similar.
+	 *
+	 * @param extension the extension to register
+	 * @param source the source of the extension
+	 */
 	public void registerExtension(Extension extension, Object source) {
 		LOG.finer(() -> String.format("Registering extension [%s] from source [%s].", extension, source));
-		this.registeredExtensions.add(new RegisteredExtension<>(extension, source));
+		this.registeredExtensions.add(extension);
 	}
 
 }
