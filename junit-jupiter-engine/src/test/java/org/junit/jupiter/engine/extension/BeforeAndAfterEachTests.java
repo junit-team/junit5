@@ -43,12 +43,14 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
 public class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 
 	private static final List<String> callSequence = new ArrayList<>();
+	private static final List<String> beforeEachMethodCallSequence = new ArrayList<>();
 
 	private static Optional<Throwable> actualExceptionInAfterEachCallback;
 
 	@BeforeEach
 	void resetCallSequence() {
 		callSequence.clear();
+		beforeEachMethodCallSequence.clear();
 		actualExceptionInAfterEachCallback = null;
 	}
 
@@ -222,16 +224,34 @@ public class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
 		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
 
+		// Since the JVM does not guarantee the order in which methods are
+		// returned via reflection (and since JUnit Jupiter does not yet
+		// support ordering of @BeforeEach methods), we have to figure out
+		// which @BeforeEach method got executed first in order to determine
+		// the expected call sequence.
+
 		// @formatter:off
-		assertEquals(asList(
+		List<String> list1 = asList(
 			"fooBeforeEachCallback",
 				"beforeEachMethod1", // throws an exception.
-				// "beforeEachMethod2" should not get invoked, but we cannot enforce ordering
+				// "beforeEachMethod2" should not get invoked
 					// test should not get invoked.
 				"afterEachMethod",
 			"fooAfterEachCallback"
-		), callSequence, "wrong call sequence");
+		);
+		List<String> list2 = asList(
+			"fooBeforeEachCallback",
+				"beforeEachMethod2",
+				"beforeEachMethod1", // throws an exception.
+					// test should not get invoked.
+				"afterEachMethod",
+			"fooAfterEachCallback"
+		);
 		// @formatter:on
+
+		List<String> expected = beforeEachMethodCallSequence.get(0).equals("beforeEachMethod1") ? list1 : list2;
+
+		assertEquals(expected, callSequence, "wrong call sequence");
 
 		assertTrue(actualExceptionInAfterEachCallback.isPresent(), "test exception should be present");
 		assertEquals(EnigmaException.class, actualExceptionInAfterEachCallback.get().getClass());
@@ -407,19 +427,16 @@ public class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 
 		@BeforeEach
 		void beforeEach1() {
+			beforeEachMethodCallSequence.add("beforeEachMethod1");
 			callSequence.add("beforeEachMethod1");
 			throw new EnigmaException("@BeforeEach");
 		}
 
-		// Since the JVM does not guarantee the order in which methods are
-		// returned via reflection (and since JUnit Jupiter does not yet
-		// support ordering of @BeforeEach methods), we unfortunately cannot
-		// include a 2nd @BeforeEach method in these tests.
-		//
-		// @BeforeEach
-		// void beforeEach2() {
-		// 	callSequence.add("beforeEachMethod2");
-		// }
+		@BeforeEach
+		void beforeEach2() {
+			beforeEachMethodCallSequence.add("beforeEachMethod2");
+			callSequence.add("beforeEachMethod2");
+		}
 
 		@Test
 		void test() {
