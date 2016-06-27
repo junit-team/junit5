@@ -12,8 +12,8 @@ package example;
 
 // tag::imports[]
 import static org.junit.platform.engine.discovery.ClassFilter.includeClassNamePattern;
-import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
-import static org.junit.platform.engine.discovery.PackageSelector.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.launcher.Launcher;

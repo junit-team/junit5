@@ -12,7 +12,7 @@ package org.junit.jupiter.engine;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.AfterEach;

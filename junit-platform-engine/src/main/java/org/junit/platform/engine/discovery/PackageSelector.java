@@ -13,7 +13,6 @@ package org.junit.platform.engine.discovery;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
@@ -26,19 +25,9 @@ import org.junit.platform.engine.DiscoverySelector;
 @API(Experimental)
 public class PackageSelector implements DiscoverySelector {
 
-	/**
-	 * Create a {@code PackageSelector} for the supplied package name.
-	 *
-	 * @param packageName the package name to select; never {@code null} or blank
-	 */
-	public static PackageSelector selectPackage(String packageName) {
-		Preconditions.notBlank(packageName, "Package name must not be null or blank");
-		return new PackageSelector(packageName);
-	}
-
 	private final String packageName;
 
-	private PackageSelector(String packageName) {
+	PackageSelector(String packageName) {
 		this.packageName = packageName;
 	}
 

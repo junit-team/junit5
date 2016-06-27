@@ -11,7 +11,7 @@
 package org.junit.vintage.engine;
 
 import static org.assertj.core.api.Assertions.allOf;
-import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.abortedWithReason;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;

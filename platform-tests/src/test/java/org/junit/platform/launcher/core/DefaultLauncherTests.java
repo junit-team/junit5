@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
@@ -29,7 +30,6 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DummyTestEngine;
 import org.junit.platform.engine.test.TestEngineSpy;
@@ -82,7 +82,7 @@ class DefaultLauncherTests {
 
 		DefaultLauncher launcher = createLauncher(engine);
 
-		TestPlan testPlan = launcher.discover(request().selectors(PackageSelector.selectPackage("any")).build());
+		TestPlan testPlan = launcher.discover(request().selectors(selectPackage("any")).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier rootIdentifier = testPlan.getRoots().iterator().next();
@@ -234,7 +234,7 @@ class DefaultLauncherTests {
 
 		TestPlan testPlan = launcher.discover( //
 			request() //
-					.selectors(PackageSelector.selectPackage("any")) //
+					.selectors(selectPackage("any")) //
 					.filters(includeWithUniqueIdContainsTest, includeWithUniqueIdContains1) //
 					.build());
 
@@ -295,7 +295,7 @@ class DefaultLauncherTests {
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
 				request()
-						.selectors(PackageSelector.selectPackage("any"))
+						.selectors(selectPackage("any"))
 						.filters(TagFilter.includeTags("foo"))
 						.build());
 		// @formatter:on

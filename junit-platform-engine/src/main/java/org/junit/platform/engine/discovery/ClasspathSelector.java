@@ -39,6 +39,7 @@ public class ClasspathSelector implements DiscoverySelector {
 	 * never {@code null}
 	 * @return a list of selectors for the supplied directories; directories which
 	 * do not physically exist in the filesystem will be filtered out
+	 * @see ClasspathSelector
 	 */
 	public static List<DiscoverySelector> selectClasspathRoots(Set<File> directories) {
 		Preconditions.notNull(directories, "directories must not be null");
@@ -53,7 +54,7 @@ public class ClasspathSelector implements DiscoverySelector {
 
 	private final File classpathRoot;
 
-	private ClasspathSelector(File classpathRoot) {
+	ClasspathSelector(File classpathRoot) {
 		this.classpathRoot = classpathRoot;
 	}
 

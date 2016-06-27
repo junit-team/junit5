@@ -16,10 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.junit.platform.engine.FilterResult.excluded;
-import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
-import static org.junit.platform.engine.discovery.ClasspathSelector.selectClasspathRoots;
-import static org.junit.platform.engine.discovery.MethodSelector.selectMethod;
-import static org.junit.platform.engine.discovery.PackageSelector.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
@@ -114,7 +114,7 @@ public class TestDiscoveryRequestBuilderTests {
 			// @formatter:off
 			DiscoveryRequest discoveryRequest = (DiscoveryRequest) request()
 					.selectors(
-							MethodSelector.selectMethod(SampleTestClass.class, "test")
+							selectMethod(SampleTestClass.class, "test")
 					).build();
 			// @formatter:on
 

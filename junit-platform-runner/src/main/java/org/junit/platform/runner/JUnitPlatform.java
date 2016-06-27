@@ -14,7 +14,7 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Maintained;
 import static org.junit.platform.engine.discovery.ClassFilter.includeClassNamePattern;
-import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
@@ -30,8 +30,7 @@ import java.util.function.Function;
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.discovery.ClassSelector;
-import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.TestDiscoveryRequest;
@@ -141,8 +140,8 @@ public class JUnitPlatform extends Runner implements Filterable {
 	private List<DiscoverySelector> getSelectorsFromAnnotations() {
 		List<DiscoverySelector> selectors = new ArrayList<>();
 
-		selectors.addAll(transform(getSelectedClasses(), ClassSelector::selectClass));
-		selectors.addAll(transform(getSelectedPackageNames(), PackageSelector::selectPackage));
+		selectors.addAll(transform(getSelectedClasses(), DiscoverySelectors::selectClass));
+		selectors.addAll(transform(getSelectedPackageNames(), DiscoverySelectors::selectPackage));
 
 		return selectors;
 	}

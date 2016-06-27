@@ -14,9 +14,9 @@ import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
-import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
-import static org.junit.platform.engine.discovery.MethodSelector.selectMethod;
-import static org.junit.platform.engine.discovery.PackageSelector.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 
 import java.lang.reflect.Method;
 import java.util.Collection;

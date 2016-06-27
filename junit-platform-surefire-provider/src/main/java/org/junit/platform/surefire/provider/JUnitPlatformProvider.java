@@ -10,7 +10,7 @@
 
 package org.junit.platform.surefire.provider;
 
-import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.InvocationTargetException;

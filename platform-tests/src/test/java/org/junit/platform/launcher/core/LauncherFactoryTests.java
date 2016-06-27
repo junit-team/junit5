@@ -12,7 +12,7 @@ package org.junit.platform.launcher.core;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import java.util.List;

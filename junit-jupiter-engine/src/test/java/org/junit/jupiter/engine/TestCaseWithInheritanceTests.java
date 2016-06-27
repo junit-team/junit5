@@ -13,7 +13,7 @@ package org.junit.jupiter.engine;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.junit.platform.engine.discovery.MethodSelector.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.AfterEach;

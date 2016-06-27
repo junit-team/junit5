@@ -62,6 +62,10 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
  * </pre>
  *
  * @since 1.0
+ * @see org.junit.platform.engine.discovery.DiscoverySelectors
+ * @see org.junit.platform.engine.discovery.ClassFilter
+ * @see org.junit.platform.launcher.EngineFilter
+ * @see org.junit.platform.launcher.TagFilter
  */
 @API(Experimental)
 public final class TestDiscoveryRequestBuilder {

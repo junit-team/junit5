@@ -21,10 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.discovery.ClassFilter.includeClassNamePattern;
-import static org.junit.platform.engine.discovery.ClassSelector.selectClass;
-import static org.junit.platform.engine.discovery.ClasspathSelector.selectClasspathRoots;
-import static org.junit.platform.engine.discovery.MethodSelector.selectMethod;
-import static org.junit.platform.engine.discovery.PackageSelector.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 

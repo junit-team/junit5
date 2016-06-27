@@ -12,7 +12,7 @@ package org.junit.platform.launcher.core;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.engine.discovery.NameBasedSelectors.selectName;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectName;
 import static org.junit.platform.engine.discovery.UniqueIdSelector.selectUniqueId;
 import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
