@@ -14,8 +14,6 @@ dependencies {
 	testCompile(project(':junit-platform-runner'))
 	testCompile(project(':junit-platform-launcher'))
 
-	// Temporarily depend on junit-platform-console until recent version is published
-	testRuntime(project(':junit-platform-console'))
 	testRuntime(project(':junit-vintage-engine'))
 	testRuntime(project(':junit-jupiter-engine'))
 	testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")

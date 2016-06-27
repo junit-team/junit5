@@ -18,8 +18,6 @@ dependencies {
 	testCompile("org.assertj:assertj-core:${assertJVersion}")
 	testCompile("org.mockito:mockito-core:${mockitoVersion}")
 
-	// Temporarily depend on junit-platform-console until recent version is published
-	testRuntime(project(':junit-platform-console'))
 	testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 }
