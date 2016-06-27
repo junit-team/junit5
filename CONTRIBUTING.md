@@ -8,6 +8,11 @@
 - You will only Submit Contributions to which You have the necessary rights. This means that if You are employed You have received the necessary permissions from Your employer to make the Contributions.
 - Whatever content You Contribute will be provided under the Project License(s).
 
+## Commit Messages
+
+As a general rule, the style and formatting of commit messages should follow the guidelines in
+[How to Write a Git Commit Message](http://chris.beams.io/posts/git-commit/).
+
 ## Pull Requests
 
 Please add the following lines to your pull request description:
