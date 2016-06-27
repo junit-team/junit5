@@ -226,7 +226,7 @@ public class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 		assertEquals(asList(
 			"fooBeforeEachCallback",
 				"beforeEachMethod1", // throws an exception.
-				// "beforeEachMethod2" should not get invoked
+				// "beforeEachMethod2" should not get invoked, but we cannot enforce ordering
 					// test should not get invoked.
 				"afterEachMethod",
 			"fooAfterEachCallback"
@@ -411,10 +411,15 @@ public class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 			throw new EnigmaException("@BeforeEach");
 		}
 
-		@BeforeEach
-		void beforeEach2() {
-			callSequence.add("beforeEachMethod2");
-		}
+		// Since the JVM does not guarantee the order in which methods are
+		// returned via reflection (and since JUnit Jupiter does not yet
+		// support ordering of @BeforeEach methods), we unfortunately cannot
+		// include a 2nd @BeforeEach method in these tests.
+		//
+		// @BeforeEach
+		// void beforeEach2() {
+		// 	callSequence.add("beforeEachMethod2");
+		// }
 
 		@Test
 		void test() {
