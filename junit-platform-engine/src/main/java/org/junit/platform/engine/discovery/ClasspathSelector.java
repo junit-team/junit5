@@ -10,15 +10,11 @@
 
 package org.junit.platform.engine.discovery;
 
-import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import java.io.File;
-import java.util.List;
-import java.util.Set;
 
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
@@ -31,26 +27,6 @@ import org.junit.platform.engine.DiscoverySelector;
  */
 @API(Experimental)
 public class ClasspathSelector implements DiscoverySelector {
-
-	/**
-	 * Create a list of {@code ClasspathSelectors} for the supplied {@code directories}.
-	 *
-	 * @param directories set of directories in the filesystem that represent classpath roots;
-	 * never {@code null}
-	 * @return a list of selectors for the supplied directories; directories which
-	 * do not physically exist in the filesystem will be filtered out
-	 * @see ClasspathSelector
-	 */
-	public static List<DiscoverySelector> selectClasspathRoots(Set<File> directories) {
-		Preconditions.notNull(directories, "directories must not be null");
-
-		// @formatter:off
-		return directories.stream()
-				.filter(File::isDirectory)
-				.map(ClasspathSelector::new)
-				.collect(toList());
-		// @formatter:on
-	}
 
 	private final File classpathRoot;
 
