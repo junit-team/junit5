@@ -25,7 +25,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
-import static org.junit.platform.engine.discovery.UniqueIdSelector.selectUniqueId;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import java.io.File;
@@ -42,7 +42,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.support.descriptor.JavaClassSource;
 import org.junit.platform.engine.support.descriptor.JavaMethodSource;
 import org.junit.platform.launcher.TestDiscoveryRequest;
@@ -363,8 +362,8 @@ class VintageTestEngineDiscoveryTests {
 	@Test
 	void resolvesUniqueIdSelectorForSingleMethod() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
-		TestDiscoveryRequest discoveryRequest = request().selectors(UniqueIdSelector.selectUniqueId(
-			VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "failingTest"))).build();
+		TestDiscoveryRequest discoveryRequest = request().selectors(
+			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "failingTest"))).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -380,7 +379,7 @@ class VintageTestEngineDiscoveryTests {
 	void resolvesUniqueIdSelectorForSingleClass() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		TestDiscoveryRequest discoveryRequest = request().selectors(
-			UniqueIdSelector.selectUniqueId(VintageUniqueIdBuilder.uniqueIdForClass(testClass))).build();
+			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForClass(testClass))).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -395,7 +394,7 @@ class VintageTestEngineDiscoveryTests {
 		Class<?> suiteClass = JUnit4SuiteWithTwoTestCases.class;
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
 		TestDiscoveryRequest discoveryRequest = request().selectors(
-			UniqueIdSelector.selectUniqueId(VintageUniqueIdBuilder.uniqueIdForClasses(suiteClass, testClass))).build();
+			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForClasses(suiteClass, testClass))).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -414,7 +413,7 @@ class VintageTestEngineDiscoveryTests {
 	void resolvesUniqueIdSelectorOfSingleMethodWithinSuite() throws Exception {
 		Class<?> suiteClass = JUnit4SuiteWithTwoTestCases.class;
 		Class<?> testClass = PlainJUnit4TestCaseWithTwoTestMethods.class;
-		TestDiscoveryRequest discoveryRequest = request().selectors(UniqueIdSelector.selectUniqueId(
+		TestDiscoveryRequest discoveryRequest = request().selectors(selectUniqueId(
 			VintageUniqueIdBuilder.uniqueIdForMethod(VintageUniqueIdBuilder.uniqueIdForClasses(suiteClass, testClass),
 				testClass, "successfulTest"))).build();
 
@@ -435,9 +434,8 @@ class VintageTestEngineDiscoveryTests {
 	void resolvesMultipleUniqueIdSelectorsForMethodsOfSameClass() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithTwoTestMethods.class;
 		TestDiscoveryRequest discoveryRequest = request().selectors(
-			UniqueIdSelector.selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "successfulTest")),
-			UniqueIdSelector.selectUniqueId(
-				VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "failingTest"))).build();
+			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "successfulTest")),
+			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "failingTest"))).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
 
@@ -472,8 +470,7 @@ class VintageTestEngineDiscoveryTests {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		TestDiscoveryRequest discoveryRequest = request().selectors( //
 			selectMethod(testClass, testClass.getMethod("failingTest")), //
-			UniqueIdSelector.selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "abortedTest")),
-			selectClass(testClass) //
+			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "abortedTest")), selectClass(testClass) //
 		).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
@@ -489,7 +486,7 @@ class VintageTestEngineDiscoveryTests {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		TestDiscoveryRequest discoveryRequest = request().selectors( //
 			selectMethod(testClass, testClass.getMethod("failingTest")), //
-			UniqueIdSelector.selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "abortedTest") //
+			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "abortedTest") //
 			)).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
@@ -510,7 +507,7 @@ class VintageTestEngineDiscoveryTests {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 		TestDiscoveryRequest discoveryRequest = request().selectors( //
 			selectMethod(testClass, testClass.getMethod("failingTest")), //
-			UniqueIdSelector.selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "failingTest") //
+			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "failingTest") //
 			)).build();
 
 		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);

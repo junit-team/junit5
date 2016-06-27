@@ -13,7 +13,7 @@ package org.junit.jupiter.engine;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.discovery.UniqueIdSelector.selectUniqueId;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Retention;
@@ -76,6 +76,7 @@ public class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------
 
 	private static abstract class AbstractTestCase {
+
 		@Test
 		void abstractTest() {
 

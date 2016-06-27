@@ -27,6 +27,7 @@ import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.UniqueId;
 
 /**
  * Collection of {@code static} factory methods for creating
@@ -229,6 +230,28 @@ public final class DiscoverySelectors {
 	public static List<DiscoverySelector> selectNames(Collection<String> names) {
 		Preconditions.notNull(names, "names collection must not be null");
 		return names.stream().map(DiscoverySelectors::selectName).collect(toList());
+	}
+
+	/**
+	 * Create a {@code UniqueIdSelector} for the supplied {@link UniqueId}.
+	 *
+	 * @param uniqueId the {@code UniqueId} to select; never {@code null}
+	 * @see UniqueIdSelector
+	 */
+	public static UniqueIdSelector selectUniqueId(UniqueId uniqueId) {
+		Preconditions.notNull(uniqueId, "UniqueId must not be null");
+		return new UniqueIdSelector(uniqueId);
+	}
+
+	/**
+	 * Create a {@code UniqueIdSelector} for the supplied unique ID.
+	 *
+	 * @param uniqueId the unique ID to select; never {@code null} or blank
+	 * @see UniqueIdSelector
+	 */
+	public static UniqueIdSelector selectUniqueId(String uniqueId) {
+		Preconditions.notBlank(uniqueId, "Unique ID must not be null or blank");
+		return new UniqueIdSelector(UniqueId.parse(uniqueId));
 	}
 
 	private static Class<?> loadClass(String className) {

@@ -31,7 +31,6 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
-import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.TestDiscoveryRequest;
 import org.junit.platform.launcher.TestIdentifier;
@@ -234,7 +233,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 		// @formatter:off
 		List<DiscoverySelector> selectors = testIdentifiers.stream()
 				.map(TestIdentifier::getUniqueId)
-				.map(UniqueIdSelector::selectUniqueId)
+				.map(DiscoverySelectors::selectUniqueId)
 				.collect(toList());
 		// @formatter:on
 		return request().selectors(selectors).build();

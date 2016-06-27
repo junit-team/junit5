@@ -12,8 +12,8 @@ package org.junit.platform.console.tasks;
 
 import static java.util.stream.Collectors.toCollection;
 import static org.junit.platform.engine.discovery.ClassFilter.includeClassNamePattern;
-import static org.junit.platform.engine.discovery.ClasspathSelector.selectClasspathRoots;
-import static org.junit.platform.engine.discovery.NameBasedSelectors.selectNames;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNames;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.TagFilter.excludeTags;

@@ -13,6 +13,7 @@ package org.junit.vintage.engine.discovery;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.vintage.engine.VintageUniqueIdBuilder.engineId;
 
 import java.util.Set;
@@ -34,7 +35,7 @@ class UniqueIdSelectorResolverTests {
 	void logsWarningOnUnloadableTestClass() {
 		UniqueId uniqueId = VintageUniqueIdBuilder.uniqueIdForClass("foo.bar.UnknownClass");
 		RecordCollectingLogger logger = new RecordCollectingLogger();
-		UniqueIdSelector selector = UniqueIdSelector.selectUniqueId(uniqueId);
+		UniqueIdSelector selector = selectUniqueId(uniqueId);
 		TestClassCollector collector = new TestClassCollector();
 
 		new UniqueIdSelectorResolver(logger).resolve(selector, collector);
@@ -52,7 +53,7 @@ class UniqueIdSelectorResolverTests {
 	void logsWarningForEngineUniqueId() {
 		String uniqueId = engineId().toString();
 		RecordCollectingLogger logger = new RecordCollectingLogger();
-		UniqueIdSelector selector = UniqueIdSelector.selectUniqueId(uniqueId);
+		UniqueIdSelector selector = selectUniqueId(uniqueId);
 		TestClassCollector collector = new TestClassCollector();
 
 		new UniqueIdSelectorResolver(logger).resolve(selector, collector);
@@ -70,7 +71,7 @@ class UniqueIdSelectorResolverTests {
 	void ignoresUniqueIdsOfOtherEngines() {
 		UniqueId uniqueId = UniqueId.forEngine("someEngine");
 		RecordCollectingLogger logger = new RecordCollectingLogger();
-		UniqueIdSelector selector = UniqueIdSelector.selectUniqueId(uniqueId);
+		UniqueIdSelector selector = selectUniqueId(uniqueId);
 		TestClassCollector collector = new TestClassCollector();
 
 		new UniqueIdSelectorResolver(logger).resolve(selector, collector);

@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.platform.console.tasks.XmlReportAssertions.ensureValidAccordingToJenkinsSchema;
 import static org.junit.platform.engine.TestExecutionResult.successful;
-import static org.junit.platform.engine.discovery.UniqueIdSelector.selectUniqueId;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
