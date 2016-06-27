@@ -179,10 +179,11 @@ public interface ExtensionContext {
 		 *
 		 * @param key the key; never {@code null}
 		 * @param requiredType the required type of the value; never {@code null}
+		 * @param <V> the value type
 		 * @return the value; potentially {@code null}
 		 * @see #get(Object)
 		 */
-		<T> T get(Object key, Class<T> requiredType);
+		<V> V get(Object key, Class<V> requiredType);
 
 		/**
 		 * Get the value that is stored under the supplied {@code key}.
@@ -200,8 +201,8 @@ public interface ExtensionContext {
 		 * @param key the key; never {@code null}
 		 * @param defaultCreator the function called with the supplied {@code key}
 		 * to create a new value; never {@code null}
-		 * @param <K> the type of the key
-		 * @param <V> the type of the value
+		 * @param <K> the key type
+		 * @param <V> the value type
 		 * @return the value; potentially {@code null}
 		 * @see #getOrComputeIfAbsent(Object, Function, Class)
 		 */
@@ -222,8 +223,8 @@ public interface ExtensionContext {
 		 * @param defaultCreator the function called with the supplied {@code key}
 		 * to create a new value; never {@code null}
 		 * @param requiredType the required type of the value; never {@code null}
-		 * @param <K> the type of the key
-		 * @param <V> the type of the value
+		 * @param <K> the key type
+		 * @param <V> the value type
 		 * @return the value; potentially {@code null}
 		 * @see #getOrComputeIfAbsent(Object, Function)
 		 */
@@ -267,11 +268,12 @@ public interface ExtensionContext {
 		 *
 		 * @param key the key; never {@code null}
 		 * @param requiredType the required type of the value; never {@code null}
+		 * @param <V> the value type
 		 * @return the previous value or {@code null} if no value was present
 		 * for the specified key
 		 * @see #remove(Object)
 		 */
-		<T> T remove(Object key, Class<T> requiredType);
+		<V> V remove(Object key, Class<V> requiredType);
 
 	}
 
