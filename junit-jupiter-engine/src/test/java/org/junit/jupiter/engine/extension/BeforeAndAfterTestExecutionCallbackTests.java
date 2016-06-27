@@ -71,26 +71,26 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 		assertEquals(asList(
 
 			// OuterTestCase
-			"beforeEachOuter",
-				"fooBeforeCallback",
-				"barBeforeCallback",
+			"beforeEachMethodOuter",
+				"fooBeforeTestExecutionCallback",
+				"barBeforeTestExecutionCallback",
 					"testOuter",
-				"barAfterCallback",
-				"fooAfterCallback",
-			"afterEachOuter",
+				"barAfterTestExecutionCallback",
+				"fooAfterTestExecutionCallback",
+			"afterEachMethodOuter",
 
 			// InnerTestCase
-			"beforeEachOuter",
-				"beforeEachInner",
-					"fooBeforeCallback",
-					"barBeforeCallback",
-						"fizzBeforeCallback",
+			"beforeEachMethodOuter",
+				"beforeEachMethodInner",
+					"fooBeforeTestExecutionCallback",
+					"barBeforeTestExecutionCallback",
+						"fizzBeforeTestExecutionCallback",
 							"testInner",
-						"fizzAfterCallback",
-					"barAfterCallback",
-					"fooAfterCallback",
-				"afterEachInner",
-			"afterEachOuter"
+						"fizzAfterTestExecutionCallback",
+					"barAfterTestExecutionCallback",
+					"fooAfterTestExecutionCallback",
+				"afterEachMethodInner",
+			"afterEachMethodOuter"
 
 		), callSequence, "wrong call sequence");
 		// @formatter:on
@@ -110,11 +110,11 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 		// @formatter:off
 		assertEquals(asList(
-			"fooBeforeCallback",
-			"barBeforeCallback",
+			"fooBeforeTestExecutionCallback",
+			"barBeforeTestExecutionCallback",
 				"testChild",
-			"barAfterCallback",
-			"fooAfterCallback"
+			"barAfterTestExecutionCallback",
+			"fooAfterTestExecutionCallback"
 		), callSequence, "wrong call sequence");
 		// @formatter:on
 	}
@@ -135,18 +135,18 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 		assertEquals(asList(
 
 			// Test Interface
-			"fooBeforeCallback",
-				"barBeforeCallback",
+			"fooBeforeTestExecutionCallback",
+				"barBeforeTestExecutionCallback",
 					"defaultTestMethod",
-				"barAfterCallback",
-			"fooAfterCallback",
+				"barAfterTestExecutionCallback",
+			"fooAfterTestExecutionCallback",
 
 			// Test Class
-			"fooBeforeCallback",
-				"barBeforeCallback",
+			"fooBeforeTestExecutionCallback",
+				"barBeforeTestExecutionCallback",
 					"localTestMethod",
-				"barAfterCallback",
-			"fooAfterCallback"
+				"barAfterTestExecutionCallback",
+			"fooAfterTestExecutionCallback"
 
 		), callSequence, "wrong call sequence");
 		// @formatter:on
@@ -168,15 +168,15 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 		// @formatter:off
 		assertEquals(asList(
 			"beforeEachMethod", // throws an exception.
-				// fooBeforeCallback should not get invoked.
+				// fooBeforeTestExecutionCallback should not get invoked.
 					// test should not get invoked.
-				// fooAfterCallback should not get invoked.
+				// fooAfterTestExecutionCallback should not get invoked.
 			"afterEachMethod"
 		), callSequence, "wrong call sequence");
 		// @formatter:on
 
 		assertNull(actualExceptionInAfterTestExecution,
-			"test exception (fooAfterCallback should not have been called)");
+			"test exception (fooAfterTestExecutionCallback should not have been called)");
 	}
 
 	@Test
@@ -195,12 +195,12 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 		// @formatter:off
 		assertEquals(asList(
 			"beforeEachMethod",
-				"fooBeforeCallback",
+				"fooBeforeTestExecutionCallback",
 				"exceptionThrowingBeforeTestExecutionCallback", // throws an exception.
-				// barBeforeCallback should not get invoked.
+				// barBeforeTestExecutionCallback should not get invoked.
 					// test() should not get invoked.
-				"barAfterCallback",
-				"fooAfterCallback",
+				"barAfterTestExecutionCallback",
+				"fooAfterTestExecutionCallback",
 			"afterEachMethod"
 		), callSequence, "wrong call sequence");
 		// @formatter:on
@@ -226,12 +226,12 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 		// @formatter:off
 		assertEquals(asList(
 			"beforeEachMethod",
-				"fooBeforeCallback",
-				"barBeforeCallback",
+				"fooBeforeTestExecutionCallback",
+				"barBeforeTestExecutionCallback",
 					"test",
-				"barAfterCallback",
+				"barAfterTestExecutionCallback",
 				"exceptionThrowingAfterTestExecutionCallback", // throws an exception.
-				"fooAfterCallback",
+				"fooAfterTestExecutionCallback",
 			"afterEachMethod"
 		), callSequence, "wrong call sequence");
 		// @formatter:on
@@ -256,9 +256,9 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 		// @formatter:off
 		assertEquals(asList(
 			"beforeEachMethod",
-				"fooBeforeCallback",
+				"fooBeforeTestExecutionCallback",
 					"test", // throws an exception.
-				"fooAfterCallback",
+				"fooAfterTestExecutionCallback",
 			"afterEachMethod"
 		), callSequence, "wrong call sequence");
 		// @formatter:on
@@ -306,7 +306,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 		@BeforeEach
 		void beforeEach() {
-			callSequence.add("beforeEachOuter");
+			callSequence.add("beforeEachMethodOuter");
 		}
 
 		@Test
@@ -316,7 +316,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 		@AfterEach
 		void afterEach() {
-			callSequence.add("afterEachOuter");
+			callSequence.add("afterEachMethodOuter");
 		}
 
 		@Nested
@@ -325,7 +325,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 			@BeforeEach
 			void beforeInnerMethod() {
-				callSequence.add("beforeEachInner");
+				callSequence.add("beforeEachMethodInner");
 			}
 
 			@Test
@@ -335,7 +335,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 			@AfterEach
 			void afterInnerMethod() {
-				callSequence.add("afterEachInner");
+				callSequence.add("afterEachMethodInner");
 			}
 		}
 	}
@@ -426,12 +426,12 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 		@Override
 		public void beforeTestExecution(TestExtensionContext context) {
-			callSequence.add("fooBeforeCallback");
+			callSequence.add("fooBeforeTestExecutionCallback");
 		}
 
 		@Override
 		public void afterTestExecution(TestExtensionContext context) {
-			callSequence.add("fooAfterCallback");
+			callSequence.add("fooAfterTestExecutionCallback");
 			actualExceptionInAfterTestExecution = context.getTestException();
 		}
 	}
@@ -440,12 +440,12 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 		@Override
 		public void beforeTestExecution(TestExtensionContext context) {
-			callSequence.add("barBeforeCallback");
+			callSequence.add("barBeforeTestExecutionCallback");
 		}
 
 		@Override
 		public void afterTestExecution(TestExtensionContext context) {
-			callSequence.add("barAfterCallback");
+			callSequence.add("barAfterTestExecutionCallback");
 		}
 	}
 
@@ -453,12 +453,12 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 		@Override
 		public void beforeTestExecution(TestExtensionContext context) {
-			callSequence.add("fizzBeforeCallback");
+			callSequence.add("fizzBeforeTestExecutionCallback");
 		}
 
 		@Override
 		public void afterTestExecution(TestExtensionContext context) {
-			callSequence.add("fizzAfterCallback");
+			callSequence.add("fizzAfterTestExecutionCallback");
 		}
 	}
 
