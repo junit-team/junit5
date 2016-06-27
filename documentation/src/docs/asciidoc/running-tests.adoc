@@ -23,7 +23,8 @@ plugin in action.
 [[running-tests-gradle-junit-enable]]
 ===== Enabling the JUnit Gradle Plugin
 
-To use the JUnit Gradle plugin, you first need to configure `build.gradle` as follows.
+To use the JUnit Gradle plugin, you first need to make sure that you are running Gradle
+2.5 or higher. Once you've done that, you can configure `build.gradle` as follows.
 
 [source,java,indent=0]
 [subs="verbatim,attributes"]

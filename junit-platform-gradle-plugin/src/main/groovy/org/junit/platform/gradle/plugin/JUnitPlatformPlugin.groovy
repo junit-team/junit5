@@ -9,9 +9,11 @@
  */
 package org.junit.platform.gradle.plugin
 
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.JavaExec
+import org.gradle.util.GradleVersion
 import org.junit.platform.console.ConsoleLauncher
 
 /**
@@ -26,6 +28,11 @@ class JUnitPlatformPlugin implements Plugin<Project> {
 		def junitExtension = project.extensions.create(EXTENSION_NAME, JUnitPlatformExtension)
 		junitExtension.extensions.create('tags', TagsExtension)
 		junitExtension.extensions.create('engines', EnginesExtension)
+
+		// configuration.defaultDependencies used below was introduced in Gradle 2.5
+		if (GradleVersion.current().compareTo(GradleVersion.version('2.5')) < 0) {
+			throw new GradleException('junit-platform-gradle-plugin requires Gradle version 2.5 or higher')
+		}
 
 		// Add required JUnit Platform dependencies to a custom configuration that
 		// will later be used to create the classpath for the custom task created
