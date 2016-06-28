@@ -628,10 +628,10 @@ the projects below.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>For Gradle, check out the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project.</p>
+<p>For Gradle, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project.</p>
 </li>
 <li>
-<p>For Maven, check out the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-maven-consumer">junit5-maven-consumer</a></code> project.</p>
+<p>For Maven, check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer">junit5-maven-consumer</a></code> project.</p>
 </li>
 </ul>
 </div>
@@ -1111,7 +1111,7 @@ parameter must be resolved at runtime by a registered <code>ParameterResolver</c
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a method parameter is of type <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/TestInfo.html">TestInfo</a></code>, the
+<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a method parameter is of type <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/TestInfo.html">TestInfo</a></code>, the
 <code>TestInfoParameterResolver</code> will supply an instance of <code>TestInfo</code> corresponding to the
 current test as the value for the parameter. The <code>TestInfo</code> can then be used to retrieve
 information about the current test such as the test&#8217;s display name, the test class, the
@@ -1161,7 +1161,7 @@ class TestInfoDemo {
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a method parameter is of type <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/TestReporter.html">TestReporter</a></code>, the
+<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a method parameter is of type <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/TestReporter.html">TestReporter</a></code>, the
 <code>TestReporterParameterResolver</code> will supply an instance of <code>TestReporter</code>.
 The <code>TestReporter</code> can be used to publish additional data about the current test run.
 The data can be consumed through <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a>.reportingEntryPublished()</code> and thus
@@ -1207,7 +1207,7 @@ class TestReporterDemo {
 <div class="ulist">
 <ul>
 <li>
-<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> for an example of a <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code>. While not
+<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> for an example of a <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code>. While not
 intended to be production-ready, it demonstrates the simplicity and expressiveness of
 both the extension model and the parameter resolution process. <code>MyMockitoTest</code>
 demonstrates how to inject Mockito mocks into <code>@BeforeEach</code> and <code>@Test</code> methods.</p>
@@ -1535,7 +1535,7 @@ or execute JUnit Jupiter tests with a <a href="#running-tests-junit-platform-run
 <div class="paragraph">
 <p>The JUnit team has developed a very basic Gradle plugin that allows you to run any kind
 of test that is supported by a <code>TestEngine</code> (e.g., JUnit 3, JUnit 4, JUnit Jupiter, Specsy,
-etc.). See <code>build.gradle</code> in the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project for an example of the
+etc.). See <code>build.gradle</code> in the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project for an example of the
 plugin in action.</p>
 </div>
 <div class="sect4">
@@ -1653,7 +1653,7 @@ line will execute all tests within the project whose class names match the regul
 expression supplied via <code>includeClassNamePattern</code>.</p>
 </div>
 <div class="paragraph">
-<p>Executing the <code>junitPlatformTest</code> task in the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project results
+<p>Executing the <code>junitPlatformTest</code> task in the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-gradle-consumer">junit5-gradle-consumer</a></code> project results
 in output similar to the following:</p>
 </div>
 <div class="listingblock">
@@ -1722,7 +1722,7 @@ See the <code>reportsDir</code> property of the plugin.</p>
 <div class="paragraph">
 <p>The JUnit team has developed a very basic provider for Maven Surefire that lets you run
 JUnit 4 and JUnit Jupiter tests via <code>mvn test</code>. The <code>pom.xml</code> file in the
-<code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-maven-consumer">junit5-maven-consumer</a></code> project demonstrates how to use it and can serve as a starting
+<code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-maven-consumer">junit5-maven-consumer</a></code> project demonstrates how to use it and can serve as a starting
 point.</p>
 </div>
 <div class="listingblock">
@@ -2007,7 +2007,7 @@ determine if a given test method should be executed based on the supplied
 <code>TestExtensionContext</code>.</p>
 </div>
 <div class="paragraph">
-<p>See the source code of <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> for concrete examples.</p>
+<p>See the source code of <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> for concrete examples.</p>
 </div>
 <div class="sect3">
 <h4 id="extensions-conditions-deactivation">5.3.1. Deactivating Conditions</h4>
@@ -2076,8 +2076,8 @@ process</em> test instances.</p>
 initialization methods on the test instance, etc.</p>
 </div>
 <div class="paragraph">
-<p>For concrete examples, consult the source code for the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> and the
-<code><a href="https://github.com/sbrannen/spring-test-junit5/blob/master/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code>.</p>
+<p>For concrete examples, consult the source code for the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> and the
+<code><a href="https://github.com/sbrannen/spring-test-junit5/tree/master/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2090,10 +2090,10 @@ runtime.</p>
 <p>If a test constructor or a <code>@Test</code>, <code>@TestFactory</code>, <code>@BeforeEach</code>, <code>@AfterEach</code>,
 <code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts a parameter, the parameter must be <em>resolved</em>
 at runtime by a <code>ParameterResolver</code>. A <code>ParameterResolver</code> can either be built-in (see
-<code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or <a href="#extensions-registration">registered by the user</a>.
+<code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or <a href="#extensions-registration">registered by the user</a>.
 Generally speaking, parameters may be resolved by <em>name</em>, <em>type</em>, <em>annotation</em>, or any
 combination thereof. For concrete examples, consult the source code for
-<code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
+<code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2135,7 +2135,7 @@ each of these interfaces in the <code><a href="http://junit.org/junit5/docs/snap
 </div>
 <div class="paragraph">
 <p>Note that extension developers may choose to implement any number of these interfaces
-within a single extension. Consult the source code of the <code><a href="https://github.com/sbrannen/spring-test-junit5/blob/master/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code> for a
+within a single extension. Consult the source code of the <code><a href="https://github.com/sbrannen/spring-test-junit5/tree/master/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a></code> for a
 concrete example.</p>
 </div>
 <div class="sect3">
@@ -2680,7 +2680,7 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-28 08:48:10 -04:00
+Last updated 2016-06-28 09:04:20 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
