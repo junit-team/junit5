@@ -52,9 +52,9 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :junit-vintage-engine:              {javadoc-root}/org/junit/vintage/engine/package-summary.html[junit-vintage-engine]
 
 :junit5-samples-repo:               {junit-team}/junit5-samples
-:junit5-gradle-consumer:            {junit5-samples-repo}/tree/master/junit5-gradle-consumer[junit5-gradle-consumer]
-:junit5-maven-consumer:             {junit5-samples-repo}/tree/master/junit5-maven-consumer[junit5-maven-consumer]
-:MockitoExtension:                  {junit5-samples-repo}/tree/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java[MockitoExtension]
+:junit5-gradle-consumer:            {junit5-samples-repo}/tree/{release-branch}/junit5-gradle-consumer[junit5-gradle-consumer]
+:junit5-maven-consumer:             {junit5-samples-repo}/tree/{release-branch}/junit5-maven-consumer[junit5-maven-consumer]
+:MockitoExtension:                  {junit5-samples-repo}/tree/{release-branch}/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java[MockitoExtension]
 
 :SpringExtension:                   https://github.com/sbrannen/spring-test-junit5/tree/master/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java[SpringExtension]
 
