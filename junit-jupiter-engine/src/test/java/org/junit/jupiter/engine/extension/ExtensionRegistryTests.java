@@ -120,37 +120,23 @@ public class ExtensionRegistryTests {
 
 	interface MyExtensionApi extends Extension {
 
-		void doNothing(String test);
+		default void doNothing(String test) {
+		}
 	}
 
 	interface AnotherExtensionApi extends Extension {
 
-		void doMore();
+		default void doMore() {
+		}
 	}
 
 	static class MyExtension implements MyExtensionApi {
-
-		@Override
-		public void doNothing(String test) {
-		}
 	}
 
 	static class YourExtension implements MyExtensionApi {
-
-		@Override
-		public void doNothing(String test) {
-		}
 	}
 
 	static class MultipleExtension implements MyExtensionApi, AnotherExtensionApi {
-
-		@Override
-		public void doNothing(String test) {
-		}
-
-		@Override
-		public void doMore() {
-		}
 	}
 
 }
