@@ -664,7 +664,7 @@ class FirstJUnit5Tests {
 <p>JUnit Jupiter supports the following annotations for configuring tests and extending the framework.</p>
 </div>
 <div class="paragraph">
-<p>All core annotations are located in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api">org.junit.jupiter.api</a></code> package in the <code>junit-jupiter-api</code>
+<p>All core annotations are located in the <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></code> package in the <code>junit-jupiter-api</code>
 module.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
@@ -847,7 +847,7 @@ class DisplayNameDemo {
 <div class="paragraph">
 <p>JUnit Jupiter comes with many of the assertion methods that JUnit 4 has and adds a few that
 lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter assertions are static
-methods in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java">org.junit.jupiter.Assertions</a></code> class.</p>
+methods in the <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.Assertions</a></code> class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -895,7 +895,7 @@ class AssertionsDemo {
 <div class="paragraph">
 <p>JUnit Jupiter comes with a subset of the assumption methods that JUnit 4 provides and adds a
 few that lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter assumptions
-are static methods in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assumptions.java">org.junit.jupiter.Assumptions</a></code> class.</p>
+are static methods in the <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/Assumptions.html">org.junit.jupiter.Assumptions</a></code> class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1100,7 +1100,7 @@ parameters. This allows for greater flexibility and enables <em>Dependency Injec
 constructors and methods.</p>
 </div>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java">ParameterResolver</a></code> defines the API for test extensions that wish to <em>dynamically</em>
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code> defines the API for test extensions that wish to <em>dynamically</em>
 resolve parameters at runtime. If a test constructor or a <code>@Test</code>, <code>@TestFactory</code>,
 <code>@BeforeEach</code>, <code>@AfterEach</code>, <code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts a parameter, the
 parameter must be resolved at runtime by a registered <code>ParameterResolver</code>.</p>
@@ -1111,14 +1111,14 @@ parameter must be resolved at runtime by a registered <code>ParameterResolver</c
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a method parameter is of type <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestInfo.java">TestInfo</a></code>, the
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a method parameter is of type <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/TestInfo.html">TestInfo</a></code>, the
 <code>TestInfoParameterResolver</code> will supply an instance of <code>TestInfo</code> corresponding to the
 current test as the value for the parameter. The <code>TestInfo</code> can then be used to retrieve
 information about the current test such as the test&#8217;s display name, the test class, the
 test method, or associated tags. The display name is either a technical name, such as
 the name of the test class or test method, or a custom name configured via <code>@DisplayName</code>.</p>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestInfo.java">TestInfo</a></code> acts as a drop-in replacement for the <code>TestName</code>
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/TestInfo.html">TestInfo</a></code> acts as a drop-in replacement for the <code>TestName</code>
 rule from JUnit 4. Here is an example of its usage.</p>
 </div>
 </li>
@@ -1161,10 +1161,10 @@ class TestInfoDemo {
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a method parameter is of type <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestReporter.java">TestReporter</a></code>, the
+<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a method parameter is of type <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/TestReporter.html">TestReporter</a></code>, the
 <code>TestReporterParameterResolver</code> will supply an instance of <code>TestReporter</code>.
 The <code>TestReporter</code> can be used to publish additional data about the current test run.
-The data can be consumed through <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestExecutionListener.java">TestExecutionListener</a>.reportingEntryPublished()</code> and thus
+The data can be consumed through <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a>.reportingEntryPublished()</code> and thus
 be viewed by IDEs or included in reports.</p>
 <div class="paragraph">
 <p>In JUnit Jupiter you should use <code>TestReporter</code> where
@@ -1207,7 +1207,7 @@ class TestReporterDemo {
 <div class="ulist">
 <ul>
 <li>
-<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> for an example of a <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java">ParameterResolver</a></code>. While not
+<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> for an example of a <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code>. While not
 intended to be production-ready, it demonstrates the simplicity and expressiveness of
 both the extension model and the parameter resolution process. <code>MyMockitoTest</code>
 demonstrates how to inject Mockito mocks into <code>@BeforeEach</code> and <code>@Test</code> methods.</p>
@@ -1752,7 +1752,7 @@ point.</p>
 <div class="sect2">
 <h3 id="running-tests-console-launcher">4.3. Console Launcher</h3>
 <div class="paragraph">
-<p>The <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncher.java">ConsoleLauncher</a></code> is a command-line Java application that lets you launch
+<p>The <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> is a command-line Java application that lets you launch
 the JUnit Platform from the console. For example, it can be used to run JUnit
 Vintage and JUnit Jupiter tests and print test execution results to the console.</p>
 </div>
@@ -1780,7 +1780,7 @@ Test run finished after 29 ms
 </div>
 </div>
 <div class="paragraph">
-<p>The <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncher.java">ConsoleLauncher</a></code> exits with status code 0 if no test failed. In case of at
+<p>The <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> exits with status code 0 if no test failed. In case of at
 least one failing test the status code is 1.</p>
 </div>
 <div class="sect3">
@@ -1921,8 +1921,8 @@ and its subpackages.</p>
 <div class="paragraph">
 <p>There are more configuration options for discovering and filtering tests than just
 <code>@SelectPackages</code>. Please consult the
-<a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/runner/package-summary.html">Javadoc</a> or the source
-code for the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatform.java">JUnitPlatform</a></code> runner for further details.</p>
+<a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/runner/package-summary.html">Javadoc</a> for further
+details.</p>
 </div>
 </div>
 </div>
@@ -1942,7 +1942,7 @@ JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concep
 <div class="sect2">
 <h3 id="extensions-registration">5.2. Registering Extensions</h3>
 <div class="paragraph">
-<p>Extensions can be registered declaratively via <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtendWith.java">@ExtendWith</a></code>.</p>
+<p>Extensions can be registered declaratively via <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/ExtendWith.html">@ExtendWith</a></code>.</p>
 </div>
 <div class="paragraph">
 <p>Note that registered extensions are inherited within test class hierarchies.</p>
@@ -1996,7 +1996,7 @@ class MyTestsV2 {
 <div class="sect2">
 <h3 id="extensions-conditions">5.3. Conditional Test Execution</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ContainerExecutionCondition.java">ContainerExecutionCondition</a></code> and <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestExecutionCondition.java">TestExecutionCondition</a></code> define the <code>Extension</code>
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/ContainerExecutionCondition.html">ContainerExecutionCondition</a></code> and <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/TestExecutionCondition.html">TestExecutionCondition</a></code> define the <code>Extension</code>
 APIs for programmatic, <em>conditional test execution</em>.</p>
 </div>
 <div class="paragraph">
@@ -2007,7 +2007,7 @@ determine if a given test method should be executed based on the supplied
 <code>TestExtensionContext</code>.</p>
 </div>
 <div class="paragraph">
-<p>See the source code of <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/Disabled.java">@Disabled</a></code> for concrete examples.</p>
+<p>See the source code of <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> for concrete examples.</p>
 </div>
 <div class="sect3">
 <h4 id="extensions-conditions-deactivation">5.3.1. Deactivating Conditions</h4>
@@ -2068,7 +2068,7 @@ of its subpackages.</p>
 <div class="sect2">
 <h3 id="extensions-test-instance-post-processing">5.4. Test Instance Post-processing</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstancePostProcessor.java">TestInstancePostProcessor</a></code> defines the API for <code>Extensions</code> that wish to <em>post
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/TestInstancePostProcessor.html">TestInstancePostProcessor</a></code> defines the API for <code>Extensions</code> that wish to <em>post
 process</em> test instances.</p>
 </div>
 <div class="paragraph">
@@ -2083,7 +2083,7 @@ initialization methods on the test instance, etc.</p>
 <div class="sect2">
 <h3 id="extensions-parameter-resolution">5.5. Parameter Resolution</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java">ParameterResolver</a></code> defines the <code>Extension</code> API for dynamically resolving parameters at
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code> defines the <code>Extension</code> API for dynamically resolving parameters at
 runtime.</p>
 </div>
 <div class="paragraph">
@@ -2101,35 +2101,35 @@ combination thereof. For concrete examples, consult the source code for
 <div class="paragraph">
 <p>The following interfaces define the APIs for extending tests at various points in the
 test execution lifecycle. Consult the following sections for examples and the Javadoc for
-each of these interfaces in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension">org.junit.jupiter.api.extension</a></code> package for further details.</p>
+each of these interfaces in the <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></code> package for further details.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>BeforeAllCallback</code></p>
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/BeforeAllCallback.html">BeforeAllCallback</a></code></p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>BeforeEachCallback</code></p>
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/BeforeEachCallback.html">BeforeEachCallback</a></code></p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>BeforeTestExecutionCallback</code></p>
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/BeforeTestExecutionCallback.html">BeforeTestExecutionCallback</a></code></p>
 </li>
 <li>
-<p><code>AfterTestExecutionCallback</code></p>
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html">AfterTestExecutionCallback</a></code></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><code>AfterEachCallback</code></p>
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/AfterEachCallback.html">AfterEachCallback</a></code></p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><code>AfterAllCallback</code></p>
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/AfterAllCallback.html">AfterAllCallback</a></code></p>
 </li>
 </ul>
 </div>
@@ -2141,7 +2141,7 @@ concrete example.</p>
 <div class="sect3">
 <h4 id="extensions-lifecycle-callbacks-before-after-execution">5.6.1. Before and After Test Execution Callbacks</h4>
 <div class="paragraph">
-<p><code>BeforeTestExecutionCallback</code> and <code>AfterTestExecutionCallback</code> define the APIs for
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/BeforeTestExecutionCallback.html">BeforeTestExecutionCallback</a></code> and <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html">AfterTestExecutionCallback</a></code> define the APIs for
 <code>Extensions</code> that wish to add behavior that will be executed <em>immediately before</em> and
 <em>immediately after</em> a test method is executed, respectively. As such, these callbacks are
 well suited for timing, tracing, and similar use cases. If you need to implement
@@ -2227,7 +2227,7 @@ INFO: Method [sleep50ms] took 53 ms.</pre>
 <div class="sect2">
 <h3 id="extensions-exception-handling">5.7. Exception Handling</h3>
 <div class="paragraph">
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.java">TestExecutionExceptionHandler</a></code> defines the API for <code>Extensions</code> that wish to handle
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.html">TestExecutionExceptionHandler</a></code> defines the API for <code>Extensions</code> that wish to handle
 exceptions thrown during test execution.</p>
 </div>
 <div class="paragraph">
@@ -2351,11 +2351,11 @@ libraries – like Spock, Cucumber, and FitNesse – to plug into the JUnit Plat
 infrastructure.</p>
 </div>
 <div class="paragraph">
-<p>The launching API is in the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-launcher">junit-platform-launcher</a></code> module.</p>
+<p>The launching API is in the <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/launcher/package-summary.html">junit-platform-launcher</a></code> module.</p>
 </div>
 <div class="paragraph">
-<p>An example consumer of the launching API is the <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncher.java">ConsoleLauncher</a></code> in the
-<code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-console">junit-platform-console</a></code> project.</p>
+<p>An example consumer of the launching API is the <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> in the
+<code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/console/package-summary.html">junit-platform-console</a></code> project.</p>
 </div>
 <div class="sect3">
 <h4 id="launcher-api-discovery">7.1.1. Discovering Tests</h4>
@@ -2415,7 +2415,7 @@ ID</em> that can be used to invoke a particular test or group of tests.</p>
 <p>There are two ways to execute tests. Clients can either use the same test specification
 object as in the discovery phase, or – to speed things up a bit – pass in the prepared
 <code>TestPlan</code> object from a previous discovery step. Test progress and result reporting can
-be achieved through a <code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestExecutionListener.java">TestExecutionListener</a></code>:</p>
+be achieved through a <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2439,7 +2439,7 @@ launcher.execute(request);</code></pre>
 <div class="paragraph">
 <p>There&#8217;s currently no result object, but you can easily use a listener to aggregate the
 final results in an object of your own. For an example see the
-<code><a href="https://github.com/junit-team/junit5/blob/master/junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/SummaryGeneratingListener.java">SummaryGeneratingListener</a></code>.</p>
+<code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html">SummaryGeneratingListener</a></code>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -2450,20 +2450,21 @@ final results in an object of your own. For an example see the
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-jupiter-engine">junit-jupiter-engine</a></code>: The core of JUnit Jupiter.</p>
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/engine/package-summary.html">junit-jupiter-engine</a></code>: The core of JUnit Jupiter.</p>
 </li>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/blob/master/junit-vintage-engine">junit-vintage-engine</a></code>: A thin layer on top of JUnit 4 to allow running "old" tests with the
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/vintage/engine/package-summary.html">junit-vintage-engine</a></code>: A thin layer on top of JUnit 4 to allow running "old" tests with the
 launcher infrastructure.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>Third parties may also contribute their own <code>TestEngine</code> by implementing the interfaces
-in the <a href="https://github.com/junit-team/junit5/blob/master/junit-platform-engine">junit-platform-engine</a> module and <em>registering</em> their engine. Engine registration is
-currently supported via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism. For example, the
-<code>junit-jupiter-engine</code> module registers its <code>JupiterTestEngine</code>
-<a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/resources/META-INF/services/org.junit.platform.engine.TestEngine">here</a>.</p>
+in the <a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/engine/package-summary.html">junit-platform-engine</a> module and <em>registering</em> their engine. Engine registration
+is currently supported via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism. For example, the
+<code>junit-jupiter-engine</code> module registers its <code>org.junit.jupiter.engine.JupiterTestEngine</code>
+in a file named <code>org.junit.platform.engine.TestEngine</code> within the <code>/META-INF/services</code> in
+the <code>junit-jupiter-engine</code> JAR.</p>
 </div>
 </div>
 </div>
@@ -2494,7 +2495,7 @@ classes, and methods.</p>
 <h3 id="api-evolution-annotations">8.1. API Annotations</h3>
 <div class="paragraph">
 <p>Every published artifact has a version number <code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code> and all
-publicly available interfaces, classes, and methods are annotated with <a href="https://github.com/junit-team/junit5/blob/master/junit-platform-commons/src/main/java/org/junit/platform/commons/meta/API.java">@API</a>. The
+publicly available interfaces, classes, and methods are annotated with <a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/commons/meta/API.html">@API</a>. The
 annotation&#8217;s <code>Usage</code> value can be assigned one of the following five values:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
@@ -2679,7 +2680,7 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-28 07:41:28 -04:00
+Last updated 2016-06-28 08:48:10 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
