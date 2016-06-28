@@ -26,6 +26,7 @@ asciidoctor {
 	attributes	'jupiter-version': project.property('version'),
 				'platform-version': project.property('platformVersion'),
 				'vintage-version': project.property('vintageVersion'),
+				'docs-version': project.property('docsVersion'),
 				'revnumber' : project.version,
 				'mainDir': project.sourceSets.main.java.srcDirs[0],
 				'testDir': project.sourceSets.test.java.srcDirs[0],
