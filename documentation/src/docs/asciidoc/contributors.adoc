@@ -1,0 +1,4 @@
+[[contributors]]
+== Contributors
+
+Browse the {junit5-repo}/graphs/contributors[current list of contributors] directly on GitHub.

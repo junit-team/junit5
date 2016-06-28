@@ -68,27 +68,10 @@ include::extensions.adoc[]
 
 include::migration-from-junit4.adoc[]
 
-[[advanced-topics]]
-== Advanced Topics
-
-include::launcher-api.adoc[]
-
-[[modules]]
-=== Modules
-
-[[engines]]
-=== Engines
+include::advanced-topics.adoc[]
 
 include::api-evolution.adoc[]
 
-[[contributors]]
-== Contributors
+include::contributors.adoc[]
 
-Browse the {junit5-repo}/graphs/contributors[current list of contributors] directly on GitHub.
-
-[[release-notes]]
-== Release Notes
-
-include::release-notes-5.0.0-ALPHA.adoc[]
-
-include::release-notes-5.0.0-M1.adoc[]
+include::release-notes.adoc[]
