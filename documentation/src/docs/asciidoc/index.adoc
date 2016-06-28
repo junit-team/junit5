@@ -11,7 +11,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 
 :junit-team:                        https://github.com/junit-team
 :junit5-repo:                       {junit-team}/junit5
-:master-branch:                     {junit5-repo}/blob/master
+:current-branch:                    {junit5-repo}/tree/{release-branch}
 
 :junit-platform-console:            {javadoc-root}/org/junit/platform/console/package-summary.html[junit-platform-console]
 :junit-platform-engine:             {javadoc-root}/org/junit/platform/engine/package-summary.html[junit-platform-engine]
@@ -43,20 +43,20 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :TestInstancePostProcessor:         {javadoc-root}/org/junit/jupiter/api/extension/TestInstancePostProcessor.html[TestInstancePostProcessor]
 :TestReporter:                      {javadoc-root}/org/junit/jupiter/api/TestReporter.html[TestReporter]
 
-:DisabledCondition:                 {master-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java[DisabledCondition]
-:TestInfoParameterResolver:         {master-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java[TestInfoParameterResolver]
-:TestReporterParameterResolver:     {master-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java[TestReporterParameterResolver]
-:CustomAnnotationParameterResolver: {master-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java[CustomAnnotationParameterResolver]
-:CustomTypeParameterResolver:       {master-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java[CustomTypeParameterResolver]
+:DisabledCondition:                 {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java[DisabledCondition]
+:TestInfoParameterResolver:         {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java[TestInfoParameterResolver]
+:TestReporterParameterResolver:     {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java[TestReporterParameterResolver]
+:CustomAnnotationParameterResolver: {current-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java[CustomAnnotationParameterResolver]
+:CustomTypeParameterResolver:       {current-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java[CustomTypeParameterResolver]
 
 :junit-vintage-engine:              {javadoc-root}/org/junit/vintage/engine/package-summary.html[junit-vintage-engine]
 
 :junit5-samples-repo:               {junit-team}/junit5-samples
-:junit5-gradle-consumer:            {junit5-samples-repo}/blob/master/junit5-gradle-consumer[junit5-gradle-consumer]
-:junit5-maven-consumer:             {junit5-samples-repo}/blob/master/junit5-maven-consumer[junit5-maven-consumer]
-:MockitoExtension:                  {junit5-samples-repo}/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java[MockitoExtension]
+:junit5-gradle-consumer:            {junit5-samples-repo}/tree/master/junit5-gradle-consumer[junit5-gradle-consumer]
+:junit5-maven-consumer:             {junit5-samples-repo}/tree/master/junit5-maven-consumer[junit5-maven-consumer]
+:MockitoExtension:                  {junit5-samples-repo}/tree/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java[MockitoExtension]
 
-:SpringExtension:                   https://github.com/sbrannen/spring-test-junit5/blob/master/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java[SpringExtension]
+:SpringExtension:                   https://github.com/sbrannen/spring-test-junit5/tree/master/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java[SpringExtension]
 
 include::overview.adoc[]
 
