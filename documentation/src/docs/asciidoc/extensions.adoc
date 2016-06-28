@@ -13,7 +13,7 @@ JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concep
 
 Extensions can be registered declaratively via `{ExtendWith}`.
 
-Note that registered extensions are inherited within test class hierarchies.
+NOTE: Registered extensions are inherited within test class hierarchies.
 
 [[extensions-registration-declarative]]
 ==== Declarative Extension Registration
@@ -150,7 +150,8 @@ each of these interfaces in the `{extension-api-package}` package for further de
 ** `{AfterEachCallback}`
 * `{AfterAllCallback}`
 
-Note that extension developers may choose to implement any number of these interfaces
+.Implementing Multiple Extension APIs
+NOTE: Extension developers may choose to implement any number of these interfaces
 within a single extension. Consult the source code of the `{SpringExtension}` for a
 concrete example.
 

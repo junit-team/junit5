@@ -60,7 +60,7 @@ include::{testDir}/example/Fast.java[tags=user_guide]
 include::{testDir}/example/StandardTests.java[tags=user_guide]
 ----
 
-Notice that neither test classes nor test methods need to be `public`.
+NOTE: Neither test classes nor test methods need to be `public`.
 
 [[writing-tests-display-names]]
 === Display Names
@@ -145,7 +145,7 @@ several group of tests. Here's an elaborate example.
 include::{testDir}/example/TestingAStackDemo.java[tags=user_guide]
 ----
 
-Notice that _only non-static nested classes_ (i.e. _inner classes_) can serve as
+NOTE: _Only non-static nested classes_ (i.e. _inner classes_) can serve as
 `@Nested` tests. Nesting can be arbitrarily deep, and those inner classes are considered
 to be full members of the test class family with one exception: `@BeforeAll` and
 `@AfterAll` do not work, because Java does not allow `static` members in inner classes.
