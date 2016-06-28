@@ -47,7 +47,7 @@ public interface ParameterResolver extends Extension {
 	 * in which the parameter is declared can be retrieved via
 	 * {@link ParameterContext#getDeclaringExecutable()}.
 	 *
-	 * @param parameterContext the parameter context to be resolved; never
+	 * @param parameterContext the context for the parameter to be resolved; never
 	 * {@code null}
 	 * @param extensionContext the extension context for the {@code Executable}
 	 * about to be invoked; never {@code null}
@@ -70,7 +70,7 @@ public interface ParameterResolver extends Extension {
 	 * in which the parameter is declared can be retrieved via
 	 * {@link ParameterContext#getDeclaringExecutable()}.
 	 *
-	 * @param parameterContext the parameter context to be resolved; never
+	 * @param parameterContext the context for the parameter to be resolved; never
 	 * {@code null}
 	 * @param extensionContext the extension context for the {@code Executable}
 	 * about to be invoked; never {@code null}
