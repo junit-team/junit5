@@ -143,12 +143,12 @@ The following interfaces define the APIs for extending tests at various points i
 test execution lifecycle. Consult the following sections for examples and the Javadoc for
 each of these interfaces in the `{extension-api-package}` package for further details.
 
-* `BeforeAllCallback`
-** `BeforeEachCallback`
-*** `BeforeTestExecutionCallback`
-*** `AfterTestExecutionCallback`
-** `AfterEachCallback`
-* `AfterAllCallback`
+* `{BeforeAllCallback}`
+** `{BeforeEachCallback}`
+*** `{BeforeTestExecutionCallback}`
+*** `{AfterTestExecutionCallback}`
+** `{AfterEachCallback}`
+* `{AfterAllCallback}`
 
 Note that extension developers may choose to implement any number of these interfaces
 within a single extension. Consult the source code of the `{SpringExtension}` for a
@@ -157,7 +157,7 @@ concrete example.
 [[extensions-lifecycle-callbacks-before-after-execution]]
 ==== Before and After Test Execution Callbacks
 
-`BeforeTestExecutionCallback` and `AfterTestExecutionCallback` define the APIs for
+`{BeforeTestExecutionCallback}` and `{AfterTestExecutionCallback}` define the APIs for
 `Extensions` that wish to add behavior that will be executed _immediately before_ and
 _immediately after_ a test method is executed, respectively. As such, these callbacks are
 well suited for timing, tracing, and similar use cases. If you need to implement

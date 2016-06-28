@@ -6,45 +6,57 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 
 :docs-root:                         http://junit.org/junit5/docs/{docs-version}
 :javadoc-root:                      {docs-root}/api
-:snapshot-repo:                     https://oss.sonatype.org/content/repositories/snapshots
-:junit-team:                        https://github.com/junit-team
 
+:snapshot-repo:                     https://oss.sonatype.org/content/repositories/snapshots
+
+:junit-team:                        https://github.com/junit-team
 :junit5-repo:                       {junit-team}/junit5
-:junit5-samples-repo:               {junit-team}/junit5-samples
 :master-branch:                     {junit5-repo}/blob/master
 
-:junit5-gradle-consumer:            {junit5-samples-repo}/blob/master/junit5-gradle-consumer[junit5-gradle-consumer]
-:junit5-maven-consumer:             {junit5-samples-repo}/blob/master/junit5-maven-consumer[junit5-maven-consumer]
-:junit-platform-console:            {master-branch}/junit-platform-console[junit-platform-console]
-:junit-platform-launcher:           {master-branch}/junit-platform-launcher[junit-platform-launcher]
-:junit-platform-engine:             {master-branch}/junit-platform-engine[junit-platform-engine]
-:junit-vintage-engine:              {master-branch}/junit-vintage-engine[junit-vintage-engine]
-:junit-jupiter-engine:              {master-branch}/junit-jupiter-engine[junit-jupiter-engine]
-:api-package:                       {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api[org.junit.jupiter.api]
-:extension-api-package:             {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension[org.junit.jupiter.api.extension]
-:API:                               {master-branch}/junit-platform-commons/src/main/java/org/junit/platform/commons/meta/API.java[@API]
-:Assertions:                        {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java[org.junit.jupiter.Assertions]
-:Assumptions:                       {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assumptions.java[org.junit.jupiter.Assumptions]
-:ConsoleLauncher:                   {master-branch}/junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncher.java[ConsoleLauncher]
-:ContainerExecutionCondition:       {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ContainerExecutionCondition.java[ContainerExecutionCondition]
+:junit-platform-console:            {javadoc-root}/org/junit/platform/console/package-summary.html[junit-platform-console]
+:junit-platform-engine:             {javadoc-root}/org/junit/platform/engine/package-summary.html[junit-platform-engine]
+:junit-platform-launcher:           {javadoc-root}/org/junit/platform/launcher/package-summary.html[junit-platform-launcher]
+:API:                               {javadoc-root}/org/junit/platform/commons/meta/API.html[@API]
+:ConsoleLauncher:                   {javadoc-root}/org/junit/platform/console/ConsoleLauncher.html[ConsoleLauncher]
+:JUnitPlatform-Runner:              {javadoc-root}/org/junit/platform/runner/JUnitPlatform.html[JUnitPlatform]
+:SummaryGeneratingListener:         {javadoc-root}/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html[SummaryGeneratingListener]
+:TestExecutionListener:             {javadoc-root}/org/junit/platform/launcher/TestExecutionListener.html[TestExecutionListener]
+
+:api-package:                       {javadoc-root}/org/junit/jupiter/api/package-summary.html[org.junit.jupiter.api]
+:extension-api-package:             {javadoc-root}/org/junit/jupiter/api/extension/package-summary.html[org.junit.jupiter.api.extension]
+:junit-jupiter-engine:              {javadoc-root}/org/junit/jupiter/engine/package-summary.html[junit-jupiter-engine]
+:AfterAllCallback:                  {javadoc-root}/org/junit/jupiter/api/extension/AfterAllCallback.html[AfterAllCallback]
+:AfterEachCallback:                 {javadoc-root}/org/junit/jupiter/api/extension/AfterEachCallback.html[AfterEachCallback]
+:AfterTestExecutionCallback:        {javadoc-root}/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html[AfterTestExecutionCallback]
+:Assertions:                        {javadoc-root}/org/junit/jupiter/api/Assertions.html[org.junit.jupiter.Assertions]
+:Assumptions:                       {javadoc-root}/org/junit/jupiter/api/Assumptions.html[org.junit.jupiter.Assumptions]
+:BeforeAllCallback:                 {javadoc-root}/org/junit/jupiter/api/extension/BeforeAllCallback.html[BeforeAllCallback]
+:BeforeEachCallback:                {javadoc-root}/org/junit/jupiter/api/extension/BeforeEachCallback.html[BeforeEachCallback]
+:BeforeTestExecutionCallback:       {javadoc-root}/org/junit/jupiter/api/extension/BeforeTestExecutionCallback.html[BeforeTestExecutionCallback]
+:ContainerExecutionCondition:       {javadoc-root}/org/junit/jupiter/api/extension/ContainerExecutionCondition.html[ContainerExecutionCondition]
+:Disabled:                          {javadoc-root}/org/junit/jupiter/api/Disabled.html[@Disabled]
+:ExtendWith:                        {javadoc-root}/org/junit/jupiter/api/extension/ExtendWith.html[@ExtendWith]
+:ParameterResolver:                 {javadoc-root}/org/junit/jupiter/api/extension/ParameterResolver.html[ParameterResolver]
+:TestExecutionCondition:            {javadoc-root}/org/junit/jupiter/api/extension/TestExecutionCondition.html[TestExecutionCondition]
+:TestExecutionExceptionHandler:     {javadoc-root}/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.html[TestExecutionExceptionHandler]
+:TestInfo:                          {javadoc-root}/org/junit/jupiter/api/TestInfo.html[TestInfo]
+:TestInstancePostProcessor:         {javadoc-root}/org/junit/jupiter/api/extension/TestInstancePostProcessor.html[TestInstancePostProcessor]
+:TestReporter:                      {javadoc-root}/org/junit/jupiter/api/TestReporter.html[TestReporter]
+
+:DisabledCondition:                 {master-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java[DisabledCondition]
+:TestInfoParameterResolver:         {master-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java[TestInfoParameterResolver]
+:TestReporterParameterResolver:     {master-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java[TestReporterParameterResolver]
 :CustomAnnotationParameterResolver: {master-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java[CustomAnnotationParameterResolver]
 :CustomTypeParameterResolver:       {master-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java[CustomTypeParameterResolver]
-:Disabled:                          {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/Disabled.java[@Disabled]
-:DisabledCondition:                 {master-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java[DisabledCondition]
-:TestExecutionExceptionHandler:     {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.java[TestExecutionExceptionHandler]
-:ExtendWith:                        {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtendWith.java[@ExtendWith]
-:TestInstancePostProcessor:         {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstancePostProcessor.java[TestInstancePostProcessor]
-:JUnitPlatform-Runner:              {master-branch}/junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatform.java[JUnitPlatform]
-:ParameterResolver:                 {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java[ParameterResolver]
+
+:junit-vintage-engine:              {javadoc-root}/org/junit/vintage/engine/package-summary.html[junit-vintage-engine]
+
+:junit5-samples-repo:               {junit-team}/junit5-samples
+:junit5-gradle-consumer:            {junit5-samples-repo}/blob/master/junit5-gradle-consumer[junit5-gradle-consumer]
+:junit5-maven-consumer:             {junit5-samples-repo}/blob/master/junit5-maven-consumer[junit5-maven-consumer]
 :MockitoExtension:                  {junit5-samples-repo}/blob/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java[MockitoExtension]
+
 :SpringExtension:                   https://github.com/sbrannen/spring-test-junit5/blob/master/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java[SpringExtension]
-:SummaryGeneratingListener:         {master-branch}/junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/SummaryGeneratingListener.java[SummaryGeneratingListener]
-:TestExecutionCondition:            {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestExecutionCondition.java[TestExecutionCondition]
-:TestExecutionListener:             {master-branch}/junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestExecutionListener.java[TestExecutionListener]
-:TestInfoParameterResolver:         {master-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java[TestInfoParameterResolver]
-:TestInfo:                          {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestInfo.java[TestInfo]
-:TestReporterParameterResolver:     {master-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java[TestReporterParameterResolver]
-:TestReporter:                      {master-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestReporter.java[TestReporter]
 
 include::overview.adoc[]
 

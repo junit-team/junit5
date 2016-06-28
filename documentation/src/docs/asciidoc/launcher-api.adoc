@@ -75,7 +75,8 @@ The current snapshot provides two `TestEngine` implementations out of the box:
   launcher infrastructure.
 
 Third parties may also contribute their own `TestEngine` by implementing the interfaces
-in the {junit-platform-engine} module and _registering_ their engine. Engine registration is
-currently supported via Java's `java.util.ServiceLoader` mechanism. For example, the
-`junit-jupiter-engine` module registers its `JupiterTestEngine`
-https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/resources/META-INF/services/org.junit.platform.engine.TestEngine[here].
+in the {junit-platform-engine} module and _registering_ their engine. Engine registration
+is currently supported via Java's `java.util.ServiceLoader` mechanism. For example, the
+`junit-jupiter-engine` module registers its `org.junit.jupiter.engine.JupiterTestEngine`
+in a file named `org.junit.platform.engine.TestEngine` within the `/META-INF/services` in
+the `junit-jupiter-engine` JAR.

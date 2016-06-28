@@ -345,5 +345,5 @@ and its subpackages.
 
 There are more configuration options for discovering and filtering tests than just
 `@SelectPackages`. Please consult the
-{javadoc-root}/org/junit/platform/runner/package-summary.html[Javadoc] or the source
-code for the `{JUnitPlatform-Runner}` runner for further details.
+{javadoc-root}/org/junit/platform/runner/package-summary.html[Javadoc] for further
+details.
