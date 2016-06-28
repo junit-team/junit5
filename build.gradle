@@ -444,7 +444,8 @@ configure(rootProject) {
 		}
 	}
 
-	def docVersion = project.version.contains('SNAPSHOT') ? 'snapshot' : project.version
+	// docsVersion is also used in documentation.gradle.
+	ext.docsVersion = project.version.contains('SNAPSHOT') ? 'snapshot' : project.version
 
 	githubPages {
 		repoUri = 'https://github.com/junit-team/junit5.git'
@@ -461,7 +462,7 @@ configure(rootProject) {
 			from("$buildDir/docs") {
 				include 'javadoc/**'
 			}
-			into "docs/${docVersion}"
+			into "docs/${docsVersion}"
 			filesMatching('asciidoc/**') { fileCopyDetails ->
 				fileCopyDetails.path = fileCopyDetails.path.replace('asciidoc/', 'user-guide/')
 			}
