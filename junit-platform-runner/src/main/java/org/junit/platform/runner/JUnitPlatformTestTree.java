@@ -59,6 +59,7 @@ class JUnitPlatformTestTree {
 
 	void addDynamicDescription(TestIdentifier newIdentifier, String parentId) {
 		Description parent = getDescription(this.plan.getTestIdentifier(parentId));
+		this.plan.add(newIdentifier);
 		buildDescription(newIdentifier, parent, this.plan);
 	}
 

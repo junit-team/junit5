@@ -38,16 +38,19 @@ import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
+import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.support.hierarchical.DummyTestEngine;
 import org.junit.platform.engine.test.TestDescriptorStub;
@@ -328,7 +331,26 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void reportsIgnoredEventsForLeafsWhenContainerIsSkipped() throws Exception {
+		void supportsDynamicTestRegistration() throws Exception {
+			RunListener runListener = mock(RunListener.class);
+			RunNotifier notifier = new RunNotifier();
+			// notifier.addListener(new LoggingRunListener());
+			notifier.addListener(runListener);
+			new JUnitPlatform(TestClass.class, createLauncher(new DynamicTestEngine())).run(notifier);
+
+			InOrder inOrder = inOrder(runListener);
+
+			inOrder.verify(runListener).testStarted(testDescription("[engine:dynamic]/[container:1]/[test:1]"));
+			inOrder.verify(runListener).testFinished(testDescription("[engine:dynamic]/[container:1]/[test:1]"));
+
+			inOrder.verify(runListener).testStarted(testDescription("[engine:dynamic]/[container:1]/[test:2]"));
+			inOrder.verify(runListener).testFinished(testDescription("[engine:dynamic]/[container:1]/[test:2]"));
+
+			inOrder.verifyNoMoreInteractions();
+		}
+
+		@Test
+		void reportsIgnoredEventsForLeavesWhenContainerIsSkipped() throws Exception {
 			UniqueId uniqueEngineId = UniqueId.forEngine("engine");
 			TestDescriptor engineDescriptor = new EngineDescriptor(uniqueEngineId, "engine");
 			TestDescriptor container = new TestDescriptorStub(UniqueId.root("root", "container"), "container");
@@ -385,6 +407,115 @@ class JUnitPlatformRunnerTests {
 	}
 
 	private static class TestClass {
+	}
+
+	private static class DynamicTestEngine implements TestEngine {
+
+		@Override
+		public String getId() {
+			return "dynamic";
+		}
+
+		@Override
+		public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+			EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "Dynamic Engine");
+
+			// If we don't add this pseudo-container, the whole engine will get pruned because
+			// it otherwise won't have any (static) children.
+			TestDescriptor dynamicTestContainer = new DynamicTestContainerTestDescriptor(
+				uniqueId.append("pseudo-container", "0"), "dynamic test pseudo-container");
+			engineDescriptor.addChild(dynamicTestContainer);
+
+			return engineDescriptor;
+		}
+
+		@Override
+		public void execute(ExecutionRequest request) {
+			EngineExecutionListener engineExecutionListener = request.getEngineExecutionListener();
+			TestDescriptor root = request.getRootTestDescriptor();
+
+			TestDescriptor container = new DemoContainerTestDescriptor(root.getUniqueId().append("container", "1"),
+				"container #1");
+			root.addChild(container);
+
+			engineExecutionListener.dynamicTestRegistered(container);
+			engineExecutionListener.executionStarted(container);
+
+			UniqueId containerUid = container.getUniqueId();
+
+			TestDescriptor dynamicTest1 = new DemoTestTestDescriptor(containerUid.append("test", "1"),
+				"dynamic test #1");
+			container.addChild(dynamicTest1);
+			engineExecutionListener.dynamicTestRegistered(dynamicTest1);
+			engineExecutionListener.executionStarted(dynamicTest1);
+			engineExecutionListener.executionFinished(dynamicTest1, TestExecutionResult.successful());
+
+			TestDescriptor dynamicTest2 = new DemoTestTestDescriptor(containerUid.append("test", "2"),
+				"dynamic test #2");
+			container.addChild(dynamicTest2);
+			engineExecutionListener.dynamicTestRegistered(dynamicTest2);
+			engineExecutionListener.executionStarted(dynamicTest2);
+			engineExecutionListener.executionFinished(dynamicTest2, TestExecutionResult.successful());
+
+			engineExecutionListener.executionFinished(container, TestExecutionResult.successful());
+		}
+
+	}
+
+	private static class DynamicTestContainerTestDescriptor extends AbstractTestDescriptor {
+
+		DynamicTestContainerTestDescriptor(UniqueId uniqueId, String displayName) {
+			super(uniqueId, displayName);
+		}
+
+		@Override
+		public boolean isContainer() {
+			return true;
+		}
+
+		@Override
+		public boolean isTest() {
+			return false;
+		}
+
+		@Override
+		public boolean hasTests() {
+			return true;
+		}
+	}
+
+	private static class DemoContainerTestDescriptor extends AbstractTestDescriptor {
+
+		DemoContainerTestDescriptor(UniqueId uniqueId, String displayName) {
+			super(uniqueId, displayName);
+		}
+
+		@Override
+		public boolean isContainer() {
+			return true;
+		}
+
+		@Override
+		public boolean isTest() {
+			return false;
+		}
+	}
+
+	private static class DemoTestTestDescriptor extends AbstractTestDescriptor {
+
+		DemoTestTestDescriptor(UniqueId uniqueId, String displayName) {
+			super(uniqueId, displayName);
+		}
+
+		@Override
+		public boolean isContainer() {
+			return false;
+		}
+
+		@Override
+		public boolean isTest() {
+			return true;
+		}
 	}
 
 }
