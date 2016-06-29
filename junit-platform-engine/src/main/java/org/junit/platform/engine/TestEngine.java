@@ -45,21 +45,24 @@ public interface TestEngine {
 	String getId();
 
 	/**
-	 * Discover tests according to an {@link EngineDiscoveryRequest}.
+	 * Discover tests according to the supplied {@link EngineDiscoveryRequest}.
 	 *
-	 * <p>The supplied {@code uniqueId} must be used for the returned
-	 * {@link TestDescriptor}. In addition, it is used to create unique IDs for
-	 * its children by calling {@link UniqueId#append}.
+	 * <p>The supplied {@link UniqueId} must be used as the unique ID of the
+	 * returned root {@link TestDescriptor}. In addition, the {@code UniqueId}
+	 * must be used to create unique IDs for children of the root's descriptor
+	 * by calling {@link UniqueId#append}.
 	 *
-	 * @param discoveryRequest the request to discover tests from
+	 * @param discoveryRequest the discovery request
 	 * @param uniqueId the unique ID to be used for this test engine's
 	 * {@code TestDescriptor}
-	 * @return the root {@code TestDescriptor} of this engine
+	 * @return the root {@code TestDescriptor} of this engine, typically an
+	 * instance of {@code EngineDescriptor}
+	 * @see org.junit.platform.engine.support.descriptor.EngineDescriptor
 	 */
 	TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId);
 
 	/**
-	 * Execute tests according to an {@link ExecutionRequest}.
+	 * Execute tests according to the supplied {@link ExecutionRequest}.
 	 *
 	 * <p>The {@code request} passed to this method contains the root
 	 * {@link TestDescriptor} that was previously returned by {@link #discover},

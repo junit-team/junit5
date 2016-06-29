@@ -47,6 +47,10 @@ public class ExecutionRequest {
 	/**
 	 * Get the root {@link TestDescriptor} of the engine that processes this
 	 * request.
+	 *
+	 * <p><strong>Note</strong>: the <em>root</em> descriptor is the
+	 * {@code TestDescriptor} returned by
+	 * {@link TestEngine#discover(EngineDiscoveryRequest, UniqueId)}.
 	 */
 	public TestDescriptor getRootTestDescriptor() {
 		return this.rootTestDescriptor;
