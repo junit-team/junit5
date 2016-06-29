@@ -36,7 +36,7 @@ class JUnitPlatformTestTree {
 
 	JUnitPlatformTestTree(TestPlan plan, Class<?> testClass) {
 		this.plan = plan;
-		this.suiteDescription = generateDescription(plan, testClass);
+		this.suiteDescription = generateSuiteDescription(plan, testClass);
 	}
 
 	Description getSuiteDescription() {
@@ -47,7 +47,7 @@ class JUnitPlatformTestTree {
 		return this.descriptions.get(identifier);
 	}
 
-	private Description generateDescription(TestPlan testPlan, Class<?> testClass) {
+	private Description generateSuiteDescription(TestPlan testPlan, Class<?> testClass) {
 		Description suiteDescription = Description.createSuiteDescription(testClass.getName());
 		buildDescriptionTree(suiteDescription, testPlan);
 		return suiteDescription;
@@ -58,7 +58,7 @@ class JUnitPlatformTestTree {
 	}
 
 	void addDynamicDescription(TestIdentifier newIdentifier, String parentId) {
-		Description parent = getDescription(plan.getTestIdentifier(parentId));
+		Description parent = getDescription(this.plan.getTestIdentifier(parentId));
 		buildDescription(newIdentifier, parent, this.plan);
 	}
 
