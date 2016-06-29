@@ -300,8 +300,8 @@ class JUnitPlatformRunnerTests {
 			engine.addTest("failingTest", () -> fail("expected to fail"));
 			engine.addTest("succeedingTest", () -> {
 			});
-			engine.addTest("skippedTest", () -> assumeFalse(true));
-			engine.addTest("ignoredTest", () -> fail("never called")).markSkipped("should be skipped");
+			engine.addTest("abortedTest", () -> assumeFalse(true));
+			engine.addTest("skippedTest", () -> fail("never called")).markSkipped("should be skipped");
 
 			RunListener runListener = mock(RunListener.class);
 
@@ -318,11 +318,11 @@ class JUnitPlatformRunnerTests {
 			inOrder.verify(runListener).testStarted(testDescription("[engine:dummy]/[test:succeedingTest]"));
 			inOrder.verify(runListener).testFinished(testDescription("[engine:dummy]/[test:succeedingTest]"));
 
-			inOrder.verify(runListener).testStarted(testDescription("[engine:dummy]/[test:skippedTest]"));
+			inOrder.verify(runListener).testStarted(testDescription("[engine:dummy]/[test:abortedTest]"));
 			inOrder.verify(runListener).testAssumptionFailure(any());
-			inOrder.verify(runListener).testFinished(testDescription("[engine:dummy]/[test:skippedTest]"));
+			inOrder.verify(runListener).testFinished(testDescription("[engine:dummy]/[test:abortedTest]"));
 
-			inOrder.verify(runListener).testIgnored(testDescription("[engine:dummy]/[test:ignoredTest]"));
+			inOrder.verify(runListener).testIgnored(testDescription("[engine:dummy]/[test:skippedTest]"));
 
 			inOrder.verifyNoMoreInteractions();
 		}
