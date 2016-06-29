@@ -13,7 +13,6 @@ package org.junit.platform.engine.support.descriptor;
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
 import org.junit.platform.commons.meta.API;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
@@ -27,8 +26,6 @@ import org.junit.platform.engine.UniqueId;
 @API(Experimental)
 public class EngineDescriptor extends AbstractTestDescriptor {
 
-	private final String displayName;
-
 	/**
 	 * Create a new {@code EngineDescriptor} with the supplied {@link UniqueId}
 	 * and display name.
@@ -41,13 +38,7 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 	 * @see TestDescriptor#getDisplayName()
 	 */
 	public EngineDescriptor(UniqueId uniqueId, String displayName) {
-		super(uniqueId);
-		this.displayName = Preconditions.notBlank(displayName, "display name must not be null or blank");
-	}
-
-	@Override
-	public final String getDisplayName() {
-		return this.displayName;
+		super(uniqueId, displayName);
 	}
 
 	/**

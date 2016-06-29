@@ -361,12 +361,7 @@ public class HierarchicalTestExecutorTests {
 	private static class MyContainer extends AbstractTestDescriptor implements Node<MyEngineExecutionContext> {
 
 		protected MyContainer(UniqueId uniqueId) {
-			super(uniqueId);
-		}
-
-		@Override
-		public String getDisplayName() {
-			return getUniqueId().toString();
+			super(uniqueId, uniqueId.toString());
 		}
 
 		@Override
@@ -389,17 +384,12 @@ public class HierarchicalTestExecutorTests {
 	private static class MyLeaf extends AbstractTestDescriptor implements Node<MyEngineExecutionContext> {
 
 		protected MyLeaf(UniqueId uniqueId) {
-			super(uniqueId);
+			super(uniqueId, uniqueId.toString());
 		}
 
 		@Override
 		public MyEngineExecutionContext execute(MyEngineExecutionContext context) throws Exception {
 			return context;
-		}
-
-		@Override
-		public String getDisplayName() {
-			return getUniqueId().toString();
 		}
 
 		@Override

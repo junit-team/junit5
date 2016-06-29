@@ -28,17 +28,15 @@ import org.junit.platform.engine.UniqueId;
  */
 public class DemoMethodTestDescriptor extends AbstractTestDescriptor {
 
-	private final String displayName;
 	private final Class<?> testClass;
 	private final Method testMethod;
 
 	public DemoMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
-		super(uniqueId);
+		super(uniqueId, String.format("%s(%s)", Preconditions.notNull(testMethod, "Method must not be null").getName(),
+			StringUtils.nullSafeToString(Class::getSimpleName, testMethod.getParameterTypes())));
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
-		this.testMethod = Preconditions.notNull(testMethod, "Method must not be null");
-		this.displayName = String.format("%s(%s)", testMethod.getName(),
-			StringUtils.nullSafeToString(Class::getSimpleName, testMethod.getParameterTypes()));
+		this.testMethod = testMethod;
 
 		setSource(new JavaMethodSource(testMethod));
 	}
@@ -55,11 +53,6 @@ public class DemoMethodTestDescriptor extends AbstractTestDescriptor {
 
 		getParent().ifPresent(parentDescriptor -> methodTags.addAll(parentDescriptor.getTags()));
 		return methodTags;
-	}
-
-	@Override
-	public final String getDisplayName() {
-		return this.displayName;
 	}
 
 	public final Class<?> getTestClass() {

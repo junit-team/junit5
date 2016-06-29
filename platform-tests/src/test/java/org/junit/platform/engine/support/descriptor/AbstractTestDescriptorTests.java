@@ -98,12 +98,7 @@ public class AbstractTestDescriptorTests {
 class GroupDescriptor extends AbstractTestDescriptor {
 
 	GroupDescriptor(UniqueId uniqueId) {
-		super(uniqueId);
-	}
-
-	@Override
-	public String getDisplayName() {
-		return "group: " + getUniqueId();
+		super(uniqueId, "group: " + uniqueId);
 	}
 
 	@Override
@@ -120,12 +115,7 @@ class GroupDescriptor extends AbstractTestDescriptor {
 class LeafDescriptor extends AbstractTestDescriptor {
 
 	LeafDescriptor(UniqueId uniqueId) {
-		super(uniqueId);
-	}
-
-	@Override
-	public String getDisplayName() {
-		return "leaf: " + getUniqueId();
+		super(uniqueId, "leaf: " + uniqueId);
 	}
 
 	@Override

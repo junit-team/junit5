@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Executable;
@@ -44,8 +45,8 @@ import org.junit.platform.engine.support.hierarchical.Node;
 public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		implements Node<JupiterEngineExecutionContext> {
 
-	JupiterTestDescriptor(UniqueId uniqueId) {
-		super(uniqueId);
+	JupiterTestDescriptor(UniqueId uniqueId, String displayName) {
+		super(uniqueId, displayName);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -60,16 +61,15 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		// @formatter:on
 	}
 
-	protected String determineDisplayName(AnnotatedElement element) {
+	protected static <E extends AnnotatedElement> String determineDisplayName(E element,
+			Function<E, String> defaultDisplayNameGenerator) {
 		// @formatter:off
 		return findAnnotation(element, DisplayName.class)
 				.map(DisplayName::value)
 				.filter(StringUtils::isNotBlank)
-				.orElseGet(() -> generateDefaultDisplayName());
+				.orElseGet(() -> defaultDisplayNameGenerator.apply(element));
 		// @formatter:on
 	}
-
-	protected abstract String generateDefaultDisplayName();
 
 	// --- Node ----------------------------------------------------------------
 

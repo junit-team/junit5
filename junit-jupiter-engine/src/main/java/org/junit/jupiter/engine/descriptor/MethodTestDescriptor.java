@@ -63,16 +63,15 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
-	private final String displayName;
 	private final Class<?> testClass;
 	private final Method testMethod;
 
 	public MethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
-		super(uniqueId);
+		super(uniqueId, determineDisplayName(Preconditions.notNull(testMethod, "Method must not be null"),
+			MethodTestDescriptor::generateDefaultDisplayName));
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
-		this.testMethod = Preconditions.notNull(testMethod, "Method must not be null");
-		this.displayName = determineDisplayName(testMethod);
+		this.testMethod = testMethod;
 
 		setSource(new JavaMethodSource(testMethod));
 	}
@@ -84,11 +83,6 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		Set<TestTag> methodTags = getTags(getTestMethod());
 		getParent().ifPresent(parentDescriptor -> methodTags.addAll(parentDescriptor.getTags()));
 		return methodTags;
-	}
-
-	@Override
-	public final String getDisplayName() {
-		return this.displayName;
 	}
 
 	public final Class<?> getTestClass() {
@@ -109,10 +103,9 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 		return false;
 	}
 
-	@Override
-	protected String generateDefaultDisplayName() {
-		return String.format("%s(%s)", this.testMethod.getName(),
-			StringUtils.nullSafeToString(Class::getSimpleName, this.testMethod.getParameterTypes()));
+	protected static String generateDefaultDisplayName(Method testMethod) {
+		return String.format("%s(%s)", testMethod.getName(),
+			StringUtils.nullSafeToString(Class::getSimpleName, testMethod.getParameterTypes()));
 	}
 
 	// --- Node ----------------------------------------------------------------

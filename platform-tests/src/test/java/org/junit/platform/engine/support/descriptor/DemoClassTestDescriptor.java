@@ -27,14 +27,12 @@ import org.junit.platform.engine.UniqueId;
  */
 public class DemoClassTestDescriptor extends AbstractTestDescriptor {
 
-	private final String displayName;
 	private final Class<?> testClass;
 
 	public DemoClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
-		super(uniqueId);
+		super(uniqueId, Preconditions.notNull(testClass, "Class must not be null").getSimpleName());
 		setSource(new JavaClassSource(testClass));
-		this.displayName = testClass.getSimpleName();
-		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
+		this.testClass = testClass;
 	}
 
 	@Override
@@ -46,11 +44,6 @@ public class DemoClassTestDescriptor extends AbstractTestDescriptor {
 				.map(TestTag::create)
 				.collect(toCollection(LinkedHashSet::new));
 		// @formatter:on
-	}
-
-	@Override
-	public final String getDisplayName() {
-		return this.displayName;
 	}
 
 	public final Class<?> getTestClass() {

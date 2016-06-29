@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -64,7 +65,6 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
-	private final String displayName;
 	private final Class<?> testClass;
 
 	private final List<Method> beforeAllMethods;
@@ -73,10 +73,16 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private final List<Method> afterEachMethods;
 
 	public ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
-		super(uniqueId);
+		this(uniqueId, ClassTestDescriptor::generateDefaultDisplayName, testClass);
+	}
 
-		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
-		this.displayName = determineDisplayName(testClass);
+	protected ClassTestDescriptor(UniqueId uniqueId, Function<Class<?>, String> defaultDisplayNameGenerator,
+			Class<?> testClass) {
+
+		super(uniqueId, determineDisplayName(Preconditions.notNull(testClass, "Class must not be null"),
+			defaultDisplayNameGenerator));
+
+		this.testClass = testClass;
 
 		this.beforeAllMethods = findBeforeAllMethods(testClass);
 		this.afterAllMethods = findAfterAllMethods(testClass);
@@ -93,11 +99,6 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		return getTags(this.testClass);
 	}
 
-	@Override
-	public final String getDisplayName() {
-		return this.displayName;
-	}
-
 	public final Class<?> getTestClass() {
 		return this.testClass;
 	}
@@ -112,9 +113,8 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		return true;
 	}
 
-	@Override
-	protected String generateDefaultDisplayName() {
-		String name = this.testClass.getName();
+	private static String generateDefaultDisplayName(Class<?> testClass) {
+		String name = testClass.getName();
 		int index = name.lastIndexOf('.');
 		return name.substring(index + 1);
 	}

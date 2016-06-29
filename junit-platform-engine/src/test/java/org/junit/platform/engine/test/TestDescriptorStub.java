@@ -18,16 +18,8 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
  */
 public class TestDescriptorStub extends AbstractTestDescriptor {
 
-	private final String displayName;
-
 	public TestDescriptorStub(UniqueId uniqueId, String displayName) {
-		super(uniqueId);
-		this.displayName = displayName;
-	}
-
-	@Override
-	public String getDisplayName() {
-		return displayName;
+		super(uniqueId, displayName);
 	}
 
 	@Override

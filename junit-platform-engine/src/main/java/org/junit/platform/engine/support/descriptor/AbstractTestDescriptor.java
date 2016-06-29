@@ -40,6 +40,8 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final UniqueId uniqueId;
 
+	private final String displayName;
+
 	private TestDescriptor parent;
 
 	private TestSource source;
@@ -48,18 +50,26 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	/**
 	 * Create a new {@code AbstractTestDescriptor} with the supplied
-	 * {@link UniqueId}.
+	 * {@link UniqueId} and display name.
 	 *
-	 * @param uniqueId unique ID of this {@link TestDescriptor}; must not be
-	 * {@code null}.
+	 * @param uniqueId the unique ID of this {@link TestDescriptor}; never
+	 * {@code null}
+	 * @param displayName the display name for this {@link TestDescriptor};
+	 * never {@code null} or blank
 	 */
-	protected AbstractTestDescriptor(UniqueId uniqueId) {
+	protected AbstractTestDescriptor(UniqueId uniqueId, String displayName) {
 		this.uniqueId = Preconditions.notNull(uniqueId, "UniqueId must not be null");
+		this.displayName = Preconditions.notNull(displayName, "displayName must not be null or blank");
 	}
 
 	@Override
 	public final UniqueId getUniqueId() {
 		return this.uniqueId;
+	}
+
+	@Override
+	public final String getDisplayName() {
+		return this.displayName;
 	}
 
 	@Override

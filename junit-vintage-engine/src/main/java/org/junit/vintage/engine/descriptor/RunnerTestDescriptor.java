@@ -30,7 +30,7 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 	private final Class<?> testClass;
 
 	public RunnerTestDescriptor(TestDescriptor parent, Class<?> testClass, Runner runner) {
-		super(parent, SEGMENT_TYPE_RUNNER, testClass.getName(), runner.getDescription(),
+		super(parent, SEGMENT_TYPE_RUNNER, testClass.getName(), runner.getDescription(), testClass.getName(),
 			Optional.of(new JavaClassSource(testClass)));
 		this.testClass = testClass;
 		this.runner = runner;
@@ -42,11 +42,6 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 
 	public Class<?> getTestClass() {
 		return this.testClass;
-	}
-
-	@Override
-	public String getDisplayName() {
-		return this.testClass.getName();
 	}
 
 	public Request toRequest() {

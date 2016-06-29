@@ -64,8 +64,8 @@ class XmlReportsWritingListenerTests {
 	@Test
 	void writesFileForSingleSucceedingTest(@Root Path tempDirectory) throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
-		engine.addTest("succeedingTest", () -> {
-		}).setDisplayName("display<>Name");
+		engine.addTest("succeedingTest", "display<>Name", () -> {
+		});
 
 		executeTests(engine, tempDirectory);
 

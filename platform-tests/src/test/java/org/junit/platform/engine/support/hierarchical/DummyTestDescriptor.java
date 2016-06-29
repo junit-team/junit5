@@ -21,24 +21,13 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
  */
 public class DummyTestDescriptor extends AbstractTestDescriptor implements Node<DummyEngineExecutionContext> {
 
-	private String displayName;
 	private final Runnable runnable;
 	private String skippedReason;
 	private boolean skipped;
 
 	DummyTestDescriptor(UniqueId uniqueId, String displayName, Runnable runnable) {
-		super(uniqueId);
-		this.displayName = displayName;
+		super(uniqueId, displayName);
 		this.runnable = runnable;
-	}
-
-	@Override
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
 	}
 
 	@Override

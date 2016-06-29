@@ -42,7 +42,7 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	public NestedClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
-		super(uniqueId, testClass);
+		super(uniqueId, Class::getSimpleName, testClass);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -52,11 +52,6 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 		Set<TestTag> localTags = super.getTags();
 		getParent().ifPresent(parentDescriptor -> localTags.addAll(parentDescriptor.getTags()));
 		return localTags;
-	}
-
-	@Override
-	protected String generateDefaultDisplayName() {
-		return getTestClass().getSimpleName();
 	}
 
 	// --- Node ----------------------------------------------------------------

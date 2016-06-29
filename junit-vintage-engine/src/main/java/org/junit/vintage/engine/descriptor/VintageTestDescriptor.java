@@ -50,25 +50,31 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 
 	public VintageTestDescriptor(TestDescriptor parent, String segmentType, String segmentValue,
 			Description description) {
+
 		this(parent, segmentType, segmentValue, description, toJavaSource(description));
 	}
 
 	VintageTestDescriptor(TestDescriptor parent, String segmentType, String segmentValue, Description description,
 			Optional<? extends TestSource> source) {
-		super(parent.getUniqueId().append(segmentType, segmentValue));
+
+		this(parent, segmentType, segmentValue, description, generateDisplayName(description), source);
+	}
+
+	VintageTestDescriptor(TestDescriptor parent, String segmentType, String segmentValue, Description description,
+			String displayName, Optional<? extends TestSource> source) {
+
+		super(parent.getUniqueId().append(segmentType, segmentValue), displayName);
 
 		this.description = description;
 		source.ifPresent(this::setSource);
 	}
 
-	public Description getDescription() {
-		return description;
+	private static String generateDisplayName(Description description) {
+		return description.getMethodName() != null ? description.getMethodName() : description.getDisplayName();
 	}
 
-	@Override
-	public String getDisplayName() {
-		String methodName = description.getMethodName();
-		return methodName != null ? methodName : description.getDisplayName();
+	public Description getDescription() {
+		return description;
 	}
 
 	@Override
