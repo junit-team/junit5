@@ -1,5 +1,5 @@
 /**
- * Public API for JUnit test engines.
+ * Public API for test engines.
  */
 
 package org.junit.platform.engine;

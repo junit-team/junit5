@@ -1,5 +1,5 @@
 /**
- * Internal meta-annotations.
+ * Internal <em>meta</em> package.
  *
  * <h3>DISCLAIMER</h3>
  *
