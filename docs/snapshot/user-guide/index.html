@@ -435,7 +435,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#overview">1. Overview</a>
 <ul class="sectlevel2">
-<li><a href="#overview-java-versions">1.1. Supported Java Versions</a></li>
+<li><a href="#overview-what-is-junit-5">1.1. What is JUnit 5?</a></li>
+<li><a href="#overview-java-versions">1.2. Supported Java Versions</a></li>
 </ul>
 </li>
 <li><a href="#installation">2. Installation</a>
@@ -481,7 +482,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#migrating-from-junit4">6. Migrating from JUnit 4</a>
 <ul class="sectlevel2">
-<li><a href="#migrating-from-junit4-running">6.1. Running JUnit 4 Tests with the JUnit Platform</a></li>
+<li><a href="#migrating-from-junit4-running">6.1. Running JUnit 4 Tests on the JUnit Platform</a></li>
 <li><a href="#migrating-from-junit4-tips">6.2. Migration Tips</a></li>
 </ul>
 </li>
@@ -511,14 +512,44 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="overview">1. Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The goal of this document is to provide comprehensive reference documentation for both
-programmers writing tests and extension authors.</p>
+<p>The goal of this document is to provide comprehensive reference documentation for
+programmers writing tests, extension authors, and engine authors as well as build tool
+and IDE vendors.</p>
 </div>
 <div class="sect2">
-<h3 id="overview-java-versions">1.1. Supported Java Versions</h3>
+<h3 id="overview-what-is-junit-5">1.1. What is JUnit 5?</h3>
 <div class="paragraph">
-<p>JUnit 5 only supports Java 8 and above. However, you can still test classes compiled with
-lower versions.</p>
+<p>Unlike previous versions of JUnit, JUnit 5 is composed of several different modules from
+three different sub-projects.</p>
+</div>
+<div class="paragraph">
+<p><strong>JUnit 5 = <em>JUnit Platform</em> + <em>JUnit Jupiter</em> + <em>JUnit Vintage</em></strong></p>
+</div>
+<div class="paragraph">
+<p>The <strong>JUnit Platform</strong> serves as a foundation for <a href="#launcher-api">launching testing
+frameworks</a> on the JVM. It also defines the <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/engine/TestEngine.html">TestEngine</a></code> API for developing a testing
+framework that runs on the platform. Furthermore, the platform provides a
+<a href="#running-tests-console-launcher">Console Launcher</a> to launch the platform from the
+command line and build plugins for <a href="#running-tests-build-gradle">Gradle</a> and
+<a href="#running-tests-build-maven">Maven</a> as well as a
+<a href="#running-tests-junit-platform-runner">JUnit 4 based Runner</a> for running any <code>TestEngine</code>
+on the platform.</p>
+</div>
+<div class="paragraph">
+<p><strong>JUnit Jupiter</strong> is the combination of the new <a href="#writing-tests">programming model</a> and
+<a href="#extensions">extension model</a> for writing tests and extensions in JUnit 5. The Jupiter
+sub-project provides a <code>TestEngine</code> for running Jupiter based tests on the platform.</p>
+</div>
+<div class="paragraph">
+<p><strong>JUnit Vintage</strong> provides a <code>TestEngine</code> for running JUnit 3 and JUnit 4 based tests on
+the platform.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="overview-java-versions">1.2. Supported Java Versions</h3>
+<div class="paragraph">
+<p>JUnit 5 requires Java 8 at runtime. However, you can still test code that has been
+compiled with previous versions of the JDK.</p>
 </div>
 </div>
 </div>
@@ -527,39 +558,16 @@ lower versions.</p>
 <h2 id="installation">2. Installation</h2>
 <div class="sectionbody">
 <div class="paragraph">
+<p>Artifacts for final releases and milestones are deployed to Maven Central.</p>
+</div>
+<div class="paragraph">
 <p>Snapshot artifacts are deployed to Sonatype&#8217;s <a href="https://oss.sonatype.org/content/repositories/snapshots">snapshots repository</a> under
 <a href="https://oss.sonatype.org/content/repositories/snapshots/org/junit/">/org/junit</a>.</p>
 </div>
 <div class="sect2">
 <h3 id="dependency-metadata">2.1. Dependency Metadata</h3>
 <div class="sect3">
-<h4 id="dependency-metadata-junit-jupiter">2.1.1. JUnit Jupiter</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Group ID</strong>: <code>org.junit.jupiter</code></p>
-</li>
-<li>
-<p><strong>Version</strong>: <code>5.0.0-SNAPSHOT</code></p>
-</li>
-<li>
-<p><strong>Artifact IDs</strong>:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>junit-jupiter-api</code></p>
-</li>
-<li>
-<p><code>junit-jupiter-engine</code></p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="dependency-metadata-junit-platform">2.1.2. JUnit Platform</h4>
+<h4 id="dependency-metadata-junit-platform">2.1.1. JUnit Platform</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -600,6 +608,32 @@ lower versions.</p>
 </div>
 </div>
 <div class="sect3">
+<h4 id="dependency-metadata-junit-jupiter">2.1.2. JUnit Jupiter</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Group ID</strong>: <code>org.junit.jupiter</code></p>
+</li>
+<li>
+<p><strong>Version</strong>: <code>5.0.0-SNAPSHOT</code></p>
+</li>
+<li>
+<p><strong>Artifact IDs</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>junit-jupiter-api</code></p>
+</li>
+<li>
+<p><code>junit-jupiter-engine</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
 <h4 id="dependency-metadata-junit-vintage">2.1.3. JUnit Vintage</h4>
 <div class="ulist">
 <ul>
@@ -620,8 +654,8 @@ lower versions.</p>
 <h3 id="dependency-metadata-junit-jupiter-samples">2.2. JUnit Jupiter Sample Projects</h3>
 <div class="paragraph">
 <p>The <a href="https://github.com/junit-team/junit5-samples"><code>junit5-samples</code></a> repository hosts a collection of sample
-projects based on JUnit Jupiter. You&#8217;ll find the respective <code>build.gradle</code> and <code>pom.xml</code> in
-the projects below.</p>
+projects based on JUnit Jupiter and JUnit Vintage. You&#8217;ll find the respective
+<code>build.gradle</code> and <code>pom.xml</code> in the projects below.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1538,16 +1572,17 @@ class DynamicTestsDemo {
 <div class="sect2">
 <h3 id="running-tests-ide">4.1. IDE Support</h3>
 <div class="paragraph">
-<p>At the time of this writing there is no direct support for running JUnit Jupiter tests in IDEs.
-However, the JUnit team provides two intermediate solutions so that you can go ahead and
-try out JUnit 5 within your IDE today. You can use the <a href="#running-tests-console-launcher">Console Launcher</a>
-or execute JUnit Jupiter tests with a <a href="#running-tests-junit-platform-runner">JUnit 4 based Runner</a>.</p>
+<p>At the time of this writing there is no direct support for running tests on the JUnit
+Platform within IDEs. However, the JUnit team provides two intermediate solutions so that
+you can go ahead and try out JUnit 5 within your IDE today. You can use the
+<a href="#running-tests-console-launcher">Console Launcher</a> manually or execute tests with a
+<a href="#running-tests-junit-platform-runner">JUnit 4 based Runner</a>.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="running-tests-build">4.2. Build Support</h3>
 <div class="sect3">
-<h4 id="running-tests-gradle">4.2.1. Gradle</h4>
+<h4 id="running-tests-build-gradle">4.2.1. Gradle</h4>
 <div class="paragraph">
 <p>The JUnit team has developed a very basic Gradle plugin that allows you to run any kind
 of test that is supported by a <code>TestEngine</code> (e.g., JUnit 3, JUnit 4, JUnit Jupiter, Specsy,
@@ -1555,7 +1590,7 @@ etc.). See <code>build.gradle</code> in the <code><a href="https://github.com/ju
 plugin in action.</p>
 </div>
 <div class="sect4">
-<h5 id="running-tests-gradle-junit-enable">Enabling the JUnit Gradle Plugin</h5>
+<h5 id="running-tests-build-gradle-junit-enable">Enabling the JUnit Gradle Plugin</h5>
 <div class="paragraph">
 <p>To use the JUnit Gradle plugin, you first need to make sure that you are running Gradle
 2.5 or higher. Once you&#8217;ve done that, you can configure <code>build.gradle</code> as follows.</p>
@@ -1578,7 +1613,7 @@ apply plugin: 'org.junit.platform.gradle.plugin'</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="running-tests-gradle-junit-configure">Configuring the JUnit Gradle Plugin</h5>
+<h5 id="running-tests-build-gradle-junit-configure">Configuring the JUnit Gradle Plugin</h5>
 <div class="paragraph">
 <p>Once the JUnit Gradle plugin has been applied, you can configure it as follows.</p>
 </div>
@@ -1634,7 +1669,7 @@ tests).</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="running-tests-gradle-engines-configure">Configuring Test Engines</h5>
+<h5 id="running-tests-build-gradle-engines-configure">Configuring Test Engines</h5>
 <div class="paragraph">
 <p>In order to have the JUnit Gradle plugin run any tests at all, a <code>TestEngine</code>
 implementation must be on the classpath.</p>
@@ -1667,7 +1702,7 @@ TestEngine implementation similar to the following.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="running-tests-gradle-junit-using">Using the JUnit Gradle Plugin</h5>
+<h5 id="running-tests-build-gradle-junit-using">Using the JUnit Gradle Plugin</h5>
 <div class="paragraph">
 <p>Once the JUnit Gradle plugin has been applied and configured, you have a new
 <code>junitPlatformTest</code> task at your disposal.</p>
@@ -1755,7 +1790,7 @@ The results of any tests run via the JUnit Gradle plugin will not be included
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-maven">4.2.2. Maven</h4>
+<h4 id="running-tests-build-maven">4.2.2. Maven</h4>
 <div class="paragraph">
 <p>The JUnit team has developed a very basic provider for Maven Surefire that lets you run
 JUnit 4 and JUnit Jupiter tests via <code>mvn test</code>. The <code>pom.xml</code> file in the
@@ -2367,20 +2402,20 @@ will need to update all of their existing tests, test extensions, and custom bui
 infrastructure to migrate to JUnit Jupiter.</p>
 </div>
 <div class="paragraph">
-<p>Instead, JUnit provides a gentle migration path via a <em>JUnit 4 test engine</em> which
-allows existing tests based on JUnit 4 to be executed using the JUnit Platform infrastructure.
-Since all classes and annotations specific to JUnit Jupiter reside under a new <code>org.junit.jupiter</code>
-base package, having both JUnit 4 and JUnit Jupiter in the classpath does not lead to any
-conflicts. It is therefore safe to maintain existing JUnit 4 tests alongside JUnit Jupiter
-tests. Furthermore, since the JUnit team will continue to provide maintenance and bug fix
-releases for the JUnit 4.x baseline, developers have plenty of time to migrate to JUnit Jupiter
-on their own schedule.</p>
+<p>Instead, JUnit provides a gentle migration path via a <em>JUnit Vintage test engine</em> which
+allows existing tests based on JUnit 3 and JUnit 4 to be executed using the JUnit
+Platform infrastructure. Since all classes and annotations specific to JUnit Jupiter
+reside under a new <code>org.junit.jupiter</code> base package, having both JUnit 4 and JUnit
+Jupiter in the classpath does not lead to any conflicts. It is therefore safe to maintain
+existing JUnit 4 tests alongside JUnit Jupiter tests. Furthermore, since the JUnit team
+will continue to provide maintenance and bug fix releases for the JUnit 4.x baseline,
+developers have plenty of time to migrate to JUnit Jupiter on their own schedule.</p>
 </div>
 <div class="sect2">
-<h3 id="migrating-from-junit4-running">6.1. Running JUnit 4 Tests with the JUnit Platform</h3>
+<h3 id="migrating-from-junit4-running">6.1. Running JUnit 4 Tests on the JUnit Platform</h3>
 <div class="paragraph">
 <p>Just make sure that the <code>junit-vintage-engine</code> artifact is in your test runtime path. In that
-case JUnit 4 tests will automatically be picked up by the JUnit Platform launcher.</p>
+case JUnit 3 and JUnit 4 tests will automatically be picked up by the JUnit Platform launcher.</p>
 </div>
 <div class="paragraph">
 <p>See the example projects in the <a href="https://github.com/junit-team/junit5-samples"><code>junit5-samples</code></a> repository to
@@ -2439,10 +2474,10 @@ decouple the internals of discovering and executing tests from all the filtering
 configuration that&#8217;s necessary from the outside.</p>
 </div>
 <div class="paragraph">
-<p>For JUnit 5 we came up with the concept of a <code>Launcher</code> that can be used to discover,
-filter, and execute JUnit tests. Moreover, we added a mechanism to allow third party test
-libraries – like Spock, Cucumber, and FitNesse – to plug into the JUnit Platform&#8217;s launching
-infrastructure.</p>
+<p>JUnit 5 introduces the concept of a <code>Launcher</code> that can be used to discover, filter, and
+execute tests. Moreover, third party test libraries – like Spock, Cucumber, and FitNesse
+– can plug into the JUnit Platform&#8217;s launching infrastructure by providing a custom
+<code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/engine/TestEngine.html">TestEngine</a></code>.</p>
 </div>
 <div class="paragraph">
 <p>The launching API is in the <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/launcher/package-summary.html">junit-platform-launcher</a></code> module.</p>
@@ -2454,9 +2489,9 @@ infrastructure.</p>
 <div class="sect3">
 <h4 id="launcher-api-discovery">7.1.1. Discovering Tests</h4>
 <div class="paragraph">
-<p>Introducing <em>test discovery</em> as a dedicated feature of JUnit itself will (hopefully) free
-IDEs and build tools from most of the difficulties they had to go through to identify
-test classes and test methods in the past.</p>
+<p>Introducing <em>test discovery</em> as a dedicated feature of the platform itself will
+(hopefully) free IDEs and build tools from most of the difficulties they had to go
+through to identify test classes and test methods in the past.</p>
 </div>
 <div class="paragraph">
 <p>Usage Example:</p>
@@ -2539,7 +2574,7 @@ final results in an object of your own. For an example see the
 <div class="sect3">
 <h4 id="launcher-api-engines-custom">7.1.3. Plugging in Your Own Test Engine</h4>
 <div class="paragraph">
-<p>The current snapshot provides two <code>TestEngine</code> implementations out of the box:</p>
+<p>JUnit currently provides two <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/platform/engine/TestEngine.html">TestEngine</a></code> implementations out of the box:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2547,8 +2582,8 @@ final results in an object of your own. For an example see the
 <p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/engine/package-summary.html">junit-jupiter-engine</a></code>: The core of JUnit Jupiter.</p>
 </li>
 <li>
-<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/vintage/engine/package-summary.html">junit-vintage-engine</a></code>: A thin layer on top of JUnit 4 to allow running "old" tests with the
-launcher infrastructure.</p>
+<p><code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/vintage/engine/package-summary.html">junit-vintage-engine</a></code>: A thin layer on top of JUnit 4 to allow running <em>vintage</em>
+tests with the launcher infrastructure.</p>
 </li>
 </ul>
 </div>
@@ -2766,7 +2801,7 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-06-29 15:10:19 -04:00
+Last updated 2016-06-30 10:02:29 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
