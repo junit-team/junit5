@@ -2136,7 +2136,7 @@ For example, you may wish to run tests even if they are annotated with <code>@Di
 order to see if they are still <em>broken</em>. To do this, simply provide a pattern for the
 <code>junit.conditions.deactivate</code> configuration key to specify which conditions should be
 deactivated (i.e., not evaluated) for the current test run. The pattern can be supplied
-as a JVM system property or as a <em>configuration parameter</em> in the <code>TestDiscoveryRequest</code>
+as a JVM system property or as a <em>configuration parameter</em> in the <code>LauncherDiscoveryRequest</code>
 that is passed to the <code>Launcher</code>.</p>
 </div>
 <div class="paragraph">
@@ -2504,17 +2504,17 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPacka
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
-import org.junit.platform.launcher.core.TestDiscoveryRequestBuilder;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest request = TestDiscoveryRequestBuilder.request()
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
     .selectors(
         selectPackage("com.example.mytests"),
         selectClass(MyTestClass.class)
@@ -2548,7 +2548,7 @@ be achieved through a <code><a href="http://junit.org/junit5/docs/snapshot/api/o
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">TestDiscoveryRequest request = TestDiscoveryRequestBuilder.request()
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
     .selectors(
         selectPackage("com.example.mytests"),
         selectClass(MyTestClass.class)
