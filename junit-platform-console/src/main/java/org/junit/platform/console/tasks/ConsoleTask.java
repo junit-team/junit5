@@ -17,7 +17,7 @@ import java.io.PrintWriter;
 import org.junit.platform.commons.meta.API;
 
 /**
- * A task to be executed from the console,
+ * A task to be executed from the console.
  *
  * @since 1.0
  */
