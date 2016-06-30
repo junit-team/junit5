@@ -1,6 +1,4 @@
 apply plugin: 'org.asciidoctor.convert'
-
-/*
 apply plugin: 'org.junit.platform.gradle.plugin'
 
 junitPlatform {
@@ -10,12 +8,13 @@ junitPlatform {
 	}
 	logManager 'org.apache.logging.log4j.jul.LogManager'
 }
-*/
 
+/*
 test {
 	scanForTestClasses = false
-	include(['**/DocumentationTestSuite.class'])
+	include(['example/DocumentationTestSuite.class'])
 }
+*/
 
 dependencies {
 	testCompile(project(':junit-jupiter-api'))
