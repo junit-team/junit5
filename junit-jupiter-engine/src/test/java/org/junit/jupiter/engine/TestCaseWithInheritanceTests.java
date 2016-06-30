@@ -14,13 +14,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * Integration tests for test class hierarchy support in the {@link JupiterTestEngine}.
@@ -57,7 +57,8 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 
 	@Test
 	public void executeSingleTest() {
-		TestDiscoveryRequest request = request().selectors(selectMethod(LocalTestCase.class, "alwaysPasses")).build();
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(LocalTestCase.class, "alwaysPasses")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -70,7 +71,8 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 
 	@Test
 	public void executeTestDeclaredInSuperClass() {
-		TestDiscoveryRequest request = request().selectors(selectMethod(LocalTestCase.class, "superclassTest")).build();
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(LocalTestCase.class, "superclassTest")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -89,7 +91,7 @@ public class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests
 
 	@Test
 	public void executeTestWithExceptionThrownInAfterMethod() {
-		TestDiscoveryRequest request = request().selectors(
+		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(LocalTestCase.class, "throwExceptionInAfterMethod")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);

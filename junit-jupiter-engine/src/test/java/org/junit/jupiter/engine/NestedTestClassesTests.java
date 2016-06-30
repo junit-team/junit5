@@ -13,7 +13,7 @@ package org.junit.jupiter.engine;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@linkplain Nested nested contexts}
@@ -34,7 +34,7 @@ public class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void nestedTestsAreCorrectlyDiscovered() {
-		TestDiscoveryRequest request = request().selectors(selectClass(TestCaseWithNesting.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCaseWithNesting.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
@@ -53,7 +53,7 @@ public class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void doublyNestedTestsAreCorrectlyDiscovered() {
-		TestDiscoveryRequest request = request().selectors(selectClass(TestCaseWithDoubleNesting.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCaseWithDoubleNesting.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(8, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}

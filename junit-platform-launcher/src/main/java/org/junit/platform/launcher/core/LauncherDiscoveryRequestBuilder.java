@@ -25,17 +25,17 @@ import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.EngineFilter;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
-import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
- * The {@code TestDiscoveryRequestBuilder} provides a light-weight DSL for
- * generating a {@link TestDiscoveryRequest}.
+ * The {@code LauncherDiscoveryRequestBuilder} provides a light-weight DSL for
+ * generating a {@link LauncherDiscoveryRequest}.
  *
  * <h4>Example</h4>
  *
  * <pre style="code">
- *   TestDiscoveryRequestBuilder.request()
+ *   LauncherDiscoveryRequestBuilder.request()
  *     .selectors(
  *        selectPackage("org.example.user"),
  *        selectClass("org.example.payment.PaymentTests"),
@@ -68,7 +68,7 @@ import org.junit.platform.launcher.TestDiscoveryRequest;
  * @see org.junit.platform.launcher.TagFilter
  */
 @API(Experimental)
-public final class TestDiscoveryRequestBuilder {
+public final class LauncherDiscoveryRequestBuilder {
 
 	private List<DiscoverySelector> selectors = new LinkedList<>();
 	private List<EngineFilter> engineFilters = new LinkedList<>();
@@ -77,10 +77,10 @@ public final class TestDiscoveryRequestBuilder {
 	private Map<String, String> configurationParameters = new HashMap<>();
 
 	/**
-	 * Create a new {@code TestDiscoveryRequestBuilder}.
+	 * Create a new {@code LauncherDiscoveryRequestBuilder}.
 	 */
-	public static TestDiscoveryRequestBuilder request() {
-		return new TestDiscoveryRequestBuilder();
+	public static LauncherDiscoveryRequestBuilder request() {
+		return new LauncherDiscoveryRequestBuilder();
 	}
 
 	/**
@@ -88,7 +88,7 @@ public final class TestDiscoveryRequestBuilder {
 	 *
 	 * @param selectors the {@code DiscoverySelectors} to add
 	 */
-	public TestDiscoveryRequestBuilder selectors(DiscoverySelector... selectors) {
+	public LauncherDiscoveryRequestBuilder selectors(DiscoverySelector... selectors) {
 		if (selectors != null) {
 			selectors(Arrays.asList(selectors));
 		}
@@ -100,7 +100,7 @@ public final class TestDiscoveryRequestBuilder {
 	 *
 	 * @param selectors the {@code DiscoverySelectors} to add
 	 */
-	public TestDiscoveryRequestBuilder selectors(List<DiscoverySelector> selectors) {
+	public LauncherDiscoveryRequestBuilder selectors(List<DiscoverySelector> selectors) {
 		if (selectors != null) {
 			this.selectors.addAll(selectors);
 		}
@@ -118,7 +118,7 @@ public final class TestDiscoveryRequestBuilder {
 	 *
 	 * @param filters the {@code Filter}s to add
 	 */
-	public TestDiscoveryRequestBuilder filters(Filter<?>... filters) {
+	public LauncherDiscoveryRequestBuilder filters(Filter<?>... filters) {
 		if (filters != null) {
 			Arrays.stream(filters).forEach(this::storeFilter);
 		}
@@ -128,7 +128,7 @@ public final class TestDiscoveryRequestBuilder {
 	/**
 	 * Add the supplied <em>configuration parameter</em> to the request.
 	 */
-	public TestDiscoveryRequestBuilder configurationParameter(String key, String value) {
+	public LauncherDiscoveryRequestBuilder configurationParameter(String key, String value) {
 		Preconditions.notBlank(key, "configuration parameter key must not be null or blank");
 		this.configurationParameters.put(key, value);
 		return this;
@@ -139,7 +139,7 @@ public final class TestDiscoveryRequestBuilder {
 	 *
 	 * @param configurationParameters the map of configuration parameters to add
 	 */
-	public TestDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
+	public LauncherDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
 		if (configurationParameters != null) {
 			configurationParameters.forEach(this::configurationParameter);
 		}
@@ -164,10 +164,10 @@ public final class TestDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Build the {@link TestDiscoveryRequest} that has been configured via
+	 * Build the {@link LauncherDiscoveryRequest} that has been configured via
 	 * this builder.
 	 */
-	public TestDiscoveryRequest build() {
+	public LauncherDiscoveryRequest build() {
 		LauncherConfigurationParameters launcherConfigurationParameters = new LauncherConfigurationParameters(
 			this.configurationParameters);
 		return new DefaultDiscoveryRequest(this.selectors, this.engineFilters, this.discoveryFilters,

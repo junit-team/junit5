@@ -19,7 +19,7 @@ import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -32,11 +32,11 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
-import org.junit.platform.launcher.core.TestDiscoveryRequestBuilder;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -80,7 +80,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 	private final Class<?> testClass;
 	private final Launcher launcher;
 
-	private TestDiscoveryRequest discoveryRequest;
+	private LauncherDiscoveryRequest discoveryRequest;
 	private JUnitPlatformTestTree testTree;
 
 	public JUnitPlatform(Class<?> testClass) throws InitializationError {
@@ -113,7 +113,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 		return new JUnitPlatformTestTree(plan, testClass);
 	}
 
-	private TestDiscoveryRequest createDiscoveryRequest() {
+	private LauncherDiscoveryRequest createDiscoveryRequest() {
 		List<DiscoverySelector> selectors = getSelectorsFromAnnotations();
 
 		// Allows to simply add @RunWith(JUnitPlatform.class) to any test case
@@ -121,12 +121,12 @@ public class JUnitPlatform extends Runner implements Filterable {
 			selectors.add(selectClass(this.testClass));
 		}
 
-		TestDiscoveryRequestBuilder requestBuilder = request().selectors(selectors);
+		LauncherDiscoveryRequestBuilder requestBuilder = request().selectors(selectors);
 		addFiltersFromAnnotations(requestBuilder);
 		return requestBuilder.build();
 	}
 
-	private void addFiltersFromAnnotations(TestDiscoveryRequestBuilder requestBuilder) {
+	private void addFiltersFromAnnotations(LauncherDiscoveryRequestBuilder requestBuilder) {
 		addIncludeClassNamePatternFilter(requestBuilder);
 
 		addIncludedTagsFilter(requestBuilder);
@@ -149,35 +149,35 @@ public class JUnitPlatform extends Runner implements Filterable {
 		return stream(sourceElements).map(transformer).collect(toList());
 	}
 
-	private void addIncludeClassNamePatternFilter(TestDiscoveryRequestBuilder requestBuilder) {
+	private void addIncludeClassNamePatternFilter(LauncherDiscoveryRequestBuilder requestBuilder) {
 		String pattern = getIncludeClassNamePattern();
 		if (!pattern.isEmpty()) {
 			requestBuilder.filters(includeClassNamePattern(pattern));
 		}
 	}
 
-	private void addIncludedTagsFilter(TestDiscoveryRequestBuilder requestBuilder) {
+	private void addIncludedTagsFilter(LauncherDiscoveryRequestBuilder requestBuilder) {
 		String[] includedTags = getIncludedTags();
 		if (includedTags.length > 0) {
 			requestBuilder.filters(includeTags(includedTags));
 		}
 	}
 
-	private void addExcludedTagsFilter(TestDiscoveryRequestBuilder requestBuilder) {
+	private void addExcludedTagsFilter(LauncherDiscoveryRequestBuilder requestBuilder) {
 		String[] excludedTags = getExcludedTags();
 		if (excludedTags.length > 0) {
 			requestBuilder.filters(excludeTags(excludedTags));
 		}
 	}
 
-	private void addIncludedEnginesFilter(TestDiscoveryRequestBuilder requestBuilder) {
+	private void addIncludedEnginesFilter(LauncherDiscoveryRequestBuilder requestBuilder) {
 		String[] engineIds = getIncludedEngineIds();
 		if (engineIds.length > 0) {
 			requestBuilder.filters(includeEngines(engineIds));
 		}
 	}
 
-	private void addExcludedEnginesFilter(TestDiscoveryRequestBuilder requestBuilder) {
+	private void addExcludedEnginesFilter(LauncherDiscoveryRequestBuilder requestBuilder) {
 		String[] engineIds = getExcludedEngineIds();
 		if (engineIds.length > 0) {
 			requestBuilder.filters(excludeEngines(engineIds));
@@ -229,7 +229,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 		this.testTree = generateTestTree();
 	}
 
-	private TestDiscoveryRequest createDiscoveryRequestForUniqueIds(Set<TestIdentifier> testIdentifiers) {
+	private LauncherDiscoveryRequest createDiscoveryRequestForUniqueIds(Set<TestIdentifier> testIdentifiers) {
 		// @formatter:off
 		List<DiscoverySelector> selectors = testIdentifiers.stream()
 				.map(TestIdentifier::getUniqueId)

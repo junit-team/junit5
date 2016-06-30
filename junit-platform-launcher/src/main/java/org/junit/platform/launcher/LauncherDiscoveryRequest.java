@@ -21,10 +21,10 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 
 /**
- * {@code TestDiscoveryRequest} extends the {@link EngineDiscoveryRequest} API
+ * {@code LauncherDiscoveryRequest} extends the {@link EngineDiscoveryRequest} API
  * with additional filters that are applied by the {@link Launcher} itself.
  *
- * <p>Specifically, a {@code TestDiscoveryRequest} contains the following.
+ * <p>Specifically, a {@code LauncherDiscoveryRequest} contains the following.
  *
  * <ul>
  * <li>{@linkplain EngineFilter Engine Filters}: filters that are applied before
@@ -51,7 +51,7 @@ import org.junit.platform.engine.EngineDiscoveryRequest;
  * @see #getPostDiscoveryFilters()
  */
 @API(Experimental)
-public interface TestDiscoveryRequest extends EngineDiscoveryRequest {
+public interface LauncherDiscoveryRequest extends EngineDiscoveryRequest {
 
 	/**
 	 * Get the {@code EngineFilters} for this request.

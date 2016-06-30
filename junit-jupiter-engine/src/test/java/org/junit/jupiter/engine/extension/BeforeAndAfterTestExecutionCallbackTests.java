@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@link BeforeTestExecutionCallback},
@@ -57,7 +57,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 	@Test
 	public void beforeAndAfterTestExecutionCallbacks() {
-		TestDiscoveryRequest request = request().selectors(selectClass(OuterTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(OuterTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -98,7 +98,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 	@Test
 	public void beforeAndAfterTestExecutionCallbacksDeclaredOnSuperclassAndSubclass() {
-		TestDiscoveryRequest request = request().selectors(selectClass(ChildTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(ChildTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -121,7 +121,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 	@Test
 	public void beforeAndAfterTestExecutionCallbacksDeclaredOnInterfaceAndClass() {
-		TestDiscoveryRequest request = request().selectors(selectClass(TestInterfaceTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(TestInterfaceTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -154,7 +154,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 	@Test
 	public void beforeEachMethodThrowsAnException() {
-		TestDiscoveryRequest request = request().selectors(
+		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(ExceptionInBeforeEachMethodTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -181,7 +181,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 	@Test
 	public void beforeTestExecutionCallbackThrowsAnException() {
-		TestDiscoveryRequest request = request().selectors(
+		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(ExceptionInBeforeTestExecutionCallbackTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -212,7 +212,7 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 	@Test
 	public void afterTestExecutionCallbackThrowsAnException() {
-		TestDiscoveryRequest request = request().selectors(
+		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(ExceptionInAfterTestExecutionCallbackTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -243,7 +243,8 @@ public class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTes
 
 	@Test
 	public void testMethodThrowsAnException() {
-		TestDiscoveryRequest request = request().selectors(selectClass(ExceptionInTestMethodTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(
+			selectClass(ExceptionInTestMethodTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

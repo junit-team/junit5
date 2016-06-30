@@ -27,7 +27,7 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.fini
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.started;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * Integration tests for {@link TestFactory @TestFactory} and {@link DynamicTest}.
@@ -51,14 +51,14 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testFactoryMethodsAreCorrectlyDiscoveredForClassSelector() {
-		TestDiscoveryRequest request = request().selectors(selectClass(MyDynamicTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(MyDynamicTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	void testFactoryMethodIsCorrectlyDiscoveredForMethodSelector() {
-		TestDiscoveryRequest request = request().selectors(
+		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyDynamicTestCase.class, "dynamicStream")).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
@@ -66,7 +66,7 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicTestsAreExecutedFromStream() {
-		TestDiscoveryRequest request = request().selectors(
+		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyDynamicTestCase.class, "dynamicStream")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -88,7 +88,7 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicTestsAreExecutedFromCollection() {
-		TestDiscoveryRequest request = request().selectors(
+		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyDynamicTestCase.class, "dynamicCollection")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -104,7 +104,7 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicTestsAreExecutedFromIterator() {
-		TestDiscoveryRequest request = request().selectors(
+		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyDynamicTestCase.class, "dynamicIterator")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -120,7 +120,7 @@ class DynamicTestGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicTestsAreExecutedFromIterable() {
-		TestDiscoveryRequest request = request().selectors(
+		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyDynamicTestCase.class, "dynamicIterable")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);

@@ -23,7 +23,7 @@ import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -56,7 +56,7 @@ public class ExecuteTestsTask implements ConsoleTask {
 		Launcher launcher = launcherSupplier.get();
 		SummaryGeneratingListener summaryListener = registerListeners(out, launcher);
 
-		TestDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(options);
+		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(options);
 		launcher.execute(discoveryRequest);
 
 		TestExecutionSummary summary = summaryListener.getSummary();

@@ -25,7 +25,7 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.star
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@link TestExecutionExceptionHandler}.
@@ -61,7 +61,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 
 	@Test
 	void exceptionHandlerRethrowsException() {
-		TestDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testRethrow")).build();
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testRethrow")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -78,7 +78,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 
 	@Test
 	void exceptionHandlerSwallowsException() {
-		TestDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSwallow")).build();
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSwallow")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -95,7 +95,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 
 	@Test
 	void exceptionHandlerConvertsException() {
-		TestDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testConvert")).build();
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testConvert")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -112,7 +112,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 
 	@Test
 	void severalHandlersAreCalledInOrder() {
-		TestDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSeveral")).build();
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSeveral")).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

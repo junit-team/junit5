@@ -28,9 +28,9 @@ import org.junit.platform.commons.meta.API;
  * dynamically discovers test engines via Java's
  * {@link java.util.ServiceLoader ServiceLoader} mechanism.
  *
- * <p>Discovery and execution of tests require a {@link TestDiscoveryRequest}
+ * <p>Discovery and execution of tests require a {@link LauncherDiscoveryRequest}
  * which is passed to all registered engines. Each engine decides which tests
- * it can discover and later execute according to the {@link TestDiscoveryRequest}.
+ * it can discover and later execute according to the {@link LauncherDiscoveryRequest}.
  *
  * <p>Clients of this interface may optionally call {@link #discover} prior to
  * {@link #execute} in order to inspect the {@link TestPlan} before executing
@@ -43,7 +43,7 @@ import org.junit.platform.commons.meta.API;
  * in the order in which they were registered.
  *
  * @since 1.0
- * @see TestDiscoveryRequest
+ * @see LauncherDiscoveryRequest
  * @see TestPlan
  * @see TestExecutionListener
  * @see org.junit.platform.launcher.core.LauncherFactory
@@ -62,23 +62,23 @@ public interface Launcher {
 
 	/**
 	 * Discover tests and build a {@link TestPlan} according to the supplied
-	 * {@link TestDiscoveryRequest} by querying all registered engines and
+	 * {@link LauncherDiscoveryRequest} by querying all registered engines and
 	 * collecting their results.
 	 *
-	 * @param testDiscoveryRequest the test discovery request; never {@code null}
+	 * @param launcherDiscoveryRequest the launcher discovery request; never {@code null}
 	 * @return a {@code TestPlan} that contains all resolved {@linkplain
 	 * TestIdentifier identifiers} from all registered engines
 	 */
-	TestPlan discover(TestDiscoveryRequest testDiscoveryRequest);
+	TestPlan discover(LauncherDiscoveryRequest launcherDiscoveryRequest);
 
 	/**
 	 * Execute a {@link TestPlan} which is built according to the supplied
-	 * {@link TestDiscoveryRequest} by querying all registered engines and
+	 * {@link LauncherDiscoveryRequest} by querying all registered engines and
 	 * collecting their results, and notify {@linkplain #registerTestExecutionListeners
 	 * registered listeners} about the progress and results of the execution.
 	 *
-	 * @param testDiscoveryRequest the test discovery request; never {@code null}
+	 * @param launcherDiscoveryRequest the launcher discovery request; never {@code null}
 	 */
-	void execute(TestDiscoveryRequest testDiscoveryRequest);
+	void execute(LauncherDiscoveryRequest launcherDiscoveryRequest);
 
 }

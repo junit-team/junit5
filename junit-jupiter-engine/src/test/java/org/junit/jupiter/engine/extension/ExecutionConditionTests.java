@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.engine.Constants.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +27,7 @@ import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition.SystemProperty;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@link TestExecutionCondition} and
@@ -53,7 +53,7 @@ public class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void conditionWorksOnContainer() {
-		TestDiscoveryRequest request = request().selectors(
+		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(TestCaseWithContainerExecutionCondition.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -63,7 +63,7 @@ public class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void conditionWorksOnTest() {
-		TestDiscoveryRequest request = request().selectors(
+		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(TestCaseWithTestExecutionCondition.class)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -114,7 +114,7 @@ public class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	private void assertContainerExecutionConditionOverride(String deactivatePattern, int testStartedCount,
 			int testFailedCount) {
 		// @formatter:off
-		TestDiscoveryRequest request = request()
+		LauncherDiscoveryRequest request = request()
 				.selectors(selectClass(TestCaseWithContainerExecutionCondition.class))
 				.configurationParameter(DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME, deactivatePattern)
 				.build();
@@ -131,7 +131,7 @@ public class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	private void assertTestExecutionConditionOverride(String deactivatePattern, int started, int succeeded,
 			int failed) {
 		// @formatter:off
-		TestDiscoveryRequest request = request()
+		LauncherDiscoveryRequest request = request()
 				.selectors(selectClass(TestCaseWithTestExecutionCondition.class))
 				.configurationParameter(DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME, deactivatePattern)
 				.build();

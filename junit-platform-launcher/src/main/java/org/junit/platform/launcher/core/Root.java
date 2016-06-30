@@ -19,7 +19,7 @@ import java.util.Map;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * Represents the root of all discovered {@link TestEngine TestEngines} and
@@ -56,7 +56,7 @@ class Root {
 		return this.testEngineDescriptors.get(testEngine);
 	}
 
-	void applyPostDiscoveryFilters(TestDiscoveryRequest discoveryRequest) {
+	void applyPostDiscoveryFilters(LauncherDiscoveryRequest discoveryRequest) {
 		Filter<TestDescriptor> postDiscoveryFilter = composeFilters(discoveryRequest.getPostDiscoveryFilters());
 		TestDescriptor.Visitor removeExcludedTestDescriptors = descriptor -> {
 			if (!descriptor.isRoot() && isExcluded(descriptor, postDiscoveryFilter)) {

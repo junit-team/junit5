@@ -13,7 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@link TestInstancePostProcessor}.
@@ -39,7 +39,7 @@ public class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTes
 
 	@Test
 	public void instancePostProcessorsInNestedClasses() {
-		TestDiscoveryRequest request = request().selectors(selectClass(OuterTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(OuterTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

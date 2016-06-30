@@ -14,14 +14,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.opentest4j.TestAbortedException;
 
 /**
@@ -40,21 +40,21 @@ public class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	public void standardTestClassIsCorrectlyDiscovered() {
-		TestDiscoveryRequest request = request().selectors(selectClass(MyStandardTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(MyStandardTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(5, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsCorrectlyDiscovered() {
-		TestDiscoveryRequest request = request().selectors(selectClass(SecondOfTwoTestCases.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(SecondOfTwoTestCases.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
 		assertEquals(2 + 2, engineDescriptor.getAllDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	public void moreThanOneTestClassIsExecuted() {
-		TestDiscoveryRequest request = request().selectors(selectClass(FirstOfTwoTestCases.class),
+		LauncherDiscoveryRequest request = request().selectors(selectClass(FirstOfTwoTestCases.class),
 			selectClass(SecondOfTwoTestCases.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);

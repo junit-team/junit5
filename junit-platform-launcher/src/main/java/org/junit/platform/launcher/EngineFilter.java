@@ -36,7 +36,7 @@ import org.junit.platform.engine.TestEngine;
  * @since 1.0
  * @see #includeEngines(String...)
  * @see #excludeEngines(String...)
- * @see TestDiscoveryRequest
+ * @see LauncherDiscoveryRequest
  */
 @API(Experimental)
 public class EngineFilter implements Filter<TestEngine> {

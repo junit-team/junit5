@@ -18,7 +18,7 @@ import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.util.LinkedHashSet;
@@ -27,28 +27,28 @@ import java.util.Set;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.console.options.CommandLineOptions;
-import org.junit.platform.launcher.TestDiscoveryRequest;
-import org.junit.platform.launcher.core.TestDiscoveryRequestBuilder;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
 /**
  * @since 1.0
  */
 class DiscoveryRequestCreator {
 
-	TestDiscoveryRequest toDiscoveryRequest(CommandLineOptions options) {
-		TestDiscoveryRequestBuilder requestBuilder = createRequestBuilder(options);
+	LauncherDiscoveryRequest toDiscoveryRequest(CommandLineOptions options) {
+		LauncherDiscoveryRequestBuilder requestBuilder = createRequestBuilder(options);
 		addFilters(requestBuilder, options);
 		return requestBuilder.build();
 	}
 
-	private TestDiscoveryRequestBuilder createRequestBuilder(CommandLineOptions options) {
+	private LauncherDiscoveryRequestBuilder createRequestBuilder(CommandLineOptions options) {
 		if (options.isRunAllTests()) {
 			return createBuilderForAllTests(options);
 		}
 		return createNameBasedBuilder(options);
 	}
 
-	private TestDiscoveryRequestBuilder createBuilderForAllTests(CommandLineOptions options) {
+	private LauncherDiscoveryRequestBuilder createBuilderForAllTests(CommandLineOptions options) {
 		Set<File> rootDirectoriesToScan = determineClasspathRootDirectories(options);
 		return request().selectors(selectClasspathRoots(rootDirectoriesToScan));
 	}
@@ -64,12 +64,12 @@ class DiscoveryRequestCreator {
 		return options.getArguments().stream().map(File::new).collect(toCollection(LinkedHashSet::new));
 	}
 
-	private TestDiscoveryRequestBuilder createNameBasedBuilder(CommandLineOptions options) {
+	private LauncherDiscoveryRequestBuilder createNameBasedBuilder(CommandLineOptions options) {
 		Preconditions.notEmpty(options.getArguments(), "No arguments were supplied to the ConsoleLauncher");
 		return request().selectors(selectNames(options.getArguments()));
 	}
 
-	private void addFilters(TestDiscoveryRequestBuilder requestBuilder, CommandLineOptions options) {
+	private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, CommandLineOptions options) {
 		options.getIncludeClassNamePattern().ifPresent(
 			pattern -> requestBuilder.filters(includeClassNamePattern(pattern)));
 

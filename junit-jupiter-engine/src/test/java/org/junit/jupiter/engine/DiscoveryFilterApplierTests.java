@@ -13,7 +13,7 @@ package org.junit.jupiter.engine;
 import static org.junit.jupiter.engine.descriptor.TestDescriptorBuilder.classTestDescriptor;
 import static org.junit.jupiter.engine.descriptor.TestDescriptorBuilder.engineDescriptor;
 import static org.junit.jupiter.engine.descriptor.TestDescriptorBuilder.nestedClassTestDescriptor;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.List;
 import java.util.stream.Collectors;

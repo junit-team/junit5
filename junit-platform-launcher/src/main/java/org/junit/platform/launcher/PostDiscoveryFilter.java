@@ -25,7 +25,7 @@ import org.junit.platform.engine.TestEngine;
  * {@code PostDiscoveryFilters} during the test discovery phase.
  *
  * @since 1.0
- * @see TestDiscoveryRequest
+ * @see LauncherDiscoveryRequest
  * @see TestEngine
  */
 @API(Experimental)

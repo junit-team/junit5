@@ -22,7 +22,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMetho
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -45,14 +45,14 @@ import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.test.TestEngineStub;
 import org.junit.platform.launcher.DiscoveryFilterStub;
 import org.junit.platform.launcher.EngineFilter;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.PostDiscoveryFilterStub;
-import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
  * @since 1.0
  */
-public class TestDiscoveryRequestBuilderTests {
+public class LauncherDiscoveryRequestBuilderTests {
 
 	@Nested
 	class DiscoverySelectionTests {
@@ -60,7 +60,7 @@ public class TestDiscoveryRequestBuilderTests {
 		@Test
 		public void packagesAreStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
+			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(
 							selectPackage("org.junit.platform.engine")
 					).build();
@@ -74,9 +74,9 @@ public class TestDiscoveryRequestBuilderTests {
 		@Test
 		public void classesAreStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
+			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(
-							selectClass(TestDiscoveryRequestBuilderTests.class.getName()),
+							selectClass(LauncherDiscoveryRequestBuilderTests.class.getName()),
 							selectClass(SampleTestClass.class)
 					)
 				.build();
@@ -84,7 +84,7 @@ public class TestDiscoveryRequestBuilderTests {
 
 			List<Class<?>> classes = discoveryRequest.getSelectorsByType(ClassSelector.class).stream().map(
 				ClassSelector::getJavaClass).collect(toList());
-			assertThat(classes).contains(SampleTestClass.class, TestDiscoveryRequestBuilderTests.class);
+			assertThat(classes).contains(SampleTestClass.class, LauncherDiscoveryRequestBuilderTests.class);
 		}
 
 		@Test
@@ -93,7 +93,7 @@ public class TestDiscoveryRequestBuilderTests {
 			Method testMethod = testClass.getMethod("test");
 
 			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
+			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(selectMethod(SampleTestClass.class.getName(), "test"))
 					.build();
 			// @formatter:on
@@ -129,7 +129,7 @@ public class TestDiscoveryRequestBuilderTests {
 		@Test
 		public void unavailableFoldersAreNotStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
+			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(
 							selectClasspathRoots(singleton(new File("/some/local/path")))
 					).build();
@@ -143,7 +143,7 @@ public class TestDiscoveryRequestBuilderTests {
 			File temporaryFolder = Files.newTemporaryFolder();
 			try {
 				// @formatter:off
-				TestDiscoveryRequest discoveryRequest = request()
+				LauncherDiscoveryRequest discoveryRequest = request()
 						.selectors(
 								selectClasspathRoots(singleton(temporaryFolder))
 						).build();
@@ -165,7 +165,7 @@ public class TestDiscoveryRequestBuilderTests {
 			UniqueId id2 = UniqueId.forEngine("engine").append("foo", "id2");
 
 			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
+			LauncherDiscoveryRequest discoveryRequest = request()
 					.selectors(
 							selectUniqueId(id1),
 							selectUniqueId(id2)
@@ -190,7 +190,7 @@ public class TestDiscoveryRequestBuilderTests {
 			TestEngine engine3 = new TestEngineStub("engine3");
 
 			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
+			LauncherDiscoveryRequest discoveryRequest = request()
 					.filters(includeEngines(engine1.getId(), engine2.getId()))
 					.build();
 			// @formatter:on
@@ -208,7 +208,7 @@ public class TestDiscoveryRequestBuilderTests {
 		public void discoveryFiltersAreStoredInDiscoveryRequest() throws Exception {
 
 			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
+			LauncherDiscoveryRequest discoveryRequest = request()
 					.filters(
 							new DiscoveryFilterStub("filter1"),
 							new DiscoveryFilterStub("filter2")
@@ -225,7 +225,7 @@ public class TestDiscoveryRequestBuilderTests {
 		public void postDiscoveryFiltersAreStoredInDiscoveryRequest() throws Exception {
 
 			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
+			LauncherDiscoveryRequest discoveryRequest = request()
 					.filters(
 							new PostDiscoveryFilterStub("postFilter1"),
 							new PostDiscoveryFilterStub("postFilter2")
@@ -254,7 +254,7 @@ public class TestDiscoveryRequestBuilderTests {
 
 		@Test
 		void withoutConfigurationParametersSet_NoConfigurationParametersAreStoredInDiscoveryRequest() throws Exception {
-			TestDiscoveryRequest discoveryRequest = request().build();
+			LauncherDiscoveryRequest discoveryRequest = request().build();
 
 			ConfigurationParameters configurationParameters = discoveryRequest.getConfigurationParameters();
 			assertThat(configurationParameters.get("key").isPresent()).isFalse();
@@ -263,7 +263,7 @@ public class TestDiscoveryRequestBuilderTests {
 		@Test
 		void configurationParameterAddedDirectly_isStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
+			LauncherDiscoveryRequest discoveryRequest = request()
 					.configurationParameter("key", "value")
 					.build();
 			// @formatter:on
@@ -276,7 +276,7 @@ public class TestDiscoveryRequestBuilderTests {
 		@Test
 		void configurationParameterAddedDirectlyTwice_overridesPreviousValueInDiscoveryRequest() throws Exception {
 			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
+			LauncherDiscoveryRequest discoveryRequest = request()
 					.configurationParameter("key", "value")
 					.configurationParameter("key", "value-new")
 					.build();
@@ -290,7 +290,7 @@ public class TestDiscoveryRequestBuilderTests {
 		@Test
 		void multipleConfigurationParameterAddedDirectly_isStoredInDiscoveryRequest() throws Exception {
 			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
+			LauncherDiscoveryRequest discoveryRequest = request()
 					.configurationParameter("key1", "value1")
 					.configurationParameter("key2", "value2")
 					.build();
@@ -309,7 +309,7 @@ public class TestDiscoveryRequestBuilderTests {
 			configurationParams.put("key", "value");
 
 			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
+			LauncherDiscoveryRequest discoveryRequest = request()
 					.configurationParameters(configurationParams)
 					.build();
 			// @formatter:on
@@ -326,7 +326,7 @@ public class TestDiscoveryRequestBuilderTests {
 			configurationParams.put("key2", "value2");
 
 			// @formatter:off
-			TestDiscoveryRequest discoveryRequest = request()
+			LauncherDiscoveryRequest discoveryRequest = request()
 					.configurationParameters(configurationParams)
 					.build();
 			// @formatter:on

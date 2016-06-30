@@ -25,7 +25,7 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.test
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.uniqueIdSubstring;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.runner.Description.createSuiteDescription;
 import static org.junit.runner.Description.createTestDescription;
 
@@ -35,7 +35,7 @@ import org.junit.AssumptionViolatedException;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.test.event.ExecutionEvent;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
@@ -456,7 +456,7 @@ class VintageTestEngineExecutionTests {
 
 	private static List<ExecutionEvent> execute(Class<?> testClass) {
 		VintageTestEngine engine = new VintageTestEngine();
-		TestDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
+		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
 		return ExecutionEventRecorder.execute(engine, discoveryRequest);
 	}
 }

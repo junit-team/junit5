@@ -13,7 +13,7 @@ package org.junit.jupiter.engine;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.HashMap;
 
@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * @since 5.0
@@ -32,7 +32,7 @@ public class ReportingTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void threeReportEntriesArePublished() {
-		TestDiscoveryRequest request = request().selectors(selectClass(MyReportingTestCase.class)).build();
+		LauncherDiscoveryRequest request = request().selectors(selectClass(MyReportingTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 

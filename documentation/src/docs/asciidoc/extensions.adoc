@@ -81,7 +81,7 @@ For example, you may wish to run tests even if they are annotated with `@Disable
 order to see if they are still _broken_. To do this, simply provide a pattern for the
 `junit.conditions.deactivate` configuration key to specify which conditions should be
 deactivated (i.e., not evaluated) for the current test run. The pattern can be supplied
-as a JVM system property or as a _configuration parameter_ in the `TestDiscoveryRequest`
+as a JVM system property or as a _configuration parameter_ in the `LauncherDiscoveryRequest`
 that is passed to the `Launcher`.
 
 For example, to deactivate JUnit's `@Disabled` condition, you can start your JVM with

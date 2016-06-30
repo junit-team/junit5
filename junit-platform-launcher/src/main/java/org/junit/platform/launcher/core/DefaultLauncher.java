@@ -23,7 +23,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 
@@ -73,18 +73,18 @@ class DefaultLauncher implements Launcher {
 	}
 
 	@Override
-	public TestPlan discover(TestDiscoveryRequest discoveryRequest) {
-		Preconditions.notNull(discoveryRequest, "TestDiscoveryRequest must not be null");
+	public TestPlan discover(LauncherDiscoveryRequest discoveryRequest) {
+		Preconditions.notNull(discoveryRequest, "LauncherDiscoveryRequest must not be null");
 		return TestPlan.from(discoverRoot(discoveryRequest, "discovery").getEngineDescriptors());
 	}
 
 	@Override
-	public void execute(TestDiscoveryRequest discoveryRequest) {
-		Preconditions.notNull(discoveryRequest, "TestDiscoveryRequest must not be null");
+	public void execute(LauncherDiscoveryRequest discoveryRequest) {
+		Preconditions.notNull(discoveryRequest, "LauncherDiscoveryRequest must not be null");
 		execute(discoverRoot(discoveryRequest, "execution"), discoveryRequest.getConfigurationParameters());
 	}
 
-	private Root discoverRoot(TestDiscoveryRequest discoveryRequest, String phase) {
+	private Root discoverRoot(LauncherDiscoveryRequest discoveryRequest, String phase) {
 		Root root = new Root();
 
 		for (TestEngine testEngine : this.testEngines) {

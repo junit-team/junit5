@@ -28,8 +28,8 @@ import org.junit.platform.engine.discovery.ClasspathSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.launcher.EngineFilter;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
-import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
  * @since 1.0
@@ -43,7 +43,7 @@ public class DiscoveryRequestCreatorTests {
 		Class<?> testClass = getClass();
 		options.setArguments(singletonList(testClass.getName()));
 
-		TestDiscoveryRequest request = convert();
+		LauncherDiscoveryRequest request = convert();
 
 		List<ClassSelector> classSelectors = request.getSelectorsByType(ClassSelector.class);
 		assertThat(classSelectors).hasSize(1);
@@ -56,7 +56,7 @@ public class DiscoveryRequestCreatorTests {
 		Method testMethod = testClass.getDeclaredMethod("convertsMethodArgument");
 		options.setArguments(singletonList(testClass.getName() + "#" + testMethod.getName()));
 
-		TestDiscoveryRequest request = convert();
+		LauncherDiscoveryRequest request = convert();
 
 		List<MethodSelector> methodSelectors = request.getSelectorsByType(MethodSelector.class);
 		assertThat(methodSelectors).hasSize(1);
@@ -69,7 +69,7 @@ public class DiscoveryRequestCreatorTests {
 		String packageName = getClass().getPackage().getName();
 		options.setArguments(singletonList(packageName));
 
-		TestDiscoveryRequest request = convert();
+		LauncherDiscoveryRequest request = convert();
 
 		List<PackageSelector> packageSelectors = request.getSelectorsByType(PackageSelector.class);
 		assertThat(packageSelectors).extracting(PackageSelector::getPackageName).containsExactly(packageName);
@@ -79,7 +79,7 @@ public class DiscoveryRequestCreatorTests {
 	public void convertsAllOptionWithoutExplicitRootDirectories() {
 		options.setRunAllTests(true);
 
-		TestDiscoveryRequest request = convert();
+		LauncherDiscoveryRequest request = convert();
 
 		List<ClasspathSelector> classpathSelectors = request.getSelectorsByType(ClasspathSelector.class);
 		// @formatter:off
@@ -94,7 +94,7 @@ public class DiscoveryRequestCreatorTests {
 		options.setRunAllTests(true);
 		options.setArguments(asList(".", ".."));
 
-		TestDiscoveryRequest request = convert();
+		LauncherDiscoveryRequest request = convert();
 
 		List<ClasspathSelector> classpathSelectors = request.getSelectorsByType(ClasspathSelector.class);
 		// @formatter:off
@@ -108,7 +108,7 @@ public class DiscoveryRequestCreatorTests {
 		options.setRunAllTests(true);
 		options.setAdditionalClasspathEntries(asList(".", ".."));
 
-		TestDiscoveryRequest request = convert();
+		LauncherDiscoveryRequest request = convert();
 
 		List<ClasspathSelector> classpathSelectors = request.getSelectorsByType(ClasspathSelector.class);
 		// @formatter:off
@@ -122,7 +122,7 @@ public class DiscoveryRequestCreatorTests {
 		options.setRunAllTests(true);
 		options.setIncludeClassNamePattern(".*Test");
 
-		TestDiscoveryRequest request = convert();
+		LauncherDiscoveryRequest request = convert();
 
 		List<ClassFilter> filter = request.getDiscoveryFiltersByType(ClassFilter.class);
 		assertThat(filter).hasSize(1);
@@ -135,7 +135,7 @@ public class DiscoveryRequestCreatorTests {
 		options.setIncludedTags(asList("fast", "medium", "slow"));
 		options.setExcludedTags(asList("slow"));
 
-		TestDiscoveryRequest request = convert();
+		LauncherDiscoveryRequest request = convert();
 		List<PostDiscoveryFilter> postDiscoveryFilters = request.getPostDiscoveryFilters();
 
 		assertThat(postDiscoveryFilters).hasSize(2);
@@ -149,7 +149,7 @@ public class DiscoveryRequestCreatorTests {
 		options.setIncludedEngines(asList("engine1", "engine2", "engine3"));
 		options.setExcludedEngines(asList("engine2"));
 
-		TestDiscoveryRequest request = convert();
+		LauncherDiscoveryRequest request = convert();
 		List<EngineFilter> engineFilters = request.getEngineFilters();
 
 		assertThat(engineFilters).hasSize(2);
@@ -157,7 +157,7 @@ public class DiscoveryRequestCreatorTests {
 		assertThat(engineFilters.get(1).toString()).contains("excludes", "[engine2]");
 	}
 
-	private TestDiscoveryRequest convert() {
+	private LauncherDiscoveryRequest convert() {
 		DiscoveryRequestCreator creator = new DiscoveryRequestCreator();
 		return creator.toDiscoveryRequest(options);
 	}

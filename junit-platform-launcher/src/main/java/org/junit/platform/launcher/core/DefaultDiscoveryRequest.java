@@ -21,16 +21,16 @@ import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.launcher.EngineFilter;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
-import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
  * {@code DefaultDiscoveryRequest} is the default implementation of the
- * {@link EngineDiscoveryRequest} and {@link TestDiscoveryRequest} APIs.
+ * {@link EngineDiscoveryRequest} and {@link LauncherDiscoveryRequest} APIs.
  *
  * @since 1.0
  */
-final class DefaultDiscoveryRequest implements TestDiscoveryRequest {
+final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 
 	// Selectors provided to the engines to be used for discovering tests
 	private final List<DiscoverySelector> selectors;

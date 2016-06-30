@@ -57,8 +57,8 @@ import org.junit.platform.engine.test.TestDescriptorStub;
 import org.junit.platform.engine.test.TestEngineStub;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
-import org.junit.platform.launcher.TestDiscoveryRequest;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.NoTestsRemainException;
@@ -84,7 +84,7 @@ class JUnitPlatformRunnerTests {
 			class TestCase {
 			}
 
-			TestDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
 			List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
 			assertThat(selectors).hasSize(1);
@@ -99,7 +99,7 @@ class JUnitPlatformRunnerTests {
 			class TestCase {
 			}
 
-			TestDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
 			List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
 			assertThat(selectors).hasSize(2);
@@ -114,7 +114,7 @@ class JUnitPlatformRunnerTests {
 			class TestCase {
 			}
 
-			TestDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
 			List<PackageSelector> selectors = request.getSelectorsByType(PackageSelector.class);
 			assertThat(selectors).hasSize(2);
@@ -129,7 +129,7 @@ class JUnitPlatformRunnerTests {
 			class TestCase {
 			}
 
-			TestDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
 			List<PostDiscoveryFilter> filters = request.getPostDiscoveryFilters();
 			assertThat(filters).hasSize(1);
@@ -147,7 +147,7 @@ class JUnitPlatformRunnerTests {
 			class TestCase {
 			}
 
-			TestDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
 			List<PostDiscoveryFilter> filters = request.getPostDiscoveryFilters();
 			assertThat(filters).hasSize(1);
@@ -171,7 +171,7 @@ class JUnitPlatformRunnerTests {
 			TestEngine bazEngine = new TestEngineStub("baz");
 			TestEngine quuxEngine = new TestEngineStub("quux");
 
-			TestDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
 			List<EngineFilter> filters = request.getEngineFilters();
 			assertThat(filters).hasSize(2);
@@ -200,7 +200,7 @@ class JUnitPlatformRunnerTests {
 			class Bar {
 			}
 
-			TestDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
+			LauncherDiscoveryRequest request = instantiateRunnerAndCaptureGeneratedRequest(TestCase.class);
 
 			List<ClassFilter> filters = request.getDiscoveryFiltersByType(ClassFilter.class);
 			assertThat(filters).hasSize(1);
@@ -262,13 +262,13 @@ class JUnitPlatformRunnerTests {
 			TestPlan filteredTestPlan = TestPlan.from(singleton(filteredParent));
 
 			Launcher launcher = mock(Launcher.class);
-			ArgumentCaptor<TestDiscoveryRequest> captor = ArgumentCaptor.forClass(TestDiscoveryRequest.class);
+			ArgumentCaptor<LauncherDiscoveryRequest> captor = ArgumentCaptor.forClass(LauncherDiscoveryRequest.class);
 			when(launcher.discover(captor.capture())).thenReturn(fullTestPlan).thenReturn(filteredTestPlan);
 
 			JUnitPlatform runner = new JUnitPlatform(TestClass.class, launcher);
 			runner.filter(matchMethodDescription(testDescription("[root:leaf2b]")));
 
-			TestDiscoveryRequest lastDiscoveryRequest = captor.getValue();
+			LauncherDiscoveryRequest lastDiscoveryRequest = captor.getValue();
 			List<UniqueIdSelector> uniqueIdSelectors = lastDiscoveryRequest.getSelectorsByType(UniqueIdSelector.class);
 			assertEquals("[root:leaf2b]", getOnlyElement(uniqueIdSelectors).getUniqueId().toString());
 
@@ -395,10 +395,10 @@ class JUnitPlatformRunnerTests {
 		return testDescriptor;
 	}
 
-	private TestDiscoveryRequest instantiateRunnerAndCaptureGeneratedRequest(Class<?> testClass)
+	private LauncherDiscoveryRequest instantiateRunnerAndCaptureGeneratedRequest(Class<?> testClass)
 			throws InitializationError {
 		Launcher launcher = mock(Launcher.class);
-		ArgumentCaptor<TestDiscoveryRequest> captor = ArgumentCaptor.forClass(TestDiscoveryRequest.class);
+		ArgumentCaptor<LauncherDiscoveryRequest> captor = ArgumentCaptor.forClass(LauncherDiscoveryRequest.class);
 		when(launcher.discover(captor.capture())).thenReturn(TestPlan.from(emptySet()));
 
 		new JUnitPlatform(testClass, launcher);

@@ -13,7 +13,7 @@ package org.junit.platform.launcher.core;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.List;
 import java.util.Set;
@@ -21,7 +21,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
@@ -33,7 +33,7 @@ class LauncherFactoryTests {
 	@Test
 	void testCreate() {
 		Launcher launcher = LauncherFactory.create();
-		TestDiscoveryRequest discoveryRequest = this.createTestDiscoveryRequestForBothStandardEngineExampleClasses();
+		LauncherDiscoveryRequest discoveryRequest = this.createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
 
 		TestPlan testPlan = launcher.discover(discoveryRequest);
 		Set<TestIdentifier> roots = testPlan.getRoots();
@@ -53,7 +53,7 @@ class LauncherFactoryTests {
 		}
 	}
 
-	private TestDiscoveryRequest createTestDiscoveryRequestForBothStandardEngineExampleClasses() {
+	private LauncherDiscoveryRequest createLauncherDiscoveryRequestForBothStandardEngineExampleClasses() {
 		// @formatter:off
 		return request()
 				.selectors(selectClass(JUnit4Example.class))

@@ -17,11 +17,11 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPacka
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
-import org.junit.platform.launcher.core.TestDiscoveryRequestBuilder;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 // end::imports[]
 
@@ -35,7 +35,7 @@ class UsingTheLauncherDemo {
 	void discovery() {
 		// @formatter:off
 		// tag::discovery[]
-		TestDiscoveryRequest request = TestDiscoveryRequestBuilder.request()
+		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
 			.selectors(
 				selectPackage("com.example.mytests"),
 				selectClass(MyTestClass.class)
@@ -52,7 +52,7 @@ class UsingTheLauncherDemo {
 	void execution() {
 		// @formatter:off
 		// tag::execution[]
-		TestDiscoveryRequest request = TestDiscoveryRequestBuilder.request()
+		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
 			.selectors(
 				selectPackage("com.example.mytests"),
 				selectClass(MyTestClass.class)

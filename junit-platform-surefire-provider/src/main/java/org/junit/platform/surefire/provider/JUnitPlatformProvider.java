@@ -11,7 +11,7 @@
 package org.junit.platform.surefire.provider;
 
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -27,7 +27,7 @@ import org.apache.maven.surefire.suite.RunResult;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.TestsToRun;
 import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.TestDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherFactory;
 
 /**
@@ -88,7 +88,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		SimpleReportEntry classEntry = new SimpleReportEntry(getClass().getName(), testClass.getName());
 		runListener.testSetStarting(classEntry);
 
-		TestDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
+		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
 		launcher.execute(discoveryRequest);
 
 		runListener.testSetCompleted(classEntry);

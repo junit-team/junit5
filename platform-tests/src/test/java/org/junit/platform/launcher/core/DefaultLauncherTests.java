@@ -18,8 +18,8 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPacka
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
-import static org.junit.platform.launcher.core.TestDiscoveryRequestBuilder.request;
 
 import java.util.Optional;
 
