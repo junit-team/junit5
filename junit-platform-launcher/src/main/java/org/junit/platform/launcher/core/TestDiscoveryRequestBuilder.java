@@ -170,7 +170,7 @@ public final class TestDiscoveryRequestBuilder {
 	public TestDiscoveryRequest build() {
 		LauncherConfigurationParameters launcherConfigurationParameters = new LauncherConfigurationParameters(
 			this.configurationParameters);
-		return new DiscoveryRequest(this.selectors, this.engineFilters, this.discoveryFilters,
+		return new DefaultDiscoveryRequest(this.selectors, this.engineFilters, this.discoveryFilters,
 			this.postDiscoveryFilters, launcherConfigurationParameters);
 	}
 

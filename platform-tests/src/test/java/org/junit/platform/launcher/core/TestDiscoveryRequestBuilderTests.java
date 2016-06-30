@@ -112,7 +112,7 @@ public class TestDiscoveryRequestBuilderTests {
 			Method testMethod = testClass.getMethod("test");
 
 			// @formatter:off
-			DiscoveryRequest discoveryRequest = (DiscoveryRequest) request()
+			DefaultDiscoveryRequest discoveryRequest = (DefaultDiscoveryRequest) request()
 					.selectors(
 							selectMethod(SampleTestClass.class, "test")
 					).build();

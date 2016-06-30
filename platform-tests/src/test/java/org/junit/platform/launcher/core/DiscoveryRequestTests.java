@@ -26,7 +26,7 @@ import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 
 /**
- * Unit tests for {@link DiscoveryRequest}.
+ * Unit tests for {@link DefaultDiscoveryRequest}.
  *
  * @since 1.0
  */

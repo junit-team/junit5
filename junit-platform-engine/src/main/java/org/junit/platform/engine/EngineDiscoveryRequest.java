@@ -17,27 +17,29 @@ import java.util.List;
 import org.junit.platform.commons.meta.API;
 
 /**
- * Provides {@link TestEngine TestEngines} access to the information necessary
- * to discover {@link TestDescriptor TestDescriptors}.
+ * {@code EngineDiscoveryRequest} provides a {@link TestEngine} access to the
+ * information necessary to discover tests and containers.
  *
  * <p>A request is comprised of {@linkplain DiscoverySelector selectors} and
- * {@linkplain DiscoveryFilter filters}. While the former specify which tests
- * are to be <em>selected</em>, the latter specify how they are to be
- * <em>filtered</em>.
+ * {@linkplain DiscoveryFilter filters}. While the former <em>select</em>
+ * resources that engines can use to discover tests, the latter specify how
+ * such resources are to be <em>filtered</em>.
  *
  * <p>In addition, the supplied {@linkplain ConfigurationParameters
- * configuration parameters} may be used to influence the discovery process.
+ * configuration parameters} can be used to influence the discovery process.
  *
  * @see TestEngine
+ * @see TestDescriptor
  * @see DiscoverySelector
  * @see DiscoveryFilter
+ * @see ConfigurationParameters
  * @since 1.0
  */
 @API(Experimental)
 public interface EngineDiscoveryRequest {
 
 	/**
-	 * Get the {@link DiscoverySelector DiscoverySelectors} of this request,
+	 * Get the {@link DiscoverySelector DiscoverySelectors} for this request,
 	 * filtered by a particular type.
 	 *
 	 * @param selectorType the type of {@link DiscoverySelector} to filter by
@@ -46,7 +48,7 @@ public interface EngineDiscoveryRequest {
 	<T extends DiscoverySelector> List<T> getSelectorsByType(Class<T> selectorType);
 
 	/**
-	 * Get the {@link DiscoveryFilter DiscoveryFilters} of this request, filtered
+	 * Get the {@link DiscoveryFilter DiscoveryFilters} for this request, filtered
 	 * by a particular type.
 	 *
 	 * @param filterType the type of {@link DiscoveryFilter} to filter by
@@ -55,7 +57,7 @@ public interface EngineDiscoveryRequest {
 	<T extends DiscoveryFilter<?>> List<T> getDiscoveryFiltersByType(Class<T> filterType);
 
 	/**
-	 * Get the {@link ConfigurationParameters} of this request.
+	 * Get the {@link ConfigurationParameters} for this request.
 	 */
 	ConfigurationParameters getConfigurationParameters();
 

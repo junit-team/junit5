@@ -19,36 +19,18 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.TestEngine;
+import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.TestDiscoveryRequest;
 
 /**
- * {@code DiscoveryRequest} represents the configuration for test
- * discovery and execution. It is passed to every active {@link TestEngine}
- * and should be used to look up tests for the given configuration.
- *
- * <p>A {@code DiscoveryRequest} contains different configuration options.
- *
- * <ul>
- * <li>{@link DiscoverySelector}: a selector defines where a {@code TestEngine}
- * should look up tests</li>
- * <li>{@link EngineFilter}: a filter that is applied before each
- * {@code TestEngine} is executed</li>
- * <li>{@link DiscoveryFilter}: a filter that should be applied by
- * {@code TestEngines} during test discovery</li>
- * <li>{@link PostDiscoveryFilter}: a filter that will be applied by the
- * launcher after {@code TestEngines} have performed test discovery</li>
- * </ul>
+ * {@code DefaultDiscoveryRequest} is the default implementation of the
+ * {@link EngineDiscoveryRequest} and {@link TestDiscoveryRequest} APIs.
  *
  * @since 1.0
- * @see DiscoverySelector
- * @see EngineFilter
- * @see DiscoveryFilter
- * @see PostDiscoveryFilter
  */
-final class DiscoveryRequest implements TestDiscoveryRequest {
+final class DefaultDiscoveryRequest implements TestDiscoveryRequest {
 
 	// Selectors provided to the engines to be used for discovering tests
 	private final List<DiscoverySelector> selectors;
@@ -65,7 +47,7 @@ final class DiscoveryRequest implements TestDiscoveryRequest {
 	// Configuration parameters can be used to provide custom configuration to engines, e.g. for extensions
 	private final LauncherConfigurationParameters configurationParameters;
 
-	DiscoveryRequest(List<DiscoverySelector> selectors, List<EngineFilter> engineFilters,
+	DefaultDiscoveryRequest(List<DiscoverySelector> selectors, List<EngineFilter> engineFilters,
 			List<DiscoveryFilter<?>> discoveryFilters, List<PostDiscoveryFilter> postDiscoveryFilters,
 			LauncherConfigurationParameters configurationParameters) {
 		this.selectors = selectors;
