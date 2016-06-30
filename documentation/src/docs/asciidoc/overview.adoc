@@ -1,32 +1,50 @@
 [[overview]]
 == Overview
 
-The goal of this document is to provide comprehensive reference documentation for both
-programmers writing tests and extension authors.
+The goal of this document is to provide comprehensive reference documentation for
+programmers writing tests, extension authors, and engine authors as well as build tool
+and IDE vendors.
+
+[[overview-what-is-junit-5]]
+=== What is JUnit 5?
+
+Unlike previous versions of JUnit, JUnit 5 is composed of several different modules from
+three different sub-projects.
+
+**JUnit 5 = _JUnit Platform_ + _JUnit Jupiter_ + _JUnit Vintage_**
+
+The **JUnit Platform** serves as a foundation for <<launcher-api,launching testing
+frameworks>> on the JVM. It also defines the `{TestEngine}` API for developing a testing
+framework that runs on the platform. Furthermore, the platform provides a
+<<running-tests-console-launcher,Console Launcher>> to launch the platform from the
+command line and build plugins for <<running-tests-build-gradle,Gradle>> and
+<<running-tests-build-maven,Maven>> as well as a
+<<running-tests-junit-platform-runner,JUnit 4 based Runner>> for running any `TestEngine`
+on the platform.
+
+**JUnit Jupiter** is the combination of the new <<writing-tests,programming model>> and
+<<extensions,extension model>> for writing tests and extensions in JUnit 5. The Jupiter
+sub-project provides a `TestEngine` for running Jupiter based tests on the platform.
+
+**JUnit Vintage** provides a `TestEngine` for running JUnit 3 and JUnit 4 based tests on
+the platform.
 
 [[overview-java-versions]]
 === Supported Java Versions
 
-JUnit 5 only supports Java 8 and above. However, you can still test classes compiled with
-lower versions.
+JUnit 5 requires Java 8 at runtime. However, you can still test code that has been
+compiled with previous versions of the JDK.
 
 [[installation]]
 == Installation
+
+Artifacts for final releases and milestones are deployed to Maven Central.
 
 Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
 {snapshot-repo}/org/junit/[/org/junit].
 
 [[dependency-metadata]]
 === Dependency Metadata
-
-[[dependency-metadata-junit-jupiter]]
-==== JUnit Jupiter
-
-* *Group ID*: `org.junit.jupiter`
-* *Version*: `{jupiter-version}`
-* *Artifact IDs*:
-** `junit-jupiter-api`
-** `junit-jupiter-engine`
 
 [[dependency-metadata-junit-platform]]
 ==== JUnit Platform
@@ -42,6 +60,15 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
 ** `junit-platform-runner`
 ** `junit-platform-surefire-provider`
 
+[[dependency-metadata-junit-jupiter]]
+==== JUnit Jupiter
+
+* *Group ID*: `org.junit.jupiter`
+* *Version*: `{jupiter-version}`
+* *Artifact IDs*:
+** `junit-jupiter-api`
+** `junit-jupiter-engine`
+
 [[dependency-metadata-junit-vintage]]
 ==== JUnit Vintage
 
@@ -53,8 +80,8 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
 === JUnit Jupiter Sample Projects
 
 The {junit5-samples-repo}[`junit5-samples`] repository hosts a collection of sample
-projects based on JUnit Jupiter. You'll find the respective `build.gradle` and `pom.xml` in
-the projects below.
+projects based on JUnit Jupiter and JUnit Vintage. You'll find the respective
+`build.gradle` and `pom.xml` in the projects below.
 
 * For Gradle, check out the `{junit5-gradle-consumer}` project.
 * For Maven, check out the `{junit5-maven-consumer}` project.

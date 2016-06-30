@@ -20,6 +20,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 :ConsoleLauncher:                   {javadoc-root}/org/junit/platform/console/ConsoleLauncher.html[ConsoleLauncher]
 :JUnitPlatform-Runner:              {javadoc-root}/org/junit/platform/runner/JUnitPlatform.html[JUnitPlatform]
 :SummaryGeneratingListener:         {javadoc-root}/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html[SummaryGeneratingListener]
+:TestEngine:                        {javadoc-root}/org/junit/platform/engine/TestEngine.html[TestEngine]
 :TestExecutionListener:             {javadoc-root}/org/junit/platform/launcher/TestExecutionListener.html[TestExecutionListener]
 
 :api-package:                       {javadoc-root}/org/junit/jupiter/api/package-summary.html[org.junit.jupiter.api]

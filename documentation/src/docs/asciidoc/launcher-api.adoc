@@ -6,10 +6,10 @@ programmatic clients – build tools and IDEs – more powerful and stable. The 
 decouple the internals of discovering and executing tests from all the filtering and
 configuration that's necessary from the outside.
 
-For JUnit 5 we came up with the concept of a `Launcher` that can be used to discover,
-filter, and execute JUnit tests. Moreover, we added a mechanism to allow third party test
-libraries – like Spock, Cucumber, and FitNesse – to plug into the JUnit Platform's launching
-infrastructure.
+JUnit 5 introduces the concept of a `Launcher` that can be used to discover, filter, and
+execute tests. Moreover, third party test libraries – like Spock, Cucumber, and FitNesse
+– can plug into the JUnit Platform's launching infrastructure by providing a custom
+`{TestEngine}`.
 
 The launching API is in the `{junit-platform-launcher}` module.
 
@@ -19,9 +19,9 @@ An example consumer of the launching API is the `{ConsoleLauncher}` in the
 [[launcher-api-discovery]]
 ==== Discovering Tests
 
-Introducing _test discovery_ as a dedicated feature of JUnit itself will (hopefully) free
-IDEs and build tools from most of the difficulties they had to go through to identify
-test classes and test methods in the past.
+Introducing _test discovery_ as a dedicated feature of the platform itself will
+(hopefully) free IDEs and build tools from most of the difficulties they had to go
+through to identify test classes and test methods in the past.
 
 Usage Example:
 
@@ -68,11 +68,11 @@ final results in an object of your own. For an example see the
 [[launcher-api-engines-custom]]
 ==== Plugging in Your Own Test Engine
 
-The current snapshot provides two `TestEngine` implementations out of the box:
+JUnit currently provides two `{TestEngine}` implementations out of the box:
 
 * `{junit-jupiter-engine}`: The core of JUnit Jupiter.
-* `{junit-vintage-engine}`: A thin layer on top of JUnit 4 to allow running "old" tests with the
-  launcher infrastructure.
+* `{junit-vintage-engine}`: A thin layer on top of JUnit 4 to allow running _vintage_
+  tests with the launcher infrastructure.
 
 Third parties may also contribute their own `TestEngine` by implementing the interfaces
 in the {junit-platform-engine} module and _registering_ their engine. Engine registration
