@@ -63,6 +63,7 @@ class XmlReportWriter {
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		XMLStreamWriter xmlWriter = factory.createXMLStreamWriter(out);
 		xmlWriter.writeStartDocument();
+		newLine(xmlWriter);
 		writeTestsuite(testIdentifier, tests, xmlWriter);
 		xmlWriter.writeEndDocument();
 		xmlWriter.flush();
@@ -71,18 +72,22 @@ class XmlReportWriter {
 
 	private void writeTestsuite(TestIdentifier testIdentifier, List<TestIdentifier> tests, XMLStreamWriter writer)
 			throws XMLStreamException {
+
 		// NumberFormat is not thread-safe. Thus, we instantiate it here and pass it to
 		// writeTestcase instead of using a constant
 		NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
 
 		writer.writeStartElement("testsuite");
 		writeAttributes(testIdentifier, tests, numberFormat, writer);
+		newLine(writer);
 		writer.writeComment("Unique ID: " + testIdentifier.getUniqueId());
+		newLine(writer);
 		writeSystemProperties(writer);
 		for (TestIdentifier test : tests) {
 			writeTestcase(test, numberFormat, writer);
 		}
 		writer.writeEndElement();
+		newLine(writer);
 	}
 
 	private void writeAttributes(TestIdentifier testIdentifier, List<TestIdentifier> tests, NumberFormat numberFormat,
@@ -104,13 +109,16 @@ class XmlReportWriter {
 
 	private void writeSystemProperties(XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeStartElement("properties");
+		newLine(writer);
 		Properties systemProperties = System.getProperties();
 		for (String propertyName : new TreeSet<>(systemProperties.stringPropertyNames())) {
 			writer.writeEmptyElement("property");
 			writer.writeAttribute("name", propertyName);
 			writer.writeAttribute("value", systemProperties.getProperty(propertyName));
+			newLine(writer);
 		}
 		writer.writeEndElement();
+		newLine(writer);
 	}
 
 	private void writeTestcase(TestIdentifier test, NumberFormat numberFormat, XMLStreamWriter writer)
@@ -121,12 +129,16 @@ class XmlReportWriter {
 		writer.writeAttribute("name", test.getDisplayName());
 		writer.writeAttribute("classname", getParentClassName(test));
 		writer.writeAttribute("time", getTime(test, numberFormat));
+		newLine(writer);
+
 		writer.writeComment("Unique ID: " + test.getUniqueId());
+		newLine(writer);
 
 		writeSkippedOrErrorOrFailureElement(test, writer);
 		writeReportEntriesToSystemOutElement(test, writer);
 
 		writer.writeEndElement();
+		newLine(writer);
 	}
 
 	private String getParentClassName(TestIdentifier test) {
@@ -153,12 +165,13 @@ class XmlReportWriter {
 	private void writeSkippedElement(String reason, XMLStreamWriter writer) throws XMLStreamException {
 		if (isNotBlank(reason)) {
 			writer.writeStartElement("skipped");
-			writer.writeCharacters(reason);
+			writer.writeCData(reason);
 			writer.writeEndElement();
 		}
 		else {
 			writer.writeEmptyElement("skipped");
 		}
+		newLine(writer);
 	}
 
 	private void writeErrorOrFailureElement(Optional<Throwable> throwable, XMLStreamWriter writer)
@@ -171,6 +184,7 @@ class XmlReportWriter {
 		else {
 			writer.writeEmptyElement("error");
 		}
+		newLine(writer);
 	}
 
 	private void writeFailureAttributesAndContent(Throwable throwable, XMLStreamWriter writer)
@@ -179,7 +193,7 @@ class XmlReportWriter {
 			writer.writeAttribute("message", throwable.getMessage());
 		}
 		writer.writeAttribute("type", throwable.getClass().getName());
-		writer.writeCharacters(readStackTrace(throwable));
+		writer.writeCData(readStackTrace(throwable));
 	}
 
 	private void writeReportEntriesToSystemOutElement(TestIdentifier testIdentifier, XMLStreamWriter writer)
@@ -187,10 +201,12 @@ class XmlReportWriter {
 		List<ReportEntry> entries = reportData.getReportEntries(testIdentifier);
 		if (!entries.isEmpty()) {
 			writer.writeStartElement("system-out");
+			newLine(writer);
 			for (int i = 0; i < entries.size(); i++) {
 				writer.writeCharacters(buildReportEntryDescription(entries.get(i), i + 1));
 			}
 			writer.writeEndElement();
+			newLine(writer);
 		}
 	}
 
@@ -219,6 +235,10 @@ class XmlReportWriter {
 
 	private LocalDateTime getCurrentDateTime() {
 		return LocalDateTime.now(reportData.getClock()).withNano(0);
+	}
+
+	private void newLine(XMLStreamWriter xmlWriter) throws XMLStreamException {
+		xmlWriter.writeCharacters("\n");
 	}
 
 	private static class TestCounts {

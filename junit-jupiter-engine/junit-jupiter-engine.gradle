@@ -25,6 +25,10 @@ dependencies {
 	testCompile("org.assertj:assertj-core:${assertJVersion}")
 	testCompile("org.mockito:mockito-core:${mockitoVersion}")
 
+	// Include junit-platform-console so that the JUnit Gradle plugin
+	// uses the local version of the ConsoleLauncher.
+	testRuntime(project(':junit-platform-console'))
+
 	testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
 	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 }
