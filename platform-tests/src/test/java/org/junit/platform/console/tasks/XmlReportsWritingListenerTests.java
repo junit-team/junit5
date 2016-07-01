@@ -64,21 +64,28 @@ class XmlReportsWritingListenerTests {
 	@Test
 	void writesFileForSingleSucceedingTest(@Root Path tempDirectory) throws Exception {
 		DummyTestEngine engine = new DummyTestEngine("dummy");
-		engine.addTest("succeedingTest", "display<>Name", () -> {
+		engine.addTest("succeedingTest", "display<-->Name 😎", () -> {
 		});
 
 		executeTests(engine, tempDirectory);
 
 		String content = readValidXmlFile(tempDirectory.resolve("TEST-dummy.xml"));
-
 		//@formatter:off
 		assertThat(content)
 			.containsSequence(
 				"<testsuite name=\"dummy\" tests=\"1\" skipped=\"0\" failures=\"0\" errors=\"0\"",
-				"<!--Unique ID: [engine:dummy]-->",
-				"<testcase name=\"display&lt;&gt;Name\" classname=\"dummy\"",
-				"<!--Unique ID: [engine:dummy]/[test:succeedingTest]-->",
-				"</testcase>",
+
+					"<testcase name=\"display&lt;--&gt;Name 😎\" classname=\"dummy\"",
+						"<system-out>",
+							"unique-id: [engine:dummy]/[test:succeedingTest]",
+							"display-name: display<-->Name 😎",
+						"</system-out>",
+					"</testcase>",
+
+					"<system-out>",
+						"unique-id: [engine:dummy]",
+						"display-name: dummy",
+					"</system-out>",
 				"</testsuite>")
 			.doesNotContain("<skipped")
 			.doesNotContain("<failure")

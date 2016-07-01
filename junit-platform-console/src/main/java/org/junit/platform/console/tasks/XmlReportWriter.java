@@ -78,14 +78,18 @@ class XmlReportWriter {
 		NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
 
 		writer.writeStartElement("testsuite");
+
 		writeAttributes(testIdentifier, tests, numberFormat, writer);
-		newLine(writer);
-		writer.writeComment("Unique ID: " + testIdentifier.getUniqueId());
+
 		newLine(writer);
 		writeSystemProperties(writer);
+
 		for (TestIdentifier test : tests) {
 			writeTestcase(test, numberFormat, writer);
 		}
+
+		writeNonStandardAttributesToSystemOutElement(testIdentifier, writer);
+
 		writer.writeEndElement();
 		newLine(writer);
 	}
@@ -131,11 +135,9 @@ class XmlReportWriter {
 		writer.writeAttribute("time", getTime(test, numberFormat));
 		newLine(writer);
 
-		writer.writeComment("Unique ID: " + test.getUniqueId());
-		newLine(writer);
-
 		writeSkippedOrErrorOrFailureElement(test, writer);
 		writeReportEntriesToSystemOutElement(test, writer);
+		writeNonStandardAttributesToSystemOutElement(test, writer);
 
 		writer.writeEndElement();
 		newLine(writer);
@@ -235,6 +237,19 @@ class XmlReportWriter {
 
 	private LocalDateTime getCurrentDateTime() {
 		return LocalDateTime.now(reportData.getClock()).withNano(0);
+	}
+
+	private void writeNonStandardAttributesToSystemOutElement(TestIdentifier testIdentifier, XMLStreamWriter writer)
+			throws XMLStreamException {
+
+		StringBuilder builder = new StringBuilder("\n");
+		builder.append("unique-id: ").append(testIdentifier.getUniqueId()).append("\n");
+		builder.append("display-name: ").append(testIdentifier.getDisplayName()).append("\n");
+
+		writer.writeStartElement("system-out");
+		writer.writeCData(builder.toString());
+		writer.writeEndElement();
+		newLine(writer);
 	}
 
 	private void newLine(XMLStreamWriter xmlWriter) throws XMLStreamException {
