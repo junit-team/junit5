@@ -15,12 +15,15 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiFunction;
 
+import org.junit.jupiter.api.Executable;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestExtensionContext;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
@@ -164,43 +167,40 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private void invokeBeforeEachCallbacks(JupiterEngineExecutionContext context) {
-		ExtensionRegistry registry = context.getExtensionRegistry();
-		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
-		ThrowableCollector throwableCollector = context.getThrowableCollector();
-
-		for (BeforeEachCallback callback : registry.getExtensions(BeforeEachCallback.class)) {
-			throwableCollector.execute(() -> callback.beforeEach(testExtensionContext));
-			if (throwableCollector.isNotEmpty()) {
-				break;
-			}
-		}
+		this.invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(context,
+			((TestExtensionContext c, BeforeEachCallback callback) -> () -> callback.beforeEach(c)),
+			BeforeEachCallback.class);
 	}
 
 	private void invokeBeforeEachMethods(JupiterEngineExecutionContext context) {
-		ExtensionRegistry registry = context.getExtensionRegistry();
-		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
-		ThrowableCollector throwableCollector = context.getThrowableCollector();
-
-		for (BeforeEachMethodAdapter adapter : registry.getExtensions(BeforeEachMethodAdapter.class)) {
-			throwableCollector.execute(() -> adapter.invokeBeforeEachMethod(testExtensionContext));
-			if (throwableCollector.isNotEmpty()) {
-				break;
-			}
-		}
+		this.invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(context,
+			((TestExtensionContext c, BeforeEachMethodAdapter callback) -> () -> callback.invokeBeforeEachMethod(c)),
+			BeforeEachMethodAdapter.class);
 	}
 
 	private void invokeBeforeTestExecutionCallbacks(JupiterEngineExecutionContext context) {
+		this.invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(context,
+			((TestExtensionContext c, BeforeTestExecutionCallback callback) -> () -> callback.beforeTestExecution(c)),
+			BeforeTestExecutionCallback.class);
+	}
+
+	private <T extends Extension> void invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(
+			JupiterEngineExecutionContext context, BiFunction<TestExtensionContext, T, Executable> generator,
+			Class<T> type) {
 		ExtensionRegistry registry = context.getExtensionRegistry();
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		for (BeforeTestExecutionCallback callback : registry.getExtensions(BeforeTestExecutionCallback.class)) {
-			throwableCollector.execute(() -> callback.beforeTestExecution(testExtensionContext));
+		for (T callback : registry.getExtensions(type)) {
+			Executable executable = generator.apply(testExtensionContext, callback);
+			throwableCollector.execute(executable);
 			if (throwableCollector.isNotEmpty()) {
 				break;
 			}
 		}
 	}
+
+
 
 	protected void invokeTestMethod(JupiterEngineExecutionContext context) {
 		TestExtensionContext testExtensionContext = (TestExtensionContext) context.getExtensionContext();
