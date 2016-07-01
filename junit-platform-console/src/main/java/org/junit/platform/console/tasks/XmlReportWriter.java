@@ -33,8 +33,12 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.reporting.ReportEntry;
+import org.junit.platform.engine.support.descriptor.JavaClassSource;
+import org.junit.platform.engine.support.descriptor.JavaMethodSource;
 import org.junit.platform.launcher.TestIdentifier;
 
 /**
@@ -130,8 +134,8 @@ class XmlReportWriter {
 
 		writer.writeStartElement("testcase");
 
-		writer.writeAttribute("name", testIdentifier.getDisplayName());
-		writer.writeAttribute("classname", getParentClassName(testIdentifier));
+		writer.writeAttribute("name", getName(testIdentifier));
+		writer.writeAttribute("classname", getClassName(testIdentifier));
 		writer.writeAttribute("time", getTime(testIdentifier, numberFormat));
 		newLine(writer);
 
@@ -143,7 +147,38 @@ class XmlReportWriter {
 		newLine(writer);
 	}
 
-	private String getParentClassName(TestIdentifier testIdentifier) {
+	private String getName(TestIdentifier testIdentifier) {
+		Optional<TestSource> optionalSource = testIdentifier.getSource();
+		if (optionalSource.isPresent()) {
+			TestSource source = optionalSource.get();
+			if (source instanceof JavaClassSource) {
+				return ((JavaClassSource) source).getJavaClass().getName();
+			}
+			else if (source instanceof JavaMethodSource) {
+				JavaMethodSource javaMethodSource = (JavaMethodSource) source;
+				List<Class<?>> parameterTypes = javaMethodSource.getJavaMethodParameterTypes();
+				return String.format("%s(%s)", javaMethodSource.getJavaMethodName(), StringUtils.nullSafeToString(
+					Class::getName, parameterTypes.toArray(new Class<?>[parameterTypes.size()])));
+			}
+		}
+
+		// Else fall back to display name
+		return testIdentifier.getDisplayName();
+	}
+
+	private String getClassName(TestIdentifier testIdentifier) {
+		Optional<TestSource> optionalSource = testIdentifier.getSource();
+		if (optionalSource.isPresent()) {
+			TestSource source = optionalSource.get();
+			if (source instanceof JavaClassSource) {
+				return ((JavaClassSource) source).getJavaClass().getName();
+			}
+			else if (source instanceof JavaMethodSource) {
+				return ((JavaMethodSource) source).getJavaClass().getName();
+			}
+		}
+
+		// Else fall back to display name of parent
 		// @formatter:off
 		return reportData.getTestPlan().getParent(testIdentifier)
 				.map(TestIdentifier::getDisplayName)
