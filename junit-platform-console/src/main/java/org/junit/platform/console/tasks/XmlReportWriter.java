@@ -79,7 +79,7 @@ class XmlReportWriter {
 
 		writer.writeStartElement("testsuite");
 
-		writeAttributes(testIdentifier, tests, numberFormat, writer);
+		writeSuiteAttributes(testIdentifier, tests, numberFormat, writer);
 
 		newLine(writer);
 		writeSystemProperties(writer);
@@ -94,8 +94,8 @@ class XmlReportWriter {
 		newLine(writer);
 	}
 
-	private void writeAttributes(TestIdentifier testIdentifier, List<TestIdentifier> tests, NumberFormat numberFormat,
-			XMLStreamWriter writer) throws XMLStreamException {
+	private void writeSuiteAttributes(TestIdentifier testIdentifier, List<TestIdentifier> tests,
+			NumberFormat numberFormat, XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeAttribute("name", testIdentifier.getDisplayName());
 		writeTestCounts(tests, writer);
 		writer.writeAttribute("time", getTime(testIdentifier, numberFormat));
@@ -125,39 +125,39 @@ class XmlReportWriter {
 		newLine(writer);
 	}
 
-	private void writeTestcase(TestIdentifier test, NumberFormat numberFormat, XMLStreamWriter writer)
+	private void writeTestcase(TestIdentifier testIdentifier, NumberFormat numberFormat, XMLStreamWriter writer)
 			throws XMLStreamException {
 
 		writer.writeStartElement("testcase");
 
-		writer.writeAttribute("name", test.getDisplayName());
-		writer.writeAttribute("classname", getParentClassName(test));
-		writer.writeAttribute("time", getTime(test, numberFormat));
+		writer.writeAttribute("name", testIdentifier.getDisplayName());
+		writer.writeAttribute("classname", getParentClassName(testIdentifier));
+		writer.writeAttribute("time", getTime(testIdentifier, numberFormat));
 		newLine(writer);
 
-		writeSkippedOrErrorOrFailureElement(test, writer);
-		writeReportEntriesToSystemOutElement(test, writer);
-		writeNonStandardAttributesToSystemOutElement(test, writer);
+		writeSkippedOrErrorOrFailureElement(testIdentifier, writer);
+		writeReportEntriesToSystemOutElement(testIdentifier, writer);
+		writeNonStandardAttributesToSystemOutElement(testIdentifier, writer);
 
 		writer.writeEndElement();
 		newLine(writer);
 	}
 
-	private String getParentClassName(TestIdentifier test) {
+	private String getParentClassName(TestIdentifier testIdentifier) {
 		// @formatter:off
-		return reportData.getTestPlan().getParent(test)
+		return reportData.getTestPlan().getParent(testIdentifier)
 				.map(TestIdentifier::getDisplayName)
 				.orElse("<unrooted>");
 		// @formatter:on
 	}
 
-	private void writeSkippedOrErrorOrFailureElement(TestIdentifier test, XMLStreamWriter writer)
+	private void writeSkippedOrErrorOrFailureElement(TestIdentifier testIdentifier, XMLStreamWriter writer)
 			throws XMLStreamException {
-		if (reportData.wasSkipped(test)) {
-			writeSkippedElement(reportData.getSkipReason(test), writer);
+		if (reportData.wasSkipped(testIdentifier)) {
+			writeSkippedElement(reportData.getSkipReason(testIdentifier), writer);
 		}
 		else {
-			Optional<TestExecutionResult> result = reportData.getResult(test);
+			Optional<TestExecutionResult> result = reportData.getResult(testIdentifier);
 			if (result.isPresent() && result.get().getStatus() == FAILED) {
 				writeErrorOrFailureElement(result.get().getThrowable(), writer);
 			}
