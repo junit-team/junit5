@@ -167,18 +167,18 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private void invokeBeforeEachCallbacks(JupiterEngineExecutionContext context) {
-		this.invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(context,
+		invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(context,
 			((extensionContext, callback) -> () -> callback.beforeEach(extensionContext)), BeforeEachCallback.class);
 	}
 
 	private void invokeBeforeEachMethods(JupiterEngineExecutionContext context) {
-		this.invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(context,
+		invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(context,
 			((extensionContext, callback) -> () -> callback.invokeBeforeEachMethod(extensionContext)),
 			BeforeEachMethodAdapter.class);
 	}
 
 	private void invokeBeforeTestExecutionCallbacks(JupiterEngineExecutionContext context) {
-		this.invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(context,
+		invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(context,
 			((extensionContext, callback) -> () -> callback.beforeTestExecution(extensionContext)),
 			BeforeTestExecutionCallback.class);
 	}
@@ -239,19 +239,19 @@ public class MethodTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private void invokeAfterTestExecutionCallbacks(JupiterEngineExecutionContext context) {
-		this.invokeAllAfterMethodsOrCallbacks(context,
+		invokeAllAfterMethodsOrCallbacks(context,
 			((extensionContext, callback) -> () -> callback.afterTestExecution(extensionContext)),
 			AfterTestExecutionCallback.class);
 	}
 
 	private void invokeAfterEachMethods(JupiterEngineExecutionContext context) {
-		this.invokeAllAfterMethodsOrCallbacks(context,
+		invokeAllAfterMethodsOrCallbacks(context,
 			((extensionContext, callback) -> () -> callback.invokeAfterEachMethod(extensionContext)),
 			AfterEachMethodAdapter.class);
 	}
 
 	private void invokeAfterEachCallbacks(JupiterEngineExecutionContext context) {
-		this.invokeAllAfterMethodsOrCallbacks(context,
+		invokeAllAfterMethodsOrCallbacks(context,
 			((extensionContext, callback) -> () -> callback.afterEach(extensionContext)), AfterEachCallback.class);
 	}
 
