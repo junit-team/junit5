@@ -16,6 +16,17 @@ matrix:
   allow_failures:
     - jdk: oraclejdk9
 
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+install: echo "Prevent './gradlew assemble' from being executed."
+
 script:
   - java -version
   - ./gradlew wrapper --gradle-distribution-url=https://services.gradle.org/distributions-snapshots/gradle-3.0-20160702000020+0000-bin.zip
