@@ -26,7 +26,7 @@ cache:
     - $HOME/.gradle/wrapper/
 
 # Update Gradle Wrapper instead of letting Travis execute './gradlew assemble' by default
-install: gradle wrapper --gradle-distribution-url=https://services.gradle.org/distributions-snapshots/gradle-3.0-20160702000020+0000-bin.zip
+install: ./gradlew wrapper --gradle-distribution-url=https://services.gradle.org/distributions-snapshots/gradle-3.0-20160702000020+0000-bin.zip
 
 script:
   - java -version
