@@ -2,9 +2,22 @@ language: java
 
 sudo: required
 
+# required for oraclejdk9
+dist: trusty
+
+# required for oraclejdk9
+group: edge
+
 jdk:
   - oraclejdk8
+  - oraclejdk9
+
+matrix:
+  allow_failures:
+    - jdk: oraclejdk9
 
 script:
   - java -version
-  - ./gradlew check
+  - ./gradlew wrapper --gradle-distribution-url=https://services.gradle.org/distributions-snapshots/gradle-3.0-20160702000020+0000-bin.zip
+  - ./gradlew -version
+  - ./gradlew clean check
