@@ -25,10 +25,10 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-install: echo "Prevent './gradlew assemble' from being executed."
+# Update Gradle Wrapper instead of letting Travis execute './gradlew assemble' by default
+install: gradle wrapper --gradle-distribution-url=https://services.gradle.org/distributions-snapshots/gradle-3.0-20160702000020+0000-bin.zip
 
 script:
   - java -version
-  - ./gradlew wrapper --gradle-distribution-url=https://services.gradle.org/distributions-snapshots/gradle-3.0-20160702000020+0000-bin.zip
   - ./gradlew -version
   - ./gradlew clean check
