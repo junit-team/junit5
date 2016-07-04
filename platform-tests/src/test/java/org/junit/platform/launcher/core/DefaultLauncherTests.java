@@ -35,7 +35,6 @@ import org.junit.platform.engine.support.hierarchical.DummyTestEngine;
 import org.junit.platform.engine.test.TestEngineSpy;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.PostDiscoveryFilterStub;
-import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
@@ -71,7 +70,7 @@ class DefaultLauncherTests {
 
 		TestPlan testPlan = launcher.discover(request().build());
 
-		assertThat(testPlan.getRoots()).isEmpty();
+		assertThat(testPlan.getRoots()).hasSize(1);
 	}
 
 	@Test
@@ -286,21 +285,6 @@ class DefaultLauncherTests {
 		finally {
 			System.clearProperty(FOO);
 		}
-	}
-
-	@Test
-	void engineDescriptorsWithoutAnyChildrenAreNotFilteredButPruned() {
-		DefaultLauncher launcher = createLauncher(new DummyTestEngine("emptyEngine"));
-
-		// @formatter:off
-		TestPlan testPlan = launcher.discover(
-				request()
-						.selectors(selectPackage("any"))
-						.filters(TagFilter.includeTags("foo"))
-						.build());
-		// @formatter:on
-
-		assertThat(testPlan.getRoots()).isEmpty();
 	}
 
 }

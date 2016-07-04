@@ -71,11 +71,10 @@ class Root {
 	 * that do not have executable tests.
 	 *
 	 * <p>If a {@link TestEngine} ends up with no {@code TestDescriptors} after
-	 * pruning, it will be removed.
+	 * pruning, it will <strong>not</strong> be removed.
 	 */
 	void prune() {
 		acceptInAllTestEngines(REMOVE_DESCRIPTORS_WITHOUT_TESTS);
-		pruneEmptyTestEngines();
 	}
 
 	private boolean isExcluded(TestDescriptor descriptor, Filter<TestDescriptor> postDiscoveryFilter) {
@@ -84,10 +83,6 @@ class Root {
 
 	private void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {
 		this.testEngineDescriptors.values().forEach(descriptor -> descriptor.accept(visitor));
-	}
-
-	private void pruneEmptyTestEngines() {
-		this.testEngineDescriptors.values().removeIf(descriptor -> descriptor.getChildren().isEmpty());
 	}
 
 }

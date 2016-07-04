@@ -418,15 +418,7 @@ class JUnitPlatformRunnerTests {
 
 		@Override
 		public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-			EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "Dynamic Engine");
-
-			// If we don't add this pseudo-container, the whole engine will get pruned because
-			// it otherwise won't have any (static) children.
-			TestDescriptor dynamicTestContainer = new DynamicTestContainerTestDescriptor(
-				uniqueId.append("pseudo-container", "0"), "dynamic test pseudo-container");
-			engineDescriptor.addChild(dynamicTestContainer);
-
-			return engineDescriptor;
+			return new EngineDescriptor(uniqueId, "Dynamic Engine");
 		}
 
 		@Override
@@ -460,28 +452,6 @@ class JUnitPlatformRunnerTests {
 			engineExecutionListener.executionFinished(container, TestExecutionResult.successful());
 		}
 
-	}
-
-	private static class DynamicTestContainerTestDescriptor extends AbstractTestDescriptor {
-
-		DynamicTestContainerTestDescriptor(UniqueId uniqueId, String displayName) {
-			super(uniqueId, displayName);
-		}
-
-		@Override
-		public boolean isContainer() {
-			return true;
-		}
-
-		@Override
-		public boolean isTest() {
-			return false;
-		}
-
-		@Override
-		public boolean hasTests() {
-			return true;
-		}
 	}
 
 	private static class DemoContainerTestDescriptor extends AbstractTestDescriptor {
