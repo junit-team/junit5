@@ -2708,8 +2708,143 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 <p>The following is a list of global changes. For details regarding changes specific to the
 Platform, Jupiter, and Vintage, consult the dedicated subsections.</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>JAR manifests in published artifacts now contain additional metadata such as
+<code>Created-By</code>, <code>Built-By</code>, <code>Build-Date</code>, <code>Build-Time</code>, <code>Build-Revision</code>,
+<code>Implementation-Title</code>, <code>Implementation-Version</code>, <code>Implementation-Vendor</code>, etc.</p>
+</li>
+<li>
+<p>Published artifacts now contain <code>LICENSE.md</code> in <code>META-INF</code>.</p>
+</li>
+<li>
+<p>JUnit now participates in the <a href="http://up-for-grabs.net/#/tags/junit">Up For Grabs</a>
+movement for open source contributions.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See the <a href="https://github.com/junit-team/junit5/labels/up-for-grabs">up-for-grabs</a> label
+on GitHub.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Group IDs, artifact IDs, and versions have changed for all published artifacts.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="#release-notes-5.0.0-m1-migration-artifacts">Artifact Migration</a> and <a href="#dependency-metadata">Dependency Metadata</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>All base packages have been renamed.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="#release-notes-5.0.0-m1-migration-packages">Package Migration</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<table id="release-notes-5.0.0-m1-migration-artifacts" class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Artifact Migration</caption>
+<colgroup>
+<col style="width: 12%;">
+<col style="width: 19%;">
+<col style="width: 20%;">
+<col style="width: 31%;">
+<col style="width: 15%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Old Group ID</th>
+<th class="tableblock halign-left valign-top">Old Artifact ID</th>
+<th class="tableblock halign-left valign-top">New Group ID</th>
+<th class="tableblock halign-left valign-top">New Artifact ID</th>
+<th class="tableblock halign-left valign-top">New Base Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-commons</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-commons</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-console</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-console</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-engine-api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-engine</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-gradle</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-gradle-plugin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-launcher</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-launcher</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit4-runner</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-runner</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>surefire-junit5</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-platform-surefire-provider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.0.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit5-api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-jupiter-api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.0.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit5-engine</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-jupiter-engine</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.0.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit4-engine</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.vintage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>junit-vintage-engine</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>4.12.0</code></p></td>
+</tr>
+</tbody>
+</table>
 <table id="release-notes-5.0.0-m1-migration-packages" class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. Package Migration</caption>
+<caption class="title">Table 2. Package Migration</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 80%;">
@@ -2758,6 +2893,10 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.gen5.launcher.main</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher.core</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.gen5.surefire</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.surefire.provider</code></p></td>
 </tr>
@@ -2768,7 +2907,94 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>org.junit.platform.console.ConsoleRunner</code> renamed to <code>ConsoleLauncher</code></p>
+<p>The <code>ConsoleRunner</code> has been renamed to <code>ConsoleLauncher</code>.</p>
+</li>
+<li>
+<p><code>ConsoleLauncher</code> now always returns the status code on exit, and the <em>enable exit code</em>
+flags have been removed.</p>
+</li>
+<li>
+<p>The <code>junit-platform-console</code> artifact no longer defines transitive dependencies on
+<code>junit-platform-runner</code>, <code>junit-jupiter-engine</code>, or <code>junit-vintage-engine</code>.</p>
+</li>
+<li>
+<p>The <code>JUnit5</code> Runner has been renamed to <code>JUnitPlatform</code>.</p>
+</li>
+<li>
+<p><code>@Packages</code> has been renamed to <code>@SelectPackages</code>.</p>
+</li>
+<li>
+<p><code>@Classes</code> has been renamed to <code>@SelectClasses</code>.</p>
+</li>
+<li>
+<p><code>@UniqueIds</code> has been removed.</p>
+</li>
+<li>
+<p>The Gradle plugin for the JUnit Platform has been completely overhauled.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The JUnit Platform Gradle plugin now requires Gradle 2.5 or higher.</p>
+</li>
+<li>
+<p>The <code>junit5Test</code> Gradle task has been renamed to <code>junitPlatformTest</code>.</p>
+</li>
+<li>
+<p>The <code>junit5</code> Gradle plugin configuration has been renamed to <code>junitPlatform</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>runJunit4</code> has been replaced by <code>enableStandardTestTask</code>.</p>
+</li>
+<li>
+<p><code>version</code> has been replaced by <code>platformVersion</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>See <a href="#running-tests-build-gradle">Gradle</a> for further details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Unique ID in <code>TestIdentifier</code> is now a <code>String</code>.</p>
+</li>
+<li>
+<p><code>TestSource</code> is now an interface with a dedicated hierarchy consisting of
+<code>CompositeTestSource</code>, <code>JavaSource</code>, <code>JavaPackageSource</code>, <code>JavaClassSource</code>,
+<code>JavaMethodSource</code>, <code>UriSource</code>, <code>FileSystemSource</code>, <code>DirectorySource</code>, and
+<code>FileSource</code>.</p>
+</li>
+<li>
+<p><code>Filter#filter()</code> has been renamed to <code>Filter#apply()</code>.</p>
+</li>
+<li>
+<p><code>TestTag.of()</code> has been renamed to <code>TestTag.create()</code>.</p>
+</li>
+<li>
+<p><code>TestDiscoveryRequest</code> has been renamed to <code>LauncherDiscoveryRequest</code>.</p>
+</li>
+<li>
+<p><code>TestDiscoveryRequestBuilder</code> has been renamed to <code>LauncherDiscoveryRequestBuilder</code>.</p>
+</li>
+<li>
+<p><code>LauncherDiscoveryRequest</code> is now immutable.</p>
+</li>
+<li>
+<p><code>TestDescriptor#allDescendants()</code> has been renamed to <code>TestDescriptor#getAllDescendants()</code>.</p>
+</li>
+<li>
+<p><code>TestEngine#discover(EngineDiscoveryRequest)</code> has been replaced by
+<code>TestEngine#discover(EngineDiscoveryRequest, UniqueId)</code>.</p>
+</li>
+<li>
+<p>Introduced <code>ConfigurationParameters</code> which the <code>Launcher</code> supplies to engines via the
+<code>EngineDiscoveryRequest</code> and <code>ExecutionRequest</code></p>
+</li>
+<li>
+<p>The <code>Container</code> and <code>Leaf</code> abstractions have been removed from the <code>HierarchicalTestEngine</code>.</p>
 </li>
 </ul>
 </div>
@@ -2778,7 +3004,60 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>ExtensionContext.getElement()</code> now returns <code>Optional&lt;AnnotatedElement&gt;</code></p>
+<p>The <code>junit5</code> engine ID has been renamed to <code>junit-jupiter</code>.</p>
+</li>
+<li>
+<p><code>JUnit5TestEngine</code> has been renamed to <code>JupiterTestEngine</code>.</p>
+</li>
+<li>
+<p><code>InstancePostProcessor</code> has been renamed to <code>TestInstancePostProcessor</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>TestInstancePostProcessor</code> implementations are now properly applied within <code>@Nested</code>
+test class hierarchies.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>MethodParameterResolver</code> has been renamed to <code>ParameterResolver</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>ParameterResolver</code> API is now based on <code>java.lang.reflect.Executable</code> and can
+therefore be used to resolve parameters for methods <em>and</em> constructors.</p>
+</li>
+<li>
+<p>New <code>ParameterContext</code> which is passed to the <code>supports()</code> and <code>resolve()</code> methods of
+<code>ParameterResolver</code> extensions.</p>
+</li>
+<li>
+<p>Resolution of primitive types is now supported for <code>ParameterResolver</code> extensions.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>BeforeAllExtensionPoint</code> has been renamed to <code>BeforeAllCallback</code>.</p>
+</li>
+<li>
+<p><code>AfterAllExtensionPoint</code> has been renamed to <code>AfterAllCallback</code>.</p>
+</li>
+<li>
+<p><code>BeforeEachExtensionPoint</code> has been renamed to <code>BeforeEachCallback</code>.</p>
+</li>
+<li>
+<p><code>BeforeAllExtensionPoint</code> has been renamed to <code>BeforeAllCallback</code>.</p>
+</li>
+<li>
+<p>New <code>BeforeTestExecutionCallback</code> and <code>AfterTestExecutionCallback</code> extension APIs.</p>
+</li>
+<li>
+<p><code>ExceptionHandlerExtensionPoint</code> has been renamed to <code>TestExecutionExceptionHandler</code>.</p>
+</li>
+<li>
+<p>Test exceptions are now supplied to extensions via the <code>TestExtensionContext</code>.</p>
 </li>
 </ul>
 </div>
@@ -2788,7 +3067,10 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>???</p>
+<p>The <code>junit4</code> engine ID has been renamed to <code>junit-vintage</code>.</p>
+</li>
+<li>
+<p><code>JUnit4TestEngine</code> has been renamed to <code>VintageTestEngine</code>.</p>
 </li>
 </ul>
 </div>
@@ -2801,7 +3083,7 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-07-02 12:34:08 -04:00
+Last updated 2016-07-04 08:41:38 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
