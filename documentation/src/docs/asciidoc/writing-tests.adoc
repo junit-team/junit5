@@ -209,21 +209,22 @@ Other parameter resolvers must be explicitly enabled by registering appropriate
 [source,java,indent=0]
 [subs="verbatim"]
 ----
+import com.example.mockito.MockitoExtension;
 import org.junit.jupiter.api.*;
+import org.mockito.Mock;
 
 import static org.mockito.Mockito.when;
-import com.example.mockito.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class MyMockitoTest {
 
 	@BeforeEach
-	void init(@InjectMock Person person) {
+	void init(@Mock Person person) {
 		when(person.getName()).thenReturn("Dilbert");
 	}
 
 	@Test
-	void simpleTestWithInjectedMock(@InjectMock Person person) {
+	void simpleTestWithInjectedMock(@Mock Person person) {
 		assertEquals("Dilbert", person.getName());
 	}
 
