@@ -1266,21 +1266,22 @@ demonstrates how to inject Mockito mocks into <code>@BeforeEach</code> and <code
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import org.junit.jupiter.api.*;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import com.example.mockito.MockitoExtension;
+import org.junit.jupiter.api.*;
+import org.mockito.Mock;
 
 import static org.mockito.Mockito.when;
-import com.example.mockito.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class MyMockitoTest {
 
     @BeforeEach
-    void init(@InjectMock Person person) {
+    void init(@Mock Person person) {
         when(person.getName()).thenReturn("Dilbert");
     }
 
     @Test
-    void simpleTestWithInjectedMock(@InjectMock Person person) {
+    void simpleTestWithInjectedMock(@Mock Person person) {
         assertEquals("Dilbert", person.getName());
     }
 
@@ -3083,7 +3084,7 @@ therefore be used to resolve parameters for methods <em>and</em> constructors.</
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-07-04 08:41:38 -04:00
+Last updated 2016-07-05 04:27:40 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
