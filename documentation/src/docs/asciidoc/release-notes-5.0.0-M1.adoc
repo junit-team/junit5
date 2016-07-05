@@ -106,6 +106,8 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.
 * Introduced `ConfigurationParameters` which the `Launcher` supplies to engines via the
   `EngineDiscoveryRequest` and `ExecutionRequest`
 * The `Container` and `Leaf` abstractions have been removed from the `HierarchicalTestEngine`.
+* The `getName()` method has been removed from `TestIdentifier` and `TestDescriptor` in
+  favor of retrieving an implementation specific name via the `TestSource`.
 * Test engines are now permitted to be completely dynamic in nature. In other words, a
   `TestEngine` is no longer required to create `TestDescriptor` entries during the
   _discovery phase_; a `TestEngine` may now optionally register containers and tests
@@ -125,6 +127,22 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.
 
 * The `junit5` engine ID has been renamed to `junit-jupiter`.
 * `JUnit5TestEngine` has been renamed to `JupiterTestEngine`.
+* `Assertions` now provides the following support:
+** `assertEquals()` for primitive types
+** `assertEquals()` for doubles and floats with deltas
+** `assertArrayEquals()`
+** Expected and actual values are now supplied to the `AssertionFailedError`.
+* <<writing-tests-dynamic-tests,Dynamic Tests>>: tests can now be registered dynamically
+  at runtime via lambda expressions.
+* `TestInfo` now provides access to tags via `getTags()`.
+* `@AfterEach` methods and _after_ callbacks are now invoked if an exception is thrown by
+  a `@Test` method, a `@BeforeEach` method, or a _before_ callback.
+* `@AfterAll` methods and _after all_ callbacks are now guaranteed to be invoked.
+* Repeatable annotations such as `@ExtendWith` and `@Tag` are now discovered in
+  superclasses within a test class hierarchy as well as on interfaces.
+* Extensions are now registered _top-down_ within a test class or interface hierarchy.
+* Test and container execution <<extensions-conditions-deactivation,_conditions_ can now
+  be deactivated>>.
 * `InstancePostProcessor` has been renamed to `TestInstancePostProcessor`.
 ** `TestInstancePostProcessor` implementations are now properly applied within `@Nested`
    test class hierarchies.
@@ -134,6 +152,8 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.
 ** New `ParameterContext` which is passed to the `supports()` and `resolve()` methods of
    `ParameterResolver` extensions.
 ** Resolution of primitive types is now supported for `ParameterResolver` extensions.
+* The `ExtensionPointRegistry` and `ExtensionRegistrar` have been removed in favor of
+  declarative registration via `@ExtendWith`.
 * `BeforeAllExtensionPoint` has been renamed to `BeforeAllCallback`.
 * `AfterAllExtensionPoint` has been renamed to `AfterAllCallback`.
 * `BeforeEachExtensionPoint` has been renamed to `BeforeEachCallback`.
@@ -141,44 +161,13 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.
 * New `BeforeTestExecutionCallback` and `AfterTestExecutionCallback` extension APIs.
 * `ExceptionHandlerExtensionPoint` has been renamed to `TestExecutionExceptionHandler`.
 * Test exceptions are now supplied to extensions via the `TestExtensionContext`.
-
-////
-* Introduce deactivation mechanism for conditions
-
-* Introduce support for type safety in ExtensionContext.Store
-* Return Optional from ExtensionContext.getElement()
-
-* Ensure afters are invoked if exception is thrown by test or a before
-* Ensure AfterAlls are invoked if exception is thrown by a BeforeAll
-
-* Rename Namespace.of() to Namespace.create()
-
-* Add assertEquals for primitive types.
-* Add assertEquals() for doubles & floats with delta
-* Introduce assertArrayEquals() methods in Assertions
-* Assertions: Pass expected/actual values to AssertionFailedError
-
-* Dynamic Tests
-
-* Introduce getTest[Class|Method]() in TestInfo & ExtensionContext
-* Remove getName() from TestInfo, ExtensionContext, TestIdentifier, TestDescriptor
-
-* Generate proper default display name for test methods
-* Document display names and defaults across the project
-
-* Ensure that repeatable annotations are discovered in superclasses
-* Ensure extensions are registered top-down w/in class hierarchy
-* Find repeatable annotations on interfaces
-
-* `ExtensionContext.getElement()` now returns `Optional<AnnotatedElement>`
-
-* Rename test lifecycle callback extension APIs
-* Introduce before & after test method callback APIs
-* Remove ExtensionPoint API in favor of Extension
-* Remove ExtensionPointRegistry and ExtensionRegistrar
-
-* TestInfo.getTags()
-////
+* `ExtensionContext.Store` now supports type-safe variants of many of its methods.
+* `ExtensionContext.getElement()` now returns an `Optional`.
+* `Namespace.of()` has been renamed to `Namespace.create()`.
+* `TestInfo` and `ExtensionContext` have new `getTestClass()` and `getTestMethod()`
+  methods.
+* The `getName()` method has been removed from `TestInfo` and `ExtensionContext` in favor
+  of retrieving a context specific name via the current test class or test method.
 
 [[release-notes-5.0.0-m1-junit-vintage]]
 ===== JUnit Vintage
