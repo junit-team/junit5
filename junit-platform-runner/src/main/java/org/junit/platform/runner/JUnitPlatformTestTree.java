@@ -15,11 +15,17 @@ import static java.util.stream.Collectors.toSet;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.support.descriptor.JavaClassSource;
+import org.junit.platform.engine.support.descriptor.JavaMethodSource;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.runner.Description;
@@ -73,12 +79,57 @@ class JUnitPlatformTestTree {
 
 	private Description createJUnit4Description(TestIdentifier identifier, TestPlan testPlan) {
 		if (identifier.isTest()) {
-			return Description.createTestDescription(testPlan.getParent(identifier).orElse(identifier).getDisplayName(),
-				identifier.getDisplayName(), identifier.getUniqueId());
+			String className = getClassName(identifier, testPlan);
+			String name = getName(identifier);
+			return Description.createTestDescription(className, name, identifier.getUniqueId());
 		}
 		else {
 			return Description.createSuiteDescription(identifier.getDisplayName(), identifier.getUniqueId());
 		}
+	}
+
+	private String getName(TestIdentifier testIdentifier) {
+		Optional<TestSource> optionalSource = testIdentifier.getSource();
+		if (optionalSource.isPresent()) {
+			TestSource source = optionalSource.get();
+			if (source instanceof JavaClassSource) {
+				return ((JavaClassSource) source).getJavaClass().getName();
+			}
+			else if (source instanceof JavaMethodSource) {
+				JavaMethodSource javaMethodSource = (JavaMethodSource) source;
+				List<Class<?>> parameterTypes = javaMethodSource.getJavaMethodParameterTypes();
+				if (parameterTypes.size() == 0) {
+					return javaMethodSource.getJavaMethodName();
+				}
+				else {
+					return String.format("%s(%s)", javaMethodSource.getJavaMethodName(), StringUtils.nullSafeToString(
+						Class::getName, parameterTypes.toArray(new Class<?>[parameterTypes.size()])));
+				}
+			}
+		}
+
+		// Else fall back to display name
+		return testIdentifier.getDisplayName();
+	}
+
+	private String getClassName(TestIdentifier testIdentifier, TestPlan testPlan) {
+		Optional<TestSource> optionalSource = testIdentifier.getSource();
+		if (optionalSource.isPresent()) {
+			TestSource source = optionalSource.get();
+			if (source instanceof JavaClassSource) {
+				return ((JavaClassSource) source).getJavaClass().getName();
+			}
+			else if (source instanceof JavaMethodSource) {
+				return ((JavaMethodSource) source).getJavaClass().getName();
+			}
+		}
+
+		// Else fall back to display name of parent
+		// @formatter:off
+		return testPlan.getParent(testIdentifier)
+				.map(TestIdentifier::getDisplayName)
+				.orElse("<unrooted>");
+		// @formatter:on
 	}
 
 	Set<TestIdentifier> getTestsInSubtree(TestIdentifier ancestor) {

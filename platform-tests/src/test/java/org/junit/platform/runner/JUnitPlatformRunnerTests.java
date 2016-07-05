@@ -15,6 +15,7 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -34,6 +35,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Nested;
@@ -380,6 +383,43 @@ class JUnitPlatformRunnerTests {
 		}
 
 	}
+
+	@Nested
+	class Descriptions {
+
+		@Test
+		void descriptionForJavaMethodSource() throws Exception {
+			DummyTestEngine engine = new DummyTestEngine("dummy");
+			Method failingTest = getClass().getDeclaredMethod("failingTest");
+			engine.addTest(failingTest, () -> {
+			});
+
+			JUnitPlatform platformRunner = new JUnitPlatform(TestClass.class, createLauncher(engine));
+
+			ArrayList<Description> children = platformRunner.getDescription().getChildren();
+			assertEquals(1, children.size());
+			Description engineDescription = children.get(0);
+			assertEquals("dummy", engineDescription.getDisplayName());
+
+			children = engineDescription.getChildren();
+			assertEquals(1, children.size());
+			Description testDescription = children.get(0);
+			// @formatter:off
+			assertAll(
+				() -> assertEquals(getClass().getName(), testDescription.getClassName(), "class name"),
+				() -> assertEquals("failingTest", testDescription.getMethodName(), "method name"),
+				() -> assertEquals("failingTest(" + getClass().getName() + ")", testDescription.getDisplayName(), "display name")
+			);
+			// @formatter:on
+		}
+
+		void failingTest() {
+			// not actually invoked
+		}
+
+	}
+
+	// -------------------------------------------------------------------------
 
 	private static Description suiteDescription(String uniqueId) {
 		return createSuiteDescription(uniqueId, uniqueId);

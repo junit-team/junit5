@@ -13,6 +13,7 @@ package org.junit.platform.engine.support.hierarchical;
 import static org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip;
 import static org.junit.platform.engine.support.hierarchical.Node.SkipResult.skip;
 
+import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 
@@ -26,7 +27,14 @@ public class DummyTestDescriptor extends AbstractTestDescriptor implements Node<
 	private boolean skipped;
 
 	DummyTestDescriptor(UniqueId uniqueId, String displayName, Runnable runnable) {
+		this(uniqueId, displayName, null, runnable);
+	}
+
+	DummyTestDescriptor(UniqueId uniqueId, String displayName, TestSource source, Runnable runnable) {
 		super(uniqueId, displayName);
+		if (source != null) {
+			setSource(source);
+		}
 		this.runnable = runnable;
 	}
 

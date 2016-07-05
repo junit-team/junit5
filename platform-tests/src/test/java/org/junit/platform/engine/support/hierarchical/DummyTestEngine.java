@@ -10,10 +10,13 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import java.lang.reflect.Method;
+
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.JavaMethodSource;
 
 /**
  * @since 1.0
@@ -45,6 +48,14 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 		return addTest(uniqueName, uniqueName, runnable);
 	}
 
+	public DummyTestDescriptor addTest(Method testMethod, Runnable runnable) {
+		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", testMethod.getName());
+		JavaMethodSource source = new JavaMethodSource(testMethod);
+		DummyTestDescriptor child = new DummyTestDescriptor(uniqueId, testMethod.getName(), source, runnable);
+		engineDescriptor.addChild(child);
+		return child;
+	}
+
 	public DummyTestDescriptor addTest(String uniqueName, String displayName, Runnable runnable) {
 		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", uniqueName);
 		DummyTestDescriptor child = new DummyTestDescriptor(uniqueId, displayName, runnable);
@@ -61,4 +72,5 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 	protected DummyEngineExecutionContext createExecutionContext(ExecutionRequest request) {
 		return new DummyEngineExecutionContext();
 	}
+
 }
