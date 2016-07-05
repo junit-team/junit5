@@ -446,6 +446,35 @@ configure(rootProject) {
 
 	// docsVersion is also used in documentation.gradle.
 	ext.docsVersion = project.version.contains('SNAPSHOT') ? 'snapshot' : project.version
+	ext.docsDir = new File(buildDir, 'ghpages-docs')
+
+	task prepareDocsForUploadToGhPages(dependsOn: [aggregateJavadocs, ":documentation:asciidoctor"], type: Copy) {
+		outputs.dir docsDir
+
+		from(project(':documentation').buildDir) {
+			include 'asciidoc/**'
+		}
+		from("$buildDir/docs") {
+			include 'javadoc/**'
+		}
+		into "${docsDir}/${docsVersion}"
+		filesMatching('asciidoc/**') { fileCopyDetails ->
+			fileCopyDetails.path = fileCopyDetails.path.replace('asciidoc/', 'user-guide/')
+		}
+		filesMatching('javadoc/**') { fileCopyDetails ->
+			fileCopyDetails.path = fileCopyDetails.path.replace('javadoc/', 'api/')
+		}
+		includeEmptyDirs = false
+	}
+
+	task createCurrentDocsFolder(dependsOn: prepareDocsForUploadToGhPages, type: Copy) {
+		outputs.dir "${docsDir}/current"
+
+		from "${docsDir}/${docsVersion}"
+		into "${docsDir}/current"
+	}
+
+	createCurrentDocsFolder.onlyIf { project.hasProperty('replaceCurrentDocs') }
 
 	githubPages {
 		repoUri = 'https://github.com/junit-team/junit5.git'
@@ -456,27 +485,15 @@ configure(rootProject) {
 		}
 
 		pages {
-			from(project(':documentation').buildDir) {
-				include 'asciidoc/**'
-			}
-			from("$buildDir/docs") {
-				include 'javadoc/**'
-			}
-			into "docs/${docsVersion}"
-			filesMatching('asciidoc/**') { fileCopyDetails ->
-				fileCopyDetails.path = fileCopyDetails.path.replace('asciidoc/', 'user-guide/')
-			}
-			filesMatching('javadoc/**') { fileCopyDetails ->
-				fileCopyDetails.path = fileCopyDetails.path.replace('javadoc/', 'api/')
-			}
-			includeEmptyDirs = false
+			from docsDir
+			into "docs"
 		}
 
 		deleteExistingFiles = false
 	}
 
-	prepareGhPages.dependsOn(":documentation:asciidoctor")
-	prepareGhPages.dependsOn(aggregateJavadocs)
+	prepareGhPages.dependsOn(prepareDocsForUploadToGhPages)
+	prepareGhPages.dependsOn(createCurrentDocsFolder)
 
 	task wrapper(type: Wrapper) {
 		// To build against Gradle 3.0 nightly builds, obtain the latest
