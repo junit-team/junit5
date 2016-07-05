@@ -4,8 +4,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp
 
 :sectnums:
 
-:docs-root:                         http://junit.org/junit5/docs/{docs-version}
-:javadoc-root:                      {docs-root}/api
+:javadoc-root:                      link:../api
 
 :snapshot-repo:                     https://oss.sonatype.org/content/repositories/snapshots
 

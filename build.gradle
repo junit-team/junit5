@@ -444,9 +444,8 @@ configure(rootProject) {
 		}
 	}
 
-	// docsVersion is also used in documentation.gradle.
-	ext.docsVersion = project.version.contains('SNAPSHOT') ? 'snapshot' : project.version
-	ext.docsDir = new File(buildDir, 'ghpages-docs')
+	def docsVersion = project.version.contains('SNAPSHOT') ? 'snapshot' : project.version
+	def docsDir = new File(buildDir, 'ghpages-docs')
 
 	task prepareDocsForUploadToGhPages(dependsOn: [aggregateJavadocs, ":documentation:asciidoctor"], type: Copy) {
 		outputs.dir docsDir
