@@ -198,22 +198,27 @@ Using `@RunWith(JUnitPlatform.class)` will even output all reported entries to `
 include::{testDir}/example/TestReporterDemo.java[tags=user_guide]
 ----
 
-Other parameter resolvers must be explicitly enabled by registering appropriate
+NOTE: Other parameter resolvers must be explicitly enabled by registering appropriate
 <<extensions,extensions>> via `@ExtendWith`.
 
-* Check out the `{MockitoExtension}` for an example of a `{ParameterResolver}`. While not
-  intended to be production-ready, it demonstrates the simplicity and expressiveness of
-  both the extension model and the parameter resolution process. `MyMockitoTest`
-  demonstrates how to inject Mockito mocks into `@BeforeEach` and `@Test` methods.
+Check out the `{MockitoExtension}` for an example of a custom `{ParameterResolver}`.
+While not intended to be production-ready, it demonstrates the simplicity and
+expressiveness of both the extension model and the parameter resolution process.
+`MyMockitoTest` demonstrates how to inject Mockito mocks into `@BeforeEach` and `@Test`
+methods.
 
 [source,java,indent=0]
 [subs="verbatim"]
 ----
-import com.example.mockito.MockitoExtension;
-import org.junit.jupiter.api.*;
-import org.mockito.Mock;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import com.example.Person;
+import com.example.mockito.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class MyMockitoTest {
