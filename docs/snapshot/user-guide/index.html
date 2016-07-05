@@ -1250,27 +1250,37 @@ class TestReporterDemo {
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Other parameter resolvers must be explicitly enabled by registering appropriate
-<a href="#extensions">extensions</a> via <code>@ExtendWith</code>.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Other parameter resolvers must be explicitly enabled by registering appropriate
+<a href="#extensions">extensions</a> via <code>@ExtendWith</code>.
+</td>
+</tr>
+</table>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> for an example of a <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code>. While not
-intended to be production-ready, it demonstrates the simplicity and expressiveness of
-both the extension model and the parameter resolution process. <code>MyMockitoTest</code>
-demonstrates how to inject Mockito mocks into <code>@BeforeEach</code> and <code>@Test</code> methods.</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>Check out the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java">MockitoExtension</a></code> for an example of a custom <code><a href="http://junit.org/junit5/docs/snapshot/api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code>.
+While not intended to be production-ready, it demonstrates the simplicity and
+expressiveness of both the extension model and the parameter resolution process.
+<code>MyMockitoTest</code> demonstrates how to inject Mockito mocks into <code>@BeforeEach</code> and <code>@Test</code>
+methods.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import com.example.mockito.MockitoExtension;
-import org.junit.jupiter.api.*;
-import org.mockito.Mock;
-
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import com.example.Person;
+import com.example.mockito.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class MyMockitoTest {
@@ -3084,7 +3094,7 @@ therefore be used to resolve parameters for methods <em>and</em> constructors.</
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-07-05 04:27:40 -04:00
+Last updated 2016-07-05 05:23:02 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
