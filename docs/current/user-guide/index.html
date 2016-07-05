@@ -2721,7 +2721,7 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m1">10.2. 5.0.0-M1</h3>
 <div class="paragraph">
-<p><strong>Date of Release:</strong> June 30, 2016</p>
+<p><strong>Date of Release:</strong> July 6, 2016</p>
 </div>
 <div class="paragraph">
 <p><strong>Scope:</strong> First milestone release of JUnit 5</p>
@@ -3048,6 +3048,10 @@ class that serves as a centralized collection of all <em>select</em> methods.</p
 <p>The <code>Container</code> and <code>Leaf</code> abstractions have been removed from the <code>HierarchicalTestEngine</code>.</p>
 </li>
 <li>
+<p>The <code>getName()</code> method has been removed from <code>TestIdentifier</code> and <code>TestDescriptor</code> in
+favor of retrieving an implementation specific name via the <code>TestSource</code>.</p>
+</li>
+<li>
 <p>Test engines are now permitted to be completely dynamic in nature. In other words, a
 <code>TestEngine</code> is no longer required to create <code>TestDescriptor</code> entries during the
 <em>discovery phase</em>; a <code>TestEngine</code> may now optionally register containers and tests
@@ -3092,6 +3096,50 @@ dynamically during the <em>execution phase</em>.</p>
 <p><code>JUnit5TestEngine</code> has been renamed to <code>JupiterTestEngine</code>.</p>
 </li>
 <li>
+<p><code>Assertions</code> now provides the following support:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>assertEquals()</code> for primitive types</p>
+</li>
+<li>
+<p><code>assertEquals()</code> for doubles and floats with deltas</p>
+</li>
+<li>
+<p><code>assertArrayEquals()</code></p>
+</li>
+<li>
+<p>Expected and actual values are now supplied to the <code>AssertionFailedError</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="#writing-tests-dynamic-tests">Dynamic Tests</a>: tests can now be registered dynamically
+at runtime via lambda expressions.</p>
+</li>
+<li>
+<p><code>TestInfo</code> now provides access to tags via <code>getTags()</code>.</p>
+</li>
+<li>
+<p><code>@AfterEach</code> methods and <em>after</em> callbacks are now invoked if an exception is thrown by
+a <code>@Test</code> method, a <code>@BeforeEach</code> method, or a <em>before</em> callback.</p>
+</li>
+<li>
+<p><code>@AfterAll</code> methods and <em>after all</em> callbacks are now guaranteed to be invoked.</p>
+</li>
+<li>
+<p>Repeatable annotations such as <code>@ExtendWith</code> and <code>@Tag</code> are now discovered in
+superclasses within a test class hierarchy as well as on interfaces.</p>
+</li>
+<li>
+<p>Extensions are now registered <em>top-down</em> within a test class or interface hierarchy.</p>
+</li>
+<li>
+<p>Test and container execution <a href="#extensions-conditions-deactivation"><em>conditions</em> can now
+be deactivated</a>.</p>
+</li>
+<li>
 <p><code>InstancePostProcessor</code> has been renamed to <code>TestInstancePostProcessor</code>.</p>
 <div class="ulist">
 <ul>
@@ -3121,6 +3169,10 @@ therefore be used to resolve parameters for methods <em>and</em> constructors.</
 </div>
 </li>
 <li>
+<p>The <code>ExtensionPointRegistry</code> and <code>ExtensionRegistrar</code> have been removed in favor of
+declarative registration via <code>@ExtendWith</code>.</p>
+</li>
+<li>
 <p><code>BeforeAllExtensionPoint</code> has been renamed to <code>BeforeAllCallback</code>.</p>
 </li>
 <li>
@@ -3140,6 +3192,23 @@ therefore be used to resolve parameters for methods <em>and</em> constructors.</
 </li>
 <li>
 <p>Test exceptions are now supplied to extensions via the <code>TestExtensionContext</code>.</p>
+</li>
+<li>
+<p><code>ExtensionContext.Store</code> now supports type-safe variants of many of its methods.</p>
+</li>
+<li>
+<p><code>ExtensionContext.getElement()</code> now returns an <code>Optional</code>.</p>
+</li>
+<li>
+<p><code>Namespace.of()</code> has been renamed to <code>Namespace.create()</code>.</p>
+</li>
+<li>
+<p><code>TestInfo</code> and <code>ExtensionContext</code> have new <code>getTestClass()</code> and <code>getTestMethod()</code>
+methods.</p>
+</li>
+<li>
+<p>The <code>getName()</code> method has been removed from <code>TestInfo</code> and <code>ExtensionContext</code> in favor
+of retrieving a context specific name via the current test class or test method.</p>
 </li>
 </ul>
 </div>
