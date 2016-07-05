@@ -2943,7 +2943,8 @@ flags have been removed.</p>
 </li>
 <li>
 <p>The <code>JUnit5</code> Runner has been renamed to <code>JUnitPlatform</code>.</p>
-</li>
+<div class="ulist">
+<ul>
 <li>
 <p><code>@Packages</code> has been renamed to <code>@SelectPackages</code>.</p>
 </li>
@@ -2952,6 +2953,9 @@ flags have been removed.</p>
 </li>
 <li>
 <p><code>@UniqueIds</code> has been removed.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p>The Gradle plugin for the JUnit Platform has been completely overhauled.</p>
@@ -2983,6 +2987,25 @@ flags have been removed.</p>
 </div>
 </li>
 <li>
+<p>XML test report generation has been overhauled.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>XML reports now contain newlines.</p>
+</li>
+<li>
+<p>Attributes specific to the JUnit Platform that do not align with standard attributes
+in the de facto standard XML schema are now contained in <code>CDATA</code> blocks within the
+<code>&lt;system-out&gt;</code> element.</p>
+</li>
+<li>
+<p>XML reports now use real method names and fully qualified class names instead of
+display names.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>Unique ID in <code>TestIdentifier</code> is now a <code>String</code>.</p>
 </li>
 <li>
@@ -2992,7 +3015,11 @@ flags have been removed.</p>
 <code>FileSource</code>.</p>
 </li>
 <li>
-<p><code>Filter#filter()</code> has been renamed to <code>Filter#apply()</code>.</p>
+<p>All <code>DiscoverySelector</code> factory methods have been moved to a new <code>DiscoverySelectors</code>
+class that serves as a centralized collection of all <em>select</em> methods.</p>
+</li>
+<li>
+<p><code>Filter.filter()</code> has been renamed to <code>Filter.apply()</code>.</p>
 </li>
 <li>
 <p><code>TestTag.of()</code> has been renamed to <code>TestTag.create()</code>.</p>
@@ -3007,7 +3034,7 @@ flags have been removed.</p>
 <p><code>LauncherDiscoveryRequest</code> is now immutable.</p>
 </li>
 <li>
-<p><code>TestDescriptor#allDescendants()</code> has been renamed to <code>TestDescriptor#getAllDescendants()</code>.</p>
+<p><code>TestDescriptor.allDescendants()</code> has been renamed to <code>TestDescriptor.getAllDescendants()</code>.</p>
 </li>
 <li>
 <p><code>TestEngine#discover(EngineDiscoveryRequest)</code> has been replaced by
@@ -3019,6 +3046,37 @@ flags have been removed.</p>
 </li>
 <li>
 <p>The <code>Container</code> and <code>Leaf</code> abstractions have been removed from the <code>HierarchicalTestEngine</code>.</p>
+</li>
+<li>
+<p>Test engines are now permitted to be completely dynamic in nature. In other words, a
+<code>TestEngine</code> is no longer required to create <code>TestDescriptor</code> entries during the
+<em>discovery phase</em>; a <code>TestEngine</code> may now optionally register containers and tests
+dynamically during the <em>execution phase</em>.</p>
+</li>
+<li>
+<p>Include and exclude support for engines and tags has been completely revised.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Engines and tags can no longer be <em>required</em> but rather <em>included</em>.</p>
+</li>
+<li>
+<p><code>ConsoleLauncher</code> now supports the following options: <code>t</code>/<code>include-tag</code>,
+<code>T</code>/<code>exclude-tag</code>, <code>e/include-engine</code>, <code>E/exclude-engine</code>.</p>
+</li>
+<li>
+<p>The Gradle plugin now supports <code>engines</code> and <code>tags</code> configuration blocks with nested
+<code>include</code> and <code>exclude</code> entries.</p>
+</li>
+<li>
+<p><code>EngineFilter</code> now supports <code>includeEngines()</code> and <code>excludeEngines()</code> factory methods.</p>
+</li>
+<li>
+<p>The <code>JUnitPlatform</code> runner now supports <code>@IncludeTags</code>, <code>@ExcludeTags</code>,
+<code>@IncludeEngines</code>, and <code>@ExcludeEngines</code>.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
