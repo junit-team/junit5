@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.JavaMethodSource;
 
@@ -61,6 +62,13 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 		DummyTestDescriptor child = new DummyTestDescriptor(uniqueId, displayName, runnable);
 		engineDescriptor.addChild(child);
 		return child;
+	}
+
+	public DummyTestDescriptor addContainer(String uniqueName, String displayName, TestSource source) {
+		UniqueId uniqueId = engineDescriptor.getUniqueId().append("container", uniqueName);
+		DummyTestDescriptor container = new DummyTestDescriptor(uniqueId, displayName, source, null);
+		engineDescriptor.addChild(container);
+		return container;
 	}
 
 	@Override

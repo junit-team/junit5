@@ -30,7 +30,7 @@ public class DummyTestDescriptor extends AbstractTestDescriptor implements Node<
 		this(uniqueId, displayName, null, runnable);
 	}
 
-	DummyTestDescriptor(UniqueId uniqueId, String displayName, TestSource source, Runnable runnable) {
+	public DummyTestDescriptor(UniqueId uniqueId, String displayName, TestSource source, Runnable runnable) {
 		super(uniqueId, displayName);
 		if (source != null) {
 			setSource(source);
@@ -40,17 +40,17 @@ public class DummyTestDescriptor extends AbstractTestDescriptor implements Node<
 
 	@Override
 	public boolean isTest() {
-		return true;
+		return !isContainer();
 	}
 
 	@Override
 	public boolean isContainer() {
-		return false;
+		return runnable == null;
 	}
 
 	@Override
 	public boolean isLeaf() {
-		return !isContainer();
+		return isTest();
 	}
 
 	public void markSkipped(String reason) {
@@ -65,7 +65,9 @@ public class DummyTestDescriptor extends AbstractTestDescriptor implements Node<
 
 	@Override
 	public DummyEngineExecutionContext execute(DummyEngineExecutionContext context) {
-		runnable.run();
+		if (runnable != null) {
+			runnable.run();
+		}
 		return context;
 	}
 

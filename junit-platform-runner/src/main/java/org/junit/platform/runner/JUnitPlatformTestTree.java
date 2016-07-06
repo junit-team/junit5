@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.util.StringUtils;
@@ -38,13 +39,17 @@ class JUnitPlatformTestTree {
 
 	private final Map<TestIdentifier, Description> descriptions = new HashMap<>();
 	private final TestPlan plan;
-	private final boolean useTechnicalNames;
+	private final Function<TestIdentifier, String> nameExtractor;
 	private final Description suiteDescription;
 
 	JUnitPlatformTestTree(TestPlan plan, Class<?> testClass) {
 		this.plan = plan;
-		this.useTechnicalNames = testClass.isAnnotationPresent(UseTechnicalNames.class);
+		this.nameExtractor = useTechnicalNames(testClass) ? this::getTechnicalName : TestIdentifier::getDisplayName;
 		this.suiteDescription = generateSuiteDescription(plan, testClass);
+	}
+
+	private static boolean useTechnicalNames(Class<?> testClass) {
+		return testClass.isAnnotationPresent(UseTechnicalNames.class);
 	}
 
 	Description getSuiteDescription() {
@@ -80,45 +85,12 @@ class JUnitPlatformTestTree {
 	}
 
 	private Description createJUnit4Description(TestIdentifier identifier, TestPlan testPlan) {
+		String name = nameExtractor.apply(identifier);
 		if (identifier.isTest()) {
-			String containerName;
-			String name;
-
-			if (this.useTechnicalNames) {
-				containerName = getTechnicalContainerName(identifier, testPlan);
-				name = getTechnicalName(identifier);
-			}
-			else {
-				containerName = testPlan.getParent(identifier).orElse(identifier).getDisplayName();
-				name = identifier.getDisplayName();
-			}
-
+			String containerName = testPlan.getParent(identifier).map(nameExtractor).orElse("<unrooted>");
 			return Description.createTestDescription(containerName, name, identifier.getUniqueId());
 		}
-		else {
-			String name = (this.useTechnicalNames ? getTechnicalName(identifier) : identifier.getDisplayName());
-			return Description.createSuiteDescription(name, identifier.getUniqueId());
-		}
-	}
-
-	private String getTechnicalContainerName(TestIdentifier testIdentifier, TestPlan testPlan) {
-		Optional<TestSource> optionalSource = testIdentifier.getSource();
-		if (optionalSource.isPresent()) {
-			TestSource source = optionalSource.get();
-			if (source instanceof JavaClassSource) {
-				return ((JavaClassSource) source).getJavaClass().getName();
-			}
-			else if (source instanceof JavaMethodSource) {
-				return ((JavaMethodSource) source).getJavaClass().getName();
-			}
-		}
-
-		// Else fall back to display name of parent
-		// @formatter:off
-		return testPlan.getParent(testIdentifier)
-				.map(TestIdentifier::getDisplayName)
-				.orElse("<unrooted>");
-		// @formatter:on
+		return Description.createSuiteDescription(name, identifier.getUniqueId());
 	}
 
 	private String getTechnicalName(TestIdentifier testIdentifier) {

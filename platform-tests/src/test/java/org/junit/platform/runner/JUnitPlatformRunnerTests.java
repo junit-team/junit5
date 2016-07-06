@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
@@ -36,7 +37,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Nested;
@@ -55,6 +55,9 @@ import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
+import org.junit.platform.engine.support.descriptor.JavaClassSource;
+import org.junit.platform.engine.support.descriptor.JavaMethodSource;
+import org.junit.platform.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DummyTestEngine;
 import org.junit.platform.engine.test.TestDescriptorStub;
 import org.junit.platform.engine.test.TestEngineStub;
@@ -388,53 +391,73 @@ class JUnitPlatformRunnerTests {
 	class Descriptions {
 
 		@Test
-		void descriptionForJavaMethodSource() throws Exception {
+		void descriptionForJavaMethodAndClassSources() throws Exception {
 			DummyTestEngine engine = new DummyTestEngine("dummy");
 			Method failingTest = getClass().getDeclaredMethod("failingTest");
-			engine.addTest(failingTest, () -> {
-			});
+			DummyTestDescriptor containerDescriptor = engine.addContainer("uniqueContainerName", "containerDisplayName",
+				new JavaClassSource(getClass()));
+			containerDescriptor.addChild(
+				new DummyTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
+					"testDisplayName", new JavaMethodSource(failingTest), () -> {
+					}));
 
 			JUnitPlatform platformRunner = new JUnitPlatform(TestClass.class, createLauncher(engine));
 
-			ArrayList<Description> children = platformRunner.getDescription().getChildren();
+			List<Description> children = platformRunner.getDescription().getChildren();
 			assertEquals(1, children.size());
 			Description engineDescription = children.get(0);
 			assertEquals("dummy", engineDescription.getDisplayName());
 
-			children = engineDescription.getChildren();
-			assertEquals(1, children.size());
-			Description testDescription = children.get(0);
+			Description containerDescription = getOnlyElement(engineDescription.getChildren());
+			Description testDescription = getOnlyElement(containerDescription.getChildren());
+
 			// @formatter:off
 			assertAll(
-				() -> assertEquals("dummy", testDescription.getClassName(), "class name"),
-				() -> assertEquals("failingTest", testDescription.getMethodName(), "method name"),
-				() -> assertEquals("failingTest(dummy)", testDescription.getDisplayName(), "display name")
+					() -> assertEquals("dummy", engineDescription.getDisplayName(), "engine display name"),
+					() -> assertEquals("dummy", engineDescription.getClassName(), "engine class name"),
+					() -> assertNull(engineDescription.getMethodName(), "engine method name"),
+					() -> assertEquals("containerDisplayName", containerDescription.getDisplayName(), "container display name"),
+					() -> assertEquals("containerDisplayName", containerDescription.getClassName(), "container class name"),
+					() -> assertNull(containerDescription.getMethodName(), "container method name"),
+					() -> assertEquals("testDisplayName(containerDisplayName)", testDescription.getDisplayName(), "test display name"),
+					() -> assertEquals("containerDisplayName", testDescription.getClassName(), "test class name"),
+					() -> assertEquals("testDisplayName", testDescription.getMethodName(), "test method name")
 			);
 			// @formatter:on
 		}
 
 		@Test
-		void descriptionForJavaMethodSourceUsingTechnicalNames() throws Exception {
+		void descriptionForJavaMethodAndClassSourcesUsingTechnicalNames() throws Exception {
 			DummyTestEngine engine = new DummyTestEngine("dummy");
 			Method failingTest = getClass().getDeclaredMethod("failingTest");
-			engine.addTest(failingTest, () -> {
-			});
+			DummyTestDescriptor containerDescriptor = engine.addContainer("uniqueContainerName", "containerDisplayName",
+				new JavaClassSource(getClass()));
+			containerDescriptor.addChild(
+				new DummyTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
+					"testDisplayName", new JavaMethodSource(failingTest), () -> {
+					}));
 
 			JUnitPlatform platformRunner = new JUnitPlatform(TestClassWithTechnicalNames.class, createLauncher(engine));
 
-			ArrayList<Description> children = platformRunner.getDescription().getChildren();
+			List<Description> children = platformRunner.getDescription().getChildren();
 			assertEquals(1, children.size());
 			Description engineDescription = children.get(0);
 			assertEquals("dummy", engineDescription.getDisplayName());
 
-			children = engineDescription.getChildren();
-			assertEquals(1, children.size());
-			Description testDescription = children.get(0);
+			Description containerDescription = getOnlyElement(engineDescription.getChildren());
+			Description testDescription = getOnlyElement(containerDescription.getChildren());
+
 			// @formatter:off
 			assertAll(
-				() -> assertEquals(getClass().getName(), testDescription.getClassName(), "class name"),
-				() -> assertEquals("failingTest", testDescription.getMethodName(), "method name"),
-				() -> assertEquals("failingTest(" + getClass().getName() + ")", testDescription.getDisplayName(), "display name")
+					() -> assertEquals("dummy", engineDescription.getDisplayName(), "engine display name"),
+					() -> assertEquals("dummy", engineDescription.getClassName(), "engine class name"),
+					() -> assertNull(engineDescription.getMethodName(), "engine method name"),
+					() -> assertEquals(getClass().getName(), containerDescription.getDisplayName(), "container display name"),
+					() -> assertEquals(getClass().getName(), containerDescription.getClassName(), "container class name"),
+					() -> assertNull(containerDescription.getMethodName(), "container method name"),
+					() -> assertEquals("failingTest(" + getClass().getName() + ")", testDescription.getDisplayName(), "test display name"),
+					() -> assertEquals(getClass().getName(), testDescription.getClassName(), "test class name"),
+					() -> assertEquals("failingTest", testDescription.getMethodName(), "test method name")
 			);
 			// @formatter:on
 		}
