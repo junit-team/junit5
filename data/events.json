@@ -117,5 +117,14 @@
     "speakers": [
       "sbrannen"
     ]
+  },
+  {
+    "title": "JavaZone 2016",
+    "date": "2016-09-07",
+    "location": "Oslo, Norway",
+    "link": "https://2016.javazone.no/program/j-unit-5-next-generation-testing-on-the-jvm",
+    "speakers": [
+      "nicolaiparlog"
+    ]
   }
 ]
