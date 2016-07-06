@@ -406,6 +406,32 @@ class JUnitPlatformRunnerTests {
 			Description testDescription = children.get(0);
 			// @formatter:off
 			assertAll(
+				() -> assertEquals("dummy", testDescription.getClassName(), "class name"),
+				() -> assertEquals("failingTest", testDescription.getMethodName(), "method name"),
+				() -> assertEquals("failingTest(dummy)", testDescription.getDisplayName(), "display name")
+			);
+			// @formatter:on
+		}
+
+		@Test
+		void descriptionForJavaMethodSourceUsingTechnicalNames() throws Exception {
+			DummyTestEngine engine = new DummyTestEngine("dummy");
+			Method failingTest = getClass().getDeclaredMethod("failingTest");
+			engine.addTest(failingTest, () -> {
+			});
+
+			JUnitPlatform platformRunner = new JUnitPlatform(TestClassWithTechnicalNames.class, createLauncher(engine));
+
+			ArrayList<Description> children = platformRunner.getDescription().getChildren();
+			assertEquals(1, children.size());
+			Description engineDescription = children.get(0);
+			assertEquals("dummy", engineDescription.getDisplayName());
+
+			children = engineDescription.getChildren();
+			assertEquals(1, children.size());
+			Description testDescription = children.get(0);
+			// @formatter:off
+			assertAll(
 				() -> assertEquals(getClass().getName(), testDescription.getClassName(), "class name"),
 				() -> assertEquals("failingTest", testDescription.getMethodName(), "method name"),
 				() -> assertEquals("failingTest(" + getClass().getName() + ")", testDescription.getDisplayName(), "display name")
@@ -447,6 +473,10 @@ class JUnitPlatformRunnerTests {
 	}
 
 	private static class TestClass {
+	}
+
+	@UseTechnicalNames
+	private static class TestClassWithTechnicalNames {
 	}
 
 	private static class DynamicTestEngine implements TestEngine {

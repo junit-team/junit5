@@ -38,10 +38,12 @@ class JUnitPlatformTestTree {
 
 	private final Map<TestIdentifier, Description> descriptions = new HashMap<>();
 	private final TestPlan plan;
+	private final boolean useTechnicalNames;
 	private final Description suiteDescription;
 
 	JUnitPlatformTestTree(TestPlan plan, Class<?> testClass) {
 		this.plan = plan;
+		this.useTechnicalNames = testClass.isAnnotationPresent(UseTechnicalNames.class);
 		this.suiteDescription = generateSuiteDescription(plan, testClass);
 	}
 
@@ -79,16 +81,47 @@ class JUnitPlatformTestTree {
 
 	private Description createJUnit4Description(TestIdentifier identifier, TestPlan testPlan) {
 		if (identifier.isTest()) {
-			String className = getClassName(identifier, testPlan);
-			String name = getName(identifier);
-			return Description.createTestDescription(className, name, identifier.getUniqueId());
+			String containerName;
+			String name;
+
+			if (this.useTechnicalNames) {
+				containerName = getTechnicalContainerName(identifier, testPlan);
+				name = getTechnicalName(identifier);
+			}
+			else {
+				containerName = testPlan.getParent(identifier).orElse(identifier).getDisplayName();
+				name = identifier.getDisplayName();
+			}
+
+			return Description.createTestDescription(containerName, name, identifier.getUniqueId());
 		}
 		else {
-			return Description.createSuiteDescription(identifier.getDisplayName(), identifier.getUniqueId());
+			String name = (this.useTechnicalNames ? getTechnicalName(identifier) : identifier.getDisplayName());
+			return Description.createSuiteDescription(name, identifier.getUniqueId());
 		}
 	}
 
-	private String getName(TestIdentifier testIdentifier) {
+	private String getTechnicalContainerName(TestIdentifier testIdentifier, TestPlan testPlan) {
+		Optional<TestSource> optionalSource = testIdentifier.getSource();
+		if (optionalSource.isPresent()) {
+			TestSource source = optionalSource.get();
+			if (source instanceof JavaClassSource) {
+				return ((JavaClassSource) source).getJavaClass().getName();
+			}
+			else if (source instanceof JavaMethodSource) {
+				return ((JavaMethodSource) source).getJavaClass().getName();
+			}
+		}
+
+		// Else fall back to display name of parent
+		// @formatter:off
+		return testPlan.getParent(testIdentifier)
+				.map(TestIdentifier::getDisplayName)
+				.orElse("<unrooted>");
+		// @formatter:on
+	}
+
+	private String getTechnicalName(TestIdentifier testIdentifier) {
 		Optional<TestSource> optionalSource = testIdentifier.getSource();
 		if (optionalSource.isPresent()) {
 			TestSource source = optionalSource.get();
@@ -110,26 +143,6 @@ class JUnitPlatformTestTree {
 
 		// Else fall back to display name
 		return testIdentifier.getDisplayName();
-	}
-
-	private String getClassName(TestIdentifier testIdentifier, TestPlan testPlan) {
-		Optional<TestSource> optionalSource = testIdentifier.getSource();
-		if (optionalSource.isPresent()) {
-			TestSource source = optionalSource.get();
-			if (source instanceof JavaClassSource) {
-				return ((JavaClassSource) source).getJavaClass().getName();
-			}
-			else if (source instanceof JavaMethodSource) {
-				return ((JavaMethodSource) source).getJavaClass().getName();
-			}
-		}
-
-		// Else fall back to display name of parent
-		// @formatter:off
-		return testPlan.getParent(testIdentifier)
-				.map(TestIdentifier::getDisplayName)
-				.orElse("<unrooted>");
-		// @formatter:on
 	}
 
 	Set<TestIdentifier> getTestsInSubtree(TestIdentifier ancestor) {

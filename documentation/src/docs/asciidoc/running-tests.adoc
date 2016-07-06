@@ -297,10 +297,10 @@ for example, a JUnit Jupiter test class.
 Annotating a class with `@RunWith(JUnitPlatform.class)` allows it to be run with IDEs and
 build systems that support JUnit 4 but do not yet support the JUnit Platform directly.
 
-NOTE: Since the JUnit Platform has features that JUnit 4 does not have, the runner is only able
-to support a subset of the JUnit Platform functionality, especially with regard to
-reporting. But for the time being the `JUnitPlatform` runner is an easy way to get
-started.
+NOTE: Since the JUnit Platform has features that JUnit 4 does not have, the runner is
+only able to support a subset of the JUnit Platform functionality, especially with regard
+to reporting (see <<running-tests-junit-platform-runner-technical-names>>). But for the
+time being the `JUnitPlatform` runner is an easy way to get started.
 
 [[running-tests-junit-platform-runner-setup]]
 ==== Setup
@@ -312,6 +312,17 @@ versions.
 * `junit-jupiter-api` in _test_ scope: API for writing tests, including `@Test`, etc.
 * `junit-platform-runner` in _test_ scope: location of the `JUnitPlatform` runner
 * `junit-jupiter-engine` in _test runtime_ scope: implementation of the Engine API for JUnit Jupiter
+
+[[running-tests-junit-platform-runner-technical-names]]
+==== Display Names vs. Technical Names
+
+By default, _display names_ will be used for test artifacts; however, when the
+`JUnitPlatform` runner is used to execute tests with a build tool such as Gradle or
+Maven, the generated test report often needs to include the _technical names_ of test
+artifacts — for example, fully qualified class names — instead of shorter display names
+like the simple name of a test class or a custom display name containing special
+characters. To enable technical names for reporting purposes, simply declare the
+`@UseTechnicalNames` annotation alongside `@RunWith(JUnitPlatform.class)`.
 
 [[running-tests-junit-platform-runner-single-test]]
 ==== Single Test Class

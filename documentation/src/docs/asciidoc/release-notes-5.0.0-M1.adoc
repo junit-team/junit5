@@ -74,6 +74,8 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.
 ** `@Packages` has been renamed to `@SelectPackages`.
 ** `@Classes` has been renamed to `@SelectClasses`.
 ** `@UniqueIds` has been removed.
+** `@UseTechnicalNames` has been introduced.
+*** See <<running-tests-junit-platform-runner-technical-names>>.
 * The Gradle plugin for the JUnit Platform has been completely overhauled.
 ** The JUnit Platform Gradle plugin now requires Gradle 2.5 or higher.
 ** The `junit5Test` Gradle task has been renamed to `junitPlatformTest`.
