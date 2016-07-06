@@ -58,8 +58,8 @@ class JUnitPlatformRunnerListener implements TestExecutionListener {
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		if (testIdentifier.isTest()) {
-			Description description = findJUnit4Description(testIdentifier);
+		Description description = findJUnit4Description(testIdentifier);
+		if (description.isTest()) {
 			this.notifier.fireTestStarted(description);
 		}
 	}
@@ -74,7 +74,7 @@ class JUnitPlatformRunnerListener implements TestExecutionListener {
 		else if (status == FAILED) {
 			this.notifier.fireTestFailure(toFailure(testExecutionResult, description));
 		}
-		if (testIdentifier.isTest()) {
+		if (description.isTest()) {
 			this.notifier.fireTestFinished(description);
 		}
 	}
