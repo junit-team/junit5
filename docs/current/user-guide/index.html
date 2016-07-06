@@ -1957,10 +1957,10 @@ build systems that support JUnit 4 but do not yet support the JUnit Platform dir
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Since the JUnit Platform has features that JUnit 4 does not have, the runner is only able
-to support a subset of the JUnit Platform functionality, especially with regard to
-reporting. But for the time being the <code>JUnitPlatform</code> runner is an easy way to get
-started.
+Since the JUnit Platform has features that JUnit 4 does not have, the runner is
+only able to support a subset of the JUnit Platform functionality, especially with regard
+to reporting (see <a href="#running-tests-junit-platform-runner-technical-names">Display Names vs. Technical Names</a>). But for the
+time being the <code>JUnitPlatform</code> runner is an easy way to get started.
 </td>
 </tr>
 </table>
@@ -1987,7 +1987,19 @@ versions.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-junit-platform-runner-single-test">4.4.2. Single Test Class</h4>
+<h4 id="running-tests-junit-platform-runner-technical-names">4.4.2. Display Names vs. Technical Names</h4>
+<div class="paragraph">
+<p>By default, <em>display names</em> will be used for test artifacts; however, when the
+<code>JUnitPlatform</code> runner is used to execute tests with a build tool such as Gradle or
+Maven, the generated test report often needs to include the <em>technical names</em> of test
+artifacts — for example, fully qualified class names — instead of shorter display names
+like the simple name of a test class or a custom display name containing special
+characters. To enable technical names for reporting purposes, simply declare the
+<code>@UseTechnicalNames</code> annotation alongside <code>@RunWith(JUnitPlatform.class)</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="running-tests-junit-platform-runner-single-test">4.4.3. Single Test Class</h4>
 <div class="paragraph">
 <p>One way to use the <code>JUnitPlatform</code> runner is to annotate a test class with
 <code>@RunWith(JUnitPlatform.class)</code> directly. Please note that the test methods in the
@@ -2021,7 +2033,7 @@ public class JUnit4ClassDemo {
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-junit-platform-runner-test-suite">4.4.3. Test Suite</h4>
+<h4 id="running-tests-junit-platform-runner-test-suite">4.4.4. Test Suite</h4>
 <div class="paragraph">
 <p>If you have multiple test classes you can create a test suite as can be seen in the
 following example.</p>
@@ -2954,6 +2966,16 @@ flags have been removed.</p>
 <li>
 <p><code>@UniqueIds</code> has been removed.</p>
 </li>
+<li>
+<p><code>@UseTechnicalNames</code> has been introduced.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="#running-tests-junit-platform-runner-technical-names">Display Names vs. Technical Names</a>.</p>
+</li>
+</ul>
+</div>
+</li>
 </ul>
 </div>
 </li>
@@ -3234,7 +3256,7 @@ of retrieving a context specific name via the current test class or test method.
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-07-05 13:15:12 -04:00
+Last updated 2016-07-06 15:02:48 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
