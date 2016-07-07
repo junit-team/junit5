@@ -36,38 +36,47 @@ import org.junit.platform.launcher.core.LauncherFactory;
 public class JUnitPlatformProvider extends AbstractProvider {
 
 	private final ProviderParameters parameters;
+	private final Launcher launcher;
 
 	public JUnitPlatformProvider(ProviderParameters parameters) {
+		this(parameters, LauncherFactory.create());
+	}
+
+	JUnitPlatformProvider(ProviderParameters parameters, Launcher launcher) {
 		this.parameters = parameters;
+		this.launcher = launcher;
 		Logger.getLogger("org.junit").setLevel(Level.WARNING);
 	}
 
 	@Override
 	public Iterable<Class<?>> getSuites() {
-		// TODO Implement suite support in the JUnitPlatformProvider.
-		throw new UnsupportedOperationException("Forking is not yet supported.");
+		return scanClasspath();
 	}
 
 	@Override
 	public RunResult invoke(Object forkTestSet)
 			throws TestSetFailedException, ReporterException, InvocationTargetException {
-		if (forkTestSet != null) {
-			// TODO Implement forking support in the JUnitPlatformProvider.
-			throw new UnsupportedOperationException("Forking is not yet supported.");
+		if (forkTestSet instanceof TestsToRun) {
+			return invokeAllTests((TestsToRun) forkTestSet);
 		}
-
-		Launcher launcher = LauncherFactory.create();
-		TestsToRun testsToRun = scanClasspath(launcher);
-		return invokeAllTests(testsToRun, launcher);
+		else if (forkTestSet instanceof Class) {
+			return invokeAllTests(TestsToRun.fromClass(((Class) forkTestSet)));
+		}
+		else if (forkTestSet == null) {
+			return invokeAllTests(scanClasspath());
+		}
+		else {
+			throw new IllegalArgumentException("Unexpected value of forkTestSet: " + forkTestSet);
+		}
 	}
 
-	private TestsToRun scanClasspath(Launcher launcher) {
+	private TestsToRun scanClasspath() {
 		TestsToRun scannedClasses = parameters.getScanResult().applyFilter(new TestPlanScannerFilter(launcher),
 			parameters.getTestClassLoader());
 		return parameters.getRunOrderCalculator().orderTestClasses(scannedClasses);
 	}
 
-	private RunResult invokeAllTests(TestsToRun testsToRun, Launcher launcher) {
+	private RunResult invokeAllTests(TestsToRun testsToRun) {
 		RunResult runResult;
 		ReporterFactory reporterFactory = parameters.getReporterFactory();
 		try {
@@ -75,7 +84,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 			launcher.registerTestExecutionListeners(new RunListenerAdapter(runListener));
 
 			for (Class<?> testClass : testsToRun) {
-				invokeSingleClass(testClass, launcher, runListener);
+				invokeSingleClass(testClass, runListener);
 			}
 		}
 		finally {
@@ -84,7 +93,7 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		return runResult;
 	}
 
-	private void invokeSingleClass(Class<?> testClass, Launcher launcher, RunListener runListener) {
+	private void invokeSingleClass(Class<?> testClass, RunListener runListener) {
 		SimpleReportEntry classEntry = new SimpleReportEntry(getClass().getName(), testClass.getName());
 		runListener.testSetStarting(classEntry);
 
