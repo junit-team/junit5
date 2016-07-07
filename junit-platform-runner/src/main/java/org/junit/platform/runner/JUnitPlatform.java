@@ -69,6 +69,7 @@ import org.junit.runners.model.InitializationError;
  * @see ExcludeTags
  * @see IncludeEngines
  * @see ExcludeEngines
+ * @see UseTechnicalNames
  */
 @API(Maintained)
 public class JUnitPlatform extends Runner implements Filterable {
