@@ -202,7 +202,7 @@ point.
 				<version>2.19</version>
 				<dependencies>
 					<dependency>
-						<groupId>org.junit</groupId>
+						<groupId>org.junit.platform</groupId>
 						<artifactId>junit-platform-surefire-provider</artifactId>
 						<version>{platform-version}</version>
 					</dependency>
