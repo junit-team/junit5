@@ -13,6 +13,8 @@ package org.junit.platform.surefire.provider;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.util.function.Predicate;
+
 import org.apache.maven.surefire.util.ScannerFilter;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -24,18 +26,21 @@ import org.junit.platform.launcher.TestPlan;
  */
 final class TestPlanScannerFilter implements ScannerFilter {
 
+	private static final Predicate<TestIdentifier> hasTests = testIdentifier -> testIdentifier.isTest()
+			|| testIdentifier.isContainer();
+
 	private final Launcher launcher;
 
 	public TestPlanScannerFilter(Launcher launcher) {
 		this.launcher = launcher;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
+	@SuppressWarnings("rawtypes")
 	public boolean accept(Class testClass) {
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
 		TestPlan testPlan = launcher.discover(discoveryRequest);
-		return testPlan.countTestIdentifiers(TestIdentifier::isTest) > 0;
+		return testPlan.countTestIdentifiers(hasTests) > 0;
 	}
 
 }

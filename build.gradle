@@ -52,6 +52,7 @@ ext {
 	cloverTestProjects = [
 		'junit-jupiter-engine',
 		'junit-vintage-engine',
+		'junit-platform-surefire-provider',
 		'platform-tests'
 	]
 }

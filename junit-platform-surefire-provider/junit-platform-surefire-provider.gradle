@@ -1,5 +1,25 @@
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+junitPlatform {
+	engines {
+		include 'junit-jupiter'
+	}
+	includeClassNamePattern '.*Tests?'
+	logManager 'org.apache.logging.log4j.jul.LogManager'
+}
+
 dependencies {
+	compile(project(':junit-platform-launcher'))
 	compile('org.apache.maven.surefire:surefire-api:2.19.1')
 	compile('org.apache.maven.surefire:common-java5:2.19.1')
-	compile(project(':junit-platform-launcher'))
+
+	testCompile(project(':junit-jupiter-api'))
+	testCompile(project(':junit-platform-runner'))
+
+	// Include junit-platform-console so that the JUnit Gradle plugin
+	// uses the local version of the ConsoleLauncher.
+	testRuntime(project(':junit-platform-console'))
+	testRuntime(project(':junit-jupiter-engine'))
+	testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
+	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
 }
