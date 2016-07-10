@@ -5,4 +5,4 @@ dependencies {
 	compile('net.sf.jopt-simple:jopt-simple:5.0.2')
 }
 
-mainClassName = "org.junit.platform.console.ConsoleRunner"
+mainClassName = "org.junit.platform.console.ConsoleLauncher"
