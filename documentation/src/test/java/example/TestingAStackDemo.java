@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 class TestingAStackDemo {
 
 	Stack<Object> stack;
-	boolean isRun = false;
 
 	@Test
 	@DisplayName("is instantiated with new Stack()")
