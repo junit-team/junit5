@@ -10,16 +10,20 @@
 
 package example;
 
+// tag::user_guide[]
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.EmptyStackException;
 import java.util.Stack;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-// tag::user_guide[]
 @DisplayName("A stack")
 class TestingAStackDemo {
 
@@ -44,19 +48,19 @@ class TestingAStackDemo {
 		@Test
 		@DisplayName("is empty")
 		void isEmpty() {
-			Assertions.assertTrue(stack.isEmpty());
+			assertTrue(stack.isEmpty());
 		}
 
 		@Test
 		@DisplayName("throws EmptyStackException when popped")
 		void throwsExceptionWhenPopped() {
-			Assertions.assertThrows(EmptyStackException.class, () -> stack.pop());
+			assertThrows(EmptyStackException.class, () -> stack.pop());
 		}
 
 		@Test
 		@DisplayName("throws EmptyStackException when peeked")
 		void throwsExceptionWhenPeeked() {
-			Assertions.assertThrows(EmptyStackException.class, () -> stack.peek());
+			assertThrows(EmptyStackException.class, () -> stack.peek());
 		}
 
 		@Nested
@@ -73,21 +77,21 @@ class TestingAStackDemo {
 			@Test
 			@DisplayName("it is no longer empty")
 			void isEmpty() {
-				Assertions.assertFalse(stack.isEmpty());
+				assertFalse(stack.isEmpty());
 			}
 
 			@Test
 			@DisplayName("returns the element when popped and is empty")
 			void returnElementWhenPopped() {
-				Assertions.assertEquals(anElement, stack.pop());
-				Assertions.assertTrue(stack.isEmpty());
+				assertEquals(anElement, stack.pop());
+				assertTrue(stack.isEmpty());
 			}
 
 			@Test
 			@DisplayName("returns the element when peeked but remains not empty")
 			void returnElementWhenPeeked() {
-				Assertions.assertEquals(anElement, stack.peek());
-				Assertions.assertFalse(stack.isEmpty());
+				assertEquals(anElement, stack.peek());
+				assertFalse(stack.isEmpty());
 			}
 		}
 	}
