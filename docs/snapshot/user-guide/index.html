@@ -1071,7 +1071,7 @@ class TestingAStackDemo {
     @Test
     @DisplayName("is instantiated with new Stack()")
     void isInstantiatedWithNew() {
-        new Stack&lt;Object&gt;();
+        new Stack&lt;&gt;();
     }
 
     @Nested
@@ -1080,7 +1080,7 @@ class TestingAStackDemo {
 
         @BeforeEach
         void init() {
-            stack = new Stack&lt;Object&gt;();
+            stack = new Stack&lt;&gt;();
         }
 
         @Test
