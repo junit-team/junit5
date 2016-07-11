@@ -40,7 +40,7 @@ class TestingAStackDemo {
 	class WhenNew {
 
 		@BeforeEach
-		void init() {
+		void createNewStack() {
 			stack = new Stack<>();
 		}
 
@@ -69,7 +69,7 @@ class TestingAStackDemo {
 			String anElement = "an element";
 
 			@BeforeEach
-			void init() {
+			void pushAnElement() {
 				stack.push(anElement);
 			}
 
