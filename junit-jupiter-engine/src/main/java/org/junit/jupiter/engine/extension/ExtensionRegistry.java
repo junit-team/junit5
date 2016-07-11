@@ -139,17 +139,25 @@ public class ExtensionRegistry {
 	}
 
 	/**
+	 * Determine if the supplied type is already registered in this registry or in a
+	 * parent registry.
+	 */
+	private boolean isAlreadyRegistered(Class<? extends Extension> extensionType) {
+		return (this.registeredExtensionTypes.contains(extensionType)
+				|| (this.parent != null && this.parent.isAlreadyRegistered(extensionType)));
+	}
+
+	/**
 	 * Instantiate an extension of the given type using its default constructor
 	 * and register it in this registry.
 	 *
 	 * <p>A new {@link Extension} will not be registered if an extension of the
-	 * given type already exists in this registry.
+	 * given type already exists in this registry or a parent registry.
 	 *
 	 * @param extensionType the type of extension to register
 	 */
 	void registerExtension(Class<? extends Extension> extensionType) {
-		boolean extensionAlreadyRegistered = this.registeredExtensionTypes.contains(extensionType);
-		if (!extensionAlreadyRegistered) {
+		if (!isAlreadyRegistered(extensionType)) {
 			registerExtension(ReflectionUtils.newInstance(extensionType));
 			this.registeredExtensionTypes.add(extensionType);
 		}

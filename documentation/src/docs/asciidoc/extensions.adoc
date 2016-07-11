@@ -13,16 +13,28 @@ JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concep
 
 Extensions can be registered declaratively via `{ExtendWith}`.
 
-NOTE: Registered extensions are inherited within test class hierarchies.
-
 [[extensions-registration-declarative]]
 ==== Declarative Extension Registration
 
 Developers can register one or more extensions _declaratively_ by annotating a test
-class, test method, or custom _<<writing-tests-meta-annotations,composed annotation>>_ with
-`@ExtendWith(...)` and supplying class references for the extensions to register. For
-example, to register a custom `MockitoExtension` for all tests in a particular class and
-its subclasses, you would annotate the test class as follows.
+class, test method, or custom _<<writing-tests-meta-annotations,composed annotation>>_
+with `@ExtendWith(...)` and supplying class references for the extensions to register.
+
+For example, to register a custom `MockitoExtension` for a particular test method, you
+would annotate the test method as follows.
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+@ExtendWith(MockitoExtension.class)
+@Test
+void mockTest() {
+	// ...
+}
+----
+
+To register a custom `MockitoExtension` for all tests in a particular class and its
+subclasses, you would annotate the test class as follows.
 
 [source,java,indent=0]
 [subs="verbatim"]
@@ -58,6 +70,15 @@ class MyTestsV2 {
 
 The execution of tests in both `MyTestsV1` and `MyTestsV2` will be extended by the
 `FooExtension` and `BarExtension`, in exactly that order.
+
+[[extensions-registration-inheritance]]
+==== Extension Inheritance
+
+Registered extensions are inherited within test class hierarchies with top-down
+semantics. Similarly, extensions registered at the class-level are inherited at the
+method-level. Furthermore, a specific extension implementation can only be registered
+once for a given extension context and its parent contexts. Consequently, any attempt to
+register a duplicate extension implementation will be ignored.
 
 [[extensions-conditions]]
 === Conditional Test Execution
