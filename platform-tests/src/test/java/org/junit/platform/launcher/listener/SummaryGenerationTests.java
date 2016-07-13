@@ -88,6 +88,8 @@ class SummaryGenerationTests {
 
 	@Test
 	void reportingCorrectFailures() throws Exception {
+		RuntimeException failedException = new RuntimeException("failed");
+
 		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("root", "2"), "failingTest") {
 
 			@Override
@@ -100,7 +102,7 @@ class SummaryGenerationTests {
 
 		listener.testPlanExecutionStarted(testPlan);
 		listener.executionStarted(failed);
-		listener.executionFinished(failed, TestExecutionResult.failed(new RuntimeException("failed")));
+		listener.executionFinished(failed, TestExecutionResult.failed(failedException));
 		listener.executionStarted(aborted);
 		listener.executionFinished(aborted, TestExecutionResult.aborted(new RuntimeException("aborted")));
 		listener.testPlanExecutionFinished(testPlan);
@@ -113,7 +115,7 @@ class SummaryGenerationTests {
 			() -> assertTrue(failuresString.contains("Test failures (1)"), "test failures"), //
 			() -> assertTrue(failuresString.contains(Object.class.getName()), "source"), //
 			() -> assertTrue(failuresString.contains("failingTest"), "display name"), //
-			() -> assertTrue(failuresString.contains("=> Exception: failed"), "exception") //
+			() -> assertTrue(failuresString.contains("=> " + failedException), "exception") //
 		);
 	}
 

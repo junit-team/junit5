@@ -27,6 +27,9 @@ import org.junit.platform.launcher.TestPlan;
  */
 class MutableTestExecutionSummary implements TestExecutionSummary {
 
+	private static final String TAB = "  ";
+	private static final String DOUBLE_TAB = TAB + TAB;
+
 	final AtomicLong testsStarted = new AtomicLong();
 	final AtomicLong testsFound = new AtomicLong();
 	final AtomicLong testsSkipped = new AtomicLong();
@@ -113,9 +116,9 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 			writer.println();
 			writer.println(String.format("Test failures (%d):", testsFailed.get()));
 			failures.forEach(failure -> {
-				writer.println("  " + describeTest(failure.getTestIdentifier()));
-				failure.getTestIdentifier().getSource().ifPresent(source -> writer.println("    " + source));
-				writer.println("    => Exception: " + failure.getException().getLocalizedMessage());
+				writer.println(TAB + describeTest(failure.getTestIdentifier()));
+				failure.getTestIdentifier().getSource().ifPresent(source -> writer.println(DOUBLE_TAB + source));
+				writer.println(String.format("%s=> %s", DOUBLE_TAB, failure.getException()));
 			});
 			writer.flush();
 		}
