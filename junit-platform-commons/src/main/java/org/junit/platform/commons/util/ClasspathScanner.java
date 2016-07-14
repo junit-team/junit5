@@ -14,6 +14,8 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +25,8 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import org.junit.platform.commons.meta.API;
 
@@ -119,18 +123,34 @@ class ClasspathScanner {
 
 	private void collectClassesRecursively(File sourceDir, String packageName, List<Class<?>> classesCollector,
 			Predicate<Class<?>> classFilter) {
-		File[] files = sourceDir.listFiles();
-		if (files == null) {
-			return;
-		}
-		for (File file : files) {
-			if (isClassFile(file)) {
-				Optional<Class<?>> classForClassFile = loadClassForClassFile(file, packageName);
-				classForClassFile.filter(classFilter).ifPresent(classesCollector::add);
+		if (sourceDir.isDirectory()) {
+			File[] files = sourceDir.listFiles();
+			if (files == null) {
+				return;
 			}
-			else if (file.isDirectory()) {
-				collectClassesRecursively(file, appendPackageName(packageName, file.getName()), classesCollector,
-					classFilter);
+			for (File file : files) {
+				if (isClassFile(file)) {
+					Optional<Class<?>> classForClassFile = loadClassForClassFile(file, packageName);
+					classForClassFile.filter(classFilter).ifPresent(classesCollector::add);
+				}
+				else if (file.isDirectory()) {
+					collectClassesRecursively(file, appendPackageName(packageName, file.getName()), classesCollector,
+						classFilter);
+				}
+			}
+		}
+		else {
+			try {
+				String pathWithinJar = sourceDir.getPath();
+				String pathToJar = URI.create(pathWithinJar.substring(0, pathWithinJar.indexOf('!'))).getPath();
+				JarFile jarFile = new JarFile(pathToJar);
+				jarFile.stream().filter(
+					entry -> entry.getName().startsWith(packageName.replace(".", "/") + "/")).filter(
+						ClasspathScanner::isClassEntry).map(this::loadClassForJarEntry).filter(Optional::isPresent).map(
+							Optional::get).forEach(classesCollector::add);
+			}
+			catch (IOException e) {
+				throw new UncheckedIOException(e);
 			}
 		}
 	}
@@ -142,10 +162,24 @@ class ClasspathScanner {
 			return packageName + "." + subpackageName;
 	}
 
+	private Optional<Class<?>> loadClassForJarEntry(JarEntry entry) {
+		String classFileName = entry.getName().replace("/", ".");
+		String className = classFileName.substring(0, classFileName.indexOf(CLASS_FILE_SUFFIX));
+		return loadClass(className);
+	}
+
 	private Optional<Class<?>> loadClassForClassFile(File file, String packageName) {
 		String className = packageName + '.'
 				+ file.getName().substring(0, file.getName().length() - CLASS_FILE_SUFFIX.length());
+		return loadClass(className);
+	}
+
+	private Optional<Class<?>> loadClass(String className) {
 		return loadClass.apply(className, classLoaderSupplier.get());
+	}
+
+	private static boolean isClassEntry(JarEntry entry) {
+		return entry.getName().endsWith(CLASS_FILE_SUFFIX);
 	}
 
 	private static boolean isClassFile(File file) {
