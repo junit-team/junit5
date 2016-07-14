@@ -30,17 +30,22 @@ import org.junit.platform.launcher.TestIdentifier;
  */
 public class ColoredPrintingTestListenerTests {
 
+	private static final String EOL = System.lineSeparator();
+
 	@Test
 	public void executionSkippedMessageIndented() {
 		StringWriter stringWriter = new StringWriter();
 		PrintWriter out = new PrintWriter(stringWriter);
 		ColoredPrintingTestListener listener = new ColoredPrintingTestListener(out, true);
 
-		listener.executionSkipped(newTestIdentifier(), "Test\n\tdisabled");
+		listener.executionSkipped(newTestIdentifier(), "Test" + EOL + "\tdisabled");
 		String output = stringWriter.toString();
 
-		String expected = "Skipped:     failingTest [[engine:junit]]\n" + INDENTATION + "=> Reason: Test\n"
-				+ INDENTATION + "\tdisabled\n";
+		// @formatter:off
+		String expected = "Skipped:     failingTest [[engine:demo-engine]]" + EOL
+				+ INDENTATION + "=> Reason: Test" + EOL
+				+ INDENTATION + "\tdisabled" + EOL;
+		// @formatter:on
 
 		assertEquals(expected, output);
 	}
@@ -55,7 +60,8 @@ public class ColoredPrintingTestListenerTests {
 		String[] split = stringWriter.toString().split(System.lineSeparator());
 
 		assertEquals(2, split.length);
-		assertAll("lines in the message", () -> assertEquals("Reported:    failingTest [[engine:junit]]", split[0]),
+		assertAll("lines in the message",
+			() -> assertEquals("Reported:    failingTest [[engine:demo-engine]]", split[0]),
 			() -> assertTrue(split[1].startsWith(INDENTATION + "=> Reported values: ReportEntry [timestamp =")),
 			() -> assertTrue(split[1].endsWith(", foo = 'bar']")));
 	}
@@ -67,17 +73,20 @@ public class ColoredPrintingTestListenerTests {
 		ColoredPrintingTestListener listener = new ColoredPrintingTestListener(out, true);
 
 		listener.executionFinished(newTestIdentifier(),
-			failed(new Throwable("Fail\n\texpected: <foo> but was: <bar>")));
+			failed(new Throwable("Fail" + EOL + "\texpected: <foo> but was: <bar>")));
 		String output = stringWriter.toString();
 
-		String expected = "Finished:    failingTest [[engine:junit]]\n" + INDENTATION + "=> Exception: Fail\n"
-				+ INDENTATION + "\texpected: <foo> but was: <bar>\n";
+		// @formatter:off
+		String expected = "Finished:    failingTest [[engine:demo-engine]]" + EOL
+				+ INDENTATION + "=> Exception: Fail" + EOL
+				+ INDENTATION + "\texpected: <foo> but was: <bar>" + EOL;
+		// @formatter:on
 
 		assertEquals(expected, output);
 	}
 
 	private static TestIdentifier newTestIdentifier() {
-		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.forEngine("junit"), "failingTest");
+		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.forEngine("demo-engine"), "failingTest");
 		return TestIdentifier.from(testDescriptor);
 	}
 
