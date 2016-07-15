@@ -1,0 +1,26 @@
+[[release-notes-5.0.0-m2]]
+=== 5.0.0-M2
+
+*Date of Release:* July 22, 2016
+
+*Scope:* Second milestone release of JUnit 5
+
+[[release-notes-5.0.0-m2-summary]]
+==== Summary of Changes
+
+This release is primarily a bugfix release for bugs discovered since 5.0.0-M1.
+
+[[release-notes-5.0.0-m2-junit-platform]]
+===== JUnit Platform
+
+* ?
+
+[[release-notes-5.0.0-m2-junit-jupiter]]
+===== JUnit Jupiter
+
+* ?
+
+[[release-notes-5.0.0-m2-junit-vintage]]
+===== JUnit Vintage
+
+_No changes since 5.0.0-M1_
