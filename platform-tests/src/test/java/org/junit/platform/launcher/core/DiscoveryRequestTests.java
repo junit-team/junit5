@@ -12,8 +12,10 @@ package org.junit.platform.launcher.core;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectName;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -35,66 +37,67 @@ import org.junit.platform.engine.discovery.UniqueIdSelector;
  */
 public class DiscoveryRequestTests {
 
-	private static final Method fullyQualifiedMethod;
+	private static final Method fullyQualifiedMethod = fullyQualifiedMethod();
 
-	static {
+	private static final String fullyQualifiedMethodName = fullyQualifiedMethodName();
+
+	@Test
+	void selectMethodByFullyQualifiedName() throws Exception {
+		MethodSelector selector = selectMethod(fullyQualifiedMethodName);
+		assertEquals(fullyQualifiedMethod, selector.getJavaMethod());
+	}
+
+	@Test
+	void selectNameWithPackageName() {
+		DiscoverySelector selector = selectName("org.junit.platform");
+		assertEquals(PackageSelector.class, selector.getClass());
+	}
+
+	@Test
+	void selectNameWithClassName() {
+		DiscoverySelector selector = selectName(getClass().getName());
+		assertEquals(ClassSelector.class, selector.getClass());
+	}
+
+	@Test
+	void selectNameWithMethodName() throws Exception {
+		DiscoverySelector selector = selectName(fullyQualifiedMethodName);
+		assertEquals(MethodSelector.class, selector.getClass());
+	}
+
+	@Test
+	void buildDiscoveryRequest() {
+		// @formatter:off
+		EngineDiscoveryRequest spec = request().selectors(
+			selectUniqueId(UniqueId.forEngine("fooEngine")),
+			selectPackage("org.junit.platform"),
+			selectClass(getClass()),
+			selectMethod(fullyQualifiedMethodName)
+		).build();
+
+		assertAll(
+			() -> assertEquals(1, spec.getSelectorsByType(UniqueIdSelector.class).size()),
+			() -> assertEquals(1, spec.getSelectorsByType(PackageSelector.class).size()),
+			() -> assertEquals(1, spec.getSelectorsByType(ClassSelector.class).size()),
+			() -> assertEquals(1, spec.getSelectorsByType(MethodSelector.class).size())
+		);
+		// @formatter:on
+	}
+
+	private static String fullyQualifiedMethodName() {
+		return DiscoveryRequestTests.class.getName() + "#" + fullyQualifiedMethod().getName();
+	}
+
+	private static Method fullyQualifiedMethod() {
 		try {
-			fullyQualifiedMethod = MyTestClass.class.getDeclaredMethod("myTest");
+			return DiscoveryRequestTests.class.getDeclaredMethod("myTest");
 		}
 		catch (Exception ex) {
 			throw new IllegalStateException(ex);
 		}
 	}
 
-	@Test
-	void selectMethodByFullyQualifiedName() throws Exception {
-		MethodSelector selector = selectMethod(fullyQualifiedMethodName());
-		assertEquals(fullyQualifiedMethod, selector.getJavaMethod());
-	}
-
-	@Test
-	public void selectNameWithClass() {
-		DiscoverySelector element = selectName(MyTestClass.class.getName());
-		assertEquals(ClassSelector.class, element.getClass());
-	}
-
-	@Test
-	public void selectNameWithMethod() throws Exception {
-		DiscoverySelector element = selectName(fullyQualifiedMethodName());
-		assertEquals(MethodSelector.class, element.getClass());
-	}
-
-	@Test
-	public void selectNameWithPackage() {
-		DiscoverySelector element = selectName("org.junit.platform");
-		assertEquals(PackageSelector.class, element.getClass());
-	}
-
-	@Test
-	public void buildDiscoveryRequest() throws Exception {
-		// @formatter:off
-		EngineDiscoveryRequest spec = request().selectors(
-			selectUniqueId(UniqueId.forEngine("fooEngine")),
-			selectName(MyTestClass.class.getName()),
-			selectName("org.junit.platform"),
-			selectName(fullyQualifiedMethodName())
-		).build();
-		// @formatter:on
-
-		assertAll(() -> assertEquals(1, spec.getSelectorsByType(ClassSelector.class).size()),
-			() -> assertEquals(1, spec.getSelectorsByType(MethodSelector.class).size()),
-			() -> assertEquals(1, spec.getSelectorsByType(PackageSelector.class).size()),
-			() -> assertEquals(1, spec.getSelectorsByType(UniqueIdSelector.class).size()));
-	}
-
-	private String fullyQualifiedMethodName() throws Exception {
-		return MyTestClass.class.getName() + "#" + MyTestClass.class.getDeclaredMethod("myTest").getName();
-	}
-
-	static class MyTestClass {
-
-		void myTest() {
-		}
+	void myTest() {
 	}
 
 }
