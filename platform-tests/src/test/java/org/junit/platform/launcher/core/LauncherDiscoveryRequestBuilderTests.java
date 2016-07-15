@@ -88,6 +88,22 @@ public class LauncherDiscoveryRequestBuilderTests {
 		}
 
 		@Test
+		public void methodsByFullyQualifiedNameAreStoredInDiscoveryRequest() throws Exception {
+			// @formatter:off
+			LauncherDiscoveryRequest discoveryRequest = request()
+					.selectors(selectMethod(fullyQualifiedMethodName()))
+					.build();
+			// @formatter:on
+
+			List<MethodSelector> methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
+			assertThat(methodSelectors).hasSize(1);
+
+			MethodSelector methodSelector = methodSelectors.get(0);
+			assertThat(methodSelector.getJavaClass()).isEqualTo(LauncherDiscoveryRequestBuilderTests.class);
+			assertThat(methodSelector.getJavaMethod()).isEqualTo(fullyQualifiedMethod());
+		}
+
+		@Test
 		public void methodsByNameAreStoredInDiscoveryRequest() throws Exception {
 			Class<?> testClass = SampleTestClass.class;
 			Method testMethod = testClass.getMethod("test");
@@ -344,6 +360,22 @@ public class LauncherDiscoveryRequestBuilderTests {
 		@Test
 		public void test() {
 		}
+	}
+
+	private static String fullyQualifiedMethodName() {
+		return LauncherDiscoveryRequestBuilderTests.class.getName() + "#" + fullyQualifiedMethod().getName();
+	}
+
+	private static Method fullyQualifiedMethod() {
+		try {
+			return LauncherDiscoveryRequestBuilderTests.class.getDeclaredMethod("myTest");
+		}
+		catch (Exception ex) {
+			throw new IllegalStateException(ex);
+		}
+	}
+
+	void myTest() {
 	}
 
 }

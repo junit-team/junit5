@@ -8,34 +8,22 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.platform.launcher.core;
+package org.junit.platform.engine.discovery;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.EngineDiscoveryRequest;
-import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.ClassSelector;
-import org.junit.platform.engine.discovery.DiscoverySelectors;
-import org.junit.platform.engine.discovery.MethodSelector;
-import org.junit.platform.engine.discovery.PackageSelector;
-import org.junit.platform.engine.discovery.UniqueIdSelector;
 
 /**
- * Unit tests for {@link DefaultDiscoveryRequest}.
+ * Unit tests for {@link DiscoverySelectors}.
  *
  * @since 1.0
  */
-public class DiscoveryRequestTests {
+public class DiscoverySelectorsTests {
 
 	private static final Method fullyQualifiedMethod = fullyQualifiedMethod();
 
@@ -76,32 +64,13 @@ public class DiscoveryRequestTests {
 		assertEquals(MethodSelector.class, selector.getClass());
 	}
 
-	@Test
-	void buildDiscoveryRequest() {
-		// @formatter:off
-		EngineDiscoveryRequest spec = request().selectors(
-			selectUniqueId(UniqueId.forEngine("fooEngine")),
-			selectPackage("org.junit.platform"),
-			selectClass(getClass()),
-			selectMethod(fullyQualifiedMethodName)
-		).build();
-
-		assertAll(
-			() -> assertEquals(1, spec.getSelectorsByType(UniqueIdSelector.class).size()),
-			() -> assertEquals(1, spec.getSelectorsByType(PackageSelector.class).size()),
-			() -> assertEquals(1, spec.getSelectorsByType(ClassSelector.class).size()),
-			() -> assertEquals(1, spec.getSelectorsByType(MethodSelector.class).size())
-		);
-		// @formatter:on
-	}
-
 	private static String fullyQualifiedMethodName() {
-		return DiscoveryRequestTests.class.getName() + "#" + fullyQualifiedMethod().getName();
+		return DiscoverySelectorsTests.class.getName() + "#" + fullyQualifiedMethod().getName();
 	}
 
 	private static Method fullyQualifiedMethod() {
 		try {
-			return DiscoveryRequestTests.class.getDeclaredMethod("myTest");
+			return DiscoverySelectorsTests.class.getDeclaredMethod("myTest");
 		}
 		catch (Exception ex) {
 			throw new IllegalStateException(ex);
