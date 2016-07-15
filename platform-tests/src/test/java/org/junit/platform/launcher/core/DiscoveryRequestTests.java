@@ -12,9 +12,12 @@ package org.junit.platform.launcher.core;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectName;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+
+import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.DiscoverySelector;
@@ -31,6 +34,23 @@ import org.junit.platform.engine.discovery.UniqueIdSelector;
  * @since 1.0
  */
 public class DiscoveryRequestTests {
+
+	private static final Method fullyQualifiedMethod;
+
+	static {
+		try {
+			fullyQualifiedMethod = MyTestClass.class.getDeclaredMethod("myTest");
+		}
+		catch (Exception ex) {
+			throw new IllegalStateException(ex);
+		}
+	}
+
+	@Test
+	void selectMethodByFullyQualifiedName() throws Exception {
+		MethodSelector selector = selectMethod(fullyQualifiedMethodName());
+		assertEquals(fullyQualifiedMethod, selector.getJavaMethod());
+	}
 
 	@Test
 	public void selectNameWithClass() {

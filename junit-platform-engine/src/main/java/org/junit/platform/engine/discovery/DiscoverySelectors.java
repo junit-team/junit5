@@ -105,6 +105,33 @@ public final class DiscoverySelectors {
 	}
 
 	/**
+	 * Create a {@code MethodSelector} for the supplied <em>fully qualified
+	 * method name</em>.
+	 *
+	 * <p>The supported format for a <em>fully qualified method name</em> is
+	 * {@code [fully qualified class name]#[methodName]}. For example, the
+	 * fully qualified name for the {@code chars()} method in
+	 * {@code java.lang.String} is {@code "java.lang.String#chars"}.
+	 * 
+	 * <p><strong>WARNING</strong>: Names for overloaded methods are not supported.
+	 *
+	 * @param name the fully qualified name of the method to select; never
+	 * {@code null} or blank
+	 * @throws PreconditionViolationException if the supplied name is {@code null},
+	 * blank, or does not specify a unique method
+	 * @see MethodSelector
+	 */
+	public static MethodSelector selectMethod(String name) throws PreconditionViolationException {
+		Preconditions.notBlank(name, "name must not be null or blank");
+
+		Optional<Method> methodOptional = ReflectionUtils.loadMethod(name);
+		Method method = methodOptional.orElseThrow(() -> new PreconditionViolationException(
+			String.format("'%s' could not be resolved to a unique method", name)));
+
+		return selectMethod(method.getDeclaringClass(), method);
+	}
+
+	/**
 	 * Create a {@code MethodSelector} for the supplied class name and method name.
 	 *
 	 * @param className the fully qualified name of the class in which the method
