@@ -42,9 +42,17 @@ public class DiscoveryRequestTests {
 	private static final String fullyQualifiedMethodName = fullyQualifiedMethodName();
 
 	@Test
-	void selectMethodByFullyQualifiedName() throws Exception {
+	void selectMethodByFullyQualifiedName() {
 		MethodSelector selector = selectMethod(fullyQualifiedMethodName);
 		assertEquals(fullyQualifiedMethod, selector.getJavaMethod());
+	}
+
+	@Test
+	void selectMethodWithParametersByMethodReference() throws Exception {
+		Method method = getClass().getDeclaredMethod("myTest", String.class);
+		MethodSelector selector = selectMethod(getClass(), method);
+		assertEquals(method, selector.getJavaMethod());
+		assertEquals(method, selector.getJavaMethod());
 	}
 
 	@Test
@@ -63,7 +71,7 @@ public class DiscoveryRequestTests {
 
 	@Test
 	@SuppressWarnings("deprecation")
-	void selectNameWithMethodName() throws Exception {
+	void selectNameWithMethodName() {
 		DiscoverySelector selector = DiscoverySelectors.selectName(fullyQualifiedMethodName);
 		assertEquals(MethodSelector.class, selector.getClass());
 	}
@@ -101,6 +109,9 @@ public class DiscoveryRequestTests {
 	}
 
 	void myTest() {
+	}
+
+	void myTest(String info) {
 	}
 
 }
