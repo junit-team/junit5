@@ -96,6 +96,7 @@ allprojects {
 			eclipseFormatFile rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
 
 			trimTrailingWhitespace()
+			lineEndings 'UNIX'
 			endWithNewline()
 
 			custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
@@ -395,11 +396,13 @@ configure(rootProject) {
 			target '**/*.gradle', '**/*.gitignore'
 			indentWithTabs()
 			trimTrailingWhitespace()
+			lineEndings 'UNIX'
 			endWithNewline()
 		}
 		format 'documentation', {
 			target '**/*.adoc', '**/*.md'
 			trimTrailingWhitespace()
+			lineEndings 'UNIX'
 			endWithNewline()
 		}
 	}
