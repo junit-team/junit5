@@ -64,6 +64,7 @@ class DiscoveryRequestCreator {
 		return options.getArguments().stream().map(File::new).collect(toCollection(LinkedHashSet::new));
 	}
 
+	@SuppressWarnings("deprecation")
 	private LauncherDiscoveryRequestBuilder createNameBasedBuilder(CommandLineOptions options) {
 		Preconditions.notEmpty(options.getArguments(), "No arguments were supplied to the ConsoleLauncher");
 		return request().selectors(selectNames(options.getArguments()));

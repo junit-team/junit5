@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectName;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -26,6 +25,7 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
@@ -48,20 +48,23 @@ public class DiscoveryRequestTests {
 	}
 
 	@Test
+	@SuppressWarnings("deprecation")
 	void selectNameWithPackageName() {
-		DiscoverySelector selector = selectName("org.junit.platform");
+		DiscoverySelector selector = DiscoverySelectors.selectName("org.junit.platform");
 		assertEquals(PackageSelector.class, selector.getClass());
 	}
 
 	@Test
+	@SuppressWarnings("deprecation")
 	void selectNameWithClassName() {
-		DiscoverySelector selector = selectName(getClass().getName());
+		DiscoverySelector selector = DiscoverySelectors.selectName(getClass().getName());
 		assertEquals(ClassSelector.class, selector.getClass());
 	}
 
 	@Test
+	@SuppressWarnings("deprecation")
 	void selectNameWithMethodName() throws Exception {
-		DiscoverySelector selector = selectName(fullyQualifiedMethodName);
+		DiscoverySelector selector = DiscoverySelectors.selectName(fullyQualifiedMethodName);
 		assertEquals(MethodSelector.class, selector.getClass());
 	}
 
