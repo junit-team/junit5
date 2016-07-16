@@ -39,7 +39,7 @@ label are specifically targeted for community contributions.
 | Travis CI | Linux   | [![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg?branch=master)](https://travis-ci.org/junit-team/junit5) |
 | AppVeyor  | Windows | [![Build status](https://ci.appveyor.com/api/projects/status/xv8wc8w9sr44ghc4/branch/master?svg=true)](https://ci.appveyor.com/project/marcphilipp/junit5/branch/master) |
 
-Jenkins is the official CI build server for JUnit 5. Travis CI is used to perform quick checks on submitted pull requests and for build matrices including JDK 8 and JDK 9 early access builds.
+Jenkins is the official CI build server for JUnit 5. Travis CI is used to perform quick checks on submitted pull requests and for build matrices including JDK 8 and JDK 9 early access builds. The build on AppVeyor ensures that JUnit 5 can be build on Windows.
 
 ## Code Coverage
 
