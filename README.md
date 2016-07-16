@@ -37,7 +37,7 @@ label are specifically targeted for community contributions.
 | --------- | ------- | ------ | ----------- |
 | Jenkins   | Linux   | [![Build Status](https://junit.ci.cloudbees.com/job/JUnit5/badge/icon)](https://junit.ci.cloudbees.com/job/JUnit5) | Official CI build server for JUnit 5 |
 | Travis CI | Linux   | [![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg?branch=master)](https://travis-ci.org/junit-team/junit5) | Used to perform quick checks on submitted pull requests and for build matrices including JDK 8 and JDK 9 early access builds |
-| AppVeyor  | Windows | [![Build status](https://ci.appveyor.com/api/projects/status/xv8wc8w9sr44ghc4/branch/master?svg=true)](https://ci.appveyor.com/project/marcphilipp/junit5/branch/master) | Used to ensures that JUnit 5 can be built on Windows |
+| AppVeyor  | Windows | [![Build status](https://ci.appveyor.com/api/projects/status/xv8wc8w9sr44ghc4/branch/master?svg=true)](https://ci.appveyor.com/project/marcphilipp/junit5/branch/master) | Used to ensure that JUnit 5 can be built on Windows |
 
 ## Code Coverage
 
