@@ -52,7 +52,8 @@ class SummaryGenerationTests {
 			() -> assertTrue(summaryString.contains("0 tests started"), "tests started"), //
 			() -> assertTrue(summaryString.contains("0 tests aborted"), "tests aborted"), //
 			() -> assertTrue(summaryString.contains("0 tests successful"), "tests successful"), //
-			() -> assertTrue(summaryString.contains("0 tests failed"), "tests failed") //
+			() -> assertTrue(summaryString.contains("0 tests failed"), "tests failed"), //
+			() -> assertTrue(summaryString.contains("0 containers failed"), "containers failed") //
 		);
 
 		assertEquals("", failuresAsString());
@@ -82,7 +83,8 @@ class SummaryGenerationTests {
 			() -> assertTrue(summaryString.contains("3 tests started"), "tests started"), //
 			() -> assertTrue(summaryString.contains("1 tests aborted"), "tests aborted"), //
 			() -> assertTrue(summaryString.contains("1 tests successful"), "tests successful"), //
-			() -> assertTrue(summaryString.contains("1 tests failed"), "tests failed") //
+			() -> assertTrue(summaryString.contains("1 tests failed"), "tests failed"), //
+			() -> assertTrue(summaryString.contains("0 containers failed"), "containers failed") //
 		);
 	}
 
@@ -112,7 +114,7 @@ class SummaryGenerationTests {
 
 		String failuresString = failuresAsString();
 		assertAll("failures", //
-			() -> assertTrue(failuresString.contains("Test failures (1)"), "test failures"), //
+			() -> assertTrue(failuresString.contains("Failures (1)"), "test failures"), //
 			() -> assertTrue(failuresString.contains(Object.class.getName()), "source"), //
 			() -> assertTrue(failuresString.contains("failingTest"), "display name"), //
 			() -> assertTrue(failuresString.contains("=> " + failedException), "exception") //

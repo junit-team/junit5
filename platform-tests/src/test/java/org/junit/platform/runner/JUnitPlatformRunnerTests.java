@@ -57,6 +57,7 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.support.descriptor.JavaClassSource;
 import org.junit.platform.engine.support.descriptor.JavaMethodSource;
+import org.junit.platform.engine.support.hierarchical.DummyContainerDescriptor;
 import org.junit.platform.engine.support.hierarchical.DummyTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DummyTestEngine;
 import org.junit.platform.engine.test.TestDescriptorStub;
@@ -394,8 +395,8 @@ class JUnitPlatformRunnerTests {
 		void descriptionForJavaMethodAndClassSources() throws Exception {
 			DummyTestEngine engine = new DummyTestEngine("dummy");
 			Method failingTest = getClass().getDeclaredMethod("failingTest");
-			DummyTestDescriptor containerDescriptor = engine.addContainer("uniqueContainerName", "containerDisplayName",
-				new JavaClassSource(getClass()));
+			DummyContainerDescriptor containerDescriptor = engine.addContainer("uniqueContainerName",
+				"containerDisplayName", new JavaClassSource(getClass()));
 			containerDescriptor.addChild(
 				new DummyTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
 					"testDisplayName", new JavaMethodSource(failingTest), () -> {
@@ -430,8 +431,8 @@ class JUnitPlatformRunnerTests {
 		void descriptionForJavaMethodAndClassSourcesUsingTechnicalNames() throws Exception {
 			DummyTestEngine engine = new DummyTestEngine("dummy");
 			Method failingTest = getClass().getDeclaredMethod("failingTest");
-			DummyTestDescriptor containerDescriptor = engine.addContainer("uniqueContainerName", "containerDisplayName",
-				new JavaClassSource(getClass()));
+			DummyContainerDescriptor containerDescriptor = engine.addContainer("uniqueContainerName",
+				"containerDisplayName", new JavaClassSource(getClass()));
 			containerDescriptor.addChild(
 				new DummyTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
 					"testDisplayName", new JavaMethodSource(failingTest), () -> {

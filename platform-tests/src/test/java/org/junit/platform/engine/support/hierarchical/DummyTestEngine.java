@@ -45,28 +45,38 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 		return engineDescriptor;
 	}
 
-	public DummyTestDescriptor addTest(String uniqueName, Runnable runnable) {
-		return addTest(uniqueName, uniqueName, runnable);
+	public DummyTestDescriptor addTest(String uniqueName, Runnable executeBlock) {
+		return addTest(uniqueName, uniqueName, executeBlock);
 	}
 
-	public DummyTestDescriptor addTest(Method testMethod, Runnable runnable) {
+	public DummyTestDescriptor addTest(Method testMethod, Runnable executeBlock) {
 		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", testMethod.getName());
 		JavaMethodSource source = new JavaMethodSource(testMethod);
-		DummyTestDescriptor child = new DummyTestDescriptor(uniqueId, testMethod.getName(), source, runnable);
+		DummyTestDescriptor child = new DummyTestDescriptor(uniqueId, testMethod.getName(), source, executeBlock);
 		engineDescriptor.addChild(child);
 		return child;
 	}
 
-	public DummyTestDescriptor addTest(String uniqueName, String displayName, Runnable runnable) {
+	public DummyTestDescriptor addTest(String uniqueName, String displayName, Runnable executeBlock) {
 		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", uniqueName);
-		DummyTestDescriptor child = new DummyTestDescriptor(uniqueId, displayName, runnable);
+		DummyTestDescriptor child = new DummyTestDescriptor(uniqueId, displayName, executeBlock);
 		engineDescriptor.addChild(child);
 		return child;
 	}
 
-	public DummyTestDescriptor addContainer(String uniqueName, String displayName, TestSource source) {
+	public DummyContainerDescriptor addContainer(String uniqueName, String displayName, TestSource source) {
+		return addContainer(uniqueName, displayName, source, null);
+	}
+
+	public DummyContainerDescriptor addContainer(String uniqueName, Runnable beforeBlock) {
+		return addContainer(uniqueName, uniqueName, null, beforeBlock);
+	}
+
+	public DummyContainerDescriptor addContainer(String uniqueName, String displayName, TestSource source,
+			Runnable beforeBlock) {
+
 		UniqueId uniqueId = engineDescriptor.getUniqueId().append("container", uniqueName);
-		DummyTestDescriptor container = new DummyTestDescriptor(uniqueId, displayName, source, null);
+		DummyContainerDescriptor container = new DummyContainerDescriptor(uniqueId, displayName, source, beforeBlock);
 		engineDescriptor.addChild(container);
 		return container;
 	}

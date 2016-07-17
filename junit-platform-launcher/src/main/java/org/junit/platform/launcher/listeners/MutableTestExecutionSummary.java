@@ -30,12 +30,13 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	private static final String TAB = "  ";
 	private static final String DOUBLE_TAB = TAB + TAB;
 
-	final AtomicLong testsStarted = new AtomicLong();
 	final AtomicLong testsFound = new AtomicLong();
+	final AtomicLong testsStarted = new AtomicLong();
 	final AtomicLong testsSkipped = new AtomicLong();
 	final AtomicLong testsAborted = new AtomicLong();
 	final AtomicLong testsSucceeded = new AtomicLong();
 	final AtomicLong testsFailed = new AtomicLong();
+	final AtomicLong containersFailed = new AtomicLong();
 
 	private final TestPlan testPlan;
 	private final List<Failure> failures = new ArrayList<>();
@@ -53,13 +54,13 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	}
 
 	@Override
-	public long getTestsStartedCount() {
-		return this.testsStarted.get();
+	public long getTestsFoundCount() {
+		return this.testsFound.get();
 	}
 
 	@Override
-	public long getTestsFoundCount() {
-		return this.testsFound.get();
+	public long getTestsStartedCount() {
+		return this.testsStarted.get();
 	}
 
 	@Override
@@ -83,6 +84,16 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	}
 
 	@Override
+	public long getContainersFailedCount() {
+		return this.containersFailed.get();
+	}
+
+	@Override
+	public long getTotalFailureCount() {
+		return getTestsFailedCount() + getContainersFailedCount();
+	}
+
+	@Override
 	public long getTimeStarted() {
 		return this.timeStarted;
 	}
@@ -96,15 +107,23 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	public void printTo(PrintWriter writer) {
 		// @formatter:off
 		writer.println(String.format(
-			"%nTest run finished after %d ms\n"
-			+ "[%10d tests found     ]\n"
-			+ "[%10d tests skipped   ]\n"
-			+ "[%10d tests started   ]\n"
-			+ "[%10d tests aborted   ]\n"
-			+ "[%10d tests successful]\n"
-			+ "[%10d tests failed    ]\n",
-			(this.timeFinished - this.timeStarted), this.testsFound.get(), this.testsSkipped.get(),
-			this.testsStarted.get(), this.testsAborted.get(), this.testsSucceeded.get(), this.testsFailed.get()));
+			"%nTest run finished after %d ms%n"
+			+ "[%10d tests found      ]%n"
+			+ "[%10d tests skipped    ]%n"
+			+ "[%10d tests started    ]%n"
+			+ "[%10d tests aborted    ]%n"
+			+ "[%10d tests successful ]%n"
+			+ "[%10d tests failed     ]%n"
+			+ "[%10d containers failed]%n",
+			(this.timeFinished - this.timeStarted),
+			this.testsFound.get(),
+			this.testsSkipped.get(),
+			this.testsStarted.get(),
+			this.testsAborted.get(),
+			this.testsSucceeded.get(),
+			this.testsFailed.get(),
+			this.containersFailed.get()
+		));
 		// @formatter:on
 
 		writer.flush();
@@ -112,10 +131,10 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 
 	@Override
 	public void printFailuresTo(PrintWriter writer) {
-		if (getTestsFailedCount() > 0) {
+		if (getTotalFailureCount() > 0) {
 			writer.println();
-			writer.println(String.format("Test failures (%d):", testsFailed.get()));
-			failures.forEach(failure -> {
+			writer.println(String.format("Failures (%d):", getTotalFailureCount()));
+			this.failures.forEach(failure -> {
 				writer.println(TAB + describeTest(failure.getTestIdentifier()));
 				failure.getTestIdentifier().getSource().ifPresent(source -> writer.println(DOUBLE_TAB + source));
 				writer.println(String.format("%s=> %s", DOUBLE_TAB, failure.getException()));

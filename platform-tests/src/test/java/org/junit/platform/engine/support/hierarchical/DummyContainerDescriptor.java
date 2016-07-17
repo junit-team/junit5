@@ -20,37 +20,43 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 /**
  * @since 1.0
  */
-public class DummyTestDescriptor extends AbstractTestDescriptor implements Node<DummyEngineExecutionContext> {
+public class DummyContainerDescriptor extends AbstractTestDescriptor implements Node<DummyEngineExecutionContext> {
 
-	private final Runnable executeBlock;
+	private final Runnable beforeBlock;
 	private String skippedReason;
 	private boolean skipped;
 
-	DummyTestDescriptor(UniqueId uniqueId, String displayName, Runnable executeBlock) {
+	DummyContainerDescriptor(UniqueId uniqueId, String displayName, Runnable executeBlock) {
 		this(uniqueId, displayName, null, executeBlock);
 	}
 
-	public DummyTestDescriptor(UniqueId uniqueId, String displayName, TestSource source, Runnable executeBlock) {
+	public DummyContainerDescriptor(UniqueId uniqueId, String displayName, TestSource source, Runnable beforeBlock) {
 		super(uniqueId, displayName);
+
 		if (source != null) {
 			setSource(source);
 		}
-		this.executeBlock = executeBlock;
+		this.beforeBlock = beforeBlock;
 	}
 
 	@Override
 	public boolean isTest() {
-		return !isContainer();
-	}
-
-	@Override
-	public boolean isContainer() {
-		return this.executeBlock == null;
+		return false;
 	}
 
 	@Override
 	public boolean isLeaf() {
-		return isTest();
+		return false;
+	}
+
+	@Override
+	public boolean hasTests() {
+		return true;
+	}
+
+	@Override
+	public boolean isContainer() {
+		return true;
 	}
 
 	public void markSkipped(String reason) {
@@ -60,13 +66,13 @@ public class DummyTestDescriptor extends AbstractTestDescriptor implements Node<
 
 	@Override
 	public SkipResult shouldBeSkipped(DummyEngineExecutionContext context) throws Exception {
-		return skipped ? skip(skippedReason) : doNotSkip();
+		return this.skipped ? skip(this.skippedReason) : doNotSkip();
 	}
 
 	@Override
-	public DummyEngineExecutionContext execute(DummyEngineExecutionContext context) {
-		if (this.executeBlock != null) {
-			this.executeBlock.run();
+	public DummyEngineExecutionContext before(DummyEngineExecutionContext context) throws Exception {
+		if (this.beforeBlock != null) {
+			this.beforeBlock.run();
 		}
 		return context;
 	}

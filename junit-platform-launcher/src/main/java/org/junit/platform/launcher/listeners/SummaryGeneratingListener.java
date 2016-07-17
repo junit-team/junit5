@@ -79,18 +79,25 @@ public class SummaryGeneratingListener implements TestExecutionListener {
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-		if (testIdentifier.isTest()) {
-			if (testExecutionResult.getStatus() == SUCCESSFUL) {
+		if (testExecutionResult.getStatus() == SUCCESSFUL) {
+			if (testIdentifier.isTest()) {
 				this.summary.testsSucceeded.incrementAndGet();
 			}
-			else if (testExecutionResult.getStatus() == ABORTED) {
+		}
+		else if (testExecutionResult.getStatus() == ABORTED) {
+			if (testIdentifier.isTest()) {
 				this.summary.testsAborted.incrementAndGet();
 			}
-			else if (testExecutionResult.getStatus() == FAILED) {
+		}
+		else if (testExecutionResult.getStatus() == FAILED) {
+			if (testIdentifier.isTest()) {
 				this.summary.testsFailed.incrementAndGet();
-				testExecutionResult.getThrowable().ifPresent(
-					throwable -> this.summary.addFailure(testIdentifier, throwable));
 			}
+			else if (testIdentifier.isContainer()) {
+				this.summary.containersFailed.incrementAndGet();
+			}
+			testExecutionResult.getThrowable().ifPresent(
+				throwable -> this.summary.addFailure(testIdentifier, throwable));
 		}
 	}
 

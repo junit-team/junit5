@@ -30,7 +30,8 @@ import org.junit.platform.engine.support.hierarchical.DummyTestEngine;
  * @since 1.0
  */
 public class ExecuteTestsTaskTests {
-	private static final Runnable FAILING_TEST = () -> fail("should fail");
+
+	private static final Runnable FAILING_BLOCK = () -> fail("should fail");
 	private static final Runnable SUCCEEDING_TEST = () -> {
 	};
 
@@ -43,7 +44,7 @@ public class ExecuteTestsTaskTests {
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
 		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
-		dummyTestEngine.addTest("failingTest", FAILING_TEST);
+		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter));
@@ -61,7 +62,7 @@ public class ExecuteTestsTaskTests {
 		options.setRunAllTests(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("failingTest", FAILING_TEST);
+		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter));
@@ -78,7 +79,7 @@ public class ExecuteTestsTaskTests {
 		options.setRunAllTests(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("failingTest", FAILING_TEST);
+		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter));
@@ -95,12 +96,13 @@ public class ExecuteTestsTaskTests {
 		options.setRunAllTests(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("failingTest", FAILING_TEST);
+		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
+		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
 		task.execute(new PrintWriter(stringWriter));
 
-		assertThat(stringWriter.toString()).contains("Test failures (1)", "failingTest");
+		assertThat(stringWriter.toString()).contains("Failures (2)", "failingTest", "failingContainer");
 	}
 
 	@Test
@@ -118,12 +120,26 @@ public class ExecuteTestsTaskTests {
 	}
 
 	@Test
-	public void hasStatusCode1ForFailingTests() throws Exception {
+	public void hasStatusCode1ForFailingTest() throws Exception {
 		CommandLineOptions options = new CommandLineOptions();
 		options.setRunAllTests(true);
 
 		DummyTestEngine dummyTestEngine = new DummyTestEngine();
-		dummyTestEngine.addTest("failingTest", FAILING_TEST);
+		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
+
+		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
+		int exitCode = task.execute(dummyWriter());
+
+		assertThat(exitCode).isEqualTo(1);
+	}
+
+	@Test
+	public void hasStatusCode1ForFailingContainer() throws Exception {
+		CommandLineOptions options = new CommandLineOptions();
+		options.setRunAllTests(true);
+
+		DummyTestEngine dummyTestEngine = new DummyTestEngine();
+		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
 		int exitCode = task.execute(dummyWriter());

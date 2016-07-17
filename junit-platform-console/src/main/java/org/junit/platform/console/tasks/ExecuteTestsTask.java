@@ -98,9 +98,7 @@ public class ExecuteTestsTask implements ConsoleTask {
 	}
 
 	private int computeExitCode(TestExecutionSummary summary) {
-		if (summary.getTestsFailedCount() == 0) {
-			return SUCCESS;
-		}
-		return TESTS_FAILED;
+		return (summary.getTotalFailureCount() == 0 ? SUCCESS : TESTS_FAILED);
 	}
+
 }

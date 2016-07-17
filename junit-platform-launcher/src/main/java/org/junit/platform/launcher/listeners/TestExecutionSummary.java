@@ -26,14 +26,14 @@ import org.junit.platform.commons.meta.API;
 public interface TestExecutionSummary {
 
 	/**
-	 * Get the number of tests started.
-	 */
-	long getTestsStartedCount();
-
-	/**
 	 * Get the number of tests found.
 	 */
 	long getTestsFoundCount();
+
+	/**
+	 * Get the number of tests started.
+	 */
+	long getTestsStartedCount();
 
 	/**
 	 * Get the number of tests skipped.
@@ -52,8 +52,28 @@ public interface TestExecutionSummary {
 
 	/**
 	 * Get the number of tests that failed.
+	 *
+	 * @see #getContainersFailedCount()
+	 * @see #getTotalFailureCount()
 	 */
 	long getTestsFailedCount();
+
+	/**
+	 * Get the number of containers that failed.
+	 *
+	 * @see #getTestsFailedCount()
+	 * @see #getTotalFailureCount()
+	 */
+	long getContainersFailedCount();
+
+	/**
+	 * Get the total number of {@linkplain #getContainersFailedCount failed
+	 * containers} and {@linkplain #getTestsFailedCount failed tests}.
+	 *
+	 * @see #getTestsFailedCount()
+	 * @see #getContainersFailedCount()
+	 */
+	long getTotalFailureCount();
 
 	/**
 	 * Get the timestamp (in milliseconds) when the test plan started.
@@ -75,8 +95,8 @@ public interface TestExecutionSummary {
 	void printTo(PrintWriter writer);
 
 	/**
-	 * Print failed tests including sources and exception messages to the
-	 * supplied {@link PrintWriter}.
+	 * Print failed containers and tests, including sources and exception
+	 * messages, to the supplied {@link PrintWriter}.
 	 *
 	 * @see #printTo(PrintWriter)
 	 */
