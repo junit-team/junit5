@@ -3287,26 +3287,83 @@ of retrieving a context specific name via the current test class or test method.
 <div class="sect3">
 <h4 id="release-notes-5.0.0-m2-summary">10.3.1. Summary of Changes</h4>
 <div class="paragraph">
-<p>This release is primarily a bugfix release for bugs discovered since 5.0.0-M1.</p>
+<p>This release is primarily a bugfix release for bugs discovered since <code>5.0.0-M1</code>.</p>
 </div>
-<div class="sect4">
-<h5 id="release-notes-5.0.0-m2-junit-platform">JUnit Platform</h5>
+<div class="paragraph">
+<p>The following is a list of global changes. For details regarding changes specific to the
+Platform, Jupiter, and Vintage, consult the dedicated subsections.</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>?</p>
+<p>The JUnit 5 Gradle build now runs properly on Microsoft Windows.</p>
+</li>
+<li>
+<p>A continuous integration build against Microsoft Windows has been set up on AppVeyor.</p>
 </li>
 </ul>
+</div>
+<div class="sect4">
+<h5 id="release-notes-5.0.0-m2-junit-platform">JUnit Platform</h5>
+<div class="sect5">
+<h6 id="bug-fixes">Bug Fixes</h6>
+<div class="ulist">
+<ul>
+<li>
+<p>Failures in containers&#8201;&#8212;&#8201;for example, <code>@BeforeAll</code> methods that throw exceptions&#8201;&#8212;&#8201;now fail the build when using the <code>ConsoleLauncher</code> or the JUnit Platform Gradle plugin.</p>
+</li>
+<li>
+<p>The JUnit Platform Surefire Provider no longer silently ignores purely dynamic test
+classes&#8201;&#8212;&#8201;for example, test classes that only declare <code>@TestFactory</code> methods.</p>
+</li>
+<li>
+<p>The <code>junit-platform-console</code> and <code>junit-platform-console.bat</code> shell scripts included in
+the <code>junit-platform-console-&lt;release version&gt;</code> TAR and ZIP distributions now properly
+refer to the <code>ConsoleLauncher</code> instead of the <code>ConsoleRunner</code>.</p>
+</li>
+<li>
+<p>The <code>TestExecutionSummary</code> used by the <code>ConsoleLauncher</code> and the JUnit Platform Gradle
+plugin now includes the actual exception type for failures.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect5">
+<h6 id="deprecations">Deprecations</h6>
+<div class="ulist">
+<ul>
+<li>
+<p>Generic name-based discovery selectors (i.e., <code>selectName()</code> and <code>selectNames()</code>) in
+<code>DiscoverySelectors</code> have been deprecated in favor of the dedicated
+<code>selectPackage(String)</code>, <code>selectClass(String)</code>, and <code>selectMethod(String)</code> methods.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect5">
+<h6 id="new-features">New Features</h6>
+<div class="ulist">
+<ul>
+<li>
+<p>New  <code>selectMethod(String)</code> method in <code>DiscoverySelectors</code> that supports selection of
+a <em>fully qualified method name</em>.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect4">
 <h5 id="release-notes-5.0.0-m2-junit-jupiter">JUnit Jupiter</h5>
+<div class="sect5">
+<h6 id="bug-fixes-2">Bug Fixes</h6>
 <div class="ulist">
 <ul>
 <li>
-<p>?</p>
+<p>Extension implementations declared via <code>@ExtendWith</code> at the class-level and at the
+method-level will no longer be registered multiple times.</p>
 </li>
 </ul>
+</div>
 </div>
 </div>
 <div class="sect4">
