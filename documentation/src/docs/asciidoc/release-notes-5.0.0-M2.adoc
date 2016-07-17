@@ -8,17 +8,47 @@
 [[release-notes-5.0.0-m2-summary]]
 ==== Summary of Changes
 
-This release is primarily a bugfix release for bugs discovered since 5.0.0-M1.
+This release is primarily a bugfix release for bugs discovered since `5.0.0-M1`.
+
+The following is a list of global changes. For details regarding changes specific to the
+Platform, Jupiter, and Vintage, consult the dedicated subsections.
+
+* The JUnit 5 Gradle build now runs properly on Microsoft Windows.
+* A continuous integration build against Microsoft Windows has been set up on AppVeyor.
 
 [[release-notes-5.0.0-m2-junit-platform]]
 ===== JUnit Platform
 
-* ?
+====== Bug Fixes
+
+* Failures in containers -- for example, `@BeforeAll` methods that throw exceptions --
+  now fail the build when using the `ConsoleLauncher` or the JUnit Platform Gradle plugin.
+* The JUnit Platform Surefire Provider no longer silently ignores purely dynamic test
+  classes -- for example, test classes that only declare `@TestFactory` methods.
+* The `junit-platform-console` and `junit-platform-console.bat` shell scripts included in
+  the `junit-platform-console-<release version>` TAR and ZIP distributions now properly
+  refer to the `ConsoleLauncher` instead of the `ConsoleRunner`.
+* The `TestExecutionSummary` used by the `ConsoleLauncher` and the JUnit Platform Gradle
+  plugin now includes the actual exception type for failures.
+
+====== Deprecations
+
+* Generic name-based discovery selectors (i.e., `selectName()` and `selectNames()`) in
+  `DiscoverySelectors` have been deprecated in favor of the dedicated
+  `selectPackage(String)`, `selectClass(String)`, and `selectMethod(String)` methods.
+
+====== New Features
+
+* New  `selectMethod(String)` method in `DiscoverySelectors` that supports selection of
+  a _fully qualified method name_.
 
 [[release-notes-5.0.0-m2-junit-jupiter]]
 ===== JUnit Jupiter
 
-* ?
+====== Bug Fixes
+
+* Extension implementations declared via `@ExtendWith` at the class-level and at the
+  method-level will no longer be registered multiple times.
 
 [[release-notes-5.0.0-m2-junit-vintage]]
 ===== JUnit Vintage
