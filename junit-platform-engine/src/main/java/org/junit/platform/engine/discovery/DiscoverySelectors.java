@@ -114,7 +114,8 @@ public final class DiscoverySelectors {
 	 * fully qualified name for the {@code chars()} method in
 	 * {@code java.lang.String} is {@code "java.lang.String#chars"}.
 	 *
-	 * <p><strong>WARNING</strong>: Names for overloaded methods are not supported.
+	 * <p><strong>WARNING</strong>: Overloaded methods and methods that accept
+	 * arguments are not currently supported.
 	 *
 	 * @param name the fully qualified name of the method to select; never
 	 * {@code null} or blank
