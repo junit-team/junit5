@@ -19,10 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
@@ -42,6 +44,21 @@ class ClasspathScannerTests {
 		assertThat(classes.size()).isGreaterThanOrEqualTo(20);
 		assertTrue(classes.contains(NestedClassToBeFound.class));
 		assertTrue(classes.contains(MemberClassToBeFound.class));
+	}
+
+	@Test
+	void findAllClassesInPackageWithinJarFile() throws Exception {
+
+		URL jarfile = getClass().getResource("/jartest.jar");
+		URLClassLoader classLoader = new URLClassLoader(new URL[] { jarfile });
+		ClasspathScanner classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::loadClass);
+
+		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.platform.jartest.included",
+			clazz -> true);
+		assertThat(classes.size()).isEqualTo(2);
+		List<String> classNames = classes.stream().map(Class::getSimpleName).collect(Collectors.toList());
+		assertTrue(classNames.contains("Included"));
+		assertTrue(classNames.contains("RecursivelyIncluded"));
 	}
 
 	@Test
