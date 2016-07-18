@@ -505,7 +505,7 @@ configure(rootProject) {
 		// the latest distribution URL:
 		// gradlew wrapper --gradle-distribution-url=https://services.gradle.org/distributions-snapshots/gradle-3.0-20160615000025+0000-bin.zip && gradlew -version && gradlew clean test
 
-		distributionUrl = 'https://services.gradle.org/distributions/gradle-2.14-bin.zip'
+		distributionUrl = 'https://services.gradle.org/distributions/gradle-2.14.1-bin.zip'
 	}
 
 }
