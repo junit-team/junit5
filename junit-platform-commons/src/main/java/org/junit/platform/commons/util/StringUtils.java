@@ -93,7 +93,7 @@ public final class StringUtils {
 		if (classes == null || classes.length == 0) {
 			return "";
 		}
-		return stream(classes).map(mapper).collect(joining(", "));
+		return stream(classes).map(v -> v == null ? "" : mapper.apply(v)).collect(joining(", "));
 	}
 
 }
