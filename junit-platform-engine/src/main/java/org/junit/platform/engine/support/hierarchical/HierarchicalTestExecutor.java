@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static org.junit.platform.engine.support.hierarchical.BlacklistedExceptions.rethrowIfBlacklisted;
+import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;

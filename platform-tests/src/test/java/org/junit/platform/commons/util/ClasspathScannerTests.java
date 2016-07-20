@@ -37,6 +37,70 @@ class ClasspathScannerTests {
 		ReflectionUtils::loadClass);
 
 	@Test
+	void scanForClassesInClasspathRootWhenMalformedClassnameInternalErrorOccurs() throws Exception {
+		Predicate<Class<?>> malformedClassNameSimulationFilter = clazz -> {
+			if (clazz.getSimpleName().equals("ClassForMalformedClassNameSimulation"))
+				throw new InternalError("Malformed class name");
+
+			return true;
+		};
+
+		File root = getTestClasspathRoot();
+		List<Class<?>> classes = this.classpathScanner.scanForClassesInClasspathRoot(root,
+			malformedClassNameSimulationFilter);
+
+		assertThat(classes.size()).isGreaterThanOrEqualTo(150);
+	}
+
+	@Test
+	void scanForClassesInClasspathRootWhenOtherInternalErrorOccurs() throws Exception {
+		Predicate<Class<?>> otherInternalErrorSimulationFilter = clazz -> {
+			if (clazz.getSimpleName().equals("ClassForOtherInternalErrorSimulation"))
+				throw new InternalError("other internal error");
+
+			return true;
+		};
+
+		File root = getTestClasspathRoot();
+		List<Class<?>> classes = this.classpathScanner.scanForClassesInClasspathRoot(root,
+			otherInternalErrorSimulationFilter);
+
+		assertThat(classes.size()).isGreaterThanOrEqualTo(150);
+	}
+
+	@Test
+	void scanForClassesInClasspathRootWhenGenericRuntimeExceptionOccurs() throws Exception {
+		Predicate<Class<?>> runtimeExceptionSimulationFilter = clazz -> {
+			if (clazz.getSimpleName().equals("ClassForGenericRuntimeExceptionSimulation"))
+				throw new RuntimeException("a generic exception");
+
+			return true;
+		};
+
+		File root = getTestClasspathRoot();
+		List<Class<?>> classes = this.classpathScanner.scanForClassesInClasspathRoot(root,
+			runtimeExceptionSimulationFilter);
+
+		assertThat(classes.size()).isGreaterThanOrEqualTo(150);
+	}
+
+	@Test
+	void scanForClassesInClasspathRootWhenOutOfMemoryErrorOccurs() throws Exception {
+		Predicate<Class<?>> outOfMemoryErrorSimulationFilter = clazz -> {
+			if (clazz.getSimpleName().equals("ClassForOutOfMemoryErrorSimulation"))
+				throw new OutOfMemoryError();
+
+			return true;
+		};
+
+		File root = getTestClasspathRoot();
+		assertThrows(OutOfMemoryError.class, () -> {
+			this.classpathScanner.scanForClassesInClasspathRoot(root, outOfMemoryErrorSimulationFilter);
+		});
+
+	}
+
+	@Test
 	void findAllClassesInThisPackage() throws Exception {
 		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.platform.commons", clazz -> true);
 		assertThat(classes.size()).isGreaterThanOrEqualTo(20);
@@ -131,6 +195,18 @@ class ClasspathScannerTests {
 	}
 
 	static class NestedClassToBeFound {
+	}
+
+	static class ClassForMalformedClassNameSimulation {
+	}
+
+	static class ClassForOtherInternalErrorSimulation {
+	}
+
+	static class ClassForGenericRuntimeExceptionSimulation {
+	}
+
+	static class ClassForOutOfMemoryErrorSimulation {
 	}
 
 	private static class ThrowingClassLoaderSupplier implements Supplier<ClassLoader> {

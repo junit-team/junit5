@@ -8,14 +8,19 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package org.junit.platform.engine.support.hierarchical;
+package org.junit.platform.commons.util;
 
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.platform.commons.util.ExceptionUtils;
-
 /**
+ *
+ *  <h3>DISCLAIMER</h3>
+ *
+ * <p>These utilities are intended solely for usage within the JUnit framework
+ * itself. <strong>Any usage by external parties is not supported.</strong>
+ * Use at your own risk!
+ *
  * Internal utilities for working with <em>blacklisted</em> exceptions.
  *
  * <p><em>Blacklisted</em> exceptions are those that should always terminate
@@ -28,7 +33,7 @@ import org.junit.platform.commons.util.ExceptionUtils;
  *
  * @since 1.0
  */
-final class BlacklistedExceptions {
+public final class BlacklistedExceptions {
 
 	private static final List<Class<? extends Throwable>> blacklist = Collections.singletonList(OutOfMemoryError.class);
 
@@ -43,7 +48,7 @@ final class BlacklistedExceptions {
 	 * <p>If the supplied {@code exception} is not <em>blacklisted</em>,
 	 * this method does nothing.
 	 */
-	static void rethrowIfBlacklisted(Throwable exception) {
+	public static void rethrowIfBlacklisted(Throwable exception) {
 		if (blacklist.stream().anyMatch(exceptionType -> exceptionType.isInstance(exception))) {
 			ExceptionUtils.throwAsUncheckedException(exception);
 		}

@@ -11,10 +11,10 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
+import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.engine.TestExecutionResult.aborted;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
-import static org.junit.platform.engine.support.hierarchical.BlacklistedExceptions.rethrowIfBlacklisted;
 
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.engine.TestExecutionResult;
