@@ -30,6 +30,10 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.
   refer to the `ConsoleLauncher` instead of the `ConsoleRunner`.
 * The `TestExecutionSummary` used by the `ConsoleLauncher` and the JUnit Platform Gradle
   plugin now includes the actual exception type for failures.
+* Safeguard classpath scanning -- Classpath scanning is now safeguarded against classes
+  with malformed names. The underlying error is swallowed and the offending file path
+  is logged. Other exceptions are swallowed as well unless it is a blacklisted exception
+  such as an OutOfMemoryError. Such an error is rethrown.
 
 ====== Deprecations
 
