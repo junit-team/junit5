@@ -10,8 +10,12 @@
 
 package org.junit.platform.commons.util;
 
+import static org.junit.platform.commons.meta.API.Usage.Internal;
+
 import java.util.Collections;
 import java.util.List;
+
+import org.junit.platform.commons.meta.API;
 
 /**
  *
@@ -33,6 +37,7 @@ import java.util.List;
  *
  * @since 1.0
  */
+@API(Internal)
 public final class BlacklistedExceptions {
 
 	private static final List<Class<? extends Throwable>> blacklist = Collections.singletonList(OutOfMemoryError.class);
