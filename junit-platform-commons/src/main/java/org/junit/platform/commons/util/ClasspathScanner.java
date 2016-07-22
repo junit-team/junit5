@@ -15,7 +15,6 @@ import static org.junit.platform.commons.meta.API.Usage.Internal;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +24,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.junit.platform.commons.meta.API;
@@ -45,12 +45,18 @@ class ClasspathScanner {
 
 	private static final String CLASS_FILE_SUFFIX = ".class";
 
+	private static final String ROOT_PACKAGE_NAME = "";
+
+	/** Malformed class name InternalError like reported in #401. */
+	private static final String MALFORMED_CLASS_NAME_ERROR_MESSAGE = "Malformed class name";
+
 	private final Supplier<ClassLoader> classLoaderSupplier;
 
 	private final BiFunction<String, ClassLoader, Optional<Class<?>>> loadClass;
 
 	ClasspathScanner(Supplier<ClassLoader> classLoaderSupplier,
 			BiFunction<String, ClassLoader, Optional<Class<?>>> loadClass) {
+
 		this.classLoaderSupplier = classLoaderSupplier;
 		this.loadClass = loadClass;
 	}
@@ -58,30 +64,19 @@ class ClasspathScanner {
 	boolean isPackage(String packageName) {
 		Preconditions.notBlank(packageName, "package name must not be null or blank");
 
-		String path = packagePath(packageName);
 		try {
-			Enumeration<URL> resource = classLoaderSupplier.get().getResources(path);
-			return resource.hasMoreElements();
+			return getClassLoader().getResources(packagePath(packageName)).hasMoreElements();
 		}
-		catch (IOException e) {
+		catch (Exception ex) {
 			return false;
 		}
 	}
 
 	List<Class<?>> scanForClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter) {
-		Preconditions.notBlank(basePackageName, "basePackageName must not be blank");
+		Preconditions.notBlank(basePackageName, "basePackageName must not be null or blank");
 
 		List<File> dirs = allSourceDirsForPackage(basePackageName);
 		return allClassesInSourceDirs(dirs, basePackageName, classFilter);
-	}
-
-	private List<Class<?>> allClassesInSourceDirs(List<File> sourceDirs, String basePackageName,
-			Predicate<Class<?>> classFilter) {
-		List<Class<?>> classes = new ArrayList<>();
-		for (File aSourceDir : sourceDirs) {
-			classes.addAll(findClassesInSourceDirRecursively(aSourceDir, basePackageName, classFilter));
-		}
-		return classes;
 	}
 
 	List<Class<?>> scanForClassesInClasspathRoot(File root, Predicate<Class<?>> classFilter) {
@@ -89,14 +84,22 @@ class ClasspathScanner {
 		Preconditions.condition(root.isDirectory(),
 			() -> "root must be an existing directory: " + root.getAbsolutePath());
 
-		return findClassesInSourceDirRecursively(root, "", classFilter);
+		return findClassesInSourceDirRecursively(ROOT_PACKAGE_NAME, root, classFilter);
+	}
+
+	private List<Class<?>> allClassesInSourceDirs(List<File> sourceDirs, String basePackageName,
+			Predicate<Class<?>> classFilter) {
+
+		List<Class<?>> classes = new ArrayList<>();
+		for (File sourceDir : sourceDirs) {
+			classes.addAll(findClassesInSourceDirRecursively(basePackageName, sourceDir, classFilter));
+		}
+		return classes;
 	}
 
 	private List<File> allSourceDirsForPackage(String basePackageName) {
 		try {
-			ClassLoader classLoader = classLoaderSupplier.get();
-			String path = packagePath(basePackageName);
-			Enumeration<URL> resources = classLoader.getResources(path);
+			Enumeration<URL> resources = getClassLoader().getResources(packagePath(basePackageName));
 			List<File> dirs = new ArrayList<>();
 			while (resources.hasMoreElements()) {
 				URL resource = resources.nextElement();
@@ -104,108 +107,120 @@ class ClasspathScanner {
 			}
 			return dirs;
 		}
-		catch (IOException e) {
+		catch (Exception ex) {
 			return Collections.emptyList();
 		}
 	}
 
-	private String packagePath(String basePackageName) {
-		return basePackageName.replace('.', '/');
-	}
-
-	private List<Class<?>> findClassesInSourceDirRecursively(File sourceDir, String packageName,
+	private List<Class<?>> findClassesInSourceDirRecursively(String packageName, File sourceDir,
 			Predicate<Class<?>> classFilter) {
+
 		Preconditions.notNull(classFilter, "classFilter must not be null");
 
-		List<Class<?>> classesCollector = new ArrayList<>();
-		collectClassesRecursively(sourceDir, packageName, classesCollector, classFilter);
-		return classesCollector;
+		List<Class<?>> classes = new ArrayList<>();
+		collectClassesRecursively(packageName, sourceDir, classFilter, classes);
+		return classes;
 	}
 
-	private void collectClassesRecursively(File sourceDir, String packageName, List<Class<?>> classesCollector,
-			Predicate<Class<?>> classFilter) {
+	private void collectClassesRecursively(String packageName, File sourceDir, Predicate<Class<?>> classFilter,
+			List<Class<?>> classes) {
+
 		File[] files = sourceDir.listFiles();
 		if (files == null) {
 			return;
 		}
+
 		for (File file : files) {
 			if (isClassFile(file)) {
-				this.handleClassFileSafely(packageName, classesCollector, classFilter, file);
+				processClassFileSafely(packageName, file, classFilter, classes);
 			}
 			else if (file.isDirectory()) {
-				collectClassesRecursively(file, appendPackageName(packageName, file.getName()), classesCollector,
-					classFilter);
+				collectClassesRecursively(appendSubpackageName(packageName, file.getName()), file, classFilter,
+					classes);
 			}
 		}
 	}
 
-	private void handleClassFileSafely(String packageName, List<Class<?>> classesCollector,
-			Predicate<Class<?>> classFilter, File file) {
-		Optional<Class<?>> classForClassFile = Optional.empty();
+	private void processClassFileSafely(String packageName, File classFile, Predicate<Class<?>> classFilter,
+			List<Class<?>> classes) {
 
+		Optional<Class<?>> clazz = Optional.empty();
 		try {
-			classForClassFile = loadClassForClassFile(file, packageName);
-			classForClassFile.filter(classFilter).ifPresent(classesCollector::add);
+			clazz = loadClassFromFile(packageName, classFile);
+			clazz.filter(classFilter).ifPresent(classes::add);
 		}
 		catch (InternalError internalError) {
-			this.catchInternalError(file, classForClassFile, internalError);
+			handleInternalError(classFile, clazz, internalError);
 		}
 		catch (Throwable throwable) {
-			this.catchAllOtherThrowables(file, throwable);
+			handleThrowable(classFile, throwable);
 		}
 	}
 
-	private void catchInternalError(File file, Optional<Class<?>> classForClassFile, InternalError internalError) {
-		// Malformed class name InternalError as reported by #401
-		if (internalError.getMessage().equals("Malformed class name")) {
-			this.logMalformedClassnameInternalError(file, classForClassFile);
-		}
-		// other potential InternalErrors
-		else {
-			this.logGenericFileProcessingProblem(file);
-		}
-	}
-
-	private void logMalformedClassnameInternalError(File file, Optional<Class<?>> classForClassFile) {
-		try {
-			LOG.warning(() -> format("The class in the current file has a malformed class name. Offending file: '%s'",
-				file.getAbsolutePath()));
-
-			classForClassFile.ifPresent(malformedClass ->
-			//cannot use getCanonicalName() here because its being null is related to the underlying error
-			LOG.warning(() -> format("Malformed class name: '%s'", malformedClass.getName())));
-		}
-		catch (Throwable throwable) {
-			LOG.warning(
-				"The class name of the class in the current file is so malformed that not even getName() or toString() can be called on it!");
-		}
-	}
-
-	private void catchAllOtherThrowables(File file, Throwable throwable) {
-		rethrowIfBlacklisted(throwable);
-		this.logGenericFileProcessingProblem(file);
-	}
-
-	private void logGenericFileProcessingProblem(File file) {
-		LOG.warning(() -> format("There was a problem while processing the current file. Offending file: '%s'",
-			file.getAbsolutePath()));
-	}
-
-	private String appendPackageName(String packageName, String subpackageName) {
-		if (packageName.isEmpty())
-			return subpackageName;
-		else
-			return packageName + "." + subpackageName;
-	}
-
-	private Optional<Class<?>> loadClassForClassFile(File file, String packageName) {
+	private Optional<Class<?>> loadClassFromFile(String packageName, File classFile) {
 		String className = packageName + '.'
-				+ file.getName().substring(0, file.getName().length() - CLASS_FILE_SUFFIX.length());
-		return loadClass.apply(className, classLoaderSupplier.get());
+				+ classFile.getName().substring(0, classFile.getName().length() - CLASS_FILE_SUFFIX.length());
+		return this.loadClass.apply(className, getClassLoader());
+	}
+
+	private void handleInternalError(File classFile, Optional<Class<?>> clazz, InternalError ex) {
+		if (MALFORMED_CLASS_NAME_ERROR_MESSAGE.equals(ex.getMessage())) {
+			logMalformedClassName(classFile, clazz, ex);
+		}
+		else {
+			logGenericFileProcessingException(classFile, ex);
+		}
+	}
+
+	private void handleThrowable(File classFile, Throwable throwable) {
+		rethrowIfBlacklisted(throwable);
+		logGenericFileProcessingException(classFile, throwable);
+	}
+
+	private void logMalformedClassName(File classFile, Optional<Class<?>> clazz, InternalError ex) {
+		try {
+
+			if (clazz.isPresent()) {
+				// Do not use getSimpleName() or getCanonicalName() here because they will likely
+				// throw another exception due to the underlying error.
+				logWarning(ex,
+					() -> format("The java.lang.Class loaded from file [%s] has a malformed class name [%s].",
+						classFile.getAbsolutePath(), clazz.get().getName()));
+			}
+			else {
+				logWarning(ex, () -> format("The java.lang.Class loaded from file [%s] has a malformed class name.",
+					classFile.getAbsolutePath()));
+			}
+		}
+		catch (Throwable t) {
+			ex.addSuppressed(t);
+			logGenericFileProcessingException(classFile, ex);
+		}
+	}
+
+	private void logGenericFileProcessingException(File classFile, Throwable throwable) {
+		logWarning(throwable, () -> format("Failed to load java.lang.Class for file [%s] during classpath scanning.",
+			classFile.getAbsolutePath()));
+	}
+
+	private String appendSubpackageName(String packageName, String subpackageName) {
+		return (!packageName.isEmpty() ? packageName + "." + subpackageName : subpackageName);
+	}
+
+	private ClassLoader getClassLoader() {
+		return this.classLoaderSupplier.get();
 	}
 
 	private static boolean isClassFile(File file) {
 		return file.isFile() && file.getName().endsWith(CLASS_FILE_SUFFIX);
+	}
+
+	private static String packagePath(String packageName) {
+		return packageName.replace('.', '/');
+	}
+
+	private static void logWarning(Throwable throwable, Supplier<String> msgSupplier) {
+		LOG.log(Level.WARNING, throwable, msgSupplier);
 	}
 
 }

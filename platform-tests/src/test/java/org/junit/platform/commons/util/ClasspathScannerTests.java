@@ -22,7 +22,6 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Test;
 
@@ -37,67 +36,72 @@ class ClasspathScannerTests {
 		ReflectionUtils::loadClass);
 
 	@Test
-	void scanForClassesInClasspathRootWhenMalformedClassnameInternalErrorOccurs() throws Exception {
-		Predicate<Class<?>> malformedClassNameSimulationFilter = clazz -> {
-			if (clazz.getSimpleName().equals("ClassForMalformedClassNameSimulation"))
-				throw new InternalError("Malformed class name");
+	void scanForClassesInClasspathRootWhenMalformedClassnameInternalErrorOccursWithNullDetailedMessage()
+			throws Exception {
 
+		Predicate<Class<?>> malformedClassNameSimulationFilter = clazz -> {
+			if (clazz.getSimpleName().equals(ClassForMalformedClassNameSimulation.class.getSimpleName())) {
+				throw new InternalError();
+			}
 			return true;
 		};
 
-		File root = getTestClasspathRoot();
-		List<Class<?>> classes = this.classpathScanner.scanForClassesInClasspathRoot(root,
-			malformedClassNameSimulationFilter);
+		assertClassesScannedWhenExceptionIsThrown(malformedClassNameSimulationFilter);
+	}
 
-		assertThat(classes.size()).isGreaterThanOrEqualTo(150);
+	@Test
+	void scanForClassesInClasspathRootWhenMalformedClassnameInternalErrorOccurs() throws Exception {
+		Predicate<Class<?>> malformedClassNameSimulationFilter = clazz -> {
+			if (clazz.getSimpleName().equals(ClassForMalformedClassNameSimulation.class.getSimpleName())) {
+				throw new InternalError("Malformed class name");
+			}
+			return true;
+		};
+
+		assertClassesScannedWhenExceptionIsThrown(malformedClassNameSimulationFilter);
 	}
 
 	@Test
 	void scanForClassesInClasspathRootWhenOtherInternalErrorOccurs() throws Exception {
 		Predicate<Class<?>> otherInternalErrorSimulationFilter = clazz -> {
-			if (clazz.getSimpleName().equals("ClassForOtherInternalErrorSimulation"))
+			if (clazz.getSimpleName().equals(ClassForOtherInternalErrorSimulation.class.getSimpleName())) {
 				throw new InternalError("other internal error");
-
+			}
 			return true;
 		};
 
-		File root = getTestClasspathRoot();
-		List<Class<?>> classes = this.classpathScanner.scanForClassesInClasspathRoot(root,
-			otherInternalErrorSimulationFilter);
-
-		assertThat(classes.size()).isGreaterThanOrEqualTo(150);
+		assertClassesScannedWhenExceptionIsThrown(otherInternalErrorSimulationFilter);
 	}
 
 	@Test
 	void scanForClassesInClasspathRootWhenGenericRuntimeExceptionOccurs() throws Exception {
 		Predicate<Class<?>> runtimeExceptionSimulationFilter = clazz -> {
-			if (clazz.getSimpleName().equals("ClassForGenericRuntimeExceptionSimulation"))
+			if (clazz.getSimpleName().equals(ClassForGenericRuntimeExceptionSimulation.class.getSimpleName())) {
 				throw new RuntimeException("a generic exception");
-
+			}
 			return true;
 		};
 
-		File root = getTestClasspathRoot();
-		List<Class<?>> classes = this.classpathScanner.scanForClassesInClasspathRoot(root,
-			runtimeExceptionSimulationFilter);
+		assertClassesScannedWhenExceptionIsThrown(runtimeExceptionSimulationFilter);
+	}
 
+	private void assertClassesScannedWhenExceptionIsThrown(Predicate<Class<?>> filter) throws Exception {
+		List<Class<?>> classes = this.classpathScanner.scanForClassesInClasspathRoot(getTestClasspathRoot(), filter);
 		assertThat(classes.size()).isGreaterThanOrEqualTo(150);
 	}
 
 	@Test
 	void scanForClassesInClasspathRootWhenOutOfMemoryErrorOccurs() throws Exception {
 		Predicate<Class<?>> outOfMemoryErrorSimulationFilter = clazz -> {
-			if (clazz.getSimpleName().equals("ClassForOutOfMemoryErrorSimulation"))
+			if (clazz.getSimpleName().equals(ClassForOutOfMemoryErrorSimulation.class.getSimpleName())) {
 				throw new OutOfMemoryError();
-
+			}
 			return true;
 		};
 
-		File root = getTestClasspathRoot();
-		assertThrows(OutOfMemoryError.class, () -> {
-			this.classpathScanner.scanForClassesInClasspathRoot(root, outOfMemoryErrorSimulationFilter);
-		});
-
+		assertThrows(OutOfMemoryError.class,
+			() -> this.classpathScanner.scanForClassesInClasspathRoot(getTestClasspathRoot(),
+				outOfMemoryErrorSimulationFilter));
 	}
 
 	@Test
@@ -129,7 +133,7 @@ class ClasspathScannerTests {
 
 	@Test
 	void scanForClassesInPackageWhenIOExceptionOccurs() {
-		ClasspathScanner scanner = new ClasspathScanner(new ThrowingClassLoaderSupplier(), ReflectionUtils::loadClass);
+		ClasspathScanner scanner = new ClasspathScanner(() -> new ThrowingClassLoader(), ReflectionUtils::loadClass);
 		List<Class<?>> classes = scanner.scanForClassesInPackage("org.junit.platform.commons", clazz -> true);
 		assertThat(classes).isEmpty();
 	}
@@ -147,7 +151,7 @@ class ClasspathScannerTests {
 
 	@Test
 	void isPackageWhenIOExceptionOccurs() {
-		ClasspathScanner scanner = new ClasspathScanner(new ThrowingClassLoaderSupplier(), ReflectionUtils::loadClass);
+		ClasspathScanner scanner = new ClasspathScanner(() -> new ThrowingClassLoader(), ReflectionUtils::loadClass);
 		assertFalse(scanner.isPackage("org.junit.platform.commons"));
 	}
 
@@ -207,14 +211,6 @@ class ClasspathScannerTests {
 	}
 
 	static class ClassForOutOfMemoryErrorSimulation {
-	}
-
-	private static class ThrowingClassLoaderSupplier implements Supplier<ClassLoader> {
-
-		@Override
-		public ClassLoader get() {
-			return new ThrowingClassLoader();
-		}
 	}
 
 	private static class ThrowingClassLoader extends ClassLoader {
