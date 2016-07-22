@@ -46,7 +46,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private TestSource source;
 
-	private final Set<TestDescriptor> children = new LinkedHashSet<>();
+	private final Set<TestDescriptor> children = Collections.synchronizedSet(new LinkedHashSet<>(16));
 
 	/**
 	 * Create a new {@code AbstractTestDescriptor} with the supplied

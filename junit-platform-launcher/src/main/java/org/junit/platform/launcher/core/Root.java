@@ -35,7 +35,7 @@ class Root {
 		}
 	};
 
-	private final Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
+	private final Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>(4);
 
 	/**
 	 * Add an {@code engine}'s root {@link TestDescriptor}.

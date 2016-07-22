@@ -16,11 +16,12 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import static org.junit.platform.commons.meta.API.Usage.Internal;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.meta.API;
@@ -53,9 +54,11 @@ import org.junit.platform.engine.TestDescriptor.Visitor;
 @API(Experimental)
 public final class TestPlan {
 
-	private final Set<TestIdentifier> roots = new LinkedHashSet<>();
-	private final Map<String, LinkedHashSet<TestIdentifier>> children = new LinkedHashMap<>();
-	private final Map<String, TestIdentifier> allIdentifiers = new LinkedHashMap<>();
+	private final Set<TestIdentifier> roots = Collections.synchronizedSet(new LinkedHashSet<>(4));
+
+	private final Map<String, Set<TestIdentifier>> children = new ConcurrentHashMap<>(32);
+
+	private final Map<String, TestIdentifier> allIdentifiers = new ConcurrentHashMap<>(32);
 
 	/**
 	 * Construct a new {@code TestPlan} from the supplied collection of
@@ -91,7 +94,8 @@ public final class TestPlan {
 		allIdentifiers.put(testIdentifier.getUniqueId(), testIdentifier);
 		if (testIdentifier.getParentId().isPresent()) {
 			String parentId = testIdentifier.getParentId().get();
-			Set<TestIdentifier> directChildren = children.computeIfAbsent(parentId, key -> new LinkedHashSet<>());
+			Set<TestIdentifier> directChildren = children.computeIfAbsent(parentId,
+				key -> Collections.synchronizedSet(new LinkedHashSet<>(16)));
 			directChildren.add(testIdentifier);
 		}
 		else {
@@ -186,7 +190,7 @@ public final class TestPlan {
 	 */
 	public Set<TestIdentifier> getDescendants(TestIdentifier parent) {
 		Preconditions.notNull(parent, "parent must not be null");
-		Set<TestIdentifier> result = new LinkedHashSet<>();
+		Set<TestIdentifier> result = new LinkedHashSet<>(16);
 		Set<TestIdentifier> children = getChildren(parent);
 		result.addAll(children);
 		for (TestIdentifier child : children) {
