@@ -18,13 +18,6 @@ import java.util.List;
 import org.junit.platform.commons.meta.API;
 
 /**
- *
- *  <h3>DISCLAIMER</h3>
- *
- * <p>These utilities are intended solely for usage within the JUnit framework
- * itself. <strong>Any usage by external parties is not supported.</strong>
- * Use at your own risk!
- *
  * Internal utilities for working with <em>blacklisted</em> exceptions.
  *
  * <p><em>Blacklisted</em> exceptions are those that should always terminate
@@ -35,6 +28,12 @@ import org.junit.platform.commons.meta.API;
  * <li>{@link OutOfMemoryError}</li>
  * </ul>
  *
+ * <h3>DISCLAIMER</h3>
+ *
+ * <p>These utilities are intended solely for usage within the JUnit framework
+ * itself. <strong>Any usage by external parties is not supported.</strong>
+ * Use at your own risk!
+ *
  * @since 1.0
  */
 @API(Internal)
@@ -42,9 +41,11 @@ public final class BlacklistedExceptions {
 
 	private static final List<Class<? extends Throwable>> blacklist = Collections.singletonList(OutOfMemoryError.class);
 
+	///CLOVER:OFF
 	private BlacklistedExceptions() {
 		/* no-op */
 	}
+	///CLOVER:ON
 
 	/**
 	 * Rethrow the supplied {@link Throwable exception} if it is
