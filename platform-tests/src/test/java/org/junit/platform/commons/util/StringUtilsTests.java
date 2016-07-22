@@ -36,7 +36,7 @@ class StringUtilsTests {
 		assertEquals("", StringUtils.nullSafeToString());
 		assertEquals("java.lang.String", StringUtils.nullSafeToString(String.class));
 		assertEquals("java.lang.String, java.lang.Integer", StringUtils.nullSafeToString(String.class, Integer.class));
-		assertEquals("java.lang.String, , java.lang.Integer",
+		assertEquals("java.lang.String, null, java.lang.Integer",
 			StringUtils.nullSafeToString(String.class, null, Integer.class));
 	}
 
