@@ -9,7 +9,10 @@
 ==== Summary of Changes
 
 The following is a list of global changes. For details regarding changes specific to the
-Platform, Jupiter, and Vintage, consult the dedicated subsections.
+Platform, Jupiter, and Vintage, consult the dedicated subsections below. For a complete
+list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/2?closed=1+[5.0 M1] milestone page in the JUnit repository
+on GitHub.
 
 * JAR manifests in published artifacts now contain additional metadata such as
   `Created-By`, `Built-By`, `Build-Date`, `Build-Time`, `Build-Revision`,

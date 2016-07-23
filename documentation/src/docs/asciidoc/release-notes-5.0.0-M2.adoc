@@ -1,7 +1,7 @@
 [[release-notes-5.0.0-m2]]
 === 5.0.0-M2
 
-*Date of Release:* July 22, 2016
+*Date of Release:* July 23, 2016
 
 *Scope:* Second milestone release of JUnit 5
 
@@ -11,7 +11,10 @@
 This release is primarily a bugfix release for bugs discovered since `5.0.0-M1`.
 
 The following is a list of global changes. For details regarding changes specific to the
-Platform, Jupiter, and Vintage, consult the dedicated subsections.
+Platform, Jupiter, and Vintage, consult the dedicated subsections below. For a complete
+list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/4?closed=1+[5.0 M2] milestone page in the JUnit repository
+on GitHub.
 
 * The JUnit 5 Gradle build now runs properly on Microsoft Windows.
 * A continuous integration build against Microsoft Windows has been set up on AppVeyor.
@@ -30,10 +33,11 @@ Platform, Jupiter, and Vintage, consult the dedicated subsections.
   refer to the `ConsoleLauncher` instead of the `ConsoleRunner`.
 * The `TestExecutionSummary` used by the `ConsoleLauncher` and the JUnit Platform Gradle
   plugin now includes the actual exception type for failures.
-* Safeguard classpath scanning -- Classpath scanning is now safeguarded against classes
-  with malformed names. The underlying error is swallowed and the offending file path
-  is logged. Other exceptions are swallowed as well unless it is a blacklisted exception
-  such as an OutOfMemoryError. Such an error is rethrown.
+* Classpath scanning is now safeguarded against exceptions encountered during class
+  loading and processing -- for example, when processing classes with malformed names.
+  The underlying exception is swallowed and logged along with the offending file path. If
+  the exception is a _blacklisted exception_ such as an `OutOfMemoryError`, however, it
+  will be rethrown.
 
 ====== Deprecations
 
