@@ -143,7 +143,7 @@ public class UniqueId implements Cloneable {
 	 *
 	 * @see #append(String, String)
 	 */
-	private final UniqueId append(Segment segment) {
+	private UniqueId append(Segment segment) {
 		UniqueId clone = new UniqueId(this.uniqueIdFormat, this.segments);
 		clone.segments.add(segment);
 		return clone;
@@ -193,7 +193,7 @@ public class UniqueId implements Cloneable {
 		 * Create a new {@code Segment} using the supplied {@code type} and
 		 * {@code value}.
 		 *
-		 * @param type the type of the segment
+		 * @param type the type of this segment
 		 * @param value the value of this segment
 		 */
 		Segment(String type, String value) {
