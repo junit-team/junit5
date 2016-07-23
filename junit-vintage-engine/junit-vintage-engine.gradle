@@ -31,6 +31,6 @@ dependencies {
 	testRuntime(project(':junit-platform-console'))
 
 	testRuntime(project(':junit-jupiter-engine'))
-	testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
-	testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
+	testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+	testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 }

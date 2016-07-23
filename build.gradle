@@ -349,8 +349,8 @@ configure(rootProject) {
 
 		testCompile("de.schauderhaft.degraph:degraph-check:${degraphVersion}")
 
-		testRuntime("org.apache.logging.log4j:log4j-core:${log4JVersion}")
-		testRuntime("org.apache.logging.log4j:log4j-jul:${log4JVersion}")
+		testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+		testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 	}
 
 	junitPlatform {
