@@ -126,7 +126,6 @@ public class UniqueId implements Cloneable {
 	 *
 	 * @param segmentType the type of the segment; never {@code null} or blank
 	 * @param value the value of the segment; never {@code null} or blank
-	 * @see #append(Segment)
 	 */
 	public final UniqueId append(String segmentType, String value) {
 		Preconditions.notBlank(segmentType, "segmentType must not be null or blank");

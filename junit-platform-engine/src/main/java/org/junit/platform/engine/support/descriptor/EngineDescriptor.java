@@ -32,7 +32,7 @@ public class EngineDescriptor extends AbstractTestDescriptor {
 	 *
 	 * @param uniqueId the {@code UniqueId} for the described {@code TestEngine};
 	 * never {@code null}
-	 * @param displayName the display name for the  described {@code TestEngine};
+	 * @param displayName the display name for the described {@code TestEngine};
 	 * never {@code null} or blank
 	 * @see TestEngine#getId()
 	 * @see TestDescriptor#getDisplayName()

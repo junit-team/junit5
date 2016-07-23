@@ -52,9 +52,9 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	 * Create a new {@code AbstractTestDescriptor} with the supplied
 	 * {@link UniqueId} and display name.
 	 *
-	 * @param uniqueId the unique ID of this {@link TestDescriptor}; never
+	 * @param uniqueId the unique ID of this {@code TestDescriptor}; never
 	 * {@code null}
-	 * @param displayName the display name for this {@link TestDescriptor};
+	 * @param displayName the display name for this {@code TestDescriptor};
 	 * never {@code null} or blank
 	 */
 	protected AbstractTestDescriptor(UniqueId uniqueId, String displayName) {
