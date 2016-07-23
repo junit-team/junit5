@@ -6,7 +6,7 @@ This includes focusing on Java 8 and above, as well as enabling many different s
 
 JUnit 5 is the result of [JUnit Lambda](http://junit.org/junit4/junit-lambda.html) and its [crowdfunding campaign on Indiegogo](http://junit.org/junit4/junit-lambda-campaign.html).
 
-The JUnit 5 team released [Milestone 1](docs/5.0.0-M1/user-guide) on July 7, 2016, and is currently working on additional milestones and ultimately a GA release (due late 2016).
+The JUnit 5 team released [Milestone 2](docs/5.0.0-M2/user-guide) on July 23, 2016, and is currently working on additional milestones and ultimately a GA release (due late 2016).
 
 ### Resources
 
