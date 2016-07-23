@@ -1,69 +1,26 @@
-# Contributing
-
-## JUnit Contributor License Agreement
-
-**Project License:**  [Eclipse Public License v1.0](LICENSE.md)
+### Project License:  Eclipse Public License v1.0
 
 - You will only Submit Contributions where You have authored 100% of the content.
 - You will only Submit Contributions to which You have the necessary rights. This means that if You are employed You have received the necessary permissions from Your employer to make the Contributions.
 - Whatever content You Contribute will be provided under the Project License(s).
 
-## Commit Messages
-
-As a general rule, the style and formatting of commit messages should follow the guidelines in
-[How to Write a Git Commit Message](http://chris.beams.io/posts/git-commit/).
-
-## Pull Requests
-
-Please add the following lines to your pull request description:
-
-```markdown
 ---
 
-I hereby agree to the terms of the JUnit Contributor License Agreement.
-```
+### How to submit a pull request
 
-## Coding Conventions
+We love pull requests. Here is a quick guide:
 
-### Formatting
+1. You need to have Maven and a JDK (at least version 1.5) installed.
+2. [Fork the repo](https://help.github.com/articles/fork-a-repo).
+3. [Create a new branch](https://help.github.com/articles/creating-and-deleting-branches-within-your-repository/) from master.
+4. Ensure that you have a clean state by running `mvn verify`.
+5. Add your change together with a test (tests are not needed for refactorings and documentation changes).
+6. Format your code: Import the JUnit project in Eclipse and use its formatter or apply the rules in the `CODING_STYLE` file manually. Only format the code you've changed; reformatting unrelated code makes it harder for us to review your changes.
+7. Run `mvn verify` again and ensure all tests are passing.
+8. Push to your fork and [submit a pull request](https://help.github.com/articles/creating-a-pull-request/).
 
-Code formatting is enforced using the [Spotless](https://github.com/diffplug/spotless) Gradle plugin. You can use `gradle spotlessApply` to format new code and add missing license headers to source files. Formatter settings for Eclipse are available [in the repository](src/eclipse/junit-eclipse-formatter-settings.xml). For IntelliJ IDEA there's a [plugin](https://plugins.jetbrains.com/plugin/6546) you can use.
+Now you are waiting on us. We review your pull request and at least leave some comments.
 
-### Javadoc
 
-- Javadoc comments should be wrapped after 80 characters whenever possible.
-- This first paragraph must be a single, concise sentence that ends with a period (".").
-- Place `<p>` on the same line as the first line in a new paragraph and precede `<p>` with a blank line.
-- Insert a blank line before at-clauses/tags.
-- Favor `{@code foo}` over `<code>foo</code>`.
-- Favor literals (e.g., `{@literal @}`) over HTML entities.
-- Use `@since 5.0` instead of `@since 5.0.0`.
-- Do not use `@author`tags. Instead, contributors will be listed on the website and in release notes.
-
-### Tests
-
-#### Naming
-
-- All test classes must end with a `Tests` suffix.
-- Example test classes that should not be picked up by the build must end with a `TestCase` suffix.
-
-#### Assertions
-
-- Use `org.junit.jupiter.api.Assertions` wherever possible.
-- Use AssertJ when richer assertions are needed.
-- Do not use `org.junit.Assert` or `junit.framework.Assert`.
-
-#### Mocking
-
-- Use either Mockito or hand-written test doubles.
-
-### Logging
-
-- Use sparingly
-- Do not log in utility classes (junit-platform-commons)
-- Levels
-  - `SEVERE` (Log4J: `ERROR`): extra information (in addition to an Exception) about errors that will halt execution
-  - `WARNING` (Log4J: `WARN`): potential usage errors that should not halt execution
-  - `INFO`: stuff the users might want to know but not by default (Example: `ServiceLoaderTestEngineRegistry` logs IDs of discovered engines)
-  - `FINE` (Log4J: `DEBUG`)
-  - `FINER` (Log4J: `TRACE`)
+Note that if you are thinking of providing a fix for one of the bugs or feature requests, it's usually
+a good idea to add a comment to the bug to make sure that there's agreement on how we should proceed.

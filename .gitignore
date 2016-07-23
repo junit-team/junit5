@@ -1,25 +1,13 @@
-# Gradle
-.gradle
-build/
-
-# Ignore Gradle GUI config
-gradle-app.setting
-
-# Eclipse
-.classpath
-.settings/
-.project
-bin/
-
+MaxCore.ser
+bin
+junit4.*
+target
+MaxCore.max
 # IntelliJ
-*.iml
+.idea
 *.ipr
+*.iml
 *.iws
-*.uml
-.idea/
-
-# Misc
-*.log
-*.graphml
-coverage.db*
-clover.license
+out
+java.hprof.txt
+.gitattributes
