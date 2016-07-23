@@ -2768,7 +2768,10 @@ are being used in accordance with <code>@API</code> annotation declarations.</p>
 <h4 id="release-notes-5.0.0-m1-summary">10.2.1. Summary of Changes</h4>
 <div class="paragraph">
 <p>The following is a list of global changes. For details regarding changes specific to the
-Platform, Jupiter, and Vintage, consult the dedicated subsections.</p>
+Platform, Jupiter, and Vintage, consult the dedicated subsections below. For a complete
+list of all <em>closed</em> issues and pull requests for this release, consult the
+<a href="https://github.com/junit-team/junit5/milestone/2?closed=1">5.0 M1</a> milestone page in the JUnit repository
+on GitHub.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3279,7 +3282,7 @@ of retrieving a context specific name via the current test class or test method.
 <div class="sect2">
 <h3 id="release-notes-5.0.0-m2">10.3. 5.0.0-M2</h3>
 <div class="paragraph">
-<p><strong>Date of Release:</strong> July 22, 2016</p>
+<p><strong>Date of Release:</strong> July 23, 2016</p>
 </div>
 <div class="paragraph">
 <p><strong>Scope:</strong> Second milestone release of JUnit 5</p>
@@ -3291,7 +3294,10 @@ of retrieving a context specific name via the current test class or test method.
 </div>
 <div class="paragraph">
 <p>The following is a list of global changes. For details regarding changes specific to the
-Platform, Jupiter, and Vintage, consult the dedicated subsections.</p>
+Platform, Jupiter, and Vintage, consult the dedicated subsections below. For a complete
+list of all <em>closed</em> issues and pull requests for this release, consult the
+<a href="https://github.com/junit-team/junit5/milestone/4?closed=1">5.0 M2</a> milestone page in the JUnit repository
+on GitHub.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3326,10 +3332,11 @@ refer to the <code>ConsoleLauncher</code> instead of the <code>ConsoleRunner</co
 plugin now includes the actual exception type for failures.</p>
 </li>
 <li>
-<p>Safeguard classpath scanning&#8201;&#8212;&#8201;Classpath scanning is now safeguarded against classes
-with malformed names. The underlying error is swallowed and the offending file path
-is logged. Other exceptions are swallowed as well unless it is a blacklisted exception
-such as an OutOfMemoryError. Such an error is rethrown.</p>
+<p>Classpath scanning is now safeguarded against exceptions encountered during class
+loading and processing&#8201;&#8212;&#8201;for example, when processing classes with malformed names.
+The underlying exception is swallowed and logged along with the offending file path. If
+the exception is a <em>blacklisted exception</em> such as an <code>OutOfMemoryError</code>, however, it
+will be rethrown.</p>
 </li>
 </ul>
 </div>
@@ -3386,7 +3393,7 @@ method-level will no longer be registered multiple times.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-07-23 01:22:18 -04:00
+Last updated 2016-07-23 08:30:21 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
