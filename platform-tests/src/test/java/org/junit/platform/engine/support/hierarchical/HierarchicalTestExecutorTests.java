@@ -45,7 +45,7 @@ public class HierarchicalTestExecutorTests {
 	MyContainer root;
 	EngineExecutionListener listener;
 	MyEngineExecutionContext rootContext;
-	HierarchicalTestExecutor<MyEngineExecutionContext> executor;
+	HierarchicalTestExecutor executor;
 
 	@BeforeEach
 	public void init() {
@@ -53,7 +53,7 @@ public class HierarchicalTestExecutorTests {
 		listener = mock(EngineExecutionListener.class);
 		rootContext = new MyEngineExecutionContext();
 		ExecutionRequest request = new ExecutionRequest(root, listener, null);
-		executor = new MyExecutor(request, rootContext);
+		executor = new HierarchicalTestExecutor(request, rootContext);
 	}
 
 	@Test
@@ -405,13 +405,6 @@ public class HierarchicalTestExecutorTests {
 		@Override
 		public boolean isLeaf() {
 			return !isContainer();
-		}
-	}
-
-	private static class MyExecutor extends HierarchicalTestExecutor<MyEngineExecutionContext> {
-
-		MyExecutor(ExecutionRequest request, MyEngineExecutionContext rootContext) {
-			super(request, rootContext);
 		}
 	}
 

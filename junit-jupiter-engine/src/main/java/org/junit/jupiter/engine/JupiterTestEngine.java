@@ -21,13 +21,14 @@ import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.hierarchical.EngineExecutionContext;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
 
 /**
  * @since 5.0
  */
 @API(Experimental)
-public class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngineExecutionContext> {
+public class JupiterTestEngine extends HierarchicalTestEngine {
 
 	public static final String ENGINE_ID = "junit-jupiter";
 
@@ -57,7 +58,7 @@ public class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngineExecu
 	}
 
 	@Override
-	protected JupiterEngineExecutionContext createExecutionContext(ExecutionRequest request) {
+	protected EngineExecutionContext createExecutionContext(ExecutionRequest request) {
 		return new JupiterEngineExecutionContext(request.getEngineExecutionListener(),
 			request.getConfigurationParameters());
 	}
