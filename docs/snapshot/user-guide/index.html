@@ -1758,12 +1758,13 @@ in output similar to the following:</p>
 <pre>:junitPlatformTest
 
 Test run finished after 93 ms
-[         3 tests found     ]
-[         1 tests skipped   ]
-[         2 tests started   ]
-[         0 tests aborted   ]
-[         2 tests successful]
-[         0 tests failed    ]
+[         3 tests found      ]
+[         1 tests skipped    ]
+[         2 tests started    ]
+[         0 tests aborted    ]
+[         2 tests successful ]
+[         0 tests failed     ]
+[         0 containers failed]
 
 BUILD SUCCESSFUL</pre>
 </div>
@@ -1781,12 +1782,13 @@ Test failures (1):
     => Exception: 2 is not equal to 1 ==> expected: <2> but was: <1>
 
 Test run finished after 99 ms
-[         3 tests found     ]
-[         0 tests skipped   ]
-[         3 tests started   ]
-[         0 tests aborted   ]
-[         2 tests successful]
-[         1 tests failed    ]
+[         3 tests found      ]
+[         0 tests skipped    ]
+[         3 tests started    ]
+[         0 tests aborted    ]
+[         2 tests successful ]
+[         1 tests failed     ]
+[         0 containers failed]
 
 :junitPlatformTest FAILED
 
@@ -1804,7 +1806,7 @@ Execution failed for task ':junitPlatformTest'.
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The <em>exit value</em> is <code>1</code> if any tests failed; otherwise, it is <code>0</code>.
+The <em>exit value</em> is <code>1</code> if any containers or tests failed; otherwise, it is <code>0</code>.
 </td>
 </tr>
 </table>
@@ -1880,12 +1882,13 @@ Engine finished: junit-jupiter
 Test execution finished.
 
 Test run finished after 29 ms
-[         2 tests found     ]
-[         1 tests started   ]
-[         1 tests skipped   ]
-[         0 tests aborted   ]
-[         1 tests successful]
-[         0 tests failed    ]</pre>
+[         2 tests found      ]
+[         1 tests started    ]
+[         1 tests skipped    ]
+[         0 tests aborted    ]
+[         1 tests successful ]
+[         0 tests failed     ]
+[         0 containers failed]</pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1896,8 +1899,8 @@ Test run finished after 29 ms
 </td>
 <td class="content">
 <div class="title">Exit Code</div>
-The <code><a href="../api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> exits with a status code of <code>1</code> if any tests failed. Otherwise
-the exit code is <code>0</code>.
+The <code><a href="../api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> exits with a status code of <code>1</code> if any containers or tests
+failed. Otherwise the exit code is <code>0</code>.
 </td>
 </tr>
 </table>
