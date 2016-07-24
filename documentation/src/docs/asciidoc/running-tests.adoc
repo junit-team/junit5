@@ -137,12 +137,13 @@ in output similar to the following:
 :junitPlatformTest
 
 Test run finished after 93 ms
-[         3 tests found     ]
-[         1 tests skipped   ]
-[         2 tests started   ]
-[         0 tests aborted   ]
-[         2 tests successful]
-[         0 tests failed    ]
+[         3 tests found      ]
+[         1 tests skipped    ]
+[         2 tests started    ]
+[         0 tests aborted    ]
+[         2 tests successful ]
+[         0 tests failed     ]
+[         0 containers failed]
 
 BUILD SUCCESSFUL
 ----
@@ -159,12 +160,13 @@ Test failures (1):
     => Exception: 2 is not equal to 1 ==> expected: <2> but was: <1>
 
 Test run finished after 99 ms
-[         3 tests found     ]
-[         0 tests skipped   ]
-[         3 tests started   ]
-[         0 tests aborted   ]
-[         2 tests successful]
-[         1 tests failed    ]
+[         3 tests found      ]
+[         0 tests skipped    ]
+[         3 tests started    ]
+[         0 tests aborted    ]
+[         2 tests successful ]
+[         1 tests failed     ]
+[         0 containers failed]
 
 :junitPlatformTest FAILED
 
@@ -175,7 +177,7 @@ Execution failed for task ':junitPlatformTest'.
 > Process 'command '/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home/bin/java'' finished with non-zero exit value 1
 ----
 
-NOTE: The _exit value_ is `1` if any tests failed; otherwise, it is `0`.
+NOTE: The _exit value_ is `1` if any containers or tests failed; otherwise, it is `0`.
 
 .Current Limitations of the JUnit Gradle Plugin
 WARNING: The results of any tests run via the JUnit Gradle plugin will not be included
@@ -234,17 +236,18 @@ Engine finished: junit-jupiter
 Test execution finished.
 
 Test run finished after 29 ms
-[         2 tests found     ]
-[         1 tests started   ]
-[         1 tests skipped   ]
-[         0 tests aborted   ]
-[         1 tests successful]
-[         0 tests failed    ]
+[         2 tests found      ]
+[         1 tests started    ]
+[         1 tests skipped    ]
+[         0 tests aborted    ]
+[         1 tests successful ]
+[         0 tests failed     ]
+[         0 containers failed]
 ----
 
 .Exit Code
-NOTE: The `{ConsoleLauncher}` exits with a status code of `1` if any tests failed. Otherwise
-the exit code is `0`.
+NOTE: The `{ConsoleLauncher}` exits with a status code of `1` if any containers or tests
+failed. Otherwise the exit code is `0`.
 
 [[running-tests-console-launcher-options]]
 ==== Options
