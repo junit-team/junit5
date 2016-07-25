@@ -12,12 +12,16 @@ package org.junit.platform.engine.support.descriptor;
 
 import static org.junit.platform.commons.meta.API.Usage.Experimental;
 
+import java.util.Objects;
+import java.util.Optional;
+
 import org.junit.platform.commons.meta.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
- * Java class based {@link org.junit.platform.engine.TestSource}.
+ * Java class based {@link org.junit.platform.engine.TestSource} with an optional
+ * {@linkplain FilePosition position}.
  *
  * @since 1.0
  */
@@ -28,6 +32,8 @@ public class JavaClassSource implements JavaSource {
 
 	private final Class<?> javaClass;
 
+	private final FilePosition filePosition;
+
 	/**
 	 * Create a new {@code JavaClassSource} using the supplied
 	 * {@link Class javaClass}.
@@ -35,14 +41,38 @@ public class JavaClassSource implements JavaSource {
 	 * @param javaClass the Java class; must not be {@code null}
 	 */
 	public JavaClassSource(Class<?> javaClass) {
+		this(javaClass, null);
+	}
+
+	/**
+	 * Create a new {@code JavaClassSource} using the supplied
+	 * {@link Class javaClass} and {@link FilePosition filePosition}.
+	 *
+	 * @param javaClass the Java class; must not be {@code null}
+	 * @param filePosition the position in the Java source file; may be {@code null}
+	 */
+	public JavaClassSource(Class<?> javaClass, FilePosition filePosition) {
 		this.javaClass = Preconditions.notNull(javaClass, "class must not be null");
+		this.filePosition = filePosition;
 	}
 
 	/**
 	 * Get the {@linkplain Class Java class} of this source.
+	 *
+	 * @see #getPosition()
 	 */
 	public final Class<?> getJavaClass() {
 		return this.javaClass;
+	}
+
+	/**
+	 * Get the {@linkplain FilePosition position} in the Java source file for
+	 * the associated {@linkplain #getJavaClass Java class}, if available.
+	 *
+	 * @see #getJavaClass()
+	 */
+	public final Optional<FilePosition> getPosition() {
+		return Optional.ofNullable(this.filePosition);
 	}
 
 	@Override
@@ -54,17 +84,22 @@ public class JavaClassSource implements JavaSource {
 			return false;
 		}
 		JavaClassSource that = (JavaClassSource) o;
-		return this.javaClass.equals(that.javaClass);
+		return Objects.equals(this.javaClass, that.javaClass) && Objects.equals(this.filePosition, that.filePosition);
 	}
 
 	@Override
 	public int hashCode() {
-		return this.javaClass.hashCode();
+		return Objects.hash(this.javaClass, this.filePosition);
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("javaClass", this.javaClass.getName()).toString();
+		// @formatter:off
+		return new ToStringBuilder(this)
+				.append("javaClass", this.javaClass.getName())
+				.append("filePosition", this.filePosition)
+				.toString();
+		// @formatter:on
 	}
 
 }

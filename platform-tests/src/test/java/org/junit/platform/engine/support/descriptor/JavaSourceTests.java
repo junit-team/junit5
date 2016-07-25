@@ -64,6 +64,18 @@ class JavaSourceTests extends AbstractTestSourceTests {
 		JavaClassSource source = new JavaClassSource(testClass);
 
 		assertThat(source.getJavaClass()).isEqualTo(testClass);
+		assertThat(source.getPosition()).isEmpty();
+	}
+
+	@Test
+	void classSourceWithFilePosition() {
+		Class<?> testClass = getClass();
+		FilePosition position = new FilePosition(42, 23);
+		JavaClassSource source = new JavaClassSource(testClass, position);
+
+		assertThat(source.getJavaClass()).isEqualTo(testClass);
+		assertThat(source.getPosition()).isNotEmpty();
+		assertThat(source.getPosition()).hasValue(position);
 	}
 
 	@Test
