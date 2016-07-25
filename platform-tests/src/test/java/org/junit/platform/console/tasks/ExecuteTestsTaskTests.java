@@ -24,7 +24,7 @@ import java.io.StringWriter;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.CommandLineOptions;
-import org.junit.platform.engine.support.hierarchical.DummyTestEngine;
+import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 
 /**
  * @since 1.0
@@ -42,7 +42,7 @@ public class ExecuteTestsTaskTests {
 		CommandLineOptions options = new CommandLineOptions();
 		options.setRunAllTests(true);
 
-		DummyTestEngine dummyTestEngine = new DummyTestEngine();
+		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
@@ -61,7 +61,7 @@ public class ExecuteTestsTaskTests {
 		options.setHideDetails(false);
 		options.setRunAllTests(true);
 
-		DummyTestEngine dummyTestEngine = new DummyTestEngine();
+		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
@@ -78,7 +78,7 @@ public class ExecuteTestsTaskTests {
 		options.setHideDetails(true);
 		options.setRunAllTests(true);
 
-		DummyTestEngine dummyTestEngine = new DummyTestEngine();
+		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
@@ -95,7 +95,7 @@ public class ExecuteTestsTaskTests {
 		options.setHideDetails(true);
 		options.setRunAllTests(true);
 
-		DummyTestEngine dummyTestEngine = new DummyTestEngine();
+		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);
 
@@ -110,7 +110,7 @@ public class ExecuteTestsTaskTests {
 		CommandLineOptions options = new CommandLineOptions();
 		options.setRunAllTests(true);
 
-		DummyTestEngine dummyTestEngine = new DummyTestEngine();
+		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("succeedingTest", SUCCEEDING_TEST);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
@@ -124,7 +124,7 @@ public class ExecuteTestsTaskTests {
 		CommandLineOptions options = new CommandLineOptions();
 		options.setRunAllTests(true);
 
-		DummyTestEngine dummyTestEngine = new DummyTestEngine();
+		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("failingTest", FAILING_BLOCK);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
@@ -138,7 +138,7 @@ public class ExecuteTestsTaskTests {
 		CommandLineOptions options = new CommandLineOptions();
 		options.setRunAllTests(true);
 
-		DummyTestEngine dummyTestEngine = new DummyTestEngine();
+		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addContainer("failingContainer", FAILING_BLOCK);
 
 		ExecuteTestsTask task = new ExecuteTestsTask(options, () -> createLauncher(dummyTestEngine));
@@ -155,7 +155,7 @@ public class ExecuteTestsTaskTests {
 		options.setAdditionalClasspathEntries(singletonList("."));
 
 		ClassLoader oldClassLoader = getDefaultClassLoader();
-		DummyTestEngine dummyTestEngine = new DummyTestEngine();
+		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("failingTest",
 			() -> assertSame(oldClassLoader, getDefaultClassLoader(), "should fail"));
 
@@ -173,7 +173,7 @@ public class ExecuteTestsTaskTests {
 		options.setAdditionalClasspathEntries(emptyList());
 
 		ClassLoader oldClassLoader = getDefaultClassLoader();
-		DummyTestEngine dummyTestEngine = new DummyTestEngine();
+		DemoHierarchicalTestEngine dummyTestEngine = new DemoHierarchicalTestEngine();
 		dummyTestEngine.addTest("failingTest",
 			() -> assertNotSame(oldClassLoader, getDefaultClassLoader(), "should fail"));
 

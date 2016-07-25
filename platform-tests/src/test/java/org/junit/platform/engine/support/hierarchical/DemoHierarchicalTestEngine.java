@@ -22,18 +22,18 @@ import org.junit.platform.engine.support.descriptor.JavaMethodSource;
 /**
  * @since 1.0
  */
-public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExecutionContext> {
+public final class DemoHierarchicalTestEngine extends HierarchicalTestEngine<DemoEngineExecutionContext> {
 
 	private final String engineId;
-	private final DummyEngineDescriptor engineDescriptor;
+	private final DemoHierarchicalEngineDescriptor engineDescriptor;
 
-	public DummyTestEngine() {
+	public DemoHierarchicalTestEngine() {
 		this("dummy");
 	}
 
-	public DummyTestEngine(String engineId) {
+	public DemoHierarchicalTestEngine(String engineId) {
 		this.engineId = engineId;
-		this.engineDescriptor = new DummyEngineDescriptor(UniqueId.forEngine(getId()));
+		this.engineDescriptor = new DemoHierarchicalEngineDescriptor(UniqueId.forEngine(getId()));
 	}
 
 	@Override
@@ -41,42 +41,44 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 		return engineId;
 	}
 
-	public DummyEngineDescriptor getEngineDescriptor() {
+	public DemoHierarchicalEngineDescriptor getEngineDescriptor() {
 		return engineDescriptor;
 	}
 
-	public DummyTestDescriptor addTest(String uniqueName, Runnable executeBlock) {
+	public DemoHierarchicalTestDescriptor addTest(String uniqueName, Runnable executeBlock) {
 		return addTest(uniqueName, uniqueName, executeBlock);
 	}
 
-	public DummyTestDescriptor addTest(Method testMethod, Runnable executeBlock) {
+	public DemoHierarchicalTestDescriptor addTest(Method testMethod, Runnable executeBlock) {
 		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", testMethod.getName());
 		JavaMethodSource source = new JavaMethodSource(testMethod);
-		DummyTestDescriptor child = new DummyTestDescriptor(uniqueId, testMethod.getName(), source, executeBlock);
+		DemoHierarchicalTestDescriptor child = new DemoHierarchicalTestDescriptor(uniqueId, testMethod.getName(),
+			source, executeBlock);
 		engineDescriptor.addChild(child);
 		return child;
 	}
 
-	public DummyTestDescriptor addTest(String uniqueName, String displayName, Runnable executeBlock) {
+	public DemoHierarchicalTestDescriptor addTest(String uniqueName, String displayName, Runnable executeBlock) {
 		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", uniqueName);
-		DummyTestDescriptor child = new DummyTestDescriptor(uniqueId, displayName, executeBlock);
+		DemoHierarchicalTestDescriptor child = new DemoHierarchicalTestDescriptor(uniqueId, displayName, executeBlock);
 		engineDescriptor.addChild(child);
 		return child;
 	}
 
-	public DummyContainerDescriptor addContainer(String uniqueName, String displayName, TestSource source) {
+	public DemoHierarchicalContainerDescriptor addContainer(String uniqueName, String displayName, TestSource source) {
 		return addContainer(uniqueName, displayName, source, null);
 	}
 
-	public DummyContainerDescriptor addContainer(String uniqueName, Runnable beforeBlock) {
+	public DemoHierarchicalContainerDescriptor addContainer(String uniqueName, Runnable beforeBlock) {
 		return addContainer(uniqueName, uniqueName, null, beforeBlock);
 	}
 
-	public DummyContainerDescriptor addContainer(String uniqueName, String displayName, TestSource source,
+	public DemoHierarchicalContainerDescriptor addContainer(String uniqueName, String displayName, TestSource source,
 			Runnable beforeBlock) {
 
 		UniqueId uniqueId = engineDescriptor.getUniqueId().append("container", uniqueName);
-		DummyContainerDescriptor container = new DummyContainerDescriptor(uniqueId, displayName, source, beforeBlock);
+		DemoHierarchicalContainerDescriptor container = new DemoHierarchicalContainerDescriptor(uniqueId, displayName,
+			source, beforeBlock);
 		engineDescriptor.addChild(container);
 		return container;
 	}
@@ -87,8 +89,8 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 	}
 
 	@Override
-	protected DummyEngineExecutionContext createExecutionContext(ExecutionRequest request) {
-		return new DummyEngineExecutionContext();
+	protected DemoEngineExecutionContext createExecutionContext(ExecutionRequest request) {
+		return new DemoEngineExecutionContext();
 	}
 
 }

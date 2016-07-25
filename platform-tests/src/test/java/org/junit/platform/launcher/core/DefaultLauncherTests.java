@@ -30,8 +30,8 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.hierarchical.DummyTestDescriptor;
-import org.junit.platform.engine.support.hierarchical.DummyTestEngine;
+import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
+import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 import org.junit.platform.engine.test.TestEngineSpy;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.PostDiscoveryFilterStub;
@@ -59,14 +59,15 @@ class DefaultLauncherTests {
 	@Test
 	void constructLauncherWithMultipleTestEnginesWithDuplicateIds() {
 		JUnitException exception = expectThrows(JUnitException.class,
-			() -> createLauncher(new DummyTestEngine("dummy id"), new DummyTestEngine("dummy id")));
+			() -> createLauncher(new DemoHierarchicalTestEngine("dummy id"),
+				new DemoHierarchicalTestEngine("dummy id")));
 
 		assertThat(exception).hasMessageContaining("multiple engines with the same ID");
 	}
 
 	@Test
 	void discoverEmptyTestPlanWithEngineWithoutAnyTests() {
-		DefaultLauncher launcher = createLauncher(new DummyTestEngine());
+		DefaultLauncher launcher = createLauncher(new DemoHierarchicalTestEngine());
 
 		TestPlan testPlan = launcher.discover(request().build());
 
@@ -75,7 +76,7 @@ class DefaultLauncherTests {
 
 	@Test
 	void discoverTestPlanForSingleEngine() {
-		DummyTestEngine engine = new DummyTestEngine("myEngine");
+		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("myEngine");
 		engine.addTest("test1", noOp);
 		engine.addTest("test2", noOp);
 
@@ -91,9 +92,9 @@ class DefaultLauncherTests {
 
 	@Test
 	void discoverTestPlanForMultipleEngines() {
-		DummyTestEngine firstEngine = new DummyTestEngine("engine1");
+		DemoHierarchicalTestEngine firstEngine = new DemoHierarchicalTestEngine("engine1");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
-		DummyTestEngine secondEngine = new DummyTestEngine("engine2");
+		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("engine2");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
@@ -108,9 +109,9 @@ class DefaultLauncherTests {
 
 	@Test
 	void launcherWillNotExecuteEnginesIfNotIncludedByAnEngineFilter() {
-		DummyTestEngine firstEngine = new DummyTestEngine("first");
+		DemoHierarchicalTestEngine firstEngine = new DemoHierarchicalTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
-		DummyTestEngine secondEngine = new DummyTestEngine("second");
+		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("second");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
@@ -131,9 +132,9 @@ class DefaultLauncherTests {
 
 	@Test
 	void launcherWillExecuteAllEnginesExplicitlyIncludedViaSingleEngineFilter() {
-		DummyTestEngine firstEngine = new DummyTestEngine("first");
+		DemoHierarchicalTestEngine firstEngine = new DemoHierarchicalTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
-		DummyTestEngine secondEngine = new DummyTestEngine("second");
+		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("second");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
@@ -151,9 +152,9 @@ class DefaultLauncherTests {
 
 	@Test
 	void launcherWillNotExecuteEnginesExplicitlyIncludedViaMultipleCompetingEngineFilters() {
-		DummyTestEngine firstEngine = new DummyTestEngine("first");
+		DemoHierarchicalTestEngine firstEngine = new DemoHierarchicalTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
-		DummyTestEngine secondEngine = new DummyTestEngine("second");
+		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("second");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
@@ -171,9 +172,9 @@ class DefaultLauncherTests {
 
 	@Test
 	void launcherWillNotExecuteEnginesExplicitlyExcludedByAnEngineFilter() {
-		DummyTestEngine firstEngine = new DummyTestEngine("first");
+		DemoHierarchicalTestEngine firstEngine = new DemoHierarchicalTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
-		DummyTestEngine secondEngine = new DummyTestEngine("second");
+		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("second");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
@@ -194,11 +195,11 @@ class DefaultLauncherTests {
 
 	@Test
 	void launcherWillExecuteEnginesHonoringBothIncludeAndExcludeEngineFilters() {
-		DummyTestEngine firstEngine = new DummyTestEngine("first");
+		DemoHierarchicalTestEngine firstEngine = new DemoHierarchicalTestEngine("first");
 		TestDescriptor test1 = firstEngine.addTest("test1", noOp);
-		DummyTestEngine secondEngine = new DummyTestEngine("second");
+		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("second");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
-		DummyTestEngine thirdEngine = new DummyTestEngine("third");
+		DemoHierarchicalTestEngine thirdEngine = new DemoHierarchicalTestEngine("third");
 		TestDescriptor test3 = thirdEngine.addTest("test3", noOp);
 
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine, thirdEngine);
@@ -219,8 +220,8 @@ class DefaultLauncherTests {
 
 	@Test
 	void launcherAppliesPostDiscoveryFilters() {
-		DummyTestEngine engine = new DummyTestEngine("myEngine");
-		DummyTestDescriptor test1 = engine.addTest("test1", noOp);
+		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("myEngine");
+		DemoHierarchicalTestDescriptor test1 = engine.addTest("test1", noOp);
 		engine.addTest("test2", noOp);
 
 		DefaultLauncher launcher = createLauncher(engine);

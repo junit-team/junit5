@@ -19,14 +19,14 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 /**
  * @since 1.0
  */
-public class DummyEngineDescriptor extends EngineDescriptor implements Node<DummyEngineExecutionContext> {
+public class DemoHierarchicalEngineDescriptor extends EngineDescriptor implements Node<DemoEngineExecutionContext> {
 
 	private String skippedReason;
 	private boolean skipped;
 	private Runnable beforeAllBehavior = () -> {
 	};
 
-	public DummyEngineDescriptor(UniqueId uniqueId) {
+	public DemoHierarchicalEngineDescriptor(UniqueId uniqueId) {
 		super(uniqueId, uniqueId.getEngineId().get());
 	}
 
@@ -40,12 +40,12 @@ public class DummyEngineDescriptor extends EngineDescriptor implements Node<Dumm
 	}
 
 	@Override
-	public SkipResult shouldBeSkipped(DummyEngineExecutionContext context) {
+	public SkipResult shouldBeSkipped(DemoEngineExecutionContext context) {
 		return skipped ? skip(skippedReason) : doNotSkip();
 	}
 
 	@Override
-	public DummyEngineExecutionContext before(DummyEngineExecutionContext context) throws Exception {
+	public DemoEngineExecutionContext before(DemoEngineExecutionContext context) throws Exception {
 		beforeAllBehavior.run();
 		return context;
 	}

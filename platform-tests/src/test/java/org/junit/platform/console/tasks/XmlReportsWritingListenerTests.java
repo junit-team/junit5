@@ -47,8 +47,8 @@ import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
-import org.junit.platform.engine.support.hierarchical.DummyTestDescriptor;
-import org.junit.platform.engine.support.hierarchical.DummyTestEngine;
+import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
+import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 import org.junit.platform.engine.test.TestDescriptorStub;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.TestIdentifier;
@@ -63,7 +63,7 @@ class XmlReportsWritingListenerTests {
 
 	@Test
 	void writesFileForSingleSucceedingTest(@Root Path tempDirectory) throws Exception {
-		DummyTestEngine engine = new DummyTestEngine("dummy");
+		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("succeedingTest", "display<-->Name 😎", () -> {
 		});
 
@@ -95,7 +95,7 @@ class XmlReportsWritingListenerTests {
 
 	@Test
 	void writesFileForSingleFailingTest(@Root Path tempDirectory) throws Exception {
-		DummyTestEngine engine = new DummyTestEngine("dummy");
+		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("failingTest", () -> fail("expected to <b>fail</b>"));
 
 		executeTests(engine, tempDirectory);
@@ -120,7 +120,7 @@ class XmlReportsWritingListenerTests {
 
 	@Test
 	void writesFileForSingleErroneousTest(@Root Path tempDirectory) throws Exception {
-		DummyTestEngine engine = new DummyTestEngine("dummy");
+		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("failingTest", () -> {
 			throw new RuntimeException("error occurred");
 		});
@@ -147,8 +147,8 @@ class XmlReportsWritingListenerTests {
 
 	@Test
 	void writesFileForSingleSkippedTest(@Root Path tempDirectory) throws Exception {
-		DummyTestEngine engine = new DummyTestEngine("dummy");
-		DummyTestDescriptor testDescriptor = engine.addTest("skippedTest", () -> fail("never called"));
+		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
+		DemoHierarchicalTestDescriptor testDescriptor = engine.addTest("skippedTest", () -> fail("never called"));
 		testDescriptor.markSkipped("should be skipped");
 
 		executeTests(engine, tempDirectory);
@@ -172,7 +172,7 @@ class XmlReportsWritingListenerTests {
 
 	@Test
 	void writesFileForSingleAbortedTest(@Root Path tempDirectory) throws Exception {
-		DummyTestEngine engine = new DummyTestEngine("dummy");
+		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("abortedTest", () -> assumeFalse(true, "deliberately aborted"));
 
 		executeTests(engine, tempDirectory);
@@ -198,7 +198,7 @@ class XmlReportsWritingListenerTests {
 
 	@Test
 	void measuresTimesInSeconds(@Root Path tempDirectory) throws Exception {
-		DummyTestEngine engine = new DummyTestEngine("dummy");
+		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("firstTest", () -> {
 		});
 		engine.addTest("secondTest", () -> {
@@ -224,7 +224,7 @@ class XmlReportsWritingListenerTests {
 
 	@Test
 	void testWithImmeasurableTimeIsOutputCorrectly(@Root Path tempDirectory) throws Exception {
-		DummyTestEngine engine = new DummyTestEngine("dummy");
+		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> {
 		});
 
@@ -242,7 +242,7 @@ class XmlReportsWritingListenerTests {
 
 	@Test
 	void writesFileForSkippedContainer(@Root Path tempDirectory) throws Exception {
-		DummyTestEngine engine = new DummyTestEngine("dummy");
+		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> fail("never called"));
 		engine.getEngineDescriptor().markSkipped("should be skipped");
 
@@ -265,7 +265,7 @@ class XmlReportsWritingListenerTests {
 
 	@Test
 	void writesFileForFailingContainer(@Root Path tempDirectory) throws Exception {
-		DummyTestEngine engine = new DummyTestEngine("dummy");
+		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> fail("never called"));
 		engine.getEngineDescriptor().setBeforeAllBehavior(() -> fail("failure before all tests"));
 
@@ -289,7 +289,7 @@ class XmlReportsWritingListenerTests {
 
 	@Test
 	void writesSystemProperties(@Root Path tempDirectory) throws Exception {
-		DummyTestEngine engine = new DummyTestEngine("dummy");
+		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> {
 		});
 
@@ -312,7 +312,7 @@ class XmlReportsWritingListenerTests {
 
 	@Test
 	void writesHostNameAndTimestamp(@Root Path tempDirectory) throws Exception {
-		DummyTestEngine engine = new DummyTestEngine("dummy");
+		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> {
 		});
 

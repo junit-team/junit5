@@ -57,9 +57,9 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.support.descriptor.JavaClassSource;
 import org.junit.platform.engine.support.descriptor.JavaMethodSource;
-import org.junit.platform.engine.support.hierarchical.DummyContainerDescriptor;
-import org.junit.platform.engine.support.hierarchical.DummyTestDescriptor;
-import org.junit.platform.engine.support.hierarchical.DummyTestEngine;
+import org.junit.platform.engine.support.hierarchical.DemoHierarchicalContainerDescriptor;
+import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
+import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 import org.junit.platform.engine.test.TestDescriptorStub;
 import org.junit.platform.engine.test.TestEngineStub;
 import org.junit.platform.launcher.EngineFilter;
@@ -306,7 +306,7 @@ class JUnitPlatformRunnerTests {
 
 		@Test
 		void notifiesRunListenerOfTestExecution() throws Exception {
-			DummyTestEngine engine = new DummyTestEngine("dummy");
+			DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 			engine.addTest("failingTest", () -> fail("expected to fail"));
 			engine.addTest("succeedingTest", () -> {
 			});
@@ -393,12 +393,12 @@ class JUnitPlatformRunnerTests {
 
 		@Test
 		void descriptionForJavaMethodAndClassSources() throws Exception {
-			DummyTestEngine engine = new DummyTestEngine("dummy");
+			DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 			Method failingTest = getClass().getDeclaredMethod("failingTest");
-			DummyContainerDescriptor containerDescriptor = engine.addContainer("uniqueContainerName",
+			DemoHierarchicalContainerDescriptor containerDescriptor = engine.addContainer("uniqueContainerName",
 				"containerDisplayName", new JavaClassSource(getClass()));
 			containerDescriptor.addChild(
-				new DummyTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
+				new DemoHierarchicalTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
 					"testDisplayName", new JavaMethodSource(failingTest), () -> {
 					}));
 
@@ -429,12 +429,12 @@ class JUnitPlatformRunnerTests {
 
 		@Test
 		void descriptionForJavaMethodAndClassSourcesUsingTechnicalNames() throws Exception {
-			DummyTestEngine engine = new DummyTestEngine("dummy");
+			DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 			Method failingTest = getClass().getDeclaredMethod("failingTest");
-			DummyContainerDescriptor containerDescriptor = engine.addContainer("uniqueContainerName",
+			DemoHierarchicalContainerDescriptor containerDescriptor = engine.addContainer("uniqueContainerName",
 				"containerDisplayName", new JavaClassSource(getClass()));
 			containerDescriptor.addChild(
-				new DummyTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
+				new DemoHierarchicalTestDescriptor(containerDescriptor.getUniqueId().append("test", "failingTest"),
 					"testDisplayName", new JavaMethodSource(failingTest), () -> {
 					}));
 

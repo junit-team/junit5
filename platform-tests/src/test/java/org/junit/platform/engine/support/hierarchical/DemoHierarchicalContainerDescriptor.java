@@ -20,17 +20,19 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 /**
  * @since 1.0
  */
-public class DummyContainerDescriptor extends AbstractTestDescriptor implements Node<DummyEngineExecutionContext> {
+public class DemoHierarchicalContainerDescriptor extends AbstractTestDescriptor
+		implements Node<DemoEngineExecutionContext> {
 
 	private final Runnable beforeBlock;
 	private String skippedReason;
 	private boolean skipped;
 
-	DummyContainerDescriptor(UniqueId uniqueId, String displayName, Runnable executeBlock) {
+	DemoHierarchicalContainerDescriptor(UniqueId uniqueId, String displayName, Runnable executeBlock) {
 		this(uniqueId, displayName, null, executeBlock);
 	}
 
-	public DummyContainerDescriptor(UniqueId uniqueId, String displayName, TestSource source, Runnable beforeBlock) {
+	public DemoHierarchicalContainerDescriptor(UniqueId uniqueId, String displayName, TestSource source,
+			Runnable beforeBlock) {
 		super(uniqueId, displayName);
 
 		if (source != null) {
@@ -65,12 +67,12 @@ public class DummyContainerDescriptor extends AbstractTestDescriptor implements 
 	}
 
 	@Override
-	public SkipResult shouldBeSkipped(DummyEngineExecutionContext context) throws Exception {
+	public SkipResult shouldBeSkipped(DemoEngineExecutionContext context) throws Exception {
 		return this.skipped ? skip(this.skippedReason) : doNotSkip();
 	}
 
 	@Override
-	public DummyEngineExecutionContext before(DummyEngineExecutionContext context) throws Exception {
+	public DemoEngineExecutionContext before(DemoEngineExecutionContext context) throws Exception {
 		if (this.beforeBlock != null) {
 			this.beforeBlock.run();
 		}
