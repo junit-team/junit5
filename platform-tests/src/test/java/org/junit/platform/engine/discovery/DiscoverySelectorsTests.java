@@ -16,7 +16,6 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMetho
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.DiscoverySelector;
 
 /**
  * Unit tests for {@link DiscoverySelectors}.
@@ -30,6 +29,18 @@ public class DiscoverySelectorsTests {
 	private static final String fullyQualifiedMethodName = fullyQualifiedMethodName();
 
 	@Test
+	void selectPackageByName() {
+		PackageSelector selector = DiscoverySelectors.selectPackage(getClass().getPackage().getName());
+		assertEquals(getClass().getPackage().getName(), selector.getPackageName());
+	}
+
+	@Test
+	void selectClassByName() {
+		ClassSelector selector = DiscoverySelectors.selectClass(getClass().getName());
+		assertEquals(getClass(), selector.getJavaClass());
+	}
+
+	@Test
 	void selectMethodByFullyQualifiedName() {
 		MethodSelector selector = selectMethod(fullyQualifiedMethodName);
 		assertEquals(fullyQualifiedMethod, selector.getJavaMethod());
@@ -41,27 +52,6 @@ public class DiscoverySelectorsTests {
 		MethodSelector selector = selectMethod(getClass(), method);
 		assertEquals(method, selector.getJavaMethod());
 		assertEquals(method, selector.getJavaMethod());
-	}
-
-	@Test
-	@SuppressWarnings("deprecation")
-	void selectNameWithPackageName() {
-		DiscoverySelector selector = DiscoverySelectors.selectName("org.junit.platform");
-		assertEquals(PackageSelector.class, selector.getClass());
-	}
-
-	@Test
-	@SuppressWarnings("deprecation")
-	void selectNameWithClassName() {
-		DiscoverySelector selector = DiscoverySelectors.selectName(getClass().getName());
-		assertEquals(ClassSelector.class, selector.getClass());
-	}
-
-	@Test
-	@SuppressWarnings("deprecation")
-	void selectNameWithMethodName() {
-		DiscoverySelector selector = DiscoverySelectors.selectName(fullyQualifiedMethodName);
-		assertEquals(MethodSelector.class, selector.getClass());
 	}
 
 	private static String fullyQualifiedMethodName() {
