@@ -72,6 +72,7 @@ public class TestPlanScannerFilterTests {
 	private static class EmptyClass {
 	}
 
+	@SuppressWarnings("unused")
 	private static class ClassWithMethods {
 
 		void method1() {
@@ -94,6 +95,7 @@ public class TestPlanScannerFilterTests {
 
 	private static class ClassWithNestedTestClass {
 
+		@SuppressWarnings("unused")
 		void method() {
 		}
 
@@ -144,4 +146,5 @@ public class TestPlanScannerFilterTests {
 			}
 		}
 	}
+
 }

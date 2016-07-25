@@ -24,9 +24,12 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.launcher.TestIdentifier;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
+/**
+ * Unit tests for {@link RunListenerAdapter}.
+ *
+ * @since 1.0
+ */
 class RunListenerAdapterTests {
 
 	@Test

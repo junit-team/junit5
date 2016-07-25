@@ -36,9 +36,12 @@ import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
+/**
+ * Unit tests for {@link JUnitPlatformProvider}.
+ *
+ * @since 1.0
+ */
 class JUnitPlatformProviderTests {
 
 	@Test
