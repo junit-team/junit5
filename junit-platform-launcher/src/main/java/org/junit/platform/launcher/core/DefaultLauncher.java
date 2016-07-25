@@ -107,7 +107,9 @@ class DefaultLauncher implements Launcher {
 			UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
 			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);
 			Preconditions.notNull(engineRoot,
-				"The discover() method must return at least the engine's TestDescriptor.");
+				() -> String.format(
+					"The discover() method for TestEngine with ID '%s' must return a non-null root TestDescriptor.",
+					testEngine.getId()));
 			root.add(testEngine, engineRoot);
 		}
 		root.applyPostDiscoveryFilters(discoveryRequest);
