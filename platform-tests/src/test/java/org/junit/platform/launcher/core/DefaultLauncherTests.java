@@ -29,10 +29,12 @@ import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 import org.junit.platform.engine.test.TestEngineSpy;
+import org.junit.platform.engine.test.TestEngineStub;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.PostDiscoveryFilterStub;
 import org.junit.platform.launcher.TestIdentifier;
@@ -72,6 +74,25 @@ class DefaultLauncherTests {
 		TestPlan testPlan = launcher.discover(request().build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
+	}
+
+	@Test
+	void discoverTestPlanForEngineThatReturnsNullForItsRootDescriptor() {
+		TestEngine engine = new TestEngineStub() {
+
+			@Override
+			public TestDescriptor discover(org.junit.platform.engine.EngineDiscoveryRequest discoveryRequest,
+					UniqueId uniqueId) {
+				return null;
+			}
+		};
+
+		Throwable exception = expectThrows(PreconditionViolationException.class,
+			() -> createLauncher(engine).discover(request().build()));
+
+		assertThat(exception).hasMessage(
+			"The discover() method for TestEngine with ID '%s' must return a non-null root TestDescriptor.",
+			engine.getId());
 	}
 
 	@Test
