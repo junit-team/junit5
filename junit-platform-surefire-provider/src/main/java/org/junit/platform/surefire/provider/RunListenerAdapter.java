@@ -34,8 +34,8 @@ final class RunListenerAdapter implements TestExecutionListener {
 
 	private final RunListener runListener;
 
-	public RunListenerAdapter(RunListener reporter) {
-		this.runListener = reporter;
+	public RunListenerAdapter(RunListener runListener) {
+		this.runListener = runListener;
 	}
 
 	@Override

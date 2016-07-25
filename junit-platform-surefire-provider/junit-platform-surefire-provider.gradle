@@ -15,6 +15,9 @@ dependencies {
 
 	testCompile(project(':junit-jupiter-api'))
 	testCompile(project(':junit-platform-runner'))
+	testCompile(project(':junit-jupiter-engine'))
+	testCompile("org.mockito:mockito-core:${mockitoVersion}")
+	testCompile("org.assertj:assertj-core:${assertJVersion}")
 
 	// Include junit-platform-console so that the JUnit Gradle plugin
 	// uses the local version of the ConsoleLauncher.
