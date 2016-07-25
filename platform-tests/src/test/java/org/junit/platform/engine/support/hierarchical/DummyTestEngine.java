@@ -22,7 +22,7 @@ import org.junit.platform.engine.support.descriptor.JavaMethodSource;
 /**
  * @since 1.0
  */
-public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExecutionContext> {
+public final class DummyTestEngine extends HierarchicalTestEngine {
 
 	private final String engineId;
 	private final DummyEngineDescriptor engineDescriptor;
@@ -87,7 +87,7 @@ public final class DummyTestEngine extends HierarchicalTestEngine<DummyEngineExe
 	}
 
 	@Override
-	protected DummyEngineExecutionContext createExecutionContext(ExecutionRequest request) {
+	protected EngineExecutionContext createExecutionContext(ExecutionRequest request) {
 		return new DummyEngineExecutionContext();
 	}
 

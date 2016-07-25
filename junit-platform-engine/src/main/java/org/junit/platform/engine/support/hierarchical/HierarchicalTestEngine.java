@@ -20,12 +20,11 @@ import org.junit.platform.engine.TestEngine;
  * Abstract base class for all {@link TestEngine} implementations that wish
  * to organize test suites hierarchically based on the {@link Node} abstraction.
  *
- * @param <C> the type of {@code EngineExecutionContext} used by this engine
  * @since 1.0
  * @see Node
  */
 @API(Experimental)
-public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> implements TestEngine {
+public abstract class HierarchicalTestEngine implements TestEngine {
 
 	/**
 	 * Create an initial {@linkplain #createExecutionContext execution
@@ -40,7 +39,7 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 	 */
 	@Override
 	public final void execute(ExecutionRequest request) {
-		new HierarchicalTestExecutor<>(request, createExecutionContext(request)).execute();
+		new HierarchicalTestExecutor(request, createExecutionContext(request)).execute();
 	}
 
 	/**
@@ -50,6 +49,6 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 	 * @param request the request about to be executed
 	 * @return the initial context that will be passed to nodes in the hierarchy
 	 */
-	protected abstract C createExecutionContext(ExecutionRequest request);
+	protected abstract EngineExecutionContext createExecutionContext(ExecutionRequest request);
 
 }

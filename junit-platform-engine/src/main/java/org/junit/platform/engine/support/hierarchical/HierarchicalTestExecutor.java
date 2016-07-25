@@ -29,19 +29,17 @@ import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
  * executing nodes in the hierarchy in the appropriate order as well as
  * firing the necessary events in the {@link EngineExecutionListener}.
  *
- * @param <C> the type of {@code EngineExecutionContext} used by the
- * {@code HierarchicalTestEngine}
  * @since 1.0
  */
-class HierarchicalTestExecutor<C extends EngineExecutionContext> {
+class HierarchicalTestExecutor {
 
 	private static final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
 
 	private final TestDescriptor rootTestDescriptor;
 	private final EngineExecutionListener listener;
-	private final C rootContext;
+	private final EngineExecutionContext rootContext;
 
-	HierarchicalTestExecutor(ExecutionRequest request, C rootContext) {
+	HierarchicalTestExecutor(ExecutionRequest request, EngineExecutionContext rootContext) {
 		this.rootTestDescriptor = request.getRootTestDescriptor();
 		this.listener = request.getEngineExecutionListener();
 		this.rootContext = rootContext;
@@ -51,10 +49,10 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		execute(this.rootTestDescriptor, this.rootContext);
 	}
 
-	private void execute(TestDescriptor testDescriptor, C parentContext) {
-		Node<C> node = asNode(testDescriptor);
+	private void execute(TestDescriptor testDescriptor, EngineExecutionContext parentContext) {
+		Node<EngineExecutionContext> node = asNode(testDescriptor);
 
-		C preparedContext;
+		EngineExecutionContext preparedContext;
 		try {
 			preparedContext = node.prepare(parentContext);
 			SkipResult skipResult = node.shouldBeSkipped(preparedContext);
@@ -75,7 +73,7 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		this.listener.executionStarted(testDescriptor);
 
 		TestExecutionResult result = singleTestExecutor.executeSafely(() -> {
-			C context = preparedContext;
+			EngineExecutionContext context = preparedContext;
 			try {
 				context = node.before(context);
 				context = node.execute(context);
@@ -98,8 +96,8 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Node<C> asNode(TestDescriptor testDescriptor) {
-		return (testDescriptor instanceof Node ? (Node<C>) testDescriptor : noOpNode);
+	private Node<EngineExecutionContext> asNode(TestDescriptor testDescriptor) {
+		return (testDescriptor instanceof Node ? (Node<EngineExecutionContext>) testDescriptor : noOpNode);
 	}
 
 	@SuppressWarnings("rawtypes")
