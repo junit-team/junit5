@@ -11,14 +11,16 @@
 package org.junit.vintage.engine.discovery;
 
 import static java.lang.String.format;
+import static java.util.function.Predicate.isEqual;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
+import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_TYPE_RUNNER;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.UniqueId.Segment;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 
 /**
@@ -41,12 +43,9 @@ class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelecto
 				() -> format("Unresolvable Unique ID (%s): Cannot resolve the engine's unique ID", uniqueId));
 		}
 		else {
-			uniqueId.getEngineId().ifPresent(engineId -> {
-				if (engineId.equals(ENGINE_ID)) {
-					String testClassName = determineTestClassName(uniqueId);
-					resolveIntoFilteredTestClass(testClassName, uniqueId, collector);
-				}
-			});
+			uniqueId.getEngineId().filter(isEqual(ENGINE_ID)).ifPresent(
+				engineId -> determineTestClassName(uniqueId).ifPresent(
+					testClassName -> resolveIntoFilteredTestClass(testClassName, uniqueId, collector)));
 		}
 	}
 
@@ -60,12 +59,16 @@ class UniqueIdSelectorResolver extends DiscoverySelectorResolver<UniqueIdSelecto
 		}
 	}
 
-	private String determineTestClassName(UniqueId uniqueId) {
-		List<UniqueId.Segment> segments = uniqueId.getSegments();
-		segments.remove(0); // drop engine node
-		UniqueId.Segment runnerSegment = segments.remove(0);
-		// TODO [#337] Check that it really is a runner segment
-		return runnerSegment.getValue();
+	private Optional<String> determineTestClassName(UniqueId uniqueId) {
+		Segment runnerSegment = uniqueId.getSegments().get(1); // skip engine node
+		if (SEGMENT_TYPE_RUNNER.equals(runnerSegment.getType())) {
+			return Optional.of(runnerSegment.getValue());
+		}
+		logger.warning(
+			() -> format("Unresolvable Unique ID (%s): Unique ID segment after engine segment must be of type \""
+					+ SEGMENT_TYPE_RUNNER + "\"",
+				uniqueId));
+		return Optional.empty();
 	}
 
 }
