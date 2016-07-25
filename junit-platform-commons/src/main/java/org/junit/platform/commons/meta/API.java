@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * @since 1.0
  */
 @Target({ ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR })
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(Experimental)
 public @interface API {
