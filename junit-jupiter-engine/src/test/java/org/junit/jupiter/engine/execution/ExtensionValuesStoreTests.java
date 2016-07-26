@@ -153,7 +153,7 @@ public class ExtensionValuesStoreTests {
 
 		@Test
 		void getWithTypeSafetyAndInvalidRequiredTypeThrowsException() {
-			Integer key = new Integer(42);
+			Integer key = 42;
 			String value = "enigma";
 			store.put(namespace, key, value);
 
@@ -165,7 +165,7 @@ public class ExtensionValuesStoreTests {
 
 		@Test
 		void getWithTypeSafety() {
-			Integer key = new Integer(42);
+			Integer key = 42;
 			String value = "enigma";
 			store.put(namespace, key, value);
 
@@ -215,7 +215,7 @@ public class ExtensionValuesStoreTests {
 
 		@Test
 		void getOrComputeIfAbsentWithTypeSafety() {
-			Integer key = new Integer(42);
+			Integer key = 42;
 			String value = "enigma";
 
 			// The fact that we can declare this as a String suffices for testing the required type.
@@ -237,7 +237,7 @@ public class ExtensionValuesStoreTests {
 
 		@Test
 		void removeWithTypeSafetyAndInvalidRequiredTypeThrowsException() {
-			Integer key = new Integer(42);
+			Integer key = 42;
 			String value = "enigma";
 			store.put(namespace, key, value);
 
@@ -249,7 +249,7 @@ public class ExtensionValuesStoreTests {
 
 		@Test
 		void removeWithTypeSafety() {
-			Integer key = new Integer(42);
+			Integer key = 42;
 			String value = "enigma";
 			store.put(namespace, key, value);
 
@@ -277,7 +277,7 @@ public class ExtensionValuesStoreTests {
 
 		@Test
 		void removeNullValueWithTypeSafety() {
-			Integer key = new Integer(42);
+			Integer key = 42;
 			store.put(namespace, key, null);
 
 			// The fact that we can declare this as a String suffices for testing the required type.

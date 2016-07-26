@@ -298,12 +298,12 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		void numberParameterInjection(Number number) {
-			assertEquals(new Integer(42), number);
+			assertEquals(Integer.valueOf(42), number);
 		}
 
 		@Test
 		void integerParameterInjection(Integer number) {
-			assertEquals(new Integer(42), number);
+			assertEquals(Integer.valueOf(42), number);
 		}
 
 		/**

@@ -28,7 +28,7 @@ public class PrimitiveIntegerParameterResolver implements ParameterResolver {
 
 	@Override
 	public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return new Integer(42);
+		return 42;
 	}
 
 }
