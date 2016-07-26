@@ -15,10 +15,17 @@ import static org.junit.platform.commons.meta.API.Usage.Experimental;
 import static org.junit.platform.commons.meta.API.Usage.Maintained;
 import static org.junit.platform.commons.util.ReflectionUtils.isArray;
 
+import java.time.Duration;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -994,6 +1001,164 @@ public final class Assertions {
 		}
 		throw new AssertionFailedError(
 			String.format("Expected %s to be thrown, but nothing was thrown.", expectedType.getName()));
+	}
+
+	// --- assertTimeout -------------------------------------------------------
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable}
+	 * completes before the given {@code timeout} is exceeded.
+	 *
+	 * <p>Note: the executable will be executed in the same thread as that
+	 * of the calling code. Consequently, execution of the executable will
+	 * not be preemptively aborted if the timeout is exceeded.
+	 *
+	 * @see #assertTimeout(Duration, Executable, String)
+	 * @see #assertTimeout(Duration, Executable, Supplier)
+	 * @see #assertTimeoutPreemptively(Duration, Executable)
+	 */
+	public static void assertTimeout(Duration timeout, Executable executable) {
+		assertTimeout(timeout, executable, () -> null);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable}
+	 * completes before the given {@code timeout} is exceeded.
+	 *
+	 * <p>Note: the executable will be executed in the same thread as that
+	 * of the calling code. Consequently, execution of the executable will
+	 * not be preemptively aborted if the timeout is exceeded.
+	 *
+	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @see #assertTimeout(Duration, Executable)
+	 * @see #assertTimeout(Duration, Executable, Supplier)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
+	 */
+	public static void assertTimeout(Duration timeout, Executable executable, String message) {
+		assertTimeout(timeout, executable, () -> message);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable}
+	 * completes before the given {@code timeout} is exceeded.
+	 *
+	 * <p>Note: the executable will be executed in the same thread as that
+	 * of the calling code. Consequently, execution of the executable will
+	 * not be preemptively aborted if the timeout is exceeded.
+	 *
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * @see #assertTimeout(Duration, Executable)
+	 * @see #assertTimeout(Duration, Executable, String)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
+	 */
+	public static void assertTimeout(Duration timeout, Executable executable, Supplier<String> messageSupplier) {
+		long timeoutInMillis = timeout.toMillis();
+		long start = System.currentTimeMillis();
+		try {
+			executable.execute();
+		}
+		catch (Throwable ex) {
+			ExceptionUtils.throwAsUncheckedException(ex);
+		}
+
+		long timeElapsed = System.currentTimeMillis() - start;
+		if (timeElapsed > timeoutInMillis) {
+			fail(buildPrefix(nullSafeGet(messageSupplier)) + "executable exceeded timeout of " + timeoutInMillis
+					+ " ms by " + (timeElapsed - timeoutInMillis) + " ms");
+		}
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable}
+	 * completes before the given {@code timeout} is exceeded.
+	 *
+	 * <p>Note: the executable will be executed in a different thread than
+	 * that of the calling code. Furthermore, execution of the executable will
+	 * be preemptively aborted if the timeout is exceeded.
+	 *
+	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
+	 * @see #assertTimeout(Duration, Executable)
+	 */
+	public static void assertTimeoutPreemptively(Duration timeout, Executable executable) {
+		assertTimeoutPreemptively(timeout, executable, () -> null);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable}
+	 * completes before the given {@code timeout} is exceeded.
+	 *
+	 * <p>Note: the executable will be executed in a different thread than
+	 * that of the calling code. Furthermore, execution of the executable will
+	 * be preemptively aborted if the timeout is exceeded.
+	 *
+	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @see #assertTimeoutPreemptively(Duration, Executable)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
+	 * @see #assertTimeout(Duration, Executable, String)
+	 */
+	public static void assertTimeoutPreemptively(Duration timeout, Executable executable, String message) {
+		assertTimeoutPreemptively(timeout, executable, () -> message);
+	}
+
+	/**
+	 * <em>Asserts</em> that execution of the supplied {@code executable}
+	 * completes before the given {@code timeout} is exceeded.
+	 *
+	 * <p>Note: the executable will be executed in a different thread than
+	 * that of the calling code. Furthermore, execution of the executable will
+	 * be preemptively aborted if the timeout is exceeded.
+	 *
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * @see #assertTimeoutPreemptively(Duration, Executable)
+	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
+	 * @see #assertTimeout(Duration, Executable, Supplier)
+	 */
+	public static void assertTimeoutPreemptively(Duration timeout, Executable executable,
+			Supplier<String> messageSupplier) {
+
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
+		try {
+			Future<Throwable> future = executorService.submit(() -> {
+				try {
+					executable.execute();
+				}
+				catch (Throwable ex) {
+					return ex;
+				}
+				return null;
+			});
+
+			long timeoutInMillis = timeout.toMillis();
+			Throwable throwable = null;
+
+			try {
+				throwable = future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
+			}
+			catch (TimeoutException ex) {
+				fail(buildPrefix(nullSafeGet(messageSupplier)) + "executable timed out after " + timeoutInMillis
+						+ " ms");
+			}
+			catch (ExecutionException ex) {
+				throwable = ex.getCause();
+			}
+			catch (Throwable ex) {
+				throwable = ex;
+			}
+
+			if (throwable != null) {
+				ExceptionUtils.throwAsUncheckedException(throwable);
+			}
+		}
+		finally {
+			executorService.shutdownNow();
+		}
 	}
 
 	// --- assertArrayEquals helpers -------------------------------------------

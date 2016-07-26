@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static java.time.Duration.ofMillis;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTimeout;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.expectThrows;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -28,6 +31,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 import org.opentest4j.AssertionFailedError;
@@ -3044,6 +3048,105 @@ public class AssertionsTests {
 			assertMessageContains(ex, "expected: <java.lang.IllegalStateException>");
 			assertMessageContains(ex, "but was: <java.lang.NumberFormatException>");
 		}
+	}
+
+	// --- assertTimeout -------------------------------------------------
+
+	private static ThreadLocal<AtomicBoolean> changed = ThreadLocal.withInitial(() -> new AtomicBoolean(false));
+
+	@Test
+	void assertTimeoutForExecutableThatCompletesBeforeTheTimeout() {
+		changed.get().set(false);
+
+		assertTimeout(ofMillis(500), () -> {
+			changed.get().set(true);
+		});
+
+		assertTrue(changed.get().get(), "should have executed in the same thread");
+	}
+
+	@Test
+	void assertTimeoutForExecutableThatThrowsAnException() {
+		RuntimeException exception = expectThrows(RuntimeException.class, () -> assertTimeout(ofMillis(500), () -> {
+			throw new RuntimeException("not this time");
+		}));
+		assertMessageEquals(exception, "not this time");
+	}
+
+	@Test
+	void assertTimeoutForExecutableThatThrowsAnAssertionFailedError() {
+		AssertionFailedError exception = expectThrows(AssertionFailedError.class,
+			() -> assertTimeout(ofMillis(500), () -> fail("enigma")));
+		assertMessageEquals(exception, "enigma");
+	}
+
+	@Test
+	void assertTimeoutForExecutableThatCompletesAfterTheTimeout() {
+		AssertionFailedError error = expectThrows(AssertionFailedError.class,
+			() -> assertTimeout(ofMillis(50), () -> Thread.sleep(100)));
+		assertMessageStartsWith(error, "executable exceeded timeout of 50 ms by");
+	}
+
+	@Test
+	void assertTimeoutWithMessageForExecutableThatCompletesAfterTheTimeout() {
+		AssertionFailedError error = expectThrows(AssertionFailedError.class,
+			() -> assertTimeout(ofMillis(50), () -> Thread.sleep(100), "Tempus Fugit"));
+		assertMessageStartsWith(error, "Tempus Fugit ==> executable exceeded timeout of 50 ms by");
+	}
+
+	@Test
+	void assertTimeoutWithMessageSupplierForExecutableThatCompletesAfterTheTimeout() {
+		AssertionFailedError error = expectThrows(AssertionFailedError.class,
+			() -> assertTimeout(ofMillis(50), () -> Thread.sleep(100), () -> "Tempus" + " " + "Fugit"));
+		assertMessageStartsWith(error, "Tempus Fugit ==> executable exceeded timeout of 50 ms by");
+	}
+
+	@Test
+	void assertTimeoutPreemptivelyForExecutableThatCompletesBeforeTheTimeout() {
+		changed.get().set(false);
+
+		assertTimeoutPreemptively(ofMillis(500), () -> {
+			changed.get().set(true);
+		});
+
+		assertFalse(changed.get().get(), "should have executed in a different same thread");
+	}
+
+	@Test
+	void assertTimeoutPreemptivelyForExecutableThatThrowsAnException() {
+		RuntimeException exception = expectThrows(RuntimeException.class,
+			() -> assertTimeoutPreemptively(ofMillis(500), () -> {
+				throw new RuntimeException("not this time");
+			}));
+		assertMessageEquals(exception, "not this time");
+	}
+
+	@Test
+	void assertTimeoutPreemptivelyForExecutableThatThrowsAnAssertionFailedError() {
+		AssertionFailedError exception = expectThrows(AssertionFailedError.class,
+			() -> assertTimeoutPreemptively(ofMillis(500), () -> fail("enigma")));
+		assertMessageEquals(exception, "enigma");
+	}
+
+	@Test
+	void assertTimeoutPreemptivelyForExecutableThatCompletesAfterTheTimeout() {
+		AssertionFailedError error = expectThrows(AssertionFailedError.class,
+			() -> assertTimeoutPreemptively(ofMillis(50), () -> Thread.sleep(100)));
+		assertMessageEquals(error, "executable timed out after 50 ms");
+	}
+
+	@Test
+	void assertTimeoutPreemptivelyWithMessageForExecutableThatCompletesAfterTheTimeout() {
+		AssertionFailedError error = expectThrows(AssertionFailedError.class,
+			() -> assertTimeoutPreemptively(ofMillis(50), () -> Thread.sleep(100), "Tempus Fugit"));
+		assertMessageEquals(error, "Tempus Fugit ==> executable timed out after 50 ms");
+	}
+
+	@Test
+	void assertTimeoutPreemptivelyWithMessageSupplierForExecutableThatCompletesAfterTheTimeout() {
+		AssertionFailedError error = expectThrows(AssertionFailedError.class,
+			() -> assertTimeoutPreemptively(ofMillis(50), () -> Thread.sleep(100), () -> "Tempus" + " " + "Fugit"));
+		assertMessageEquals(error, "Tempus Fugit ==> executable timed out after 50 ms");
 	}
 
 	// -------------------------------------------------------------------
