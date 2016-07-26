@@ -943,7 +943,7 @@ public final class Assertions {
 				multipleFailuresError.addFailure(assertionError);
 			}
 			catch (Throwable t) {
-				throw ExceptionUtils.throwAsUncheckedException(t);
+				ExceptionUtils.throwAsUncheckedException(t);
 			}
 		}
 		if (multipleFailuresError.hasFailures()) {
