@@ -87,6 +87,36 @@ methods in the `{Assertions}` class.
 include::{testDir}/example/AssertionsDemo.java[tags=user_guide]
 ----
 
+Just like in JUnit 4, matchers can be used to make assertions more descriptive and
+readable. Contrary to JUnit 4 and its
+http://junit.org/junit4/javadoc/latest/org/junit/Assert.html#assertThat[`org.junit.Assert`]
+class, JUnit Jupiter does not provide a static method accepting a
+http://junit.org/junit4/javadoc/latest/org/hamcrest/Matcher.html[`Matcher`]
+and is, therefore, not dependent on http://hamcrest.org/JavaHamcrest/[Hamcrest].
+
+In order to use the `assertThat` syntax in JUnit Jupiter, you can add a dependency on
+http://hamcrest.org/JavaHamcrest/[Hamcrest], http://joel-costigliola.github.io/assertj/[AssertJ]
+or https://github.com/google/truth[Truth] and statically import the necessary methods supported
+by your chosen framework.
+
+[source,java,indent=0]
+[subs="verbatim"]
+----
+import org.junit.jupiter.api.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+public class MyHamcrestTest() {
+
+    @Test
+    public void simpleTestWithHamcrest() {
+        assertThat(2 + 1, is(3));
+    }
+}
+----
+
+Naturally, legacy tests using the JUnit 4 based Runner can continue using `org.junit.Assert#assertThat`.
+
 [[writing-tests-assumptions]]
 === Assumptions
 
