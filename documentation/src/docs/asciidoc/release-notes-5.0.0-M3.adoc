@@ -34,7 +34,11 @@ on GitHub.
 [[release-notes-5.0.0-m3-junit-jupiter]]
 ===== JUnit Jupiter
 
-* ❓
+====== New Features
+
+* Support for lazy and preemptive _timeouts_ with lambda expressions in `Assertions`. See
+  examples in <<writing-tests-assertions,`AssertionsDemo`>> and consult the
+  `{Assertions}` Javadoc for further details.
 
 [[release-notes-5.0.0-m3-junit-vintage]]
 ===== JUnit Vintage
