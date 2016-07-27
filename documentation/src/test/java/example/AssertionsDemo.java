@@ -12,8 +12,12 @@ package example;
 
 // @formatter:off
 // tag::user_guide[]
+import static java.time.Duration.ofMillis;
+import static java.time.Duration.ofMinutes;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTimeout;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.expectThrows;
 
@@ -51,6 +55,40 @@ class AssertionsDemo {
 		assertEquals("a message", exception.getMessage());
 	}
 
+	@Test
+	void timeoutNotExceeded() {
+		// The following assertion succeeds.
+		assertTimeout(ofMinutes(2), () -> {
+			// Perform task that takes less than 2 minutes.
+		});
+	}
+
+	// end::user_guide[]
+	@extensions.ExpectToFail
+	// tag::user_guide[]
+	@Test
+	void timeoutExceeded() {
+		// The following assertion fails with an error message similar to:
+		// execution exceeded timeout of 10 ms by 91 ms
+		assertTimeout(ofMillis(10), () -> {
+			// Simulate task that takes more than 10 ms.
+			Thread.sleep(100);
+		});
+	}
+
+	// end::user_guide[]
+	@extensions.ExpectToFail
+	// tag::user_guide[]
+	@Test
+	void timeoutExceededWithPreemptiveTermination() {
+		// The following assertion fails with an error message similar to:
+		// execution timed out after 10 ms
+		assertTimeoutPreemptively(ofMillis(10), () -> {
+			// Simulate task that takes more than 10 ms.
+			Thread.sleep(100);
+		});
+	}
+
 }
 // end::user_guide[]
 // @formatter:on
@@ -74,4 +112,5 @@ class Address {
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
+
 }
