@@ -893,8 +893,12 @@ methods in the <code><a href="../api/org/junit/jupiter/api/Assertions.html">org.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static org.junit.jupiter.api.Assertions.assertAll;
+<pre class="highlightjs highlight"><code class="language-java" data-lang="java">import static java.time.Duration.ofMillis;
+import static java.time.Duration.ofMinutes;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTimeout;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.expectThrows;
 
@@ -926,6 +930,34 @@ class AssertionsDemo {
             throw new IllegalArgumentException("a message");
         });
         assertEquals("a message", exception.getMessage());
+    }
+
+    @Test
+    void timeoutNotExceeded() {
+        // The following assertion succeeds.
+        assertTimeout(ofMinutes(2), () -&gt; {
+            // Perform task that takes less than 2 minutes.
+        });
+    }
+
+    @Test
+    void timeoutExceeded() {
+        // The following assertion fails with an error message similar to:
+        // execution exceeded timeout of 10 ms by 91 ms
+        assertTimeout(ofMillis(10), () -&gt; {
+            // Simulate task that takes more than 10 ms.
+            Thread.sleep(100);
+        });
+    }
+
+    @Test
+    void timeoutExceededWithPreemptiveTermination() {
+        // The following assertion fails with an error message similar to:
+        // execution timed out after 10 ms
+        assertTimeoutPreemptively(ofMillis(10), () -&gt; {
+            // Simulate task that takes more than 10 ms.
+            Thread.sleep(100);
+        });
     }
 
 }</code></pre>
@@ -3396,7 +3428,7 @@ method-level will no longer be registered multiple times.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.0.0-SNAPSHOT<br>
-Last updated 2016-07-27 11:27:25 -04:00
+Last updated 2016-07-27 12:01:36 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
