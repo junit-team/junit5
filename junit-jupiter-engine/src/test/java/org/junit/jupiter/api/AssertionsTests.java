@@ -3057,31 +3057,30 @@ public class AssertionsTests {
 		throw new AssertionError("Should have thrown an " + AssertionFailedError.class.getName());
 	}
 
-	private static void assertMessageEquals(AssertionFailedError ex, String msg) throws AssertionError {
+	private static void assertMessageEquals(Throwable ex, String msg) throws AssertionError {
 		if (!msg.equals(ex.getMessage())) {
-			throw new AssertionError(
-				"Message in AssertionFailedError should be [" + msg + "], but was [" + ex.getMessage() + "].");
+			throw new AssertionError("Exception message should be [" + msg + "], but was [" + ex.getMessage() + "].");
 		}
 	}
 
-	private static void assertMessageEndsWith(AssertionFailedError ex, String msg) throws AssertionError {
-		if (!ex.getMessage().endsWith(msg)) {
-			throw new AssertionError(
-				"Message in AssertionFailedError should end with [" + msg + "], but was [" + ex.getMessage() + "].");
-		}
-	}
-
-	private static void assertMessageStartsWith(AssertionFailedError ex, String msg) throws AssertionError {
+	private static void assertMessageStartsWith(Throwable ex, String msg) throws AssertionError {
 		if (!ex.getMessage().startsWith(msg)) {
 			throw new AssertionError(
-				"Message in AssertionFailedError should start with [" + msg + "], but was [" + ex.getMessage() + "].");
+				"Exception message should start with [" + msg + "], but was [" + ex.getMessage() + "].");
 		}
 	}
 
-	private static void assertMessageContains(AssertionFailedError ex, String msg) throws AssertionError {
+	private static void assertMessageEndsWith(Throwable ex, String msg) throws AssertionError {
+		if (!ex.getMessage().endsWith(msg)) {
+			throw new AssertionError(
+				"Exception message should end with [" + msg + "], but was [" + ex.getMessage() + "].");
+		}
+	}
+
+	private static void assertMessageContains(Throwable ex, String msg) throws AssertionError {
 		if (!ex.getMessage().contains(msg)) {
 			throw new AssertionError(
-				"Message in AssertionFailedError should contain [" + msg + "], but was [" + ex.getMessage() + "].");
+				"Exception message should contain [" + msg + "], but was [" + ex.getMessage() + "].");
 		}
 	}
 
