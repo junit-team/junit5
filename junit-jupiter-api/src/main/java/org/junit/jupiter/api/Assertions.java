@@ -1066,7 +1066,7 @@ public final class Assertions {
 
 		long timeElapsed = System.currentTimeMillis() - start;
 		if (timeElapsed > timeoutInMillis) {
-			fail(buildPrefix(nullSafeGet(messageSupplier)) + "executable exceeded timeout of " + timeoutInMillis
+			fail(buildPrefix(nullSafeGet(messageSupplier)) + "execution exceeded timeout of " + timeoutInMillis
 					+ " ms by " + (timeElapsed - timeoutInMillis) + " ms");
 		}
 	}
@@ -1142,8 +1142,8 @@ public final class Assertions {
 				throwable = future.get(timeoutInMillis, TimeUnit.MILLISECONDS);
 			}
 			catch (TimeoutException ex) {
-				fail(buildPrefix(nullSafeGet(messageSupplier)) + "executable timed out after " + timeoutInMillis
-						+ " ms");
+				fail(
+					buildPrefix(nullSafeGet(messageSupplier)) + "execution timed out after " + timeoutInMillis + " ms");
 			}
 			catch (ExecutionException ex) {
 				throwable = ex.getCause();
